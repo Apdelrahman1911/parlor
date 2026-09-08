@@ -1,0 +1,42 @@
+{
+  "at": "2026-09-07T09:04:35.215456+00:00",
+  "reviewer": "/root",
+  "test_author": "/root/factory_review",
+  "production_fix_author": "/root",
+  "conclusion": "Test independently read completely and exercised; overall fix awaits a different non-author reviewer.",
+  "test": {
+    "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupStepperLayoutTest.kt",
+    "sha256": "306d7e76f6275440b9ceab2150b8e4cbcd8d6e8e47a7fe9ad3fcea45fad9d302",
+    "lines_read": [
+      1,
+      133
+    ]
+  },
+  "review": [
+    "Exact controls disambiguate the Mafia title via public LayoutInfo ancestry; no production tags introduced.",
+    "All four explicit Unit signatures actually discovered; each checks all three role steppers and maximum revotes.",
+    "Density1 uses actual un-clipped layout size, not expanded semantics touch bounds or clipped viewport coordinates, for48dp contract.",
+    "Each nonzero control is scrolled separately; sibling/label geometry refreshed after the same scroll; zero width fails instead of skipping the assertion.",
+    "RED01 retained as mixed selector/clipping evidence, not falsely counted as four valid witnesses. RED02 is four deterministic measured-geometry assertion failures.",
+    "GREEN01 full module277tests/34suites,0failures/errors/skips incl four new stepper cases and four existing toggle layout cases, with Detekt executed and no output/worker retention.",
+    "Coverage is bounded EN/AR320x640dp at1x/2x fontScale. It is not physical accessibility certification or every viewport."
+  ],
+  "evidence": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-red-02/receipt.json",
+      "sha256": "b8cb8d687e539342067cffd8c6a854e783590bc3b1634704377616fb8e55f5c2"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-red-02/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupStepperLayoutTest.xml",
+      "sha256": "e49ed2c95683101c1c4f4c7e838ccf69ac80c4b678a397cc2912033e3830d422"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/receipt.json",
+      "sha256": "d63aa86dfd6f9efa25e230804db7594acdef778479e0a8b9b4d1330300a73e41"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/test-receipts.json",
+      "sha256": "6d41f9c8e62ce1fb954fa9489139727e40edf161dd410a1aec6b4acfd6ea1b7a"
+    }
+  ]
+}

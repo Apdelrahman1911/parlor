@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "author": "/root/native_fix_review",
+  "reviewed_at": "2026-09-07T05:24:44.041762+00:00",
+  "conclusion": "FREEZE04 SOURCE AND70 SYNTHETIC CONTROL TESTS APPROVED; EXACT EXECUTION BINDING AND NATIVE RUNTIME REVIEW STILL REQUIRED",
+  "current_head": "875d849e0079452557374690b14e42c546ba2c06",
+  "baseline_note": "Freeze records b4f0ece\u2026 predecessor. All38raw control hashes unchanged after later timer-test commit; hashes, not source commit alone, identify this review.",
+  "freeze": {
+    "path": "native/controls-review-freeze-04.json",
+    "sha256": "e483933975c5ec1873f69a297a1058c9477705e351d0909857f72781a933a136",
+    "file_count": 38,
+    "line_count": 8209,
+    "triplet_manifest_digest": "792c1dacf2e466b49735335da3a6e85edcdeb3b779e773e0cd77017ab88b7dcb",
+    "digest_caveat": "Inventory triplet digest is NOT execution control_hash. Execution hashes ordered path/sha256 object rows INCLUDING selected explicit binding file."
+  },
+  "coverage_ledger": {
+    "path": "reviews/native-controls-freeze04-coverage.json",
+    "sha256": "ff170b80116eefb8af3c26c149927d5e09ff40e1168d677521a180501f270080"
+  },
+  "independent_checks": [
+    "All38 live rawhashes and linecounts match freeze04; all37 lineage current/original hashes verified; metadata diff fully read.",
+    "Published four entitlement overlay bytes equal same-reviewer approved final draft. No later unreviewed source changes detected.",
+    "Rootactual70-test log reread in full:70 distinct ok test lines, Ran70, OK; exit0 and all38pre-execution control hashes match current; receipt records unchangedcontrols.",
+    "Final-draft-supplement remains authoritative for diagnostic code; superseded mixed-version draft receipt must not be used as exact evidence.",
+    "Native entropy/query/storage/signing/appID policies unchanged; synthetic parser/wiring tests cannot resolve nativeIOS-R1, OS per-app language, eightcoldlaunch image/storage observations."
+  ],
+  "verification": {
+    "result": "PASS",
+    "scope": "70 synthetic control tests only; zero skips/failures",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "scripts/verification/ios-readiness",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "started_at": "2026-09-07T05:17:27.011056+00:00",
+    "finished_at": "2026-09-07T05:17:33.020513+00:00",
+    "exit_code": 0,
+    "receipt_sha256": "3a2e878edf7bbb5b43801952513580afc6018c997e300f91d258fe5153027db7",
+    "log_sha256": "2730bcd14ff16fb88e77a71553626df88134a39f5b687bedd0b8b6308325d616",
+    "cleanup": "TemporaryDirectory fixtures disposed, no Gradle/build/simulator started; -B prevents pycache."
+  },
+  "pending": [
+    "Create explicit current-source binding reviewed against actual build inventory; no implicit refresh or bypass.",
+    "Review exact binding and calculated execution control_hash (including binding).",
+    "Root-only native lane after approval; evaluate actual OS PRESENT preference transitions, production native statuses, per-launch artifact/observed imagebinding and cleanup."
+  ],
+  "previous_reviews": [
+    "reviews/native-controls-freeze03-independent-review.json",
+    "reviews/native-entitlement-final-draft-supplement.json",
+    "reviews/native-controls-authoritative-references-01.json"
+  ],
+  "reviewer_cleanup": "Only finite read/hash/source-research commands and exclusive evidence writes; Python -B; no build/app/native/test/server workers or generated build outputs created by reviewer."
+}

@@ -1,0 +1,63 @@
+{
+  "author": "/root/native_fix_review",
+  "branch": "fix/local-readiness-2026-09-07",
+  "cleanup": {
+    "background_workers_started": false,
+    "build_outputs_created": false,
+    "deletions_performed": false,
+    "other_task_resources_touched": false
+  },
+  "commit": "e1dd40c0f1ff14561ecac6c25967fced8cda74d2",
+  "context_source_hashes": {
+    "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt": "c2852fafb293a693be830171f4674947289fafb07f8ecdbafa5c0aaae6d1bf8b",
+    "scripts/verification/ios-readiness/L08StorageProbe.kt.in": "a1202e47e1b41feb7e5c558e4df9515704e27762e437778b6ae79c777bfce651"
+  },
+  "created_at_utc": "2026-09-08T01:04:28.703216+00:00",
+  "id": "L08-NATIVE-FOUNDATION-CONTROL-DRAFT-02",
+  "limits": [
+    "Metadata-only CLI; no file-content readback, original recovery matrix, app sandbox, Keychain, encryption or physical Data Protection evidence.",
+    "Runtime/private-set/temp forwarding/Foundation-image and actual cleanup behavior still unexecuted. Original L08 remains failed/unresolved; assertions unchanged.",
+    "No production/control adoption, branch/history/release or original audit evidence changes performed by this agent."
+  ],
+  "manifest": "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-02/manifest.json",
+  "manifest_sha256": "aa6867dbf163ba224c7feb5896da267f1648177890f1be669b98d73361dc2d9a",
+  "next": "Factory independently reviews frozen02; root runs synthetic checks in the coordinated lane only after approval. No execution by author.",
+  "preservation": {
+    "frozen01_manifest_sha256": "789884aa6ec4dad4afc4eca89a00ee5cf576cc9dcce7c2b042c976a3df216ff5",
+    "new_paths_only": [
+      "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-02",
+      "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-author-02.json"
+    ]
+  },
+  "prior_independent_review": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control01-independent-review-01.json",
+    "sha256": "6b3ff6136bca98bc3a3da841d38286ea079918f04c7029222d09ff96ee0b4ba8"
+  },
+  "requested_by": "/root",
+  "revisions": [
+    {
+      "change": "Exact lsof -nP -t +w +D; warning/holder/query failures retain root; negative and clean-empty argv/deletion controls added.",
+      "review_id": "FND-CONTROL-R1"
+    },
+    {
+      "change": "Non-throwing bounded first/repeated cancellation recording; 0.2s select/wait checkpoints; command finalization masks interruption through TERM/KILL/reap/close/log; Gradle stop and cleanup shielded; cancellation cannot report completed collection. Synthetic interruption/handoff/EOF/cleanup-shield controls added.",
+      "review_id": "FND-CONTROL-R2"
+    },
+    {
+      "change": "Separate devices child inode/type/UID/canonical pin before every sim call and cleanup; track any Simulator contact; only positive empty-set proof or uncontacted unchanged custody allows root cleanup; unexpected pre-create sets permanently quarantined; exact-token partial-create recovery retained. Replacement/symlink/unknown/noncreation/quarantine/partial-create controls added.",
+      "review_id": "FND-CONTROL-R3"
+    }
+  ],
+  "schema_version": 1,
+  "status": "SAFETY_REVISION_FROZEN_NOT_EXECUTED_AWAITING_INDEPENDENT_REVIEW",
+  "tracked_status_at_freeze": "M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\n M scripts/verification/ios-readiness/L08StorageProbe.kt.in\n M scripts/verification/ios-readiness/l08_receipts.py\n M scripts/verification/ios-readiness/test_l08_diagnostics.py",
+  "tree": "1d4822ebea89148635e0d71c74060fce1ab61824",
+  "unchanged_native_observer_sha256": "403432717c00b518d81a109415ad4c20c85a7307f733dfb6d53900c8cd327ff0",
+  "verification": {
+    "builds": "NOT_RUN",
+    "native_launch": "NOT_RUN",
+    "simulator_commands": "NOT_RUN",
+    "source_review": "Author completed changes; independent factory review pending",
+    "tests": "NOT_RUN"
+  }
+}

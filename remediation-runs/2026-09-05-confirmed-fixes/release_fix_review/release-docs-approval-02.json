@@ -1,0 +1,56 @@
+{
+  "reviewer": "/root/release_fix_review",
+  "author": "/root",
+  "reviewed_at": "2026-09-05T21:32:03.422389+00:00",
+  "conclusion": "APPROVE SCOPED DOCUMENTATION \u2014 BOTH INDEPENDENT REVIEW REQUESTS RESOLVED",
+  "path": "/Users/abdelrahman/Projects/parlor/docs/RELEASE_AUTOMATION.md",
+  "sha256": "5598e91447aae3f111654b217118aa64cc9ea0c0c3c34d36f0440c51c0b7f206",
+  "reviewed_line_ranges": [
+    [
+      124,
+      154
+    ]
+  ],
+  "changed_line_ranges": [
+    [
+      133,
+      152
+    ]
+  ],
+  "source_references_unchanged_since_independent_review": {
+    "scripts/release/PrepareAndroidUploadTrust.java": "a74b92902839047353aa4b5816bc226e43526960da7c4d2df117e25c9375c211",
+    "scripts/release/validate_android_artifact.sh": "e0100ed6274e41113e18d1cdaa5310242f749d2f337fdb0c5b85920a011cece6",
+    "scripts/release/store_api.py": "95ba5a18b5e78d85eb15c8764f011db76293d0bdcf8ee088151321ad5d6b7012",
+    "scripts/release/tests/test_android_upload_signature.py": "fd9723397cd3ae4336371cd6fdd93164d225919d1ed615d5fd48f75055b3eade",
+    "scripts/release/tests/test_google_promotion_edit.py": "b6ed5e950782ef5581f86cabd7a263937da52d3dfcf7c84cc45df5bcc2d147db",
+    "scripts/release/tests/test_store_api.py": "18d49c5deb8cc5383b5a9888f7f14f21884bbbfeb577348412f1930f4972a1d1"
+  },
+  "resolved_requests": [
+    {
+      "prior_lines": [
+        138,
+        139
+      ],
+      "current_lines": [
+        138,
+        141
+      ],
+      "resolution": "Now correctly places validity, critical-extension, algorithm checks before temporary trust and mandatory strict jarsigner purpose checks afterward."
+    },
+    {
+      "prior_lines": [
+        149,
+        150
+      ],
+      "current_lines": [
+        150,
+        151
+      ],
+      "resolution": "Now explicitly says uncommitted edit cleanup is attempted and failures reported; no unconditional external deletion guarantee."
+    }
+  ],
+  "remaining_prose_assessment": "Python regular-file bounds, all-signer pinning/public-only trust, TSA-root separation, JDK21 internal API boundary, user-home isolation, synthetic evidence limits, same-edit preconditions/mutation and no-blind-retry accurately match inspected executable source.",
+  "prior_addendum": "release-docs-interactions-01.json",
+  "limits": "Source/doc approval, not a new executed release gate. Broad root-owned validate_release_system.sh receipt pending; no positive RFC3161/Store/device evidence implied.",
+  "cleanup": "No builds/tests/servers/workers launched, no source/test/doc edits and no unrelated processes/files touched. Only task-owned approval evidence written."
+}

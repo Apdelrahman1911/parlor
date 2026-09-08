@@ -1,0 +1,193 @@
+{
+  "at": "2026-09-07T12:02:22.387843+00:00",
+  "reviewer": "/root/release_fix_review",
+  "scope": "Completed read-only CI source/artifact qualification; not new-build or Store approval",
+  "source": {
+    "run_id": 34112913001,
+    "head_sha": "f5ea8045bd903c255041b198f54aca67e893612f",
+    "git_tree": "b109c8ec6ec579b9197f449b36bda2c39105a652",
+    "branch": "fix/local-readiness-2026-09-07",
+    "head_verified_against_log_line": 208
+  },
+  "overall_ci": "FAIL",
+  "jobs": [
+    {
+      "id": 101713007167,
+      "name": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+      "status": "completed",
+      "conclusion": "failure",
+      "completed_at": "2026-09-07T10:52:13Z"
+    },
+    {
+      "id": 101713007402,
+      "name": "iOS tests, release frameworks, and Swift wrapper",
+      "status": "completed",
+      "conclusion": "success",
+      "completed_at": "2026-09-07T11:43:26Z"
+    },
+    {
+      "id": 101713007446,
+      "name": "Desktop and Kotlin Native strict verification (macOS x64)",
+      "status": "completed",
+      "conclusion": "success",
+      "completed_at": "2026-09-07T10:55:44Z"
+    },
+    {
+      "id": 101713007548,
+      "name": "Desktop strict verification (Linux arm64)",
+      "status": "completed",
+      "conclusion": "success",
+      "completed_at": "2026-09-07T10:49:08Z"
+    },
+    {
+      "id": 101713007567,
+      "name": "Common, desktop, and Android release",
+      "status": "completed",
+      "conclusion": "failure",
+      "completed_at": "2026-09-07T10:52:10Z"
+    }
+  ],
+  "apple": {
+    "qualified_executor": "PASS",
+    "xcode": "26.3",
+    "build": "17C529",
+    "developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+    "iphoneos_sdk": "26.2",
+    "iphonesimulator_sdk": "26.2",
+    "toolchain_source_log_lines": [
+      183,
+      208
+    ],
+    "java": "Temurin21.0.12+101.0 arm64; recorded CI setup",
+    "gradle_command": "./gradlew productionIosSimulatorRuntimeTests productionAppleCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+    "gradle_result": "PASS;252actionable tasks/252executed,38m41s",
+    "gradle_result_log_lines": [
+      933,
+      964
+    ],
+    "runtime_reports": {
+      "format": "actual Gradle HTML, NOT original JUnit XML",
+      "tests": 458,
+      "failures": 0,
+      "ignored": 0,
+      "classes": 74,
+      "module_tasks": 13,
+      "source": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/artifact-descriptors-and-cleanup-02.json",
+        "sha256": "ac470a2b508d44b83c3e21ae485ab280a34a01f069ee70c3731009e4afee4327"
+      }
+    },
+    "swift_xctest": {
+      "tests": 5,
+      "failures": 0,
+      "skipped": 0,
+      "descriptors": [
+        {
+          "class": "iosAppUITests.ComposeContainerViewControllerTests",
+          "method": "testChildUsesFullBoundsAcrossSizesAndOpposingSemanticDirections",
+          "result": "passed",
+          "duration": "1.931 seconds",
+          "log_line": 3977
+        },
+        {
+          "class": "iosAppUITests.ComposeContainerViewControllerTests",
+          "method": "testDefaultAppearanceForwardingReachesTheSameChildExactlyOnce",
+          "result": "passed",
+          "duration": "0.356 seconds",
+          "log_line": 3982
+        },
+        {
+          "class": "iosAppUITests.ComposeContainerViewControllerTests",
+          "method": "testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView",
+          "result": "passed",
+          "duration": "0.359 seconds",
+          "log_line": 3987
+        },
+        {
+          "class": "iosAppUITests.ComposeContainerViewControllerTests",
+          "method": "testSystemDecorationAndOrientationPoliciesStillBelongToTheChild",
+          "result": "passed",
+          "duration": "0.266 seconds",
+          "log_line": 3992
+        },
+        {
+          "class": "iosAppUITests.IOSAppLaunchUITests",
+          "method": "testColdLaunchRendersComposeHomeWithoutUnexpectedAlert",
+          "result": "passed",
+          "duration": "43.895 seconds",
+          "log_line": 4018
+        }
+      ],
+      "summary_log_lines": [
+        3970,
+        4032
+      ]
+    },
+    "unsigned_release_wrapper": {
+      "result": "PASS: unsigned arm64 simulator build, not signed iPhone Store candidate",
+      "binary_log_sha256": "1dd0790db2dc8819c76524574e7811bba2e3079d8f7509706320ace41b64c8c0",
+      "binary_file": "Parlor.app/Parlor",
+      "log_lines": [
+        5274,
+        5278
+      ],
+      "binary_bytes_not_downloaded_or_independently_rehashed": true
+    }
+  },
+  "android_reports": {
+    "scope": ":composeApp:testReleaseUnitTest only; failed aggregate does not attest remaining Android/Desktop tasks",
+    "format": "actual Gradle HTML",
+    "tests": 76,
+    "failures": 0,
+    "ignored": 0,
+    "classes": 17,
+    "lint": {
+      "issues": 35,
+      "errors": 0,
+      "strict_inventory": "FAIL:exact3newKotlin plugin advisories,expected32actual35"
+    },
+    "managed_device_step": "SKIPPED because earlier gate failed",
+    "artifact_inspection_step": "SKIPPED because earlier gate failed"
+  },
+  "alternate_desktop": {
+    "linux_arm64": "PASS productionDesktopCheck;13executed module desktopTest tasks;112actionable/112executed; per-test totals unavailable, no report upload in original workflow",
+    "macos_x64": "PASS productionDesktopCheck+Native distribution;13executed module desktopTest tasks;113actionable/113executed; per-test totals unavailable, no report upload in original workflow",
+    "windows_x64": "FAIL composeApp:desktopTest95tests/1failure;LF-only source assertion at221. Other individual reports not archived."
+  },
+  "retained_evidence": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/run-final-status-01.json",
+      "sha256": "ed45ee7c859be0bba172a3b5c1e530dd9937d76830c233f05f0fa6e9c14c08df"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/fetch-receipt-03.json",
+      "sha256": "eca45353a919101130b4504c209f58332ea6b66e94e9b9b06c295adfd5eb7111"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/apple-completed-sanitized.log",
+      "sha256": "9d3f92fbf5191ec826a71a5bfd01938c6b0c201c0828a914f0168b4daa7ded56"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/artifact-member-inventory-01.json",
+      "sha256": "cbc96cdad725847c554bf2a7f947594de7536e3d73835618d030eb0fcc9f053d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/artifact-descriptors-and-cleanup-02.json",
+      "sha256": "ac470a2b508d44b83c3e21ae485ab280a34a01f069ee70c3731009e4afee4327"
+    }
+  ],
+  "evidence_limitations": [
+    "JUnit XML not uploaded by original workflow; HTML counters were independently reconciled against every class-table descriptor before summing.",
+    "iOS compiled/shared simulator tests do not exercise all Desktop-only tests, physical peer networking, manual accessibility/RTL navigation or real signing/Store operations.",
+    "IOS-R1 evidence gap and WD-C4 product decision are not automatically resolved by these results.",
+    "New local CRLF/lint remediation is outside this CI run SHA; new source requires its own verification.",
+    "Original hosted workflow had no explicit per-cycle Gradle-stop/owned-build cleanup. Hosted orphan cleanup is logged but is not equivalent to the requested per-cycle cleanup; a bounded draft is being prepared."
+  ],
+  "cleanup": {
+    "owned_archives": "1,122,382bytes removed; exact owned directory removed, no cleanup failure",
+    "temporary_binary_extraction": "none; xcresult/dSYM not extracted",
+    "retained": "compact sanitized text reports/logs/source receipts only",
+    "local_builds_or_workers_started": false,
+    "source_or_workflow_mutations_by_this_child": false
+  }
+}

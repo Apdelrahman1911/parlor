@@ -1,0 +1,742 @@
+{
+  "schema": 1,
+  "reviewer": "/root/release_fix_review",
+  "created_at": "2026-09-07T19:07:56.980340+00:00",
+  "classification": "ACCEPTED_SCOPED_EVIDENCE_WITH_EXPLICIT_CACHE_AND_PLATFORM_GAPS",
+  "source": {
+    "commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+    "tree": "c65463bdf1f3656f90dfe6e6dbe1d94b3c588dac",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "ca2b99d237a921513a4c8d922666b9d8df838b8c2ac04064f7563e474204e711"
+  },
+  "scope": "Independent post-run evidence validation, not another exhaustive source audit or replacement for original per-fix review dossiers. No builds/tests/native APIs/source edits/Git mutations performed by reviewer.",
+  "evidence_sha256": {
+    "evidence/final-production-check-02/receipt.json": "7f8af7a6a8711141d160d4a265fc85be977c9eb579a7d1ac1239991821999e4e",
+    "evidence/final-production-check-02/gradle.log": "4c75bd249f87c39ec45e382fda5e943c4728f5f0dda5245b5c84802313c74dc5",
+    "evidence/final-production-check-02/test-receipts.json": "dff11ded4d0d247ffb1c99df7c1fbbd5d123f8a2cdabbb994483d822f04ec62b",
+    "evidence/final-production-check-02/artifact-receipts.json": "c5df8eb11e553cd9f49b7ba5550ee9c077853e0fc343c01b35b36cbe8c0b7b91",
+    "evidence/final-production-check-02/artifacts/android-package-1.json": "3039e67840977e60196e19abcfcff3fd62fc69de38b1e764a6ecd7e4dd961402",
+    "evidence/final-production-check-02/artifacts/android-notices-1.json": "aa9d81fc220f24be8bf0b3a45cd3e9ecb1f4f1e25a161d6cff6f0feca3adcf03",
+    "evidence/final-production-check-02/stop.log": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+  },
+  "command": [
+    "./gradlew",
+    "productionCheck",
+    "--no-daemon",
+    "--no-parallel",
+    "--max-workers=1",
+    "--no-configuration-cache",
+    "--dependency-verification=strict",
+    "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=final-production-check-02",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-Pparlor.android.signing.storeFile=",
+    "-Pparlor.android.signing.storePassword=",
+    "-Pparlor.android.signing.keyAlias=",
+    "-Pparlor.android.signing.keyPassword="
+  ],
+  "exit_code": 0,
+  "task_summary": "906 actionable:394 executed,435 from-cache,77 up-to-date",
+  "tests": {
+    "raw_xml_fully_parsed_and_exactly_reconciled_with_receipt": 236,
+    "descriptors": 1491,
+    "fresh_passing": 634,
+    "fresh_skipped": 3,
+    "cache_restored_passing": 854,
+    "failures": 0,
+    "errors": 0,
+    "by_task": {
+      ":shared:core:desktopTest": {
+        "outcome": "FROM-CACHE",
+        "suites": 2,
+        "descriptors": 12,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      ":shared:networking:desktopTest": {
+        "outcome": "FROM-CACHE",
+        "suites": 8,
+        "descriptors": 34,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      ":shared:content:desktopTest": {
+        "outcome": "FROM-CACHE",
+        "suites": 5,
+        "descriptors": 24,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      ":shared:storage:desktopTest": {
+        "outcome": "FROM-CACHE",
+        "suites": 4,
+        "descriptors": 31,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      ":shared:transport-p2p:desktopTest": {
+        "outcome": "EXECUTED",
+        "suites": 22,
+        "descriptors": 277,
+        "failures": 0,
+        "errors": 0,
+        "skips": 3
+      },
+      ":shared:networking-testing:desktopTest": {
+        "outcome": "FROM-CACHE",
+        "suites": 1,
+        "descriptors": 4,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      ":shared:engine:desktopTest": {
+        "outcome": "FROM-CACHE",
+        "suites": 5,
+        "descriptors": 13,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      ":shared:design-system:desktopTest": {
+        "outcome": "FROM-CACHE",
+        "suites": 18,
+        "descriptors": 40,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      ":shared:engine-testing:desktopTest": {
+        "outcome": "FROM-CACHE",
+        "suites": 3,
+        "descriptors": 6,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      ":shared:session:desktopTest": {
+        "outcome": "FROM-CACHE",
+        "suites": 13,
+        "descriptors": 145,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      ":game-modes:whodunit:desktopTest": {
+        "outcome": "EXECUTED",
+        "suites": 63,
+        "descriptors": 360,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      ":game-modes:mafia:desktopTest": {
+        "outcome": "FROM-CACHE",
+        "suites": 37,
+        "descriptors": 297,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      ":composeApp:desktopTest": {
+        "outcome": "FROM-CACHE",
+        "suites": 21,
+        "descriptors": 96,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      ":composeApp:testDebugUnitTest": {
+        "outcome": "FROM-CACHE",
+        "suites": 17,
+        "descriptors": 76,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      ":composeApp:testReleaseUnitTest": {
+        "outcome": "FROM-CACHE",
+        "suites": 17,
+        "descriptors": 76,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      }
+    },
+    "fresh_release_python": {
+      "count": 347,
+      "seconds": 31.941,
+      "outcome": "PASS",
+      "workflow_contract": "PASS",
+      "exact_811_row_inventory_freshness": "PASS",
+      "pinned_shellcheck_actionlint": "PASS"
+    },
+    "intentional_physical_skips": [
+      {
+        "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "test": "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]"
+      },
+      {
+        "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "test": "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]"
+      },
+      {
+        "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "test": "host_broadcast_reaches_every_peer()[desktop]"
+      }
+    ]
+  },
+  "finding_regression_matrix": {
+    "SN-C1": [
+      {
+        "suite": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+        "xml": "shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+        "task": ":shared:session:desktopTest",
+        "outcome": "FROM-CACHE",
+        "descriptors": 9,
+        "skips": 0
+      }
+    ],
+    "SN-C2": [
+      {
+        "suite": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+        "xml": "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.HostOpeningCancellationTest.xml",
+        "task": ":shared:transport-p2p:desktopTest",
+        "outcome": "EXECUTED",
+        "descriptors": 5,
+        "skips": 0
+      }
+    ],
+    "WD-C1": [
+      {
+        "suite": "com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest",
+        "xml": "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest.xml",
+        "task": ":game-modes:whodunit:desktopTest",
+        "outcome": "EXECUTED",
+        "descriptors": 12,
+        "skips": 0
+      }
+    ],
+    "ROOT-T3": [
+      {
+        "suite": "com.parlor.transport.p2p.JupiterDiscoveryContractTest",
+        "xml": "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+        "task": ":shared:transport-p2p:desktopTest",
+        "outcome": "EXECUTED",
+        "descriptors": 1,
+        "skips": 0
+      }
+    ],
+    "MF-C1": [
+      {
+        "suite": "com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest",
+        "xml": "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest.xml",
+        "task": ":game-modes:mafia:desktopTest",
+        "outcome": "FROM-CACHE",
+        "descriptors": 2,
+        "skips": 0
+      },
+      {
+        "suite": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+        "xml": "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest.xml",
+        "task": ":game-modes:mafia:desktopTest",
+        "outcome": "FROM-CACHE",
+        "descriptors": 15,
+        "skips": 0
+      },
+      {
+        "suite": "com.parlor.games.mafia.multidevice.MafiaDoctorLanTest",
+        "xml": "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaDoctorLanTest.xml",
+        "task": ":game-modes:mafia:desktopTest",
+        "outcome": "FROM-CACHE",
+        "descriptors": 2,
+        "skips": 0
+      },
+      {
+        "suite": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+        "xml": "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.MafiaDoctorRulesTest.xml",
+        "task": ":game-modes:mafia:desktopTest",
+        "outcome": "FROM-CACHE",
+        "descriptors": 8,
+        "skips": 0
+      },
+      {
+        "suite": "com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest",
+        "xml": "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest.xml",
+        "task": ":game-modes:mafia:desktopTest",
+        "outcome": "FROM-CACHE",
+        "descriptors": 2,
+        "skips": 0
+      },
+      {
+        "suite": "com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLanguageContinuityTest",
+        "xml": "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLanguageContinuityTest.xml",
+        "task": ":game-modes:mafia:desktopTest",
+        "outcome": "FROM-CACHE",
+        "descriptors": 2,
+        "skips": 0
+      }
+    ],
+    "WD-C3": [
+      {
+        "suite": "com.parlor.games.whodunit.snapshot.WhodunitSnapshotValidationTest",
+        "xml": "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitSnapshotValidationTest.xml",
+        "task": ":game-modes:whodunit:desktopTest",
+        "outcome": "EXECUTED",
+        "descriptors": 46,
+        "skips": 0
+      },
+      {
+        "suite": "com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest",
+        "xml": "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest.xml",
+        "task": ":game-modes:whodunit:desktopTest",
+        "outcome": "EXECUTED",
+        "descriptors": 9,
+        "skips": 0
+      }
+    ],
+    "M-C03": [
+      {
+        "suite": "com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest",
+        "xml": "game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest.xml",
+        "task": ":game-modes:mafia:desktopTest",
+        "outcome": "FROM-CACHE",
+        "descriptors": 6,
+        "skips": 0
+      }
+    ],
+    "DS-C02": [
+      {
+        "suite": "com.parlor.designsystem.components.ParlorToastStateTest",
+        "xml": "shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+        "task": ":shared:design-system:desktopTest",
+        "outcome": "FROM-CACHE",
+        "descriptors": 4,
+        "skips": 0
+      },
+      {
+        "suite": "com.parlor.designsystem.components.ParlorToastLifetimeTest",
+        "xml": "shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastLifetimeTest.xml",
+        "task": ":shared:design-system:desktopTest",
+        "outcome": "FROM-CACHE",
+        "descriptors": 3,
+        "skips": 0
+      },
+      {
+        "suite": "com.parlor.designsystem.components.ParlorToastConcurrencyTest",
+        "xml": "shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastConcurrencyTest.xml",
+        "task": ":shared:design-system:desktopTest",
+        "outcome": "FROM-CACHE",
+        "descriptors": 2,
+        "skips": 0
+      }
+    ],
+    "DS-C03": [
+      {
+        "suite": "com.parlor.designsystem.components.RecoveryActionContrastTest",
+        "xml": "shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.RecoveryActionContrastTest.xml",
+        "task": ":shared:design-system:desktopTest",
+        "outcome": "FROM-CACHE",
+        "descriptors": 3,
+        "skips": 0
+      }
+    ],
+    "WD-C2": [
+      {
+        "suite": "com.parlor.games.whodunit.content.TestingStoryChronologyTest",
+        "xml": "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryChronologyTest.xml",
+        "task": ":game-modes:whodunit:desktopTest",
+        "outcome": "EXECUTED",
+        "descriptors": 5,
+        "skips": 0
+      }
+    ],
+    "WD-C4_authorized_later_timer_tests": [
+      {
+        "suite": "com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+        "xml": "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest.xml",
+        "task": ":game-modes:whodunit:desktopTest",
+        "outcome": "EXECUTED",
+        "descriptors": 6,
+        "skips": 0
+      },
+      {
+        "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+        "xml": "game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest.xml",
+        "task": ":game-modes:whodunit:desktopTest",
+        "outcome": "EXECUTED",
+        "descriptors": 4,
+        "skips": 0
+      }
+    ],
+    "ST-C1": {
+      "status": "NOT_EXECUTED_IN_THIS_GATE",
+      "reason": "IosLegacySnapshotBackupTest/IosStorageSafetyTest are iosTest; desktop source contracts are not Foundation runtime."
+    },
+    "DS-C01": {
+      "status": "NATIVE_RUNTIME_NOT_EXECUTED_IN_THIS_GATE",
+      "reason": "IosLanguageOverrideOwnerTest is iosTest. ProvideAppLanguageDesktopTest was cache-restored; preceding dedicated locale-public-idle-green-01 supplies separate fresh JVM evidence, not iOS."
+    },
+    "IOS-B1": {
+      "outcome": "EXECUTED",
+      "passing_python_tests": 5,
+      "descriptors": [
+        "test_failed_directory_change_cannot_build_from_previous_directory (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... ok",
+        "test_failed_gradle_with_stale_framework_fails_without_normalizing (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... ok",
+        "test_intentional_ide_override_still_skips_gradle_and_normalization (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... ok",
+        "test_successful_embed_normalizes_case_only_framework_name (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... ok",
+        "test_successful_gradle_still_rejects_missing_framework (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... ok"
+      ],
+      "scope": "Exact production script/function boundary with synthetic fixtures; not real Xcode embedding or Store/device evidence."
+    },
+    "RL-C1": {
+      "outcome": "EXECUTED",
+      "passing_python_tests": 7,
+      "descriptors": [
+        "test_both_small_files_with_spaces_pass_gnu_shaped_stat_preflight (test_android_artifact_size.AndroidArtifactSizeTest) ... ok",
+        "test_empty_dependency_report_is_rejected (test_android_artifact_size.AndroidArtifactSizeTest) ... ok",
+        "test_exact_artifact_bound_is_accepted_without_allocating_512_mib (test_android_artifact_size.AndroidArtifactSizeTest) ... ok",
+        "test_exact_dependency_report_bound_is_accepted (test_android_artifact_size.AndroidArtifactSizeTest) ... ok",
+        "test_missing_directory_and_symlink_inputs_are_rejected (test_android_artifact_size.AndroidArtifactSizeTest) ... ok",
+        "test_oversized_artifact_is_rejected (test_android_artifact_size.AndroidArtifactSizeTest) ... ok",
+        "test_oversized_dependency_report_is_rejected (test_android_artifact_size.AndroidArtifactSizeTest) ... ok"
+      ],
+      "scope": "Exact production script/function boundary with synthetic fixtures; not real Xcode embedding or Store/device evidence."
+    },
+    "RL-C2": {
+      "outcome": "EXECUTED",
+      "passing_python_tests": 21,
+      "descriptors": [
+        "test_additional_unapproved_signer_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_certificate_usage_must_allow_code_signing (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_corrupt_signature_block_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_disabled_certificate_algorithm_is_rejected_with_modern_jar_signature (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_disabled_jar_algorithm_is_rejected_with_modern_certificate (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_disabled_rsa_key_size_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_entirely_unsigned_bundle_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_expired_self_signed_certificate_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_extended_usage_must_allow_code_signing (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_failed_java_preparation_cannot_be_masked_by_later_verification (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_not_yet_valid_self_signed_certificate_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_registered_self_signed_upload_certificate_passes_strict_verification (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_signedjar_specific_certificate_policy_cannot_be_bypassed_by_trusting_leaf (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_stale_trust_store_is_not_overwritten_or_used_after_preparation_failure (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_tampered_signed_payload_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_unknown_critical_certificate_extension_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_unsigned_extra_payload_including_meta_inf_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_untrusted_ca_path_does_not_become_a_new_trust_anchor (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_upload_trust_cannot_be_reused_as_timestamp_authority_trust (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_wrong_approved_fingerprint_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok",
+        "test_timeout_stops_term_resistant_redirected_descendant (test_android_upload_signature.OwnedSignatureProcessTest) ... ok"
+      ],
+      "scope": "Exact production script/function boundary with synthetic fixtures; not real Xcode embedding or Store/device evidence."
+    },
+    "RL-C3": {
+      "outcome": "EXECUTED",
+      "passing_python_tests": 9,
+      "descriptors": [
+        "test_already_present_candidate_is_validated_and_edit_is_deleted (test_google_promotion_edit.GooglePromotionEditTest) ... ok",
+        "test_commit_failure_is_not_blindly_retried (test_google_promotion_edit.GooglePromotionEditTest) ... ok",
+        "test_external_change_after_reads_invalidates_mutation_without_retry (test_google_promotion_edit.GooglePromotionEditTest) ... ok",
+        "test_missing_configured_destination_is_rejected (test_google_promotion_edit.GooglePromotionEditTest) ... ok",
+        "test_read_validation_and_commit_use_the_same_edit_snapshot (test_google_promotion_edit.GooglePromotionEditTest) ... ok",
+        "test_staged_destination_in_mutation_snapshot_is_not_completed (test_google_promotion_edit.GooglePromotionEditTest) ... ok",
+        "test_unavailable_or_unfinished_source_in_mutation_snapshot_is_rejected (test_google_promotion_edit.GooglePromotionEditTest) ... ok",
+        "test_validation_failure_deletes_uncommitted_edit_without_retry (test_google_promotion_edit.GooglePromotionEditTest) ... ok",
+        "test_wrong_bundle_digest_in_mutation_snapshot_is_rejected (test_google_promotion_edit.GooglePromotionEditTest) ... ok"
+      ],
+      "scope": "Exact production script/function boundary with synthetic fixtures; not real Xcode embedding or Store/device evidence."
+    }
+  },
+  "doctor_assertion_quality": {
+    "ON": "Real reducer traces at every supported count5..16 protect the same living victim for FOUR consecutive nights and assert wasSaved, resolved host history, own-private previous target, valid recovery, then Night5.",
+    "OFF": "Repeat returns exact unchanged state and no submitted flag; first/second/first protection succeeds.",
+    "invariants": "Both settings cover explicit skip consumes submission/clears effective prior target, self-heal independence, one submission, dead/non-Doctor actor, bounded logs, no Doctor/dead Doctor, normal/early terminal cleanup, codec/store/load forged null/wrong target rejection, phase and revote history binding.",
+    "local_resume": "Actual PassAndPlaySessionController applies persisted setting after codec/store/load.",
+    "LAN_scope": "Actual host/peer bridges use authenticated in-memory room fixture; setup permissions, no optimistic state, setting propagation, disconnect/reconnect, own-private history/no host logs or seed; not physical P2pKit, lobby/start transaction, or native storage.",
+    "runtime_caveat": "All these Doctor suite XML are FROM-CACHE in THIS cycle; fresh runs must be sourced from other validated exact-tree cycle or CI."
+  },
+  "analysis": {
+    "detekt_reports": 43,
+    "fresh_reports": 12,
+    "cache_reports": 31,
+    "violations": 0,
+    "lint": "All lintAnalyze* tasks FROM-CACHE; report/gate executed. Exact35-warning multiset independently re-normalized and compared, not count-only; no errors.",
+    "lint_warning_categories": {
+      "OldTargetApi": 1,
+      "AndroidGradlePluginVersion": 4,
+      "GradleDependency": 3,
+      "NewerVersionAvailable": 27
+    },
+    "R8": "FROM-CACHE; no fresh shrinker execution claim.",
+    "source_contract_gates": "verifyApplicationIdentities,verifyMergedReleaseManifest,verifyReleaseLintWarnings,verifyGameShellDispatch executed."
+  },
+  "unsigned_AAB": {
+    "status": "ACCEPTED_RETAINED_INSPECTION_RECEIPTS",
+    "sha256": "c145c78041bab2d8780e69821cd16b12cae99c7ba17a9bb5dad6f6b8e96e0d81",
+    "bytes": 8872850,
+    "entries": 380,
+    "expanded_bytes": 68403585,
+    "manifest": {
+      "application_id": "com.parlor.app",
+      "exported": [
+        [
+          "activity",
+          "com.parlor.app.MainActivity",
+          ""
+        ],
+        [
+          "receiver",
+          "androidx.profileinstaller.ProfileInstallReceiver",
+          "android.permission.DUMP"
+        ]
+      ],
+      "min_sdk": 26,
+      "permissions": [
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.ACCESS_WIFI_STATE",
+        "android.permission.CHANGE_WIFI_MULTICAST_STATE",
+        "android.permission.INTERNET",
+        "com.parlor.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+      ],
+      "target_sdk": 36,
+      "version_code": 1,
+      "version_name": "1.0.0"
+    },
+    "native_abis": [
+      "arm64-v8a",
+      "armeabi-v7a",
+      "x86",
+      "x86_64"
+    ],
+    "dex": [
+      {
+        "bytes": 4714184,
+        "class_definitions": 5454,
+        "contains_main_activity": true,
+        "path": "base/dex/classes.dex",
+        "sha256": "6520278b689b6b617a73e44343c1a800fc0cc9871f387191fbbfd5b301759f2b",
+        "test_fixture_namespaces_absent": true
+      }
+    ],
+    "r8_mapping": {
+      "class_mappings": 6263,
+      "test_fixture_namespaces_absent": true
+    },
+    "resources": "All9 exact raw story/font source hashes independently rehashed and match retained package rows; all26 source notice bytes/hashes rehashed and match package/source receipts. Embedded notice receipt equals standalone receipt exactly.",
+    "tools": {
+      "build_tools": "36.0.0",
+      "bundletool_sha256": "a099cfa1543f55593bc2ed16a70a7c67fe54b1747bb7301f37fdfd6d91028e29",
+      "dexdump_sha256": "9c4addfdb5373f0923e418a64683976922c1ffdd1a3e9673b9cce5a0838e9692"
+    },
+    "policy": "bundletool hash independently matches release-policy.json; source inspector enforces unsigned verification AAB, manifest permissions/identity/version, four ELF ABIs, mapping+DEX namespace absence, bounded ZIP/entry sizes, raw asset equality and unchanged artifact hash.",
+    "limitations": [
+      "Raw AAB already removed after producer inspection; reviewer did not independently reopen/hash that deleted binary.",
+      "R8/cache outputs can be valid cache evidence but not fresh compiler/runtime proof.",
+      "No signed Store candidate/device runtime/legal completeness statement.",
+      "Current Store identity collision and disabled publishing safeguards remain; artifact inspection does not approve identity."
+    ]
+  },
+  "cleanup": {
+    "command_finished_at": "2026-09-07T18:39:33.471517+00:00",
+    "stop_finished_at": "2026-09-07T18:39:34.026011+00:00",
+    "stop_exit_code": 0,
+    "stop_log": "No Gradle daemons are running.",
+    "cleanup_completed_at": "2026-09-07T18:40:44.102709+00:00",
+    "removed_outputs": [
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build",
+      "build",
+      "composeApp/build",
+      "build-logic/convention/build"
+    ],
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "artifact_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "source_changed": false,
+    "runner_changed": false,
+    "note": "Recorded final-production02 cleanup accepted. Reviewer did not stop/delete or interfere with root-owned subsequent native05/06 build lane."
+  },
+  "next_minimal_execution": [
+    "Do not rerun cached productionCheck and call it fresh. Inspect CI34152138368 exact-source common-host outputs first; executed production/static/R8 tasks there can cover those gates without redundant local execution.",
+    "Root native05/06 owns native/allTests work. allTests alone must not be assumed to cover every application desktop/Android unit task; source root graph wires only registered module allTests and productionCheck wires explicit app tests. Bind actual descriptors/task logs.",
+    "Native iOS storage/locale needs actual iosTest app-host evidence; physical LAN/lifecycle/accessibility and real owner/Store/signing remain separate.",
+    "Do not inherit PASS from13local+5CI+3physical+4owner gate template; use final receipts."
+  ],
+  "source_reopened": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build.gradle.kts",
+      "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+      "ranges": [
+        [
+          1,
+          204
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/build.gradle.kts",
+      "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+      "ranges": [
+        [
+          330,
+          449
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/android_release_artifacts.py",
+      "sha256": "55d6b3ddbe4877956c383225ea8bc8b203a2b023206be60eeac519b2555e98cb",
+      "ranges": [
+        [
+          1,
+          310
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/JupiterDiscoveryContractTest.kt",
+      "sha256": "94682d196381d97a37f6c5e925b63646f102b864d76eb55252cfbd082abcb305",
+      "ranges": [
+        [
+          1,
+          40
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+      "sha256": "21451bf407d791ec85066227a2670ccf61d3506efaae47375c0bba557fe3be73",
+      "ranges": [
+        [
+          1,
+          242
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+      "sha256": "5fe2144436f87162e2d29bcbef6d57ac9b9cede6ab328b406b63cceebcdd501b",
+      "ranges": [
+        [
+          1,
+          156
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "sha256": "d1d830e0330d5a47f2011b9f87d025a5ce1e0bc2d3cb08be742ca1ff4403f743",
+      "ranges": [
+        [
+          1,
+          383
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonTest/kotlin/com/parlor/games/mafia/testing/MafiaDoctorFixture.kt",
+      "sha256": "fa5a85db72638033569368062722fc1e1f97fcf1c3948e912c7954324e1e2ba7",
+      "ranges": [
+        [
+          1,
+          120
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaDoctorLanTest.kt",
+      "sha256": "570e8f18c12f15c480a48c38e6a09025d5aef2ab1aa38cbac246b2f2f0b5a5a5",
+      "ranges": [
+        [
+          1,
+          248
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt",
+      "sha256": "27b4894a394bf06952bc1435324ab23acb5c7f38242b65df5feb01e8df16b777",
+      "ranges": [
+        [
+          1,
+          135
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitSnapshotValidationTest.kt",
+      "sha256": "28e40104e0b6929aae16ccf22235e32d2017feb99a8931f612306f9631542965",
+      "ranges": [
+        [
+          120,
+          346
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitFinalTwoRecoveryTest.kt",
+      "sha256": "b6f36aa2ea3615dcee2c563087d67120e321146d4ae0a2e40cb0f696e865d906",
+      "ranges": [
+        [
+          50,
+          347
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_google_promotion_edit.py",
+      "sha256": "b6ed5e950782ef5581f86cabd7a263937da52d3dfcf7c84cc45df5bcc2d147db",
+      "ranges": [
+        [
+          1,
+          192
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_upload_signature.py",
+      "sha256": "fd9723397cd3ae4336371cd6fdd93164d225919d1ed615d5fd48f75055b3eade",
+      "ranges": [
+        [
+          1,
+          373
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/config/android-lint-accepted-warnings.txt",
+      "sha256": "4fe091a88dc1cec1849c0076790fa5db25608cf16ff094a30441ac99a84277d7",
+      "ranges": [
+        [
+          1,
+          42
+        ]
+      ]
+    }
+  ],
+  "prior_full_control_review": "run_gradle_cycle.py1..344 reviewed within this continuation before compaction, SHA5c0e546c819c28762cbc6b355ec2717737fc53f96712af591a27add878579d7a; third_party_notices.py1..613 reviewed in preceding independent task, neither changed."
+}

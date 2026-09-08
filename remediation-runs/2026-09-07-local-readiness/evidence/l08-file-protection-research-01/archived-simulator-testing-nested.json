@@ -1,0 +1,199 @@
+{
+  "accessed_at_utc": "2026-09-07T20:26:19.626934+00:00",
+  "bytes": 26183,
+  "final_url": "https://developer.apple.com/library/archive/documentation/IDEs/Conceptual/iOS_Simulator_Guide/TestingontheiOSSimulator/TestingontheiOSSimulator.html",
+  "name": "archived-simulator-testing-nested",
+  "request_url": "https://developer.apple.com/library/archive/documentation/IDEs/Conceptual/iOS_Simulator_Guide/TestingontheiOSSimulator/TestingontheiOSSimulator.html",
+  "response_sha256": "5bc8be71de5b70a1218b9c4e1121bc378f0f8512684e55e8b91581c8c6bece08",
+  "selected_visible_paragraphs": [
+    {
+      "paragraph": 16,
+      "text": "Testing and Debugging in Simulator"
+    },
+    {
+      "paragraph": 17,
+      "text": "Simulator is a great tool for rapid prototyping and development before testing your app on a device. Simulator also has features that can assist you in testing and debugging both iOS apps and web apps. By understanding the tools that Simulator offers, you can more efficiently develop your app."
+    },
+    {
+      "paragraph": 18,
+      "text": "Differences Testing in Simulator"
+    },
+    {
+      "paragraph": 19,
+      "text": "Simulator is a useful tool, but it should not be the only way you test an app. Because the simulator is an app running on a Mac, it has access to the computer\u2019s resources, including the CPU, memory, and network connection. All of these resources are likely to be faster than those found on a mobile device. As a result, the simulator is not an accurate test of an app\u2019s performance, memory usage, and networking speed. For this same reason, always test the performance of your app\u2019s user interface on a device. In Simulator, your app\u2019s user interface may appear to run both faster and smoother than on a device."
+    },
+    {
+      "paragraph": 20,
+      "text": "Also keep in mind that some user interface elements can be easier to interact with in Simulator using a mouse than when trying to interact with the app through touch on a device."
+    },
+    {
+      "paragraph": 21,
+      "text": "Finally, there are some hardware and API differences in Simulator. These differences may affect your app when testing in Simulator."
+    },
+    {
+      "paragraph": 22,
+      "text": "Hardware Differences"
+    },
+    {
+      "paragraph": 23,
+      "text": "Though most of the functionality of devices can be simulated in Simulator, some hardware features must be tested directly on a device. The hardware features that are not simulated as of iOS 8.2 are:"
+    },
+    {
+      "paragraph": 24,
+      "text": "Motion support (accelerometer and gyroscope) are unsupported."
+    },
+    {
+      "paragraph": 25,
+      "text": "Audio and video input (camera and microphone) are unsupported."
+    },
+    {
+      "paragraph": 31,
+      "text": "OpenGL ES Differences"
+    },
+    {
+      "paragraph": 32,
+      "text": "Simulator includes complete implementations of OpenGL ES 1.1, 2.0, and 3.0 that you can use to start developing your app. The capabilities of Simulator are similar to those of the A7 GPU; for more information on the iOS hardware, see iOS Device Compatibility Reference. Simulator differs from the hardware processor in a few ways:"
+    },
+    {
+      "paragraph": 33,
+      "text": "Simulator does not use a tile-based deferred renderer."
+    },
+    {
+      "paragraph": 34,
+      "text": "Simulator does not provide a pixel-accurate match to the graphics hardware."
+    },
+    {
+      "paragraph": 35,
+      "text": "Rendering performance of OpenGL ES in Simulator has no relation to the performance of OpenGL ES on an actual device."
+    },
+    {
+      "paragraph": 36,
+      "text": "Important: The OpenGL ES support in Simulator should be used to help you get started writing an OpenGL ES app. Never assume that Simulator reflects the real-world performance or the precise capabilities of the graphics processors used in iOS devices. Always profile and optimize your drawing code on a real device."
+    },
+    {
+      "paragraph": 37,
+      "text": "API Differences"
+    },
+    {
+      "paragraph": 38,
+      "text": "Simulator APIs don\u2019t have all the features that are available on a device. For example, the APIs don\u2019t offer:"
+    },
+    {
+      "paragraph": 39,
+      "text": "Receiving and sending Apple push notifications"
+    },
+    {
+      "paragraph": 40,
+      "text": "Privacy alerts for access to Photos, Contacts, Calendar, and Reminders"
+    },
+    {
+      "paragraph": 52,
+      "text": "To find a list of the simulated versions of iOS and watchOS in Xcode"
+    },
+    {
+      "paragraph": 53,
+      "text": "Choose Hardware > Device > Manage Devices."
+    },
+    {
+      "paragraph": 54,
+      "text": "Xcode opens the Devices window."
+    },
+    {
+      "paragraph": 55,
+      "text": "At the bottom of the left column, click the Add button (+)."
+    },
+    {
+      "paragraph": 61,
+      "text": "To download a simulator for a version of iOS, click the Download button."
+    },
+    {
+      "paragraph": 62,
+      "text": "After Xcode downloads the new iOS version, it will be available for new device simulators. For information on adding a new device, see Change the Simulated Device and OS Version."
+    },
+    {
+      "paragraph": 63,
+      "text": "Testing for the iPad mini"
+    },
+    {
+      "paragraph": 64,
+      "text": "To test apps for the iPad mini in the simulator, run your app on a simulated iPad with the corresponding type of display, either Retina or non-Retina, depending on the iPad mini model."
+    },
+    {
+      "paragraph": 68,
+      "text": "To start the Accessibility Inspector"
+    },
+    {
+      "paragraph": 69,
+      "text": "When Simulator is running, choose Hardware > Home to reveal the Home screen."
+    },
+    {
+      "paragraph": 70,
+      "text": "Click Settings."
+    },
+    {
+      "paragraph": 71,
+      "text": "Choose General > Accessibility."
+    },
+    {
+      "paragraph": 77,
+      "text": "Testing App Localization"
+    },
+    {
+      "paragraph": 78,
+      "text": "If you have created an app with multiple localizations, you can test them in Simulator by changing the Internationalization settings. To learn how to set the language and region on iOS, read Reviewing Language and Region Settings on iOS Devices. For more information on localizing your app, read Internationalization and Localization Guide."
+    },
+    {
+      "paragraph": 79,
+      "text": "Testing Web Apps"
+    },
+    {
+      "paragraph": 80,
+      "text": "If you are building a web app and want to test its usability on an iOS device, Simulator can assist you."
+    },
+    {
+      "paragraph": 81,
+      "text": "To test a web app in Simulator"
+    },
+    {
+      "paragraph": 82,
+      "text": "Select the simulator environment you would like to test in by choosing Hardware > Device > device of choice."
+    },
+    {
+      "paragraph": 83,
+      "text": "Open Safari from the Home screen of Simulator."
+    },
+    {
+      "paragraph": 84,
+      "text": "Navigate to the location of your web app in the browser."
+    },
+    {
+      "paragraph": 86,
+      "text": "Testing iCloud"
+    },
+    {
+      "paragraph": 87,
+      "text": "If you are building an app that uses iCloud, you can test iCloud syncing from within Simulator before testing on physical devices. This can also assist you in testing iCloud syncing across many devices if you have a limited number of devices to test on."
+    },
+    {
+      "paragraph": 88,
+      "text": "To simulate iCloud syncing, first sign in to Simulator using an Apple ID. It is strongly encouraged that you create and use a separate Apple ID specifically for testing iCloud in Simulator."
+    },
+    {
+      "paragraph": 89,
+      "text": "To sign in to Simulator with your Apple ID"
+    },
+    {
+      "paragraph": 90,
+      "text": "Launch Simulator with a simulated device running iOS 7.1 or later."
+    },
+    {
+      "paragraph": 91,
+      "text": "From the Home screen, open Settings and select iCloud."
+    },
+    {
+      "paragraph": 92,
+      "text": "Enter your Apple ID and password, and click Sign In."
+    }
+  ],
+  "status": 200
+}

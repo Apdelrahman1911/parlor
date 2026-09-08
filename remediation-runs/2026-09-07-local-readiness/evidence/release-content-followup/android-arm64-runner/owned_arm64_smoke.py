@@ -1,0 +1,473 @@
+#!/usr/bin/env python3
+"""Run existing release instrumentation on a NEW, exclusively owned ARM64 AVD.
+
+Build-free: supply disposable-signed APKs from the coordinated Gradle lane.
+Never accepts a device serial, existing AVD, signing key, or Store operation.
+This is ARM64 emulator evidence, not Linux/x86 GMD or physical LAN evidence.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import platform
+import re
+import shutil
+import signal
+import socket
+import stat
+import subprocess
+import tempfile
+import time
+import uuid
+
+from darwin_owned_processes import MAX_LAUNCHES, OwnedProcesses
+
+
+IMAGE = "system-images;android-35;google_apis;arm64-v8a"
+RUNNER = "com.parlor.app.test/android.test.InstrumentationTestRunner"
+CLASSES = {
+    "com.parlor.app.MainActivityColdStartTest": {
+        "testColdStartDisplaysContentWhileSettingsIoIsBlocked",
+    },
+    "com.parlor.app.ReleaseRuntimeSmokeTest": {
+        "testReleaseBuildLaunchesCanonicalActivityWithoutDebuggableFlag",
+        "testReleaseBuildCanAcquireDeclaredMulticastLock",
+    },
+}
+CANCELLED = False
+
+
+def request_cancel(_signum, _frame):
+    # Do not raise between Popen creation and ownership registration.
+    global CANCELLED
+    CANCELLED = True
+
+
+def sha256(path):
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as stream:
+        for block in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def properties(path):
+    result = {}
+    for line in Path(path).read_text().splitlines():
+        if not line.strip() or line.lstrip().startswith("#"):
+            continue
+        key, value = line.split("=", 1)
+        if key.strip() in result:
+            raise ValueError("Duplicate property: " + key)
+        result[key.strip()] = value.strip()
+    return result
+
+
+def validate_instrumentation(text, class_name, expected_methods):
+    """A zero adb exit or instrumentation exit alone is NOT test evidence."""
+    pending, starts, finishes, final_codes = {}, [], [], []
+    for line in text.splitlines():
+        if line.startswith("INSTRUMENTATION_STATUS: "):
+            key, sep, value = line[len("INSTRUMENTATION_STATUS: "):].partition("=")
+            if sep:
+                pending[key] = value
+        elif line.startswith("INSTRUMENTATION_STATUS_CODE: "):
+            code = int(line.split(": ", 1)[1])
+            descriptor = (pending.get("class"), pending.get("test"))
+            if code not in (0, 1):
+                raise ValueError("Test failure, skip, or unsupported status: " + str(code))
+            if pending.get("numtests") != str(len(expected_methods)):
+                raise ValueError("Unexpected discovered test count")
+            if code == 0 and (descriptor not in starts or descriptor in finishes):
+                raise ValueError("Completion without its unique preceding start")
+            (starts if code == 1 else finishes).append(descriptor)
+            pending = {}
+        elif line.startswith("INSTRUMENTATION_CODE: "):
+            final_codes.append(int(line.split(": ", 1)[1]))
+        elif line.startswith(("INSTRUMENTATION_FAILED:", "INSTRUMENTATION_ABORTED:")):
+            raise ValueError("Instrumentation failed or aborted")
+        elif line.startswith("INSTRUMENTATION_RESULT: shortMsg="):
+            raise ValueError("Instrumentation crash/short result")
+    expected = {(class_name, method) for method in expected_methods}
+    if (pending or final_codes != [-1] or set(starts) != expected
+            or set(finishes) != expected or len(starts) != len(expected)
+            or len(finishes) != len(expected)):
+        raise ValueError("Missing, duplicate, wrong, or incomplete test descriptors")
+    return [{"class": name, "method": method} for name, method in sorted(expected)]
+
+
+class OwnedDirectory:
+    def __init__(self):
+        # A short owned path also stays below AF_UNIX's socket path limit.
+        self.token = uuid.uuid4().hex
+        temporary_parent = Path("/tmp").resolve(strict=True)
+        self.path = Path(tempfile.mkdtemp(prefix="parlor-arm64-", dir=temporary_parent))
+        self.identity, self.marker_identity = None, None
+        try:
+            info = self.path.lstat()
+            self.identity = (info.st_dev, info.st_ino)
+            self.path.chmod(0o700)
+            with (self.path / ".parlor-owner").open("x") as marker:
+                marker_info = os.fstat(marker.fileno())
+                self.marker_identity = (marker_info.st_dev, marker_info.st_ino)
+                marker.write(self.token)
+        except BaseException as error:
+            # The caller cannot register this object until construction
+            # returns. No worker exists yet. Attest only the exact inodes
+            # created here, then remove the partial marker and EMPTY root;
+            # never recursively delete an incompletely initialized tree.
+            try:
+                self._remove_incomplete()
+            except BaseException as cleanup_error:
+                raise RuntimeError(
+                    f"Temporary-directory initialization failed; preserved {self.path}; "
+                    f"cleanup: {cleanup_error}"
+                ) from error
+            raise
+
+    def _remove_incomplete(self):
+        info = self.path.lstat()
+        if (self.identity is None or (info.st_dev, info.st_ino) != self.identity
+                or not stat.S_ISDIR(info.st_mode) or self.path.is_symlink()
+                or info.st_uid != os.getuid()):
+            raise RuntimeError("Partial directory ownership could not be attested")
+        if self.marker_identity is not None:
+            marker = self.path / ".parlor-owner"
+            marker_info = marker.lstat()
+            if ((marker_info.st_dev, marker_info.st_ino) != self.marker_identity
+                    or not stat.S_ISREG(marker_info.st_mode) or marker.is_symlink()
+                    or marker_info.st_uid != os.getuid()):
+                raise RuntimeError("Partial marker ownership could not be attested")
+            marker.unlink()
+        self.path.rmdir()  # Unexpected children mean preservation, not broad cleanup.
+
+    def attest(self):
+        info = self.path.lstat()
+        marker = self.path / ".parlor-owner"
+        marker_info = marker.lstat()
+        if (not stat.S_ISDIR(info.st_mode) or self.path.is_symlink()
+                or (info.st_dev, info.st_ino) != self.identity
+                or info.st_uid != os.getuid() or info.st_mode & 0o077
+                or not stat.S_ISREG(marker_info.st_mode) or marker.is_symlink()
+                or marker_info.st_uid != os.getuid() or marker.read_text() != self.token):
+            raise RuntimeError("Owned temporary directory attestation failed; preserving it")
+
+    def remove(self):
+        self.attest()
+        shutil.rmtree(self.path)
+        if self.path.exists():
+            raise RuntimeError("Owned output removal failed")
+
+
+def socket_is_live(path):
+    client = socket.socket(socket.AF_UNIX)
+    client.settimeout(1)
+    try:
+        client.connect(str(path))
+        return True
+    except (ConnectionRefusedError, FileNotFoundError):
+        return False
+    finally:
+        client.close()
+
+
+def stop_owned_adb_socket(owned):
+    """Send one ADB smart-socket host:kill; never invoke a client that autostarts."""
+    owned.attest()
+    path = owned.path / "adb.sock"
+    try:
+        info = path.lstat()
+    except FileNotFoundError:
+        return False
+    if path.is_symlink() or not stat.S_ISSOCK(info.st_mode) or info.st_uid != os.getuid():
+        raise RuntimeError("Unexpected owned ADB socket identity")
+    client = socket.socket(socket.AF_UNIX)
+    client.settimeout(3)
+    try:
+        try:
+            client.connect(str(path))
+        except (ConnectionRefusedError, FileNotFoundError):
+            return False
+        payload = b"host:kill"
+        client.sendall(f"{len(payload):04x}".encode("ascii") + payload)
+        response = b""
+        while len(response) < 4:
+            block = client.recv(4 - len(response))
+            if not block:
+                break
+            response += block
+        if response != b"OKAY":
+            raise RuntimeError("Owned ADB socket did not acknowledge shutdown")
+        return True
+    finally:
+        client.close()
+
+
+class Commands:
+    def __init__(self, evidence, env):
+        self.evidence, self.env = evidence, env
+        self.receipts = []
+        self.processes = OwnedProcesses()
+
+    def command(self, label, args, timeout=45, check=True, input_text=None, cleanup=False):
+        if CANCELLED and not cleanup:
+            raise InterruptedError("Task cancelled before command creation")
+        start = time.time()
+        deadline = time.monotonic() + timeout
+        if len(self.processes.launches) >= MAX_LAUNCHES:
+            raise RuntimeError("Command launch ceiling exceeded before spawn")
+        if input_text is not None and len(input_text.encode()) > 4096:
+            raise ValueError("Command input exceeds the reviewed small-input boundary")
+        log_name = f"{len(self.receipts):03d}-{label}.log"
+        logfile = self.evidence / log_name
+        output, failure, process, launch = "", None, None, None
+        try:
+            with logfile.open("x") as stream:
+                process = subprocess.Popen(args, env=self.env,
+                                           stdin=subprocess.PIPE if input_text is not None else subprocess.DEVNULL,
+                                           stdout=stream, stderr=subprocess.STDOUT,
+                                           text=True, start_new_session=True)
+                launch = self.processes.register(process, label, args)
+                if input_text is not None:
+                    process.stdin.write(input_text)
+                    process.stdin.close()
+                while True:
+                    if CANCELLED and not cleanup:
+                        raise InterruptedError("Task cancellation requested")
+                    if time.monotonic() >= deadline:
+                        raise TimeoutError("Command timeout: " + label)
+                    if logfile.stat().st_size > 8 * 1024 * 1024:
+                        raise RuntimeError("Command output ceiling exceeded: " + label)
+                    if launch.poll() is not None:
+                        break
+                    time.sleep(0.1)
+                self.processes.finish(launch)
+        except BaseException as error:
+            failure = error
+            if launch is not None:
+                try:
+                    self.processes.stop(launch)
+                except BaseException as cleanup_error:
+                    failure = RuntimeError(f"{error}; owned command cleanup failed: {cleanup_error}")
+        finally:
+            if logfile.exists():
+                with logfile.open(errors="replace") as stream:
+                    output = stream.read(8 * 1024 * 1024)
+            self.receipts.append({"args": args, "started_epoch": start,
+                                  "seconds": round(time.time() - start, 3),
+                                  "exit_code": process.returncode if process else None, "log": log_name,
+                                  "failure": str(failure) if failure else None})
+        if failure:
+            raise failure
+        if check and process.returncode:
+            raise RuntimeError(f"{label} exited {process.returncode}; see {log_name}")
+        return output
+
+    def worker(self, label, args):
+        if len(self.processes.launches) >= MAX_LAUNCHES:
+            raise RuntimeError("Worker launch ceiling exceeded before spawn")
+        stream = (self.evidence / (label + ".log")).open("x")
+        try:
+            process = subprocess.Popen(args, env=self.env, stdin=subprocess.DEVNULL,
+                                       stdout=stream, stderr=subprocess.STDOUT,
+                                       start_new_session=True)
+            return self.processes.register(process, label, args)
+        finally:
+            stream.close()
+
+
+def choose_console_port():
+    for port in range(5554, 5585, 2):
+        first, second = socket.socket(), socket.socket()
+        try:
+            first.bind(("127.0.0.1", port))
+            second.bind(("127.0.0.1", port + 1))
+            return port
+        except OSError:
+            continue
+        finally:
+            first.close()
+            second.close()
+    raise RuntimeError("No free emulator console pair; no existing emulator will be touched")
+
+
+def run(args):
+    evidence = Path(args.evidence_dir).resolve()
+    evidence.mkdir(parents=True, exist_ok=False)
+    evidence.chmod(0o700)
+    report = {"status": "FAIL", "runtime_kind": "owned API35 ARM64 emulator",
+              "not_evidence_for": ["physical LAN", "Linux x86/KVM GMD", "Store signing"],
+              "tests": [], "cleanup": [], "source_commit": args.source_commit,
+              "source_binding": "Caller-provided commit; campaign freeze and Gradle receipt must bind dirty source. Artifact hashes alone do not prove source."}
+    owned, commands, adb_prefix, legacy_guard = None, None, None, None
+    try:
+        if platform.system() != "Darwin" or platform.machine() != "arm64":
+            raise RuntimeError("This bounded runner requires the reviewed Apple Silicon host")
+        sdk = Path(args.sdk_root).resolve(strict=True)
+        image = sdk / "system-images/android-35/google_apis/arm64-v8a"
+        image_props = properties(image / "source.properties")
+        if (image_props.get("AndroidVersion.ApiLevel") != "35"
+                or image_props.get("SystemImage.Abi") != "arm64-v8a"
+                or image_props.get("Pkg.Revision") != "9"):
+            raise RuntimeError("Expected installed API35 Google APIs ARM64 image revision 9")
+        report["image_properties"] = image_props
+        report["artifacts"] = [{"path": str(Path(path).resolve(strict=True)),
+                                "sha256": sha256(path)}
+                               for path in (args.app_apk, args.test_apk)]
+        owned = OwnedDirectory()
+        report["temporary_root"] = str(owned.path)
+        env = os.environ.copy()
+        for key in ("ANDROID_SERIAL", "ADB_VENDOR_KEYS", "ADB_TRACE", "ANDROID_LOG_TAGS"):
+            env.pop(key, None)
+        for key, relative in {"HOME": "home", "ANDROID_USER_HOME": "android-user",
+                              "ANDROID_EMULATOR_HOME": "emulator-home",
+                              "ANDROID_AVD_HOME": "avd", "ANDROID_SDK_HOME": "home",
+                              "TMPDIR": "tmp"}.items():
+            path = owned.path / relative
+            path.mkdir(mode=0o700, exist_ok=True)
+            env[key] = str(path)
+        adb_socket = "localfilesystem:" + str(owned.path / "adb.sock")
+        # Reserve a private non-listening TCP port so emulator legacy
+        # announcement cannot contact the user's default adb server, or an
+        # unrelated service. Actual adb uses the owned AF_UNIX socket.
+        legacy_guard = socket.socket()
+        legacy_guard.bind(("127.0.0.1", 0))
+        legacy_port = legacy_guard.getsockname()[1]
+        report["legacy_adb_port_reserved"] = legacy_port
+        env.update(ANDROID_HOME=str(sdk), ANDROID_SDK_ROOT=str(sdk),
+                   ADB_SERVER_SOCKET=adb_socket, ADB_USB="0", ADB_MDNS="0",
+                   ADB_EMU="0", ADB_LOCAL_TRANSPORT_MAX_PORT="0",
+                   ADB_MDNS_AUTO_CONNECT="", ANDROID_ADB_SERVER_PORT=str(legacy_port))
+        commands = Commands(evidence, env)
+        adb = str(sdk / "platform-tools/adb")
+        emulator = str(sdk / "emulator/emulator")
+        adb_prefix = [adb, "-L", adb_socket]
+        commands.command("adb-version", [adb, "version"])
+        commands.command("emulator-version", [emulator, "-version"])
+        avd_name = "parlor_arm64_" + owned.token
+        avd_path = owned.path / "avd" / (avd_name + ".avd")
+        commands.command("avd-create", [args.avdmanager, "create", "avd", "--name", avd_name,
+                                       "--path", str(avd_path), "--package", IMAGE,
+                                       "--device", "pixel_2"], input_text="no\n", timeout=90)
+        config_path = avd_path / "config.ini"
+        owned.attest()
+        if (config_path.is_symlink() or avd_path.is_symlink()
+                or not config_path.resolve().is_relative_to(owned.path)
+                or config_path.resolve().parent != avd_path.resolve()):
+            raise RuntimeError("Unexpected AVD config ownership")
+        config = properties(config_path)
+        config.update({"disk.dataPartition.size": "1G", "hw.ramSize": "2048",
+                       "hw.cpu.ncore": "2", "hw.gpu.enabled": "yes",
+                       "hw.gpu.mode": "swiftshader", "showDeviceFrame": "no"})
+        config_path.write_text("".join(key + "=" + value + "\n" for key, value in config.items()))
+        server = commands.worker("adb-server", adb_prefix + ["server", "nodaemon"])
+        deadline = time.monotonic() + 15
+        while not (owned.path / "adb.sock").exists():
+            if CANCELLED or server.poll() is not None or time.monotonic() >= deadline:
+                raise RuntimeError("Owned adb server did not start")
+            time.sleep(0.1)
+        if not stat.S_ISSOCK((owned.path / "adb.sock").lstat().st_mode):
+            raise RuntimeError("Owned adb endpoint is not a filesystem socket")
+        port = choose_console_port()
+        report["console_port"] = port
+        worker = commands.worker("emulator", [emulator, "-avd", avd_name, "-port", str(port),
+                                              "-no-window", "-no-audio", "-no-snapshot",
+                                              "-wipe-data", "-no-boot-anim", "-gpu", "swiftshader",
+                                              "-memory", "2048", "-cores", "2"])
+        serial = "127.0.0.1:" + str(port + 1)
+        device = adb_prefix + ["-s", serial]
+        deadline = time.monotonic() + 300
+        while time.monotonic() < deadline:
+            if CANCELLED or worker.poll() is not None or server.poll() is not None:
+                raise RuntimeError("Task cancelled or owned emulator/adb worker exited")
+            commands.command("connect", adb_prefix + ["connect", serial], timeout=10, check=False)
+            boot = commands.command("boot", device + ["shell", "getprop", "sys.boot_completed"],
+                                    timeout=10, check=False)
+            if boot.strip() == "1":
+                break
+            time.sleep(3)
+        else:
+            raise RuntimeError("Owned emulator boot deadline exceeded")
+        attestation = {}
+        for key in ("ro.product.cpu.abi", "ro.build.version.sdk", "ro.kernel.qemu",
+                    "ro.boot.qemu.avd_name", "ro.kernel.qemu.avd_name"):
+            attestation[key] = commands.command("attest", device + ["shell", "getprop", key]).strip()
+        if (attestation["ro.product.cpu.abi"] != "arm64-v8a"
+                or attestation["ro.build.version.sdk"] != "35"
+                or attestation["ro.kernel.qemu"] != "1"
+                or avd_name not in (attestation["ro.boot.qemu.avd_name"],
+                                    attestation["ro.kernel.qemu.avd_name"])):
+            raise RuntimeError("Device ownership, API, or ABI attestation failed before destructive tests")
+        report["device_attestation"] = attestation
+        for path in (args.app_apk, args.test_apk):
+            commands.command("install", device + ["install", "-t", str(Path(path).resolve())], timeout=90)
+        available = commands.command("instrumentation", device + ["shell", "pm", "list", "instrumentation"])
+        if "instrumentation:" + RUNNER + " (target=com.parlor.app)" not in available.splitlines():
+            raise RuntimeError("Unexpected installed instrumentation target")
+        for class_name, methods in CLASSES.items():
+            commands.command("force-stop", device + ["shell", "am", "force-stop", "com.parlor.app"])
+            text = commands.command("tests", device + ["shell", "am", "instrument", "-w", "-r",
+                                                        "-e", "class", class_name, RUNNER], timeout=180)
+            report["tests"].extend(validate_instrumentation(text, class_name, methods))
+        if len(report["tests"]) != 3:
+            raise RuntimeError("All three real descriptors must complete")
+        report["status"] = "PASS"
+    except BaseException as error:
+        report["failure"] = type(error).__name__ + ": " + str(error)
+    finally:
+        if commands is not None:
+            # No historical numeric-PGID grant, global adb kill, pkill, or
+            # existing-AVD operation. Native audit tokens bind every signal.
+            if owned is not None and adb_prefix is not None:
+                try:
+                    report["owned_adb_shutdown_acknowledged"] = stop_owned_adb_socket(owned)
+                except BaseException as error:
+                    report["cleanup"].append({"adb_shutdown": "error", "error": str(error)})
+            try:
+                report["cleanup"].extend(commands.processes.shutdown())
+            except BaseException as error:
+                report["cleanup"].append({"workers": "error", "error": str(error)})
+            if owned is not None and adb_prefix is not None:
+                try:
+                    deadline = time.monotonic() + 5
+                    while socket_is_live(owned.path / "adb.sock") and time.monotonic() < deadline:
+                        time.sleep(0.1)
+                    if socket_is_live(owned.path / "adb.sock"):
+                        raise RuntimeError("Server remains live at owned adb socket")
+                except BaseException as error:
+                    report["cleanup"].append({"adb_socket": "error", "error": str(error)})
+            report["commands"] = commands.receipts
+            report["worker_exit_codes"] = commands.processes.receipts()
+            report["token_bound_signals"] = commands.processes.events
+        if legacy_guard is not None:
+            legacy_guard.close()
+        if owned is not None and not report["cleanup"]:
+            try:
+                owned.remove()
+                report["temporary_root_removed"] = True
+            except BaseException as error:
+                report["cleanup"].append({"temporary_root": "preserved", "error": str(error)})
+        if report["cleanup"]:
+            report["status"] = "FAIL"
+        (evidence / "run.json").write_text(json.dumps(report, indent=2) + "\n")
+    print(report["status"] + ": " + str(evidence / "run.json"))
+    return 0 if report["status"] == "PASS" else 1
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    for option in ("sdk-root", "avdmanager", "app-apk", "test-apk", "evidence-dir", "source-commit"):
+        parser.add_argument("--" + option, required=True)
+    args = parser.parse_args()
+    if not re.fullmatch(r"[0-9a-f]{40}", args.source_commit):
+        parser.error("source-commit must be a full commit; also preserve the campaign dirty-source/build binding")
+    signal.signal(signal.SIGINT, request_cancel)
+    signal.signal(signal.SIGTERM, request_cancel)
+    return run(args)
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

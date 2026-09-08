@@ -1,0 +1,854 @@
+{
+  "at": "2026-09-05T20:03:54.193731+00:00",
+  "author": "/root/whodunit_cont",
+  "stage": "Author review of root-run actual XML; not independent self-approval",
+  "source_files": [
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+      "sha256": "11b188ca7ecfa7a02086ab2513fe9e40230f3aab9db9a9fa25c79204b4e9b0b7",
+      "cycle_before_and_after_match": true
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitStateValidator.kt",
+      "sha256": "c391101ba10792d4ba81eb0aa3a21771162c458e075b90bfbf06d4cb33d139c1",
+      "cycle_before_and_after_match": true
+    },
+    {
+      "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/domain/WhodunitRulesInvariantTest.kt",
+      "sha256": "593a7e3937abc330e11ab76f4a4802e21bcde7231fb9b5220657a5bcc7d5d513",
+      "cycle_before_and_after_match": true
+    },
+    {
+      "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/PeerReadinessRemountTest.kt",
+      "sha256": "e443c59bc953b1e35113ce26bf3a2638839cd44723e6a36c90c014b77f5cb6d3",
+      "cycle_before_and_after_match": true
+    },
+    {
+      "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitFinalTwoRecoveryTest.kt",
+      "sha256": "58e56cfae03d3f13fa7d62b866ae4d671dc8289b8766d04f6cbed2bcb3e6b9c0",
+      "cycle_before_and_after_match": true
+    }
+  ],
+  "root_cycle_receipt": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/receipt.json",
+  "receipt_sha256": "6ec583de55d5b45847ece8177a5c09124958c078d795db5abe2a4d2b13055aae",
+  "overall_cycle_status": "FAIL",
+  "overall_cycle_exit_code": 1,
+  "overall_failure": "One DS-C02 added test assertion, not Whodunit; see actual separate suite XML",
+  "whodunit_status": "PASS - full module desktop suite",
+  "suite_count": 53,
+  "totals": {
+    "tests": 309,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "suites": [
+    {
+      "suite": "com.parlor.games.whodunit.WhodunitPlayModePolicyTest",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.WhodunitPlayModePolicyTest.xml",
+      "xml_sha256": "bb4fd8d9a40cfcc6c574822855718b55968264bb9f9ef5a77402bd5755832a78"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.action.WhodunitActionCodecTest",
+      "counts": {
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.action.WhodunitActionCodecTest.xml",
+      "xml_sha256": "e976ec1b5ff39a35cdef13ff0c0f779cfaa28ed6d2ad998c779df9a976e21b3e"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.authority.WhodunitActionAuthorityTest",
+      "counts": {
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.authority.WhodunitActionAuthorityTest.xml",
+      "xml_sha256": "cc2e712411986335a324c5b482c4684e9be149f4266c84eb0b7a7f05f1f5e1e7"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.content.ArabicCaseValidationTest",
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.ArabicCaseValidationTest.xml",
+      "xml_sha256": "3b6756b3aa1c2e0f4de59f92e3ca41f5797b4e201320e2ffd2179116a401a7a0"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.content.BundledCaseLoadingTest",
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.BundledCaseLoadingTest.xml",
+      "xml_sha256": "686eed01eba56d84bafb51e96d64dfe3d5a7b9fca8d301ac35cfb4254ae280cb"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.content.CasePickerDiscoveryTest",
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.CasePickerDiscoveryTest.xml",
+      "xml_sha256": "52e79ee6bc377339a77dfe1a9cb26da6f08cbd45274215ce750dbf8f6d0ced90"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.content.ResReadBytesProbeTest",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.ResReadBytesProbeTest.xml",
+      "xml_sha256": "4e13b1d2f1aeb6cffd943f032cd082d641c55dd39191500651117da04d3b3b1a"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.content.WhodunitContentIdentityTest",
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.WhodunitContentIdentityTest.xml",
+      "xml_sha256": "76638ba30ccc01d5abcb2433602d2ec177fd5e31a053289321fd954e8e279eee"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.content.WhodunitPayloadHardeningTest",
+      "counts": {
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.WhodunitPayloadHardeningTest.xml",
+      "xml_sha256": "37ba33d1c981cfd3c2467b87d44c0a2c3bc2973ebf17ac4f00288a0661b9d5da"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.domain.CluePolicyTest",
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.CluePolicyTest.xml",
+      "xml_sha256": "cd2889911c697b57e6ece9b13c01874fe4539f8a2e52745cdf436b3978be7ac3"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.domain.PartyReadinessTest",
+      "counts": {
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.PartyReadinessTest.xml",
+      "xml_sha256": "7f76ba1204b0ebb1fcc80d156d0bd4acdfc5a908314a62ee10d96f24b5021297"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.domain.WhodunitReducerProductionGuardsTest",
+      "counts": {
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.WhodunitReducerProductionGuardsTest.xml",
+      "xml_sha256": "0bf85938f331aa11398d4e2acf497a325492e562873c9c25796a2ea4a5c4574f"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.domain.WhodunitRulesInvariantTest",
+      "counts": {
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.WhodunitRulesInvariantTest.xml",
+      "xml_sha256": "f3496cc9281058eb42dd7adf5f54dd07db5fac6bab9f27ed1f5e4d5d4c5563ff",
+      "cases": [
+        {
+          "name": "modelDrivePreservesInvariantsForEveryShippingModeAndSupportedCount()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "displayNamesMustBeCanonicalBoundedAndSafeAtTheDomainBoundary()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "defensiveFinalTwoFallbackDoesNotMakeAnActiveSnapshotValid()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "invalidCountModeIdentityAndSeatAreRejectedBeforeSessionStarts()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "everySupportedCountAndSeedProducesOneDeterministicKillerAndUniqueDossiers()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "exactDuplicateDisplayNamesAreRejectedAtTheAuthoritativeBoundary()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "seededKillerSelectionHasNoMaterialSeatBias()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "eliminationVoteOpensOnlyAfterACompletedDiscussion()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "privacyRerollChangesKillerAndEveryPreviouslyViewedDossier()[desktop]",
+          "failed": false,
+          "skipped": false
+        }
+      ]
+    },
+    {
+      "suite": "com.parlor.games.whodunit.domain.WhodunitTerminalAndCluePolicyTest",
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.WhodunitTerminalAndCluePolicyTest.xml",
+      "xml_sha256": "60493d4ef3a920fdd51d085fd7c9721d73c05a3328a5e1db3cd911ccb33f566d"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.domain.rules.WhodunitPolicyGoldenTest",
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.rules.WhodunitPolicyGoldenTest.xml",
+      "xml_sha256": "9d2f5ad418824fb815eb27a317ee90d443db0d6376dd5cf4bea91cfb551c4b8a"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.flow.ContinueWithoutPlayerTest",
+      "counts": {
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.ContinueWithoutPlayerTest.xml",
+      "xml_sha256": "40a88f886c7b4d9837eef3f1b6814541a55377f035ed9ec8d4871dbc5bb04486"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.flow.FullGameDriveTest",
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.FullGameDriveTest.xml",
+      "xml_sha256": "07c0df766331dcd4f74e8890011e8892ba1deef47e04e2a5a88526591524234a"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.flow.IntroAndBriefingReadinessTest",
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.IntroAndBriefingReadinessTest.xml",
+      "xml_sha256": "dca670f15ba7717dd0ec487ede63c8e7f881248b66933142b1e6faae43d202ae"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.flow.PartyFlowControllerTest",
+      "counts": {
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.PartyFlowControllerTest.xml",
+      "xml_sha256": "5bde2b40fdcd92961f81374dd245cbaef7e34b47f7ef9fd3aae98048a424776b"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.flow.PauseRefuseLeaveTest",
+      "counts": {
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.PauseRefuseLeaveTest.xml",
+      "xml_sha256": "b2748ad697bec5af1005e30d2e8eab8e1f4e8419e2a3cc541afb42b00adaad37"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.flow.SimultaneousCharacterRevealTest",
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.SimultaneousCharacterRevealTest.xml",
+      "xml_sha256": "72866b176b52f7c7bcf530dc9923b56ba314b125d1787c0653c36cf58119a462"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.flow.TickerAndRerollTest",
+      "counts": {
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.TickerAndRerollTest.xml",
+      "xml_sha256": "f4b4bc0a02b0f8266202562d6257ee0f63a5e9cc4f4d1e93f787d506d184345b"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.flow.TiedRevoteTest",
+      "counts": {
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.TiedRevoteTest.xml",
+      "xml_sha256": "ddef03792995b5a82a07a271091ce72ecf26d616e9c954b9d4a4ee40e08baf6f"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.flow.WhodunitLocalSessionConfigTest",
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.WhodunitLocalSessionConfigTest.xml",
+      "xml_sha256": "dd8708e4cf58440d1d426f07e40746a3e9961cc381d82a89cb168246758ec353"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.layout.ResponsiveLayoutAuditTest",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.layout.ResponsiveLayoutAuditTest.xml",
+      "xml_sha256": "84865a58ede7c06a82fd284a07a2bf5a2b47799826b5d0ae0d35b07269614efb"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.layout.TokenDisciplineTest",
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.layout.TokenDisciplineTest.xml",
+      "xml_sha256": "0a0b2aff6d5b07a91c56bf4d250ec16bc21177d658b5d9e6b433172d70b1142a"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.multidevice.HostLostTimeoutTest",
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.HostLostTimeoutTest.xml",
+      "xml_sha256": "e26a88059d12d5b7c031fa56e80a71d87747ef390461732378ab1f9f56f88100"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.multidevice.MultiDevicePartyPlayContractTest",
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.MultiDevicePartyPlayContractTest.xml",
+      "xml_sha256": "5bf63a3ca4d3bdd6fb8acf46cbc315a5b4f301565439c164b9a3e11f922ffaa2"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.multidevice.PartyConnectionEventsTest",
+      "counts": {
+        "tests": 17,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.PartyConnectionEventsTest.xml",
+      "xml_sha256": "3018600e520c3963d4459731c25bb1acb4d00b685388be89b972efea5d21a486"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.multidevice.PartyPlayPassAndPlayParityTest",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.PartyPlayPassAndPlayParityTest.xml",
+      "xml_sha256": "a3cbf7c58105d2bdb28ba29bfbab6ee49292e14a6b193a2161a38ffd2bcd8960"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.multidevice.QueuedActionSafetyTest",
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.QueuedActionSafetyTest.xml",
+      "xml_sha256": "b3048e876741eb0e9cb959dc966eb6ecc049db15b34abee26f210548f207815f"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.multidevice.SelfOfflineTimeoutTest",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.SelfOfflineTimeoutTest.xml",
+      "xml_sha256": "434c097693b7db3810baf19d5db8caf5ec11bdf22cd1064014c5e1d70dbc3676"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.multidevice.WhodunitMultiDeviceShapeTest",
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.WhodunitMultiDeviceShapeTest.xml",
+      "xml_sha256": "c65d236a80928b8b24b4f7310f68f1629444ed89e57fb24f982079f57532e2eb"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.multidevice.WhodunitPeerProjectionBoundaryTest",
+      "counts": {
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.WhodunitPeerProjectionBoundaryTest.xml",
+      "xml_sha256": "a86cea0946e23b84a8d4f1e184581aa7a47ace0b96f2d38f64a1841666126f34"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.projection.VoteRedactionTest",
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.projection.VoteRedactionTest.xml",
+      "xml_sha256": "f1c16f282d25f0d6d45ab8f9f5559f3a32b0419ed3dacbde4735dd6abd3d79a7"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.snapshot.WhodunitCaseBindingTest",
+      "counts": {
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitCaseBindingTest.xml",
+      "xml_sha256": "1f8fcd9b662cb318514130ac7bc4f92837e383a7858f1a27f42bb7fd604848d1"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest",
+      "counts": {
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest.xml",
+      "xml_sha256": "28cb42f4796624751890b004af8b0d48f94fa20691e120bcbdf344f0187d5438",
+      "cases": [
+        {
+          "name": "everyOwnPrivatePeerBoundaryRejectsAReopenedFinalTwo()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "earlyEndWithAndWithoutDisclosureRemainRecoverable()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "currentDecoderRejectsCanonicalJsonThatReopensTheFinalTwo()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "aLegalLastRoundKillerEliminationStillAllowsTwoInnocentSurvivors()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "legalFinalTwoKillerVictoryStillRecoversThroughPostGameAndReplay()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "productionLocalResumeLoaderRejectsAnImpossibleTrustedPayload()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "currentEncoderRejectsEveryReopenedFinalTwoSubstate()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "bareLegacyPayloadCannotRepairAnImpossibleActiveFinalTwo()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "caseBoundRecoveryRejectsFinalTwoEvenWithTheCorrectContentIdentity()[desktop]",
+          "failed": false,
+          "skipped": false
+        }
+      ]
+    },
+    {
+      "suite": "com.parlor.games.whodunit.snapshot.WhodunitLegacySnapshotGoldenTest",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitLegacySnapshotGoldenTest.xml",
+      "xml_sha256": "040d950a2e843e0feaeeef9899fbbd1ee635454719d1bd3faf6b54a3a1423812"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest",
+      "counts": {
+        "tests": 11,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest.xml",
+      "xml_sha256": "cd1b60589dbdc824a6c1047549e41a66f7514a9d622452c2c0e84a28d9356e3b"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.snapshot.WhodunitSnapshotRoundTripTest",
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitSnapshotRoundTripTest.xml",
+      "xml_sha256": "77256167d14009a0ed61e61e14e83bc733ccefd8520e83d134eb6ce9d8fd0133"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.snapshot.WhodunitSnapshotValidationTest",
+      "counts": {
+        "tests": 46,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitSnapshotValidationTest.xml",
+      "xml_sha256": "7f992aafbf554609bc456bddafb8a22dfe4926212d1ad99b9fd606c4ce775c36"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.ui.PrivacyConcernPolicyTest",
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.PrivacyConcernPolicyTest.xml",
+      "xml_sha256": "f088c2931360ecd29bb0440b5f57028554a7e4b5689ed9870e1cf24b4fe5d4bb"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.ui.RtlFormattingTest",
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.RtlFormattingTest.xml",
+      "xml_sha256": "b022b1a2943ebac29581e5080ed179404e3351c938e816ab95274b727d5662d5"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.ui.WhodunitAccessibilitySemanticsTest",
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.WhodunitAccessibilitySemanticsTest.xml",
+      "xml_sha256": "525c33ae9e8055c998fc6b992bfa32323241e143f716522ac425bd570297803e"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.ui.WhodunitCasePickerScreenTest",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.WhodunitCasePickerScreenTest.xml",
+      "xml_sha256": "177afaa7633aefea3737cd3e53e500a90c0c7d1211e53cae980bf9a6cf27b6fd"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.ui.WhodunitNetErrorMessageKeyTest",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.WhodunitNetErrorMessageKeyTest.xml",
+      "xml_sha256": "8c476828b0ec48bc86bf7bedffad183b2ecd1fa8b479afcae76a28d690f78c51"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.ui.components.RevealCompletionGateTest",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.components.RevealCompletionGateTest.xml",
+      "xml_sha256": "7ebb4c9e44f5d27a1dbcfa4702ded398db44439a1223a3be091fbf88b9e036a1"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.ui.flow.EliminationVoteOwnershipIntegrationTest",
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.EliminationVoteOwnershipIntegrationTest.xml",
+      "xml_sha256": "868190753b438b851da2b6a86081e36914bf962f488a4e1c90733e3e62da83e3"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest",
+      "counts": {
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest.xml",
+      "xml_sha256": "7d5225642d778c2e298a5c136e7b00ca8353442830f53e7b55f84be85bbbe979",
+      "cases": [
+        {
+          "name": "introAcknowledgementDoesNotRepeatAfterCommandCoverRemount()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "freshIntroSnapshotWinsOverAStaleComposeProjection()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "replayInTheSameRenderedPhaseAcknowledgesTheNewGeneration()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "replayBeforeEffectDoesNotAcknowledgeTheStaleAssignmentGeneration()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "freshBriefingSnapshotWinsOverAStaleComposeProjection()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "acknowledgedBriefingSurvivesUiRecreationAndDisconnectPause()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "rejectionWithoutHostAcknowledgementDoesNotCreateOptimisticReadiness()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "briefingAcknowledgementDoesNotRepeatAfterCommandCoverRemount()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "phaseChangeBeforeEffectDoesNotSendThePreviousPhaseAcknowledgement()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "aReplacementControllerRechecksReadinessInTheSamePhase()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "unrelatedBriefingUpdatesDoNotResendWhileAuthorityHasNotResponded()[desktop]",
+          "failed": false,
+          "skipped": false
+        },
+        {
+          "name": "acknowledgedIntroSurvivesUiRecreationAndDisconnectPause()[desktop]",
+          "failed": false,
+          "skipped": false
+        }
+      ]
+    },
+    {
+      "suite": "com.parlor.games.whodunit.ui.flow.VoteTurnPolicyTest",
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.VoteTurnPolicyTest.xml",
+      "xml_sha256": "26f4ca4ed2eecb8b5d257d9983cd71a5e75801c95bc9e218d76c535685ca87e7"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerSessionFlowPolicyTest",
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerSessionFlowPolicyTest.xml",
+      "xml_sha256": "a38a7706d1ae6b8133c4fab95d9735993d81986d50e91567d161c41c76eb0b3f"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.ui.screens.setup.WhodunitCaseLanguageLabelTest",
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.screens.setup.WhodunitCaseLanguageLabelTest.xml",
+      "xml_sha256": "80c5045dd47e2114d207085363c4b6607e6c719b1f8b5b9e54f2408a0657f69c"
+    },
+    {
+      "suite": "com.parlor.games.whodunit.ui.screens.setup.WhodunitModeChoiceTest",
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.screens.setup.WhodunitModeChoiceTest.xml",
+      "xml_sha256": "c680210b09e72f09df2fa4212948cbc64791c52f4bba124751c75ac5236f008e"
+    }
+  ],
+  "command": [
+    "./gradlew",
+    ":shared:design-system:desktopTest",
+    ":game-modes:whodunit:desktopTest",
+    "--continue",
+    "--no-daemon",
+    "--no-parallel",
+    "--max-workers=1",
+    "--no-configuration-cache",
+    "--dependency-verification=strict",
+    "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=design-whodunit-desktop-01",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-Pparlor.android.signing.storeFile=",
+    "-Pparlor.android.signing.storePassword=",
+    "-Pparlor.android.signing.keyAlias=",
+    "-Pparlor.android.signing.keyPassword="
+  ],
+  "started_at": "2026-09-05T19:56:12.544655+00:00",
+  "finished_at": "2026-09-05T19:56:40.260644+00:00",
+  "stable_source": true,
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-05T19:56:40.568193+00:00",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "removed_outputs": [
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "build",
+      "build-logic/convention/build"
+    ],
+    "remaining_outputs": [],
+    "cleanup_completed_at": "2026-09-05T19:56:40.847118+00:00",
+    "cleanup_errors": []
+  },
+  "previous_cycles": [
+    {
+      "cycle": "games-session-desktop-01",
+      "whodunit": "NOT RUN - earlier Mafia test compilation failed"
+    },
+    {
+      "cycle": "games-session-desktop-02",
+      "whodunit": "NOT RUN - earlier Mafia tests failed"
+    },
+    {
+      "cycle": "games-session-desktop-03",
+      "whodunit": "NOT RUN - new PeerReadinessRemountTest line90 type inference failed; explicit list element type corrected without weakening"
+    }
+  ],
+  "limits": [
+    "Independent reviewer still required for author-owned WD-C1/WD-C3 fixes",
+    "No physical LAN/radio/rejoin/process runtime claim",
+    "No Android/iOS compilation/rendering/runtime claim from Desktop tests",
+    "No Store/signing claim",
+    "No WD-C2 authorial content edits; still owner-blocked",
+    "WD-C4 clock-policy unchanged/outside authorized remediation scope"
+  ],
+  "builds_or_process_operations_by_author": false,
+  "evidence_generation_note": "First attempted writer stopped with Python stdin non-UTF8 SyntaxError before execution; this ASCII-only retry generated the report. No build or application side effects."
+}

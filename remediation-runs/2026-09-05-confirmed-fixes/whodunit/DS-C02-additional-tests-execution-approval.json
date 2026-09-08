@@ -1,0 +1,352 @@
+{
+  "at": "2026-09-05T20:45:13.542786+00:00",
+  "independent_reviewer": "/root/whodunit_cont",
+  "production_fix_author": "/root",
+  "status": "DS-C02 bounded independent execution APPROVED; unchanged DS-C03 regressions pass",
+  "test_fixture_correction_author": "/root/whodunit_cont at root request; root performed separate review/execution",
+  "scope": "DS-C02 additional tests; not independent approval of unrelated repository patches",
+  "source_files": [
+    {
+      "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt",
+      "sha256": "ea4e554c099511942e13e07281df48419c333948be7a64d65a72b7dd49ea25b0",
+      "before_after_current_match": true
+    },
+    {
+      "path": "shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/components/ParlorToastStateTest.kt",
+      "sha256": "6fb9a4c16974a10c978a325c57deffcbeb80d36bb9afd394cea55837cbf79cd1",
+      "before_after_current_match": true
+    },
+    {
+      "path": "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastLifetimeTest.kt",
+      "sha256": "4bec7f140fa576210c1abc9c33decf1bac5b6ca24112d15d69dee2d0ad702cc9",
+      "before_after_current_match": true
+    },
+    {
+      "path": "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastConcurrencyTest.kt",
+      "sha256": "d1ce19edccb66916930b4fa27d90f7e390f851442de923b351bef1258a0f90d9",
+      "before_after_current_match": true
+    },
+    {
+      "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorButton.kt",
+      "sha256": "06ac462915e5371344abb953d29eab22bb9b622c800c70c5ebc96cca96efac0b",
+      "before_after_current_match": true
+    },
+    {
+      "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ReconnectingOverlay.kt",
+      "sha256": "587a0b4c7f8af7b7d0b762035855beee02cf4d1e9b4f4b532862b5f9821a10b5",
+      "before_after_current_match": true
+    },
+    {
+      "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/HostDisconnectedOverlay.kt",
+      "sha256": "a4cf551ee4846b8529b7ba1352a92a286d28831ecff086ef3a5a1ea3a30c450d",
+      "before_after_current_match": true
+    },
+    {
+      "path": "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/RecoveryActionContrastTest.kt",
+      "sha256": "bf9742cdc49fa3b8765b3219774e4b6e7f6e849c4725e9049dca5fc7343d5e20",
+      "before_after_current_match": true
+    }
+  ],
+  "cycle_receipt": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/receipt.json",
+  "receipt_sha256": "1623724c52d9c7dcc3eb6e5279b4d350c584a32a3dc514ddffb5397665ee847a",
+  "command": [
+    "./gradlew",
+    ":shared:design-system:desktopTest",
+    "--no-daemon",
+    "--no-parallel",
+    "--max-workers=1",
+    "--no-configuration-cache",
+    "--dependency-verification=strict",
+    "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=design-toast-cover-02",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-Pparlor.android.signing.storeFile=",
+    "-Pparlor.android.signing.storePassword=",
+    "-Pparlor.android.signing.keyAlias=",
+    "-Pparlor.android.signing.keyPassword="
+  ],
+  "started_at": "2026-09-05T20:27:59.492135+00:00",
+  "finished_at": "2026-09-05T20:28:16.746812+00:00",
+  "exit_code": 0,
+  "suite_count": 18,
+  "counts": {
+    "tests": 40,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "xml": [
+    {
+      "name": "com.parlor.designsystem.ActiveTextContrastCallSiteTest",
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.ActiveTextContrastCallSiteTest.xml",
+      "sha256": "4f28a49e5fc0f7f95d38d60947c0051a1cbe718ce52a9c482196e7db553248f8"
+    },
+    {
+      "name": "com.parlor.designsystem.components.ParlorSafeAreaTest",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorSafeAreaTest.xml",
+      "sha256": "a83e286e57343f509431c82a1e805fea37381939dc878eea80466d5c3c579c3e"
+    },
+    {
+      "name": "com.parlor.designsystem.components.ParlorToastConcurrencyTest",
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastConcurrencyTest.xml",
+      "sha256": "3f4c707d5b8d6c9c149cd78c43ba9eb70b830c5fc4a81a18b27353d39988774d",
+      "cases": [
+        {
+          "name": "concurrent_identical_messages_still_coalesce_and_floods_remain_bounded()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "concurrent_producers_cannot_reuse_lifetime_ids_or_lose_a_non_overflowing_wave()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "com.parlor.designsystem.components.ParlorToastHostInsetsTest",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastHostInsetsTest.xml",
+      "sha256": "1f61a801bedd588faefca67403950fc3427a294195d5f7fda2d00804e70535d0",
+      "cases": [
+        {
+          "name": "toast host keeps horizontal and bottom safe areas without adding a top inset()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "com.parlor.designsystem.components.ParlorToastLifetimeTest",
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastLifetimeTest.xml",
+      "sha256": "4b30b6a773dd7ce3d55fa7a1ca51700b7471143840fdc9a64ee776a86515894b",
+      "cases": [
+        {
+          "name": "replacement_state_owner_with_same_numeric_id_gets_its_own_lifetime()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "replacement_after_automatic_dismiss_gets_fresh_visibility_and_timer()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "identical_text_after_automatic_dismiss_is_a_new_lifetime()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "com.parlor.designsystem.components.ParlorToastStateTest",
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+      "sha256": "2892ce0c8e7a58d22920838a3c6e94efcad23f0e322bde49e4dede7b03c3cf6f",
+      "cases": [
+        {
+          "name": "queue_is_bounded_and_keeps_the_latest_distinct_messages()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "adjacent_duplicate_message_is_coalesced()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "dismissed_identity_cannot_dismiss_a_new_lifetime_even_with_identical_text()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "coalescing_preserves_existing_lifetime_and_eviction_does_not_recycle_it()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "name": "com.parlor.designsystem.components.ReconnectingOverlayFocusTest",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ReconnectingOverlayFocusTest.xml",
+      "sha256": "7306ee6a10e82b463340d54712dab6f1936c2f703972cdd70145a01d98fcd33e"
+    },
+    {
+      "name": "com.parlor.designsystem.components.RecoveryActionContrastTest",
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.RecoveryActionContrastTest.xml",
+      "sha256": "be5e05973449b8afb7446ff18e38328b93268dbbd5c04dad59055858cb46770e"
+    },
+    {
+      "name": "com.parlor.designsystem.components.SessionExitBackPolicyTest",
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.SessionExitBackPolicyTest.xml",
+      "sha256": "88a2ba2e9ca2490e0f8c232fcee54ee2d12efca0ae895df9f3a1500a8cd9ca9d"
+    },
+    {
+      "name": "com.parlor.designsystem.components.SessionExitOverlayLayoutTest",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.SessionExitOverlayLayoutTest.xml",
+      "sha256": "72ffa0031c98c914d6149b5ff747e4e63e6da49d4a7507d2fc506e510fe21099"
+    },
+    {
+      "name": "com.parlor.designsystem.components.SessionExitOverlayTest",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.SessionExitOverlayTest.xml",
+      "sha256": "5023fdb99c58d9b590d2e691dd9a75defe9059f0afb3adb4e292d001b1351391"
+    },
+    {
+      "name": "com.parlor.designsystem.components.StickyActionLayoutTest",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.StickyActionLayoutTest.xml",
+      "sha256": "480b80a7cff13f4bb5d10a9df96b681473c75d4946e70400d57bfc94d9833663"
+    },
+    {
+      "name": "com.parlor.designsystem.icons.ParlorIconsTest",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.icons.ParlorIconsTest.xml",
+      "sha256": "67d26773743ec7dfa38dab87dfe2e0b1818d0fcd6b2f7490c4dcb089961b8a1f"
+    },
+    {
+      "name": "com.parlor.designsystem.localization.AppLanguageSelectionTest",
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.localization.AppLanguageSelectionTest.xml",
+      "sha256": "0bf4bd8d2d8d4d3ecea9de191f56c4a52916ec5bceeda6827ade5f86d7b2d427"
+    },
+    {
+      "name": "com.parlor.designsystem.localization.PlatformAppLocaleLoadingContractTest",
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.localization.PlatformAppLocaleLoadingContractTest.xml",
+      "sha256": "44662501aab1079535f04475237ede75e77f0099aaf627ca719fe64a86114450"
+    },
+    {
+      "name": "com.parlor.designsystem.localization.ProvideAppLanguageDesktopTest",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.localization.ProvideAppLanguageDesktopTest.xml",
+      "sha256": "0a67a3bd7e7dc878d76fbadd9694baa9318e60e44512111bd7c5d4f7be66c544"
+    },
+    {
+      "name": "com.parlor.designsystem.motion.ParlorMotionTest",
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.motion.ParlorMotionTest.xml",
+      "sha256": "4b3d914a916e56c2e972cba9861e5152bbc7685d10c79e484d819a636d50b0b4"
+    },
+    {
+      "name": "com.parlor.designsystem.tokens.PaletteCoverageTest",
+      "counts": {
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.tokens.PaletteCoverageTest.xml",
+      "sha256": "10e58c1b60cfde72677ab7e2b367ed57dbc61b21b083d1f08c4a6917693f86b5"
+    }
+  ],
+  "source_changed_during_cycle": false,
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-05T20:28:17.059923+00:00",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "removed_outputs": [
+      "shared/core/build",
+      "shared/design-system/build",
+      "build",
+      "build-logic/convention/build"
+    ],
+    "remaining_outputs": [],
+    "cleanup_completed_at": "2026-09-05T20:28:17.196419+00:00",
+    "cleanup_errors": [],
+    "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership."
+  },
+  "previous_failure": "design-whodunit-desktop-01 paused-clock fixture query before recomposition; preserved and explained in DS-C02-additional-tests-failure-review.json",
+  "nonfindings": "Owner-swap stale queue remains rejected as confirmed shipping defect: no production owner replacement path; DS-C02-owner-swap-rejected.json",
+  "limits": [
+    "Desktop Compose, not mobile rendering/physical accessibility",
+    "Finite four-thread schedule coverage, not proof over every interleaving",
+    "No Store/signing conclusion",
+    "No child builds/process cleanup required because none launched"
+  ]
+}

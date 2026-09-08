@@ -1,0 +1,18 @@
+{
+  "at": "2026-09-08T04:40:20.591443+00:00",
+  "classification": "ROOT_EPHEMERAL_PREFLIGHT_FAILED_RUNNER_OWN_PREFLIGHT_SUCCEEDED_NATIVE_PENDING",
+  "root_preflight": "AssertionError at process-conflict check, before root approvalreceipt or capacityread. The shell lacked set-e and continued to the already independently approved native command. Do not label preflightPASS.",
+  "candidate_explanation": "The multi-command launching shell itself includes the literal process-classifier string. No matching PID rows were retained; exact complete matchset/rootcause remainsunproven.",
+  "guard_counter_evidence": "Actual Lane.prepare independently checked fresh sourcebinding,originaloutputs,allpreexistingGradle/Xcodeprocesses before allocation and xcode. Main acquired exclusive lock and checkedcontrolhash. Receipt/inputmanifest and copiedsource prove successful preparation not runtime success.",
+  "actual_run": {
+    "cycle": "ios-readiness-13",
+    "status": "RUNNING",
+    "source_commit": "8b9e3b0cdfdab82e7cff3ad8135d0eae9a0b8ca3",
+    "approved_control_sha256": "d18ef9c99264353396dcd026ac2bd0c755d3ea3cbc93c6c6c260a4dd6f6c9a7d",
+    "owned_uuid": "465433C2-00B7-4F9C-A00D-534656778AA2",
+    "input_manifest_sha256": "d67571db66b0881c5f96abed52aee3899df2cb3aada0a59083de6564783d34d9",
+    "copy_manifest_sha256": "9c5c558b297f753a2dcf9edaf2a44834b83471902810a5d78164583a1f18cbef"
+  },
+  "future_correction": "Use separate source/preflight tool call and set-e; never concatenate build following unsuccessful preflight. No runner/code/source changed. Existing native runner owns cleanup, do not introduce competing lane.",
+  "limits": "No result/inferred provenance/root preflight success claimed. Independent reconciliation still required after runner finalization."
+}

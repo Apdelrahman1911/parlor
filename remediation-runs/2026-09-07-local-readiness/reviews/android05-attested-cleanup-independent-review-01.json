@@ -1,0 +1,108 @@
+{
+  "reviewer": "/root/factory_review",
+  "at": "2026-09-07T12:24:25.135792+00:00",
+  "scope": "Independent static authorization check of root-authored one-allocation cleanup; actual05 race verification. Reviewer ran no cleanup, imports, native probes, builds, apps, tests, or Git writes.",
+  "checkout_observed": "2250007173bbf9ca7c441f1c46802d84c1b478ba (tracked clean; pre-existing untracked audit/design/instructions/verification material retained)",
+  "decision": "APPROVE single recorded root only, conditional on every runtime fail-closed attestation passing",
+  "read_ranges": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/cleanup_android05_attested_root.py",
+      "lines": [
+        [
+          1,
+          108
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/owned_arm64_smoke_sdk.py",
+      "lines": [
+        [
+          1,
+          105
+        ],
+        [
+          183,
+          350
+        ],
+        [
+          450,
+          576
+        ]
+      ],
+      "note": "Other current control coverage and hash-specific review recorded separately."
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py",
+      "lines": [
+        [
+          1,
+          210
+        ],
+        [
+          210,
+          368
+        ]
+      ],
+      "note": "210\u2013368 previously independently read for this actual05 race."
+    }
+  ],
+  "binding": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/cleanup_android05_attested_root.py",
+      "sha256": "4a3bf563106822a5d64d05b8789775105ebc0e3f6393a6c2082a9749aeecfe77"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/android05-leftover-readonly-attestation-01.json",
+      "sha256": "42df275dce2082a4b4e776fae8b4f9d7f158ef6a84158e9edcdc8e03a1cfda23"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/owned_arm64_smoke_sdk.py",
+      "sha256": "3a425d8dafac853ac3f8c189a68e4951eb1874e79c57f458825d1145d0289991"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py",
+      "sha256": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/owned_sdk_image.py",
+      "sha256": "82490e1769445cbb1f4e95ab41007dcc47473a243f78224c1042e2743f8b47a0"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-runtime-05/run.json",
+      "sha256": "57c12bbce3b7b625b1765098af738803c75257e46bc83ea60d5c15af91b245a1"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-runtime-05/emulator.log",
+      "sha256": "315890866f841675ab52975d44034d16f775557eb70772d69589a3ea36851add"
+    }
+  ],
+  "authorization_checks": [
+    "Full script AST parses; imports reviewed controls rather than invoking global adb client. All three imported control bytes independently rehashed; third transitive SDK module remains at prior approved hash.",
+    "Recorded cycle exact root and AVD token agree with attestation; three actual descriptors recorded. Root, marker and socket exact dev/inode, UID, path type, non-symlink, realpath and private-root permission checks precede actions.",
+    "PID19243 inspected only with read-only lifetime/audit-token backend; process identity must exactly match immutable attestation. lsof specific PID must show the owned private socket; lifetime and socket inode rechecked immediately before direct smart-socket host:kill.",
+    "No numeric PID/group signaling, global adb kill-server, existing-AVD operation or SDK mutation exists in this script. Private root plus exact endpoint constrain the only stop request.",
+    "10-second bounded loop requires original lifetime gone AND no live server on owned socket. Unknown/new process lifetime is never signalled. Any error preserves allocation and records failure.",
+    "lsof+D must yield exactly no holders/no stderr before deletion. Exact root+marker rechecked, OwnedDirectory.remove reattests token/ownership again. Removal limited to recorded task-created root, not user profiles or global caches.",
+    "Exclusive result receipt creation; original runtime receipt read-only, preserved as FAIL."
+  ],
+  "race": {
+    "classification": "CONFIRMED test-runner cleanup defect, not an application failure",
+    "source_proof": "owned_arm64_smoke_sdk.py:514\u2013518 kills owned ADB while emulator remains alive; 519\u2013522 then shuts workers; 523\u2013531 only checks liveness, never sends final kill.",
+    "runtime_proof": "actual05 emulator.log records an adb child starting a new daemon at localfilesystem:/private/tmp/parlor-arm64-9x6snv5r/adb.sock after Wait for emulator \u2026 shutdown. Original run lists only remaining live-socket cleanup failure; all three instrumentation methods completed.",
+    "remediation": "Keep ADB available while emulator/owned workers retire; ensure final ownership-attested direct socket shutdown and bounded dead-socket verification AFTER workers. Cleanup errors must stay failures. Do not widen process signalling grants.",
+    "regressions_recommended": [
+      "ordering: emulator teardown before final endpoint stop",
+      "emulator triggers detached replacement during shutdown; final exact endpoint stop removes it",
+      "worker shutdown raises; remaining narrowly owned cleanup still attempted and error preserved",
+      "wrong owner/symlink/malformed endpoint remains fail-closed",
+      "fresh actual runtime after synthetic controls; previous FAIL remains immutable"
+    ]
+  },
+  "limits": [
+    "Read-only attestation is a past observation. Script revalidation\u2014not reviewer assumption\u2014authorizes any action at execution.",
+    "Approval is not cleanup success. Root must execute single-lane and supply separate receipt.",
+    "This does not authorize Store/device activity or global worker termination."
+  ],
+  "reviewer_cleanup": "No reviewer-owned workers or build outputs created; only this compact deliverable."
+}

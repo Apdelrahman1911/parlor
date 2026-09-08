@@ -1,0 +1,671 @@
+{
+  "schema": 1,
+  "created_at": "2026-09-07T06:30:36.739541+00:00",
+  "reviewer": "/root/factory_review",
+  "authors": [
+    "/root/release_fix_review",
+    "/root (Fatma final delta)"
+  ],
+  "classification": "APPROVED — FIXED AND VERIFIED FOR THE SCOPED 12-FILE STORY FOLLOW-UP; NOT PRODUCTION OR STORE READINESS",
+  "scope": "Full twelve-file source/test/document review (3402 lines), exact dirty worktree source binding, independent Fatma correction review, focused desktop/runtime and strict-detekt receipts. No production Kotlin behavior changes in this bundle.",
+  "source": {
+    "head": "0787b0fade803f3b8f2213b89f2fccb52a822279",
+    "tree": "0f1086c2f38c7316945ede7ceb79a80e11afafd7",
+    "branch": "fix/local-readiness-2026-09-07",
+    "whole_reviewed_input_count": 716,
+    "whole_reviewed_input_manifest_sha256": "6de2ea63e7cfe99b885605e58a2301918d2e6aa034b1b49043a3a49bd935ae00",
+    "tracked_worktree_diff_sha256": "3f496d93aaf6bc8fa897703d2863962797a0beae1d3eeaf6afd4aa50e7360bc8",
+    "pending_bundle_manifest": [
+      {
+        "path": "docs/WHODUNIT_TEST_CONTENT.md",
+        "sha256": "971d1bc65874df676e20ca7ce8dbd0e9d0d040ca1bc24f5dd2bbb5d5b1e584f7"
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json",
+        "sha256": "529cabfad2c076d23f1fb3ca3585cbc5f2aac3ec86f2b16550ffd730b923db1a"
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+        "sha256": "ec3fda631a22dc34a1ecb756d13d81b0e2fc25ada67c0eeba72e002b9adc4559"
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+        "sha256": "c940dd9fe230f996999ec359e688550c974f93e733e7d8ee64d93894c9271f6b"
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+        "sha256": "28f5695ad9188fcba9177147fa898cb827f1a8472aa554bb495310a7fa01d9eb"
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+        "sha256": "83cf702d60d6dfb285c158c2032eaf9bbf4c57a84bd0e619bd42ae565bf1544e"
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/saidi-inheritance.json",
+        "sha256": "89c547e21d1eece8b4ae75ce7a36279d62747250cc1d53b6fcbc439f4b27d6da"
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/zamalek-ramadan.json",
+        "sha256": "098a19c4bef18e643e2fcbdc06bd9c498adc57c8594d45a5602bf61291d75158"
+      },
+      {
+        "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt",
+        "sha256": "1bfdaab8ab48b00643c9f8aeb4d016407fde53a04830c1872f0eaf8181a03d1b"
+      },
+      {
+        "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt",
+        "sha256": "fbc43b04edd9bbbae48bc664ed3da7e4f1862e45f61e17f35105421188a1698a"
+      },
+      {
+        "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryFollowupChronologyTest.kt",
+        "sha256": "b2e006c1064476413b6196a737fe8b26e790c1ffbc046989174c5cd471920dfd"
+      },
+      {
+        "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryGameTraceTest.kt",
+        "sha256": "488152774e309e4c297896a995000b712cd4cdc53a1582c12f702cb6d40ba99d"
+      }
+    ],
+    "pending_bundle_manifest_sha256": "2c74b6b2712a944410a0ca92e6680e5442a7fd45361d8009a01293ac1e20e930",
+    "pending_full_diff_sha256": "9f8aa982c16f92eea5de08c9c9f03fd878cd5937169d817a103f2a78d4876af7",
+    "pending_full_diff_definition": "git diff --binary HEAD for sorted eleven tracked paths, concatenated with git diff --no-index --binary /dev/null for complete new follow-up test",
+    "coverage": "reviews/story-followup-final-coverage-11.json",
+    "coverage_sha256": "3a5fa9a46d4ff1b2e9bc1a6de3b83a23d180bea5ab9023c14bef6570a2773f13"
+  },
+  "source_delta": [
+    {
+      "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json",
+      "baseline_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "baseline_sha256": "3d9c96255b2097cc8b9417030cc8cff70e95571c66e64b031c4f247779eafaa2",
+      "current_sha256": "529cabfad2c076d23f1fb3ca3585cbc5f2aac3ec86f2b16550ffd730b923db1a",
+      "version_before": "1.0.0",
+      "version_after": "1.0.1",
+      "changed_leaf_paths": [
+        "/version",
+        "/payload/characters/0/relationshipToVictim",
+        "/payload/characters/5/guiltyBrief/method",
+        "/payload/characters/5/guiltyBrief/timeline/2/action"
+      ],
+      "structure_ids_order_modes_counts_rounds_and_all_fake_alibis_preserved": true
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+      "baseline_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "baseline_sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+      "current_sha256": "ec3fda631a22dc34a1ecb756d13d81b0e2fc25ada67c0eeba72e002b9adc4559",
+      "version_before": "1.0.1",
+      "version_after": "1.0.2",
+      "changed_leaf_paths": [
+        "/version",
+        "/payload/characters/0/guiltyBrief/method",
+        "/payload/cluePools/finalStrong/fadi-darwish/1/text"
+      ],
+      "structure_ids_order_modes_counts_rounds_and_all_fake_alibis_preserved": true
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+      "baseline_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "baseline_sha256": "12167f59be005d880c3a4861e58cb9ec2f5ff94dbbda8ddfc02a2846e5df6fef",
+      "current_sha256": "c940dd9fe230f996999ec359e688550c974f93e733e7d8ee64d93894c9271f6b",
+      "version_before": "1.0.1",
+      "version_after": "1.0.2",
+      "changed_leaf_paths": [
+        "/version",
+        "/payload/characters/5/guiltyBrief/timeline/0/action",
+        "/payload/revealNarratives/refaat-elsayed"
+      ],
+      "structure_ids_order_modes_counts_rounds_and_all_fake_alibis_preserved": true
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+      "baseline_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "baseline_sha256": "f4c5ff253a82220f937328de09161d09110b05a98eb6bb012934a80f60a5b96d",
+      "current_sha256": "28f5695ad9188fcba9177147fa898cb827f1a8472aa554bb495310a7fa01d9eb",
+      "version_before": "1.0.1",
+      "version_after": "1.0.2",
+      "changed_leaf_paths": [
+        "/version",
+        "/payload/cluePools/killerPointing/daniel-hargrove/3/text",
+        "/payload/cluePools/killerPointing/vivienne-cross/0/text"
+      ],
+      "structure_ids_order_modes_counts_rounds_and_all_fake_alibis_preserved": true
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+      "baseline_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "baseline_sha256": "a0db6acb459d69bf75a4c15a809b64d1b7cd5c21714dceaedc5973ba2d951826",
+      "current_sha256": "83cf702d60d6dfb285c158c2032eaf9bbf4c57a84bd0e619bd42ae565bf1544e",
+      "version_before": "1.0.1",
+      "version_after": "1.0.2",
+      "changed_leaf_paths": [
+        "/version",
+        "/payload/characters/0/guiltyBrief/timeline/1/time",
+        "/payload/characters/2/guiltyBrief/method",
+        "/payload/characters/2/guiltyBrief/timeline/1/action",
+        "/payload/characters/3/guiltyBrief/method",
+        "/payload/characters/4/guiltyBrief/method",
+        "/payload/characters/5/guiltyBrief/method",
+        "/payload/cluePools/killerPointing/rana-naqshabandi/3/text",
+        "/payload/cluePools/contradiction/rana-naqshabandi/0/text",
+        "/payload/revealNarratives/ghassan-shoufan"
+      ],
+      "structure_ids_order_modes_counts_rounds_and_all_fake_alibis_preserved": true
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/saidi-inheritance.json",
+      "baseline_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "baseline_sha256": "eef41fcf78cd6c066d40ef1d0abaab0dbef7d06f9227f6b1012684b4b0c2ed56",
+      "current_sha256": "89c547e21d1eece8b4ae75ce7a36279d62747250cc1d53b6fcbc439f4b27d6da",
+      "version_before": "1.0.0",
+      "version_after": "1.0.1",
+      "changed_leaf_paths": [
+        "/version",
+        "/payload/bedrockClues/0",
+        "/payload/characters/2/guiltyBrief/method"
+      ],
+      "structure_ids_order_modes_counts_rounds_and_all_fake_alibis_preserved": true
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/zamalek-ramadan.json",
+      "baseline_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "baseline_sha256": "6b28832bcf860fae8e30c0207bf8a30060ae075d111d0e6a5c9f18a54162f1b7",
+      "current_sha256": "098a19c4bef18e643e2fcbdc06bd9c498adc57c8594d45a5602bf61291d75158",
+      "version_before": "1.0.0",
+      "version_after": "1.0.1",
+      "changed_leaf_paths": [
+        "/version",
+        "/payload/bedrockClues/2",
+        "/payload/cluePools/publicUniversal/2/text",
+        "/payload/revealNarratives/hagg-mokhtar"
+      ],
+      "structure_ids_order_modes_counts_rounds_and_all_fake_alibis_preserved": true
+    }
+  ],
+  "fatma": {
+    "id": "CONTENT-IC-01",
+    "finder": "/root/factory_review",
+    "original_independent_validator": "/root",
+    "fix_author": "/root",
+    "independent_fix_reviewer": "/root/factory_review",
+    "conclusion": "Original same-selected-killer method/timeline discrepancy removed, not explained away via invented second preparation. All original clues, final account, deliberate incomplete alibi, motive and IDs preserved.",
+    "source_ranges": {
+      "resource": [
+        [
+          187,
+          214
+        ],
+        [
+          219,
+          222
+        ],
+        [
+          265,
+          270
+        ],
+        [
+          326,
+          331
+        ]
+      ],
+      "test": [
+        [
+          172,
+          190
+        ]
+      ],
+      "doc": [
+        [
+          26,
+          40
+        ]
+      ]
+    },
+    "red": "evidence/fatma-chronology-red-10: actual1test1AssertionFailedError at178, no skip; strict Gradle exit1 and cleanup complete",
+    "green": "focused11 same217-line test source now actual Fatma descriptor PASS; entire13-test follow-up class PASS",
+    "compatibility": "Keep uncommitted1.0.1 bump from published-in-Git1.0.0; current digest e27cddb6fb9b6bf035ce6cd9fcb8000dbcb589ae0333cda5c7d7ac83598fb2f7 distinguishes former uncommitted1.0.1 bytes; no new schema/migration."
+  },
+  "verification": {
+    "cycle": "evidence/focused-readiness-regressions-11/",
+    "actual_xml_counts": {
+      "tests": 111,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "suite_count": 18,
+    "story_test_descriptors": 23,
+    "game_trace": "One descriptor executes7catalog×6killer×2mode=84 paths twice; every changed action state strict codec and loaded-case validation; final evidence/reveal/postgame/replay asserted; not physical LAN",
+    "suites": [
+      {
+        "name": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+        "counts": {
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "xml": "evidence/focused-readiness-regressions-11/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.MafiaDoctorRulesTest.xml",
+        "sha256": "66976688a31c8859593356cf73e9d025cbcd0ed43da84dccbb1389ddd978a032",
+        "actual_testcases": []
+      },
+      {
+        "name": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+        "counts": {
+          "tests": 15,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "xml": "evidence/focused-readiness-regressions-11/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest.xml",
+        "sha256": "9f0ccb826c87160a024371b8e78d676aca90ce41b219f76beec208bc26a1cac2",
+        "actual_testcases": []
+      },
+      {
+        "name": "com.parlor.games.whodunit.content.BundledCaseLoadingTest",
+        "counts": {
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "xml": "evidence/focused-readiness-regressions-11/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.BundledCaseLoadingTest.xml",
+        "sha256": "44ba38dae750b8000bbcaddf059bc76c98049a2ebfd3cf533ea321bca6097d7e",
+        "actual_testcases": []
+      },
+      {
+        "name": "com.parlor.games.whodunit.content.TestingStoryChronologyTest",
+        "counts": {
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "xml": "evidence/focused-readiness-regressions-11/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryChronologyTest.xml",
+        "sha256": "a99c3a02bc9d79eaacd1f701079d4f8bf8de28d584fb89434fa549463a077152",
+        "actual_testcases": [
+          "nadimsShortCellarWaitMatchesTheFinalAccountWithoutChangingHisLie()[desktop]",
+          "jamesLightsOneCigarAt915WhileHis910AlibiRemainsFalse()[desktop]",
+          "eachCorrectedTestingStoryUsesItsNextContentVersionWithoutSchemaChanges()[desktop]",
+          "laylaHasOne905OutageAcrossIntroEvidenceAndWitnesses()[desktop]",
+          "karims940PoisoningPrecedesHisCorroborated1015RecordsAlibi()[desktop]"
+        ]
+      },
+      {
+        "name": "com.parlor.games.whodunit.content.TestingStoryCompatibilityTest",
+        "counts": {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "xml": "evidence/focused-readiness-regressions-11/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryCompatibilityTest.xml",
+        "sha256": "b7fff6aed5aa07ea8f427c0a465e7c2051b14ad8d45c85fa74867e90f657bd86",
+        "actual_testcases": [
+          "correctedStoriesDoNotReuseAnyRecordedEarlierCanonicalContentDigest()[desktop]",
+          "currentSaveRoundTripsButOldOrCrossedIdentityIsRetainedAndRejected()[desktop]",
+          "identityLessPreClueSavesCannotSilentlyBindToInstalledStoryProse()[desktop]",
+          "lanOffersMatchOnlyTheExactLoadedRevisionForAllCorrectedCasesAndModes()[desktop]"
+        ]
+      },
+      {
+        "name": "com.parlor.games.whodunit.content.TestingStoryFollowupChronologyTest",
+        "counts": {
+          "tests": 13,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "xml": "evidence/focused-readiness-regressions-11/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryFollowupChronologyTest.xml",
+        "sha256": "1247a05deb6f36543ace6de48cbc21a627156ec59051034f2b71e472801c6e4f",
+        "actual_testcases": [
+          "viviennesBurnedDocumentStaysInTheLibraryAcrossEvidenceAndFinalAccount()[desktop]",
+          "zahraRemainsTheElderSiblingWithoutRewritingHerFiftyYearHistory()[desktop]",
+          "laylasSingle845SpeechPreservesRanasEarlierTenMinuteDetour()[desktop]",
+          "magdasElderSiblingAgeAllowsHerExistingCaregiverHistory()[desktop]",
+          "threeLaylaMethodsSay858LikeTheirOwnTimelines()[desktop]",
+          "walidsEightMinuteReturnIntervalDoesNotRewriteHisFalseAlibiOrWitnesses()[desktop]",
+          "refaatsOriginalNotePredatesHisDiscoveryAndMorningReread()[desktop]",
+          "fadisFollowingMorningNoteAgreesWithHisBriefAndThursdaySettingMetadata()[desktop]",
+          "danielsLampClueUsesTenMinutesWithoutCorrectingHisDeliberateLie()[desktop]",
+          "fatmasPreparationMatchesHerFactualTimelineAndBottleEvidence()[desktop]",
+          "zamalekApproximateDelayDoesNotImposeAnImpossibleTwoHourMinimum()[desktop]",
+          "amalBringsHerFathersNoteButTarekKeepsHisUncleRelationship()[desktop]",
+          "mokhtarsTwoYearHistoryMatchesTheAuditAndFinalAccount()[desktop]"
+        ]
+      },
+      {
+        "name": "com.parlor.games.whodunit.content.TestingStoryGameTraceTest",
+        "counts": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "xml": "evidence/focused-readiness-regressions-11/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryGameTraceTest.xml",
+        "sha256": "44c38337175e00aff0ca1a8ae5983089647fe7e6fd43e3e4a45e8d3ca2d75794",
+        "actual_testcases": [
+          "everyBundledCaseKillerAndModeCompletesDeterministicallyAndRoundTrips()[desktop]"
+        ]
+      },
+      {
+        "name": "com.parlor.games.whodunit.content.WhodunitContentIdentityTest",
+        "counts": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "xml": "evidence/focused-readiness-regressions-11/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.WhodunitContentIdentityTest.xml",
+        "sha256": "5b763afa6d2fbda99ca6a11fe0da9f0cdf081edbc0ad2ba7c6f72ac5143a5165",
+        "actual_testcases": []
+      },
+      {
+        "name": "com.parlor.games.whodunit.content.WhodunitPayloadHardeningTest",
+        "counts": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "xml": "evidence/focused-readiness-regressions-11/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.WhodunitPayloadHardeningTest.xml",
+        "sha256": "2c00ee9d676048dd88c707d5fa1aa2acddabca22922a79f1b918cb9e372dd99f",
+        "actual_testcases": []
+      },
+      {
+        "name": "com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest",
+        "counts": {
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "xml": "evidence/focused-readiness-regressions-11/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest.xml",
+        "sha256": "4cd0b8d36b04842f236e157c14f2cb19d8f88403722bd4980e9fce678e5ff4e5",
+        "actual_testcases": []
+      },
+      {
+        "name": "com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest",
+        "counts": {
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "xml": "evidence/focused-readiness-regressions-11/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest.xml",
+        "sha256": "06b3640c8e4c22a5d97d0b859ffe7ddb96a2f58d25a02a186562ba4920120feb",
+        "actual_testcases": []
+      },
+      {
+        "name": "com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+        "counts": {
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "xml": "evidence/focused-readiness-regressions-11/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest.xml",
+        "sha256": "9a06b3ce43d2cf423b49652d903c41883ece8e8331ec578db71d0654f550c110",
+        "actual_testcases": []
+      },
+      {
+        "name": "com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest",
+        "counts": {
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "xml": "evidence/focused-readiness-regressions-11/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest.xml",
+        "sha256": "515988900956043def3a8ed5b1b8541c9c217085b5912fd9b74568fb27511e74",
+        "actual_testcases": []
+      },
+      {
+        "name": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+        "counts": {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "xml": "evidence/focused-readiness-regressions-11/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest.xml",
+        "sha256": "0dd81dbe9564c101048379a7c13ed3f423045ed7902343614dbbe0c33b8380da",
+        "actual_testcases": []
+      },
+      {
+        "name": "com.parlor.engine.registry.GameRegistryTest",
+        "counts": {
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "xml": "evidence/focused-readiness-regressions-11/reports/shared/engine/build/test-results/desktopTest/TEST-com.parlor.engine.registry.GameRegistryTest.xml",
+        "sha256": "15adea1b2c3e5c809eb4424317246dc6b1db10203c0b975c167b061c6d4f1cb8",
+        "actual_testcases": []
+      },
+      {
+        "name": "com.parlor.engine.snapshot.GameSnapshotTest",
+        "counts": {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "xml": "evidence/focused-readiness-regressions-11/reports/shared/engine/build/test-results/desktopTest/TEST-com.parlor.engine.snapshot.GameSnapshotTest.xml",
+        "sha256": "7af557d6018737134283fdd55b0c8665917ad11264ad8935b83234278a9e0e24",
+        "actual_testcases": []
+      },
+      {
+        "name": "com.parlor.transport.p2p.JupiterDiscoveryContractTest",
+        "counts": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "xml": "evidence/focused-readiness-regressions-11/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+        "sha256": "3d38b52e80701f8bf0357c41f01f9c592fe95e4bdbf1d1d9cc862127ee09c57e",
+        "actual_testcases": []
+      },
+      {
+        "name": "com.parlor.transport.p2p.LoopbackFixtureContractTest",
+        "counts": {
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "xml": "evidence/focused-readiness-regressions-11/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.LoopbackFixtureContractTest.xml",
+        "sha256": "20bd1b506f124c7cdb6f1c78a3097fd7efda61b86a466cbf4f120de3850b175d",
+        "actual_testcases": []
+      }
+    ],
+    "detekt_actual_tasks": [
+      "> Task :game-modes:whodunit:detekt",
+      "> Task :game-modes:whodunit:detektDesktopTest",
+      "> Task :game-modes:mafia:detekt",
+      "> Task :game-modes:mafia:detektDesktopTest",
+      "> Task :shared:engine:detekt",
+      "> Task :shared:engine:detektDesktopTest",
+      "> Task :shared:transport-p2p:detekt",
+      "> Task :shared:transport-p2p:detektDesktopTest"
+    ],
+    "gradle_exit_code": 0,
+    "java_production_canonicalizer_exit_code": 0,
+    "canonical_records": [
+      {
+        "revision": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+        "case_id": "jasmine-ring",
+        "resource_sha256": "d1397ac1e0dc3669d3e5ff5e147aabf88647bc6726621cb7239392eb4e4cd9ca",
+        "version": "1.0.0",
+        "canonical_digest": "5cd26321aecef56a82afb56ec61f8ebad77329de39f413cb59b26de766d0d714"
+      },
+      {
+        "revision": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+        "case_id": "khan-el-khalili",
+        "resource_sha256": "b1b1d73cedc751f321c51f1e1523b74e57d515d408a7760add328c73c8dcc5e4",
+        "version": "1.0.0",
+        "canonical_digest": "0e690e0129c9b76fb772952b4e888e59e81610597b9294c52e8f656144393b9c"
+      },
+      {
+        "revision": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+        "case_id": "last-dinner",
+        "resource_sha256": "c36b20ed19f94b7eea5809f7c2f1ef38be1f97ac6e2598a8a5de0233ee9e89af",
+        "version": "1.0.0",
+        "canonical_digest": "a8593bdab776bb5dc1723b6fb562f37009aa2e02ddd11fc7e848284916452f26"
+      },
+      {
+        "revision": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+        "case_id": "layla-halabi",
+        "resource_sha256": "954752e02c72ab8b4ac8fe7b03598857252c539ba07d1f781683be3b42c07d1d",
+        "version": "1.0.0",
+        "canonical_digest": "b98ca82b8cc2334e4f241f6bcefad96c7846f15096f3a043c4126911404345a5"
+      },
+      {
+        "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "case_id": "iskenderia-corniche",
+        "resource_sha256": "3d9c96255b2097cc8b9417030cc8cff70e95571c66e64b031c4f247779eafaa2",
+        "version": "1.0.0",
+        "canonical_digest": "b492eddff0ccfdc3142a60ff2ee6da22566cbb39ab8717c2219e8875ac66733d"
+      },
+      {
+        "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "case_id": "jasmine-ring",
+        "resource_sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+        "version": "1.0.1",
+        "canonical_digest": "d0aab1123c08f7fb919f00f7ecc8eeb9e1ed2d5daf03df169ea90489c63199c7"
+      },
+      {
+        "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "case_id": "khan-el-khalili",
+        "resource_sha256": "12167f59be005d880c3a4861e58cb9ec2f5ff94dbbda8ddfc02a2846e5df6fef",
+        "version": "1.0.1",
+        "canonical_digest": "c9979500738d7b15812b286300714db1943824aa44c29656dc6bebea72e979a0"
+      },
+      {
+        "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "case_id": "last-dinner",
+        "resource_sha256": "f4c5ff253a82220f937328de09161d09110b05a98eb6bb012934a80f60a5b96d",
+        "version": "1.0.1",
+        "canonical_digest": "f3b71cc74aaee28dcf7845b750ca773229047388a391ba9294be89efab173a05"
+      },
+      {
+        "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "case_id": "layla-halabi",
+        "resource_sha256": "a0db6acb459d69bf75a4c15a809b64d1b7cd5c21714dceaedc5973ba2d951826",
+        "version": "1.0.1",
+        "canonical_digest": "953d5b1dae0aa26b9901e0e044f279b94fd64d4a6d8a66371a9c6577672a3cfc"
+      },
+      {
+        "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "case_id": "saidi-inheritance",
+        "resource_sha256": "eef41fcf78cd6c066d40ef1d0abaab0dbef7d06f9227f6b1012684b4b0c2ed56",
+        "version": "1.0.0",
+        "canonical_digest": "5d333bfb59ebf49586f5ca15a26ba55206b6d8aa9de505ca8c3e4738ffebf8b6"
+      },
+      {
+        "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "case_id": "zamalek-ramadan",
+        "resource_sha256": "6b28832bcf860fae8e30c0207bf8a30060ae075d111d0e6a5c9f18a54162f1b7",
+        "version": "1.0.0",
+        "canonical_digest": "b3fa57ea89c675bc3c5185a64adcbf0a99b4d640d6dff6fa206b58ed2c070d91"
+      },
+      {
+        "revision": "current",
+        "case_id": "iskenderia-corniche",
+        "resource_sha256": "529cabfad2c076d23f1fb3ca3585cbc5f2aac3ec86f2b16550ffd730b923db1a",
+        "version": "1.0.1",
+        "canonical_digest": "e27cddb6fb9b6bf035ce6cd9fcb8000dbcb589ae0333cda5c7d7ac83598fb2f7"
+      },
+      {
+        "revision": "current",
+        "case_id": "jasmine-ring",
+        "resource_sha256": "ec3fda631a22dc34a1ecb756d13d81b0e2fc25ada67c0eeba72e002b9adc4559",
+        "version": "1.0.2",
+        "canonical_digest": "f03f94cc92f2f0c2388eab34e45857cb7dcfca2dd86f2aced5ff23d9292017cf"
+      },
+      {
+        "revision": "current",
+        "case_id": "khan-el-khalili",
+        "resource_sha256": "c940dd9fe230f996999ec359e688550c974f93e733e7d8ee64d93894c9271f6b",
+        "version": "1.0.2",
+        "canonical_digest": "45ddc38ee07935f762175adcffe70c10c163abc4238edaadbd6711f3d7ab8b25"
+      },
+      {
+        "revision": "current",
+        "case_id": "last-dinner",
+        "resource_sha256": "28f5695ad9188fcba9177147fa898cb827f1a8472aa554bb495310a7fa01d9eb",
+        "version": "1.0.2",
+        "canonical_digest": "69e5001cbd49f18c4240d10936d0eb8e75c3020e3df9f21c0f34b9735f0b58ab"
+      },
+      {
+        "revision": "current",
+        "case_id": "layla-halabi",
+        "resource_sha256": "83cf702d60d6dfb285c158c2032eaf9bbf4c57a84bd0e619bd42ae565bf1544e",
+        "version": "1.0.2",
+        "canonical_digest": "a8f57a9a11bb94e1af39e212c5c7f212c5f1ad39d9a76b1b4570368af3fb05c6"
+      },
+      {
+        "revision": "current",
+        "case_id": "saidi-inheritance",
+        "resource_sha256": "89c547e21d1eece8b4ae75ce7a36279d62747250cc1d53b6fcbc439f4b27d6da",
+        "version": "1.0.1",
+        "canonical_digest": "6551e02121f0e27bb0ff70ee24769fd97586dfa5afcaa4e1fd5f066aa6cfd72a"
+      },
+      {
+        "revision": "current",
+        "case_id": "zamalek-ramadan",
+        "resource_sha256": "098a19c4bef18e643e2fcbdc06bd9c498adc57c8594d45a5602bf61291d75158",
+        "version": "1.0.1",
+        "canonical_digest": "82b596a460787ea11cdd20c1f6cd74d4b5e7393188e389fa2e2e93c13f31e3c7"
+      }
+    ],
+    "source_and_controls_stable": true,
+    "timing": {
+      "started_at": "2026-09-07T06:25:00.437553+00:00",
+      "finished_at": "2026-09-07T06:27:14.113630+00:00",
+      "stopped_at": "2026-09-07T06:27:14.427451+00:00",
+      "cleanup_completed_at": "2026-09-07T06:27:14.812007+00:00"
+    },
+    "immediate_inner_gradle_stop": {
+      "exit_code": 0,
+      "at": "2026-09-07T06:27:13.551516+00:00"
+    }
+  },
+  "cross_boundary_conclusions": [
+    "Bundled catalog and DI load all7resources in production; tests call real Res/strict validator. Testing denotes approval status, not isolation.",
+    "Canonical digest includes all envelope prose/version except deliverysignature; arrays/clue ordering preserved. All11historicalpins independently rebound to source bytes and actual production canonicalizer.",
+    "Exact local caseVersion+caseDigest gate precedes launch. Missing identity decodes for inspection only; unsupportedSolo rejected before codec; no implicit rewrite/delete. Earlier independently reviewed nine recovery UI descriptors pass; factory_review does not self-approve its authored additions.",
+    "LAN handshake requires requestedcase/roster/mode and exactidentity; host/peer runtime ownership unchanged; no projection/seed/role-map changes. Tests do not prove physical LAN or samehostdevice rejoin.",
+    "Original WD-C2 four chains still pinned. Followups preserve lies and cross-variant semantics. Ages62/75 remain explicit pre-release editorial choices, not authorially recovered facts."
+  ],
+  "limits": [
+    "This is not full-repository audit completion, no assertion of all story coherence, absence of all defects, UI accessibility, balanced games, legal rights or Store readiness.",
+    "Jasmine earlier-draft/will chronology and closurestatus; Iskenderia discovery/scream; innocent/crossvariant witnessalibis remain editorial questions exactly as documented.",
+    "No physical LAN/device, signedrelease, Store, OSdurability or VoiceOver/TalkBack evidence from this run.",
+    "No automatic content migration or backward-compatible oldstory resume: prior test saves intentionally retained but cannotlaunch mismatched content."
+  ],
+  "cleanup": {
+    "parent_lane_stop_exit_code": 0,
+    "removed_owned_build_paths": [
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build",
+      "build",
+      "build-logic/convention/build"
+    ],
+    "precise_paths_confirmed_absent": true,
+    "retained_outputs": [],
+    "remaining_owned_workers": [],
+    "errors": [],
+    "reviewer_started_builds_or_workers": false,
+    "reviewer_writes": "Only new compact task-specific coverage/review JSON; source, user changes and prior receipts preserved."
+  }
+}

@@ -1,0 +1,12 @@
+--- remediation-runs/2026-09-07-local-readiness/reviews/normal-vmmap-capability-test-before-mock-name-fix-01.txt
++++ remediation-runs/2026-09-07-local-readiness/native/normal-vmmap-capability-01/test_vmmap_capability.py
+@@ -256,7 +256,8 @@
+         gate.__enter__.return_value = gate
+         if gate.pending:
+             gate.check.side_effect = probe.ProbeFailure('INTERRUPTED')
+-        output = mock.Mock(fd=8, name='/synthetic/owned/tmp/owned-sleep-vmmap-synthetic')
++        output = mock.Mock(fd=8)
++        output.name = '/synthetic/owned/tmp/owned-sleep-vmmap-synthetic'
+         output.read.return_value = b'vmmap: operation not permitted\n'
+         if output_cleanup_error:
+             output.cleanup.side_effect = probe.ProbeFailure('RAW_FILE_OWNERSHIP_CHANGED')

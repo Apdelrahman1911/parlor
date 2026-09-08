@@ -1,0 +1,206 @@
+{
+  "schema": 1,
+  "created_at": "2026-09-07T06:40:49.337139+00:00",
+  "reviewer": "/root/factory_review",
+  "control_author": "/root/native_fix_review",
+  "binding_creator_and_execution_owner": "/root",
+  "classification": "APPROVED FOR EXACT UNSIGNED DEBUG SIMULATOR EXECUTION ONLY; NATIVE RESULTS NOT YET VERIFIED",
+  "approved_control_sha256": "049b271d048b19e8598479237176ca23227566dde3e07b26056c5fc14aa60590",
+  "binding": {
+    "path": "ios-readiness-source-01.json",
+    "sha256": "3aba65ba2c1c2e43f9610208cc47fcef008c97e16f7621f95b0213ce55cf2cac",
+    "schema_version": 3,
+    "source_identity": {
+      "commit": "1f809b87c15a4deb079809bc14718a58cf0fe451",
+      "tree": "6f6912d8612f71e07d2c338d860e906333ce8aad",
+      "branch": "fix/local-readiness-2026-09-07",
+      "tracked_status": "",
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_manifest_sha256": "6de2ea63e7cfe99b885605e58a2301918d2e6aa034b1b49043a3a49bd935ae00"
+    },
+    "source_input_count": 716,
+    "copied_input_count": 659,
+    "copied_by_root": {
+      "build-logic": 5,
+      "build.gradle.kts": 1,
+      "composeApp": 95,
+      "config": 5,
+      "game-modes": 230,
+      "gradle.properties": 1,
+      "gradle": 4,
+      "gradlew": 1,
+      "gradlew.bat": 1,
+      "iosApp": 19,
+      "scripts": 59,
+      "settings.gradle.kts": 1,
+      "shared": 237
+    },
+    "same_source_bytes_as_green11": true,
+    "status_note": "Source binding preserves old audit/design/user material. All38untracked harness files are explicitly hashed and included; tracked checkout now contains the reviewed story bytes. Clean tracked status does not mean no user untracked files."
+  },
+  "control_freeze": {
+    "path": "native/controls-review-freeze-04.json",
+    "raw_sha256": "e483933975c5ec1873f69a297a1058c9477705e351d0909857f72781a933a136",
+    "file_count": 38,
+    "line_count": 8209,
+    "triplet_manifest_sha256": "792c1dacf2e466b49735335da3a6e85edcdeb3b779e773e0cd77017ab88b7dcb",
+    "execution_manifest_path": "native/execution-controls-01.json",
+    "execution_manifest_raw_sha256": "e0b0368d4f25fcc4abbe4b66305ac45ebdaf03e0606c56c8eb76f78f68af97dc",
+    "execution_rows": 39,
+    "execution_digest_definition": "SHA256 compact JSON ordered {path,sha256} rows: sorted38frozen controlfiles then exactbindingfile. Not tripletmanifest hash."
+  },
+  "lineage": {
+    "full_control_source_and70_synthetic_test_review": "reviews/native-controls-freeze04-independent-review.json",
+    "sha256": "06448ea7d349c220bae88929e50b5fec2f5bdd18f9119d0f5e26f0c27f7ccb50",
+    "coverage": "reviews/native-controls-freeze04-coverage.json",
+    "coverage_sha256": "ff170b80116eefb8af3c26c149927d5e09ff40e1168d677521a180501f270080",
+    "note": "All38current raw hashes/linecounts independently match the full reviewed freeze. This pass refreshed source/copy/binding/phase/identity code, not a fictional second8209-line read."
+  },
+  "independent_inspection": [
+    "Recreated repository identity from Git cached+untracked inventory and streamed/read hashes after excluding task history/design/protected paths. Exact716row identity matches binding and completed focused11.",
+    "Recreated allowed build input selection independently from explicit build roots/prefixes and protected/hidden path exclusions: ordered659rows equal binding, every source is regular/nonsymlink and matches its current bytes.",
+    "Recomputed38freeze rawhashes,linecounts,triplet digest and distinct39row execution digest without invoking runner or any build.",
+    "Reopened bind_source.py1-59; owned_lane.py1-221; copied_sources.py1-228; instrument_storage.py1-42; actual caller source anchors and Swift ContentView/iOSApp; run_ios_readiness.py1-120,300-345,528-657. Earlier complete-control review remains hash-bound.",
+    "Actual root Gradle settings graph, Compose app dependencies and Xcode resource/build phase references were inspected for copied-input completeness. All application source/resource/Gradlewrapper/pins/verificationmetadata/config/ioswrapper inputs included. Nonshipping source master PNG/docs/IDE/workflow/releaseconfig not consumed by this unsignedembed task remain excluded.",
+    "Ignored path-name inventory contains only three Xcode user-state/scheme-management files under xcuserdata; their contents were not read/copied. No ignored Kotlin/Swift/resources/Gradle build inputs found by allowedpath selection.",
+    "Exact replacement anchors remain unique in current source; declared12copy-only modified inputs and3observer additions remain separate from originalrepository. Current38controls already had70actual synthetic tests, not a claim that nativeOS behavior passed."
+  ],
+  "declared_copy_transforms": [
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/shell/settings/SettingsScreen.kt",
+      "original_sha256": "f97da085d85ed5fe01ac9f4725580ea2f86e399dcd330f532d9babc1925535c5",
+      "purpose": "Actual settings composition observation"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "original_sha256": "cee14cd945a1ecb76bb256eff24e0629259538fd165515cfe1c89e62f0b8fcca",
+      "purpose": "Actual local canonical session/phase observer, not reducer replacement"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaGameFlow.kt",
+      "original_sha256": "8f250d62f8afb48e407c30e5382eb4758bc4ad53dee5168af8e3452ad3e840f6",
+      "purpose": "Same actual local canonical session observer"
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+      "original_sha256": "c77abd03ddcae230b4752d888b16c3d74231d89c967624c31129d176a5ed20ce",
+      "purpose": "Direct invocation/notification bridge retaining actual lifecycle calls"
+    },
+    {
+      "path": "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+      "original_sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098",
+      "purpose": "Actual LocalUIViewController observation"
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSecureKeyValueBacking.kt",
+      "original_sha256": "4bce714c161a892ecd66fff662561d925db7e045af8cacf28e5b698c887015c7",
+      "purpose": "Primitive exact-invocation SecItem status observer; query/return/error mapping unchanged"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/setup/PlayerEntryScreen.kt",
+      "original_sha256": "878a154d1b5e44a6d857c73fb77119f2a1ff5e6d5727b2346c620fb4f87e0977",
+      "purpose": "Stable synthetic selector tag only"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaPlayerEntryScreen.kt",
+      "original_sha256": "2daf4b0f890e14fa33b9fea37db42bc15d2e9cf0c396c5e82f9e40876b8bc7a5",
+      "purpose": "Stable synthetic selector tag only"
+    },
+    {
+      "path": "iosApp/iosApp/iOSApp.swift",
+      "original_sha256": "01d47afe5d13eb9ec48d9e8987c7920e72f2fefa5b06ec525087025caa809386",
+      "purpose": "Fresh owned-profile synthetic fixture preparation"
+    },
+    {
+      "path": "iosApp/iosApp/ContentView.swift",
+      "original_sha256": "5881b354ccc45340100356fbf37480e94efdcc2e8fe823f0bb6b5b60f8ccaa87",
+      "purpose": "Synthetic observation overlay and attachment to actual production container"
+    },
+    {
+      "path": "iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
+      "original_sha256": "e903278fc8defcac9a4d03a52495c1364a361222e5f369059c5d6b6416fb6eb7",
+      "purpose": "Reviewed copied Swift controlled user journey and evidence helpers"
+    },
+    {
+      "path": "iosApp/iosApp.xcodeproj/project.pbxproj",
+      "original_sha256": "625103b4676a017beb4619c61b705efc84c2be47b71603bddd840c1d3856ea9d",
+      "purpose": "Single copied Gradle phase points at owned source copy; immediate isolated daemon stop and failure propagation; no graph or signing modification"
+    }
+  ],
+  "excluded_source_inputs": [
+    ".github/dependabot.yml",
+    ".github/workflows/production-promotion.yml",
+    ".github/workflows/production-verification.yml",
+    ".github/workflows/testing-candidate.yml",
+    ".github/workflows/testing-external-promotion.yml",
+    ".gitignore",
+    ".run/Android App.run.xml",
+    ".run/Build iOS Framework.run.xml",
+    ".run/Compose Desktop.run.xml",
+    ".run/iOS App.run.xml",
+    "AGENTS.md",
+    "ARCHITECTURE.md",
+    "CLAUDE.md",
+    "PROBLEMS_PARLOR.md",
+    "README.md",
+    "assets/branding/parlor-app-icon-master.png",
+    "docs/ACCESSIBILITY_AUDIT.md",
+    "docs/ANDROID_LINT_TRIAGE.md",
+    "docs/APP_PLAN.md",
+    "docs/CONTENT_REVIEW.md",
+    "docs/CONTENT_SCHEMA.md",
+    "docs/DEPENDENCY_REVIEW.md",
+    "docs/DESIGN_TOKENS.md",
+    "docs/FR_REMEDIATION_FINDINGS.md",
+    "docs/HOW_TO_ADD_A_GAME.md",
+    "docs/IOS_SETUP.md",
+    "docs/MAFIA_RULES.md",
+    "docs/MOCK_BACKEND.md",
+    "docs/MOTION_DOWNGRADE.md",
+    "docs/MULTIPLAYER_PLAYTEST.md",
+    "docs/P2PKIT_MAVEN_PROVENANCE.md",
+    "docs/P2P_MANUAL_TEST.md",
+    "docs/P2P_REMEDIATION_PLAN.md",
+    "docs/P2P_REMEDIATION_STATUS.md",
+    "docs/PARLOR_P2P_SMOKE_TEST.md",
+    "docs/PARLOR_PROJECT_HANDOFF.md",
+    "docs/PHASE_0_VALIDATION.md",
+    "docs/PHASE_8_VALIDATION.md",
+    "docs/PRE_RELEASE_COMPATIBILITY.md",
+    "docs/PRIVACY_AND_COMPLIANCE.md",
+    "docs/PRODUCTION_ARCHITECTURE.md",
+    "docs/PROGRESS.md",
+    "docs/RELEASE_AUTOMATION.md",
+    "docs/RELEASE_GATES.md",
+    "docs/RELEASE_RUNBOOK.md",
+    "docs/STORE_METADATA.md",
+    "docs/WHODUNIT_DISCUSSION_TIMING.md",
+    "docs/WHODUNIT_TEST_CONTENT.md",
+    "docs/adr/0001-game-module-registration.md",
+    "docs/adr/0002-manual-endpoint-connection.md",
+    "docs/release/MOBILE_RELEASE_KIT_MIGRATION.md",
+    "docs/review/INDEPENDENT_REVIEW_FINDINGS.md",
+    "docs/review/INDEPENDENT_REVIEW_FINDING_OVERRIDES.csv",
+    "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+    "docs/review/README.md",
+    "release/mobile-release.json",
+    "whodunit-game-design.md"
+  ],
+  "protected_and_personal_handling": {
+    "rule": "No private signing/credentials/local.properties/realplayerdata/globaldefaults or user xcuserdata content read. Paths only inventoried where applicable.",
+    "ignored_personal_paths": [
+      "iosApp/iosApp.xcodeproj/project.xcworkspace/xcuserdata/abdelrahman.xcuserdatad/UserInterfaceState.xcuserstate",
+      "iosApp/iosApp.xcodeproj/project.xcworkspace/xcuserdata/abdelrahman.xcuserdatad/xcschemes/xcschememanagement.plist",
+      "iosApp/iosApp.xcodeproj/xcuserdata/abdelrahman.xcuserdatad/xcschemes/xcschememanagement.plist"
+    ]
+  },
+  "execution_conditions": [
+    "Root sole lane; exact approved control hash and binding; no source/control edits during run. Any drift invalidates this approval.",
+    "Fresh task-owned simulator only, syntheticsettings/saves, explicit unsignedDebug, pinnedJDK21/strictverification, isolated sourcecopy/DerivedData/Gradlehome; no system/global resets.",
+    "Preserve actual evidence including failed launch/native errors, exact builds/install/MachO/loadedimage binding, realOS per-app preference fixture; do not infer first-four-crash cause.",
+    "Immediately stop isolatedGradle after embed/Xcode includingfailures; cleanup sourcecopy/generatedoutputs/DerivedData/ownedprofile and ownership-attestedsecondaryFIFOs after requiredinspection. Never stop unrelatedprocesses.",
+    "Native result, report validity and cleanup must be independently reviewed afterward. Source/control approval alone does not passIOS-R1, DS-C01native, eightcoldlaunch, physicalLAN, signedStore, contentlegal or accessibilitygates."
+  ],
+  "unexecuted_status": "NOT_RUN for new iOS readiness runtime. Prior70controltests PASS only; focused111Desktoptests are not native evidence.",
+  "reviewer_cleanup": "No build/simulator/probe/test/server processes or generated outputs started. Only finite read/hash commands with Python-B and this exclusive newJSON evidence; originalsource/control/userfiles untouched."
+}

@@ -1,0 +1,89 @@
+{
+  "recorded_at": "2026-09-06T06:18:07.199930+00:00",
+  "reviewer": "/root/release_fix_review",
+  "classification": "SOURCE REVIEW OF ORIGINAL WD-C2 STORIES; no implementation/test-result approval",
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+      "sha256": "c36b20ed19f94b7eea5809f7c2f1ef38be1f97ac6e2598a8a5de0233ee9e89af",
+      "reviewed_lines": [
+        [
+          1,
+          391
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "version": "1.0.0"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+      "sha256": "954752e02c72ab8b4ac8fe7b03598857252c539ba07d1f781683be3b42c07d1d",
+      "reviewed_lines": [
+        [
+          1,
+          345
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "version": "1.0.0"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+      "sha256": "d1397ac1e0dc3669d3e5ff5e147aabf88647bc6726621cb7239392eb4e4cd9ca",
+      "reviewed_lines": [
+        [
+          1,
+          342
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "version": "1.0.0"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+      "sha256": "b1b1d73cedc751f321c51f1e1523b74e57d515d408a7760add328c73c8dcc5e4",
+      "reviewed_lines": [
+        [
+          1,
+          348
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "version": "1.0.0"
+    }
+  ],
+  "complete_original_lines_read": 1426,
+  "original_four": [
+    "Last Dinner: James guilty timeline159 says light cigar9:00, objectiveclues284/336/360 andfinal376 say9:15. fs-james-2 unsupported25-minute gap also needs correction. Preserve deliberatelyfalse9:10alibi.",
+    "Layla: intro18 says9:45outage versuspublicUniversal219 9:05 andSamitrue85 alreadyout9:35. Ghassaninnocent132 beforeoutage also conflicts withcorroborated9:20Sami/9:30Tarek afterchoosing9:05.",
+    "Jasmine: Nadimactualmethod77/timeline79–83 placeentry10:50,hiding11:00,victimdescent11:10,attack11:12; final325 claim fullhour unsupported.",
+    "Khan: Karimactualpoison9:40 at82,records10:00at83; Refaatinnocent195/ownvariant208 andKarimfinal331 specifyrecords10:15. Finalimmediatelyprecedingminute implies~10:14,contradicts9:40. Preserve omission ofpoisoning,correctfactual35-minuteinterval."
+  ],
+  "candidate_register": [
+    {
+      "id": "WD-C2-SIBLING-TOAST",
+      "status": "FALSE POSITIVE",
+      "finder": "/root/factory_review and /root/release_fix_review",
+      "independent_reasoning": "Explicit8:30toastclocks belong to other guiltyvariants(Eleanor/James/Clara/Henry). ActualDossierCard76–92 and157–163 render onlyselectedkiller guiltybrief; Daniel own8:15–8:40conversation canprecedecommonunspecifiedtoastbefore8:45. No simultaneous objective8:30source found."
+    },
+    {
+      "id": "WD-C2-SIBLING-LIBRARY",
+      "status": "UNCONFIRMED — EDITORIAL INTENT",
+      "evidence": "last-dinner.json72/110 assignDaniel9:00–9:50library andViviennealone9:10–9:50; co-renderwhenanythirdcharacterkiller(all6selected).",
+      "counter_evidence": "Shipping setup_briefing_card_2 explicitly permitsallplayerstolie, dossierlabels alibi notfactualtimeline. Historicaldesign saysinnocentalibitrue,but isnotauthoritativecurrentcontract. Noimpliedproductioneditorialapproval."
+    },
+    {
+      "id": "WD-C2-SIBLING-PARLOR",
+      "status": "UNCONFIRMED — EDITORIAL INTENT",
+      "evidence": "layla-halabi.json102 assignsRanawithSouadparlor9:00–9:40; Souad162 andAmal35 placeSouadkitchen8:50–9:25thenparlor. Corroboratinginnocentdossiers co-renderwiththirdpersonkiller.",
+      "counter_evidence": "Samepermittedlying/ambiguousauthoredalibicontract; preserveascandidate,donotsilentlyrewriteplot."
+    }
+  ],
+  "content_identity_review": {
+    "source": "WhodunitGameFlow445–489;WhodunitStateValidator159–240;WhodunitContentIdentity42–66",
+    "deterministic_legacy_gap": "Nullidentity passesreferencechecks. Valid6-seatPublicIntro hasnorevealedclues, sochangedproseisnotchecked. Itcanlaunchnewstorywithoutproofitmatchesthesavedrevision.",
+    "expectation_basis": "Newownerauthorizationrequiresstrictcontent/versionmatchingandwaivesoldinternalbackwardmigration.",
+    "recommendation": "Require non-null exact contentidentity at loaded-case launch boundary. Leavecodecinspectioncompatibilityintact,preservefile,offerexplicitdiscard/restart. Updatelegacyacceptancetestsasnewpolicy—notweakenvalidation; retaincontentbounddeepinvarianttests."
+  },
+  "runtime_status": "NOT RUN BY REVIEWER; root owns all execution and cleanup"
+}

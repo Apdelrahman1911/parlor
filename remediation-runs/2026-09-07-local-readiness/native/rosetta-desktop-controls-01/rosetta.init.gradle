@@ -1,0 +1,66 @@
+import groovy.json.JsonOutput
+import org.gradle.api.tasks.compile.JavaCompile
+import org.gradle.api.tasks.testing.Test
+import org.gradle.jvm.toolchain.JavaLanguageVersion
+import org.gradle.jvm.toolchain.JavaToolchainService
+
+// Evidence-only runtime selection. No repository, dependency, test assertion,
+// discovery filter, production source or verification metadata is changed.
+def expected = new File(System.getenv('PARLOR_ROSETTA_JDK')).canonicalFile
+def current = new File(System.getProperty('java.home')).canonicalFile
+if (gradle.gradleVersion != '8.13' || current != expected ||
+        !(System.getProperty('os.arch') in ['x86_64', 'amd64']) ||
+        Runtime.version().feature() != 21) {
+    throw new GradleException('The actual Gradle JVM is not the approved x64 JDK21')
+}
+println('PARLOR_ROSETTA_HOST ' + JsonOutput.toJson([
+    build: gradle.startParameter.currentDir.toString(), home: current.toString(),
+    architecture: System.getProperty('os.arch'), version: System.getProperty('java.version')
+]))
+
+gradle.beforeProject { project ->
+    project.tasks.withType(Test).configureEach { task ->
+        def tools = project.extensions.getByType(JavaToolchainService)
+        task.javaLauncher.set(tools.launcherFor { languageVersion.set(JavaLanguageVersion.of(21)) })
+        task.maxParallelForks = 1
+        task.systemProperty('parlor.remediation.cycle', System.getenv('PARLOR_ROSETTA_CYCLE'))
+        task.doFirst {
+            def launcher = task.javaLauncher.get()
+            if (launcher.metadata.installationPath.asFile.canonicalFile != expected) {
+                throw new GradleException('A test launcher escaped the approved x64 JDK')
+            }
+            println('PARLOR_ROSETTA_TEST ' + JsonOutput.toJson([
+                build: project.rootDir.toString(), task: task.path,
+                executable: launcher.executablePath.asFile.canonicalPath,
+                home: launcher.metadata.installationPath.asFile.canonicalPath
+            ]))
+        }
+    }
+    project.tasks.withType(JavaCompile).configureEach { task ->
+        def tools = project.extensions.getByType(JavaToolchainService)
+        task.javaCompiler.set(tools.compilerFor { languageVersion.set(JavaLanguageVersion.of(21)) })
+        task.doFirst {
+            def compiler = task.javaCompiler.get()
+            if (compiler.metadata.installationPath.asFile.canonicalFile != expected) {
+                throw new GradleException('A Java compiler escaped the approved x64 JDK')
+            }
+            println('PARLOR_ROSETTA_JAVAC ' + JsonOutput.toJson([
+                build: project.rootDir.toString(), task: task.path,
+                executable: compiler.executablePath.asFile.canonicalPath
+            ]))
+        }
+    }
+    project.tasks.configureEach { task ->
+        if (task.hasProperty('compilerExecutionStrategy')) {
+            task.doFirst {
+                if (task.compilerExecutionStrategy.get().name() != 'IN_PROCESS') {
+                    throw new GradleException('Kotlin compilation did not select the in-process strategy')
+                }
+                println('PARLOR_ROSETTA_KOTLIN ' + JsonOutput.toJson([
+                    build: project.rootDir.toString(), task: task.path, strategy: 'IN_PROCESS',
+                    home: System.getProperty('java.home'), architecture: System.getProperty('os.arch')
+                ]))
+            }
+        }
+    }
+}

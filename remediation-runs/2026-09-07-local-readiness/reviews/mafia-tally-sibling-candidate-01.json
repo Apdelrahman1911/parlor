@@ -1,0 +1,256 @@
+{
+  "id": "M-READINESS-TALLY",
+  "classification": "UNCONFIRMED — independent root validation and draft runtime witness pending",
+  "finder": "/root/native_fix_review",
+  "intended_validator": "/root",
+  "proposed_severity": "Low presentation; no rule/authority/privacy defect established",
+  "created_utc": "2026-09-07T13:00:10.389156+00:00",
+  "repository": "/Users/abdelrahman/Projects/parlor",
+  "checkout_commit": "711dd4163f4afa97954f47eddc98fd1a4df0b4ae",
+  "grouping": "Two UI manifestations of the M-C03 unweighted leading-player-name/trailing-value root cause, not two independently counted domain issues.",
+  "candidates": [
+    {
+      "file": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/vote/VoteCastScreen.kt",
+      "lines": [
+        124,
+        149
+      ],
+      "description": "Public day tally renders full legal player name first and count second, both unweighted in fixed-width Row. SpaceBetween does not reserve the count.",
+      "reachability": "MafiaReducer.CloseVote626–709 constructs public VoteAnnouncement; nonterminal elimination retains the announcement phase. Local VoteAnnouncementSegment659–693 and LAN segment471–517 pass public tally and full roster displayName unchanged."
+    },
+    {
+      "file": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/MafiaKillVoteScreen.kt",
+      "lines": [
+        54,
+        92
+      ],
+      "description": "Private Mafia coordination revote previous-round tally repeats the same leading-name/count row.",
+      "reachability": "ResolveNight363–383 opens round2 after valid round1 tied kill tally under default REVOTE. openMafiaCoordinationRevote514–548 records previousRoundTally. Local NightChoose349–374 and LAN NightSegment266–340 pass only current player Mafia private snapshot to MafiaKillVoteScreen; round>=2/nonempty footer54–58 is reachable. 2 Mafia +6 Town is a valid8player setting. Peer validator accepts the appropriate tied1:1 history and bans non-Mafia private projection."
+    }
+  ],
+  "basis": "Current RoomInputPolicy allows32code-unit W or Arabic ش names. Both scenes apply outer padding and a padded ParlorCard. Full name is first unweighted child; no ellipsis, maxwidth or prior count allocation. Original independently executed M-C03 final-role witness established zero trailing allocation under the same current typography/card geometry. The new draft tests must still demonstrate each actual sibling before confirming runtime behavior.",
+  "scenarios": [
+    "8living players,2Mafia/6Town, a non-Mafia player has a valid32wide-character name; day ballot3:2 plus3abstentions eliminates one Town without terminal parity: public tally should retain3 and2.",
+    "8living players,2Mafia/6Town, default MafiaKillTie.REVOTE; living Mafia choose separate eligibleTown targets1:1. On round2, previous tally for32wide-character target must show1.",
+    "EN/LTR and AR/RTL at320x640, fontScale1 and2; display actual public/private production composables."
+  ],
+  "siblings_disposition": [
+    {
+      "file": "MafiaSetupScreen.kt",
+      "lines": [
+        248,
+        266
+      ],
+      "disposition": "NOT SAME ROOT CAUSE: RadioButton measured first; label follows. No trailing control starvation from a leading player name."
+    },
+    {
+      "file": "MafiaSetupScreen.kt",
+      "lines": [
+        344,
+        394
+      ],
+      "disposition": "Prior independently reviewed FlowRow wraps label and intact48dp-control group; latest root actual4stepper tests PASS."
+    },
+    {
+      "file": "MafiaSetupScreen.kt",
+      "lines": [
+        497,
+        529
+      ],
+      "disposition": "Prior independently reviewed ToggleRow weighted label reserves fixedSwitch; actual4tests PASS."
+    },
+    {
+      "file": "MafiaSetupScreen.kt",
+      "lines": [
+        396,
+        414
+      ],
+      "disposition": "Unweighted civilian count has bounded authored Civilian/مدني label, not arbitrary32character name. No confirmed failure. Separate4test draft countercheck at valid maximum15civilian count and1x/2x; do not classify it merely by similar source shape."
+    },
+    {
+      "file": "TargetPickerScreen.kt",
+      "lines": [
+        141,
+        180
+      ],
+      "disposition": "NOT SAME ROOT CAUSE: target Row has one Column child, not a trailing count/control."
+    },
+    {
+      "file": "PostGameScreen.kt",
+      "lines": [
+        61,
+        87
+      ],
+      "disposition": "OriginalM-C03 repaired using full-width stacked name/role. Latest root actual6layout tests PASS."
+    }
+  ],
+  "privacy_and_fix_constraints": "Any eventual patch must stay in the two game-owned tally composables. No reducer, projections, stored role/history, protocol, player-count/name policy or private targeting behavior change. Never expose private Mafia tally outside own permitted private slice to solve presentation.",
+  "drafts": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/MafiaTallyLayoutTest.kt.draft",
+      "sha256": "999aa86af0139eb5146dafc18d1c469e2b8b65ffb2b3dc4886c0f2aca8e5abef",
+      "intended_active_path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/MafiaTallyLayoutTest.kt",
+      "tests_expected": 8,
+      "execution": "NOT_RUN — root lane only; reviewer requests independent source approval before root adopts"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/MafiaSetupReadOnlyCountLayoutTest.kt.draft",
+      "sha256": "a2b5fe28323a86dc34bccea273ba8006b88989e3887db2c52238992103ec6560",
+      "intended_active_path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupReadOnlyCountLayoutTest.kt",
+      "tests_expected": 4,
+      "execution": "NOT_RUN — root lane only; reviewer requests independent source approval before root adopts"
+    }
+  ],
+  "proposed_repair_if_confirmed": "Reserve trailing numeric width by weighting the name and retaining a fixed semantic spacing gap, or use existing full-width stacked presentation pattern. Do not shrink fonts/names, disable scaling, or drop tally rows.",
+  "source_ledger": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/vote/VoteCastScreen.kt",
+      "sha256": "fbfa34d07191ac38fed6d6edf1afef23df5e7baf3c84757c1739d216b20c8e3b",
+      "reviewed_lines": [
+        [
+          1,
+          172
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/MafiaKillVoteScreen.kt",
+      "sha256": "60eb1efce28f4fd3b9c671ffc05a11afabcca8e4b0c62033820c0d14bd628fca",
+      "reviewed_lines": [
+        [
+          1,
+          95
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/TargetPickerScreen.kt",
+      "sha256": "325ec6093450c3ce095cb52cf05ee3b1b15b163dbb35123a7352ce25d77deb1c",
+      "reviewed_lines": [
+        [
+          1,
+          180
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+      "sha256": "4b98a283b3d92bcfbbdeaa699a8c3e552b38440b90874795273a8edb0dada3dd",
+      "reviewed_lines": [
+        [
+          1,
+          529
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+      "sha256": "1371eb747579362548f3962a520c2c3f3c2f6225ef551bad93e3e690e08a1fe6",
+      "reviewed_lines": [
+        [
+          1,
+          251
+        ],
+        [
+          285,
+          398
+        ],
+        [
+          640,
+          751
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+      "sha256": "09de10c3735f1afeb7b36550dca57c4e9fd190d985faf6ff0eae8c0b8d21a784",
+      "reviewed_lines": [
+        [
+          1,
+          244
+        ],
+        [
+          247,
+          358
+        ],
+        [
+          470,
+          628
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/reducer/MafiaReducer.kt",
+      "sha256": "2ff9754d497b8258613badb057ab915a6d457786c56b0d5e725f2ba0053e56e2",
+      "reviewed_lines": [
+        [
+          358,
+          730
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/state/MafiaPeerSnapshotValidator.kt",
+      "sha256": "8df30438d0b5a4f6e9666de6e1863ab4c1faf8c3664126be6343c293ff8e383c",
+      "reviewed_lines": [
+        [
+          135,
+          190
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/projection/MafiaProjectionPolicy.kt",
+      "sha256": "713158db7e5cf09e479cd249537b2f1e4ead14261b9d148c9288ba45c4dc51cc",
+      "reviewed_lines": [
+        [
+          1,
+          94
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/settings/MafiaSettings.kt",
+      "sha256": "beaa58c17c44a8ff552e52e838171deedf17f8dadd76258caaef8dd2b5a336f5",
+      "reviewed_lines": [
+        [
+          1,
+          133
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/networking/src/commonMain/kotlin/com/parlor/networking/room/RoomInputPolicy.kt",
+      "sha256": "f4fe96788fbb709ac7e9a1d2b66a010b124d4456e5779272527f2392f43bd118",
+      "reviewed_lines": [
+        [
+          1,
+          100
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorCard.kt",
+      "sha256": "e764e6c7e09dc72464ad3eb14b41328a609a7d47475941054fb7af292f7a9d51",
+      "reviewed_lines": [
+        [
+          1,
+          55
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    }
+  ],
+  "cleanup": "Only compact draft/evidence files created; no active production/test edits, builds, daemons, native processes or temp directories started by reviewer."
+}

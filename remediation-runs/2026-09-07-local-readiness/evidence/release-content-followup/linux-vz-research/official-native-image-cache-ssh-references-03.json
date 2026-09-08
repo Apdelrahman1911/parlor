@@ -1,0 +1,243 @@
+[
+  {
+    "url": "https://api.github.com/repos/lima-vm/lima/contents/pkg/downloader/downloader.go?ref=v2.1.4",
+    "accessed_at": "2026-09-07T05:31:20.182124+00:00",
+    "sha256": "b7e4500b5e1488d04262e552eeb90c6b7cd970af727a374c4457a2717bb8bff3",
+    "lines": 793,
+    "reviewed_excerpts": [
+      {
+        "from": 1,
+        "to": 13,
+        "text": "1: // SPDX-FileCopyrightText: Copyright The Lima Authors\n2: // SPDX-License-Identifier: Apache-2.0\n3: \n4: package downloader\n5: \n6: import (\n7: \t\"bytes\"\n8: \t\"context\"\n9: \t\"crypto/sha256\"\n10: \t\"errors\"\n11: \t\"fmt\"\n12: \t\"io\"\n13: \t\"net/http\""
+      },
+      {
+        "from": 42,
+        "to": 64,
+        "text": "42: \n43: const (\n44: \tStatusUnknown    Status = \"\"\n45: \tStatusDownloaded Status = \"downloaded\"\n46: \tStatusSkipped    Status = \"skipped\"\n47: \tStatusUsedCache  Status = \"used-cache\"\n48: )\n49: \n50: type Result struct {\n51: \tStatus          Status\n52: \tCachePath       string // \"/Users/foo/Library/Caches/lima/download/by-url-sha256/<SHA256_OF_URL>/data\"\n53: \tLastModified    time.Time\n54: \tContentType     string\n55: \tValidatedDigest bool\n56: }\n57: \n58: type options struct {\n59: \tcacheDir       string // default: empty (disables caching)\n60: \tdecompress     bool   // default: false (keep compression)\n61: \tdescription    string // default: url\n62: \texpectedDigest digest.Digest\n63: }\n64: "
+      },
+      {
+        "from": 71,
+        "to": 102,
+        "text": "71: \treturn nil\n72: }\n73: \n74: type Opt func(*options) error\n75: \n76: // WithCache enables caching using filepath.Join(os.UserCacheDir(), \"lima\") as the cache dir.\n77: func WithCache() Opt {\n78: \treturn func(o *options) error {\n79: \t\tucd, err := os.UserCacheDir()\n80: \t\tif err != nil {\n81: \t\t\treturn err\n82: \t\t}\n83: \t\tcacheDir := filepath.Join(ucd, \"lima\")\n84: \t\treturn WithCacheDir(cacheDir)(o)\n85: \t}\n86: }\n87: \n88: // WithCacheDir enables caching using the specified dir.\n89: // Empty value disables caching.\n90: func WithCacheDir(cacheDir string) Opt {\n91: \treturn func(o *options) error {\n92: \t\to.cacheDir = cacheDir\n93: \t\treturn nil\n94: \t}\n95: }\n96: \n97: // WithDescription adds a user description of the download.\n98: func WithDescription(description string) Opt {\n99: \treturn func(o *options) error {\n100: \t\to.description = description\n101: \t\treturn nil\n102: \t}"
+      },
+      {
+        "from": 164,
+        "to": 181,
+        "text": "164: \treturn t\n165: }\n166: \n167: // Download downloads the remote resource into the local path.\n168: //\n169: // Download caches the remote resource if WithCache or WithCacheDir option is specified.\n170: // Local files are not cached.\n171: //\n172: // When the local path already exists, Download returns Result with StatusSkipped.\n173: // (So, the local path cannot be set to /dev/null for \"caching only\" mode.)\n174: //\n175: // The local path can be an empty string for \"caching only\" mode.\n176: func Download(ctx context.Context, local, remote string, opts ...Opt) (*Result, error) {\n177: \tvar o options\n178: \tif err := o.apply(opts); err != nil {\n179: \t\treturn nil, err\n180: \t}\n181: "
+      },
+      {
+        "from": 236,
+        "to": 306,
+        "text": "236: \t}\n237: \n238: \tvar res *Result\n239: \terr := lockutil.WithDirLock(shad, func() error {\n240: \t\tvar err error\n241: \t\tres, err = getCached(ctx, localPath, remote, o)\n242: \t\tif err != nil {\n243: \t\t\treturn err\n244: \t\t}\n245: \t\tif res != nil {\n246: \t\t\treturn nil\n247: \t\t}\n248: \t\tres, err = fetch(ctx, localPath, remote, o)\n249: \t\treturn err\n250: \t})\n251: \treturn res, err\n252: }\n253: \n254: // getCached tries to copy the file from the cache to local path. Return result,\n255: // nil if the file was copied, nil, nil if the file is not in the cache or the\n256: // cache needs update, or nil, error on fatal error.\n257: func getCached(ctx context.Context, localPath, remote string, o options) (*Result, error) {\n258: \tshad := cacheDirectoryPath(o.cacheDir, remote)\n259: \tshadData := filepath.Join(shad, \"data\")\n260: \tshadTime := filepath.Join(shad, \"time\")\n261: \tshadType := filepath.Join(shad, \"type\")\n262: \tshadDigest, err := cacheDigestPath(shad, o.expectedDigest)\n263: \tif err != nil {\n264: \t\treturn nil, err\n265: \t}\n266: \tif _, err := os.Stat(shadData); err != nil {\n267: \t\treturn nil, nil\n268: \t}\n269: \text := path.Ext(remote)\n270: \tlogrus.Debugf(\"file %#q is cached as %#q\", localPath, shadData)\n271: \tif _, err := os.Stat(shadDigest); err == nil {\n272: \t\tlogrus.Debugf(\"Comparing digest %#q with the cached digest file %#q, not computing the actual digest of %#q\",\n273: \t\t\to.expectedDigest, shadDigest, shadData)\n274: \t\tif err := validateCachedDigest(shadDigest, o.expectedDigest); err != nil {\n275: \t\t\treturn nil, err\n276: \t\t}\n277: \t\tif err := copyLocal(ctx, localPath, shadData, ext, o.decompress, \"\", \"\"); err != nil {\n278: \t\t\treturn nil, err\n279: \t\t}\n280: \t} else {\n281: \t\tif match, lmCached, lmRemote, err := matchLastModified(ctx, shadTime, remote); err != nil {\n282: \t\t\tlogrus.WithError(err).Info(\"Failed to retrieve last-modified for cached digest-less image; using cached image.\")\n283: \t\t} else if match {\n284: \t\t\tif err := copyLocal(ctx, localPath, shadData, ext, o.decompress, o.description, o.expectedDigest); err != nil {\n285: \t\t\t\treturn nil, err\n286: \t\t\t}\n287: \t\t} else {\n288: \t\t\tlogrus.Infof(\"Re-downloading digest-less image: last-modified mismatch (cached: %#q, remote: %#q)\", lmCached, lmRemote)\n289: \t\t\treturn nil, nil\n290: \t\t}\n291: \t}\n292: \tres := &Result{\n293: \t\tStatus:          StatusUsedCache,\n294: \t\tCachePath:       shadData,\n295: \t\tLastModified:    readTime(shadTime),\n296: \t\tContentType:     readFile(shadType),\n297: \t\tValidatedDigest: o.expectedDigest != \"\",\n298: \t}\n299: \treturn res, nil\n300: }\n301: \n302: // fetch downloads remote to the cache and copy the cached file to local path.\n303: func fetch(ctx context.Context, localPath, remote string, o options) (*Result, error) {\n304: \tshad := cacheDirectoryPath(o.cacheDir, remote)\n305: \tshadData := filepath.Join(shad, \"data\")\n306: \tshadTime := filepath.Join(shad, \"time\")"
+      },
+      {
+        "from": 326,
+        "to": 357,
+        "text": "326: \tif err := copyLocal(ctx, localPath, shadData, ext, o.decompress, \"\", \"\"); err != nil {\n327: \t\treturn nil, err\n328: \t}\n329: \tres := &Result{\n330: \t\tStatus:          StatusDownloaded,\n331: \t\tCachePath:       shadData,\n332: \t\tLastModified:    readTime(shadTime),\n333: \t\tContentType:     readFile(shadType),\n334: \t\tValidatedDigest: o.expectedDigest != \"\",\n335: \t}\n336: \treturn res, nil\n337: }\n338: \n339: // Cached checks if the remote resource is in the cache.\n340: //\n341: // Download caches the remote resource if WithCache or WithCacheDir option is specified.\n342: // Local files are not cached.\n343: //\n344: // When the cache path already exists, Cached returns Result with StatusUsedCache.\n345: func Cached(remote string, opts ...Opt) (*Result, error) {\n346: \tvar o options\n347: \tif err := o.apply(opts); err != nil {\n348: \t\treturn nil, err\n349: \t}\n350: \tif o.cacheDir == \"\" {\n351: \t\treturn nil, errors.New(\"caching-only mode requires the cache directory to be specified\")\n352: \t}\n353: \tif IsLocal(remote) {\n354: \t\treturn nil, errors.New(\"local files are not cached\")\n355: \t}\n356: \n357: \tshad := cacheDirectoryPath(o.cacheDir, remote)"
+      },
+      {
+        "from": 373,
+        "to": 420,
+        "text": "373: \tif err := os.MkdirAll(shad, 0o700); err != nil {\n374: \t\treturn nil, err\n375: \t}\n376: \terr = lockutil.WithDirLock(shad, func() error {\n377: \t\tif _, err := os.Stat(shadDigest); err != nil {\n378: \t\t\tif err := validateCachedDigest(shadDigest, o.expectedDigest); err != nil {\n379: \t\t\t\treturn err\n380: \t\t\t}\n381: \t\t} else {\n382: \t\t\tif err := validateLocalFileDigest(shadData, o.expectedDigest); err != nil {\n383: \t\t\t\treturn err\n384: \t\t\t}\n385: \t\t}\n386: \t\treturn nil\n387: \t})\n388: \tif err != nil {\n389: \t\treturn nil, err\n390: \t}\n391: \n392: \tres := &Result{\n393: \t\tStatus:          StatusUsedCache,\n394: \t\tCachePath:       shadData,\n395: \t\tLastModified:    readTime(shadTime),\n396: \t\tContentType:     readFile(shadType),\n397: \t\tValidatedDigest: o.expectedDigest != \"\",\n398: \t}\n399: \treturn res, nil\n400: }\n401: \n402: // cacheDirectoryPath returns the cache subdirectory path.\n403: //   - \"url\" file contains the url\n404: //   - \"data\" file contains the data\n405: //   - \"time\" file contains the time (Last-Modified header)\n406: //   - \"type\" file contains the type (Content-Type header)\n407: func cacheDirectoryPath(cacheDir, remote string) string {\n408: \treturn filepath.Join(cacheDir, \"download\", \"by-url-sha256\", CacheKey(remote))\n409: }\n410: \n411: // cacheDigestPath returns the cache digest file path.\n412: //   - \"<ALGO>.digest\" contains the digest\n413: func cacheDigestPath(shad string, expectedDigest digest.Digest) (string, error) {\n414: \tshadDigest := \"\"\n415: \tif expectedDigest != \"\" {\n416: \t\talgo := expectedDigest.Algorithm().String()\n417: \t\tif strings.Contains(algo, \"/\") || strings.Contains(algo, \"\\\\\") {\n418: \t\t\treturn \"\", fmt.Errorf(\"invalid digest algorithm %#q\", algo)\n419: \t\t}\n420: \t\tshadDigest = filepath.Join(shad, algo+\".digest\")"
+      },
+      {
+        "from": 570,
+        "to": 587,
+        "text": "570: \t}\n571: \tbar.Finish()\n572: \treturn err\n573: }\n574: \n575: func validateCachedDigest(shadDigest string, expectedDigest digest.Digest) error {\n576: \tif expectedDigest == \"\" {\n577: \t\treturn nil\n578: \t}\n579: \tshadDigestB, err := os.ReadFile(shadDigest)\n580: \tif err != nil {\n581: \t\treturn err\n582: \t}\n583: \tshadDigestS := strings.TrimSpace(string(shadDigestB))\n584: \tif shadDigestS != expectedDigest.String() {\n585: \t\treturn fmt.Errorf(\"expected digest %#q, got %#q\", expectedDigest, shadDigestS)\n586: \t}\n587: \treturn nil"
+      },
+      {
+        "from": 618,
+        "to": 662,
+        "text": "618: //   - lastModifiedPath: path of the cached last-modified time file\n619: //   - url: URL to fetch the last-modified time\n620: //\n621: // returns:\n622: //   - matched: whether the last-modified time matches\n623: //   - lmCached: last-modified time string from the lastModifiedPath\n624: //   - lmRemote: last-modified time string from the URL\n625: //   - err: error if fetching the last-modified time from the URL fails\n626: func matchLastModified(ctx context.Context, lastModifiedPath, url string) (matched bool, lmCached, lmRemote string, err error) {\n627: \tlmCached = readFile(lastModifiedPath)\n628: \tif lmCached == \"\" {\n629: \t\treturn false, \"<not cached>\", \"<not checked>\", nil\n630: \t}\n631: \tresp, err := httpclientutil.Head(ctx, http.DefaultClient, url)\n632: \tif err != nil {\n633: \t\treturn false, lmCached, \"<failed to fetch remote>\", err\n634: \t}\n635: \tdefer resp.Body.Close()\n636: \tlmRemote = resp.Header.Get(\"Last-Modified\")\n637: \tif lmRemote == \"\" {\n638: \t\treturn false, lmCached, \"<missing Last-Modified header>\", nil\n639: \t}\n640: \tlmCachedTime, errParsingCachedTime := time.Parse(http.TimeFormat, lmCached)\n641: \tlmRemoteTime, errParsingRemoteTime := time.Parse(http.TimeFormat, lmRemote)\n642: \tif errParsingCachedTime != nil && errParsingRemoteTime != nil {\n643: \t\t// both time strings are failed to parse, so compare them as strings\n644: \t\treturn lmCached == lmRemote, lmCached, lmRemote, nil\n645: \t} else if errParsingCachedTime == nil && errParsingRemoteTime == nil {\n646: \t\t// both time strings are successfully parsed, so compare them as times\n647: \t\treturn lmRemoteTime.Equal(lmCachedTime), lmCached, lmRemote, nil\n648: \t}\n649: \t// ignore parsing errors for either time string and assume they are different\n650: \treturn false, lmCached, lmRemote, nil\n651: }\n652: \n653: func downloadHTTP(ctx context.Context, localPath, lastModified, contentType, url, description string, expectedDigest digest.Digest) error {\n654: \tif localPath == \"\" {\n655: \t\treturn errors.New(\"downloadHTTP: got empty localPath\")\n656: \t}\n657: \tlogrus.Debugf(\"downloading %#q into %#q\", url, localPath)\n658: \n659: \tresp, err := httpclientutil.Get(ctx, http.DefaultClient, url)\n660: \tif err != nil {\n661: \t\treturn err\n662: \t}"
+      },
+      {
+        "from": 742,
+        "to": 762,
+        "text": "742: // https://github.com/lima-vm/lima/issues/2722\n743: func perProcessTempfile(path string) string {\n744: \treturn fmt.Sprintf(\"%s.tmp.%d.%d\", path, os.Getpid(), tempfileCount.Add(1))\n745: }\n746: \n747: // CacheEntries returns a map of cache entries.\n748: // The key is the SHA256 of the URL.\n749: // The value is the path to the cache entry.\n750: func CacheEntries(opts ...Opt) (map[string]string, error) {\n751: \tentries := make(map[string]string)\n752: \tvar o options\n753: \tif err := o.apply(opts); err != nil {\n754: \t\treturn nil, err\n755: \t}\n756: \tif o.cacheDir == \"\" {\n757: \t\treturn entries, nil\n758: \t}\n759: \tdownloadDir := filepath.Join(o.cacheDir, \"download\", \"by-url-sha256\")\n760: \t_, err := os.Stat(downloadDir)\n761: \tif err != nil {\n762: \t\tif errors.Is(err, os.ErrNotExist) {"
+      },
+      {
+        "from": 772,
+        "to": 793,
+        "text": "772: \t\tentries[entry.Name()] = filepath.Join(downloadDir, entry.Name())\n773: \t}\n774: \treturn entries, nil\n775: }\n776: \n777: // CacheKey returns the key for a cache entry of the remote URL.\n778: func CacheKey(remote string) string {\n779: \treturn fmt.Sprintf(\"%x\", sha256.Sum256([]byte(remote)))\n780: }\n781: \n782: // RemoveAllCacheDir removes the cache directory.\n783: func RemoveAllCacheDir(opts ...Opt) error {\n784: \tvar o options\n785: \tif err := o.apply(opts); err != nil {\n786: \t\treturn err\n787: \t}\n788: \tif o.cacheDir == \"\" {\n789: \t\treturn nil\n790: \t}\n791: \tlogrus.Infof(\"Pruning %#q\", o.cacheDir)\n792: \treturn os.RemoveAll(o.cacheDir)\n793: }"
+      }
+    ]
+  },
+  {
+    "url": "https://api.github.com/repos/lima-vm/lima/contents/pkg/driver/vz/vz_driver_darwin.go?ref=v2.1.4",
+    "accessed_at": "2026-09-07T05:31:23.014711+00:00",
+    "sha256": "c77863819ad641eabb8790c08d0b87952b192f4ee74d4e7e93f6d6b9116493b2",
+    "lines": 615,
+    "reviewed_excerpts": [
+      {
+        "from": 1,
+        "to": 15,
+        "text": "1: //go:build darwin && !no_vz\n2: \n3: // SPDX-FileCopyrightText: Copyright The Lima Authors\n4: // SPDX-License-Identifier: Apache-2.0\n5: \n6: package vz\n7: \n8: import (\n9: \t\"context\"\n10: \t\"embed\"\n11: \t\"errors\"\n12: \t\"fmt\"\n13: \t\"net\"\n14: \t\"os\"\n15: \t\"os/exec\""
+      },
+      {
+        "from": 133,
+        "to": 150,
+        "text": "133: \t\t}\n134: \t}\n135: \n136: \tvar vzOpts limatype.VZOpts\n137: \tif l.Instance.Config.VMOpts[limatype.VZ] != nil {\n138: \t\tif err := limayaml.Convert(l.Instance.Config.VMOpts[limatype.VZ], &vzOpts, \"vmOpts.vz\"); err != nil {\n139: \t\t\tlogrus.WithError(err).Warnf(\"Couldn't convert %#q\", l.Instance.Config.VMOpts[limatype.VZ])\n140: \t\t}\n141: \t}\n142: \n143: \tif runtime.GOOS == \"darwin\" && limatype.IsNativeArch(limatype.AARCH64) {\n144: \t\tif vzOpts.Rosetta.Enabled != nil {\n145: \t\t\tl.rosettaEnabled = *vzOpts.Rosetta.Enabled\n146: \t\t}\n147: \t}\n148: \tif vzOpts.Rosetta.BinFmt != nil {\n149: \t\tl.rosettaBinFmt = *vzOpts.Rosetta.BinFmt\n150: \t}"
+      },
+      {
+        "from": 171,
+        "to": 188,
+        "text": "171: \tif cfg.SSH.OverVsock == nil {\n172: \t\tcfg.SSH.OverVsock = ptr.Of(*cfg.OS == limatype.LINUX)\n173: \t}\n174: \n175: \tvar vzOpts limatype.VZOpts\n176: \tif err := limayaml.Convert(cfg.VMOpts[limatype.VZ], &vzOpts, \"vmOpts.vz\"); err != nil {\n177: \t\tlogrus.WithError(err).Warnf(\"Couldn't convert %#q\", cfg.VMOpts[limatype.VZ])\n178: \t}\n179: \n180: \t//nolint:staticcheck // Migration of top-level Rosetta if specified\n181: \tif (vzOpts.Rosetta.Enabled == nil && vzOpts.Rosetta.BinFmt == nil) && (!isEmpty(cfg.Rosetta)) {\n182: \t\tlogrus.Debug(\"Migrating top-level Rosetta configuration to vmOpts.vz.rosetta\")\n183: \t\tvzOpts.Rosetta = cfg.Rosetta\n184: \t}\n185: \t//nolint:staticcheck // Warning about both top-level and vmOpts.vz.Rosetta being set\n186: \tif (vzOpts.Rosetta.Enabled != nil && vzOpts.Rosetta.BinFmt != nil) && (!isEmpty(cfg.Rosetta)) {\n187: \t\tlogrus.Warn(\"Both top-level 'rosetta' and 'vmOpts.vz.rosetta' are configured. Using vmOpts.vz.rosetta. Top-level 'rosetta' is deprecated.\")\n188: \t}"
+      },
+      {
+        "from": 206,
+        "to": 223,
+        "text": "206: \t\t\tvzOpts.DiskImageFormat = ptr.Of(raw.Type)\n207: \t\t}\n208: \t}\n209: \n210: \tvar opts any\n211: \tif err := limayaml.Convert(vzOpts, &opts, \"\"); err != nil {\n212: \t\tlogrus.WithError(err).Warnf(\"Couldn't convert %+v\", vzOpts)\n213: \t}\n214: \tif cfg.VMOpts == nil {\n215: \t\tcfg.VMOpts = limatype.VMOpts{}\n216: \t}\n217: \tcfg.VMOpts[limatype.VZ] = opts\n218: \n219: \treturn validateConfig(ctx, cfg)\n220: }\n221: \n222: func isEmpty(r limatype.Rosetta) bool {\n223: \treturn r.Enabled == nil && r.BinFmt == nil"
+      },
+      {
+        "from": 331,
+        "to": 348,
+        "text": "331: \tcase \"vz\", \"default\", \"none\":\n332: \tdefault:\n333: \t\tlogrus.Warnf(\"field `video.display` must be `vz`, `default`, or `none` for VZ driver , got %#q\", videoDisplay)\n334: \t}\n335: \tvar vzOpts limatype.VZOpts\n336: \tif err := limayaml.Convert(cfg.VMOpts[limatype.VZ], &vzOpts, \"vmOpts.vz\"); err != nil {\n337: \t\tlogrus.WithError(err).Warnf(\"Couldn't convert %#q\", cfg.VMOpts[limatype.VZ])\n338: \t}\n339: \tswitch *vzOpts.DiskImageFormat {\n340: \tcase raw.Type:\n341: \tcase asif.Type:\n342: \t\tif macOSProductVersion.LessThan(*semver.New(\"26.0.0\")) {\n343: \t\t\treturn fmt.Errorf(\"vmOpts.vz.diskImageFormat=%#q requires macOS 26 or higher to run, got %#q\", asif.Type, macOSProductVersion)\n344: \t\t}\n345: \tdefault:\n346: \t\treturn fmt.Errorf(\"field `vmOpts.vz.diskImageFormat` must be %#q or %#q, got %#q\", raw.Type, asif.Type, *vzOpts.DiskImageFormat)\n347: \t}\n348: \treturn nil"
+      },
+      {
+        "from": 477,
+        "to": 494,
+        "text": "477: \tsshExe, err := sshutil.NewSSHExe()\n478: \tif err != nil {\n479: \t\treturn err\n480: \t}\n481: \tcmd := exec.CommandContext(ctx, sshExe.Exe,\n482: \t\tappend(sshExe.Args, \"-F\", l.Instance.SSHConfigFile, l.Instance.Hostname, \"--\",\n483: \t\t\t\"sudo\", \"/sbin/shutdown\", \"-h\", \"now\")...)\n484: \tlogrus.Infof(\"Running shutdown command in the VM: %v\", cmd.Args)\n485: \tif out, err := cmd.CombinedOutput(); err != nil {\n486: \t\treturn fmt.Errorf(\"failed to run %v: %w (output=%s)\", cmd.Args, err, string(out))\n487: \t}\n488: \treturn nil\n489: }\n490: \n491: func (l *LimaVzDriver) Stop(ctx context.Context) error {\n492: \tlogrus.Info(\"Shutting down VZ\")\n493: \tcanStop := l.machine.CanRequestStop()\n494: "
+      }
+    ]
+  },
+  {
+    "url": "https://api.github.com/repos/lima-vm/lima/contents/pkg/driver/vz/vm_darwin.go?ref=v2.1.4",
+    "accessed_at": "2026-09-07T05:31:27.227781+00:00",
+    "sha256": "c98f14b78909cdf7c7b789c240a446cf08dfe71b45f375f3c4b5ad3a568fee16",
+    "lines": 967,
+    "reviewed_excerpts": [
+      {
+        "from": 1,
+        "to": 15,
+        "text": "1: //go:build darwin && !no_vz\n2: \n3: // SPDX-FileCopyrightText: Copyright The Lima Authors\n4: // SPDX-License-Identifier: Apache-2.0\n5: \n6: package vz\n7: \n8: import (\n9: \t\"context\"\n10: \t\"errors\"\n11: \t\"fmt\"\n12: \t\"io/fs\"\n13: \t\"net\"\n14: \t\"os\"\n15: \t\"path/filepath\""
+      },
+      {
+        "from": 37,
+        "to": 59,
+        "text": "37: \t\"github.com/lima-vm/lima/v2/pkg/networks/usernet\"\n38: \t\"github.com/lima-vm/lima/v2/pkg/osutil\"\n39: \t\"github.com/lima-vm/lima/v2/pkg/store\"\n40: )\n41: \n42: // diskImageCachingMode is set to DiskImageCachingModeCached so as to avoid disk corruption on ARM:\n43: // - https://github.com/utmapp/UTM/issues/4840#issuecomment-1824340975\n44: // - https://github.com/utmapp/UTM/issues/4840#issuecomment-1824542732\n45: //\n46: // Eventually we may bring this back to DiskImageCachingModeAutomatic when the corruption issue is properly fixed.\n47: const diskImageCachingMode = vz.DiskImageCachingModeCached\n48: \n49: type virtualMachineWrapper struct {\n50: \t*vz.VirtualMachine\n51: \tmu      sync.Mutex\n52: \tstopped bool\n53: }\n54: \n55: // Hold all *os.File created via socketpair() so that they won't get garbage collected. f.FD() gets invalid if f gets garbage collected.\n56: var vmNetworkFiles = make([]*os.File, 1)\n57: \n58: func startVM(ctx context.Context, inst *limatype.Instance, sshLocalPort int, onVsockEvent func(*events.VsockEvent)) (vm *virtualMachineWrapper, waitSSHLocalPortAccessible <-chan any, errCh chan error, err error) {\n59: \tusernetClient, stopUsernet, err := startUsernet(ctx, inst)"
+      },
+      {
+        "from": 269,
+        "to": 286,
+        "text": "269: \t\treturn nil, err\n270: \t}\n271: \n272: \t// Only attach the primary disk here. cidata.iso is not existent at this point.\n273: \tdisk := filepath.Join(inst.Dir, filenames.Disk)\n274: \tdiffDiskAttachment, err := vz.NewDiskImageStorageDeviceAttachmentWithCacheAndSync(disk, false, diskImageCachingMode, vz.DiskImageSynchronizationModeFsync)\n275: \tif err != nil {\n276: \t\treturn nil, err\n277: \t}\n278: \tdiskConfig, err := vz.NewVirtioBlockDeviceConfiguration(diffDiskAttachment)\n279: \tif err != nil {\n280: \t\treturn nil, err\n281: \t}\n282: \tvmConfig.SetStorageDevicesVirtualMachineConfiguration([]vz.StorageDeviceConfiguration{diskConfig})\n283: \n284: \tif err = attachDisplay(inst, vmConfig); err != nil {\n285: \t\treturn nil, err\n286: \t}"
+      },
+      {
+        "from": 552,
+        "to": 569,
+        "text": "552: \n553: \tif osutil.FileExists(diskPath) {\n554: \t\tif err := validateDiskFormat(diskPath); err != nil {\n555: \t\t\treturn err\n556: \t\t}\n557: \t\tdiskAttachment, err := vz.NewDiskImageStorageDeviceAttachmentWithCacheAndSync(diskPath, false, diskImageCachingMode, vz.DiskImageSynchronizationModeFsync)\n558: \t\tif err != nil {\n559: \t\t\treturn err\n560: \t\t}\n561: \t\tdiskDev, err := vz.NewVirtioBlockDeviceConfiguration(diskAttachment)\n562: \t\tif err != nil {\n563: \t\t\treturn err\n564: \t\t}\n565: \t\tconfigurations = append(configurations, diskDev)\n566: \t}\n567: \tif osutil.FileExists(isoPath) {\n568: \t\tif err := validateDiskFormat(isoPath); err != nil {\n569: \t\t\treturn err"
+      },
+      {
+        "from": 591,
+        "to": 614,
+        "text": "591: \t\tlogrus.Infof(\"Mounting disk %#q on %#q\", diskName, disk.MountPoint)\n592: \t\tif err = disk.LockForInstance(inst.Dir); err != nil {\n593: \t\t\treturn fmt.Errorf(\"failed to attach disk %#q: %w\", diskName, err)\n594: \t\t}\n595: \t\textraDiskPath := filepath.Join(disk.Dir, filenames.DataDisk)\n596: \t\t// ConvertToRaw is a NOP if no conversion is needed\n597: \t\tlogrus.Debugf(\"Converting extra disk %#q to a raw disk (if it is not a raw)\", extraDiskPath)\n598: \n599: \t\tif err = diskUtil.Convert(ctx, raw.Type, extraDiskPath, extraDiskPath, nil, true); err != nil {\n600: \t\t\treturn fmt.Errorf(\"failed to convert extra disk %#q to a raw disk: %w\", extraDiskPath, err)\n601: \t\t}\n602: \t\textraDiskPathAttachment, err := vz.NewDiskImageStorageDeviceAttachmentWithCacheAndSync(extraDiskPath, false, diskImageCachingMode, vz.DiskImageSynchronizationModeFsync)\n603: \t\tif err != nil {\n604: \t\t\treturn fmt.Errorf(\"failed to create disk attachment for extra disk %#q: %w\", extraDiskPath, err)\n605: \t\t}\n606: \t\textraDisk, err := vz.NewVirtioBlockDeviceConfiguration(extraDiskPathAttachment)\n607: \t\tif err != nil {\n608: \t\t\treturn fmt.Errorf(\"failed to create new virtio block device config for extra disk %#q: %w\", extraDiskPath, err)\n609: \t\t}\n610: \t\tconfigurations = append(configurations, extraDisk)\n611: \t}\n612: \n613: \tif err := validateDiskFormat(ciDataPath); err != nil {\n614: \t\treturn err"
+      },
+      {
+        "from": 742,
+        "to": 759,
+        "text": "742: \t\t\treturn err\n743: \t\t}\n744: \t}\n745: \n746: \tvar vzOpts limatype.VZOpts\n747: \tif err := limayaml.Convert(inst.Config.VMOpts[limatype.VZ], &vzOpts, \"vmOpts.vz\"); err != nil {\n748: \t\tlogrus.WithError(err).Warnf(\"Couldn't convert %#q\", inst.Config.VMOpts[limatype.VZ])\n749: \t}\n750: \n751: \tif vzOpts.Rosetta.Enabled != nil && *vzOpts.Rosetta.Enabled {\n752: \t\tlogrus.Info(\"Setting up Rosetta share\")\n753: \t\tdirectorySharingDeviceConfig, err := createRosettaDirectoryShareConfiguration()\n754: \t\tif err != nil {\n755: \t\t\tlogrus.Warnf(\"Unable to configure Rosetta: %s\", err)\n756: \t\t} else {\n757: \t\t\tmounts = append(mounts, directorySharingDeviceConfig)\n758: \t\t}\n759: \t}"
+      }
+    ]
+  },
+  {
+    "url": "https://api.github.com/repos/lima-vm/lima/contents/pkg/imgutil/nativeimgutil/nativeimgutil.go?ref=v2.1.4",
+    "accessed_at": "2026-09-07T05:31:29.797143+00:00",
+    "sha256": "f7b6ad888a5bc195a35bab25a3b6771ebee314d781f2216906ef38ac0363159c",
+    "lines": 248,
+    "reviewed_excerpts": [
+      {
+        "from": 1,
+        "to": 16,
+        "text": "1: // SPDX-FileCopyrightText: Copyright The Lima Authors\n2: // SPDX-License-Identifier: Apache-2.0\n3: \n4: // Package nativeimgutil provides image utilities that do not depend on `qemu-img` binary.\n5: package nativeimgutil\n6: \n7: import (\n8: \t\"context\"\n9: \t\"errors\"\n10: \t\"fmt\"\n11: \t\"io\"\n12: \t\"io/fs\"\n13: \t\"math\"\n14: \t\"math/rand/v2\"\n15: \t\"os\"\n16: \t\"path/filepath\""
+      },
+      {
+        "from": 57,
+        "to": 81,
+        "text": "57: \t\treturn fmt.Errorf(\"failed to detect the format of %q: %w\", source, err)\n58: \t}\n59: \tif size != nil && *size < srcImg.Size() {\n60: \t\treturn fmt.Errorf(\"specified size %d is smaller than the original image size (%d) of %q\", *size, srcImg.Size(), source)\n61: \t}\n62: \tlogrus.Infof(\"Converting %q (%s) to a %s disk %q\", source, srcImg.Type(), destType, dest)\n63: \tswitch t := srcImg.Type(); t {\n64: \tcase raw.Type:\n65: \t\tif destType == raw.Type {\n66: \t\t\tif err = srcF.Close(); err != nil {\n67: \t\t\t\treturn err\n68: \t\t\t}\n69: \t\t\treturn convertRawToRaw(source, dest, size)\n70: \t\t}\n71: \tcase qcow2.Type:\n72: \t\tif !allowSourceWithBackingFile {\n73: \t\t\tq, ok := srcImg.(*qcow2.Qcow2)\n74: \t\t\tif !ok {\n75: \t\t\t\treturn fmt.Errorf(\"unexpected qcow2 image %T\", srcImg)\n76: \t\t\t}\n77: \t\t\tif q.BackingFile != \"\" {\n78: \t\t\t\treturn fmt.Errorf(\"qcow2 image %q has an unexpected backing file: %q\", source, q.BackingFile)\n79: \t\t\t}\n80: \t\t}\n81: \tcase asif.Type:"
+      },
+      {
+        "from": 96,
+        "to": 120,
+        "text": "96: \t\tdestTmp        string\n97: \t\tattachedDevice string\n98: \t)\n99: \tswitch destType {\n100: \tcase raw.Type:\n101: \t\tdestTmpF, err = os.CreateTemp(filepath.Dir(dest), filepath.Base(dest)+\".lima-*.tmp\")\n102: \t\tdestTmp = destTmpF.Name()\n103: \tcase asif.Type:\n104: \t\t// destTmp != destTmpF.Name() because destTmpF is mounted ASIF device file.\n105: \t\trandomBase := fmt.Sprintf(\"%s.lima-%d.tmp.asif\", filepath.Base(dest), rand.UintN(math.MaxUint))\n106: \t\tdestTmp = filepath.Join(filepath.Dir(dest), randomBase)\n107: \t\t// Since qcow2 image is smaller than expected size, we need to specify expected size to avoid resize later.\n108: \t\t// Resizing ASIF image is not supported by qemu-img which recognizes ASIF format as raw.\n109: \t\tvar newSize int64\n110: \t\tif size != nil {\n111: \t\t\tnewSize = *size\n112: \t\t} else {\n113: \t\t\tnewSize = srcImg.Size()\n114: \t\t}\n115: \t\tattachedDevice, destTmpF, err = asifutil.NewAttachedASIF(destTmp, newSize)\n116: \tdefault:\n117: \t\treturn fmt.Errorf(\"unsupported target image type: %q\", destType)\n118: \t}\n119: \tif err != nil {\n120: \t\treturn err"
+      },
+      {
+        "from": 133,
+        "to": 156,
+        "text": "133: \tbar, err := progressbar.New(srcImg.Size())\n134: \tif err != nil {\n135: \t\treturn err\n136: \t}\n137: \tbar.Start()\n138: \terr = convert.Convert(destTmpF, srcImg, convert.Options{Progress: bar})\n139: \tbar.Finish()\n140: \tif err != nil {\n141: \t\treturn fmt.Errorf(\"failed to convert image: %w\", err)\n142: \t}\n143: \n144: \t// Resize\n145: \tif size != nil {\n146: \t\tlogrus.Infof(\"Expanding to %s\", units.BytesSize(float64(*size)))\n147: \t\tif err = makeSparse(destTmpF, *size); err != nil {\n148: \t\t\treturn err\n149: \t\t}\n150: \t}\n151: \tif err = destTmpF.Close(); err != nil {\n152: \t\treturn err\n153: \t}\n154: \t// Detach ASIF device\n155: \tif destType == asif.Type {\n156: \t\terr := asifutil.DetachASIF(attachedDevice)"
+      },
+      {
+        "from": 164,
+        "to": 181,
+        "text": "164: \t\treturn err\n165: \t}\n166: \treturn os.Rename(destTmp, dest)\n167: }\n168: \n169: func convertRawToRaw(source, dest string, size *int64) error {\n170: \tif source != dest {\n171: \t\t// continuity attempts clonefile\n172: \t\tif err := containerdfs.CopyFile(dest, source); err != nil {\n173: \t\t\treturn fmt.Errorf(\"failed to copy %q into %q: %w\", source, dest, err)\n174: \t\t}\n175: \t\tif err := os.Chmod(dest, 0o644); err != nil {\n176: \t\t\treturn fmt.Errorf(\"failed to set permissions on %q: %w\", dest, err)\n177: \t\t}\n178: \t}\n179: \tif size != nil {\n180: \t\tlogrus.Infof(\"Expanding to %s\", units.BytesSize(float64(*size)))\n181: \t\tdestF, err := os.OpenFile(dest, os.O_RDWR, 0o644)"
+      },
+      {
+        "from": 200,
+        "to": 217,
+        "text": "200: \t\t\treturn fmt.Errorf(\"failed to set permissions on %q: %w\", dest, err)\n201: \t\t}\n202: \t}\n203: \tif size != nil {\n204: \t\tlogrus.Infof(\"Resizing to %s\", units.BytesSize(float64(*size)))\n205: \t\tif err := asifutil.ResizeASIF(dest, *size); err != nil {\n206: \t\t\treturn fmt.Errorf(\"failed to resize ASIF image %q: %w\", dest, err)\n207: \t\t}\n208: \t}\n209: \treturn nil\n210: }\n211: \n212: func makeSparse(f *os.File, offset int64) error {\n213: \tif _, err := f.Seek(offset, io.SeekStart); err != nil {\n214: \t\treturn err\n215: \t}\n216: \treturn f.Truncate(offset)\n217: }"
+      },
+      {
+        "from": 228,
+        "to": 248,
+        "text": "228: \tdefer f.Close()\n229: \troundedSize := roundUp(size)\n230: \treturn f.Truncate(roundedSize)\n231: }\n232: \n233: // Convert converts a disk image to the specified format.\n234: // Currently supported formats are raw.Type and asif.Type.\n235: func (n *NativeImageUtil) Convert(_ context.Context, imageType image.Type, source, dest string, size *int64, allowSourceWithBackingFile bool) error {\n236: \treturn convertTo(imageType, source, dest, size, allowSourceWithBackingFile)\n237: }\n238: \n239: // ResizeDisk resizes an existing disk image to the specified size.\n240: func (n *NativeImageUtil) ResizeDisk(_ context.Context, disk string, size int64) error {\n241: \troundedSize := roundUp(size)\n242: \treturn os.Truncate(disk, roundedSize)\n243: }\n244: \n245: // MakeSparse makes a file sparse, starting from the specified offset.\n246: func (n *NativeImageUtil) MakeSparse(_ context.Context, f *os.File, offset int64) error {\n247: \treturn makeSparse(f, offset)\n248: }"
+      }
+    ]
+  },
+  {
+    "url": "https://api.github.com/repos/lima-vm/lima/contents/pkg/sshutil/sshutil.go?ref=v2.1.4",
+    "accessed_at": "2026-09-07T05:31:32.573416+00:00",
+    "sha256": "bdd13122d9cfcef5a63b584b89b877b8dfbea449240d013e21d767d7a3ae4a12",
+    "lines": 511,
+    "reviewed_excerpts": [
+      {
+        "from": 1,
+        "to": 13,
+        "text": "1: // SPDX-FileCopyrightText: Copyright The Lima Authors\n2: // SPDX-License-Identifier: Apache-2.0\n3: \n4: package sshutil\n5: \n6: import (\n7: \t\"bytes\"\n8: \t\"context\"\n9: \t\"encoding/base64\"\n10: \t\"encoding/binary\"\n11: \t\"errors\"\n12: \t\"fmt\"\n13: \t\"io/fs\""
+      },
+      {
+        "from": 88,
+        "to": 105,
+        "text": "88: }\n89: \n90: // DefaultPubKeys returns the public key from $LIMA_HOME/_config/user.pub.\n91: // The key will be created if it does not yet exist.\n92: //\n93: // When loadDotSSH is true, ~/.ssh/*.pub will be appended to make the VM accessible without specifying\n94: // an identity explicitly.\n95: func DefaultPubKeys(ctx context.Context, loadDotSSH bool) ([]PubKey, error) {\n96: \t// Read $LIMA_HOME/_config/user.pub\n97: \tconfigDir, err := dirnames.LimaConfigDir()\n98: \tif err != nil {\n99: \t\treturn nil, err\n100: \t}\n101: \t_, err = os.Stat(filepath.Join(configDir, filenames.UserPrivateKey))\n102: \tif err != nil {\n103: \t\tif !errors.Is(err, os.ErrNotExist) {\n104: \t\t\treturn nil, err\n105: \t\t}"
+      },
+      {
+        "from": 134,
+        "to": 152,
+        "text": "134: \n135: \tif !loadDotSSH {\n136: \t\treturn res, nil\n137: \t}\n138: \n139: \t// Append all of ~/.ssh/*.pub\n140: \thomeDir, err := os.UserHomeDir()\n141: \tif err != nil {\n142: \t\treturn nil, err\n143: \t}\n144: \tfiles, err := filepath.Glob(filepath.Join(homeDir, \".ssh/*.pub\"))\n145: \tif err != nil {\n146: \t\tpanic(err) // Only possible error is ErrBadPattern, so this should be unreachable.\n147: \t}\n148: \tfor _, f := range files {\n149: \t\tif !strings.HasSuffix(f, \".pub\") {\n150: \t\t\tpanic(fmt.Errorf(\"unexpected ssh public key filename %q\", f))\n151: \t\t}\n152: \t\tentry, err := readPublicKey(f)"
+      },
+      {
+        "from": 179,
+        "to": 199,
+        "text": "179: \n180: \t// OpenSSH executable information for the version and supported options.\n181: \topenSSH openSSHInfo\n182: }\n183: \n184: // CommonOpts returns ssh option key-value pairs like {\"IdentityFile=/path/to/id_foo\"}.\n185: // The result may contain different values with the same key.\n186: //\n187: // The result always contains the IdentityFile option.\n188: // The result never contains the Port option.\n189: func CommonOpts(ctx context.Context, sshExe SSHExe, useDotSSH bool) ([]string, error) {\n190: \tconfigDir, err := dirnames.LimaConfigDir()\n191: \tif err != nil {\n192: \t\treturn nil, err\n193: \t}\n194: \tprivateKeyPath := filepath.Join(configDir, filenames.UserPrivateKey)\n195: \t_, err = os.Stat(privateKeyPath)\n196: \tif err != nil {\n197: \t\treturn nil, err\n198: \t}\n199: \tvar opts []string"
+      },
+      {
+        "from": 201,
+        "to": 221,
+        "text": "201: \tif err != nil {\n202: \t\treturn nil, err\n203: \t}\n204: \topts = []string{idf}\n205: \n206: \t// Append all private keys corresponding to ~/.ssh/*.pub to keep old instances working\n207: \t// that had been created before lima started using an internal identity.\n208: \tif useDotSSH {\n209: \t\thomeDir, err := os.UserHomeDir()\n210: \t\tif err != nil {\n211: \t\t\treturn nil, err\n212: \t\t}\n213: \t\tfiles, err := filepath.Glob(filepath.Join(homeDir, \".ssh/*.pub\"))\n214: \t\tif err != nil {\n215: \t\t\tpanic(err) // Only possible error is ErrBadPattern, so this should be unreachable.\n216: \t\t}\n217: \t\tfor _, f := range files {\n218: \t\t\tif !strings.HasSuffix(f, \".pub\") {\n219: \t\t\t\tpanic(fmt.Errorf(\"unexpected ssh public key filename %q\", f))\n220: \t\t\t}\n221: \t\t\tprivateKeyPath := strings.TrimSuffix(f, \".pub\")"
+      },
+      {
+        "from": 240,
+        "to": 257,
+        "text": "240: \t\t}\n241: \t}\n242: \n243: \topts = append(opts,\n244: \t\t\"StrictHostKeyChecking=no\",\n245: \t\t\"UserKnownHostsFile=/dev/null\",\n246: \t\t\"NoHostAuthenticationForLocalhost=yes\",\n247: \t\t\"PreferredAuthentications=publickey\",\n248: \t\t\"Compression=no\",\n249: \t\t\"BatchMode=yes\",\n250: \t\t\"IdentitiesOnly=yes\",\n251: \t)\n252: \n253: \tsshInfo.Do(func() {\n254: \t\tsshInfo.aesAccelerated = detectAESAcceleration()\n255: \t\tsshInfo.openSSH = detectOpenSSHInfo(ctx, sshExe)\n256: \t})\n257: "
+      },
+      {
+        "from": 288,
+        "to": 317,
+        "text": "288: \tif runtime.GOOS == \"windows\" {\n289: \t\tprivateKeyPath, err := ioutilx.WindowsSubsystemPath(ctx, privateKeyPath)\n290: \t\tif err != nil {\n291: \t\t\treturn \"\", err\n292: \t\t}\n293: \t\treturn fmt.Sprintf(`IdentityFile='%s'`, privateKeyPath), nil\n294: \t}\n295: \treturn fmt.Sprintf(`IdentityFile=\"%s\"`, privateKeyPath), nil\n296: }\n297: \n298: // DisableControlMasterOptsFromSSHArgs returns ssh args that disable ControlMaster, ControlPath, and ControlPersist.\n299: func DisableControlMasterOptsFromSSHArgs(sshArgs []string) []string {\n300: \targsForOverridingConfigFile := []string{\n301: \t\t\"-o\", \"ControlMaster=no\",\n302: \t\t\"-o\", \"ControlPath=none\",\n303: \t\t\"-o\", \"ControlPersist=no\",\n304: \t}\n305: \treturn slices.Concat(argsForOverridingConfigFile, removeOptsFromSSHArgs(sshArgs, \"ControlMaster\", \"ControlPath\", \"ControlPersist\"))\n306: }\n307: \n308: func removeOptsFromSSHArgs(sshArgs []string, removeOpts ...string) []string {\n309: \tres := make([]string, 0, len(sshArgs))\n310: \tisOpt := false\n311: \tfor _, arg := range sshArgs {\n312: \t\tif isOpt {\n313: \t\t\tisOpt = false\n314: \t\t\tif !slices.ContainsFunc(removeOpts, func(opt string) bool {\n315: \t\t\t\treturn strings.HasPrefix(arg, opt)\n316: \t\t\t}) {\n317: \t\t\t\tres = append(res, \"-o\", arg)"
+      },
+      {
+        "from": 330,
+        "to": 398,
+        "text": "330: \tcontrolSock := filepath.Join(instDir, filenames.SSHSock)\n331: \t_, err := os.Stat(controlSock)\n332: \treturn err == nil\n333: }\n334: \n335: // SSHOpts adds the following options to CommonOptions: User, ControlMaster, ControlPath, ControlPersist.\n336: func SSHOpts(ctx context.Context, sshExe SSHExe, instDir, username string, useDotSSH, forwardAgent, forwardX11, forwardX11Trusted bool) ([]string, error) {\n337: \tcontrolSock := filepath.Join(instDir, filenames.SSHSock)\n338: \tif len(controlSock) >= osutil.UnixPathMax {\n339: \t\treturn nil, fmt.Errorf(\"socket path %q is too long: >= UNIX_PATH_MAX=%d\", controlSock, osutil.UnixPathMax)\n340: \t}\n341: \topts, err := CommonOpts(ctx, sshExe, useDotSSH)\n342: \tif err != nil {\n343: \t\treturn nil, err\n344: \t}\n345: \tcontrolPath := fmt.Sprintf(`ControlPath=\"%s\"`, controlSock)\n346: \tif runtime.GOOS == \"windows\" {\n347: \t\tcontrolSock, err = ioutilx.WindowsSubsystemPath(ctx, controlSock)\n348: \t\tif err != nil {\n349: \t\t\treturn nil, err\n350: \t\t}\n351: \t\tcontrolPath = fmt.Sprintf(`ControlPath='%s'`, controlSock)\n352: \t}\n353: \topts = append(opts,\n354: \t\tfmt.Sprintf(\"User=%s\", username), // guest and host have the same username, but we should specify the username explicitly (#85)\n355: \t\t\"ControlMaster=auto\",\n356: \t\tcontrolPath,\n357: \t\t\"ControlPersist=yes\",\n358: \t)\n359: \tif forwardAgent {\n360: \t\topts = append(opts, \"ForwardAgent=yes\")\n361: \t}\n362: \tif forwardX11 {\n363: \t\topts = append(opts, \"ForwardX11=yes\")\n364: \t}\n365: \tif forwardX11Trusted {\n366: \t\topts = append(opts, \"ForwardX11Trusted=yes\")\n367: \t}\n368: \treturn opts, nil\n369: }\n370: \n371: // SSHArgsFromOpts returns ssh args from opts.\n372: // The result always contains {\"-F\", \"/dev/null} in addition to {\"-o\", \"KEY=VALUE\", ...}.\n373: func SSHArgsFromOpts(opts []string) []string {\n374: \targs := []string{\"-F\", \"/dev/null\"}\n375: \tfor _, o := range opts {\n376: \t\targs = append(args, \"-o\", o)\n377: \t}\n378: \treturn args\n379: }\n380: \n381: // SSHOptsRemovingControlPath removes ControlMaster, ControlPath, and ControlPersist options from SSH options.\n382: func SSHOptsRemovingControlPath(opts []string) []string {\n383: \t// Create a copy of opts to avoid modifying the original slice, since slices.DeleteFunc modifies the slice in place.\n384: \tcopiedOpts := slices.Clone(opts)\n385: \treturn slices.DeleteFunc(copiedOpts, func(s string) bool {\n386: \t\treturn strings.HasPrefix(s, \"ControlMaster\") || strings.HasPrefix(s, \"ControlPath\") || strings.HasPrefix(s, \"ControlPersist\")\n387: \t})\n388: }\n389: \n390: func ParseOpenSSHVersion(version []byte) *semver.Version {\n391: \tregex := regexp.MustCompile(`(?m)^OpenSSH_(\\d+\\.\\d+)(?:p(\\d+))?\\b`)\n392: \tmatches := regex.FindSubmatch(version)\n393: \tif len(matches) == 3 {\n394: \t\tif len(matches[2]) == 0 {\n395: \t\t\tmatches[2] = []byte(\"0\")\n396: \t\t}\n397: \t\treturn semver.New(fmt.Sprintf(\"%s.%s\", matches[1], matches[2]))\n398: \t}"
+      }
+    ]
+  },
+  {
+    "url": "https://cloud-images.ubuntu.com/releases/noble/release-20260615/ubuntu-24.04-server-cloudimg-arm64.img",
+    "accessed_at": "2026-09-07T05:31:33.365229+00:00",
+    "request": "Range bytes=0-103; read bound104 bytes, response closed immediately",
+    "status": 206,
+    "content_range": "bytes 0-103/614949888",
+    "bytes_read": 104,
+    "magic": "514649fb",
+    "header_sha256": "a886628a4cc865bd792337d9a81d1bbd9e7aee110a719aac819c0a745dcca20b",
+    "qcow2_virtual_size_bytes": 3758096384
+  }
+]

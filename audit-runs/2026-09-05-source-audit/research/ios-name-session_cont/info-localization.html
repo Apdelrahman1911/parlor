@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>About Information Property List Files</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=7">
+    <meta charset="utf-8">
+    <meta id="book-resource-type" name="book-resource-type" content="Guide">
+    <meta scheme="apple_ref" id="identifier" name="identifier" content="//apple_ref/doc/uid/TP40009247">
+    <meta id="document-version" name="document-version" content="17.13.4">
+    <meta id="build" name="build" content="c1e4c7a89af8f899a21cfa81fc33ba42" />
+    <meta id="chapterId" name="chapterId" content="TP40009254">
+    <meta id="date" name="date" content="2018-06-04">
+    <meta id="description" name="description" content="Describes the keys for a bundle's Info.plist file.">
+    <meta id="book-title" name="book-title" content="Information Property List Key Reference">
+    <meta id="book-root" name="book-root" content="../">
+    <meta id="book-json" name="book-json" content="../book.json">
+    <meta id="devcenter" name="devcenter" content="Mac Dev Center">
+    <meta id="devcenter-url" name="devcenter-url" content="http://developer.apple.com/devcenter/mac">
+    <meta id="reflib" name="reflib" content="Documentation Archive">
+    <meta id="book-assignments" name="book-assignments" content="{Type/Guide}, {Topic/General}">
+    
+    
+    <meta id="copyright" name="copyright" content="Copyright 2018 Apple Inc. All Rights Reserved.">
+    <meta id="xcode-display" name="xcode-display" content="render">
+    <meta id="IndexTitle" name="IndexTitle" content="Information Property List Key Reference: About Information Property List Files">
+    <meta id="resources-uri" name="resources-uri" content="../../../../../Resources/1282">
+    <link id="book-index-page" rel="Start" title="Information Property List Key Reference" type="text/html" href="../index.html">
+    <link id="next-page" rel="Next" type="text/html" href="CoreFoundationKeys.html">
+    <link id="previous-page" rel="Prev" type="text/html" href="../Introduction/Introduction.html">
+    <link rel="stylesheet" type="text/css" href="../../../../../Resources/1282/CSS/screen.css">
+    
+    <!-- xcode_css -->
+    <link rel="stylesheet" type="text/css" href="../../../../../Resources/1282/CSS/feedback.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta id="platforms" name="platforms" content="">
+</head>    
+<body><a name="//apple_ref/doc/uid/TP40009254" title="About Information Property List Files"></a>
+    <div id="_omniture_top">
+    <!-- SiteCatalyst code version: H.8. Copyright 1997-2006 Omniture, Inc. -->
+    <script type="text/javascript">
+    /* RSID: */
+    var s_account="awdappledeveloper"
+    </script>
+
+    <script type="text/javascript" src="https://developer.apple.com/assets/metrics/scripts/analytics.js"></script>
+    <script type="text/javascript">
+    s.channel="www.documentationarchive.developer"
+
+    /************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
+    var s_code=s.t();if(s_code)document.write(s_code)</script>
+    <!-- End SiteCatalyst code version: H.8. -->
+    </div>
+
+    <div id="adcHeader" class="hideOnPrint hideInXcode">
+        <div id='ssi_Header' class="hideInXcode unified">
+            <a id="ssi_LibraryTitle" href='../../../../../navigation/'>Documentation Archive</a>
+            <a id="ssi_AppleDeveloperConnection" href='https://developer.apple.com/'>Developer</a>
+            <div id='ssi_SearchButton' role="button" title="Search">Search</div>
+        </div>
+        <form id='ssi_SearchMenu' method='get' action='../../../../../search/' accept-charset='utf-8'>
+            <label for='adcsearch'>Search Documentation Archive</label>
+            
+            
+    
+            <input type='search' id='ssi_SearchField' name='q' accesskey='s' results='5' />
+        </form>
+    </div>
+
+    <header id="header">
+        <div id="title" role="banner">
+            <h1>Information Property List Key Reference</h1>
+            <span id="file_links">
+                <a id="PDF_link" role="button" tabindex='4' rel="alternate" title="Download PDF"><span id="pdf_icon"></span>PDF</a>
+                <a id="Companion_link" role="button" tabindex='3' title="Download Companion File"><span id="companion_icon"></span>Companion File</a>
+            </span>
+        </div>
+        <ul id="headerButtons" class="hideOnPrint" role="toolbar">
+            <li id="toc_button" style="display:none">
+                <button tabindex="5" id="table_of_contents" class="open" role="checkbox" aria-label="Show Table of Contents"><span class="disclosure"></span>Table of Contents</button>
+            </li>
+            <li id="jumpto_button" style="display:none" role="navigation"><select tabindex="6" id="jumpTo"><option value="top">Jump To&#133;</option></select></li>
+            <li id="downloadSample_button" style="display:none">
+                <a id="Sample_link"><button id="Sample_button">Download Sample Code</button></a>
+            </li>
+        </ul>
+    </header>
+    <nav id="tocContainer" tabindex="7">
+        <ul id="toc" role="tree"></ul>
+    </nav>
+
+    <article id="contents" tabindex="0" role="main">
+        <div id="pageNavigationLinks_top" class="pageNavigationLinks">
+            <a class='nextLink' rel='next' href='CoreFoundationKeys.html'>Next</a><a class='previousLink' rel='prev' href='../Introduction/Introduction.html'>Previous</a>
+        </div>
+        <a id="top" name="top"></a>
+        <a id="INDEX" href="../index.html" style="display:none;"></a>
+        
+        <a name="//apple_ref/doc/uid/TP40009254-SW1" title="About Information Property List Files"></a><h1 id="pageTitle">About Information Property List Files</h1><p>An information property list file is a structured text file that contains essential configuration information for a bundled executable. The file itself is typically encoded using the Unicode UTF-8 encoding and the contents are structured using XML. The root XML node is a dictionary, whose contents are a set of keys and values describing different aspects of the bundle. The system uses these keys and values to obtain information about your app and how it is configured. As a result, all bundled executables (plug-ins, frameworks, and apps) are expected to have an information property list file.</p><p>By convention, the name of an information property list file is <code>Info.plist</code>. This name of this file is case sensitive and must have an initial capital letter <code>I</code>. In iOS apps, this file resides in the top-level of the bundle directory. In macOS bundles, this file resides in the bundle’s <code>Contents</code> directory. Xcode typically creates this file for you automatically when you create a project of an appropriate type.</p><div class="importantbox clear"><aside><a name="//apple_ref/doc/uid/TP40009254-DontLinkElementID_9" title="Important"></a><p><strong>Important:</strong>&nbsp;In the sections that follow, pay attention to the capitalization of files and directories that reside inside a bundle. The <code><a href="../../../../LegacyTechnologies/WebObjects/WebObjects_3.5/Reference/Frameworks/ObjC/Foundation/Classes/NSBundle/Description.html#//apple_ref/occ/cl/NSBundle" data-renderer-version="1" target="_self">NSBundle</a></code> class and Core Foundation bundle functions consider case when searching for resources inside a bundle directory. Case mismatches could prevent you from finding your resources at runtime.</p><p></p></aside></div><section><a name="//apple_ref/doc/uid/TP40009254-100806" title="Creating and Editing an Information Property List File"></a><h2 class="jump">Creating and Editing an Information Property List File</h2><p>The simplest way to create an information property list file is to let Xcode create it for you. Each new bundle-based project that you create in Xcode comes with a file named <em>&lt;project&gt;</em><code>-Info.plist</code>, where <em>&lt;project&gt;</em> is the name of the project. At build time, this file is used to generate the <code>Info.plist</code> file that is then included in the resulting bundle.</p><p>To edit the contents of your information property list file, select the <em>&lt;project&gt;</em><code>-Info.plist</code> file in your Xcode project to display the property list editor. <span class="content_text">Figure 1</span> shows the editor for the information property list file of a new Cocoa app project. The file created by Xcode comes preconfigured with keys that every information property list should have.  </p><figure class="figure"><a name="//apple_ref/doc/uid/TP40009254-SW2" title="Figure 1Editing the information property list in Xcode"></a><figcaption><strong class="caption_number">Figure 1</strong>&nbsp;&nbsp;Editing the information property list in Xcode</figcaption><img src="../Art/xcode_infoplist_editor_2x.png" class="wide-image" alt="" width="680" height="385"><img src="../Art/xcode_infoplist_editor_2x.png" class="ipad-scaled-image" alt="" width="670" height="379"></figure><p>To edit the value for a specify key, double-click the value in the Xcode property list editor to select it, then type a new value. Most values are specified as strings but Xcode also supports several other scalar types. You can also specify complex types such as an array or dictionary. The property list editor displays an appropriate interface for editing each type. To change the type of a given value, make sure the value is not selected and Control-click it to display its contextual menu. From the Value Type submenu, select the type you want to use for the value. </p><p>Because information property lists are usually just text files, you can also edit them using any text editor that supports the UTF-8 file encoding. Because they are XML files, however, editing property list files manually is generally discouraged. </p></section><section><a name="//apple_ref/doc/uid/TP40009254-SW3" title="Adding Keys to an Information Property List File"></a><h2 class="jump">Adding Keys to an Information Property List File</h2><p>Although the <code>Info.plist</code> file provided by Xcode contains the most critical keys required by the system, most apps should typically specify several additional keys. Many subsystems and system apps use the <code>Info.plist</code> file to gather information about your app. For example, when the user chooses File &gt; Get Info for your app, the Finder displays information from many of these keys in the resulting information window. </p><p>You add keys to your app’s <code>Info.plist</code> using the Xcode property list editor. For information about how to use this editor, see “<span class="content_text"><a href="http://help.apple.com/xcode/mac/8.0/#/dev3f399a2a6" class="urlLink" rel="external">Edit property lists</a></span>.”</p><div class="importantbox clear"><aside><a name="//apple_ref/doc/uid/TP40009254-DontLinkElementID_10" title="Important"></a><p><strong>Important:</strong>&nbsp;The property list editor in Xcode displays human-readable strings (instead of the actual key name) for many keys by default. To display the actual key names as they appear in the <code>Info.plist</code> file, Control-click any of the keys in the editor window and enable the Show Raw Keys/Values item in the contextual menu.</p><p></p></aside></div><p>For a list of the recommended keys you should include in a typical app, see <span class="content_text"><a href="#//apple_ref/doc/uid/TP40009254-SW4" data-renderer-version="1">Recommended Info.plist Keys</a></span>. </p></section><section><a name="//apple_ref/doc/uid/TP40009254-102276" title="Localizing Property List Values"></a><h2 class="jump">Localizing Property List Values</h2><p>The values for many keys in an information property list file are human-readable strings that are displayed to the user by the Finder or your own app. When you localize your app, you should be sure to localize the values for these strings in addition to the rest of your app’s content. </p><p>Localized values are not stored in the <code>Info.plist</code> file itself. Instead, you store the values for a particular localization in a strings file with the name  <code>InfoPlist.strings</code>. You place this file in the same language-specific project directory that you use to store other resources for the same localization. The contents of the <code>InfoPlist.strings</code> file are the individual keys you want localized and the appropriately translated value. The routines that look up key values in the <code>Info.plist</code> file take the user’s language preferences into account and return the localized version of the key (from the appropriate <code>InfoPlist.strings</code> file) when one exists. If a localized version of a key does not exist, the routines return the value stored in the <code>Info.plist</code> file.  </p><p>For example, the TextEdit app has several keys that are displayed in the Finder and thus should be localized. Suppose your information property list file defines the following keys:</p><div class="codesample clear"><table><tr><td scope="row"><pre>&lt;key&gt;CFBundleDisplayName&lt;/key&gt;<span></span></pre></td></tr><tr><td scope="row"><pre>&lt;string&gt;TextEdit&lt;/string&gt;<span></span></pre></td></tr><tr><td scope="row"><pre>&lt;key&gt;NSHumanReadableCopyright&lt;/key&gt;<span></span></pre></td></tr><tr><td scope="row"><pre>&lt;string&gt;Copyright ¬© 1995-2009, Apple Inc.,All Rights Reserved.<span></span></pre></td></tr><tr><td scope="row"><pre>&lt;/string&gt;<span></span></pre></td></tr></table></div><p>The French localization for TextEdit then includes the following strings in the <code>InfoPlist.strings</code> file of its <code>Contents/Resources/French.lproj</code> directory:</p><div class="codesample clear"><table><tr><td scope="row"><pre>CFBundleDisplayName = "TextEdit";<span></span></pre></td></tr><tr><td scope="row"><pre>NSHumanReadableCopyright = "Copyright © 1995-2009 Apple Inc.\nTous droits réservés.";<span></span></pre></td></tr></table></div><p>For more information about the placement of <code>InfoPlist.strings</code> files in your bundle, see <em><a href="../../../../CoreFoundation/Conceptual/CFBundles/Introduction/Introduction.html#//apple_ref/doc/uid/10000123i" data-renderer-version="1" target="_self">Bundle Programming Guide</a></em>. For information about creating strings files, see <em><a href="../../../../Cocoa/Conceptual/LoadingResources/Introduction/Introduction.html#//apple_ref/doc/uid/10000051i" data-renderer-version="1" target="_self">Resource Programming Guide</a></em>. For additional information about the localization process, see <em><a href="../../../../MacOSX/Conceptual/BPInternational/Introduction/Introduction.html#//apple_ref/doc/uid/10000171i" data-renderer-version="1" target="_self">Internationalization and Localization Guide</a></em>.  </p></section><section><a name="//apple_ref/doc/uid/TP40009254-SW9" title="Creating Platform- and Device-Specific Keys"></a><h2 class="jump">Creating Platform- and Device-Specific Keys</h2><p>You can designate a key in an <code>Info.plist</code> file as applying to a specific platform, a specific device type, or both. To create a platform- or device-specific key variant, combine a root key name with one or two qualifiers, using the following pattern:</p><p><em>key_root</em><code>-</code><em>&lt;platform&gt;</em><code>~</code><em>&lt;device&gt;</em></p><p>In this pattern, the <em>key_root</em> portion represents the original name of the key, as you find it in this document. The <em>&lt;platform&gt;</em> and <em>&lt;device&gt;</em> portions are optional and restrict the key’s applicability to a specific platform or device type. Notice that if you employ a platform qualifier, connect it with a hyphen (<code>-</code>), and if you employ a device qualifier, connect it with a tilde (<code>~</code>).</p><p>Use of a device qualifier is much more common than is use of a platform qualifier.</p><p>For a device qualifier, you can use one of the following values: </p><ul class="ul"><li class="li"><p><code>iphone</code> The key applies to iPhone devices only</p></li><li class="li"><p><code>ipod</code> The key applies to iPod touch devices only</p></li><li class="li"><p><code>ipad</code> The key applies to iPad devices only</p></li></ul><p>For a platform qualifier, you can specify a value of <code>iphoneos</code> or <code>macos</code> depending on which of these two platforms you are targeting.</p><p>When specifying a key variant, do so in addition to employing a corresponding key without any qualifiers, thereby ensuring you provide a reasonable default value. When the system searches for a key in your app’s <code>Info.plist</code> file, it chooses the key that is most specific to the current device and platform. If it does not find a qualified key, it looks for one without qualifiers. For example, to specify support for all device orientations on iPad, and three orientations for iPhone, the Xcode templates specify the corresponding keys in an app’s <code>Info.plist</code> file:</p><div class="codesample clear"><table><tr><td scope="row"><pre>&lt;key&gt;UISupportedInterfaceOrientations&lt;/key&gt;<span></span></pre></td></tr><tr><td scope="row"><pre>    &lt;string&gt;UIInterfaceOrientationPortrait&lt;/string&gt;<span></span></pre></td></tr><tr><td scope="row"><pre>    &lt;string&gt;UIInterfaceOrientationLandscapeLeft&lt;/string&gt;<span></span></pre></td></tr><tr><td scope="row"><pre>    &lt;string&gt;UIInterfaceOrientationLandscapeRight&lt;/string&gt;<span></span></pre></td></tr><tr><td scope="row"><pre>&lt;key&gt;UISupportedInterfaceOrientations~ipad&lt;/key&gt;<span></span></pre></td></tr><tr><td scope="row"><pre>    &lt;string&gt;UIInterfaceOrientationPortrait&lt;/string&gt;<span></span></pre></td></tr><tr><td scope="row"><pre>    &lt;string&gt;UIInterfaceOrientationPortraitUpsideDown&lt;/string&gt;<span></span></pre></td></tr><tr><td scope="row"><pre>    &lt;string&gt;UIInterfaceOrientationLandscapeLeft&lt;/string&gt;<span></span></pre></td></tr><tr><td scope="row"><pre>    &lt;string&gt;UIInterfaceOrientationLandscapeRight&lt;/string&gt;<span></span></pre></td></tr></table></div></section><section><a name="//apple_ref/doc/uid/TP40009254-SW10" title="Custom Keys"></a><h2 class="jump">Custom Keys</h2><p>iOS and macOS ignore custom keys you include in an <code>Info.plist</code> file. If you want to include app-specific configuration information in your <code>Info.plist</code> file, you can do so freely as long as your key names do not conflict with the ones Apple uses. When defining custom key names, prefix them with a unique prefix, such as your app’s bundle ID or your company’s domain name, to prevent conflicts.</p></section><section><a name="//apple_ref/doc/uid/TP40009254-SW4" title="Recommended Info.plist Keys"></a><h2 class="jump">Recommended Info.plist Keys</h2><p>Each of the Xcode application templates includes an <code>Info.plist</code> file, but you can also construct one from scratch. When creating an information property list file, there are several keys you should always include. These keys are almost always accessed by the system and providing them ensures that the system has the information it needs to work with your app effectively. </p><section><a name="//apple_ref/doc/uid/TP40009254-SW5" title="Recommended Keys for iOS Apps"></a><h3 class="jump">Recommended Keys for iOS Apps</h3><p>It is recommended that an iOS app include the following keys in its information property list file. Most are set by Xcode automatically when you create your project.</p><ul class="ul"><li class="li"><p><span class="content_text"><a href="CoreFoundationKeys.html#//apple_ref/doc/uid/20001431-130430" data-renderer-version="1">CFBundleDevelopmentRegion</a></span></p></li><li class="li"><p><span class="content_text"><a href="CoreFoundationKeys.html#//apple_ref/doc/uid/20001431-110725" data-renderer-version="1">CFBundleDisplayName</a></span></p></li><li class="li"><p><span class="content_text"><a href="CoreFoundationKeys.html#//apple_ref/doc/uid/20001431-101909" data-renderer-version="1">CFBundleExecutable</a></span></p></li><li class="li"><p><span class="content_text"><a href="CoreFoundationKeys.html#//apple_ref/doc/uid/TP40009249-SW10" data-renderer-version="1">CFBundleIconFiles</a></span></p></li><li class="li"><p><span class="content_text"><a href="CoreFoundationKeys.html#//apple_ref/doc/uid/20001431-102070" data-renderer-version="1">CFBundleIdentifier</a></span></p></li><li class="li"><p><span class="content_text"><a href="CoreFoundationKeys.html#//apple_ref/doc/uid/20001431-102088" data-renderer-version="1">CFBundleInfoDictionaryVersion</a></span></p></li><li class="li"><p><span class="content_text"><a href="CoreFoundationKeys.html#//apple_ref/doc/uid/20001431-111321" data-renderer-version="1">CFBundlePackageType</a></span></p></li><li class="li"><p><span class="content_text"><a href="CoreFoundationKeys.html#//apple_ref/doc/uid/20001431-102364" data-renderer-version="1">CFBundleVersion</a></span></p></li><li class="li"><p><span class="content_text"><a href="LaunchServicesKeys.html#//apple_ref/doc/uid/TP40009250-SW2" data-renderer-version="1">LSRequiresIPhoneOS</a></span></p></li><li class="li"><p><span class="content_text"><a href="iPhoneOSKeys.html#//apple_ref/doc/uid/TP40009252-SW9" data-renderer-version="1">UIMainStoryboardFile</a></span></p></li></ul><p>In addition to these keys, there are several that are commonly included:</p><ul class="ul"><li class="li"><p><span class="content_text"><a href="iPhoneOSKeys.html#//apple_ref/doc/uid/TP40009252-SW3" data-renderer-version="1">UIRequiredDeviceCapabilities</a></span> (required)</p></li><li class="li"><p><span class="content_text"><a href="iPhoneOSKeys.html#//apple_ref/doc/uid/TP40009252-SW14" data-renderer-version="1">UIStatusBarStyle</a></span></p></li><li class="li"><p><span class="content_text"><a href="iPhoneOSKeys.html#//apple_ref/doc/uid/TP40009252-SW13" data-renderer-version="1">UIInterfaceOrientation</a></span></p></li><li class="li"><p><span class="content_text"><a href="iPhoneOSKeys.html#//apple_ref/doc/uid/TP40009252-SW12" data-renderer-version="1">UIRequiresPersistentWiFi</a></span></p></li></ul><p>For descriptions of these keys, see the other chapters of this book.</p></section><section><a name="//apple_ref/doc/uid/TP40009254-SW6" title="Recommended Keys for Cocoa Apps"></a><h3 class="jump">Recommended Keys for Cocoa Apps</h3><p>It is recommended that a Cocoa app include the following keys in its information property list file. Most are set by Xcode automatically when you create your project but some may need to be added.</p><ul class="ul"><li class="li"><p><span class="content_text"><a href="CoreFoundationKeys.html#//apple_ref/doc/uid/20001431-130430" data-renderer-version="1">CFBundleDevelopmentRegion</a></span></p></li><li class="li"><p><span class="content_text"><a href="CoreFoundationKeys.html#//apple_ref/doc/uid/20001431-110725" data-renderer-version="1">CFBundleDisplayName</a></span></p></li><li class="li"><p><span class="content_text"><a href="CoreFoundationKeys.html#//apple_ref/doc/uid/20001431-101909" data-renderer-version="1">CFBundleExecutable</a></span></p></li><li class="li"><p><span class="content_text"><a href="CoreFoundationKeys.html#//apple_ref/doc/uid/20001431-102043" data-renderer-version="1">CFBundleIconFile</a></span></p></li><li class="li"><p><span class="content_text"><a href="CoreFoundationKeys.html#//apple_ref/doc/uid/20001431-102070" data-renderer-version="1">CFBundleIdentifier</a></span></p></li><li class="li"><p><span class="content_text"><a href="CoreFoundationKeys.html#//apple_ref/doc/uid/20001431-102088" data-renderer-version="1">CFBundleInfoDictionaryVersion</a></span></p></li><li class="li"><p><span class="content_text"><a href="CoreFoundationKeys.html#//apple_ref/doc/uid/TP40009249-109585" data-renderer-version="1">CFBundleName</a></span></p></li><li class="li"><p><span class="content_text"><a href="CoreFoundationKeys.html#//apple_ref/doc/uid/20001431-111321" data-renderer-version="1">CFBundlePackageType</a></span></p></li><li class="li"><p><span class="content_text"><a href="CoreFoundationKeys.html#//apple_ref/doc/uid/20001431-111349" data-renderer-version="1">CFBundleShortVersionString</a></span></p></li><li class="li"><p><span class="content_text"><a href="CoreFoundationKeys.html#//apple_ref/doc/uid/20001431-102364" data-renderer-version="1">CFBundleVersion</a></span></p></li><li class="li"><p><span class="content_text"><a href="CocoaKeys.html#//apple_ref/doc/uid/TP40009251-112854-TPXREF117" data-renderer-version="1">NSHumanReadableCopyright</a></span></p></li></ul><p>These keys identify your app to the system and provide some basic information about the services it provides. Cocoa apps should also include the following keys to identify key resources in the bundle:</p><ul class="ul"><li class="li"><p><span class="content_text"><a href="CocoaKeys.html#//apple_ref/doc/uid/20001431-107221" data-renderer-version="1">NSMainNibFile</a></span></p></li><li class="li"><p><span class="content_text"><a href="CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW11" data-renderer-version="1">NSPrincipalClass</a></span></p></li></ul><div class="notebox"><aside><a name="//apple_ref/doc/uid/TP40009254-SW7" title="Note"></a><p><strong>Note:</strong>&nbsp;If you are building a Cocoa app using an Xcode template, the <span class="content_text"><a href="CocoaKeys.html#//apple_ref/doc/uid/20001431-107221" data-renderer-version="1">NSMainNibFile</a></span> and <span class="content_text"><a href="CocoaKeys.html#//apple_ref/doc/uid/TP40009251-SW11" data-renderer-version="1">NSPrincipalClass</a></span> keys are typically already set in the template project. </p><p></p></aside></div><p>For descriptions of these keys, see the other chapters of this book.</p></section><section><a name="//apple_ref/doc/uid/TP40009254-SW8" title="Commonly Localized Keys"></a><h3 class="jump">Commonly Localized Keys</h3><p>In addition to the recommended keys, there are several keys that should be localized and placed in your language-specific <code>InfoPlist.strings</code> files:</p><ul class="ul"><li class="li"><p><span class="content_text"><a href="CoreFoundationKeys.html#//apple_ref/doc/uid/20001431-110725" data-renderer-version="1">CFBundleDisplayName</a></span></p></li><li class="li"><p><span class="content_text"><a href="CoreFoundationKeys.html#//apple_ref/doc/uid/TP40009249-109585" data-renderer-version="1">CFBundleName</a></span></p></li><li class="li"><p><span class="content_text"><a href="CoreFoundationKeys.html#//apple_ref/doc/uid/20001431-111349" data-renderer-version="1">CFBundleShortVersionString</a></span></p></li><li class="li"><p><span class="content_text"><a href="CocoaKeys.html#//apple_ref/doc/uid/TP40009251-112854-TPXREF117" data-renderer-version="1">NSHumanReadableCopyright</a></span></p></li></ul><p>For more information about localizing information property list keys, see <span class="content_text"><a href="#//apple_ref/doc/uid/TP40009254-102276" data-renderer-version="1">Localizing Property List Values</a></span>. </p></section></section>
+        <div id="pageNavigationLinks_bottom" class="pageNavigationLinks">
+            <a class='nextLink' rel='next' href='CoreFoundationKeys.html'>Next</a><a class='previousLink' rel='prev' href='../Introduction/Introduction.html'>Previous</a>
+        </div><br/>
+        <div class="copyright"><br/><hr /><div align="center"><p class="content_text" lang="en" dir="ltr"> Copyright &#x00a9; 2018 Apple Inc. All Rights Reserved.  <a href="http://www.apple.com/legal/internet-services/terms/site.html" target="_blank">Terms of Use</a>   |  <a href="http://www.apple.com/privacy/" target="_blank">Privacy Policy</a>  |  Updated: 2018-06-04</p></div></div>
+
+        <div id="pediaWindow">
+            <div id="pediaHeader"></div>
+            <div id="pediaBody"></div>
+        </div>
+    </article>
+
+    <div id="blackout">
+    <div id="preload"></div>
+</div>
+<div id="modal" aria-hidden="true">
+    <div id="closebox" tabindex="0" aria-label="Close feedback form" role="button"></div>
+    <div id="sending" class="hidden">
+        <h2 tabindex="0">Sending feedback&hellip;</h2>
+        <div id="sending_img"></div>
+    </div>
+    <div id="error" class="hidden">
+        <h2 tabindex="0">We&rsquo;re sorry, an error has occurred.</h2>
+        <p>Please try submitting your feedback later.</p>
+        <div id="error_icon"></div>
+    </div>
+    <div id="success" class="hidden">
+        <h2 tabindex="0">Thank you for providing feedback!</h2>
+        <p>Your input helps improve our developer documentation.</p>
+        <div id="thank_you_icon"></div>
+    </div>
+    
+    <form id="feedback" action="#" method="post">
+        <div class="left-leaf">
+            <h2 id="helpful_title" data-asterisk="a1" tabindex="0">How helpful is this document?</h2>     
+            <sup id="a1" class="asterisk" aria-hidden="true">*</sup>
+
+            <div id="star_group" role="radiogroup" aria-required="true">
+                <label> 
+                    <input class="radio" type="radio" name="helped" value="1" /> 
+                    Very helpful
+                </label>
+                <label> 
+                    <input class="radio" type="radio" name="helped" value="2" /> 
+                    Somewhat helpful
+                </label>
+                <label>
+                    <input class="radio" type="radio" name="helped" value="3" /> 
+                    Not helpful
+                </label>
+            </div>
+        </div>
+        <div class="right-leaf">
+            <h2>How can we improve this document?</h2>
+            <div id="improve" class="checkboxes">
+                <label>
+                    <input type="checkbox" name="typo" /> 
+                    Fix typos or links
+                </label>
+                <label>
+                    <input type="checkbox" name="infoIncorrect" /> 
+                    Fix incorrect information
+                </label>
+                <label>
+                    <input type="checkbox" name="needs_examples" /> 
+                    Add or update code samples
+                </label>
+                <label>
+                    <input type="checkbox" name="needs_art" /> 
+                    Add or update illustrations
+                </label>
+                <label>
+                    <input type="checkbox" name="missingInfo" /> 
+                    Add information about...
+                </label>
+            </div>
+        </div>
+
+        <textarea id="comment" name="problem" cols="70" rows="8" placeholder="Please tell us more about your experience with this document" data-asterisk="a2" required></textarea>
+        <sup id="a2" class="asterisk" aria-hidden="true">*</sup>
+
+        <p class="fineprint">
+            <em aria-hidden="true"><span>*</span> Required information</em>
+        </p> 
+
+        <input id="submit" type="button" value="Send" />
+
+        <section id="legal">
+            <p>
+                To submit a product bug or enhancement request, please visit the 
+                <a href="https://developer.apple.com/bugreporter/" target="_blank">Bug Reporter</a> 
+                page.
+            </p>
+            <p>
+                Please read <a href="http://www.apple.com/legal/policies/ideas.html" target="_blank">Apple's Unsolicited Idea Submission Policy</a> 
+                before you send us your feedback.
+            </p> 
+        </section>
+    </form>
+</div>
+
+    
+    <script charset="utf-8" src="../../../../../Resources/1282/JavaScript/lib/prototype.js"></script>
+    <script src="../../../../../Resources/1282/JavaScript/library.js"></script>
+</body>
+</html>

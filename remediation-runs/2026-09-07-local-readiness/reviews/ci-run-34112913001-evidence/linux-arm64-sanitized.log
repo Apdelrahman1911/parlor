@@ -1,0 +1,825 @@
+﻿2026-09-07T10:43:21.8185093Z Current runner version: '2.337.0'
+2026-09-07T10:43:21.8219779Z ##[group]Runner Image Provisioner
+2026-09-07T10:43:21.8221184Z Hosted Compute Agent
+2026-09-07T10:43:21.8221989Z Version: 20260828.587
+2026-09-07T10:43:21.8222664Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-07T10:43:21.8223375Z Build Date: 2026-08-28T16:44:25Z
+2026-09-07T10:43:21.8224166Z Worker ID: {c28877db-9cbf-441d-84bf-4ed8a3af855f}
+2026-09-07T10:43:21.8224952Z Azure Region: northcentralus
+2026-09-07T10:43:21.8225742Z ##[endgroup]
+2026-09-07T10:43:21.8227878Z ##[group]Operating System
+2026-09-07T10:43:21.8228517Z Ubuntu
+2026-09-07T10:43:21.8229259Z 24.04.4
+2026-09-07T10:43:21.8229818Z LTS
+2026-09-07T10:43:21.8230388Z ##[endgroup]
+2026-09-07T10:43:21.8231278Z ##[group]Runner Image
+2026-09-07T10:43:21.8231918Z Image: ubuntu-24.04-arm
+2026-09-07T10:43:21.8232598Z Version: 20260831.111.1
+2026-09-07T10:43:21.8234089Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24-arm64/20260831.111/images/ubuntu/Ubuntu2404-Arm64-Readme.md
+2026-09-07T10:43:21.8235928Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24-arm64%2F20260831.111
+2026-09-07T10:43:21.8236897Z ##[endgroup]
+2026-09-07T10:43:21.8238222Z ##[group]GITHUB_TOKEN Permissions
+2026-09-07T10:43:21.8241938Z Contents: read
+2026-09-07T10:43:21.8242788Z Metadata: read
+2026-09-07T10:43:21.8243338Z ##[endgroup]
+2026-09-07T10:43:21.8246409Z Secret source: Actions
+2026-09-07T10:43:21.8247987Z Prepare workflow directory
+2026-09-07T10:43:21.8644849Z Prepare all required actions
+2026-09-07T10:43:21.8695372Z Getting action download info
+2026-09-07T10:43:22.0764617Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-07T10:43:22.1856739Z Download action repository 'actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95' (SHA:03ad4de0992f5dab5e18fcb136590ce7c4a0ac95)
+2026-09-07T10:43:22.7780013Z Complete job name: Desktop strict verification (Linux arm64)
+2026-09-07T10:43:22.8635878Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-09-07T10:43:22.8637502Z with:
+2026-09-07T10:43:22.8638123Z   fetch-depth: 1
+2026-09-07T10:43:22.8638869Z   persist-credentials: false
+2026-09-07T10:43:22.8639559Z   repository: Apdelrahman1911/parlor
+2026-09-07T10:43:22.8643567Z   token: <REDACTED>
+2026-09-07T10:43:22.8644200Z   ssh-strict: true
+2026-09-07T10:43:22.8644797Z   ssh-user: git
+2026-09-07T10:43:22.8645396Z   clean: true
+2026-09-07T10:43:22.8646037Z   sparse-checkout-cone-mode: true
+2026-09-07T10:43:22.8646685Z   fetch-tags: false
+2026-09-07T10:43:22.8647343Z   show-progress: true
+2026-09-07T10:43:22.8647892Z   lfs: false
+2026-09-07T10:43:22.8648456Z   submodules: false
+2026-09-07T10:43:22.8649047Z   set-safe-directory: true
+2026-09-07T10:43:22.8649664Z   allow-unsafe-pr-checkout: false
+2026-09-07T10:43:22.8651314Z ##[endgroup]
+2026-09-07T10:43:22.9521222Z Syncing repository: Apdelrahman1911/parlor
+2026-09-07T10:43:22.9525136Z ##[group]Getting Git version info
+2026-09-07T10:43:22.9526302Z Working directory is '<CI_WORKSPACE>'
+2026-09-07T10:43:22.9527864Z [command]/usr/bin/git version
+2026-09-07T10:43:22.9548236Z git version 2.55.0
+2026-09-07T10:43:22.9567273Z ##[endgroup]
+2026-09-07T10:43:22.9581312Z Temporarily overriding HOME='<CI_HOME>/work/_temp/f80a3660-2dfa-4fca-8f4b-7d99f81a8b09' before making global git config changes
+2026-09-07T10:43:22.9582945Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-07T10:43:22.9588074Z [command]/usr/bin/git config --global --add safe.directory <CI_WORKSPACE>
+2026-09-07T10:43:22.9619991Z Deleting the contents of '<CI_WORKSPACE>'
+2026-09-07T10:43:22.9624718Z ##[group]Determining repository object format
+2026-09-07T10:43:22.9626400Z ##[endgroup]
+2026-09-07T10:43:22.9627468Z ##[group]Initializing the repository
+2026-09-07T10:43:22.9632214Z [command]/usr/bin/git init <CI_WORKSPACE>
+2026-09-07T10:43:22.9705915Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-07T10:43:22.9707843Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-07T10:43:22.9709991Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-07T10:43:22.9711743Z hint: call:
+2026-09-07T10:43:22.9712624Z hint:
+2026-09-07T10:43:22.9713715Z hint: 	git config --global init.defaultBranch <name>
+2026-09-07T10:43:22.9715206Z hint:
+2026-09-07T10:43:22.9716395Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-07T10:43:22.9717715Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-07T10:43:22.9718761Z hint:
+2026-09-07T10:43:22.9719706Z hint: 	git branch -m <name>
+2026-09-07T10:43:22.9720685Z hint:
+2026-09-07T10:43:22.9721900Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-07T10:43:22.9723614Z Initialized empty Git repository in <CI_WORKSPACE>/.git/
+2026-09-07T10:43:22.9726563Z [command]/usr/bin/git remote add origin https://github.com/Apdelrahman1911/parlor
+2026-09-07T10:43:22.9757251Z ##[endgroup]
+2026-09-07T10:43:22.9758715Z ##[group]Disabling automatic garbage collection
+2026-09-07T10:43:22.9760125Z [command]/usr/bin/git config --local gc.auto 0
+2026-09-07T10:43:22.9794854Z ##[endgroup]
+2026-09-07T10:43:22.9796092Z ##[group]Setting up auth
+2026-09-07T10:43:22.9796960Z Removing SSH command configuration
+2026-09-07T10:43:22.9801478Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-07T10:43:22.9846659Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-07T10:43:23.0128449Z Removing HTTP extra header
+2026-09-07T10:43:23.0132754Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-07T10:43:23.0169679Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-07T10:43:23.0383051Z Removing includeIf entries pointing to credentials config files
+2026-09-07T10:43:23.0384560Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-07T10:43:23.0412549Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-07T10:43:23.0629715Z [command]/usr/bin/git config --file <CI_HOME>/work/_temp/git-credentials-30316ef0-3b0f-4e8e-b587-577010df496e.config http.https://github.com/.extraheader AUTHORIZATION: <REDACTED>
+2026-09-07T10:43:23.0678941Z [command]/usr/bin/git config --local includeIf.gitdir:<CI_WORKSPACE>/.git.path <CI_HOME>/work/_temp/git-credentials-30316ef0-3b0f-4e8e-b587-577010df496e.config
+2026-09-07T10:43:23.0713292Z [command]/usr/bin/git config --local includeIf.gitdir:<CI_WORKSPACE>/.git/worktrees/*.path <CI_HOME>/work/_temp/git-credentials-30316ef0-3b0f-4e8e-b587-577010df496e.config
+2026-09-07T10:43:23.0746373Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-30316ef0-3b0f-4e8e-b587-577010df496e.config
+2026-09-07T10:43:23.0779446Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-30316ef0-3b0f-4e8e-b587-577010df496e.config
+2026-09-07T10:43:23.0808818Z ##[endgroup]
+2026-09-07T10:43:23.0809897Z ##[group]Fetching the repository
+2026-09-07T10:43:23.0815582Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +f5ea8045bd903c255041b198f54aca67e893612f:refs/remotes/origin/fix/local-readiness-2026-09-07
+2026-09-07T10:43:23.8715373Z From https://github.com/Apdelrahman1911/parlor
+2026-09-07T10:43:23.8717924Z  * [new ref]         f5ea8045bd903c255041b198f54aca67e893612f -> origin/fix/local-readiness-2026-09-07
+2026-09-07T10:43:23.8724030Z [command]/usr/bin/git branch --list --remote origin/fix/local-readiness-2026-09-07
+2026-09-07T10:43:23.8748413Z   origin/fix/local-readiness-2026-09-07
+2026-09-07T10:43:23.8758103Z [command]/usr/bin/git rev-parse refs/remotes/origin/fix/local-readiness-2026-09-07
+2026-09-07T10:43:23.8782264Z f5ea8045bd903c255041b198f54aca67e893612f
+2026-09-07T10:43:23.8798247Z ##[endgroup]
+2026-09-07T10:43:23.8800517Z ##[group]Determining the checkout info
+2026-09-07T10:43:23.8802609Z ##[endgroup]
+2026-09-07T10:43:23.8803989Z [command]/usr/bin/git sparse-checkout disable
+2026-09-07T10:43:23.8828145Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-07T10:43:23.8858367Z ##[group]Checking out the ref
+2026-09-07T10:43:23.8861210Z [command]/usr/bin/git checkout --progress --force -B fix/local-readiness-2026-09-07 refs/remotes/origin/fix/local-readiness-2026-09-07
+2026-09-07T10:43:23.9356785Z Switched to a new branch 'fix/local-readiness-2026-09-07'
+2026-09-07T10:43:23.9359005Z branch 'fix/local-readiness-2026-09-07' set up to track 'origin/fix/local-readiness-2026-09-07'.
+2026-09-07T10:43:23.9364883Z ##[endgroup]
+2026-09-07T10:43:23.9407373Z [command]/usr/bin/git log -1 --format=%H
+2026-09-07T10:43:23.9438757Z f5ea8045bd903c255041b198f54aca67e893612f
+2026-09-07T10:43:23.9442591Z ##[group]Removing auth
+2026-09-07T10:43:23.9443716Z Removing SSH command configuration
+2026-09-07T10:43:23.9448810Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-07T10:43:23.9483377Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-07T10:43:23.9694445Z Removing HTTP extra header
+2026-09-07T10:43:23.9696462Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-07T10:43:23.9728632Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-07T10:43:23.9928955Z Removing includeIf entries pointing to credentials config files
+2026-09-07T10:43:23.9932016Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-07T10:43:23.9956771Z includeif.gitdir:<CI_WORKSPACE>/.git.path
+2026-09-07T10:43:23.9958502Z includeif.gitdir:<CI_WORKSPACE>/.git/worktrees/*.path
+2026-09-07T10:43:23.9960219Z includeif.gitdir:/github/workspace/.git.path
+2026-09-07T10:43:23.9961913Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-07T10:43:23.9966139Z [command]/usr/bin/git config --local --get-all includeif.gitdir:<CI_WORKSPACE>/.git.path
+2026-09-07T10:43:23.9991960Z <CI_HOME>/work/_temp/git-credentials-30316ef0-3b0f-4e8e-b587-577010df496e.config
+2026-09-07T10:43:24.0002834Z [command]/usr/bin/git config --local --unset includeif.gitdir:<CI_WORKSPACE>/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-30316ef0\-3b0f\-4e8e\-b587\-577010df496e\.config
+2026-09-07T10:43:24.0036438Z [command]/usr/bin/git config --local --get-all includeif.gitdir:<CI_WORKSPACE>/.git/worktrees/*.path
+2026-09-07T10:43:24.0061645Z <CI_HOME>/work/_temp/git-credentials-30316ef0-3b0f-4e8e-b587-577010df496e.config
+2026-09-07T10:43:24.0069406Z [command]/usr/bin/git config --local --unset includeif.gitdir:<CI_WORKSPACE>/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-30316ef0\-3b0f\-4e8e\-b587\-577010df496e\.config
+2026-09-07T10:43:24.0106548Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-07T10:43:24.0135623Z /github/runner_temp/git-credentials-30316ef0-3b0f-4e8e-b587-577010df496e.config
+2026-09-07T10:43:24.0150941Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-30316ef0\-3b0f\-4e8e\-b587\-577010df496e\.config
+2026-09-07T10:43:24.0191544Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-07T10:43:24.0216021Z /github/runner_temp/git-credentials-30316ef0-3b0f-4e8e-b587-577010df496e.config
+2026-09-07T10:43:24.0224592Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-30316ef0\-3b0f\-4e8e\-b587\-577010df496e\.config
+2026-09-07T10:43:24.0260195Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-07T10:43:24.0476287Z Removing credentials config '<CI_HOME>/work/_temp/git-credentials-30316ef0-3b0f-4e8e-b587-577010df496e.config'
+2026-09-07T10:43:24.0479591Z ##[endgroup]
+2026-09-07T10:43:24.0887391Z ##[group]Run actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95
+2026-09-07T10:43:24.0888770Z with:
+2026-09-07T10:43:24.0889676Z   distribution: temurin
+2026-09-07T10:43:24.0890477Z   java-version: 21
+2026-09-07T10:43:24.0891512Z   check-latest: false
+2026-09-07T10:43:24.0892906Z   java-package: jdk
+2026-09-07T10:43:24.0893687Z   set-default: true
+2026-09-07T10:43:24.0894577Z   verify-signature: false
+2026-09-07T10:43:24.0895455Z   server-id: github
+2026-09-07T10:43:24.0896248Z   server-username: GITHUB_ACTOR
+2026-09-07T10:43:24.0897271Z   server-password: <REDACTED>
+2026-09-07T10:43:24.0898153Z   overwrite-settings: true
+2026-09-07T10:43:24.0898982Z   job-status: success
+2026-09-07T10:43:24.0905636Z   token: <REDACTED>
+2026-09-07T10:43:24.0906414Z   show-download-progress: false
+2026-09-07T10:43:24.0907363Z ##[endgroup]
+2026-09-07T10:43:24.2235199Z ##[group]Installed distributions
+2026-09-07T10:43:24.2424716Z Trying to resolve the latest version from remote
+2026-09-07T10:43:24.4103898Z Resolved latest version as 21.0.12+101.0.LTS
+2026-09-07T10:43:24.4104674Z Trying to download...
+2026-09-07T10:43:24.4106045Z Downloading Java 21.0.12+101.0.LTS (Temurin-Hotspot) from https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.12.1%2B1/OpenJDK21U-jdk_aarch64_linux_hotspot_21.0.12.1_1.tar.gz ...
+2026-09-07T10:43:25.4122572Z Extracting Java archive...
+2026-09-07T10:43:25.4234152Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C <CI_HOME>/work/_temp/0d2808f1-e9ee-4276-817e-32ebb5e6ca74 -f <CI_HOME>/work/_temp/718b36d7-c5a5-400b-a00d-2452a721bac6
+2026-09-07T10:43:28.0112501Z Java 21.0.12+101.0.LTS was downloaded
+2026-09-07T10:43:28.0113206Z Setting Java 21.0.12+101.0.LTS as the default
+2026-09-07T10:43:28.0119507Z Creating toolchains.xml for JDK version 21 from temurin
+2026-09-07T10:43:28.0180332Z Writing to <CI_HOME>/.m2/toolchains.xml
+2026-09-07T10:43:28.0180815Z 
+2026-09-07T10:43:28.0181229Z Java configuration:
+2026-09-07T10:43:28.0181980Z   Distribution: temurin
+2026-09-07T10:43:28.0182467Z   Version: 21.0.12+101.0.LTS
+2026-09-07T10:43:28.0183006Z   Path: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0.LTS/arm64
+2026-09-07T10:43:28.0183583Z 
+2026-09-07T10:43:28.0184361Z ##[endgroup]
+2026-09-07T10:43:28.0220495Z Creating settings.xml with server-id: github
+2026-09-07T10:43:28.0221983Z Writing to <CI_HOME>/.m2/settings.xml
+2026-09-07T10:43:28.0223338Z Configured MAVEN_ARGS to include -ntp to suppress Maven transfer progress logs. Set 'show-download-progress: true' to keep the download progress output.
+2026-09-07T10:43:28.0364562Z ##[group]Run set -euo pipefail
+2026-09-07T10:43:28.0365136Z set -euo pipefail
+2026-09-07T10:43:28.0365422Z test "$(uname -s)" = "Linux"
+2026-09-07T10:43:28.0365893Z test "$(uname -m)" = "aarch64"
+2026-09-07T10:43:28.0366194Z git rev-parse HEAD
+2026-09-07T10:43:28.0366539Z test -z "$(git status --porcelain)"
+2026-09-07T10:43:28.3289504Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-07T10:43:28.3290422Z env:
+2026-09-07T10:43:28.3291274Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0.LTS/arm64
+2026-09-07T10:43:28.3291944Z   JAVA_HOME_21_ARM64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0.LTS/arm64
+2026-09-07T10:43:28.3292405Z   MAVEN_ARGS: -ntp
+2026-09-07T10:43:28.3292702Z ##[endgroup]
+2026-09-07T10:43:28.4921735Z f5ea8045bd903c255041b198f54aca67e893612f
+2026-09-07T10:43:28.5416753Z ##[group]Run ./gradlew productionDesktopCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain
+2026-09-07T10:43:28.5417829Z ./gradlew productionDesktopCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain
+2026-09-07T10:43:28.5469384Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-07T10:43:28.5469900Z env:
+2026-09-07T10:43:28.5470364Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0.LTS/arm64
+2026-09-07T10:43:28.5471131Z   JAVA_HOME_21_ARM64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0.LTS/arm64
+2026-09-07T10:43:28.5471629Z   MAVEN_ARGS: -ntp
+2026-09-07T10:43:28.5471958Z ##[endgroup]
+2026-09-07T10:43:28.6280941Z Downloading https://services.gradle.org/distributions/gradle-8.13-bin.zip
+2026-09-07T10:43:29.8448401Z .............10%.............20%.............30%.............40%.............50%.............60%.............70%.............80%.............90%.............100%
+2026-09-07T10:43:30.9871251Z 
+2026-09-07T10:43:30.9872587Z Welcome to Gradle 8.13!
+2026-09-07T10:43:30.9901670Z 
+2026-09-07T10:43:30.9902667Z Here are the highlights of this release:
+2026-09-07T10:43:30.9931895Z  - Daemon JVM auto-provisioning
+2026-09-07T10:43:30.9961978Z  - Enhancements for Scala plugin and JUnit testing
+2026-09-07T10:43:30.9991744Z  - Improvements for build authors and plugin developers
+2026-09-07T10:43:30.9992576Z 
+2026-09-07T10:43:31.0019339Z For more details see https://docs.gradle.org/8.13/release-notes.html
+2026-09-07T10:43:31.0051245Z 
+2026-09-07T10:43:31.0839824Z To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+2026-09-07T10:43:32.0832396Z Daemon will be stopped at the end of the build 
+2026-09-07T10:43:33.3852864Z Calculating task graph as no cached configuration is available for tasks: productionDesktopCheck
+2026-09-07T10:43:54.1845662Z Type-safe project accessors is an incubating feature.
+2026-09-07T10:44:18.2871367Z > Task :build-logic:convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:44:26.6834533Z > Task :build-logic:convention:pluginDescriptors
+2026-09-07T10:44:26.7831686Z > Task :build-logic:convention:processResources
+2026-09-07T10:44:32.3852212Z > Task :build-logic:convention:compileKotlin
+2026-09-07T10:44:32.3853368Z > Task :build-logic:convention:compileJava NO-SOURCE
+2026-09-07T10:44:32.3853816Z > Task :build-logic:convention:classes
+2026-09-07T10:44:32.3854441Z > Task :build-logic:convention:jar
+2026-09-07T10:44:56.6833706Z 
+2026-09-07T10:44:56.6834668Z > Configure project :composeApp
+2026-09-07T10:44:56.6835180Z WARNING: The option setting 'android.experimental.lint.version=9.1.1' is experimental.
+2026-09-07T10:45:05.1842473Z w: ⚠️ Deprecated Gradle Version
+2026-09-07T10:45:05.1843463Z The used Gradle version (Gradle 8.13) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+2026-09-07T10:45:05.1844141Z The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+2026-09-07T10:45:05.1844487Z 
+2026-09-07T10:45:05.1844646Z This warning can be suppressed in 'gradle.properties':
+2026-09-07T10:45:05.1845160Z     kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+2026-09-07T10:45:05.1845684Z Solution: Please update the Gradle version to at least Gradle 8.14.4.
+2026-09-07T10:45:05.1845965Z 
+2026-09-07T10:45:05.1846813Z w: ⚠️ Native task 'iosX64Test' is disabled
+2026-09-07T10:45:05.1847329Z Task 'iosX64Test' for target 'ios_x64' cannot run on the current host (linux-aarch64).
+2026-09-07T10:45:05.1848217Z Reason: simulator tests require macOS
+2026-09-07T10:45:05.1848832Z Solution: To suppress this warning, add 'kotlin.native.ignoreDisabledTargets=true' to gradle.properties.
+2026-09-07T10:45:05.1849236Z 
+2026-09-07T10:45:05.1849529Z w: ⚠️ Native task 'iosSimulatorArm64Test' is disabled
+2026-09-07T10:45:05.1850349Z Task 'iosSimulatorArm64Test' for target 'ios_simulator_arm64' cannot run on the current host (linux-aarch64).
+2026-09-07T10:45:05.1851260Z Reason: simulator tests require macOS
+2026-09-07T10:45:05.1851766Z Solution: To suppress this warning, add 'kotlin.native.ignoreDisabledTargets=true' to gradle.properties.
+2026-09-07T10:45:05.1852277Z 
+2026-09-07T10:45:05.1852500Z w: ⚠️ Disabled Kotlin/Native Targets
+2026-09-07T10:45:05.1852965Z The following Kotlin/Native targets cannot be built on this machine and are disabled:
+2026-09-07T10:45:05.1853458Z iosArm64, iosSimulatorArm64, iosX64
+2026-09-07T10:45:05.1854008Z Solution: To hide this message, add 'kotlin.native.ignoreDisabledTargets=true' to the Gradle properties.
+2026-09-07T10:45:05.1854403Z 
+2026-09-07T10:45:05.1854690Z w: ⚠️ The host platform is not supported by Kotlin/Native
+2026-09-07T10:45:05.1855248Z The Kotlin/Native compiler does not support your current host platform: linux-aarch64.
+2026-09-07T10:45:05.1855598Z 
+2026-09-07T10:45:05.1856031Z Compilation of Kotlin/Native targets is only possible on the following host platforms:
+2026-09-07T10:45:05.1856559Z * Linux (x86_64)
+2026-09-07T10:45:05.1856807Z * Windows (x86_64)
+2026-09-07T10:45:05.1857055Z * macOS (arm64)
+2026-09-07T10:45:05.1857310Z * macOS (x86_64)
+2026-09-07T10:45:05.1857438Z 
+2026-09-07T10:45:05.1857684Z Your platform is not on this list, so the Kotlin/Native compiler cannot be executed.
+2026-09-07T10:45:05.1858086Z Solutions:
+2026-09-07T10:45:05.1858515Z  * Run your build on one of the supported host platforms (listed above).
+2026-09-07T10:45:05.1859117Z  * If using a CI/CD service, configure your build pipeline to use a supported runner (e.g., a Linux x86_64 agent).
+2026-09-07T10:45:05.1859865Z See https://kotlinlang.org/docs/native-target-support.html for more details.
+2026-09-07T10:45:05.1860184Z 
+2026-09-07T10:45:07.2835170Z 
+2026-09-07T10:45:07.2842005Z > Configure project :game-modes:mafia
+2026-09-07T10:45:07.2842728Z w: ⚠️ Disabled Kotlin/Native Targets
+2026-09-07T10:45:07.2843241Z The following Kotlin/Native targets cannot be built on this machine and are disabled:
+2026-09-07T10:45:07.2843804Z iosArm64, iosSimulatorArm64, iosX64
+2026-09-07T10:45:07.2844351Z Solution: To hide this message, add 'kotlin.native.ignoreDisabledTargets=true' to the Gradle properties.
+2026-09-07T10:45:07.2844765Z 
+2026-09-07T10:45:07.2845129Z w: ⚠️ The host platform is not supported by Kotlin/Native
+2026-09-07T10:45:07.2845632Z The Kotlin/Native compiler does not support your current host platform: linux-aarch64.
+2026-09-07T10:45:07.2845969Z 
+2026-09-07T10:45:07.2846231Z Compilation of Kotlin/Native targets is only possible on the following host platforms:
+2026-09-07T10:45:07.2846744Z * Linux (x86_64)
+2026-09-07T10:45:07.2846987Z * Windows (x86_64)
+2026-09-07T10:45:07.2847246Z * macOS (arm64)
+2026-09-07T10:45:07.2847473Z * macOS (x86_64)
+2026-09-07T10:45:07.2847613Z 
+2026-09-07T10:45:07.2847848Z Your platform is not on this list, so the Kotlin/Native compiler cannot be executed.
+2026-09-07T10:45:07.2848340Z Solutions:
+2026-09-07T10:45:07.2848653Z  * Run your build on one of the supported host platforms (listed above).
+2026-09-07T10:45:07.2849286Z  * If using a CI/CD service, configure your build pipeline to use a supported runner (e.g., a Linux x86_64 agent).
+2026-09-07T10:45:07.2849938Z See https://kotlinlang.org/docs/native-target-support.html for more details.
+2026-09-07T10:45:07.2850266Z 
+2026-09-07T10:45:08.3843459Z 
+2026-09-07T10:45:08.3844228Z > Configure project :game-modes:whodunit
+2026-09-07T10:45:08.3845073Z w: ⚠️ Disabled Kotlin/Native Targets
+2026-09-07T10:45:08.3846129Z The following Kotlin/Native targets cannot be built on this machine and are disabled:
+2026-09-07T10:45:08.3847654Z iosArm64, iosSimulatorArm64, iosX64
+2026-09-07T10:45:08.3848809Z Solution: To hide this message, add 'kotlin.native.ignoreDisabledTargets=true' to the Gradle properties.
+2026-09-07T10:45:08.3849669Z 
+2026-09-07T10:45:08.3850365Z w: ⚠️ The host platform is not supported by Kotlin/Native
+2026-09-07T10:45:08.3851612Z The Kotlin/Native compiler does not support your current host platform: linux-aarch64.
+2026-09-07T10:45:08.3852175Z 
+2026-09-07T10:45:08.3852666Z Compilation of Kotlin/Native targets is only possible on the following host platforms:
+2026-09-07T10:45:08.3853272Z * Linux (x86_64)
+2026-09-07T10:45:08.3853641Z * Windows (x86_64)
+2026-09-07T10:45:08.3854122Z * macOS (arm64)
+2026-09-07T10:45:08.3854479Z * macOS (x86_64)
+2026-09-07T10:45:08.3854795Z 
+2026-09-07T10:45:08.3855187Z Your platform is not on this list, so the Kotlin/Native compiler cannot be executed.
+2026-09-07T10:45:08.3855733Z Solutions:
+2026-09-07T10:45:08.3856240Z  * Run your build on one of the supported host platforms (listed above).
+2026-09-07T10:45:08.3857013Z  * If using a CI/CD service, configure your build pipeline to use a supported runner (e.g., a Linux x86_64 agent).
+2026-09-07T10:45:08.3857783Z See https://kotlinlang.org/docs/native-target-support.html for more details.
+2026-09-07T10:45:08.3858278Z 
+2026-09-07T10:45:10.0832621Z 
+2026-09-07T10:45:10.0833560Z > Configure project :shared:content
+2026-09-07T10:45:10.0835832Z w: ⚠️ Disabled Kotlin/Native Targets
+2026-09-07T10:45:10.0836981Z The following Kotlin/Native targets cannot be built on this machine and are disabled:
+2026-09-07T10:45:10.0837815Z iosArm64, iosSimulatorArm64, iosX64
+2026-09-07T10:45:10.0838795Z Solution: To hide this message, add 'kotlin.native.ignoreDisabledTargets=true' to the Gradle properties.
+2026-09-07T10:45:10.0839245Z 
+2026-09-07T10:45:10.0839716Z w: ⚠️ The host platform is not supported by Kotlin/Native
+2026-09-07T10:45:10.0840391Z The Kotlin/Native compiler does not support your current host platform: linux-aarch64.
+2026-09-07T10:45:10.0841075Z 
+2026-09-07T10:45:10.0841400Z Compilation of Kotlin/Native targets is only possible on the following host platforms:
+2026-09-07T10:45:10.0841935Z * Linux (x86_64)
+2026-09-07T10:45:10.0842166Z * Windows (x86_64)
+2026-09-07T10:45:10.0842382Z * macOS (arm64)
+2026-09-07T10:45:10.0842661Z * macOS (x86_64)
+2026-09-07T10:45:10.0842811Z 
+2026-09-07T10:45:10.0843093Z Your platform is not on this list, so the Kotlin/Native compiler cannot be executed.
+2026-09-07T10:45:10.0843545Z Solutions:
+2026-09-07T10:45:10.0843857Z  * Run your build on one of the supported host platforms (listed above).
+2026-09-07T10:45:10.0844445Z  * If using a CI/CD service, configure your build pipeline to use a supported runner (e.g., a Linux x86_64 agent).
+2026-09-07T10:45:10.0845141Z See https://kotlinlang.org/docs/native-target-support.html for more details.
+2026-09-07T10:45:10.0845470Z 
+2026-09-07T10:45:10.8833835Z 
+2026-09-07T10:45:10.8835168Z > Configure project :shared:core
+2026-09-07T10:45:10.8835964Z w: ⚠️ Disabled Kotlin/Native Targets
+2026-09-07T10:45:10.8836690Z The following Kotlin/Native targets cannot be built on this machine and are disabled:
+2026-09-07T10:45:10.8837247Z iosArm64, iosSimulatorArm64, iosX64
+2026-09-07T10:45:10.8837740Z Solution: To hide this message, add 'kotlin.native.ignoreDisabledTargets=true' to the Gradle properties.
+2026-09-07T10:45:10.8838209Z 
+2026-09-07T10:45:10.8838532Z w: ⚠️ The host platform is not supported by Kotlin/Native
+2026-09-07T10:45:10.8839035Z The Kotlin/Native compiler does not support your current host platform: linux-aarch64.
+2026-09-07T10:45:10.8839394Z 
+2026-09-07T10:45:10.8839727Z Compilation of Kotlin/Native targets is only possible on the following host platforms:
+2026-09-07T10:45:10.8840177Z * Linux (x86_64)
+2026-09-07T10:45:10.8840405Z * Windows (x86_64)
+2026-09-07T10:45:10.8841108Z * macOS (arm64)
+2026-09-07T10:45:10.8841472Z * macOS (x86_64)
+2026-09-07T10:45:10.8871482Z 
+2026-09-07T10:45:10.8902563Z Your platform is not on this list, so the Kotlin/Native compiler cannot be executed.
+2026-09-07T10:45:10.8921702Z Solutions:
+2026-09-07T10:45:10.8922078Z  * Run your build on one of the supported host platforms (listed above).
+2026-09-07T10:45:10.8923081Z  * If using a CI/CD service, configure your build pipeline to use a supported runner (e.g., a Linux x86_64 agent).
+2026-09-07T10:45:10.8924409Z See https://kotlinlang.org/docs/native-target-support.html for more details.
+2026-09-07T10:45:10.8924915Z 
+2026-09-07T10:45:11.6830707Z 
+2026-09-07T10:45:11.6831825Z > Configure project :shared:design-system
+2026-09-07T10:45:11.6833315Z w: ⚠️ Disabled Kotlin/Native Targets
+2026-09-07T10:45:11.6834403Z The following Kotlin/Native targets cannot be built on this machine and are disabled:
+2026-09-07T10:45:11.6835014Z iosArm64, iosSimulatorArm64, iosX64
+2026-09-07T10:45:11.6835739Z Solution: To hide this message, add 'kotlin.native.ignoreDisabledTargets=true' to the Gradle properties.
+2026-09-07T10:45:11.6836333Z 
+2026-09-07T10:45:11.6836827Z w: ⚠️ The host platform is not supported by Kotlin/Native
+2026-09-07T10:45:11.6837721Z The Kotlin/Native compiler does not support your current host platform: linux-aarch64.
+2026-09-07T10:45:11.6838347Z 
+2026-09-07T10:45:11.6838805Z Compilation of Kotlin/Native targets is only possible on the following host platforms:
+2026-09-07T10:45:11.6839405Z * Linux (x86_64)
+2026-09-07T10:45:11.6839839Z * Windows (x86_64)
+2026-09-07T10:45:11.6840245Z * macOS (arm64)
+2026-09-07T10:45:11.6840934Z * macOS (x86_64)
+2026-09-07T10:45:11.6841316Z 
+2026-09-07T10:45:11.6841713Z Your platform is not on this list, so the Kotlin/Native compiler cannot be executed.
+2026-09-07T10:45:11.6842262Z Solutions:
+2026-09-07T10:45:11.6842775Z  * Run your build on one of the supported host platforms (listed above).
+2026-09-07T10:45:11.6843682Z  * If using a CI/CD service, configure your build pipeline to use a supported runner (e.g., a Linux x86_64 agent).
+2026-09-07T10:45:11.6844482Z See https://kotlinlang.org/docs/native-target-support.html for more details.
+2026-09-07T10:45:11.6845038Z 
+2026-09-07T10:45:12.3851389Z 
+2026-09-07T10:45:12.3855911Z > Configure project :shared:engine
+2026-09-07T10:45:12.3882047Z w: ⚠️ Disabled Kotlin/Native Targets
+2026-09-07T10:45:12.3895143Z The following Kotlin/Native targets cannot be built on this machine and are disabled:
+2026-09-07T10:45:12.3896586Z iosArm64, iosSimulatorArm64, iosX64
+2026-09-07T10:45:12.3897293Z Solution: To hide this message, add 'kotlin.native.ignoreDisabledTargets=true' to the Gradle properties.
+2026-09-07T10:45:12.3897727Z 
+2026-09-07T10:45:12.3898122Z w: ⚠️ The host platform is not supported by Kotlin/Native
+2026-09-07T10:45:12.3898726Z The Kotlin/Native compiler does not support your current host platform: linux-aarch64.
+2026-09-07T10:45:12.3899069Z 
+2026-09-07T10:45:12.3899339Z Compilation of Kotlin/Native targets is only possible on the following host platforms:
+2026-09-07T10:45:12.3899819Z * Linux (x86_64)
+2026-09-07T10:45:12.3900090Z * Windows (x86_64)
+2026-09-07T10:45:12.3900330Z * macOS (arm64)
+2026-09-07T10:45:12.3900858Z * macOS (x86_64)
+2026-09-07T10:45:12.3901020Z 
+2026-09-07T10:45:12.3901278Z Your platform is not on this list, so the Kotlin/Native compiler cannot be executed.
+2026-09-07T10:45:12.3901747Z Solutions:
+2026-09-07T10:45:12.3902107Z  * Run your build on one of the supported host platforms (listed above).
+2026-09-07T10:45:12.3902721Z  * If using a CI/CD service, configure your build pipeline to use a supported runner (e.g., a Linux x86_64 agent).
+2026-09-07T10:45:12.3903426Z See https://kotlinlang.org/docs/native-target-support.html for more details.
+2026-09-07T10:45:12.3903754Z 
+2026-09-07T10:45:13.1832233Z 
+2026-09-07T10:45:13.1862229Z > Configure project :shared:engine-testing
+2026-09-07T10:45:13.1892085Z w: ⚠️ Disabled Kotlin/Native Targets
+2026-09-07T10:45:13.1951819Z The following Kotlin/Native targets cannot be built on this machine and are disabled:
+2026-09-07T10:45:13.2001677Z iosArm64, iosSimulatorArm64, iosX64
+2026-09-07T10:45:13.2021820Z Solution: To hide this message, add 'kotlin.native.ignoreDisabledTargets=true' to the Gradle properties.
+2026-09-07T10:45:13.2022285Z 
+2026-09-07T10:45:13.2022803Z w: ⚠️ The host platform is not supported by Kotlin/Native
+2026-09-07T10:45:13.2023479Z The Kotlin/Native compiler does not support your current host platform: linux-aarch64.
+2026-09-07T10:45:13.2023837Z 
+2026-09-07T10:45:13.2024435Z Compilation of Kotlin/Native targets is only possible on the following host platforms:
+2026-09-07T10:45:13.2024945Z * Linux (x86_64)
+2026-09-07T10:45:13.2025242Z * Windows (x86_64)
+2026-09-07T10:45:13.2025493Z * macOS (arm64)
+2026-09-07T10:45:13.2025739Z * macOS (x86_64)
+2026-09-07T10:45:13.2025867Z 
+2026-09-07T10:45:13.2026130Z Your platform is not on this list, so the Kotlin/Native compiler cannot be executed.
+2026-09-07T10:45:13.2026540Z Solutions:
+2026-09-07T10:45:13.2026909Z  * Run your build on one of the supported host platforms (listed above).
+2026-09-07T10:45:13.2027508Z  * If using a CI/CD service, configure your build pipeline to use a supported runner (e.g., a Linux x86_64 agent).
+2026-09-07T10:45:13.2028195Z See https://kotlinlang.org/docs/native-target-support.html for more details.
+2026-09-07T10:45:13.2028544Z 
+2026-09-07T10:45:13.8830821Z 
+2026-09-07T10:45:13.8831640Z > Configure project :shared:networking
+2026-09-07T10:45:13.8862298Z w: ⚠️ Disabled Kotlin/Native Targets
+2026-09-07T10:45:13.8864976Z The following Kotlin/Native targets cannot be built on this machine and are disabled:
+2026-09-07T10:45:13.8865698Z iosArm64, iosSimulatorArm64, iosX64
+2026-09-07T10:45:13.8866262Z Solution: To hide this message, add 'kotlin.native.ignoreDisabledTargets=true' to the Gradle properties.
+2026-09-07T10:45:13.8866660Z 
+2026-09-07T10:45:13.8867465Z w: ⚠️ The host platform is not supported by Kotlin/Native
+2026-09-07T10:45:13.8868042Z The Kotlin/Native compiler does not support your current host platform: linux-aarch64.
+2026-09-07T10:45:13.8868400Z 
+2026-09-07T10:45:13.8868643Z Compilation of Kotlin/Native targets is only possible on the following host platforms:
+2026-09-07T10:45:13.8869157Z * Linux (x86_64)
+2026-09-07T10:45:13.8869410Z * Windows (x86_64)
+2026-09-07T10:45:13.8869684Z * macOS (arm64)
+2026-09-07T10:45:13.8869972Z * macOS (x86_64)
+2026-09-07T10:45:13.8870092Z 
+2026-09-07T10:45:13.8870334Z Your platform is not on this list, so the Kotlin/Native compiler cannot be executed.
+2026-09-07T10:45:13.8871180Z Solutions:
+2026-09-07T10:45:13.8871554Z  * Run your build on one of the supported host platforms (listed above).
+2026-09-07T10:45:13.8872154Z  * If using a CI/CD service, configure your build pipeline to use a supported runner (e.g., a Linux x86_64 agent).
+2026-09-07T10:45:13.8872853Z See https://kotlinlang.org/docs/native-target-support.html for more details.
+2026-09-07T10:45:13.8873182Z 
+2026-09-07T10:45:14.3830153Z 
+2026-09-07T10:45:14.3831653Z > Configure project :shared:networking-testing
+2026-09-07T10:45:14.3833093Z w: ⚠️ Disabled Kotlin/Native Targets
+2026-09-07T10:45:14.3833784Z The following Kotlin/Native targets cannot be built on this machine and are disabled:
+2026-09-07T10:45:14.3834631Z iosArm64, iosSimulatorArm64, iosX64
+2026-09-07T10:45:14.3835324Z Solution: To hide this message, add 'kotlin.native.ignoreDisabledTargets=true' to the Gradle properties.
+2026-09-07T10:45:14.3835849Z 
+2026-09-07T10:45:14.3836451Z w: ⚠️ The host platform is not supported by Kotlin/Native
+2026-09-07T10:45:14.3837118Z The Kotlin/Native compiler does not support your current host platform: linux-aarch64.
+2026-09-07T10:45:14.3837615Z 
+2026-09-07T10:45:14.3837984Z Compilation of Kotlin/Native targets is only possible on the following host platforms:
+2026-09-07T10:45:14.3838663Z * Linux (x86_64)
+2026-09-07T10:45:14.3839014Z * Windows (x86_64)
+2026-09-07T10:45:14.3839436Z * macOS (arm64)
+2026-09-07T10:45:14.3839790Z * macOS (x86_64)
+2026-09-07T10:45:14.3840047Z 
+2026-09-07T10:45:14.3840394Z Your platform is not on this list, so the Kotlin/Native compiler cannot be executed.
+2026-09-07T10:45:14.3841390Z Solutions:
+2026-09-07T10:45:14.3842438Z  * Run your build on one of the supported host platforms (listed above).
+2026-09-07T10:45:14.3843262Z  * If using a CI/CD service, configure your build pipeline to use a supported runner (e.g., a Linux x86_64 agent).
+2026-09-07T10:45:14.3844059Z See https://kotlinlang.org/docs/native-target-support.html for more details.
+2026-09-07T10:45:14.3844532Z 
+2026-09-07T10:45:14.9830122Z 
+2026-09-07T10:45:14.9831766Z > Configure project :shared:session
+2026-09-07T10:45:14.9832832Z w: ⚠️ Disabled Kotlin/Native Targets
+2026-09-07T10:45:14.9833782Z The following Kotlin/Native targets cannot be built on this machine and are disabled:
+2026-09-07T10:45:14.9834410Z iosArm64, iosSimulatorArm64, iosX64
+2026-09-07T10:45:14.9835015Z Solution: To hide this message, add 'kotlin.native.ignoreDisabledTargets=true' to the Gradle properties.
+2026-09-07T10:45:14.9835609Z 
+2026-09-07T10:45:14.9836342Z w: ⚠️ The host platform is not supported by Kotlin/Native
+2026-09-07T10:45:14.9837432Z The Kotlin/Native compiler does not support your current host platform: linux-aarch64.
+2026-09-07T10:45:14.9838032Z 
+2026-09-07T10:45:14.9838313Z Compilation of Kotlin/Native targets is only possible on the following host platforms:
+2026-09-07T10:45:14.9838801Z * Linux (x86_64)
+2026-09-07T10:45:14.9839084Z * Windows (x86_64)
+2026-09-07T10:45:14.9839389Z * macOS (arm64)
+2026-09-07T10:45:14.9839859Z * macOS (x86_64)
+2026-09-07T10:45:14.9839973Z 
+2026-09-07T10:45:14.9840288Z Your platform is not on this list, so the Kotlin/Native compiler cannot be executed.
+2026-09-07T10:45:14.9841017Z Solutions:
+2026-09-07T10:45:14.9841337Z  * Run your build on one of the supported host platforms (listed above).
+2026-09-07T10:45:14.9842054Z  * If using a CI/CD service, configure your build pipeline to use a supported runner (e.g., a Linux x86_64 agent).
+2026-09-07T10:45:14.9842708Z See https://kotlinlang.org/docs/native-target-support.html for more details.
+2026-09-07T10:45:14.9843010Z 
+2026-09-07T10:45:15.1830116Z 
+2026-09-07T10:45:15.1831348Z > Configure project :shared:storage
+2026-09-07T10:45:15.1832352Z w: ⚠️ Disabled Kotlin/Native Targets
+2026-09-07T10:45:15.1832816Z The following Kotlin/Native targets cannot be built on this machine and are disabled:
+2026-09-07T10:45:15.1833549Z iosArm64, iosSimulatorArm64, iosX64
+2026-09-07T10:45:15.1834071Z Solution: To hide this message, add 'kotlin.native.ignoreDisabledTargets=true' to the Gradle properties.
+2026-09-07T10:45:15.1834490Z 
+2026-09-07T10:45:15.1834888Z w: ⚠️ The host platform is not supported by Kotlin/Native
+2026-09-07T10:45:15.1835423Z The Kotlin/Native compiler does not support your current host platform: linux-aarch64.
+2026-09-07T10:45:15.1835768Z 
+2026-09-07T10:45:15.1836132Z Compilation of Kotlin/Native targets is only possible on the following host platforms:
+2026-09-07T10:45:15.1836588Z * Linux (x86_64)
+2026-09-07T10:45:15.1836810Z * Windows (x86_64)
+2026-09-07T10:45:15.1837355Z * macOS (arm64)
+2026-09-07T10:45:15.1837581Z * macOS (x86_64)
+2026-09-07T10:45:15.1837698Z 
+2026-09-07T10:45:15.1838046Z Your platform is not on this list, so the Kotlin/Native compiler cannot be executed.
+2026-09-07T10:45:15.1838463Z Solutions:
+2026-09-07T10:45:15.1838765Z  * Run your build on one of the supported host platforms (listed above).
+2026-09-07T10:45:15.1839429Z  * If using a CI/CD service, configure your build pipeline to use a supported runner (e.g., a Linux x86_64 agent).
+2026-09-07T10:45:15.1840092Z See https://kotlinlang.org/docs/native-target-support.html for more details.
+2026-09-07T10:45:15.1840416Z 
+2026-09-07T10:45:16.1830947Z 
+2026-09-07T10:45:16.1834671Z > Configure project :shared:transport-p2p
+2026-09-07T10:45:16.1835689Z w: ⚠️ Disabled Kotlin/Native Targets
+2026-09-07T10:45:16.1836182Z The following Kotlin/Native targets cannot be built on this machine and are disabled:
+2026-09-07T10:45:16.1836722Z iosArm64, iosSimulatorArm64, iosX64
+2026-09-07T10:45:16.1837236Z Solution: To hide this message, add 'kotlin.native.ignoreDisabledTargets=true' to the Gradle properties.
+2026-09-07T10:45:16.1837637Z 
+2026-09-07T10:45:16.1838438Z w: ⚠️ The host platform is not supported by Kotlin/Native
+2026-09-07T10:45:16.1838999Z The Kotlin/Native compiler does not support your current host platform: linux-aarch64.
+2026-09-07T10:45:16.1839380Z 
+2026-09-07T10:45:16.1839624Z Compilation of Kotlin/Native targets is only possible on the following host platforms:
+2026-09-07T10:45:16.1840052Z * Linux (x86_64)
+2026-09-07T10:45:16.1840814Z * Windows (x86_64)
+2026-09-07T10:45:16.1841158Z * macOS (arm64)
+2026-09-07T10:45:16.1841528Z * macOS (x86_64)
+2026-09-07T10:45:16.1841661Z 
+2026-09-07T10:45:16.1841917Z Your platform is not on this list, so the Kotlin/Native compiler cannot be executed.
+2026-09-07T10:45:16.1842333Z Solutions:
+2026-09-07T10:45:16.1842698Z  * Run your build on one of the supported host platforms (listed above).
+2026-09-07T10:45:16.1843304Z  * If using a CI/CD service, configure your build pipeline to use a supported runner (e.g., a Linux x86_64 agent).
+2026-09-07T10:45:16.1844055Z See https://kotlinlang.org/docs/native-target-support.html for more details.
+2026-09-07T10:45:16.1844391Z 
+2026-09-07T10:45:54.2830425Z 
+2026-09-07T10:45:54.2875038Z > Task :composeApp:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:45:54.2881494Z > Task :composeApp:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:45:54.2898858Z > Task :composeApp:copyNonXmlValueResourcesForCommonMain NO-SOURCE
+2026-09-07T10:45:54.2901325Z > Task :composeApp:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+2026-09-07T10:45:54.2902689Z > Task :composeApp:convertXmlValueResourcesForDesktopMain NO-SOURCE
+2026-09-07T10:45:54.2903418Z > Task :composeApp:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+2026-09-07T10:45:54.2904198Z > Task :composeApp:generateResourceAccessorsForDesktopMain NO-SOURCE
+2026-09-07T10:45:54.2904958Z > Task :composeApp:generateParlorVersion
+2026-09-07T10:45:54.2905585Z > Task :game-modes:mafia:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:45:54.2906256Z > Task :game-modes:mafia:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:45:54.3837049Z > Task :composeApp:convertXmlValueResourcesForCommonMain
+2026-09-07T10:45:54.3869435Z > Task :game-modes:mafia:convertXmlValueResourcesForCommonMain
+2026-09-07T10:45:54.3870266Z > Task :game-modes:mafia:copyNonXmlValueResourcesForCommonMain NO-SOURCE
+2026-09-07T10:45:54.3893035Z > Task :composeApp:prepareComposeResourcesTaskForCommonMain
+2026-09-07T10:45:54.3921576Z > Task :game-modes:mafia:prepareComposeResourcesTaskForCommonMain
+2026-09-07T10:45:54.3951299Z > Task :composeApp:generateComposeResClass
+2026-09-07T10:45:54.3961583Z > Task :game-modes:mafia:convertXmlValueResourcesForDesktopMain NO-SOURCE
+2026-09-07T10:45:54.3976921Z > Task :composeApp:generateExpectResourceCollectorsForCommonMain
+2026-09-07T10:45:54.3977891Z > Task :game-modes:mafia:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+2026-09-07T10:45:54.3978685Z > Task :game-modes:mafia:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+2026-09-07T10:45:54.3979381Z > Task :game-modes:mafia:generateResourceAccessorsForDesktopMain NO-SOURCE
+2026-09-07T10:45:54.3980113Z > Task :game-modes:mafia:generateComposeResClass
+2026-09-07T10:45:54.3980949Z > Task :shared:content:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:45:54.3981718Z > Task :shared:content:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:45:54.3982385Z > Task :shared:core:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:45:54.3983046Z > Task :game-modes:mafia:generateExpectResourceCollectorsForCommonMain
+2026-09-07T10:45:54.3983799Z > Task :shared:core:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:45:54.3984479Z > Task :shared:core:desktopProcessResources NO-SOURCE
+2026-09-07T10:45:54.3985067Z > Task :shared:core:processDesktopMainResources SKIPPED
+2026-09-07T10:45:54.3985641Z > Task :shared:engine:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:45:54.3986343Z > Task :shared:engine:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:45:54.3987015Z > Task :shared:engine:desktopProcessResources NO-SOURCE
+2026-09-07T10:45:54.3987980Z > Task :shared:engine:processDesktopMainResources SKIPPED
+2026-09-07T10:45:54.3988602Z > Task :shared:content:desktopProcessResources NO-SOURCE
+2026-09-07T10:45:54.3989159Z > Task :shared:content:processDesktopMainResources SKIPPED
+2026-09-07T10:45:54.3989752Z > Task :shared:design-system:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:45:54.3991055Z > Task :shared:design-system:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:45:54.4832770Z > Task :shared:design-system:convertXmlValueResourcesForCommonMain
+2026-09-07T10:45:54.4852031Z > Task :shared:design-system:copyNonXmlValueResourcesForCommonMain
+2026-09-07T10:45:54.4876582Z > Task :shared:design-system:prepareComposeResourcesTaskForCommonMain
+2026-09-07T10:45:54.4901596Z > Task :shared:design-system:generateResourceAccessorsForCommonMain
+2026-09-07T10:45:54.4931462Z > Task :composeApp:generateResourceAccessorsForCommonMain
+2026-09-07T10:45:54.4942591Z > Task :shared:design-system:convertXmlValueResourcesForDesktopMain NO-SOURCE
+2026-09-07T10:45:54.4961564Z > Task :shared:design-system:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+2026-09-07T10:45:54.5842362Z > Task :shared:design-system:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+2026-09-07T10:45:54.5851449Z > Task :game-modes:mafia:generateResourceAccessorsForCommonMain
+2026-09-07T10:45:54.5891374Z > Task :shared:design-system:generateResourceAccessorsForDesktopMain NO-SOURCE
+2026-09-07T10:45:54.5906313Z > Task :composeApp:generateActualResourceCollectorsForDesktopMain
+2026-09-07T10:45:54.5931323Z > Task :game-modes:mafia:generateActualResourceCollectorsForDesktopMain
+2026-09-07T10:45:54.5952657Z > Task :shared:design-system:generateComposeResClass
+2026-09-07T10:45:54.5974367Z > Task :shared:design-system:generateActualResourceCollectorsForDesktopMain
+2026-09-07T10:45:54.5981989Z > Task :shared:design-system:generateExpectResourceCollectorsForCommonMain
+2026-09-07T10:45:54.5982537Z > Task :shared:networking:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:45:54.5983176Z > Task :shared:networking:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:45:54.5983730Z > Task :shared:session:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:45:54.5984210Z > Task :shared:session:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:45:54.5984734Z > Task :shared:networking:desktopProcessResources NO-SOURCE
+2026-09-07T10:45:54.5985171Z > Task :shared:networking:processDesktopMainResources SKIPPED
+2026-09-07T10:45:54.5985652Z > Task :shared:storage:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:45:54.5986207Z > Task :shared:storage:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:45:54.5986698Z > Task :shared:session:desktopProcessResources NO-SOURCE
+2026-09-07T10:45:54.5987146Z > Task :shared:session:processDesktopMainResources SKIPPED
+2026-09-07T10:45:54.5987554Z > Task :shared:storage:desktopProcessResources NO-SOURCE
+2026-09-07T10:45:54.5987940Z > Task :shared:storage:processDesktopMainResources SKIPPED
+2026-09-07T10:45:54.5989016Z > Task :game-modes:whodunit:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:45:54.5989541Z > Task :game-modes:whodunit:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:45:54.5990057Z > Task :shared:design-system:assembleDesktopMainResources
+2026-09-07T10:45:54.5990476Z > Task :game-modes:mafia:assembleDesktopMainResources
+2026-09-07T10:45:54.5991088Z > Task :game-modes:mafia:desktopProcessResources
+2026-09-07T10:45:54.5991581Z > Task :game-modes:mafia:processDesktopMainResources SKIPPED
+2026-09-07T10:45:54.5991983Z > Task :shared:design-system:desktopProcessResources
+2026-09-07T10:45:54.5992451Z > Task :shared:design-system:processDesktopMainResources SKIPPED
+2026-09-07T10:45:54.5992961Z > Task :game-modes:whodunit:convertXmlValueResourcesForDesktopMain NO-SOURCE
+2026-09-07T10:45:54.5993507Z > Task :game-modes:whodunit:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+2026-09-07T10:45:54.5994120Z > Task :game-modes:whodunit:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+2026-09-07T10:45:54.5995347Z > Task :game-modes:whodunit:generateResourceAccessorsForDesktopMain NO-SOURCE
+2026-09-07T10:45:54.5996123Z > Task :game-modes:whodunit:convertXmlValueResourcesForCommonMain
+2026-09-07T10:45:54.5996647Z > Task :game-modes:whodunit:generateComposeResClass
+2026-09-07T10:45:54.5997319Z > Task :game-modes:whodunit:generateExpectResourceCollectorsForCommonMain
+2026-09-07T10:45:54.5997928Z > Task :shared:transport-p2p:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:45:54.5998462Z > Task :shared:transport-p2p:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:45:54.5999287Z > Task :shared:transport-p2p:desktopProcessResources NO-SOURCE
+2026-09-07T10:45:54.5999757Z > Task :shared:transport-p2p:processDesktopMainResources SKIPPED
+2026-09-07T10:45:54.6000248Z > Task :composeApp:convertXmlValueResourcesForCommonTest NO-SOURCE
+2026-09-07T10:45:54.6000994Z > Task :composeApp:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+2026-09-07T10:45:54.6001511Z > Task :composeApp:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+2026-09-07T10:45:54.6002006Z > Task :composeApp:generateResourceAccessorsForCommonTest NO-SOURCE
+2026-09-07T10:45:54.6027924Z > Task :composeApp:convertXmlValueResourcesForDesktopTest NO-SOURCE
+2026-09-07T10:45:54.6028504Z > Task :composeApp:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+2026-09-07T10:45:54.6029079Z > Task :game-modes:whodunit:copyNonXmlValueResourcesForCommonMain
+2026-09-07T10:45:54.6029503Z > Task :composeApp:assembleDesktopMainResources
+2026-09-07T10:45:54.6029932Z > Task :composeApp:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+2026-09-07T10:45:54.6030477Z > Task :composeApp:generateResourceAccessorsForDesktopTest NO-SOURCE
+2026-09-07T10:45:54.6031200Z > Task :shared:engine-testing:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:45:54.6031871Z > Task :shared:engine-testing:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:45:54.6032404Z > Task :shared:engine-testing:desktopProcessResources NO-SOURCE
+2026-09-07T10:45:54.6032882Z > Task :shared:engine-testing:processDesktopMainResources SKIPPED
+2026-09-07T10:45:54.6033434Z > Task :game-modes:whodunit:prepareComposeResourcesTaskForCommonMain
+2026-09-07T10:45:54.6033850Z > Task :composeApp:desktopProcessResources
+2026-09-07T10:45:54.6034215Z > Task :composeApp:assembleDesktopTestResources
+2026-09-07T10:45:54.6034613Z > Task :composeApp:processDesktopMainResources SKIPPED
+2026-09-07T10:45:54.6862994Z > Task :composeApp:desktopTestProcessResources
+2026-09-07T10:45:54.6887789Z > Task :composeApp:processDesktopTestResources SKIPPED
+2026-09-07T10:45:54.6896326Z > Task :game-modes:mafia:convertXmlValueResourcesForCommonTest NO-SOURCE
+2026-09-07T10:45:54.6902624Z > Task :game-modes:mafia:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+2026-09-07T10:45:54.6903341Z > Task :game-modes:whodunit:assembleDesktopMainResources
+2026-09-07T10:45:54.6903913Z > Task :game-modes:mafia:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+2026-09-07T10:45:54.6904810Z > Task :game-modes:mafia:generateResourceAccessorsForCommonTest NO-SOURCE
+2026-09-07T10:45:54.6905471Z > Task :game-modes:mafia:convertXmlValueResourcesForDesktopTest NO-SOURCE
+2026-09-07T10:45:54.6906175Z > Task :game-modes:mafia:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+2026-09-07T10:45:54.6906838Z > Task :game-modes:mafia:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+2026-09-07T10:45:54.6907482Z > Task :game-modes:mafia:generateResourceAccessorsForDesktopTest NO-SOURCE
+2026-09-07T10:45:54.6908179Z > Task :shared:networking-testing:kmpPartiallyResolvedDependenciesChecker
+2026-09-07T10:45:54.6908834Z > Task :shared:networking-testing:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-07T10:45:54.6909576Z > Task :shared:networking-testing:desktopProcessResources NO-SOURCE
+2026-09-07T10:45:54.6910156Z > Task :shared:networking-testing:processDesktopMainResources SKIPPED
+2026-09-07T10:45:54.6910933Z > Task :game-modes:whodunit:desktopProcessResources
+2026-09-07T10:45:54.6912801Z > Task :game-modes:whodunit:processDesktopMainResources SKIPPED
+2026-09-07T10:45:54.6913430Z > Task :game-modes:whodunit:convertXmlValueResourcesForCommonTest NO-SOURCE
+2026-09-07T10:45:54.6914256Z > Task :game-modes:whodunit:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+2026-09-07T10:45:54.6915157Z > Task :game-modes:mafia:assembleDesktopTestResources
+2026-09-07T10:45:54.6916871Z > Task :game-modes:whodunit:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+2026-09-07T10:45:54.6917758Z > Task :game-modes:whodunit:generateResourceAccessorsForCommonTest NO-SOURCE
+2026-09-07T10:45:54.6918397Z > Task :game-modes:whodunit:convertXmlValueResourcesForDesktopTest NO-SOURCE
+2026-09-07T10:45:54.6919039Z > Task :game-modes:mafia:desktopTestProcessResources
+2026-09-07T10:45:54.6919548Z > Task :game-modes:mafia:processDesktopTestResources SKIPPED
+2026-09-07T10:45:54.6920133Z > Task :game-modes:whodunit:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+2026-09-07T10:45:54.6921017Z > Task :shared:content:desktopTestProcessResources NO-SOURCE
+2026-09-07T10:45:54.6921552Z > Task :shared:content:processDesktopTestResources SKIPPED
+2026-09-07T10:45:54.6922219Z > Task :game-modes:whodunit:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+2026-09-07T10:45:54.6922812Z > Task :shared:core:desktopTestProcessResources NO-SOURCE
+2026-09-07T10:45:54.6923387Z > Task :game-modes:whodunit:generateResourceAccessorsForDesktopTest NO-SOURCE
+2026-09-07T10:45:54.6924034Z > Task :shared:core:processDesktopTestResources SKIPPED
+2026-09-07T10:45:54.6924638Z > Task :shared:design-system:convertXmlValueResourcesForCommonTest NO-SOURCE
+2026-09-07T10:45:54.6925257Z > Task :game-modes:whodunit:assembleDesktopTestResources
+2026-09-07T10:45:54.6925809Z > Task :shared:design-system:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+2026-09-07T10:45:54.6926443Z > Task :shared:design-system:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+2026-09-07T10:45:54.6927200Z > Task :shared:design-system:generateResourceAccessorsForCommonTest NO-SOURCE
+2026-09-07T10:45:54.6927876Z > Task :shared:design-system:convertXmlValueResourcesForDesktopTest NO-SOURCE
+2026-09-07T10:45:54.6928566Z > Task :shared:design-system:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+2026-09-07T10:45:54.6929129Z > Task :game-modes:whodunit:desktopTestProcessResources
+2026-09-07T10:45:54.6929613Z > Task :game-modes:whodunit:processDesktopTestResources SKIPPED
+2026-09-07T10:45:54.6930225Z > Task :shared:engine:desktopTestProcessResources NO-SOURCE
+2026-09-07T10:45:54.6930909Z > Task :shared:engine:processDesktopTestResources SKIPPED
+2026-09-07T10:45:54.6931565Z > Task :shared:design-system:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+2026-09-07T10:45:54.6932195Z > Task :shared:engine-testing:desktopTestProcessResources NO-SOURCE
+2026-09-07T10:45:54.6932789Z > Task :shared:design-system:generateResourceAccessorsForDesktopTest NO-SOURCE
+2026-09-07T10:45:54.6933453Z > Task :shared:engine-testing:processDesktopTestResources SKIPPED
+2026-09-07T10:45:54.6934059Z > Task :game-modes:whodunit:generateResourceAccessorsForCommonMain
+2026-09-07T10:45:54.6934697Z > Task :shared:networking:desktopTestProcessResources NO-SOURCE
+2026-09-07T10:45:54.7833227Z > Task :shared:networking:processDesktopTestResources SKIPPED
+2026-09-07T10:45:54.7833937Z > Task :shared:design-system:assembleDesktopTestResources
+2026-09-07T10:45:54.7834876Z > Task :shared:networking-testing:desktopTestProcessResources NO-SOURCE
+2026-09-07T10:45:54.7835689Z > Task :shared:networking-testing:processDesktopTestResources SKIPPED
+2026-09-07T10:45:54.7836339Z > Task :shared:session:desktopTestProcessResources NO-SOURCE
+2026-09-07T10:45:54.7836908Z > Task :shared:session:processDesktopTestResources SKIPPED
+2026-09-07T10:45:54.7837521Z > Task :game-modes:whodunit:generateActualResourceCollectorsForDesktopMain
+2026-09-07T10:45:54.7838160Z > Task :shared:design-system:desktopTestProcessResources
+2026-09-07T10:45:54.7838774Z > Task :shared:transport-p2p:desktopTestProcessResources NO-SOURCE
+2026-09-07T10:45:54.7839391Z > Task :shared:design-system:processDesktopTestResources SKIPPED
+2026-09-07T10:45:54.7840512Z > Task :shared:storage:desktopTestProcessResources NO-SOURCE
+2026-09-07T10:45:54.7841446Z > Task :shared:transport-p2p:processDesktopTestResources SKIPPED
+2026-09-07T10:45:54.7842164Z > Task :shared:storage:processDesktopTestResources SKIPPED
+2026-09-07T10:46:04.5852434Z > Task :shared:core:compileKotlinDesktop
+2026-09-07T10:46:04.5887401Z > Task :shared:core:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:46:04.5888708Z > Task :shared:core:desktopMainClasses
+2026-09-07T10:46:04.5889495Z > Task :shared:core:desktopJar
+2026-09-07T10:46:06.9841919Z > Task :shared:core:compileTestKotlinDesktop
+2026-09-07T10:46:06.9871790Z > Task :shared:core:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:46:06.9872499Z > Task :shared:core:desktopTestClasses
+2026-09-07T10:46:08.4851824Z > Task :shared:engine:compileKotlinDesktop
+2026-09-07T10:46:08.4896407Z > Task :shared:engine:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:46:08.4931826Z > Task :shared:engine:desktopMainClasses
+2026-09-07T10:46:08.4936339Z > Task :shared:engine:desktopJar
+2026-09-07T10:46:09.3832288Z > Task :shared:core:desktopTest
+2026-09-07T10:46:13.5861098Z > Task :shared:storage:compileKotlinDesktop
+2026-09-07T10:46:13.5879443Z > Task :shared:storage:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:46:13.5941659Z > Task :shared:storage:desktopMainClasses
+2026-09-07T10:46:13.6832089Z > Task :shared:storage:desktopJar
+2026-09-07T10:46:14.0862168Z > Task :shared:content:compileKotlinDesktop
+2026-09-07T10:46:14.0863434Z > Task :shared:content:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:46:14.0864570Z > Task :shared:content:desktopMainClasses
+2026-09-07T10:46:14.1871863Z > Task :shared:content:desktopJar
+2026-09-07T10:46:15.3852213Z > Task :shared:engine-testing:compileKotlinDesktop
+2026-09-07T10:46:15.3871638Z > Task :shared:engine-testing:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:46:15.3911759Z > Task :shared:engine-testing:desktopMainClasses
+2026-09-07T10:46:15.3934016Z > Task :shared:engine-testing:desktopJar
+2026-09-07T10:46:16.0830906Z > Task :shared:engine:compileTestKotlinDesktop
+2026-09-07T10:46:16.0841658Z > Task :shared:engine:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:46:16.0871405Z > Task :shared:engine:desktopTestClasses
+2026-09-07T10:46:16.8831049Z > Task :shared:networking:compileKotlinDesktop
+2026-09-07T10:46:16.8881631Z > Task :shared:networking:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:46:16.8951596Z > Task :shared:networking:desktopMainClasses
+2026-09-07T10:46:16.9831261Z > Task :shared:networking:desktopJar
+2026-09-07T10:46:18.1859148Z > Task :shared:design-system:compileKotlinDesktop
+2026-09-07T10:46:18.1912090Z > Task :shared:design-system:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:46:18.1959644Z > Task :shared:design-system:desktopMainClasses
+2026-09-07T10:46:18.3831965Z > Task :shared:design-system:desktopJar
+2026-09-07T10:46:18.7872205Z > Task :shared:content:compileTestKotlinDesktop
+2026-09-07T10:46:20.7852027Z > Task :shared:engine:desktopTest
+2026-09-07T10:46:20.8851907Z > Task :shared:content:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:46:20.8911993Z > Task :shared:content:desktopTestClasses
+2026-09-07T10:46:21.0852023Z > Task :shared:networking-testing:compileKotlinDesktop
+2026-09-07T10:46:21.0912005Z > Task :shared:networking-testing:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:46:21.0941687Z > Task :shared:networking-testing:desktopMainClasses
+2026-09-07T10:46:21.1052927Z > Task :shared:networking-testing:desktopJar
+2026-09-07T10:46:23.1831245Z > Task :shared:content:desktopTest
+2026-09-07T10:46:24.7842452Z > Task :shared:engine-testing:compileTestKotlinDesktop
+2026-09-07T10:46:24.7872077Z > Task :shared:engine-testing:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:46:24.7903113Z > Task :shared:engine-testing:desktopTestClasses
+2026-09-07T10:46:26.3831223Z > Task :shared:engine-testing:desktopTest
+2026-09-07T10:46:26.5872092Z > Task :shared:design-system:compileTestKotlinDesktop
+2026-09-07T10:46:26.5932200Z > Task :shared:design-system:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:46:26.5991776Z > Task :shared:design-system:desktopTestClasses
+2026-09-07T10:46:28.8859353Z > Task :shared:networking:compileTestKotlinDesktop
+2026-09-07T10:46:28.8900150Z > Task :shared:networking:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:46:28.8921477Z > Task :shared:networking:desktopTestClasses
+2026-09-07T10:46:29.3842081Z > Task :shared:session:compileKotlinDesktop
+2026-09-07T10:46:29.3867402Z > Task :shared:session:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:46:29.3903844Z > Task :shared:session:desktopMainClasses
+2026-09-07T10:46:29.4831796Z > Task :shared:session:desktopJar
+2026-09-07T10:46:30.8841874Z > Task :shared:networking:desktopTest
+2026-09-07T10:46:32.4852095Z > Task :shared:design-system:desktopTest
+2026-09-07T10:46:32.7831236Z > Task :shared:transport-p2p:compileKotlinDesktop
+2026-09-07T10:46:32.7882394Z > Task :shared:transport-p2p:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:46:32.7911723Z > Task :shared:transport-p2p:desktopMainClasses
+2026-09-07T10:46:32.8852610Z > Task :shared:transport-p2p:desktopJar
+2026-09-07T10:46:33.2854413Z > Task :shared:networking-testing:compileTestKotlinDesktop
+2026-09-07T10:46:33.2871829Z > Task :shared:networking-testing:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:46:33.2892847Z > Task :shared:networking-testing:desktopTestClasses
+2026-09-07T10:46:34.7872726Z > Task :shared:networking-testing:desktopTest
+2026-09-07T10:46:37.5831488Z > Task :shared:storage:compileTestKotlinDesktop
+2026-09-07T10:46:37.5851930Z > Task :shared:storage:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:46:37.5865584Z > Task :shared:storage:desktopTestClasses
+2026-09-07T10:46:39.6835724Z > Task :shared:storage:desktopTest
+2026-09-07T10:46:43.4851479Z > Task :shared:session:compileTestKotlinDesktop
+2026-09-07T10:46:43.4891891Z > Task :shared:session:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:46:43.4929098Z > Task :shared:session:desktopTestClasses
+2026-09-07T10:46:47.0842232Z > Task :shared:session:desktopTest
+2026-09-07T10:46:52.5831676Z > Task :shared:transport-p2p:compileTestKotlinDesktop
+2026-09-07T10:46:52.5852070Z > Task :shared:transport-p2p:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:46:52.5881876Z > Task :shared:transport-p2p:desktopTestClasses
+2026-09-07T10:46:52.8882192Z > Task :game-modes:mafia:compileKotlinDesktop
+2026-09-07T10:46:52.8884421Z > Task :game-modes:mafia:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:46:52.8941479Z > Task :game-modes:mafia:desktopMainClasses
+2026-09-07T10:46:53.0837779Z > Task :game-modes:mafia:desktopJar
+2026-09-07T10:46:53.5831785Z > Task :game-modes:whodunit:compileKotlinDesktop
+2026-09-07T10:46:53.5871917Z > Task :game-modes:whodunit:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:46:53.5872687Z > Task :game-modes:whodunit:desktopMainClasses
+2026-09-07T10:46:53.7855103Z > Task :game-modes:whodunit:desktopJar
+2026-09-07T10:47:03.3863966Z > Task :composeApp:compileKotlinDesktop
+2026-09-07T10:47:03.3891846Z > Task :composeApp:compileDesktopMainJava NO-SOURCE
+2026-09-07T10:47:03.3921563Z > Task :composeApp:desktopMainClasses
+2026-09-07T10:47:03.4852151Z > Task :composeApp:desktopJar
+2026-09-07T10:47:03.5842413Z > Task :game-modes:mafia:compileTestKotlinDesktop
+2026-09-07T10:47:03.5853796Z > Task :game-modes:mafia:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:47:03.5881710Z > Task :game-modes:mafia:desktopTestClasses
+2026-09-07T10:47:07.9831917Z > Task :composeApp:compileTestKotlinDesktop
+2026-09-07T10:47:07.9861935Z > Task :composeApp:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:47:07.9881835Z > Task :composeApp:desktopTestClasses
+2026-09-07T10:47:10.7842216Z > Task :game-modes:whodunit:compileTestKotlinDesktop
+2026-09-07T10:47:10.7874817Z > Task :game-modes:whodunit:compileDesktopTestJava NO-SOURCE
+2026-09-07T10:47:10.7926636Z > Task :game-modes:whodunit:desktopTestClasses
+2026-09-07T10:47:11.8851668Z > Task :composeApp:desktopTest
+2026-09-07T10:47:16.8831149Z > Task :shared:transport-p2p:desktopTest
+2026-09-07T10:47:18.8831066Z > Task :game-modes:mafia:desktopTest
+2026-09-07T10:47:40.7831883Z > Task :game-modes:whodunit:desktopTest
+2026-09-07T10:49:06.3830393Z > Task :productionDesktopCheck
+2026-09-07T10:49:06.4779305Z 
+2026-09-07T10:49:06.4782882Z [Incubating] Problems report is available at: file://<CI_WORKSPACE>/build/reports/problems/problems-report.html
+2026-09-07T10:49:06.4786839Z 
+2026-09-07T10:49:06.4787374Z BUILD SUCCESSFUL in 5m 37s
+2026-09-07T10:49:06.4788218Z 112 actionable tasks: 112 executed
+2026-09-07T10:49:06.4788918Z Configuration cache entry stored.
+2026-09-07T10:49:06.8189344Z Post job cleanup.
+2026-09-07T10:49:06.9554593Z Post job cleanup.
+2026-09-07T10:49:07.0325628Z [command]/usr/bin/git version
+2026-09-07T10:49:07.0371406Z git version 2.55.0
+2026-09-07T10:49:07.0419876Z Temporarily overriding HOME='<CI_HOME>/work/_temp/697f2e62-b2e6-4f75-bb1b-153203688299' before making global git config changes
+2026-09-07T10:49:07.0424046Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-07T10:49:07.0425119Z [command]/usr/bin/git config --global --add safe.directory <CI_WORKSPACE>
+2026-09-07T10:49:07.0464399Z Removing SSH command configuration
+2026-09-07T10:49:07.0470039Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-07T10:49:07.0529795Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-07T10:49:07.0759899Z Removing HTTP extra header
+2026-09-07T10:49:07.0765168Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-07T10:49:07.0801157Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-07T10:49:07.1011955Z Removing includeIf entries pointing to credentials config files
+2026-09-07T10:49:07.1018299Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-07T10:49:07.1035768Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-07T10:49:07.1420268Z Cleaning up orphan processes
+2026-09-07T10:49:07.1724203Z Terminate orphan process: pid (2717) (java)
+2026-09-07T10:49:07.1743716Z Terminate orphan process: pid (2809) (java)

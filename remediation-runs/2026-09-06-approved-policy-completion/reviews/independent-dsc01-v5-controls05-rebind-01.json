@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "recorded_at": "2026-09-06T11:03:37.977994+00:00",
+  "classification": "V5 EXECUTION APPROVAL EXACT-HASH RERUN CONDITION SATISFIED; NOT RUNTIME APPROVAL",
+  "approval": "reviews/independent-dsc01-v5-execution-approval-01.json",
+  "control_sha256": "94e8506ab4a4ed49398b7ae30dc704e3003bf0895af0507b920d346e6f145e70",
+  "cycle": "native-controls-05",
+  "checks": {
+    "prepost_control_match": true,
+    "control_binding_encloses_full_cycle": true,
+    "source_manifest_before_after_match": true,
+    "tests_individually_checked": 83,
+    "pass": 83,
+    "skip": 0,
+    "fail": 0,
+    "exit_code": 0,
+    "duration_seconds": 3.392,
+    "stop_exit_code": 0,
+    "remaining_outputs": [],
+    "remaining_owned_workers": [],
+    "cleanup_errors": [],
+    "source_changed": false,
+    "runner_changed": false
+  },
+  "evidence": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-05/receipt.json",
+      "sha256": "200befae5256ee8944a475367ba091e750da95f406864a329c05175c75870f07"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-05/gradle.log",
+      "sha256": "7cd88ed9864502775f35c0bcbf08b48a1a5e38c2b8acfe61cb70f23821732f86"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-05/frozen-control-binding.json",
+      "sha256": "5c0aa3f3f931c4a7ec3e2722a7353c692102fc31b887df2d441e049870543e32"
+    }
+  ],
+  "limits": [
+    "Python synthetic/control execution only. No apphost/runtime or original DS-C01 defect-closure claim.",
+    "Review-only work: no application changes, process operations, build/test or signing/Store/Git action by reviewer."
+  ]
+}

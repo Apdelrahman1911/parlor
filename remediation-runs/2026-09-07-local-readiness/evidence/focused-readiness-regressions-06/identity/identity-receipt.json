@@ -1,0 +1,303 @@
+{
+  "started_at": "2026-09-07T05:26:33.617132+00:00",
+  "status": "FAIL",
+  "controls_before": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/run_with_identity.py",
+      "sha256": "e8396c59ab871ee7b8222875d24f22fd28456f4105b745963f57774053888e3e"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/capture-runtime-classpath.init.gradle",
+      "sha256": "6fc59f266231486563a10dac6613d1da3862f9f3f869f4dce5a7835604a464a9"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/VerifyContentIdentity.java",
+      "sha256": "82b022878c56fe180f056f937a9d4e51b2a19e53e8bb22df75c433c1e18358c5"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/classpath_validation.py",
+      "sha256": "2f8a730d1f3a7259bc76e43f5d5de142dd4739f374cfcea6c34f4c73ab8bcfb7"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/test_classpath_validation.py",
+      "sha256": "4be8910b306e7c6545afe49ed18b7d5808229b4abd18d015cb9e87a3e8324eae"
+    }
+  ],
+  "gradle_arguments": [
+    ":game-modes:whodunit:desktopTest",
+    "--tests",
+    "*TestingStory*",
+    "--tests",
+    "*WhodunitRecoveryInteractionTest",
+    "--tests",
+    "*WhodunitContentIdentityTest",
+    "--tests",
+    "*Bundled*",
+    "--tests",
+    "*PeerReadiness*",
+    "--tests",
+    "*Reconstruction*",
+    "--tests",
+    "*LeaveTimerTest",
+    ":game-modes:whodunit:detekt",
+    ":game-modes:whodunit:detektDesktopTest",
+    ":game-modes:mafia:desktopTest",
+    "--tests",
+    "*MafiaDoctorRulesTest",
+    "--tests",
+    "*MafiaDoctorHistoryRecoveryTest",
+    ":game-modes:mafia:detekt",
+    ":game-modes:mafia:detektDesktopTest",
+    ":shared:engine:desktopTest",
+    "--tests",
+    "*GameRegistryTest",
+    "--tests",
+    "*GameSnapshotTest",
+    ":shared:engine:detekt",
+    ":shared:engine:detektDesktopTest",
+    ":shared:transport-p2p:desktopTest",
+    "--tests",
+    "*LoopbackFixtureContractTest",
+    "--tests",
+    "*JupiterDiscoveryContractTest",
+    ":shared:transport-p2p:detekt",
+    ":shared:transport-p2p:detektDesktopTest",
+    "--rerun-tasks",
+    "--no-build-cache"
+  ],
+  "production_mutations": false,
+  "outer_lane_required": "run_gradle_cycle.py exclusive --command ownership and cleanup",
+  "java_home": "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home",
+  "inputs": [
+    {
+      "revision": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+      "case_id": "jasmine-ring",
+      "byte_sha256": "d1397ac1e0dc3669d3e5ff5e147aabf88647bc6726621cb7239392eb4e4cd9ca",
+      "expected_version": "1.0.0",
+      "expected_canonical_digest": "5cd26321aecef56a82afb56ec61f8ebad77329de39f413cb59b26de766d0d714"
+    },
+    {
+      "revision": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+      "case_id": "khan-el-khalili",
+      "byte_sha256": "b1b1d73cedc751f321c51f1e1523b74e57d515d408a7760add328c73c8dcc5e4",
+      "expected_version": "1.0.0",
+      "expected_canonical_digest": "0e690e0129c9b76fb772952b4e888e59e81610597b9294c52e8f656144393b9c"
+    },
+    {
+      "revision": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+      "case_id": "last-dinner",
+      "byte_sha256": "c36b20ed19f94b7eea5809f7c2f1ef38be1f97ac6e2598a8a5de0233ee9e89af",
+      "expected_version": "1.0.0",
+      "expected_canonical_digest": "a8593bdab776bb5dc1723b6fb562f37009aa2e02ddd11fc7e848284916452f26"
+    },
+    {
+      "revision": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+      "case_id": "layla-halabi",
+      "byte_sha256": "954752e02c72ab8b4ac8fe7b03598857252c539ba07d1f781683be3b42c07d1d",
+      "expected_version": "1.0.0",
+      "expected_canonical_digest": "b98ca82b8cc2334e4f241f6bcefad96c7846f15096f3a043c4126911404345a5"
+    },
+    {
+      "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json",
+      "case_id": "iskenderia-corniche",
+      "byte_sha256": "3d9c96255b2097cc8b9417030cc8cff70e95571c66e64b031c4f247779eafaa2",
+      "expected_version": "1.0.0",
+      "expected_canonical_digest": "b492eddff0ccfdc3142a60ff2ee6da22566cbb39ab8717c2219e8875ac66733d"
+    },
+    {
+      "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+      "case_id": "jasmine-ring",
+      "byte_sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+      "expected_version": "1.0.1",
+      "expected_canonical_digest": "d0aab1123c08f7fb919f00f7ecc8eeb9e1ed2d5daf03df169ea90489c63199c7"
+    },
+    {
+      "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+      "case_id": "khan-el-khalili",
+      "byte_sha256": "12167f59be005d880c3a4861e58cb9ec2f5ff94dbbda8ddfc02a2846e5df6fef",
+      "expected_version": "1.0.1",
+      "expected_canonical_digest": "c9979500738d7b15812b286300714db1943824aa44c29656dc6bebea72e979a0"
+    },
+    {
+      "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+      "case_id": "last-dinner",
+      "byte_sha256": "f4c5ff253a82220f937328de09161d09110b05a98eb6bb012934a80f60a5b96d",
+      "expected_version": "1.0.1",
+      "expected_canonical_digest": "f3b71cc74aaee28dcf7845b750ca773229047388a391ba9294be89efab173a05"
+    },
+    {
+      "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+      "case_id": "layla-halabi",
+      "byte_sha256": "a0db6acb459d69bf75a4c15a809b64d1b7cd5c21714dceaedc5973ba2d951826",
+      "expected_version": "1.0.1",
+      "expected_canonical_digest": "953d5b1dae0aa26b9901e0e044f279b94fd64d4a6d8a66371a9c6577672a3cfc"
+    },
+    {
+      "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/saidi-inheritance.json",
+      "case_id": "saidi-inheritance",
+      "byte_sha256": "eef41fcf78cd6c066d40ef1d0abaab0dbef7d06f9227f6b1012684b4b0c2ed56",
+      "expected_version": "1.0.0",
+      "expected_canonical_digest": "5d333bfb59ebf49586f5ca15a26ba55206b6d8aa9de505ca8c3e4738ffebf8b6"
+    },
+    {
+      "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/zamalek-ramadan.json",
+      "case_id": "zamalek-ramadan",
+      "byte_sha256": "6b28832bcf860fae8e30c0207bf8a30060ae075d111d0e6a5c9f18a54162f1b7",
+      "expected_version": "1.0.0",
+      "expected_canonical_digest": "b3fa57ea89c675bc3c5185a64adcbf0a99b4d640d6dff6fa206b58ed2c070d91"
+    },
+    {
+      "revision": "current",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json",
+      "case_id": "iskenderia-corniche",
+      "byte_sha256": "f8339b64a1b268e571d388186162517dc611b5e1c3f54b9dfcf448ced508719f",
+      "expected_version": "1.0.1",
+      "expected_canonical_digest": "-"
+    },
+    {
+      "revision": "current",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+      "case_id": "jasmine-ring",
+      "byte_sha256": "ec3fda631a22dc34a1ecb756d13d81b0e2fc25ada67c0eeba72e002b9adc4559",
+      "expected_version": "1.0.2",
+      "expected_canonical_digest": "-"
+    },
+    {
+      "revision": "current",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+      "case_id": "khan-el-khalili",
+      "byte_sha256": "c940dd9fe230f996999ec359e688550c974f93e733e7d8ee64d93894c9271f6b",
+      "expected_version": "1.0.2",
+      "expected_canonical_digest": "-"
+    },
+    {
+      "revision": "current",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+      "case_id": "last-dinner",
+      "byte_sha256": "28f5695ad9188fcba9177147fa898cb827f1a8472aa554bb495310a7fa01d9eb",
+      "expected_version": "1.0.2",
+      "expected_canonical_digest": "-"
+    },
+    {
+      "revision": "current",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+      "case_id": "layla-halabi",
+      "byte_sha256": "83cf702d60d6dfb285c158c2032eaf9bbf4c57a84bd0e619bd42ae565bf1544e",
+      "expected_version": "1.0.2",
+      "expected_canonical_digest": "-"
+    },
+    {
+      "revision": "current",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/saidi-inheritance.json",
+      "case_id": "saidi-inheritance",
+      "byte_sha256": "89c547e21d1eece8b4ae75ce7a36279d62747250cc1d53b6fcbc439f4b27d6da",
+      "expected_version": "1.0.1",
+      "expected_canonical_digest": "-"
+    },
+    {
+      "revision": "current",
+      "resource": "game-modes/whodunit/src/commonMain/composeResources/files/cases/zamalek-ramadan.json",
+      "case_id": "zamalek-ramadan",
+      "byte_sha256": "098a19c4bef18e643e2fcbdc06bd9c498adc57c8594d45a5602bf61291d75158",
+      "expected_version": "1.0.1",
+      "expected_canonical_digest": "-"
+    }
+  ],
+  "gradle_command": [
+    "./gradlew",
+    ":game-modes:whodunit:desktopTest",
+    "--tests",
+    "*TestingStory*",
+    "--tests",
+    "*WhodunitRecoveryInteractionTest",
+    "--tests",
+    "*WhodunitContentIdentityTest",
+    "--tests",
+    "*Bundled*",
+    "--tests",
+    "*PeerReadiness*",
+    "--tests",
+    "*Reconstruction*",
+    "--tests",
+    "*LeaveTimerTest",
+    ":game-modes:whodunit:detekt",
+    ":game-modes:whodunit:detektDesktopTest",
+    ":game-modes:mafia:desktopTest",
+    "--tests",
+    "*MafiaDoctorRulesTest",
+    "--tests",
+    "*MafiaDoctorHistoryRecoveryTest",
+    ":game-modes:mafia:detekt",
+    ":game-modes:mafia:detektDesktopTest",
+    ":shared:engine:desktopTest",
+    "--tests",
+    "*GameRegistryTest",
+    "--tests",
+    "*GameSnapshotTest",
+    ":shared:engine:detekt",
+    ":shared:engine:detektDesktopTest",
+    ":shared:transport-p2p:desktopTest",
+    "--tests",
+    "*LoopbackFixtureContractTest",
+    "--tests",
+    "*JupiterDiscoveryContractTest",
+    ":shared:transport-p2p:detekt",
+    ":shared:transport-p2p:detektDesktopTest",
+    "--rerun-tasks",
+    "--no-build-cache",
+    "--no-daemon",
+    "--no-parallel",
+    "--max-workers=1",
+    "--no-configuration-cache",
+    "--dependency-verification=strict",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-Pparlor.android.signing.storeFile=",
+    "-Pparlor.android.signing.storePassword=",
+    "-Pparlor.android.signing.keyAlias=",
+    "-Pparlor.android.signing.keyPassword=",
+    "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=focused-readiness-regressions-06",
+    "-I",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/capture-runtime-classpath.init.gradle",
+    "-Dparlor.audit.whodunit.classpath=/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/focused-readiness-regressions-06/identity/desktop-test-classpath.txt"
+  ],
+  "gradle_exit_code": 1,
+  "gradle_finished_at": "2026-09-07T05:28:58.746662+00:00",
+  "immediate_stop_exit_code": 0,
+  "gradle_stopped_at": "2026-09-07T05:28:59.011701+00:00",
+  "error": "RuntimeError: Build or mandatory immediate stop failed; Java check NOT RUN",
+  "controls_after": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/run_with_identity.py",
+      "sha256": "e8396c59ab871ee7b8222875d24f22fd28456f4105b745963f57774053888e3e"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/capture-runtime-classpath.init.gradle",
+      "sha256": "6fc59f266231486563a10dac6613d1da3862f9f3f869f4dce5a7835604a464a9"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/VerifyContentIdentity.java",
+      "sha256": "82b022878c56fe180f056f937a9d4e51b2a19e53e8bb22df75c433c1e18358c5"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/classpath_validation.py",
+      "sha256": "2f8a730d1f3a7259bc76e43f5d5de142dd4739f374cfcea6c34f4c73ab8bcfb7"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/test_classpath_validation.py",
+      "sha256": "4be8910b306e7c6545afe49ed18b7d5808229b4abd18d015cb9e87a3e8324eae"
+    }
+  ],
+  "scratch_removed": true,
+  "finished_at": "2026-09-07T05:28:59.013117+00:00"
+}

@@ -1,0 +1,260 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "reviewed_at": "2026-09-07T14:30:41.033103+00:00",
+  "decision": "PASS_SCOPED_ACTUAL_RESOLVED_GRAPH_INTEGRITY; LICENSE_PIPELINE_STILL_INCOMPLETE",
+  "blocking_graph_findings": [],
+  "actual_run": {
+    "receipt": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-02/receipt.json",
+    "receipt_sha256": "8877c86a6f7584f8b543ef7a43ce6eed0831944633b8653eaf32153ff6ec327e",
+    "log_sha256": "55596a92ea487581a706aa8f9ca9533f54904da0586c57930879dbde9a4fb5bc",
+    "command": [
+      "./gradlew",
+      "writeResolvedDependencyInventory",
+      "-I",
+      "scripts/verification/resolved_dependencies.init.gradle",
+      "-Pparlor.dependencyInventoryDir=/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-02/raw-graphs",
+      "--no-daemon",
+      "--no-parallel",
+      "--max-workers=1",
+      "--no-configuration-cache",
+      "--dependency-verification=strict",
+      "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=dependency-graph-export-02",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-Pparlor.android.signing.storeFile=",
+      "-Pparlor.android.signing.storePassword=",
+      "-Pparlor.android.signing.keyAlias=",
+      "-Pparlor.android.signing.keyPassword="
+    ],
+    "started_at": "2026-09-07T14:19:19.713145+00:00",
+    "finished_at": "2026-09-07T14:19:27.804935+00:00",
+    "status": "PASS",
+    "exit_code": 0,
+    "stop_exit_code": 0,
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "removed_outputs": [
+      "build",
+      "build-logic/convention/build"
+    ],
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "source_changed_during_cycle": false,
+    "runner_changed_during_cycle": false
+  },
+  "source": {
+    "commit": "11210dc6e34811bd1dd36d6a34339851601e5112",
+    "tree": "cb97cc572dff903b8555ec20144c6df2995f2512",
+    "diff_sha256": "f40d88169f213b5b5be3935ad7c06de6180acf65997ce6a887e4072ac9f2eed0"
+  },
+  "source_outer_receipts_agree": true,
+  "source_manifest_sha256": "63ac217a2f76da6f9659677054f97d430a06c71044ce775287fec3ce1021c28a",
+  "control_hashes": {
+    "scripts/release/tests/test_dependency_inventory.py": "a129437daa50caf0e355c4a492b5e896781b25aa73ac25dc9385d7c66d9d4065",
+    "scripts/verification/dependency_inventory.py": "f82c3365ff59b602d3ad03ad19fa085f6831e79fff5753898785a06c478045ce",
+    "scripts/verification/resolved_dependencies.init.gradle": "5120cb8d7c12825ad889f23d73075ef29ae48b66e4966d1e2335aa2d11995f59"
+  },
+  "completion": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-02/raw-graphs/resolution-complete.json",
+    "sha256": "88d7bc6778c1a5aa3c115c28e8c136e8ffabd36a94a734b7b208f3c1390e1b9c"
+  },
+  "graphs": [
+    {
+      "label": "androidRelease",
+      "raw_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-02/raw-graphs/androidRelease.json",
+      "sha256": "97aafb48c1e50f78ef1d1b6ff830a308448a82cef8919da07fbd6972ce3598a0",
+      "configuration": "releaseRuntimeClasspath",
+      "root_component": "project::composeApp",
+      "components": 239,
+      "external_components": 228,
+      "project_components": [
+        "project::composeApp",
+        "project::game-modes:mafia",
+        "project::game-modes:whodunit",
+        "project::shared:content",
+        "project::shared:core",
+        "project::shared:design-system",
+        "project::shared:engine",
+        "project::shared:networking",
+        "project::shared:session",
+        "project::shared:storage",
+        "project::shared:transport-p2p"
+      ],
+      "edges": 1198,
+      "constraint_edges": 282,
+      "artifacts": 129,
+      "artifact_bytes": 57977515,
+      "external_nodes_without_direct_artifact": 99,
+      "all_nodes_reachable": true,
+      "component_owner_and_content_uniqueness": true,
+      "all_hashes_match_exact_strict_metadata_entries": true,
+      "test_fixture_components_detected": [],
+      "components_edges_identical_export01": true,
+      "unique_content_set_identical_export01": true,
+      "multi_variant_artifacts": [
+        {
+          "component": "androidx.core:core:1.16.0",
+          "name": "core-1.16.0.aar",
+          "bytes": 1377184,
+          "sha256": "6bf03d39dbe3744acce227d3b697374c3625aae1025fbec8ad9fd7bd58bce431",
+          "variants": [
+            "adhoc variant for androidx.core:core:1.16.0",
+            "androidx.core:core:1.16.0 variant releaseVariantReleaseRuntimePublication"
+          ]
+        }
+      ]
+    },
+    {
+      "label": "iosArm64",
+      "raw_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-02/raw-graphs/iosArm64.json",
+      "sha256": "b761e0d7059cd37fe1212190eb9d5c71eec4bdc3cce7479964c1cc12d86adf63",
+      "configuration": "iosArm64CompileKlibraries",
+      "root_component": "project::composeApp",
+      "components": 167,
+      "external_components": 156,
+      "project_components": [
+        "project::composeApp",
+        "project::game-modes:mafia",
+        "project::game-modes:whodunit",
+        "project::shared:content",
+        "project::shared:core",
+        "project::shared:design-system",
+        "project::shared:engine",
+        "project::shared:networking",
+        "project::shared:session",
+        "project::shared:storage",
+        "project::shared:transport-p2p"
+      ],
+      "edges": 577,
+      "constraint_edges": 60,
+      "artifacts": 81,
+      "artifact_bytes": 70482571,
+      "external_nodes_without_direct_artifact": 82,
+      "all_nodes_reachable": true,
+      "component_owner_and_content_uniqueness": true,
+      "all_hashes_match_exact_strict_metadata_entries": true,
+      "test_fixture_components_detected": [],
+      "components_edges_identical_export01": true,
+      "unique_content_set_identical_export01": true,
+      "multi_variant_artifacts": []
+    },
+    {
+      "label": "iosSimulatorArm64",
+      "raw_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-02/raw-graphs/iosSimulatorArm64.json",
+      "sha256": "3c8a7d69e853e893a58cf0b951f03918e6a8baf63c7be5815ce119bd5c0fbcad",
+      "configuration": "iosSimulatorArm64CompileKlibraries",
+      "root_component": "project::composeApp",
+      "components": 167,
+      "external_components": 156,
+      "project_components": [
+        "project::composeApp",
+        "project::game-modes:mafia",
+        "project::game-modes:whodunit",
+        "project::shared:content",
+        "project::shared:core",
+        "project::shared:design-system",
+        "project::shared:engine",
+        "project::shared:networking",
+        "project::shared:session",
+        "project::shared:storage",
+        "project::shared:transport-p2p"
+      ],
+      "edges": 577,
+      "constraint_edges": 60,
+      "artifacts": 81,
+      "artifact_bytes": 70559853,
+      "external_nodes_without_direct_artifact": 82,
+      "all_nodes_reachable": true,
+      "component_owner_and_content_uniqueness": true,
+      "all_hashes_match_exact_strict_metadata_entries": true,
+      "test_fixture_components_detected": [],
+      "components_edges_identical_export01": true,
+      "unique_content_set_identical_export01": true,
+      "multi_variant_artifacts": []
+    },
+    {
+      "label": "iosX64",
+      "raw_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-graph-export-02/raw-graphs/iosX64.json",
+      "sha256": "dc8f07642fe1d3ff4a37008b47fff36eb3f242ca3799cfb170aee14cbd741aa3",
+      "configuration": "iosX64CompileKlibraries",
+      "root_component": "project::composeApp",
+      "components": 167,
+      "external_components": 156,
+      "project_components": [
+        "project::composeApp",
+        "project::game-modes:mafia",
+        "project::game-modes:whodunit",
+        "project::shared:content",
+        "project::shared:core",
+        "project::shared:design-system",
+        "project::shared:engine",
+        "project::shared:networking",
+        "project::shared:session",
+        "project::shared:storage",
+        "project::shared:transport-p2p"
+      ],
+      "edges": 577,
+      "constraint_edges": 60,
+      "artifacts": 81,
+      "artifact_bytes": 50628949,
+      "external_nodes_without_direct_artifact": 82,
+      "all_nodes_reachable": true,
+      "component_owner_and_content_uniqueness": true,
+      "all_hashes_match_exact_strict_metadata_entries": true,
+      "test_fixture_components_detected": [],
+      "components_edges_identical_export01": true,
+      "unique_content_set_identical_export01": true,
+      "multi_variant_artifacts": []
+    }
+  ],
+  "union_external_gav_count": 456,
+  "artifact_occurrences_checked": 372,
+  "strict_verification_metadata": {
+    "path": "/Users/abdelrahman/Projects/parlor/gradle/verification-metadata.xml",
+    "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+    "comparison": "All372 exactcomponent+filename+sha256 occurrences matched; verification metadata never modified."
+  },
+  "alias_result": "Onlyduplicate projectedcoreAAR was coalesced; actualretainedvariants are adhocvariant and releaseVariantReleaseRuntimePublication. Earlierpublicapi/runtime metadata was counter-evidence, not proof of actualselectedaliasIDs. No graphdependency loss occurred.",
+  "schema_applicability": {
+    "spec": "CycloneDX1.6",
+    "official_schema": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-inventory-preparation-01/bom-1.6.schema.json",
+    "official_schema_sha256": "3e92dddbc30cf7f6a02b80f0942b1a4cfd4fb1c26f1dfc4310afa9d613cafb93",
+    "source_review": "Existingformatter uses allowednamedlicense, nestedfilecomponents, properties, SHA256 and dependencyrefs.",
+    "actual_full_output_validation": "NOT_RUN: research02 abortedbeforelicense-evidence/BOMwrites."
+  },
+  "pending_research02_failure": {
+    "receipt": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-02/receipt.json",
+    "receipt_sha256": "95bd5a49f6e639133abb67825f60fa5c8ea54ac84cd3b5a10e80ccd12c39ccc0",
+    "log_sha256": "4b6f19f316e1cd308a4354c1a6699b85cf73d54bceebf6db08822f47ee4e6d78",
+    "classification": "CONFIRMED_VERIFICATION_TOOL_COMPATIBILITY_DEFECT_UNDER_REPAIR, not applicationdefect or finalPOMabsence",
+    "cause": "Socketreadtimeout in actualXcodePython3.9 is socket.timeout separate fromTimeoutError; uncaught, aborts wholemetadata collection. Root notified withnarrowcatch andregressionrecommendation.",
+    "official_sources": [
+      {
+        "url": "https://docs.python.org/3/library/socket.html#socket.timeout",
+        "document_sha256": "72226705230dff946399a3cd9cf4e4cc43b084ef7b8be90839458dbb0764bb32",
+        "claim": "socket.timeout becameTimeoutErroralias in3.10."
+      },
+      {
+        "url": "https://raw.githubusercontent.com/python/cpython/v3.9.6/Modules/socketmodule.c",
+        "sha256": "1826831dc1c2168746558b20b4a8ac7a791d9bb082fc2297d85dba439a797f33",
+        "lines": [
+          [
+            7179,
+            7180
+          ]
+        ],
+        "claim": "3.9.6 creates socket.timeout withPyExc_OSErrorbase, notTimeoutError."
+      }
+    ]
+  },
+  "downstream_obligations": [
+    "NarrowPython3.9timeout/HTTPfailurehandlingreview+actualregressionexecution; complete boundedPOMresearch withoutfabricateddefaults.",
+    "ActualBOMschema validationagainstexactofficialschema, source/hash bindingandall456GAVdeclarationdisposition.",
+    "POMdeclarations are notfinal redistributionlicense/notice obligations orlegalapproval; inspect embeddednotices/nativevendoredcode/compilerplatformruntime/assets/fonts independently.",
+    "AndroidreleaseRuntimeClasspath ispreR8inputsuperset, nativeCompileKlibraries are linkerinputs; graphresolutionnotappcompilation/runtime/physicalLAN/signedreleaseevidence.",
+    "Finalfrozencheckout revalidationrequired after subsequentcommits/changes; graphsource11210dc6+f40d8816diffisnotanylaterHEAD."
+  ],
+  "reviewer_actions": "Read-only structured parsing/hashing ofallfourgraphs/receipts/verificationmetadata andpublicsource research. NoGradle/test/app/nativeprocesses orsourcewrites. Thisreportalone added; no requiredraw-evidence changes."
+}

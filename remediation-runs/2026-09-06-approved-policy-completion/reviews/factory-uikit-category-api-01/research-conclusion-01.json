@@ -1,0 +1,173 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-06T12:05:36.244003+00:00",
+  "reviewer": "/root/factory_review",
+  "task": "Independent bounded API research requested by /root after proposed Kotlin container compile failures; not a new original-finding or runtime fix approval.",
+  "classification": "CONFIRMED KOTLIN PLATFORM API LIMITATION; RECOMMEND SWIFT-NATIVE CONTAINER FOR SUPPORTED OVERRIDE DISPATCH",
+  "versions": {
+    "kotlin_native": "2.4.10",
+    "platform_target": "ios_simulator_arm64",
+    "pinned_compose_ui": "1.10.3",
+    "xcode": {
+      "CFBundleShortVersionString": "26.5",
+      "ProductBuildVersion": "17F42",
+      "CFBundleVersion": "24943"
+    },
+    "sdk_header": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIViewController.h",
+    "sdk_header_sha256": "61454958d79ae0627b6078bf70a4ac3bada7837297374f56da2a5591d4e3692d",
+    "minimum_deployment": "iOS16 per checked-in pbxproj"
+  },
+  "exact_failure": {
+    "evidence": "remediation-runs/2026-09-06-approved-policy-completion/evidence/locale-continuity-focused-01/gradle.log",
+    "lines": "179-190",
+    "classification": "Kotlin compiler errors in new proposal, not app runtime exceptions or repeated-launch-crash evidence",
+    "details": [
+      "Unresolved addChildViewController/didMoveToParentViewController are category extension imports not intrinsic class members.",
+      "Seven policy overrides report overrides nothing: status style/hidden, home indicator, screen-edge deferral, supported/preferred orientation, shouldAutorotate."
+    ]
+  },
+  "proof": [
+    {
+      "source": "https://kotlinlang.org/docs/native-objc-interop.html#extensions-and-category-members",
+      "claim": "Objective-C categories import as Kotlin extensions and cannot be overridden; since1.8.20 exception specifically NSView/UIView same-header methods, not arbitrary UIViewController members."
+    },
+    {
+      "source": "https://kotlinlang.org/docs/whatsnew1820.html#import-objective-c-extensions-as-class-members-in-uikit",
+      "claim": "1.8.20 notes confirm narrow NSView/UIView exception and only a future plan for all Objective-C classes. Do not infer the plan shipped for UIViewController."
+    },
+    {
+      "source": "https://raw.githubusercontent.com/JetBrains/kotlin/v2.4.10/kotlin-native/platformLibs/src/platform/ios/UIKit.def",
+      "claim": "Exact pinned file byte-matches installed definition. objcClassesIncludingCategories does not add UIViewController; corroboration only, actual klib metadata below is decisive."
+    },
+    {
+      "source": "klib-inspection-01.json",
+      "claim": "All50 UIKit package fragments decoded read-only against exact public metadata.proto. Actual UIViewController class has119functions32properties; only viewDidLoad among10target names. Nine remaining targets are package extension functions with UIViewController receiver;7policy names also extension properties. Switching fun to val or importing extensions cannot create virtual class overrides."
+    },
+    {
+      "source": "UIViewController-header-excerpts.txt",
+      "claim": "Installed Apple SDK places orientation functions in UIViewControllerRotation, containment/status in UIContainerViewControllerProtectedMethods/Callbacks, home-indicator and system-gesture policy in separate categories. They remain valid Objective-C/Swift virtual override APIs; the limitation is Kotlin import shape."
+    },
+    {
+      "source": "apple-status-style.json,apple-status-hidden.json,apple-home-indicator.json,apple-edges.json",
+      "claim": "Apple explicitly requires custom containers to return the controlling child. Defaults consult self/nil instead; removing overrides or invoking inherited extensions would silently abandon intended child policy."
+    },
+    {
+      "source": "apple-supported-orientations.json,apple-preferred-orientation.json,apple-autorotate.json",
+      "claim": "Swift declarations are overrideable getter properties. supportedInterfaceOrientations must remain nonzero. shouldAutorotate is deprecated sinceiOS16 in exactSDK, not removed; replacing it with invented policy would not preserve behavior."
+    },
+    {
+      "source": "apple-container.txt,apple-representable.json",
+      "claim": "UIKit recommends addChild→addRootView→constrain→didMove; automatic appearance forwarding is default. SwiftUI owns represented outer root geometry. Container must constrain only child physical bounds and not set the outer SwiftUI-managed frame."
+    }
+  ],
+  "recommendation": {
+    "where": "Existing iosApp/iosApp/ContentView.swift, which is already part of PBXSources. Let MainViewController continue returning its single original ComposeUIViewController as UIViewController; ComposeView.makeUIViewController wraps it once in a plain native Swift UIViewController container.",
+    "why": "Swift UIKit subclass uses compiler-checked ordinary override var and Objective-C virtual dispatch. This avoids custom platform .def files, a new C/Objective-Cinterop dependency, selector runtime tricks, an extra navigation engine or version upgrade. Swift is not theoretically the only possible language; it is the cleanest already-present supported native boundary.",
+    "required_overrides": [
+      "override var childForStatusBarStyle: UIViewController?",
+      "override var childForStatusBarHidden: UIViewController?",
+      "override var childForHomeIndicatorAutoHidden: UIViewController?",
+      "override var childForScreenEdgesDeferringSystemGestures: UIViewController?",
+      "override var supportedInterfaceOrientations: UIInterfaceOrientationMask",
+      "override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation",
+      "override var shouldAutorotate: Bool"
+    ],
+    "deprecated_hook": "Forward shouldAutorotate to preserve child behavior; acknowledge exactiOS16deprecation. Do not remove it merely to compile, fabricate replacement logic, or suppress unrelated warnings. Root must verify compiler policy for any matching @available annotation if needed.",
+    "lifecycle_geometry": [
+      "Keep1stableComposechild; no replacement in updateUIViewController, no UINavigationController.",
+      "Use standard UIKit containment exactly once and physical left/right/top/bottom root constraints. Parent/child forced semantic directions may intentionally oppose; no duplicate safe-area padding.",
+      "Leave automatic appearance/size/trait forwarding intact; no manual duplicate lifecycle notifications.",
+      "Keep SwiftUI privacy cover and common scenePhase coordinator bridge at current owning boundary."
+    ],
+    "verification": [
+      "Compile exactSwift wrapper in root lane; metadata/source proof is not compilation or runtime proof.",
+      "Use real UIViewController child in apphost native tests; assert each override through UIViewController-typed reference to avoid test-only accidental shadowmethod pass.",
+      "Check onechild identity/parent/view, all12size+directioncrossproduct layouts, and default appearance forwarding exactlyonce.",
+      "Record actualComposechild for native semantic oracle plus stableouter/childcontainment; never redefine oldouteroracle as repaired.",
+      "Re-run sustained background/foreground from actualSettings EN and AR, cross-switch/remount and both game scopes; physicalLAN/realdevices separate."
+    ]
+  },
+  "counter_evidence_rejected": [
+    "UIKit symbols are not absent: exactklib has callable packageextensions. Missing imports fix ordinary calls, not overrides.",
+    "Changing overrides to properties does not fix imported-category inability: they are extensionproperties too.",
+    "Discarding override keyword and testing direct calls on concrete Kotlin wrapper might call Kotlin-only methods while UIKit still sees superclass selectors; no such weakened repair recommended.",
+    "UIView/NSView exception does not cover UIViewController despite all declarations being present in oneAppleheader.",
+    "Compose1.10.3 itself overrides baseclass preferredStatusBarStyle/prefersStatusBarHidden, not categorychildselectors; its success does not establish that a Kotlincontainer can override these separate methods.",
+    "No claim that SwiftUI exactinternalsetter was proved or that wrapper is already aruntimefix. Runtime must still establish sustainedactualchilddirection consistency."
+  ],
+  "research_failures": [
+    "Twoattempts toguessKotlinstubgenerator sourcepath returnedHTTP404; logged in fetchreceipts, not proof. No need to relyon them because exactpublicmetadata+installedklib proveAPIshape.",
+    "Firstinlineprotobufdecoder command hadPythonSyntaxError beforeexecuting; corrected secondread-onlycommand succeeded. No compile/testtask orgeneratedbuildoutput resulted."
+  ],
+  "preservation_cleanup": "No production/test/config edits, staging/Gitactions, Gradle/Kotlincompiler/Xcode invocation, apps, simulators, servers or persistentworkers. Only readinstalledpublicSDK/klib and fetchedpublicvendorURLs without sending repositorysource. Oneboundednetworkfetch command yielded thencompletedexit0; requiredresearchfiles~144KBpreserved. Globalcaches/platformlibraries unchanged.",
+  "evidence_files": [
+    {
+      "path": "UIViewController-header-excerpts.txt",
+      "sha256": "6d5d9e4a8d1d0af66c82c283838d7726a24599e190d0a16dec7ce2b8a68c8616"
+    },
+    {
+      "path": "apple-autorotate.json",
+      "sha256": "f93089da98dc4b39d0783f6919990f3f00770826e427c569d733648240a0f73f"
+    },
+    {
+      "path": "apple-container.txt",
+      "sha256": "41bdbf556349d7f992e19845570ee63eca2b86a322dc0e1a69b8fbb533613493"
+    },
+    {
+      "path": "apple-edges.json",
+      "sha256": "17a5ff898490ae1b73765f2ccb5d27c2516a707e2090d937ecd8e2fe208626ec"
+    },
+    {
+      "path": "apple-home-indicator.json",
+      "sha256": "84e950ed930858dd91d635fcdd435c5b953e881b778ab3d6b581dfc0eceb59c1"
+    },
+    {
+      "path": "apple-preferred-orientation.json",
+      "sha256": "3d91ffec13b5d871462f4768ba4c86dc241c725a8f8cc9b0423c6012fb39f424"
+    },
+    {
+      "path": "apple-representable.json",
+      "sha256": "08d74f8131d6042d537ace13143f043b97ee13242ed826dadd4347d9a5e73673"
+    },
+    {
+      "path": "apple-status-hidden.json",
+      "sha256": "5605bfb70ecfb9269e95e4aa04fd2e9f305fd0cea7e301788411f44b6a0cf3b6"
+    },
+    {
+      "path": "apple-status-style.json",
+      "sha256": "b8762d7a1182df1a7aaf637bf8a2bffffdae98dc6d765b9e84858574f2a23ed8"
+    },
+    {
+      "path": "apple-supported-orientations.json",
+      "sha256": "077aa6730e4fc2827be83b4b4a93041558dc92d5bbd8f62653f7ba8e4591e0cc"
+    },
+    {
+      "path": "fetch-receipts-01.json",
+      "sha256": "e020a1aa99c483f2e823f00d6983c6e06b62ee3c9ad1538e9a16aa2896f59c81"
+    },
+    {
+      "path": "fetch-receipts-02.json",
+      "sha256": "796378f9ae086096bfd121d2246482d94ba459f4a895fc9fbbc2db6f746b25b3"
+    },
+    {
+      "path": "klib-inspection-01.json",
+      "sha256": "e7c9ac25f2a64d0be9df088ae8cba8741917f647fafe92d8777345c8d75a18b4"
+    },
+    {
+      "path": "kotlin-1820-categories.txt",
+      "sha256": "1c394d2f5db763c869722f58a13242d6756dc02b44aad9279f5179434d56c5a7"
+    },
+    {
+      "path": "kotlin-metadata-2410.proto",
+      "sha256": "8388828a509493a5571f145dce94179aa66ceffb49fa6f52fc816e68ea4f78ec"
+    },
+    {
+      "path": "kotlin-objc-interop.txt",
+      "sha256": "702687ab9a7d5ebdec4750073e1f9770680bbfc89df9f9b7574759b34f04a93d"
+    },
+    {
+      "path": "kotlin-uikit-def-2410.txt",
+      "sha256": "6f9a9688352e48c9e1c26b0f84adf1667b5276eb5d8124cfcfcc0c15d96f1bb1"
+    }
+  ]
+}

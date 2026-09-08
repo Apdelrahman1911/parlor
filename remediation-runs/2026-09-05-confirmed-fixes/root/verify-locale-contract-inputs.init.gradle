@@ -1,0 +1,22 @@
+// Evidence-only assertion of the actual task inputs; no source or test exclusions.
+gradle.projectsEvaluated { invocation ->
+    if (invocation.rootProject.projectDir.canonicalPath != '/Users/abdelrahman/Projects/parlor') return
+    def app = invocation.rootProject.project(':composeApp')
+    app.tasks.named('desktopTest').configure { task ->
+        task.doFirst {
+            def registered = task.inputs.files.files.collect { it.canonicalPath }.toSet()
+            def expected = invocation.rootProject.fileTree('shared/design-system/src') {
+                include '*Main/kotlin/com/parlor/designsystem/localization/*.kt'
+            }.files
+            if (expected.size() != 7 || !expected.any { it.name == 'IosLanguageOverrideOwner.kt' }) {
+                throw new GradleException('Unexpected locale source input inventory')
+            }
+            expected.sort { it.path }.each { source ->
+                if (!registered.contains(source.canonicalPath)) {
+                    throw new GradleException('Missing declared locale input: ' + source.name)
+                }
+                task.logger.lifecycle('VERIFIED_LOCALE_CONTRACT_INPUT ' + invocation.rootProject.relativePath(source))
+            }
+        }
+    }
+}

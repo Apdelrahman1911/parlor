@@ -1,0 +1,59 @@
+{
+  "at": "2026-09-05T19:56:15.618977+00:00",
+  "author": "/root",
+  "independent_validator": "/root/whodunit_cont",
+  "status": "SOURCE APPROVED; execution pending root build lane",
+  "scope": "Additional DS-C02 regression tests only; production already approved at previous tested hash",
+  "coverage": [
+    {
+      "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt",
+      "sha256": "ea4e554c099511942e13e07281df48419c333948be7a64d65a72b7dd49ea25b0",
+      "lines": 230,
+      "reviewed_ranges": [
+        [
+          1,
+          230
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont"
+    },
+    {
+      "path": "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastLifetimeTest.kt",
+      "sha256": "5a44e710b9bc28cb117e67c07c0d449ef6c9f04782f61ce1991bda261f70f0bc",
+      "lines": 85,
+      "reviewed_ranges": [
+        [
+          1,
+          85
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont"
+    },
+    {
+      "path": "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastConcurrencyTest.kt",
+      "sha256": "d1ce19edccb66916930b4fa27d90f7e390f851442de923b351bef1258a0f90d9",
+      "lines": 73,
+      "reviewed_ranges": [
+        [
+          1,
+          73
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont"
+    }
+  ],
+  "checks": [
+    "Equal numeric IDs in different owners but clocks differ by600ms; old timer/visible capture would fail replacement visibility at1200ms",
+    "Four-worker bounded barrier per four-message wave; no queue overflow within a wave; all texts/count4 retained and200 IDs never reused across50 empty-queue cycles",
+    "No assertion of numeric ID commit order; CAS linearization may legitimately differ from reservation order",
+    "Concurrent adjacent-identical messages200calls coalesce toone; distinct200message flood capped4; stale firstID dismissal cannot remove survivors",
+    "Every future get and barrier await bounded; executors shut down and termination asserted in finally",
+    "Full production toast file reopened: owner+ID key, atomic outside retryable insertion, preserved cap/coalescing; no production changes since initial approval"
+  ],
+  "limitations": [
+    "These are bounded regression interleavings, not exhaustive scheduler exploration or platform performance/load certification",
+    "No child execution/build/process mutations",
+    "Runtime test results not yet available"
+  ],
+  "builds_run_by_validator": false
+}

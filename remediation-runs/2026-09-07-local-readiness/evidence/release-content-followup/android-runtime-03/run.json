@@ -1,0 +1,393 @@
+{
+  "status": "FAIL",
+  "runtime_kind": "owned API35 ARM64 emulator",
+  "not_evidence_for": [
+    "physical LAN",
+    "Linux x86/KVM GMD",
+    "Store signing"
+  ],
+  "tests": [],
+  "cleanup": [],
+  "source_commit": "f5ea8045bd903c255041b198f54aca67e893612f",
+  "source_binding": "Caller-provided commit; campaign freeze and Gradle receipt must bind dirty source. Artifact hashes alone do not prove source.",
+  "controls_before": {
+    "files": [
+      {
+        "path": "owned_arm64_smoke_sdk.py",
+        "sha256": "bf6a07f759aef88746caac02609dfa6f2d72bb2052de8f46b53c6a73311aa6c8"
+      },
+      {
+        "path": "darwin_owned_processes.py",
+        "sha256": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378"
+      },
+      {
+        "path": "avd-sdk-root-01/owned_sdk_image.py",
+        "sha256": "4f181d5c9455c43f4d7f51fca1d127c645cb6d55a7c64827ebf4d610b70f8e81"
+      }
+    ],
+    "sha256": "a4c8d3cb35247b15301c5d03b444239c2289624cb7b765689269612718d55e1c"
+  },
+  "global_sdk_metadata_before": [
+    {
+      "path": ".knownPackages",
+      "present": true,
+      "sha256": "2c745ac1361465d6c8829b94852c594dd5a34293ec5f2a1e49d2f169a8cce545",
+      "identity": [
+        16777232,
+        868916,
+        16,
+        1788614208880530858,
+        1788614208880530858
+      ]
+    },
+    {
+      "path": "system-images/android-35/google_apis/arm64-v8a/package.xml",
+      "present": true,
+      "sha256": "9bbfa7f3f8b7386ae31ee3130748aeb32a37c3404d2be5fb8ac7f0f731ea9642",
+      "identity": [
+        16777232,
+        1186852,
+        19631,
+        1766752554252213151,
+        1766752554252213151
+      ]
+    },
+    {
+      "path": "system-images/android-35/google_apis/arm64-v8a/source.properties",
+      "present": true,
+      "sha256": "bd5cb4bc86ef478b0f37a034aa2b460165b391e8cb6504cb13b8ca1c462c4848",
+      "identity": [
+        16777232,
+        1186810,
+        363,
+        1766752544512494673,
+        1766752544512494673
+      ]
+    }
+  ],
+  "image_properties": {
+    "Pkg.Desc": "System Image arm64-v8a with Google APIs.",
+    "Pkg.Revision": "9",
+    "Pkg.Dependencies": "emulator#33.1.24",
+    "AndroidVersion.ApiLevel": "35",
+    "AndroidVersion.ExtensionLevel": "13",
+    "AndroidVersion.IsBaseSdk": "true",
+    "SystemImage.Abi": "arm64-v8a",
+    "SystemImage.TagId": "google_apis",
+    "SystemImage.TagDisplay": "Google APIs",
+    "SystemImage.GpuSupport": "true",
+    "Addon.VendorId": "google",
+    "Addon.VendorDisplay": "Google Inc."
+  },
+  "artifacts": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-03/release.apk",
+      "sha256": "561b269c883de7be33efda9eb7b2dcabb412ce2706ffd38ad79f3f04c2c5a8cb"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-03/release-androidTest.apk",
+      "sha256": "754daf608683abb2c32988287a19d0438c86699fcbfc259a62e117138ec9893d"
+    }
+  ],
+  "temporary_root": "/private/tmp/parlor-arm64-ka_nwtyt",
+  "legacy_adb_port_reserved": 50105,
+  "native_clone_probe": {
+    "status": "PASS",
+    "method": "real fclonefileat",
+    "independent_inodes": true,
+    "clone_mutation_preserved_source": true,
+    "source_sha256": "6fd92cca4f2a24a028c2c6ab72315bd4b2f78cbd7c2b3fdc97474a3dbc79f5cf"
+  },
+  "sdk_clone": {
+    "source_image": "/Users/abdelrahman/Library/Android/sdk/system-images/android-35/google_apis/arm64-v8a",
+    "owned_sdk": "/private/tmp/parlor-arm64-ka_nwtyt/sdk",
+    "owned_image": "/private/tmp/parlor-arm64-ka_nwtyt/sdk/system-images/android-35/google_apis/arm64-v8a",
+    "logical_bytes": 4058038626,
+    "method": "fclonefileat per regular file; no fallback; source+clone SHA256 compared",
+    "files": [
+      {
+        "path": "NOTICE.txt",
+        "size": 20106158,
+        "sha256": "cd037fbc74785480bdef48894b9245b3f157db65327f05ace0e8f68abd1b37f4"
+      },
+      {
+        "path": "VerifiedBootParams.textproto",
+        "size": 356,
+        "sha256": "47bec2cf2e3f822c1ee9a299f5a723674ce3f67565661123940be0605360e02b"
+      },
+      {
+        "path": "advancedFeatures.ini",
+        "size": 758,
+        "sha256": "b293a499caf9a3a2b0ba8e95fbc3d9113c8d3c33da27af59c6284e5f81119e5e"
+      },
+      {
+        "path": "build.prop",
+        "size": 4758,
+        "sha256": "0e90e5c253335e4fc7ba24502a077bfecbf93d524db19ad75798e27fa50135f4"
+      },
+      {
+        "path": "data/empty_data_disk",
+        "size": 107,
+        "sha256": "e4dc7c33a83013f3d9eb9b5a5693c912e83a9c7f978933b5c7600039dbfde903"
+      },
+      {
+        "path": "data/local.prop",
+        "size": 46,
+        "sha256": "49b05d093a46d35d85df01fb99133f077fcc725cc49efe1a1bedae884d24e20b"
+      },
+      {
+        "path": "data/misc/GoldfishSkinConfig",
+        "size": 783,
+        "sha256": "763b66cad27dc57354f456bb763e27acf8859059890e6515daba90e77c906b75"
+      },
+      {
+        "path": "data/misc/apns/apns-conf.xml",
+        "size": 6575,
+        "sha256": "c35b899f2b6296aee4a9742302651cce9eb64622669d4d8fe8d276ca11060eb6"
+      },
+      {
+        "path": "data/misc/emulator/config/radioconfig.xml",
+        "size": 1433,
+        "sha256": "534a81b662ad62fc70ec0ea22715670524a05a066afc9fdac8e7c0f5a7789cd7"
+      },
+      {
+        "path": "data/misc/emulator/version.txt",
+        "size": 112,
+        "sha256": "2f4ecb211f6b497d6011a75390fb0469ceaec4b816c10209198e43bafa57c695"
+      },
+      {
+        "path": "data/misc/modem_simulator/etc/modem_simulator/files/numeric_operator.xml",
+        "size": 297,
+        "sha256": "c2557e604beea20b67642cdbb14ae7b792f804e4476b3f6cf47035690234f436"
+      },
+      {
+        "path": "data/misc/modem_simulator/iccprofile_for_carrierapitests.xml",
+        "size": 16537,
+        "sha256": "dc4b5f5344f084fc44f89250bbcf2b12e452eb98c104e4ef3ec115366eb6ce32"
+      },
+      {
+        "path": "data/misc/modem_simulator/iccprofile_for_sim0.xml",
+        "size": 14647,
+        "sha256": "a2744726a306b18d7547251026201aa5c6a9e120aa1555992eeb8b0a3b4aa6d9"
+      },
+      {
+        "path": "data/misc/modem_simulator/iccprofile_for_sim_tel_alaska.xml",
+        "size": 14474,
+        "sha256": "462cc26ddaa9d6c470a2d9415771c80e323b526b1863f099accb298955b14db3"
+      },
+      {
+        "path": "data/misc/pixel_9_pro_fold/devicestate/device_state_configuration.xml",
+        "size": 1644,
+        "sha256": "8bebf4943ed3fc50973ac428ab8c8c0d71700af81419f44fc95a59f52f873838"
+      },
+      {
+        "path": "data/misc/pixel_9_pro_fold/display_settings.xml",
+        "size": 303,
+        "sha256": "2adca8f98a2c8ee0f780e10ca16587ac92641df5e93ab4437c3c47ad41b0041d"
+      },
+      {
+        "path": "data/misc/pixel_9_pro_fold/displayconfig/display_layout_configuration.xml",
+        "size": 1311,
+        "sha256": "a64e2eca65bc2f9196215fb72a88c9035a584319f8b3da3606fff161be642be8"
+      },
+      {
+        "path": "data/misc/pixel_9_pro_fold/extra_feature.xml",
+        "size": 829,
+        "sha256": "ba27b7a61457027e2a77917f8b07d716d3e918097901a14833749252b15aa38f"
+      },
+      {
+        "path": "data/misc/pixel_fold/devicestate/device_state_configuration.xml",
+        "size": 1644,
+        "sha256": "8bebf4943ed3fc50973ac428ab8c8c0d71700af81419f44fc95a59f52f873838"
+      },
+      {
+        "path": "data/misc/pixel_fold/display_settings.xml",
+        "size": 303,
+        "sha256": "2adca8f98a2c8ee0f780e10ca16587ac92641df5e93ab4437c3c47ad41b0041d"
+      },
+      {
+        "path": "data/misc/pixel_fold/displayconfig/display_layout_configuration.xml",
+        "size": 1311,
+        "sha256": "a64e2eca65bc2f9196215fb72a88c9035a584319f8b3da3606fff161be642be8"
+      },
+      {
+        "path": "data/misc/pixel_fold/extra_feature.xml",
+        "size": 829,
+        "sha256": "ba27b7a61457027e2a77917f8b07d716d3e918097901a14833749252b15aa38f"
+      },
+      {
+        "path": "encryptionkey.img",
+        "size": 18874368,
+        "sha256": "522bd0b6a2c92e37de465059bb9487bb9597a9aae032b469a8ebe0b38146d8c3"
+      },
+      {
+        "path": "kernel-ranchu",
+        "size": 14474326,
+        "sha256": "a9dda2ae115395ea352bca2201294b4df0020a7f425cbfae879ee66a03a8f19f"
+      },
+      {
+        "path": "kernel_cmdline.txt",
+        "size": 16,
+        "sha256": "5bd6571f46a3e593053a7c6c37f4eed840c0da2278506fa53d1ff021e9d4d8e4"
+      },
+      {
+        "path": "package.xml",
+        "size": 19631,
+        "sha256": "9bbfa7f3f8b7386ae31ee3130748aeb32a37c3404d2be5fb8ac7f0f731ea9642"
+      },
+      {
+        "path": "ramdisk.img",
+        "size": 2080115,
+        "sha256": "46ff502d0e0a1d8f844d29c084a8b797107513d26199825f0d827836a87e84d7"
+      },
+      {
+        "path": "source.properties",
+        "size": 363,
+        "sha256": "bd5cb4bc86ef478b0f37a034aa2b460165b391e8cb6504cb13b8ca1c462c4848"
+      },
+      {
+        "path": "system.img",
+        "size": 3891265536,
+        "sha256": "5d9c9213a36f9034e85719baffba88d0a4b6ab992bbf80fdc7c4dfd21d070597"
+      },
+      {
+        "path": "vendor.img",
+        "size": 111149056,
+        "sha256": "af71ded6307254f8bfa4711c87cbc82f60fe1f31b424ccff20db540639ab460b"
+      }
+    ],
+    "files_sha256": "130a9e52c977b66f199812633b862ad63ac5360a7f2d4095bc95d29dba438a13"
+  },
+  "jdk_release_sha256": "7befd86565133fbebfa54138e55ec5b03bb59649ea5dda35d9f9b95265226756",
+  "failure": "RuntimeError: avd-create exited 1; see 002-avd-create.log",
+  "owned_adb_shutdown_acknowledged": false,
+  "commands": [
+    {
+      "args": [
+        "/Users/abdelrahman/Library/Android/sdk/platform-tools/adb",
+        "version"
+      ],
+      "started_epoch": 1788778781.4198668,
+      "seconds": 0.117,
+      "exit_code": 0,
+      "log": "000-adb-version.log",
+      "failure": null
+    },
+    {
+      "args": [
+        "/Users/abdelrahman/Library/Android/sdk/emulator/emulator",
+        "-version"
+      ],
+      "started_epoch": 1788778781.536631,
+      "seconds": 0.538,
+      "exit_code": 0,
+      "log": "001-emulator-version.log",
+      "failure": null
+    },
+    {
+      "args": [
+        "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/bin/java",
+        "-Xmx256m",
+        "-Dcom.android.sdkmanager.toolsdir=/private/tmp/parlor-arm64-ka_nwtyt/sdk/cmdline-tools/owned-placeholder",
+        "-Duser.home=/private/tmp/parlor-arm64-ka_nwtyt/home",
+        "-Djava.io.tmpdir=/private/tmp/parlor-arm64-ka_nwtyt/tmp",
+        "-XX:ErrorFile=/private/tmp/parlor-arm64-ka_nwtyt/tmp/hs_err_pid%p.log",
+        "-classpath",
+        "/opt/homebrew/share/android-commandlinetools/cmdline-tools/latest/lib/avdmanager-classpath.jar",
+        "com.android.sdklib.tool.AvdManagerCli",
+        "create",
+        "avd",
+        "--name",
+        "parlor_arm64_eba78ca1fb404b9f9ff94a139399e9cc",
+        "--path",
+        "/private/tmp/parlor-arm64-ka_nwtyt/avd/parlor_arm64_eba78ca1fb404b9f9ff94a139399e9cc.avd",
+        "--package",
+        "system-images;android-35;google_apis;arm64-v8a",
+        "--device",
+        "pixel_2"
+      ],
+      "started_epoch": 1788778785.583678,
+      "seconds": 0.744,
+      "exit_code": 1,
+      "log": "002-avd-create.log",
+      "failure": null
+    }
+  ],
+  "worker_exit_codes": [
+    {
+      "pid": 80203,
+      "label": "adb-version",
+      "retired": true,
+      "exit_code": 0
+    },
+    {
+      "pid": 80207,
+      "label": "emulator-version",
+      "retired": true,
+      "exit_code": 0
+    },
+    {
+      "pid": 80247,
+      "label": "avd-create",
+      "retired": true,
+      "exit_code": 1
+    }
+  ],
+  "token_bound_signals": [],
+  "global_sdk_metadata_after": [
+    {
+      "path": ".knownPackages",
+      "present": true,
+      "sha256": "2c745ac1361465d6c8829b94852c594dd5a34293ec5f2a1e49d2f169a8cce545",
+      "identity": [
+        16777232,
+        868916,
+        16,
+        1788614208880530858,
+        1788614208880530858
+      ]
+    },
+    {
+      "path": "system-images/android-35/google_apis/arm64-v8a/package.xml",
+      "present": true,
+      "sha256": "9bbfa7f3f8b7386ae31ee3130748aeb32a37c3404d2be5fb8ac7f0f731ea9642",
+      "identity": [
+        16777232,
+        1186852,
+        19631,
+        1766752554252213151,
+        1766752554252213151
+      ]
+    },
+    {
+      "path": "system-images/android-35/google_apis/arm64-v8a/source.properties",
+      "present": true,
+      "sha256": "bd5cb4bc86ef478b0f37a034aa2b460165b391e8cb6504cb13b8ca1c462c4848",
+      "identity": [
+        16777232,
+        1186810,
+        363,
+        1766752544512494673,
+        1766752544512494673
+      ]
+    }
+  ],
+  "controls_after": {
+    "files": [
+      {
+        "path": "owned_arm64_smoke_sdk.py",
+        "sha256": "bf6a07f759aef88746caac02609dfa6f2d72bb2052de8f46b53c6a73311aa6c8"
+      },
+      {
+        "path": "darwin_owned_processes.py",
+        "sha256": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378"
+      },
+      {
+        "path": "avd-sdk-root-01/owned_sdk_image.py",
+        "sha256": "4f181d5c9455c43f4d7f51fca1d127c645cb6d55a7c64827ebf4d610b70f8e81"
+      }
+    ],
+    "sha256": "a4c8d3cb35247b15301c5d03b444239c2289624cb7b765689269612718d55e1c"
+  },
+  "temporary_root_removed": true
+}

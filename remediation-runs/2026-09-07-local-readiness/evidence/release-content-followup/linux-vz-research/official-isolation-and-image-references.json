@@ -1,0 +1,69 @@
+[
+  {
+    "url": "https://api.github.com/repos/lima-vm/lima/contents/pkg/limayaml/limayaml.go?ref=v2.1.4",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "url": "https://api.github.com/repos/lima-vm/lima/contents/pkg/limayaml/defaults.go?ref=v2.1.4",
+    "accessed_at": "2026-09-07T05:20:30.595214+00:00",
+    "sha256": "ec506213fc8c65aaad57c41493d577e2b29dc43318e2349eedd16758b4c43ef5",
+    "excerpts": [
+      {
+        "from": 132,
+        "to": 150,
+        "text": "// Both d and o may be empty.\n//\n// Maps (`Env`) are being merged: first populated from d, overwritten by y, and again overwritten by o.\n// Slices (e.g. `Mounts`, `Provision`) are appended, starting with o, followed by y, and finally d. This\n// makes sure o takes priority over y over d, in cases it matters (e.g. `PortForwards`, where the first\n// matching rule terminates the search).\n//\n// Exceptions:\n//   - Mounts are appended in d, y, o order, but \"merged\" when the Location matches a previous entry;\n//     the highest priority Writable setting wins.\n//   - Networks are appended in d, y, o order\n//   - DNS are picked from the highest priority where DNS is not empty.\n//   - CACertificates Files and Certs are uniquely appended in d, y, o order\nfunc FillDefault(ctx context.Context, y, d, o *limatype.LimaYAML, filePath string, warn bool) {\n\tinstDir := filepath.Dir(filePath)\n\n\texistingLimaVersion := ExistingLimaVersion(instDir)\n\n\t// OS has to be resolved before User"
+      },
+      {
+        "from": 351,
+        "to": 369,
+        "text": "\t\t// y.SSH.LocalPort value is not filled here (filled by the hostagent)\n\t\ty.SSH.LocalPort = ptr.Of(0)\n\t}\n\tif y.SSH.LoadDotSSHPubKeys == nil {\n\t\ty.SSH.LoadDotSSHPubKeys = d.SSH.LoadDotSSHPubKeys\n\t}\n\tif o.SSH.LoadDotSSHPubKeys != nil {\n\t\ty.SSH.LoadDotSSHPubKeys = o.SSH.LoadDotSSHPubKeys\n\t}\n\tif y.SSH.LoadDotSSHPubKeys == nil {\n\t\ty.SSH.LoadDotSSHPubKeys = ptr.Of(false) // was true before Lima v1.0\n\t}\n\n\tif y.SSH.ForwardAgent == nil {\n\t\ty.SSH.ForwardAgent = d.SSH.ForwardAgent\n\t}\n\tif o.SSH.ForwardAgent != nil {\n\t\ty.SSH.ForwardAgent = o.SSH.ForwardAgent\n\t}"
+      },
+      {
+        "from": 662,
+        "to": 680,
+        "text": "\n\ty.MountTypesUnsupported = slices.Concat(o.MountTypesUnsupported, y.MountTypesUnsupported, d.MountTypesUnsupported)\n\n\t// MountType has to be resolved before resolving Mounts\n\tif y.MountType == nil {\n\t\ty.MountType = d.MountType\n\t}\n\tif o.MountType != nil {\n\t\ty.MountType = o.MountType\n\t}\n\n\tif y.MountInotify == nil {\n\t\ty.MountInotify = d.MountInotify\n\t}\n\tif o.MountInotify != nil {\n\t\ty.MountInotify = o.MountInotify\n\t}\n\tif y.MountInotify == nil {\n\t\ty.MountInotify = ptr.Of(false)"
+      },
+      {
+        "from": 682,
+        "to": 700,
+        "text": "\n\t// Combine all mounts; highest priority entry determines writable status.\n\t// Only works for exact matches; does not normalize case or resolve symlinks.\n\tmounts := make([]limatype.Mount, 0, len(d.Mounts)+len(y.Mounts)+len(o.Mounts))\n\tmountPoint := make(map[string]int)\n\tfor _, mount := range slices.Concat(d.Mounts, y.Mounts, o.Mounts) {\n\t\tif out, err := executeHostTemplate(mount.Location, instDir, y.Param); err == nil {\n\t\t\tmount.Location = filepath.Clean(out.String())\n\t\t} else {\n\t\t\tlogrus.WithError(err).Warnf(\"Couldn't process mount location %#q as a template\", mount.Location)\n\t\t}\n\t\t// Expand a path that begins with `~`. Relative paths are not modified, and rejected by Validate() later.\n\t\tif localpathutil.IsTildePath(mount.Location) {\n\t\t\tif location, err := localpathutil.Expand(mount.Location); err == nil {\n\t\t\t\tmount.Location = location\n\t\t\t} else {\n\t\t\t\tlogrus.WithError(err).Warnf(\"Couldn't expand location %#q\", mount.Location)\n\t\t\t}\n\t\t}"
+      },
+      {
+        "from": 751,
+        "to": 769,
+        "text": "\t\t\tmounts = append(mounts, mount)\n\t\t}\n\t}\n\ty.Mounts = mounts\n\n\tfor i := range y.Mounts {\n\t\tmount := &y.Mounts[i]\n\t\tif mount.SSHFS.Cache == nil {\n\t\t\tmount.SSHFS.Cache = ptr.Of(true)\n\t\t}\n\t\tif mount.SSHFS.FollowSymlinks == nil {\n\t\t\tmount.SSHFS.FollowSymlinks = ptr.Of(false)\n\t\t}\n\t\tif mount.SSHFS.SFTPDriver == nil {\n\t\t\tmount.SSHFS.SFTPDriver = ptr.Of(\"\")\n\t\t}\n\t\tif mount.NineP.SecurityModel == nil {\n\t\t\tmounts[i].NineP.SecurityModel = ptr.Of(Default9pSecurityModel)\n\t\t}"
+      },
+      {
+        "from": 834,
+        "to": 852,
+        "text": "\t\ty.NestedVirtualization = ptr.Of(false)\n\t}\n\n\tif y.Plain == nil {\n\t\ty.Plain = d.Plain\n\t}\n\tif o.Plain != nil {\n\t\ty.Plain = o.Plain\n\t}\n\tif y.Plain == nil {\n\t\ty.Plain = ptr.Of(false)\n\t}\n\n\tfixUpForPlainMode(y)\n}\n\n// ExistingLimaVersion returns empty if the instance was created with Lima prior to v0.20.\nfunc ExistingLimaVersion(instDir string) string {\n\tif !IsExistingInstanceDir(instDir) {"
+      },
+      {
+        "from": 863,
+        "to": 881,
+        "text": "\treturn version.Version\n}\n\nfunc fixUpForPlainMode(y *limatype.LimaYAML) {\n\tif !*y.Plain {\n\t\treturn\n\t}\n\tdeleteNonStaticPortForwards(&y.PortForwards)\n\ty.Mounts = nil\n\ty.Containerd.System = ptr.Of(false)\n\ty.Containerd.User = ptr.Of(false)\n\ty.TimeZone = ptr.Of(\"\")\n}\n\n// deleteNonStaticPortForwards removes all non-static port forwarding rules in case of Plain mode.\nfunc deleteNonStaticPortForwards(portForwards *[]limatype.PortForward) {\n\tstaticPortForwards := make([]limatype.PortForward, 0, len(*portForwards))\n\tfor _, rule := range *portForwards {\n\t\tif rule.Static {"
+      }
+    ]
+  },
+  {
+    "url": "https://api.github.com/repos/lima-vm/lima/contents/pkg/store/dir.go?ref=v2.1.4",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "url": "https://cloud-images.ubuntu.com/releases/noble/release-20260615/SHA256SUMS",
+    "accessed_at": "2026-09-07T05:20:33.687912+00:00",
+    "sha256": "7732dc066499ad8a1abb82cf9e900b5f6ffc40e1f61dad7de60f6d9e25803bd0",
+    "matching_lines": [
+      "cafa1a965b591b7c4184b484ffd8e625981a79d48f9b4ae8a4adf7b4c5ade927 *ubuntu-24.04-server-cloudimg-arm64.img"
+    ]
+  },
+  {
+    "url": "https://cloud-images.ubuntu.com/releases/noble/release-20260615/ubuntu-24.04-server-cloudimg-arm64.img",
+    "accessed_at": "2026-09-07T05:20:37.812560+00:00",
+    "request": "HEAD; no image downloaded",
+    "status": 200,
+    "content_length": "614949888",
+    "last_modified": "Fri, 19 Jun 2026 18:31:45 GMT",
+    "content_type": "application/octet-stream"
+  }
+]

@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "recorded_at": "2026-09-07T16:32:28.898599+00:00",
+  "decision": "APPROVED_DRIVER_SELF_BINDING_DELTA_AND143_RECORDED_CONTROL_EXECUTIONS",
+  "author": "/root",
+  "source": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "5d9f5f4c81ff51ee70922c876eefb91c6e669d56",
+    "tree": "3fbc4908ae41fab311e5e936e3ec8913199da7ad",
+    "diff_sha256": "1e83f6e7f3eb7e52effeda42f6e72ffc2d7733fb3e44058290bea482417f2884",
+    "source_manifest_sha256": "fbe71edc05220102285ab690c3adaaf653633e33840381963fa2cfb6d4643699"
+  },
+  "driver": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/run_package_controls_01.py",
+    "sha256": "3dfd0d545ba93b042361686f71958e750af69f2cec2452b41b08fa0d96a4ce7b",
+    "bytes": 3230,
+    "lines": 66,
+    "reviewed_line_ranges": [
+      [
+        1,
+        66
+      ]
+    ],
+    "before_after_runtime_hash": true,
+    "recorded_driver_sha256": "3dfd0d545ba93b042361686f71958e750af69f2cec2452b41b08fa0d96a4ce7b",
+    "delta_reasoning": "New lines33-34 hash the executing driver before loading tests;54-55 report its exact path/hash;58checks current bytes afterexecution;60and62 expose and require stability. Existing AST/discovery equality, test assertions, no-skips and test-source stability checks remain intact."
+  },
+  "execution": {
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-07-local-readiness/reviews/run_package_controls_01.py"
+    ],
+    "started_at": "2026-09-07T16:28:28.232248+00:00",
+    "finished_at": "2026-09-07T16:28:31.022205+00:00",
+    "exit_code": 0,
+    "tests": 143,
+    "errors": 0,
+    "failures": 0,
+    "skips": 0,
+    "raw_unique_ok_descriptors": 143,
+    "all_raw_ids_equal_logged_discovery_equal_current_ast": true,
+    "all7_test_file_hashes_match_logged_execution": true,
+    "suites": [
+      {
+        "path": "scripts/release/tests/test_third_party_notices.py",
+        "sha256": "0a395e8b064dea6ec229509026abfd5ec7c7f5a5a23969f606e461100f42eed3",
+        "tests": 32
+      },
+      {
+        "path": "scripts/release/tests/test_notice_git_bytes.py",
+        "sha256": "a1a4196e301f7a310efd4ce4a6f92b2be16cefeafa5b5feabe409200d74f6ba6",
+        "tests": 2
+      },
+      {
+        "path": "scripts/release/tests/test_android_release_artifacts.py",
+        "sha256": "f8b9a707ef2a023fce7fa1a2cd658a0820042af4e28aae647d91567d80004963",
+        "tests": 17
+      },
+      {
+        "path": "scripts/release/tests/test_ios_release_artifacts.py",
+        "sha256": "e5239b6587b963d009a2a477de6d6e1e36bac5c03e144059c92657527ec3e1c6",
+        "tests": 29
+      },
+      {
+        "path": "scripts/release/tests/test_workflow_contract.py",
+        "sha256": "b2e5f6af1a37f86e5e47c3c69e7a31afb1b4090034c202a39c7bfc3a93f3e219",
+        "tests": 43
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/test_aab_package_inspection_02.py",
+        "sha256": "28afd0b61324c2278983b60db6b0150581b62f8783aa15fbfc570872f2944b59",
+        "tests": 15
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/test_build_lane_group_retirement.py",
+        "sha256": "6933afa3dca7e1fa89886500806491ca09d27d499d9b94dd8c92158102509878",
+        "tests": 5
+      }
+    ],
+    "source_before_after_exactly_equal": true,
+    "runner_before_after_exactly_equal": true,
+    "driver_unchanged": true,
+    "test_inputs_unchanged": true
+  },
+  "relation_to_prior_receipt": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/package-controls-01/receipt.json",
+    "changed": false,
+    "scope": "This is a new actual143-test run with the added Git formatting method and own-driver hash. It does not retroactively invent runtime selfbinding for older220-testbatch. Older pre-run baseline can still establish separate preparation provenance."
+  },
+  "cleanup": {
+    "stop_exit": 0,
+    "stop_log": "No Gradle daemons are running.",
+    "stopped_at": "2026-09-07T16:28:31.292211+00:00",
+    "cleanup_completed_at": "2026-09-07T16:28:31.409719+00:00",
+    "remaining_owned_workers": [],
+    "remaining_artifact_workers": [],
+    "retained_or_remaining_outputs": [],
+    "cleanup_errors": [],
+    "task_scratch_absent_at_review": true,
+    "reviewer_started_build_tests_native_apps_or_workers": false
+  },
+  "limits": [
+    "No actual AAB, native SDK/DWARF/vtool commands, unsignediOSapp, normal8+1app launch, LANphysicaldevice, signing, publication or legal proof. This batch runs only the package controls, not normal78again.",
+    "NewGitformatting assertion semantic review andfullworkflow/coordinator implementation review remain delegated to release_fix_review; this review independently confirms their143execution IDs and hashes, not a duplicate full author review.",
+    "User-protected source/audit material is preserved; only this new report written by reviewer."
+  ],
+  "evidence": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/package-controls-bound-02/receipt.json",
+      "sha256": "0d20926db69360a5ea5c7afe05ef1d1c5793b628eab05efa7f2fd8e252c9ad85",
+      "bytes": 296493,
+      "lines": 6303
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/package-controls-bound-02/gradle.log",
+      "sha256": "fb35d2b1e20cddc2f7a821f98f916e0a3587633d4008e4e99c5d51c3143902d5",
+      "bytes": 33793,
+      "lines": 152
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/package-controls-bound-02/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31,
+      "lines": 1
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/package-controls-bound-02/artifact-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3,
+      "lines": 1
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/package-controls-bound-02/test-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3,
+      "lines": 1
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+410:     )
+411: 
+412: /** A four dimensional bounds using [Dp] for units */
+413: @Immutable
+414: @Suppress("DataClassDefinition")
+415: data class DpRect(
+416:     @Stable val left: Dp,
+417:     @Stable val top: Dp,
+418:     @Stable val right: Dp,
+419:     @Stable val bottom: Dp,
+420: ) {
+421:     /** Constructs a [DpRect] from the top-left [origin] and the width and height in [size]. */
+422:     constructor(
+423:         origin: DpOffset,
+424:         size: DpSize,
+425:     ) : this(origin.x, origin.y, origin.x + size.width, origin.y + size.height)
+426: 
+427:     companion object
+428: }
+429: 
+430: /** A width of this Bounds in [Dp]. */
+431: @Stable
+432: inline val DpRect.width: Dp
+433:     get() = right - left
+434: 
+435: /** A height of this Bounds in [Dp]. */
+436: @Stable
+437: inline val DpRect.height: Dp
+438:     get() = bottom - top
+439: 
+440: /** Returns the size of the [DpRect]. */
+441: @Stable
+442: inline val DpRect.size: DpSize
+443:     get() = DpSize(width, height)

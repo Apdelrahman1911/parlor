@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "recorded_at": "2026-09-06T14:55:57.728926+00:00",
+  "classification": "ROOT_NATIVE_EXECUTION_GO_AFTER_CONTROL_PASS",
+  "control_sha256": "59e97515d3fa919edc0232d7717bee987d0ad3d7a30a89ac2a743933651619cd",
+  "source_review_record": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-ios-wrapper-smoke-v1-controls-01.json",
+    "sha256": "48ef8d9fefea36feaa79ce35b90776f4ba87a684cbccb9f8b6303cce31fd76c6"
+  },
+  "control_cycle": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-controls-01",
+    "receipt_sha256": "320babddc67bc38ec268f0fe4314f8906594cf5111281f2096922453380b8043",
+    "log_sha256": "dbed3ada70e99ff16156c87bc994cd1942843e476e19d01879e82ea55899cd64",
+    "status": "PASS",
+    "exit_code": 0,
+    "tests": 37,
+    "passed": 37,
+    "skipped": 0,
+    "failed": 0,
+    "seconds": 0.091,
+    "verification": "Read complete raw log; all 37 descriptors independently match current AST inventory exactly once, every status ok. Recomputed all 11 control hashes before and after cycle; exact approved aggregate. Generic cycle receipt alone binds only its own runner, so separately hashbound smoke controls here."
+  },
+  "source_identity": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+    "diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "count": 669,
+    "current_input_drift": []
+  },
+  "cleanup": {
+    "status": "PASS",
+    "stop_exit_code": 0,
+    "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+    "scratch_absent": true,
+    "remaining_generated_outputs": [],
+    "owned_workers_remaining": [],
+    "cleanup_errors": [],
+    "method": "Read raw stop/receipt; exact cycle scratch and current module/build-logic outputs independently confirmed absent. No cleanup actions taken by reviewer."
+  },
+  "root_only_execution_command": [
+    "/usr/bin/python3",
+    "-B",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/native/ios_wrapper_smoke_v1/run_ios_wrapper_smoke_cycle.py",
+    "ios-wrapper-smoke-01",
+    "59e97515d3fa919edc0232d7717bee987d0ad3d7a30a89ac2a743933651619cd"
+  ],
+  "conditions": [
+    "Root sole lane, no original source/control modifications, exact frozen source guards and finalization must remain enabled.",
+    "Approval is for execution, not outcome. Require exact five original XCTest results and raw source/copy/cleanup receipts afterward.",
+    "One cold launch plus four UIKit fixtures does not complete DS-C01 language/session matrix."
+  ],
+  "reviewer_execution": "No test/build/native/process/cleanup execution by reviewer; read/hash/AST/result inspection only."
+}

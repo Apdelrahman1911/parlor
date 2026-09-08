@@ -1,0 +1,17 @@
+{
+  "url": "https://api.github.com/repos/apple-oss-distributions/xnu/contents/libsyscall/wrappers/libproc/libproc.c?ref=xnu-12377.61.12",
+  "accessed_at": "2026-09-07T04:56:29.221484+00:00",
+  "sha256": "5c8a771427e04c5e1d55c4cdf5a077f3b52c5be4a091683b970084bfdda76df2",
+  "excerpts": [
+    {
+      "from": 74,
+      "to": 98,
+      "text": "\nint\nproc_listpgrppids(pid_t pgrpid, void * buffer, int buffersize)\n{\n\tint numpids;\n\tnumpids = proc_listpids(PROC_PGRP_ONLY, (uint32_t)pgrpid, buffer, buffersize);\n\tif (numpids == -1) {\n\t\treturn -1;\n\t} else {\n\t\treturn numpids / sizeof(int);\n\t}\n}\n\nint\nproc_listchildpids(pid_t ppid, void * buffer, int buffersize)\n{\n\tint numpids;\n\tnumpids = proc_listpids(PROC_PPID_ONLY, (uint32_t)ppid, buffer, buffersize);\n\tif (numpids == -1) {\n\t\treturn -1;\n\t} else {\n\t\treturn numpids / sizeof(int);\n\t}\n}\n"
+    },
+    {
+      "from": 86,
+      "to": 110,
+      "text": "\nint\nproc_listchildpids(pid_t ppid, void * buffer, int buffersize)\n{\n\tint numpids;\n\tnumpids = proc_listpids(PROC_PPID_ONLY, (uint32_t)ppid, buffer, buffersize);\n\tif (numpids == -1) {\n\t\treturn -1;\n\t} else {\n\t\treturn numpids / sizeof(int);\n\t}\n}\n\n\nint\nproc_pidinfo(int pid, int flavor, uint64_t arg, void *buffer, int buffersize)\n{\n\tint retval;\n\n\tif ((retval = __proc_info(PROC_INFO_CALL_PIDINFO, pid, flavor, arg, buffer, buffersize)) == -1) {\n\t\treturn 0;\n\t}\n\n\treturn retval;\n}"
+    }
+  ]
+}

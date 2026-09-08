@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-06T09:53:44.749066+00:00",
+  "reviewer": "/root/native_fix_review",
+  "scope": "Read-only exact previously recorded secondary FIFO/parent and PID identities; no broad temp scans, cleanup, signal, or original receipt modification.",
+  "original_receipt_status": "FAIL / cleanup_status FAIL retained unchanged",
+  "original_error": {
+    "pid": 44714,
+    "start": "Sun Sep 6 12:28:00 2026",
+    "error_type": "RuntimeError",
+    "message": "Cannot verify task-owned Apple worker UID"
+  },
+  "recorded_process": {
+    "pid": 44714,
+    "ppid": 43565,
+    "pgid": 43565,
+    "start": "Sun Sep 6 12:28:00 2026",
+    "command": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/Library/Xcode/Overlays/AssetCatalogSimulatorAgent --hostToRemoteFIFO /var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-43565/IB/340F344B-1DD5-409F-A73F-93E681463A47.HostToRemote --remoteToHostFIFO /var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-43565/IB/340F344B-1DD5-409F-A73F-93E681463A47.RemoteToHost",
+    "role": "command",
+    "proof": "Observed child/group of identity-checked task process"
+  },
+  "matching_previously_attested_fifo_records": 2,
+  "parent_and_worker_identity_match_prior_records": true,
+  "both_original_argv_fifo_paths_match_records": true,
+  "prior_final_cleanup": {
+    "status": "PASS",
+    "removed": [
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-43565/IB/340F344B-1DD5-409F-A73F-93E681463A47.RemoteToHost",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-43565/IB/340F344B-1DD5-409F-A73F-93E681463A47.HostToRemote",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-43565/IB",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-43565"
+    ],
+    "remaining": []
+  },
+  "recorded_paths": [
+    {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-43565",
+      "disposition": "ABSENT"
+    },
+    {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-43565/IB",
+      "disposition": "ABSENT"
+    },
+    {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-43565/IB/340F344B-1DD5-409F-A73F-93E681463A47.HostToRemote",
+      "disposition": "ABSENT"
+    },
+    {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-43565/IB/340F344B-1DD5-409F-A73F-93E681463A47.RemoteToHost",
+      "disposition": "ABSENT"
+    }
+  ],
+  "recorded_processes": [
+    {
+      "expected": {
+        "pid": 44714,
+        "start": "Sun Sep 6 12:28:00 2026"
+      },
+      "command": [
+        "ps",
+        "-p",
+        "44714",
+        "-o",
+        "pid=,lstart="
+      ],
+      "exit_code": 1,
+      "disposition": "PID_ABSENT",
+      "observed": null
+    },
+    {
+      "expected": {
+        "pid": 43565,
+        "start": "Sun Sep 6 12:26:07 2026"
+      },
+      "command": [
+        "ps",
+        "-p",
+        "43565",
+        "-o",
+        "pid=,lstart="
+      ],
+      "exit_code": 1,
+      "disposition": "PID_ABSENT",
+      "observed": null
+    }
+  ],
+  "supplemental_status": "EXACT_RECORDED_OUTPUTS_AND_WORKER_IDENTITIES_ABSENT",
+  "reason": "The error names the same worker/start and exact pair already fully attested in the durable ledger. That pair and its attested empty parents were removed by the original finalizer; this supplemental read independently checks their current absence.",
+  "unresolved": "The failed ps UID call retained only an exception, not exit/stdout/stderr; an exit race is plausible but not established. No absence or ownership claims for paths never observed in the original argv or ledger.",
+  "references": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-02/receipt.json",
+      "sha256": "c03616f76e91061c810debf7884b98d7b0bf02abcfd83cbcfa21c4ba8049e13e"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-02/secondary-fifo-errors.json",
+      "sha256": "13b6ede698a2292e6ed1eecf21423123069940c6be6fa63fbceac28b18661e2e"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-02/secondary-fifo-ownership-final.json",
+      "sha256": "0b35e93835d1989d51f3ecc67851209fee8ff6243af3db793a24ece1f9573b35"
+    }
+  ],
+  "deleted_paths": [],
+  "signalled_processes": [],
+  "builds_or_tests_started": 0
+}

@@ -1,0 +1,42 @@
+{
+  "at": "2026-09-07T11:39:55.496293+00:00",
+  "reviewer": "/root/release_fix_review",
+  "baseline_head": "f5ea8045bd903c255041b198f54aca67e893612f",
+  "supersedes_no_original_evidence": true,
+  "corrections": [
+    {
+      "prior": "diagnosis-01.json source_files",
+      "correction": "The source hash inventory used nonrecursive glob for convention Kotlin files. Append these hashes for the already inspected three nested convention plugins; do not treat absent hash entries as source not present."
+    },
+    {
+      "prior": "linux-no-kapt-applicability-guard-draft.patch v1",
+      "correction": "Root review identified omitted .kts precompiled convention sources. v2 scans both .kt/.kts, adds matching task inputs and executable owned nested .gradle.kts guard fixture. It remains unapplied/uncompiled/untested."
+    }
+  ],
+  "convention_sources": [
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/parlor/buildlogic/DetektConventionPlugin.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/src/main/kotlin/com/parlor/buildlogic/DetektConventionPlugin.kt",
+      "sha256": "8d5fd3fb3f13d9d5cb02f89c29a57aab8d71c89cdf6dd0ac41161942109bd825",
+      "lines": 59
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpComposeLibraryConventionPlugin.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpComposeLibraryConventionPlugin.kt",
+      "sha256": "d8a7cd25a7062f20ae871a068b724c061c98f3831aae4d90701c5cbbf7b4e660",
+      "lines": 19
+    },
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpLibraryConventionPlugin.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpLibraryConventionPlugin.kt",
+      "sha256": "9d3b07942123f5a4c2da229aa873d5d7b7d422b120d1ff42014cfe066eefbc63",
+      "lines": 72
+    }
+  ],
+  "current_draft": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/drafts/linux-no-kapt-applicability-guard-v2-draft.patch",
+    "sha256": "089fa6e65b7b37974dfc3a600df0c76e678e91ec385ce9a3a9166e2610f15a19",
+    "depends_on": "linux-exact-kotlin-advisory-triage-draft.patch"
+  },
+  "original_draft_preserved": true
+}

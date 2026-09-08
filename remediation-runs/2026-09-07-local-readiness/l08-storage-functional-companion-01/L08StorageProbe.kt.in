@@ -1,0 +1,630 @@
+// COPY-ONLY app-host verification. Synthetic payloads remain within this process/sandbox.
+@file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class, kotlinx.cinterop.BetaInteropApi::class)
+
+package com.parlor.app.readiness
+
+import com.parlor.app.resolveLocalResumeDestination
+import com.parlor.app.shell.game.GameShellRegistry
+import com.parlor.app.shell.game.GameShellRouter
+import com.parlor.app.shell.home.readLocalRecoveryInventory
+import com.parlor.app.storage.IosSnapshotFileSystem
+import com.parlor.app.storage.readBoundedSnapshotBytes
+import com.parlor.content.repository.CaseRepository
+import com.parlor.core.ids.SessionId
+import com.parlor.core.result.DataError
+import com.parlor.core.result.Result
+import com.parlor.engine.snapshot.GameSnapshot
+import com.parlor.games.mafia.MafiaDefinition
+import com.parlor.games.mafia.readiness.L08MafiaSnapshots
+import com.parlor.games.whodunit.WhodunitDefinition
+import com.parlor.games.whodunit.readiness.L08WhodunitSnapshots
+import com.parlor.networking.transport.RoomTransport
+import com.parlor.storage.snapshot.FileBackedSnapshotStore
+import com.parlor.storage.snapshot.SnapshotFileSystem
+import com.parlor.storage.snapshot.SnapshotStore
+import com.parlor.transport.p2p.P2pKitRoomTransport
+import kotlinx.cinterop.ByteVar
+import kotlinx.cinterop.ObjCObjectVar
+import kotlinx.cinterop.alloc
+import kotlinx.cinterop.cValue
+import kotlinx.cinterop.ptr
+import kotlinx.cinterop.value
+import kotlinx.cinterop.addressOf
+import kotlinx.cinterop.allocArray
+import kotlinx.cinterop.memScoped
+import kotlinx.cinterop.toKString
+import kotlinx.cinterop.usePinned
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+import org.koin.mp.KoinPlatform
+import platform.Foundation.NSApplicationSupportDirectory
+import platform.Foundation.NSBundle
+import platform.Foundation.NSData
+import platform.Foundation.NSError
+import platform.Foundation.NSCocoaErrorDomain
+import platform.Foundation.NSPOSIXErrorDomain
+import platform.Foundation.NSOperatingSystemVersion
+import platform.Foundation.NSDocumentDirectory
+import platform.Foundation.NSFileHandle
+import platform.Foundation.NSFileManager
+import platform.Foundation.NSFileProtectionComplete
+import platform.Foundation.NSFileProtectionNone
+import platform.Foundation.NSFileProtectionCompleteUnlessOpen
+import platform.Foundation.NSFileProtectionCompleteUntilFirstUserAuthentication
+import platform.Foundation.NSFileProtectionCompleteWhenUserInactive
+import platform.Foundation.NSFileProtectionKey
+import platform.Foundation.NSFileType
+import platform.Foundation.NSFileTypeDirectory
+import platform.Foundation.NSFileTypeRegular
+import platform.Foundation.NSHomeDirectory
+import platform.Foundation.NSNumber
+import platform.Foundation.NSProcessInfo
+import platform.Foundation.NSURL
+import platform.Foundation.NSURLIsExcludedFromBackupKey
+import platform.Foundation.NSURLVolumeSupportsFileProtectionKey
+import platform.Foundation.NSUserDomainMask
+import platform.Foundation.closeFile
+import platform.Foundation.create
+import platform.Foundation.fileHandleForWritingAtPath
+import platform.Foundation.seekToFileOffset
+import platform.Foundation.synchronizeFile
+import platform.Foundation.writeData
+import platform.posix.PATH_MAX
+import platform.posix.realpath
+
+object L08StorageProbe {
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    private var active = false
+    private var commandIndex = 0
+    private var expected: GameSnapshot? = null
+    private var stage = "context"
+    private var protectionDiagnostic: JsonObject? = null
+    private val aliases = listOf("wc", "we", "mon", "moff", "legacy", "damaged", "dual")
+    private val plans = mapOf(
+        1 to listOf("save"), 2 to listOf("load", "continue"),
+        3 to listOf("save"), 4 to listOf("load", "continue"),
+        5 to listOf("save"), 6 to listOf("load", "continue"),
+        7 to listOf("save"), 8 to listOf("load", "continue"),
+        9 to listOf("legacy-seed"), 10 to listOf("legacy-load", "continue"),
+        11 to listOf("legacy-neighbor", "discard-observed"),
+        12 to listOf("dual-preserved", "discard-observed"), 13 to listOf("final-absence"),
+    )
+
+    fun command(action: String, onJson: (String) -> Unit) {
+        if (active) return // The XCTest must fail if an action produces no distinct receipt.
+        active = true
+        scope.launch {
+            stage = "context" // A new command must not inherit the previous command's stage.
+            protectionDiagnostic = null
+            var token = ""
+            var boot = 0
+            var finished = false
+            try {
+                val env = NSProcessInfo.processInfo.environment
+                token = env["PARLOR_DSC01_RUN_TOKEN"] as? String ?: error("context")
+                boot = (env["PARLOR_L08_STORAGE_BOOT"] as? String)?.toIntOrNull() ?: error("context")
+                requireContext(token, "l08-storage")
+                val plan = checkNotNull(plans[boot])
+                check(plan.getOrNull(commandIndex) == action)
+                val checks = withTimeout(60_000) { execute(token, boot, action) }
+                commandIndex++
+                finished = commandIndex == plan.size
+                onJson(buildJsonObject {
+                    put("schema_version", 1); put("status", "PASS")
+                    put("boot_ordinal", boot); put("command_ordinal", commandIndex)
+                    put("run_token", token); put("action", action); put("checks", checks)
+                    put("physical_or_store_evidence", false)
+                }.toString())
+            } catch (cancelled: CancellationException) {
+                // Cancellation is not storage absence and cannot be reported as success.
+                onJson(failed(token, boot, action, "cancelled"))
+                finished = true
+                throw cancelled
+            } catch (_: Exception) {
+                onJson(failed(token, boot, action, "fixture_or_boundary_failure"))
+                finished = true
+            } finally {
+                active = false
+                if (finished) {
+                    expected?.payload?.fill(0)
+                    expected = null
+                    protectionDiagnostic = null
+                    L08WhodunitSnapshots.release()
+                    L08MafiaSnapshots.release()
+                    scope.cancel() // Own observer scope only. UI/session scopes retain their actual owner.
+                }
+            }
+        }
+    }
+
+    private suspend fun execute(token: String, boot: Int, action: String): JsonObject {
+        stage = "actual-bindings"
+        val koin = KoinPlatform.getKoin()
+        val store = koin.get<SnapshotStore>()
+        val filesystem = koin.get<SnapshotFileSystem>()
+        check(store is FileBackedSnapshotStore && filesystem is IosSnapshotFileSystem)
+        check(koin.get<RoomTransport>() is P2pKitRoomTransport)
+        val paths = OwnedSnapshotPaths(token, ::enterStage, ::recordProtectionDiagnostic)
+        val alias = when (boot) {
+            in 1..8 -> aliases[(boot - 1) / 2]
+            9, 10 -> "legacy"
+            11 -> "damaged"
+            12 -> "dual"
+            else -> "none"
+        }
+        val id = paths.id(alias.takeIf { it != "none" } ?: "wc")
+        when (action) {
+            "save", "legacy-seed" -> {
+                stage = "initial-absence"
+                aliases.forEach { checkAbsent(store, paths, it) }
+                stage = "reachable-checkpoint"
+                val envelope = envelope(id, alias)
+                expected = envelope
+                if (action == "save") {
+                    stage = "real-store-save"
+                    check(store.save(envelope) is Result.Success)
+                    assertEnvelope(store, id, envelope)
+                    paths.protectedMetadata(alias)
+                } else {
+                    stage = "owned-legacy-seed"
+                    val encoded = koin.get<Json>().encodeToString(GameSnapshot.serializer(), envelope).encodeToByteArray()
+                    try {
+                        paths.seedLegacy("legacy", encoded)
+                        paths.seedLegacy("damaged", "!malformed-l08-synthetic-neighbor".encodeToByteArray())
+                    } finally { encoded.fill(0) }
+                    // Do not read via store/list here: migration must occur on the next process boot.
+                    paths.assertLegacyPresent("legacy")
+                    paths.assertLegacyPresent("damaged")
+                    paths.assertProtectedAbsent("legacy")
+                    paths.assertProtectedAbsent("damaged")
+                    // The dual-copy case is a second independently reducer-built
+                    // envelope. Do not copy another session's encoded identity.
+                    L08MafiaSnapshots.release()
+                    stage = "reachable-checkpoint"
+                    val dual = envelope(paths.id("dual"), "dual")
+                    try {
+                        stage = "real-store-save"
+                        check(store.save(dual) is Result.Success)
+                        assertEnvelope(store, dual.sessionId, dual)
+                        stage = "owned-legacy-seed"
+                        val dualBytes = koin.get<Json>().encodeToString(GameSnapshot.serializer(), dual).encodeToByteArray()
+                        try { paths.seedDualCopyAndDamageTag(dualBytes) } finally { dualBytes.fill(0) }
+                    } finally { dual.payload.fill(0) }
+                    // No store/list read after tampering: the next cold boot
+                    // must exercise production precedence and preservation.
+                }
+                return if (action == "save") checks("actual_bindings", "initial_absence", "reachable_checkpoint",
+                    "real_store_save_roundtrip", "protected_metadata") else checks("actual_bindings", "initial_absence",
+                    "reachable_checkpoint", "legacy_seed_exclusive", "healthy_and_malformed_coexist",
+                    "valid_dual_copy_seeded_recognized_tag_damaged")
+            }
+            "load", "legacy-load" -> {
+                stage = "restart-envelope"
+                val envelope = envelope(id, alias)
+                expected = envelope
+                assertEnvelope(store, id, envelope)
+                stage = "production-recovery"
+                if (alias in setOf("wc", "we")) L08WhodunitSnapshots.verifyRecovery(store, koin.get())
+                else L08MafiaSnapshots.verifyRecovery(store, koin.get())
+                val route = resolveLocalResumeDestination(store, GameShellRouter(koin.get<GameShellRegistry>()), id)
+                check(route is Result.Success && route.data.sessionId == id && route.data.gameId == envelope.gameId)
+                stage = "protected-metadata"
+                paths.protectedMetadata(alias)
+                if (action == "legacy-load") {
+                    stage = "legacy-neighbor-isolation"
+                    val inventory = readLocalRecoveryInventory(store)
+                    check(inventory is Result.Success)
+                    check(inventory.data.entries.single { it.sessionId == id }.gameId == envelope.gameId)
+                    check(inventory.data.entries.single { it.sessionId == paths.id("damaged") }.gameId == null)
+                    check(inventory.data.entries.single { it.sessionId == paths.id("dual") }.gameId == null)
+                    check(inventory.data.hasUnreadableRecord)
+                    checkCorrupted(store, paths.id("damaged"))
+                    paths.assertLegacyAbsent("legacy")
+                    paths.assertLegacyPresent("damaged")
+                    paths.assertProtectedAbsent("damaged")
+                    paths.legacyExcluded()
+                    checkCorrupted(store, paths.id("dual"))
+                    paths.assertLegacyPresent("dual")
+                    paths.protectedMetadata("dual")
+                }
+                L08UiSeam.expect(id, alias)
+                return if (action == "legacy-load") checks("actual_bindings", "restart_envelope_equal",
+                    "production_recovery", "exact_home_destination", "protected_metadata", "valid_legacy_migrated",
+                    "malformed_retained_excluded", "dual_copy_failed_closed_and_retained", "independent_inventory") else checks("actual_bindings",
+                    "restart_envelope_equal", "production_recovery", "exact_home_destination", "protected_metadata")
+            }
+            "continue" -> {
+                stage = "actual-home-controller"
+                check(L08UiSeam.resumeTaps == 1 && L08UiSeam.discardTaps == 0)
+                if (alias in setOf("wc", "we")) {
+                    withTimeout(10_000) { while (!L08WhodunitSnapshots.isAttached()) delay(25) }
+                    L08WhodunitSnapshots.continueActualResumedController()
+                } else {
+                    withTimeout(10_000) { while (!L08MafiaSnapshots.isAttached()) delay(25) }
+                    L08MafiaSnapshots.continueActualResumedController()
+                }
+                stage = "actual-terminal-writer-delete"
+                // Never delete directly: this must be the real resumed UI's SerializedSnapshotWriter.
+                awaitAbsent(store, id)
+                paths.assertAbsent(alias)
+                return checks("actual_home_tap", "actual_resumed_controller", "restored_state_equal",
+                    "legal_continuation", "terminal_winner", "actual_terminal_writer_delete")
+            }
+            "legacy-neighbor" -> {
+                stage = "retained-corrupt-neighbor"
+                checkAbsent(store, paths, "legacy")
+                checkCorrupted(store, id)
+                paths.assertLegacyPresent("damaged")
+                paths.legacyExcluded()
+                L08UiSeam.expect(id, "damaged")
+                return checks("healthy_terminal_absent_after_restart", "malformed_still_addressable",
+                    "malformed_still_excluded")
+            }
+            "dual-preserved" -> {
+                stage = "dual-copy-retained-after-restart"
+                checkAbsent(store, paths, "legacy")
+                checkAbsent(store, paths, "damaged")
+                checkCorrupted(store, id)
+                paths.assertLegacyPresent("dual")
+                val retained = envelope(id, "dual")
+                expected = retained
+                paths.assertLegacyMatches("dual", retained, koin.get())
+                paths.protectedMetadata("dual")
+                paths.legacyExcluded()
+                L08UiSeam.expect(id, "dual")
+                return checks("prior_records_absent_after_restart", "recognized_damage_failed_closed",
+                    "recoverable_legacy_still_present", "retained_legacy_envelope_equal", "legacy_still_excluded", "protected_metadata")
+            }
+            "discard-observed" -> {
+                stage = "explicit-retry-discard"
+                check(L08UiSeam.resumeTaps == 1 && L08UiSeam.retryTaps == 1 && L08UiSeam.discardTaps == 1)
+                check(L08UiSeam.recoveryShows == 2)
+                awaitAbsent(store, id)
+                paths.assertAbsent(alias)
+                return checks("actual_home_tap", "actual_retry_tap", "actual_discard_tap", "retry_remained_failed", "explicit_discard_deleted")
+            }
+            "final-absence" -> {
+                stage = "final-restart-absence"
+                aliases.forEach { checkAbsent(store, paths, it) }
+                return checks("all_synthetic_records_absent_after_restart", "strict_absence_not_unavailable")
+            }
+            else -> error("Unsupported fixture action")
+        }
+    }
+
+    private suspend fun envelope(id: SessionId, alias: String): GameSnapshot {
+        val koin = KoinPlatform.getKoin()
+        return if (alias in setOf("wc", "we")) L08WhodunitSnapshots.expectedEnvelope(
+            koin.get<CaseRepository>(), koin.get<WhodunitDefinition>(), koin.get(), id, alias == "we")
+        else L08MafiaSnapshots.expectedEnvelope(koin.get<MafiaDefinition>(), id, alias != "moff")
+    }
+
+    private suspend fun assertEnvelope(store: SnapshotStore, id: SessionId, expected: GameSnapshot) {
+        stage = "real-store-load"
+        val loaded = store.load(id)
+        check(loaded is Result.Success)
+        try {
+            stage = "loaded-envelope-equality"
+            check(loaded.data == expected)
+        } finally { loaded.data.payload.fill(0) }
+    }
+
+    private suspend fun checkCorrupted(store: SnapshotStore, id: SessionId) {
+        val loaded = store.load(id)
+        check(loaded is Result.Failure && loaded.error == DataError.CorruptedData)
+    }
+
+    private suspend fun checkAbsent(store: SnapshotStore, paths: OwnedSnapshotPaths, alias: String) {
+        val loaded = store.load(paths.id(alias))
+        check(loaded is Result.Failure && loaded.error == DataError.NotFound)
+        paths.assertAbsent(alias)
+    }
+
+    private suspend fun awaitAbsent(store: SnapshotStore, id: SessionId) {
+        withTimeout(10_000) {
+            while (true) {
+                when (val loaded = store.load(id)) {
+                    is Result.Failure -> {
+                        check(loaded.error == DataError.NotFound)
+                        break
+                    }
+                    is Result.Success -> loaded.data.payload.fill(0)
+                }
+                delay(25)
+            }
+        }
+    }
+
+    // All callers provide closed literal stage names (or a previously captured stage).
+    // Returning the old stage lets nested metadata checks restore it on success only.
+    private fun enterStage(next: String): String {
+        val previous = stage
+        stage = next
+        return previous
+    }
+
+    private fun recordProtectionDiagnostic(value: JsonObject) {
+        check(protectionDiagnostic == null)
+        check(stage == "metadata-directory-protection" || stage == "metadata-file-protection")
+        protectionDiagnostic = value // Closed metadata only; never paths, bytes, or NSError descriptions.
+    }
+
+    private fun checks(vararg names: String) = buildJsonObject { names.forEach { put(it, true) } }
+    private fun failed(token: String, boot: Int, action: String, reason: String) = buildJsonObject {
+        put("schema_version", 1); put("status", "FAIL"); put("run_token", token)
+        put("boot_ordinal", boot); put("action", action); put("stage", stage); put("reason", reason)
+        if (reason == "fixture_or_boundary_failure") {
+            protectionDiagnostic?.let { put("protection_metadata", it) }
+        }
+    }.toString()
+}
+
+internal fun requireContext(token: String, scenario: String) {
+    val environment = NSProcessInfo.processInfo.environment
+    check(NSBundle.mainBundle.bundleIdentifier == "com.parlor.app.debug")
+    check(Regex("[A-Fa-f0-9]{8}(-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12}").matches(token))
+    check(environment["PARLOR_DSC01_SCENARIO"] == scenario)
+    check(environment["SIMULATOR_UDID"] == environment["PARLOR_DSC01_EXPECTED_UDID"])
+    check(environment["SIMULATOR_UDID"] is String)
+}
+
+/** Exact app-container/token paths only; no directory enumeration or broad deletion. */
+private class OwnedSnapshotPaths(
+    private val token: String,
+    private val enterStage: (String) -> String,
+    private val recordProtectionDiagnostic: (JsonObject) -> Unit,
+) {
+    private val files = NSFileManager.defaultManager
+    private val home = canonical(NSHomeDirectory())
+    private val legacy: String
+    private val protected: String
+    init {
+        val udid = NSProcessInfo.processInfo.environment["SIMULATOR_UDID"] as String
+        check(home.contains("/CoreSimulator/Devices/$udid/data/Containers/Data/Application/"))
+        legacy = directory(NSDocumentDirectory, "snapshots")
+        protected = directory(NSApplicationSupportDirectory, "Parlor/snapshots")
+    }
+    fun id(alias: String): SessionId {
+        check(alias in setOf("wc", "we", "mon", "moff", "legacy", "damaged", "dual"))
+        return SessionId("l08-${token.lowercase()}-$alias")
+    }
+    private fun name(alias: String) = id(alias).raw + FileBackedSnapshotStore.SUFFIX
+    private fun directory(kind: ULong, tail: String): String {
+        val base = checkNotNull(files.URLForDirectory(kind, NSUserDomainMask, null, false, null)?.path)
+        check(base.startsWith(NSHomeDirectory() + "/"))
+        val path = home + base.removePrefix(NSHomeDirectory()) + "/" + tail
+        requireDirectoryIfPresent(path)
+        return path
+    }
+    private fun requireDirectoryIfPresent(path: String) {
+        check(path.startsWith(home + "/"))
+        var current = home
+        path.removePrefix(home + "/").split('/').forEach { part ->
+            check(part.isNotEmpty() && part != "." && part != ".." && !part.contains('\\'))
+            current += "/$part"
+            if (files.fileExistsAtPath(current)) {
+                check(canonical(current) == current)
+                check(files.attributesOfItemAtPath(current, null)?.get(NSFileType) == NSFileTypeDirectory)
+            }
+        }
+    }
+    private fun file(directory: String, alias: String): String {
+        requireDirectoryIfPresent(directory)
+        val result = directory + "/" + name(alias)
+        if (files.fileExistsAtPath(result)) {
+            check(canonical(result) == result)
+            check(files.attributesOfItemAtPath(result, null)?.get(NSFileType) == NSFileTypeRegular)
+        }
+        return result
+    }
+    fun seedLegacy(alias: String, bytes: ByteArray) = seedLegacyInternal(alias, bytes, false)
+    private fun seedLegacyInternal(alias: String, bytes: ByteArray, allowOwnedDual: Boolean) {
+        check(bytes.isNotEmpty() && bytes.size <= 256 * 1024)
+        // Only this explicit synthetic legacy seeding operation creates a
+        // directory. Reads/metadata observers cannot repair production output.
+        requireDirectoryIfPresent(legacy)
+        if (!files.fileExistsAtPath(legacy)) {
+            check(files.createDirectoryAtPath(legacy, false, null, null))
+        }
+        requireDirectoryIfPresent(legacy)
+        val path = file(legacy, alias)
+        check(!files.fileExistsAtPath(path))
+        if (allowOwnedDual) {
+            check(alias == "dual")
+            protectedMetadata(alias)
+        } else check(!files.fileExistsAtPath(file(protected, alias)))
+        val data = bytes.usePinned { NSData.create(bytes = it.addressOf(0), length = bytes.size.toULong()) }
+        check(files.createFileAtPath(path, data, null))
+        val actual = readBoundedSnapshotBytes(path, 256 * 1024)
+        try { check(actual.contentEquals(bytes)) } finally { actual.fill(0) }
+    }
+    fun seedDualCopyAndDamageTag(legacyBytes: ByteArray) {
+        seedLegacyInternal("dual", legacyBytes, true)
+        val path = file(protected, "dual")
+        val before = readBoundedSnapshotBytes(path, 256 * 1024 + 128)
+        try {
+            check(before.size > 7 + 2 + 16 + 16 + 32)
+            check(before.copyOfRange(0, 9).contentEquals("PARSNAP".encodeToByteArray() + byteArrayOf(1, 16)))
+            val changed = byteArrayOf((before.last().toInt() xor 1).toByte())
+            try {
+                val handle = checkNotNull(NSFileHandle.fileHandleForWritingAtPath(path))
+                try {
+                    handle.seekToFileOffset((before.size - 1).toULong())
+                    val data = changed.usePinned { NSData.create(bytes = it.addressOf(0), length = 1uL) }
+                    handle.writeData(data)
+                    handle.synchronizeFile()
+                } finally { handle.closeFile() }
+                val after = readBoundedSnapshotBytes(path, 256 * 1024 + 128)
+                try {
+                    check(after.size == before.size && after.last() == changed[0])
+                    check((0 until after.lastIndex).all { after[it] == before[it] })
+                } finally { after.fill(0) }
+            } finally { changed.fill(0) }
+        } finally { before.fill(0) }
+        // Observe, never repair, original native metadata after the in-place
+        // synthetic tag mutation. No plaintext fallback/read is performed.
+        protectedMetadata("dual")
+        assertLegacyPresent("dual")
+    }
+    fun assertLegacyPresent(alias: String) { check(files.fileExistsAtPath(file(legacy, alias))) }
+    fun assertLegacyMatches(alias: String, expected: GameSnapshot, json: Json) {
+        val bytes = readBoundedSnapshotBytes(file(legacy, alias), 256 * 1024)
+        try {
+            val decoded = json.decodeFromString(GameSnapshot.serializer(), bytes.decodeToString())
+            try { check(decoded == expected) } finally { decoded.payload.fill(0) }
+        } finally { bytes.fill(0) }
+    }
+    fun assertLegacyAbsent(alias: String) { check(!files.fileExistsAtPath(file(legacy, alias))) }
+    fun assertProtectedAbsent(alias: String) { check(!files.fileExistsAtPath(file(protected, alias))) }
+    fun assertAbsent(alias: String) { assertLegacyAbsent(alias); assertProtectedAbsent(alias) }
+    fun legacyExcluded() { check(excluded(legacy)) }
+    fun protectedMetadata(alias: String) {
+        val previous = enterStage("metadata-path")
+        val path = file(protected, alias)
+        enterStage("metadata-existence")
+        check(files.fileExistsAtPath(path))
+        enterStage("metadata-directory-backup")
+        check(excluded(protected))
+        enterStage("metadata-file-backup")
+        check(excluded(path))
+        enterStage("metadata-protection-constants")
+        val key = checkNotNull(NSFileProtectionKey)
+        val protection = checkNotNull(NSFileProtectionComplete)
+        enterStage("metadata-directory-protection")
+        val directory = protectionAttributes(protected, key, protection)
+        if (!directory.complete) protectionFailure("directory", path, key, protection, directory)
+        check(directory.complete)
+        enterStage("metadata-file-protection")
+        val file = protectionAttributes(path, key, protection)
+        if (!file.complete) protectionFailure("file", path, key, protection, directory, file)
+        check(file.complete)
+        // Ciphertext header only; never retain or report any stored payload bytes.
+        enterStage("metadata-encrypted-read")
+        val bytes = readBoundedSnapshotBytes(path, 256 * 1024 + 128)
+        try {
+            enterStage("metadata-encrypted-header")
+            check(bytes.take(7).toByteArray().contentEquals("PARSNAP".encodeToByteArray()))
+        } finally { bytes.fill(0) }
+        // Do not restore in finally: a failure must retain the exact failed boundary.
+        enterStage(previous)
+    }
+    private class ProtectionRead(val complete: Boolean, val observation: JsonObject)
+
+    // Exactly one original getter per required check; the equality itself is unchanged.
+    private fun protectionAttributes(path: String, key: String, protection: String): ProtectionRead = memScoped {
+        val error = alloc<ObjCObjectVar<NSError?>>()
+        error.value = null
+        val values = files.attributesOfItemAtPath(path, error.ptr)
+        val value = values?.get(key)
+        ProtectionRead(value == protection, metadataRead(values != null, values?.containsKey(key) == true,
+            when {
+                values == null -> "unavailable"
+                !values.containsKey(key) -> "missing"
+                else -> protectionValue(value)
+            }, error.value))
+    }
+
+    private fun protectionValue(value: Any?): String = when {
+        value == null -> "null"
+        value == NSFileProtectionComplete -> "complete"
+        value == NSFileProtectionNone -> "none"
+        value == NSFileProtectionCompleteUnlessOpen -> "unless-open"
+        value == NSFileProtectionCompleteUntilFirstUserAuthentication -> "until-first-authentication"
+        // The fifth public enum is iOS17+; do not touch its symbol on iOS16.
+        NSProcessInfo.processInfo.isOperatingSystemAtLeastVersion(cValue<NSOperatingSystemVersion> {
+            majorVersion = 17; minorVersion = 0; patchVersion = 0
+        }) && value == NSFileProtectionCompleteWhenUserInactive -> "when-user-inactive"
+        value is String -> "other-string"
+        else -> "non-string"
+    }
+
+    private fun protectionFailure(target: String, path: String, key: String, protection: String,
+                                  directory: ProtectionRead, file: ProtectionRead? = null) {
+        // On directory failure, the original file assertion has NOT run. Only
+        // its already-attested exact regular-file path is sampled diagnostically.
+        val fileObservation = file?.observation ?: additionalFileObservation(path, key, protection)
+        recordProtectionDiagnostic(buildJsonObject {
+            put("schema_version", 1)
+            put("failed_target", target)
+            put("directory", buildJsonObject {
+                put("role", if (target == "directory") "required-failed" else "required-passed")
+                put("attributes", directory.observation)
+                put("volume", volumeProtection(protected))
+            })
+            put("file", buildJsonObject {
+                put("role", if (target == "file") "required-failed" else "diagnostic-only")
+                put("attributes", fileObservation)
+                put("volume", volumeProtection(path))
+            })
+        })
+    }
+
+    private fun additionalFileObservation(path: String, key: String, protection: String): JsonObject = try {
+        protectionAttributes(path, key, protection).observation
+    } catch (cancelled: CancellationException) {
+        throw cancelled
+    } catch (_: Exception) {
+        unknownMetadata("observer-exception") // Never replace the original failed directory check.
+    }
+
+    private fun volumeProtection(path: String): JsonObject = try {
+        val key = NSURLVolumeSupportsFileProtectionKey
+        if (key == null) unknownMetadata("constant-unavailable") else memScoped {
+            val error = alloc<ObjCObjectVar<NSError?>>()
+            error.value = null
+            // SDK NSURL.h: a volume key may be read from any filesystem URL.
+            // A fresh URL avoids using a value cached by a previous observation.
+            val values = NSURL.fileURLWithPath(path).resourceValuesForKeys(listOf(key), error.ptr)
+            val value = values?.get(key)
+            metadataRead(values != null, values?.containsKey(key) == true, when {
+                values == null -> "unavailable"
+                !values.containsKey(key) -> "missing"
+                value is NSNumber -> if (value.boolValue) "supported" else "unsupported"
+                else -> "non-number"
+            }, error.value)
+        }
+    } catch (cancelled: CancellationException) {
+        throw cancelled
+    } catch (_: Exception) {
+        unknownMetadata("observer-exception")
+    }
+
+    private fun metadataRead(dictionary: Boolean, key: Boolean, value: String, error: NSError?) = buildJsonObject {
+        put("query", "returned"); put("dictionary_present", dictionary); put("key_present", key); put("value", value)
+        put("native_error", buildJsonObject {
+            put("present", error != null)
+            put("domain", when (error?.domain) {
+                null -> "none"
+                NSCocoaErrorDomain -> "cocoa"
+                NSPOSIXErrorDomain -> "posix"
+                else -> "other"
+            })
+            put("code", error?.code ?: 0L)
+        })
+    }
+
+    private fun unknownMetadata(query: String) = buildJsonObject {
+        put("query", query); put("dictionary_present", false); put("key_present", false); put("value", "unobserved")
+        put("native_error", buildJsonObject { put("present", false); put("domain", "unobserved"); put("code", 0L) })
+    }
+
+    private fun excluded(path: String): Boolean {
+        val key = checkNotNull(NSURLIsExcludedFromBackupKey)
+        val values = checkNotNull(NSURL.fileURLWithPath(path).resourceValuesForKeys(listOf(key), null))
+        return checkNotNull(values[key] as? NSNumber).boolValue
+    }
+    private fun canonical(path: String): String = memScoped {
+        val buffer = allocArray<ByteVar>(PATH_MAX)
+        checkNotNull(realpath(path, buffer)).toKString()
+    }
+}

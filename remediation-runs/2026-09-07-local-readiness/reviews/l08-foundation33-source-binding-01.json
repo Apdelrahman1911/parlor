@@ -1,0 +1,38 @@
+{
+  "started_at": "2026-09-08T01:15:59.793394+00:00",
+  "manifest_sha256": "aa6867dbf163ba224c7feb5896da267f1648177890f1be669b98d73361dc2d9a",
+  "before": {
+    "FoundationProtectionControl.m": "403432717c00b518d81a109415ad4c20c85a7307f733dfb6d53900c8cd327ff0",
+    "README.md": "332edbb66de9eca52256519e6e1f015d4bbea0dfdc1ad8d139455b970be19b9f",
+    "public-tool-evidence.json": "8a5cad552acfb337a3172282c15bfade6dd36fd99f39f1afc02a94cc4c5f1bb2",
+    "run_control.py": "58e8daf875eaf8061ed017e10cc8c8065eb49292866b6741227814282a1b8e9f",
+    "test_control.py": "f044ca95d872d4347d1db5657ddecd47fe60e1083a797e5310eb15b50087464d"
+  },
+  "approval_sha256": "39a78d4af3c104cb4cf7fa24e9616653ccfb9d574d707e7c05a0e8dfd57f59f0",
+  "command": [
+    "/usr/bin/python3",
+    "-B",
+    "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+    "l08-foundation33-controls-01",
+    "--command",
+    "/usr/bin/python3",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-02",
+    "-p",
+    "test_control.py",
+    "-v"
+  ],
+  "exit_code": 0,
+  "after": {
+    "FoundationProtectionControl.m": "403432717c00b518d81a109415ad4c20c85a7307f733dfb6d53900c8cd327ff0",
+    "README.md": "332edbb66de9eca52256519e6e1f015d4bbea0dfdc1ad8d139455b970be19b9f",
+    "public-tool-evidence.json": "8a5cad552acfb337a3172282c15bfade6dd36fd99f39f1afc02a94cc4c5f1bb2",
+    "run_control.py": "58e8daf875eaf8061ed017e10cc8c8065eb49292866b6741227814282a1b8e9f",
+    "test_control.py": "f044ca95d872d4347d1db5657ddecd47fe60e1083a797e5310eb15b50087464d"
+  },
+  "finished_at": "2026-09-08T01:16:01.267444+00:00"
+}

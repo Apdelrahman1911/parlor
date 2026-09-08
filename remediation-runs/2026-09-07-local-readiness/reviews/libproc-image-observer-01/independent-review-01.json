@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "author": "/root",
+  "reviewed_at": "2026-09-08T07:34:57.625620+00:00",
+  "status": "CHANGE_REQUESTED_SOURCE_REVIEW_ONLY",
+  "reviewed_freeze_sha256": "bc6af40b980d588d194ec815f2879f91a8160ecbed97a2adb903649512472663",
+  "reviewed_patch_sha256": "9c7ec6097e6d5bb3097ae76e57696430a27b8c0f6a08023f96ecb0dc1cb20477",
+  "files": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/draft/README.md",
+      "sha256": "2b66fe50c60c5c01e6ea4c14069111d014ea023e73fe92c91df5cb5b444485fd",
+      "lines": 300,
+      "reviewed_ranges": [
+        [
+          1,
+          300
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/draft/kernel_image_region.c.in",
+      "sha256": "d42aa932e5fe83defab173670aeea6f59507fa1b10029159efc04e1bbd67fdfc",
+      "lines": 76,
+      "reviewed_ranges": [
+        [
+          1,
+          76
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/draft/kernel_image_regions.py",
+      "sha256": "4b87bf30ab492bf45554b2952ef52982343d5f16c66dce247412a45801b0287b",
+      "lines": 52,
+      "reviewed_ranges": [
+        [
+          1,
+          52
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/draft/run_control_tests.py",
+      "sha256": "0aa080c52ff3f30bb159bc59f728084ff92d6ad4f340b1ec051dfc55dd317f2e",
+      "lines": 65,
+      "reviewed_ranges": [
+        [
+          1,
+          65
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/draft/run_normal_ios_launch.py",
+      "sha256": "f10a5db6873fb9b3d885bfa1b195699463cec20ccdac7e09ae1e6042ece3cb1f",
+      "lines": 871,
+      "reviewed_ranges": [
+        [
+          1,
+          871
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/draft/test_kernel_image_regions.py",
+      "sha256": "1f82b7a9f2e9cdd001e40f4c23328285d2918978298b51695239127df91e19a7",
+      "lines": 187,
+      "reviewed_ranges": [
+        [
+          1,
+          187
+        ]
+      ]
+    }
+  ],
+  "patch_exactly_regenerated_from_before_and_draft": true,
+  "static_test_inventory": {
+    "existing": 177,
+    "added": 10,
+    "total": 187,
+    "unique": true,
+    "actual_discovery_or_execution": "NOT_RUN"
+  },
+  "required_correction": {
+    "id": "LIBPROC-REVIEW-01",
+    "scope": "audit observer controls only; not a newly confirmed application defect",
+    "file": "draft/run_normal_ios_launch.py",
+    "lines": [
+      527,
+      539
+    ],
+    "description": "Helper integrity is rechecked before each call but not after the final call. A change during the last invocation can be omitted from the provenance verdict and retained helper hash. README286 promises helper changes fail closed.",
+    "source_level_witness": "Use the existing orchestration fixture. In the last helper require side-effect, first produce the otherwise valid observation JSON and then overwrite the synthetic helper bytes. No later digest(helper) runs; app lifetime and selected artifacts stay equal; bind_regions and final provenance return PASS. This witness is source-traced, not executed by this reviewer.",
+    "counter_evidence": "Before-call hash detects earlier changes and subsequent calls detect mutations during earlier calls. Final artifact rehash covers selected app images, not the helper. Final control_hash covers the C source, not task-owned compiled output. Neither closes the final-call gap.",
+    "minimal_correction": "Repeat canonical/regular/hash helper check immediately after each require and before consuming output; keep process postflight and final artifact checks. Add a last-query helper-mutation regression."
+  },
+  "positive_source_conclusions": [
+    "C uses the installed public struct and one PROC_PIDREGIONPATHINFO call; no task_for_pid, path-only lookup, memory read, fork, shell or code injected in app.",
+    "Exact start and bounded size reject next-region-on-hole behavior; full return is supplemented with RX/nonwritable/offset/submap/path/vnode identity checks.",
+    "C validates only task-supplied known PID/path/range; failures use closed literals/numbers. Caller keeps source binding, owned simulator identity, finite sample selection, UUID/hash and lifetime checks.",
+    "All selected rows, including optional rows, are required by binder; missing/extra/unknown/duplicate-JSON fields fail closed.",
+    "Explicit option leaves default vmmap behavior and 177 existing test methods unchanged. Source declaration adds ten unique synchronous unittest methods.",
+    "New helper is inside existing allocation; command ownership, output/time limits, interruption and final deletion follow existing runner boundary. No separate cleanup process needed.",
+    "Methods honestly distinguish per-selected-region provenance, no in-memory UUID/page hash, no whole-map enumeration and no historical native15 reclassification."
+  ],
+  "public_api_research": {
+    "prior_dossier": "../normal-native15-vmmap-libproc-review-01/review.md",
+    "xcrun_manpage": {
+      "path": "/Applications/Xcode.app/Contents/Developer/usr/share/man/man1/xcrun.1",
+      "sha256": "9237a9b41d4baaaa40ae24e728c00818634e0dde7c108608a86933867396c1e1",
+      "reviewed_ranges": [
+        [
+          50,
+          55
+        ],
+        [
+          178,
+          199
+        ]
+      ],
+      "claim": "Explicit --sdk macosx supplies SDKROOT to clang; inherited SDK_NAME does not select its target SDK."
+    },
+    "installed_headers": "libproc.h includes sys/param.h; full public region and vinfo structs from MacOSX26.5 SDK were reopened. __DARWIN_C_LEVEL defaults full independently of strict C11; strnlen is declared at POSIX2008 level. Compile remains unexecuted."
+  },
+  "verification_gaps": [
+    "No tests/imports, clang, native processes or APIs executed; root owns active native16 lane.",
+    "C negative-path guard source-string test does not execute native guard semantics. Python mirror cases do not prove libproc availability/ABI/runtime output.",
+    "Fixture native_structure_bytes=1328 is synthetic, not an asserted native struct size. Actual helper sizeof/returned-size and architecture must be observed in future native lane.",
+    "Draft location is intentionally not execution-ready: relative ROOT/import layout assumes later approved canonical placement. Fresh source/control binding required after adoption."
+  ],
+  "hygiene": "Only short-lived stdlib file/hash/AST analysis and additive review JSON; no generated build outputs or long-running workers; no source/control files modified by reviewer."
+}

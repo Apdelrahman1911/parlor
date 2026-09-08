@@ -1,0 +1,641 @@
+{
+  "status": "SOURCE_RESEARCH_NOT_RUNTIME_VERIFICATION",
+  "references": [
+    {
+      "url": "https://raw.githubusercontent.com/InsertKoinIO/koin/4.0.0/projects/core/koin-core/src/commonMain/kotlin/org/koin/core/KoinApplication.kt",
+      "accessed_at": "2026-09-07T17:14:52.672038+00:00",
+      "sha256": "24c584a01e6988bb1c550c1bd71bd67e9087c84def0cb604f26429f88982fb33",
+      "bytes": 3650,
+      "lines": [
+        {
+          "line": 35,
+          "text": "class KoinApplication private constructor() {"
+        },
+        {
+          "line": 36,
+          "text": ""
+        },
+        {
+          "line": 37,
+          "text": "    val koin = Koin()"
+        },
+        {
+          "line": 38,
+          "text": "    private var allowOverride = true"
+        },
+        {
+          "line": 39,
+          "text": ""
+        },
+        {
+          "line": 40,
+          "text": "    /**"
+        },
+        {
+          "line": 41,
+          "text": "     * Load definitions from modules"
+        },
+        {
+          "line": 42,
+          "text": "     * @param modules"
+        },
+        {
+          "line": 43,
+          "text": "     */"
+        },
+        {
+          "line": 44,
+          "text": "    fun modules(modules: Module): KoinApplication {"
+        },
+        {
+          "line": 45,
+          "text": "        return modules(listOf(modules))"
+        },
+        {
+          "line": 46,
+          "text": "    }"
+        },
+        {
+          "line": 47,
+          "text": ""
+        },
+        {
+          "line": 48,
+          "text": "    /**"
+        },
+        {
+          "line": 49,
+          "text": "     * Load definitions from modules"
+        },
+        {
+          "line": 50,
+          "text": "     * @param modules"
+        },
+        {
+          "line": 51,
+          "text": "     */"
+        },
+        {
+          "line": 52,
+          "text": "    fun modules(vararg modules: Module): KoinApplication {"
+        },
+        {
+          "line": 53,
+          "text": "        return modules(modules.toList())"
+        },
+        {
+          "line": 54,
+          "text": "    }"
+        },
+        {
+          "line": 55,
+          "text": ""
+        },
+        {
+          "line": 56,
+          "text": "    /**"
+        },
+        {
+          "line": 57,
+          "text": "     * Load definitions from modules"
+        },
+        {
+          "line": 58,
+          "text": "     * @param modules"
+        },
+        {
+          "line": 59,
+          "text": "     */"
+        },
+        {
+          "line": 60,
+          "text": "    fun modules(modules: List<Module>): KoinApplication {"
+        },
+        {
+          "line": 61,
+          "text": "        if (koin.logger.isAt(Level.INFO)) {"
+        },
+        {
+          "line": 62,
+          "text": "            val duration = measureTime { loadModules(modules) }"
+        },
+        {
+          "line": 63,
+          "text": "            val count = koin.instanceRegistry.size()"
+        },
+        {
+          "line": 64,
+          "text": "            koin.logger.display(Level.INFO, \"Started $count definitions in ${duration.inMs} ms\")"
+        },
+        {
+          "line": 65,
+          "text": "        } else {"
+        },
+        {
+          "line": 66,
+          "text": "            loadModules(modules)"
+        },
+        {
+          "line": 67,
+          "text": "        }"
+        },
+        {
+          "line": 68,
+          "text": "        return this"
+        },
+        {
+          "line": 69,
+          "text": "    }"
+        },
+        {
+          "line": 70,
+          "text": ""
+        },
+        {
+          "line": 71,
+          "text": "    /**"
+        },
+        {
+          "line": 72,
+          "text": "     * Create eager instances (single with createdAtStart)"
+        },
+        {
+          "line": 73,
+          "text": "     */"
+        },
+        {
+          "line": 74,
+          "text": "    fun createEagerInstances() {"
+        },
+        {
+          "line": 75,
+          "text": "        koin.createEagerInstances()"
+        },
+        {
+          "line": 76,
+          "text": "    }"
+        },
+        {
+          "line": 77,
+          "text": ""
+        },
+        {
+          "line": 78,
+          "text": "    /**"
+        },
+        {
+          "line": 79,
+          "text": "     * Allow definition override or not, in a global manner"
+        },
+        {
+          "line": 80,
+          "text": "     *"
+        },
+        {
+          "line": 81,
+          "text": "     * @param override"
+        },
+        {
+          "line": 82,
+          "text": "     */"
+        },
+        {
+          "line": 83,
+          "text": "    public fun allowOverride(override: Boolean) {"
+        },
+        {
+          "line": 84,
+          "text": "        allowOverride = override"
+        },
+        {
+          "line": 85,
+          "text": "    }"
+        },
+        {
+          "line": 86,
+          "text": ""
+        },
+        {
+          "line": 87,
+          "text": "    private fun loadModules(modules: List<Module>) {"
+        },
+        {
+          "line": 88,
+          "text": "        koin.loadModules(modules, allowOverride = allowOverride, createEagerInstances = false)"
+        },
+        {
+          "line": 89,
+          "text": "    }"
+        },
+        {
+          "line": 90,
+          "text": ""
+        }
+      ]
+    },
+    {
+      "url": "https://raw.githubusercontent.com/InsertKoinIO/koin/4.0.0/projects/core/koin-core/src/commonMain/kotlin/org/koin/core/Koin.kt",
+      "accessed_at": "2026-09-07T17:14:53.195295+00:00",
+      "sha256": "b7aea83a32710c761000eb17d3f1d5bf041ff29be1cee1c6f5d88cdfd35186be",
+      "bytes": 9961,
+      "lines": [
+        {
+          "line": 305,
+          "text": "    /**"
+        },
+        {
+          "line": 306,
+          "text": "     * Load module & create eager instances"
+        },
+        {
+          "line": 307,
+          "text": "     *"
+        },
+        {
+          "line": 308,
+          "text": "     * @param allowOverride - allow to override definitions"
+        },
+        {
+          "line": 309,
+          "text": "     * @param createEagerInstances - run instance creation for eager single definitions"
+        },
+        {
+          "line": 310,
+          "text": "     */"
+        },
+        {
+          "line": 311,
+          "text": "    fun loadModules(modules: List<Module>, allowOverride: Boolean = true, createEagerInstances : Boolean = false) {"
+        },
+        {
+          "line": 312,
+          "text": "        val flattedModules = flatten(modules)"
+        },
+        {
+          "line": 313,
+          "text": "        instanceRegistry.loadModules(flattedModules, allowOverride)"
+        },
+        {
+          "line": 314,
+          "text": "        scopeRegistry.loadScopes(flattedModules)"
+        },
+        {
+          "line": 315,
+          "text": ""
+        },
+        {
+          "line": 316,
+          "text": "        if (createEagerInstances){"
+        },
+        {
+          "line": 317,
+          "text": "            createEagerInstances()"
+        },
+        {
+          "line": 318,
+          "text": "        }"
+        },
+        {
+          "line": 319,
+          "text": "    }"
+        },
+        {
+          "line": 320,
+          "text": ""
+        }
+      ]
+    },
+    {
+      "url": "https://raw.githubusercontent.com/InsertKoinIO/koin/4.0.0/projects/core/koin-core/src/commonMain/kotlin/org/koin/core/registry/InstanceRegistry.kt",
+      "accessed_at": "2026-09-07T17:14:55.206024+00:00",
+      "sha256": "f45a90aa3cc7c339494e1154af95394d7bd45e811507054a2aaa37ffb56edca9",
+      "bytes": 6939,
+      "lines": [
+        {
+          "line": 43,
+          "text": "        get() = _instances"
+        },
+        {
+          "line": 44,
+          "text": ""
+        },
+        {
+          "line": 45,
+          "text": "    private val eagerInstances = safeHashMap<Int, SingleInstanceFactory<*>>()"
+        },
+        {
+          "line": 46,
+          "text": ""
+        },
+        {
+          "line": 47,
+          "text": "    internal fun loadModules(modules: Set<Module>, allowOverride: Boolean) {"
+        },
+        {
+          "line": 48,
+          "text": "        modules.forEach { module ->"
+        },
+        {
+          "line": 49,
+          "text": "            loadModule(module, allowOverride)"
+        },
+        {
+          "line": 50,
+          "text": "            addAllEagerInstances(module)"
+        },
+        {
+          "line": 51,
+          "text": "        }"
+        },
+        {
+          "line": 52,
+          "text": "    }"
+        },
+        {
+          "line": 53,
+          "text": ""
+        },
+        {
+          "line": 54,
+          "text": "    private fun addAllEagerInstances(module: Module) {"
+        },
+        {
+          "line": 55,
+          "text": "        module.eagerInstances.forEach { factory ->"
+        },
+        {
+          "line": 56,
+          "text": "            eagerInstances[factory.beanDefinition.hashCode()] = factory"
+        },
+        {
+          "line": 57,
+          "text": "        }"
+        },
+        {
+          "line": 58,
+          "text": "    }"
+        },
+        {
+          "line": 59,
+          "text": ""
+        },
+        {
+          "line": 60,
+          "text": "    internal fun createAllEagerInstances() {"
+        },
+        {
+          "line": 61,
+          "text": "        val instances = arrayListOf(*eagerInstances.values.toTypedArray())"
+        },
+        {
+          "line": 62,
+          "text": "        eagerInstances.clear()"
+        },
+        {
+          "line": 63,
+          "text": "        createEagerInstances(instances)"
+        },
+        {
+          "line": 64,
+          "text": "    }"
+        },
+        {
+          "line": 65,
+          "text": ""
+        },
+        {
+          "line": 66,
+          "text": "    private fun loadModule(module: Module, allowOverride: Boolean) {"
+        },
+        {
+          "line": 67,
+          "text": "        module.mappings.forEach { (mapping, factory) ->"
+        },
+        {
+          "line": 68,
+          "text": "            saveMapping(allowOverride, mapping, factory)"
+        },
+        {
+          "line": 69,
+          "text": "        }"
+        },
+        {
+          "line": 70,
+          "text": "    }"
+        },
+        {
+          "line": 71,
+          "text": ""
+        },
+        {
+          "line": 72,
+          "text": "    @KoinInternalApi"
+        },
+        {
+          "line": 73,
+          "text": "    fun saveMapping("
+        },
+        {
+          "line": 74,
+          "text": "        allowOverride: Boolean,"
+        },
+        {
+          "line": 75,
+          "text": "        mapping: IndexKey,"
+        },
+        {
+          "line": 76,
+          "text": "        factory: InstanceFactory<*>,"
+        },
+        {
+          "line": 77,
+          "text": "        logWarning: Boolean = true,"
+        },
+        {
+          "line": 78,
+          "text": "    ) {"
+        },
+        {
+          "line": 79,
+          "text": "        _instances[mapping]?.let {"
+        },
+        {
+          "line": 80,
+          "text": "            if (!allowOverride) {"
+        },
+        {
+          "line": 81,
+          "text": "                overrideError(factory, mapping)"
+        },
+        {
+          "line": 82,
+          "text": "            } else if (logWarning) {"
+        },
+        {
+          "line": 83,
+          "text": "                _koin.logger.warn(\"(+) override index '$mapping' -> '${factory.beanDefinition}'\")"
+        },
+        {
+          "line": 84,
+          "text": "            }"
+        },
+        {
+          "line": 85,
+          "text": "        }"
+        },
+        {
+          "line": 86,
+          "text": "        _koin.logger.debug(\"(+) index '$mapping' -> '${factory.beanDefinition}'\")"
+        },
+        {
+          "line": 87,
+          "text": "        _instances[mapping] = factory"
+        },
+        {
+          "line": 88,
+          "text": "    }"
+        },
+        {
+          "line": 89,
+          "text": ""
+        },
+        {
+          "line": 90,
+          "text": "    private fun createEagerInstances(instances: Collection<SingleInstanceFactory<*>>) {"
+        }
+      ]
+    },
+    {
+      "url": "https://raw.githubusercontent.com/InsertKoinIO/koin/4.0.0/projects/core/koin-core/src/commonMain/kotlin/org/koin/core/module/Module.kt",
+      "accessed_at": "2026-09-07T17:14:57.337314+00:00",
+      "sha256": "3afba88c6215fa65860432ae834634a9646d9c05b227dbf0fa45d647c988186a",
+      "bytes": 7911,
+      "lines": [
+        {
+          "line": 229,
+          "text": "operator fun List<Module>.plus(module: Module): List<Module> = this + listOf(module)"
+        },
+        {
+          "line": 230,
+          "text": ""
+        },
+        {
+          "line": 231,
+          "text": "/**"
+        },
+        {
+          "line": 232,
+          "text": " * Run through the module list to flatten all modules & submodules"
+        },
+        {
+          "line": 233,
+          "text": " */"
+        },
+        {
+          "line": 234,
+          "text": "@OptIn(KoinInternalApi::class)"
+        },
+        {
+          "line": 235,
+          "text": "fun flatten(modules: List<Module>): Set<Module> {"
+        },
+        {
+          "line": 236,
+          "text": "    // This is actually a DFS traversal of the module graph,"
+        },
+        {
+          "line": 237,
+          "text": "    // but we're using a stack instead of recursion to avoid stack overflows and performance overhead."
+        },
+        {
+          "line": 238,
+          "text": ""
+        },
+        {
+          "line": 239,
+          "text": "    val flatten = linkedSetOf<Module>()"
+        },
+        {
+          "line": 240,
+          "text": "    val stack = ArrayDeque(modules.asReversed())"
+        },
+        {
+          "line": 241,
+          "text": ""
+        },
+        {
+          "line": 242,
+          "text": "    while (stack.isNotEmpty()) {"
+        },
+        {
+          "line": 243,
+          "text": "        val current = stack.removeLast()"
+        },
+        {
+          "line": 244,
+          "text": ""
+        },
+        {
+          "line": 245,
+          "text": "        // If the module is already in the set, that means we've already visited it, so we can skip it."
+        },
+        {
+          "line": 246,
+          "text": "        if (!flatten.add(current)) {"
+        },
+        {
+          "line": 247,
+          "text": "            continue"
+        },
+        {
+          "line": 248,
+          "text": "        }"
+        },
+        {
+          "line": 249,
+          "text": ""
+        },
+        {
+          "line": 250,
+          "text": "        // Add all the included modules to the stack if they haven't been visited yet."
+        },
+        {
+          "line": 251,
+          "text": "        for (module in current.includedModules) {"
+        },
+        {
+          "line": 252,
+          "text": "            if (module !in flatten) {"
+        },
+        {
+          "line": 253,
+          "text": "                stack += module"
+        },
+        {
+          "line": 254,
+          "text": "            }"
+        },
+        {
+          "line": 255,
+          "text": "        }"
+        },
+        {
+          "line": 256,
+          "text": "    }"
+        },
+        {
+          "line": 257,
+          "text": ""
+        },
+        {
+          "line": 258,
+          "text": "    return flatten"
+        },
+        {
+          "line": 259,
+          "text": "}"
+        }
+      ]
+    }
+  ]
+}

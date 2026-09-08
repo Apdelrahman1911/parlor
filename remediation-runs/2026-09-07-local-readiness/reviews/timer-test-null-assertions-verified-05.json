@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "author": "/root",
+  "reviewed_at": "2026-09-07T05:15:48.462825+00:00",
+  "status": "FIXED AND VERIFIED",
+  "scope": "Test-only unsafe-null assertion/static-analysis correction in two WD-C4 timer policy test files; not an extra application defect or unqualified full cycle PASS.",
+  "source_review": "reviews/timer-test-null-assertions-independent-review.json",
+  "reviewed_files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitLocalLeaveTimerTest.kt",
+      "sha256": "2124dafc4168ff0712e9ff93f3a8368d6cc5ab483b252d8114dc77c9a33c1c9e",
+      "reviewed_ranges": [
+        [
+          1,
+          251
+        ]
+      ],
+      "test_methods": 6
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLeaveTimerTest.kt",
+      "sha256": "99d188364e681983f5fd4c31d192d80c6fde9731a57d62d5de6e0c8fe897da6a",
+      "reviewed_ranges": [
+        [
+          1,
+          275
+        ]
+      ],
+      "test_methods": 4
+    }
+  ],
+  "runtime_evidence": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-story-followup-05/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest.xml",
+      "sha256": "18c9fc875721e26d942f1d66755ea2ab4f959e92e411a7b8c719bfabeebe9e0b",
+      "suite": "com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+      "test_count": 6,
+      "cases": [
+        "eliminationConfirmationTimeIsExcludedAndStayRestartsOnlyOneTicker()[desktop]",
+        "stayDoesNotReleaseAnExistingPerTimerPause()[desktop]",
+        "lastSecondCannotExpireBehindConfirmationButExpiresAfterStay()[desktop]",
+        "failedSaveKeepsTimeFrozenAndSuccessfulSaveResumesWithoutCatchingUp()[desktop]",
+        "stayDoesNotReleaseAnExistingSessionPause()[desktop]",
+        "classicConfirmationTimeIsExcludedAndStayRestartsOnlyOneTicker()[desktop]"
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-story-followup-05/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest.xml",
+      "sha256": "d851acea9666d064e4d35853ab85e80590fa88239c09f3153ae6d17c3e88a893",
+      "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+      "test_count": 4,
+      "cases": [
+        "classicHostConfirmationExcludesTimeAndConfirmedLeaveStopsTicker()[desktop]",
+        "lifecycleResumeBehindConfirmationDoesNotRestartHiddenDiscussion()[desktop]",
+        "eliminationHostConfirmationExcludesTimeAndConfirmedLeaveStopsTicker()[desktop]",
+        "stayAndLifecycleResumeDoNotReleaseManualPause()[desktop]"
+      ]
+    }
+  ],
+  "static_analysis": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-story-followup-05/reports/game-modes/whodunit/build/reports/detekt/detekt.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/focused-story-followup-05/reports/game-modes/whodunit/build/reports/detekt/detektDesktopTest.xml",
+      "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "findings": 0
+    }
+  ],
+  "combined_selected_tests": {
+    "total_executed": 72,
+    "failed": 0,
+    "skipped": 0,
+    "version": "Exact current timerfile hashes match focused05 source_before and source_after; no drift withincycle."
+  },
+  "overall_cycle": {
+    "status": "FAIL",
+    "reason": "Separate canonical-content helper preflight rejected captured classpath after successful Gradle/test/Detekt. Java canonical helper did not execute. This limitation does not turn10actual timer PASS or0Detekt findings into failures; equally, timer PASS does not waive helper failure.",
+    "source": "evidence/focused-story-followup-05/identity/identity-receipt.json",
+    "gradle_exit_code": 0,
+    "helper_error": "RuntimeError: Missing/invalid captured runtime classpath entry",
+    "qualified_assessment": "All scoped timer correction checks passed independently; separate content-helper evidence requires rerun."
+  },
+  "mandatory_second_review": [
+    "Original19Detekt nullable findings were rootcaused and replaced by explicit assertNotNull, without suppressions/skippedtests/weakerconditions.",
+    "Complete diff and surrounding251/275line testfiles previously reopened; fresh raw XML confirms all6local+4host tests actually executed on correctedbytes.",
+    "Actual tests retain Classic+Elimination, repeatedconfirm/Stay, existingpause, savefailure/retry/resume, final-secondexpiry, retainedhost/lifecycle and terminaltickerownership.",
+    "No game reducer/rule/serialization/protocol/private boundary changed; bothlocal and simulatedhost preserve immutable host/private state assertions. NotphysicalLAN or iOSUIproof.",
+    "Both generic and type-aware desktop-test Detekt XML contain no findings; no compiler unnecessary!! issue remains in these files."
+  ],
+  "cleanup": {
+    "inner_immediate_stop": 0,
+    "outer_stop": 0,
+    "remaining_outputs": [],
+    "remaining_owned_workers": [],
+    "cleanup_errors": [],
+    "source_unchanged_during_cycle": true,
+    "runner_unchanged_during_cycle": true,
+    "evidence": "evidence/focused-story-followup-05/receipt.json"
+  },
+  "reviewer_actions": "No source edits, commits, builds/tests/simulators/process cleanup. Read exactdiff/source/XML/log/receipts and wrote isolatedreview; root alone owns integration andbuildlane."
+}

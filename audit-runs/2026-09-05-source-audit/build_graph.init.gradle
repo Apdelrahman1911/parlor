@@ -1,0 +1,27 @@
+// Audit-only observation. Does not alter shipping source sets or task assertions.
+gradle.projectsEvaluated {
+    rootProject.tasks.register('auditPrintBuildGraph') {
+        doLast {
+            println("AUDIT_GRADLE ${gradle.gradleVersion} JDK ${System.getProperty('java.version')}")
+            rootProject.allprojects.sort { it.path }.each { p ->
+                println("AUDIT_PROJECT ${p.path} ${p.projectDir}")
+                def k = p.extensions.findByName('kotlin')
+                if (k != null && k.hasProperty('sourceSets')) {
+                    k.sourceSets.sort { it.name }.each { s ->
+                        println("AUDIT_SOURCE_SET ${p.path}:${s.name} kotlin=${s.kotlin.srcDirs} resources=${s.resources.srcDirs} dependsOn=${s.dependsOn*.name}")
+                    }
+                }
+                p.configurations.sort { it.name }.each { c ->
+                    def ds = c.dependencies.collect { d ->
+                        d.hasProperty('dependencyProject') ? "project:${d.dependencyProject.path}" : "${d.group}:${d.name}:${d.version}"
+                    }
+                    if (!ds.empty) println("AUDIT_DEPENDENCIES ${p.path}:${c.name} ${ds}")
+                }
+            }
+            ['allTests', 'productionCheck', 'productionDesktopCheck', 'productionAppleCheck', 'productionIosSimulatorRuntimeTests', 'productionAndroidRuntimeCheck'].each { n ->
+                def t=rootProject.tasks.findByName(n)
+                if(t != null) println("AUDIT_AGGREGATE ${n} ${t.taskDependencies.getDependencies(t)*.path.sort()}")
+            }
+        }
+    }
+}

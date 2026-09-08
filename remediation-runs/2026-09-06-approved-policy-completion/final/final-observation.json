@@ -1,0 +1,317 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-07T01:21:06.185877+00:00",
+  "author": "/root",
+  "scope": "Final bounded source/preservation and task-owned cleanup reconciliation after report materialization and ledger validation; not a new runtime or full-source audit.",
+  "observation": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-final-preservation-observation-03.json",
+    "sha256": "0023609b6873c0f5d1cdc20846917f73f5bac766545f5f50c6c1dda1cdb3e2bf"
+  },
+  "observation_status": "PASS_CURRENT_BOUNDED_OBSERVATION",
+  "source": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e"
+  },
+  "source_matches_freeze02": true,
+  "source_stable_during_observation": true,
+  "source_input_count": 669,
+  "baseline_preservation": {
+    "files": 2180,
+    "byte_identical": 2167,
+    "exactly_13_approved_changes": true,
+    "missing": [],
+    "AGENTS_unchanged": true
+  },
+  "git_preservation": {
+    "refs": {
+      "unchanged": true,
+      "sha256": "180495798b5ad4dd63204fa9d95f306440f4cb61e15607ff492c42825a609007"
+    },
+    "stashes": {
+      "unchanged": true,
+      "sha256": "ca7d3dff9247e248a72ccc87c6e1931cceb7e943f5d6cdec7054388f7706d3ac"
+    },
+    "index_diff": {
+      "unchanged": true,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "qualification": "Logical staged diff, refs and stash list only; not Git index stat-cache identity or stash-content inspection. Intentionally dirty approved work is preserved."
+  },
+  "bounded_owned_resource_counts": {
+    "cycle_history": 59,
+    "cycle_scratch_directories": 59,
+    "owned_temporary_paths": 72,
+    "owned_device_directories": 14,
+    "owned_process_identities": 742,
+    "original_generated_outputs": 17
+  },
+  "bounded_owned_resource_observations": {
+    "cycle_scratch_directories": [
+      "ABSENT"
+    ],
+    "owned_temporary_paths": [
+      "ABSENT"
+    ],
+    "owned_device_directories": [
+      "ABSENT"
+    ],
+    "owned_process_identities": [
+      "ABSENT"
+    ],
+    "original_generated_outputs": [
+      "ABSENT"
+    ]
+  },
+  "process_scope": "Only recorded PID/start identities were queried; no signals or unrelated argv. Gradle receipts do not retain every historical descendant. This is not a census or cleanup guarantee for unrecorded workers.",
+  "historical_cleanup_qualification": "Original failed receipts, especially apphost-02 UID attestation, are retained as failures; present absence does not retroactively repair historical attestation or establish unobserved ownership.",
+  "finalization_cycles": [
+    {
+      "cycle": "final-verification-collection-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/final-verification-collection-01/receipt.json",
+        "sha256": "7537b51b338964a765560b01d6ea626303d0ed850e6e3340eb739740d4cb94ed"
+      },
+      "result_log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/final-verification-collection-01/gradle.log",
+        "sha256": "640414eb089617a086ade65ef091db9ffddac83ab5d0991566d6a17d5c46d7c0"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "finished_at": "2026-09-07T00:55:51.105809+00:00",
+      "stop_exit_code": 0,
+      "stopped_at": "2026-09-07T00:55:51.409278+00:00",
+      "stop_log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/final-verification-collection-01/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "cleanup_errors": [],
+      "cleanup_completed_at": "2026-09-07T00:55:51.476944+00:00",
+      "source_changed": false,
+      "controls_changed": false
+    },
+    {
+      "cycle": "final-selection-prepare-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/final-selection-prepare-01/receipt.json",
+        "sha256": "916ee002e984562782c76e479396067b3d4d1b4c303d634092ced00b4e505abe"
+      },
+      "result_log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/final-selection-prepare-01/gradle.log",
+        "sha256": "0318833c9fbdfbf25e120cd01a28c6777cc3558daf1440553796fbeb3cbae291"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "finished_at": "2026-09-07T01:07:25.499638+00:00",
+      "stop_exit_code": 0,
+      "stopped_at": "2026-09-07T01:07:25.781985+00:00",
+      "stop_log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/final-selection-prepare-01/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "cleanup_errors": [],
+      "cleanup_completed_at": "2026-09-07T01:07:25.845969+00:00",
+      "source_changed": false,
+      "controls_changed": false
+    },
+    {
+      "cycle": "final-selection-wording-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/final-selection-wording-01/receipt.json",
+        "sha256": "6d497207452884d3748f047cc3bddcf181016acb0188a3700909a1b7abb577ee"
+      },
+      "result_log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/final-selection-wording-01/gradle.log",
+        "sha256": "6fc57b3c0d82d00d79790766876eff1e49360a75145a80ef44a23d7b91253206"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "finished_at": "2026-09-07T01:13:32.409541+00:00",
+      "stop_exit_code": 0,
+      "stopped_at": "2026-09-07T01:13:32.693307+00:00",
+      "stop_log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/final-selection-wording-01/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "cleanup_errors": [],
+      "cleanup_completed_at": "2026-09-07T01:13:32.758325+00:00",
+      "source_changed": false,
+      "controls_changed": false
+    },
+    {
+      "cycle": "final-materialization-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/final-materialization-01/receipt.json",
+        "sha256": "e14b16722db115a992069a0bfc5c95590bb9a6e6493c97d001a9b793e6799cb5"
+      },
+      "result_log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/final-materialization-01/gradle.log",
+        "sha256": "bffd834455748414f3635dee329d91ca766df2af81a77379db04fa269f229b17"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "finished_at": "2026-09-07T01:18:10.257795+00:00",
+      "stop_exit_code": 0,
+      "stopped_at": "2026-09-07T01:18:10.576229+00:00",
+      "stop_log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/final-materialization-01/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "cleanup_errors": [],
+      "cleanup_completed_at": "2026-09-07T01:18:10.649621+00:00",
+      "source_changed": false,
+      "controls_changed": false
+    },
+    {
+      "cycle": "final-evidence-ledger-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/final-evidence-ledger-01/receipt.json",
+        "sha256": "1bb3614a2cd28c0ab30da5f1115713efa7f20725e630d89dafb5d9023f329352"
+      },
+      "result_log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/final-evidence-ledger-01/gradle.log",
+        "sha256": "70d4a3a4c5ee0c714419589ec60e11c015d92a6093dd7084915ddd2b6d2b9e33"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "finished_at": "2026-09-07T01:18:23.186499+00:00",
+      "stop_exit_code": 0,
+      "stopped_at": "2026-09-07T01:18:23.442021+00:00",
+      "stop_log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/final-evidence-ledger-01/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "cleanup_errors": [],
+      "cleanup_completed_at": "2026-09-07T01:18:23.504893+00:00",
+      "source_changed": false,
+      "controls_changed": false
+    }
+  ],
+  "ledger_validation": {
+    "result": {
+      "artifact_count": 3,
+      "errors": [],
+      "gate_counts": {
+        "BLOCKED": 14,
+        "NOT_APPLICABLE": 1,
+        "PASS": 26
+      },
+      "status": "PASS",
+      "verdict": "NOT_READY"
+    },
+    "receipt": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/final-evidence-ledger-01/receipt.json",
+      "sha256": "1bb3614a2cd28c0ab30da5f1115713efa7f20725e630d89dafb5d9023f329352"
+    },
+    "qualification": "Executed evidence-schema/path validation, not new application tests or proof of correctness of every referenced claim. Separate independent semantic/hash reviews remain authoritative."
+  },
+  "selection_review": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-completion-selection-review-01.json",
+    "sha256": "d32050854cbaebb1d98ea19782148032b2f9b62c55d8f2521e37365597e44f0c"
+  },
+  "current_native_review": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-dsc01-apphost10-outcome-01.json",
+    "sha256": "4bca1750842bd8057bafe758a4c518b51566861e8e6c0ea16cda5e3af2783fa3"
+  },
+  "collector_preservation_review": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-final-collector-preservation-result-review-01.json",
+    "sha256": "9ed31c23c64a377e935ab0e28045bb812dea5cbad944f787ac33b784fe60d14d"
+  },
+  "final_artifacts_before_this_record": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/final/REPORT.md",
+      "sha256": "483a44c9af85a4cd622f27c3a4f53bd07fbe1e3d1091ba4fd76770e841ced28f"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/final/cycle-history.json",
+      "sha256": "673ada78aea68d6394a7ad9172f8e6477a4a0c383b02993333c2111257172f74"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/final/diff-identity.json",
+      "sha256": "88f62f3dffc7d8204b11db5fa40fd9ed72fc2d980c1c277d43a82c3637b091ce"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/final/gates.json",
+      "sha256": "084f413097fff19e40c548facd21189b01b68b9d67714e62a409e79359dfa5a0"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/final/issue-source-map.json",
+      "sha256": "697b439979901b42d649fa2084405f76dac1b31aa7761eb791c6c2b6286c5464"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/final/issues.json",
+      "sha256": "9cc579e04a8ab2839e927a7462f1c6e6a719d42a38f69e34551ebc1b4f2d6bad"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/final/preservation.json",
+      "sha256": "318b678e036a4abd1d533314cc0a8db6c22f3743170139e8ff6d5d0a15fec52a"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/final/remediation.patch",
+      "sha256": "71b17c8e05ab9e5850c523ff0c25a29a576a6bc088636c4a265e0944efcfc000"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/final/review-and-research-index.json",
+      "sha256": "26ed4353d00b768372656759f443c80ed6a5f49843bead278b5ecc4c615599a3"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/final/source-identity.json",
+      "sha256": "0f0545086a19d2e15cf592cd07dd2c9fd109d10794fa5f736837928ca71760ff"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/final/verification-summary.json",
+      "sha256": "9dfd0f748d904894394fe39e0685f220a7f46d143c3e0abbb0d0f3c141b208bd"
+    }
+  ],
+  "final_output_review": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-final-output-review-01.json",
+    "instruction": "Read the separate explicit decision at this path; this root-authored record does not preapprove it. No self-referential evidence hash is constructed."
+  },
+  "disk_observation": {
+    "available_bytes": 19845304320,
+    "available_gib": 18.48,
+    "method": "statvfs repository filesystem; no cache or unrelated-file enumeration/deletion"
+  },
+  "execution_safety": {
+    "main_git_mutations": false,
+    "source_changes_in_this_finalization": false,
+    "signing_or_store_operations": false,
+    "unrelated_processes_stopped": false,
+    "unrelated_files_deleted": false,
+    "global_caches_deleted": false,
+    "processes_or_builds_started_by_this_record_writer": 0,
+    "qualification": "The worktree remains intentionally dirty and all required evidence is retained. Synthetic prior test fixtures are separately qualified in the issue ledger."
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "cycle": "android-arm64-runtime-05",
+  "started_at": "2026-09-07T12:13:11.157116+00:00",
+  "runner_before": {
+    "manifest": [
+      [
+        "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+        "172c4f3162dc6a6b20e912e6551eaca9f33a32ba3d0d6f150ad8becfd30865ea"
+      ]
+    ],
+    "manifest_sha256": "fb59458c24ca17d1be230ada04d8c268d9d43656704d149402f9c0cc6dd55ec4"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "-B",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/owned_arm64_smoke_sdk.py",
+    "--sdk-root",
+    "/Users/abdelrahman/Library/Android/sdk",
+    "--avdmanager",
+    "/opt/homebrew/bin/avdmanager",
+    "--app-apk",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-03/release.apk",
+    "--test-apk",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-03/release-androidTest.apk",
+    "--source-commit",
+    "f5ea8045bd903c255041b198f54aca67e893612f",
+    "--approved-control-sha256",
+    "19870b9e06bf54fd0721910646aaf9c904e5a2c6404e3debbf4a321c36d08e5d",
+    "--evidence-dir",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-runtime-05"
+  ],
+  "env_policy": "JDK21, system Python, strict verification, signing env removed/empty Gradle signing props, cycle-owned TMPDIR/pycache",
+  "outputs_before": [],
+  "status": "FAIL",
+  "exit_code": 1,
+  "finished_at": "2026-09-07T12:13:53.191487+00:00",
+  "stop_exit_code": 0,
+  "stopped_at": "2026-09-07T12:13:53.554204+00:00",
+  "workers": {
+    "terminated_owned_workers": [],
+    "remaining_owned_workers": []
+  },
+  "removed_outputs": [],
+  "retained_outputs": [],
+  "remaining_outputs": [],
+  "cleanup_completed_at": "2026-09-07T12:13:53.613362+00:00",
+  "source_changed_during_cycle": false,
+  "runner_after": {
+    "manifest": [
+      [
+        "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+        "172c4f3162dc6a6b20e912e6551eaca9f33a32ba3d0d6f150ad8becfd30865ea"
+      ]
+    ],
+    "manifest_sha256": "fb59458c24ca17d1be230ada04d8c268d9d43656704d149402f9c0cc6dd55ec4"
+  },
+  "runner_changed_during_cycle": false,
+  "cleanup_errors": [],
+  "deferred_signals": [],
+  "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership."
+}

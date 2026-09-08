@@ -1,0 +1,236 @@
+// Copied XCTest only. This can touch the existing PUBLIC Start button once.
+// No callback, settings setter, reducer, private role screen or route is invoked.
+private struct DSC01MafiaStartHitPlan {
+    let visibleInterior: CGRect
+    let point: CGPoint
+    let normalizedOffset: CGVector
+
+    static func make(target: CGRect, viewport: CGRect, overlay: CGRect) -> DSC01MafiaStartHitPlan? {
+        guard dsc01CatalogFinite(target), dsc01CatalogFinite(viewport), dsc01CatalogFinite(overlay),
+              viewport.contains(overlay), viewport.width > 16 else { return nil }
+        // The overlay is measured. The 48pt physical-edge bands are deliberately
+        // conservative HIT-SAFETY MARGINS, not purported measured system insets.
+        // Neither application layout nor the original raw safe-area oracle changes.
+        let top = max(viewport.minY + 48, overlay.maxY + 8)
+        let bottom = viewport.maxY - 48
+        guard bottom > top else { return nil }
+        let usable = CGRect(x: viewport.minX + 8, y: top, width: viewport.width - 16, height: bottom - top)
+        let clipped = target.intersection(usable)
+        guard dsc01CatalogFinite(clipped), clipped.width >= 48, clipped.height >= 48 else { return nil }
+        let interior = clipped.insetBy(dx: 12, dy: 12)
+        let point = CGPoint(x: interior.midX, y: interior.midY)
+        let offset = CGVector(dx: (point.x - target.minX) / target.width,
+                              dy: (point.y - target.minY) / target.height)
+        guard target.contains(point), usable.contains(point),
+              offset.dx > 0, offset.dx < 1, offset.dy > 0, offset.dy < 1 else { return nil }
+        return DSC01MafiaStartHitPlan(visibleInterior: interior, point: point, normalizedOffset: offset)
+    }
+}
+
+private struct DSC01MafiaStartSample {
+    let targetCount: Int
+    let target: CGRect?
+    let hittable: Bool
+    let enabled: Bool
+    let viewport: CGRect
+    let overlayCount: Int
+    let overlay: CGRect?
+    let foreground: Bool
+    let alertPresent: Bool
+    let keyboardPresent: Bool
+
+    var isExpectedEnvironment: Bool {
+        foreground && !alertPresent && !keyboardPresent && overlayCount == 1 && targetCount <= 1
+    }
+    var plan: DSC01MafiaStartHitPlan? {
+        guard isExpectedEnvironment, targetCount == 1, hittable, enabled,
+              let target, let overlay else { return nil }
+        return DSC01MafiaStartHitPlan.make(target: target, viewport: viewport, overlay: overlay)
+    }
+    var fields: [String: Any] {
+        ["targetCountCapped16": min(targetCount, 16), "target": dsc01CatalogRectFields(target),
+         "hittable": hittable, "enabled": enabled, "viewport": dsc01CatalogRectFields(viewport),
+         "overlayCountCapped16": min(overlayCount, 16), "overlay": dsc01CatalogRectFields(overlay),
+         "foreground": foreground, "alertPresent": alertPresent, "keyboardPresent": keyboardPresent]
+    }
+    func geometryNear(_ other: DSC01MafiaStartSample) -> Bool {
+        guard let target, let otherTarget = other.target, let overlay, let otherOverlay = other.overlay else { return false }
+        return dsc01CatalogNear(target, otherTarget) && dsc01CatalogNear(viewport, other.viewport) &&
+            dsc01CatalogNear(overlay, otherOverlay)
+    }
+}
+
+@MainActor private final class DSC01MafiaStartDiagnostics {
+    private let start = ProcessInfo.processInfo.systemUptime
+    private var ordinal = 0
+    private var totalBytes = 0
+
+    func append(kind: String, fields: [String: Any]) throws {
+        guard ["setup", "search", "before-activation", "after-activation", "successor", "failed"].contains(kind),
+              ordinal < 96 else { throw NSError(domain: "DSC01MafiaStartDiagnosticBudget", code: 1) }
+        ordinal += 1
+        let row: [String: Any] = ["schemaVersion": 1, "ordinal": ordinal, "kind": kind,
+            "elapsedMilliseconds": Int((ProcessInfo.processInfo.systemUptime - start) * 1000), "fields": fields]
+        let encoded = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
+        totalBytes += encoded.count
+        guard encoded.count <= 4096, totalBytes <= 196608,
+              let text = String(data: encoded, encoding: .utf8) else {
+            throw NSError(domain: "DSC01MafiaStartDiagnosticBudget", code: 2)
+        }
+        print("DSC01_MAFIA_START_METADATA " + text)
+    }
+}
+
+extension IOSAppLaunchUITests {
+    @MainActor private func mafiaStartPublicSample(_ app: XCUIApplication) -> DSC01MafiaStartSample {
+        // This exact source-whitelisted prefix selects a real Role.Button.
+        let query = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@",
+            "Start the Mafia game with these settings"))
+        let count = query.count
+        let target = count == 1 ? query.firstMatch : nil
+        let overlays = app.descendants(matching: .any).matching(identifier: "parlor-dsc01-overlay")
+        let overlayCount = overlays.count
+        return DSC01MafiaStartSample(targetCount: count, target: target?.frame,
+            hittable: target?.isHittable ?? false, enabled: target?.isEnabled ?? false, viewport: app.frame,
+            overlayCount: overlayCount, overlay: overlayCount == 1 ? overlays.firstMatch.frame : nil,
+            foreground: app.state == .runningForeground, alertPresent: app.alerts.firstMatch.exists,
+            keyboardPresent: app.keyboards.firstMatch.exists)
+    }
+
+    @MainActor private func mafiaStartReadySample(_ app: XCUIApplication,
+        diagnostics: DSC01MafiaStartDiagnostics) throws -> DSC01MafiaStartSample {
+        for window in 1...14 {
+            var samples: [DSC01MafiaStartSample] = []
+            for index in 1...6 {
+                if index > 1 { try catalogSamplingInterval() }
+                let sample = mafiaStartPublicSample(app)
+                samples.append(sample)
+                var fields = sample.fields
+                fields["window"] = window; fields["index"] = index
+                try diagnostics.append(kind: "search", fields: fields)
+            }
+            guard samples.allSatisfy(\.isExpectedEnvironment), let first = samples.first, let last = samples.last else {
+                throw NSError(domain: "DSC01MafiaStartUnexpectedPublicSurface", code: 1)
+            }
+            let targetFrames = samples.compactMap(\.target)
+            let stable = dsc01CatalogStable(targetFrames) && samples.allSatisfy { $0.geometryNear(first) }
+            if stable && samples.allSatisfy({ $0.plan != nil }) { return last }
+            if stable && samples.allSatisfy({ $0.targetCount == 1 && !$0.enabled }) {
+                throw NSError(domain: "DSC01MafiaStartDisabled", code: 1)
+            }
+            let inaccessibleZeroFrame = samples.allSatisfy {
+                !$0.hittable && ($0.target == nil || $0.target == CGRect.zero)
+            }
+            // No action activation occurs in these bounded readiness loops.
+            // Moving geometry is reobserved; inaccessible settled content may scroll.
+            if targetFrames.isEmpty || stable || inaccessibleZeroFrame {
+                if window < 14 { app.swipeUp(velocity: .slow) }
+            }
+        }
+        throw NSError(domain: "DSC01MafiaStartStableTargetUnavailable", code: 1)
+    }
+
+    @MainActor private func startActualMafiaOnce(_ app: XCUIApplication) throws {
+        let diagnostics = DSC01MafiaStartDiagnostics()
+        do {
+            let setup = try observeEventually(app, predicateName: .mafiaSetupPublic) { snapshot in
+                let value = try self.dictionary(snapshot, "composition")
+                return snapshot["scenario"] as? String == "mafia" &&
+                    value["surface"] as? String == "mafia-local" && value["publicPhase"] as? String == "setup" &&
+                    value["gameDirection"] as? String == "ltr" && value["checkpointCaptured"] as? Bool == false &&
+                    value["commandOrdinal"] as? Int == 0
+            }
+            try diagnostics.append(kind: "setup", fields: dsc01PublicContext(setup))
+            let ready = try mafiaStartReadySample(app, diagnostics: diagnostics)
+            let current = mafiaStartPublicSample(app)
+            guard current.geometryNear(ready), let plan = current.plan else {
+                throw NSError(domain: "DSC01MafiaStartMovedBeforeActivation", code: 1)
+            }
+            let query = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@",
+                "Start the Mafia game with these settings"))
+            guard query.count == 1 else { throw NSError(domain: "DSC01MafiaStartAmbiguousTarget", code: 1) }
+            let target = query.firstMatch
+            let activationFrame = target.frame
+            guard let sampledFrame = current.target, dsc01CatalogNear(activationFrame, sampledFrame),
+                  target.isHittable, target.isEnabled else {
+                throw NSError(domain: "DSC01MafiaStartMovedBeforeActivation", code: 2)
+            }
+            let coordinate = target.coordinate(withNormalizedOffset: plan.normalizedOffset)
+            let point = coordinate.screenPoint
+            var before = current.fields
+            before["normalizedPoint"] = [plan.normalizedOffset.dx, plan.normalizedOffset.dy]
+            before["plannedPoint"] = [plan.point.x, plan.point.y]
+            // XCUICoordinate.screenPoint is dynamic; this is a sample, not an
+            // attestation of the later OS event location or callback delivery.
+            before["sampledCoordinatePoint"] = point.x.isFinite && point.y.isFinite ? [point.x, point.y] : []
+            before["visibleInterior"] = dsc01CatalogRectFields(plan.visibleInterior)
+            before["activationTargetFrame"] = dsc01CatalogRectFields(activationFrame)
+            try diagnostics.append(kind: "before-activation", fields: before)
+            guard point.x.isFinite, point.y.isFinite, abs(point.x - plan.point.x) <= 0.5,
+                  abs(point.y - plan.point.y) <= 0.5 else {
+                throw NSError(domain: "DSC01MafiaStartCoordinateMoved", code: 1)
+            }
+            coordinate.tap() // Exactly one Start activation, outside all retry loops.
+            try diagnostics.append(kind: "after-activation", fields: mafiaStartPublicSample(app).fields)
+            let successor = try observeEventually(app, predicateName: .mafiaStartSuccessor) { snapshot in
+                let value = try self.dictionary(snapshot, "composition")
+                let target = self.mafiaStartPublicSample(app)
+                return snapshot["scenario"] as? String == "mafia" &&
+                    value["surface"] as? String == "mafia-local" && value["publicPhase"] as? String == "role-assignment" &&
+                    value["gameDirection"] as? String == "ltr" && value["checkpointCaptured"] as? Bool == false &&
+                    value["commandOrdinal"] as? Int == 0 && target.targetCount == 0 && target.foreground &&
+                    !target.alertPresent && !target.keyboardPresent
+            }
+            let final = mafiaStartPublicSample(app)
+            var fields = final.fields
+            fields["publicContext"] = dsc01PublicContext(successor)
+            fields["gameDirection"] = try dictionary(successor, "composition")["gameDirection"]
+            try diagnostics.append(kind: "successor", fields: fields)
+            guard final.targetCount == 0, final.foreground, !final.alertPresent, !final.keyboardPresent else {
+                throw NSError(domain: "DSC01MafiaStartSuccessorChanged", code: 1)
+            }
+        } catch {
+            try diagnostics.append(kind: "failed", fields: mafiaStartPublicSample(app).fields)
+            XCTFail("Mafia Start phase failed: one activation must prove canonical role-assignment and Start absence")
+            throw error
+        }
+    }
+
+    @MainActor private func verifyMafiaStartGeometryContract() throws {
+        let viewport = CGRect(x: 0, y: 0, width: 402, height: 874)
+        let overlay = CGRect(x: 68, y: 134, width: 265, height: 49)
+        let valid = CGRect(x: 24, y: 720, width: 354, height: 52)
+        let cases: [(String, CGRect, Bool)] = [
+            ("visible", valid, true),
+            ("safe-bottom", CGRect(x: 24, y: 772, width: 354, height: 52), true),
+            ("partial-bottom-enough", CGRect(x: 24, y: 760, width: 354, height: 80), true),
+            ("crosses-overlay-enough", CGRect(x: 24, y: 170, width: 354, height: 80), true),
+            ("overlay-only", CGRect(x: 24, y: 136, width: 354, height: 44), false),
+            ("top-edge-only", CGRect(x: 24, y: 0, width: 354, height: 44), false),
+            ("bottom-edge-only", CGRect(x: 24, y: 827, width: 354, height: 44), false),
+            ("offscreen", CGRect(x: 24, y: 1000, width: 354, height: 52), false),
+            ("tiny-bottom-sliver", CGRect(x: 24, y: 800, width: 354, height: 52), false),
+            ("too-narrow", CGRect(x: 24, y: 720, width: 47, height: 52), false),
+            ("zero", .zero, false),
+            ("negative-size", CGRect(x: 24, y: 720, width: -354, height: 52), false),
+            ("nonfinite", CGRect(x: CGFloat.nan, y: 720, width: 354, height: 52), false),
+        ]
+        for (name, target, accepted) in cases {
+            let result = DSC01MafiaStartHitPlan.make(target: target, viewport: viewport, overlay: overlay)
+            XCTAssertEqual(result != nil, accepted, "Pure Mafia Start hit geometry: " + name)
+            if let result {
+                XCTAssertTrue(target.contains(result.point))
+                XCTAssertFalse(overlay.contains(result.point))
+                XCTAssertGreaterThan(result.point.y, viewport.minY + 48)
+                XCTAssertLessThan(result.point.y, viewport.maxY - 48)
+                XCTAssertEqual(target.minX + target.width * result.normalizedOffset.dx, result.point.x, accuracy: 0.0001)
+                XCTAssertEqual(target.minY + target.height * result.normalizedOffset.dy, result.point.y, accuracy: 0.0001)
+            }
+        }
+        XCTAssertTrue(dsc01CatalogStable(Array(repeating: valid, count: 6)))
+        var moving = Array(repeating: valid, count: 6); moving[3].origin.y += 1
+        XCTAssertFalse(dsc01CatalogStable(moving))
+        XCTAssertFalse(dsc01CatalogStable(Array(repeating: valid, count: 5)))
+        print("DSC01_MAFIA_START_GEOMETRY_CONTRACT {\"schemaVersion\":1,\"cases\":16,\"passed\":true}")
+    }
+}

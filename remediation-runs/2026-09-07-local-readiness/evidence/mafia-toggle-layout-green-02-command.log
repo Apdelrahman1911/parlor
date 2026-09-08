@@ -1,0 +1,70 @@
+{
+  "cycle": "mafia-toggle-layout-green-02",
+  "started_at": "2026-09-07T08:16:01.287619+00:00",
+  "runner_before": {
+    "manifest": [
+      [
+        "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+        "172c4f3162dc6a6b20e912e6551eaca9f33a32ba3d0d6f150ad8becfd30865ea"
+      ]
+    ],
+    "manifest_sha256": "fb59458c24ca17d1be230ada04d8c268d9d43656704d149402f9c0cc6dd55ec4"
+  },
+  "command": [
+    "./gradlew",
+    ":game-modes:mafia:desktopTest",
+    ":game-modes:mafia:detekt",
+    "--no-daemon",
+    "--no-parallel",
+    "--max-workers=1",
+    "--no-configuration-cache",
+    "--dependency-verification=strict",
+    "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=mafia-toggle-layout-green-02",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-Pparlor.android.signing.storeFile=",
+    "-Pparlor.android.signing.storePassword=",
+    "-Pparlor.android.signing.keyAlias=",
+    "-Pparlor.android.signing.keyPassword="
+  ],
+  "env_policy": "JDK21, system Python, strict verification, signing env removed/empty Gradle signing props, cycle-owned TMPDIR/pycache",
+  "outputs_before": [],
+  "status": "PASS",
+  "exit_code": 0,
+  "finished_at": "2026-09-07T08:16:49.807737+00:00",
+  "stop_exit_code": 0,
+  "stopped_at": "2026-09-07T08:16:50.124424+00:00",
+  "workers": {
+    "terminated_owned_workers": [],
+    "remaining_owned_workers": []
+  },
+  "removed_outputs": [
+    "shared/core/build",
+    "shared/networking/build",
+    "shared/content/build",
+    "shared/storage/build",
+    "shared/networking-testing/build",
+    "shared/engine/build",
+    "shared/design-system/build",
+    "shared/session/build",
+    "game-modes/mafia/build",
+    "build",
+    "build-logic/convention/build"
+  ],
+  "retained_outputs": [],
+  "remaining_outputs": [],
+  "cleanup_completed_at": "2026-09-07T08:16:50.396738+00:00",
+  "source_changed_during_cycle": false,
+  "runner_after": {
+    "manifest": [
+      [
+        "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+        "172c4f3162dc6a6b20e912e6551eaca9f33a32ba3d0d6f150ad8becfd30865ea"
+      ]
+    ],
+    "manifest_sha256": "fb59458c24ca17d1be230ada04d8c268d9d43656704d149402f9c0cc6dd55ec4"
+  },
+  "runner_changed_during_cycle": false,
+  "cleanup_errors": [],
+  "deferred_signals": [],
+  "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership."
+}

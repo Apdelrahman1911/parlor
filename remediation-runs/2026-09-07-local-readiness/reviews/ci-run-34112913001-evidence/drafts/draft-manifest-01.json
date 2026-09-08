@@ -1,0 +1,53 @@
+{
+  "at": "2026-09-07T11:25:13.353070+00:00",
+  "author": "/root/release_fix_review",
+  "baseline_head": "f5ea8045bd903c255041b198f54aca67e893612f",
+  "status": "DRAFT ONLY \u2014 NOT APPLIED, NOT COMPILED, NOT TESTED",
+  "artifacts": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/drafts/windows-source-crlf-draft.patch",
+      "sha256": "d84c28ffa3e934d3dce87ecb9f048ef73b88e7899b5cde5f363faa87d83e95ec",
+      "source_changes": [
+        {
+          "path": "composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt",
+          "before_sha256": "00e0d9c8af2d59562ae1a68cc514382f6e017b0c63613ac43810ad407a9d4ba6",
+          "proposed_sha256": "830f077ec2f61747339310051f609d4f95fa79979a5da543620358b72742db31"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/drafts/linux-exact-kotlin-advisory-triage-draft.patch",
+      "sha256": "1047dfc96c89305dc0af2ca1a2cc94b1d084a3a27ae5d7cb8572e60227058ebb",
+      "source_changes": [
+        {
+          "path": "config/android-lint-accepted-warnings.txt",
+          "before_sha256": "e196948d55ae455b7d59a4532b9a8f680e109daef5a704b555d1b903afb9ecbd",
+          "proposed_sha256": "4fe091a88dc1cec1849c0076790fa5db25608cf16ff094a30441ac99a84277d7"
+        },
+        {
+          "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/AndroidReleaseLintContractTest.kt",
+          "before_sha256": "649d3d91daffa9f8a2df92a373d6ba0729d591cfc158abeb0a62df78270b0fc2",
+          "proposed_sha256": "f9732210b5fc08686d97e52282f9bc4985ab310771d34b8233ec435f9b956fee"
+        },
+        {
+          "path": "docs/ANDROID_LINT_TRIAGE.md",
+          "before_sha256": "425d39b620add895c1f8f43c502b2012dd0f5f5a57688a9d9f937f4d923ee209",
+          "proposed_sha256": "cc5ccc1396aa806f2b2f21dfd71095e82a847c352f02170daec9ae0b65fd1ac8"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/drafts/linux-no-kapt-applicability-guard-draft.patch",
+      "sha256": "576599bee03f133be5a6d182503993ee8b480375498c889e14e95d0d28bf55c5",
+      "depends_on": "linux-exact-kotlin-advisory-triage-draft.patch",
+      "warning": "Structural source/metadata guard for current declared build topology, not a defense against malicious obfuscated plugin injection or user init scripts. A KAPT addition must reopen security/version review, not delete this assertion to get green."
+    }
+  ],
+  "no_production_changes": true,
+  "verification_needed": [
+    "Original source test + LF/CRLF guard on desktop; actual Windows rerun for job evidence",
+    "Linux exact35 lint multiset with exact3newKotlin plugin rows; strict pins unchanged",
+    "No-KAPT guard red with synthetic plugin marker/runtime-component addition; green on configured current build",
+    "Independent root review of all draft diffs and explicit no-KAPT triage policy before application"
+  ]
+}

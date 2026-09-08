@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/native_fix_review",
+  "observed_at_utc": "2026-09-07T21:51:08.543658+00:00",
+  "method": "Read-only inspection of public installed SDK headers; no compiler, native, simulator or Gradle invocation.",
+  "sdk": "iPhoneSimulator26.5.sdk as selected in preserved native07 receipt; header inspection does not certify Store-qualified Xcode.",
+  "headers": [
+    {
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSFileManager.h",
+      "sha256": "446f238e10fec2b392bc82b54da061eebc7fcc919f827807911774ef987423eb",
+      "bytes": 58197,
+      "reviewed_ranges": [
+        {
+          "first": 149,
+          "last": 159,
+          "text": "149: /* setAttributes:ofItemAtPath:error: returns YES when the attributes specified in the 'attributes' dictionary are set successfully on the item specified by 'path'. If this method returns NO, a presentable NSError will be provided by-reference in the 'error' parameter. If no error is required, you may pass 'nil' for the error.\n150:  \n151:     This method replaces changeFileAttributes:atPath:.\n152:  */\n153: - (BOOL)setAttributes:(NSDictionary<NSFileAttributeKey, id> *)attributes ofItemAtPath:(NSString *)path error:(NSError **)error API_AVAILABLE(macos(10.5), ios(2.0), watchos(2.0), tvos(9.0));\n154: \n155: /* createDirectoryAtPath:withIntermediateDirectories:attributes:error: creates a directory at the specified path. If you pass 'NO' for createIntermediates, the directory must not exist at the time this call is made. Passing 'YES' for 'createIntermediates' will create any necessary intermediate directories. This method returns YES if all directories specified in 'path' were created and attributes were set. Directories are created with attributes specified by the dictionary passed to 'attributes'. If no dictionary is supplied, directories are created according to the umask of the process. This method returns NO if a failure occurs at any stage of the operation. If an error parameter was provided, a presentable NSError will be returned by reference.\n156:  \n157:     This method replaces createDirectoryAtPath:attributes:\n158:  */\n159: - (BOOL)createDirectoryAtPath:(NSString *)path withIntermediateDirectories:(BOOL)createIntermediates attributes:(nullable NSDictionary<NSFileAttributeKey, id> *)attributes error:(NSError **)error API_AVAILABLE(macos(10.5), ios(2.0), watchos(2.0), tvos(9.0));"
+        },
+        {
+          "first": 173,
+          "last": 177,
+          "text": "173: /* attributesOfItemAtPath:error: returns an NSDictionary of key/value pairs containing the attributes of the item (file, directory, symlink, etc.) at the path in question. If this method returns 'nil', an NSError will be returned by reference in the 'error' parameter. This method does not traverse a terminal symlink.\n174:  \n175:     This method replaces fileAttributesAtPath:traverseLink:.\n176:  */\n177: - (nullable NSDictionary<NSFileAttributeKey, id> *)attributesOfItemAtPath:(NSString *)path error:(NSError **)error API_AVAILABLE(macos(10.5), ios(2.0), watchos(2.0), tvos(9.0));"
+        },
+        {
+          "first": 601,
+          "last": 606,
+          "text": "601: FOUNDATION_EXPORT NSFileAttributeKey const NSFileProtectionKey API_AVAILABLE(macos(10.6), ios(4.0), watchos(2.0), tvos(9.0));\n602: FOUNDATION_EXPORT NSFileProtectionType const NSFileProtectionNone API_AVAILABLE(macos(10.6), ios(4.0), watchos(2.0), tvos(9.0));\n603: FOUNDATION_EXPORT NSFileProtectionType const NSFileProtectionComplete API_AVAILABLE(macos(10.6), ios(4.0), watchos(2.0), tvos(9.0));\n604: FOUNDATION_EXPORT NSFileProtectionType const NSFileProtectionCompleteUnlessOpen API_AVAILABLE(macos(10.6), ios(5.0), watchos(2.0), tvos(9.0));\n605: FOUNDATION_EXPORT NSFileProtectionType const NSFileProtectionCompleteUntilFirstUserAuthentication API_AVAILABLE(macos(10.6), ios(5.0), watchos(2.0), tvos(9.0));\n606: FOUNDATION_EXPORT NSFileProtectionType const NSFileProtectionCompleteWhenUserInactive API_AVAILABLE(ios(17.0), watchos(10.0), tvos(17.0)) API_UNAVAILABLE(macos);"
+        }
+      ]
+    },
+    {
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSURL.h",
+      "sha256": "97981c4e8ad70b8fc8c33c22e73b448a9ce9ad0ddfb7304d85a67d0843365f6d",
+      "bytes": 97493,
+      "reviewed_ranges": [
+        {
+          "first": 177,
+          "last": 183,
+          "text": "177: /* Returns the resource value identified by a given resource key. This method first checks if the URL object already caches the resource value. If so, it returns the cached resource value to the caller. If not, then this method synchronously obtains the resource value from the backing store, adds the resource value to the URL object's cache, and returns the resource value to the caller. The type of the resource value varies by resource property (see resource key definitions). If this method returns YES and value is populated with nil, it means the resource property is not available for the specified resource and no errors occurred when determining the resource property was not available. If this method returns NO, the optional error is populated. This method is currently applicable only to URLs for file system resources. Symbol is present in iOS 4, but performs no operation.\n178:  */\n179: - (BOOL)getResourceValue:(out id _Nullable * _Nonnull)value forKey:(NSURLResourceKey)key error:(out NSError ** _Nullable)error API_AVAILABLE(macos(10.6), ios(4.0), watchos(2.0), tvos(9.0));\n180: \n181: /* Returns the resource values identified by specified array of resource keys. This method first checks if the URL object already caches the resource values. If so, it returns the cached resource values to the caller. If not, then this method synchronously obtains the resource values from the backing store, adds the resource values to the URL object's cache, and returns the resource values to the caller. The type of the resource values vary by property (see resource key definitions). If the result dictionary does not contain a resource value for one or more of the requested resource keys, it means those resource properties are not available for the specified resource and no errors occurred when determining those resource properties were not available. If this method returns NULL, the optional error is populated. This method is currently applicable only to URLs for file system resources. Symbol is present in iOS 4, but performs no operation.\n182:  */\n183: - (nullable NSDictionary<NSURLResourceKey, id> *)resourceValuesForKeys:(NSArray<NSURLResourceKey> *)keys error:(NSError **)error API_AVAILABLE(macos(10.6), ios(4.0), watchos(2.0), tvos(9.0));"
+        },
+        {
+          "first": 288,
+          "last": 295,
+          "text": "288: /* Resource keys applicable only to regular files\n289:  */\n290: FOUNDATION_EXPORT NSURLResourceKey const NSURLFileSizeKey                    API_AVAILABLE(macos(10.6), ios(4.0), watchos(2.0), tvos(9.0)); // Total file size in bytes (Read-only, value type NSNumber)\n291: FOUNDATION_EXPORT NSURLResourceKey const NSURLFileAllocatedSizeKey           API_AVAILABLE(macos(10.6), ios(4.0), watchos(2.0), tvos(9.0)); // Total size allocated on disk for the file in bytes (number of blocks times block size) (Read-only, value type NSNumber)\n292: FOUNDATION_EXPORT NSURLResourceKey const NSURLTotalFileSizeKey               API_AVAILABLE(macos(10.7), ios(5.0), watchos(2.0), tvos(9.0)); // Total displayable size of the file in bytes (this may include space used by metadata), or nil if not available. (Read-only, value type NSNumber)\n293: FOUNDATION_EXPORT NSURLResourceKey const NSURLTotalFileAllocatedSizeKey      API_AVAILABLE(macos(10.7), ios(5.0), watchos(2.0), tvos(9.0)); // Total allocated size of the file in bytes (this may include space used by metadata), or nil if not available. This can be less than the value returned by NSURLTotalFileSizeKey if the resource is compressed. (Read-only, value type NSNumber)\n294: FOUNDATION_EXPORT NSURLResourceKey const NSURLIsAliasFileKey                 API_AVAILABLE(macos(10.6), ios(4.0), watchos(2.0), tvos(9.0)); // true if the resource is a Finder alias file or a symlink, false otherwise ( Read-only, value type boolean NSNumber)\n295: FOUNDATION_EXPORT NSURLResourceKey const NSURLFileProtectionKey              API_AVAILABLE(macos(10.11), ios(9.0), watchos(2.0), tvos(9.0)); // The protection level for this file"
+        },
+        {
+          "first": 310,
+          "last": 313,
+          "text": "310: /* Volumes resource keys\n311:  \n312:  As a convenience, volume resource values can be requested from any file system URL. The value returned will reflect the property value for the volume on which the resource is located.\n313:  */"
+        },
+        {
+          "first": 353,
+          "last": 353,
+          "text": "353: FOUNDATION_EXPORT NSURLResourceKey const NSURLVolumeSupportsFileProtectionKey     API_AVAILABLE(macos(11.0), ios(14.0), watchos(7.0), tvos(14.0)); // True if the volume supports the File Protection attribute (see NSURLFileProtectionKey). (Read-only, value type NSNumber)"
+        }
+      ]
+    },
+    {
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSProcessInfo.h",
+      "sha256": "c121ba7aa9ca7e96f88447ff70e1d4a5a1ef15d3619426fa5476287239e51d22",
+      "bytes": 17721,
+      "reviewed_ranges": [
+        {
+          "first": 21,
+          "last": 25,
+          "text": "21: typedef struct NS_SWIFT_SENDABLE {\n22:     NSInteger majorVersion;\n23:     NSInteger minorVersion;\n24:     NSInteger patchVersion;\n25: } NSOperatingSystemVersion;"
+        },
+        {
+          "first": 55,
+          "last": 61,
+          "text": "55: @property (readonly) NSOperatingSystemVersion operatingSystemVersion API_AVAILABLE(macos(10.10), ios(8.0), watchos(2.0), tvos(9.0));\n56: \n57: @property (readonly) NSUInteger processorCount API_AVAILABLE(macos(10.5), ios(2.0), watchos(2.0), tvos(9.0));\n58: @property (readonly) NSUInteger activeProcessorCount API_AVAILABLE(macos(10.5), ios(2.0), watchos(2.0), tvos(9.0));\n59: @property (readonly) unsigned long long physicalMemory API_AVAILABLE(macos(10.5), ios(2.0), watchos(2.0), tvos(9.0));\n60: \n61: - (BOOL) isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion)version API_AVAILABLE(macos(10.10), ios(8.0), watchos(2.0), tvos(9.0));"
+        }
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "claim": "attributesOfItemAtPath may return a nil dictionary with NSError; original null error argument loses that distinction.",
+      "source": "NSFileManager.h:173-177"
+    },
+    {
+      "claim": "NSFileProtectionCompleteWhenUserInactive is iOS17+; require runtime guard before accessing that symbol on iOS16. Native linkage/runtime behavior is unexecuted.",
+      "source": "NSFileManager.h:606; NSProcessInfo.h:21-25,61"
+    },
+    {
+      "claim": "NSURLVolumeSupportsFileProtectionKey is a read-only NSNumber iOS14+ property and may be queried from any filesystem URL, including this exact attested directory and regular file.",
+      "source": "NSURL.h:310-313,353"
+    },
+    {
+      "claim": "Missing requested resource key is an unavailable observation, not a false/unsupported value; nil resource dictionary is a separate error observation.",
+      "source": "NSURL.h:181-183"
+    },
+    {
+      "claim": "NSURLFileProtectionKey is grouped among regular-file keys, so it is not substituted for original NSFileManager directory assertion.",
+      "source": "NSURL.h:288-295"
+    }
+  ],
+  "not_established": [
+    "No SDK claim read here establishes that this Simulator must expose Complete or cannot expose Complete.",
+    "A reported volume capability is not physical lock/backup evidence.",
+    "Header availability alone does not execute or prove draft Kotlin/Native declarations and linkage."
+  ],
+  "related_online_research": {
+    "report": "remediation-runs/2026-09-07-local-readiness/reviews/l08-file-protection-platform-research-01.json",
+    "sha256": "087a72daf3d5ad468b7022737714b8d2a4d817efb013b1909e7c8c60d56de61c",
+    "access_date": "2026-09-07",
+    "urls": [
+      "https://developer.apple.com/documentation/foundation/fileprotectiontype/complete",
+      "https://developer.apple.com/documentation/foundation/fileattributekey/protectionkey",
+      "https://developer.apple.com/documentation/foundation/filemanager/attributesofitem(atpath:)",
+      "https://developer.apple.com/documentation/foundation/urlresourcekey/volumesupportsfileprotectionkey"
+    ]
+  }
+}

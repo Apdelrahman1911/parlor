@@ -1,0 +1,1404 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-07T03:00:24.762254+00:00",
+  "reviewer": "/root/release_fix_review",
+  "assignment": "Bounded independent precommit baseline review of IOS-B1/RL-C1/RL-C2/RL-C3/WD-C2. No new global audit or local-readiness investigation.",
+  "verdict": "APPROVE THESE FIVE SCOPED FIXES; no blocking regression found in this reinspection. Not a claim that the repository is READY.",
+  "baseline": {
+    "root": "/Users/abdelrahman/Projects/parlor",
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "tracked_diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "source_freeze": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/source-freeze-02.json",
+      "sha256": "7b471f8561a728f4e429d957460f368ecb432aa83833c0f97d26c9ba819e70a4"
+    },
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+    "freshly_rehashed_inputs": 669,
+    "source_drift": [],
+    "identity_note": "Commit alone excludes dirty/untracked build inputs. All669 frozen source inputs freshly rebound; full tracked diff hash also verified. Reports/receipts excluded from shipping source as recorded by freeze.",
+    "register": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/final/issues.json",
+      "sha256": "9cc579e04a8ab2839e927a7462f1c6e6a719d42a38f69e34551ebc1b4f2d6bad"
+    },
+    "owner_testing_content_policy": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/AUTHORIZATION.md",
+      "sha256": "75e8cb210880b34ff5531f0f55801f9a469f05d777adb76671efaaeb08ff9f00"
+    }
+  },
+  "review_method": {
+    "actual_source": "Complete scoped tracked diffs reopened; all new/changed helper and focused test files read in full where ledger says so; surrounding callers, policies and error paths inspected. Current pass includes preceding continuations by same reviewer.",
+    "prior_chains": "Original findings, separate validations and named prior remedial dossiers reread/rebound. Prior full-file/full-story work is reused with exact hashes, not counted as newly read lines.",
+    "new_execution": "No builds/tests/Gradle/Xcode/app/simulator/signing/Store operation performed by reviewer. Parsed archived raw logs/XML and reconciled hashes/source identity independently.",
+    "research": "Retained authoritative official references/exact JDK21.0.11 tag and source applicability reviewed; no new online access date asserted."
+  },
+  "changed_source_coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp.xcodeproj/project.pbxproj",
+      "sha256": "625103b4676a017beb4619c61b705efc84c2be47b71603bddd840c1d3856ea9d",
+      "line_count": 539,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          132,
+          160
+        ],
+        [
+          235,
+          264
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": false,
+      "finding_ids": [
+        "IOS-B1",
+        "DS-C01"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_xcode_framework_phase.py",
+      "sha256": "3033307b0a029d87ab9c8c14d3b3b4d3a0d4db9d183012d6da58fb1e8b5c4a73",
+      "line_count": 99,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          1,
+          99
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": true,
+      "finding_ids": [
+        "IOS-B1"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/PRE_RELEASE_COMPATIBILITY.md",
+      "sha256": "32ae112de9fd761636191c3308faf28fa5a3a8f3fd694064bbeaf3f2ffe69060",
+      "line_count": 59,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          1,
+          59
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": true,
+      "finding_ids": [
+        "DS-C01",
+        "WD-C2"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/PRODUCTION_ARCHITECTURE.md",
+      "sha256": "e5fd25fbdcf8e157c90cf2095ab64d8d62777dbefe6b7b8ef58a74927345252d",
+      "line_count": 309,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          248,
+          265
+        ],
+        [
+          276,
+          302
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": false,
+      "finding_ids": [
+        "ST-C1",
+        "DS-C01",
+        "WD-C2"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/WHODUNIT_TEST_CONTENT.md",
+      "sha256": "19a2ca3a4cba3d60117f76897c7fc0d1cc55f97beb5002aead43fdc020b12756",
+      "line_count": 86,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          1,
+          86
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": true,
+      "finding_ids": [
+        "WD-C2"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+      "sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+      "line_count": 342,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          1,
+          24
+        ],
+        [
+          62,
+          98
+        ],
+        [
+          238,
+          256
+        ],
+        [
+          299,
+          310
+        ],
+        [
+          316,
+          328
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": false,
+      "finding_ids": [
+        "WD-C2"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+      "sha256": "12167f59be005d880c3a4861e58cb9ec2f5ff94dbbda8ddfc02a2846e5df6fef",
+      "line_count": 348,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          1,
+          24
+        ],
+        [
+          63,
+          97
+        ],
+        [
+          189,
+          214
+        ],
+        [
+          217,
+          232
+        ],
+        [
+          327,
+          335
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": false,
+      "finding_ids": [
+        "WD-C2"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+      "sha256": "f4c5ff253a82220f937328de09161d09110b05a98eb6bb012934a80f60a5b96d",
+      "line_count": 391,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          1,
+          28
+        ],
+        [
+          136,
+          180
+        ],
+        [
+          257,
+          290
+        ],
+        [
+          328,
+          345
+        ],
+        [
+          355,
+          391
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": false,
+      "finding_ids": [
+        "WD-C2"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+      "sha256": "a0db6acb459d69bf75a4c15a809b64d1b7cd5c21714dceaedc5973ba2d951826",
+      "line_count": 345,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          1,
+          24
+        ],
+        [
+          60,
+          95
+        ],
+        [
+          122,
+          152
+        ],
+        [
+          211,
+          228
+        ],
+        [
+          320,
+          333
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": false,
+      "finding_ids": [
+        "WD-C2"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/values-ar/strings.xml",
+      "sha256": "4009a4813e51af96e49e5e6c71c66ed931a6436e92fee97e877ff6abe0122a10",
+      "line_count": 373,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          326,
+          329
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": false,
+      "finding_ids": [
+        "WD-C2"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/values/strings.xml",
+      "sha256": "aea6aa1abb5cf4d68734de65fb21e1f71cdc520039dbe12e2c88cdad3c2865f9",
+      "line_count": 373,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          326,
+          329
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": false,
+      "finding_ids": [
+        "WD-C2"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "sha256": "726d948937f757496807bab91381abcb9d050240695fb63dbdbdc21181cb9334",
+      "line_count": 1427,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          144,
+          147
+        ],
+        [
+          209,
+          700
+        ],
+        [
+          755,
+          970
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": false,
+      "finding_ids": [
+        "WD-C2"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt",
+      "sha256": "9325933fab3a9547d14898319c4964e2d791af3bab8011eff68a68f768333c9b",
+      "line_count": 152,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          1,
+          152
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": true,
+      "finding_ids": [
+        "WD-C2"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt",
+      "sha256": "dfdd8aed4bc9f199fadfddf644bc321d1e293cafda2d201d2ec6055bac313fa9",
+      "line_count": 248,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          1,
+          248
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": true,
+      "finding_ids": [
+        "WD-C2"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryGameTraceTest.kt",
+      "sha256": "ca31ec98fc19aaeba3675e6d56135abec745d9307a471fc81543e57bd6f6c058",
+      "line_count": 157,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          1,
+          157
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": true,
+      "finding_ids": [
+        "WD-C2"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/WhodunitContentIdentityTest.kt",
+      "sha256": "c6f88217dc835c33f93e0af0de8a086c005056b13ae436441990c48f21b8f3a1",
+      "line_count": 83,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          1,
+          83
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": true,
+      "finding_ids": [
+        "WD-C2"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitCaseBindingTest.kt",
+      "sha256": "528b7ab77dee6a1acbdf280bcfe58a641bc69e21c24cff77a795fe65af3e1754",
+      "line_count": 363,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          1,
+          125
+        ],
+        [
+          318,
+          363
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": false,
+      "finding_ids": [
+        "WD-C2"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitResumeReconstructionTest.kt",
+      "sha256": "e2ef51a27dd6ba794ff5241326d7f3e1c49e88a730c872bde7cd6bdde1623b09",
+      "line_count": 556,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          264,
+          535
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": false,
+      "finding_ids": [
+        "WD-C2"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitRecoveryInteractionTest.kt",
+      "sha256": "ce78251562131202f41648b26ef897034fd712c59f9cbb5d0af5207a3c47aa57",
+      "line_count": 295,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          1,
+          295
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": true,
+      "finding_ids": [
+        "WD-C2"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/RELEASE_AUTOMATION.md",
+      "sha256": "5598e91447aae3f111654b217118aa64cc9ea0c0c3c34d36f0440c51c0b7f206",
+      "line_count": 638,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          124,
+          157
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": false,
+      "finding_ids": [
+        "RL-C1",
+        "RL-C2",
+        "RL-C3"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_artifact_size.py",
+      "sha256": "1bdf6fe45be629ed8ea6d435727e88d87644319257127732b61a529f1ce1a0b1",
+      "line_count": 117,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          1,
+          117
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": true,
+      "finding_ids": [
+        "RL-C1"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/validate_android_artifact.sh",
+      "sha256": "e0100ed6274e41113e18d1cdaa5310242f749d2f337fdb0c5b85920a011cece6",
+      "line_count": 295,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          1,
+          295
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": true,
+      "finding_ids": [
+        "RL-C1",
+        "RL-C2"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/PrepareAndroidUploadTrust.java",
+      "sha256": "a74b92902839047353aa4b5816bc226e43526960da7c4d2df117e25c9375c211",
+      "line_count": 181,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          1,
+          181
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": true,
+      "finding_ids": [
+        "RL-C2"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_upload_signature.py",
+      "sha256": "fd9723397cd3ae4336371cd6fdd93164d225919d1ed615d5fd48f75055b3eade",
+      "line_count": 373,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          1,
+          373
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": true,
+      "finding_ids": [
+        "RL-C2"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/store_api.py",
+      "sha256": "95ba5a18b5e78d85eb15c8764f011db76293d0bdcf8ee088151321ad5d6b7012",
+      "line_count": 1834,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          100,
+          247
+        ],
+        [
+          258,
+          520
+        ],
+        [
+          630,
+          735
+        ],
+        [
+          1760,
+          1830
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": false,
+      "finding_ids": [
+        "RL-C3"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_google_promotion_edit.py",
+      "sha256": "b6ed5e950782ef5581f86cabd7a263937da52d3dfcf7c84cc45df5bcc2d147db",
+      "line_count": 192,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          1,
+          192
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": true,
+      "finding_ids": [
+        "RL-C3"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_store_api.py",
+      "sha256": "18d49c5deb8cc5383b5a9888f7f14f21884bbbfeb577348412f1930f4972a1d1",
+      "line_count": 1020,
+      "reviewed_ranges_this_bounded_pass": [
+        [
+          250,
+          440
+        ]
+      ],
+      "scoped_diff_read": true,
+      "whole_file_read_this_pass": false,
+      "finding_ids": [
+        "RL-C3"
+      ],
+      "scope_note": "Every scoped changed hunk read. Shared-file unrelated finding hunks are not independently approved by this five-item review. Unchanged whole-file prior reviews retained rather than relabelled as new reading."
+    }
+  ],
+  "original_evidence": [
+    {
+      "finding_id": "IOS-B1",
+      "original_finding": {
+        "path": "audit-runs/2026-09-05-source-audit/candidates/IOS-B1-xcode-swallowed-framework-failure.md",
+        "sha256": "231c7cc3e5020fd4d13b4a418b7a0e5be0ff8a238de8e7797619c2bce8acf93c"
+      },
+      "independent_validation": {
+        "path": "audit-runs/2026-09-05-source-audit/validations/IOS-B1-session_cont.md",
+        "sha256": "951f83318a03aedcb2339da088297b0da90c171cc8982055e0e4a12366fe5503"
+      }
+    },
+    {
+      "finding_id": "RL-C1",
+      "original_finding": {
+        "path": "audit-runs/2026-09-05-source-audit/candidates/RL-C1-whodunit_cont.md",
+        "sha256": "03534c76b1cb3c1d83921fdb2d2604322d66527109766e5b1cd70be362b09635"
+      },
+      "independent_validation": {
+        "path": "audit-runs/2026-09-05-source-audit/validations/RL-C1-session_cont.md",
+        "sha256": "d949d53eae4943723e17010d266595f717a3bb499d90c977e32240e34ea048bd"
+      }
+    },
+    {
+      "finding_id": "RL-C2",
+      "original_finding": {
+        "path": "audit-runs/2026-09-05-source-audit/candidates/RL-C2-whodunit_cont.md",
+        "sha256": "89482c9c2a08c1ce58866f4f620de7f499926b86ce74561b5aa59b8a99f5d9e8"
+      },
+      "independent_validation": {
+        "path": "audit-runs/2026-09-05-source-audit/validations/RL-C2-session_cont.md",
+        "sha256": "260c5fe7144299805ad533c6dfd8c7bac9fb4fb983288728d7666da883bd826e"
+      }
+    },
+    {
+      "finding_id": "RL-C3",
+      "original_finding": {
+        "path": "audit-runs/2026-09-05-source-audit/candidates/RL-C3-whodunit_cont.md",
+        "sha256": "66ce8bc916728d7e0351ea2b0d016ec7982d7b3d3c17361607414d81dc9c1193"
+      },
+      "independent_validation": {
+        "path": "audit-runs/2026-09-05-source-audit/validations/RL-C3-session_cont.md",
+        "sha256": "978a19af9d7d541a0cc7be4d9f6e0021f3695e3a8556d14dfe2044d8ac700d72"
+      }
+    },
+    {
+      "finding_id": "WD-C2",
+      "original_finding": {
+        "path": "audit-runs/2026-09-05-source-audit/candidates/WD-C2-whodunit_cont.md",
+        "sha256": "afdd8a9f8669f8ff5c543cf36f15b9bf0045947162896026f2efa8a10487e615"
+      },
+      "independent_validation": {
+        "path": "audit-runs/2026-09-05-source-audit/validations/WD-C2-mafia_cont.md",
+        "sha256": "e6a632d2c371a642da9183d1334ab6806daffad4c8319ea58c974cec33181df4"
+      }
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "IOS-B1",
+      "fix_author": "/root",
+      "independent_reviewer": "/root/release_fix_review",
+      "authored_any_part_of_this_fix": false,
+      "conclusion": "APPROVE — FIXED AND VERIFIED within the stated local/scoped evidence",
+      "approval_scope": "Reviewed remediation diff/root cause and bound existing executed regression evidence; not whole-application or Store approval",
+      "root_cause_and_correction": "The actual iosApp target invokes the embedded shell phase. set -e precedes cd; cd and checked-in Gradle wrapper invocation are unguarded top-level commands, so either failure returns nonzero before normalization. IDE override remains intentionally explicit. Normalizer cannot launder a failed build through stale output.",
+      "counter_evidence": [
+        "Inspected attachment to iosApp buildPhases and actual shellPath /bin/sh, not only a copied test script.",
+        "Successful embed still normalizes the framework; missing canonical executable remains a failure. Intentional IDE skip unchanged."
+      ],
+      "regression": "Five tests extract and execute the actual pbxproj shell; failed directory change and failed Gradle with stale framework both fail without normalization. Three sibling normalizer tests pass.",
+      "limitations": [
+        "These are actual shell executions using synthetic wrapper/framework fixtures, not new Xcode execution by this reviewer. No diagnosis of historical launch crashes is established."
+      ],
+      "compatibility": "No application identity/signing/embedding task/version changes beyond error propagation.",
+      "prior_independent_dossiers": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/IOS-B1-independent-remediation-review-01.json",
+          "sha256": "3e04f4aeed79ba9f7528357fe18136386abcb90c5fe84abb86f3b76e64e236ab"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/IOS-B1-independent-remediation-review-01.md",
+          "sha256": "8d0f2eb8693356379329e17e134d63a991ef37d0111a6a7df472a4ee41e82b01"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/IOS-B1-independent-remediation-review-02-green.md",
+          "sha256": "6dd99298c8d85295227f1a3435ba1fd8f271e7fd4ec155b7110ea36fc98c52c9"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-release-foundations-rebind-01.json",
+          "sha256": "62e49d3380fab87cdee8888d05cbfe3b330eba37dfcb716c11b73f895052a5da"
+        }
+      ]
+    },
+    {
+      "finding_id": "RL-C1",
+      "fix_author": "/root",
+      "independent_reviewer": "/root/release_fix_review",
+      "authored_any_part_of_this_fix": false,
+      "conclusion": "APPROVE — FIXED AND VERIFIED within the stated local/scoped evidence",
+      "approval_scope": "Reviewed remediation diff/root cause and bound existing executed regression evidence; not whole-application or Store approval",
+      "root_cause_and_correction": "Both AAB and dependency-report guards use Python os.stat with follow_symlinks=False and require a regular file before checking unchanged inclusive 512MiB/10MiB limits. BSD/GNU stat stdout contamination is removed at both sites.",
+      "counter_evidence": [
+        "Both file guards inspected; no GNU-shaped stdout is interpreted as a size. Symlinks/nonregular files reject.",
+        "This fix does not claim to resolve external replacement between metadata read and later open; repository inputs retain their existing trust assumptions."
+      ],
+      "regression": "Seven actual validation-script fixtures pass, including GNU-shaped stat shim and oversized artifact/report cases.",
+      "limitations": [
+        "The current evidence is macOS-hosted with a GNU-shaped shim, not an actual Linux job result. Portable Python metadata semantics are source-backed."
+      ],
+      "compatibility": "Existing512MiB/10MiB bounds, digest/identity/signature safeguards preserved; publication remains disabled.",
+      "prior_independent_dossiers": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/mafia/rl-c1-independent-fix-review-01.json",
+          "sha256": "623d83ad4b20674179887f49c2e733026f0149bd831e91f3ab3ae100e94f941f"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-interactions-01.json",
+          "sha256": "bd900c84f3e0949c0ae3dd04cc1173c171e24150e2e8f78bb36ba64d74386201"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-approval-02.json",
+          "sha256": "e4d58a9ea4131b7399347ff38b5858630a9c8068f6ddf9683ca2f68e20ed5e30"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-release-foundations-rebind-01.json",
+          "sha256": "62e49d3380fab87cdee8888d05cbfe3b330eba37dfcb716c11b73f895052a5da"
+        }
+      ]
+    },
+    {
+      "finding_id": "RL-C2",
+      "fix_author": "/root",
+      "independent_reviewer": "/root/release_fix_review",
+      "authored_any_part_of_this_fix": false,
+      "conclusion": "APPROVE — FIXED AND VERIFIED within the stated local/scoped evidence",
+      "approval_scope": "Reviewed remediation diff/root cause and bound existing executed regression evidence; not whole-application or Store approval",
+      "root_cause_and_correction": "Validation-only JDK21 helper authenticates every non-signature-metadata JAR payload by reading verified entries to EOF, checks every signer against the approved SHA256, validates an approved self-signed leaf as a non-anchor PKIX certificate with code-signing AlgorithmChecker, and only then creates public-only CREATE_NEW temporary trust. Strict jarsigner remains mandatory. Timestamp trust is separately validated against original JDK public roots before timestamp affects leaf validity.",
+      "counter_evidence": [
+        "No blanket exit4 waiver; approved fingerprint, integrity, unsigned-payload, weak-algorithm, validity and code-purpose controls stay enforced. Ordinary META-INF payload is not treated as signature metadata.",
+        "JDK21 trusted-leaf short circuit was checked against retained exact-tag source; helper compensates before adding the leaf as temporary trust.",
+        "TSA validation is isolated from upload trust; non-self-signed untrusted CA does not become trusted. No Store keys accessed.",
+        "Runtime Java feature guard and narrow internal API exports fail closed; helper does not ship in application artifacts."
+      ],
+      "regression": "Twenty real disposable synthetic certificate/JAR policy tests plus one owned TERM-resistant descendant-cleanup test pass. Actual signed payload tampering, unsigned payload, wrong/additional signer, invalid/weak certificate and timestamp trust boundary negatives execute.",
+      "limitations": [
+        "No Store-signed AAB or private credential used. Positive full RFC3161 integration and wider algorithm matrix remain unexecuted.",
+        "The helper adds bounds but is not a full hostile-ZIP sandbox; existing unzip -tqq precedes helper bounds. No broader archive-security claim."
+      ],
+      "compatibility": "No blanket exit4 waiver, no weak-algorithm/fingerprint/unsigned-payload bypass; Java helper is release tooling only.",
+      "prior_independent_dossiers": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/RL-C2-independent-remediation-review-01.json",
+          "sha256": "0dfb26b45804abd11dcea5d3f5fce4c5b168822f01a9598cd774935cf968bbdb"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/RL-C2-independent-remediation-review-01.md",
+          "sha256": "f2d0d7ac7f7cb40ef66e50bf6ba8b0df619dff1f4d112d711dbcf3bc3be40554"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-release-foundations-rebind-01.json",
+          "sha256": "62e49d3380fab87cdee8888d05cbfe3b330eba37dfcb716c11b73f895052a5da"
+        }
+      ]
+    },
+    {
+      "finding_id": "RL-C3",
+      "fix_author": "/root",
+      "independent_reviewer": "/root/release_fix_review",
+      "authored_any_part_of_this_fix": false,
+      "conclusion": "APPROVE — FIXED AND VERIFIED within the stated local/scoped evidence",
+      "approval_scope": "Reviewed remediation diff/root cause and bound existing executed regression evidence; not whole-application or Store approval",
+      "root_cause_and_correction": "One inserted mutation edit is used to read source and destination tracks and bundle digest, perform completed/staged/identity checks, update, validate and commit. Mutation no longer uses validation from a separate inventory edit. Successful postcommit readback remains separate.",
+      "counter_evidence": [
+        "Changes before edit creation are in the validated snapshot; server invalidation after edit creation is surfaced rather than blindly retried.",
+        "No-op idempotent path still validates store digest and cleans unused edit. Failed/unneeded edit deletion is attempted and errors logged, not falsely guaranteed.",
+        "All mutation requests retain safe_retry=False; staged-rollout and candidate digest protections, no-rebuild behavior and disabled workflows remain intact."
+      ],
+      "regression": "Nine production-helper HTTP-mock tests pass for same-edit binding, staged/unfinished/missing-track/digest rejection, concurrent invalidation, idempotency, cleanup and no blind mutation retry. Existing Store helper tests also execute in 172-test aggregate.",
+      "limitations": [
+        "No actual Google Play edit, publication, upload or promotion executed. Official edit semantics applicability is supported by retained research, not mock network proof."
+      ],
+      "compatibility": "Staged-rollout/digest/idempotency/identity/disabled-publication safeguards preserved.",
+      "prior_independent_dossiers": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/mafia/rl-c3-independent-fix-review-01.json",
+          "sha256": "2911a5629eb8b16f34936834301a59c883b1913597a42fa2cd7ecbd49e3c322b"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-interactions-01.json",
+          "sha256": "bd900c84f3e0949c0ae3dd04cc1173c171e24150e2e8f78bb36ba64d74386201"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-approval-02.json",
+          "sha256": "e4d58a9ea4131b7399347ff38b5858630a9c8068f6ddf9683ca2f68e20ed5e30"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-release-foundations-rebind-01.json",
+          "sha256": "62e49d3380fab87cdee8888d05cbfe3b330eba37dfcb716c11b73f895052a5da"
+        }
+      ]
+    },
+    {
+      "finding_id": "WD-C2",
+      "fix_author": "/root/factory_review (chronology/content/recovery draft); /root (follow-up compatibility/UI/retired-Solo preservation refinements)",
+      "independent_reviewer": "/root/release_fix_review",
+      "authored_any_part_of_this_fix": false,
+      "conclusion": "APPROVE — FIXED AND VERIFIED within the stated local/scoped evidence",
+      "approval_scope": "Reviewed remediation diff/root cause and bound existing executed regression evidence; not whole-application or Store approval",
+      "root_cause_and_correction": "Four owner-authorized testing-story chronology contradictions are corrected without changing IDs, ordering, roles or rules. Versions advance 1.0.0 to1.0.1 for these four resources. Loaded content version/digest is mandatory and exact before local recovery launches; incompatible, identity-less and retired-Solo records are retained unchanged for explicit user discard rather than automatically rewritten/deleted. LAN host/peer loaded-content identity remains exact.",
+      "counter_evidence": [
+        "Authorized canonical decisions preserve intentional lies and truthful-but-incomplete alibis; no historical production editorial claim. James departure8:55/return9:15 agrees with clues while false9:10 remains; Layla outage9:05 agrees with Sami and Ghassan order.",
+        "Nadim enters10:50, hides11:00, victim11:10/attack11:12 rather than a full hour; cigarette lie stays. Karim poison9:40 then documented10:15-10:55 alibi remains plausible and consistent with Refaat.",
+        "Recovery rejects unsupported modes before decoding; no Solo reenablement or snapshot repair. New failure text distinguishes kept save; only selected explicit discard deletes.",
+        "Metadata emitted from actual loaded case and independently loaded LAN offer version/digest match; no host seed/private assignment transmission introduced. Existing legacy decoder support does not imply identity-less launch authorization."
+      ],
+      "regression": "Current combined XML confirms chronology5, compatibility4, full-game trace1, recovery UI6, reconstruction11 and sibling case-binding8 tests with no failures/skips. Trace test loops48 story/player/mode combinations twice; this is one descriptor, not48 tests. English/Arabic incompatible, identity-less and retired-Solo retention/discard UI execute on Desktop.",
+      "limitations": [
+        "Fresh pass read every content diff and related factual chains; prior unchanged whole-story reviews retained, not falsely labelled as a new whole-story read.",
+        "Testing-only chronology authorization, not complete editorial/localization/legal rights approval. Older incompatible saves intentionally do not resume; preserved until explicit discard, with no migration.",
+        "Desktop UI/synthetic stores are not native durability or physical LAN rejoin evidence."
+      ],
+      "compatibility": "4 cases1.0.0->1.0.1 and canonical content digests change;3 other cases stay1.0.0. All7 currently support6players and2modes. Exact protocol4.2, content schema1, minimumAppVersion1.0.0, game id/version and snapshot envelope remain unchanged. No migration of old internal/identityless/retired-Solo saves; they are rejected and retained until explicit discard, no Solo reenablement. Testing-content approval is not final editorial/legal approval.",
+      "prior_independent_dossiers": [
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-wdc2-remediation-focused-01.json",
+          "sha256": "563998b215bc002f3902bd035fda8e0db913f22497628ff5e74c42dceb73b631"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-retired-solo-preservation-01.json",
+          "sha256": "4c1809d5a103c0a35c9ee88b0426887d37b53341fb0714d09f3d6c9ee85db7e0"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-wdc2-retired-save-green-01.json",
+          "sha256": "fd8a08793765eea0f5f7cdb408b5358ce4f161b2337a519cbc0b26f4a8e59914"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-wdc2-retired-save-range-correction-01.json",
+          "sha256": "de31c86830c965db935e5d464e81b9d2f6334c713122aaf59aa18c742425f789"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "cycle_receipt": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/receipt.json",
+      "sha256": "ee8e31280b0f2d45b869b6b5fffa23dee89944ea52e36bd6027f33e48415a47a"
+    },
+    "raw_log": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/gradle.log",
+      "sha256": "195ca59c870a0ed1d01332aa8bcdcf28dde2f7e04c689c326debe73dac0e193d"
+    },
+    "command": [
+      "./gradlew",
+      "productionCheck",
+      "--no-build-cache",
+      "--continue",
+      "--no-daemon",
+      "--no-parallel",
+      "--max-workers=1",
+      "--no-configuration-cache",
+      "--dependency-verification=strict",
+      "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=combined-production-04",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-Pparlor.android.signing.storeFile=",
+      "-Pparlor.android.signing.storePassword=",
+      "-Pparlor.android.signing.keyAlias=",
+      "-Pparlor.android.signing.keyPassword="
+    ],
+    "status": "PASS",
+    "exit_code": 0,
+    "started_at": "2026-09-06T12:15:50.742332+00:00",
+    "finished_at": "2026-09-06T12:21:22.403650+00:00",
+    "source_before_after_match": true,
+    "release_suite_actual_executed_tests": 172,
+    "release_group_results": [
+      {
+        "family": "test_android_artifact_size.",
+        "executed_pass_descriptors": 7,
+        "results": [
+          {
+            "line": 1251,
+            "result": "test_both_small_files_with_spaces_pass_gnu_shaped_stat_preflight (test_android_artifact_size.AndroidArtifactSizeTest) ... ok"
+          },
+          {
+            "line": 1252,
+            "result": "test_empty_dependency_report_is_rejected (test_android_artifact_size.AndroidArtifactSizeTest) ... ok"
+          },
+          {
+            "line": 1253,
+            "result": "test_exact_artifact_bound_is_accepted_without_allocating_512_mib (test_android_artifact_size.AndroidArtifactSizeTest) ... ok"
+          },
+          {
+            "line": 1254,
+            "result": "test_exact_dependency_report_bound_is_accepted (test_android_artifact_size.AndroidArtifactSizeTest) ... ok"
+          },
+          {
+            "line": 1255,
+            "result": "test_missing_directory_and_symlink_inputs_are_rejected (test_android_artifact_size.AndroidArtifactSizeTest) ... ok"
+          },
+          {
+            "line": 1256,
+            "result": "test_oversized_artifact_is_rejected (test_android_artifact_size.AndroidArtifactSizeTest) ... ok"
+          },
+          {
+            "line": 1257,
+            "result": "test_oversized_dependency_report_is_rejected (test_android_artifact_size.AndroidArtifactSizeTest) ... ok"
+          }
+        ]
+      },
+      {
+        "family": "test_android_upload_signature.",
+        "executed_pass_descriptors": 21,
+        "results": [
+          {
+            "line": 1258,
+            "result": "test_additional_unapproved_signer_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok"
+          },
+          {
+            "line": 1259,
+            "result": "test_certificate_usage_must_allow_code_signing (test_android_upload_signature.AndroidUploadSignatureTest) ... ok"
+          },
+          {
+            "line": 1260,
+            "result": "test_corrupt_signature_block_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok"
+          },
+          {
+            "line": 1261,
+            "result": "test_disabled_certificate_algorithm_is_rejected_with_modern_jar_signature (test_android_upload_signature.AndroidUploadSignatureTest) ... ok"
+          },
+          {
+            "line": 1262,
+            "result": "test_disabled_jar_algorithm_is_rejected_with_modern_certificate (test_android_upload_signature.AndroidUploadSignatureTest) ... ok"
+          },
+          {
+            "line": 1263,
+            "result": "test_disabled_rsa_key_size_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok"
+          },
+          {
+            "line": 1264,
+            "result": "test_entirely_unsigned_bundle_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok"
+          },
+          {
+            "line": 1265,
+            "result": "test_expired_self_signed_certificate_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok"
+          },
+          {
+            "line": 1266,
+            "result": "test_extended_usage_must_allow_code_signing (test_android_upload_signature.AndroidUploadSignatureTest) ... ok"
+          },
+          {
+            "line": 1267,
+            "result": "test_failed_java_preparation_cannot_be_masked_by_later_verification (test_android_upload_signature.AndroidUploadSignatureTest) ... ok"
+          },
+          {
+            "line": 1268,
+            "result": "test_not_yet_valid_self_signed_certificate_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok"
+          },
+          {
+            "line": 1269,
+            "result": "test_registered_self_signed_upload_certificate_passes_strict_verification (test_android_upload_signature.AndroidUploadSignatureTest) ... ok"
+          },
+          {
+            "line": 1270,
+            "result": "test_signedjar_specific_certificate_policy_cannot_be_bypassed_by_trusting_leaf (test_android_upload_signature.AndroidUploadSignatureTest) ... ok"
+          },
+          {
+            "line": 1271,
+            "result": "test_stale_trust_store_is_not_overwritten_or_used_after_preparation_failure (test_android_upload_signature.AndroidUploadSignatureTest) ... ok"
+          },
+          {
+            "line": 1272,
+            "result": "test_tampered_signed_payload_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok"
+          },
+          {
+            "line": 1273,
+            "result": "test_unknown_critical_certificate_extension_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok"
+          },
+          {
+            "line": 1274,
+            "result": "test_unsigned_extra_payload_including_meta_inf_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok"
+          },
+          {
+            "line": 1275,
+            "result": "test_untrusted_ca_path_does_not_become_a_new_trust_anchor (test_android_upload_signature.AndroidUploadSignatureTest) ... ok"
+          },
+          {
+            "line": 1276,
+            "result": "test_upload_trust_cannot_be_reused_as_timestamp_authority_trust (test_android_upload_signature.AndroidUploadSignatureTest) ... ok"
+          },
+          {
+            "line": 1277,
+            "result": "test_wrong_approved_fingerprint_is_rejected (test_android_upload_signature.AndroidUploadSignatureTest) ... ok"
+          },
+          {
+            "line": 1278,
+            "result": "test_timeout_stops_term_resistant_redirected_descendant (test_android_upload_signature.OwnedSignatureProcessTest) ... ok"
+          }
+        ]
+      },
+      {
+        "family": "test_google_promotion_edit.",
+        "executed_pass_descriptors": 9,
+        "results": [
+          {
+            "line": 1279,
+            "result": "test_already_present_candidate_is_validated_and_edit_is_deleted (test_google_promotion_edit.GooglePromotionEditTest) ... ok"
+          },
+          {
+            "line": 1280,
+            "result": "test_commit_failure_is_not_blindly_retried (test_google_promotion_edit.GooglePromotionEditTest) ... ok"
+          },
+          {
+            "line": 1281,
+            "result": "test_external_change_after_reads_invalidates_mutation_without_retry (test_google_promotion_edit.GooglePromotionEditTest) ... ok"
+          },
+          {
+            "line": 1282,
+            "result": "test_missing_configured_destination_is_rejected (test_google_promotion_edit.GooglePromotionEditTest) ... ok"
+          },
+          {
+            "line": 1283,
+            "result": "test_read_validation_and_commit_use_the_same_edit_snapshot (test_google_promotion_edit.GooglePromotionEditTest) ... ok"
+          },
+          {
+            "line": 1284,
+            "result": "test_staged_destination_in_mutation_snapshot_is_not_completed (test_google_promotion_edit.GooglePromotionEditTest) ... ok"
+          },
+          {
+            "line": 1285,
+            "result": "test_unavailable_or_unfinished_source_in_mutation_snapshot_is_rejected (test_google_promotion_edit.GooglePromotionEditTest) ... ok"
+          },
+          {
+            "line": 1286,
+            "result": "test_validation_failure_deletes_uncommitted_edit_without_retry (test_google_promotion_edit.GooglePromotionEditTest) ... ok"
+          },
+          {
+            "line": 1287,
+            "result": "test_wrong_bundle_digest_in_mutation_snapshot_is_rejected (test_google_promotion_edit.GooglePromotionEditTest) ... ok"
+          }
+        ]
+      },
+      {
+        "family": "test_normalize_embedded_apple_framework.",
+        "executed_pass_descriptors": 3,
+        "results": [
+          {
+            "line": 1288,
+            "result": "test_canonical_framework_is_an_idempotent_success (test_normalize_embedded_apple_framework.EmbeddedAppleFrameworkNormalizationTest) ... ok"
+          },
+          {
+            "line": 1289,
+            "result": "test_case_only_framework_rename_matches_macho_identity (test_normalize_embedded_apple_framework.EmbeddedAppleFrameworkNormalizationTest) ... ok"
+          },
+          {
+            "line": 1290,
+            "result": "test_framework_without_canonical_executable_fails_closed (test_normalize_embedded_apple_framework.EmbeddedAppleFrameworkNormalizationTest) ... ok"
+          }
+        ]
+      },
+      {
+        "family": "test_xcode_framework_phase.",
+        "executed_pass_descriptors": 5,
+        "results": [
+          {
+            "line": 1419,
+            "result": "test_failed_directory_change_cannot_build_from_previous_directory (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... ok"
+          },
+          {
+            "line": 1420,
+            "result": "test_failed_gradle_with_stale_framework_fails_without_normalizing (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... ok"
+          },
+          {
+            "line": 1421,
+            "result": "test_intentional_ide_override_still_skips_gradle_and_normalization (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... ok"
+          },
+          {
+            "line": 1422,
+            "result": "test_successful_embed_normalizes_case_only_framework_name (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... ok"
+          },
+          {
+            "line": 1423,
+            "result": "test_successful_gradle_still_rejects_missing_framework (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... ok"
+          }
+        ]
+      }
+    ],
+    "actual_xml": [
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryChronologyTest.xml",
+        "sha256": "00b9dc81e7fd715be1894b98b92b409fa5d432e4c2122ec1e840ad86dd2deafc",
+        "suite": "TestingStoryChronologyTest",
+        "counts": {
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "actual_method_results": [
+          {
+            "name": "nadimsShortCellarWaitMatchesTheFinalAccountWithoutChangingHisLie()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "jamesLightsOneCigarAt915WhileHis910AlibiRemainsFalse()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "correctionsBumpOnlyTheFourTestingCaseVersions()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "laylaHasOne905OutageAcrossIntroEvidenceAndWitnesses()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "karims940PoisoningPrecedesHisCorroborated1015RecordsAlibi()[desktop]",
+            "failed": false,
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryCompatibilityTest.xml",
+        "sha256": "406d981e1e576e9160de04ed0908760a20d8dd7de715c454d1e7c61e80dbcb13",
+        "suite": "TestingStoryCompatibilityTest",
+        "counts": {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "actual_method_results": [
+          {
+            "name": "correctedStoriesDoNotReuseAnyOriginalCanonicalContentDigest()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "currentSaveRoundTripsButOldOrCrossedIdentityIsRetainedAndRejected()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "identityLessPreClueSavesCannotSilentlyBindToInstalledStoryProse()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "lanOffersMatchOnlyTheExactLoadedRevisionForAllCorrectedCasesAndModes()[desktop]",
+            "failed": false,
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryGameTraceTest.xml",
+        "sha256": "ba9bbfd72b98739f3c654b7caa769f3174adafd6b791ef039543966a6607f991",
+        "suite": "TestingStoryGameTraceTest",
+        "counts": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "actual_method_results": [
+          {
+            "name": "everyCorrectedCaseKillerAndModeCompletesDeterministicallyAndRoundTrips()[desktop]",
+            "failed": false,
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest.xml",
+        "sha256": "96e2475c9a181ee9e816b0dbc0d0eaf06d309648e40a426e266417615b659e43",
+        "suite": "WhodunitRecoveryInteractionTest",
+        "counts": {
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "actual_method_results": [
+          {
+            "name": "englishRetiredSoloSaveIsKeptUntilExplicitDiscard()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "arabicRetiredSoloSaveIsKeptUntilExplicitDiscard()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "arabicIncompatibleSaveIsExplainedAndKeptUntilExplicitDiscard()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "englishIncompatibleSaveIsExplainedAndKeptUntilExplicitDiscard()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "englishIdentityLessSaveIsKeptUntilExplicitDiscard()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "arabicIdentityLessSaveIsKeptUntilExplicitDiscard()[desktop]",
+            "failed": false,
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest.xml",
+        "sha256": "f33df8b4a4f140b0921045cd0d95cf798b9ba7c2f8975c5259446353d817775a",
+        "suite": "WhodunitResumeReconstructionTest",
+        "counts": {
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "actual_method_results": [
+          {
+            "name": "resume_accepts_supportedBareVersionsAndCurrentVersionedPayload()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "resume_propagates_load_cancellation_without_deleting_a_retired_snapshot()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "resume_preserves_a_retired_solo_snapshot_without_rewriting_private_state()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "resume_rejects_partial_or_malformed_content_identity_metadata()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "resume_rejects_unknown_play_mode_metadata_instead_of_changing_ceremony()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "resumed_controller_state_equals_saved_state_and_advances_correctly()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "resume_rejects_another_game_before_decoding_its_payload()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "deleting_snapshot_removes_it_from_listUnfinished()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "loaded_case_boundary_requires_exact_identity_and_content_compatible_state()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "corrupt_snapshot_payload_does_not_blow_up_decoder()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "resume_rejects_a_future_engine_version_before_decoding_its_payload()[desktop]",
+            "failed": false,
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitCaseBindingTest.xml",
+        "sha256": "e09c2e92ac2e6314f5c630a2d6d490780dd8a7347d2ee82bbd18ca233d9cfedb",
+        "suite": "WhodunitCaseBindingTest",
+        "counts": {
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "actual_method_results": [
+          {
+            "name": "authoredFilteredDeflectionTargetsMustMatchExactly()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "recoveredTimerMustMatchAuthoredIdDurationAndRemainderPolicy()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "shippingCaseRejectsFourPlayersAndAcceptsAValidSixPlayerAssignment()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "validatedEnvelopeBindsCaseIdModeAndEffectivePlayerCount()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "reducerAcceptsOnlyTheExactAuthoredDiscussionDuration()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "drawnClueSetMustEqualTheReconstructedPrefixExactly()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "deterministicCluePrefixRejectsASeedMismatchAndNonFinalEvidenceInFinalRound()[desktop]",
+            "failed": false,
+            "skipped": false
+          },
+          {
+            "name": "deterministicCluePrefixRejectsAnotherSeedChoiceAndWrongRoundCategory()[desktop]",
+            "failed": false,
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "receipt_interpretation": "Current combined-production-04 PASS, not the earlier failing combined-production-03. Older failed cycles retained. No cache-only result substituted for focused execution.",
+    "test_count_note": "Per-family/suite totals are not independent repository percentages. No physical P2pKit success inferred."
+  },
+  "research_records": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/RL-C2-research/online-research-01.jsonl",
+      "sha256": "cc05820f18bff3c7a4d20cc7a89291b2f7fc07370474cac99ef36766612e7e3b"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/RL-C2-research/online-research-02-tsa.jsonl",
+      "sha256": "76db115d673b4a13164c2f69faec1fbbf8b0234a3c7f1e5c2ddfe58797a07f13"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/research-01.json",
+      "sha256": "bff0632fe960005c5d6fcd5067fc0a722f9c3eb10b5939e873d4f7f016959bee"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/RL-C2-research/DESIGN-RECOMMENDATION-01.md",
+      "sha256": "98bebdce2ce7f85fd554eca8eea8fc8d40a2e4b76793d5c29ba8c97a4231398e"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/RL-C2-research/TSA-TRUST-RECOMMENDATION-02.md",
+      "sha256": "c1a87ccb77f978936bd3762761139adeec62a7202adc4fe89422a575faa791df"
+    }
+  ],
+  "cleanup": {
+    "reviewer_owned_build_or_background_processes_started": 0,
+    "reviewer_generated_build_outputs": [],
+    "reviewer_stop_or_delete_actions": [],
+    "reason_no_gradle_stop_invoked": "No reviewer build process was started; root owns shared build lane. Do not stop another task or launch Gradle for read-only review.",
+    "selected_build_cycle_stop_exit_code": 0,
+    "selected_build_cycle_stopped_at": "2026-09-06T12:21:22.681195+00:00",
+    "selected_build_cycle_cleanup_completed_at": "2026-09-06T12:21:24.761643+00:00",
+    "selected_build_cycle_removed_outputs": [
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build",
+      "build",
+      "composeApp/build",
+      "build-logic/convention/build"
+    ],
+    "all_listed_output_roots_freshly_verified_absent": true,
+    "selected_cycle_remaining_owned_workers": [],
+    "selected_cycle_cleanup_errors": [],
+    "source_changes_made_by_reviewer": [],
+    "only_additive_deliverable": "remediation-runs/2026-09-07-local-readiness/reviews/baseline-release-content-review.json"
+  },
+  "nonblocking_limits": [
+    "Actual Linux execution, qualified-Xcode26.3/17C529 signed candidates, physical-device LAN/lifecycle and owner Store/legal requirements are not replaced by local fixtures. Current identity collision and disabled publication jobs remain untouched.",
+    "IOS-R1 remains evidence gap and WD-C4 modal-time policy remains unresolved; neither silently repaired/approved by this review.",
+    "Positive timestamp/signing interoperability and full-content editorial/language/rightsholder review remain distinct from the narrowly repaired confirmed roots.",
+    "No commit, push, staging, issue mutation, source/test/config/docs edit, credentials use or release operation performed by this reviewer."
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "at": "2026-09-07T06:41:15.712112+00:00",
+  "reviewer": "/root",
+  "author": "/root/release_fix_review",
+  "conclusion": "APPROVED FOR ROOT-OWNED SYNTHETIC APK BUILD AFTER CURRENT NATIVE LANE; ACTUAL BUILD/RUNTIME PENDING",
+  "files": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-build-helper/build_and_retain_apks.py",
+      "sha256": "8a6a4425d61c0120297665b05b3f34e3943021e432bd95c62b68f86649c695f4",
+      "reviewed_lines": [
+        1,
+        443
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-build-helper/test_build_and_retain_apks.py",
+      "sha256": "543d043e227f49619e85ac0fd9b17c93379dea3043b69e61e6d6e4f3448dfb49",
+      "reviewed_lines": [
+        1,
+        133
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-build-helper/README.md",
+      "sha256": "1e687e603f10c566727cdaeb4dde28f7431fbafbaff9ab731bb6240ded06b613",
+      "reviewed_lines": [
+        1,
+        83
+      ]
+    }
+  ],
+  "production_wiring_review": [
+    "composeApp/build.gradle.kts:64-106,223-318: env-first release signing, Release minify/shrink true, AndroidTest Release runtime.",
+    "scripts/android/run_release_managed_device_smoke.sh:1-70: existing AGP signing-injection mechanism with disposable key."
+  ],
+  "checks": [
+    "Outer lane lock/current receipt/TMPDIR/source identity and initially absent app/build enforced; no independent heavyweight command by review agents.",
+    "Same fresh disposable key via env-only values to repo and existing AGP signing properties. Private signing material never read; no application-ID or repository override.",
+    "Actual apksigner exit0 + singleexactexported fingerprint required on both actualmetadata-boundsingleAPKs.",
+    "Immediate Gradle stop in finally for failures/timeouts/signals; only ownership-attested processes/paths finalized. Original source/globalcache untouched.",
+    "17 actual guard methods passed, no fakekeyAPK runtime claim. Reuses independently verified Darwin ownership control."
+  ],
+  "tests": "evidence/android-apk-guards-01/",
+  "previous_ownership_review": "reviews/android-owned-process-controls-and-runtime-verified-03.json",
+  "limits": [
+    "Only metadata guards now executed; build and real apksigner must run before APKs accepted.",
+    "Retained APKs are temporary evidence until fresh owned ARM64 runtime; not Store-signed candidates.",
+    "LinuxKVM and physicaldevices not established by macOS ARM emulator."
+  ]
+}

@@ -1,0 +1,51 @@
+// Appended ONLY to the copied actual MainViewController.kt, in its package.
+// This is explicitly a synthetic invocation, not an invented in-game route.
+private object DSC01SyntheticSettingsInvocation {
+    private val scope = kotlinx.coroutines.CoroutineScope(
+        kotlinx.coroutines.SupervisorJob() + kotlinx.coroutines.Dispatchers.Main.immediate,
+    )
+    private var job: kotlinx.coroutines.Job? = null
+
+    fun submit(language: String) {
+        check(platform.Foundation.NSThread.isMainThread)
+        check(job?.isActive != true)
+        val observer = com.parlor.designsystem.auditcopy.DSC01CopyOnlyObservation
+        val ordinal = observer.beginCommand(language)
+        // Exactly the production Koin singleton used by App/SettingsScreen;
+        // no mock store, fake callback, or post-start backing-defaults write.
+        val store = org.koin.mp.KoinPlatform.getKoin()
+            .get<com.parlor.storage.settings.SettingsStore>()
+        job = scope.launch {
+            try {
+                store.setLanguageOverride(if (language == "system") null else language)
+                observer.endCommand(ordinal, "applied")
+            } catch (cancelled: kotlinx.coroutines.CancellationException) {
+                observer.endCommand(ordinal, "cancelled")
+                throw cancelled
+            } catch (_: com.parlor.storage.settings.SettingsPersistenceException) {
+                observer.endCommand(ordinal, "failed")
+            }
+        }
+    }
+
+    fun close() {
+        check(job?.isActive != true)
+        job = null
+        scope.coroutineContext[kotlinx.coroutines.Job]?.cancel()
+        com.parlor.designsystem.auditcopy.DSC01CopyOnlyObservation.release()
+    }
+}
+
+fun DSC01ActualCompositionObservation(): String {
+    check(platform.Foundation.NSThread.isMainThread)
+    return com.parlor.designsystem.auditcopy.DSC01CopyOnlyObservation.snapshot()
+}
+
+fun DSC01CaptureActualSession() {
+    check(platform.Foundation.NSThread.isMainThread)
+    com.parlor.designsystem.auditcopy.DSC01CopyOnlyObservation.capture()
+}
+
+fun DSC01SyntheticLanguage(language: String) = DSC01SyntheticSettingsInvocation.submit(language)
+
+fun DSC01ReleaseSyntheticObservation() = DSC01SyntheticSettingsInvocation.close()

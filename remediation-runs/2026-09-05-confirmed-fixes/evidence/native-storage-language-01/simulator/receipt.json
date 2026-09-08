@@ -1,0 +1,128 @@
+{
+  "name": "Parlor-Remediation-native-storage-language-01-d27f5ca5842b484cab9f21327a0e1de7",
+  "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-5",
+  "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+  "commands": [
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "list",
+        "devices",
+        "-j"
+      ],
+      "log": "inventory-before.log",
+      "started_at": "2026-09-05T20:31:51.287573+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T20:31:53.419275+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "create",
+        "Parlor-Remediation-native-storage-language-01-d27f5ca5842b484cab9f21327a0e1de7",
+        "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+        "com.apple.CoreSimulator.SimRuntime.iOS-26-5"
+      ],
+      "log": "create.log",
+      "started_at": "2026-09-05T20:31:53.419625+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T20:31:53.683795+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "list",
+        "devices",
+        "-j"
+      ],
+      "log": "inventory-created.log",
+      "started_at": "2026-09-05T20:31:53.684340+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T20:31:53.801180+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "boot",
+        "124CC16C-87B4-4C2A-9401-3DBDB4088FDB"
+      ],
+      "log": "boot.log",
+      "started_at": "2026-09-05T20:31:53.801701+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T20:31:57.192873+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "bootstatus",
+        "124CC16C-87B4-4C2A-9401-3DBDB4088FDB",
+        "-b"
+      ],
+      "log": "bootstatus.log",
+      "started_at": "2026-09-05T20:31:57.193305+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T20:32:22.374930+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "list",
+        "devices",
+        "-j"
+      ],
+      "log": "inventory-cleanup.log",
+      "started_at": "2026-09-05T20:33:04.974134+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T20:33:05.092202+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "shutdown",
+        "124CC16C-87B4-4C2A-9401-3DBDB4088FDB"
+      ],
+      "log": "shutdown.log",
+      "started_at": "2026-09-05T20:33:05.092681+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T20:33:08.312919+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "delete",
+        "124CC16C-87B4-4C2A-9401-3DBDB4088FDB"
+      ],
+      "log": "delete.log",
+      "started_at": "2026-09-05T20:33:08.315515+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T20:33:08.568388+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "list",
+        "devices",
+        "-j"
+      ],
+      "log": "inventory-final.log",
+      "started_at": "2026-09-05T20:33:08.568712+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T20:33:08.719504+00:00"
+    }
+  ],
+  "cleanup_errors": [],
+  "owned_device_absent": true,
+  "preexisting_device_count": 22,
+  "owned_uuid": "124CC16C-87B4-4C2A-9401-3DBDB4088FDB",
+  "preexisting_devices_preserved": true,
+  "remaining_owned_uuid_processes": []
+}

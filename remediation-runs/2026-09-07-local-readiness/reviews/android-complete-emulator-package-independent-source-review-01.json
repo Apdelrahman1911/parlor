@@ -1,0 +1,51 @@
+{
+  "at": "2026-09-07T11:37:29.424931+00:00",
+  "reviewer": "/root",
+  "author": "/root/factory_review",
+  "classification": "APPROVED FOR BOUND SYNTHETIC TESTS; RUNTIME NOT YET VERIFIED",
+  "reviewed_complete_files": [
+    "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/emulator-package-followup-01/owned_sdk_image.py",
+    "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/emulator-package-followup-01/test_owned_sdk_image.py",
+    "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/emulator-package-followup-01/owned_arm64_smoke_sdk.proposed.py.txt",
+    "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/emulator-package-followup-01/test_root_integration.proposed.py.txt",
+    "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/emulator-package-followup-01/run_integration_controls.proposed.py.txt"
+  ],
+  "changes": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/owned_sdk_image.py",
+      "before_sha256": "4f181d5c9455c43f4d7f51fca1d127c645cb6d55a7c64827ebf4d610b70f8e81",
+      "after_sha256": "722b18056cf5c130076edcd5dfd53a4524f68bd4f68e8f8ad65812ce50eabc61"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/test_owned_sdk_image.py",
+      "before_sha256": "e95c142cf4e1f6c491e1716420b36012c63197669386ec241844dc76b8fd4093",
+      "after_sha256": "9f1bec9f05c09efc11e4021dfa463420024ef33b5993c2091331f4838be30728"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/owned_arm64_smoke_sdk.py",
+      "before_sha256": "bf6a07f759aef88746caac02609dfa6f2d72bb2052de8f46b53c6a73311aa6c8",
+      "after_sha256": "3a425d8dafac853ac3f8c189a68e4951eb1874e79c57f458825d1145d0289991"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/test_root_integration.py",
+      "before_sha256": "ddecb2e127210fe46b2eb1313413ab5b2029b454df5e0ba04c4535d7de0fb406",
+      "after_sha256": "e5a10152cbced1ab7ee4b2fd213702f97ba7820ae4248eb771e55f997a905b34"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/run_integration_controls.py",
+      "before_sha256": "d9dd18311152b87ad55d5bcb704773224a8d6d4da893de93984b907838614815",
+      "after_sha256": "1f30696ec8ad76f4c411338d2e3b325e6ab9a3dcd868ecb530511dbe6e8c198b"
+    }
+  ],
+  "basis": [
+    "Reopened runtime03 CLI emulator-package failure before launch; no app verdict from that failure.",
+    "Complete genuine package cloning avoids writing original SDK or fabricating metadata; hardlink/symlink/special rejection, bounded counts/size/streaming and exact metadata/tool pins retained.",
+    "Reviewed all30 adapter tests and8 root tests; original assertions retained; new source/import/discovery-bound driver requires38 actual methods.",
+    "Original shared runner/native owner unchanged; existing process/socket/instrumentation gates not bypassed.",
+    "Installed five emulator pins separately recorded in author observation and original executable control record."
+  ],
+  "limitations": [
+    "No physical Android or Linux/KVM evidence.",
+    "Approves exact source for tests, not hypothetical runtime success."
+  ]
+}

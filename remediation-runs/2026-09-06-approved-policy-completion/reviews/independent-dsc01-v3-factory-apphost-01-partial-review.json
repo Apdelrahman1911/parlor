@@ -1,0 +1,662 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-09-06T08:45:44.732408+00:00",
+  "reviewer": "/root/factory_review",
+  "author": "/root/native_fix_review",
+  "cycle": "dsc01-apphost-01",
+  "overall_verdict": "FAIL — one actual XCTest executed and failed in Whodunit setup. Not an app crash diagnosis, not PASS, not NOT_RUN.",
+  "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+  "tracked_diff_sha256": "38326880d1f9332618d193f73d49cebc6de063dd26c7e87a8711be9a04a5a430",
+  "approved_controls_sha256": "521b0e4cac65fe89ab4913e153dc4b544a589eae497c67e465d18f01437790e4",
+  "controls_after_sha256": "521b0e4cac65fe89ab4913e153dc4b544a589eae497c67e465d18f01437790e4",
+  "xctest": {
+    "result": "Failed",
+    "totalTestCount": 1,
+    "passedTests": 0,
+    "failedTests": 1,
+    "skippedTests": 0
+  },
+  "test_name": "IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSInvestigation()",
+  "device": {
+    "architecture": "arm64",
+    "deviceId": "6EDE37DE-E0B6-44B6-87B5-3CE2DE096C10",
+    "deviceName": "Parlor-Audit-parlor-audit-dsc01-apphost-01-zbq7j_1u",
+    "modelName": "iPhone 17 Pro",
+    "osBuildNumber": "23F77",
+    "osVersion": "26.5",
+    "platform": "iOS Simulator"
+  },
+  "xcodebuild_exit_code": 65,
+  "failure_classification": "XCTest keyboard-focus/event dispatch failure at exact synthetic player6 field before game session creation. Raw snapshot still has player5 focus. This failure is not evidence of an application exception/OS termination.",
+  "settings_subset": {
+    "status": "BOUNDED ACTUAL OBSERVATIONS VERIFIED; not a separately passing XCTest",
+    "completed": true,
+    "observations": 22,
+    "distinct_before_main_boots": 4,
+    "source_steps": "IOSAppLaunchUITests.swift.in16–89 actual Compose Settings callbacks AR/restart/System and EN/prior preference/restart/System; asserts continueAfterFailure=false precede later failure.",
+    "rows": [
+      {
+        "ordinal": 1,
+        "boot_index": 1,
+        "phase": "before_main",
+        "fixture": "fresh",
+        "preferences": {
+          "appLanguages": [],
+          "hasAppOverride": false,
+          "ownerPrevious": [],
+          "ownerPresent": false,
+          "ownerPreviousPresent": false,
+          "ownerInstalled": "none",
+          "setting": "system",
+          "preferredLanguage": "en"
+        },
+        "native_direction": "unavailable",
+        "actual_settings_compose_direction": null,
+        "root_controller_creations": 0
+      },
+      {
+        "ordinal": 2,
+        "boot_index": 1,
+        "phase": "sample",
+        "fixture": "fresh",
+        "preferences": {
+          "appLanguages": [],
+          "hasAppOverride": false,
+          "ownerPrevious": [],
+          "ownerPresent": false,
+          "ownerPreviousPresent": false,
+          "ownerInstalled": "none",
+          "setting": "system",
+          "preferredLanguage": "en"
+        },
+        "native_direction": "force_ltr",
+        "actual_settings_compose_direction": "absent",
+        "root_controller_creations": 1
+      },
+      {
+        "ordinal": 3,
+        "boot_index": 1,
+        "phase": "sample",
+        "fixture": "fresh",
+        "preferences": {
+          "appLanguages": [],
+          "hasAppOverride": false,
+          "ownerPrevious": [],
+          "ownerPresent": false,
+          "ownerPreviousPresent": false,
+          "ownerInstalled": "none",
+          "setting": "system",
+          "preferredLanguage": "en"
+        },
+        "native_direction": "force_ltr",
+        "actual_settings_compose_direction": "ltr",
+        "root_controller_creations": 1
+      },
+      {
+        "ordinal": 4,
+        "boot_index": 1,
+        "phase": "sample",
+        "fixture": "fresh",
+        "preferences": {
+          "appLanguages": [
+            "ar"
+          ],
+          "hasAppOverride": true,
+          "ownerPrevious": [],
+          "ownerPresent": true,
+          "ownerPreviousPresent": false,
+          "ownerInstalled": "ar",
+          "setting": "ar",
+          "preferredLanguage": "ar"
+        },
+        "native_direction": "force_rtl",
+        "actual_settings_compose_direction": "rtl",
+        "root_controller_creations": 1
+      },
+      {
+        "ordinal": 5,
+        "boot_index": 1,
+        "phase": "sample",
+        "fixture": "fresh",
+        "preferences": {
+          "ownerPresent": true,
+          "appLanguages": [
+            "ar"
+          ],
+          "ownerInstalled": "ar",
+          "setting": "ar",
+          "ownerPrevious": [],
+          "hasAppOverride": true,
+          "preferredLanguage": "ar",
+          "ownerPreviousPresent": false
+        },
+        "native_direction": "force_rtl",
+        "actual_settings_compose_direction": "rtl",
+        "root_controller_creations": 1
+      },
+      {
+        "ordinal": 6,
+        "boot_index": 2,
+        "phase": "before_main",
+        "fixture": "continue",
+        "preferences": {
+          "ownerPresent": true,
+          "appLanguages": [
+            "ar"
+          ],
+          "ownerInstalled": "ar",
+          "setting": "ar",
+          "ownerPrevious": [],
+          "hasAppOverride": true,
+          "preferredLanguage": "ar",
+          "ownerPreviousPresent": false
+        },
+        "native_direction": "unavailable",
+        "actual_settings_compose_direction": null,
+        "root_controller_creations": 0
+      },
+      {
+        "ordinal": 7,
+        "boot_index": 2,
+        "phase": "sample",
+        "fixture": "continue",
+        "preferences": {
+          "ownerPresent": true,
+          "appLanguages": [
+            "ar"
+          ],
+          "ownerInstalled": "ar",
+          "setting": "ar",
+          "ownerPrevious": [],
+          "hasAppOverride": true,
+          "preferredLanguage": "ar",
+          "ownerPreviousPresent": false
+        },
+        "native_direction": "force_rtl",
+        "actual_settings_compose_direction": "absent",
+        "root_controller_creations": 1
+      },
+      {
+        "ordinal": 8,
+        "boot_index": 2,
+        "phase": "sample",
+        "fixture": "continue",
+        "preferences": {
+          "ownerPresent": true,
+          "appLanguages": [
+            "ar"
+          ],
+          "ownerInstalled": "ar",
+          "setting": "ar",
+          "ownerPrevious": [],
+          "hasAppOverride": true,
+          "preferredLanguage": "ar",
+          "ownerPreviousPresent": false
+        },
+        "native_direction": "force_rtl",
+        "actual_settings_compose_direction": "rtl",
+        "root_controller_creations": 1
+      },
+      {
+        "ordinal": 9,
+        "boot_index": 2,
+        "phase": "sample",
+        "fixture": "continue",
+        "preferences": {
+          "setting": "system",
+          "ownerPreviousPresent": false,
+          "ownerInstalled": "none",
+          "hasAppOverride": false,
+          "ownerPrevious": [],
+          "ownerPresent": false,
+          "preferredLanguage": "en",
+          "appLanguages": []
+        },
+        "native_direction": "force_ltr",
+        "actual_settings_compose_direction": "ltr",
+        "root_controller_creations": 1
+      },
+      {
+        "ordinal": 10,
+        "boot_index": 2,
+        "phase": "sample",
+        "fixture": "continue",
+        "preferences": {
+          "setting": "system",
+          "ownerPreviousPresent": false,
+          "ownerInstalled": "none",
+          "hasAppOverride": false,
+          "ownerPrevious": [],
+          "ownerPresent": false,
+          "preferredLanguage": "en",
+          "appLanguages": []
+        },
+        "native_direction": "force_ltr",
+        "actual_settings_compose_direction": "ltr",
+        "root_controller_creations": 1
+      },
+      {
+        "ordinal": 11,
+        "boot_index": 3,
+        "phase": "before_main",
+        "fixture": "previous-ar",
+        "preferences": {
+          "setting": "system",
+          "ownerPreviousPresent": false,
+          "ownerInstalled": "none",
+          "hasAppOverride": true,
+          "ownerPrevious": [],
+          "ownerPresent": false,
+          "preferredLanguage": "ar",
+          "appLanguages": [
+            "ar-EG",
+            "en"
+          ]
+        },
+        "native_direction": "unavailable",
+        "actual_settings_compose_direction": null,
+        "root_controller_creations": 0
+      },
+      {
+        "ordinal": 12,
+        "boot_index": 3,
+        "phase": "sample",
+        "fixture": "previous-ar",
+        "preferences": {
+          "setting": "system",
+          "ownerPreviousPresent": false,
+          "ownerInstalled": "none",
+          "hasAppOverride": true,
+          "ownerPrevious": [],
+          "ownerPresent": false,
+          "preferredLanguage": "ar",
+          "appLanguages": [
+            "ar-EG",
+            "en"
+          ]
+        },
+        "native_direction": "force_rtl",
+        "actual_settings_compose_direction": "absent",
+        "root_controller_creations": 1
+      },
+      {
+        "ordinal": 13,
+        "boot_index": 3,
+        "phase": "sample",
+        "fixture": "previous-ar",
+        "preferences": {
+          "setting": "system",
+          "ownerPreviousPresent": false,
+          "ownerInstalled": "none",
+          "hasAppOverride": true,
+          "ownerPrevious": [],
+          "ownerPresent": false,
+          "preferredLanguage": "ar",
+          "appLanguages": [
+            "ar-EG",
+            "en"
+          ]
+        },
+        "native_direction": "force_rtl",
+        "actual_settings_compose_direction": "rtl",
+        "root_controller_creations": 1
+      },
+      {
+        "ordinal": 14,
+        "boot_index": 3,
+        "phase": "sample",
+        "fixture": "previous-ar",
+        "preferences": {
+          "setting": "en",
+          "ownerPreviousPresent": true,
+          "ownerInstalled": "en",
+          "hasAppOverride": true,
+          "ownerPrevious": [
+            "ar-EG",
+            "en"
+          ],
+          "ownerPresent": true,
+          "preferredLanguage": "en",
+          "appLanguages": [
+            "en"
+          ]
+        },
+        "native_direction": "force_ltr",
+        "actual_settings_compose_direction": "ltr",
+        "root_controller_creations": 1
+      },
+      {
+        "ordinal": 15,
+        "boot_index": 3,
+        "phase": "sample",
+        "fixture": "previous-ar",
+        "preferences": {
+          "setting": "en",
+          "ownerPreviousPresent": true,
+          "ownerInstalled": "en",
+          "hasAppOverride": true,
+          "ownerPrevious": [
+            "ar-EG",
+            "en"
+          ],
+          "ownerPresent": true,
+          "preferredLanguage": "en",
+          "appLanguages": [
+            "en"
+          ]
+        },
+        "native_direction": "force_ltr",
+        "actual_settings_compose_direction": "ltr",
+        "root_controller_creations": 1
+      },
+      {
+        "ordinal": 16,
+        "boot_index": 4,
+        "phase": "before_main",
+        "fixture": "continue",
+        "preferences": {
+          "setting": "en",
+          "ownerPreviousPresent": true,
+          "ownerInstalled": "en",
+          "hasAppOverride": true,
+          "ownerPrevious": [
+            "ar-EG",
+            "en"
+          ],
+          "ownerPresent": true,
+          "preferredLanguage": "en",
+          "appLanguages": [
+            "en"
+          ]
+        },
+        "native_direction": "unavailable",
+        "actual_settings_compose_direction": null,
+        "root_controller_creations": 0
+      },
+      {
+        "ordinal": 17,
+        "boot_index": 4,
+        "phase": "sample",
+        "fixture": "continue",
+        "preferences": {
+          "setting": "en",
+          "ownerPreviousPresent": true,
+          "ownerInstalled": "en",
+          "hasAppOverride": true,
+          "ownerPrevious": [
+            "ar-EG",
+            "en"
+          ],
+          "ownerPresent": true,
+          "preferredLanguage": "en",
+          "appLanguages": [
+            "en"
+          ]
+        },
+        "native_direction": "force_ltr",
+        "actual_settings_compose_direction": "absent",
+        "root_controller_creations": 1
+      },
+      {
+        "ordinal": 18,
+        "boot_index": 4,
+        "phase": "sample",
+        "fixture": "continue",
+        "preferences": {
+          "setting": "en",
+          "ownerPreviousPresent": true,
+          "ownerInstalled": "en",
+          "hasAppOverride": true,
+          "ownerPrevious": [
+            "ar-EG",
+            "en"
+          ],
+          "ownerPresent": true,
+          "preferredLanguage": "en",
+          "appLanguages": [
+            "en"
+          ]
+        },
+        "native_direction": "force_ltr",
+        "actual_settings_compose_direction": "ltr",
+        "root_controller_creations": 1
+      },
+      {
+        "ordinal": 19,
+        "boot_index": 4,
+        "phase": "sample",
+        "fixture": "continue",
+        "preferences": {
+          "setting": "system",
+          "ownerPreviousPresent": false,
+          "ownerInstalled": "none",
+          "hasAppOverride": true,
+          "ownerPrevious": [],
+          "ownerPresent": false,
+          "preferredLanguage": "ar",
+          "appLanguages": [
+            "ar-EG",
+            "en"
+          ]
+        },
+        "native_direction": "force_rtl",
+        "actual_settings_compose_direction": "rtl",
+        "root_controller_creations": 1
+      },
+      {
+        "ordinal": 20,
+        "boot_index": 4,
+        "phase": "sample",
+        "fixture": "continue",
+        "preferences": {
+          "ownerPreviousPresent": false,
+          "ownerPresent": false,
+          "ownerPrevious": [],
+          "appLanguages": [
+            "ar-EG",
+            "en"
+          ],
+          "ownerInstalled": "none",
+          "hasAppOverride": true,
+          "setting": "system",
+          "preferredLanguage": "ar"
+        },
+        "native_direction": "force_rtl",
+        "actual_settings_compose_direction": "rtl",
+        "root_controller_creations": 1
+      },
+      {
+        "ordinal": 21,
+        "boot_index": 4,
+        "phase": "complete",
+        "fixture": "continue",
+        "preferences": {
+          "ownerPreviousPresent": false,
+          "ownerPresent": false,
+          "ownerPrevious": [],
+          "appLanguages": [
+            "ar-EG",
+            "en"
+          ],
+          "ownerInstalled": "none",
+          "hasAppOverride": true,
+          "setting": "system",
+          "preferredLanguage": "ar"
+        },
+        "native_direction": "force_rtl",
+        "actual_settings_compose_direction": "rtl",
+        "root_controller_creations": 1
+      },
+      {
+        "ordinal": 22,
+        "boot_index": 4,
+        "phase": "sample",
+        "fixture": "continue",
+        "preferences": {
+          "ownerPreviousPresent": false,
+          "ownerPresent": false,
+          "ownerPrevious": [],
+          "appLanguages": [
+            "ar-EG",
+            "en"
+          ],
+          "ownerInstalled": "none",
+          "hasAppOverride": true,
+          "setting": "system",
+          "preferredLanguage": "ar"
+        },
+        "native_direction": "force_rtl",
+        "actual_settings_compose_direction": "rtl",
+        "root_controller_creations": 1
+      }
+    ],
+    "conclusion": "Actual persistent owner visible before App on both restarts; owned ar/en overrides replaced only while explicit. System restored absence to en or exact synthetic prior[ar-EG,en] to ar. Direct actual Settings Compose direction and UIKit agree. No controller recreation within a boot.",
+    "limitations": "Prior[ar-EG,en] fixture is synthetic; not actual OS Settings application proof, not power-loss durability or active-game/session continuity."
+  },
+  "uncompleted": {
+    "whodunit": {
+      "completed": false,
+      "observations": 5,
+      "captured_checkpoints": 0,
+      "reason": "Failed during real player entry; no local canonical session observed."
+    },
+    "mafia": "NOT_RUN — prior XCTest failure stops ordered test.",
+    "os_per_app_language": "NOT_RUN — prior XCTest failure; cannot classify absent UI or physical-only blocker."
+  },
+  "source_and_cleanup_review": {
+    "all609_copy_before_after_hashes_match": true,
+    "postcopy_inventory_gaps": {
+      "unexpected_build_inputs": [],
+      "missing_build_inputs": [],
+      "unexpected_source_symlinks": []
+    },
+    "source_unchanged": true,
+    "controls_unchanged": true,
+    "original_output_intrusion": [],
+    "gradle_stops": [
+      {
+        "label": "stop-xcode-immediate",
+        "exit_code": 0,
+        "at": "2026-09-06T08:27:17.102793+00:00"
+      },
+      {
+        "label": "stop-final",
+        "exit_code": 0,
+        "at": "2026-09-06T08:27:18.198634+00:00"
+      }
+    ],
+    "embedded_gradle_stop": "build_exit=0\nstop_exit=0",
+    "cleanup_status": "PASS",
+    "finalization_stages": [
+      {
+        "stage": "final-isolated-gradle-stop",
+        "status": "PASS",
+        "at": "2026-09-06T08:27:18.198640+00:00"
+      },
+      {
+        "stage": "shutdown-owned-simulator-and-app",
+        "status": "PASS",
+        "at": "2026-09-06T08:27:21.665195+00:00"
+      },
+      {
+        "stage": "delete-owned-simulator",
+        "status": "PASS",
+        "at": "2026-09-06T08:27:22.187740+00:00"
+      },
+      {
+        "stage": "stop-owned-command-workers",
+        "status": "PASS",
+        "at": "2026-09-06T08:27:22.546373+00:00"
+      },
+      {
+        "stage": "cleanup-attested-secondary-fifos",
+        "status": "PASS",
+        "at": "2026-09-06T08:27:22.826993+00:00"
+      },
+      {
+        "stage": "verify-workers-before-file-removal",
+        "status": "PASS",
+        "at": "2026-09-06T08:27:22.985025+00:00"
+      },
+      {
+        "stage": "verify-copied-input-identity-after-workers-stop",
+        "status": "PASS",
+        "at": "2026-09-06T08:27:23.124099+00:00"
+      },
+      {
+        "stage": "remove-owned-copy-derived-data-home-temp",
+        "status": "PASS",
+        "at": "2026-09-06T08:27:24.092228+00:00"
+      },
+      {
+        "stage": "read-final-source-identity",
+        "status": "PASS",
+        "at": "2026-09-06T08:27:24.305826+00:00"
+      }
+    ],
+    "owned_device_absent": true,
+    "temp_absent_independent_path_check": true,
+    "owned_processes_remaining": [],
+    "unknown_holders": [],
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "secondary_fifo_ownership": "2exactFIFOs inode/UID/birthtime+ownedworker/parent recorded, removed with2emptyparents after stop; pending/remaining[]; no broad filesystem cleanup."
+  },
+  "privacy_caveat": "Harness does not explicitly export screenshots/hierarchy, but XCTest automatic failureText in raw summary/tests and xcodebuild logs includes a public/synthetic setup hierarchy. Previous no-hierarchy-export wording must be narrowed. This failure precedes role assignment and includes only synthetic Audit Player names/public setup labels; do not generalize it as sanitization proof for every future failure.",
+  "evidence": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-01/receipt.json",
+      "sha256": "ac4b9691556c92e2e7b18de02189f099ad0fa20d8e7ba26018a5c7a8ce151a7f"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-01/xcresult-summary.json",
+      "sha256": "017daab87d491ef8ce09fe576ded1cd7268d304d1448d42d58cac8d0cdcaec9f"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-01/xcresult-tests.json",
+      "sha256": "269f113ef58b2a1ea8c6149dabdd8e3a7ebbc51c4a134ee5eb21815f990252b8"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-01/probe-settings-result.json",
+      "sha256": "bdd270961d22f726c9e4baf18c2f7a79be79f8af9a60200a52d49568becc2c0f"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-01/probe-whodunit-result.json",
+      "sha256": "53f671a6af93902835008b5b2661fc63c62b88a234ccb95b6d286e6fc11be2da"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-01/xcodebuild.log",
+      "sha256": "3a1262f21e420c3edaa2901b74c97b89564afe43a69b12ece35688801256e7e3"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-01/copied-source-manifest.json",
+      "sha256": "2cc5a60ea99a94059e54747ed1483ef472795df825829ec258f1dad6186b8245"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-01/copied-source-inputs-after-build.json",
+      "sha256": "4ac5e5005c38b02dfffe74ad22bca42864c9948ab4a1862815549b47a3358ef8"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-01/copied-source.diff",
+      "sha256": "0ec7526c242477ca326696ee9f13c81881de6c3c9a9f172979802db3dc97725e"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-01/embedded-gradle-stop.txt",
+      "sha256": "fb55a963c8d30249ea6b8be68a62b5921facefdc7823c16ad139fea885be972f"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-01/secondary-fifo-ownership-final.json",
+      "sha256": "3e72a5b30595861c3550c123ff3be8b3ec991b636e1aabf765781e8916ba7aee"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-01/owned-device-after-delete.json",
+      "sha256": "755d442cf44919879856407fe199e916c770d206e3f6b050d6eb286b7af73782"
+    }
+  ],
+  "pending": [
+    "Independent review of any new harness focus correction and rerun, preserving this failed receipt.",
+    "Actual local Whodunit/Mafia continuity and OS Settings investigation remain uncompleted.",
+    "Retained multiplayer-host/nativeLAN/physical/Store/signing/editorial evidence is separate."
+  ],
+  "hygiene": "No source/harness edits or processes started by reviewer; only receipt/source reads and append-only review evidence."
+}

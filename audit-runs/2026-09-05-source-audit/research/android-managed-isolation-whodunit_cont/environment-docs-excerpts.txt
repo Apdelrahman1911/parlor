@@ -1,0 +1,11 @@
+ANDROID_HOME Sets the path to the SDK installation directory. Once set, the value does not typically change and can be shared by multiple users on the same machine. ANDROID_SDK_ROOT , which also points to the SDK installation directory, is deprecated. If you continue to use it, Android Studio and the Android Gradle plugin will check that the old and new variables are consistent.
+
+ANDROID_USER_HOME Sets the path to the user preferences directory for tools that are part of the Android SDK. Defaults to $HOME/.android/ . Some older tools, such as Android Studio 4.3 and earlier, do not read ANDROID_USER_HOME . To override the user preferences location for those older tools, set ANDROID_SDK_HOME to the parent directory you would like the .android directory to be created under.
+
+By default, the emulator stores configuration files under $HOME/.android/ and AVD data under $HOME/.android/avd/ . You can override the defaults by setting the following environment variables. The emulator -avd <avd_name> command searches the avd directory in the order of the values in $ANDROID_AVD_HOME , $ANDROID_USER_HOME/avd/ , and $HOME/.android/avd/ . For emulator environment variable help, type emulator -help-environment at the command line. For information about emulator command-line options, see Start the emulator from the command line .
+
+ANDROID_EMULATOR_HOME Sets the path to the user-specific emulator configuration directory. Defaults to $ANDROID_USER_HOME . Older tools, such as Android Studio 4.3 and earlier, do not read ANDROID_USER_HOME . For those tools, the default value is $ANDROID_SDK_HOME/.android .
+
+ANDROID_AVD_HOME Sets the path to the directory that contains all AVD-specific files, which mostly consist of very large disk images. The default location is $ANDROID_EMULATOR_HOME/avd/ . You might want to specify a new location if the default location is low on disk space.
+
+ANDROID_HOME See ANDROID_HOME .

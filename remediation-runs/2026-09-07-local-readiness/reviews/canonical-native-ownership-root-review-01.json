@@ -1,0 +1,57 @@
+{
+  "reviewed_at": "2026-09-08T00:25:46.642214+00:00",
+  "reviewer": "/root",
+  "baseline_commit": "b6e1947c62661631d0593038db7f64dbf25f720e",
+  "scope": "Complete canonical secondary_fifo/owned_lane sources, original and new tests, diff and native readiness/normal launch callers. Root is NOT independent of owned_lane fix author; independent review is Pasteur.",
+  "sources": [
+    {
+      "path": "scripts/verification/ios-readiness/secondary_fifo.py",
+      "sha256": "170586ec941b02866acfa4b8e54aa3dd0842dbc7bc9c4b50410bca4b1149440a",
+      "reviewed_lines": [
+        1,
+        252
+      ]
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_secondary_fifo.py",
+      "sha256": "02b82b6662b735316fe303f6ba7d7affb203090374cacadd8c67909a174ff99e",
+      "reviewed_lines": [
+        1,
+        401
+      ]
+    },
+    {
+      "path": "scripts/verification/ios-readiness/owned_lane.py",
+      "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+      "reviewed_lines": [
+        1,
+        228
+      ]
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_owned_lane_lsof.py",
+      "sha256": "72a1f9bd5f23d7124e6d8679333e4071c07f67b812ff861e5ac727f7e875ede8",
+      "reviewed_lines": [
+        1,
+        64
+      ]
+    }
+  ],
+  "conclusion": "Focused tooling changes preserve strict ownership and fail-closed cleanup. Partial claims never authorize late unobserved inodes. Cache bounded and process/parent/path/inode-bound. lsof enables warning visibility after terse flag and never converts diagnostics to empty holders. Native09 original attestation category remains unproven.",
+  "evidence": {
+    "canonical_tests": 172,
+    "canonical_skips": 0,
+    "normal_control_tests": 99,
+    "normal_control_skips": 0,
+    "scope": "Executed Python controls, not application or physical-device runtime",
+    "cycles": [
+      "native-ownership-canonical-controls-01",
+      "normal-after-ownership-controls-01"
+    ]
+  },
+  "limitations": [
+    "Some short-lived workers can still escape observation; no guarantee every worker can be collected.",
+    "lsof output limits reject after capture and are not streaming memory bounds.",
+    "No storage metadata waiver, native launch-crash explanation, or Store readiness claim."
+  ]
+}

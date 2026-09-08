@@ -1,0 +1,172 @@
+{
+  "reviewer": "/root/factory_review",
+  "author": "/root/native_fix_review",
+  "timestamp": "2026-09-06T09:28:26.558037+00:00",
+  "classification": "INDEPENDENT_SOURCE_AND_CONTRACT_ACCEPTED_FOR_SINGLE_ROOT_OWNED_RUNTIME_EXECUTION",
+  "approved_control_sha256": "5b3a5cae3e693d1dd8836d58f8a9a423336c8f32a08dd9d0b23c135a89e3ff60",
+  "all_16_controls_independently_rehashed": true,
+  "source_identity": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "diff_sha256": "38326880d1f9332618d193f73d49cebc6de063dd26c7e87a8711be9a04a5a430",
+    "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4"
+  },
+  "source_binding_sha256": "690215bbbc72dadc1a639ba6aa514b43e51a029ba0c07c03a0b7aa3b4f3fa31a",
+  "all_608_original_copy_inputs_match_bound_hash": true,
+  "current_cycle_source_before_after_and_binding_equal": true,
+  "delta_review": {
+    "functional_control_changes": [
+      "IOSAppLaunchUITests.swift.in",
+      "test_copy_observation_contract.py"
+    ],
+    "documentation_only": "README.md",
+    "remaining_controls": "Byte-identical to independently accepted v3; prior full range ledger and apphost01 cleanup reviews retained",
+    "reasoning": [
+      "First field tap only; each exact tagged existing field receives one synthetic name, then bounded exact value assertion. No retry or generic application text entry.",
+      "Standalone newline uses existing configured IME action. CMP1.10.3 dispatches Next to default focus traversal; actual final Done clears focus and hides keyboard. Finite visible and keyboard-hidden checks fail rather than claiming progress.",
+      "Both original source-field files unchanged. Instrumentation only adds public-index test tags, not sanitizer/value/focus/keyboard callbacks.",
+      "New source-policy tests are guards, not proof of runtime focus advancement. All previous62contract checks remain unchanged.",
+      "No app-crash cause claimed for apphost01 focus/selector failure. No production input patch or hidden fallback."
+    ]
+  },
+  "new_read_ranges": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v4/IOSAppLaunchUITests.swift.in",
+      "sha256": "65c8f7c809f722e3a14e7c4c6adc9ca5c6ae5200eee970a1ab41def123fd8f57",
+      "ranges": [
+        [
+          1,
+          305
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v4/test_copy_observation_contract.py",
+      "sha256": "c44e7066046bb134159326ecc3d8ad184ebacc7290bc659fa2712ee8c06ea9d9",
+      "ranges": [
+        [
+          275,
+          357
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v4/copied_sources.py",
+      "sha256": "845f1fa9e3e96347329b050bc323bd89967dce7cb9ebe357c97cc1d392573ee1",
+      "ranges": [
+        [
+          1,
+          130
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v4/run_dsc01_apphost_cycle.py",
+      "sha256": "05e5a45e18cbbeccad63adb24216e33cdb0e64c14dd53d7ad0008ea7815b07f7",
+      "ranges": [
+        [
+          1,
+          115
+        ]
+      ]
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/setup/PlayerEntryScreen.kt",
+      "sha256": "878a154d1b5e44a6d857c73fb77119f2a1ff5e6d5727b2346c620fb4f87e0977",
+      "ranges": [
+        [
+          1,
+          143
+        ]
+      ]
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaPlayerEntryScreen.kt",
+      "sha256": "2daf4b0f890e14fa33b9fea37db42bc15d2e9cf0c396c5e82f9e40876b8bc7a5",
+      "ranges": [
+        [
+          1,
+          138
+        ]
+      ]
+    },
+    {
+      "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/BringIntoViewOnFocus.kt",
+      "sha256": "b3b9d9b50d5ea500313850c5d83a0e182d6eda18d8b098c67e981b5c0ffb483f",
+      "ranges": [
+        [
+          1,
+          36
+        ]
+      ]
+    }
+  ],
+  "prior_review_references": [
+    "reviews/independent-dsc01-v3-factory-source-review-01.json",
+    "reviews/independent-dsc01-v3-factory-contract-review-02.json",
+    "reviews/independent-dsc01-v3-factory-apphost-01-partial-review.json"
+  ],
+  "research": [
+    {
+      "receipt": "native/dsc01_apphost_v3/research/keyboard-source/receipt.json",
+      "version": "CMP1.10.3 matching gradle/libs.versions.toml",
+      "read_ranges": {
+        "UIKitTextInputService.uikit.kt": [
+          [
+            276,
+            335
+          ],
+          [
+            470,
+            509
+          ]
+        ],
+        "CoreTextField.kt": [
+          [
+            838,
+            890
+          ]
+        ],
+        "KeyboardActionRunner.kt": "complete",
+        "LegacyPlatformTextInputServiceAdapter.kt": "complete",
+        "LegacyPlatformTextInputServiceAdapter.skiko.kt": "complete"
+      }
+    },
+    {
+      "receipt": "native/dsc01_apphost_v4/research/apple-type-text.json",
+      "claim": "Apple typeText requires element or descendant keyboard focus. Exact-field assertion is not bypassed."
+    }
+  ],
+  "contract_result": {
+    "evidence": "evidence/native-controls-03",
+    "raw_log_sha256": "4358828f91ceb6c2e7d562b9a6c6528bbc7eebb72e10d009879034f49f60d1c8",
+    "executed": 64,
+    "passed": 64,
+    "failed": 0,
+    "skipped": 0,
+    "duration_seconds": 2.965,
+    "status": "PASS",
+    "stop_exit_code": 0,
+    "outputs_remaining": [],
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "cleanup_errors": [],
+    "control_binding_limitation": "Generic contract receipt binds its runner, not automatically all16controls; this reviewer separately recomputed and compared exact16control manifest. Native runner binds all16 before/after."
+  },
+  "limitations": [
+    "Runtime apphost02 not yet executed/reviewed. Source approval is not DS-C01 repair completion.",
+    "Original genuine OS per-app UI and real local sessions remain pending latest-runtime evidence. Native active multiplayer host/peers are not represented by local sessions.",
+    "Neither simulator nor contract tests establish physicalLAN, Store signing, release readiness or power-loss UserDefaults durability.",
+    "XCTest can automatically emit synthetic/public failure hierarchy; harness does not deliberately request arbitrary hierarchy, screenshots, private state, seeds or role maps. Do not describe automatic diagnostics as universally hierarchy-free."
+  ],
+  "process_and_worktree_safety": {
+    "builds_started_by_reviewer": 0,
+    "app_simulator_processes_started": 0,
+    "production_files_modified": [],
+    "evidence_changes": "This append-only reviewer record only",
+    "cleanup_required_by_reviewer": false
+  }
+}

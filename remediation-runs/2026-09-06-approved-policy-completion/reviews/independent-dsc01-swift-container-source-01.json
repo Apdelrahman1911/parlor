@@ -1,0 +1,134 @@
+{
+  "at": "2026-09-06T12:13:10.825024+00:00",
+  "reviewer": "/root/release_fix_review",
+  "author": "/root",
+  "classification": "APPROVED FOR ROOT-ONLY EXECUTION; NOT RUNTIME/FIX CLOSURE",
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/ComposeContainerViewController.swift",
+      "sha256": "9bdeeaf67a569f4016bc5359ae865b6df9eeaa2a9f6ee36e01041bf79000a903",
+      "reviewed_ranges": [
+        [
+          1,
+          48
+        ]
+      ],
+      "scope": "Full source read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosAppUITests/ComposeContainerViewControllerTests.swift",
+      "sha256": "a4730b77ad93d01df60a4b6fde558bfea264f71b19ee5aa6c4a08d33480eacc8",
+      "reviewed_ranges": [
+        [
+          1,
+          104
+        ]
+      ],
+      "scope": "Full source read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/ContentView.swift",
+      "sha256": "5881b354ccc45340100356fbf37480e94efdcc2e8fe823f0bb6b5b60f8ccaa87",
+      "reviewed_ranges": [
+        [
+          1,
+          62
+        ]
+      ],
+      "scope": "Full source read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp.xcodeproj/project.pbxproj",
+      "sha256": "625103b4676a017beb4619c61b705efc84c2be47b71603bddd840c1d3856ea9d",
+      "reviewed_ranges": [
+        [
+          1,
+          177
+        ],
+        [
+          230,
+          285
+        ],
+        [
+          460,
+          510
+        ]
+      ],
+      "scope": "Full modified diff plus surrounding file/buildrefs/target/sources/configurations; fullunchangedproject previously reviewed"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+      "sha256": "c77abd03ddcae230b4752d888b16c3d74231d89c967624c31129d176a5ed20ce",
+      "reviewed_ranges": [
+        [
+          1,
+          56
+        ]
+      ],
+      "scope": "Full source read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/Info.plist",
+      "sha256": "db09f2c4a3cc378f4bb24b6de29653283c90227795a27f64370c9da87ef0d0a5",
+      "reviewed_ranges": [
+        [
+          1,
+          61
+        ]
+      ],
+      "scope": "Full source read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp.xcodeproj/xcshareddata/xcschemes/iosApp.xcscheme",
+      "sha256": "b883fb73d15c7cf4faf868d2cdc8c2fb921c7ffe3606893733b1f89a33747312",
+      "reviewed_ranges": [
+        [
+          1,
+          103
+        ]
+      ],
+      "scope": "Full source read"
+    }
+  ],
+  "main_restored_exact_head": true,
+  "failed_kotlin_prototype_absent": [
+    true,
+    true
+  ],
+  "boundaries": [
+    "One plain UIKit parent owns one existing Compose controller; stable let reference and no update-time construction or language-keyed root.",
+    "Apple sequence addChild/addSubview/physicalfullboundsconstraints/didMove; standard automatic appearance forwarding; no additionalsafearea/keyboardpadding.",
+    "4supported child policy getters and supported/preferred orientation forwarding remain. No newUIViewController/UINavigationController routing stack; Koin/session/reducer/protocol unchanged.",
+    "Existing SwiftUI black inactive/background cover and accessibilityHidden stay intact. LocalUIViewController in pinned Compose still refers to actual child.",
+    "Unavailable NSCoder initialization only for programmatic non-storyboard container; required initializer not made a silent no-op."
+  ],
+  "test_review": [
+    "Same48lineproductionSwiftfile is listed once in appsources and once in existingUITestsources via distinct buildrefs/samefileref. Tests arenot a copied fake implementation.",
+    "4zeroargument Void XCTest methods, each@MainActor plus isMainThread; source-discovered but not yet compiled/executed.",
+    "Identity/semantics with bothdirections;12geometrycombinations(3sizes×2parent×2child);4decorationdelegates+2orientationvalues;appear/disappear exactlyonce.",
+    "UIKit tests do not prove realSwiftUI/Compose/publicSettings/sessioncontinuity or physicalgestures."
+  ],
+  "orientation_decision": {
+    "conclusion": "Omitting deprecated shouldAutorotate preserves ACTUAL current production child default; do not add a hypothetical negative-autorotation policy.",
+    "proof": "Apple docdefaulttrue+deprecatedAt16, appdeployment16; exactCMP1.10.3ComposeHostingandCMPViewControllersuperclass do not override the property. Modernorientationdelegates remain.",
+    "counter_evidence": "Deprecation is not evidence UIKit never calls it. Apple supportedInterfaceOrientations discussion still references shouldAutorotate. If future dependency/app adds customized childrotation semantics, re-review this boundary.",
+    "references": "reviews/dsc01-orientation-reference-01/{CMPViewController.h,CMPViewController.m,receipt.json,apple-apis.json}; reviews/independent-uikit-category-reference-02.json"
+  },
+  "original_trial_failure": {
+    "receipt_sha256": "9aaf8fd5c0a6fe624e106d59c364a5678f99efefd2ce187ad1cf9bcbb0b2ea62",
+    "cycle": "locale-continuity-focused-01",
+    "exit_code": 1,
+    "classification": "FAIL — compileonly;0tests executed",
+    "errors": "UnresolvedUIKitcategorycalls/nonoverridableextensionproperties;13 positional waitUntil arguments choose String? parameter. Not runtimeappcrash or defectwitness.",
+    "stop_exit_code": 0,
+    "remaining_outputs": [],
+    "cleanup_errors": []
+  },
+  "required_next": [
+    "Rootfresh sourcebound V6 apphost whose native oracle measures actualComposechild, notoutercontainer or expectedstate.",
+    "Compile/discover/execute all4UIKit tests; no caller-context substitutions.",
+    "Runfocusedhost/currentcombinedtests and preserve exactsourceevidence.",
+    "Physicalgesture/OSlanguageUI/VoiceOver/rotation andprivacy-covervisual checks remain explicit limits."
+  ],
+  "reviewer_actions": "Source/reference/evidence reads; compactreviewwritesonly. NoGradle/Xcode/apps/testlaunch/processstop/sourceedits."
+}

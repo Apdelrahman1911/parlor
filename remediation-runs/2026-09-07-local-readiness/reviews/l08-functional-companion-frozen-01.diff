@@ -1,0 +1,2239 @@
+--- /dev/null
++++ functional-companion/L08StorageFunctionalLaunch.swift.in
+@@ -0,0 +1,71 @@
++// Separate functional companion; required Complete failures remain recorded, never a strict L08 PASS.
++extension DSC01Probe {
++    var isL08StorageFunctionalScenario: Bool { scenario == "l08-storage-functional" }
++
++    func startL08StorageFunctional(_ action: String) {
++        precondition(Thread.isMainThread && isL08StorageFunctionalScenario)
++        let environment = ProcessInfo.processInfo.environment
++        guard let number = Int(environment["PARLOR_L08_STORAGE_FUNCTIONAL_BOOT"] ?? ""),
++              (1...13).contains(number),
++              ["save", "load", "continue", "legacy-seed", "legacy-load", "legacy-neighbor",
++               "dual-preserved", "discard-observed", "final-absence"].contains(action), l08Display != "running" else {
++            l08Display = "invalid-context"; return
++        }
++        l08Display = "running"
++        MainViewControllerKt.L08StorageFunctionalCommand(action: action) { [weak self] json in
++            DispatchQueue.main.async {
++                guard let self else { return }
++                do {
++                    let raw = Data(json.utf8)
++                    guard raw.count <= 4096,
++                          let observation = try JSONSerialization.jsonObject(with: raw) as? [String: Any] else {
++                        throw self.fixtureError()
++                    }
++                    let images = try nativeReadinessLoadedImages()
++                    let record: [String: Any] = ["schema_version": 1, "scenario": "l08-storage-functional",
++                        "signing_mode": nativeReadinessSigningMode, "run_token": environment["PARLOR_DSC01_RUN_TOKEN"] ?? "",
++                        "process_boot": self.boot, "boot_ordinal": number, "action": action,
++                        "loaded_app_images": images.app, "loaded_compose_framework": images.framework,
++                        "loader_environment": try nativeReadinessLoaderEnvironment(), "observation": observation]
++                    let encoded = try JSONSerialization.data(withJSONObject: record, options: [.sortedKeys])
++                    guard encoded.count <= 16384 else { throw self.fixtureError() }
++                    let url = FileManager.default.temporaryDirectory.appendingPathComponent(
++                        "parlor-l08-storage-functional-\(number)-\(action).json")
++                    guard !FileManager.default.fileExists(atPath: url.path) else { throw self.fixtureError() }
++                    try encoded.write(to: url, options: [.withoutOverwriting])
++                    self.l08Display = String(decoding: encoded, as: UTF8.self)
++                } catch {
++                    self.l08Display = "bounded-receipt-failed"
++                }
++            }
++        }
++    }
++
++    func sampleL08Ui() { l08UiDisplay = MainViewControllerKt.L08UiObservation() }
++}
++
++private struct L08StorageFunctionalControls: View {
++    @ObservedObject var probe: DSC01Probe
++    var body: some View {
++        VStack(spacing: 4) {
++            HStack {
++                Button("Save fixture") { probe.startL08StorageFunctional("save") }.accessibilityIdentifier("l08-functional-action-save")
++                Button("Read checkpoint") { probe.startL08StorageFunctional("load") }.accessibilityIdentifier("l08-functional-action-load")
++                Button("Continue fixture") { probe.startL08StorageFunctional("continue") }.accessibilityIdentifier("l08-functional-action-continue")
++            }
++            HStack {
++                Button("Seed legacy") { probe.startL08StorageFunctional("legacy-seed") }.accessibilityIdentifier("l08-functional-action-legacy-seed")
++                Button("Migrate legacy") { probe.startL08StorageFunctional("legacy-load") }.accessibilityIdentifier("l08-functional-action-legacy-load")
++                Button("Read damaged") { probe.startL08StorageFunctional("legacy-neighbor") }.accessibilityIdentifier("l08-functional-action-legacy-neighbor")
++            }
++            HStack {
++                Button("Read retained") { probe.startL08StorageFunctional("dual-preserved") }.accessibilityIdentifier("l08-functional-action-dual-preserved")
++                Button("Check discard") { probe.startL08StorageFunctional("discard-observed") }.accessibilityIdentifier("l08-functional-action-discard-observed")
++                Button("Check absence") { probe.startL08StorageFunctional("final-absence") }.accessibilityIdentifier("l08-functional-action-final-absence")
++            }
++            Text("L08 result").accessibilityIdentifier("l08-storage-functional-result").accessibilityValue(probe.l08Display)
++            Button("Observe L08 UI") { probe.sampleL08Ui() }.accessibilityIdentifier("l08-ui-observe")
++            Text("L08 UI result").accessibilityIdentifier("l08-ui-result").accessibilityValue(probe.l08UiDisplay)
++        }
++    }
++}
+--- /dev/null
++++ functional-companion/L08StorageFunctionalProbe.kt.in
+@@ -0,0 +1,586 @@
++// COPY-ONLY functional companion. Complete comparisons remain explicit unsuccessful obligations.
++// Original strict L08 is unchanged; synthetic payloads stay within this process/sandbox.
++@file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class, kotlinx.cinterop.BetaInteropApi::class)
++
++package com.parlor.app.readiness
++
++import com.parlor.app.resolveLocalResumeDestination
++import com.parlor.app.shell.game.GameShellRegistry
++import com.parlor.app.shell.game.GameShellRouter
++import com.parlor.app.shell.home.readLocalRecoveryInventory
++import com.parlor.app.storage.IosSnapshotFileSystem
++import com.parlor.app.storage.readBoundedSnapshotBytes
++import com.parlor.content.repository.CaseRepository
++import com.parlor.core.ids.SessionId
++import com.parlor.core.result.DataError
++import com.parlor.core.result.Result
++import com.parlor.engine.snapshot.GameSnapshot
++import com.parlor.games.mafia.MafiaDefinition
++import com.parlor.games.mafia.readiness.L08MafiaSnapshots
++import com.parlor.games.whodunit.WhodunitDefinition
++import com.parlor.games.whodunit.readiness.L08WhodunitSnapshots
++import com.parlor.networking.transport.RoomTransport
++import com.parlor.storage.snapshot.FileBackedSnapshotStore
++import com.parlor.storage.snapshot.SnapshotFileSystem
++import com.parlor.storage.snapshot.SnapshotStore
++import com.parlor.transport.p2p.P2pKitRoomTransport
++import kotlinx.cinterop.ByteVar
++import kotlinx.cinterop.ObjCObjectVar
++import kotlinx.cinterop.alloc
++import kotlinx.cinterop.cValue
++import kotlinx.cinterop.ptr
++import kotlinx.cinterop.value
++import kotlinx.cinterop.addressOf
++import kotlinx.cinterop.allocArray
++import kotlinx.cinterop.memScoped
++import kotlinx.cinterop.toKString
++import kotlinx.cinterop.usePinned
++import kotlinx.coroutines.CancellationException
++import kotlinx.coroutines.CoroutineScope
++import kotlinx.coroutines.Dispatchers
++import kotlinx.coroutines.SupervisorJob
++import kotlinx.coroutines.cancel
++import kotlinx.coroutines.delay
++import kotlinx.coroutines.launch
++import kotlinx.coroutines.withTimeout
++import kotlinx.serialization.json.Json
++import kotlinx.serialization.json.JsonArray
++import kotlinx.serialization.json.JsonObject
++import kotlinx.serialization.json.buildJsonObject
++import kotlinx.serialization.json.put
++import org.koin.mp.KoinPlatform
++import platform.Foundation.NSApplicationSupportDirectory
++import platform.Foundation.NSBundle
++import platform.Foundation.NSData
++import platform.Foundation.NSError
++import platform.Foundation.NSCocoaErrorDomain
++import platform.Foundation.NSPOSIXErrorDomain
++import platform.Foundation.NSOperatingSystemVersion
++import platform.Foundation.NSDocumentDirectory
++import platform.Foundation.NSFileHandle
++import platform.Foundation.NSFileManager
++import platform.Foundation.NSFileProtectionComplete
++import platform.Foundation.NSFileProtectionNone
++import platform.Foundation.NSFileProtectionCompleteUnlessOpen
++import platform.Foundation.NSFileProtectionCompleteUntilFirstUserAuthentication
++import platform.Foundation.NSFileProtectionCompleteWhenUserInactive
++import platform.Foundation.NSFileProtectionKey
++import platform.Foundation.NSFileType
++import platform.Foundation.NSFileTypeDirectory
++import platform.Foundation.NSFileTypeRegular
++import platform.Foundation.NSHomeDirectory
++import platform.Foundation.NSNumber
++import platform.Foundation.NSProcessInfo
++import platform.Foundation.NSURL
++import platform.Foundation.NSURLIsExcludedFromBackupKey
++import platform.Foundation.NSUserDomainMask
++import platform.Foundation.closeFile
++import platform.Foundation.create
++import platform.Foundation.fileHandleForWritingAtPath
++import platform.Foundation.seekToFileOffset
++import platform.Foundation.synchronizeFile
++import platform.Foundation.writeData
++import platform.posix.PATH_MAX
++import platform.posix.realpath
++
++object L08StorageFunctionalProbe {
++    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
++    private var active = false
++    private var commandIndex = 0
++    private var expected: GameSnapshot? = null
++    private var stage = "context"
++    private val completeComparisons = mutableListOf<JsonObject>()
++    private val aliases = listOf("wc", "we", "mon", "moff", "legacy", "damaged", "dual")
++    private val plans = mapOf(
++        1 to listOf("save"), 2 to listOf("load", "continue"),
++        3 to listOf("save"), 4 to listOf("load", "continue"),
++        5 to listOf("save"), 6 to listOf("load", "continue"),
++        7 to listOf("save"), 8 to listOf("load", "continue"),
++        9 to listOf("legacy-seed"), 10 to listOf("legacy-load", "continue"),
++        11 to listOf("legacy-neighbor", "discard-observed"),
++        12 to listOf("dual-preserved", "discard-observed"), 13 to listOf("final-absence"),
++    )
++
++    fun command(action: String, onJson: (String) -> Unit) {
++        if (active) return // The XCTest must fail if an action produces no distinct receipt.
++        active = true
++        scope.launch {
++            stage = "context" // A new command must not inherit the previous command's stage.
++            completeComparisons.clear()
++            var token = ""
++            var boot = 0
++            var finished = false
++            try {
++                val env = NSProcessInfo.processInfo.environment
++                token = env["PARLOR_DSC01_RUN_TOKEN"] as? String ?: error("context")
++                boot = (env["PARLOR_L08_STORAGE_FUNCTIONAL_BOOT"] as? String)?.toIntOrNull() ?: error("context")
++                requireContext(token, "l08-storage-functional")
++                val plan = checkNotNull(plans[boot])
++                check(plan.getOrNull(commandIndex) == action)
++                val checks = withTimeout(60_000) { execute(token, boot, action) }
++                commandIndex++
++                finished = commandIndex == plan.size
++                onJson(buildJsonObject {
++                    put("schema_version", 1); put("kind", "l08-storage-functional"); put("functional_status", "PASS")
++                    put("boot_ordinal", boot); put("command_ordinal", commandIndex)
++                    put("run_token", token); put("action", action); put("functional_checks", checks)
++                    put("complete_comparisons", JsonArray(completeComparisons.toList()))
++                    put("physical_or_store_evidence", false)
++                }.toString())
++            } catch (cancelled: CancellationException) {
++                // Cancellation is not storage absence and cannot be reported as success.
++                onJson(failed(token, boot, action, "cancelled"))
++                finished = true
++                throw cancelled
++            } catch (_: Exception) {
++                onJson(failed(token, boot, action, "fixture_or_boundary_failure"))
++                finished = true
++            } finally {
++                active = false
++                if (finished) {
++                    expected?.payload?.fill(0)
++                    expected = null
++                    completeComparisons.clear()
++                    L08WhodunitSnapshots.release()
++                    L08MafiaSnapshots.release()
++                    scope.cancel() // Own observer scope only. UI/session scopes retain their actual owner.
++                }
++            }
++        }
++    }
++
++    private suspend fun execute(token: String, boot: Int, action: String): JsonObject {
++        stage = "actual-bindings"
++        val koin = KoinPlatform.getKoin()
++        val store = koin.get<SnapshotStore>()
++        val filesystem = koin.get<SnapshotFileSystem>()
++        check(store is FileBackedSnapshotStore && filesystem is IosSnapshotFileSystem)
++        check(koin.get<RoomTransport>() is P2pKitRoomTransport)
++        val paths = OwnedSnapshotPaths(token, ::enterStage, ::recordProtectionComparison)
++        val alias = when (boot) {
++            in 1..8 -> aliases[(boot - 1) / 2]
++            9, 10 -> "legacy"
++            11 -> "damaged"
++            12 -> "dual"
++            else -> "none"
++        }
++        val id = paths.id(alias.takeIf { it != "none" } ?: "wc")
++        when (action) {
++            "save", "legacy-seed" -> {
++                stage = "initial-absence"
++                aliases.forEach { checkAbsent(store, paths, it) }
++                stage = "reachable-checkpoint"
++                val envelope = envelope(id, alias)
++                expected = envelope
++                if (action == "save") {
++                    stage = "real-store-save"
++                    check(store.save(envelope) is Result.Success)
++                    assertEnvelope(store, id, envelope)
++                    paths.protectedMetadata(alias, "save")
++                } else {
++                    stage = "owned-legacy-seed"
++                    val encoded = koin.get<Json>().encodeToString(GameSnapshot.serializer(), envelope).encodeToByteArray()
++                    try {
++                        paths.seedLegacy("legacy", encoded)
++                        paths.seedLegacy("damaged", "!malformed-l08-synthetic-neighbor".encodeToByteArray())
++                    } finally { encoded.fill(0) }
++                    // Do not read via store/list here: migration must occur on the next process boot.
++                    paths.assertLegacyPresent("legacy")
++                    paths.assertLegacyPresent("damaged")
++                    paths.assertProtectedAbsent("legacy")
++                    paths.assertProtectedAbsent("damaged")
++                    // The dual-copy case is a second independently reducer-built
++                    // envelope. Do not copy another session's encoded identity.
++                    L08MafiaSnapshots.release()
++                    stage = "reachable-checkpoint"
++                    val dual = envelope(paths.id("dual"), "dual")
++                    try {
++                        stage = "real-store-save"
++                        check(store.save(dual) is Result.Success)
++                        assertEnvelope(store, dual.sessionId, dual)
++                        stage = "owned-legacy-seed"
++                        val dualBytes = koin.get<Json>().encodeToString(GameSnapshot.serializer(), dual).encodeToByteArray()
++                        try { paths.seedDualCopyAndDamageTag(dualBytes) } finally { dualBytes.fill(0) }
++                    } finally { dual.payload.fill(0) }
++                    // No store/list read after tampering: the next cold boot
++                    // must exercise production precedence and preservation.
++                }
++                return if (action == "save") checks("actual_bindings", "initial_absence", "reachable_checkpoint",
++                    "real_store_save_roundtrip", "owned_metadata_and_header") else checks("actual_bindings", "initial_absence",
++                    "reachable_checkpoint", "legacy_seed_exclusive", "healthy_and_malformed_coexist",
++                    "valid_dual_copy_seeded_recognized_tag_damaged")
++            }
++            "load", "legacy-load" -> {
++                stage = "restart-envelope"
++                val envelope = envelope(id, alias)
++                expected = envelope
++                assertEnvelope(store, id, envelope)
++                stage = "production-recovery"
++                if (alias in setOf("wc", "we")) L08WhodunitSnapshots.verifyRecovery(store, koin.get())
++                else L08MafiaSnapshots.verifyRecovery(store, koin.get())
++                val route = resolveLocalResumeDestination(store, GameShellRouter(koin.get<GameShellRegistry>()), id)
++                check(route is Result.Success && route.data.sessionId == id && route.data.gameId == envelope.gameId)
++                stage = "protected-metadata"
++                paths.protectedMetadata(alias, "load")
++                if (action == "legacy-load") {
++                    stage = "legacy-neighbor-isolation"
++                    val inventory = readLocalRecoveryInventory(store)
++                    check(inventory is Result.Success)
++                    check(inventory.data.entries.single { it.sessionId == id }.gameId == envelope.gameId)
++                    check(inventory.data.entries.single { it.sessionId == paths.id("damaged") }.gameId == null)
++                    check(inventory.data.entries.single { it.sessionId == paths.id("dual") }.gameId == null)
++                    check(inventory.data.hasUnreadableRecord)
++                    checkCorrupted(store, paths.id("damaged"))
++                    paths.assertLegacyAbsent("legacy")
++                    paths.assertLegacyPresent("damaged")
++                    paths.assertProtectedAbsent("damaged")
++                    paths.legacyExcluded()
++                    checkCorrupted(store, paths.id("dual"))
++                    paths.assertLegacyPresent("dual")
++                    paths.protectedMetadata("dual", "legacy-load-dual")
++                }
++                L08UiSeam.expect(id, alias)
++                return if (action == "legacy-load") checks("actual_bindings", "restart_envelope_equal",
++                    "production_recovery", "exact_home_destination", "owned_metadata_and_header", "valid_legacy_migrated",
++                    "malformed_retained_excluded", "dual_copy_failed_closed_and_retained", "independent_inventory") else checks("actual_bindings",
++                    "restart_envelope_equal", "production_recovery", "exact_home_destination", "owned_metadata_and_header")
++            }
++            "continue" -> {
++                stage = "actual-home-controller"
++                check(L08UiSeam.resumeTaps == 1 && L08UiSeam.discardTaps == 0)
++                if (alias in setOf("wc", "we")) {
++                    withTimeout(10_000) { while (!L08WhodunitSnapshots.isAttached()) delay(25) }
++                    L08WhodunitSnapshots.continueActualResumedController()
++                } else {
++                    withTimeout(10_000) { while (!L08MafiaSnapshots.isAttached()) delay(25) }
++                    L08MafiaSnapshots.continueActualResumedController()
++                }
++                stage = "actual-terminal-writer-delete"
++                // Never delete directly: this must be the real resumed UI's SerializedSnapshotWriter.
++                awaitAbsent(store, id)
++                paths.assertAbsent(alias)
++                return checks("actual_home_tap", "actual_resumed_controller", "restored_state_equal",
++                    "legal_continuation", "terminal_winner", "actual_terminal_writer_delete")
++            }
++            "legacy-neighbor" -> {
++                stage = "retained-corrupt-neighbor"
++                checkAbsent(store, paths, "legacy")
++                checkCorrupted(store, id)
++                paths.assertLegacyPresent("damaged")
++                paths.legacyExcluded()
++                L08UiSeam.expect(id, "damaged")
++                return checks("healthy_terminal_absent_after_restart", "malformed_still_addressable",
++                    "malformed_still_excluded")
++            }
++            "dual-preserved" -> {
++                stage = "dual-copy-retained-after-restart"
++                checkAbsent(store, paths, "legacy")
++                checkAbsent(store, paths, "damaged")
++                checkCorrupted(store, id)
++                paths.assertLegacyPresent("dual")
++                val retained = envelope(id, "dual")
++                expected = retained
++                paths.assertLegacyMatches("dual", retained, koin.get())
++                paths.protectedMetadata("dual", "retained-dual")
++                paths.legacyExcluded()
++                L08UiSeam.expect(id, "dual")
++                return checks("prior_records_absent_after_restart", "recognized_damage_failed_closed",
++                    "recoverable_legacy_still_present", "retained_legacy_envelope_equal", "legacy_still_excluded", "owned_metadata_and_header")
++            }
++            "discard-observed" -> {
++                stage = "explicit-retry-discard"
++                check(L08UiSeam.resumeTaps == 1 && L08UiSeam.retryTaps == 1 && L08UiSeam.discardTaps == 1)
++                check(L08UiSeam.recoveryShows == 2)
++                awaitAbsent(store, id)
++                paths.assertAbsent(alias)
++                return checks("actual_home_tap", "actual_retry_tap", "actual_discard_tap", "retry_remained_failed", "explicit_discard_deleted")
++            }
++            "final-absence" -> {
++                stage = "final-restart-absence"
++                aliases.forEach { checkAbsent(store, paths, it) }
++                return checks("all_synthetic_records_absent_after_restart", "strict_absence_not_unavailable")
++            }
++            else -> error("Unsupported fixture action")
++        }
++    }
++
++    private suspend fun envelope(id: SessionId, alias: String): GameSnapshot {
++        val koin = KoinPlatform.getKoin()
++        return if (alias in setOf("wc", "we")) L08WhodunitSnapshots.expectedEnvelope(
++            koin.get<CaseRepository>(), koin.get<WhodunitDefinition>(), koin.get(), id, alias == "we")
++        else L08MafiaSnapshots.expectedEnvelope(koin.get<MafiaDefinition>(), id, alias != "moff")
++    }
++
++    private suspend fun assertEnvelope(store: SnapshotStore, id: SessionId, expected: GameSnapshot) {
++        stage = "real-store-load"
++        val loaded = store.load(id)
++        check(loaded is Result.Success)
++        try {
++            stage = "loaded-envelope-equality"
++            check(loaded.data == expected)
++        } finally { loaded.data.payload.fill(0) }
++    }
++
++    private suspend fun checkCorrupted(store: SnapshotStore, id: SessionId) {
++        val loaded = store.load(id)
++        check(loaded is Result.Failure && loaded.error == DataError.CorruptedData)
++    }
++
++    private suspend fun checkAbsent(store: SnapshotStore, paths: OwnedSnapshotPaths, alias: String) {
++        val loaded = store.load(paths.id(alias))
++        check(loaded is Result.Failure && loaded.error == DataError.NotFound)
++        paths.assertAbsent(alias)
++    }
++
++    private suspend fun awaitAbsent(store: SnapshotStore, id: SessionId) {
++        withTimeout(10_000) {
++            while (true) {
++                when (val loaded = store.load(id)) {
++                    is Result.Failure -> {
++                        check(loaded.error == DataError.NotFound)
++                        break
++                    }
++                    is Result.Success -> loaded.data.payload.fill(0)
++                }
++                delay(25)
++            }
++        }
++    }
++
++    // All callers provide closed literal stage names (or a previously captured stage).
++    // Returning the old stage lets nested metadata checks restore it on success only.
++    private fun enterStage(next: String): String {
++        val previous = stage
++        stage = next
++        return previous
++    }
++
++    private fun recordProtectionComparison(value: JsonObject) {
++        check(completeComparisons.size < 4)
++        check(stage == "metadata-directory-protection" || stage == "metadata-file-protection")
++        completeComparisons.add(buildJsonObject {
++            put("ordinal", completeComparisons.size + 1)
++            value.forEach { (key, item) -> put(key, item) }
++        }) // Closed metadata only, including an unsuccessful required Complete comparison.
++    }
++
++    private fun checks(vararg names: String) = buildJsonObject { names.forEach { put(it, true) } }
++    private fun failed(token: String, boot: Int, action: String, reason: String) = buildJsonObject {
++        put("schema_version", 1); put("kind", "l08-storage-functional"); put("functional_status", "FAIL")
++        put("run_token", token); put("boot_ordinal", boot); put("command_ordinal", commandIndex + 1)
++        put("action", action); put("stage", stage); put("reason", reason)
++        put("complete_comparisons", JsonArray(completeComparisons.toList()))
++        put("physical_or_store_evidence", false)
++    }.toString()
++
++}
++
++internal fun requireContext(token: String, scenario: String) {
++    val environment = NSProcessInfo.processInfo.environment
++    check(NSBundle.mainBundle.bundleIdentifier == "com.parlor.app.debug")
++    check(Regex("[A-Fa-f0-9]{8}(-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12}").matches(token))
++    check(environment["PARLOR_DSC01_SCENARIO"] == scenario)
++    check(environment["SIMULATOR_UDID"] == environment["PARLOR_DSC01_EXPECTED_UDID"])
++    check(environment["SIMULATOR_UDID"] is String)
++}
++
++/** Exact app-container/token paths only; no directory enumeration or broad deletion. */
++private class OwnedSnapshotPaths(
++    private val token: String,
++    private val enterStage: (String) -> String,
++    private val recordProtectionComparison: (JsonObject) -> Unit,
++) {
++    private val files = NSFileManager.defaultManager
++    private val home = canonical(NSHomeDirectory())
++    private val legacy: String
++    private val protected: String
++    init {
++        val udid = NSProcessInfo.processInfo.environment["SIMULATOR_UDID"] as String
++        check(home.contains("/CoreSimulator/Devices/$udid/data/Containers/Data/Application/"))
++        legacy = directory(NSDocumentDirectory, "snapshots")
++        protected = directory(NSApplicationSupportDirectory, "Parlor/snapshots")
++    }
++    fun id(alias: String): SessionId {
++        check(alias in setOf("wc", "we", "mon", "moff", "legacy", "damaged", "dual"))
++        return SessionId("l08-${token.lowercase()}-$alias")
++    }
++    private fun name(alias: String) = id(alias).raw + FileBackedSnapshotStore.SUFFIX
++    private fun directory(kind: ULong, tail: String): String {
++        val base = checkNotNull(files.URLForDirectory(kind, NSUserDomainMask, null, false, null)?.path)
++        check(base.startsWith(NSHomeDirectory() + "/"))
++        val path = home + base.removePrefix(NSHomeDirectory()) + "/" + tail
++        requireDirectoryIfPresent(path)
++        return path
++    }
++    private fun requireDirectoryIfPresent(path: String) {
++        check(path.startsWith(home + "/"))
++        var current = home
++        path.removePrefix(home + "/").split('/').forEach { part ->
++            check(part.isNotEmpty() && part != "." && part != ".." && !part.contains('\\'))
++            current += "/$part"
++            if (files.fileExistsAtPath(current)) {
++                check(canonical(current) == current)
++                check(files.attributesOfItemAtPath(current, null)?.get(NSFileType) == NSFileTypeDirectory)
++            }
++        }
++    }
++    private fun file(directory: String, alias: String): String {
++        requireDirectoryIfPresent(directory)
++        val result = directory + "/" + name(alias)
++        if (files.fileExistsAtPath(result)) {
++            check(canonical(result) == result)
++            check(files.attributesOfItemAtPath(result, null)?.get(NSFileType) == NSFileTypeRegular)
++        }
++        return result
++    }
++    fun seedLegacy(alias: String, bytes: ByteArray) = seedLegacyInternal(alias, bytes, false)
++    private fun seedLegacyInternal(alias: String, bytes: ByteArray, allowOwnedDual: Boolean) {
++        check(bytes.isNotEmpty() && bytes.size <= 256 * 1024)
++        // Only this explicit synthetic legacy seeding operation creates a
++        // directory. Reads/metadata observers cannot repair production output.
++        requireDirectoryIfPresent(legacy)
++        if (!files.fileExistsAtPath(legacy)) {
++            check(files.createDirectoryAtPath(legacy, false, null, null))
++        }
++        requireDirectoryIfPresent(legacy)
++        val path = file(legacy, alias)
++        check(!files.fileExistsAtPath(path))
++        if (allowOwnedDual) {
++            check(alias == "dual")
++            protectedMetadata(alias, "dual-before-legacy-seed")
++        } else check(!files.fileExistsAtPath(file(protected, alias)))
++        val data = bytes.usePinned { NSData.create(bytes = it.addressOf(0), length = bytes.size.toULong()) }
++        check(files.createFileAtPath(path, data, null))
++        val actual = readBoundedSnapshotBytes(path, 256 * 1024)
++        try { check(actual.contentEquals(bytes)) } finally { actual.fill(0) }
++    }
++    fun seedDualCopyAndDamageTag(legacyBytes: ByteArray) {
++        seedLegacyInternal("dual", legacyBytes, true)
++        val path = file(protected, "dual")
++        val before = readBoundedSnapshotBytes(path, 256 * 1024 + 128)
++        try {
++            check(before.size > 7 + 2 + 16 + 16 + 32)
++            check(before.copyOfRange(0, 9).contentEquals("PARSNAP".encodeToByteArray() + byteArrayOf(1, 16)))
++            val changed = byteArrayOf((before.last().toInt() xor 1).toByte())
++            try {
++                val handle = checkNotNull(NSFileHandle.fileHandleForWritingAtPath(path))
++                try {
++                    handle.seekToFileOffset((before.size - 1).toULong())
++                    val data = changed.usePinned { NSData.create(bytes = it.addressOf(0), length = 1uL) }
++                    handle.writeData(data)
++                    handle.synchronizeFile()
++                } finally { handle.closeFile() }
++                val after = readBoundedSnapshotBytes(path, 256 * 1024 + 128)
++                try {
++                    check(after.size == before.size && after.last() == changed[0])
++                    check((0 until after.lastIndex).all { after[it] == before[it] })
++                } finally { after.fill(0) }
++            } finally { changed.fill(0) }
++        } finally { before.fill(0) }
++        // Observe, never repair, original native metadata after the in-place
++        // synthetic tag mutation. No plaintext fallback/read is performed.
++        protectedMetadata("dual", "dual-after-tag-damage")
++        assertLegacyPresent("dual")
++    }
++    fun assertLegacyPresent(alias: String) { check(files.fileExistsAtPath(file(legacy, alias))) }
++    fun assertLegacyMatches(alias: String, expected: GameSnapshot, json: Json) {
++        val bytes = readBoundedSnapshotBytes(file(legacy, alias), 256 * 1024)
++        try {
++            val decoded = json.decodeFromString(GameSnapshot.serializer(), bytes.decodeToString())
++            try { check(decoded == expected) } finally { decoded.payload.fill(0) }
++        } finally { bytes.fill(0) }
++    }
++    fun assertLegacyAbsent(alias: String) { check(!files.fileExistsAtPath(file(legacy, alias))) }
++    fun assertProtectedAbsent(alias: String) { check(!files.fileExistsAtPath(file(protected, alias))) }
++    fun assertAbsent(alias: String) { assertLegacyAbsent(alias); assertProtectedAbsent(alias) }
++    fun legacyExcluded() { check(excluded(legacy)) }
++    fun protectedMetadata(alias: String, site: String) {
++        val previous = enterStage("metadata-path")
++        val path = file(protected, alias)
++        enterStage("metadata-existence")
++        check(files.fileExistsAtPath(path))
++        enterStage("metadata-directory-backup")
++        check(excluded(protected))
++        enterStage("metadata-file-backup")
++        check(excluded(path))
++        enterStage("metadata-protection-constants")
++        val key = checkNotNull(NSFileProtectionKey)
++        val protection = checkNotNull(NSFileProtectionComplete)
++        enterStage("metadata-directory-protection")
++        val directory = protectionAttributes(protected, key, protection)
++        recordComparison(site, alias, "directory", directory)
++        enterStage("metadata-file-protection")
++        val file = protectionAttributes(path, key, protection)
++        recordComparison(site, alias, "file", file)
++        // Ciphertext header only; never retain or report any stored payload bytes.
++        enterStage("metadata-encrypted-read")
++        val bytes = readBoundedSnapshotBytes(path, 256 * 1024 + 128)
++        try {
++            enterStage("metadata-encrypted-header")
++            check(bytes.take(7).toByteArray().contentEquals("PARSNAP".encodeToByteArray()))
++        } finally { bytes.fill(0) }
++        // Do not restore in finally: a failure must retain the exact failed boundary.
++        enterStage(previous)
++    }
++    private class ProtectionRead(val complete: Boolean, val observation: JsonObject)
++
++    // Exactly one original getter per required check; the equality itself is unchanged.
++    private fun protectionAttributes(path: String, key: String, protection: String): ProtectionRead = memScoped {
++        val error = alloc<ObjCObjectVar<NSError?>>()
++        error.value = null
++        val values = files.attributesOfItemAtPath(path, error.ptr)
++        val value = values?.get(key)
++        ProtectionRead(value == protection, metadataRead(values != null, values?.containsKey(key) == true,
++            when {
++                values == null -> "unavailable"
++                !values.containsKey(key) -> "missing"
++                else -> protectionValue(value)
++            }, error.value))
++    }
++
++    private fun protectionValue(value: Any?): String = when {
++        value == null -> "null"
++        value == NSFileProtectionComplete -> "complete"
++        value == NSFileProtectionNone -> "none"
++        value == NSFileProtectionCompleteUnlessOpen -> "unless-open"
++        value == NSFileProtectionCompleteUntilFirstUserAuthentication -> "until-first-authentication"
++        // The fifth public enum is iOS17+; do not touch its symbol on iOS16.
++        NSProcessInfo.processInfo.isOperatingSystemAtLeastVersion(cValue<NSOperatingSystemVersion> {
++            majorVersion = 17; minorVersion = 0; patchVersion = 0
++        }) && value == NSFileProtectionCompleteWhenUserInactive -> "when-user-inactive"
++        value is String -> "other-string"
++        else -> "non-string"
++    }
++
++    private fun recordComparison(site: String, alias: String, target: String, reading: ProtectionRead) {
++        recordProtectionComparison(buildJsonObject {
++            put("site", site); put("alias", alias); put("target", target)
++            put("attributes", reading.observation)
++            put("comparison", if (reading.complete) "PASS" else "FAIL")
++        })
++    }
++
++    private fun metadataRead(dictionary: Boolean, key: Boolean, value: String, error: NSError?) = buildJsonObject {
++        put("query", "returned"); put("dictionary_present", dictionary); put("key_present", key); put("value", value)
++        put("native_error", buildJsonObject {
++            put("present", error != null)
++            put("domain", when (error?.domain) {
++                null -> "none"
++                NSCocoaErrorDomain -> "cocoa"
++                NSPOSIXErrorDomain -> "posix"
++                else -> "other"
++            })
++            put("code", error?.code ?: 0L)
++        })
++    }
++
++    private fun excluded(path: String): Boolean {
++        val key = checkNotNull(NSURLIsExcludedFromBackupKey)
++        val values = checkNotNull(NSURL.fileURLWithPath(path).resourceValuesForKeys(listOf(key), null))
++        return checkNotNull(values[key] as? NSNumber).boolValue
++    }
++    private fun canonical(path: String): String = memScoped {
++        val buffer = allocArray<ByteVar>(PATH_MAX)
++        checkNotNull(realpath(path, buffer)).toKString()
++    }
++}
+--- /dev/null
++++ functional-companion/L08StorageFunctionalUITests.swift.in
+@@ -0,0 +1,117 @@
++// Separate functional companion; never an upgrade of original strict L08 or physical storage evidence.
++extension IOSAppLaunchUITests {
++    @MainActor private func verifyL08FunctionalStoreResume(_ app: XCUIApplication) throws {
++        var boots = Set<String>()
++        for ordinal in 1...13 {
++            app.launchEnvironment["PARLOR_L08_STORAGE_FUNCTIONAL_BOOT"] = String(ordinal)
++            try startScenario(app, name: "l08-storage-functional")
++            let initial = try observe(app)
++            let boot = try string(initial, "boot")
++            XCTAssertTrue(boots.insert(boot).inserted, "Every checkpoint recovery must be a different process")
++            try assertNative(initial)
++            var actions: [String] = []
++            if [1, 3, 5, 7].contains(ordinal) {
++                _ = try l08StorageFunctionalAction(app, action: "save", ordinal: ordinal, boot: boot)
++                actions = ["save"]
++            } else if [2, 4, 6, 8, 10].contains(ordinal) {
++                let aliases = [2: "wc", 4: "we", 6: "mon", 8: "moff", 10: "legacy"]
++                let load = ordinal == 10 ? "legacy-load" : "load"
++                _ = try l08StorageFunctionalAction(app, action: load, ordinal: ordinal, boot: boot)
++                try l08TapExactPublicControl(app, identifier: "l08-home-" + aliases[ordinal]!)
++                _ = try l08StorageFunctionalAction(app, action: "continue", ordinal: ordinal, boot: boot)
++                actions = [load, "continue"]
++            } else if ordinal == 9 {
++                _ = try l08StorageFunctionalAction(app, action: "legacy-seed", ordinal: ordinal, boot: boot)
++                actions = ["legacy-seed"]
++            } else if [11, 12].contains(ordinal) {
++                let check = ordinal == 11 ? "legacy-neighbor" : "dual-preserved"
++                let alias = ordinal == 11 ? "damaged" : "dual"
++                _ = try l08StorageFunctionalAction(app, action: check, ordinal: ordinal, boot: boot)
++                try l08TapExactPublicControl(app, identifier: "l08-home-" + alias)
++                try l08WaitRecovery(app, shows: 1)
++                try l08TapExactPublicControl(app, identifier: "l08-recovery-retry")
++                try l08WaitRecovery(app, shows: 2)
++                try l08TapExactPublicControl(app, identifier: "l08-recovery-discard")
++                _ = try l08StorageFunctionalAction(app, action: "discard-observed", ordinal: ordinal, boot: boot)
++                actions = [check, "discard-observed"]
++            } else {
++                _ = try l08StorageFunctionalAction(app, action: "final-absence", ordinal: ordinal, boot: boot)
++                actions = ["final-absence"]
++            }
++            let row: [String: Any] = ["schema_version": 1, "boot_ordinal": ordinal, "process_boot": boot,
++                "actions": actions, "foreground": app.state == .runningForeground,
++                "alert_present": app.alerts.firstMatch.exists,
++                "run_token": app.launchEnvironment["PARLOR_DSC01_RUN_TOKEN"] ?? ""]
++            let encoded = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
++            XCTAssertLessThanOrEqual(encoded.count, 2048)
++            print("PARLOR_L08_STORAGE_FUNCTIONAL_BOOT " + String(decoding: encoded, as: UTF8.self))
++        }
++        app.buttons["parlor-dsc01-complete"].tap()
++        XCTAssertEqual(try observe(app)["completed"] as? Bool, true)
++        app.launchEnvironment.removeValue(forKey: "PARLOR_L08_STORAGE_FUNCTIONAL_BOOT")
++    }
++
++    @MainActor private func l08StorageFunctionalAction(_ app: XCUIApplication, action: String,
++                                            ordinal: Int, boot: String) throws -> [String: Any] {
++        try l08TapExactPublicControl(app, identifier: "l08-functional-action-" + action)
++        let state = app.staticTexts["l08-storage-functional-result"]
++        XCTAssertTrue(state.waitForExistence(timeout: 10))
++        let done = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
++            guard let text = state.value as? String, !["pending", "running"].contains(text) else { return false }
++            guard let bytes = text.data(using: .utf8), bytes.count <= 16384,
++                  let value = (try? JSONSerialization.jsonObject(with: bytes)) as? [String: Any] else { return true }
++            return value["action"] as? String == action
++        }, object: nil)
++        XCTAssertEqual(XCTWaiter.wait(for: [done], timeout: 75), .completed)
++        let bytes = try XCTUnwrap((state.value as? String)?.data(using: .utf8))
++        XCTAssertLessThanOrEqual(bytes.count, 16384)
++        let value = try XCTUnwrap(JSONSerialization.jsonObject(with: bytes) as? [String: Any])
++        XCTAssertEqual(value["process_boot"] as? String, boot)
++        XCTAssertEqual(value["boot_ordinal"] as? Int, ordinal)
++        XCTAssertEqual(value["action"] as? String, action)
++        XCTAssertEqual(value["run_token"] as? String, app.launchEnvironment["PARLOR_DSC01_RUN_TOKEN"])
++        let result = try dictionary(value, "observation")
++        XCTAssertEqual(result["kind"] as? String, "l08-storage-functional")
++        XCTAssertEqual(result["functional_status"] as? String, "PASS")
++        let comparisons = try XCTUnwrap(result["complete_comparisons"] as? [[String: Any]])
++        XCTAssertLessThanOrEqual(comparisons.count, 4)
++        for comparison in comparisons {
++            XCTAssertTrue(["PASS", "FAIL"].contains(try string(comparison, "comparison")))
++        } // A FAIL here remains a required metadata FAIL in the strict host verifier.
++        XCTAssertEqual(result["physical_or_store_evidence"] as? Bool, false)
++        XCTAssertEqual(app.state, .runningForeground)
++        XCTAssertFalse(app.alerts.firstMatch.exists)
++        return value
++    }
++
++    @MainActor private func l08TapExactPublicControl(_ app: XCUIApplication, identifier: String) throws {
++        XCTAssertTrue(identifier.hasPrefix("l08-"))
++        let query = app.descendants(matching: .any).matching(identifier: identifier)
++        XCTAssertTrue(query.firstMatch.waitForExistence(timeout: 15))
++        XCTAssertEqual(query.count, 1)
++        let target = query.firstMatch
++        let ready = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
++            target.exists && target.isEnabled && target.isHittable
++        }, object: nil)
++        XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 15), .completed)
++        target.tap() // No alternate selector, coordinate fallback, or repeat activation.
++    }
++
++    @MainActor private func l08WaitRecovery(_ app: XCUIApplication, shows: Int) throws {
++        // Observe completion of the actual asynchronous resume coordinator, not
++        // merely that an old Retry/Discard button survived recomposition.
++        for _ in 0..<24 {
++            try l08TapExactPublicControl(app, identifier: "l08-ui-observe")
++            let node = app.staticTexts["l08-ui-result"]
++            let data = try XCTUnwrap((node.value as? String)?.data(using: .utf8))
++            XCTAssertLessThanOrEqual(data.count, 1024)
++            let value = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
++            if value["recovery_shows"] as? Int == shows { return }
++            let interval = XCTestExpectation(description: "L08 bounded recovery observation")
++            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { interval.fulfill() }
++            XCTAssertEqual(XCTWaiter.wait(for: [interval], timeout: 2), .completed)
++        }
++        XCTFail("Original resume coordinator did not retain the expected failed-recovery route")
++        throw NSError(domain: "L08RecoveryObservation", code: 1)
++    }
++}
+--- /dev/null
++++ functional-companion/L08_FUNCTIONAL_README.md
+@@ -0,0 +1,127 @@
++# L08 Storage Functional Companion
++
++## Scope and evidence boundaries
++
++This is a separate, copy-only diagnostic harness, **not a modification or
++successful rerun of original strict L08**. The original 65 controls remain in
++`scripts/verification/ios-readiness/`; this directory preserves 63 verbatim and
++changes only its cloned `copied_sources.py` and `run_ios_readiness.py`. Ten new
++companion files are allowlisted by
++`../reviews/l08-functional-companion-clone-manifest-01.json` (SHA-256
++`3036231a1bcfc9d567b8381ee33d89cd381377bea2b10790ddde0f90baf682fb`).
++Original strict sources, assertions, parsers, tests and failed native09 evidence
++are not overwritten, reclassified or bypassed.
++
++The separately validated direct Foundation experiment retained dictionary/key
++observations and unsuccessful Complete comparisons; it did not demonstrate
++app-container, encryption, physical-lock, backup or Store correctness. This
++companion collects the still-independent functional paths that strict L08's
++first required directory comparison prevented from executing. It never repairs
++the metadata or substitutes a different protection class for Complete.
++
++## What runs, and what stays fatal
++
++The owned copied Debug app performs the original matrix: 13 cold boots,
++20 distinct operations, 13 metadata checkpoints and **26 actual required
++directory/file Complete comparisons**. Every primary getter remains the same;
++each successful return records its actual equality immediately. At most four
++comparisons belong to one operation. A later failure preserves only the valid
++completed prefix. Missing or failed comparisons cannot become metadata PASS.
++
++| Boots | Actions | Metadata checkpoint sites |
++| --- | --- | --- |
++| 1, 3, 5, 7 | Save | `save`: Classic, Elimination, Doctor ON, Doctor OFF |
++| 2, 4, 6, 8 | Load; actual Home resume; continue | `load`: same four variants |
++| 9 | Seed legacy, malformed neighbor and dual copy | `dual-before-legacy-seed`; `dual-after-tag-damage` |
++| 10 | Load/migrate legacy; Home resume; continue | `load`/legacy; `legacy-load-dual`/dual |
++| 11 | Observe damaged neighbor; actual Retry/Discard | None |
++| 12 | Observe retained dual copy; actual Retry/Discard | `retained-dual` |
++| 13 | Confirm final absence after restart | None |
++
++Unchanged fatal assertions include actual Koin store/filesystem/P2pKit bindings,
++reachable deterministic snapshots, exact envelopes and recovery routes, real
++Home/Retry/Discard callbacks, attached production controllers, Whodunit terminal
++play, Mafia ON four consecutive same-target nights and OFF alternate/skip
++semantics, terminal writer deletion, corrupt-record isolation, last-copy legacy
++preservation, path/type/existence checks, backup exclusion, protection constants,
++ciphertext header, bounded reads and cancellation propagation. Corruption or
++unavailable storage never means NotFound. The probe never deletes directly to
++simulate a successful terminal writer or discard.
++
++Only the two Complete equalities have separate nonfatal **observations** in
++this companion. Their values and unsuccessful outcomes remain required,
++explicit obligations. Original strict L08 still throws on those checks.
++
++The original eight native-storage boots, three controlled-host fixtures,
++language/OS observations and four UIKit-container tests remain independent
++requirements. These are not physical P2pKit LAN tests or full UI game traces.
++
++## Separate schema and strict reporting
++
++The new scenario, inner kind, boot environment and receipt names contain
++`l08-storage-functional`; the XCTest method is
++`testDSC01ActualSettingsLocalSessionsAndOSWithL08FunctionalObservation`.
++Original strict parsers reject companion rows even if every comparison matches.
++The original **4096-byte inner and 16384-byte wrapper limits remain unchanged**.
++All observations are closed metadata: no seeds, role maps, game payloads, paths
++or NSError descriptions are added to comparison records.
++
++The functional validator requires all 20 operations, all checks true, 13 unique
++boots, matching XCTest receipts, exact metadata sequence and real image binding.
++It reports `FUNCTIONAL_MATRIX_VERIFIED` plus separate `functional_gate` and
++`complete_comparison_gate` values. `original_strict_l08` always remains
++`NOT_SATISFIED_BY_COMPANION`. Complete comparison FAIL does not prevent remaining
++functional/host subgates, but functional failure remains fatal.
++
++Available failure rows are image-bound before XCTest outcome rejection, so a
++failed run can retain its actual executable provenance. This partial image
++inventory always says `matrix_verified: false`; it cannot satisfy missing
++operations, missing tests or failed native storage health.
++
++The final companion result is **never PASS**. A fully validated functional run
++with intact source, controls and cleanup is `PARTIALLY_VERIFIED` (exit 2), with
++strict-L08 and other unmet obligations listed. Genuine runtime, storage-health,
++source, control, signing, ownership or cleanup failure remains FAIL (exit 1).
++
++## Review and execution
++
++Implementation/source review is not test execution. All added controls require
++root's executed regression receipt and independent review before native use.
++From the repository root, the coordinated owner can run:
++
++```sh
++F=remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-01
++PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -B -m unittest discover -s "$F" -p 'test_*.py' -v
++```
++
++These tests include the unchanged original controls, original strict parsers,
++fake-wrapper stale-build cases, exact clone/source contract and new comparison,
++namespace, failure-prefix, discovery, image-binding and classification tests.
++They use disposable synthetic data and owned temporary directories. Inherited
++controls compile and run bounded host Swift/Foundation path and encoder fixtures;
++this is not Simulator/app execution. Source mutation guards compare complete
++executable regions; green controls are not application Swift/Kotlin compilation.
++
++After freezing the current source and approving the exact control/source hash,
++the root can use the unchanged source-binding and `--control-manifest` procedure
++in `README.md`, but invoke this directory's runner. Choose a fresh unused
++`ios-readiness-NN` receipt name. The familiar name format is deliberately
++retained for the already-reviewed ownership guards; the receipt execution kind
++explicitly identifies this separate functional companion. No shared binding or
++earlier evidence may be overwritten. Simulator ad-hoc mode, if approved, has
++exactly the existing local-only signing/entitlement checks; no Store credentials.
++
++## Ownership and cleanup
++
++Root exclusively owns Gradle/Xcode/native/test execution. Review agents do not
++start competing builds or stop another task's workers. The original build lane,
++source-copy allowlist, immediate/final Gradle stops, fresh simulator identity,
++PID/start attestation, secondary FIFO ownership, worker checks, cache-symlink
++handling and exact copy/DerivedData cleanup are unchanged. Failures still enter
++the finalizer. Unknown holders or ownership failures keep cleanup failed, not
++falsely successful. Only task-owned outputs are removable; global caches and
++pre-existing source, audits, credentials and user work are preserved.
++
++Actual Simulator metadata, runtime limits, command receipts and cleanup must be
++reconciled after execution. This harness neither waives strict L08 nor grants
++physical-device, Store, release, publication or production-readiness approval.
+--- canonical/copied_sources.py
++++ functional-companion/copied_sources.py
+@@ -6,7 +6,7 @@
+ import re
+ import shutil
+ from instrument_storage import PATH as CREDENTIALS, ADDITION as NATIVE_ADDITION, instrument_credentials
+-from l08_copy import L08_ADDITIONS, L08_ADDITIONAL_MODIFIED, instrument_l08_kotlin
++from l08_functional_copy import L08_ADDITIONS, L08_ADDITIONAL_MODIFIED, instrument_l08_kotlin
+ 
+ HERE = Path(__file__).resolve().parent
+ SETTINGS = 'composeApp/src/commonMain/kotlin/com/parlor/app/shell/settings/SettingsScreen.kt'
+--- /dev/null
++++ functional-companion/l08_functional_copy.py
+@@ -0,0 +1,41 @@
++"""Namespaced functional observations in one owned copy; original strict L08 stays intact."""
++from pathlib import Path
++
++import l08_copy as strict
++
++L08_ADDITIONAL_MODIFIED = strict.L08_ADDITIONAL_MODIFIED
++L08_ADDITIONS = dict(strict.L08_ADDITIONS)
++OLD_PROBE = 'composeApp/src/iosMain/kotlin/com/parlor/app/readiness/L08StorageProbe.kt'
++NEW_PROBE = 'composeApp/src/iosMain/kotlin/com/parlor/app/readiness/L08StorageFunctionalProbe.kt'
++if L08_ADDITIONS.pop(OLD_PROBE) != 'L08StorageProbe.kt.in':
++    raise RuntimeError('Original storage observer registration drifted')
++L08_ADDITIONS[NEW_PROBE] = 'L08StorageFunctionalProbe.kt.in'
++
++OLD_TEST = 'testDSC01ActualSettingsLocalSessionsAndOSInvestigation'
++NEW_TEST = 'testDSC01ActualSettingsLocalSessionsAndOSWithL08FunctionalObservation'
++
++
++def instrument_l08_kotlin(copy_root):
++    # The original transform enforces exact paths and rejects double application.
++    strict.instrument_l08_kotlin(copy_root)
++    path = Path(copy_root).absolute() / strict.MAIN
++    text = strict.once(path.read_text(), '''fun L08StorageCommand(action: String, onJson: (String) -> Unit) {
++    com.parlor.app.readiness.L08StorageProbe.command(action, onJson)
++}''', '''fun L08StorageFunctionalCommand(action: String, onJson: (String) -> Unit) {
++    com.parlor.app.readiness.L08StorageFunctionalProbe.command(action, onJson)
++}''')
++    path.write_text(text)
++
++
++def instrument_probe_swift(text):
++    text = strict.instrument_probe_swift(text)
++    text = strict.once(text, '"readiness", "l08-storage", "l08-host"',
++                       '"readiness", "l08-storage-functional", "l08-host"')
++    return strict.once(text, 'if probe.isL08StorageScenario { L08StorageControls(probe: probe) }',
++                       'if probe.isL08StorageFunctionalScenario { L08StorageFunctionalControls(probe: probe) }')
++
++
++def instrument_ui_test(text):
++    text = strict.instrument_ui_test(text)
++    text = strict.once(text, 'try verifyL08RealStoreResume(app)', 'try verifyL08FunctionalStoreResume(app)')
++    return strict.once(text, 'func ' + OLD_TEST + '()', 'func ' + NEW_TEST + '()')
+--- /dev/null
++++ functional-companion/l08_functional_receipts.py
+@@ -0,0 +1,193 @@
++"""Strict functional/metadata separation. This parser can never satisfy original L08."""
++import json
++from pathlib import Path
++
++from artifact_inventory import FRAMEWORK_PATH, bind_loaded_images, safe_relative
++from l08_receipts import (STORAGE_PLAN, STORAGE_CHECKS, STORAGE_FAILURE_STAGES, UUID,
++                          _context, _framework_inventory_keys, _validate_protection_read,
++                          read_owned_result, unique)
++from probe_validation import common, geometry_fills_window, require
++
++SCENARIO = 'l08-storage-functional'
++KIND = SCENARIO
++BOOT_PREFIX = 'PARLOR_L08_STORAGE_FUNCTIONAL_BOOT '
++INNER_MAXIMUM = 4096
++OUTER_MAXIMUM = 16384
++FUNCTIONAL_CHECKS = {
++    action: {('owned_metadata_and_header' if check == 'protected_metadata' else check) for check in checks}
++    for action, checks in STORAGE_CHECKS.items()
++}
++
++
++def comparison_plan(boot, action):
++    require(type(boot) is int and boot in STORAGE_PLAN and action in STORAGE_PLAN[boot],
++            'Unplanned functional metadata observation')
++    sites = []
++    if action in {'save', 'load'}:
++        sites = [(action, ('wc', 'we', 'mon', 'moff')[(boot - 1) // 2])]
++    elif action == 'legacy-seed':
++        sites = [('dual-before-legacy-seed', 'dual'), ('dual-after-tag-damage', 'dual')]
++    elif action == 'legacy-load':
++        sites = [('load', 'legacy'), ('legacy-load-dual', 'dual')]
++    elif action == 'dual-preserved':
++        sites = [('retained-dual', 'dual')]
++    return [dict(ordinal=index + 1, site=site, alias=alias, target=target)
++            for index, (site, alias, target) in enumerate(
++                (site, alias, target) for site, alias in sites for target in ('directory', 'file'))]
++
++
++def functional_result_names():
++    return ['parlor-%s-%d-%s.json' % (SCENARIO, boot, action)
++            for boot, actions in STORAGE_PLAN.items() for action in actions]
++
++
++def validate_comparisons(rows, boot, action, complete):
++    expected = comparison_plan(boot, action)
++    require(isinstance(rows, list) and len(rows) <= len(expected) and len(rows) <= 4 and
++            (not complete or len(rows) == len(expected)), 'Missing/extra functional Complete comparisons')
++    for row, planned in zip(rows, expected):
++        require(isinstance(row, dict) and set(row) == set(planned) | {'attributes', 'comparison'} and
++                type(row['ordinal']) is int and all(row[key] == value for key, value in planned.items()),
++                'Reordered, duplicated or wrongly scoped Complete comparison')
++        _validate_protection_read(row['attributes'])
++        require(row['attributes']['query'] == 'returned',
++                'Only an actually returned primary getter can have a Complete comparison')
++        require(row['comparison'] == ('PASS' if row['attributes']['value'] == 'complete' else 'FAIL'),
++                'Required Complete equality disagrees with actual observed value')
++    return rows
++
++
++def validate_preservable_functional_operation(record):
++    require(isinstance(record, dict), 'Invalid functional operation envelope')
++    token, mode = record.get('run_token'), record.get('signing_mode')
++    require(isinstance(token, str) and UUID.fullmatch(token) and isinstance(mode, str) and
++            mode in {'disabled', 'adhoc'}, 'Invalid functional operation token or signing mode')
++    _context(record, token, mode, SCENARIO)
++    boot, action = record['boot_ordinal'], record['action']
++    require(type(boot) is int and boot in STORAGE_PLAN and isinstance(action, str) and
++            action in STORAGE_PLAN[boot], 'Unplanned functional operation identity')
++    images = record['loaded_app_images']
++    require(isinstance(images, list) and 1 <= len(images) <= 128 and all(safe_relative(item) for item in images) and
++            images == sorted(set(images)), 'Unsafe functional image provenance')
++    value = record['observation']
++    require(isinstance(value, dict) and type(value.get('schema_version')) is int and value['schema_version'] == 1 and
++            value.get('kind') == KIND and value.get('run_token') == token and
++            type(value.get('boot_ordinal')) is int and value['boot_ordinal'] == boot and
++            value.get('action') == action and type(value.get('command_ordinal')) is int and
++            value['command_ordinal'] == STORAGE_PLAN[boot].index(action) + 1 and
++            value.get('physical_or_store_evidence') is False,
++            'Functional observation kind/context disagrees or overclaims external proof')
++    fields = {'schema_version', 'kind', 'functional_status', 'run_token', 'boot_ordinal', 'command_ordinal',
++              'action', 'complete_comparisons', 'physical_or_store_evidence'}
++    if value.get('functional_status') == 'FAIL':
++        require(set(value) == fields | {'stage', 'reason'} and isinstance(value['stage'], str) and
++                value['stage'] in STORAGE_FAILURE_STAGES and
++                isinstance(value['reason'], str) and value['reason'] in {'cancelled', 'fixture_or_boundary_failure'},
++                'Unknown functional failure metadata')
++        validate_comparisons(value['complete_comparisons'], boot, action, complete=False)
++    else:
++        require(set(value) == fields | {'functional_checks'} and value.get('functional_status') == 'PASS',
++                'Unknown functional observation schema')
++        checks = value['functional_checks']
++        require(isinstance(checks, dict) and set(checks) == FUNCTIONAL_CHECKS[action] and
++                all(type(flag) is bool for flag in checks.values()), 'Unsafe functional invariant metadata')
++        validate_comparisons(value['complete_comparisons'], boot, action, complete=True)
++    require(len(json.dumps(value, separators=(',', ':'), ensure_ascii=False).encode()) <= INNER_MAXIMUM,
++            'Functional observation exceeds unchanged Kotlin-to-Swift bound')
++
++
++def preserve_functional_evidence(container, evidence):
++    parent = Path(container).absolute() / 'tmp'
++    destination = Path(evidence).absolute()
++    require(destination.is_dir() and not destination.is_symlink() and destination.resolve() == destination,
++            'Functional evidence destination is not an exact owned directory')
++    require(parent.is_dir() and not parent.is_symlink() and parent.resolve() == parent,
++            'Functional app result directory escaped owned simulator container')
++    preserved = []
++    for name in functional_result_names():
++        path = parent / name
++        if not path.exists() and not path.is_symlink():
++            continue  # Missing/unexecuted actions never become fabricated observations.
++        value = read_owned_result(path, parent, OUTER_MAXIMUM)
++        validate_preservable_functional_operation(value)
++        require(name == 'parlor-%s-%d-%s.json' % (SCENARIO, value['boot_ordinal'], value['action']),
++                'Functional receipt does not belong to its exact filename')
++        with (destination / name).open('x') as stream:
++            stream.write(json.dumps(value, sort_keys=True) + '\n')
++        preserved.append(name)
++    return preserved
++
++
++def verify_storage_functional(records, scenario, token, log, mode, built, installed, framework_inventories):
++    require(isinstance(token, str) and UUID.fullmatch(token), 'Invalid functional task token')
++    require(isinstance(records, list) and len(records) == sum(map(len, STORAGE_PLAN.values())),
++            'Every functional save/load/Home/continue/discard action needs durable evidence')
++    rows, starts = common(scenario, SCENARIO)
++    require(scenario['runToken'] == token and len(starts) == 13 and
++            all(row['fixture'] == 'existing' for row in starts), 'Missing thirteen functional cold starts')
++    for event, _ in rows:
++        require(type(event['ordinal']) is int and type(event['controllerCreations']) is int,
++                'Functional counters must be actual integers')
++        if event['phase'] != 'before_main':
++            require(geometry_fills_window(event['native']['geometry'], 'portrait'),
++                    'Functional native container geometry failed')
++    inventories = _framework_inventory_keys(records, framework_inventories)
++    index, comparisons = 0, []
++    per_boot = []
++    for ordinal, actions in STORAGE_PLAN.items():
++        current = []
++        for command, action in enumerate(actions, 1):
++            record = records[index]
++            index += 1
++            validate_preservable_functional_operation(record)
++            _context(record, token, mode, SCENARIO)
++            require(record['boot_ordinal'] == ordinal and record['action'] == action and
++                    record['process_boot'] == starts[ordinal - 1]['boot'],
++                    'Missing/reordered/cross-process functional operation')
++            observation = record['observation']
++            require(observation['functional_status'] == 'PASS' and observation['command_ordinal'] == command and
++                    all(flag is True for flag in observation['functional_checks'].values()),
++                    'A failed or incomplete functional boundary cannot pass')
++            comparisons += [dict(boot_ordinal=ordinal, action=action, **row)
++                            for row in observation['complete_comparisons']]
++            current.append(record)
++        require(all(row['loaded_app_images'] == current[0]['loaded_app_images'] and
++                    row['loaded_compose_framework'] == current[0]['loaded_compose_framework'] and
++                    row['loader_environment'] == current[0]['loader_environment'] for row in current),
++                'One functional process changed loaded-artifact binding')
++        origin = current[0]['loaded_compose_framework']
++        keys = {('installed-app-bundle', FRAMEWORK_PATH), (origin['origin'], origin['path'])}
++        bind_loaded_images(built, installed, [current[0]], [inventories[key] for key in sorted(keys)])
++        per_boot.append(current[0])
++    launches = []
++    for line in log.splitlines():
++        if line.startswith(BOOT_PREFIX):
++            require(len(line.encode()) <= 2048 and len(launches) < 13, 'Unbounded functional XCTest receipt')
++            launches.append(json.loads(line.removeprefix(BOOT_PREFIX), object_pairs_hook=unique))
++    require(len(launches) == 13, 'Every functional cold boot needs its executed XCTest receipt')
++    for ordinal, row in enumerate(launches, 1):
++        require(isinstance(row, dict) and set(row) == {
++            'schema_version', 'boot_ordinal', 'process_boot', 'actions', 'foreground', 'alert_present', 'run_token'},
++            'Unexpected functional XCTest receipt schema')
++        require(type(row['schema_version']) is int and row['schema_version'] == 1 and
++                type(row['boot_ordinal']) is int and row['boot_ordinal'] == ordinal and
++                row['process_boot'] == per_boot[ordinal - 1]['process_boot'] and row['run_token'] == token and
++                row['actions'] == list(STORAGE_PLAN[ordinal]) and row['foreground'] is True and row['alert_present'] is False,
++                'Functional XCTest and durable app observations disagree')
++    require(len(comparisons) == 26, 'All thirteen metadata checkpoints must execute both actual comparisons')
++    failed = [dict(boot_ordinal=row['boot_ordinal'], action=row['action'], ordinal=row['ordinal'],
++                   site=row['site'], alias=row['alias'], target=row['target'],
++                   observed_value=row['attributes']['value']) for row in comparisons if row['comparison'] == 'FAIL']
++    return dict(kind=KIND, status='FUNCTIONAL_MATRIX_VERIFIED', functional_gate='PASS',
++                complete_comparison_gate='FAIL' if failed else 'PASS', complete_comparison_count=26,
++                successful_complete_comparisons=26 - len(failed), unsuccessful_complete_comparisons=failed,
++                original_strict_l08='NOT_SATISFIED_BY_COMPANION',
++                process_restarts=13, operations=20, real_home_resume_and_terminal_controller_traces=5,
++                game_variants=['whodunit-classic', 'whodunit-elimination', 'mafia-doctor-on', 'mafia-doctor-off'],
++                mafia_on_consecutive_nights=4,
++                mafia_off_trace='alternate, explicit skip, pre-skip target; illegal adjacent repeat rejected',
++                valid_legacy_migration_and_bad_neighbor='PASS', explicit_retry_discard='PASS',
++                recognized_damaged_protected_with_valid_legacy='Fail closed; retain excluded legacy; actual Retry stays failed and Discard deletes both',
++                owned_path_type_existence_backup_and_header='PASS',
++                physical_or_store_evidence=False,
++                limits='Synthetic legal drivers in the real copied Debug simulator app, not full UI playthrough, physical lock/backup, power loss, LAN or Store proof. Missing Complete metadata remains an unsuccessful required comparison.')
+--- /dev/null
++++ functional-companion/l08_functional_runner.py
+@@ -0,0 +1,133 @@
++"""Pure companion selection/classification; imports never launch processes or write files."""
++from pathlib import Path
++
++from artifact_inventory import FRAMEWORK_PATH, bind_loaded_images
++from l08_functional_receipts import (SCENARIO, KIND, functional_result_names,
++                                    validate_preservable_functional_operation)
++from l08_receipts import (UUID, _framework_inventory_keys, host_result_names, read_owned_result,
++                          validate_preservable_operation)
++from native_readiness_receipts import verify_boot_result
++from probe_validation import require
++
++
++def available_run_records(evidence, mode):
++    """Validate every available bounded row without pretending missing steps ran."""
++    require(isinstance(mode, str) and mode in {'disabled', 'adhoc'}, 'Invalid available observation signing mode')
++    parent = Path(evidence).absolute()
++    result = []
++    for ordinal in range(1, 9):
++        path = parent / ('parlor-native-readiness-boot-%d.json' % ordinal)
++        if path.exists() or path.is_symlink():
++            row = read_owned_result(path, parent, 49152)
++            token = row.get('run_token')
++            require(isinstance(token, str) and UUID.fullmatch(token), 'Invalid available native task token')
++            verify_boot_result(row, ordinal, token, mode)
++            result.append(row)
++    for names, maximum, validate in (
++        (functional_result_names(), 16384, validate_preservable_functional_operation),
++        (host_result_names(), 24576, lambda row: validate_preservable_operation(row, 'l08-host')),
++    ):
++        for name in names:
++            path = parent / name
++            if path.exists() or path.is_symlink():
++                row = read_owned_result(path, parent, maximum)
++                validate(row)
++                require(row['signing_mode'] == mode and
++                        name == 'parlor-%s-%d-%s.json' % (row['scenario'], row['boot_ordinal'], row['action']),
++                        'Available operation has wrong sign mode or filename identity')
++                result.append(row)
++    require(len(result) <= 70 and len({row['run_token'] for row in result}) <= 1,
++            'Available image rows cross tasks or exceed this exact matrix')
++    return result
++
++
++def bind_available_images(records, built, installed, framework_inventories):
++    """Only source/image binding for available rows, never matrix or XCTest success."""
++    require(isinstance(records, list) and 1 <= len(records) <= 70,
++            'No bounded available rows for image binding')
++    for row in records:
++        require(isinstance(row, dict), 'Invalid available image row')
++        scenario = row.get('scenario', 'readiness')
++        if scenario == 'readiness':
++            token, mode, ordinal = row.get('run_token'), row.get('signing_mode'), row.get('boot_ordinal')
++            require(isinstance(token, str) and UUID.fullmatch(token) and
++                    isinstance(mode, str) and mode in {'disabled', 'adhoc'} and
++                    type(ordinal) is int and 1 <= ordinal <= 8, 'Invalid available native row context')
++            verify_boot_result(row, ordinal, token, mode)
++        elif scenario == SCENARIO:
++            validate_preservable_functional_operation(row)
++        elif scenario == 'l08-host':
++            validate_preservable_operation(row, 'l08-host')
++        else:
++            raise RuntimeError('Unknown available image row scenario')
++    require(len({row['run_token'] for row in records}) == 1 and
++            len({row['signing_mode'] for row in records}) == 1,
++            'Available image rows cross task tokens or signing modes')
++    require(len({(row.get('scenario', 'readiness'), row['boot_ordinal'], row.get('action'))
++                 for row in records}) == len(records), 'Repeated available operation identity')
++    inventories = _framework_inventory_keys(records, framework_inventories)
++    grouped = {}
++    for row in records:
++        key = (row.get('scenario', 'readiness'), row['boot_ordinal'])
++        require(key[0] in {'readiness', SCENARIO, 'l08-host'}, 'Unknown available image row scenario')
++        grouped.setdefault(key, []).append(row)
++    processes = set()
++    bindings = []
++    for (scenario, ordinal), rows in grouped.items():
++        first = rows[0]
++        require(first['process_boot'] not in processes, 'Available groups reused a cold-start process UUID')
++        processes.add(first['process_boot'])
++        require(all(all(row[key] == first[key] for key in (
++            'process_boot', 'run_token', 'signing_mode', 'loaded_app_images',
++            'loaded_compose_framework', 'loader_environment')) for row in rows),
++            'Available process observations disagree about loaded-image ownership')
++        origin = first['loaded_compose_framework']
++        keys = {('installed-app-bundle', FRAMEWORK_PATH), (origin['origin'], origin['path'])}
++        bound = bind_loaded_images(built, installed, [first], [inventories[key] for key in sorted(keys)])
++        bindings.append(dict(scenario=scenario, boot_ordinal=ordinal, operation_rows=len(rows), binding=bound))
++    return dict(status='AVAILABLE_OBSERVATIONS_IMAGE_BOUND', matrix_verified=False,
++                observation_rows=len(records), process_groups=len(grouped), bindings=bindings,
++                limits='Image provenance for available closed observations only. This does not accept incomplete scenarios, unsuccessful metadata, missing XCTest evidence or missing operations.')
++
++
++def runtime_complete(receipt, xcode):
++    if not isinstance(receipt, dict) or any(not isinstance(receipt.get(key), dict)
++            for key in ('l08_storage_functional', 'xctest', 'l08_host')):
++        return False
++    functional = receipt.get('l08_storage_functional', {})
++    return (type(xcode) is int and xcode == 0 and receipt.get('xctest', {}).get('result') == 'Passed' and
++            receipt.get('embedded_gradle_stop_status') == 'PASS' and
++            receipt.get('probe_harness_status') == 'observation_complete' and
++            functional.get('kind') == KIND and functional.get('status') == 'FUNCTIONAL_MATRIX_VERIFIED' and
++            functional.get('functional_gate') == 'PASS' and
++            functional.get('complete_comparison_gate') in ('PASS', 'FAIL') and
++            functional.get('original_strict_l08') == 'NOT_SATISFIED_BY_COMPANION' and
++            receipt.get('l08_host', {}).get('status') == 'PASS')
++
++
++def classify_final_companion(receipt):
++    """Never return overall PASS, including when every Complete comparison matches."""
++    result = dict(status='FAIL', strict_l08_gate='NOT_SATISFIED_BY_COMPANION')
++    if not isinstance(receipt, dict):
++        return result
++    safe = (runtime_complete(receipt, receipt.get('xcodebuild_exit_code')) and
++            receipt.get('runtime_evidence_status') == 'FUNCTIONAL_COMPANION_VERIFIED' and
++            not receipt.get('error') and receipt.get('cleanup_status') == 'PASS' and
++            all(isinstance(receipt.get(key), dict) for key in ('native_readiness', 'os_settings_gate')) and
++            all(receipt.get(key) is True for key in (
++                'source_unchanged', 'controls_unchanged', 'copied_sources_unchanged')))
++    if not safe:
++        return result
++    if receipt.get('native_readiness', {}).get('storage_health') == 'FAIL':
++        result['readiness_gate_failure'] = 'Observed native storage inconsistency remains a failed gate; not automatically an application defect.'
++        return result
++    result['status'] = 'PARTIALLY_VERIFIED'
++    result['remaining_obligations'] = ['Original strict L08 was not executed by this separate functional companion.']
++    if receipt.get('l08_storage_functional', {}).get('complete_comparison_gate') != 'PASS':
++        result['remaining_obligations'].append('Required NSFileProtectionComplete comparisons remain unsuccessful; inspect all retained rows.')
++    if receipt.get('native_readiness', {}).get('storage_health') != 'PASS':
++        result['remaining_obligations'].append('Actual native storage-health subgate is not PASS.')
++    os_gate = receipt.get('os_settings_gate', {})
++    if os_gate.get('status') != 'PASS' or os_gate.get('actual_present_os_preference_coverage') is not True:
++        result['remaining_obligations'].append('Actual OS-managed per-app preference subgate is not fully verified.')
++    return result
+--- canonical/run_ios_readiness.py
++++ functional-companion/run_ios_readiness.py
+@@ -1,5 +1,5 @@
+ #!/usr/bin/env python3
+-"""Source-bound local-readiness temporary-copy execution; root's sole build lane.
++"""Source-bound functional companion execution; root's sole build lane.
+ 
+ All production/build inputs are copied from a later explicitly frozen manifest.
+ Only reviewed copy transformations add direct observation/synthetic invocation.
+@@ -41,9 +41,13 @@
+                                 render_owned_native_launch, FRAMEWORK_PATH)
+ from native_readiness_receipts import verify_native_readiness, read_synthetic_seed_cleanup
+ from native_failure_receipts import read_failure
+-from l08_copy import instrument_probe_swift, instrument_ui_test
+-from l08_receipts import (preserve_l08_evidence, storage_result_names, host_result_names,
+-                          read_owned_result, verify_storage, verify_host, framework_subset)
++from l08_functional_copy import instrument_probe_swift, instrument_ui_test
++from l08_receipts import (preserve_l08_evidence, host_result_names,
++                          read_owned_result, verify_host, framework_subset)
++from l08_functional_receipts import (preserve_functional_evidence, functional_result_names,
++                                     verify_storage_functional)
++from l08_functional_runner import (available_run_records, bind_available_images,
++                                   runtime_complete, classify_final_companion)
+ from simulator_signing import (selected_mode, signing_overrides, render_owned_kotlin_phase,
+                                read_phase_receipt, RECEIPT_NAME as PHASE_RECEIPT_NAME)
+ from simulator_entitlements import (inspect_bundle_entitlements, inspect_generated_app_entitlements,
+@@ -54,7 +58,7 @@
+ 
+ FIXTURE = HERE
+ APP_ID = 'com.parlor.app.debug'
+-EXPECTED_TEST = 'IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSInvestigation()'
++EXPECTED_TEST = 'IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSWithL08FunctionalObservation()'
+ EXPECTED_TESTS = {EXPECTED_TEST} | {'ComposeContainerViewControllerTests/' + name + '()' for name in (
+     'testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView',
+     'testChildUsesFullBoundsAcrossSizesAndOpposingSemanticDirections',
+@@ -349,9 +353,9 @@
+         dest.parent.mkdir(exist_ok=True)
+         dest.mkdir(exist_ok=False)
+         receipt = dict(cycle=NAME, started_at=now(), status='RUNNING',
+-                       execution_kind='manifest-owned-copy-ios-local-readiness-matrix', signing_mode=mode, commands=[],
++                       execution_kind='manifest-owned-copy-ios-l08-storage-functional-companion', signing_mode=mode, commands=[],
+                        runtime_evidence_status='NOT_RUN', cleanup_status='BLOCKED',
+-                       scope='Four actual production-container UIKit tests; actual Settings/restart; direct Compose and actual LocalUIViewController direction; stable outer/child/window identities and full-bounds safe-area geometry in EN/AR portrait/landscape; local Whodunit/Mafia controller/flow/value continuity under synthetic real-store language setters and actual background/foreground; actual OS Arabic per-app preference; eight current-build cold launches; exact rerun credential OSStatus and synthetic storage durability; complete embedded Mach-O inventory and observed loaded-image binding. Additive L08: thirteen full GameSnapshot/real Home resume and damaged-record boots and three ControlledStartRoom host locale/lifecycle fixtures; no physical LAN, full-UI-game, signed-release, Store or leak-free claim.', approved_control_sha256=approved)
++                       scope='Four actual production-container UIKit tests; actual Settings/restart; direct Compose and actual LocalUIViewController direction; stable outer/child/window identities and full-bounds safe-area geometry in EN/AR portrait/landscape; local Whodunit/Mafia controller/flow/value continuity under synthetic real-store language setters and actual background/foreground; actual OS Arabic per-app preference; eight current-build cold launches; exact rerun credential OSStatus and synthetic storage durability; complete embedded Mach-O inventory and observed loaded-image binding. Separate L08 functional companion: thirteen full GameSnapshot/real Home resume and damaged-record boots with all Complete comparisons retained separately, never original strict L08 PASS; three ControlledStartRoom host locale/lifecycle fixtures; no physical LAN, full-UI-game, signed-release, Store or leak-free claim.', approved_control_sha256=approved)
+         temp, owner, env, uuid = None, None, None, None
+         # This iteration compiles only inside temp/copy. Original-repository
+         # outputs are never task-owned and must never be deleted by this run.
+@@ -580,7 +584,7 @@
+             content.write_text(original + '\n' + (FIXTURE / 'DSC01NativeObservation.swift.in').read_text() +
+                                '\n' + instrument_probe_swift((FIXTURE / 'DSC01Probe.swift.in').read_text()) + '\n' +
+                                render_owned_native_launch((FIXTURE / 'NativeReadinessLaunch.swift.in').read_text(), temp, mode) + '\n' +
+-                               (FIXTURE / 'L08StorageLaunch.swift.in').read_text() + '\n' +
++                               (FIXTURE / 'L08StorageFunctionalLaunch.swift.in').read_text() + '\n' +
+                                (FIXTURE / 'L08HostLaunch.swift.in').read_text())
+             entry = temp / 'copy/iosApp/iosApp/iOSApp.swift'
+             original = entry.read_text()
+@@ -599,7 +603,7 @@
+                                (FIXTURE / 'DSC01OSAppSettings.swift.in').read_text() + '\n' +
+                                (FIXTURE / 'DSC01OSPreferenceBaseline.swift.in').read_text() + '\n' +
+                                (FIXTURE / 'NativeReadinessUITests.swift.in').read_text() + '\n' +
+-                               (FIXTURE / 'L08StorageUITests.swift.in').read_text() + '\n' +
++                               (FIXTURE / 'L08StorageFunctionalUITests.swift.in').read_text() + '\n' +
+                                (FIXTURE / 'L08HostUITests.swift.in').read_text())
+             project = temp / 'copy/iosApp/iosApp.xcodeproj/project.pbxproj'
+             pbx = project.read_text()
+@@ -677,7 +681,7 @@
+                 container = Path((dest / 'owned-container.log').read_text().strip()).resolve()
+                 owned_device = Path.home() / 'Library/Developer/CoreSimulator/Devices' / uuid
+                 container.relative_to(owned_device.resolve())
+-                for scenario in ('settings', 'whodunit', 'mafia', 'os', 'readiness', 'l08-storage', 'l08-host'):
++                for scenario in ('settings', 'whodunit', 'mafia', 'os', 'readiness', 'l08-storage-functional', 'l08-host'):
+                     result = container / ('tmp/parlor-dsc01-' + scenario + '-result.json')
+                     if result.is_symlink() or result.resolve().parent != (container / 'tmp').resolve():
+                         raise RuntimeError('Unexpected synthetic result path; refuse to read')
+@@ -686,6 +690,7 @@
+                             raise RuntimeError('Oversized synthetic result; refuse to copy')
+                         shutil.copyfile(result, dest / ('probe-' + scenario + '-result.json'))
+                 receipt['l08_preserved_operation_files'] = preserve_l08_evidence(container, dest)
++                receipt['l08_functional_preserved_operation_files'] = preserve_functional_evidence(container, dest)
+                 save()
+                 cleanup_result = container / 'tmp/parlor-native-synthetic-seed-cleanup.json'
+                 if cleanup_result.is_symlink() or cleanup_result.resolve().parent != (container / 'tmp').resolve():
+@@ -776,6 +781,40 @@
+                 write_json(dest / 'installed-app-linker-entitlements.json',
+                            inspect_bundle_entitlements(installed, installed_inventory, owned_device))
+                 receipt['installed_app_linker_entitlements_sha256'] = digest(dest / 'installed-app-linker-entitlements.json')
++            available_records = available_run_records(dest, mode)
++            framework_inventory = []
++            if available_records:
++                if built_inventory is None or installed_inventory is None:
++                    raise RuntimeError('Complete built/installed native binary inventory is unavailable')
++                embedded = next(row for row in built_inventory['images'] if row['resolved_path'] == FRAMEWORK_PATH)
++                embedded_uuid = next(row for row in receipt['native_uuid_inventory'] if row['path'] == FRAMEWORK_PATH)
++                framework_inventory = [dict(origin='installed-app-bundle', path=FRAMEWORK_PATH, bytes=embedded['bytes'],
++                                            sha256=embedded['sha256'], architectures=embedded_uuid['architectures'])]
++                observed_origins = {('installed-app-bundle', FRAMEWORK_PATH)}
++                for native in available_records:
++                    observed = validate_framework_observation(native.get('loaded_compose_framework'))
++                    origin = (observed['origin'], observed['path'])
++                    if origin in observed_origins:
++                        continue
++                    # Only an exact, symlink-resolved product inside this cycle's
++                    # copied KMP output is readable. Nothing from DYLD's other paths
++                    # or unrelated host/system libraries is inspected or retained.
++                    owned_build = temp / 'copy/composeApp/build'
++                    artifact = inventory_owned_framework(owned_build, observed, receipt['sdk_name'])
++                    path = owned_build / observed['path']
++                    filename = 'native-runtime-framework-' + str(len(framework_inventory)).zfill(3) + '.log'
++                    if command(['xcrun', 'dwarfdump', '--uuid', path], filename) != 0 or digest(path) != artifact['sha256']:
++                        raise RuntimeError('Observed framework product changed or UUID inspection failed')
++                    artifact['architectures'] = parse_dwarfdump_uuids((dest / filename).read_text(), path)
++                    framework_inventory.append(artifact); observed_origins.add(origin)
++                write_json(dest / 'executed-framework-inventory.json', dict(schema_version=1, images=framework_inventory))
++                receipt['executed_framework_inventory_sha256'] = digest(dest / 'executed-framework-inventory.json')
++                receipt['available_observation_image_binding'] = bind_available_images(
++                    available_records, built_inventory, installed_inventory, framework_inventory)
++            else:
++                receipt['available_observation_image_binding'] = dict(
++                    status='NOT_RUN', matrix_verified=False, reason='No valid executed observation rows are available')
++            save()
+             if receipt.get('native_diagnostic_failures'):
+                 raise RuntimeError('Native diagnostic generation failed; bounded owned failure metadata retained')
+             if not results.exists() or receipt.get('xcresult_extraction_exit_codes') != {'summary': 0, 'tests': 0}:
+@@ -809,36 +848,11 @@
+             native_results = [json.loads((dest / ('parlor-native-readiness-boot-' + str(ordinal) + '.json')).read_text())
+                               for ordinal in range(1, 9)]
+             native_scenario = json.loads((dest / 'probe-readiness-result.json').read_text())
+-            l08_storage_results = [read_owned_result(dest / name, dest, 16384) for name in storage_result_names()]
++            l08_storage_results = [read_owned_result(dest / name, dest, 16384) for name in functional_result_names()]
+             l08_host_results = [read_owned_result(dest / name, dest, 24576) for name in host_result_names()]
+-            l08_storage_scenario = read_owned_result(dest / 'probe-l08-storage-result.json', dest, 262144)
++            l08_storage_scenario = read_owned_result(dest / 'probe-l08-storage-functional-result.json', dest, 262144)
+             l08_host_scenario = read_owned_result(dest / 'probe-l08-host-result.json', dest, 262144)
+             all_observed_runs = native_results + l08_storage_results + l08_host_results
+-            if built_inventory is None or installed_inventory is None:
+-                raise RuntimeError('Complete built/installed native binary inventory is unavailable')
+-            embedded = next(row for row in built_inventory['images'] if row['resolved_path'] == FRAMEWORK_PATH)
+-            embedded_uuid = next(row for row in receipt['native_uuid_inventory'] if row['path'] == FRAMEWORK_PATH)
+-            framework_inventory = [dict(origin='installed-app-bundle', path=FRAMEWORK_PATH, bytes=embedded['bytes'],
+-                                        sha256=embedded['sha256'], architectures=embedded_uuid['architectures'])]
+-            observed_origins = {('installed-app-bundle', FRAMEWORK_PATH)}
+-            for native in all_observed_runs:
+-                observed = validate_framework_observation(native.get('loaded_compose_framework'))
+-                origin = (observed['origin'], observed['path'])
+-                if origin in observed_origins:
+-                    continue
+-                # Only an exact, symlink-resolved product inside this cycle's
+-                # copied KMP output is readable. Nothing from DYLD's other paths
+-                # or unrelated host/system libraries is inspected or retained.
+-                owned_build = temp / 'copy/composeApp/build'
+-                artifact = inventory_owned_framework(owned_build, observed, receipt['sdk_name'])
+-                path = owned_build / observed['path']
+-                filename = 'native-runtime-framework-' + str(len(framework_inventory)).zfill(3) + '.log'
+-                if command(['xcrun', 'dwarfdump', '--uuid', path], filename) != 0 or digest(path) != artifact['sha256']:
+-                    raise RuntimeError('Observed framework product changed or UUID inspection failed')
+-                artifact['architectures'] = parse_dwarfdump_uuids((dest / filename).read_text(), path)
+-                framework_inventory.append(artifact); observed_origins.add(origin)
+-            write_json(dest / 'executed-framework-inventory.json', dict(schema_version=1, images=framework_inventory))
+-            receipt['executed_framework_inventory_sha256'] = digest(dest / 'executed-framework-inventory.json')
+             cleanup_path = dest / 'parlor-native-synthetic-seed-cleanup.json'
+             cleanup_record = read_synthetic_seed_cleanup(cleanup_path)
+             receipt['synthetic_seed_cleanup_sha256'] = digest(cleanup_path)
+@@ -847,7 +861,7 @@
+             receipt['executed_binary_binding'] = bind_loaded_images(
+                 built_inventory, installed_inventory, native_results,
+                 framework_subset(native_results, all_observed_runs, framework_inventory))
+-            receipt['l08_storage'] = verify_storage(l08_storage_results, l08_storage_scenario,
++            receipt['l08_storage_functional'] = verify_storage_functional(l08_storage_results, l08_storage_scenario,
+                 native_scenario['runToken'], (dest / 'xcodebuild.log').read_text(), mode,
+                 built_inventory, installed_inventory,
+                 framework_subset(l08_storage_results, all_observed_runs, framework_inventory))
+@@ -873,14 +887,10 @@
+             receipt['os_settings_gate'] = receipt['dsc01_matrix']['os_settings_gate']
+             if owner.secondary_errors:
+                 raise RuntimeError('Apple secondary-path attestation incomplete; inspect exact ledger, never claim cleanup success')
+-            receipt['runtime_evidence_status'] = 'PASS' if (
+-                xcode == 0 and receipt.get('xctest', {}).get('result') == 'Passed' and
+-                receipt.get('embedded_gradle_stop_status') == 'PASS' and
+-                receipt.get('probe_harness_status') == 'observation_complete' and
+-                receipt.get('l08_storage', {}).get('status') == 'PASS' and
+-                receipt.get('l08_host', {}).get('status') == 'PASS') else 'FAIL'
+-            if receipt['runtime_evidence_status'] != 'PASS':
+-                raise RuntimeError('No complete native diagnostic matrix; inspect retained evidence, not an inferred application failure')
++            receipt['runtime_evidence_status'] = (
++                'FUNCTIONAL_COMPANION_VERIFIED' if runtime_complete(receipt, xcode) else 'FAIL')
++            if receipt['runtime_evidence_status'] != 'FUNCTIONAL_COMPANION_VERIFIED':
++                raise RuntimeError('No complete functional companion matrix; retained observations are not original strict L08 success')
+         except BaseException as error:
+             # Failed validation after an attempted runtime is not an unexecuted
+             # check. This records an evidence failure, not an application defect.
+@@ -970,15 +980,7 @@
+                 receipt['controls_unchanged'] = receipt['controls_after_sha256'] == approved
+                 receipt['source_unchanged'] = receipt.get('source_after') is not None and receipt.get('source_after') == receipt.get('source_before')
+                 receipt['cleanup_status'] = 'PASS' if safe and not errors and not receipt['remaining_outputs'] and receipt['temporary_directory_removed'] else 'FAIL'
+-                receipt['status'] = 'PASS' if receipt.get('runtime_evidence_status') == 'PASS' and not receipt.get('error') and receipt['cleanup_status'] == 'PASS' and receipt['source_unchanged'] and receipt['controls_unchanged'] and receipt['copied_sources_unchanged'] else 'FAIL'
+-                if receipt['status'] == 'PASS' and receipt.get('native_readiness', {}).get('storage_health') == 'FAIL':
+-                    receipt['status'] = 'FAIL'
+-                    receipt['readiness_gate_failure'] = 'Observed storage inconsistency requires investigation; not automatically a confirmed application defect.'
+-                if receipt['status'] == 'PASS' and (
+-                        receipt.get('os_settings_gate', {}).get('status') != 'PASS' or
+-                        receipt.get('os_settings_gate', {}).get('actual_present_os_preference_coverage') is not True or
+-                        receipt.get('native_readiness', {}).get('storage_health') != 'PASS'):
+-                    receipt['status'] = 'PARTIALLY_VERIFIED'
++                receipt.update(classify_final_companion(receipt))
+                 receipt['unexpected_original_outputs_preserved'] = [str(p.relative_to(ROOT)) for p in original_outputs
+                                                                     if p.exists() or p.is_symlink()]
+                 if receipt['unexpected_original_outputs_preserved']:
+--- /dev/null
++++ functional-companion/test_l08_functional_copy.py
+@@ -0,0 +1,220 @@
++"""Source/copy contract tests only; root executes in the shared lane, never native proof."""
++import ast
++import hashlib
++import json
++from pathlib import Path
++import re
++import tempfile
++import unittest
++
++import copied_sources as copies
++import l08_copy as strict
++import l08_functional_copy as companion
++
++HERE = Path(__file__).resolve().parent
++ROOT = HERE.parents[2]
++CANONICAL = ROOT / 'scripts/verification/ios-readiness'
++CLONE_MANIFEST = HERE.parent / 'reviews/l08-functional-companion-clone-manifest-01.json'
++CLONE_MANIFEST_SHA256 = '3036231a1bcfc9d567b8381ee33d89cd381377bea2b10790ddde0f90baf682fb'
++SITES = ('save', 'load', 'dual-before-legacy-seed', 'dual-after-tag-damage', 'legacy-load-dual', 'retained-dual')
++
++
++def sha(path):
++    return hashlib.sha256(path.read_bytes()).hexdigest()
++
++
++def require(condition, reason):
++    if not condition:
++        raise RuntimeError(reason)
++
++
++def section(text, first, last=None):
++    require(text.count(first) == 1 and (last is None or text.count(last) == 1), 'Ambiguous source section')
++    start = text.index(first)
++    end = len(text) if last is None else text.index(last, start)
++    return text[start:end]
++
++
++def assert_probe_contract(candidate, original):
++    """Compare complete executable regions, not just whether check names occur somewhere."""
++    for site in SITES:
++        require(len(re.findall(r'protectedMetadata\((?:alias|"dual"), "' + site + r'"\)', candidate)) == 1,
++                'Missing or duplicate metadata checkpoint: ' + site)
++    restored = re.sub(r'protectedMetadata\((alias|"dual"), "(?:' + '|'.join(SITES) + r')"\)',
++                      r'protectedMetadata(\1)', candidate)
++    restored = restored.replace('"owned_metadata_and_header"', '"protected_metadata"')
++    restored = restored.replace('recordProtectionComparison', 'recordProtectionDiagnostic')
++    for first, last in (
++        ('    private val aliases', '    fun command('),
++        ('    private suspend fun execute(', '    private fun recordProtectionDiagnostic('),
++        ('internal fun requireContext(', '/** Exact app-container/token paths only'),
++        ('/** Exact app-container/token paths only', '    fun protectedMetadata('),
++        ('    private fun excluded(', None),
++    ):
++        require(section(restored, first, last) == section(original, first, last),
++                'A nonmetadata functional/ownership boundary changed: ' + first)
++    cancellation = section(candidate, '            } catch (cancelled:', '    private suspend fun execute(')
++    require(cancellation.replace('completeComparisons.clear()', 'protectionDiagnostic = null') ==
++            section(original, '            } catch (cancelled:', '    private suspend fun execute('),
++            'Cancellation, payload clearing or controller/scope cleanup changed')
++    expected = section(original, '    fun protectedMetadata(', '    private class ProtectionRead(')
++    expected = strict.once(expected, 'fun protectedMetadata(alias: String)', 'fun protectedMetadata(alias: String, site: String)')
++    for target, args in (('directory', 'directory'), ('file', 'directory, file')):
++        expected = strict.once(expected,
++            '        if (!' + target + '.complete) protectionFailure("' + target + '", path, key, protection, ' + args + ')\n'
++            '        check(' + target + '.complete)',
++            '        recordComparison(site, alias, "' + target + '", ' + target + ')')
++    require(section(candidate, '    fun protectedMetadata(', '    private class ProtectionRead(') == expected,
++            'Path/existence/backup/header or one of the actual Complete comparisons changed')
++    require(section(candidate, '    private class ProtectionRead(', '    private fun recordComparison(') ==
++            section(original, '    private class ProtectionRead(', '    private fun protectionFailure('),
++            'The actual getter, required equality or exact native values changed')
++    require(section(candidate, '    private fun metadataRead(', '    private fun excluded(') ==
++            section(original, '    private fun metadataRead(', '    private fun unknownMetadata('),
++            'Native primitive metadata is not preserved exactly')
++    require(section(candidate, '    private fun recordComparison(', '    private fun metadataRead(') == '''    private fun recordComparison(site: String, alias: String, target: String, reading: ProtectionRead) {
++        recordProtectionComparison(buildJsonObject {
++            put("site", site); put("alias", alias); put("target", target)
++            put("attributes", reading.observation)
++            put("comparison", if (reading.complete) "PASS" else "FAIL")
++        })
++    }
++
++''', 'A comparison must record the actual equality, never repair or relabel it')
++    require(section(candidate, '    private fun recordProtectionComparison(', '    private fun checks(') == '''    private fun recordProtectionComparison(value: JsonObject) {
++        check(completeComparisons.size < 4)
++        check(stage == "metadata-directory-protection" || stage == "metadata-file-protection")
++        completeComparisons.add(buildJsonObject {
++            put("ordinal", completeComparisons.size + 1)
++            value.forEach { (key, item) -> put(key, item) }
++        }) // Closed metadata only, including an unsuccessful required Complete comparison.
++    }
++
++''', 'Comparison recording must remain a bounded command-local append')
++    require(candidate.count('completeComparisons.clear()') == 2 and
++            candidate.count('JsonArray(completeComparisons.toList())') == 2,
++            'Commands and failures must retain their own comparison prefix without cross-command reuse')
++
++
++class L08FunctionalCopyTests(unittest.TestCase):
++    def test_all_original_controls_and_exact_clone_allowlist_are_preserved(self):
++        self.assertEqual(sha(CLONE_MANIFEST), CLONE_MANIFEST_SHA256)
++        manifest = json.loads(CLONE_MANIFEST.read_text())
++        self.assertEqual(len(manifest['files']), 65)
++        changed = set(manifest['permitted_changed_clones'])
++        self.assertEqual(changed, {'copied_sources.py', 'run_ios_readiness.py'})
++        allowed = {row['path'] for row in manifest['files']} | set(manifest['permitted_new_files'])
++        self.assertEqual(len(allowed), 75)
++        self.assertEqual({path.name for path in HERE.iterdir()}, allowed)
++        self.assertTrue(all(path.is_file() and not path.is_symlink() for path in HERE.iterdir()))
++        for row in manifest['files']:
++            with self.subTest(path=row['path']):
++                self.assertEqual(sha(CANONICAL / row['path']), row['original_sha256'])
++                if row['path'] not in changed:
++                    self.assertEqual(sha(HERE / row['path']), row['original_sha256'])
++        original = (CANONICAL / 'copied_sources.py').read_text()
++        self.assertEqual((HERE / 'copied_sources.py').read_text(), strict.once(original,
++            'from l08_copy import L08_ADDITIONS, L08_ADDITIONAL_MODIFIED, instrument_l08_kotlin',
++            'from l08_functional_copy import L08_ADDITIONS, L08_ADDITIONAL_MODIFIED, instrument_l08_kotlin'))
++
++    def test_only_the_new_probe_registration_replaces_the_strict_probe_in_owned_copy(self):
++        expected = dict(strict.L08_ADDITIONS)
++        del expected[companion.OLD_PROBE]
++        expected[companion.NEW_PROBE] = 'L08StorageFunctionalProbe.kt.in'
++        self.assertEqual(companion.L08_ADDITIONS, expected)
++        self.assertEqual(companion.L08_ADDITIONAL_MODIFIED, strict.L08_ADDITIONAL_MODIFIED)
++        self.assertEqual(len(companion.L08_ADDITIONS), 9)
++        self.assertNotIn(companion.OLD_PROBE, copies.ADDITIONS)
++        self.assertIn(companion.NEW_PROBE, copies.ADDITIONS)
++        for path in copies.ADDITIONS:
++            self.assertFalse((ROOT / path).exists(), 'Copy-only seam must not enter a shipping source tree')
++
++    def test_current_source_transforms_once_with_single_bridge_and_shared_context(self):
++        before = {path: sha(ROOT / path) for path in copies.MODIFIED_KOTLIN}
++        with tempfile.TemporaryDirectory(prefix='parlor-functional-copy-') as raw:
++            owned = Path(raw).resolve()
++            for path in copies.MODIFIED_KOTLIN:
++                target = owned / path; target.parent.mkdir(parents=True, exist_ok=True)
++                target.write_bytes((ROOT / path).read_bytes())
++            copies.instrument_kotlin(owned)
++            self.assertTrue((owned / companion.NEW_PROBE).is_file())
++            self.assertFalse((owned / companion.OLD_PROBE).exists())
++            main = (owned / strict.MAIN).read_text()
++            self.assertEqual(main.count('fun L08StorageFunctionalCommand('), 1)
++            self.assertEqual(main.count('L08StorageFunctionalProbe.command(action, onJson)'), 1)
++            self.assertNotIn('fun L08StorageCommand(', main)
++            self.assertIn('L08HostProbe.command(action, onJson)', main)
++            self.assertEqual(sum((owned / path).read_text().count('fun requireContext(') for path in copies.ADDITIONS), 1)
++            self.assertEqual((owned / companion.NEW_PROBE).read_bytes(), (HERE / 'L08StorageFunctionalProbe.kt.in').read_bytes())
++            for path, template in companion.L08_ADDITIONS.items():
++                self.assertEqual((owned / path).read_bytes(), (HERE / template).read_bytes())
++            with self.assertRaises(RuntimeError): companion.instrument_l08_kotlin(owned)
++        self.assertFalse(owned.exists())
++        self.assertEqual(before, {path: sha(ROOT / path) for path in copies.MODIFIED_KOTLIN})
++
++    def test_functional_probe_preserves_complete_nonmetadata_execution_regions(self):
++        assert_probe_contract((HERE / 'L08StorageFunctionalProbe.kt.in').read_text(),
++                              (CANONICAL / 'L08StorageProbe.kt.in').read_text())
++
++    def test_each_source_boundary_mutation_is_rejected_not_just_missing_check_names(self):
++        original = (CANONICAL / 'L08StorageProbe.kt.in').read_text()
++        candidate = (HERE / 'L08StorageFunctionalProbe.kt.in').read_text()
++        changes = [
++            ('check(store is FileBackedSnapshotStore && filesystem is IosSnapshotFileSystem)', 'check(true)'),
++            ('check(koin.get<RoomTransport>() is P2pKitRoomTransport)', 'check(true)'),
++            ('check(loaded is Result.Failure && loaded.error == DataError.NotFound)', 'check(loaded is Result.Failure)'),
++            ('check(loaded.error == DataError.NotFound)', 'check(loaded.error == DataError.CorruptedData)'),
++            ('awaitAbsent(store, id)', 'store.delete(id)'),
++            ('check(excluded(protected))', 'check(true)'), ('check(excluded(path))', 'check(true)'),
++            ('check(bytes.take(7).toByteArray().contentEquals("PARSNAP".encodeToByteArray()))', 'check(true)'),
++            ('ProtectionRead(value == protection,', 'ProtectionRead(true,'),
++            ('recordComparison(site, alias, "directory", directory)', 'Unit'),
++            ('recordComparison(site, alias, "file", file)', 'Unit'),
++            ('check(completeComparisons.size < 4)', 'check(completeComparisons.size < 5)'),
++            ('put("comparison", if (reading.complete) "PASS" else "FAIL")', 'put("comparison", "PASS")'),
++            ('throw cancelled', 'return@launch'), ('expected?.payload?.fill(0)', 'expected = null'),
++        ]
++        changes += [('protectedMetadata(' + ('alias' if site in ('save', 'load', 'dual-before-legacy-seed') else '"dual"') +
++                     ', "' + site + '")', 'Unit') for site in SITES]
++        for old, new in changes:
++            self.assertIn(old, candidate)
++            with self.subTest(change=old), self.assertRaises(RuntimeError):
++                assert_probe_contract(candidate.replace(old, new, 1), original)
++
++    def test_swift_namespace_preserves_shared_host_helpers_and_exact_distinct_test(self):
++        probe = (CANONICAL / 'DSC01Probe.swift.in').read_text()
++        transformed = companion.instrument_probe_swift(probe)
++        self.assertIn('"readiness", "l08-storage-functional", "l08-host"', transformed)
++        self.assertNotIn('"l08-storage"', transformed)
++        self.assertEqual(transformed.count('if probe.isL08StorageFunctionalScenario { L08StorageFunctionalControls(probe: probe) }'), 1)
++        for invalid in ('', probe + probe, transformed):
++            with self.assertRaises(RuntimeError): companion.instrument_probe_swift(invalid)
++        ui = (CANONICAL / 'IOSAppLaunchUITests.swift.in').read_text()
++        changed = companion.instrument_ui_test(ui)
++        self.assertEqual(changed.count('func ' + companion.NEW_TEST + '()'), 1)
++        self.assertNotIn('func ' + companion.OLD_TEST + '()', changed)
++        ordered = ['verifyActualNativeReadiness', 'verifyL08FunctionalStoreResume', 'verifyL08StartedHosts']
++        locations = [changed.index('try ' + name + '(app)') for name in ordered]
++        self.assertEqual(locations, sorted(locations))
++        self.assertIn('continueAfterFailure = false', changed)
++        for invalid in ('', ui + ui, changed):
++            with self.assertRaises(RuntimeError): companion.instrument_ui_test(invalid)
++        launch = (HERE / 'L08StorageFunctionalLaunch.swift.in').read_text()
++        tests = (HERE / 'L08StorageFunctionalUITests.swift.in').read_text()
++        self.assertIn('raw.count <= 4096', launch)
++        self.assertIn('encoded.count <= 16384', launch)
++        self.assertEqual(launch.count('func sampleL08Ui()'), 1)
++        self.assertEqual(tests.count('private func l08TapExactPublicControl('), 1)
++        self.assertEqual(tests.count('private func l08WaitRecovery('), 1)
++        self.assertIn('PARLOR_L08_STORAGE_FUNCTIONAL_BOOT ', tests)
++        self.assertNotIn('PARLOR_L08_STORAGE_BOOT ', tests)
++        self.assertIn('XCTAssertEqual(result["functional_status"] as? String, "PASS")', tests)
++        self.assertIn('["PASS", "FAIL"].contains', tests)
++
++    def test_all_new_python_controls_parse_without_launching_any_worker(self):
++        for name in ('l08_functional_copy.py', 'l08_functional_receipts.py', 'l08_functional_runner.py',
++                     'test_l08_functional_copy.py', 'test_l08_functional_receipts.py', 'test_l08_functional_runner.py'):
++            ast.parse((HERE / name).read_text(), filename=name)
++
++
++if __name__ == '__main__': unittest.main()
+--- /dev/null
++++ functional-companion/test_l08_functional_receipts.py
+@@ -0,0 +1,240 @@
++"""Synthetic strict-parser regressions; root runs them, never native/device evidence."""
++import copy
++import json
++from pathlib import Path
++import tempfile
++import unittest
++from unittest import mock
++
++import l08_functional_receipts as receipts
++import l08_receipts as strict
++from test_l08_receipts import matrix as strict_matrix
++from test_native_readiness import TOKEN, framework_inventory
++
++
++def reading(value='missing', error=None):
++    return dict(query='returned', dictionary_present=value != 'unavailable',
++                key_present=value not in {'missing', 'unavailable'}, value=value,
++                native_error=error if error is not None else dict(present=False, domain='none', code=0))
++
++
++def matrix(value='missing'):
++    records, scenario, log = strict_matrix()
++    scenario['scenario'] = receipts.SCENARIO
++    for record in records:
++        record['scenario'] = receipts.SCENARIO
++        observation = record['observation']
++        del observation['status']
++        del observation['checks']
++        observation.update(kind=receipts.KIND, functional_status='PASS',
++            functional_checks={key: True for key in receipts.FUNCTIONAL_CHECKS[record['action']]},
++            complete_comparisons=[dict(row, attributes=reading(value), comparison='PASS' if value == 'complete' else 'FAIL')
++                                  for row in receipts.comparison_plan(record['boot_ordinal'], record['action'])])
++    return records, scenario, log.replace('PARLOR_L08_STORAGE_BOOT ', receipts.BOOT_PREFIX)
++
++
++def failed_record(boot=1, action='save', retained=1):
++    source = next(row for row in matrix()[0] if row['boot_ordinal'] == boot and row['action'] == action)
++    value = source['observation']
++    del value['functional_checks']
++    value.update(functional_status='FAIL', stage='metadata-encrypted-header', reason='fixture_or_boundary_failure')
++    value['complete_comparisons'] = value['complete_comparisons'][:retained]
++    return source
++
++
++class L08FunctionalReceiptTests(unittest.TestCase):
++    def verify(self, records=None, scenario=None, log=None):
++        defaults = matrix()
++        return receipts.verify_storage_functional(records if records is not None else defaults[0],
++            scenario if scenario is not None else defaults[1], TOKEN, log if log is not None else defaults[2],
++            'disabled', {}, {}, [framework_inventory()])
++
++    @mock.patch.object(receipts, 'bind_loaded_images')
++    def test_missing_complete_is_explicit_failure_after_every_functional_obligation(self, bind):
++        result = self.verify()
++        self.assertEqual(result['functional_gate'], 'PASS')
++        self.assertEqual(result['status'], 'FUNCTIONAL_MATRIX_VERIFIED')
++        self.assertEqual(result['complete_comparison_gate'], 'FAIL')
++        self.assertEqual(result['complete_comparison_count'], 26)
++        self.assertEqual(result['successful_complete_comparisons'], 0)
++        self.assertEqual(len(result['unsuccessful_complete_comparisons']), 26)
++        self.assertTrue(all(row['observed_value'] == 'missing' for row in result['unsuccessful_complete_comparisons']))
++        self.assertEqual(result['original_strict_l08'], 'NOT_SATISFIED_BY_COMPANION')
++        self.assertFalse(result['physical_or_store_evidence'])
++        self.assertEqual(bind.call_count, 13)
++        self.assertTrue(all(len(call.args[2]) == 1 for call in bind.call_args_list))
++
++    @mock.patch.object(receipts, 'bind_loaded_images')
++    def test_matching_complete_is_not_original_l08_execution(self, _bind):
++        result = self.verify(records=matrix('complete')[0])
++        self.assertEqual(result['complete_comparison_gate'], 'PASS')
++        self.assertEqual(result['successful_complete_comparisons'], 26)
++        self.assertEqual(result['unsuccessful_complete_comparisons'], [])
++        self.assertNotEqual(result['status'], 'PASS')
++        self.assertEqual(result['original_strict_l08'], 'NOT_SATISFIED_BY_COMPANION')
++
++    @mock.patch.object(receipts, 'bind_loaded_images')
++    def test_each_actual_noncomplete_value_remains_an_unsuccessful_comparison(self, _bind):
++        for value in ('missing', 'unavailable', 'null', 'none', 'unless-open', 'until-first-authentication',
++                      'when-user-inactive', 'other-string', 'non-string'):
++            with self.subTest(value=value):
++                result = self.verify(records=matrix(value)[0])
++                self.assertEqual(result['complete_comparison_gate'], 'FAIL')
++                self.assertEqual(result['successful_complete_comparisons'], 0)
++
++    def test_exact_six_sites_thirteen_checkpoints_and_twenty_six_comparisons(self):
++        records = matrix()[0]
++        rows = [row for record in records for row in record['observation']['complete_comparisons']]
++        self.assertEqual(len(records), 20)
++        self.assertEqual(len(rows), 26)
++        self.assertEqual({row['site'] for row in rows}, {
++            'save', 'load', 'dual-before-legacy-seed', 'dual-after-tag-damage', 'legacy-load-dual', 'retained-dual'})
++        for boot, action in ((9, 'legacy-seed'), (10, 'legacy-load')):
++            selected = next(record for record in records if record['boot_ordinal'] == boot and record['action'] == action)
++            self.assertEqual(len(selected['observation']['complete_comparisons']), 4)
++        self.assertEqual(len(receipts.functional_result_names()), 20)
++        self.assertFalse(set(receipts.functional_result_names()) & set(strict.storage_result_names()))
++
++    @mock.patch.object(receipts, 'bind_loaded_images')
++    def test_missing_reordered_reused_extra_and_unfinished_processes_fail(self, _bind):
++        records, scenario, log = matrix()
++        for rows in (records[:-1], records + [records[-1]], [records[1], records[0]] + records[2:]):
++            with self.assertRaises(RuntimeError): self.verify(records=rows)
++        wrong = copy.deepcopy(records); wrong[1]['process_boot'] = wrong[0]['process_boot']
++        with self.assertRaises(RuntimeError): self.verify(records=wrong)
++        for change in (lambda value: value.update(completed=False),
++                       lambda value: value['observations'][2].update(boot=value['observations'][0]['boot'])):
++            bad = copy.deepcopy(scenario); change(bad)
++            with self.assertRaises(RuntimeError): self.verify(scenario=bad)
++        for altered in ('', log + '\n' + log.splitlines()[0], log.replace('"foreground": true', '"foreground": false', 1),
++                        log.replace('"alert_present": false', '"alert_present": true', 1),
++                        log.replace(receipts.BOOT_PREFIX, 'PARLOR_L08_STORAGE_BOOT ')):
++            with self.assertRaises(RuntimeError): self.verify(log=altered)
++
++    @mock.patch.object(receipts, 'bind_loaded_images')
++    def test_every_functional_guard_false_missing_wrong_type_or_unknown_is_rejected(self, _bind):
++        base = matrix()[0]
++        for index, record in enumerate(base):
++            for key in record['observation']['functional_checks']:
++                for replacement in (False, 1, None):
++                    rows = copy.deepcopy(base); rows[index]['observation']['functional_checks'][key] = replacement
++                    with self.subTest(index=index, key=key, value=replacement), self.assertRaises(RuntimeError):
++                        self.verify(records=rows)
++                rows = copy.deepcopy(base); del rows[index]['observation']['functional_checks'][key]
++                with self.assertRaises(RuntimeError): self.verify(records=rows)
++            rows = copy.deepcopy(base); rows[index]['observation']['functional_checks']['unknown'] = True
++            with self.assertRaises(RuntimeError): self.verify(records=rows)
++
++    @mock.patch.object(receipts, 'bind_loaded_images')
++    def test_every_comparison_is_required_ordered_and_cannot_imply_a_fake_pass(self, _bind):
++        base = matrix()[0]
++        for index, record in enumerate(base):
++            for row_index, row in enumerate(record['observation']['complete_comparisons']):
++                for key, replacement in (('comparison', 'PASS'), ('ordinal', True), ('site', 'save-again'),
++                                         ('alias', 'another-seat'), ('target', 'other'), ('secret', 'synthetic')):
++                    altered = copy.deepcopy(base)
++                    altered[index]['observation']['complete_comparisons'][row_index][key] = replacement
++                    with self.subTest(index=index, row=row_index, key=key), self.assertRaises(RuntimeError):
++                        self.verify(records=altered)
++                altered = copy.deepcopy(base); del altered[index]['observation']['complete_comparisons'][row_index]
++                with self.assertRaises(RuntimeError): self.verify(records=altered)
++            altered = copy.deepcopy(base)
++            altered[index]['observation']['complete_comparisons'].append(copy.deepcopy(base[0]['observation']['complete_comparisons'][0]))
++            with self.assertRaises(RuntimeError): self.verify(records=altered)
++
++    def test_getter_shapes_strict_booleans_and_error_codes_are_not_coerced(self):
++        base = matrix()[0][0]
++        changes = [lambda value: value.update(query='observer-exception'),
++                   lambda value: value.update(key_present=True), lambda value: value.update(value='complete'),
++                   lambda value: value.update(volume_support='supported'),
++                   lambda value: value['native_error'].update(description='not-allowed'),
++                   lambda value: value['native_error'].update(code=2 ** 63),
++                   lambda value: value['native_error'].update(code=True)]
++        for key in ('dictionary_present', 'key_present'):
++            for integer in (0, 1):
++                changes.append(lambda value, key=key, integer=integer: value.update({key: integer}))
++        for integer in (0, 1):
++            changes.append(lambda value, integer=integer: value['native_error'].update(present=integer))
++        for index, change in enumerate(changes):
++            record = copy.deepcopy(base); change(record['observation']['complete_comparisons'][0]['attributes'])
++            with self.subTest(index=index), self.assertRaises(RuntimeError):
++                receipts.validate_preservable_functional_operation(record)
++        valid = copy.deepcopy(base)
++        valid['observation']['complete_comparisons'][0]['attributes']['native_error'] = dict(
++            present=True, domain='posix', code=-(2 ** 63))
++        receipts.validate_preservable_functional_operation(valid)
++
++    def test_failure_retains_only_a_valid_completed_prefix_without_becoming_success(self):
++        for count in range(5):
++            row = failed_record(9, 'legacy-seed', retained=count)
++            receipts.validate_preservable_functional_operation(row)
++            for reason in ('cancelled', 'fixture_or_boundary_failure'):
++                row['observation']['reason'] = reason
++                receipts.validate_preservable_functional_operation(row)
++        bad = failed_record(9, 'legacy-seed', retained=2)
++        bad['observation']['complete_comparisons'].reverse()
++        with self.assertRaises(RuntimeError): receipts.validate_preservable_functional_operation(bad)
++        for reason in (None, [], {}, 1):
++            bad = failed_record(); bad['observation']['reason'] = reason
++            with self.assertRaises(RuntimeError): receipts.validate_preservable_functional_operation(bad)
++        records = matrix()[0]; records[0] = failed_record()
++        with self.assertRaises(RuntimeError): self.verify(records=records)
++
++    def test_original_strict_parser_rejects_companion_even_when_all_comparisons_match(self):
++        for value in ('complete', 'missing'):
++            rows, scenario, log = matrix(value)
++            with self.subTest(value=value), self.assertRaises(RuntimeError):
++                strict.verify_storage(rows, scenario, TOKEN, log, 'disabled', {}, {}, [framework_inventory()])
++            with self.assertRaises(RuntimeError): strict.validate_preservable_operation(rows[0], 'l08-storage')
++            forged = copy.deepcopy(rows[0]); forged['scenario'] = 'l08-storage'
++            with self.assertRaises(RuntimeError): strict.validate_preservable_operation(forged, 'l08-storage')
++        with self.assertRaises(RuntimeError): receipts.validate_preservable_functional_operation(strict_matrix()[0][0])
++
++    @mock.patch.object(receipts, 'bind_loaded_images', side_effect=RuntimeError('actual artifact mismatch'))
++    def test_real_artifact_binding_failure_is_not_swallowed(self, _bind):
++        with self.assertRaisesRegex(RuntimeError, 'artifact mismatch'): self.verify()
++
++    def test_context_signing_identity_and_secret_fields_are_closed(self):
++        base = matrix()[0][0]
++        for key, replacement in (('schema_version', True), ('boot_ordinal', True), ('run_token', 'wrong'),
++                                 ('signing_mode', 'store'), ('signing_mode', []), ('signing_mode', {}),
++                                 ('scenario', 'l08-storage'), ('seed', 'synthetic')):
++            row = copy.deepcopy(base); row[key] = replacement
++            with self.subTest(key=key), self.assertRaises(RuntimeError):
++                receipts.validate_preservable_functional_operation(row)
++        for key, replacement in (('schema_version', True), ('command_ordinal', True), ('run_token', TOKEN + '0'),
++                                 ('physical_or_store_evidence', True), ('kind', 'l08-storage'), ('role_map', {})):
++            row = copy.deepcopy(base); row['observation'][key] = replacement
++            with self.subTest(key=key), self.assertRaises(RuntimeError):
++                receipts.validate_preservable_functional_operation(row)
++
++    def test_preservation_is_exclusive_bounded_safe_and_never_invents_missing_steps(self):
++        with tempfile.TemporaryDirectory(prefix='parlor-functional-evidence-') as raw:
++            root = Path(raw).resolve(); parent = root / 'app/tmp'; parent.mkdir(parents=True)
++            dest = root / 'evidence'; dest.mkdir()
++            name = receipts.functional_result_names()[0]
++            row = failed_record()
++            path = parent / name; path.write_text(json.dumps(row))
++            self.assertEqual(receipts.preserve_functional_evidence(parent.parent, dest), [name])
++            self.assertEqual(json.loads((dest / name).read_text()), row)
++            self.assertEqual(len(list(dest.iterdir())), 1)
++            with self.assertRaises(FileExistsError): receipts.preserve_functional_evidence(parent.parent, dest)
++            for data in ('{}', '{"a":1,"a":2}', ' ' * 16385):
++                path.write_text(data)
++                with self.assertRaises(RuntimeError): receipts.preserve_functional_evidence(parent.parent, dest)
++            path.unlink(); path.symlink_to(dest / name)
++            with self.assertRaises(RuntimeError): receipts.preserve_functional_evidence(parent.parent, dest)
++
++    def test_four_comparison_records_fit_original_inner_and_outer_limits(self):
++        self.assertEqual((receipts.INNER_MAXIMUM, receipts.OUTER_MAXIMUM), (4096, 16384))
++        for row in matrix('until-first-authentication')[0]:
++            for comparison in row['observation']['complete_comparisons']:
++                comparison['attributes']['native_error'] = dict(present=True, domain='cocoa', code=-(2 ** 63))
++            receipts.validate_preservable_functional_operation(row)
++            inner = json.dumps(row['observation'], separators=(',', ':'), ensure_ascii=False).encode()
++            outer = json.dumps(row, separators=(',', ':'), ensure_ascii=False).encode()
++            self.assertLessEqual(len(inner), 4096)
++            self.assertLessEqual(len(outer), 16384)
++
++
++if __name__ == '__main__': unittest.main()
+--- /dev/null
++++ functional-companion/test_l08_functional_runner.py
+@@ -0,0 +1,263 @@
++"""Synthetic companion orchestration tests; no Gradle, Xcode or Simulator execution."""
++import ast
++import copy
++import importlib
++import json
++from pathlib import Path
++import tempfile
++import unittest
++from unittest import mock
++
++import l08_functional_receipts as receipts
++import l08_functional_runner as helpers
++import run_ios_readiness as runner
++from test_l08_functional_receipts import failed_record, matrix
++from test_l08_host_receipts import host_matrix
++from test_native_readiness import TOKEN, boot_result, framework_inventory, framework_observation, PRODUCT_PATH
++
++HERE = Path(__file__).resolve().parent
++CANONICAL = HERE.parents[2] / 'scripts/verification/ios-readiness'
++
++
++def xctest():
++    device = dict(deviceId=TOKEN, architecture='arm64', platform='iOS Simulator')
++    summary = dict(result='Passed', totalTestCount=5, passedTests=5, failedTests=0,
++                   skippedTests=0, expectedFailures=0, testFailures=[],
++                   devicesAndConfigurations=[dict(device=copy.deepcopy(device))])
++    tests = dict(devices=[copy.deepcopy(device)], testNodes=[dict(nodeType='Test Suite', children=[
++        dict(nodeType='Test Case', nodeIdentifier=name, result='Passed') for name in sorted(runner.EXPECTED_TESTS)])])
++    return summary, tests
++
++
++def receipt(complete='FAIL'):
++    return dict(runtime_evidence_status='FUNCTIONAL_COMPANION_VERIFIED', xcodebuild_exit_code=0,
++        xctest=dict(result='Passed'), embedded_gradle_stop_status='PASS', probe_harness_status='observation_complete',
++        l08_storage_functional=dict(kind=receipts.KIND, status='FUNCTIONAL_MATRIX_VERIFIED', functional_gate='PASS',
++            complete_comparison_gate=complete, original_strict_l08='NOT_SATISFIED_BY_COMPANION'),
++        l08_host=dict(status='PASS'), native_readiness=dict(storage_health='PASS'),
++        os_settings_gate=dict(status='PASS', actual_present_os_preference_coverage=True),
++        cleanup_status='PASS', source_unchanged=True, controls_unchanged=True, copied_sources_unchanged=True)
++
++
++def filename(row):
++    if 'scenario' not in row:
++        return 'parlor-native-readiness-boot-%d.json' % row['boot_ordinal']
++    return 'parlor-%s-%d-%s.json' % (row['scenario'], row['boot_ordinal'], row['action'])
++
++
++def write_rows(root, rows):
++    for row in rows:
++        with (root / filename(row)).open('x') as stream:
++            stream.write(json.dumps(row))
++
++
++class L08FunctionalRunnerTests(unittest.TestCase):
++    def test_imports_remain_read_only(self):
++        with mock.patch('subprocess.Popen', side_effect=AssertionError('Import launched a worker')), \
++                mock.patch('pathlib.Path.write_text', side_effect=AssertionError('Import wrote output')):
++            importlib.reload(helpers)
++            importlib.reload(runner)
++        self.assertIsNone(runner.BINDING)
++        with self.assertRaises(RuntimeError): runner.control_manifest()
++
++    def test_exact_five_discovered_tests_include_only_the_distinct_companion_method(self):
++        summary, tests = xctest()
++        result = runner.verify_xctest(summary, tests, TOKEN)
++        self.assertEqual(result['total'], 5)
++        self.assertEqual(result['method'], 'IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSWithL08FunctionalObservation()')
++        self.assertEqual(result['methods'], sorted(runner.EXPECTED_TESTS))
++        self.assertEqual(sum(name.startswith('ComposeContainerViewControllerTests/') for name in result['methods']), 4)
++        self.assertEqual(result['skipped'], 0)
++        for key, value in (('result', 'Failed'), ('totalTestCount', 4), ('passedTests', 4),
++                           ('failedTests', 1), ('skippedTests', 1), ('expectedFailures', 1)):
++            changed = copy.deepcopy(summary); changed[key] = value
++            with self.subTest(summary=key), self.assertRaises(RuntimeError): runner.verify_xctest(changed, tests, TOKEN)
++        for key, value in (('deviceId', TOKEN + '0'), ('architecture', 'x86_64'), ('platform', 'iOS')):
++            for source in ('summary', 'tests'):
++                left, right = copy.deepcopy(summary), copy.deepcopy(tests)
++                target = left['devicesAndConfigurations'][0]['device'] if source == 'summary' else right['devices'][0]
++                target[key] = value
++                with self.subTest(source=source, key=key), self.assertRaises(RuntimeError):
++                    runner.verify_xctest(left, right, TOKEN)
++        changed = copy.deepcopy(tests)
++        case = next(row for row in changed['testNodes'][0]['children'] if row['nodeIdentifier'] == runner.EXPECTED_TEST)
++        case['nodeIdentifier'] = 'IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSInvestigation()'
++        with self.assertRaises(RuntimeError): runner.verify_xctest(summary, changed, TOKEN)
++        for mutate in (lambda rows: rows.pop(), lambda rows: rows.append(copy.deepcopy(rows[0])),
++                       lambda rows: rows[0].update(result='Skipped')):
++            changed = copy.deepcopy(tests); mutate(changed['testNodes'][0]['children'])
++            with self.assertRaises(RuntimeError): runner.verify_xctest(summary, changed, TOKEN)
++
++    def test_available_failure_rows_are_retained_without_accepting_missing_scenarios(self):
++        values = [boot_result(1), failed_record(9, 'legacy-seed', retained=2), host_matrix()[0][0]]
++        values[-1]['observation'] = dict(schema_version=1, status='FAIL', run_token=TOKEN,
++            boot_ordinal=1, action='prepare', stage='context', reason='cancelled')
++        with tempfile.TemporaryDirectory(prefix='parlor-functional-available-') as raw:
++            root = Path(raw).resolve()
++            self.assertEqual(helpers.available_run_records(root, 'disabled'), [])
++            write_rows(root, values)
++            actual = helpers.available_run_records(root, 'disabled')
++            self.assertEqual(actual, values)
++            with mock.patch.object(helpers, 'bind_loaded_images', return_value=dict(status='PASS')) as binder:
++                result = helpers.bind_available_images(actual, {}, {}, [framework_inventory()])
++            self.assertEqual(binder.call_count, 3)
++            self.assertEqual(result['status'], 'AVAILABLE_OBSERVATIONS_IMAGE_BOUND')
++            self.assertIs(result['matrix_verified'], False)
++            self.assertEqual((result['observation_rows'], result['process_groups']), (3, 3))
++            self.assertFalse(helpers.runtime_complete(dict(available_observation_image_binding=result), 0))
++            self.assertEqual(helpers.classify_final_companion(dict(available_observation_image_binding=result))['status'], 'FAIL')
++
++    def test_complete_available_inventory_has_seventy_rows_and_twenty_four_cold_processes(self):
++        values = [boot_result(boot) for boot in range(1, 9)] + matrix()[0] + host_matrix()[0]
++        with tempfile.TemporaryDirectory(prefix='parlor-functional-all-rows-') as raw:
++            root = Path(raw).resolve(); write_rows(root, values)
++            actual = helpers.available_run_records(root, 'disabled')
++            self.assertEqual(actual, values)
++            with mock.patch.object(helpers, 'bind_loaded_images', return_value=dict(status='PASS')) as binder:
++                result = helpers.bind_available_images(actual, {}, {}, [framework_inventory()])
++            self.assertEqual(result['observation_rows'], 70)
++            self.assertEqual(result['process_groups'], 24)
++            self.assertEqual(binder.call_count, 24)
++            self.assertTrue(all(len(call.args[2]) == 1 for call in binder.call_args_list))
++            self.assertIs(result['matrix_verified'], False)
++
++    def test_available_rows_reject_cross_token_wrong_filename_and_malformed_or_unsafe_results(self):
++        original = failed_record()
++        with tempfile.TemporaryDirectory(prefix='parlor-functional-available-bad-') as raw:
++            root = Path(raw).resolve(); path = root / filename(original)
++            for data in ('{}', '{"a":1,"a":2}', ' ' * 16385):
++                path.write_text(data)
++                with self.assertRaises(RuntimeError): helpers.available_run_records(root, 'disabled')
++            wrong = copy.deepcopy(original); wrong['action'] = 'load'; path.write_text(json.dumps(wrong))
++            with self.assertRaises(RuntimeError): helpers.available_run_records(root, 'disabled')
++            wrong = copy.deepcopy(original); wrong['signing_mode'] = 'adhoc'; path.write_text(json.dumps(wrong))
++            with self.assertRaises(RuntimeError): helpers.available_run_records(root, 'disabled')
++            for mode in ('store', None, [], {}):
++                with self.subTest(mode=mode), self.assertRaises(RuntimeError): helpers.available_run_records(root, mode)
++            row = copy.deepcopy(original)
++            row['run_token'] = row['observation']['run_token'] = 'feedbeef-1234-5678-9000-000000000001'
++            path.write_text(json.dumps(row)); write_rows(root, [boot_result(1)])
++            with self.assertRaises(RuntimeError): helpers.available_run_records(root, 'disabled')
++            path.unlink(); target = root / 'synthetic-target.json'; target.write_text(json.dumps(original))
++            path.symlink_to(target)
++            with self.assertRaises(RuntimeError): helpers.available_run_records(root, 'disabled')
++
++    @mock.patch.object(helpers, 'bind_loaded_images', return_value=dict(status='PASS'))
++    def test_binding_rejects_cross_token_duplicate_process_and_inconsistent_same_process_images(self, _binder):
++        original = [boot_result(1), matrix()[0][0], matrix()[0][1], matrix()[0][2]]
++        changes = [
++            lambda rows: rows[1].update(process_boot=rows[0]['process_boot']),
++            lambda rows: rows[2].update(process_boot=rows[1]['process_boot']),
++            lambda rows: rows[3].update(loaded_app_images=rows[3]['loaded_app_images'][:-1]),
++            lambda rows: rows[3]['loader_environment']['DYLD_FRAMEWORK_PATH'].update(present=True, redacted_entry_count=1),
++            lambda rows: rows[1].update(signing_mode='adhoc'),
++            lambda rows: rows[1].update(scenario='not-this-matrix'),
++        ]
++        for change in changes:
++            values = copy.deepcopy(original); change(values)
++            with self.assertRaises(RuntimeError): helpers.bind_available_images(values, {}, {}, [framework_inventory()])
++        values = copy.deepcopy(original)
++        values[1]['run_token'] = values[1]['observation']['run_token'] = 'feedbeef-1234-5678-9000-000000000001'
++        with self.assertRaises(RuntimeError): helpers.bind_available_images(values, {}, {}, [framework_inventory()])
++        for invalid in ([], [None], original * 18, [original[1], original[1]]):
++            with self.assertRaises(RuntimeError): helpers.bind_available_images(invalid, {}, {}, [framework_inventory()])
++
++    def test_real_image_binding_errors_and_unobserved_inventory_are_never_swallowed(self):
++        values = [failed_record()]
++        with mock.patch.object(helpers, 'bind_loaded_images', side_effect=RuntimeError('real image mismatch')):
++            with self.assertRaisesRegex(RuntimeError, 'real image mismatch'):
++                helpers.bind_available_images(values, {}, {}, [framework_inventory()])
++        extra = framework_inventory(framework_observation('task-owned-build-product', PRODUCT_PATH))
++        for inventories in ([], [framework_inventory(), framework_inventory()], [framework_inventory(), extra]):
++            with self.assertRaises(RuntimeError): helpers.bind_available_images(values, {}, {}, inventories)
++
++    def test_metadata_failures_allow_independent_functional_subgates_but_never_overall_pass(self):
++        for value in ('PASS', 'FAIL'):
++            row = receipt(value)
++            self.assertTrue(helpers.runtime_complete(row, 0))
++            result = helpers.classify_final_companion(row)
++            self.assertEqual(result['status'], 'PARTIALLY_VERIFIED')
++            self.assertEqual(result['strict_l08_gate'], 'NOT_SATISFIED_BY_COMPANION')
++            self.assertIn('Original strict L08', result['remaining_obligations'][0])
++            self.assertEqual(any('remain unsuccessful' in item for item in result['remaining_obligations']), value == 'FAIL')
++        text = (HERE / 'run_ios_readiness.py').read_text()
++        self.assertLess(text.index("receipt['l08_storage_functional'] = verify_storage_functional("),
++                        text.index("receipt['l08_host'] = verify_host("))
++        between = text[text.index("receipt['l08_storage_functional'] = verify_storage_functional("):
++                       text.index("receipt['l08_host'] = verify_host(")]
++        self.assertNotIn('complete_comparison_gate', between)
++
++    def test_genuine_runtime_cleanup_or_source_failures_cannot_become_partial_success(self):
++        for value in (False, True, None, 1, -1, '0'):
++            self.assertFalse(helpers.runtime_complete(receipt(), value))
++        runtime_changes = (
++            ('xctest', 'result', 'Failed'), ('l08_host', 'status', 'FAIL'),
++            ('l08_storage_functional', 'functional_gate', 'FAIL'),
++            ('l08_storage_functional', 'status', 'PARTIAL'),
++            ('l08_storage_functional', 'original_strict_l08', 'PASS'),
++            ('l08_storage_functional', 'complete_comparison_gate', 'UNOBSERVED'),
++            ('l08_storage_functional', 'complete_comparison_gate', []),
++        )
++        for section, key, value in runtime_changes:
++            changed = receipt(); changed[section][key] = value
++            self.assertFalse(helpers.runtime_complete(changed, 0))
++            self.assertEqual(helpers.classify_final_companion(changed)['status'], 'FAIL')
++        for key, value in (('runtime_evidence_status', 'PASS'), ('xcodebuild_exit_code', 1),
++                ('cleanup_status', 'FAIL'), ('embedded_gradle_stop_status', 'FAIL'),
++                ('probe_harness_status', 'incomplete'), ('source_unchanged', False),
++                ('controls_unchanged', False), ('copied_sources_unchanged', False),
++                ('source_unchanged', 1), ('error', dict(type='SyntheticFailure'))):
++            changed = receipt(); changed[key] = value
++            self.assertEqual(helpers.classify_final_companion(changed)['status'], 'FAIL')
++        for section in ('l08_storage_functional', 'xctest', 'l08_host', 'native_readiness', 'os_settings_gate'):
++            changed = receipt(); changed[section] = None
++            self.assertEqual(helpers.classify_final_companion(changed)['status'], 'FAIL')
++        for invalid in (None, [], {}, False):
++            self.assertFalse(helpers.runtime_complete(invalid, 0))
++            self.assertEqual(helpers.classify_final_companion(invalid)['status'], 'FAIL')
++
++    def test_native_storage_failure_stays_failed_and_other_missing_obligations_stay_explicit(self):
++        changed = receipt(); changed['native_readiness']['storage_health'] = 'FAIL'
++        result = helpers.classify_final_companion(changed)
++        self.assertEqual(result['status'], 'FAIL')
++        self.assertIn('not automatically an application defect', result['readiness_gate_failure'])
++        changed = receipt(); changed['native_readiness']['storage_health'] = 'BLOCKED'
++        changed['os_settings_gate']['actual_present_os_preference_coverage'] = False
++        result = helpers.classify_final_companion(changed)
++        self.assertEqual(result['status'], 'PARTIALLY_VERIFIED')
++        self.assertTrue(any('storage-health' in item for item in result['remaining_obligations']))
++        self.assertTrue(any('OS-managed' in item for item in result['remaining_obligations']))
++
++    def test_original_ownership_build_stop_and_cleanup_implementations_are_unchanged(self):
++        original = (CANONICAL / 'run_ios_readiness.py').read_text()
++        candidate = (HERE / 'run_ios_readiness.py').read_text()
++        left, right = ast.parse(original), ast.parse(candidate)
++        def functions(tree):
++            return {node.name: ast.dump(node, include_attributes=False) for node in ast.walk(tree)
++                    if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name != 'main'}
++        self.assertEqual(functions(left), functions(right))
++        # Full unchanged finalizer region through source/cleanup calculation, not just a stop substring.
++        first = '        finally:\n            deferred = []'
++        last = "                receipt['status'] = 'PASS' if receipt.get('runtime_evidence_status')"
++        end = '                receipt.update(classify_final_companion(receipt))'
++        self.assertEqual(original[original.index(first):original.index(last)],
++                         candidate[candidate.index(first):candidate.index(end)])
++        build = candidate.index("xcode = command(['xcodebuild'")
++        stop = candidate.index("stop_gradle('stop-xcode-immediate')", build)
++        self.assertIn('finally:', candidate[build:stop])
++        preserve = candidate.index('preserve_functional_evidence(container, dest)')
++        inventory = candidate.index('available_records = available_run_records(dest, mode)')
++        binding = candidate.index("receipt['available_observation_image_binding'] = bind_available_images(")
++        outcome = candidate.index("receipt['xctest'] = verify_xctest(")
++        self.assertLess(stop, preserve)
++        self.assertLess(preserve, inventory)
++        self.assertLess(inventory, binding)
++        self.assertLess(binding, outcome)
++        self.assertIn("'-parallel-testing-enabled', 'NO'", candidate)
++        self.assertIn("'-jobs', '1'", candidate)
++        self.assertIn("if owner.secondary_errors:", candidate)
++        self.assertIn("'cleanup-attested-secondary-fifos', owner.secondary.cleanup", candidate)
++        self.assertIn('RuntimeError(\'Explicit simulator ad-hoc artifact signature inspection failed', candidate)
++
++
++if __name__ == '__main__': unittest.main()

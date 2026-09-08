@@ -1,0 +1,722 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Type-safe project accessors is an incubating feature.
+> Task :build-logic:convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :build-logic:convention:compileKotlin FROM-CACHE
+> Task :build-logic:convention:compileJava NO-SOURCE
+> Task :build-logic:convention:pluginDescriptors
+> Task :build-logic:convention:processResources
+> Task :build-logic:convention:classes
+> Task :build-logic:convention:jar
+
+> Configure project :composeApp
+WARNING: The option setting 'android.experimental.lint.version=9.1.1' is experimental.
+w: [33m[1m⚠️ Deprecated Gradle Version[0m[0m
+The used Gradle version (Gradle 8.13) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+[32m[1mSolution:[0m[0m
+[32m[3mPlease update the Gradle version to at least Gradle 8.14.4.[0m[0m
+
+w: [33m[1m⚠️ Native task 'iosX64Test' is disabled[0m[0m
+Task 'iosX64Test' for target 'ios_x64' cannot run on the current host (macos-aarch64).
+Reason: architecture mismatch - target requires X64, current host is ARM64
+[32m[1mSolution:[0m[0m
+[32m[3mTo suppress this warning, add 'kotlin.native.ignoreDisabledTargets=true' to gradle.properties.[0m[0m
+
+
+> Task :game-modes:whodunit:kmpPartiallyResolvedDependenciesChecker
+> Task :game-modes:whodunit:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :game-modes:whodunit:convertXmlValueResourcesForCommonMain
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForCommonMain
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForCommonMain UP-TO-DATE
+> Task :game-modes:whodunit:generateResourceAccessorsForCommonMain
+> Task :game-modes:whodunit:convertXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForDesktopMain NO-SOURCE
+> Task :game-modes:whodunit:generateActualResourceCollectorsForDesktopMain
+> Task :game-modes:whodunit:generateComposeResClass
+> Task :game-modes:whodunit:generateExpectResourceCollectorsForCommonMain
+> Task :shared:content:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:content:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:core:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:core:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:core:compileKotlinDesktop FROM-CACHE
+> Task :shared:core:compileDesktopMainJava NO-SOURCE
+> Task :shared:core:desktopProcessResources NO-SOURCE
+> Task :shared:core:processDesktopMainResources SKIPPED
+> Task :shared:core:desktopMainClasses UP-TO-DATE
+> Task :shared:core:desktopJar
+> Task :shared:engine:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:engine:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:engine:compileKotlinDesktop FROM-CACHE
+> Task :shared:engine:compileDesktopMainJava NO-SOURCE
+> Task :shared:engine:desktopProcessResources NO-SOURCE
+> Task :shared:engine:processDesktopMainResources SKIPPED
+> Task :shared:engine:desktopMainClasses UP-TO-DATE
+> Task :shared:engine:desktopJar
+> Task :shared:content:compileKotlinDesktop FROM-CACHE
+> Task :shared:content:compileDesktopMainJava NO-SOURCE
+> Task :shared:content:desktopProcessResources NO-SOURCE
+> Task :shared:content:processDesktopMainResources SKIPPED
+> Task :shared:content:desktopMainClasses UP-TO-DATE
+> Task :shared:content:desktopJar
+> Task :shared:design-system:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:design-system:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:design-system:convertXmlValueResourcesForCommonMain
+> Task :shared:design-system:copyNonXmlValueResourcesForCommonMain
+> Task :shared:design-system:prepareComposeResourcesTaskForCommonMain UP-TO-DATE
+> Task :shared:design-system:generateResourceAccessorsForCommonMain
+> Task :shared:design-system:convertXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForDesktopMain NO-SOURCE
+> Task :shared:design-system:generateActualResourceCollectorsForDesktopMain
+> Task :shared:design-system:generateComposeResClass
+> Task :shared:design-system:generateExpectResourceCollectorsForCommonMain
+> Task :shared:design-system:compileKotlinDesktop FROM-CACHE
+> Task :shared:design-system:compileDesktopMainJava NO-SOURCE
+> Task :shared:design-system:assembleDesktopMainResources
+> Task :shared:design-system:desktopProcessResources
+> Task :shared:design-system:processDesktopMainResources SKIPPED
+> Task :shared:design-system:desktopMainClasses
+> Task :shared:design-system:desktopJar
+> Task :shared:networking:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:networking:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:networking:compileKotlinDesktop FROM-CACHE
+> Task :shared:networking:compileDesktopMainJava NO-SOURCE
+> Task :shared:networking:desktopProcessResources NO-SOURCE
+> Task :shared:networking:processDesktopMainResources SKIPPED
+> Task :shared:networking:desktopMainClasses UP-TO-DATE
+> Task :shared:networking:desktopJar
+> Task :shared:session:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:session:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:session:compileKotlinDesktop FROM-CACHE
+> Task :shared:session:compileDesktopMainJava NO-SOURCE
+> Task :shared:session:desktopProcessResources NO-SOURCE
+> Task :shared:session:processDesktopMainResources SKIPPED
+> Task :shared:session:desktopMainClasses UP-TO-DATE
+> Task :shared:session:desktopJar
+> Task :shared:storage:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:storage:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:storage:compileKotlinDesktop FROM-CACHE
+> Task :shared:storage:compileDesktopMainJava NO-SOURCE
+> Task :shared:storage:desktopProcessResources NO-SOURCE
+> Task :shared:storage:processDesktopMainResources SKIPPED
+> Task :shared:storage:desktopMainClasses UP-TO-DATE
+> Task :shared:storage:desktopJar
+> Task :game-modes:whodunit:compileKotlinDesktop FROM-CACHE
+> Task :game-modes:whodunit:compileDesktopMainJava NO-SOURCE
+> Task :game-modes:whodunit:assembleDesktopMainResources
+> Task :game-modes:whodunit:desktopProcessResources
+> Task :game-modes:whodunit:processDesktopMainResources SKIPPED
+> Task :game-modes:whodunit:desktopMainClasses
+> Task :game-modes:whodunit:desktopJar
+> Task :game-modes:whodunit:convertXmlValueResourcesForCommonTest NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForCommonTest NO-SOURCE
+> Task :game-modes:whodunit:convertXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForDesktopTest NO-SOURCE
+> Task :shared:networking-testing:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:networking-testing:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:networking-testing:compileKotlinDesktop FROM-CACHE
+> Task :shared:networking-testing:compileDesktopMainJava NO-SOURCE
+> Task :shared:networking-testing:desktopProcessResources NO-SOURCE
+> Task :shared:networking-testing:processDesktopMainResources SKIPPED
+> Task :shared:networking-testing:desktopMainClasses UP-TO-DATE
+> Task :shared:networking-testing:desktopJar
+> Task :game-modes:whodunit:compileTestKotlinDesktop
+> Task :game-modes:whodunit:compileDesktopTestJava NO-SOURCE
+> Task :game-modes:whodunit:assembleDesktopTestResources
+> Task :game-modes:whodunit:desktopTestProcessResources
+> Task :game-modes:whodunit:processDesktopTestResources SKIPPED
+> Task :game-modes:whodunit:desktopTestClasses
+> Task :game-modes:whodunit:desktopTest
+> Task :composeApp:kmpPartiallyResolvedDependenciesChecker
+> Task :composeApp:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :composeApp:convertXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForAndroidMain NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForCommonMain
+> Task :composeApp:copyNonXmlValueResourcesForCommonMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForCommonMain UP-TO-DATE
+> Task :composeApp:generateResourceAccessorsForCommonMain
+> Task :composeApp:generateActualResourceCollectorsForAndroidMain
+> Task :composeApp:generateComposeResClass
+> Task :composeApp:generateExpectResourceCollectorsForCommonMain
+> Task :composeApp:generateParlorVersion
+> Task :composeApp:convertXmlValueResourcesForAndroidRelease NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForAndroidRelease NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForAndroidRelease NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForAndroidRelease NO-SOURCE
+> Task :composeApp:preBuild UP-TO-DATE
+> Task :composeApp:preReleaseBuild UP-TO-DATE
+> Task :game-modes:mafia:preBuild UP-TO-DATE
+> Task :game-modes:mafia:preReleaseBuild UP-TO-DATE
+> Task :game-modes:mafia:writeReleaseAarMetadata
+> Task :game-modes:whodunit:preBuild UP-TO-DATE
+> Task :game-modes:whodunit:preReleaseBuild UP-TO-DATE
+> Task :game-modes:whodunit:writeReleaseAarMetadata
+> Task :shared:content:preBuild UP-TO-DATE
+> Task :shared:content:preReleaseBuild UP-TO-DATE
+> Task :shared:content:writeReleaseAarMetadata
+> Task :shared:core:preBuild UP-TO-DATE
+> Task :shared:core:preReleaseBuild UP-TO-DATE
+> Task :shared:core:writeReleaseAarMetadata
+> Task :shared:design-system:preBuild UP-TO-DATE
+> Task :shared:design-system:preReleaseBuild UP-TO-DATE
+> Task :shared:design-system:writeReleaseAarMetadata
+> Task :shared:engine:preBuild UP-TO-DATE
+> Task :shared:engine:preReleaseBuild UP-TO-DATE
+> Task :shared:engine:writeReleaseAarMetadata
+> Task :shared:networking:preBuild UP-TO-DATE
+> Task :shared:networking:preReleaseBuild UP-TO-DATE
+> Task :shared:networking:writeReleaseAarMetadata
+> Task :shared:session:preBuild UP-TO-DATE
+> Task :shared:session:preReleaseBuild UP-TO-DATE
+> Task :shared:session:writeReleaseAarMetadata
+> Task :shared:storage:preBuild UP-TO-DATE
+> Task :shared:storage:preReleaseBuild UP-TO-DATE
+> Task :shared:storage:writeReleaseAarMetadata
+> Task :shared:transport-p2p:preBuild UP-TO-DATE
+> Task :shared:transport-p2p:preReleaseBuild UP-TO-DATE
+> Task :shared:transport-p2p:writeReleaseAarMetadata
+> Task :composeApp:checkReleaseAarMetadata
+> Task :game-modes:mafia:processReleaseNavigationResources FROM-CACHE
+> Task :game-modes:whodunit:processReleaseNavigationResources FROM-CACHE
+> Task :shared:content:processReleaseNavigationResources FROM-CACHE
+> Task :shared:core:processReleaseNavigationResources FROM-CACHE
+> Task :shared:design-system:processReleaseNavigationResources FROM-CACHE
+> Task :shared:engine:processReleaseNavigationResources FROM-CACHE
+> Task :shared:networking:processReleaseNavigationResources FROM-CACHE
+> Task :shared:session:processReleaseNavigationResources FROM-CACHE
+> Task :shared:storage:processReleaseNavigationResources FROM-CACHE
+> Task :shared:transport-p2p:processReleaseNavigationResources FROM-CACHE
+> Task :composeApp:processReleaseNavigationResources FROM-CACHE
+> Task :composeApp:compileReleaseNavigationResources FROM-CACHE
+> Task :composeApp:generateReleaseResValues FROM-CACHE
+> Task :game-modes:mafia:convertXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+> Task :game-modes:mafia:convertXmlValueResourcesForAndroidRelease NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForAndroidRelease NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForAndroidRelease NO-SOURCE
+> Task :game-modes:mafia:convertXmlValueResourcesForCommonMain
+> Task :game-modes:mafia:copyNonXmlValueResourcesForCommonMain NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForCommonMain UP-TO-DATE
+> Task :game-modes:mafia:copyReleaseComposeResourcesToAndroidAssets
+> Task :game-modes:mafia:generateReleaseResValues FROM-CACHE
+> Task :game-modes:mafia:generateReleaseResources FROM-CACHE
+> Task :game-modes:mafia:packageReleaseResources FROM-CACHE
+> Task :game-modes:whodunit:convertXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+> Task :game-modes:whodunit:convertXmlValueResourcesForAndroidRelease NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForAndroidRelease NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForAndroidRelease NO-SOURCE
+> Task :game-modes:whodunit:copyReleaseComposeResourcesToAndroidAssets
+> Task :game-modes:whodunit:generateReleaseResValues FROM-CACHE
+> Task :game-modes:whodunit:generateReleaseResources FROM-CACHE
+> Task :game-modes:whodunit:packageReleaseResources FROM-CACHE
+> Task :shared:content:generateReleaseResValues FROM-CACHE
+> Task :shared:content:generateReleaseResources FROM-CACHE
+> Task :shared:content:packageReleaseResources FROM-CACHE
+> Task :shared:core:generateReleaseResValues FROM-CACHE
+> Task :shared:core:generateReleaseResources FROM-CACHE
+> Task :shared:core:packageReleaseResources FROM-CACHE
+> Task :shared:design-system:convertXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForAndroidRelease NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForAndroidRelease NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForAndroidRelease NO-SOURCE
+> Task :shared:design-system:copyReleaseComposeResourcesToAndroidAssets
+> Task :shared:design-system:generateReleaseResValues FROM-CACHE
+> Task :shared:design-system:generateReleaseResources FROM-CACHE
+> Task :shared:design-system:packageReleaseResources FROM-CACHE
+> Task :shared:engine:generateReleaseResValues FROM-CACHE
+> Task :shared:engine:generateReleaseResources FROM-CACHE
+> Task :shared:engine:packageReleaseResources FROM-CACHE
+> Task :shared:networking:generateReleaseResValues FROM-CACHE
+> Task :shared:networking:generateReleaseResources FROM-CACHE
+> Task :shared:networking:packageReleaseResources FROM-CACHE
+> Task :shared:session:generateReleaseResValues FROM-CACHE
+> Task :shared:session:generateReleaseResources FROM-CACHE
+> Task :shared:session:packageReleaseResources FROM-CACHE
+> Task :shared:storage:generateReleaseResValues FROM-CACHE
+> Task :shared:storage:generateReleaseResources FROM-CACHE
+> Task :shared:storage:packageReleaseResources FROM-CACHE
+> Task :shared:transport-p2p:generateReleaseResValues FROM-CACHE
+> Task :shared:transport-p2p:generateReleaseResources FROM-CACHE
+> Task :shared:transport-p2p:packageReleaseResources FROM-CACHE
+> Task :composeApp:mapReleaseSourceSetPaths
+> Task :composeApp:generateReleaseResources FROM-CACHE
+> Task :composeApp:mergeReleaseResources FROM-CACHE
+> Task :composeApp:copyReleaseComposeResourcesToAndroidAssets
+> Task :composeApp:packageReleaseResources FROM-CACHE
+> Task :composeApp:parseReleaseLocalResources FROM-CACHE
+> Task :composeApp:createReleaseCompatibleScreenManifests
+> Task :composeApp:extractDeepLinksRelease FROM-CACHE
+> Task :game-modes:mafia:extractDeepLinksRelease FROM-CACHE
+> Task :game-modes:mafia:processReleaseManifest FROM-CACHE
+> Task :game-modes:whodunit:extractDeepLinksRelease FROM-CACHE
+> Task :game-modes:whodunit:processReleaseManifest FROM-CACHE
+> Task :shared:content:extractDeepLinksRelease FROM-CACHE
+> Task :shared:content:processReleaseManifest FROM-CACHE
+> Task :shared:core:extractDeepLinksRelease FROM-CACHE
+> Task :shared:core:processReleaseManifest FROM-CACHE
+> Task :shared:design-system:extractDeepLinksRelease FROM-CACHE
+> Task :shared:design-system:processReleaseManifest FROM-CACHE
+> Task :shared:engine:extractDeepLinksRelease FROM-CACHE
+> Task :shared:engine:processReleaseManifest FROM-CACHE
+> Task :shared:networking:extractDeepLinksRelease FROM-CACHE
+> Task :shared:networking:processReleaseManifest FROM-CACHE
+> Task :shared:session:extractDeepLinksRelease FROM-CACHE
+> Task :shared:session:processReleaseManifest FROM-CACHE
+> Task :shared:storage:extractDeepLinksRelease FROM-CACHE
+> Task :shared:storage:processReleaseManifest FROM-CACHE
+> Task :shared:transport-p2p:extractDeepLinksRelease FROM-CACHE
+> Task :shared:transport-p2p:processReleaseManifest FROM-CACHE
+> Task :composeApp:processReleaseMainManifest FROM-CACHE
+> Task :composeApp:processReleaseManifest FROM-CACHE
+> Task :composeApp:processReleaseManifestForPackage FROM-CACHE
+> Task :game-modes:mafia:parseReleaseLocalResources FROM-CACHE
+> Task :game-modes:mafia:generateReleaseRFile FROM-CACHE
+> Task :game-modes:whodunit:parseReleaseLocalResources FROM-CACHE
+> Task :game-modes:whodunit:generateReleaseRFile FROM-CACHE
+> Task :shared:content:parseReleaseLocalResources FROM-CACHE
+> Task :shared:content:generateReleaseRFile FROM-CACHE
+> Task :shared:core:parseReleaseLocalResources FROM-CACHE
+> Task :shared:core:generateReleaseRFile FROM-CACHE
+> Task :shared:design-system:parseReleaseLocalResources FROM-CACHE
+> Task :shared:design-system:generateReleaseRFile FROM-CACHE
+> Task :shared:engine:parseReleaseLocalResources FROM-CACHE
+> Task :shared:engine:generateReleaseRFile FROM-CACHE
+> Task :shared:networking:parseReleaseLocalResources FROM-CACHE
+> Task :shared:networking:generateReleaseRFile FROM-CACHE
+> Task :shared:session:parseReleaseLocalResources FROM-CACHE
+> Task :shared:session:generateReleaseRFile FROM-CACHE
+> Task :shared:storage:parseReleaseLocalResources FROM-CACHE
+> Task :shared:storage:generateReleaseRFile FROM-CACHE
+> Task :shared:transport-p2p:parseReleaseLocalResources FROM-CACHE
+> Task :shared:transport-p2p:generateReleaseRFile FROM-CACHE
+> Task :composeApp:processReleaseResources FROM-CACHE
+> Task :game-modes:mafia:kmpPartiallyResolvedDependenciesChecker
+> Task :game-modes:mafia:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :game-modes:mafia:generateResourceAccessorsForAndroidMain NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForCommonMain
+> Task :game-modes:mafia:generateActualResourceCollectorsForAndroidMain
+> Task :game-modes:mafia:generateComposeResClass
+> Task :game-modes:mafia:generateExpectResourceCollectorsForCommonMain
+> Task :game-modes:mafia:generateResourceAccessorsForAndroidRelease NO-SOURCE
+> Task :shared:core:compileReleaseKotlinAndroid FROM-CACHE
+> Task :shared:core:javaPreCompileRelease FROM-CACHE
+> Task :shared:core:compileReleaseJavaWithJavac NO-SOURCE
+> Task :shared:core:bundleLibCompileToJarRelease
+> Task :shared:engine:compileReleaseKotlinAndroid FROM-CACHE
+> Task :shared:engine:javaPreCompileRelease FROM-CACHE
+> Task :shared:engine:compileReleaseJavaWithJavac NO-SOURCE
+> Task :shared:engine:bundleLibCompileToJarRelease
+> Task :shared:content:compileReleaseKotlinAndroid FROM-CACHE
+> Task :shared:content:javaPreCompileRelease FROM-CACHE
+> Task :shared:content:compileReleaseJavaWithJavac NO-SOURCE
+> Task :shared:content:bundleLibCompileToJarRelease
+> Task :shared:design-system:generateResourceAccessorsForAndroidMain NO-SOURCE
+> Task :shared:design-system:generateActualResourceCollectorsForAndroidMain
+> Task :shared:design-system:generateResourceAccessorsForAndroidRelease NO-SOURCE
+> Task :shared:design-system:compileReleaseKotlinAndroid FROM-CACHE
+> Task :shared:design-system:javaPreCompileRelease FROM-CACHE
+> Task :shared:design-system:compileReleaseJavaWithJavac NO-SOURCE
+> Task :shared:design-system:bundleLibCompileToJarRelease
+> Task :shared:networking:compileReleaseKotlinAndroid FROM-CACHE
+> Task :shared:networking:javaPreCompileRelease FROM-CACHE
+> Task :shared:networking:compileReleaseJavaWithJavac NO-SOURCE
+> Task :shared:networking:bundleLibCompileToJarRelease
+> Task :shared:session:compileReleaseKotlinAndroid FROM-CACHE
+> Task :shared:session:javaPreCompileRelease FROM-CACHE
+> Task :shared:session:compileReleaseJavaWithJavac NO-SOURCE
+> Task :shared:session:bundleLibCompileToJarRelease
+> Task :shared:storage:compileReleaseKotlinAndroid FROM-CACHE
+> Task :shared:storage:javaPreCompileRelease FROM-CACHE
+> Task :shared:storage:compileReleaseJavaWithJavac NO-SOURCE
+> Task :shared:storage:bundleLibCompileToJarRelease
+> Task :game-modes:mafia:compileReleaseKotlinAndroid FROM-CACHE
+> Task :game-modes:mafia:javaPreCompileRelease FROM-CACHE
+> Task :game-modes:mafia:compileReleaseJavaWithJavac NO-SOURCE
+> Task :game-modes:mafia:bundleLibCompileToJarRelease
+> Task :game-modes:whodunit:generateResourceAccessorsForAndroidMain NO-SOURCE
+> Task :game-modes:whodunit:generateActualResourceCollectorsForAndroidMain
+> Task :game-modes:whodunit:generateResourceAccessorsForAndroidRelease NO-SOURCE
+> Task :game-modes:whodunit:compileReleaseKotlinAndroid FROM-CACHE
+> Task :game-modes:whodunit:javaPreCompileRelease FROM-CACHE
+> Task :game-modes:whodunit:compileReleaseJavaWithJavac NO-SOURCE
+> Task :game-modes:whodunit:bundleLibCompileToJarRelease
+> Task :shared:transport-p2p:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:transport-p2p:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:transport-p2p:compileReleaseKotlinAndroid FROM-CACHE
+> Task :shared:transport-p2p:javaPreCompileRelease FROM-CACHE
+> Task :shared:transport-p2p:compileReleaseJavaWithJavac NO-SOURCE
+> Task :shared:transport-p2p:bundleLibCompileToJarRelease
+> Task :composeApp:compileReleaseKotlinAndroid FROM-CACHE
+> Task :composeApp:javaPreCompileRelease FROM-CACHE
+> Task :composeApp:compileReleaseJavaWithJavac NO-SOURCE
+> Task :composeApp:detektAndroidRelease FROM-CACHE
+> Task :composeApp:buildKotlinToolingMetadata
+> Task :composeApp:bundleReleaseClassesToCompileJar
+> Task :composeApp:convertXmlValueResourcesForAndroidUnitTest NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForAndroidUnitTest NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForAndroidUnitTest NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForAndroidUnitTest NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForAndroidUnitTestRelease NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForAndroidUnitTestRelease NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForAndroidUnitTestRelease NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForAndroidUnitTestRelease NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForCommonTest NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForCommonTest NO-SOURCE
+> Task :shared:engine-testing:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:engine-testing:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:engine-testing:preBuild UP-TO-DATE
+> Task :shared:engine-testing:preReleaseBuild UP-TO-DATE
+> Task :shared:engine-testing:generateReleaseResValues FROM-CACHE
+> Task :shared:engine-testing:generateReleaseResources FROM-CACHE
+> Task :shared:engine-testing:packageReleaseResources FROM-CACHE
+> Task :shared:engine-testing:processReleaseNavigationResources FROM-CACHE
+> Task :shared:engine-testing:parseReleaseLocalResources FROM-CACHE
+> Task :shared:engine-testing:generateReleaseRFile FROM-CACHE
+> Task :shared:engine-testing:compileReleaseKotlinAndroid FROM-CACHE
+> Task :shared:engine-testing:javaPreCompileRelease FROM-CACHE
+> Task :shared:engine-testing:compileReleaseJavaWithJavac NO-SOURCE
+> Task :shared:engine-testing:bundleLibCompileToJarRelease
+> Task :composeApp:compileReleaseUnitTestKotlinAndroid FROM-CACHE
+> Task :composeApp:preReleaseUnitTestBuild UP-TO-DATE
+> Task :composeApp:javaPreCompileReleaseUnitTest FROM-CACHE
+> Task :composeApp:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :composeApp:detektAndroidReleaseUnitTest FROM-CACHE
+> Task :composeApp:convertXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForDesktopMain NO-SOURCE
+> Task :composeApp:generateActualResourceCollectorsForDesktopMain
+> Task :game-modes:mafia:convertXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForDesktopMain NO-SOURCE
+> Task :game-modes:mafia:generateActualResourceCollectorsForDesktopMain
+> Task :game-modes:mafia:compileKotlinDesktop FROM-CACHE
+> Task :game-modes:mafia:compileDesktopMainJava NO-SOURCE
+> Task :game-modes:mafia:assembleDesktopMainResources
+> Task :game-modes:mafia:desktopProcessResources
+> Task :game-modes:mafia:processDesktopMainResources SKIPPED
+> Task :game-modes:mafia:desktopMainClasses
+> Task :game-modes:mafia:desktopJar
+> Task :shared:transport-p2p:compileKotlinDesktop FROM-CACHE
+> Task :shared:transport-p2p:compileDesktopMainJava NO-SOURCE
+> Task :shared:transport-p2p:desktopProcessResources NO-SOURCE
+> Task :shared:transport-p2p:processDesktopMainResources SKIPPED
+> Task :shared:transport-p2p:desktopMainClasses UP-TO-DATE
+> Task :shared:transport-p2p:desktopJar
+> Task :composeApp:compileKotlinDesktop FROM-CACHE
+> Task :composeApp:compileDesktopMainJava NO-SOURCE
+> Task :composeApp:assembleDesktopMainResources
+> Task :composeApp:desktopProcessResources
+> Task :composeApp:processDesktopMainResources SKIPPED
+> Task :composeApp:desktopMainClasses
+> Task :composeApp:detektDesktopMain FROM-CACHE
+> Task :composeApp:desktopJar
+> Task :composeApp:convertXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForDesktopTest NO-SOURCE
+> Task :shared:engine-testing:compileKotlinDesktop FROM-CACHE
+> Task :shared:engine-testing:compileDesktopMainJava NO-SOURCE
+> Task :shared:engine-testing:desktopProcessResources NO-SOURCE
+> Task :shared:engine-testing:processDesktopMainResources SKIPPED
+> Task :shared:engine-testing:desktopMainClasses UP-TO-DATE
+> Task :shared:engine-testing:desktopJar
+> Task :composeApp:compileTestKotlinDesktop FROM-CACHE
+> Task :composeApp:compileDesktopTestJava NO-SOURCE
+> Task :composeApp:assembleDesktopTestResources
+> Task :composeApp:desktopTestProcessResources
+> Task :composeApp:processDesktopTestResources SKIPPED
+> Task :composeApp:desktopTestClasses
+> Task :composeApp:detektDesktopTest FROM-CACHE
+> Task :composeApp:detektMetadataCommonMain FROM-CACHE
+> Task :game-modes:mafia:detektAndroidRelease NO-SOURCE
+> Task :game-modes:mafia:preReleaseUnitTestBuild UP-TO-DATE
+> Task :shared:networking-testing:preBuild UP-TO-DATE
+> Task :shared:networking-testing:preReleaseBuild UP-TO-DATE
+> Task :shared:networking-testing:generateReleaseResValues FROM-CACHE
+> Task :shared:networking-testing:generateReleaseResources FROM-CACHE
+> Task :shared:networking-testing:packageReleaseResources FROM-CACHE
+> Task :shared:networking-testing:processReleaseNavigationResources FROM-CACHE
+> Task :shared:networking-testing:parseReleaseLocalResources FROM-CACHE
+> Task :shared:networking-testing:generateReleaseRFile FROM-CACHE
+> Task :game-modes:mafia:generateReleaseUnitTestStubRFile FROM-CACHE
+> Task :game-modes:mafia:convertXmlValueResourcesForAndroidUnitTest NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForAndroidUnitTest NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForAndroidUnitTest NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForAndroidUnitTest NO-SOURCE
+> Task :game-modes:mafia:convertXmlValueResourcesForAndroidUnitTestRelease NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForAndroidUnitTestRelease NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForAndroidUnitTestRelease NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForAndroidUnitTestRelease NO-SOURCE
+> Task :game-modes:mafia:convertXmlValueResourcesForCommonTest NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForCommonTest NO-SOURCE
+> Task :shared:networking-testing:compileReleaseKotlinAndroid FROM-CACHE
+> Task :shared:networking-testing:javaPreCompileRelease FROM-CACHE
+> Task :shared:networking-testing:compileReleaseJavaWithJavac NO-SOURCE
+> Task :shared:networking-testing:bundleLibCompileToJarRelease
+> Task :game-modes:mafia:compileReleaseUnitTestKotlinAndroid NO-SOURCE
+> Task :game-modes:mafia:javaPreCompileReleaseUnitTest FROM-CACHE
+> Task :game-modes:mafia:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :game-modes:mafia:detektAndroidReleaseUnitTest NO-SOURCE
+> Task :game-modes:mafia:detektDesktopMain NO-SOURCE
+> Task :game-modes:mafia:convertXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForDesktopTest NO-SOURCE
+> Task :game-modes:mafia:compileTestKotlinDesktop FROM-CACHE
+> Task :game-modes:mafia:compileDesktopTestJava NO-SOURCE
+> Task :game-modes:mafia:assembleDesktopTestResources
+> Task :game-modes:mafia:desktopTestProcessResources
+> Task :game-modes:mafia:processDesktopTestResources SKIPPED
+> Task :game-modes:mafia:desktopTestClasses
+> Task :game-modes:mafia:detektDesktopTest FROM-CACHE
+> Task :game-modes:mafia:detektMetadataCommonMain
+> Task :game-modes:whodunit:detektAndroidRelease NO-SOURCE
+> Task :game-modes:whodunit:preReleaseUnitTestBuild UP-TO-DATE
+> Task :game-modes:whodunit:generateReleaseUnitTestStubRFile FROM-CACHE
+> Task :game-modes:whodunit:convertXmlValueResourcesForAndroidUnitTest NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForAndroidUnitTest NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForAndroidUnitTest NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForAndroidUnitTest NO-SOURCE
+> Task :game-modes:whodunit:convertXmlValueResourcesForAndroidUnitTestRelease NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForAndroidUnitTestRelease NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForAndroidUnitTestRelease NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForAndroidUnitTestRelease NO-SOURCE
+> Task :game-modes:whodunit:compileReleaseUnitTestKotlinAndroid
+> Task :game-modes:whodunit:javaPreCompileReleaseUnitTest FROM-CACHE
+> Task :game-modes:whodunit:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :game-modes:whodunit:detektAndroidReleaseUnitTest NO-SOURCE
+> Task :game-modes:whodunit:detektDesktopMain NO-SOURCE
+
+> Task :game-modes:whodunit:detektDesktopTest FAILED
+/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitFinalTwoRecoveryTest.kt:298:13: Function has redundant `suspend` modifier. [RedundantSuspendModifier]
+
+
+> Task :game-modes:whodunit:detektMetadataCommonMain
+> Task :shared:content:detektAndroidRelease NO-SOURCE
+> Task :shared:content:preReleaseUnitTestBuild UP-TO-DATE
+> Task :shared:content:generateReleaseUnitTestStubRFile FROM-CACHE
+> Task :shared:content:compileReleaseUnitTestKotlinAndroid FROM-CACHE
+> Task :shared:content:javaPreCompileReleaseUnitTest FROM-CACHE
+> Task :shared:content:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :shared:content:detektAndroidReleaseUnitTest NO-SOURCE
+> Task :shared:content:detektDesktopMain NO-SOURCE
+> Task :shared:content:compileTestKotlinDesktop FROM-CACHE
+> Task :shared:content:compileDesktopTestJava NO-SOURCE
+> Task :shared:content:desktopTestProcessResources NO-SOURCE
+> Task :shared:content:processDesktopTestResources SKIPPED
+> Task :shared:content:desktopTestClasses UP-TO-DATE
+> Task :shared:content:detektDesktopTest NO-SOURCE
+> Task :shared:content:detektMetadataCommonMain FROM-CACHE
+> Task :shared:core:detektAndroidRelease NO-SOURCE
+> Task :shared:core:preReleaseUnitTestBuild UP-TO-DATE
+> Task :shared:core:generateReleaseUnitTestStubRFile FROM-CACHE
+> Task :shared:core:compileReleaseUnitTestKotlinAndroid FROM-CACHE
+> Task :shared:core:javaPreCompileReleaseUnitTest FROM-CACHE
+> Task :shared:core:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :shared:core:detektAndroidReleaseUnitTest NO-SOURCE
+> Task :shared:core:detektDesktopMain NO-SOURCE
+> Task :shared:core:compileTestKotlinDesktop FROM-CACHE
+> Task :shared:core:compileDesktopTestJava NO-SOURCE
+> Task :shared:core:desktopTestProcessResources NO-SOURCE
+> Task :shared:core:processDesktopTestResources SKIPPED
+> Task :shared:core:desktopTestClasses UP-TO-DATE
+> Task :shared:core:detektDesktopTest NO-SOURCE
+> Task :shared:core:detektMetadataCommonMain FROM-CACHE
+> Task :shared:design-system:detektAndroidRelease
+> Task :shared:design-system:preReleaseUnitTestBuild UP-TO-DATE
+> Task :shared:design-system:generateReleaseUnitTestStubRFile FROM-CACHE
+> Task :shared:design-system:convertXmlValueResourcesForAndroidUnitTest NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForAndroidUnitTest NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForAndroidUnitTest NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForAndroidUnitTest NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForAndroidUnitTestRelease NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForAndroidUnitTestRelease NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForAndroidUnitTestRelease NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForAndroidUnitTestRelease NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForCommonTest NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForCommonTest NO-SOURCE
+> Task :shared:design-system:compileReleaseUnitTestKotlinAndroid
+> Task :shared:design-system:javaPreCompileReleaseUnitTest FROM-CACHE
+> Task :shared:design-system:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :shared:design-system:detektAndroidReleaseUnitTest NO-SOURCE
+> Task :shared:design-system:detektDesktopMain
+> Task :shared:design-system:convertXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForDesktopTest NO-SOURCE
+> Task :shared:design-system:compileTestKotlinDesktop FROM-CACHE
+> Task :shared:design-system:compileDesktopTestJava NO-SOURCE
+> Task :shared:design-system:assembleDesktopTestResources
+> Task :shared:design-system:desktopTestProcessResources
+> Task :shared:design-system:processDesktopTestResources SKIPPED
+> Task :shared:design-system:desktopTestClasses
+
+> Task :shared:design-system:detektDesktopTest FAILED
+/Users/abdelrahman/Projects/parlor/shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastLifetimeTest.kt:61:69: Dispatcher Unconfined is used without dependency injection. [InjectDispatcher]
+
+
+> Task :shared:design-system:detektMetadataCommonMain
+> Task :shared:engine:detektAndroidRelease NO-SOURCE
+> Task :shared:engine:preReleaseUnitTestBuild UP-TO-DATE
+> Task :shared:engine:generateReleaseUnitTestStubRFile FROM-CACHE
+> Task :shared:engine:compileReleaseUnitTestKotlinAndroid NO-SOURCE
+> Task :shared:engine:javaPreCompileReleaseUnitTest FROM-CACHE
+> Task :shared:engine:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :shared:engine:detektAndroidReleaseUnitTest NO-SOURCE
+> Task :shared:engine:detektDesktopMain NO-SOURCE
+> Task :shared:engine:compileTestKotlinDesktop FROM-CACHE
+> Task :shared:engine:compileDesktopTestJava NO-SOURCE
+> Task :shared:engine:desktopTestProcessResources NO-SOURCE
+> Task :shared:engine:processDesktopTestResources SKIPPED
+> Task :shared:engine:desktopTestClasses UP-TO-DATE
+> Task :shared:engine:detektDesktopTest FROM-CACHE
+> Task :shared:engine:detektMetadataCommonMain FROM-CACHE
+> Task :shared:engine-testing:detektAndroidRelease NO-SOURCE
+> Task :shared:engine-testing:preReleaseUnitTestBuild UP-TO-DATE
+> Task :shared:engine-testing:generateReleaseUnitTestStubRFile FROM-CACHE
+> Task :shared:engine-testing:compileReleaseUnitTestKotlinAndroid FROM-CACHE
+> Task :shared:engine-testing:javaPreCompileReleaseUnitTest FROM-CACHE
+> Task :shared:engine-testing:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :shared:engine-testing:detektAndroidReleaseUnitTest NO-SOURCE
+> Task :shared:engine-testing:detektDesktopMain NO-SOURCE
+> Task :shared:engine-testing:compileTestKotlinDesktop FROM-CACHE
+> Task :shared:engine-testing:compileDesktopTestJava NO-SOURCE
+> Task :shared:engine-testing:desktopTestProcessResources NO-SOURCE
+> Task :shared:engine-testing:processDesktopTestResources SKIPPED
+> Task :shared:engine-testing:desktopTestClasses UP-TO-DATE
+> Task :shared:engine-testing:detektDesktopTest NO-SOURCE
+> Task :shared:engine-testing:detektMetadataCommonMain FROM-CACHE
+> Task :shared:networking:detektAndroidRelease FROM-CACHE
+> Task :shared:networking:preReleaseUnitTestBuild UP-TO-DATE
+> Task :shared:networking:generateReleaseUnitTestStubRFile FROM-CACHE
+> Task :shared:networking:compileReleaseUnitTestKotlinAndroid FROM-CACHE
+> Task :shared:networking:javaPreCompileReleaseUnitTest FROM-CACHE
+> Task :shared:networking:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :shared:networking:detektAndroidReleaseUnitTest NO-SOURCE
+> Task :shared:networking:detektDesktopMain FROM-CACHE
+> Task :shared:networking:compileTestKotlinDesktop FROM-CACHE
+> Task :shared:networking:compileDesktopTestJava NO-SOURCE
+> Task :shared:networking:desktopTestProcessResources NO-SOURCE
+> Task :shared:networking:processDesktopTestResources SKIPPED
+> Task :shared:networking:desktopTestClasses UP-TO-DATE
+> Task :shared:networking:detektDesktopTest NO-SOURCE
+> Task :shared:networking:detektMetadataCommonMain FROM-CACHE
+> Task :shared:networking-testing:detektAndroidRelease NO-SOURCE
+> Task :shared:networking-testing:preReleaseUnitTestBuild UP-TO-DATE
+> Task :shared:networking-testing:generateReleaseUnitTestStubRFile FROM-CACHE
+> Task :shared:networking-testing:compileReleaseUnitTestKotlinAndroid FROM-CACHE
+> Task :shared:networking-testing:javaPreCompileReleaseUnitTest FROM-CACHE
+> Task :shared:networking-testing:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :shared:networking-testing:detektAndroidReleaseUnitTest NO-SOURCE
+> Task :shared:networking-testing:detektDesktopMain NO-SOURCE
+> Task :shared:networking-testing:compileTestKotlinDesktop FROM-CACHE
+> Task :shared:networking-testing:compileDesktopTestJava NO-SOURCE
+> Task :shared:networking-testing:desktopTestProcessResources NO-SOURCE
+> Task :shared:networking-testing:processDesktopTestResources SKIPPED
+> Task :shared:networking-testing:desktopTestClasses UP-TO-DATE
+> Task :shared:networking-testing:detektDesktopTest NO-SOURCE
+> Task :shared:networking-testing:detektMetadataCommonMain FROM-CACHE
+> Task :shared:session:detektAndroidRelease NO-SOURCE
+> Task :shared:session:preReleaseUnitTestBuild UP-TO-DATE
+> Task :shared:session:generateReleaseUnitTestStubRFile FROM-CACHE
+> Task :shared:session:compileReleaseUnitTestKotlinAndroid
+> Task :shared:session:javaPreCompileReleaseUnitTest FROM-CACHE
+> Task :shared:session:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :shared:session:detektAndroidReleaseUnitTest NO-SOURCE
+> Task :shared:session:detektDesktopMain NO-SOURCE
+> Task :shared:session:compileTestKotlinDesktop FROM-CACHE
+> Task :shared:session:compileDesktopTestJava NO-SOURCE
+> Task :shared:session:desktopTestProcessResources NO-SOURCE
+> Task :shared:session:processDesktopTestResources SKIPPED
+> Task :shared:session:desktopTestClasses UP-TO-DATE
+> Task :shared:session:detektDesktopTest
+> Task :shared:session:detektMetadataCommonMain
+> Task :shared:storage:detektAndroidRelease NO-SOURCE
+> Task :shared:storage:preReleaseUnitTestBuild UP-TO-DATE
+> Task :shared:storage:generateReleaseUnitTestStubRFile FROM-CACHE
+> Task :shared:storage:compileReleaseUnitTestKotlinAndroid FROM-CACHE
+> Task :shared:storage:javaPreCompileReleaseUnitTest FROM-CACHE
+> Task :shared:storage:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :shared:storage:detektAndroidReleaseUnitTest NO-SOURCE
+> Task :shared:storage:detektDesktopMain NO-SOURCE
+> Task :shared:storage:compileTestKotlinDesktop FROM-CACHE
+> Task :shared:storage:compileDesktopTestJava NO-SOURCE
+> Task :shared:storage:desktopTestProcessResources NO-SOURCE
+> Task :shared:storage:processDesktopTestResources SKIPPED
+> Task :shared:storage:desktopTestClasses UP-TO-DATE
+> Task :shared:storage:detektDesktopTest NO-SOURCE
+> Task :shared:storage:detektMetadataCommonMain FROM-CACHE
+> Task :shared:transport-p2p:detektAndroidRelease
+> Task :shared:transport-p2p:preReleaseUnitTestBuild UP-TO-DATE
+> Task :shared:transport-p2p:generateReleaseUnitTestStubRFile FROM-CACHE
+> Task :shared:transport-p2p:compileReleaseUnitTestKotlinAndroid
+> Task :shared:transport-p2p:javaPreCompileReleaseUnitTest FROM-CACHE
+> Task :shared:transport-p2p:compileReleaseUnitTestJavaWithJavac NO-SOURCE
+> Task :shared:transport-p2p:detektAndroidReleaseUnitTest NO-SOURCE
+> Task :shared:transport-p2p:detektDesktopMain
+> Task :shared:transport-p2p:compileTestKotlinDesktop FROM-CACHE
+> Task :shared:transport-p2p:compileDesktopTestJava NO-SOURCE
+> Task :shared:transport-p2p:desktopTestProcessResources NO-SOURCE
+> Task :shared:transport-p2p:processDesktopTestResources SKIPPED
+> Task :shared:transport-p2p:desktopTestClasses UP-TO-DATE
+> Task :shared:transport-p2p:detektDesktopTest
+> Task :shared:transport-p2p:detektMetadataCommonMain
+
+[Incubating] Problems report is available at: file:///Users/abdelrahman/Projects/parlor/build/reports/problems/problems-report.html
+
+FAILURE: Build completed with 2 failures.
+
+1: Task failed with an exception.
+-----------
+* What went wrong:
+Execution failed for task ':game-modes:whodunit:detektDesktopTest'.
+> Analysis failed with 1 weighted issues.
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+==============================================================================
+
+2: Task failed with an exception.
+-----------
+* What went wrong:
+Execution failed for task ':shared:design-system:detektDesktopTest'.
+> Analysis failed with 1 weighted issues.
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+==============================================================================
+
+BUILD FAILED in 49s
+330 actionable tasks: 122 executed, 204 from cache, 4 up-to-date

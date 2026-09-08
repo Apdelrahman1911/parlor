@@ -1,0 +1,501 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "recorded_at": "2026-09-08T00:05:58.601510+00:00",
+  "classification": "SUPPLEMENTAL NATIVE09 EXACT RESIDUE RECOVERY03 RECONCILED; ORIGINAL RUNTIME AND CLEANUP FAIL UNCHANGED",
+  "reviewer_independence": {
+    "helper03_change_author": "/root/release_fix_review",
+    "preexecution_independent_reviewer": "/root",
+    "reconciliation_reviewer": "/root/factory_review",
+    "disclosure": "factory_review originally authored01/02 ExactRecovery. Root independently approved the unchanged ownership/removal core plus03 changes. This report independently reopens the full03 implementation/tests and reconciles actual03 execution evidence; it is not solo approval of the original author\u2019s code."
+  },
+  "reviewed_code": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09_secondary_fifo_recovery_03.py",
+      "sha256": "5e0b2dbcc82ee4af777437c8c6c0181869411dc7e564d3930b1a4d84a805a458",
+      "lines": [
+        [
+          1,
+          199
+        ]
+      ],
+      "scope": "complete source, every guard, external query, descriptor, deletion, exception/finalization branch"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/test_native09_secondary_fifo_recovery_03.py",
+      "sha256": "c0f14540737a0ba4738fde2caf34bd8198fc11a7faf4a0ad652f4232d8362300",
+      "lines": [
+        [
+          1,
+          233
+        ]
+      ],
+      "scope": "complete source and all27 test assertions; no execution by reviewer"
+    }
+  ],
+  "independent_checks": [
+    "ExactRecovery AST is unchanged from02. All four metadata-bound objects and their no-follow descriptor-relative ancestry are rechecked before/after native holder/PID queries, before each unlink, and before empty-parent rmdir. No unknown-child or symlink adoption, recursive deletion, process signals, FIFO reads or retries.",
+    "03 passes exactly /usr/sbin/lsof -nP -t +w +D <frozen native09 root>; +w follows -t. Partial-selection exit1 retains every PID; only this helper PID is exempt. Any nonempty warning stderr, unexpected exit/output, timeout or other holder rejects cleanup.",
+    "All six immutable native09 artifacts in the original plan still hash-match. New claim metadata matches the frozen independently observed four objects; it does not rewrite the missing original HostToRemote inode proof.",
+    "Actual03 Python log has exactly all27 AST-declared test descriptors with ok results and no skipped/failing tests; controls exercise synthetic temporary FIFOs with fake processes and mocked queries, not app or physical LAN behavior.",
+    "Guarded verify03 has exactly one non-destructive verification event and no removals. Execute03 is bound to the same approved script and plan; it records exactly the two reviewed FIFO unlinks and two empty-parent removals in order, within receipt timestamps.",
+    "Every wrapper recorded exit0, immediate Gradle stop0, empty remaining owned-worker/output sets, no cleanup errors, and unchanged source+runner snapshots. No generated build outputs were needed for these Python cycles.",
+    "Independent current lstat of only the exact four paths and literal ancestor chain confirms all four absent, no symlink traversal, and unchanged original ancestor identities. No temp-directory enumeration, process query, signal or deletion performed by this reviewer."
+  ],
+  "actual_control_test_ids": [
+    "ExactRecoveryTests.test_changed_nonce_is_not_adopted",
+    "ExactRecoveryTests.test_exact_positive_removes_four_objects_and_preserves_sibling",
+    "ExactRecoveryTests.test_extra_hard_link_is_rejected",
+    "ExactRecoveryTests.test_holder_or_query_failure_blocks_all_mutation",
+    "ExactRecoveryTests.test_live_or_reused_pid_blocks_all_mutation",
+    "ExactRecoveryTests.test_new_unknown_content_during_query_blocks_before_first_unlink",
+    "ExactRecoveryTests.test_non_fifo_is_preserved",
+    "ExactRecoveryTests.test_partial_failure_keeps_remaining_objects_and_progress_receipt",
+    "ExactRecoveryTests.test_replaced_leaf_inode_is_preserved",
+    "ExactRecoveryTests.test_replaced_parent_inode_is_preserved",
+    "ExactRecoveryTests.test_symlink_leaf_is_not_followed",
+    "ExactRecoveryTests.test_symlink_parent_is_not_followed",
+    "ExactRecoveryTests.test_uid_and_birth_mismatch_are_rejected",
+    "ExactRecoveryTests.test_unknown_contents_preserve_all",
+    "ExactRecoveryTests.test_verification_does_not_delete",
+    "QueryControlTests.test_exact_lsof_partial_selection_keeps_all_reported_pids",
+    "QueryControlTests.test_exact_lsof_still_rejects_errors_stderr_malformed_or_oversized_output",
+    "QueryControlTests.test_holder_exemption_is_only_this_helpers_directory_fds",
+    "QueryControlTests.test_holder_query_constructs_exact_warning_enabled_command",
+    "QueryControlTests.test_lsof_partial_selection_cannot_hide_another_holder",
+    "QueryControlTests.test_lsof_partial_selection_with_only_helpers_dirfds_is_accepted",
+    "QueryControlTests.test_pid_check_never_accepts_reused_id",
+    "QueryControlTests.test_plan_hash_failure_never_reads_or_mutates_recovery_paths",
+    "QueryControlTests.test_ps_and_other_lsof_targets_keep_strict_exit_output_contract",
+    "QueryControlTests.test_query_requires_exact_empty_exit_and_bounded_integer_output",
+    "QueryControlTests.test_relaxed_lsof_contract_rejects_suppressed_missing_or_misordered_warning_flags",
+    "QueryControlTests.test_warning_stderr_is_fatal_regardless_of_exit_or_reported_pids"
+  ],
+  "actual_controls": {
+    "executed_by": "/root",
+    "tests": 27,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "reviewer_executed_tests": false
+  },
+  "cycles": [
+    {
+      "cycle": "native09-secondary-recovery-controls-03",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "remediation-runs/2026-09-07-local-readiness/reviews",
+        "-p",
+        "test_native09_secondary_fifo_recovery_03.py",
+        "-v"
+      ],
+      "started_at": "2026-09-07T23:49:33.168427+00:00",
+      "finished_at": "2026-09-07T23:49:33.882985+00:00",
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "stopped_at": "2026-09-07T23:49:34.409924+00:00",
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "artifact_workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "outputs_before": [],
+      "removed_outputs": [],
+      "retained_outputs": [],
+      "remaining_outputs": [],
+      "cleanup_completed_at": "2026-09-07T23:49:34.558198+00:00",
+      "cleanup_errors": [],
+      "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership.",
+      "receipt_sha256": "a96013d317a3e6a943ed7370463d08405963a45a8b01e8868add0b6d90df133e",
+      "log_sha256": "bf1b46ffa537442c5cae9f38f3215644983f3926c1326a385f59bf725ed7dc48",
+      "source_and_runner_unchanged_in_receipt": true,
+      "source_manifest_sha256": "b8baa32067fdf29135e3e935429768b710c65897c334f2bb8ac8108f6aa85359"
+    },
+    {
+      "cycle": "native09-secondary-recovery-preflight-03",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-07-local-readiness/reviews/native09_secondary_fifo_recovery_03.py",
+        "--approved-script-sha256=5e0b2dbcc82ee4af777437c8c6c0181869411dc7e564d3930b1a4d84a805a458"
+      ],
+      "started_at": "2026-09-07T23:50:12.805374+00:00",
+      "finished_at": "2026-09-07T23:50:13.607387+00:00",
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "stopped_at": "2026-09-07T23:50:14.164672+00:00",
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "artifact_workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "outputs_before": [],
+      "removed_outputs": [],
+      "retained_outputs": [],
+      "remaining_outputs": [],
+      "cleanup_completed_at": "2026-09-07T23:50:14.320477+00:00",
+      "cleanup_errors": [],
+      "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership.",
+      "receipt_sha256": "5c7995425f5f64ebe1c15871b8872704ad3b49d25e88f29e38d787f949c48c0a",
+      "log_sha256": "c0d3b97aa6082404ca6dfd5e400b968bd4d37752a8bbda4e9964e1f475b24bd2",
+      "source_and_runner_unchanged_in_receipt": true,
+      "source_manifest_sha256": "b8baa32067fdf29135e3e935429768b710c65897c334f2bb8ac8108f6aa85359"
+    },
+    {
+      "cycle": "native09-secondary-recovery-execution-03",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-07-local-readiness/reviews/native09_secondary_fifo_recovery_03.py",
+        "--approved-script-sha256=5e0b2dbcc82ee4af777437c8c6c0181869411dc7e564d3930b1a4d84a805a458",
+        "--execute"
+      ],
+      "started_at": "2026-09-07T23:51:37.322403+00:00",
+      "finished_at": "2026-09-07T23:51:38.527672+00:00",
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "stopped_at": "2026-09-07T23:51:39.061603+00:00",
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "artifact_workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "outputs_before": [],
+      "removed_outputs": [],
+      "retained_outputs": [],
+      "remaining_outputs": [],
+      "cleanup_completed_at": "2026-09-07T23:51:39.206855+00:00",
+      "cleanup_errors": [],
+      "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership.",
+      "receipt_sha256": "fa82a311c6f3e14b505f97cf585463c06cb1f6a18e1a250ffe013d4af18fbd61",
+      "log_sha256": "d8e6d4aabde27cae9ba9353cbdfcb8df34e0613767d468d9b67b0d6792eac557",
+      "source_and_runner_unchanged_in_receipt": true,
+      "source_manifest_sha256": "b8baa32067fdf29135e3e935429768b710c65897c334f2bb8ac8108f6aa85359"
+    }
+  ],
+  "verify_receipt": {
+    "status": "VERIFIED_NO_DELETION",
+    "started_at": 1788825013.3099232,
+    "script_sha256": "5e0b2dbcc82ee4af777437c8c6c0181869411dc7e564d3930b1a4d84a805a458",
+    "plan_sha256": "691caf73451570aae8cab30279ef84d180d15496d8d3fa39625593901855cc37",
+    "execute": false,
+    "helper_pid": 69485,
+    "original_native09_status": "FAIL",
+    "original_native09_cleanup_status": "FAIL",
+    "removed": [],
+    "finished_at": 1788825013.5912771
+  },
+  "execution_receipt": {
+    "status": "RECOVERED_CLEANUP_ONLY",
+    "started_at": 1788825097.845618,
+    "script_sha256": "5e0b2dbcc82ee4af777437c8c6c0181869411dc7e564d3930b1a4d84a805a458",
+    "plan_sha256": "691caf73451570aae8cab30279ef84d180d15496d8d3fa39625593901855cc37",
+    "execute": true,
+    "helper_pid": 70521,
+    "original_native09_status": "FAIL",
+    "original_native09_cleanup_status": "FAIL",
+    "removed": [
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768/IB/1F091456-2735-42C0-A7F7-942CBB4E01BE.RemoteToHost",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768/IB/1F091456-2735-42C0-A7F7-942CBB4E01BE.HostToRemote",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768/IB",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768"
+    ],
+    "finished_at": 1788825098.47783
+  },
+  "execution_events": [
+    {
+      "at": 1788825098.122087,
+      "stage": "all-targets-verified",
+      "execute": true
+    },
+    {
+      "at": 1788825098.207649,
+      "stage": "unlinked-exact-fifo",
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768/IB/1F091456-2735-42C0-A7F7-942CBB4E01BE.RemoteToHost"
+    },
+    {
+      "at": 1788825098.293505,
+      "stage": "unlinked-exact-fifo",
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768/IB/1F091456-2735-42C0-A7F7-942CBB4E01BE.HostToRemote"
+    },
+    {
+      "at": 1788825098.377177,
+      "stage": "removed-empty-parent",
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768/IB"
+    },
+    {
+      "at": 1788825098.4776971,
+      "stage": "removed-empty-parent",
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768"
+    }
+  ],
+  "current_exact_path_observations": [
+    {
+      "path": "/",
+      "observed_at": "2026-09-08T00:05:58.600479+00:00",
+      "status": "PRESENT_ANCESTOR",
+      "exists_or_symlink": true,
+      "device": 16777232,
+      "inode": 2,
+      "uid": 0,
+      "mode": 16877,
+      "birth_at": 1763819368.0,
+      "original_frozen_ancestor_identity_matches": true
+    },
+    {
+      "path": "/private",
+      "observed_at": "2026-09-08T00:05:58.600870+00:00",
+      "status": "PRESENT_ANCESTOR",
+      "exists_or_symlink": true,
+      "device": 16777232,
+      "inode": 564499,
+      "uid": 0,
+      "mode": 16877,
+      "birth_at": 1763819368.0,
+      "original_frozen_ancestor_identity_matches": true
+    },
+    {
+      "path": "/private/var",
+      "observed_at": "2026-09-08T00:05:58.600881+00:00",
+      "status": "PRESENT_ANCESTOR",
+      "exists_or_symlink": true,
+      "device": 16777232,
+      "inode": 564922,
+      "uid": 0,
+      "mode": 16877,
+      "birth_at": 1763819368.0,
+      "original_frozen_ancestor_identity_matches": true
+    },
+    {
+      "path": "/private/var/folders",
+      "observed_at": "2026-09-08T00:05:58.600889+00:00",
+      "status": "PRESENT_ANCESTOR",
+      "exists_or_symlink": true,
+      "device": 16777232,
+      "inode": 565632,
+      "uid": 0,
+      "mode": 16877,
+      "birth_at": 1752898412.0,
+      "original_frozen_ancestor_identity_matches": true
+    },
+    {
+      "path": "/private/var/folders/6m",
+      "observed_at": "2026-09-08T00:05:58.600896+00:00",
+      "status": "PRESENT_ANCESTOR",
+      "exists_or_symlink": true,
+      "device": 16777232,
+      "inode": 272638,
+      "uid": 0,
+      "mode": 16877,
+      "birth_at": 1766676470.3019807,
+      "original_frozen_ancestor_identity_matches": true
+    },
+    {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn",
+      "observed_at": "2026-09-08T00:05:58.600902+00:00",
+      "status": "PRESENT_ANCESTOR",
+      "exists_or_symlink": true,
+      "device": 16777232,
+      "inode": 272639,
+      "uid": 501,
+      "mode": 16877,
+      "birth_at": 1766676470.3021777,
+      "original_frozen_ancestor_identity_matches": true
+    },
+    {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T",
+      "observed_at": "2026-09-08T00:05:58.600908+00:00",
+      "status": "PRESENT_ANCESTOR",
+      "exists_or_symlink": true,
+      "device": 16777232,
+      "inode": 272642,
+      "uid": 501,
+      "mode": 16832,
+      "birth_at": 1766676470.3027442,
+      "original_frozen_ancestor_identity_matches": true
+    },
+    {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768",
+      "observed_at": "2026-09-08T00:05:58.600913+00:00",
+      "status": "ABSENT",
+      "exists_or_symlink": false
+    },
+    {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768/IB",
+      "observed_at": "2026-09-08T00:05:58.601021+00:00",
+      "status": "ABSENT",
+      "exists_or_symlink": false
+    },
+    {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768/IB/1F091456-2735-42C0-A7F7-942CBB4E01BE.RemoteToHost",
+      "observed_at": "2026-09-08T00:05:58.601027+00:00",
+      "status": "ABSENT",
+      "exists_or_symlink": false
+    },
+    {
+      "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-41768/IB/1F091456-2735-42C0-A7F7-942CBB4E01BE.HostToRemote",
+      "observed_at": "2026-09-08T00:05:58.601030+00:00",
+      "status": "ABSENT",
+      "exists_or_symlink": false
+    }
+  ],
+  "immutable_original_evidence": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/receipt.json",
+      "sha256": "7035d9505efe8cf1d5d9012024c6c5883c0e9371b97a5a5c5a0cfa15ccf36567",
+      "hash_still_matches": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/secondary-fifo-ownership.json",
+      "sha256": "8645acb761687bfe6144a8cf6c3508f310efa81ab6c7716ab1ba625b0ddc7a6d",
+      "hash_still_matches": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/secondary-fifo-ownership-final.json",
+      "sha256": "8645acb761687bfe6144a8cf6c3508f310efa81ab6c7716ab1ba625b0ddc7a6d",
+      "hash_still_matches": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/secondary-fifo-errors.json",
+      "sha256": "80fcf698958a9ebfa9ada802c344c53a9117bb1ac0fc81b27a45db0396daae37",
+      "hash_still_matches": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/stop-xcode-immediate.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "hash_still_matches": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/stop-final.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "hash_still_matches": true
+    }
+  ],
+  "evidence": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09_secondary_fifo_recovery_03.py",
+      "sha256": "5e0b2dbcc82ee4af777437c8c6c0181869411dc7e564d3930b1a4d84a805a458"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/test_native09_secondary_fifo_recovery_03.py",
+      "sha256": "c0f14540737a0ba4738fde2caf34bd8198fc11a7faf4a0ad652f4232d8362300"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09-secondary-fifo-recovery-02-to-03.patch",
+      "sha256": "da6c2952cf21226ea1a2aee34ef88ddf94020dcb65bd027c697012ce2a1ea506"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09-secondary-fifo-recovery-draft-03.json",
+      "sha256": "59d3908d5338c56b5b6ffe67caab989b32e06a0b57bec2503d4920f0defdf7e0"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09-secondary-fifo-recovery-root-review-03.json",
+      "sha256": "89f3fca901ba89d6b2cb54fa2f0227671658830a1274ab5795524a859d498255"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09-secondary-recovery-exact-absence-03.json",
+      "sha256": "25bb3f4eb982eb284f68c7f2437e63e8e92a2e70fecef2424c46334abe990241"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09-secondary-fifo-recovery02-independent-safety-review-01.json",
+      "sha256": "94d1ccb2bdcd760925548c64426e4a72661ceeb82b9d21c9ce863cd8422a70d0"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native09-secondary-fifo-recovery-verify-03/receipt.json",
+      "sha256": "c17c5b840254867bbb3a266b5a6ec9c72ee4345fd8dcaca329bee04ed724894a"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native09-secondary-fifo-recovery-verify-03/events.jsonl",
+      "sha256": "125dd58c3526897b9c52f63deb85e452d7b86cad21cc2e01104fd65c2bd09f00"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native09-secondary-fifo-recovery-verify-03/new-independent-claim.json",
+      "sha256": "0378cc8d131b23366f1c56fa689c2957ed5faba991b231d18d406a4a2df2f734"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native09-secondary-fifo-recovery-execute-03/receipt.json",
+      "sha256": "e823b4110c6d401c3128697b3e867581fc949afdb6c6e5346417d0ff918a582c"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native09-secondary-fifo-recovery-execute-03/events.jsonl",
+      "sha256": "8a93e706991eab8fc5c18c03419f34d63d74a4dcf7f497f9d12d1b3996979b37"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native09-secondary-fifo-recovery-execute-03/new-independent-claim.json",
+      "sha256": "0378cc8d131b23366f1c56fa689c2957ed5faba991b231d18d406a4a2df2f734"
+    }
+  ],
+  "research": [
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/lsof/7a8a1b2a3c0f35c30a5fcd0927f31d441c3e5255/lsof/main.c",
+      "accessed_at": "2026-09-08T00:03:54.404941+00:00",
+      "sha256": "74656c434777d77626d8962bd1fd06f17b59c286f02c72e40520ebf03a8b8cae",
+      "ranges": [
+        [
+          872,
+          887
+        ],
+        [
+          933,
+          945
+        ],
+        [
+          1490,
+          1550
+        ],
+        [
+          1755,
+          1765
+        ]
+      ],
+      "claim": "-t sets Fwarn=1; +w sets Fwarn=0. Any unused requested file can produce exit1 despite other matched PIDs."
+    },
+    {
+      "path": "/usr/share/man/man8/lsof.8",
+      "sha256": "b3e81bbde414e488160ead258804afbb09438c49b3aaba2e59f185314cc8ac1e",
+      "ranges": [
+        [
+          436,
+          478
+        ],
+        [
+          1725,
+          1750
+        ]
+      ],
+      "claim": "+D selects an entire tree and is constrained by stat permissions; -t selects -w. The manual\u2019s enabling/suppression wording is not relied upon to establish polarity; the explicit source switch above is."
+    }
+  ],
+  "limits": [
+    "Original native09 runtime FAIL and cleanup FAIL remain immutable. Supplemental RECOVERED_CLEANUP_ONLY closes this exact residual ownership cleanup only; it does not fix runtime/storage behavior or prove canonical prevention.",
+    "Helper03 retains high-level success/action receipts, not each raw successful ps/lsof output. Passed query guards are supported by hash-bound reachable code plus execution result; this reviewer did not run independent live process queries.",
+    "The general799-file source snapshot excludes isolated reviews helpers/tests;03 self-hash+approved command+root frozen manifest bind helper execution separately. Control test source identity additionally relies on frozen03 test hash and exact emitted descriptors, not a claim that it appears in the799-source graph.",
+    "Same trusted-UID operational ownership assumption remains; no kernel-forensic creator-PID proof or malicious same-UID race immunity. Installed lsof is not reproducibly binary-bound to the public Apple tag; actual native receipts separately show acceptance of the exact query.",
+    "This review does not approve native10. Canonical partial-pair prevention still needs independent review, actual red/green controls, adoption by root and a fresh exact source/control binding."
+  ],
+  "preservation_and_hygiene": {
+    "canonical_edits_by_reviewer": false,
+    "private_material_reads": false,
+    "tests_builds_native_queries_signals_or_deletion_by_reviewer": false,
+    "background_workers_started": false,
+    "build_outputs_created": false,
+    "writes": "Only this new additive reconciliation report plus separately authorized isolated draft files. No cleanup needed for reviewer source-only reads."
+  }
+}

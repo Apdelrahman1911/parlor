@@ -1,0 +1,107 @@
+{
+  "status": "FAIL",
+  "runtime_kind": "owned API35 ARM64 emulator",
+  "not_evidence_for": [
+    "physical LAN",
+    "Linux x86/KVM GMD",
+    "Store signing"
+  ],
+  "tests": [],
+  "cleanup": [],
+  "source_commit": "0264b6bb6ae312b943d7ce8b8a026c5cd6a7e0c1",
+  "source_binding": "Caller-provided commit; campaign freeze and Gradle receipt must bind dirty source. Artifact hashes alone do not prove source.",
+  "image_properties": {
+    "Pkg.Desc": "System Image arm64-v8a with Google APIs.",
+    "Pkg.Revision": "9",
+    "Pkg.Dependencies": "emulator#33.1.24",
+    "AndroidVersion.ApiLevel": "35",
+    "AndroidVersion.ExtensionLevel": "13",
+    "AndroidVersion.IsBaseSdk": "true",
+    "SystemImage.Abi": "arm64-v8a",
+    "SystemImage.TagId": "google_apis",
+    "SystemImage.TagDisplay": "Google APIs",
+    "SystemImage.GpuSupport": "true",
+    "Addon.VendorId": "google",
+    "Addon.VendorDisplay": "Google Inc."
+  },
+  "artifacts": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-02/release.apk",
+      "sha256": "3c305f9f6bbe988bad441dfa02b457ef5762ac7336f5810c5789cc40ce2fbeaf"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-02/release-androidTest.apk",
+      "sha256": "b81fae3f6635508c0898459e863078b30ce173c5ed9d93f04a183563c29b0383"
+    }
+  ],
+  "temporary_root": "/private/tmp/parlor-arm64-byhcxip6",
+  "legacy_adb_port_reserved": 63344,
+  "failure": "RuntimeError: avd-create exited 1; see 002-avd-create.log",
+  "owned_adb_shutdown_acknowledged": false,
+  "commands": [
+    {
+      "args": [
+        "/Users/abdelrahman/Library/Android/sdk/platform-tools/adb",
+        "version"
+      ],
+      "started_epoch": 1788773414.490416,
+      "seconds": 0.111,
+      "exit_code": 0,
+      "log": "000-adb-version.log",
+      "failure": null
+    },
+    {
+      "args": [
+        "/Users/abdelrahman/Library/Android/sdk/emulator/emulator",
+        "-version"
+      ],
+      "started_epoch": 1788773414.601606,
+      "seconds": 0.532,
+      "exit_code": 0,
+      "log": "001-emulator-version.log",
+      "failure": null
+    },
+    {
+      "args": [
+        "/opt/homebrew/bin/avdmanager",
+        "create",
+        "avd",
+        "--name",
+        "parlor_arm64_6dd086858fd84ea8bb4a4895cc7bc377",
+        "--path",
+        "/private/tmp/parlor-arm64-byhcxip6/avd/parlor_arm64_6dd086858fd84ea8bb4a4895cc7bc377.avd",
+        "--package",
+        "system-images;android-35;google_apis;arm64-v8a",
+        "--device",
+        "pixel_2"
+      ],
+      "started_epoch": 1788773415.13368,
+      "seconds": 1.46,
+      "exit_code": 1,
+      "log": "002-avd-create.log",
+      "failure": null
+    }
+  ],
+  "worker_exit_codes": [
+    {
+      "pid": 51496,
+      "label": "adb-version",
+      "retired": true,
+      "exit_code": 0
+    },
+    {
+      "pid": 51497,
+      "label": "emulator-version",
+      "retired": true,
+      "exit_code": 0
+    },
+    {
+      "pid": 51505,
+      "label": "avd-create",
+      "retired": true,
+      "exit_code": 1
+    }
+  ],
+  "token_bound_signals": [],
+  "temporary_root_removed": true
+}

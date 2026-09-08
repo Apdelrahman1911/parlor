@@ -1,0 +1,22 @@
+{
+  "at": "2026-09-05T14:09:21.101097+00:00",
+  "status": "PASS",
+  "runner_sha256": "7e6abf8cb71ea66fe73123323f6cbc907381af595a0a3127679627bd9fc1b5aa",
+  "imported_helper_sha256": "b34ad4662ac906bff0a2f4e8ebe25c0757229098361e8e34c29b7c06681730c0",
+  "synthetic_script_sha256": "d82b93e2ae644ce58981e8e7e78907244e8dd596e9245b5b5c8264c639decbc0",
+  "runner_snapshot": "audit-runs/2026-09-05-source-audit/evidence/iosr1-runner-independent-whodunit-cont/draft-7e6abf8cb71e.py",
+  "checks": 9,
+  "cases": [
+    "unrelated tail viewer: not adopted; blocks deletion",
+    "unrelated Java reader: not adopted; blocks deletion",
+    "new shared Xcode service: not adopted; blocks deletion",
+    "new detached Swift compiler without launch ownership: not adopted; blocks deletion",
+    "new exact task-temp Gradle worker: correctly attributed",
+    "pre-existing exact-temp process: never adopted; blocks deletion",
+    "identity-attested Popen ancestry/group recursively attributes descendants",
+    "PID reuse with different start metadata never treated as old process",
+    "symlink root refuses cleanup ownership traversal"
+  ],
+  "limitations": "Only fake process tables/fake paths/fake lsof sets. No actual process, signal, file traversal, simulator/device, Gradle or Xcode execution. Cleanup of real detached workers remains runtime evidence.",
+  "cleanup": "No temporary files/processes/generated build outputs created; this compact evidence retained."
+}

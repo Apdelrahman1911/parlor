@@ -1,0 +1,68 @@
+// Remediation-owned device binding for the pinned KGP 2.4.10 task API.
+// Copied from reviewed audit binding; original evidence remains unchanged.
+// Root must create AND boot a new task-owned simulator, then pass its UUID.
+// Apply this init script only to a test run; do not apply it to clean/--stop.
+import org.gradle.api.GradleException
+import org.gradle.api.provider.Property
+
+final String auditRootPath = '/Users/abdelrahman/Projects/parlor'
+final String auditUuid = System.getenv('PARLOR_REMEDIATION_SIMULATOR_UDID')
+if (auditUuid == null || !(auditUuid ==~ /(?i)[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/)) {
+    throw new GradleException('PARLOR_REMEDIATION_SIMULATOR_UDID must be the newly created task-owned simulator UUID')
+}
+
+final String simulatorTaskType = 'org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeSimulatorTest'
+def isSimulatorTask = { task ->
+    Class current = task.getClass()
+    while (current != null) {
+        if (current.name == simulatorTaskType) return true
+        current = current.superclass
+    }
+    return false
+}
+
+gradle.projectsEvaluated { invocation ->
+    // The same init file may also be seen by included builds. Never configure them.
+    if (invocation.rootProject.projectDir.canonicalPath != auditRootPath) return
+
+    invocation.rootProject.allprojects.each { project ->
+        project.tasks.matching { it.name == 'iosSimulatorArm64Test' }.configureEach { task ->
+            if (!isSimulatorTask(task)) {
+                throw new GradleException("Unexpected simulator task implementation: ${task.path}")
+            }
+            def device = task.property('device')
+            def standalone = task.property('standalone')
+            if (!(device instanceof Property) || !(standalone instanceof Property)) {
+                throw new GradleException("KGP simulator API differs from reviewed 2.4.10 contract: ${task.path}")
+            }
+            device.set(auditUuid)
+            // Explicitly booted/owned by the root lane; KGP must not own boot/shutdown.
+            standalone.set(false)
+        }
+    }
+
+    invocation.taskGraph.whenReady { graph ->
+        def simulatorTasks = graph.allTasks.findAll { isSimulatorTask(it) }
+        def enabledSimulatorTasks = simulatorTasks.findAll { it.enabled }
+        if (enabledSimulatorTasks.isEmpty()) {
+            throw new GradleException('No executable simulator tasks selected; this is not a runtime validation run')
+        }
+        enabledSimulatorTasks.each { task ->
+            if (task.name != 'iosSimulatorArm64Test') {
+                throw new GradleException("Refusing unbound simulator task: ${task.path}")
+            }
+            Property device = (Property) task.property('device')
+            Property standalone = (Property) task.property('standalone')
+            if (device.get() != auditUuid || standalone.get() != false || task.property('debugMode') != false) {
+                throw new GradleException("Unsafe simulator execution configuration: ${task.path}")
+            }
+            device.disallowChanges()
+            standalone.disallowChanges()
+            task.logger.lifecycle("AUDIT_SIMULATOR_BOUND ${task.path} device=${auditUuid} standalone=false")
+        }
+        simulatorTasks.findAll { !it.enabled }.each { task ->
+            // Never read disabled tasks' default device providers.
+            task.logger.lifecycle("AUDIT_SIMULATOR_HOST_DISABLED ${task.path}")
+        }
+    }
+}

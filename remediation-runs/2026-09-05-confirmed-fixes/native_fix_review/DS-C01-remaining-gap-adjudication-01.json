@@ -1,0 +1,157 @@
+{
+  "reviewer": "/root/native_fix_review",
+  "created_at": "2026-09-06T00:16:40.779780+00:00",
+  "scope": "DS-C01 remaining-gap adjudication; bounded source re-review, no new runtime execution",
+  "classification": "PARTIALLY VERIFIED; legacy unmarked ownership product-policy pending; app-host matrix locally executable but not yet run",
+  "files": [
+    {
+      "path": "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+      "sha256": "959ab1a8cb955e484c806c8ce5af65ca841a20cfcd9b1f205443a1cfe768da20",
+      "reviewed_ranges": [
+        [
+          1,
+          61
+        ]
+      ]
+    },
+    {
+      "path": "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+      "sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098",
+      "reviewed_ranges": [
+        [
+          1,
+          83
+        ]
+      ]
+    },
+    {
+      "path": "shared/design-system/src/iosTest/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwnerTest.kt",
+      "sha256": "dbf610cd2fe07dd690b994c70434c863a96833305d5fc47c0e0c9d95072acf7e",
+      "reviewed_ranges": [
+        [
+          1,
+          142
+        ]
+      ]
+    },
+    {
+      "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/ProvideAppLanguage.kt",
+      "sha256": "b4f4286459fe923ebaa3e156f4a9995232ce40ad32ae9bc43f73a929da77dc18",
+      "reviewed_ranges": [
+        [
+          1,
+          62
+        ]
+      ]
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/App.kt",
+      "sha256": "622b679a2ef023fab17bf6c8ed8eb38c1fbc2b76a391f5f9a8298d59da9dda59",
+      "reviewed_ranges": [
+        [
+          1,
+          338
+        ]
+      ]
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/AppNavigation.kt",
+      "sha256": "f489d1db51d516b6b94dce1c4bc1fae2344644749209f098a4e76919126c1a19",
+      "reviewed_ranges": [
+        [
+          1,
+          172
+        ]
+      ]
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/shell/settings/SettingsScreen.kt",
+      "sha256": "f97da085d85ed5fe01ac9f4725580ea2f86e399dcd330f532d9babc1925535c5",
+      "reviewed_ranges": [
+        [
+          65,
+          325
+        ]
+      ]
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+      "sha256": "c77abd03ddcae230b4752d888b16c3d74231d89c967624c31129d176a5ed20ce",
+      "reviewed_ranges": [
+        [
+          1,
+          56
+        ]
+      ]
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSettingsKeyValueBacking.kt",
+      "sha256": "c8162e6713905b66d10aa8bc7e284d18f6815a2ae1754ba836c7241382014a10",
+      "reviewed_ranges": [
+        [
+          1,
+          40
+        ]
+      ]
+    },
+    {
+      "path": "iosApp/iosApp/ContentView.swift",
+      "sha256": "2e9bf560447c78c84462daccafc67cee961428dbd592adb6e12ddf085ab67a55",
+      "reviewed_ranges": [
+        [
+          1,
+          62
+        ]
+      ]
+    },
+    {
+      "path": "iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
+      "sha256": "e903278fc8defcac9a4d03a52495c1364a361222e5f369059c5d6b6416fb6eb7",
+      "reviewed_ranges": [
+        [
+          1,
+          33
+        ]
+      ]
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/run_iosr1_apphost_cycle.py",
+      "sha256": "7e6abf8cb71ea66fe73123323f6cbc907381af595a0a3127679627bd9fc1b5aa",
+      "reviewed_ranges": [
+        [
+          1,
+          622
+        ]
+      ]
+    }
+  ],
+  "established_evidence": [
+    "11 native owner tests executed in native-alltests-01 exercise same-process NSUserDefaults suite owner replacement and synthetic interruption states, NOT process restart/UI/session retention.",
+    "Current marker preserves actual app-domain absence and owned previous preferences; local UIKit/app-host matrix requires new additive test fixture."
+  ],
+  "policy_question": "For older installs with an unmarked AppleLanguages value, preserve the unknown per-app preference and direct users to iOS Settings, or offer an explicitly user-consented reset of only Parlor app-domain language override? Silent deletion cannot distinguish an old Parlor write from a legitimate OS-managed preference.",
+  "reachable_unmarked_trace": [
+    "Old install has unmarked AppleLanguages=[en] and language_override=en.",
+    "apply(en) releases nothing and declines ownership of already-identical value.",
+    "Choosing System applies null; no record exists, so AppleLanguages=[en] remains."
+  ],
+  "locally_executable_unrun": [
+    "Actual unchanged App/Settings explicit English/Arabic -> process terminate/relaunch -> System, using a fresh owned unsigned simulator app sandbox.",
+    "Actual localized text and UIKit root semantic direction across switches.",
+    "Actual active controller/session/runtime retention requires scoped observation of real controllers, not fake tokens or Desktop UnitApplier tests."
+  ],
+  "not_covered_by_current_harness": [
+    "Existing Xcode cold-home test pins AppleLanguages and AppleLocale launch arguments, invalidating language mutation tests unless removed in copy.",
+    "Existing iosTest does not run actual App composition or process restart.",
+    "Current Settings is inaccessible during active game flows; do not add navigation bypass to test retention."
+  ],
+  "runner_corrections_required": [
+    "Archived runner requires clean tracked status, stale input hashes, fixed used cycle identity and IOS-R1 probe schema.",
+    "AppHostOwnership only tracks primary root/generated outputs; independent later cleanup removed two externally allocated ibtoold FIFOs.",
+    "New runner must capture exact FIFO argv paths only from PID/start/ancestry-owned workers, verify UID/birthtime/inode and no symlinks, stop owned holders, unlink attested FIFOs, remove only empty parents. Unknowns remain retained/FAIL."
+  ],
+  "research": "DS-C01-gap-research-01.json",
+  "runtime_result": "NOT RUN in this adjudication",
+  "authored_task_outputs_only": true,
+  "new_processes_or_apps_started": false
+}

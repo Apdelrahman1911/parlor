@@ -1,0 +1,1594 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/mafia_cont",
+  "recorded_utc": "2026-09-05T12:30:36.915173+00:00",
+  "purpose": "Independent reconciliation of archived first generated verification/cleanup deliverables; not a new source approval or build execution.",
+  "source": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d"
+  },
+  "inputs": [
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/final-verification-review-initial-mafia-cont/assemble_verification.py",
+      "sha256": "7f4a161e3574d9a620a050f4da40a1ff629868ba642ede571b626621aee3c132",
+      "bytes": 22246,
+      "lines": 123
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/final-verification-review-initial-mafia-cont/VERIFICATION.md",
+      "sha256": "8a34feb2706dcd8e17ef0e5cb69332eee2e151c88409fab50daef393a00df436",
+      "bytes": 17861,
+      "lines": 64
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/final-verification-review-initial-mafia-cont/verification-ledger.json",
+      "sha256": "8d56df16882ae800c5c8ab747bb2e096c7b88648c321ce6a1dbcf4870b36f918",
+      "bytes": 34616,
+      "lines": 843
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/final-verification-review-initial-mafia-cont/CLEANUP_LEDGER.json",
+      "sha256": "db2636ab0530b049c59bcbae96bd5ef6626e56c5eb46b6ae02ebadda53e246ac",
+      "bytes": 72613,
+      "lines": 1991
+    }
+  ],
+  "initial_gate_counts": {
+    "PASS": 16,
+    "FAIL": 13,
+    "BLOCKED": 10,
+    "NOT_APPLICABLE": 4
+  },
+  "markdown_json_rows_equal": true,
+  "evidence_reference_count": 77,
+  "evidence_refs": [
+    {
+      "path": "audit-runs/2026-09-05-source-audit/CLEANUP_LEDGER.json",
+      "exists": true,
+      "sha256": "db2636ab0530b049c59bcbae96bd5ef6626e56c5eb46b6ae02ebadda53e246ac"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/OTHER_CANDIDATES.md",
+      "exists": true,
+      "sha256": "db7c49882ab562eadd6df2d9a2fdfeff3b84c9a182fdf873c53e825091b8f453"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/baseline.json",
+      "exists": true,
+      "sha256": "0c3159d09188f2d9f759c5cd306c8b4d13946d393941991a60a91fc97d830576"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/candidates/WD-C1-independent-session_cont.md",
+      "exists": true,
+      "sha256": "11f8eb9bb17d71dc4324d7c61e3b6c5b12e569f8667a5b180b90bc2fa597a4ae"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/canonical-register.json",
+      "exists": true,
+      "sha256": "cc8d768a240cdf7d0c880a49913ca9658c7cc5999fb22ee154e497e85164f8bb"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/coverage/FINAL_COVERAGE.jsonl",
+      "exists": true,
+      "sha256": "58e45d333bf6ce47c775612b462e658d8ba5af88db91a5ca93f6e68a334ebd68"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/coverage/inventory.jsonl",
+      "exists": true,
+      "sha256": "5ae5e8c041090e00d7347814324f2e888681d8f2473c3265debcaf636e8f1fc5"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/coverage/observed-build-graph.txt",
+      "exists": true,
+      "sha256": "6a1c8ea206c533f899d7eb0212fe1d01768c2d52611a2b976dc9fdca6fc6b31d"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/coverage/summary.json",
+      "exists": true,
+      "sha256": "bb096b6d42339d7ba55f3d128b23f46a91f6689f00c445bbab514d2395ce4fac"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/apple-check-01/receipt.json",
+      "exists": true,
+      "sha256": "8aa98a0f4980913ddbffc1a8625ae6ce9df8916c63f41269d05128e7dc14aecb"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/apple-check-02/receipt.json",
+      "exists": true,
+      "sha256": "041210f93a27cd57febd40fed7332349578248c9a4c1aefac828aabc3020dc91"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/baseline-desktop-static-01/receipt.json",
+      "exists": true,
+      "sha256": "f99d20f39fcaef64048ec2f670174740ac7f3d7cf2864b9326ee6f07c714f8c0"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/baseline-desktop-static-01/test-receipts.json",
+      "exists": true,
+      "sha256": "ffd4862f042a3a807f640b49fb931c97ed4c5b1ee0980bed6f0ed52619e23f3a"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/design-font-metadata.json",
+      "exists": true,
+      "sha256": "15f49759645ae101eea5098725164276d1660bda0eced290c764168403f87172"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/final-state.json",
+      "exists": true,
+      "sha256": "046d151197f4bdcbe5e8a8a03a43936a0c93c9c7b0f28209fcfb0765bb060322"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/focused-storage-01/receipt.json",
+      "exists": true,
+      "sha256": "a0f6fe7504ae94a8313a49b90e8ba482972de52e13be4097f8434fc355787129"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/focused-storage-02/receipt.json",
+      "exists": true,
+      "sha256": "ad79a064f7bef675f13ddfff7afc992c3fad2b64585914102d3404b8dd654c0a"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/focused-storage-02/test-receipts.json",
+      "exists": true,
+      "sha256": "b25467ef05e35f325a67e87b461e26a9f4b5b55fbfe6ec70a7058170d825319c"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/inspect-transport-tests-02/compiled-test-methods.json",
+      "exists": true,
+      "sha256": "c0a967e00dd93f542edde376148a2b648e6ca385d0954678491987816249b35e"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/iosr1-native-02/receipt.json",
+      "exists": true,
+      "sha256": "f8a273e145bc47c8fe22b600371e5e1adf9c85364dfb99bfbef03ed8792925bc"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/native-alltests-01-simulator/receipt.json",
+      "exists": true,
+      "sha256": "f711e41ecbaf52163ac31bedc23a72f07daa0344611fc831a86b729f33146e80"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/native-alltests-01/receipt.json",
+      "exists": true,
+      "sha256": "c06c7a133a60600e855ec4c674870dc7823d485b88bfa79ac689fd570c2011e7"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/native-alltests-01/test-receipts.json",
+      "exists": true,
+      "sha256": "4de9cb16bd5b1ccd5c8a17fed37beb4b49468e152cd9f50cbfac8faf66599658"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/native-preference-01/receipt.json",
+      "exists": true,
+      "sha256": "6c4cd971317581cc7379883efc5bbe07d154382269321f942bec3edd51418d27"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/native-xcode-phase-01/receipt.json",
+      "exists": true,
+      "sha256": "dc85a99d38f4c88e38d4b99e0f9abcaad36a47ecb459234d2ccf49160003c096"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/production-check-01/artifact-receipts.json",
+      "exists": true,
+      "sha256": "9dc7d23f47bc682558bcac70de446f7965b9bd73f7808ffc5a606dbbecdded66"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/production-check-01/receipt.json",
+      "exists": true,
+      "sha256": "6c43019960c16a4d6f2e89ba9a5b8c1e96e5e1c7985d8de6e5e8e66e963c1cb3"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/production-check-01/test-receipts.json",
+      "exists": true,
+      "sha256": "d1549961e6f8eac2d8bd55fe41f18aed0525710006dfc126782f0284902d5b1f"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/repro-mafia-01/receipt.json",
+      "exists": true,
+      "sha256": "a59fbdb447394027c07d11cd8baa75428559375f3c8c3a1bde62b8b59d7ac554"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/repro-pending-01/receipt.json",
+      "exists": true,
+      "sha256": "60765637b00d5f0d12e17022fdb86343d8c036634dde15c442c89f26215d5a53"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/repro-pending-01/test-receipts.json",
+      "exists": true,
+      "sha256": "4b35895cafd8b6cdd06cc8dbf923c61fe8d027ca34ba8bcfdbb01dfac3fa2edd"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/repro-release-race-01/receipt.json",
+      "exists": true,
+      "sha256": "403914fdecb3cbd5342fbec822abe4c02d1b902da56f1422d1e6c6016d8593c3"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/repro-session-01/receipt.json",
+      "exists": true,
+      "sha256": "e9ac296aa632c91a8c47277afa1a0f301f993549cc1b7fc833bdfea4d71d02c1"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/repro-ui-03/receipt.json",
+      "exists": true,
+      "sha256": "060189a3a88ece66eb6d39cdb4843f671b39add4cff5d11ebfc220ef7132cdab"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/repro-ui-transport-02/receipt.json",
+      "exists": true,
+      "sha256": "69c709b7a400f29a14137aa78df837bbeb3c63523a948ff2f9d229fd6e411fd2"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/storage-native-01/receipt.json",
+      "exists": true,
+      "sha256": "b4e081606b6fb722e743de6cfa280295c3e8159eea467c2f47ccd1b294ccf613"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/storage-native-01/test-receipts.json",
+      "exists": true,
+      "sha256": "e1b51fa8ad7e65f3b5a9223fac47cac7a0076bb53f6d5a034a9b3653c9597c99"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/xcode-ui-01/receipt.json",
+      "exists": true,
+      "sha256": "aedcaad0cfddea800d4a3b4113d5307f083d9875abe5ac580312b4b80cb10c7c"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/xcode-ui-01/xcresult-summary.json",
+      "exists": true,
+      "sha256": "5d93bfdcbf94119a68142a45f21302945a414f1e5e585f4a98751e6a240a886d"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/xcode-ui-01/xcresult-tests.json",
+      "exists": true,
+      "sha256": "ead46d76212dff68563dd69342e4e36a63a1b3b4d7deaf98ac41d34c7cc2d20c"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/research/DS-C03-w3c-whodunit_cont.json",
+      "exists": true,
+      "sha256": "1db6fb6cd6b5faf83e5a9da6905d2a92bddd19fb080c86e176317313a6797a3d"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/reviews/binary-assets-wrapper-mafia-cont.md",
+      "exists": true,
+      "sha256": "29a230a03871ae8a41df1f86d1fb6d4fb4852f4fc38c002785bf58edd9c5c991"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/reviews/mafia-engine-notes.md",
+      "exists": true,
+      "sha256": "d46d29646cd5d835ebe03aaef9399d0a1549e9c496e4cef0f11d50e2ebf57d6b"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/reviews/metadata-whodunit_cont-notes.md",
+      "exists": true,
+      "sha256": "79341c291abcbd0fae6152d4491a569227795abcb26cd4c5ab58cb4055f9839f"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/reviews/product-docs-mafia-cont.md",
+      "exists": true,
+      "sha256": "91bcbc5d92666bfd9860850ed47bf28955b29896f85316ea95158cca1ff6e72a"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/reviews/release-docs-whodunit_cont-notes.md",
+      "exists": true,
+      "sha256": "d6785d968759e5b3c62a123562719fe64e614710a96cb301fbae27c073a088a2"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/reviews/release-whodunit_cont-notes.md",
+      "exists": true,
+      "sha256": "90efe2dbdc1335a739903f669d044ef9b6d6a75d070e864aff53bbda6a033a41"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/reviews/root-build-notes.md",
+      "exists": true,
+      "sha256": "8edb18ddcdaa446f7d24c624b9144cba5e6f14216f586c1fdddc1b5fab6ba7f5"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/reviews/root-platform-shell-notes.md",
+      "exists": true,
+      "sha256": "6c66482347a92c9322204860c86b40c71f121a73b57a7b34c7b007b3b4ac390d"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/reviews/root-storage-shell-notes.md",
+      "exists": true,
+      "sha256": "96f8210e89020c7d581d9b7069255e437fb8e001be98145820dfee1424b137b1"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/reviews/session-cont-notes.md",
+      "exists": true,
+      "sha256": "4c97af6ece012057f9d72a14edfe41eda0a5597d783e8be8bd229759802bedd4"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/reviews/verification-cleanup-reconciliation-mafia-cont-supplement-01.md",
+      "exists": true,
+      "sha256": "2fd81fe03d7563cd786861d1d21cd6ffa1493f464eaed31e70ab064d83930e2b"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/reviews/verification-cleanup-reconciliation-mafia-cont.md",
+      "exists": true,
+      "sha256": "c7fa6c2928deb79d05c6e8b461f73ea17a5783b94557a66b0672568b7cea2860"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/reviews/verification-metadata-mafia-cont.md",
+      "exists": true,
+      "sha256": "b6a146cf4216823aa4da0702923d096ad9983882d6b1da23107575c1284d4108"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/reviews/whodunit-content-notes.md",
+      "exists": true,
+      "sha256": "dd7f49e74b31b90296300342623f267c4dfe00e5969c064c5049aba9b118061e"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/reviews/whodunit-ui-followup-whodunit_cont.md",
+      "exists": true,
+      "sha256": "f20aa71d0c55356a77620404ae2379c2a8351a9a997cfbab76a11fcb5228b27e"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/DOC-C4-session_cont.md",
+      "exists": true,
+      "sha256": "21839ffeb7f3ab7e0ae849fff91aa28138e98b57f27349afd856f22df8f24a7c"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/DS-C01-root.md",
+      "exists": true,
+      "sha256": "f694719ff8faf5dc7d1b0b4ab8beaf31a14353d403fec5f61f45b19c6ff2622c"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/DS-C02-root.md",
+      "exists": true,
+      "sha256": "0f3991333a99bdca544ffd352d59c1d1e9f8816695be55c648c33b3163526830"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/DS-C03-whodunit_cont.md",
+      "exists": true,
+      "sha256": "81a740b63f3524d2f56abb6aa414501a749021c1d9214a918cc69d604d3b880b"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/IOS-B1-session_cont.md",
+      "exists": true,
+      "sha256": "951f83318a03aedcb2339da088297b0da90c171cc8982055e0e4a12366fe5503"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/IOS-R1-session_cont.md",
+      "exists": true,
+      "sha256": "4137953e53167740032a627e5b4b67a70cdad1e5102559a3e8682cdc717705f3"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/M-C03-root.md",
+      "exists": true,
+      "sha256": "b2273fdaae369f53d02dd6b13ce3343c8e81a8825a9cbdc6616468e946fe92ed"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/MF-C1-whodunit_cont.md",
+      "exists": true,
+      "sha256": "fb830e272c4f73b514ec79b3a1a51db24f3cbb750887ba087f279562a1bb1c00"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/RL-C1-session_cont.md",
+      "exists": true,
+      "sha256": "d949d53eae4943723e17010d266595f717a3bb499d90c977e32240e34ea048bd"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/RL-C2-session_cont.md",
+      "exists": true,
+      "sha256": "260c5fe7144299805ad533c6dfd8c7bac9fb4fb983288728d7666da883bd826e"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/RL-C3-session_cont.md",
+      "exists": true,
+      "sha256": "978a19af9d7d541a0cc7be4d9f6e0021f3695e3a8556d14dfe2044d8ac700d72"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/ROOT-T3-session_cont.md",
+      "exists": true,
+      "sha256": "38275715c4b099d974fe980d788f2087029716b7859a63ee97cd104fd4951c21"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/SN-C1-root.md",
+      "exists": true,
+      "sha256": "f4e3ef713b280f8072be33a7023265a5a01dc3d2786463a0bed9c53dd0a16c6c"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/SN-C2-root.md",
+      "exists": true,
+      "sha256": "853c0098a995d0585289adff7c6d9e419fb0cdc6376790466b4e7b527d97a5be"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/SN-D1-root.md",
+      "exists": true,
+      "sha256": "7c2e921312a73dbf2d7752230c1367fc70cf4a05a0c7a63298be141e81c3a81b"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/SN-T1-root.md",
+      "exists": true,
+      "sha256": "d5b8e404458dc60861d4ccd870c48efb1e299b8659d27da8cfd06655d6979d78"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/ST-C1-root.md",
+      "exists": true,
+      "sha256": "c2694a45ce4daf01a5824e2494a66fccdeaac948a5c084e60fb72d7c7372ac8e"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/WD-C2-mafia_cont.md",
+      "exists": true,
+      "sha256": "e6a632d2c371a642da9183d1334ab6806daffad4c8319ea58c974cec33181df4"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/WD-C3-root.md",
+      "exists": true,
+      "sha256": "ac1e4e6da1f61b35c9973c5e9dfc29f6d1c8378c3075d2c92d35c7434ceae6cc"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/WD-C4-root.md",
+      "exists": true,
+      "sha256": "021928ce620ebbcae91af174baea9547a9df9aa82dc3c1e6b22f61da71e90cce"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/storage-residual-root.md",
+      "exists": true,
+      "sha256": "47e1587b2dd95c4afc11d01990bc9205eecc3a40ae836d32281509b2bf722697"
+    }
+  ],
+  "manual_action_count": 10,
+  "primary_cleanup_projection": [
+    {
+      "receipt": "evidence/apple-check-01/receipt.json",
+      "sha256": "8aa98a0f4980913ddbffc1a8625ae6ce9df8916c63f41269d05128e7dc14aecb",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": "FAIL",
+      "exit_code": 1,
+      "stop_exit_code": 0,
+      "stop_completed_after_task_seconds": 0.353261,
+      "cleanup_status": "PASS",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "outputs_before": [],
+      "strict_verification": true
+    },
+    {
+      "receipt": "evidence/apple-check-02/receipt.json",
+      "sha256": "041210f93a27cd57febd40fed7332349578248c9a4c1aefac828aabc3020dc91",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "stop_completed_after_task_seconds": 0.277478,
+      "cleanup_status": "PASS",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "outputs_before": [],
+      "strict_verification": true
+    },
+    {
+      "receipt": "evidence/baseline-desktop-static-01/receipt.json",
+      "sha256": "f99d20f39fcaef64048ec2f670174740ac7f3d7cf2864b9326ee6f07c714f8c0",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "stop_completed_after_task_seconds": 0.264341,
+      "cleanup_status": "PASS",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "outputs_before": [],
+      "strict_verification": true
+    },
+    {
+      "receipt": "evidence/focused-storage-01/receipt.json",
+      "sha256": "a0f6fe7504ae94a8313a49b90e8ba482972de52e13be4097f8434fc355787129",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "stop_completed_after_task_seconds": 0.250511,
+      "cleanup_status": "PASS",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "outputs_before": [],
+      "strict_verification": true
+    },
+    {
+      "receipt": "evidence/focused-storage-02/receipt.json",
+      "sha256": "ad79a064f7bef675f13ddfff7afc992c3fad2b64585914102d3404b8dd654c0a",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "stop_completed_after_task_seconds": 0.27162,
+      "cleanup_status": "PASS",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "outputs_before": [],
+      "strict_verification": true
+    },
+    {
+      "receipt": "evidence/inspect-transport-tests-01/receipt.json",
+      "sha256": "c96df88ced15b12ddf1e057dce88c81e47eb0a3f7c9b82771df00470fd2cd839",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": "FAIL",
+      "exit_code": 1,
+      "stop_exit_code": 0,
+      "stop_completed_after_task_seconds": 0.486078,
+      "cleanup_status": "PASS",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "outputs_before": [],
+      "strict_verification": true
+    },
+    {
+      "receipt": "evidence/inspect-transport-tests-02/receipt.json",
+      "sha256": "c0b81e2a5b49866ad907c8c28592d362866ac0226081309093d7ca735ea71f3c",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "stop_completed_after_task_seconds": 0.276163,
+      "cleanup_status": "PASS",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "outputs_before": [],
+      "strict_verification": true
+    },
+    {
+      "receipt": "evidence/native-alltests-01/receipt.json",
+      "sha256": "c06c7a133a60600e855ec4c674870dc7823d485b88bfa79ac689fd570c2011e7",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "stop_completed_after_task_seconds": 0.320221,
+      "cleanup_status": "PASS",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "outputs_before": [],
+      "strict_verification": true
+    },
+    {
+      "receipt": "evidence/production-check-01/receipt.json",
+      "sha256": "6c43019960c16a4d6f2e89ba9a5b8c1e96e5e1c7985d8de6e5e8e66e963c1cb3",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "stop_completed_after_task_seconds": 0.605662,
+      "cleanup_status": "PASS",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "outputs_before": [],
+      "strict_verification": true
+    },
+    {
+      "receipt": "evidence/repro-mafia-01/receipt.json",
+      "sha256": "a59fbdb447394027c07d11cd8baa75428559375f3c8c3a1bde62b8b59d7ac554",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": "FAIL",
+      "exit_code": 1,
+      "stop_exit_code": 0,
+      "stop_completed_after_task_seconds": 0.245154,
+      "cleanup_status": "PASS",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "outputs_before": [],
+      "strict_verification": true
+    },
+    {
+      "receipt": "evidence/repro-pending-01/receipt.json",
+      "sha256": "60765637b00d5f0d12e17022fdb86343d8c036634dde15c442c89f26215d5a53",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": "FAIL",
+      "exit_code": 1,
+      "stop_exit_code": 0,
+      "stop_completed_after_task_seconds": 0.336498,
+      "cleanup_status": "PASS",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "outputs_before": [],
+      "strict_verification": true
+    },
+    {
+      "receipt": "evidence/repro-session-01/receipt.json",
+      "sha256": "e9ac296aa632c91a8c47277afa1a0f301f993549cc1b7fc833bdfea4d71d02c1",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": "FAIL",
+      "exit_code": 1,
+      "stop_exit_code": 0,
+      "stop_completed_after_task_seconds": 0.285982,
+      "cleanup_status": "PASS",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "outputs_before": [],
+      "strict_verification": true
+    },
+    {
+      "receipt": "evidence/repro-ui-03/receipt.json",
+      "sha256": "060189a3a88ece66eb6d39cdb4843f671b39add4cff5d11ebfc220ef7132cdab",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": "FAIL",
+      "exit_code": 1,
+      "stop_exit_code": 0,
+      "stop_completed_after_task_seconds": 0.266182,
+      "cleanup_status": "PASS",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "outputs_before": [],
+      "strict_verification": true
+    },
+    {
+      "receipt": "evidence/repro-ui-transport-01/receipt.json",
+      "sha256": "ca6219ae4f24e6227d3f36780c90f05bb221f1cfc2fc497c92eb5b916f854fb6",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": "FAIL",
+      "exit_code": 1,
+      "stop_exit_code": 0,
+      "stop_completed_after_task_seconds": 0.244456,
+      "cleanup_status": "PASS",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "outputs_before": [],
+      "strict_verification": true
+    },
+    {
+      "receipt": "evidence/repro-ui-transport-02/receipt.json",
+      "sha256": "69c709b7a400f29a14137aa78df837bbeb3c63523a948ff2f9d229fd6e411fd2",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": "FAIL",
+      "exit_code": 1,
+      "stop_exit_code": 0,
+      "stop_completed_after_task_seconds": 0.253272,
+      "cleanup_status": "PASS",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "outputs_before": [],
+      "strict_verification": true
+    },
+    {
+      "receipt": "evidence/storage-native-01/receipt.json",
+      "sha256": "b4e081606b6fb722e743de6cfa280295c3e8159eea467c2f47ccd1b294ccf613",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": "FAIL",
+      "exit_code": 1,
+      "stop_exit_code": 0,
+      "stop_completed_after_task_seconds": 0.325941,
+      "cleanup_status": "PASS",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "outputs_before": [],
+      "strict_verification": true
+    }
+  ],
+  "other_receipt_projection": [
+    {
+      "receipt": "evidence/filehandle-api-01/receipt.json",
+      "sha256": "280c08661741c2741a491bbc750ff6fafb7afb555ed2b970115b7eec888a937c",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": null,
+      "exit_code": null
+    },
+    {
+      "receipt": "evidence/iosr1-native-01/receipt.json",
+      "sha256": "b12991f0cae1155df107f1befd7fbc96dbc3ba4ca72b1f3aa1e3bbb20b5c406c",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": "FAIL",
+      "exit_code": null
+    },
+    {
+      "receipt": "evidence/iosr1-native-02/receipt.json",
+      "sha256": "f8a273e145bc47c8fe22b600371e5e1adf9c85364dfb99bfbef03ed8792925bc",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": "PASS",
+      "exit_code": null
+    },
+    {
+      "receipt": "evidence/native-alltests-01-simulator/receipt.json",
+      "sha256": "f711e41ecbaf52163ac31bedc23a72f07daa0344611fc831a86b729f33146e80",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": "PASS",
+      "exit_code": null
+    },
+    {
+      "receipt": "evidence/native-preference-01/receipt.json",
+      "sha256": "6c4cd971317581cc7379883efc5bbe07d154382269321f942bec3edd51418d27",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": null,
+      "exit_code": null
+    },
+    {
+      "receipt": "evidence/native-xcode-phase-01/receipt.json",
+      "sha256": "dc85a99d38f4c88e38d4b99e0f9abcaad36a47ecb459234d2ccf49160003c096",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": null,
+      "exit_code": 0
+    },
+    {
+      "receipt": "evidence/repro-release-race-01/receipt.json",
+      "sha256": "403914fdecb3cbd5342fbec822abe4c02d1b902da56f1422d1e6c6016d8593c3",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": null,
+      "exit_code": 1
+    },
+    {
+      "receipt": "evidence/storage-native-01-simulator/receipt.json",
+      "sha256": "f3414091f76e8593709b1b407f6ed25dfd3257253d9dc448de3d0a9c0abfa41c",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": "FAIL",
+      "exit_code": null
+    },
+    {
+      "receipt": "evidence/xcode-ui-01/receipt.json",
+      "sha256": "aedcaad0cfddea800d4a3b4113d5307f083d9875abe5ac580312b4b80cb10c7c",
+      "projection_equal": true,
+      "prior_hash_match": true,
+      "raw_status": "PASS",
+      "exit_code": null
+    }
+  ],
+  "prior_receipts_checked": 26,
+  "prior_receipt_hash_checks": [
+    {
+      "path": "evidence/apple-check-01/receipt.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/apple-check-02/receipt.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/baseline-desktop-static-01/receipt.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/binary-assets-wrapper/cleanup-receipt.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/binary-assets-wrapper/execution-receipts.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/filehandle-api-01/receipt.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/focused-storage-01/receipt.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/focused-storage-02/receipt.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/inspect-transport-tests-01/receipt.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/inspect-transport-tests-02/receipt.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/iosr1-native-01/receipt.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/iosr1-native-02/receipt.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/native-alltests-01/receipt.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/native-alltests-01-simulator/receipt.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/native-preference-01/receipt.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/native-xcode-phase-01/receipt.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/production-check-01/receipt.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/repro-mafia-01/receipt.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/repro-pending-01/receipt.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/repro-release-race-01/receipt.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/repro-session-01/receipt.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/repro-ui-03/receipt.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/repro-ui-transport-01/receipt.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/repro-ui-transport-02/receipt.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/research-p2p-send/receipt.json",
+      "matches": true
+    },
+    {
+      "path": "evidence/xcode-ui-01/receipt.json",
+      "matches": true
+    }
+  ],
+  "excluded_non_primary_receipts": [
+    {
+      "path": "evidence/binary-assets-wrapper/cleanup-receipt.json",
+      "sha256": "f66a0759c92fdec2bb7a2d5c5d695d49abefdd7a3b9c52d8fafbdc46578f1c0a",
+      "hash_matches": true
+    },
+    {
+      "path": "evidence/binary-assets-wrapper/execution-receipts.json",
+      "sha256": "c9d11bd7b0bd7c48be764fdd40cbfe895a8ae2c1a77512f447b787ac5c050cf9",
+      "hash_matches": true
+    },
+    {
+      "path": "evidence/research-p2p-send/receipt.json",
+      "sha256": "cf990bc60caa25f68f2646050ae425b28814d29df7bdec2ee1f92cf84ebdd77e",
+      "hash_matches": true
+    }
+  ],
+  "xml_files_reparsed": 759,
+  "junit_reconciliation": [
+    {
+      "cycle": "apple-check-01",
+      "xml_files": 0,
+      "xml_json_equal": true,
+      "counts": {},
+      "complete_json_available": true,
+      "child_count_mismatches": [],
+      "indexed_count_mismatches": [],
+      "xml_set_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "cycle": "apple-check-02",
+      "xml_files": 0,
+      "xml_json_equal": true,
+      "counts": {},
+      "complete_json_available": true,
+      "child_count_mismatches": [],
+      "indexed_count_mismatches": [],
+      "xml_set_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "cycle": "baseline-desktop-static-01",
+      "xml_files": 165,
+      "xml_json_equal": true,
+      "counts": {
+        "desktopTest": {
+          "tests": 1108,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 1,
+          "modules": {
+            "composeApp": 95,
+            "game-modes/mafia": 232,
+            "game-modes/whodunit": 288,
+            "shared/content": 24,
+            "shared/core": 12,
+            "shared/design-system": 30,
+            "shared/engine": 4,
+            "shared/engine-testing": 6,
+            "shared/networking": 34,
+            "shared/networking-testing": 4,
+            "shared/session": 136,
+            "shared/storage": 31,
+            "shared/transport-p2p": 212
+          }
+        }
+      },
+      "complete_json_available": true,
+      "child_count_mismatches": [],
+      "indexed_count_mismatches": [],
+      "xml_set_sha256": "6b68f6c39b9bf1d13c2311e322e8938be6261bf1ed08bcea071d1ca6d9a23d52"
+    },
+    {
+      "cycle": "focused-storage-01",
+      "xml_files": 1,
+      "xml_json_equal": null,
+      "counts": {
+        "desktopTest": {
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "modules": {
+            "shared/storage": 11
+          }
+        }
+      },
+      "complete_json_available": false,
+      "child_count_mismatches": [],
+      "indexed_count_mismatches": [],
+      "xml_set_sha256": "296d8706470a474349488bcbc6078dda7e228c387c6c897233523b3f082d0dd4"
+    },
+    {
+      "cycle": "focused-storage-02",
+      "xml_files": 4,
+      "xml_json_equal": true,
+      "counts": {
+        "desktopTest": {
+          "tests": 31,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "modules": {
+            "shared/storage": 31
+          }
+        }
+      },
+      "complete_json_available": true,
+      "child_count_mismatches": [],
+      "indexed_count_mismatches": [],
+      "xml_set_sha256": "19641eaddfa80cc947b9e794b518cb24fee89428c16028cb30b09289c01e28be"
+    },
+    {
+      "cycle": "inspect-transport-tests-01",
+      "xml_files": 0,
+      "xml_json_equal": true,
+      "counts": {},
+      "complete_json_available": true,
+      "child_count_mismatches": [],
+      "indexed_count_mismatches": [],
+      "xml_set_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "cycle": "inspect-transport-tests-02",
+      "xml_files": 15,
+      "xml_json_equal": true,
+      "counts": {
+        "desktopTest": {
+          "tests": 212,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 1,
+          "modules": {
+            "shared/transport-p2p": 212
+          }
+        }
+      },
+      "complete_json_available": true,
+      "child_count_mismatches": [],
+      "indexed_count_mismatches": [],
+      "xml_set_sha256": "a619b02f4dc02a348421895fa375206aba27fc77de2a01a7a4f24e0b6a9ade76"
+    },
+    {
+      "cycle": "native-alltests-01",
+      "xml_files": 367,
+      "xml_json_equal": true,
+      "counts": {
+        "desktopTest": {
+          "tests": 1108,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 1,
+          "modules": {
+            "composeApp": 95,
+            "game-modes/mafia": 232,
+            "game-modes/whodunit": 288,
+            "shared/content": 24,
+            "shared/core": 12,
+            "shared/design-system": 30,
+            "shared/engine": 4,
+            "shared/engine-testing": 6,
+            "shared/networking": 34,
+            "shared/networking-testing": 4,
+            "shared/session": 136,
+            "shared/storage": 31,
+            "shared/transport-p2p": 212
+          }
+        },
+        "iosSimulatorArm64Test": {
+          "tests": 393,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "modules": {
+            "composeApp": 77,
+            "game-modes/whodunit": 9,
+            "shared/content": 24,
+            "shared/core": 12,
+            "shared/design-system": 13,
+            "shared/engine-testing": 6,
+            "shared/networking": 34,
+            "shared/networking-testing": 4,
+            "shared/session": 133,
+            "shared/storage": 31,
+            "shared/transport-p2p": 50
+          }
+        },
+        "testDebugUnitTest": {
+          "tests": 392,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "modules": {
+            "composeApp": 76,
+            "game-modes/whodunit": 9,
+            "shared/content": 24,
+            "shared/core": 12,
+            "shared/design-system": 13,
+            "shared/engine-testing": 6,
+            "shared/networking": 34,
+            "shared/networking-testing": 4,
+            "shared/session": 133,
+            "shared/storage": 31,
+            "shared/transport-p2p": 50
+          }
+        },
+        "testReleaseUnitTest": {
+          "tests": 392,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "modules": {
+            "composeApp": 76,
+            "game-modes/whodunit": 9,
+            "shared/content": 24,
+            "shared/core": 12,
+            "shared/design-system": 13,
+            "shared/engine-testing": 6,
+            "shared/networking": 34,
+            "shared/networking-testing": 4,
+            "shared/session": 133,
+            "shared/storage": 31,
+            "shared/transport-p2p": 50
+          }
+        }
+      },
+      "complete_json_available": true,
+      "child_count_mismatches": [],
+      "indexed_count_mismatches": [],
+      "xml_set_sha256": "912e3ba8d4063f31b0018701f8baf35cfa589cd4f650636953a67e2d8d915f7a"
+    },
+    {
+      "cycle": "production-check-01",
+      "xml_files": 199,
+      "xml_json_equal": true,
+      "counts": {
+        "desktopTest": {
+          "tests": 1108,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 1,
+          "modules": {
+            "composeApp": 95,
+            "game-modes/mafia": 232,
+            "game-modes/whodunit": 288,
+            "shared/content": 24,
+            "shared/core": 12,
+            "shared/design-system": 30,
+            "shared/engine": 4,
+            "shared/engine-testing": 6,
+            "shared/networking": 34,
+            "shared/networking-testing": 4,
+            "shared/session": 136,
+            "shared/storage": 31,
+            "shared/transport-p2p": 212
+          }
+        },
+        "testDebugUnitTest": {
+          "tests": 76,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "modules": {
+            "composeApp": 76
+          }
+        },
+        "testReleaseUnitTest": {
+          "tests": 76,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "modules": {
+            "composeApp": 76
+          }
+        }
+      },
+      "complete_json_available": true,
+      "child_count_mismatches": [],
+      "indexed_count_mismatches": [],
+      "xml_set_sha256": "3dee2795ad2ef7c7797e8852792fd40c397712268b3003bac57c2037659227e6"
+    },
+    {
+      "cycle": "repro-mafia-01",
+      "xml_files": 1,
+      "xml_json_equal": true,
+      "counts": {
+        "desktopTest": {
+          "tests": 2,
+          "failures": 1,
+          "errors": 0,
+          "skipped": 0,
+          "modules": {
+            "game-modes/mafia": 2
+          }
+        }
+      },
+      "complete_json_available": true,
+      "child_count_mismatches": [],
+      "indexed_count_mismatches": [],
+      "xml_set_sha256": "90a3e9949543b33f68c3884caa597277f3748f902b37c6775a9a5f04c9bc6af7"
+    },
+    {
+      "cycle": "repro-pending-01",
+      "xml_files": 3,
+      "xml_json_equal": true,
+      "counts": {
+        "desktopTest": {
+          "tests": 11,
+          "failures": 2,
+          "errors": 0,
+          "skipped": 0,
+          "modules": {
+            "game-modes/whodunit": 2,
+            "shared/design-system": 1,
+            "shared/transport-p2p": 8
+          }
+        }
+      },
+      "complete_json_available": true,
+      "child_count_mismatches": [],
+      "indexed_count_mismatches": [],
+      "xml_set_sha256": "5cbf873f45576bc905b7ac7c469f3550ddd660b396a21c27d9e4bca099b1c3cb"
+    },
+    {
+      "cycle": "repro-session-01",
+      "xml_files": 1,
+      "xml_json_equal": true,
+      "counts": {
+        "desktopTest": {
+          "tests": 1,
+          "failures": 1,
+          "errors": 0,
+          "skipped": 0,
+          "modules": {
+            "shared/session": 1
+          }
+        }
+      },
+      "complete_json_available": true,
+      "child_count_mismatches": [],
+      "indexed_count_mismatches": [],
+      "xml_set_sha256": "eab9266f30a36cbfd52a9119cb735cae2d8e036a698637f90a4b6f7605358a36"
+    },
+    {
+      "cycle": "repro-ui-03",
+      "xml_files": 1,
+      "xml_json_equal": true,
+      "counts": {
+        "desktopTest": {
+          "tests": 1,
+          "failures": 1,
+          "errors": 0,
+          "skipped": 0,
+          "modules": {
+            "composeApp": 1
+          }
+        }
+      },
+      "complete_json_available": true,
+      "child_count_mismatches": [],
+      "indexed_count_mismatches": [],
+      "xml_set_sha256": "69c2c9c33c919a738fb65a6101b725c6dbf3a2bc199bb0c2990a252e7e930d87"
+    },
+    {
+      "cycle": "repro-ui-transport-01",
+      "xml_files": 0,
+      "xml_json_equal": true,
+      "counts": {},
+      "complete_json_available": true,
+      "child_count_mismatches": [],
+      "indexed_count_mismatches": [],
+      "xml_set_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "cycle": "repro-ui-transport-02",
+      "xml_files": 1,
+      "xml_json_equal": true,
+      "counts": {
+        "desktopTest": {
+          "tests": 1,
+          "failures": 1,
+          "errors": 0,
+          "skipped": 0,
+          "modules": {
+            "shared/transport-p2p": 1
+          }
+        }
+      },
+      "complete_json_available": true,
+      "child_count_mismatches": [],
+      "indexed_count_mismatches": [],
+      "xml_set_sha256": "be4e1e0e102c5831dc98c5b77ad7e68ea9cabc9a3b4dd66424b6bb02a9612980"
+    },
+    {
+      "cycle": "storage-native-01",
+      "xml_files": 1,
+      "xml_json_equal": true,
+      "counts": {
+        "iosSimulatorArm64Test": {
+          "tests": 3,
+          "failures": 1,
+          "errors": 0,
+          "skipped": 0,
+          "modules": {
+            "composeApp": 3
+          }
+        }
+      },
+      "complete_json_available": true,
+      "child_count_mismatches": [],
+      "indexed_count_mismatches": [],
+      "xml_set_sha256": "bd203a1b877b47bc700726c5d901bf3bb191e2198653e5f11d3cdf9240666d3b"
+    }
+  ],
+  "nonexecuted_tasks": [
+    {
+      "path": ":composeApp:iosX64Test",
+      "outcome": "SKIPPED",
+      "log_line": 439,
+      "reason": "host architecture disabled by KGP",
+      "actual_log_line": "> Task :composeApp:iosX64Test SKIPPED",
+      "match": true
+    },
+    {
+      "path": ":game-modes:mafia:iosSimulatorArm64Test",
+      "outcome": "SKIPPED",
+      "log_line": 994,
+      "reason": "Mafia or engine has Desktop-only test source; compilation/link NO-SOURCE",
+      "actual_log_line": "> Task :game-modes:mafia:iosSimulatorArm64Test SKIPPED",
+      "match": true
+    },
+    {
+      "path": ":game-modes:mafia:iosX64Test",
+      "outcome": "SKIPPED",
+      "log_line": 1010,
+      "reason": "host architecture disabled by KGP",
+      "actual_log_line": "> Task :game-modes:mafia:iosX64Test SKIPPED",
+      "match": true
+    },
+    {
+      "path": ":game-modes:mafia:testDebugUnitTest",
+      "outcome": "NO-SOURCE",
+      "log_line": 1039,
+      "reason": "Mafia or engine has Desktop-only test source; compilation/link NO-SOURCE",
+      "actual_log_line": "> Task :game-modes:mafia:testDebugUnitTest NO-SOURCE",
+      "match": true
+    },
+    {
+      "path": ":game-modes:mafia:testReleaseUnitTest",
+      "outcome": "NO-SOURCE",
+      "log_line": 1063,
+      "reason": "Mafia or engine has Desktop-only test source; compilation/link NO-SOURCE",
+      "actual_log_line": "> Task :game-modes:mafia:testReleaseUnitTest NO-SOURCE",
+      "match": true
+    },
+    {
+      "path": ":game-modes:whodunit:iosX64Test",
+      "outcome": "SKIPPED",
+      "log_line": 1124,
+      "reason": "host architecture disabled by KGP",
+      "actual_log_line": "> Task :game-modes:whodunit:iosX64Test SKIPPED",
+      "match": true
+    },
+    {
+      "path": ":shared:content:iosX64Test",
+      "outcome": "SKIPPED",
+      "log_line": 1172,
+      "reason": "host architecture disabled by KGP",
+      "actual_log_line": "> Task :shared:content:iosX64Test SKIPPED",
+      "match": true
+    },
+    {
+      "path": ":shared:core:iosX64Test",
+      "outcome": "SKIPPED",
+      "log_line": 1208,
+      "reason": "host architecture disabled by KGP",
+      "actual_log_line": "> Task :shared:core:iosX64Test SKIPPED",
+      "match": true
+    },
+    {
+      "path": ":shared:design-system:iosX64Test",
+      "outcome": "SKIPPED",
+      "log_line": 1283,
+      "reason": "host architecture disabled by KGP",
+      "actual_log_line": "> Task :shared:design-system:iosX64Test SKIPPED",
+      "match": true
+    },
+    {
+      "path": ":shared:engine:iosSimulatorArm64Test",
+      "outcome": "SKIPPED",
+      "log_line": 1326,
+      "reason": "Mafia or engine has Desktop-only test source; compilation/link NO-SOURCE",
+      "actual_log_line": "> Task :shared:engine:iosSimulatorArm64Test SKIPPED",
+      "match": true
+    },
+    {
+      "path": ":shared:engine:iosX64Test",
+      "outcome": "SKIPPED",
+      "log_line": 1331,
+      "reason": "host architecture disabled by KGP",
+      "actual_log_line": "> Task :shared:engine:iosX64Test SKIPPED",
+      "match": true
+    },
+    {
+      "path": ":shared:engine:testDebugUnitTest",
+      "outcome": "NO-SOURCE",
+      "log_line": 1338,
+      "reason": "Mafia or engine has Desktop-only test source; compilation/link NO-SOURCE",
+      "actual_log_line": "> Task :shared:engine:testDebugUnitTest NO-SOURCE",
+      "match": true
+    },
+    {
+      "path": ":shared:engine:testReleaseUnitTest",
+      "outcome": "NO-SOURCE",
+      "log_line": 1345,
+      "reason": "Mafia or engine has Desktop-only test source; compilation/link NO-SOURCE",
+      "actual_log_line": "> Task :shared:engine:testReleaseUnitTest NO-SOURCE",
+      "match": true
+    },
+    {
+      "path": ":shared:engine-testing:iosX64Test",
+      "outcome": "SKIPPED",
+      "log_line": 1367,
+      "reason": "host architecture disabled by KGP",
+      "actual_log_line": "> Task :shared:engine-testing:iosX64Test SKIPPED",
+      "match": true
+    },
+    {
+      "path": ":shared:networking:iosX64Test",
+      "outcome": "SKIPPED",
+      "log_line": 1403,
+      "reason": "host architecture disabled by KGP",
+      "actual_log_line": "> Task :shared:networking:iosX64Test SKIPPED",
+      "match": true
+    },
+    {
+      "path": ":shared:networking-testing:iosX64Test",
+      "outcome": "SKIPPED",
+      "log_line": 1439,
+      "reason": "host architecture disabled by KGP",
+      "actual_log_line": "> Task :shared:networking-testing:iosX64Test SKIPPED",
+      "match": true
+    },
+    {
+      "path": ":shared:session:iosX64Test",
+      "outcome": "SKIPPED",
+      "log_line": 1475,
+      "reason": "host architecture disabled by KGP",
+      "actual_log_line": "> Task :shared:session:iosX64Test SKIPPED",
+      "match": true
+    },
+    {
+      "path": ":shared:storage:iosX64Test",
+      "outcome": "SKIPPED",
+      "log_line": 1511,
+      "reason": "host architecture disabled by KGP",
+      "actual_log_line": "> Task :shared:storage:iosX64Test SKIPPED",
+      "match": true
+    },
+    {
+      "path": ":shared:transport-p2p:iosX64Test",
+      "outcome": "SKIPPED",
+      "log_line": 1547,
+      "reason": "host architecture disabled by KGP",
+      "actual_log_line": "> Task :shared:transport-p2p:iosX64Test SKIPPED",
+      "match": true
+    }
+  ],
+  "compiled_transport_tests": {
+    "total_annotated_methods": 222,
+    "nonvoid_count": 10,
+    "disabled_count": 3,
+    "nonvoid_methods": [
+      {
+        "class": "com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest",
+        "method": "disconnect_during_acceptance_rolls_back_the_seat_without_a_ghost_member",
+        "return_type": "assertk.Assert<com.parlor.core.result.Result$Success<?>>",
+        "parameter_count": 0,
+        "modifiers": "public final",
+        "annotations": [
+          "org.junit.jupiter.api.Test"
+        ]
+      },
+      {
+        "class": "com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest",
+        "method": "host_send_propagates_coroutine_cancellation",
+        "return_type": "java.util.concurrent.CancellationException",
+        "parameter_count": 0,
+        "modifiers": "public final",
+        "annotations": [
+          "org.junit.jupiter.api.Test"
+        ]
+      },
+      {
+        "class": "com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest",
+        "method": "peer_send_propagates_coroutine_cancellation",
+        "return_type": "java.util.concurrent.CancellationException",
+        "parameter_count": 0,
+        "modifiers": "public final",
+        "annotations": [
+          "org.junit.jupiter.api.Test"
+        ]
+      },
+      {
+        "class": "com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest",
+        "method": "admission_pending_opens_a_separate_host_approval_window",
+        "return_type": "assertk.Assert<com.parlor.core.result.Result$Success<?>>",
+        "parameter_count": 0,
+        "modifiers": "public final",
+        "annotations": [
+          "org.junit.jupiter.api.Test"
+        ]
+      },
+      {
+        "class": "com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest",
+        "method": "cancellation_during_acceptance_propagates_after_rolling_back_the_seat",
+        "return_type": "assertk.Assert<com.parlor.core.result.Result$Success<?>>",
+        "parameter_count": 0,
+        "modifiers": "public final",
+        "annotations": [
+          "org.junit.jupiter.api.Test"
+        ]
+      },
+      {
+        "class": "com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest",
+        "method": "wrong_room_does_not_end_search_before_a_late_correct_candidate_appears",
+        "return_type": "assertk.Assert<com.parlor.core.result.Result$Success<?>>",
+        "parameter_count": 0,
+        "modifiers": "public final",
+        "annotations": [
+          "org.junit.jupiter.api.Test"
+        ]
+      },
+      {
+        "class": "com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest",
+        "method": "kit_factory_cancellation_is_never_mapped_to_transport_failure",
+        "return_type": "java.util.concurrent.CancellationException",
+        "parameter_count": 0,
+        "modifiers": "public final",
+        "annotations": [
+          "org.junit.jupiter.api.Test"
+        ]
+      },
+      {
+        "class": "com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest",
+        "method": "fatal_send_and_cleanup_failures_are_never_converted_to_normal_results",
+        "return_type": "java.lang.AssertionError",
+        "parameter_count": 0,
+        "modifiers": "public final",
+        "annotations": [
+          "org.junit.jupiter.api.Test"
+        ]
+      },
+      {
+        "class": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "method": "host_broadcast_reaches_every_peer",
+        "return_type": "assertk.Assert<com.parlor.networking.protocol.HostMessage$SessionEnded>",
+        "parameter_count": 0,
+        "modifiers": "public final",
+        "annotations": [
+          "org.junit.jupiter.api.Disabled",
+          "org.junit.jupiter.api.Test"
+        ]
+      },
+      {
+        "class": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "method": "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back",
+        "return_type": "assertk.Assert<com.parlor.networking.protocol.HostMessage$SessionEnded>",
+        "parameter_count": 0,
+        "modifiers": "public final",
+        "annotations": [
+          "org.junit.jupiter.api.Disabled",
+          "org.junit.jupiter.api.Test"
+        ]
+      }
+    ]
+  },
+  "lint_warning_counts": [
+    {
+      "severity": "Warning",
+      "id": "AndroidGradlePluginVersion",
+      "count": 4
+    },
+    {
+      "severity": "Warning",
+      "id": "GradleDependency",
+      "count": 3
+    },
+    {
+      "severity": "Warning",
+      "id": "NewerVersionAvailable",
+      "count": 24
+    },
+    {
+      "severity": "Warning",
+      "id": "OldTargetApi",
+      "count": 1
+    }
+  ],
+  "release_python_count_lines": [
+    {
+      "line": 1384,
+      "text": "Ran 130 tests in 0.914s"
+    }
+  ],
+  "administrative_corrections": [
+    {
+      "id": "verification-premature-preservation-pass",
+      "status": "ACCEPTED_PENDING_FINAL_RECEIPT",
+      "location": "initial assemble_verification.py:24",
+      "reason": "Initial generator emits unconditional PASS without reading the cited final-state.json. That receipt exists and records634 unchanged fingerprints, but a regenerated final-preservation/hygiene receipt and evidence-conditioned gate are required before campaign-final approval."
+    },
+    {
+      "id": "verification-release-artifact-footer",
+      "status": "ACCEPTED_PENDING_REGENERATION",
+      "location": "initial assemble_verification.py:121 / VERIFICATION.md:64",
+      "reason": "No release artifact generated contradicts actual unsigned AAB and Release framework links/hashes; use no signed/releasable candidate retained/approved instead."
+    }
+  ],
+  "mechanical_errors": [],
+  "limitations": [
+    "Review frozen at the archived initial16-primary-cycle ledger. New managed Android runtime work and future final preservation evidence need a supplement.",
+    "Source-only findings remain source-only, not an unexecuted test PASS. This administrative reconciliation is not new original-finding approval.",
+    "No Gradle, Xcode, app, emulator, simulator, test or cleanup process was launched by this reviewer. Parent alone owns the build lane.",
+    "First focused storage XML collection was incomplete; only retained11 cases may be counted.",
+    "An initial read-only metadata probe assumed focused-storage-01/test-receipts.json and exited1 for missing file; rerun correctly treated absence as recorded incomplete collection. No generated build outputs resulted.",
+    "Initial read-only Markdown comparator skipped two pipe-space rows instead of one header row; corrected comparator verifies all43 gate rows equal JSON. Comparator error was not a repository or dossier defect."
+  ],
+  "inspection_of_existing_final_state": {
+    "path": "audit-runs/2026-09-05-source-audit/evidence/final-state.json",
+    "sha256": "046d151197f4bdcbe5e8a8a03a43936a0c93c9c7b0f28209fcfb0765bb060322",
+    "recorded_at": "2026-09-05T12:20:41.240327+00:00",
+    "source_hashes_compared": 634,
+    "changed_hashes": [],
+    "refs_unchanged": true,
+    "stashes_unchanged": true,
+    "baseline_untracked_listing_unchanged": true,
+    "qualification": "Current receipt read completely; do not infer new active-cycle hygiene or byte-attestation of deliberately unfingerprinted exclusions."
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "at": "2026-09-07T12:25:55.281220+00:00",
+  "author": "/root/release_fix_review",
+  "status": "DRAFT ONLY \u2014 NOT APPLIED, COMPILED, TESTED OR RUN; independent review and root-coordinated verification required",
+  "baseline_head": "2250007173bbf9ca7c441f1c46802d84c1b478ba",
+  "baseline_tree": "b506da5b778a3220f81e07674dcd85d381c49cb6",
+  "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/drafts/ci-xml-output-hygiene-v2-draft.patch",
+  "sha256": "3a2bbb7c9d2570b2f23cb9f9028185f96c084f73ac64415ab03020a90226e5aa",
+  "supersedes": "ci-xml-output-hygiene-v1-draft.patch (preserved unchanged; did not gate cleanup on upload success)",
+  "changes": [
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "before_sha256": "965e47ddb4c47b19d8017c9494239d0a0309b26f465eb0f6b655bd90113a929c",
+      "proposed_sha256": "8f1abc5924bb644f2c57519d4a2467890495ef8567712b16d208363b0d004a93",
+      "proposed_lines": 607
+    },
+    {
+      "path": "scripts/ci/verification_hygiene.py",
+      "before_sha256": null,
+      "proposed_sha256": "c4343ca127e575be5fb2eb99bb59e6ec5802859192817afce1ece174d4e10dec",
+      "proposed_lines": 210
+    },
+    {
+      "path": "scripts/release/tests/test_ci_verification_hygiene.py",
+      "before_sha256": null,
+      "proposed_sha256": "041491247b0f92859caa1288b39b55edfc8b0b3ea1e290000d4a2ef0c629062c",
+      "proposed_lines": 231
+    }
+  ],
+  "implemented_scope": [
+    "All five verification jobs retain actual JUnit XML alongside original required reports/artifacts.",
+    "Pre-build fresh-checkout/source/output ownership journal; refuse historical unowned roots, source overlap, redirects, changed source/task, and overwritten receipts.",
+    "Always-run Gradle stop after eight build/test cycles, and again before exact final cleanup.",
+    "Primary upload outcome plus actual artifact ID/SHA256 required before deleting the last local evidence copy. Failed/cancelled/skipped/empty uploads preserve outputs and explicitly FAIL cleanup; no claim that hosted runner disposal is durable retention.",
+    "Final output cleanup restricted to claimed root/module/build-logic/Xcode-build/Python-cache directories; no global caches, source, or Store workflow edits.",
+    "Cleanup receipt is outside outputs and uploaded separately; leftover output list and strict failure status retained."
+  ],
+  "limitations": [
+    "No successful local or CI execution exists for these proposed changes; root must run actionlint, focused filesystem tests, existing release validators, and actual cross-platform CI.",
+    "Exact directory cleanup and Gradle stop are not evidence that Kotlin compiler, Xcode/native workers, managed-device emulators, or CoreSimulator services stopped. Separately verify/repair those resource scopes before claiming full process hygiene.",
+    "All intermediate outputs are explicitly retained as one dependent same-job verification batch until the final artifact upload; no automatic per-cycle subset deletion is attempted.",
+    "GitHub may terminate the runner before always() cleanup during hard cancellation/timeout. Retention failure remains a failure, not a fabricated successful cleanup or durable external artifact.",
+    "No self-hosted/shared-runner guarantee or adversarial executing-PR sandbox is claimed. Current workflow uses isolated hosted runners.",
+    "Upload artifact paths span workspace and RUNNER_TEMP; resulting least-common-root archive paths may differ from older artifacts and must be inventoried rather than assumed."
+  ],
+  "proposed_test_count": 17,
+  "research_reference": "../authoritative-ci-retention-hygiene-01.json",
+  "cleanup": "Draft/evidence generation only; no Gradle/Xcode/test process started, no generated build outputs created or deleted."
+}

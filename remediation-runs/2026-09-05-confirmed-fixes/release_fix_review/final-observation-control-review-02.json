@@ -1,0 +1,89 @@
+{
+  "reviewer": "/root/release_fix_review",
+  "recorded_at": "2026-09-06T01:17:07.292705+00:00",
+  "scope": "Full independent static review of recorder_v2 and its executed synthetic tests; no recorder main, build, test, simulator or application execution by reviewer.",
+  "conclusion": "MOST PRIOR REQUESTS ADDRESSED; TWO MAIN-PATH SAFETY/VERDICT EDGES REMAIN BEFORE APPROVAL",
+  "files": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/record_final_observation_v2.py",
+      "sha256": "823bce7b5ab9d1a529cba0e139c85e65915669de777981d2bc27614041b32c11",
+      "reviewed_line_ranges": [
+        [
+          1,
+          253
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/test_final_observation_v2.py",
+      "sha256": "7da7644a3d4fb696c38dff5fb7d9c827690523fe7e65e6eaa5df9b53daeeb93d",
+      "reviewed_line_ranges": [
+        [
+          1,
+          119
+        ]
+      ]
+    }
+  ],
+  "previous_control_review": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/final-observation-control-review-01.json",
+    "sha256": "e6c212f501934bfcfb91c2457e21b046f9026c44cec3128751181dc906fd931d"
+  },
+  "positives": [
+    "Actual modern/application-host cleanup receipts are evaluated independently of runtime success. Nonzero/missing stops, nonempty cleanup errors/outputs/owned workers/unknown holders, temporary/device/FIFO failure and missing finalization proofs fail.",
+    "Native child receipts are associated and validated; native device directories and owned apphost temporary root get existence-only observations.",
+    "Pinned original baseline; safe_path rejects traversal/out-of-bound paths and symlink ancestry. Final refs pass through safe_path. Additional receipt paths are deduplicated.",
+    "Exact-digest legacy exception preserves no-PID-ledger/ambiguous empty scan limitation and historical_cleanup_evidence_complete=false; original134linev1 unchanged.",
+    "Main returns nonzero/FAIL for evaluated preservation or cleanup failure rather than silently discarding failures."
+  ],
+  "open_requests": [
+    {
+      "prior_id": "OBS-R2",
+      "location": "record_final_observation_v2.py:177-191; run_gradle_cycle.py:99-108",
+      "description": "lane.identity() reads eligible source bytes before baseline safe_path checks. The trusted lane checks only leaf symlinks; a symbolic-link source parent can therefore be followed before the subsequent ancestry guard rejects it.",
+      "source_proof": "main180 calls lane.identity; lane107 checks path.is_file/not path.is_symlink then108read_bytes. main187ancestry validation is later. Current checked repository has no such symlink; no real private-data read is claimed.",
+      "request": "Safely validate eligible source/baseline inventory paths before invoking any hasher that can follow parent links; preserve private-file exclusions and source freeze. Add main-path synthetic test showing rejection before source read."
+    },
+    {
+      "prior_id": "OBS-R1",
+      "location": "record_final_observation_v2.py:204-217,230-233",
+      "description": "Live Gradle/Kotlin workers are observed but excluded from cleanup_ok. Stale successful receipts cannot by themselves classify a newly observed surviving worker as unrelated.",
+      "source_proof": "workers computed206-208; cleanup_ok216 references only outputs/scratch/cycle evaluations; workers only emitted231.",
+      "request": "No current scoped cleanup PASS when an observed worker is task-owned or ownership remains unresolved. Exclude an actually unrelated worker only with a recorded explicit classification/evidence; never stop it. Add synthetic final aggregation checks. No live survivor is asserted in this review."
+    }
+  ],
+  "regression_receipt": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-01/receipt.json",
+    "sha256": "d0e8ad7b8be4aab7c42c014c4cbf68778cd3807e2e2fbdf7d9fb102c6160a3f7"
+  },
+  "raw_log": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-01/gradle.log",
+    "sha256": "2cdd2b5a16d8ae345e90fe94bd2eadbc2271f3350a2350f0075e918bb1c99ce9"
+  },
+  "stop_log": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-01/stop.log",
+    "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+  },
+  "verification": {
+    "tests_actually_reported": 14,
+    "failed": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "stop_exit_code": 0,
+    "cleanup_errors": [],
+    "remaining_outputs": [],
+    "remaining_owned_workers": [],
+    "source_before": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+    "source_after": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+    "limits": "14pure-evaluator/safe-path tests; main aggregation and pre-hash ordering are not exercised. Receipt hashes the standard lane and application source, not task-owned recorder files; amended control rerun should explicitly capture control source hashes."
+  },
+  "apphost_schema_crosscheck": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/receipt.json",
+      "sha256": "33b7d8a4ee78dd34903aa4b3131fabc0df578b4148deafe30b818dff7885e89c"
+    },
+    "observation": "Actual receipt schema matches v2 evaluator, including two stops, temporary/device/FIFO and finalization stage fields. This is only receipt-schema review, not independent approval of the apphost runtime.",
+    "reporting_limit": "Raw runtime_evidence_status remains NOT_RUN even though actual XCTest was attempted and failed before complete matrix/probe validation. Preserve the raw field but explain attempted/incomplete runtime; no success or new application defect inferred."
+  },
+  "safety": "Only two additive reviewer evidence files written; no production/test/config/Git mutation, private material, process signals or build/app/runtime work."
+}

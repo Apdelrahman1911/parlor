@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "kind": "INDEPENDENT_PUBLIC_SOURCE_RESEARCH_NO_RUNTIME_CAUSAL_CLAIM",
+  "references": [
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/xcuiautomation/xcuielement/ishittable.json",
+      "accessed_at": "2026-09-06T15:20:18.194253+00:00",
+      "http_status": 200,
+      "sha256": "a425383b2660acbb1529b1653dc46b691fb266e1c33d2379b4396ffeb27fe6f1",
+      "matches_author_retained_response": true,
+      "abstract": "Determines if the system can compute a hit point for the element.",
+      "discussion": " returns  if the element exists and can be clicked, tapped, or pressed at its current location. It returns  if the element doesn\u2019t exist, is offscreen, or is covered by another element.  only returns  if the element is already visible and hittable onscreen. It returns  for an offscreen element in a scrollable view, even if the element can be scrolled into a hittable position by calling , , or another hit-point-related interaction method."
+    },
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/xcuiautomation/xcuielement/tap().json",
+      "accessed_at": "2026-09-06T15:20:19.430994+00:00",
+      "http_status": 200,
+      "sha256": "bc49772beb3e08c609840c26ab831bde35cfbce7d3aa8bae316cdfa24e74a88a",
+      "matches_author_retained_response": true,
+      "abstract": "Sends a tap event to a hittable point the system computes for the element.",
+      "discussion": "If the element exists within a scrollable view but is offscreen, the framework attempts to scroll the element onscreen before performing the tap."
+    },
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/xcuiautomation/xcuielement/coordinate(withnormalizedoffset:).json",
+      "accessed_at": "2026-09-06T15:20:20.854241+00:00",
+      "http_status": 200,
+      "sha256": "ad58fe0535e41aa088285b262277e1613298156b7094e54fb376bcbbca4926a2",
+      "matches_author_retained_response": true,
+      "abstract": "Creates and returns a new coordinate with a normalized offset.",
+      "discussion": "The coordinate\u2019s screen point is computed by adding normalizedOffset multiplied by the size of the element\u2019s frame to the origin of the element\u2019s frame."
+    },
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/xcuiautomation/xcuielementattributes/frame.json",
+      "accessed_at": "2026-09-06T15:20:22.100957+00:00",
+      "http_status": 200,
+      "sha256": "339a16886726159e7ada4605dfb859f5881b7163d5bfeb3f8ce55a559c8ac3ec",
+      "matches_author_retained_response": true,
+      "abstract": "The frame of the element in the screen\u2019s coordinate space.",
+      "discussion": ""
+    },
+    {
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/compose/foundation/foundation-uikitsimarm64/1.10.3/foundation-uikitsimarm64-1.10.3-sources.jar",
+      "accessed_at": "2026-09-06T15:20:24.834276+00:00",
+      "http_status": 200,
+      "archive_sha256": "1d7aef7e03573a5c66c1c0ae3ae395067fbf394dab9aa261715491024109f320",
+      "archive_matches_author": true,
+      "source_members": [
+        {
+          "entry": "commonMain/androidx/compose/foundation/gestures/DragGestureDetector.kt",
+          "sha256": "910077e1e222ba6e8b4ff8b27b1d4c1af95637a2593f70424c9250de8ee792a5",
+          "matches_retained_bytes": true
+        },
+        {
+          "entry": "commonMain/androidx/compose/foundation/gestures/Draggable.kt",
+          "sha256": "a5d7523f858995b5b6adac1ce573f5193d604771877a323e023a3f2bf206cb3d",
+          "matches_retained_bytes": true
+        },
+        {
+          "entry": "commonMain/androidx/compose/foundation/gestures/Scrollable.kt",
+          "sha256": "da0cfc4affa1eda8a5a76ee1fb6c17867df4fd6661ba9b1d0badfa27b8b26bcf",
+          "matches_retained_bytes": true
+        },
+        {
+          "entry": "commonMain/androidx/compose/foundation/gestures/TapGestureDetector.kt",
+          "sha256": "dcd27ce1ca9da17d7833fffea6cc94e844e082d52acfb0e4970c2f79ea4cbcff",
+          "matches_retained_bytes": true
+        }
+      ]
+    }
+  ],
+  "applicability": [
+    "XCUIAutomation API docs apply to currentXcode26.5 UI tests; current hittability/computed tap point is not application callback/route proof.",
+    "XCUIElement.frame is screen coordinate space; normalizedOffset maps element.frame.origin + frame.size*offset. Require same frame snapshot/revalidation and interior planned point for future single-tap fixture.",
+    "ExactCMP1.10.3 Scrollable408-410/903-905 uses scroll/overscroll isInProgress for immediate drag; Draggable781-831 consumes firstDown duringInitialpass if thatflagtrue. Source only, not proof flagwastrue during apphost04tap."
+  ],
+  "scope": "No private/source payload sent; only public reference URLs fetched. No builds/tests/simulators/workers; JAR read in memory only; no dependencycache changes."
+}

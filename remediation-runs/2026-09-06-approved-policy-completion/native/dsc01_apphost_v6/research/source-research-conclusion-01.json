@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "author": "/root/native_fix_review",
+  "created_at": "2026-09-06T13:00:20.242018+00:00",
+  "claims": [
+    {
+      "topic": "Actual Compose controller origin",
+      "evidence": "copied_sources.py inserts DSC01ObserveActualUIKitController(viewController) immediately after LocalUIViewController.current in the actual iosMain locale provider. DisposableEffect(controller) only; languageTag is not a key.",
+      "pinned_source": "CMP1.10.3 ComposeHostingViewController.uikit.kt supplies LocalUIViewController with this; retained in ../dsc01_apphost_02_diagnosis/research/.",
+      "scope": "Actual current Compose controller, not guessed factory return/type/child position."
+    },
+    {
+      "topic": "Kotlin/Native2.4.10 weak ObjC ownership",
+      "files": [
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/research/installed-kotlin-native-2.4.10-Weak.kt",
+          "sha256": "933a0a81d4877ef017528ca1f1befedb806c70251033fe97a148a5dbdd581257",
+          "lines": "1-49"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/research/installed-kotlin-native-2.4.10-WeakPrivate.kt",
+          "sha256": "b9d4db744e8ee64b16c2c21c07b2d8294dbecdb70d58ed92c3bbf1d3c444a98a",
+          "lines": "1-70"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/research/installed-kotlin-native-2.4.10-ObjectiveCImpl.kt",
+          "sha256": "ae021433232313a422c076490e4bd4c6d7ced117e3e407da2ab50d62b99a6102",
+          "lines": "217-230"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/research/kotlin-2.4.10-Memory.cpp",
+          "sha256": "ae6554e145b20a2766ee15a0287164c59f85a11b896dad7eda7f16178d38c761",
+          "lines": "439-448"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/research/kotlin-2.4.10-ObjCInteropUtilsClasses.mm",
+          "sha256": "2d9faf72e8470f26a10d19c152eed3aa84244ef5af0335d8b60732447d83c8d8",
+          "lines": "58-116"
+        }
+      ],
+      "conclusion": "Public WeakReference calls getWeakReferenceImpl; ObjC wrappers dispatch using GetAssociatedObject() to ObjCWeakReferenceImpl, storing the actual ObjC pointer via objc_storeWeak. Retrieval calls objc_loadWeakRetained then Kotlin_Interop_refFromObjC and balances objc_release. Runtime comment101 explicitly includes Kotlin subclasses of ObjC classes. The observer therefore does not weakly retain an ephemeral Kotlin wrapper. DisposableEffect also keeps its exact controller callback parameter until detach. Swift baseline identities compare actual bridged ObjC references and never rebase.",
+      "limitation": "Source-backed applicability, not V6 runtime or garbage-collection stress-test evidence. No raw pointer is emitted."
+    },
+    {
+      "topic": "XCTest orientation is not UI orientation proof",
+      "url": "https://developer.apple.com/documentation/xcuiautomation/xcuidevice/orientation",
+      "receipt": "native-observation-apis-02.json",
+      "conclusion": "Public API simulates device orientation; docs explicitly distinguish it from UI orientation. V6 separately reads UIWindowScene.interfaceOrientation plus actual window/child rectangles in every sample."
+    },
+    {
+      "topic": "Loaded views and safe areas",
+      "receipt": "native-observation-apis-01.json",
+      "conclusion": "UIViewController.viewIfLoaded avoids premature view loading. UIView.window is nil before attachment. safeAreaInsets can be zero when not visible/unattached; V6 compares same-window identities and actual UIWindow insets, rejecting matching-all-zero falsegreen on the explicitly owned notched iPhone geometry fixture. Unexpected source/runtime differences remain evidence, not a reason to silently loosen the oracle."
+    },
+    {
+      "topic": "Geometry conversion and UIKit child structure",
+      "receipt": "native-observation-apis-02.json",
+      "conclusion": "UIView.convert(CGRect,to:) converts the bounds rectangle to the specific actual window coordinate system; parent/child/fullphysical anchors follow standard containment. Read-only observations do not invoke view layout, semantic setters, lifecycle or session mutations."
+    }
+  ],
+  "research_failures_retained": [
+    "native-observation-apis-01.json contains two historical404s superseded by02",
+    "kotlin-native-weak-reference-source-01.json retains rawGithub DNS failures; subsequent officialGitHubAPI receipts use exact v2.4.10 tag",
+    "kotlin-native-weak-cpp-receipt-01.json retains wrong Weak.cpp source-directory404; subsequent02 uses actual mm/cpp path"
+  ],
+  "not_claimed": [
+    "No V6 Python or native execution by this author",
+    "No physical-device gestures/LAN proof",
+    "No verified private SwiftUI semantic setter attribution",
+    "No source or production configuration edits by this child"
+  ],
+  "cleanup": "No builds, Gradle/Xcode, simulators, apps, test runs or background workers started by author. Synchronous read/research/authoring processes ended. Only required evidence/control files created; no filesystem deletion or process termination performed."
+}

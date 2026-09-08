@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "at": "2026-09-06T21:44:27.813646+00:00",
+  "status": "CORRECTION \u2014 DRAFT ONLY, NO EXECUTION APPROVAL",
+  "supersedes": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-v10-draft-unit-review-01.json",
+    "sha256": "4997299e89e09bf6e2d7dc32e8e5fd4eeb7b2e59ca8e0a716a78684762f5b53b",
+    "reason": "Author edited draft controls between line reading and record creation. Record01 captured newer hashes/line counts, not the exact versions actually read; its file coverage entries are invalid. Preserve record01, replace its coverage only with these exact read versions."
+  },
+  "actually_read_files": [
+    {
+      "path": "native/dsc01_apphost_v10/v10_sources.py",
+      "sha256": "dd5b1bdb0ef2680b877a5ecc6c556c8a567f54a95af01fb0380dd0764abdd13b",
+      "read_ranges": [
+        [
+          1,
+          96
+        ]
+      ]
+    },
+    {
+      "path": "native/dsc01_apphost_v10/DSC01OSAppSettings.swift.in",
+      "sha256": "6e58174988b5978e59ec81193b78037c999d48108b2be33b82379b8ba8ba9909",
+      "read_ranges": [
+        [
+          1,
+          303
+        ]
+      ]
+    }
+  ],
+  "record01_design_observations_apply_only_to_these_earlier_drafts": true,
+  "newer_draft_control_review": "Pending complete reread; no newer-byte execution approval",
+  "runtime_impact": "None: no tests/builds/apps, no application changes. Metadata coverage correction only."
+}

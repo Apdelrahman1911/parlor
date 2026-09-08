@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "kind": "ONE_TEST_FILE_PRIVACY_SCOPE_CORRECTION_FREEZE",
+  "author": "/root/native_fix_review",
+  "at": "2026-09-08T07:04:05.145288+00:00",
+  "baseline_sha256": "d33817766cce84730b0569688910f123f57b17c2072c46409a12c24a7530d5fe",
+  "prior_freeze_sha256": "6e6d3348e0197498f2ad35e61250a3266ceb9ec8070efc6ad1cc03d9847823ef",
+  "changed_file": {
+    "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+    "before_sha256": "4ceb37fafe333114b4f10eac53f7093059ea99f8f04c74c361d17e37ab9d4094",
+    "sha256": "b58d9761b7c199f0ab7fd01c2c6614d2f49e0a71102fd54ff3f6783acfede7f0",
+    "lines": 380
+  },
+  "diff_sha256": "2c90605eb52a7010a3d01737d049b0fbebcccdf286e730b39b4288199f265570",
+  "independent_review": "PENDING_FACTORY_REVIEW",
+  "classification": "False-positive test assertion only; pre-existing target is directory/file metadata, not a game target",
+  "source_proof": {
+    "metadata_file": "L08StorageFunctionalProbe.kt.in",
+    "call_lines": [
+      514,
+      517
+    ],
+    "emitter_lines": [
+      558,
+      562
+    ],
+    "schema_file": "l08_functional_receipts.py",
+    "schema_lines": [
+      [
+        29,
+        43
+      ],
+      [
+        51,
+        63
+      ]
+    ],
+    "new_scope": "Exact whole continuation failure builder including all keys and values; eight injected key/value mutations added"
+  },
+  "count": {
+    "copy": 12,
+    "receipts": 16,
+    "focused_total": 28,
+    "foundation_composition_unchanged": 51
+  },
+  "execution": "NOT_EXECUTED",
+  "static_checks": [
+    "Python3.9 AST parse",
+    "All12 copy test IDs retained",
+    "Exact actual failure-builder bytes match frozen expected literal after outer whitespace strip",
+    "Other87 allowed files unchanged versus prior freeze",
+    "Prior freeze/independent approval/failed28 receipt unchanged"
+  ],
+  "cleanup": {
+    "processes_started": false,
+    "generated_build_outputs": false,
+    "required": false
+  }
+}

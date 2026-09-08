@@ -1,0 +1,132 @@
+About Information Property List Files
+Documentation Archive
+Developer
+Search
+Search Documentation Archive
+Information Property List Key Reference
+PDF
+Companion File
+Table of Contents
+Jump To…
+Download Sample Code
+NextPrevious
+About Information Property List Files
+An information property list file is a structured text file that contains essential configuration information for a bundled executable. The file itself is typically encoded using the Unicode UTF-8 encoding and the contents are structured using XML. The root XML node is a dictionary, whose contents are a set of keys and values describing different aspects of the bundle. The system uses these keys and values to obtain information about your app and how it is configured. As a result, all bundled executables (plug-ins, frameworks, and apps) are expected to have an information property list file.
+By convention, the name of an information property list file is Info.plist. This name of this file is case sensitive and must have an initial capital letter I. In iOS apps, this file resides in the top-level of the bundle directory. In macOS bundles, this file resides in the bundle’s Contents directory. Xcode typically creates this file for you automatically when you create a project of an appropriate type.
+Important: In the sections that follow, pay attention to the capitalization of files and directories that reside inside a bundle. The NSBundle class and Core Foundation bundle functions consider case when searching for resources inside a bundle directory. Case mismatches could prevent you from finding your resources at runtime.
+Creating and Editing an Information Property List File
+The simplest way to create an information property list file is to let Xcode create it for you. Each new bundle-based project that you create in Xcode comes with a file named <project>-Info.plist, where <project> is the name of the project. At build time, this file is used to generate the Info.plist file that is then included in the resulting bundle.
+To edit the contents of your information property list file, select the <project>-Info.plist file in your Xcode project to display the property list editor. Figure 1 shows the editor for the information property list file of a new Cocoa app project. The file created by Xcode comes preconfigured with keys that every information property list should have.
+Figure 1  Editing the information property list in Xcode
+To edit the value for a specify key, double-click the value in the Xcode property list editor to select it, then type a new value. Most values are specified as strings but Xcode also supports several other scalar types. You can also specify complex types such as an array or dictionary. The property list editor displays an appropriate interface for editing each type. To change the type of a given value, make sure the value is not selected and Control-click it to display its contextual menu. From the Value Type submenu, select the type you want to use for the value.
+Because information property lists are usually just text files, you can also edit them using any text editor that supports the UTF-8 file encoding. Because they are XML files, however, editing property list files manually is generally discouraged.
+Adding Keys to an Information Property List File
+Although the Info.plist file provided by Xcode contains the most critical keys required by the system, most apps should typically specify several additional keys. Many subsystems and system apps use the Info.plist file to gather information about your app. For example, when the user chooses File > Get Info for your app, the Finder displays information from many of these keys in the resulting information window.
+You add keys to your app’s Info.plist using the Xcode property list editor. For information about how to use this editor, see “Edit property lists.”
+Important: The property list editor in Xcode displays human-readable strings (instead of the actual key name) for many keys by default. To display the actual key names as they appear in the Info.plist file, Control-click any of the keys in the editor window and enable the Show Raw Keys/Values item in the contextual menu.
+For a list of the recommended keys you should include in a typical app, see Recommended Info.plist Keys.
+Localizing Property List Values
+The values for many keys in an information property list file are human-readable strings that are displayed to the user by the Finder or your own app. When you localize your app, you should be sure to localize the values for these strings in addition to the rest of your app’s content.
+Localized values are not stored in the Info.plist file itself. Instead, you store the values for a particular localization in a strings file with the name  InfoPlist.strings. You place this file in the same language-specific project directory that you use to store other resources for the same localization. The contents of the InfoPlist.strings file are the individual keys you want localized and the appropriately translated value. The routines that look up key values in the Info.plist file take the user’s language preferences into account and return the localized version of the key (from the appropriate InfoPlist.strings file) when one exists. If a localized version of a key does not exist, the routines return the value stored in the Info.plist file.
+For example, the TextEdit app has several keys that are displayed in the Finder and thus should be localized. Suppose your information property list file defines the following keys:
+<key>CFBundleDisplayName</key>
+<string>TextEdit</string>
+<key>NSHumanReadableCopyright</key>
+<string>Copyright ¬© 1995-2009, Apple Inc.,All Rights Reserved.
+</string>
+The French localization for TextEdit then includes the following strings in the InfoPlist.strings file of its Contents/Resources/French.lproj directory:
+CFBundleDisplayName = "TextEdit";
+NSHumanReadableCopyright = "Copyright © 1995-2009 Apple Inc.\nTous droits réservés.";
+For more information about the placement of InfoPlist.strings files in your bundle, see Bundle Programming Guide. For information about creating strings files, see Resource Programming Guide. For additional information about the localization process, see Internationalization and Localization Guide.
+Creating Platform- and Device-Specific Keys
+You can designate a key in an Info.plist file as applying to a specific platform, a specific device type, or both. To create a platform- or device-specific key variant, combine a root key name with one or two qualifiers, using the following pattern:
+key_root-<platform>~<device>
+In this pattern, the key_root portion represents the original name of the key, as you find it in this document. The <platform> and <device> portions are optional and restrict the key’s applicability to a specific platform or device type. Notice that if you employ a platform qualifier, connect it with a hyphen (-), and if you employ a device qualifier, connect it with a tilde (~).
+Use of a device qualifier is much more common than is use of a platform qualifier.
+For a device qualifier, you can use one of the following values:
+iphone The key applies to iPhone devices only
+ipod The key applies to iPod touch devices only
+ipad The key applies to iPad devices only
+For a platform qualifier, you can specify a value of iphoneos or macos depending on which of these two platforms you are targeting.
+When specifying a key variant, do so in addition to employing a corresponding key without any qualifiers, thereby ensuring you provide a reasonable default value. When the system searches for a key in your app’s Info.plist file, it chooses the key that is most specific to the current device and platform. If it does not find a qualified key, it looks for one without qualifiers. For example, to specify support for all device orientations on iPad, and three orientations for iPhone, the Xcode templates specify the corresponding keys in an app’s Info.plist file:
+<key>UISupportedInterfaceOrientations</key>
+<string>UIInterfaceOrientationPortrait</string>
+<string>UIInterfaceOrientationLandscapeLeft</string>
+<string>UIInterfaceOrientationLandscapeRight</string>
+<key>UISupportedInterfaceOrientations~ipad</key>
+<string>UIInterfaceOrientationPortrait</string>
+<string>UIInterfaceOrientationPortraitUpsideDown</string>
+<string>UIInterfaceOrientationLandscapeLeft</string>
+<string>UIInterfaceOrientationLandscapeRight</string>
+Custom Keys
+iOS and macOS ignore custom keys you include in an Info.plist file. If you want to include app-specific configuration information in your Info.plist file, you can do so freely as long as your key names do not conflict with the ones Apple uses. When defining custom key names, prefix them with a unique prefix, such as your app’s bundle ID or your company’s domain name, to prevent conflicts.
+Recommended Info.plist Keys
+Each of the Xcode application templates includes an Info.plist file, but you can also construct one from scratch. When creating an information property list file, there are several keys you should always include. These keys are almost always accessed by the system and providing them ensures that the system has the information it needs to work with your app effectively.
+Recommended Keys for iOS Apps
+It is recommended that an iOS app include the following keys in its information property list file. Most are set by Xcode automatically when you create your project.
+CFBundleDevelopmentRegion
+CFBundleDisplayName
+CFBundleExecutable
+CFBundleIconFiles
+CFBundleIdentifier
+CFBundleInfoDictionaryVersion
+CFBundlePackageType
+CFBundleVersion
+LSRequiresIPhoneOS
+UIMainStoryboardFile
+In addition to these keys, there are several that are commonly included:
+UIRequiredDeviceCapabilities (required)
+UIStatusBarStyle
+UIInterfaceOrientation
+UIRequiresPersistentWiFi
+For descriptions of these keys, see the other chapters of this book.
+Recommended Keys for Cocoa Apps
+It is recommended that a Cocoa app include the following keys in its information property list file. Most are set by Xcode automatically when you create your project but some may need to be added.
+CFBundleDevelopmentRegion
+CFBundleDisplayName
+CFBundleExecutable
+CFBundleIconFile
+CFBundleIdentifier
+CFBundleInfoDictionaryVersion
+CFBundleName
+CFBundlePackageType
+CFBundleShortVersionString
+CFBundleVersion
+NSHumanReadableCopyright
+These keys identify your app to the system and provide some basic information about the services it provides. Cocoa apps should also include the following keys to identify key resources in the bundle:
+NSMainNibFile
+NSPrincipalClass
+Note: If you are building a Cocoa app using an Xcode template, the NSMainNibFile and NSPrincipalClass keys are typically already set in the template project.
+For descriptions of these keys, see the other chapters of this book.
+Commonly Localized Keys
+In addition to the recommended keys, there are several keys that should be localized and placed in your language-specific InfoPlist.strings files:
+CFBundleDisplayName
+CFBundleName
+CFBundleShortVersionString
+NSHumanReadableCopyright
+For more information about localizing information property list keys, see Localizing Property List Values.
+NextPrevious
+Copyright © 2018 Apple Inc. All Rights Reserved.  Terms of Use   |  Privacy Policy  |  Updated: 2018-06-04
+Sending feedback…
+We’re sorry, an error has occurred.
+Please try submitting your feedback later.
+Thank you for providing feedback!
+Your input helps improve our developer documentation.
+How helpful is this document?
+*
+Very helpful
+Somewhat helpful
+Not helpful
+How can we improve this document?
+Fix typos or links
+Fix incorrect information
+Add or update code samples
+Add or update illustrations
+Add information about...
+*
+* Required information
+To submit a product bug or enhancement request, please visit the
+Bug Reporter
+page.
+Please read Apple's Unsolicited Idea Submission Policy
+before you send us your feedback.

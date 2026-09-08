@@ -1,0 +1,213 @@
+{
+  "schema_version": 1,
+  "at": "2026-09-08T05:49:56.639228+00:00",
+  "reviewer": "/root/release_fix_review",
+  "fix_author": "/root",
+  "classification": "FIXTURE_CORRECTION_SOUND_APPROVED_FOR_FRESH_ROOT_CONTROL_RERUN_NOT_EXECUTION_PASS",
+  "scope": "Independent review of dependency-consumer03 schema-negative fixture correction and updated hash pin; no execution/network/process/Git actions by reviewer.",
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/candidate_consumer.py",
+      "sha256": "eb6e2baaac22739b4652bc63c6b57a24374ee57fb81d4711b981b872e8ac1c7f",
+      "reviewed_lines": [
+        [
+          1,
+          416
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/test_candidate_consumer.py",
+      "sha256": "92eef687dbf037b310b00c9b678a5718d95cf5e8313094861c398554755a3535",
+      "reviewed_lines": [
+        [
+          1,
+          365
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/run_schema_consumer_controls_01.py",
+      "sha256": "78222a79d0d19cdce28077506ce1fd74481cc419fdf9dce9e9e5b6fd8840336f",
+      "reviewed_lines": [
+        [
+          1,
+          187
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/dependency_inventory.py",
+      "sha256": "fc0238d4d6ea0abd60d2985ed214af6516a239e439269978139fcc9519a20534",
+      "reviewed_lines": [
+        [
+          1,
+          271
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/SCHEMA_PROVENANCE.json",
+      "sha256": "a3b3cef1c2c056693519326e8e4ab26d19b01bdb4e8c90e89a908fe25224b631",
+      "reviewed_lines": [
+        [
+          1,
+          41
+        ]
+      ]
+    }
+  ],
+  "original_executed_bytes": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-consumer03-test-before-schema-fixture-fix-01.txt",
+      "sha256": "4d66d4ed83d7bf1be1137c45455c28957b335fc05ba3ae0952ee2b7c3743b9dd"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/schema-driver-before-schema-fixture-fix-01.txt",
+      "sha256": "6bd1834df20604c7332b8489750133549daaf101f03d7ea82b4d887f9e47772d"
+    }
+  ],
+  "diff_scope": {
+    "test_only_changed_method": [
+      "test_schema_integrity_and_actual_official_validation_remain_required"
+    ],
+    "other_15_test_methods_AST_unchanged": true,
+    "same_16_signatures": true,
+    "driver_only_changed_literal": "test_candidate_consumer.py SHA-256 pin",
+    "consumer_and_all_three_schema_bytes_unchanged": true
+  },
+  "reachable_proof": [
+    {
+      "source": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/schemas/bom-1.6.schema.json",
+      "lines": [
+        7,
+        29
+      ],
+      "claim": "Pinned official Draft07 root requires specVersion and constrains type:string only. examples:[1.6] is not an enum/const; no other specVersion occurrence or root conditional exists. Integer0 violates type; string0 does not violate this property."
+    },
+    {
+      "source": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/candidate_consumer.py",
+      "lines": [
+        183,
+        222
+      ],
+      "claim": "schema_validator loads fixed SHA-pinned local schemas and actual jsonschema4.25.1/referencing0.36.2; validate_schema delegates to iter_errors and raises SchemaCheckFailure on a real validation error. Test uses this unmocked path."
+    },
+    {
+      "source": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/test_candidate_consumer.py",
+      "lines": [
+        285,
+        301
+      ],
+      "claim": "Existing positive BOM must first validate with missing-format list empty. Integer0 then checks real schema rejection. String0 is separately written as candidate BOM and actual consume must raise exact SBOM differs guard. Original SPDX tamper/Bound input hash assertion is retained."
+    },
+    {
+      "source": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/candidate_consumer.py",
+      "lines": [
+        331,
+        351
+      ],
+      "claim": "Schema construction/hash verification precedes each BOM read/equality check. Thus the retained schema-tamper assertion cannot be masked by the previously mutated BOM: its expected Bound input hash failure happens first. String0 reaches the unchanged exact make_bom equality guard at349."
+    },
+    {
+      "source": "/Users/abdelrahman/Projects/parlor/scripts/verification/dependency_inventory.py",
+      "lines": [
+        179,
+        207
+      ],
+      "claim": "Source-bound make_bom always emits specVersion string1.6 at200, independently of input graph values. String0 is necessarily unequal and cannot be normalized into success."
+    }
+  ],
+  "counter_evidence": [
+    "Prior runtime did not demonstrate an application/consumer/schema defect; it demonstrated a false schema-level test expectation. Its overall FAIL remains preserved.",
+    "No vendor schema, consumer, renderer, optional checker behavior or assertion was weakened to green the test.",
+    "Positive actual-schema and missing-format-checker tests remain intact; new exact-BOM string-version rejection increases layer-specific coverage.",
+    "Failed old driver exits before controls_after hashing; this review does not invent an old final control snapshot. Saved original bytes match captured pre-run hashes; corrected rerun must supply actual after hashes."
+  ],
+  "schemas": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/schemas/bom-1.6.schema.json",
+      "sha256": "3e92dddbc30cf7f6a02b80f0942b1a4cfd4fb1c26f1dfc4310afa9d613cafb93",
+      "original": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-inventory-preparation-01/bom-1.6.schema.json",
+      "source_url": "https://raw.githubusercontent.com/CycloneDX/specification/1.6/schema/bom-1.6.schema.json",
+      "original_accessed_at": "2026-09-07T13:42:49.561512+00:00",
+      "read_method": "Complete-byte hash/equality and JSON parse; relevant BOM specVersion lines1-95 read, not a claim of fullschema rereview."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/schemas/spdx.schema.json",
+      "sha256": "baa9d3bd1ed57b6751b0887edead6b5063ff53ff7429cf85d476c6c94af0166e",
+      "original": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-sbom-schema-02/spdx.schema.json",
+      "source_url": "https://raw.githubusercontent.com/CycloneDX/specification/1.6/schema/spdx.schema.json",
+      "original_accessed_at": "2026-09-07T14:45:47.006484+00:00",
+      "read_method": "Complete-byte hash/equality and JSON parse; relevant BOM specVersion lines1-95 read, not a claim of fullschema rereview."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/schemas/jsf-0.82.schema.json",
+      "sha256": "8bae002c25e723db7ee1f26afde680ae1a2b1a8f6b4b4b0fd65dc3becb090aae",
+      "original": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-sbom-schema-02/jsf-0.82.schema.json",
+      "source_url": "https://raw.githubusercontent.com/CycloneDX/specification/1.6/schema/jsf-0.82.schema.json",
+      "original_accessed_at": "2026-09-07T14:45:48.001612+00:00",
+      "read_method": "Complete-byte hash/equality and JSON parse; relevant BOM specVersion lines1-95 read, not a claim of fullschema rereview."
+    }
+  ],
+  "original_run": {
+    "receipt": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-consumer-controls-03/receipt.json",
+      "sha256": "18c25e73cb009e63c3428647a3303a6f9e9ec66c4adf63a1f086def70bc68772"
+    },
+    "control_receipt": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-consumer-controls-03/schema-consumer-controls.json",
+      "sha256": "76472e03953e47f144b8ae3879ad78258c8dd6877b8e16d3c8f1776ba1d27f9f"
+    },
+    "log": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-consumer-controls-03/gradle.log",
+      "sha256": "0392960eae9573a84a2ba89e06a8b2ec295f177d2a577db77db1883be2f3e062"
+    },
+    "status": "FAIL_PRESERVED",
+    "tests": 16,
+    "successes": 15,
+    "failures": 1,
+    "errors": 0,
+    "skips": 0,
+    "discovered_AST_log_ids_agree": true,
+    "versions": {
+      "jsonschema": "4.25.1",
+      "referencing": "0.36.2",
+      "rfc3987-syntax": "1.1.0",
+      "lark": "1.2.2"
+    },
+    "source_commit": "8b9e3b0cdfdab82e7cff3ad8135d0eae9a0b8ca3",
+    "source_tree": "c1e92b5e00ab64a293c4d7f9c9b5e2b85887be88",
+    "source_manifest_sha256": "c4d3387a95ff1a4462071147afe92411f5a08ee8b10f78852a59494c8d3e4420",
+    "source_before_after_equal": true,
+    "runner_before_after_equal": true
+  },
+  "cleanup": {
+    "old_cycle_cleanup": "PASS:stop0,empty remaining workers/outputs/errors,optional parser cleanup true,exact monitored paths absent",
+    "lstat_absent_paths": [
+      "/Users/abdelrahman/Projects/parlor/shared/core/build",
+      "/Users/abdelrahman/Projects/parlor/shared/networking/build",
+      "/Users/abdelrahman/Projects/parlor/shared/content/build",
+      "/Users/abdelrahman/Projects/parlor/shared/storage/build",
+      "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/build",
+      "/Users/abdelrahman/Projects/parlor/shared/networking-testing/build",
+      "/Users/abdelrahman/Projects/parlor/shared/engine/build",
+      "/Users/abdelrahman/Projects/parlor/shared/design-system/build",
+      "/Users/abdelrahman/Projects/parlor/shared/engine-testing/build",
+      "/Users/abdelrahman/Projects/parlor/shared/session/build",
+      "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build",
+      "/Users/abdelrahman/Projects/parlor/game-modes/mafia/build",
+      "/Users/abdelrahman/Projects/parlor/build",
+      "/Users/abdelrahman/Projects/parlor/composeApp/build",
+      "/Users/abdelrahman/Projects/parlor/build-logic/build",
+      "/Users/abdelrahman/Projects/parlor/build-logic/convention/build",
+      "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-consumer-controls-03/scratch",
+      "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-consumer-controls-03/scratch/pycache"
+    ],
+    "process_limit": "No reviewer process probe; worker completion is supported by actual outer-lane receipt, not a new OS snapshot.",
+    "reviewer_owned_outputs_or_workers": 0,
+    "retained": "This additive review only."
+  },
+  "recommendation": "Rerun exact current driver 78222a79d0d19cdce28077506ce1fd74481cc419fdf9dce9e9e5b6fd8840336f and test 92eef687dbf037b310b00c9b678a5718d95cf5e8313094861c398554755a3535 through root shared outer wrapper in a new cycle. Require all16actual tests,0failure/error/skip,control after-hash match,and cleanup PASS. No candidate export/schema/Store readiness pass inferred.",
+  "corrected_test_execution": "NOT RUN BY THIS REVIEWER; no new execution claim."
+}

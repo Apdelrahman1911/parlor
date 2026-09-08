@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "researcher": "/root/native_fix_review",
+  "scope": "Public Settings routing and computed-hittable XCUIElement tap semantics only",
+  "sources": [
+    {
+      "url": "https://support.apple.com/en-us/121430",
+      "accessed_at": "2026-09-06T21:16:24.171281+00:00",
+      "http_status": 200,
+      "response_sha256": "844e45665dd96629b53421d97f9747a58705b0a1e6fb8a6f7df77f87b0b426d2",
+      "retained_claims": [
+        "Go to Settings, then tap Apps.",
+        "If you want to change that choice later, open Settings, tap Apps, and then tap Safari."
+      ],
+      "applicability": "Supports public Settings > Apps > chosen app routing, not guaranteed Parlor accessibility selectors or per-app Language availability.",
+      "independent_corroboration": "../../reviews/independent-v10-public-apps-routing-research-01.json"
+    },
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/xcuiautomation/xcuielement/tap().json",
+      "accessed_at": "2026-09-06T21:16:31.305748+00:00",
+      "http_status": 200,
+      "response_sha256": "bc49772beb3e08c609840c26ab831bde35cfbce7d3aa8bae316cdfa24e74a88a",
+      "retained_claims": [
+        "Sends a tap event to a hittable point the system computes for the element."
+      ],
+      "applicability": "A declared button or an attempted tap alone does not establish a usable hit target. The copy-only helper requires actual uniqueness, finite in-viewport geometry, enabled/hittable observations, then the original durable successor."
+    }
+  ],
+  "related_root_research": [
+    "../../research/os-settings-routing-07.json",
+    "../../research/xcuiautomation-hittable-07.json"
+  ],
+  "source_names": [
+    "iosApp/iosApp/en.lproj/InfoPlist.strings:1 = Parlor",
+    "iosApp/iosApp/ar.lproj/InfoPlist.strings:1 = بارلور"
+  ],
+  "limitations": [
+    "Only bounded public-document claims and response digests were retained; full downloaded payloads were not retained.",
+    "These document reads establish no actual OS pane, selector availability, tap delivery, or per-app language change.",
+    "No application source, private values, credentials, or player data were sent to public services."
+  ]
+}

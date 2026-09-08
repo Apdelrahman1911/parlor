@@ -1,0 +1,200 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "author": "/root",
+  "reviewed_at": "2026-09-07T15:07:55.416666+00:00",
+  "decision": "APPROVED_SCOPED_STALE_CONTRACT_CORRECTION_WITH_EXECUTED_FOCUSED_EVIDENCE",
+  "blocking_findings": [],
+  "baseline": {
+    "commit": "849234edb91eef98d9ef1a85d966a6b0c09aaab8",
+    "tree": "cd28d9c6193979186392478fe10c48568ddbb600",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "M docs/review/INDEPENDENT_REVIEW_INVENTORY.csv\n M scripts/release/tests/test_workflow_contract.py\n M scripts/release/workflow_contract.py",
+    "diff_sha256": "2abe95d0bf861668ca82f99004efa4f8abc9f09f310f2d78c84690ed3cd5800b",
+    "source_manifest_sha256": "06a5fa982580949857b8df07e0f08a830a709c6f9e30a778488d5a0695d25379"
+  },
+  "diff": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/workflow-owned-simulator-contract-01.patch",
+    "sha256": "34ef613229da83c4789daf8234bc9d76c8650d9082627939c5c349a5c4070bb4",
+    "entire_two_file_diff_read": true,
+    "matches_current_binary_git_diff": true
+  },
+  "source": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/workflow_contract.py",
+      "sha256": "90e4b07ac5a932b1153a82c50066c19d0c70d7027be81b75397ccf1fa9dcf87c",
+      "receipt_before_and_after_match": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_workflow_contract.py",
+      "sha256": "f6881e7e0bc5449655a23a88855e2ef8ef854ad11c2342b54e5286a5b68b3e6c",
+      "receipt_before_and_after_match": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/.github/workflows/production-verification.yml",
+      "sha256": "916207fd2d0a42d17c088dbf7899afe06d3ae070e1f8b1d6749661785a88d8fd",
+      "receipt_before_and_after_match": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/ci/apple_verification_hygiene.py",
+      "sha256": "d9c554781750d3cbbf2a4adce3b040edb83d0de5fec4c04eac700c526fca1c3c",
+      "receipt_before_and_after_match": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/ci/owned_ci_simulator.py",
+      "sha256": "717c8c02dc06e4eac175c5dde5c7f9bdd6ebbd5e7028cc94c6ba4f84b44388af",
+      "receipt_before_and_after_match": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/ci/verification_hygiene.py",
+      "sha256": "9eab427aeb3d810c033a3827aa44f7201cbb261345a2e6667a8d085df2fbd603",
+      "receipt_before_and_after_match": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_apple_ci_hygiene.py",
+      "sha256": "28ad6d083da0088087b2196ff1c102e19944e190d9d4484facd511b1d4063be1",
+      "receipt_before_and_after_match": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_ci_verification_hygiene.py",
+      "sha256": "3fc6f1d4a15152bcca6d86d77bcbc782b3936c6c47336a3ff7b3067d3790e4c8",
+      "receipt_before_and_after_match": true
+    }
+  ],
+  "source_review": [
+    {
+      "path": "scripts/release/workflow_contract.py",
+      "line_ranges": [
+        [
+          1,
+          716
+        ]
+      ],
+      "method": "Complete current contract read; every changed line and all retained publication/toolchain/identity branches reread."
+    },
+    {
+      "path": "scripts/release/tests/test_workflow_contract.py",
+      "line_ranges": [
+        [
+          1,
+          485
+        ]
+      ],
+      "method": "Complete current tests read; three added methods traced through 15 concrete mutation/ordering cases to the production validator."
+    },
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "line_ranges": [
+        [
+          435,
+          650
+        ]
+      ],
+      "method": "Apple workflow lifecycle, effective identities, simulator launch, finalizers and output bindings; workflow bytes unchanged by this correction."
+    },
+    {
+      "path": "scripts/ci/apple_verification_hygiene.py",
+      "line_ranges": [
+        [
+          1,
+          278
+        ]
+      ],
+      "method": "Caller/callee proof: configuration, creation, lifetime/tracking ownership, immediate Gradle stop, quiesce/device/quiesce order, explicit skipped vs executed outcomes."
+    },
+    {
+      "path": "scripts/ci/owned_ci_simulator.py",
+      "line_ranges": [
+        [
+          1,
+          213
+        ]
+      ],
+      "method": "Journal-first fresh profile, old-UUID exclusion, interrupted-create adoption, fail-closed clone handling, exact owned UUID shutdown/delete."
+    },
+    {
+      "path": "scripts/ci/verification_hygiene.py",
+      "line_ranges": [
+        [
+          140,
+          276
+        ]
+      ],
+      "method": "Outcome/source/claim and successful artifact-upload binding before generated-output cleanup; earlier complete helper review remains separate."
+    }
+  ],
+  "root_cause": {
+    "classification": "CONFIRMED_TOOLING_CONTRACT_DRIFT_CORRECTED",
+    "original_receipt": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-controls-combined-01/receipt.json",
+    "original_receipt_sha256": "aaa11ff694231c36213648a0cd55f2a4533a80621cc53bf83388cb254439b7e6",
+    "original_result": "248 Python tests; 1 failure and 1 error, both from removed xcrun simctl list devices available --json token. Original FAIL remains unchanged.",
+    "proof": "Actual workflow now obtains a fresh UUID from scripts.ci.apple_verification_hygiene create-simulator apple-ui; old contract required direct selection of an existing profile. The correction replaces that obsolete expectation with exact named-step preparation, owned creation, nonparallel launch, fresh xcresult, owned DerivedData, correctly bound always-run finalizer, and immediate ordering."
+  },
+  "counter_evidence": [
+    "Original build-vs-test check remains. It still rejects replacing XCTest with an xcodebuild build.",
+    "Both original error-producing tests now actually execute and pass; assertions were not removed or weakened.",
+    "Named-step extraction is for the explicitly reviewed static workflow shape, not a general YAML security parser. Unique required markers and immediate-finalizer ordering are validated.",
+    "Preparation runs before effective identity xcodebuild calls and the launch. If the run skips/fails/cancels after a successful claim, the always-run same-cycle finalizer retains real outcome and first stops Gradle.",
+    "Fresh simulator helper copies only a public type/runtime, not profile contents; it rejects preexisting UUIDs/names and refuses arbitrary clone deletion. Existing helper regressions cover failed/interrupted creation, survivor devices and unquiesced workers.",
+    "Release identity collision safeguards, job disablement, secret restrictions, Action pins, exact Xcode26.3/17C529 policy and no-build promotions remain byte-for-byte unchanged in this two-file patch.",
+    "Game/session/protocol/resources are untouched. No Store credentials, native app runtime or physical device claim arises from Python fixture execution."
+  ],
+  "execution": {
+    "executor": "/root",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "scripts.release.tests.test_workflow_contract",
+      "scripts.release.tests.test_apple_ci_hygiene",
+      "scripts.release.tests.test_ci_verification_hygiene",
+      "-v"
+    ],
+    "started_at": "2026-09-07T15:02:01.070651+00:00",
+    "finished_at": "2026-09-07T15:02:07.670775+00:00",
+    "status": "PASS",
+    "exit_code": 0,
+    "receipt_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/workflow-owned-simulator-contract-01/receipt.json",
+    "receipt_sha256": "b772372b53e6467b88a3b8954d88b999e8dc3d35710f8f3ee2ebec7d9f978006",
+    "log_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/workflow-owned-simulator-contract-01/gradle.log",
+    "log_sha256": "74d83c2fe5b69ef23b42987417f26ad6771509414b5ddc7d24ee161c81e63624",
+    "tests": 99,
+    "workflow_tests": 40,
+    "apple_ci_tests": 37,
+    "generic_ci_tests": 22,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "source_AST_count": 99,
+    "raw_unique_success_descriptors": 99,
+    "source_ids_equal_raw_executed_ids": true,
+    "current_all_control_hashes_match_receipt": true
+  },
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-07T15:02:08.208520+00:00",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "source_changed_during_cycle": false,
+    "runner_changed_during_cycle": false
+  },
+  "remaining": [
+    "Rerun complete validate_release_system.sh / productionCheck at frozen final source; this99-test focused run is not the full release suite.",
+    "Run the actual qualified macOS/Xcode CI job to observe current helper/XPC/runtime behavior and cleanup, not just synthetic ownership controls.",
+    "Final exact-candidate cross-platform aggregates, runtime and external Store/device gates remain separate."
+  ],
+  "reviewer_actions": {
+    "source_edits": false,
+    "builds_or_tests_started": false,
+    "native_backend_or_simulator_initialized": false,
+    "processes_signaled": false,
+    "artifact_cleanup": false,
+    "git_writes": false,
+    "outputs": "Only this compact independent review report; no reviewer build/worker cleanup required."
+  }
+}

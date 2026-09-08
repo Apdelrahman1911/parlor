@@ -1,0 +1,168 @@
+{
+  "id": "M-READINESS-COVER",
+  "status": "CONFIRMED DEFECT — source-level proof; fix pending root",
+  "severity": "Medium",
+  "created_utc": "2026-09-07T12:38:33.413590+00:00",
+  "reviewer": "/root/native_fix_review",
+  "finder": "/root/native_fix_review",
+  "independent_validator": "/root",
+  "repository": "/Users/abdelrahman/Projects/parlor",
+  "commit": "2250007173bbf9ca7c441f1c46802d84c1b478ba",
+  "tree": "b506da5b778a3220f81e07674dcd85d381c49cb6",
+  "source_files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/components/MafiaCover.kt",
+      "sha256": "a8bf4211f86f855507edb8fed0cde28f2c9d24f2273c77e5e7c2c7aeae2ab6bb",
+      "reviewed_line_ranges": [
+        [
+          1,
+          183
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/EyebrowLabel.kt",
+      "sha256": "eff56d62676d935fbe541f3e0df8d8ed637b2d427c949d6cfcc5ca9dd8b84494",
+      "reviewed_line_ranges": [
+        [
+          1,
+          23
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/theme/ParlorAccent.kt",
+      "sha256": "dc8145f4594dc0b10feb636de11b3e871f48d00081ff3c627f6da2b21f8b7428",
+      "reviewed_line_ranges": [
+        [
+          1,
+          74
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/tokens/ParlorColors.kt",
+      "sha256": "99c60bb3b07cd6295c51adf7d9cf684bf5890d401395d323e1d7a4f11c6bb5e8",
+      "reviewed_line_ranges": [
+        [
+          1,
+          160
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/tokens/ParlorTypography.kt",
+      "sha256": "eb442c5c7a41e34a4cf8e1c31466ef1a3e07e6582c3259d9a14c7942ee990f15",
+      "reviewed_line_ranges": [
+        [
+          38,
+          80
+        ],
+        [
+          138,
+          159
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/game/MafiaGameShellBinding.kt",
+      "sha256": "3bc7af78980e52208974c28d21bbff0d2714a6d55cbc0e64bb958a28823ea99f",
+      "reviewed_line_ranges": [
+        [
+          39,
+          133
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+      "sha256": "1371eb747579362548f3962a520c2c3f3c2f6225ef551bad93e3e690e08a1fe6",
+      "reviewed_line_ranges": [
+        [
+          1,
+          251
+        ],
+        [
+          317,
+          359
+        ],
+        [
+          680,
+          751
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/handoff/MafiaHandoffScreens.kt",
+      "sha256": "b070ec2822169b0aee33ab01361c626c8a2e55b0d98189b1eb42b482306e1de9",
+      "reviewed_line_ranges": [
+        [
+          1,
+          165
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/composeResources/values/strings.xml",
+      "sha256": "8f46afd35f71ad31e3d5b72cac1587e21dfc9e9a903b362e69eb79c6b33b551f",
+      "reviewed_line_ranges": [
+        [
+          16,
+          16
+        ],
+        [
+          22,
+          22
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml",
+      "sha256": "a9416283c7bf130d9ca98b4ff0e08ae420bad4b935f476ed7166178c42c3bdcc",
+      "reviewed_line_ranges": [
+        [
+          16,
+          16
+        ],
+        [
+          22,
+          22
+        ]
+      ]
+    }
+  ],
+  "description": "Mafia local named handoff instruction uses ordinary light Crimson eyebrow text on a hard black privacy cover.",
+  "reachability": [
+    "MafiaGameShellBinding.Content lines64–80 applies Crimson accent to shipping local game UI.",
+    "MafiaPassAndPlayPhaseRouter role-view flow lines187–194 initializes Handoff for current eligible player.",
+    "MafiaRoleRevealHandoffScreen lines61–70 invokes MafiaCandlelitCover.",
+    "MafiaCover lines55–58 sets opaque coverScreen black. Lines80–83 use default EyebrowLabel.",
+    "EyebrowLabel lines13,16–21 chooses accentEmber explicitly; labelSmall lines151–157 is normal 11sp semibold.",
+    "LightCrimsonAccent primary B42F31 from ParlorAccent68–72 overlays accentEmber via withAccent44–53."
+  ],
+  "expected": "Meaningful normal-size cover text remains readable at at least 4.5:1 in both light and dark themes, using cover-appropriate tokens.",
+  "actual_contrast_against_black": {
+    "B42F31": 3.391615952384759,
+    "EF625E": 6.578847895375559,
+    "B7B5B0": 10.249923175314311
+  },
+  "impact": "Light-theme EN/AR handoff instruction is low contrast, making intended recipient less readable. Other redundant ribbon/confirmation labels remain visible; not total loss of navigation and not a host-secret leak.",
+  "reproduction": "Select Light theme, enter pass-and-play Mafia with valid seats, start role reveal and observe the named cover before tapping confirmation. Applicable to Android/iOS shipping common composable; Desktop renders same Compose code but is not physical-device proof.",
+  "counter_evidence": [
+    "Dark Crimson EF625E passes at 6.5788:1.",
+    "Glyph is decorative and has separate contrast criterion; does not excuse 11sp normal textual handoff label.",
+    "Remaining body/ribbon/confirmation have existing readable tokens; ordinary surface eyebrows should remain ordinary accent.",
+    "No game action, private role value, authority, setting, save, or protocol format participates in this defect."
+  ],
+  "independent_validation": "Root independently reopened source and confirmed reachable light foreground B42F31 on black ratio3.3916; approved minimal game-owned Text replacement with coverScreenTextSecondary while preserving uppercase labelSmall presentation, ordinary palette untouched.",
+  "recommendation": "Change only this cover-specific text color; retain same resource, uppercase behavior, style, text alignment and confirmation path. Add actual composed EN/AR light/dark text-style contrast regression, plus ordinary eyebrow counter-case.",
+  "research": {
+    "url": "https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html",
+    "accessed_utc": "2026-09-07T12:38:33.413521+00:00",
+    "http_status": 200,
+    "contains_4_5_threshold": true,
+    "applicability": "Normal 11sp labelSmall, not large-scale text; requires at least 4.5:1. Decorative glyph exception is unrelated to this meaningful textual handoff instruction."
+  },
+  "execution_limits": "Read-only source/proof calculation only; no app build/test launched by reviewer. Root to own regression execution; no runtime success claimed here.",
+  "cleanup": "Reviewer created only this compact report; no worker or generated output to clean."
+}

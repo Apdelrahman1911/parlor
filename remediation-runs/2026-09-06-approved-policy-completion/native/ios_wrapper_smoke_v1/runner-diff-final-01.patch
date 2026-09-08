@@ -1,0 +1,354 @@
+--- remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/run_dsc01_apphost_cycle.py
++++ remediation-runs/2026-09-06-approved-policy-completion/native/ios_wrapper_smoke_v1/run_ios_wrapper_smoke_cycle.py
+@@ -1,10 +1,10 @@
+ #!/usr/bin/env python3
+-"""Source-bound DS-C01 temporary-copy execution; root's sole build lane.
+-
+-All production/build inputs are copied from a later explicitly frozen manifest.
+-Only reviewed copy transformations add direct observation/synthetic invocation.
+-No source, dependency graph, navigation, reducer or live session is replaced.
+-Root executes only after independent control review. Simulator != physical LAN.
++"""Source-identical application/test wrapper smoke; root's sole build lane.
++
++All application and test bytes come unchanged from an explicitly frozen manifest.
++Only the copied Xcode Gradle phase changes to preserve immediate isolated stops.
++No observers, synthetic language invocation, private data reads or new UI tests.
++Root executes only after independent review. This smoke is not the DS-C01 matrix.
+ """
+ import datetime
+ import difflib
+@@ -34,13 +34,11 @@
+ from run_gradle_cycle import ROOT, OUT, identity, owned_outputs
+ from run_android_managed_cycle import Ownership, snapshot_processes, lsof_pids, digest, write_json
+ from secondary_fifo import SecondaryFifoLedger
+-from copied_sources import (create_source_copy, instrument_kotlin, inspect_copied_manifest,
+-                            inspect_copied_inputs_after_build, MODIFIED_KOTLIN, ADDITIONS)
+-from probe_validation import verify_probe
++from copied_sources import create_source_copy, inspect_copied_inputs_after_build
+ 
+ FIXTURE = HERE
+ APP_ID = 'com.parlor.app.debug'
+-EXPECTED_TEST = 'IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSInvestigation()'
++EXPECTED_TEST = 'IOSAppLaunchUITests/testColdLaunchRendersComposeHomeWithoutUnexpectedAlert()'
+ EXPECTED_TESTS = {EXPECTED_TEST} | {'ComposeContainerViewControllerTests/' + name + '()' for name in (
+     'testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView',
+     'testChildUsesFullBoundsAcrossSizesAndOpposingSemanticDirections',
+@@ -55,13 +53,11 @@
+ 
+ def control_files():
+     return [Path(__file__).resolve(), RUN / 'run_gradle_cycle.py',
+-            ROOT / 'audit-runs/2026-09-05-source-audit/run_android_managed_cycle.py'] + [
+-        HERE / name for name in ('secondary_fifo.py', 'test_secondary_fifo.py', 'test_harness_contract.py',
+-        'DSC01Probe.swift.in', 'IOSAppLaunchUITests.swift.in',
+-        'copied-kotlin-phase.sh.in', 'source-bindings.json', 'copied_sources.py', 'bind_source.py',
+-        'DSC01ComposeObservation.kt.in', 'DSC01InvocationBridge.kt.in', 'DSC01UIKitObservation.kt.in',
+-        'DSC01NativeObservation.swift.in', 'probe_validation.py',
+-        'test_copy_observation_contract.py')]
++            ROOT / 'audit-runs/2026-09-05-source-audit/run_android_managed_cycle.py',
++            HERE.parent / 'dsc01_apphost_v6/run_dsc01_apphost_cycle.py'] + [
++        HERE / name for name in ('secondary_fifo.py', 'test_secondary_fifo.py',
++        'copied-kotlin-phase.sh.in', 'source-bindings.json', 'copied_sources.py',
++        'bind_source.py', 'test_smoke_contract.py')]
+ 
+ 
+ def control_manifest():
+@@ -115,6 +111,28 @@
+                 handler(sig, None)
+             elif handler != signal.SIG_IGN:
+                 raise KeyboardInterrupt('deferred signal ' + str(sig))
++
++
++def inspect_smoke_manifest(copy_root, bindings):
++    """Exactly one build-phase edit; every application/test input stays identical."""
++    if any(path.is_symlink() for path in copy_root.rglob('*')):
++        raise RuntimeError('No symbolic links are permitted in the source-only build copy')
++    phase_project = 'iosApp/iosApp.xcodeproj/project.pbxproj'
++    result, changed = [], set()
++    entries = bindings['copy_only']
++    if len(entries) != len({entry['path'] for entry in entries}):
++        raise RuntimeError('Duplicate source binding path')
++    for entry in entries:
++        current = digest(copy_root / entry['path'])
++        if current != entry['sha256']:
++            changed.add(entry['path'])
++        result.append(dict(path=entry['path'], original_sha256=entry['sha256'], copied_sha256=current))
++    if changed != {phase_project}:
++        raise RuntimeError('Smoke permits only the reviewed copied Gradle phase edit')
++    actual = {str(path.relative_to(copy_root)) for path in copy_root.rglob('*') if path.is_file()}
++    if actual != {entry['path'] for entry in result}:
++        raise RuntimeError('Unregistered source additions/removals in the smoke copy')
++    return result
+ 
+ 
+ def verify_xctest(summary, tests, uuid):
+@@ -140,80 +158,9 @@
+     visit(tests.get('testNodes', []))
+     if (len(cases) != 5 or {case.get('nodeIdentifier') for case in cases} != EXPECTED_TESTS or
+             any(case.get('result') != 'Passed' for case in cases)):
+-        raise RuntimeError('Every exact production-container XCTest and actual app-host matrix must pass')
++        raise RuntimeError('Every exact production-container XCTest and original cold-launch test must pass')
+     return dict(method=EXPECTED_TEST, methods=sorted(EXPECTED_TESTS), result='Passed', total=5,
+                 skipped=0, failures=0, device_uuid=uuid)
+-
+-
+-def verify_legacy_settings_probe(report):
+-    """Independent schema/event proof, in addition to the real XCTest assertions."""
+-    if (set(report) != {'schemaVersion', 'runToken', 'completed', 'observations'} or
+-            report['schemaVersion'] != 1 or report['completed'] is not True or
+-            not re.fullmatch(r'[A-Fa-f0-9]{8}(?:-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12}', report['runToken'])):
+-        raise RuntimeError('No strictly bounded complete DS-C01 report')
+-    events = report['observations']
+-    if not isinstance(events, list) or not 12 <= len(events) <= 256:
+-        raise RuntimeError('Unexpected DS-C01 event count')
+-    starts, completed = [], []
+-    preferences_keys = {'setting', 'appLanguages', 'hasAppOverride', 'ownerPresent',
+-                        'ownerInstalled', 'ownerPreviousPresent', 'ownerPrevious', 'preferredLanguage'}
+-    for index, event in enumerate(events):
+-        if (set(event) != {'ordinal', 'phase', 'fixture', 'boot', 'preferences', 'nativeDirection', 'controllerCreations'} or
+-                event['ordinal'] != index + 1 or event['phase'] not in {'before_main', 'sample', 'complete'} or
+-                event['fixture'] not in {'fresh', 'continue', 'previous-ar'} or
+-                not re.fullmatch(r'[A-Fa-f0-9]{8}(?:-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12}', event['boot'])):
+-            raise RuntimeError('Unexpected DS-C01 observation shape')
+-        p = event['preferences']
+-        if (set(p) != preferences_keys or p['setting'] not in {'system', 'en', 'ar'} or
+-                p['preferredLanguage'] not in {'en', 'ar'} or p['ownerInstalled'] not in {'none', 'en', 'ar'} or
+-                p['appLanguages'] not in ([], ['en'], ['ar'], ['ar-EG', 'en']) or
+-                p['ownerPrevious'] not in ([], ['en'], ['ar'], ['ar-EG', 'en']) or
+-                any(type(p[key]) is not bool for key in ('hasAppOverride', 'ownerPresent', 'ownerPreviousPresent')) or
+-                p['hasAppOverride'] != bool(p['appLanguages']) or
+-                p['ownerPreviousPresent'] != bool(p['ownerPrevious'])):
+-            raise RuntimeError('Unexpected or inconsistent synthetic preference observation')
+-        if event['phase'] == 'before_main':
+-            if event['controllerCreations'] != 0 or event['nativeDirection'] != 'unavailable':
+-                raise RuntimeError('Startup observer did not precede original MainViewController')
+-            starts.append(event)
+-        else:
+-            if (not starts or event['boot'] != starts[-1]['boot'] or event['controllerCreations'] != 1 or
+-                    event['nativeDirection'] not in {'force_ltr', 'force_rtl'}):
+-                raise RuntimeError('Observation not from one retained original UIKit root in its process')
+-            if event['phase'] == 'complete': completed.append(event)
+-    if (len(starts) != 4 or len({start['boot'] for start in starts}) != 4 or
+-            [start['fixture'] for start in starts] != ['fresh', 'continue', 'previous-ar', 'continue'] or
+-            len(completed) != 1 or completed[0]['boot'] != starts[-1]['boot']):
+-        raise RuntimeError('Expected fresh/AR restart/previous-AR seed/EN restart process matrix did not execute')
+-
+-    def owned(value, language, previous):
+-        return (value['setting'] == language and value['ownerPresent'] and value['ownerInstalled'] == language and
+-                value['appLanguages'] == [language] and value['ownerPrevious'] == previous)
+-
+-    def system(value, previous, language):
+-        return (value['setting'] == 'system' and not value['ownerPresent'] and value['ownerInstalled'] == 'none' and
+-                value['appLanguages'] == previous and value['preferredLanguage'] == language)
+-
+-    fallback = starts[0]['preferences']['preferredLanguage']
+-    if (not system(starts[0]['preferences'], [], fallback) or
+-            not owned(starts[1]['preferences'], 'ar', []) or
+-            not system(starts[2]['preferences'], ['ar-EG', 'en'], 'ar') or
+-            not owned(starts[3]['preferences'], 'en', ['ar-EG', 'en'])):
+-        raise RuntimeError('Required source-original before-App restart ownership preconditions missing')
+-    checks = [(0, lambda p: owned(p, 'ar', []), 'force_rtl'),
+-              (1, lambda p: system(p, [], fallback), 'force_rtl' if fallback == 'ar' else 'force_ltr'),
+-              (2, lambda p: owned(p, 'en', ['ar-EG', 'en']), 'force_ltr'),
+-              (3, lambda p: system(p, ['ar-EG', 'en'], 'ar'), 'force_rtl')]
+-    for boot_index, predicate, direction in checks:
+-        if not any(e['boot'] == starts[boot_index]['boot'] and e['phase'] == 'sample' and
+-                   predicate(e['preferences']) and e['nativeDirection'] == direction for e in events):
+-            raise RuntimeError('Required post-UI preference/native-direction observation missing')
+-    if not system(events[-1]['preferences'], ['ar-EG', 'en'], 'ar'):
+-        raise RuntimeError('Final System preference is not restored')
+-    return dict(status='PASS', actual_process_boots=4, explicit_selection_restart_cycles=2,
+-                synthetic_prior_preference_boots=1, original_controller_creations_per_boot=1,
+-                direct_compose_direction_measurement=False, active_session_retention_test=False,
+-                os_settings_application_executed=False, physical_device_evidence=False)
+ 
+ 
+ class AppHostOwnership(Ownership):
+@@ -257,8 +204,8 @@
+ 
+ 
+ def main():
+-    if len(sys.argv) != 3 or not re.fullmatch(r'dsc01-apphost-[0-9]{2}', sys.argv[1]):
+-        raise SystemExit('Usage: run_dsc01_apphost_cycle.py dsc01-apphost-NN INDEPENDENTLY_REVIEWED_CONTROL_SHA256')
++    if len(sys.argv) != 3 or not re.fullmatch(r'ios-wrapper-smoke-[0-9]{2}', sys.argv[1]):
++        raise SystemExit('Usage: run_ios_wrapper_smoke_cycle.py ios-wrapper-smoke-NN INDEPENDENTLY_REVIEWED_CONTROL_SHA256')
+     NAME = sys.argv[1]
+     approved = sys.argv[2]
+     if not re.fullmatch('[a-f0-9]{64}', approved) or approved != control_hash():
+@@ -268,9 +215,9 @@
+         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+         dest.mkdir(parents=True, exist_ok=False)
+         receipt = dict(cycle=NAME, started_at=now(), status='RUNNING',
+-                       execution_kind='manifest-owned-copy-unsigned-ios-dsc01-observation-invocation-matrix', commands=[],
++                       execution_kind='manifest-owned-copy-unsigned-ios-source-identical-wrapper-smoke', commands=[],
+                        runtime_evidence_status='NOT_RUN', cleanup_status='BLOCKED',
+-                       scope='Four actual production-container UIKit tests; actual Settings/restart; direct Compose and actual LocalUIViewController direction; stable outer/child/window identities and full-bounds safe-area geometry in EN/AR portrait/landscape; local Whodunit/Mafia controller/flow/value continuity under synthetic real-store language setters and actual background/foreground; actual OS per-app language investigation. No physical LAN, full-game, signed-release, Store or leak-free claim.', approved_control_sha256=approved)
++                       scope='One unchanged cold-launch/home-brand/no-alert/foreground UI test plus four unchanged production-container UIKit tests. No Kotlin/Swift application or test instrumentation; copied Gradle stop phase only. Not language ownership, active-session retention, Settings, physical LAN, full-game, signed-release or Store proof.', approved_control_sha256=approved)
+         temp, owner, env, uuid = None, None, None, None
+         # This iteration compiles only inside temp/copy. Original-repository
+         # outputs are never task-owned and must never be deleted by this run.
+@@ -461,7 +408,7 @@
+             if receipt['source_before'] != bindings['source_identity']:
+                 raise RuntimeError('Dirty/untracked source differs from independently reviewed fixture binding')
+             if bindings['repository'] != str(ROOT) or bindings['schema_version'] != 3:
+-                raise RuntimeError('Unexpected DS-C01 source binding')
++                raise RuntimeError('Unexpected source-identical smoke source binding')
+             for entry in bindings['copy_only']:
+                 p = ROOT / entry['path']
+                 if p.is_symlink() or p.resolve() != p.absolute() or digest(p) != entry['sha256']:
+@@ -470,32 +417,9 @@
+                        control_sha256=approved, files=control_manifest()))
+             manifest = bindings
+             create_source_copy(ROOT, temp / 'copy', manifest)
+-            instrument_kotlin(temp / 'copy')
+             save()
+-            # Actual graph/wrapper/resources remain unchanged in the copy.
+-            # Only exact reviewed Kotlin observation seams plus Swift harness.
+-            content = temp / 'copy/iosApp/iosApp/ContentView.swift'
+-            original = content.read_text()
+-            needle = '        .ignoresSafeArea(.container, edges: .all)'
+-            if original.count(needle) != 1:
+-                raise RuntimeError('Unexpected original Swift safe-area structure')
+-            original = original.replace(needle, needle + '\n        .overlay(alignment: .top) { DSC01Overlay().padding(.top, 72) }')
+-            needle = '        ComposeContainerViewController(contentController: MainViewControllerKt.MainViewController())'
+-            if original.count(needle) != 1:
+-                raise RuntimeError('Unexpected explicitly source-bound production container factory')
+-            original = original.replace(needle,
+-                '        let controller = ComposeContainerViewController(contentController: MainViewControllerKt.MainViewController())\n'
+-                '        DSC01Probe.shared.attach(controller)\n        return controller')
+-            content.write_text(original + '\n' + (FIXTURE / 'DSC01NativeObservation.swift.in').read_text() +
+-                               '\n' + (FIXTURE / 'DSC01Probe.swift.in').read_text())
+-            entry = temp / 'copy/iosApp/iosApp/iOSApp.swift'
+-            original = entry.read_text()
+-            needle = 'struct iOSApp: App {'
+-            if original.count(needle) != 1:
+-                raise RuntimeError('Unexpected original Swift App entry')
+-            entry.write_text(original.replace(needle, needle + '\n    init() { DSC01Probe.shared.prepare() }'))
+-            ui_test = temp / 'copy/iosApp/iosAppUITests/IOSAppLaunchUITests.swift'
+-            ui_test.write_text((FIXTURE / 'IOSAppLaunchUITests.swift.in').read_text())
++            # Keep every Kotlin/Swift/test/resource byte unchanged. Only the
++            # copied build phase gains the already-reviewed immediate Gradle stop.
+             project = temp / 'copy/iosApp/iosApp.xcodeproj/project.pbxproj'
+             pbx = project.read_text()
+             old_search = '$(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)'
+@@ -516,16 +440,12 @@
+                 raise RuntimeError('Wrong Xcode phase target')
+             pbx = pbx[:candidate.start()] + 'shellScript = ' + json.dumps(phase) + ';' + pbx[candidate.end():]
+             project.write_text(pbx)
+-            changed = ['iosApp/iosApp/iOSApp.swift', 'iosApp/iosApp/ContentView.swift', 'iosApp/iosAppUITests/IOSAppLaunchUITests.swift', 'iosApp/iosApp.xcodeproj/project.pbxproj']
+-            changes = changed + list(MODIFIED_KOTLIN)
++            changes = ['iosApp/iosApp.xcodeproj/project.pbxproj']
+             diff = ''.join(''.join(difflib.unified_diff((ROOT / path).read_text().splitlines(True),
+                 (temp / 'copy' / path).read_text().splitlines(True),
+                 fromfile='original/' + path, tofile='audit-copy/' + path)) for path in changes)
+-            for addition in ADDITIONS:
+-                diff += ''.join(difflib.unified_diff([], (temp / 'copy' / addition).read_text().splitlines(True),
+-                              fromfile='/dev/null', tofile='audit-copy/' + addition))
+             (dest / 'copied-source.diff').write_text(diff)
+-            copied_source_manifest = inspect_copied_manifest(temp / 'copy', manifest, changed)
++            copied_source_manifest = inspect_smoke_manifest(temp / 'copy', manifest)
+             write_json(dest / 'copied-source-manifest.json', copied_source_manifest)
+             receipt['copied_source_diff_sha256'] = digest(dest / 'copied-source.diff')
+             receipt['copied_source_manifest_sha256'] = digest(dest / 'copied-source-manifest.json')
+@@ -555,7 +475,9 @@
+                     '-disable-concurrent-destination-testing', '-jobs', '1', '-test-timeouts-enabled', 'YES',
+                     '-default-test-execution-time-allowance', '720', '-maximum-test-execution-time-allowance', '900',
+                     'CODE_SIGNING_ALLOWED=NO', 'CODE_SIGNING_REQUIRED=NO', 'CODE_SIGN_IDENTITY=', 'DEVELOPMENT_TEAM=',
+-                    'ONLY_ACTIVE_ARCH=YES', 'COMPILER_INDEX_STORE_ENABLE=NO', 'test'], 'xcodebuild.log', 2100)
++                    'ONLY_ACTIVE_ARCH=YES', 'COMPILER_INDEX_STORE_ENABLE=NO',
++                    *['-only-testing:iosAppUITests/' + method[:-2] for method in sorted(EXPECTED_TESTS)],
++                    'test'], 'xcodebuild.log', 2100)
+                 receipt['xcodebuild_exit_code'] = xcode
+             finally:
+                 stop_gradle('stop-xcode-immediate')
+@@ -565,29 +487,16 @@
+                     receipt['xcresult_extraction_exit_codes'][view] = command(
+                         ['xcrun', 'xcresulttool', 'get', 'test-results', view, '--path', results],
+                         'xcresult-' + view + '.json')
+-                # No screenshot/debug-description export: this settings-only matrix
+-                # retains structured XCTest + bounded preference observations only.
+-            # Preserve all available, bounded results before validating any one
+-            # outcome. A failed XCTest must not discard an already-written probe
+-            # result when mandatory simulator cleanup runs.
+-            if command(['xcrun', 'simctl', 'get_app_container', uuid, APP_ID, 'data'], 'owned-container.log') == 0:
+-                container = Path((dest / 'owned-container.log').read_text().strip()).resolve()
+-                owned_device = Path.home() / 'Library/Developer/CoreSimulator/Devices' / uuid
+-                container.relative_to(owned_device.resolve())
+-                for scenario in ('settings', 'whodunit', 'mafia', 'os'):
+-                    result = container / ('tmp/parlor-dsc01-' + scenario + '-result.json')
+-                    if result.is_symlink() or result.resolve().parent != (container / 'tmp').resolve():
+-                        raise RuntimeError('Unexpected synthetic result path; refuse to read')
+-                    if result.is_file():
+-                        if result.stat().st_size > 262144:
+-                            raise RuntimeError('Oversized synthetic result; refuse to copy')
+-                        shutil.copyfile(result, dest / ('probe-' + scenario + '-result.json'))
++                # No screenshot/debug-description or application-data export:
++                # retain only structured XCTest and artifact/source identities.
+             app = temp / 'DerivedData/Build/Products/Debug-iphonesimulator/Parlor.app'
+             if app.is_dir():
+                 info = plistlib.loads((app / 'Info.plist').read_bytes())
+                 receipt['app_identity'] = {k: info.get(k) for k in ('CFBundleIdentifier', 'CFBundleVersion', 'CFBundleShortVersionString', 'MinimumOSVersion')}
+                 receipt['artifacts'] = [dict(path=str(p.relative_to(app)), bytes=p.stat().st_size, sha256=digest(p))
+                     for p in [app / 'Parlor', app / 'Frameworks/ComposeApp.framework/ComposeApp'] if p.is_file()]
++            if receipt.get('app_identity', {}).get('CFBundleIdentifier') != APP_ID or len(receipt.get('artifacts', [])) != 2:
++                raise RuntimeError('No exact Debug application/framework artifact identity captured')
+             if not results.exists() or receipt.get('xcresult_extraction_exit_codes') != {'summary': 0, 'tests': 0}:
+                 raise RuntimeError('No complete actual XCTest result extraction')
+             receipt['xctest'] = verify_xctest(
+@@ -597,23 +506,14 @@
+             if not embedded_stop.is_file() or embedded_stop.read_text() != 'build_exit=0\nstop_exit=0\n':
+                 raise RuntimeError('No successful immediate stop receipt from copied nested Gradle phase')
+             receipt['embedded_gradle_stop_status'] = 'PASS'
+-            reports = {}
+-            for scenario in ('settings', 'whodunit', 'mafia', 'os'):
+-                path = dest / ('probe-' + scenario + '-result.json')
+-                if not path.is_file():
+-                    raise RuntimeError('Required executed scenario has no durable probe evidence: ' + scenario)
+-                reports[scenario] = json.loads(path.read_text())
+-            receipt['dsc01_matrix'] = verify_probe(reports, verify_legacy_settings_probe)
+-            receipt['probe_harness_status'] = 'observation_complete'
+-            receipt['os_settings_gate'] = receipt['dsc01_matrix']['os_settings_gate']
++            receipt['smoke_qualification'] = 'Uninstrumented application and unchanged original tests; copied build phase only'
+             if owner.secondary_errors:
+                 raise RuntimeError('Apple secondary-path attestation incomplete; inspect exact ledger, never claim cleanup success')
+             receipt['runtime_evidence_status'] = 'PASS' if (
+                 xcode == 0 and receipt.get('xctest', {}).get('result') == 'Passed' and
+-                receipt.get('embedded_gradle_stop_status') == 'PASS' and
+-                receipt.get('probe_harness_status') == 'observation_complete') else 'FAIL'
++                receipt.get('embedded_gradle_stop_status') == 'PASS') else 'FAIL'
+             if receipt['runtime_evidence_status'] != 'PASS':
+-                raise RuntimeError('No complete DS-C01 matrix; inspect retained evidence, not an inferred application failure')
++                raise RuntimeError('No complete source-identical wrapper smoke; inspect retained evidence, not an inferred application failure')
+         except BaseException as error:
+             # Failed validation after an attempted runtime is not an unexecuted
+             # check. This records an evidence failure, not an application defect.
+@@ -644,9 +544,9 @@
+                     if isinstance(recovered, dict):
+                         uuid = recovered['udid']; receipt['owned_uuid'] = uuid
+                 if uuid is not None:
+-                    # XCTest itself defers app.terminate(). Shutting down the
+-                    # exact owned simulator also stops apps after test failure;
+-                    # no misleading nonzero 'nothing to terminate' success.
++                    # The unchanged launch test does not add teardown code.
++                    # Shutting down this exact owned simulator stops its app even
++                    # after failure; no unowned app/process is affected.
+                     stage('shutdown-owned-simulator-and-app', shutdown_owned_device)
+                     stage('delete-owned-simulator', delete_owned_device)
+                 if owner is not None:
+@@ -704,8 +604,6 @@
+                 receipt['source_unchanged'] = receipt.get('source_after') is not None and receipt.get('source_after') == receipt.get('source_before')
+                 receipt['cleanup_status'] = 'PASS' if safe and not errors and not receipt['remaining_outputs'] and receipt['temporary_directory_removed'] else 'FAIL'
+                 receipt['status'] = 'PASS' if receipt.get('runtime_evidence_status') == 'PASS' and not receipt.get('error') and receipt['cleanup_status'] == 'PASS' and receipt['source_unchanged'] and receipt['controls_unchanged'] and receipt['copied_sources_unchanged'] else 'FAIL'
+-                if receipt['status'] == 'PASS' and receipt.get('os_settings_gate', {}).get('status') != 'PASS':
+-                    receipt['status'] = 'PARTIALLY_VERIFIED'
+                 receipt['unexpected_original_outputs_preserved'] = [str(p.relative_to(ROOT)) for p in original_outputs
+                                                                     if p.exists() or p.is_symlink()]
+                 if receipt['unexpected_original_outputs_preserved']:
+@@ -721,7 +619,7 @@
+                     signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGINT, signal.SIGTERM})
+                     for s, h in prior_handlers.items(): signal.signal(s, h)
+                     signal.pthread_sigmask(signal.SIG_SETMASK, prior_mask)
+-        return 0 if receipt['status'] == 'PASS' else 2 if receipt['status'] == 'PARTIALLY_VERIFIED' else 1
++        return 0 if receipt['status'] == 'PASS' else 1
+ 
+ 
+ if __name__ == '__main__':

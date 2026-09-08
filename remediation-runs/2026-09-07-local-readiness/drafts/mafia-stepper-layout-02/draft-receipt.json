@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "author": "/root/factory_review",
+  "created_at": "2026-09-07T08:48:10.946338+00:00",
+  "status": "DRAFT_ONLY_UNEXECUTED - replaces test witness mechanics, does not retroactively change original RED01",
+  "production_source_sha256": "91fdd1317981899fbd2af1ede5461895d6e20571a81d286b2bd5bd9efb8fe9be",
+  "draft": {
+    "path": "remediation-runs/2026-09-07-local-readiness/drafts/mafia-stepper-layout-02/MafiaSetupStepperLayoutTest.kt",
+    "sha256": "306d7e76f6275440b9ceab2150b8e4cbcd8d6e8e47a7fe9ad3fcea45fad9d302",
+    "lines": 133,
+    "methods_expected": 4,
+    "executed": 0
+  },
+  "original_draft_sha256": "f2232aa6b12e8e91f3639e1c0adcec4441a5a558724356a73db35cb3c9ab17e9",
+  "original_red01": {
+    "receipt_sha256": "864107dfd7473dd0078030a9bcba64fc4d01df4922e72c85554a38d5d7bca12e",
+    "xml_sha256": "08c4a534eef1a969e7d7e9857cf1df670a325d1227c99ef99d132bbe1386d22a",
+    "tests": "4",
+    "failures": "4",
+    "errors": "0",
+    "skipped": "0",
+    "dispositions": [
+      {
+        "case": "arabic_compact_stepper_controls_keep_their_full_size()[desktop]",
+        "classification": "PARTIAL LAYOUT PROOF - width loss observed; clippedheight assertions not reliable dimensionproof",
+        "reason": "MaxRevoteswidth7/0 or roleincrements15/29/30px indicatewidthloss at observedviewport;35pxheight alsoincludesviewportclipping. RED02 neededunclippedmeasurements and full-controlscroll."
+      },
+      {
+        "case": "english_compact_stepper_controls_keep_their_full_size()[desktop]",
+        "classification": "TEST SELECTOR FAILURE - not English layout proof",
+        "reason": "Two matchingMafiaText nodes (title androlelabel) preventgeometryexecution."
+      },
+      {
+        "case": "arabic_compact_large_text_stepper_controls_keep_their_full_size()[desktop]",
+        "classification": "PARTIAL LAYOUT PROOF - width loss observed; clippedheight assertions not reliable dimensionproof",
+        "reason": "MaxRevoteswidth7/0 or roleincrements15/29/30px indicatewidthloss at observedviewport;35pxheight alsoincludesviewportclipping. RED02 neededunclippedmeasurements and full-controlscroll."
+      },
+      {
+        "case": "english_compact_large_text_stepper_controls_keep_their_full_size()[desktop]",
+        "classification": "TEST SELECTOR FAILURE - not English layout proof",
+        "reason": "Two matchingMafiaText nodes (title androlelabel) preventgeometryexecution."
+      }
+    ],
+    "cleanup": {
+      "stop_exit_code": 0,
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "cleanup_errors": []
+    }
+  },
+  "api_research": {
+    "sources_receipt": "remediation-runs/2026-09-07-local-readiness/drafts/mafia-stepper-layout-02/references/fetch-receipt.json",
+    "sha256": "a90fb6a3f906058ba08a34f676e457ed34fbd42f7e75de73ba5ca4b82fde9477",
+    "exact_version": "org.jetbrains.compose.ui/ui-desktop and ui-test-desktop1.10.3, MavenCentral source archives;SHA1checked; no retainedarchives",
+    "claims": [
+      {
+        "file": "ui-desktop-SemanticsNode.kt",
+        "lines": [
+          124,
+          159
+        ],
+        "claim": "touchBoundsInRoot mayinflatehitregion; size has noclipping; boundsInRoot clipped; positionInRoot has noclipping. Public documentedunclipRect(positionInRoot,size.toSize())."
+      },
+      {
+        "file": "ui-desktop-LayoutInfo.kt",
+        "lines": [
+          23,
+          64
+        ],
+        "claim": "Public parentInfo,width,height,coordinates,isPlaced,isAttached provide layoutancestry independentof semanticflattening."
+      },
+      {
+        "file": "ui-test-desktop-Filters.kt",
+        "lines": [
+          460,
+          482
+        ],
+        "claim": "hasAnySibling usessemanticparentchildren; not sufficientbyassumptionwhere semanticsflatten."
+      }
+    ]
+  },
+  "changes": [
+    "Exact decrementlocalizeddescription is unique andanchorsrawlayoutbutton->nestedcontrols->stepper. RoleText musthave that exactparent plusmatchingtext, excludingMafiaheading.",
+    "All dimensionassertions useunclippedSemanticsNode.size, notviewportclippedbounds; zero/nonzeroweights diagnosed separately.",
+    "Each positive-sizecontrol gets its ownperformScrollTo before visibility andscreencontainment; no zero-sized scroll is attempted.",
+    "Label+sibling+screen positions refetched afterthatcontrolscroll, avoidingcross-scrollstaleRect comparison.",
+    "Layout size48dp requirement and nonoverlap retained; nofontscalereduction, testsignatureweakening,productiontags or productionfix."
+  ],
+  "remaining_uncertainty": [
+    "Requires root actualcompileand RED02; thisdraftisnotruntimeevidence.",
+    "Selector deliberately follows publicLayoutInfo structure sharedbycurrentRow andproposedFlowRow; unrelatedfuturecomponentwrapperchanges require fixtureinspection, notmanufacturedlayoutdefect.",
+    "Actual successfulscroll and all32controlmeasurements mustbeverifiedin outputbeforeclaimingfullENARmatrixreproduction."
+  ],
+  "cleanup": {
+    "actual_builds_or_native_workers_started": false,
+    "temporary_download_archives_retained": false,
+    "required_source_reference_text_retained": true,
+    "global_cache_modified": false,
+    "original_evidence_modified": false
+  }
+}

@@ -1,0 +1,432 @@
+{
+  "schema_version": 1,
+  "at": "2026-09-08T03:22:22.168735+00:00",
+  "reviewer": "/root/factory_review",
+  "status": "APPROVED_FOR_ONE_ROOT_OWNED_NATIVE12_FUNCTIONAL_COMPANION_CYCLE",
+  "source_review": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-functional-companion-frozen01-independent-source-review-01.json",
+    "sha256": "4bbe38138ffd7b80c754e9b4cbf4c5318c0e3761dd18ccd8a3f954552490e88a",
+    "bytes": 22001
+  },
+  "source_identity": {
+    "commit": "484f82c3bcc273c0014a946376c1ee9fc7de8d83",
+    "tree": "548625b4a49bef5df8db723c1e59a4edd5676ddc",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "c4d3387a95ff1a4462071147afe92411f5a08ee8b10f78852a59494c8d3e4420"
+  },
+  "binding": {
+    "path": "remediation-runs/2026-09-07-local-readiness/ios-readiness-source-11.json",
+    "sha256": "6cabdf00c5888fbbb608e4e6bcaef06e2e081d7e8c51a62f7aa638c39bf67469",
+    "bytes": 293711
+  },
+  "bound_controls": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-functional-source11-control-manifest-01.json",
+    "sha256": "4e5dd1c3f74e7453fcd76222a1e078cb61dab14b0a04bf32c164dbc9656a63da",
+    "bytes": 16641
+  },
+  "bound_control_sha256": "f6ebf8e931bb6c8a84173bf88a920d6b154ae81f9a812d0a9901d559c6994a22",
+  "current_hash_reconciliation": {
+    "actual_source_paths": 800,
+    "copy_inputs": 740,
+    "source_inventory_recomputed_from_current_tracked_and_untracked_nonprotected_paths": true,
+    "copy_selection_recomputed_from_reviewed_allowlist": true,
+    "source_and_copy_equal_source10": true,
+    "prior_binding": {
+      "path": "remediation-runs/2026-09-07-local-readiness/ios-readiness-source-10.json",
+      "sha256": "a59e4bab9d8f9fca64337c2af86c381e77f7dd339a5f832ea6fdcf17ca2bf266",
+      "bytes": 293711
+    },
+    "canonical_controls_unchanged": 65,
+    "frozen_companion_controls_unchanged": 75,
+    "bound_control_paths": 76,
+    "method": "Standard-library hashes,AST,JSON and read-only Git only;not repository executable imports,semantic review of800files,or runtime execution"
+  },
+  "control_execution": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-functional-companion-controls-01/receipt.json",
+      "sha256": "8c0205ade1ddd8120f8acca6c4748a4f155397ea28a6384d7a4c1fb20dec4677",
+      "bytes": 296170
+    },
+    "log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-functional-companion-controls-01/gradle.log",
+      "sha256": "cbb2813692709ed63d227b4fae7d9ff655f20ba95a8f7887c9bea39173e47d6d",
+      "bytes": 25355
+    },
+    "stop": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-functional-companion-controls-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-01",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "start": "2026-09-08T03:11:42.838676+00:00",
+    "finish": "2026-09-08T03:12:12.542954+00:00",
+    "exit_code": 0,
+    "test_summary": "Ran204tests in28.973s;OK",
+    "descriptors": 204,
+    "unique_ids": 204,
+    "actual_ids_equal_all204_AST_declarations": true,
+    "descriptor_set_sha256": "c2323b4e1ee3f2ae4efb13d89812fbcdc551758799cf4f85a097a62c8184979c",
+    "per_module": {
+      "test_controls": 14,
+      "test_l08_copy": 9,
+      "test_l08_diagnostics": 21,
+      "test_l08_functional_copy": 7,
+      "test_l08_functional_receipts": 14,
+      "test_l08_functional_runner": 11,
+      "test_l08_host_receipts": 12,
+      "test_l08_receipts": 13,
+      "test_native_failure_receipts": 7,
+      "test_native_paths": 3,
+      "test_native_readiness": 25,
+      "test_os_preference_receipts": 5,
+      "test_owned_lane_lsof": 7,
+      "test_secondary_fifo": 39,
+      "test_simulator_entitlements": 11,
+      "test_simulator_signing": 6
+    },
+    "new_tests": 32,
+    "inherited_tests": 172,
+    "skipped": 0,
+    "failed": 0,
+    "errors": 0,
+    "interleaved": [
+      {
+        "id": "test_native_paths.NativePathControlTests.test_actual_host_foundation_alias_and_owned_origin_controls",
+        "log_lines": [
+          109,
+          110
+        ],
+        "closed_host_foundation_cases": 18
+      }
+    ],
+    "new_actual_descriptors": [
+      {
+        "id": "test_l08_functional_copy.L08FunctionalCopyTests.test_all_new_python_controls_parse_without_launching_any_worker",
+        "log_lines": [
+          45,
+          45
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_copy.L08FunctionalCopyTests.test_all_original_controls_and_exact_clone_allowlist_are_preserved",
+        "log_lines": [
+          46,
+          46
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_copy.L08FunctionalCopyTests.test_current_source_transforms_once_with_single_bridge_and_shared_context",
+        "log_lines": [
+          47,
+          47
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_copy.L08FunctionalCopyTests.test_each_source_boundary_mutation_is_rejected_not_just_missing_check_names",
+        "log_lines": [
+          48,
+          48
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_copy.L08FunctionalCopyTests.test_functional_probe_preserves_complete_nonmetadata_execution_regions",
+        "log_lines": [
+          49,
+          49
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_copy.L08FunctionalCopyTests.test_only_the_new_probe_registration_replaces_the_strict_probe_in_owned_copy",
+        "log_lines": [
+          50,
+          50
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_copy.L08FunctionalCopyTests.test_swift_namespace_preserves_shared_host_helpers_and_exact_distinct_test",
+        "log_lines": [
+          51,
+          51
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_receipts.L08FunctionalReceiptTests.test_context_signing_identity_and_secret_fields_are_closed",
+        "log_lines": [
+          52,
+          52
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_receipts.L08FunctionalReceiptTests.test_each_actual_noncomplete_value_remains_an_unsuccessful_comparison",
+        "log_lines": [
+          53,
+          53
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_receipts.L08FunctionalReceiptTests.test_every_comparison_is_required_ordered_and_cannot_imply_a_fake_pass",
+        "log_lines": [
+          54,
+          54
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_receipts.L08FunctionalReceiptTests.test_every_functional_guard_false_missing_wrong_type_or_unknown_is_rejected",
+        "log_lines": [
+          55,
+          55
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_receipts.L08FunctionalReceiptTests.test_exact_six_sites_thirteen_checkpoints_and_twenty_six_comparisons",
+        "log_lines": [
+          56,
+          56
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_receipts.L08FunctionalReceiptTests.test_failure_retains_only_a_valid_completed_prefix_without_becoming_success",
+        "log_lines": [
+          57,
+          57
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_receipts.L08FunctionalReceiptTests.test_four_comparison_records_fit_original_inner_and_outer_limits",
+        "log_lines": [
+          58,
+          58
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_receipts.L08FunctionalReceiptTests.test_getter_shapes_strict_booleans_and_error_codes_are_not_coerced",
+        "log_lines": [
+          59,
+          59
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_receipts.L08FunctionalReceiptTests.test_matching_complete_is_not_original_l08_execution",
+        "log_lines": [
+          60,
+          60
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_receipts.L08FunctionalReceiptTests.test_missing_complete_is_explicit_failure_after_every_functional_obligation",
+        "log_lines": [
+          61,
+          61
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_receipts.L08FunctionalReceiptTests.test_missing_reordered_reused_extra_and_unfinished_processes_fail",
+        "log_lines": [
+          62,
+          62
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_receipts.L08FunctionalReceiptTests.test_original_strict_parser_rejects_companion_even_when_all_comparisons_match",
+        "log_lines": [
+          63,
+          63
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_receipts.L08FunctionalReceiptTests.test_preservation_is_exclusive_bounded_safe_and_never_invents_missing_steps",
+        "log_lines": [
+          64,
+          64
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_receipts.L08FunctionalReceiptTests.test_real_artifact_binding_failure_is_not_swallowed",
+        "log_lines": [
+          65,
+          65
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_runner.L08FunctionalRunnerTests.test_available_failure_rows_are_retained_without_accepting_missing_scenarios",
+        "log_lines": [
+          66,
+          66
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_runner.L08FunctionalRunnerTests.test_available_rows_reject_cross_token_wrong_filename_and_malformed_or_unsafe_results",
+        "log_lines": [
+          67,
+          67
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_runner.L08FunctionalRunnerTests.test_binding_rejects_cross_token_duplicate_process_and_inconsistent_same_process_images",
+        "log_lines": [
+          68,
+          68
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_runner.L08FunctionalRunnerTests.test_complete_available_inventory_has_seventy_rows_and_twenty_four_cold_processes",
+        "log_lines": [
+          69,
+          69
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_runner.L08FunctionalRunnerTests.test_exact_five_discovered_tests_include_only_the_distinct_companion_method",
+        "log_lines": [
+          70,
+          70
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_runner.L08FunctionalRunnerTests.test_genuine_runtime_cleanup_or_source_failures_cannot_become_partial_success",
+        "log_lines": [
+          71,
+          71
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_runner.L08FunctionalRunnerTests.test_imports_remain_read_only",
+        "log_lines": [
+          72,
+          72
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_runner.L08FunctionalRunnerTests.test_metadata_failures_allow_independent_functional_subgates_but_never_overall_pass",
+        "log_lines": [
+          73,
+          73
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_runner.L08FunctionalRunnerTests.test_native_storage_failure_stays_failed_and_other_missing_obligations_stay_explicit",
+        "log_lines": [
+          74,
+          74
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_runner.L08FunctionalRunnerTests.test_original_ownership_build_stop_and_cleanup_implementations_are_unchanged",
+        "log_lines": [
+          75,
+          75
+        ],
+        "status": "PASS"
+      },
+      {
+        "id": "test_l08_functional_runner.L08FunctionalRunnerTests.test_real_image_binding_errors_and_unobserved_inventory_are_never_swallowed",
+        "log_lines": [
+          76,
+          76
+        ],
+        "status": "PASS"
+      }
+    ],
+    "limitations": [
+      "These are Python/copy/parser tests,fake wrapper shell tasks andtwo bounded hostSwift/Foundationfixtures.",
+      "No application/simulator or physical LAN/storage behavior was executed by this control command.",
+      "The interleaved descriptor remains in the immutable log;no log rewriting or inferred extra test needed."
+    ]
+  },
+  "control_cleanup": {
+    "status": "PASS",
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-08T03:12:13.019634+00:00",
+    "gradle_stop_text": "No Gradle daemons are running.",
+    "completed_at": "2026-09-08T03:12:13.150949+00:00",
+    "remaining_owned_workers": [],
+    "remaining_artifact_workers": [],
+    "remaining_outputs": [],
+    "retained_outputs": [],
+    "errors": [],
+    "task_scratch_absent": true,
+    "source_before_equals_after": true,
+    "runner_before_equals_after": true,
+    "method": "Reconciled root receipts and exact task scratch path. Reviewer did not issueprocess queries/signals/build/cleanup."
+  },
+  "native_approval": {
+    "cycle": "ios-readiness-12",
+    "working_directory": "/Users/abdelrahman/Projects/parlor",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-01/run_ios_readiness.py",
+      "ios-readiness-12",
+      "remediation-runs/2026-09-07-local-readiness/ios-readiness-source-11.json",
+      "f6ebf8e931bb6c8a84173bf88a920d6b154ae81f9a812d0a9901d559c6994a22",
+      "--simulator-signing=adhoc"
+    ],
+    "approved_scope": "Exactly one isolated copiedDebug application on a newly owned ARM64iOSsimulator. Existing actual UIKit/Settings/ENAR/local/native-health matrix plus separate13boot20operation functional storage observations and3started-host14actionControlledStartRoom traces. NotphysicalLAN,notStoresigning,notproductioncodechanges.",
+    "conditions": [
+      "Root sole shared Gradle/Xcode lane;preflightmustconfirmno conflicting workers and no unowned generated outputs.",
+      "Use exactsource11,76controls and command;any drift requires re-review.",
+      "Fresh owned simulator/container and copy allocation only;no existing user device/profile or private credentialmaterial.",
+      "Use existingad-hocsimulator mode guards;noentitlement/identity/privacy or production protection changes.",
+      "Preserve all available bounded metadata/source/image/failure evidence;do not collapse unsuccessfulComplete comparisons into functionalPass.",
+      "Expected best outcomePARTIALLY_VERIFIED/exit2,neveroverallPASS;originalstrictL08 remainsnotexecuted/unmet.",
+      "Mandatory immediateGradlestopandtask-ownedprocess/secondaryFIFO/output/simulatorcleanup on successfailuretimeoutorinterruption.",
+      "Preserve native01/native02 strict failures andFoundationobservations;nodeletion/normalization of earlier evidence.",
+      "After cycle,independently reconcile actual receipts,discovery,source/image binding,all26comparisons andcleanup before claiming functionalverification."
+    ]
+  },
+  "remaining_gaps": [
+    "Original strict NSFileProtectionComplete metadata failure remainsunresolved,not diagnosed asanapplicationdefectbythisapproval.",
+    "NativecompanionSwift/Kotlincompilation,payloadactualtypes/sizes,13coldboots/UIselectors/terminalwriters andhostflows remainunexecuted untilrootnative12.",
+    "PhysicaldeviceLock/backup/LAN/appswitcheraccessibility andStore/signing/legalrequirements remainexternal."
+  ],
+  "reviewer_cleanup": {
+    "started_build_or_native_workers": 0,
+    "repository_executable_modules_imported": false,
+    "production_or_control_source_files_modified": false,
+    "only_new_authorized_file": "remediation-runs/2026-09-07-local-readiness/reviews/l08-functional-source11-native12-independent-approval-01.json",
+    "prior_evidence_preserved": true
+  }
+}

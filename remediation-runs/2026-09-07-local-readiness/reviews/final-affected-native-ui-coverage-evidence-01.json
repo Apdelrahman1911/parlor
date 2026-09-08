@@ -1,0 +1,2495 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-07T13:47:55.327438+00:00",
+  "reviewer": "/root/native_fix_review",
+  "source": {
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "2085367999a1b6e998567e83e978785f02607b3d",
+    "tree": "887a4e26d8f43198d1bd8c4e4e6727fc126c4f8c",
+    "tracked_diff_sha256": "dc3d56de309162dd68564942c916a18fb90ede396700e2d6b35f4f1e6da4c6c1",
+    "observed_status": "M .github/workflows/production-verification.yml\n?? AGENTS.md\n?? audit-runs/\n?? design/\n?? docs/PARLOR_PROJECT_HANDOFF.md\n?? project-code-audit/\n?? remediation-runs/\n?? scripts/ci/\n?? scripts/release/tests/test_ci_verification_hygiene.py\n?? scripts/verification/resolved_dependencies.init.gradle",
+    "reviewed_subset_sha256": "6ff9982664bb8fd694fc446b4768b7e35f4652ce4675ed091b9e71b18c2ec805"
+  },
+  "scope": "Affected original-six corrections and listed native/UI siblings only; not complete application review or frozen-tree combined PASS.",
+  "coverage_method": "Cumulative direct full-file/explicit range reading during this continued assignment, not a claim every line was reread in the last command. Current bytes hashed separately. Dossiers are context, never substitute for source.",
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpComposeLibraryConventionPlugin.kt",
+      "sha256": "d8a7cd25a7062f20ae871a068b724c061c98f3831aae4d90701c5cbbf7b4e660",
+      "type": "build",
+      "line_count": 19,
+      "reviewed_line_ranges": [
+        [
+          1,
+          19
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/build.gradle.kts",
+      "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+      "type": "build",
+      "line_count": 627,
+      "reviewed_line_ranges": [
+        [
+          72,
+          218
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "explicit partial caller/context read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/App.kt",
+      "sha256": "622b679a2ef023fab17bf6c8ed8eb38c1fbc2b76a391f5f9a8298d59da9dda59",
+      "type": "production/context",
+      "line_count": 338,
+      "reviewed_line_ranges": [
+        [
+          1,
+          338
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/di/StorageModule.kt",
+      "sha256": "9734dde8f751d0e5792577692c322051aa0adc7f45ed0fa6ac5961cf9295e87c",
+      "type": "production/context",
+      "line_count": 23,
+      "reviewed_line_ranges": [
+        [
+          1,
+          23
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/game/MafiaGameShellBinding.kt",
+      "sha256": "3bc7af78980e52208974c28d21bbff0d2714a6d55cbc0e64bb958a28823ea99f",
+      "type": "production/context",
+      "line_count": 290,
+      "reviewed_line_ranges": [
+        [
+          39,
+          133
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "explicit partial caller/context read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/settings/SettingsMutationDispatcher.kt",
+      "sha256": "915149f63b117f3516c749070abea6c538942c2d61c2b9c7224f3551aad45ce5",
+      "type": "production/context",
+      "line_count": 29,
+      "reviewed_line_ranges": [
+        [
+          1,
+          29
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/settings/SettingsScreen.kt",
+      "sha256": "f97da085d85ed5fe01ac9f4725580ea2f86e399dcd330f532d9babc1925535c5",
+      "type": "production/context",
+      "line_count": 325,
+      "reviewed_line_ranges": [
+        [
+          1,
+          325
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/storage/PlatformStorage.kt",
+      "sha256": "1f56d8b7adca7d5148445ec9e8f69d2f9a74f253d4c425cc2abd00a84594b690",
+      "type": "production/context",
+      "line_count": 41,
+      "reviewed_line_ranges": [
+        [
+          1,
+          41
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt",
+      "sha256": "830f077ec2f61747339310051f609d4f95fa79979a5da543620358b72742db31",
+      "type": "test/test-fixture",
+      "line_count": 394,
+      "reviewed_line_ranges": [
+        [
+          1,
+          394
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+      "sha256": "c77abd03ddcae230b4752d888b16c3d74231d89c967624c31129d176a5ed20ce",
+      "type": "production/context",
+      "line_count": 56,
+      "reviewed_line_ranges": [
+        [
+          1,
+          56
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSettingsKeyValueBacking.kt",
+      "sha256": "c8162e6713905b66d10aa8bc7e284d18f6815a2ae1754ba836c7241382014a10",
+      "type": "production/context",
+      "line_count": 40,
+      "reviewed_line_ranges": [
+        [
+          1,
+          40
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "sha256": "8a99e60647c3d9f137ca8783e636b37798d06f4883df3609bf6cd2a0568bdf48",
+      "type": "production/context",
+      "line_count": 500,
+      "reviewed_line_ranges": [
+        [
+          1,
+          500
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/PlatformStorage.ios.kt",
+      "sha256": "cb69b6de029bf7d9f84dbc5bf19139150906a29d64cf29a60994259ca657a0c0",
+      "type": "production/context",
+      "line_count": 19,
+      "reviewed_line_ranges": [
+        [
+          1,
+          19
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosLegacySnapshotBackupTest.kt",
+      "sha256": "5d5cf8beedcddd77b3d99d3842f02f472da221f0bbcdc35c6212e3f5d56d0351",
+      "type": "test/test-fixture",
+      "line_count": 222,
+      "reviewed_line_ranges": [
+        [
+          1,
+          222
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosStorageSafetyTest.kt",
+      "sha256": "2ecae719e0cbbdaefa412ede46656f59b63777087c8b653e215053359b42218b",
+      "type": "test/test-fixture",
+      "line_count": 195,
+      "reviewed_line_ranges": [
+        [
+          1,
+          195
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/PRE_RELEASE_COMPATIBILITY.md",
+      "sha256": "32ae112de9fd761636191c3308faf28fa5a3a8f3fd694064bbeaf3f2ffe69060",
+      "type": "documentation",
+      "line_count": 59,
+      "reviewed_line_ranges": [
+        [
+          1,
+          59
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/build.gradle.kts",
+      "sha256": "7aceb370331f84b2fee70bb039b7779bdd818ea78aab15da3bfcfd137a76ad2d",
+      "type": "build",
+      "line_count": 43,
+      "reviewed_line_ranges": [
+        [
+          1,
+          43
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/projection/MafiaProjectionPolicy.kt",
+      "sha256": "713158db7e5cf09e479cd249537b2f1e4ead14261b9d148c9288ba45c4dc51cc",
+      "type": "production/context",
+      "line_count": 94,
+      "reviewed_line_ranges": [
+        [
+          1,
+          94
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/reducer/MafiaReducer.kt",
+      "sha256": "2ff9754d497b8258613badb057ab915a6d457786c56b0d5e725f2ba0053e56e2",
+      "type": "production/context",
+      "line_count": 1054,
+      "reviewed_line_ranges": [
+        [
+          350,
+          730
+        ],
+        [
+          982,
+          1041
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "explicit partial caller/context read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/settings/MafiaSettings.kt",
+      "sha256": "beaa58c17c44a8ff552e52e838171deedf17f8dadd76258caaef8dd2b5a336f5",
+      "type": "production/context",
+      "line_count": 133,
+      "reviewed_line_ranges": [
+        [
+          1,
+          133
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/state/MafiaPeerSnapshotValidator.kt",
+      "sha256": "8df30438d0b5a4f6e9666de6e1863ab4c1faf8c3664126be6343c293ff8e383c",
+      "type": "production/context",
+      "line_count": 292,
+      "reviewed_line_ranges": [
+        [
+          135,
+          190
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "explicit partial caller/context read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/components/MafiaCover.kt",
+      "sha256": "73b9e3e5bbf79ff1cb002b9f1205da59e4711d16c71a8b8c6b6fb618a7518b42",
+      "type": "production/context",
+      "line_count": 185,
+      "reviewed_line_ranges": [
+        [
+          1,
+          185
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDeviceHostFlow.kt",
+      "sha256": "9bc03d15725da5ace2e5b4c4e79947b516a8e04cce8fbc2e203edde2da9194a1",
+      "type": "production/context",
+      "line_count": 297,
+      "reviewed_line_ranges": [
+        [
+          85,
+          285
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "explicit partial caller/context read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePeerFlow.kt",
+      "sha256": "67c50637f24919981c8aff238d497e33d46dbef476f490fe511891c36a7100fa",
+      "type": "production/context",
+      "line_count": 215,
+      "reviewed_line_ranges": [
+        [
+          65,
+          215
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "explicit partial caller/context read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+      "sha256": "09de10c3735f1afeb7b36550dca57c4e9fd190d985faf6ff0eae8c0b8d21a784",
+      "type": "production/context",
+      "line_count": 628,
+      "reviewed_line_ranges": [
+        [
+          1,
+          358
+        ],
+        [
+          470,
+          628
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "explicit partial caller/context read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+      "sha256": "1371eb747579362548f3962a520c2c3f3c2f6225ef551bad93e3e690e08a1fe6",
+      "type": "production/context",
+      "line_count": 751,
+      "reviewed_line_ranges": [
+        [
+          1,
+          398
+        ],
+        [
+          640,
+          751
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "explicit partial caller/context read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/handoff/MafiaHandoffScreens.kt",
+      "sha256": "b070ec2822169b0aee33ab01361c626c8a2e55b0d98189b1eb42b482306e1de9",
+      "type": "production/context",
+      "line_count": 165,
+      "reviewed_line_ranges": [
+        [
+          1,
+          165
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/MafiaKillVoteScreen.kt",
+      "sha256": "729be6c5c48fce2224d1701bb8b80f980298e17d727587a9a37567e77bb3e767",
+      "type": "production/context",
+      "line_count": 96,
+      "reviewed_line_ranges": [
+        [
+          1,
+          96
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/TargetPickerScreen.kt",
+      "sha256": "325ec6093450c3ce095cb52cf05ee3b1b15b163dbb35123a7352ce25d77deb1c",
+      "type": "production/context",
+      "line_count": 180,
+      "reviewed_line_ranges": [
+        [
+          1,
+          180
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreen.kt",
+      "sha256": "2ebe210da47584cd0ed1105a921b4b2884cde23227b6cfb0086f25f3aec70aa9",
+      "type": "production/context",
+      "line_count": 102,
+      "reviewed_line_ranges": [
+        [
+          1,
+          102
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/reveal/PrivateRoleCardScreen.kt",
+      "sha256": "5f03d09c502ce8cc40b570fec1f7baa3e2556f8d0100601b53807fe7323aca9c",
+      "type": "production/context",
+      "line_count": 147,
+      "reviewed_line_ranges": [
+        [
+          115,
+          147
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "explicit partial caller/context read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+      "sha256": "4b98a283b3d92bcfbbdeaa699a8c3e552b38440b90874795273a8edb0dada3dd",
+      "type": "production/context",
+      "line_count": 529,
+      "reviewed_line_ranges": [
+        [
+          1,
+          529
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/vote/VoteCastScreen.kt",
+      "sha256": "2402bb7ba945f1a6f1487bb756b4db8bf8af0806cc4325c08f056c06bc5fdd70",
+      "type": "production/context",
+      "line_count": 173,
+      "reviewed_line_ranges": [
+        [
+          1,
+          173
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/components/MafiaCoverContrastTest.kt",
+      "sha256": "6b063b9bc4e75626fcabd5330c6102d3a0329e35b57f2aa2c760d52b5e27444e",
+      "type": "test/test-fixture",
+      "line_count": 113,
+      "reviewed_line_ranges": [
+        [
+          1,
+          113
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostLanguageContinuityTest.kt",
+      "sha256": "027f36dda4a27b68fad6d5abf1740f9778cce897a2ba7dea7fc152acf7bce743",
+      "type": "test/test-fixture",
+      "line_count": 338,
+      "reviewed_line_ranges": [
+        [
+          1,
+          338
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/MafiaCountAssertions.kt",
+      "sha256": "a90b5f1c479e55ea820a9ba4acd662d27485ed98157a3ef0b921d3f4bbd9b892",
+      "type": "test/test-fixture",
+      "line_count": 44,
+      "reviewed_line_ranges": [
+        [
+          1,
+          44
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/MafiaTallyLayoutTest.kt",
+      "sha256": "bdfe659970993e89ab0a59043e545451401ece17c60cddcdf6bcaba8a1fabb6f",
+      "type": "test/test-fixture",
+      "line_count": 165,
+      "reviewed_line_ranges": [
+        [
+          1,
+          165
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt",
+      "sha256": "27b4894a394bf06952bc1435324ab23acb5c7f38242b65df5feb01e8df16b777",
+      "type": "test/test-fixture",
+      "line_count": 135,
+      "reviewed_line_ranges": [
+        [
+          1,
+          135
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaDoctorSettingUiTest.kt",
+      "sha256": "47720879336a7ac14436a6cc9e186cce3afc8d00743a1339ff161c0fefb58055",
+      "type": "test/test-fixture",
+      "line_count": 71,
+      "reviewed_line_ranges": [
+        [
+          1,
+          71
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupReadOnlyCountLayoutTest.kt",
+      "sha256": "9e9b7492aecaf8689cc007056e74d5e8c9cce980a1851d853760820b7a2bb118",
+      "type": "test/test-fixture",
+      "line_count": 80,
+      "reviewed_line_ranges": [
+        [
+          1,
+          80
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupStepperLayoutTest.kt",
+      "sha256": "306d7e76f6275440b9ceab2150b8e4cbcd8d6e8e47a7fe9ad3fcea45fad9d302",
+      "type": "test/test-fixture",
+      "line_count": 133,
+      "reviewed_line_ranges": [
+        [
+          1,
+          133
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupToggleLayoutTest.kt",
+      "sha256": "36bdc52bb345999bd8a43187ac74a4f44e1c9aa618419e7088cfe0b09644be50",
+      "type": "test/test-fixture",
+      "line_count": 67,
+      "reviewed_line_ranges": [
+        [
+          1,
+          67
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build.gradle.kts",
+      "sha256": "2eb4b00a53ff1eff42f2a64b3de1a1c4d28b08d419ad2828045a063320e4696c",
+      "type": "build",
+      "line_count": 53,
+      "reviewed_line_ranges": [
+        [
+          1,
+          53
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt",
+      "sha256": "40db7e4fab766f77d893c7001e57e3395fd50112399937d39be44632ff6456c0",
+      "type": "production/context",
+      "line_count": 1261,
+      "reviewed_line_ranges": [
+        [
+          585,
+          1178
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "explicit partial caller/context read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitStateValidator.kt",
+      "sha256": "c391101ba10792d4ba81eb0aa3a21771162c458e075b90bfbf06d4cb33d139c1",
+      "type": "production/context",
+      "line_count": 1092,
+      "reviewed_line_ranges": [
+        [
+          1,
+          1092
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/snapshot/WhodunitSnapshotCodec.kt",
+      "sha256": "9025274980744440fd12342afd2ecc128a943c8fa3f3e7ed9aadb73d504a3bef",
+      "type": "production/context",
+      "line_count": 190,
+      "reviewed_line_ranges": [
+        [
+          1,
+          190
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/components/CandlelitCover.kt",
+      "sha256": "247d2db6331ebd5baf406f2e951354ec1e47fed143c38b1b336b91c8fad21977",
+      "type": "production/context",
+      "line_count": 115,
+      "reviewed_line_ranges": [
+        [
+          1,
+          115
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "sha256": "73f75eb87e2636e5e616c9bbade054fd0f44ed8bcd9ad158b930eba99fd8aa14",
+      "type": "production/context",
+      "line_count": 1432,
+      "reviewed_line_ranges": [
+        [
+          139,
+          152
+        ],
+        [
+          202,
+          327
+        ],
+        [
+          398,
+          703
+        ],
+        [
+          854,
+          948
+        ],
+        [
+          1210,
+          1432
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "explicit partial caller/context read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitPeerRoomBridge.kt",
+      "sha256": "79926523e13593a0ecb4519dbd20f34fa8577af8692d3911301031b8a11d1bc7",
+      "type": "production/context",
+      "line_count": 216,
+      "reviewed_line_ranges": [
+        [
+          1,
+          216
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/domain/WhodunitRulesInvariantTest.kt",
+      "sha256": "593a7e3937abc330e11ab76f4a4802e21bcde7231fb9b5220657a5bcc7d5d513",
+      "type": "test/test-fixture",
+      "line_count": 549,
+      "reviewed_line_ranges": [
+        [
+          345,
+          454
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "explicit partial caller/context read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitFinalTwoRecoveryTest.kt",
+      "sha256": "b6f36aa2ea3615dcee2c563087d67120e321146d4ae0a2e40cb0f696e865d906",
+      "type": "test/test-fixture",
+      "line_count": 349,
+      "reviewed_line_ranges": [
+        [
+          1,
+          349
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/PeerPausedCoverContrastTest.kt",
+      "sha256": "681c049792b523c33d431b15650e3f6832d513314186525872cfe417a5ac7d9e",
+      "type": "test/test-fixture",
+      "line_count": 89,
+      "reviewed_line_ranges": [
+        [
+          1,
+          89
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLanguageContinuityTest.kt",
+      "sha256": "97e55bc43b465a0efc241810520db0e6e642f4991860b3f7fc843effa5667323",
+      "type": "test/test-fixture",
+      "line_count": 320,
+      "reviewed_line_ranges": [
+        [
+          1,
+          320
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp.xcodeproj/project.pbxproj",
+      "sha256": "625103b4676a017beb4619c61b705efc84c2be47b71603bddd840c1d3856ea9d",
+      "type": "build",
+      "line_count": 539,
+      "reviewed_line_ranges": [
+        [
+          16,
+          18
+        ],
+        [
+          44,
+          45
+        ],
+        [
+          97,
+          97
+        ],
+        [
+          120,
+          120
+        ],
+        [
+          252,
+          282
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "explicit partial caller/context read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/ComposeContainerViewController.swift",
+      "sha256": "9bdeeaf67a569f4016bc5359ae865b6df9eeaa2a9f6ee36e01041bf79000a903",
+      "type": "production/context",
+      "line_count": 48,
+      "reviewed_line_ranges": [
+        [
+          1,
+          48
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/ContentView.swift",
+      "sha256": "5881b354ccc45340100356fbf37480e94efdcc2e8fe823f0bb6b5b60f8ccaa87",
+      "type": "production/context",
+      "line_count": 62,
+      "reviewed_line_ranges": [
+        [
+          1,
+          62
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosAppUITests/ComposeContainerViewControllerTests.swift",
+      "sha256": "a4730b77ad93d01df60a4b6fde558bfea264f71b19ee5aa6c4a08d33480eacc8",
+      "type": "test/test-fixture",
+      "line_count": 104,
+      "reviewed_line_ranges": [
+        [
+          1,
+          104
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/build.gradle.kts",
+      "sha256": "118d898f900e3b8ccc76db6fca658d69a0d211c5220b6985738f14428a99f78d",
+      "type": "build",
+      "line_count": 25,
+      "reviewed_line_ranges": [
+        [
+          1,
+          25
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/androidMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.android.kt",
+      "sha256": "c82632ec06f919e86a33ee625dc332fc0db5036f2667d48ef85460bf12ba3bac",
+      "type": "production/context",
+      "line_count": 77,
+      "reviewed_line_ranges": [
+        [
+          1,
+          77
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ContextRibbon.kt",
+      "sha256": "07aadc980d9b3777e99a32a2ce461b56ee07638e81471899d669f2e97c56ff07",
+      "type": "production/context",
+      "line_count": 84,
+      "reviewed_line_ranges": [
+        [
+          1,
+          84
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ContinueWithoutDialog.kt",
+      "sha256": "84757685bf29f2ad83ef605cb9b50ad53188e47ec8833f9c7286cc383f6cbadc",
+      "type": "production/context",
+      "line_count": 97,
+      "reviewed_line_ranges": [
+        [
+          1,
+          97
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/EyebrowLabel.kt",
+      "sha256": "eff56d62676d935fbe541f3e0df8d8ed637b2d427c949d6cfcc5ca9dd8b84494",
+      "type": "production/context",
+      "line_count": 23,
+      "reviewed_line_ranges": [
+        [
+          1,
+          23
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/HostDisconnectedOverlay.kt",
+      "sha256": "a4cf551ee4846b8529b7ba1352a92a286d28831ecff086ef3a5a1ea3a30c450d",
+      "type": "production/context",
+      "line_count": 91,
+      "reviewed_line_ranges": [
+        [
+          1,
+          91
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorButton.kt",
+      "sha256": "06ac462915e5371344abb953d29eab22bb9b622c800c70c5ebc96cca96efac0b",
+      "type": "production/context",
+      "line_count": 193,
+      "reviewed_line_ranges": [
+        [
+          1,
+          193
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorCard.kt",
+      "sha256": "e764e6c7e09dc72464ad3eb14b41328a609a7d47475941054fb7af292f7a9d51",
+      "type": "production/context",
+      "line_count": 55,
+      "reviewed_line_ranges": [
+        [
+          1,
+          55
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt",
+      "sha256": "ea4e554c099511942e13e07281df48419c333948be7a64d65a72b7dd49ea25b0",
+      "type": "production/context",
+      "line_count": 230,
+      "reviewed_line_ranges": [
+        [
+          1,
+          230
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ReconnectingOverlay.kt",
+      "sha256": "587a0b4c7f8af7b7d0b762035855beee02cf4d1e9b4f4b532862b5f9821a10b5",
+      "type": "production/context",
+      "line_count": 116,
+      "reviewed_line_ranges": [
+        [
+          1,
+          116
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/SessionExitControls.kt",
+      "sha256": "ea8b05a73e592b10a728b8907742056ffcf5fe27c7b196bb8769e8018f8fd10d",
+      "type": "production/context",
+      "line_count": 235,
+      "reviewed_line_ranges": [
+        [
+          1,
+          235
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/AppLanguage.kt",
+      "sha256": "fe6a1f254f55403d010bba741b80d05824b238f668f6d6951b31a308eb8353f0",
+      "type": "production/context",
+      "line_count": 38,
+      "reviewed_line_ranges": [
+        [
+          1,
+          38
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.kt",
+      "sha256": "9fe9742ea7225d76795a1731bab0e38c60af8b1b8760fc7d7158024d7437794f",
+      "type": "production/context",
+      "line_count": 21,
+      "reviewed_line_ranges": [
+        [
+          1,
+          21
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/ProvideAppLanguage.kt",
+      "sha256": "b4f4286459fe923ebaa3e156f4a9995232ce40ad32ae9bc43f73a929da77dc18",
+      "type": "production/context",
+      "line_count": 62,
+      "reviewed_line_ranges": [
+        [
+          1,
+          62
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/theme/ParlorAccent.kt",
+      "sha256": "dc8145f4594dc0b10feb636de11b3e871f48d00081ff3c627f6da2b21f8b7428",
+      "type": "production/context",
+      "line_count": 74,
+      "reviewed_line_ranges": [
+        [
+          1,
+          74
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/theme/ParlorTheme.kt",
+      "sha256": "b751abc30f088d8e8a8b30bcaa43b7927a97ba06b7040f472c20f5e5c9d8ff00",
+      "type": "production/context",
+      "line_count": 158,
+      "reviewed_line_ranges": [
+        [
+          1,
+          158
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/tokens/ParlorColors.kt",
+      "sha256": "99c60bb3b07cd6295c51adf7d9cf684bf5890d401395d323e1d7a4f11c6bb5e8",
+      "type": "production/context",
+      "line_count": 160,
+      "reviewed_line_ranges": [
+        [
+          1,
+          160
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/tokens/ParlorTypography.kt",
+      "sha256": "eb442c5c7a41e34a4cf8e1c31466ef1a3e07e6582c3259d9a14c7942ee990f15",
+      "type": "production/context",
+      "line_count": 190,
+      "reviewed_line_ranges": [
+        [
+          1,
+          190
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/components/ParlorToastStateTest.kt",
+      "sha256": "6fb9a4c16974a10c978a325c57deffcbeb80d36bb9afd394cea55837cbf79cd1",
+      "type": "test/test-fixture",
+      "line_count": 59,
+      "reviewed_line_ranges": [
+        [
+          1,
+          59
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/desktopMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.desktop.kt",
+      "sha256": "e0a776351f34c0c8b6bfaa76c840c331ac6b226f75cca3d10ad7144e1c6afbbf",
+      "type": "production/context",
+      "line_count": 44,
+      "reviewed_line_ranges": [
+        [
+          1,
+          44
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastConcurrencyTest.kt",
+      "sha256": "d1ce19edccb66916930b4fa27d90f7e390f851442de923b351bef1258a0f90d9",
+      "type": "test/test-fixture",
+      "line_count": 73,
+      "reviewed_line_ranges": [
+        [
+          1,
+          73
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastLifetimeTest.kt",
+      "sha256": "bac61913c5d79ace76748320f0b073669ced0bd0c12f3063c90be7bbec142adc",
+      "type": "test/test-fixture",
+      "line_count": 89,
+      "reviewed_line_ranges": [
+        [
+          1,
+          89
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ReconnectingOverlayFocusTest.kt",
+      "sha256": "ebe1b752abf406e2934de2df84ef5affac0c77f657d126d9c566422a4cbd90c6",
+      "type": "test/test-fixture",
+      "line_count": 68,
+      "reviewed_line_ranges": [
+        [
+          1,
+          68
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/RecoveryActionContrastTest.kt",
+      "sha256": "bf9742cdc49fa3b8765b3219774e4b6e7f6e849c4725e9049dca5fc7343d5e20",
+      "type": "test/test-fixture",
+      "line_count": 77,
+      "reviewed_line_ranges": [
+        [
+          1,
+          77
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+      "sha256": "959ab1a8cb955e484c806c8ce5af65ca841a20cfcd9b1f205443a1cfe768da20",
+      "type": "production/context",
+      "line_count": 61,
+      "reviewed_line_ranges": [
+        [
+          1,
+          61
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+      "sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098",
+      "type": "production/context",
+      "line_count": 83,
+      "reviewed_line_ranges": [
+        [
+          1,
+          83
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosTest/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwnerTest.kt",
+      "sha256": "dbf610cd2fe07dd690b994c70434c863a96833305d5fc47c0e0c9d95072acf7e",
+      "type": "test/test-fixture",
+      "line_count": 142,
+      "reviewed_line_ranges": [
+        [
+          1,
+          142
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/ControlledStartRoom.kt",
+      "sha256": "147692e570bcc0e8c191a6373c61fd4f636c62891b604fdc1c5fee52990861f0",
+      "type": "test/test-fixture",
+      "line_count": 188,
+      "reviewed_line_ranges": [
+        [
+          1,
+          188
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/networking/src/commonMain/kotlin/com/parlor/networking/room/RoomInputPolicy.kt",
+      "sha256": "f4fe96788fbb709ac7e9a1d2b66a010b124d4456e5779272527f2392f43bd118",
+      "type": "production/context",
+      "line_count": 100,
+      "reviewed_line_ranges": [
+        [
+          1,
+          100
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/settings/PersistentSettingsStore.kt",
+      "sha256": "179e00506a2f3c7083d9f9231aa683e8bb73220a807ef6f1f5b04bb5496dac10",
+      "type": "production/context",
+      "line_count": 110,
+      "reviewed_line_ranges": [
+        [
+          1,
+          110
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+      "sha256": "e2ca0be28fd2f0eafee1a55022653190cf30a8c6da620dc3dfe56f361e0da27f",
+      "type": "production/context",
+      "line_count": 246,
+      "reviewed_line_ranges": [
+        [
+          1,
+          246
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "coverage": "full direct file read"
+    }
+  ],
+  "verification": {
+    "reviewer_builds_or_tests_executed": 0,
+    "selected_suites": 17,
+    "selected_testcase_executions": 87,
+    "selected_executions_by_cycle": {
+      "combined-native-alltests-02": 50,
+      "peer-paused-cover-green-01": 15,
+      "mafia-stepper-layout-green-01": 2,
+      "mafia-tally-layout-green-02": 6,
+      "ci-portability-input-green-02": 14
+    },
+    "erratum": "Native/allTests selected count is50, not49. Includes4 ToastState methods x4platform tasks, not16unique methods.",
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "xml": [
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.IosLegacySnapshotBackupTest.xml",
+        "sha256": "00fbd040d6aca458274912e067b53b032c5a9a7c3f754447c6dd9364cf4fb744",
+        "cycle": "combined-native-alltests-02",
+        "suite": "com.parlor.app.storage.IosLegacySnapshotBackupTest",
+        "task": "iosSimulatorArm64Test",
+        "timestamp": "2026-09-06T12:26:57.703Z",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "actual_descriptors": [
+          "coldInventoryProtectsMalformedLegacyWithoutDestroyingItsLastCopy[iosSimulatorArm64]",
+          "directReadProtectsMalformedLegacyWithoutPriorInventory[iosSimulatorArm64]",
+          "damagedCurrentHeaderKeepsPrecedenceAndExcludesRetainedLegacy[iosSimulatorArm64]",
+          "oversizedLegacyIsExcludedBeforeBoundedReadRejectsIt[iosSimulatorArm64]",
+          "exclusionFailureIsNotSwallowedByInventoryAndDoesNotPreventExplicitDiscard[iosSimulatorArm64]",
+          "retryReappliesLegacyExclusionInsteadOfCachingIt[iosSimulatorArm64]",
+          "nativeExclusionRejectsMissingPathsRatherThanClaimingProtection[iosSimulatorArm64]",
+          "nativeExclusionIsReappliedAfterSyntheticDirectoryRecreation[iosSimulatorArm64]"
+        ],
+        "declared_methods": [
+          "coldInventoryProtectsMalformedLegacyWithoutDestroyingItsLastCopy",
+          "directReadProtectsMalformedLegacyWithoutPriorInventory",
+          "damagedCurrentHeaderKeepsPrecedenceAndExcludesRetainedLegacy",
+          "oversizedLegacyIsExcludedBeforeBoundedReadRejectsIt",
+          "exclusionFailureIsNotSwallowedByInventoryAndDoesNotPreventExplicitDiscard",
+          "retryReappliesLegacyExclusionInsteadOfCachingIt",
+          "nativeExclusionRejectsMissingPathsRatherThanClaimingProtection",
+          "nativeExclusionIsReappliedAfterSyntheticDirectoryRecreation"
+        ],
+        "descriptor_set_matches": true,
+        "affected_input_binding": [
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosLegacySnapshotBackupTest.kt",
+            "sha256": "5d5cf8beedcddd77b3d99d3842f02f472da221f0bbcdc35c6212e3f5d56d0351",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+            "sha256": "8a99e60647c3d9f137ca8783e636b37798d06f4883df3609bf6cd2a0568bdf48",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/storage/PlatformStorage.kt",
+            "sha256": "1f56d8b7adca7d5148445ec9e8f69d2f9a74f253d4c425cc2abd00a84594b690",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/PlatformStorage.ios.kt",
+            "sha256": "cb69b6de029bf7d9f84dbc5bf19139150906a29d64cf29a60994259ca657a0c0",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+            "sha256": "e2ca0be28fd2f0eafee1a55022653190cf30a8c6da620dc3dfe56f361e0da27f",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+            "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/verification-metadata.xml",
+            "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+            "both_before_and_after_manifest_match": true
+          }
+        ]
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.IosStorageSafetyTest.xml",
+        "sha256": "cc47b4626d954047530912059e2555c69992f6ca70b8c9e86a477ac0e0fdf96d",
+        "cycle": "combined-native-alltests-02",
+        "suite": "com.parlor.app.storage.IosStorageSafetyTest",
+        "task": "iosSimulatorArm64Test",
+        "timestamp": "2026-09-06T12:26:57.704Z",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "actual_descriptors": [
+          "boundedReaderRejectsAfterReadingOnlyLimitPlusOneBytes[iosSimulatorArm64]",
+          "boundedReaderAcceptsAFileExactlyAtTheLimit[iosSimulatorArm64]",
+          "keychainDataSupportsAnEmptyValueWithoutAddressingAMissingElement[iosSimulatorArm64]",
+          "commonCryptoRoundTripsAnEmptySnapshotPayload[iosSimulatorArm64]",
+          "unreadableProtectedSnapshotRemovesMatchingLegacyPlaintext[iosSimulatorArm64]",
+          "protectedSnapshotWithMissingKeyRemovesMatchingLegacyPlaintext[iosSimulatorArm64]"
+        ],
+        "declared_methods": [
+          "boundedReaderRejectsAfterReadingOnlyLimitPlusOneBytes",
+          "boundedReaderAcceptsAFileExactlyAtTheLimit",
+          "keychainDataSupportsAnEmptyValueWithoutAddressingAMissingElement",
+          "commonCryptoRoundTripsAnEmptySnapshotPayload",
+          "unreadableProtectedSnapshotRemovesMatchingLegacyPlaintext",
+          "protectedSnapshotWithMissingKeyRemovesMatchingLegacyPlaintext"
+        ],
+        "descriptor_set_matches": true,
+        "affected_input_binding": [
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosStorageSafetyTest.kt",
+            "sha256": "2ecae719e0cbbdaefa412ede46656f59b63777087c8b653e215053359b42218b",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+            "sha256": "8a99e60647c3d9f137ca8783e636b37798d06f4883df3609bf6cd2a0568bdf48",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+            "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/verification-metadata.xml",
+            "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+            "both_before_and_after_manifest_match": true
+          }
+        ]
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastConcurrencyTest.xml",
+        "sha256": "3864cc6cce7baed62e43e44dc80e106f1cfd112189e9506dea3ac7298ea71e96",
+        "cycle": "combined-native-alltests-02",
+        "suite": "com.parlor.designsystem.components.ParlorToastConcurrencyTest",
+        "task": "desktopTest",
+        "timestamp": "2026-09-06T12:29:31.279Z",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "actual_descriptors": [
+          "concurrent_identical_messages_still_coalesce_and_floods_remain_bounded()[desktop]",
+          "concurrent_producers_cannot_reuse_lifetime_ids_or_lose_a_non_overflowing_wave()[desktop]"
+        ],
+        "declared_methods": [
+          "concurrent_producers_cannot_reuse_lifetime_ids_or_lose_a_non_overflowing_wave",
+          "concurrent_identical_messages_still_coalesce_and_floods_remain_bounded"
+        ],
+        "descriptor_set_matches": true,
+        "affected_input_binding": [
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastConcurrencyTest.kt",
+            "sha256": "d1ce19edccb66916930b4fa27d90f7e390f851442de923b351bef1258a0f90d9",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt",
+            "sha256": "ea4e554c099511942e13e07281df48419c333948be7a64d65a72b7dd49ea25b0",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+            "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/verification-metadata.xml",
+            "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+            "both_before_and_after_manifest_match": true
+          }
+        ]
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastLifetimeTest.xml",
+        "sha256": "0d63dc17d2946fec090b06255360550c9bc8aa751cd03c099802c640ed5266cb",
+        "cycle": "combined-native-alltests-02",
+        "suite": "com.parlor.designsystem.components.ParlorToastLifetimeTest",
+        "task": "desktopTest",
+        "timestamp": "2026-09-06T12:29:31.297Z",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "actual_descriptors": [
+          "replacement_state_owner_with_same_numeric_id_gets_its_own_lifetime()[desktop]",
+          "replacement_after_automatic_dismiss_gets_fresh_visibility_and_timer()[desktop]",
+          "identical_text_after_automatic_dismiss_is_a_new_lifetime()[desktop]"
+        ],
+        "declared_methods": [
+          "replacement_after_automatic_dismiss_gets_fresh_visibility_and_timer",
+          "identical_text_after_automatic_dismiss_is_a_new_lifetime",
+          "replacement_state_owner_with_same_numeric_id_gets_its_own_lifetime"
+        ],
+        "descriptor_set_matches": true,
+        "affected_input_binding": [
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastLifetimeTest.kt",
+            "sha256": "bac61913c5d79ace76748320f0b073669ced0bd0c12f3063c90be7bbec142adc",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt",
+            "sha256": "ea4e554c099511942e13e07281df48419c333948be7a64d65a72b7dd49ea25b0",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+            "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/verification-metadata.xml",
+            "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+            "both_before_and_after_manifest_match": true
+          }
+        ]
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+        "sha256": "7554ea5dc8929fa885fbe3f3dc5e07ebf3c166676c4c577fe01ac6abcfa5edc8",
+        "cycle": "combined-native-alltests-02",
+        "suite": "com.parlor.designsystem.components.ParlorToastStateTest",
+        "task": "desktopTest",
+        "timestamp": "2026-09-06T12:29:31.808Z",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "actual_descriptors": [
+          "queue_is_bounded_and_keeps_the_latest_distinct_messages()[desktop]",
+          "adjacent_duplicate_message_is_coalesced()[desktop]",
+          "dismissed_identity_cannot_dismiss_a_new_lifetime_even_with_identical_text()[desktop]",
+          "coalescing_preserves_existing_lifetime_and_eviction_does_not_recycle_it()[desktop]"
+        ],
+        "declared_methods": [
+          "queue_is_bounded_and_keeps_the_latest_distinct_messages",
+          "adjacent_duplicate_message_is_coalesced",
+          "dismissed_identity_cannot_dismiss_a_new_lifetime_even_with_identical_text",
+          "coalescing_preserves_existing_lifetime_and_eviction_does_not_recycle_it"
+        ],
+        "descriptor_set_matches": true,
+        "affected_input_binding": [
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/components/ParlorToastStateTest.kt",
+            "sha256": "6fb9a4c16974a10c978a325c57deffcbeb80d36bb9afd394cea55837cbf79cd1",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt",
+            "sha256": "ea4e554c099511942e13e07281df48419c333948be7a64d65a72b7dd49ea25b0",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+            "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/verification-metadata.xml",
+            "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+            "both_before_and_after_manifest_match": true
+          }
+        ]
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ReconnectingOverlayFocusTest.xml",
+        "sha256": "2b79434a2e84792bc49fbeec97a1bf735147dfbd768b7bd6cf91a8f79320d815",
+        "cycle": "combined-native-alltests-02",
+        "suite": "com.parlor.designsystem.components.ReconnectingOverlayFocusTest",
+        "task": "desktopTest",
+        "timestamp": "2026-09-06T12:29:31.811Z",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "actual_descriptors": [
+          "overlay_excludes_covered_controls_from_keyboard_focus_until_hidden()[desktop]"
+        ],
+        "declared_methods": [
+          "overlay_excludes_covered_controls_from_keyboard_focus_until_hidden"
+        ],
+        "descriptor_set_matches": true,
+        "affected_input_binding": [
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ReconnectingOverlayFocusTest.kt",
+            "sha256": "ebe1b752abf406e2934de2df84ef5affac0c77f657d126d9c566422a4cbd90c6",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ReconnectingOverlay.kt",
+            "sha256": "587a0b4c7f8af7b7d0b762035855beee02cf4d1e9b4f4b532862b5f9821a10b5",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+            "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/verification-metadata.xml",
+            "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+            "both_before_and_after_manifest_match": true
+          }
+        ]
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.RecoveryActionContrastTest.xml",
+        "sha256": "dd27424d5f3ef464efe278305054d986a571f2e9174db0e66932f0caf999780e",
+        "cycle": "combined-native-alltests-02",
+        "suite": "com.parlor.designsystem.components.RecoveryActionContrastTest",
+        "task": "desktopTest",
+        "timestamp": "2026-09-06T12:29:31.865Z",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "actual_descriptors": [
+          "disconnected_host_leave_is_readable_in_both_themes()[desktop]",
+          "reconnecting_leave_is_readable_in_both_themes()[desktop]",
+          "ordinary_ghost_button_retains_its_theme_appropriate_foreground()[desktop]"
+        ],
+        "declared_methods": [
+          "reconnecting_leave_is_readable_in_both_themes",
+          "disconnected_host_leave_is_readable_in_both_themes",
+          "ordinary_ghost_button_retains_its_theme_appropriate_foreground"
+        ],
+        "descriptor_set_matches": true,
+        "affected_input_binding": [
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/RecoveryActionContrastTest.kt",
+            "sha256": "bf9742cdc49fa3b8765b3219774e4b6e7f6e849c4725e9049dca5fc7343d5e20",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorButton.kt",
+            "sha256": "06ac462915e5371344abb953d29eab22bb9b622c800c70c5ebc96cca96efac0b",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/tokens/ParlorColors.kt",
+            "sha256": "99c60bb3b07cd6295c51adf7d9cf684bf5890d401395d323e1d7a4f11c6bb5e8",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ReconnectingOverlay.kt",
+            "sha256": "587a0b4c7f8af7b7d0b762035855beee02cf4d1e9b4f4b532862b5f9821a10b5",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/HostDisconnectedOverlay.kt",
+            "sha256": "a4cf551ee4846b8529b7ba1352a92a286d28831ecff086ef3a5a1ea3a30c450d",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+            "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/verification-metadata.xml",
+            "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+            "both_before_and_after_manifest_match": true
+          }
+        ]
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+        "sha256": "10aa3a37ad4b71d454811dcabfb157dd8e389f3bff2aee4a70c57ed6b74ca945",
+        "cycle": "combined-native-alltests-02",
+        "suite": "com.parlor.designsystem.components.ParlorToastStateTest",
+        "task": "iosSimulatorArm64Test",
+        "timestamp": "2026-09-06T12:29:35.028Z",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "actual_descriptors": [
+          "queue_is_bounded_and_keeps_the_latest_distinct_messages[iosSimulatorArm64]",
+          "adjacent_duplicate_message_is_coalesced[iosSimulatorArm64]",
+          "dismissed_identity_cannot_dismiss_a_new_lifetime_even_with_identical_text[iosSimulatorArm64]",
+          "coalescing_preserves_existing_lifetime_and_eviction_does_not_recycle_it[iosSimulatorArm64]"
+        ],
+        "declared_methods": [
+          "queue_is_bounded_and_keeps_the_latest_distinct_messages",
+          "adjacent_duplicate_message_is_coalesced",
+          "dismissed_identity_cannot_dismiss_a_new_lifetime_even_with_identical_text",
+          "coalescing_preserves_existing_lifetime_and_eviction_does_not_recycle_it"
+        ],
+        "descriptor_set_matches": true,
+        "affected_input_binding": [
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/components/ParlorToastStateTest.kt",
+            "sha256": "6fb9a4c16974a10c978a325c57deffcbeb80d36bb9afd394cea55837cbf79cd1",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt",
+            "sha256": "ea4e554c099511942e13e07281df48419c333948be7a64d65a72b7dd49ea25b0",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+            "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/verification-metadata.xml",
+            "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+            "both_before_and_after_manifest_match": true
+          }
+        ]
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest.xml",
+        "sha256": "5f691d4fd56b4090d94127fa4ef99936a76a5a70118692362859c1152b3d7b29",
+        "cycle": "combined-native-alltests-02",
+        "suite": "com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest",
+        "task": "iosSimulatorArm64Test",
+        "timestamp": "2026-09-06T12:29:35.030Z",
+        "tests": 11,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "actual_descriptors": [
+          "system_after_interrupted_lifetime_removes_only_owned_override[iosSimulatorArm64]",
+          "explicit_choice_after_restart_keeps_original_os_value_for_later_system[iosSimulatorArm64]",
+          "fallback_language_is_never_promoted_to_the_application_domain[iosSimulatorArm64]",
+          "external_preference_changes_win_over_owned_cleanup[iosSimulatorArm64]",
+          "unmarked_identical_values_are_not_claimed_or_removed[iosSimulatorArm64]",
+          "interrupted_preparation_does_not_delete_an_unmodified_preference[iosSimulatorArm64]",
+          "malformed_owner_record_cannot_clear_os_preferences[iosSimulatorArm64]",
+          "malformed_previous_value_is_never_installed_as_a_language_array[iosSimulatorArm64]",
+          "interrupted_preparation_without_previous_value_keeps_fallback_unowned[iosSimulatorArm64]",
+          "interrupted_release_cannot_restore_over_a_new_os_preference[iosSimulatorArm64]",
+          "multiple_runtime_switches_restore_original_preference[iosSimulatorArm64]"
+        ],
+        "declared_methods": [
+          "system_after_interrupted_lifetime_removes_only_owned_override",
+          "explicit_choice_after_restart_keeps_original_os_value_for_later_system",
+          "fallback_language_is_never_promoted_to_the_application_domain",
+          "external_preference_changes_win_over_owned_cleanup",
+          "unmarked_identical_values_are_not_claimed_or_removed",
+          "interrupted_preparation_does_not_delete_an_unmodified_preference",
+          "malformed_owner_record_cannot_clear_os_preferences",
+          "malformed_previous_value_is_never_installed_as_a_language_array",
+          "interrupted_preparation_without_previous_value_keeps_fallback_unowned",
+          "interrupted_release_cannot_restore_over_a_new_os_preference",
+          "multiple_runtime_switches_restore_original_preference"
+        ],
+        "descriptor_set_matches": true,
+        "affected_input_binding": [
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosTest/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwnerTest.kt",
+            "sha256": "dbf610cd2fe07dd690b994c70434c863a96833305d5fc47c0e0c9d95072acf7e",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+            "sha256": "959ab1a8cb955e484c806c8ce5af65ca841a20cfcd9b1f205443a1cfe768da20",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+            "sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/ProvideAppLanguage.kt",
+            "sha256": "b4f4286459fe923ebaa3e156f4a9995232ce40ad32ae9bc43f73a929da77dc18",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+            "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/verification-metadata.xml",
+            "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+            "both_before_and_after_manifest_match": true
+          }
+        ]
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/design-system/build/test-results/testDebugUnitTest/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+        "sha256": "d9dcf8ab71416da8525d05590f20de43a4c151e1bd087e0b593e94b56585e591",
+        "cycle": "combined-native-alltests-02",
+        "suite": "com.parlor.designsystem.components.ParlorToastStateTest",
+        "task": "testDebugUnitTest",
+        "timestamp": "2026-09-06T12:29:53.407Z",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "actual_descriptors": [
+          "queue_is_bounded_and_keeps_the_latest_distinct_messages()",
+          "adjacent_duplicate_message_is_coalesced()",
+          "dismissed_identity_cannot_dismiss_a_new_lifetime_even_with_identical_text()",
+          "coalescing_preserves_existing_lifetime_and_eviction_does_not_recycle_it()"
+        ],
+        "declared_methods": [
+          "queue_is_bounded_and_keeps_the_latest_distinct_messages",
+          "adjacent_duplicate_message_is_coalesced",
+          "dismissed_identity_cannot_dismiss_a_new_lifetime_even_with_identical_text",
+          "coalescing_preserves_existing_lifetime_and_eviction_does_not_recycle_it"
+        ],
+        "descriptor_set_matches": true,
+        "affected_input_binding": [
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/components/ParlorToastStateTest.kt",
+            "sha256": "6fb9a4c16974a10c978a325c57deffcbeb80d36bb9afd394cea55837cbf79cd1",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt",
+            "sha256": "ea4e554c099511942e13e07281df48419c333948be7a64d65a72b7dd49ea25b0",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+            "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/verification-metadata.xml",
+            "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+            "both_before_and_after_manifest_match": true
+          }
+        ]
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/design-system/build/test-results/testReleaseUnitTest/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+        "sha256": "769d1f7b34a53d21fc65d25af356bc0dfa5b180b6ae9dfb601ccf2b403511af8",
+        "cycle": "combined-native-alltests-02",
+        "suite": "com.parlor.designsystem.components.ParlorToastStateTest",
+        "task": "testReleaseUnitTest",
+        "timestamp": "2026-09-06T12:29:54.265Z",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "actual_descriptors": [
+          "queue_is_bounded_and_keeps_the_latest_distinct_messages()",
+          "adjacent_duplicate_message_is_coalesced()",
+          "dismissed_identity_cannot_dismiss_a_new_lifetime_even_with_identical_text()",
+          "coalescing_preserves_existing_lifetime_and_eviction_does_not_recycle_it()"
+        ],
+        "declared_methods": [
+          "queue_is_bounded_and_keeps_the_latest_distinct_messages",
+          "adjacent_duplicate_message_is_coalesced",
+          "dismissed_identity_cannot_dismiss_a_new_lifetime_even_with_identical_text",
+          "coalescing_preserves_existing_lifetime_and_eviction_does_not_recycle_it"
+        ],
+        "descriptor_set_matches": true,
+        "affected_input_binding": [
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/components/ParlorToastStateTest.kt",
+            "sha256": "6fb9a4c16974a10c978a325c57deffcbeb80d36bb9afd394cea55837cbf79cd1",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt",
+            "sha256": "ea4e554c099511942e13e07281df48419c333948be7a64d65a72b7dd49ea25b0",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+            "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/verification-metadata.xml",
+            "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+            "both_before_and_after_manifest_match": true
+          }
+        ]
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest.xml",
+        "sha256": "5ee39b94e626ae6aaf04a52fe67392e24b65e0190a770f9c98cae55f678ae9f7",
+        "cycle": "peer-paused-cover-green-01",
+        "suite": "com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest",
+        "task": "desktopTest",
+        "timestamp": "2026-09-07T09:47:10.869Z",
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "actual_descriptors": [
+          "everyOwnPrivatePeerBoundaryRejectsAReopenedFinalTwo()[desktop]",
+          "earlyEndWithAndWithoutDisclosureRemainRecoverable()[desktop]",
+          "currentDecoderRejectsCanonicalJsonThatReopensTheFinalTwo()[desktop]",
+          "aLegalLastRoundKillerEliminationStillAllowsTwoInnocentSurvivors()[desktop]",
+          "legalFinalTwoKillerVictoryStillRecoversThroughPostGameAndReplay()[desktop]",
+          "productionLocalResumeLoaderRejectsAnImpossibleTrustedPayload()[desktop]",
+          "currentEncoderRejectsEveryReopenedFinalTwoSubstate()[desktop]",
+          "bareLegacyPayloadCannotRepairAnImpossibleActiveFinalTwo()[desktop]",
+          "caseBoundRecoveryRejectsFinalTwoEvenWithTheCorrectContentIdentity()[desktop]"
+        ],
+        "declared_methods": [
+          "currentEncoderRejectsEveryReopenedFinalTwoSubstate",
+          "currentDecoderRejectsCanonicalJsonThatReopensTheFinalTwo",
+          "bareLegacyPayloadCannotRepairAnImpossibleActiveFinalTwo",
+          "caseBoundRecoveryRejectsFinalTwoEvenWithTheCorrectContentIdentity",
+          "productionLocalResumeLoaderRejectsAnImpossibleTrustedPayload",
+          "everyOwnPrivatePeerBoundaryRejectsAReopenedFinalTwo",
+          "legalFinalTwoKillerVictoryStillRecoversThroughPostGameAndReplay",
+          "aLegalLastRoundKillerEliminationStillAllowsTwoInnocentSurvivors",
+          "earlyEndWithAndWithoutDisclosureRemainRecoverable"
+        ],
+        "descriptor_set_matches": true,
+        "affected_input_binding": [
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitFinalTwoRecoveryTest.kt",
+            "sha256": "b6f36aa2ea3615dcee2c563087d67120e321146d4ae0a2e40cb0f696e865d906",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitStateValidator.kt",
+            "sha256": "c391101ba10792d4ba81eb0aa3a21771162c458e075b90bfbf06d4cb33d139c1",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/snapshot/WhodunitSnapshotCodec.kt",
+            "sha256": "9025274980744440fd12342afd2ecc128a943c8fa3f3e7ed9aadb73d504a3bef",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+            "sha256": "73f75eb87e2636e5e616c9bbade054fd0f44ed8bcd9ad158b930eba99fd8aa14",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+            "sha256": "28f5695ad9188fcba9177147fa898cb827f1a8472aa554bb495310a7fa01d9eb",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+            "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/verification-metadata.xml",
+            "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+            "both_before_and_after_manifest_match": true
+          }
+        ]
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerPausedCoverContrastTest.xml",
+        "sha256": "15cd830b7b221c4bb67fffc8f8f315165c424a5758b82622870b5ed69d18fa0e",
+        "cycle": "peer-paused-cover-green-01",
+        "suite": "com.parlor.games.whodunit.ui.flow.PeerPausedCoverContrastTest",
+        "task": "desktopTest",
+        "timestamp": "2026-09-07T09:47:11.937Z",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "actual_descriptors": [
+          "arabicLightCoverTextRemainsReadable()[desktop]",
+          "arabicDarkCoverTextRemainsReadable()[desktop]",
+          "englishLightCoverTextRemainsReadable()[desktop]",
+          "englishDarkCoverTextRemainsReadable()[desktop]"
+        ],
+        "declared_methods": [
+          "englishLightCoverTextRemainsReadable",
+          "arabicLightCoverTextRemainsReadable",
+          "englishDarkCoverTextRemainsReadable",
+          "arabicDarkCoverTextRemainsReadable"
+        ],
+        "descriptor_set_matches": true,
+        "affected_input_binding": [
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/PeerPausedCoverContrastTest.kt",
+            "sha256": "681c049792b523c33d431b15650e3f6832d513314186525872cfe417a5ac7d9e",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+            "sha256": "73f75eb87e2636e5e616c9bbade054fd0f44ed8bcd9ad158b930eba99fd8aa14",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/tokens/ParlorColors.kt",
+            "sha256": "99c60bb3b07cd6295c51adf7d9cf684bf5890d401395d323e1d7a4f11c6bb5e8",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+            "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/verification-metadata.xml",
+            "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+            "both_before_and_after_manifest_match": true
+          }
+        ]
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLanguageContinuityTest.xml",
+        "sha256": "f3317e19447afec4341b519c92dce110a7b683fb712ba3fc2b1fb160a3335823",
+        "cycle": "peer-paused-cover-green-01",
+        "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLanguageContinuityTest",
+        "task": "desktopTest",
+        "timestamp": "2026-09-07T09:47:32.880Z",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "actual_descriptors": [
+          "suspendedAndResumingHostRetainsIdentityAndGuardsCommands()[desktop]",
+          "languageChangesAndRemountRetainActualStartedHost()[desktop]"
+        ],
+        "declared_methods": [
+          "languageChangesAndRemountRetainActualStartedHost",
+          "suspendedAndResumingHostRetainsIdentityAndGuardsCommands"
+        ],
+        "descriptor_set_matches": true,
+        "affected_input_binding": [
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLanguageContinuityTest.kt",
+            "sha256": "97e55bc43b465a0efc241810520db0e6e642f4991860b3f7fc843effa5667323",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+            "sha256": "73f75eb87e2636e5e616c9bbade054fd0f44ed8bcd9ad158b930eba99fd8aa14",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/ProvideAppLanguage.kt",
+            "sha256": "b4f4286459fe923ebaa3e156f4a9995232ce40ad32ae9bc43f73a929da77dc18",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/ControlledStartRoom.kt",
+            "sha256": "147692e570bcc0e8c191a6373c61fd4f636c62891b604fdc1c5fee52990861f0",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+            "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/verification-metadata.xml",
+            "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+            "both_before_and_after_manifest_match": true
+          }
+        ]
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLanguageContinuityTest.xml",
+        "sha256": "bdb0555eb22bf0f5e6fe055d7f203e65a9cef54ac208037a736c16ceeeb60607",
+        "cycle": "mafia-stepper-layout-green-01",
+        "suite": "com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLanguageContinuityTest",
+        "task": "desktopTest",
+        "timestamp": "2026-09-07T08:56:39.125Z",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "actual_descriptors": [
+          "languageChangesAndRemountRetainStartedHostWithRepeatProtectionOn()[desktop]",
+          "suspendedHostRetainsIdentityAndGuardsCommandsWithRepeatProtectionOff()[desktop]"
+        ],
+        "declared_methods": [
+          "languageChangesAndRemountRetainStartedHostWithRepeatProtectionOn",
+          "suspendedHostRetainsIdentityAndGuardsCommandsWithRepeatProtectionOff"
+        ],
+        "descriptor_set_matches": true,
+        "affected_input_binding": [
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostLanguageContinuityTest.kt",
+            "sha256": "027f36dda4a27b68fad6d5abf1740f9778cce897a2ba7dea7fc152acf7bce743",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDeviceHostFlow.kt",
+            "sha256": "9bc03d15725da5ace2e5b4c4e79947b516a8e04cce8fbc2e203edde2da9194a1",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/ProvideAppLanguage.kt",
+            "sha256": "b4f4286459fe923ebaa3e156f4a9995232ce40ad32ae9bc43f73a929da77dc18",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/ControlledStartRoom.kt",
+            "sha256": "147692e570bcc0e8c191a6373c61fd4f636c62891b604fdc1c5fee52990861f0",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+            "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/verification-metadata.xml",
+            "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+            "both_before_and_after_manifest_match": true
+          }
+        ]
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-02/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest.xml",
+        "sha256": "bb26981536ca1fd215ba9b81b9016f937eeca30de03cd4f1d634fe0091dce4d7",
+        "cycle": "mafia-tally-layout-green-02",
+        "suite": "com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest",
+        "task": "desktopTest",
+        "timestamp": "2026-09-07T13:18:19.205Z",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "actual_descriptors": [
+          "compact_arabic_long_name_does_not_consume_final_role_width()[desktop]",
+          "compact_english_long_name_does_not_consume_final_role_width()[desktop]",
+          "landscape_large_text_arabic_roles_remain_scrollable()[desktop]",
+          "compact_large_text_english_preserves_every_final_role()[desktop]",
+          "landscape_large_text_english_roles_remain_scrollable()[desktop]",
+          "compact_large_text_arabic_preserves_every_final_role()[desktop]"
+        ],
+        "declared_methods": [
+          "compact_english_long_name_does_not_consume_final_role_width",
+          "compact_arabic_long_name_does_not_consume_final_role_width",
+          "compact_large_text_english_preserves_every_final_role",
+          "compact_large_text_arabic_preserves_every_final_role",
+          "landscape_large_text_english_roles_remain_scrollable",
+          "landscape_large_text_arabic_roles_remain_scrollable"
+        ],
+        "descriptor_set_matches": true,
+        "affected_input_binding": [
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt",
+            "sha256": "27b4894a394bf06952bc1435324ab23acb5c7f38242b65df5feb01e8df16b777",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreen.kt",
+            "sha256": "2ebe210da47584cd0ed1105a921b4b2884cde23227b6cfb0086f25f3aec70aa9",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorCard.kt",
+            "sha256": "e764e6c7e09dc72464ad3eb14b41328a609a7d47475941054fb7af292f7a9d51",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/tokens/ParlorTypography.kt",
+            "sha256": "eb442c5c7a41e34a4cf8e1c31466ef1a3e07e6582c3259d9a14c7942ee990f15",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/networking/src/commonMain/kotlin/com/parlor/networking/room/RoomInputPolicy.kt",
+            "sha256": "f4fe96788fbb709ac7e9a1d2b66a010b124d4456e5779272527f2392f43bd118",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/composeResources/values/strings.xml",
+            "sha256": "8f46afd35f71ad31e3d5b72cac1587e21dfc9e9a903b362e69eb79c6b33b551f",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml",
+            "sha256": "a9416283c7bf130d9ca98b4ff0e08ae420bad4b935f476ed7166178c42c3bdcc",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+            "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/verification-metadata.xml",
+            "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+            "both_before_and_after_manifest_match": true
+          }
+        ]
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ci-portability-input-green-02/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.ProductionUiAccessibilityContractTest.xml",
+        "sha256": "cb6c634d92e68727283747e3416b4abe64f2e7b81694aa304fd2a8aa2517365c",
+        "cycle": "ci-portability-input-green-02",
+        "suite": "com.parlor.app.ProductionUiAccessibilityContractTest",
+        "task": "desktopTest",
+        "timestamp": "2026-09-07T11:55:08.871Z",
+        "tests": 14,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "actual_descriptors": [
+          "controls_use_vector_icons_instead_of_font_dependent_text_glyphs()[desktop]",
+          "game_catalog_renders_only_registered_shipping_games()[desktop]",
+          "shell_done_actions_dismiss_the_software_keyboard()[desktop]",
+          "passive_waiting_surfaces_do_not_publish_no_op_click_actions()[desktop]",
+          "localized_format_resources_use_the_platform_formatter()[desktop]",
+          "fullscreen_text_surfaces_keep_actions_reachable_with_large_text()[desktop]",
+          "mafia_target_rows_expose_radio_selection_and_revalidate_stale_selection()[desktop]",
+          "wax_seal_exposes_a_one_shot_button_action_beside_pointer_hold()[desktop]",
+          "fullscreen_recovery_and_confirmation_states_hide_or_replace_interactive_content()[desktop]",
+          "every_custom_click_or_selection_surface_declares_an_accessibility_role()[desktop]",
+          "recovery_surfaces_are_announced_and_continuous_indicators_are_motion_aware()[desktop]",
+          "source_contract_text_normalizes_only_crlf_line_endings()[desktop]",
+          "nullable_language_override_and_platform_motion_preference_reach_the_app_shell()[desktop]",
+          "platform_locale_overrides_are_commit_scoped_and_do_not_mutate_shared_resources()[desktop]"
+        ],
+        "declared_methods": [
+          "wax_seal_exposes_a_one_shot_button_action_beside_pointer_hold",
+          "mafia_target_rows_expose_radio_selection_and_revalidate_stale_selection",
+          "recovery_surfaces_are_announced_and_continuous_indicators_are_motion_aware",
+          "passive_waiting_surfaces_do_not_publish_no_op_click_actions",
+          "game_catalog_renders_only_registered_shipping_games",
+          "nullable_language_override_and_platform_motion_preference_reach_the_app_shell",
+          "shell_done_actions_dismiss_the_software_keyboard",
+          "fullscreen_recovery_and_confirmation_states_hide_or_replace_interactive_content",
+          "platform_locale_overrides_are_commit_scoped_and_do_not_mutate_shared_resources",
+          "localized_format_resources_use_the_platform_formatter",
+          "every_custom_click_or_selection_surface_declares_an_accessibility_role",
+          "controls_use_vector_icons_instead_of_font_dependent_text_glyphs",
+          "fullscreen_text_surfaces_keep_actions_reachable_with_large_text",
+          "source_contract_text_normalizes_only_crlf_line_endings"
+        ],
+        "descriptor_set_matches": true,
+        "affected_input_binding": [
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt",
+            "sha256": "830f077ec2f61747339310051f609d4f95fa79979a5da543620358b72742db31",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+            "sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+            "sha256": "959ab1a8cb955e484c806c8ce5af65ca841a20cfcd9b1f205443a1cfe768da20",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/androidMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.android.kt",
+            "sha256": "c82632ec06f919e86a33ee625dc332fc0db5036f2667d48ef85460bf12ba3bac",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/desktopMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.desktop.kt",
+            "sha256": "e0a776351f34c0c8b6bfaa76c840c331ac6b226f75cca3d10ad7144e1c6afbbf",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/ProvideAppLanguage.kt",
+            "sha256": "b4f4286459fe923ebaa3e156f4a9995232ce40ad32ae9bc43f73a929da77dc18",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+            "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+            "both_before_and_after_manifest_match": true
+          },
+          {
+            "path": "/Users/abdelrahman/Projects/parlor/gradle/verification-metadata.xml",
+            "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+            "both_before_and_after_manifest_match": true
+          }
+        ]
+      }
+    ],
+    "root_cycle_receipts": [
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/receipt.json",
+        "sha256": "2253a31979d575c1915e0445a9a1e1234abf963db9d49c98a628c386706c4fc0",
+        "cycle": "combined-native-alltests-02",
+        "command": [
+          "./gradlew",
+          "allTests",
+          "productionIosSimulatorRuntimeTests",
+          "--no-build-cache",
+          "--continue",
+          "--no-daemon",
+          "--no-parallel",
+          "--max-workers=1",
+          "--no-configuration-cache",
+          "--dependency-verification=strict",
+          "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=combined-native-alltests-02",
+          "-Pkotlin.compiler.execution.strategy=in-process",
+          "-Pparlor.android.signing.storeFile=",
+          "-Pparlor.android.signing.storePassword=",
+          "-Pparlor.android.signing.keyAlias=",
+          "-Pparlor.android.signing.keyPassword=",
+          "-I",
+          "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/owned_ios_simulator.init.gradle"
+        ],
+        "status": "PASS",
+        "exit_code": 0,
+        "started_at": "2026-09-06T12:25:01.901660+00:00",
+        "finished_at": "2026-09-06T12:31:42.432206+00:00",
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-06T12:31:42.769077+00:00",
+        "cleanup_completed_at": "2026-09-06T12:31:49.479924+00:00",
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "cleanup_errors": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "source_changed_during_cycle": false
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/receipt.json",
+        "sha256": "9f46bbbeedcc499e985b78b5ebe39cbd9b3dd6191d7d706240b7aafd7c6e3896",
+        "cycle": "peer-paused-cover-green-01",
+        "command": [
+          "./gradlew",
+          ":game-modes:whodunit:desktopTest",
+          ":game-modes:whodunit:detekt",
+          "--no-daemon",
+          "--no-parallel",
+          "--max-workers=1",
+          "--no-configuration-cache",
+          "--dependency-verification=strict",
+          "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=peer-paused-cover-green-01",
+          "-Pkotlin.compiler.execution.strategy=in-process",
+          "-Pparlor.android.signing.storeFile=",
+          "-Pparlor.android.signing.storePassword=",
+          "-Pparlor.android.signing.keyAlias=",
+          "-Pparlor.android.signing.keyPassword="
+        ],
+        "status": "PASS",
+        "exit_code": 0,
+        "started_at": "2026-09-07T09:46:42.117774+00:00",
+        "finished_at": "2026-09-07T09:48:01.629161+00:00",
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-07T09:48:01.940121+00:00",
+        "cleanup_completed_at": "2026-09-07T09:48:02.211759+00:00",
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "cleanup_errors": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "source_changed_during_cycle": false
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/receipt.json",
+        "sha256": "d63aa86dfd6f9efa25e230804db7594acdef778479e0a8b9b4d1330300a73e41",
+        "cycle": "mafia-stepper-layout-green-01",
+        "command": [
+          "./gradlew",
+          ":game-modes:mafia:desktopTest",
+          ":game-modes:mafia:detekt",
+          "--no-build-cache",
+          "--rerun-tasks",
+          "--no-daemon",
+          "--no-parallel",
+          "--max-workers=1",
+          "--no-configuration-cache",
+          "--dependency-verification=strict",
+          "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=mafia-stepper-layout-green-01",
+          "-Pkotlin.compiler.execution.strategy=in-process",
+          "-Pparlor.android.signing.storeFile=",
+          "-Pparlor.android.signing.storePassword=",
+          "-Pparlor.android.signing.keyAlias=",
+          "-Pparlor.android.signing.keyPassword="
+        ],
+        "status": "PASS",
+        "exit_code": 0,
+        "started_at": "2026-09-07T08:56:03.104196+00:00",
+        "finished_at": "2026-09-07T08:56:45.556485+00:00",
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-07T08:56:46.052451+00:00",
+        "cleanup_completed_at": "2026-09-07T08:56:46.505261+00:00",
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "cleanup_errors": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "source_changed_during_cycle": false
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/mafia-tally-layout-green-02/receipt.json",
+        "sha256": "ce7aa8c227a9ec8b0adf689c84b7c985ea20f4587b728eeb8284465becdb2a57",
+        "cycle": "mafia-tally-layout-green-02",
+        "command": [
+          "./gradlew",
+          ":game-modes:mafia:desktopTest",
+          "--tests",
+          "*MafiaTallyLayoutTest*",
+          "--tests",
+          "*MafiaSetupReadOnlyCountLayoutTest*",
+          "--tests",
+          "*MafiaCoverContrastTest*",
+          "--tests",
+          "*PostGameScreenLayoutTest*",
+          "--tests",
+          "*MafiaSetupStepperLayoutTest*",
+          "--tests",
+          "*MafiaSetupToggleLayoutTest*",
+          "--tests",
+          "*MafiaDoctorSettingUiTest*",
+          "staticAnalysis",
+          "--no-daemon",
+          "--no-parallel",
+          "--max-workers=1",
+          "--no-configuration-cache",
+          "--dependency-verification=strict",
+          "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=mafia-tally-layout-green-02",
+          "-Pkotlin.compiler.execution.strategy=in-process",
+          "-Pparlor.android.signing.storeFile=",
+          "-Pparlor.android.signing.storePassword=",
+          "-Pparlor.android.signing.keyAlias=",
+          "-Pparlor.android.signing.keyPassword="
+        ],
+        "status": "PASS",
+        "exit_code": 0,
+        "started_at": "2026-09-07T13:18:00.559073+00:00",
+        "finished_at": "2026-09-07T13:18:22.301854+00:00",
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-07T13:18:22.568588+00:00",
+        "cleanup_completed_at": "2026-09-07T13:18:22.805543+00:00",
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "cleanup_errors": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "source_changed_during_cycle": false
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ci-portability-input-green-02/receipt.json",
+        "sha256": "2a705c85f4c0c40975f801b9ba1af97af0376fb23c831fd3f6381ee8c8f59b38",
+        "cycle": "ci-portability-input-green-02",
+        "command": [
+          "./gradlew",
+          ":composeApp:desktopTest",
+          "--tests",
+          "*ProductionUiAccessibilityContractTest*",
+          ":shared:transport-p2p:desktopTest",
+          "--tests",
+          "*AndroidReleaseLintContractTest*",
+          "staticAnalysis",
+          "--rerun-tasks",
+          "--no-build-cache",
+          "--no-daemon",
+          "--no-parallel",
+          "--max-workers=1",
+          "--no-configuration-cache",
+          "--dependency-verification=strict",
+          "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=ci-portability-input-green-02",
+          "-Pkotlin.compiler.execution.strategy=in-process",
+          "-Pparlor.android.signing.storeFile=",
+          "-Pparlor.android.signing.storePassword=",
+          "-Pparlor.android.signing.keyAlias=",
+          "-Pparlor.android.signing.keyPassword="
+        ],
+        "status": "PASS",
+        "exit_code": 0,
+        "started_at": "2026-09-07T11:54:33.195706+00:00",
+        "finished_at": "2026-09-07T11:55:14.937728+00:00",
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-07T11:55:15.214662+00:00",
+        "cleanup_completed_at": "2026-09-07T11:55:15.547647+00:00",
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "cleanup_errors": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "source_changed_during_cycle": false
+      }
+    ],
+    "attribution": "Existing root executions parsed from raw XML and source manifests. Not reviewer executions. Affected-input rebinding does not claim every transitive current source was rebuilt.",
+    "final_combined_gate": "Pending root final freeze/execution; no broad PASS inferred."
+  },
+  "preservation": {
+    "only_this_additive_file_written": true,
+    "source_test_config_edits": 0,
+    "git_mutations": 0,
+    "build_app_or_worker_processes_started": 0,
+    "processes_stopped": 0,
+    "generated_build_outputs": 0,
+    "cleanup_required": false,
+    "original_receipts_preserved": true
+  }
+}

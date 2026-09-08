@@ -1,0 +1,12 @@
+{
+  "date": "2026-09-05T21:50:59.411571+00:00",
+  "cycle": "combined-production-01",
+  "status": "FAIL",
+  "source_test": "composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt:215",
+  "classification": "TEST EXPECTATION DRIFT caused by scoped DS-C01 ownership extraction, not an additional application defect",
+  "original_assumption": "iOS locale preference write is inline after DisposableEffect in the adapter. Actual protected writes now live in IosLanguageOverrideOwner called from that effect.",
+  "correction": "Retain Android/Desktop assertions; replace inline-setObject assumption with remembered owner, effect-scoped apply/dispose release, no direct writes, persistent application-domain reads, whole installed-value equality guard, no resolved fallback reads. Add platform locale sources as desktopTest inputs so iOS-only changes invalidate this source contract. Native runtime11 owner tests remain separate behavioral proof.",
+  "production_behavior_change": false,
+  "cleanup": "combined01 stop0, all task-owned outputs removed, no workers; raw reports preserved",
+  "independent_reviewer": "/root/native_fix_review; patch review requested, not yet approved"
+}

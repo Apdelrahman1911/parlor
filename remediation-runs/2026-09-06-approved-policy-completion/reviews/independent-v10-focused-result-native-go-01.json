@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "recorded_at": "2026-09-06T22:29:15.207796+00:00",
+  "status": "PASS_FOCUSED_CONTROLS_AND_GO_FOR_ONE_ROOT_OWNED_NATIVE_ATTEMPT",
+  "cycle": "native-harness-focused-10",
+  "prior_review": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-v10-frozen-focused-approval-01.json",
+    "sha256": "7eb8b487e6e851718fb3867862cb0dbddb7d02d8637b744054c138e3c84c2f59"
+  },
+  "evidence": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-harness-focused-10/receipt.json",
+      "sha256": "250b58eeb5329ae2a0918553511d61b07aa01c84ca2594c9892e39a092692f8c"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-harness-focused-10/gradle.log",
+      "sha256": "116a40e7d733c904b060a5da57905912dde5eea9aafafa6fe3613703d0686917"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-harness-focused-10/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    }
+  ],
+  "executed_tests": {
+    "total": 168,
+    "passed": 168,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "duration_seconds": 1.241,
+    "all_raw_descriptors_match_independent_ast": true,
+    "module_counts": {
+      "test_catalog_contract": 12,
+      "test_copy_observation_contract": 52,
+      "test_harness_contract": 20,
+      "test_secondary_fifo": 27,
+      "test_v10_contract": 20,
+      "test_v8_contract": 19,
+      "test_v9_contract": 18
+    },
+    "limitation": "Python synthetic source/receipt/cleanup contracts only, not application runtime or native Swift execution."
+  },
+  "control_manifest_sha256": "b283a47498a024538b6aed6dfa9cc75bea04f6281fdf2bd210ea07b0a9c6c0f0",
+  "controls_rehashed_after_execution": 107,
+  "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+  "source_inputs_rehashed_after_execution": 669,
+  "source_and_runner_unchanged": true,
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stop_log": "No Gradle daemons are running.",
+    "stop_completed_seconds_after_task_finish": 0.424173,
+    "cleanup_errors": [],
+    "output_paths_independently_checked_absent": 17,
+    "retained_outputs": [],
+    "reported_remaining_owned_workers": [],
+    "current_exact_python_test_processes": [],
+    "limitation": "No blanket global process-idleness claim; this reviewer never started build/test/app/worker processes and did not stop/delete another task resource."
+  },
+  "native_authorization": {
+    "status": "GO",
+    "executor": "/root",
+    "cycle": "dsc01-apphost-08",
+    "approved_control_sha256": "b283a47498a024538b6aed6dfa9cc75bea04f6281fdf2bd210ea07b0a9c6c0f0",
+    "single_owned_fresh_simulator_attempt_only": true,
+    "requirements": [
+      "Root sole build lane and immutable source freeze02/control hash",
+      "Use existing finalizer including immediate Gradle stops and owned PID/FIFO/simulator/copy cleanup on all exits",
+      "Preserve raw structured native and original probe evidence before cleanup",
+      "Separate independent runtime/provenance/cleanup review before DS-C01 status change",
+      "OS selection BLOCKED remains partially verified; no physical LAN, signed candidate, Store or full-app readiness claim"
+    ]
+  },
+  "reviewer_execution": "Read-only metadata/source arithmetic, not a rerun of any test"
+}

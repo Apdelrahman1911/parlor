@@ -1,0 +1,105 @@
+{
+  "scope": "Exact Gradle8.13 project-property mapping, published KGP2.4.10 source integrity, and actual old-CI runner2.337.0 orphan ownership semantics; read-only online research",
+  "references": [
+    {
+      "label": "gradle-8.13-build-environment",
+      "url": "https://docs.gradle.org/8.13/userguide/build_environment.html",
+      "accessed_at": "2026-09-07T13:15:35.112223+00:00",
+      "status": 200,
+      "final_url": "https://docs.gradle.org/8.13/userguide/build_environment.html",
+      "bytes": 195679,
+      "sha256": "d7b0428e485732d5f89ad751f0b4e958c4e8c5a8b19595f953bffe5463979a64",
+      "relevant_excerpts": [
+        {
+          "search": "org.gradle.project.",
+          "text": "ich you can set using the -D command line flag or gradle.properties file. For the project property myProperty , the system property created is called org.gradle.project. myProperty . $ ./gradlew build -Dorg.gradle.project.myProperty='Hi, world' gradle.properties org.gradle.project.myProperty='Hi, world' Gradle Properties File: You can also set project properties in gradle.properties files. gradle.properties myProperty='Hi, world' Environment Variables: You can set project properties with environment variables. If the environment variable name looks like ORG_GRADLE_PROJECT _myProperty ='Hi, world' , then Gradle will set a myProperty property on your project object, with the value of Hi, world . $ export ORG_GRADLE_PROJECT_myProperty='Hi, world' This is typically the preferred method for supplying project properties, especially secrets, to unattended builds like those running on CI servers. It is possible to change the behavior of a task based on project properties specified at invocation time. Suppose you\u2019d like to ensure release build"
+        },
+        {
+          "search": "GRADLE_OPTS",
+          "text": "M. export JAVA_OPTS=\"-Xmx18928m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8 -Djava.awt.headless=true -Dkotlin.daemon.jvm.options=-Xmx6309m\" GRADLE_OPTS Specifies JVM arguments to use when starting the Gradle client VM. The client VM only handles command line input/output, so one would rarely need to change its VM options. The actual build is run by the Gradle daemon, which is not affected by this environment variable. GRADLE_USER_HOME Specifies the GRADLE_USER_HOME directory for Gradle to store its global configuration properties, initialization scripts, caches, log files and more. Defaults to USER_HOME/.gradle if not set. JAVA_HOME Specifies the JDK installation directory to use for the client VM. This VM is also used for the daemon unless a different one is specified in a Gradle properties file with org.gradle.java.home or using the Daemon JVM criteria . GRADLE_LIBS_REPO_OVERRIDE Overrides for the default Gradle library repository. Can be used to specify a default Gradle repository URL in org.gradle.plugins.ide.internal.re"
+        },
+        {
+          "search": "Project properties",
+          "text": "rsion PDF Version Configuring the Build Environment version 8.13 Contents Available mechanisms Priority for configurations The gradle.properties file Project properties Command-line flags System properties Gradle properties Environment variables Configuring the build environment is a powerful way to customize the build process. There are many mechanisms available. By leveraging these mechanisms, you can make your Gradle builds more flexible and adaptable to different environments and requirements. Available mechanisms Gradle provides multiple mechanisms for configuring the behavior of Gradle itself and specific projects: Mechanism Information Example Command line interface Flags that configure build behavior and Gradle features --rerun Project properties Properties specific to your Gradle project TestFilter::isFailOnNoMatchingTests=false System properties Properties that are passed to the Gradle runtime (JVM) http.proxyHost=somehost.org Gradle properties Properties that configure Gradle settings and the Java process that executes your"
+        },
+        {
+          "search": "System properties",
+          "text": "d Environment version 8.13 Contents Available mechanisms Priority for configurations The gradle.properties file Project properties Command-line flags System properties Gradle properties Environment variables Configuring the build environment is a powerful way to customize the build process. There are many mechanisms available. By leveraging these mechanisms, you can make your Gradle builds more flexible and adaptable to different environments and requirements. Available mechanisms Gradle provides multiple mechanisms for configuring the behavior of Gradle itself and specific projects: Mechanism Information Example Command line interface Flags that configure build behavior and Gradle features --rerun Project properties Properties specific to your Gradle project TestFilter::isFailOnNoMatchingTests=false System properties Properties that are passed to the Gradle runtime (JVM) http.proxyHost=somehost.org Gradle properties Properties that configure Gradle settings and the Java process that executes your build org.gradle.logging.level=quiet "
+        }
+      ]
+    },
+    {
+      "label": "kgp-2.4.10-module",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin/2.4.10/kotlin-gradle-plugin-2.4.10.module",
+      "accessed_at": "2026-09-07T13:15:35.524294+00:00",
+      "status": 200,
+      "final_url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin/2.4.10/kotlin-gradle-plugin-2.4.10.module",
+      "bytes": 143988,
+      "sha256": "0e7713d84605da0bee038b578f31795882ccd721220a79cc36736ac9af9cb412",
+      "source_variant": [
+        {
+          "name": "gradle813SourcesElements",
+          "attributes": {
+            "org.gradle.category": "documentation",
+            "org.gradle.dependency.bundling": "external",
+            "org.gradle.docstype": "sources",
+            "org.gradle.plugin.api-version": "8.13",
+            "org.gradle.usage": "java-runtime"
+          },
+          "files": [
+            {
+              "name": "kotlin-gradle-plugin-2.4.10-gradle813-sources.jar",
+              "url": "kotlin-gradle-plugin-2.4.10-gradle813-sources.jar",
+              "size": 3538728,
+              "sha512": "e0191de3d2bee37131f58dff7e1ef5dcf575c55dc70cdad52e3bf5d0574ee6c9efa1e4f7670bd7e2c50867f5d4b6506e482541cd6a42f8e8581822e733b593c4",
+              "sha256": "70e277a44fbcf4d58444bb8b1459cb80686380537aa7414b80745a71607b36bb",
+              "sha1": "687bc5c96eeca0e5cfc2c4176e57f8ea7a7cac9f",
+              "md5": "f73ce4fb0ce899534714b23b67a604ad"
+            }
+          ],
+          "capabilities": [
+            {
+              "group": "org.jetbrains.kotlin",
+              "name": "kotlin-gradle-plugin",
+              "version": "2.4.10"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "label": "github-runner-2.337.0-jobextension",
+      "url": "https://raw.githubusercontent.com/actions/runner/v2.337.0/src/Runner.Worker/JobExtension.cs",
+      "accessed_at": "2026-09-07T13:15:35.804967+00:00",
+      "status": 200,
+      "final_url": "https://raw.githubusercontent.com/actions/runner/v2.337.0/src/Runner.Worker/JobExtension.cs",
+      "bytes": 73085,
+      "sha256": "f07c797dd13cc55823a55d2a00ea2381a6ec8de8968774fb1d44897bd37ca910",
+      "retained_source": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/github-runner-2.337.0-jobextension.cs",
+      "relevant_hits": [
+        {
+          "line": 590,
+          "text": "// Set the RUNNER_TRACKING_ID env variable."
+        },
+        {
+          "line": 591,
+          "text": "Environment.SetEnvironmentVariable(Constants.ProcessTrackingId, _processLookupId);"
+        },
+        {
+          "line": 905,
+          "text": "lookupId = proc.Value.GetEnvironmentVariable(HostContext, Constants.ProcessTrackingId);"
+        },
+        {
+          "line": 1266,
+          "text": "foreach (var proc in Process.GetProcesses())"
+        }
+      ]
+    },
+    {
+      "label": "github-runner-2.337.0-processextensions",
+      "url": "https://raw.githubusercontent.com/actions/runner/v2.337.0/src/Runner.Sdk/ProcessExtensions.cs",
+      "accessed_at": "2026-09-07T13:15:36.740381+00:00",
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    }
+  ]
+}

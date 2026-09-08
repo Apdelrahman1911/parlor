@@ -1,0 +1,1106 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-06T01:54:04.212658+00:00",
+  "scope": "Scoped remediation plus applicable remaining release/evidence gates",
+  "candidate": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "clean": false,
+    "branch": "main",
+    "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+    "tracked_diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+    "complete_patch_sha256": "305b8f3db676a79ddc98faf72e08d4269596528cdc30cafbbf4c6811312f03f9",
+    "not_a_release_candidate": true
+  },
+  "verdict": "NOT_READY",
+  "gates": [
+    {
+      "id": "remediation-st-c1",
+      "status": "PASS",
+      "reason": "Approved bounded correction with executed regressions. Limits: Foundation filesystem flag/retention tests8 plus existing safety6; actual backup/restore and Keychain-backed healthy migration not claimed.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/independent-review.json",
+          "sha256": "f2daf4d18fc856bbe2ae45f269c6e612f7d63e4ab9253fb36c75a2809e0cd334"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/INDEPENDENT_REVIEW.md",
+          "sha256": "3b23002f8a347aa22a8c70bd797d791cc08fcbc921ba4a6015297340608fce46"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.IosLegacySnapshotBackupTest.xml",
+          "sha256": "002a7012302b979191dbd5cd722f6a268de0b2c0dd16c07781484a41b26eefec"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.IosStorageSafetyTest.xml",
+          "sha256": "af2f4c1eac1c6497214b6eb166bc25673de03a4463ed39798e349be5b28e88be"
+        }
+      ]
+    },
+    {
+      "id": "remediation-sn-c1",
+      "status": "PASS",
+      "reason": "Approved bounded correction with executed regressions. Limits: Production handshake and peer coordinator under synthetic room/virtual time, not physical LAN.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/root/SN-C1-independent-fix-review-01.json",
+          "sha256": "a42e2f920214d4ff464b4dddf3f7baa8f6789c415c668b169754fbfe6100a4c3"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+          "sha256": "28fd1648e590ef0720414d613ac335be00238a391a27d39ac1675b66dc9a2b4f"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+          "sha256": "890bd63a5e5c8f94edb32fdc9006c0022df3e2a2d5b7ae45b6088a60b5a84f82"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+          "sha256": "8b80acb7a0cd9444481c7b461e91505efe7d09e28c5b4f79608c9dc285c5a578"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/shared/session/build/test-results/testDebugUnitTest/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+          "sha256": "25dc8b2179de1caf6b7993e7cbc9c8a31201da58cc7a0ce2a4d20ccadfbd184a"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/shared/session/build/test-results/testReleaseUnitTest/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+          "sha256": "8012958991bcc7aa75876a8fd3ecc317a8b6bce39ee8d7349c67c7f4fe947360"
+        }
+      ]
+    },
+    {
+      "id": "remediation-sn-c2",
+      "status": "PASS",
+      "reason": "Approved bounded correction with executed regressions. Limits: Factory9/host5/peer12/coordinator3 deterministic cases; native factory wiring source-reviewed, physical radio not measured.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/SN-C2-independent-remediation-review-02.json",
+          "sha256": "4d5f1113d9265a0b86abc1483c609cc6029cedb1ad73895d0dbf063dc5ad001d"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/SN-C2-independent-remediation-review-02.md",
+          "sha256": "49718eece1cc2f8b1aafd1a6d6964148a7ef63183013733838a533ff76f7f5ee"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+          "sha256": "692159a8451a8302cc3dc8b312c6fb1a232b9147c157abdd84dbb6f5b8b8c94e"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.HostOpeningCancellationTest.xml",
+          "sha256": "f7b4a2074b9b65e05e37df5fb17318907d3d47ab4d44c5c7b4f88d39191c5ed1"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitCreationTest.xml",
+          "sha256": "40ad32707bf2053de5388ab63de3e87058481d82d621a096de93c27458969dc8"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.PeerOpeningCancellationTest.xml",
+          "sha256": "2a3b0dd5970049f896c603d8cd9c44ddce1ffff38e07bf12e4743658c07df0fe"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+          "sha256": "cf6792c033c298a46ab2541f0060e79d1c7e0b984ed1e683a28a575e9d374ebf"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.HostOpeningCancellationTest.xml",
+          "sha256": "7b07072fbaf1546404eedf76a1347421168ec1f3aff4ba3accdf862f63b71e15"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitCreationTest.xml",
+          "sha256": "f6822540836de674bfc156cc675f8cacb32bb4d388d3a338e1fa538c51424ae3"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.PeerOpeningCancellationTest.xml",
+          "sha256": "e1bd6f3bc97893ea32484fa9a7df3754953839ec56f63eec36382ffba138fff3"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+          "sha256": "b23ed8e4be6d88973625f79e89c699dc9805c9db6665a23c06b1134dc6e238fd"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/shared/transport-p2p/build/test-results/testDebugUnitTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+          "sha256": "d6432f1b39c6f0a7528391f6f5b5591330394fc98d372859105ace59af857bd5"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/shared/transport-p2p/build/test-results/testReleaseUnitTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+          "sha256": "1168d51a0fe839d5871e1eeba40166a2b2c35745c1e7cb4fae299391a5922914"
+        }
+      ]
+    },
+    {
+      "id": "remediation-wd-c1",
+      "status": "PASS",
+      "reason": "Approved bounded correction with executed regressions. Limits: Twelve real Compose-router tests with synthetic host/peer session controllers, not physical multiplayer.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/root/WD-C1-independent-fix-review-01.json",
+          "sha256": "df7ba7e34da2d34e88ee6937c6838a0f8d061ca0bc4f1375e8b185788ddebf3f"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest.xml",
+          "sha256": "d5c2d5a2695d411f99b391a2337bcf564f8b3a150ab2f13c20fe5c7c8c869499"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest.xml",
+          "sha256": "a3ee0e146c055e1dc389b3a85f2e16c954d2e49404d5bcc57c070e550c88cfe6"
+        }
+      ]
+    },
+    {
+      "id": "remediation-ios-b1",
+      "status": "PASS",
+      "reason": "Approved bounded correction with executed regressions. Limits: Five actual shell-phase tests and three normalizer tests; not a corrected qualified-Xcode app build or diagnosis of historical launch crashes.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/IOS-B1-independent-remediation-review-01.json",
+          "sha256": "3e04f4aeed79ba9f7528357fe18136386abcb90c5fe84abb86f3b76e64e236ab"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/IOS-B1-independent-remediation-review-01.md",
+          "sha256": "8d0f2eb8693356379329e17e134d63a991ef37d0111a6a7df472a4ee41e82b01"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/IOS-B1-independent-remediation-review-02-green.md",
+          "sha256": "6dd99298c8d85295227f1a3435ba1fd8f271e7fd4ec155b7110ea36fc98c52c9"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/gradle.log",
+          "sha256": "2eb2574058d05bbd292dcef2ba2126cf37cb86ad7ab0c41cdcabd4e57088f776"
+        }
+      ]
+    },
+    {
+      "id": "remediation-root-t3",
+      "status": "PASS",
+      "reason": "Approved bounded correction with executed regressions. Limits: Eight formerly omitted enabled methods now execute; two restored disabled descriptors remain skipped along with third existing physical skip.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/ROOT-T3-independent-remediation-review-01.json",
+          "sha256": "875e0723d0175ff193f7fee77a38333597a8114bf943aafc0eb837b0a604c199"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/ROOT-T3-independent-remediation-review-01.md",
+          "sha256": "20c958f269669878dc68a58c6ab8a5eeaf5a7702b6591f3b74327771fc3aa85e"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+          "sha256": "fabc170786e0432c35c368921dd956ba4a2a5e8e1f47616b919552aa9aacc384"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.xml",
+          "sha256": "fbc99c0eb90e77cd07b6a9b716ccac9a460e0ca135cfaa270d7caa948d33a435"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+          "sha256": "c20906d82ef865b7a737c855567d2073765b9a80d9a198ae4ca5eb9445d08bbc"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+          "sha256": "2aa04bdb3fc6243b37b0c86f2b48b23b790b8097d6d3d2d8c878efcf4aa31d12"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.xml",
+          "sha256": "11273cb5990a882e5bb4775c13c3f4c196e25c619f1c1776388639e88add6e29"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+          "sha256": "112f6b6a5329a1bc3ac9b8e586d158b41f394fa8b68d2d9fcb98cbb6786e21c6"
+        }
+      ]
+    },
+    {
+      "id": "remediation-mf-c1",
+      "status": "PASS",
+      "reason": "Approved bounded correction with executed regressions. Limits: Existing ON feature independently exercised across four nights; OFF restriction, skips, self flag, recovery, phase, death, caps, local resume and in-memory peer paths checked.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MF-C1-M-C03-independent-evidence.json",
+          "sha256": "08b7012c575315873f0822d3dbaa6bb46c205e1b71e71f3d7f59a3f3b172ae91"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MF-C1-M-C03-independent-review.md",
+          "sha256": "ae821d8d7b8f8480b5691e9f60c3dd657c80f756512c5e43ffb46f57cd6bdff9"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/mafia-detekt-review-01/independent-followup-approval-01.json",
+          "sha256": "c61312b439ba1198e229d9b47ec133b77c629aa5496164e6e82c3065d9f1c32d"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.MafiaDoctorRulesTest.xml",
+          "sha256": "5e7c8303b0a4223b90e355ba5d7bd45f0adb371265203379f1462213b534bdee"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaDoctorLanTest.xml",
+          "sha256": "a34634a220d646cc3b04ae713d69c3ea0c9dd8b1027066d312d284742c4500d9"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest.xml",
+          "sha256": "ba6d3c53eadcce0887ba308a70455a043be5a802a2e0373275d5114f3cb1a0c4"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest.xml",
+          "sha256": "629c1c083192f329780fecdb927f9144fed4516261b20f7f0baa128423301c98"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest.xml",
+          "sha256": "b9f8571c3f0dc6ab69b6c84c43543e1b4a22ba605fc48c0f21fc48972e64a0e4"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.MafiaDoctorRulesTest.xml",
+          "sha256": "c529a28344ef207920bb30c4c3d48034e0c4669e9886307bc83091c4e28ae938"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaDoctorLanTest.xml",
+          "sha256": "ffab7f80ddf543ed13d01ba1984c20c4f78460349326d223a79fb7e275cc63fe"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest.xml",
+          "sha256": "087dfa6cb653b9337d170bd3bd101e8a4b4fdb053cc81cb612b0fc405932da63"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest.xml",
+          "sha256": "a3b05f773caf5d1f518955144b1e2ba3b865e50026d0a69b54192258ba3ef522"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest.xml",
+          "sha256": "9d91b184a5cfb2698e11b605e891e0309784dc2cc585f301efd409d12cb74a9f"
+        }
+      ]
+    },
+    {
+      "id": "remediation-wd-c3",
+      "status": "PASS",
+      "reason": "Approved bounded correction with executed regressions. Limits: Nine strict encode/decode/local-load/own-private tests with real6-seat bundled case; no normal producer or cryptographic bypass allegation.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/root/WD-C3-independent-fix-review-01.json",
+          "sha256": "32b0b19e68baa5f72f2c9e169cf66206490ce97b8dc72ac5b2378549314577fe"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/whodunit-detekt-review-01/independent-followup-approval-01.json",
+          "sha256": "881d34fc9faf770f8a944ecbf0da774a99767075acc18dc577fe2625358e8ee4"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest.xml",
+          "sha256": "f7e17520f7fcd8978256aa041fa545cd9c39a0c59d1a2c2970e4967c1947d531"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest.xml",
+          "sha256": "18df420e854531ad82ad1e1b609751ca51eb4532fe852b46a7129a0a8556efcf"
+        }
+      ]
+    },
+    {
+      "id": "remediation-m-c03",
+      "status": "PASS",
+      "reason": "Approved bounded correction with executed regressions. Limits: Six Desktop real-composable cases EN/AR,320dp,landscape,font scales1/2; native screens/readers remain separate.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MF-C1-M-C03-independent-evidence.json",
+          "sha256": "08b7012c575315873f0822d3dbaa6bb46c205e1b71e71f3d7f59a3f3b172ae91"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MF-C1-M-C03-independent-review.md",
+          "sha256": "ae821d8d7b8f8480b5691e9f60c3dd657c80f756512c5e43ffb46f57cd6bdff9"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest.xml",
+          "sha256": "7efad80cf4da29cfc75c4ecf7ddeee9bc77f2b605a5a036517ccda3d6c18b9da"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest.xml",
+          "sha256": "2a36be5c1a724526a749b58a0c0d93c4d9649be43848262165472bbf28c43ea0"
+        }
+      ]
+    },
+    {
+      "id": "remediation-ds-c01",
+      "status": "BLOCKED",
+      "reason": "Ownership fix and exact four-boot app-host restart/System matrix approved within scope; legacy provenance and active-session/direct Compose/OS Settings limits remain. 11 native owner tests, 13 source-contract tests and 1 actual app-host XCTest pass. Four distinct processes/14 events prove persisted AR/EN ownership before App initializes and System restoration of absence/exact prior [ar-EG,en], localized UI and native semantic direction. Observer modifies temporary Swift wrapper only. Legacy unmarked AppleLanguages provenance, identical external writes and asynchronous durability remain limited; no direct Compose direction, actual iOS Settings application, active-game identity or physical-device proof.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/independent-review.json",
+          "sha256": "f2daf4d18fc856bbe2ae45f269c6e612f7d63e4ab9253fb36c75a2809e0cd334"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/INDEPENDENT_REVIEW.md",
+          "sha256": "3b23002f8a347aa22a8c70bd797d791cc08fcbc921ba4a6015297340608fce46"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C01-source-contract-review-03.json",
+          "sha256": "28b7723ede03eeb10302dbf4a6aa64649774529b6b8c719844aa31dc75d4e076"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C01-source-contract-green-review-04.json",
+          "sha256": "fbe3a4d016e12baeeeaba20a3adf516868aa6f3b77f9fb399ef6be26e89e20ba"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.ProductionUiAccessibilityContractTest.xml",
+          "sha256": "193bb50411184f664af36815ba5493390e270b7f882962d43f965389e9a735b4"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.ProductionUiAccessibilityContractTest.xml",
+          "sha256": "bbf9fd5309c94fdc22be6778ad28d3eb6a86ad6adb99d1eb34fcadeb4e4bdaf0"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest.xml",
+          "sha256": "01307e858502cd38f20a63f82ecb57c0cef54be0c467f58ec27560f1d30d2e40"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/dsc01-apphost-02-independent-result-review.json",
+          "sha256": "11137e5e68aa794a056c5c2d0eaaca5ea1843a609063a27245c25c5cbbed8795"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/receipt.json",
+          "sha256": "7ce472e0296c985d152d02c0dbdf6b6979830c12906c7653291c5237bf5ac660"
+        }
+      ],
+      "owner": "implementation agent (local app-host verification); owner (legacy preference policy)"
+    },
+    {
+      "id": "remediation-ds-c02",
+      "status": "PASS",
+      "reason": "Approved bounded correction with executed regressions. Limits: State4/lifetime3/concurrency2 tests; Desktop timing only. Paused-frame fixture failure investigated, not hidden.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-C03-independent-evidence.json",
+          "sha256": "1f0b7e23936e89091983b7728bba968e0c958d5dacc7c3ecff28c80df35da21d"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-C03-independent-review.md",
+          "sha256": "18f751fa243ff134a25725cb284363f7af0990a4f374cc183a1ea3415bad55c0"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-additional-tests-execution-approval.json",
+          "sha256": "059db45339be3d0b7f7096fd296b5e2326ac069e618b71652983d5abc5404513"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C02-dispatch-review-01/independent-followup-approval-01.json",
+          "sha256": "9022ae4cc48bbcddc45b4658044fc1a854c5c9cb25630c188197d471ece6dd2c"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastConcurrencyTest.xml",
+          "sha256": "da28a92581d5a03acfcd520098720548fc76e0c8b323d7bccf3fd6f0460c69f4"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastLifetimeTest.xml",
+          "sha256": "678ad6441194194421246e565917ebec1145db9beab3e71b1387080707fd7944"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+          "sha256": "613d2851dfde61f5e3601fe88cfc6132653df27cd50a7474350d39b7607b1b1f"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastConcurrencyTest.xml",
+          "sha256": "8e46588eb8a6b83a0181a870e6f5c5e22c1f6b4590946d03f727f5f9688fb759"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastLifetimeTest.xml",
+          "sha256": "af927bb4d27fbe1a016b6faa30fb66c1ed51bc37ac7014c817edebd1d14ce0dd"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+          "sha256": "2d19cb8b589517e8cc416115e057db865e234acb30485a5bff23423ab99996b0"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+          "sha256": "8972e13f029fba077c8180720c131764c4dca9ef909a4b848650f0250792198f"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/shared/design-system/build/test-results/testDebugUnitTest/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+          "sha256": "b77a0d4f123520936175258be60fb264a16f3de826bb66b21fc5c59bbe1e9447"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/shared/design-system/build/test-results/testReleaseUnitTest/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+          "sha256": "9b56f456be1b3b6a91b5850663171e5b413b123a801a1bdef88305808a8e55da"
+        }
+      ]
+    },
+    {
+      "id": "remediation-ds-c03",
+      "status": "PASS",
+      "reason": "Approved bounded correction with executed regressions. Limits: Three actual-composable contrast cases plus focus regression; analytic pressed/disabled contrasts not physical a11y proof.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-C03-independent-evidence.json",
+          "sha256": "1f0b7e23936e89091983b7728bba968e0c958d5dacc7c3ecff28c80df35da21d"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-C03-independent-review.md",
+          "sha256": "18f751fa243ff134a25725cb284363f7af0990a4f374cc183a1ea3415bad55c0"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-additional-tests-execution-approval.json",
+          "sha256": "059db45339be3d0b7f7096fd296b5e2326ac069e618b71652983d5abc5404513"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ReconnectingOverlayFocusTest.xml",
+          "sha256": "ebff4bb136cd1fae469c69f2b35b1c4f1e4ca2514d9c0ad24124f57f5686fcb7"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.RecoveryActionContrastTest.xml",
+          "sha256": "1e291db4192be70f901c52c47aafef91b39a5461aede20df3db02750ce96e588"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ReconnectingOverlayFocusTest.xml",
+          "sha256": "d981334d1f7fb9a70eb6fd9cb3ee7a530b186f8911d435e56ee5ec4395e40a53"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.RecoveryActionContrastTest.xml",
+          "sha256": "8c71a1a7a9bd7ae48ed27f04d6984928e923a3b64992fb0fbdc010bdd87a714a"
+        }
+      ]
+    },
+    {
+      "id": "remediation-wd-c2",
+      "status": "BLOCKED",
+      "reason": "Original defect confirmed; no safe authorial correction chosen. Limits: Last Dinner9:00/9:15; Layla outage9:05/9:45; Jasmine hiding duration; Khan poisoning/arrival times unresolved.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/WD-C2-blocked.md",
+          "sha256": "5e70e73ec73e946b92abb10e1189ef5549b4f37ee1cccbf8b0d24cb5ea2c1bb1"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/wd-c2-unmodified-resources.json",
+          "sha256": "0de7e18da4500b58542daba4217a96426679d903ba456ff846093762833de232"
+        }
+      ],
+      "owner": "content author / repository owner"
+    },
+    {
+      "id": "remediation-rl-c1",
+      "status": "PASS",
+      "reason": "Approved bounded correction with executed regressions. Limits: Seven real shell-preflight fixtures include exact/over bounds and GNU-shaped shim; not an actual Linux signed-AAB run.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/mafia/rl-c1-independent-fix-review-01.json",
+          "sha256": "623d83ad4b20674179887f49c2e733026f0149bd831e91f3ab3ae100e94f941f"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-interactions-01.json",
+          "sha256": "bd900c84f3e0949c0ae3dd04cc1173c171e24150e2e8f78bb36ba64d74386201"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-approval-02.json",
+          "sha256": "e4d58a9ea4131b7399347ff38b5858630a9c8068f6ddf9683ca2f68e20ed5e30"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/gradle.log",
+          "sha256": "2eb2574058d05bbd292dcef2ba2126cf37cb86ad7ab0c41cdcabd4e57088f776"
+        }
+      ]
+    },
+    {
+      "id": "remediation-rl-c2",
+      "status": "PASS",
+      "reason": "Approved bounded correction with executed regressions. Limits: 21 local synthetic tests including actual owned descendant cleanup; not Store credentials/signed candidate/positive RFC3161 integration.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/RL-C2-independent-remediation-review-01.json",
+          "sha256": "0dfb26b45804abd11dcea5d3f5fce4c5b168822f01a9598cd774935cf968bbdb"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/RL-C2-independent-remediation-review-01.md",
+          "sha256": "f2d0d7ac7f7cb40ef66e50bf6ba8b0df619dff1f4d112d711dbcf3bc3be40554"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/gradle.log",
+          "sha256": "2eb2574058d05bbd292dcef2ba2126cf37cb86ad7ab0c41cdcabd4e57088f776"
+        }
+      ]
+    },
+    {
+      "id": "remediation-rl-c3",
+      "status": "PASS",
+      "reason": "Approved bounded correction with executed regressions. Limits: Nine new production-helper mocked-HTTP tests plus complete172-test release suite; no Google Play operations.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/mafia/rl-c3-independent-fix-review-01.json",
+          "sha256": "2911a5629eb8b16f34936834301a59c883b1913597a42fa2cd7ecbd49e3c322b"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-interactions-01.json",
+          "sha256": "bd900c84f3e0949c0ae3dd04cc1173c171e24150e2e8f78bb36ba64d74386201"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-approval-02.json",
+          "sha256": "e4d58a9ea4131b7399347ff38b5858630a9c8068f6ddf9683ca2f68e20ed5e30"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/gradle.log",
+          "sha256": "2eb2574058d05bbd292dcef2ba2126cf37cb86ad7ab0c41cdcabd4e57088f776"
+        }
+      ]
+    },
+    {
+      "id": "production-check",
+      "status": "PASS",
+      "reason": "Configured host-independent aggregate actually executed: 1372 JVM/Android passes, 3 physical skips; 172 release Python tests; 43 Detekt XML reports clear. 32 policy-accepted lint warnings remain.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/receipt.json",
+          "sha256": "4f8374afedbc3fec40353f0a95556766eaf8fa393daf1f8d307104e05694b9f4"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/combined-production-evidence-04.json",
+          "sha256": "1621b2a0f284b2ccebbbab84e6c9090ec7da6733efb7480f59a295c54f689522"
+        }
+      ]
+    },
+    {
+      "id": "configured-alltests-and-native-runtime",
+      "status": "PASS",
+      "reason": "2458 passes + 3 physical skips: 1220 Desktop, 426 actual iOS simulator, 406 Android debug-unit, 406 Android release-unit. 11 native modules, 13 host-disabled x64 tasks. Mafia/engine native tests are NO-SOURCE. Not all platforms/devices.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/receipt.json",
+          "sha256": "fae1ca61e3eb2854c2d21fae7a79c747cf5093d451a99fe957ec091fcc7043eb"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/native-final-verification-01.json",
+          "sha256": "c0235ccee1d68e85ecaa98ed3aee277eb50c22fc82fba3998ea9fdd1a6d4d245"
+        }
+      ]
+    },
+    {
+      "id": "apple-release-frameworks-and-analysis",
+      "status": "PASS",
+      "reason": "Three fresh Release framework links, 4 actual iOS-main Detekt reports clear; 113 NO-SOURCE analysis tasks; zero runtime tests in this cycle. Xcode not Store-qualified.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-apple-01/receipt.json",
+          "sha256": "41dd813e36c349daefb5f45237b70e85571d4238e1be0e9ef1e363b7afd6f82c"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/combined-apple-evidence-01.json",
+          "sha256": "01e3dcb87909255d5dbc2bd51abc7ef15f02414014558e6ff982e68cb8a795a0"
+        }
+      ]
+    },
+    {
+      "id": "en-ar-structural-resource-parity",
+      "status": "PASS",
+      "reason": "Keys/types/empty values/placeholders: 139 shell, 323 Whodunit, 269 Mafia and 16 design-system per locale. Not editorial or accessibility proof.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-resource-checks-01/receipt.json",
+          "sha256": "42d363bcc04f84e49deac1d608f81cb92a70b97fbf51c3b9dc41c353d183f731"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-resource-checks-01/gradle.log",
+          "sha256": "4aac75c30c1e09d9ca619a2430e4b6ba72662493e875e83a785df37a2882fb85"
+        }
+      ]
+    },
+    {
+      "id": "tracked-diff-whitespace",
+      "status": "PASS",
+      "reason": "git diff --check passed for tracked changes. New source additions are separately hashed and included in the complete patch.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-resource-checks-01/gradle.log",
+          "sha256": "4aac75c30c1e09d9ca619a2430e4b6ba72662493e875e83a785df37a2882fb85"
+        }
+      ]
+    },
+    {
+      "id": "frozen-source-and-original-work-preservation",
+      "status": "PASS",
+      "reason": "658-file source manifest and complete62-file patch identify dirty checkout; 1618 original files retained, no pre-existing untracked changes, refs/stash/index preserved.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/final/source-identity.json",
+          "sha256": "e710c5705cf066033d8e16747c04fe5e9a9383fb4dfc7f73e2fdc38af0206830"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/final/diff-identity.json",
+          "sha256": "612514fb26e2ae85671925ca54f18a86a6b4837878fc99311d2b635be74c15b7"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/final/preservation.json",
+          "sha256": "7fc27c70f677510788c6a47bd33561ebc2b7b62c1957ffeea395f497d9871ba4"
+        }
+      ]
+    },
+    {
+      "id": "scoped-cross-game-authority-and-compatibility",
+      "status": "PASS",
+      "reason": "Additional independent bounded cross-game/session reviews found no new scoped blocker. Pure host authority, own-private projection and exact4.2 rules retained; this is not a new exhaustive whole-repository audit.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/final-cross-game-review-01.json",
+          "sha256": "8d7e917e0ce176257c347541b5273f6b8e6af489883309c8cea238e6cbda4c9a"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/final-session-cross-check-01.json",
+          "sha256": "4be43e012718c0b46ad333324b33d728ac3c56745250c8989bde899578c97925"
+        }
+      ]
+    },
+    {
+      "id": "combined-cycle-resource-cleanup",
+      "status": "PASS",
+      "reason": "Latest completed Gradle cycles stop daemons immediately, collect compact evidence, delete owned build/scratch outputs, remove owned simulator and report no survivors. Post-index final observation is recorded separately.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/receipt.json",
+          "sha256": "4f8374afedbc3fec40353f0a95556766eaf8fa393daf1f8d307104e05694b9f4"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/receipt.json",
+          "sha256": "fae1ca61e3eb2854c2d21fae7a79c747cf5093d451a99fe957ec091fcc7043eb"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-apple-01/receipt.json",
+          "sha256": "41dd813e36c349daefb5f45237b70e85571d4238e1be0e9ef1e363b7afd6f82c"
+        }
+      ]
+    },
+    {
+      "id": "ios-real-app-language-lifecycle",
+      "status": "BLOCKED",
+      "reason": "Actual four-boot Settings/restart matrix now passes with native direction and localized resources. Broader gate remains incomplete: legacy unmarked-preference policy, direct Compose direction, OS Settings interaction and active-game continuity. In-game navigation intentionally does not expose Settings; synthetic bridge mutation is not an existing UI journey.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/native-final-verification-01.json",
+          "sha256": "c0235ccee1d68e85ecaa98ed3aee277eb50c22fc82fba3998ea9fdd1a6d4d245"
+        }
+      ],
+      "owner": "implementation agent"
+    },
+    {
+      "id": "ios-swift-apphost-and-wrapper",
+      "status": "BLOCKED",
+      "reason": "Unsigned Debug app-host with temporary Swift observer now compiled and executed successfully; original Kotlin App/Settings unchanged. This is not the unmodified shipping-wrapper smoke test or an unsigned Swift Release wrapper/archive run. The archived runner remains untouched; its secondary FIFO cleanup limitation was addressed in independently reviewed new harness controls and actually verified on both new cycles.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "docs/RELEASE_GATES.md",
+          "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/native-final-verification-01.json",
+          "sha256": "c0235ccee1d68e85ecaa98ed3aee277eb50c22fc82fba3998ea9fdd1a6d4d245"
+        }
+      ],
+      "owner": "implementation agent"
+    },
+    {
+      "id": "android-managed-runtime",
+      "status": "BLOCKED",
+      "reason": "Pinned Linux/KVM/x86_64 managed-device runtime not available on current Apple Silicon host. Desktop and Android unit tests are not the R8-shrunk Android runtime gate.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "docs/RELEASE_GATES.md",
+          "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+        },
+        {
+          "kind": "path",
+          "ref": "build.gradle.kts",
+          "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b"
+        }
+      ],
+      "owner": "CI/repository owner"
+    },
+    {
+      "id": "other-desktop-host-graphs",
+      "status": "BLOCKED",
+      "reason": "Linux x64/arm64, macOS x64 and Windows x64 dependency/runtime graphs not executed by this macOS arm64 run.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "docs/RELEASE_GATES.md",
+          "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+        }
+      ],
+      "owner": "CI/repository owner"
+    },
+    {
+      "id": "physical-p2pkit-lan",
+      "status": "BLOCKED",
+      "reason": "Three physical tests remain skipped and have historical admission assumptions. No two-device host/peer, denial/rejoin, radio or lifecycle evidence provided by in-memory tests.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "docs/RELEASE_GATES.md",
+          "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/native-final-verification-01.json",
+          "sha256": "c0235ccee1d68e85ecaa98ed3aee277eb50c22fc82fba3998ea9fdd1a6d4d245"
+        }
+      ],
+      "owner": "device validation owner"
+    },
+    {
+      "id": "native-accessibility-layout-and-privacy",
+      "status": "BLOCKED",
+      "reason": "Native VoiceOver/TalkBack, compact/large-text RTL, app-switcher and physical lifecycle matrix not executed. Desktop composable tests only cover their declared cases.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "docs/RELEASE_GATES.md",
+          "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+        }
+      ],
+      "owner": "device/accessibility owner"
+    },
+    {
+      "id": "physical-ios-backup-and-keychain",
+      "status": "BLOCKED",
+      "reason": "Backup resource-flag tests are not real backup/restore or app-host Keychain migration evidence. IOS-R1 remains an evidence gap, not a new confirmed defect.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "docs/RELEASE_GATES.md",
+          "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/independent-review.json",
+          "sha256": "f2daf4d18fc856bbe2ae45f269c6e612f7d63e4ab9253fb36c75a2809e0cd334"
+        }
+      ],
+      "owner": "device validation owner"
+    },
+    {
+      "id": "qualified-apple-toolchain",
+      "status": "BLOCKED",
+      "reason": "Installed Xcode26.5/17F42 differs from pinned Store-qualified26.3/17C529.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "config/release-policy.json",
+          "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/combined-apple-evidence-01.json",
+          "sha256": "01e3dcb87909255d5dbc2bd51abc7ef15f02414014558e6ff982e68cb8a795a0"
+        }
+      ],
+      "owner": "release owner"
+    },
+    {
+      "id": "real-store-signing-and-submission",
+      "status": "BLOCKED",
+      "reason": "No authority to read/use private Store keys, sign Store candidates, upload, promote or publish. Local synthetic certificate tests do not satisfy this gate.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "docs/RELEASE_GATES.md",
+          "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+        }
+      ],
+      "owner": "release owner"
+    },
+    {
+      "id": "store-identity-ownership",
+      "status": "BLOCKED",
+      "reason": "Known com.parlor.app identity collision unresolved; disabled publication and identity checks are deliberately preserved.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "config/release-policy.json",
+          "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4"
+        },
+        {
+          "kind": "path",
+          "ref": ".github/workflows/testing-candidate.yml",
+          "sha256": "0488fc5e0c4e520a767408cfb5e7fa387bc5fdfa0edfeb9dcd29a4cb0d2c7976"
+        },
+        {
+          "kind": "path",
+          "ref": ".github/workflows/production-promotion.yml",
+          "sha256": "94ca7f617c24cb4c9ffafa5860c7ebc104f08cfa46b2a2e13fbae3ed816c461b"
+        }
+      ],
+      "owner": "repository/release owner"
+    },
+    {
+      "id": "legal-and-store-declarations",
+      "status": "BLOCKED",
+      "reason": "Owner approval of content rights, licenses, privacy declarations, metadata and Store setup not independently established by tests.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "docs/RELEASE_GATES.md",
+          "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+        }
+      ],
+      "owner": "product/legal/release owner"
+    },
+    {
+      "id": "immutable-integrated-release-candidate",
+      "status": "BLOCKED",
+      "reason": "Authorized changes are intentionally uncommitted. No commit/merge authorization; base SHA/tree alone cannot identify a clean reviewed release candidate.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/final/preservation.json",
+          "sha256": "7fc27c70f677510788c6a47bd33561ebc2b7b62c1957ffeea395f497d9871ba4"
+        }
+      ],
+      "owner": "repository owner"
+    },
+    {
+      "id": "wd-c4-modal-timer-policy",
+      "status": "BLOCKED",
+      "reason": "Outside16 repairs: whether Leave-confirmation modal time counts as discussion time is unresolved; no policy or code change invented.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/canonical-register.json",
+          "sha256": "2767d98befc138dc9222ab0007209b52032f31033d1cbf8a71e6b4e665fe897e"
+        }
+      ],
+      "owner": "product owner"
+    },
+    {
+      "id": "ios-owned-app-language-restart-matrix",
+      "status": "PASS",
+      "reason": "One real unskipped XCTest, four distinct process boots, 14 bounded observations: actual AR/EN selection, persisted before-App ownership, System absence/prior-array restoration, localized controls and native direction. Not active-game, direct Compose direction, OS Settings, physical, release or Store proof.",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/dsc01-apphost-02-independent-result-review.json",
+          "sha256": "11137e5e68aa794a056c5c2d0eaaca5ea1843a609063a27245c25c5cbbed8795"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/receipt.json",
+          "sha256": "7ce472e0296c985d152d02c0dbdf6b6979830c12906c7653291c5237bf5ac660"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/xcresult-summary.json",
+          "sha256": "ed725b1c6ed56794928781fdc92faf89d408d2b39f2e1e0f3779227a8fed9595"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/xcresult-tests.json",
+          "sha256": "6f149983032509328417602f3b2098d34991d409e09e714da72409cb8d170ffb"
+        },
+        {
+          "kind": "path",
+          "ref": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/probe-result.json",
+          "sha256": "fe0de6c3bf01077fdac09067ef0548f65f7811d7fa69d5ffe20a4b3d2c3f5142"
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "name": "composeApp/build/outputs/bundle/release/composeApp-release.aab",
+      "sha256": "d046d2a2ed9856d5e77888acc9a31a41dd46d1bd64faa3585a16008be8d3f01e",
+      "bytes": 8802894,
+      "source_commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "source_tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "tracked_diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+      "complete_patch_sha256": "305b8f3db676a79ddc98faf72e08d4269596528cdc30cafbbf4c6811312f03f9",
+      "evidence": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/artifact-receipts.json",
+        "sha256": "b2baac0fac690255c23004a682f756696b09698c3b3d28a095d870cc378102be"
+      },
+      "disposition": "Unsigned/linkage inspection only; generated binary deleted after inspection; not an approved Store candidate or runtime proof."
+    },
+    {
+      "name": "composeApp/build/bin/iosX64/releaseFramework/ComposeApp.framework/ComposeApp",
+      "sha256": "dce4720c19d635b26f9f306b11b1f668d24b6f347bbcb6a0501a752613434b9b",
+      "bytes": 53549512,
+      "source_commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "source_tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "tracked_diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+      "complete_patch_sha256": "305b8f3db676a79ddc98faf72e08d4269596528cdc30cafbbf4c6811312f03f9",
+      "evidence": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-apple-01/artifact-receipts.json",
+        "sha256": "7e8b901616e872aee7af864dd66605be20477557675894544f179398bed7f5bd"
+      },
+      "disposition": "Unsigned/linkage inspection only; generated binary deleted after inspection; not an approved Store candidate or runtime proof."
+    },
+    {
+      "name": "composeApp/build/bin/iosSimulatorArm64/releaseFramework/ComposeApp.framework/ComposeApp",
+      "sha256": "b38bef11efdad166858d6b3ef45cae96e1783647d1d61a8f08f2a4b78caa016d",
+      "bytes": 52265480,
+      "source_commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "source_tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "tracked_diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+      "complete_patch_sha256": "305b8f3db676a79ddc98faf72e08d4269596528cdc30cafbbf4c6811312f03f9",
+      "evidence": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-apple-01/artifact-receipts.json",
+        "sha256": "7e8b901616e872aee7af864dd66605be20477557675894544f179398bed7f5bd"
+      },
+      "disposition": "Unsigned/linkage inspection only; generated binary deleted after inspection; not an approved Store candidate or runtime proof."
+    },
+    {
+      "name": "composeApp/build/bin/iosArm64/releaseFramework/ComposeApp.framework/ComposeApp",
+      "sha256": "70e113c4e73d993eb4545748e62ee1c9b7dd8e1dff1b4c3ffd99374f9ad33632",
+      "bytes": 52067408,
+      "source_commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+      "source_tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "tracked_diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+      "complete_patch_sha256": "305b8f3db676a79ddc98faf72e08d4269596528cdc30cafbbf4c6811312f03f9",
+      "evidence": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-apple-01/artifact-receipts.json",
+        "sha256": "7e8b901616e872aee7af864dd66605be20477557675894544f179398bed7f5bd"
+      },
+      "disposition": "Unsigned/linkage inspection only; generated binary deleted after inspection; not an approved Store candidate or runtime proof."
+    }
+  ],
+  "manual_actions": [
+    {
+      "id": "chronology-and-compatibility",
+      "owner": "content author/repository owner",
+      "blocking": true,
+      "action": "Answer the four WD-C2 chronology questions and choose an explicit content-version/save compatibility policy."
+    },
+    {
+      "id": "legacy-ios-language-provenance",
+      "owner": "product owner",
+      "blocking": true,
+      "action": "Choose user-directed recovery policy for pre-marker AppleLanguages values indistinguishable from OS preferences; never clear silently."
+    },
+    {
+      "id": "remaining-ios-language-lifecycle",
+      "owner": "implementation agent",
+      "blocking": true,
+      "action": "The owned-app restart/System and safe-cleanup prerequisite now pass. Remaining: direct Compose direction, actual OS Settings interaction and active-game continuity evidence without inventing an in-game Settings route or treating root identity as session proof."
+    },
+    {
+      "id": "physical-and-external-gates",
+      "owner": "repository/device/release/legal owners",
+      "blocking": true,
+      "action": "Complete the explicit physical, alternate-host, signing/identity/Store/legal gates without bypassing publication disablement."
+    }
+  ],
+  "supersedes": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/final/gates.json",
+    "sha256": "331bf4c43368d2533d7ed493517430615781a655b961e8db31233a8059c6cbe8"
+  }
+}

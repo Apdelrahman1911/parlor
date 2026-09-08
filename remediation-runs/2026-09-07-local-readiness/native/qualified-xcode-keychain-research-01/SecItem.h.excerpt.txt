@@ -1,0 +1,17 @@
+201	     @constant kSecAttrAccessGroup Specifies a dictionary key whose value is
+202	     a CFStringRef indicating which access group a item is in.  The access
+203	     groups that a particular application has membership in are determined by
+204	     two entitlements for that application.  The application-identifier
+205	     entitlement contains the application's single access group, unless
+206	     there is a keychain-access-groups entitlement present.  The latter
+207	     has as its value a list of access groups; the first item in this list
+208	     is the default access group. Unless a specific access group is provided
+209	     as the value of kSecAttrAccessGroup when SecItemAdd is called, new items
+210	     are created in the application's default access group.  Specifying this
+211	     attribute in SecItemCopyMatching, SecItemUpdate, or SecItemDelete calls
+212	     limits the search to the specified access group (of which the calling
+213	     application must be a member to obtain matching results.)  To share
+214	     keychain items between multiple applications, each application must have
+215	     a common group listed in its keychain-access-groups entitlement, and each
+216	     must specify this shared access group name as the value for the
+217	     kSecAttrAccessGroup key in the dictionary passed to SecItem functions.

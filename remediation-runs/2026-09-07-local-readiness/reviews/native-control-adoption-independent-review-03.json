@@ -1,0 +1,405 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-07T08:42:14.689644+00:00",
+  "reviewer": "/root/native_fix_review",
+  "adoption_author": "/root",
+  "status": "EXACT ADOPTION AND BOUND PURE-REGRESSION RESULTS APPROVED",
+  "scope": "Review of canonical adoption, two related one-literal SHA pin changes, archived-byte preservation, and bound execution evidence. This is not an independent re-review of every pre-existing iOS/Rosetta harness assertion or a native runtime claim.",
+  "changes": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py",
+      "before_sha256": "148a71180b6768858f47d7cf5607104169898dafdee48ecbf41937cd46e71a1d",
+      "after_sha256": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378",
+      "archive": "remediation-runs/2026-09-07-local-readiness/reviews/before-null-port-adoption-01/darwin_owned_processes.py",
+      "verified": true,
+      "scope": "exact reviewed helper adoption"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-build-helper/build_and_retain_apks.py",
+      "before_sha256": "8a6a4425d61c0120297665b05b3f34e3943021e432bd95c62b68f86649c695f4",
+      "after_sha256": "1b22b01f1b78534539dbf1491208cf25df5692a32e16f3fc3155573d293dd0d8",
+      "archive": "remediation-runs/2026-09-07-local-readiness/reviews/before-null-port-adoption-01/build_and_retain_apks.py",
+      "verified": true,
+      "scope": "one literal pin only; otherwise byte-identical"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/run_rosetta_desktop.py",
+      "before_sha256": "db7ac81e0913a7ec75a4f7c74ccbdf8f3aaf8154505656b4fb847bad510d4852",
+      "after_sha256": "9fac73b1c74128b7370b4294954782c98a90c051a7be50e327c833504bca214d",
+      "archive": "remediation-runs/2026-09-07-local-readiness/reviews/before-null-port-adoption-01/run_rosetta_desktop.py",
+      "verified": true,
+      "scope": "one literal pin only; otherwise byte-identical"
+    }
+  ],
+  "new_regression_copy": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/test_task_name_null_retry.py",
+    "sha256": "0fb15e65e59812213a0952c90ed90fb07057da92bd39bb46bae911d9588623b6",
+    "equals_reviewed_draft": true
+  },
+  "source_reviews": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/run_adopted_controls_tests.py",
+      "sha256": "35a6a3018e45a88b80dd81c15d8fd6111cc47b3ac5675815128fdcc13a08a6bd",
+      "lines": [
+        1,
+        62
+      ],
+      "method": "complete read; per-suite isolated Python process, discovered count and actual run count checked, no skips allowed; before/after full chosen control-fingerprint equality required"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-build-helper/build_and_retain_apks.py",
+      "ranges": [
+        [
+          1,
+          115
+        ]
+      ],
+      "method": "pin consumer bindings and original archive vs current full byte comparison; only changed pin approved"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/run_rosetta_desktop.py",
+      "ranges": [
+        [
+          1,
+          110
+        ]
+      ],
+      "method": "pin consumer load_registry and original archive vs current full byte comparison; only changed pin approved"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-build-helper/test_build_and_retain_apks.py",
+      "ranges": [
+        [
+          1,
+          133
+        ]
+      ],
+      "method": "complete read of17 actual metadata/signature assertions and synthetic cleanup"
+    }
+  ],
+  "results": [
+    {
+      "suite": "android",
+      "unique_executed": 61,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "before_after_and_current_hashes_match": true,
+      "hashed_file_count": 13,
+      "expected_and_actual_descriptor_sets_equal": true,
+      "imports": {
+        "darwin_owned_processes": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py",
+        "owned_arm64_smoke": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/owned_arm64_smoke.py",
+        "test_darwin_owned_processes": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/test_darwin_owned_processes.py",
+        "test_owned_arm64_smoke": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/test_owned_arm64_smoke.py",
+        "test_task_name_null_retry": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/test_task_name_null_retry.py"
+      },
+      "actual_descriptors": [
+        "test_darwin_owned_processes.ProcessLifetimeTest.test_completed_launch_cannot_grant_recycled_group",
+        "test_darwin_owned_processes.ProcessLifetimeTest.test_completed_leader_surviving_attested_child_is_still_stopped",
+        "test_darwin_owned_processes.ProcessLifetimeTest.test_denied_token_signal_has_no_numeric_fallback_and_remains_failed",
+        "test_darwin_owned_processes.ProcessLifetimeTest.test_failed_group_enumeration_cannot_report_finished_or_reap_worker",
+        "test_darwin_owned_processes.ProcessLifetimeTest.test_foreground_command_rejects_and_stops_leftover_workers",
+        "test_darwin_owned_processes.ProcessLifetimeTest.test_legitimate_exec_is_re_attested_with_current_token_and_command",
+        "test_darwin_owned_processes.ProcessLifetimeTest.test_pid_reuse_between_last_check_and_signal_is_rejected_by_token",
+        "test_darwin_owned_processes.ProcessLifetimeTest.test_poll_does_not_reap_or_release_the_group_pin",
+        "test_darwin_owned_processes.ProcessLifetimeTest.test_recycled_descendant_pid_is_not_signaled",
+        "test_darwin_owned_processes.ProcessLifetimeTest.test_recycled_parent_cannot_authorize_its_new_children",
+        "test_darwin_owned_processes.ProcessLifetimeTest.test_unexpected_external_reap_revokes_group_without_querying_reused_pid",
+        "test_darwin_owned_processes.ProcessLifetimeTest.test_unreaped_terminated_leader_allows_final_descendant_capture",
+        "test_darwin_owned_processes.PublicDarwinAbiTest.test_list_convenience_wrapper_returns_pid_count_not_bytes",
+        "test_darwin_owned_processes.PublicDarwinAbiTest.test_native_signal_passes_complete_token_and_rejects_stale_generation",
+        "test_darwin_owned_processes.PublicDarwinAbiTest.test_negative_process_count_remains_failed",
+        "test_darwin_owned_processes.PublicDarwinAbiTest.test_process_list_ceiling_fails_instead_of_truncating",
+        "test_darwin_owned_processes.PublicDarwinAbiTest.test_sdk_structure_sizes_match_arm64_header_layout",
+        "test_darwin_owned_processes.PublicDarwinAbiTest.test_wait_status_uses_public_non_reaping_flags",
+        "test_darwin_owned_processes.PublicDarwinAbiTest.test_zero_count_native_errors_are_rejected_by_both_list_wrappers",
+        "test_darwin_owned_processes.PublicDarwinAbiTest.test_zero_count_without_errno_is_empty_and_clears_stale_errno",
+        "test_owned_arm64_smoke.InstrumentationReceiptTest.test_actual_started_and_completed_descriptor_passes",
+        "test_owned_arm64_smoke.InstrumentationReceiptTest.test_crash_after_descriptors_and_non_success_exit_cannot_pass",
+        "test_owned_arm64_smoke.InstrumentationReceiptTest.test_duplicate_descriptors_cannot_pass",
+        "test_owned_arm64_smoke.InstrumentationReceiptTest.test_instrumentation_success_without_completed_test_cannot_pass",
+        "test_owned_arm64_smoke.InstrumentationReceiptTest.test_out_of_order_completion_cannot_pass",
+        "test_owned_arm64_smoke.InstrumentationReceiptTest.test_skips_ignored_errors_and_failures_cannot_pass",
+        "test_owned_arm64_smoke.InstrumentationReceiptTest.test_wrong_class_wrong_method_and_wrong_count_cannot_pass",
+        "test_owned_arm64_smoke.InstrumentationReceiptTest.test_zero_adb_exit_and_ok_summary_without_descriptors_cannot_pass",
+        "test_owned_arm64_smoke.OwnedAdbShutdownTest.test_bad_acknowledgement_is_a_cleanup_failure_not_a_pass",
+        "test_owned_arm64_smoke.OwnedAdbShutdownTest.test_exact_host_kill_packet_and_fragmented_okay_response",
+        "test_owned_arm64_smoke.OwnedAdbShutdownTest.test_missing_endpoint_cannot_create_a_socket_or_start_a_server",
+        "test_owned_arm64_smoke.OwnedAdbShutdownTest.test_refused_owned_endpoint_returns_without_autostart",
+        "test_owned_arm64_smoke.OwnedAdbShutdownTest.test_symlink_cannot_redirect_shutdown_to_another_endpoint",
+        "test_owned_arm64_smoke.OwnedOutputTest.test_attested_temporary_tree_is_removed",
+        "test_owned_arm64_smoke.OwnedOutputTest.test_changed_marker_preserves_tree",
+        "test_owned_arm64_smoke.OwnedOutputTest.test_child_symlink_does_not_delete_external_target",
+        "test_owned_arm64_smoke.OwnedOutputTest.test_failed_initialization_preserves_unexpected_child_and_reports_root",
+        "test_owned_arm64_smoke.OwnedOutputTest.test_marker_open_failure_removes_only_new_empty_directory",
+        "test_owned_arm64_smoke.OwnedOutputTest.test_partial_marker_write_failure_removes_attested_marker_and_empty_root",
+        "test_owned_arm64_smoke.OwnedOutputTest.test_property_duplicate_is_not_silently_normalized",
+        "test_owned_arm64_smoke.OwnedOutputTest.test_symlinked_marker_cannot_authorize_cleanup",
+        "test_task_name_null_retry.NullTaskNamePortTest.test_bsd_inspection_failure_is_not_misclassified_as_absence",
+        "test_task_name_null_retry.NullTaskNamePortTest.test_failed_port_release_is_not_hidden_by_successful_token",
+        "test_task_name_null_retry.NullTaskNamePortTest.test_genuine_native_denial_for_live_candidate_is_not_retried",
+        "test_task_name_null_retry.NullTaskNamePortTest.test_interrupted_wait_during_null_retry_propagates_without_port_use",
+        "test_task_name_null_retry.NullTaskNamePortTest.test_keyboard_interrupt_during_null_retry_propagates_without_port_use",
+        "test_task_name_null_retry.NullTaskNamePortTest.test_keyboard_interrupt_during_token_read_still_releases_owned_port",
+        "test_task_name_null_retry.NullTaskNamePortTest.test_malformed_token_count_still_fails_and_releases_port",
+        "test_task_name_null_retry.NullTaskNamePortTest.test_native_denial_after_confirmed_exit_retains_absence_semantics",
+        "test_task_name_null_retry.NullTaskNamePortTest.test_non_null_port_without_race_has_no_delay_and_is_released",
+        "test_task_name_null_retry.NullTaskNamePortTest.test_null_port_then_independently_confirmed_exit_returns_absent",
+        "test_task_name_null_retry.NullTaskNamePortTest.test_null_port_with_immediately_confirmed_exit_needs_no_retry",
+        "test_task_name_null_retry.NullTaskNamePortTest.test_null_then_genuine_denial_fails_without_consuming_more_retries",
+        "test_task_name_null_retry.NullTaskNamePortTest.test_persistent_null_live_candidate_fails_after_exact_bound",
+        "test_task_name_null_retry.NullTaskNamePortTest.test_read_never_uses_path_after_null_retry_independently_confirms_exit",
+        "test_task_name_null_retry.NullTaskNamePortTest.test_read_restarts_if_null_retry_crosses_bsd_process_lifetimes",
+        "test_task_name_null_retry.NullTaskNamePortTest.test_read_still_rejects_unstable_tokens_after_null_retry",
+        "test_task_name_null_retry.NullTaskNamePortTest.test_successful_null_port_then_valid_token_is_retried_not_denied",
+        "test_task_name_null_retry.NullTaskNamePortTest.test_task_info_failure_after_confirmed_exit_releases_port",
+        "test_task_name_null_retry.NullTaskNamePortTest.test_task_info_failure_for_live_candidate_is_not_retried_and_releases_port",
+        "test_task_name_null_retry.NullTaskNamePortTest.test_wrong_token_pid_still_fails_and_releases_port"
+      ]
+    },
+    {
+      "suite": "apk",
+      "unique_executed": 17,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "before_after_and_current_hashes_match": true,
+      "hashed_file_count": 6,
+      "expected_and_actual_descriptor_sets_equal": true,
+      "imports": {
+        "test_build_and_retain_apks": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-build-helper/test_build_and_retain_apks.py"
+      },
+      "actual_descriptors": [
+        "test_build_and_retain_apks.ApkMetadataTest.test_duplicate_variant_rejected",
+        "test_build_and_retain_apks.ApkMetadataTest.test_empty_apk_rejected",
+        "test_build_and_retain_apks.ApkMetadataTest.test_filtered_apk_rejected",
+        "test_build_and_retain_apks.ApkMetadataTest.test_missing_metadata_rejected",
+        "test_build_and_retain_apks.ApkMetadataTest.test_multiple_elements_rejected",
+        "test_build_and_retain_apks.ApkMetadataTest.test_path_traversal_rejected",
+        "test_build_and_retain_apks.ApkMetadataTest.test_stale_extra_apk_rejected",
+        "test_build_and_retain_apks.ApkMetadataTest.test_symlinked_apk_rejected",
+        "test_build_and_retain_apks.ApkMetadataTest.test_two_exact_metadata_bound_outputs",
+        "test_build_and_retain_apks.ApkMetadataTest.test_wrong_application_identity_rejected",
+        "test_build_and_retain_apks.ApkMetadataTest.test_wrong_artifact_type_rejected",
+        "test_build_and_retain_apks.ApkSignerTest.test_additional_digest_rejected_even_with_claimed_single_signer",
+        "test_build_and_retain_apks.ApkSignerTest.test_missing_count_rejected",
+        "test_build_and_retain_apks.ApkSignerTest.test_multiple_signers_rejected",
+        "test_build_and_retain_apks.ApkSignerTest.test_one_exact_signer_accepted",
+        "test_build_and_retain_apks.ApkSignerTest.test_uppercase_hex_is_same_public_digest",
+        "test_build_and_retain_apks.ApkSignerTest.test_wrong_signer_rejected"
+      ]
+    },
+    {
+      "suite": "rosetta",
+      "unique_executed": 20,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "before_after_and_current_hashes_match": true,
+      "hashed_file_count": 7,
+      "expected_and_actual_descriptor_sets_equal": true,
+      "imports": {
+        "run_rosetta_desktop": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/run_rosetta_desktop.py",
+        "safe_jdk": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/safe_jdk.py",
+        "test_controls": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/test_controls.py"
+      },
+      "actual_descriptors": [
+        "test_controls.PublicJdkControlTests.test_command_pins_runtime_compiler_test_toolchain_and_strict_graph",
+        "test_controls.PublicJdkControlTests.test_duplicate_normalized_paths_rejected",
+        "test_controls.PublicJdkControlTests.test_entry_bound_rejected",
+        "test_controls.PublicJdkControlTests.test_escaping_and_absolute_links_rejected",
+        "test_controls.PublicJdkControlTests.test_exact_public_digest_and_size_required",
+        "test_controls.PublicJdkControlTests.test_excess_download_rejected",
+        "test_controls.PublicJdkControlTests.test_existing_destination_never_overwritten",
+        "test_controls.PublicJdkControlTests.test_expansion_bound_rejected_before_payload_write",
+        "test_controls.PublicJdkControlTests.test_fifo_special_entry_rejected",
+        "test_controls.PublicJdkControlTests.test_file_under_symlink_rejected_before_write",
+        "test_controls.PublicJdkControlTests.test_hardlink_to_symbolic_link_rejected",
+        "test_controls.PublicJdkControlTests.test_noninventoried_target_rejected",
+        "test_controls.PublicJdkControlTests.test_only_public_https_release_redirects_allowed",
+        "test_controls.PublicJdkControlTests.test_regular_executable_and_contained_links_extract",
+        "test_controls.PublicJdkControlTests.test_scratch_symlink_is_not_ownership",
+        "test_controls.PublicJdkControlTests.test_symbolic_link_cycle_rejected",
+        "test_controls.PublicJdkControlTests.test_truncated_download_rejected",
+        "test_controls.PublicJdkControlTests.test_unsafe_names_rejected",
+        "test_controls.PublicJdkControlTests.test_wrong_declared_length_rejected",
+        "test_controls.PublicJdkControlTests.test_wrong_digest_rejected"
+      ]
+    },
+    {
+      "suite": "ios",
+      "unique_executed": 88,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "before_after_and_current_hashes_match": true,
+      "hashed_file_count": 40,
+      "expected_and_actual_descriptor_sets_equal": true,
+      "imports": {
+        "artifact_inventory": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/artifact_inventory.py",
+        "bind_source": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/bind_source.py",
+        "copied_sources": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/copied_sources.py",
+        "instrument_storage": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/instrument_storage.py",
+        "native_readiness_receipts": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/native_readiness_receipts.py",
+        "os_preference_receipts": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/os_preference_receipts.py",
+        "owned_lane": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/owned_lane.py",
+        "prerequisite_receipts": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/prerequisite_receipts.py",
+        "probe_validation": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/probe_validation.py",
+        "secondary_fifo": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/secondary_fifo.py",
+        "simulator_entitlements": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/simulator_entitlements.py",
+        "simulator_signing": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/simulator_signing.py",
+        "test_controls": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_controls.py",
+        "test_native_readiness": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_native_readiness.py",
+        "test_os_preference_receipts": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_os_preference_receipts.py",
+        "test_secondary_fifo": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_secondary_fifo.py",
+        "test_simulator_entitlements": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_simulator_entitlements.py",
+        "test_simulator_signing": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_simulator_signing.py"
+      },
+      "actual_descriptors": [
+        "test_controls.BindingAndImportTests.test_binding_destination_never_overwrites_or_traverses_a_campaign_symlink",
+        "test_controls.BindingAndImportTests.test_explicit_binding_refuses_drift_and_never_grants_execution_approval",
+        "test_controls.BindingAndImportTests.test_runner_import_is_read_only_and_no_longer_depends_on_archived_modules",
+        "test_controls.CopiedPhaseTests.test_build_failure_stops_immediately_and_never_normalizes_stale_output",
+        "test_controls.CopiedPhaseTests.test_explicit_adhoc_retains_failure_stale_output_and_stop_semantics",
+        "test_controls.CopiedPhaseTests.test_preflight_refusal_stops_without_build_or_normalizing_stale_framework",
+        "test_controls.CopiedPhaseTests.test_stop_failure_cd_failure_and_normalizer_failure_are_not_masked",
+        "test_controls.CopiedPhaseTests.test_success_requires_ordered_build_stop_normalize",
+        "test_controls.SourceCopyTests.test_all_copy_only_kotlin_transformations_use_current_source_and_preserve_the_root",
+        "test_controls.SourceCopyTests.test_build_copy_inventory_rejects_implicit_binding_symlinks_and_partial_inputs",
+        "test_controls.SourceCopyTests.test_credential_trace_retains_every_actual_native_call_and_guard",
+        "test_controls.SourceCopyTests.test_exact_simulator_name_is_shared_by_constructor_renderer_and_native_guard",
+        "test_controls.SourceCopyTests.test_name_renderer_refuses_stale_ambiguous_or_unsafe_bindings",
+        "test_controls.SourceCopyTests.test_protected_or_unreviewed_build_paths_cannot_enter_copy",
+        "test_native_readiness.ExactJavaOwnershipTests.test_only_one_exact_java_tmpdir_argument_can_adopt_a_detached_worker",
+        "test_native_readiness.NativeArtifactTests.test_all_images_including_debug_dylib_bind_to_installed_and_executed_bytes",
+        "test_native_readiness.NativeArtifactTests.test_external_framework_is_distinct_runtime_product_not_relabelled_as_installed",
+        "test_native_readiness.NativeArtifactTests.test_external_links_and_symlinked_metadata_are_refused",
+        "test_native_readiness.NativeArtifactTests.test_external_product_path_sdk_symlink_bounds_and_observed_fingerprint_are_strict",
+        "test_native_readiness.NativeArtifactTests.test_external_runtime_hash_uuid_origin_and_each_boot_must_be_bound",
+        "test_native_readiness.NativeArtifactTests.test_internal_link_is_explicit_and_unsafe_relative_names_fail",
+        "test_native_readiness.NativeArtifactTests.test_loader_environment_retains_only_bounded_task_relative_metadata",
+        "test_native_readiness.NativeArtifactTests.test_missing_debug_image_tampered_install_or_unbound_executed_image_fail",
+        "test_native_readiness.NativeArtifactTests.test_native_observer_uses_exact_owned_source_anchors_not_environment_inference",
+        "test_native_readiness.NativeArtifactTests.test_uuid_architecture_receipt_is_exact_and_not_a_signature_claim",
+        "test_native_readiness.NativeReceiptTests.test_boot_and_xctest_framework_observations_must_match",
+        "test_native_readiness.NativeReceiptTests.test_bound_types_privacy_and_exact_production_status_mapping",
+        "test_native_readiness.NativeReceiptTests.test_cleanup_exact_context_original_absence_and_source_completion_are_required",
+        "test_native_readiness.NativeReceiptTests.test_cleanup_reader_is_bounded_exclusive_path_safe_and_duplicate_key_strict",
+        "test_native_readiness.NativeReceiptTests.test_complete_synthetic_eight_launch_matrix_is_parseable_not_runtime_proof",
+        "test_native_readiness.NativeReceiptTests.test_exact_native_missing_entitlement_is_not_healthy_storage_or_an_invented_root_cause",
+        "test_native_readiness.NativeReceiptTests.test_explicit_mode_binds_every_boot_and_xctest_row_without_claiming_store_signing",
+        "test_native_readiness.NativeReceiptTests.test_loss_or_corruption_after_successful_write_fails_the_gate",
+        "test_native_readiness.NativeReceiptTests.test_missing_value_after_failed_write_remains_blocked_not_durability_failure",
+        "test_native_readiness.NativeReceiptTests.test_native_success_followed_by_secure_failure_is_fail_not_entitlement_attribution",
+        "test_native_readiness.NativeReceiptTests.test_retained_value_after_successful_remove_is_fail_and_after_failed_remove_is_blocked",
+        "test_native_readiness.NativeReceiptTests.test_stdout_cleanup_claim_cannot_replace_a_durable_boot_bound_receipt",
+        "test_native_readiness.NativeReceiptTests.test_unbound_launch_missing_cleanup_reuse_and_short_stability_train_fail",
+        "test_native_readiness.NativeReceiptTests.test_write_duplicate_retry_trace_requires_all_actual_calls",
+        "test_os_preference_receipts.ExactOSPreferenceTests.test_baseline_cannot_rebase_or_reorder_and_one_real_action_receipt_remains_required",
+        "test_os_preference_receipts.ExactOSPreferenceTests.test_forged_previous_array_or_missing_restarted_before_app_value_fails",
+        "test_os_preference_receipts.ExactOSPreferenceTests.test_observed_absence_is_never_reported_as_present_coverage",
+        "test_os_preference_receipts.ExactOSPreferenceTests.test_present_arabic_preference_is_preserved_through_english_system_and_restart",
+        "test_os_preference_receipts.ExactOSPreferenceTests.test_unavailable_os_selection_remains_blocked_and_may_not_invent_a_baseline",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_attested_pair_removed_only_after_workers_stop",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_cached_pair_still_rechecks_changed_inode",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_cached_pair_still_rechecks_inode_uid_and_symlink",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_changed_child_or_parent_start_cannot_use_attested_pair",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_current_new_pair_cannot_hide_behind_members_old_argv",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_file_holder_prevents_any_unlink",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_fully_attested_same_identity_and_pair_avoids_redundant_uid_query",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_holder_query_error_never_becomes_empty_holder_success",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_initial_uid_query_failure_never_attests_or_deletes_paths",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_inode_uid_mismatch_is_not_owned",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_missing_or_duplicate_flags_rejected",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_missing_unattested_then_late_created_fifo_blocks_cleanup",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_new_pair_argv_change_during_uid_attestation_is_rejected",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_partial_record_or_pending_claim_cannot_use_cached_uid",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_pid_reuse_during_cleanup_preserves_files",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_pid_reuse_during_observation_rejected",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_preexisting_parent_birthtime_rejects_new_fifo",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_process_uid_mismatch_is_not_owned",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_replaced_inode_rejected",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_stale_preexisting_fifo_is_not_owned",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_symlink_fifo_not_followed_or_deleted",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_symlink_parent_not_followed",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_timeout_or_cancellation_cleanup_uses_same_attestation",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_unknown_directory_contents_preserve_all",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_unknown_external_argument_is_rejected",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_unknown_root_contents_preserve_all",
+        "test_secondary_fifo.SecondaryFifoSafetyTest.test_unowned_child_cannot_attest_from_name_alone",
+        "test_simulator_entitlements.SimulatorEntitlementTests.test_bounded_file_refuses_growth_or_oversize_without_unbounded_read",
+        "test_simulator_entitlements.SimulatorEntitlementTests.test_bundle_requires_exact_owner_app_identity_paths_and_current_hash",
+        "test_simulator_entitlements.SimulatorEntitlementTests.test_fat_macho_slices_and_architecture_binding",
+        "test_simulator_entitlements.SimulatorEntitlementTests.test_generated_xcent_reads_only_exact_owned_app_paths",
+        "test_simulator_entitlements.SimulatorEntitlementTests.test_macho_malformed_command_bounds_and_section_bounds_refuse",
+        "test_simulator_entitlements.SimulatorEntitlementTests.test_malformed_oversized_duplicate_and_unsafe_plists_are_redacted",
+        "test_simulator_entitlements.SimulatorEntitlementTests.test_oversized_section_is_not_read_or_claimed_as_parsed",
+        "test_simulator_entitlements.SimulatorEntitlementTests.test_public_plist_allowlist_preserves_only_expected_public_fields",
+        "test_simulator_entitlements.SimulatorEntitlementTests.test_runner_binds_each_inspection_to_the_explicit_owned_artifact",
+        "test_simulator_entitlements.SimulatorEntitlementTests.test_sdk_defaults_and_explicit_flags_never_claim_merged_settings",
+        "test_simulator_entitlements.SimulatorEntitlementTests.test_thin_macho_endianness_width_sections_and_absence",
+        "test_simulator_signing.ExplicitSimulatorSigningTests.test_disabled_default_is_identical_and_adhoc_requires_exact_explicit_option",
+        "test_simulator_signing.ExplicitSimulatorSigningTests.test_effective_phase_records_only_owned_public_context_not_raw_environment",
+        "test_simulator_signing.ExplicitSimulatorSigningTests.test_empty_regular_fields_may_be_absent_but_disabled_expanded_identity_must_be_absent",
+        "test_simulator_signing.ExplicitSimulatorSigningTests.test_exact_receipt_is_exclusive_bounded_mode_bound_and_not_replaceable_by_stale_evidence",
+        "test_simulator_signing.ExplicitSimulatorSigningTests.test_renderer_checks_every_anchor_mode_cycle_destination_and_safe_literal",
+        "test_simulator_signing.ExplicitSimulatorSigningTests.test_unexpected_real_identity_profile_target_architecture_sdk_or_path_is_refused"
+      ]
+    }
+  ],
+  "total_executed": 186,
+  "execution_binding_notes": [
+    "The canonical helper import now resolves to the effective parent path, not the draft path. It is byte-identical to the independently approved helper.",
+    "APK test imports its helper via explicit spec_from_file_location on its bound __file__.with_name; helper does not register in sys.modules, so the import list contains only the test module. Full source construction and helper before/after hashes independently establish the target; do not claim a logged helper __file__ where none exists.",
+    "Rosetta .java/.gradle files are not in this driver fingerprint and were not compiled/executed in this pure20 suite. Runtime control_binding includes them; their execution remains a separate gate.",
+    "88 iOS tests are source/parser/synthetic shell/ownership checks, not iOS runtime or actual native provisioning evidence. Their actual descriptors and input hashes were checked here, not falsely relabelled as186 app tests."
+  ],
+  "evidence": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/before-null-port-adoption-01/adoption.json",
+      "sha256": "96db327fbc548881903287b9ac138115d486d3ca428acf280f705627591e2dc3"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/adopted-native-controls-01/receipt.json",
+      "sha256": "7aff782af677f588ae0d2a9d7fbe82ee64566ebe3328a5f16c70821700b092a4"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/adopted-native-controls-01/gradle.log",
+      "sha256": "6a7f5bb8527afd13377dc8dd048fddca893ae97a390716cbbc05fb04dea386a1"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/adopted-native-controls-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    }
+  ],
+  "source_context": {
+    "commit": "a224c513059cec8c2c626aac11d8b5c917098a00",
+    "tree": "17ea62fe703474b770723abaea330e0dd97fd909",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "79235ca3afa4fd38ba775b535cead9073e18e874117fde6e1ba3ceede66a5260"
+  },
+  "cleanup": {
+    "started_at": "2026-09-07T08:36:20.744066+00:00",
+    "finished_at": "2026-09-07T08:36:32.352254+00:00",
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-07T08:36:32.777668+00:00",
+    "cleanup_completed_at": "2026-09-07T08:36:32.843465+00:00",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "removed_outputs": [],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "cleanup_errors": []
+  },
+  "limitations": [
+    "Native Android retry, real APK creation/signature verification, Rosetta Gradle/runtime and iOS runtime are unexecuted by this pure cycle.",
+    "Approval does not automatically approve subsequent control changes or new native build/artifact/source bindings.",
+    "Original RED/runtime failure and initial approval reports remain unchanged."
+  ],
+  "reviewer_workers": "No builds/tests/native workers started by this supplemental review; only evidence/source parsing and this compact report."
+}

@@ -1,0 +1,281 @@
+// Copy-only app-host diagnostic. Never included by a shipping source set.
+@file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class)
+
+package com.parlor.app.readiness
+
+import com.parlor.app.shell.home.loadHomeRecoveryAvailability
+import com.parlor.app.storage.IosSecureKeyValueBacking
+import com.parlor.app.storage.IosSnapshotFileSystem
+import com.parlor.core.ids.SessionId
+import com.parlor.core.result.DataError
+import com.parlor.core.result.Result
+import com.parlor.networking.room.NetError
+import com.parlor.networking.transport.RoomTransport
+import com.parlor.storage.secure.PlatformKeyedSecureStorage
+import com.parlor.storage.secure.SecureKeyValueBacking
+import com.parlor.storage.secure.SecureStorage
+import com.parlor.storage.snapshot.FileBackedSnapshotStore
+import com.parlor.storage.snapshot.SnapshotFileSystem
+import com.parlor.storage.snapshot.SnapshotStore
+import com.parlor.transport.p2p.P2pKitRoomTransport
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.buildJsonObject
+import kotlinx.serialization.json.put
+import org.koin.mp.KoinPlatform
+import platform.Foundation.NSBundle
+import platform.Foundation.NSLock
+import platform.Foundation.NSProcessInfo
+import kotlin.coroutines.AbstractCoroutineContextElement
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.coroutineContext
+
+/** The real coroutine invocation owns the observer across Default dispatches. */
+internal class NativeReadinessInvocation(val step: String) : AbstractCoroutineContextElement(Key) {
+    companion object Key : CoroutineContext.Key<NativeReadinessInvocation>
+    private val lock = NSLock()
+    private val events = mutableListOf<JsonObject>()
+    private var overflow = false
+
+    // Called immediately after the exact real SecItem call, without retaining
+    // query dictionaries, key/account strings, return data, or error messages.
+    fun record(operation: String, status: Int) {
+        lock.lock()
+        try {
+            if (events.size == 16) {
+                overflow = true
+            } else {
+                events += buildJsonObject {
+                    put("ordinal", events.size + 1)
+                    put("operation", operation)
+                    put("status", status)
+                }
+            }
+        } finally {
+            lock.unlock()
+        }
+    }
+
+    fun finish(outcome: JsonObject): JsonObject {
+        lock.lock()
+        return try {
+            buildJsonObject {
+                put("step", step)
+                put("outcome", outcome)
+                put("native_events", JsonArray(events.toList()))
+                put("overflow", overflow)
+            }
+        } finally {
+            lock.unlock()
+        }
+    }
+}
+
+internal suspend fun currentNativeReadinessTrace(): NativeReadinessInvocation? =
+    coroutineContext[NativeReadinessInvocation]
+
+object NativeReadinessProbe {
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    private var started = false
+
+    fun start(boot: Int, onJson: (String) -> Unit) {
+        scope.launch {
+            if (started) return@launch
+            started = true
+            val steps = mutableListOf<JsonObject>()
+            try {
+                val report = try {
+                    withTimeoutOrNull(20_000) { observe(boot, steps) }
+                        ?: failure("own_timeout", boot, steps)
+                } catch (cancelled: CancellationException) {
+                    throw cancelled
+                } catch (_: Exception) {
+                    failure("fixture_or_observation_failed", boot, steps)
+                }
+                val encoded = report.toString()
+                onJson(if (encoded.length <= 32_768) encoded else failure("oversized_result", boot, emptyList()).toString())
+            } finally {
+                scope.cancel() // This probe's job only, not DI or app lifecycle.
+            }
+        }
+    }
+
+    private suspend fun observe(boot: Int, steps: MutableList<JsonObject>): JsonObject {
+        val environment = NSProcessInfo.processInfo.environment
+        val token = environment["PARLOR_DSC01_RUN_TOKEN"] as? String
+        check(boot in 1..8 && environment["PARLOR_READINESS_BOOT"] == boot.toString())
+        check(NSBundle.mainBundle.bundleIdentifier == "com.parlor.app.debug")
+        check(environment["SIMULATOR_UDID"] == environment["PARLOR_DSC01_EXPECTED_UDID"])
+        check(token != null && Regex("[A-Fa-f0-9]{8}(-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12}").matches(token))
+        val koin = KoinPlatform.getKoin()
+        val store = koin.get<SnapshotStore>()
+        val transport = koin.get<RoomTransport>()
+        val secure = koin.get<SecureStorage>()
+        val files = koin.get<SnapshotFileSystem>()
+        check(store is FileBackedSnapshotStore && transport is P2pKitRoomTransport)
+        check(secure is PlatformKeyedSecureStorage && koin.get<SecureKeyValueBacking>() is IosSecureKeyValueBacking)
+        check(files is IosSnapshotFileSystem)
+        // These cannot be production rejoin keys or normal saved-game names.
+        // Native backing and filesystem remain the real Koin-bound instances.
+        val key = "ios-readiness-" + token.lowercase()
+        val filename = key + ".native-readiness"
+        val first = ByteArray(64) { (it xor 0x35).toByte() }
+        val second = ByteArray(64) { (it xor 0x6a).toByte() }
+
+        step(steps, "home-rerun") {
+            val observed = EmptyOnlySnapshotStore(store)
+            var multiplayerKind = "not-observed"
+            val availability = loadHomeRecoveryAvailability(
+                store = observed,
+                loadMultiplayer = {
+                    val result = transport.resumableSession()
+                    multiplayerKind = when (result) {
+                        is Result.Success -> {
+                            check(result.data == null) // Never inspect a real credential.
+                            "absent"
+                        }
+                        is Result.Failure -> if (result.error == NetError.SecureStorageUnavailable) {
+                            "secure_storage_unavailable"
+                        } else {
+                            "other_net_error"
+                        }
+                    }
+                    result
+                },
+                supportsLocalResume = { false },
+                supportsMultiplayerResume = { false },
+            )
+            check(availability.unfinishedSessions.isEmpty() && availability.resumableMultiplayer == null)
+            buildJsonObject {
+                put("kind", "home_observed")
+                put("local", observed.kind)
+                put("multiplayer", multiplayerKind)
+                put("has_unavailable_source", availability.hasUnavailableSource)
+                put("original_home_invocation", false)
+            }
+        }
+        val expected = when (boot) { 2 -> first; 3 -> second; else -> null }
+        step(steps, "credential-read") { secureRead(secure, key, expected, firstBoot = boot == 1) }
+        step(steps, "snapshot-read") { snapshotRead(files, filename, expected, firstBoot = boot == 1) }
+        when (boot) {
+            1, 2 -> {
+                val bytes = if (boot == 1) first else second
+                step(steps, "credential-write") { result(secure.put(key, bytes)) }
+                step(steps, "snapshot-write") { nativeResult { files.write(filename, bytes) } }
+            }
+            3 -> {
+                step(steps, "credential-remove") { result(secure.remove(key)) }
+                step(steps, "snapshot-remove") { nativeResult { files.delete(filename) } }
+            }
+        }
+        first.fill(0); second.fill(0)
+        return buildJsonObject {
+            put("schema_version", 1)
+            put("kind", "actual_koin_signing_disabled_simulator")
+            put("harness_status", "observation_complete")
+            put("boot_ordinal", boot)
+            put("run_token", token)
+            put("steps", JsonArray(steps.toList()))
+            put("credential_numeric_status_is_exact_invocation", true)
+            put("initial_home_numeric_attribution", false)
+            put("snapshot_numeric_attribution", false)
+            put("physical_or_signed_evidence", false)
+        }
+    }
+
+    private suspend fun step(steps: MutableList<JsonObject>, name: String, body: suspend () -> JsonObject) {
+        check(steps.size < 5)
+        val invocation = NativeReadinessInvocation(name)
+        val outcome = withContext(invocation) { body() }
+        steps += invocation.finish(outcome)
+    }
+
+    private suspend fun secureRead(
+        storage: SecureStorage,
+        key: String,
+        expected: ByteArray?,
+        firstBoot: Boolean,
+    ): JsonObject =
+        when (val read = storage.get(key)) {
+            is Result.Failure -> kind("storage_error")
+            is Result.Success -> {
+                val bytes = read.data
+                try {
+                    if (firstBoot) check(bytes == null) // Never overwrite an unexpected initial record.
+                    kind(if (bytes == null) "absent" else if (bytes.contentEquals(expected)) "matches" else "mismatch")
+                } finally {
+                    bytes?.fill(0)
+                }
+            }
+        }
+
+    private suspend fun snapshotRead(
+        files: SnapshotFileSystem,
+        name: String,
+        expected: ByteArray?,
+        firstBoot: Boolean,
+    ): JsonObject {
+        val bytes = try {
+            files.read(name)
+        } catch (cancelled: CancellationException) {
+            throw cancelled
+        } catch (_: Exception) {
+            return kind("storage_error")
+        }
+        return try {
+            if (firstBoot) check(bytes == null)
+            kind(if (bytes == null) "absent" else if (bytes.contentEquals(expected)) "matches" else "mismatch")
+        } finally {
+            bytes?.fill(0)
+        }
+    }
+
+    private fun result(value: Result<*, DataError>): JsonObject = kind(
+        if (value is Result.Success) "ok" else "storage_error",
+    )
+
+    private suspend fun nativeResult(action: suspend () -> Unit): JsonObject = try {
+        action()
+        kind("ok")
+    } catch (cancelled: CancellationException) {
+        throw cancelled
+    } catch (_: Exception) {
+        kind("storage_error")
+    }
+
+    private fun failure(reason: String, boot: Int, steps: List<JsonObject>) = buildJsonObject {
+        put("schema_version", 1)
+        put("harness_status", "aborted")
+        put("failure_category", reason)
+        put("boot_ordinal", boot)
+        put("steps", JsonArray(steps))
+    }
+}
+
+private class EmptyOnlySnapshotStore(private val delegate: SnapshotStore) : SnapshotStore by delegate {
+    var kind = "not-observed"
+        private set
+
+    override suspend fun listUnfinished(): Result<List<SessionId>, DataError> {
+        check(kind == "not-observed")
+        val result = delegate.listUnfinished()
+        kind = when (result) {
+            is Result.Success -> {
+                check(result.data.isEmpty())
+                "absent"
+            }
+            is Result.Failure -> "storage_error"
+        }
+        return result
+    }
+}
+
+private fun kind(value: String) = buildJsonObject { put("kind", value) }

@@ -1,0 +1,217 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "author": "/root/release_fix_review",
+  "recorded_at": "2026-09-07T16:06:16.738820+00:00",
+  "decision": "APPROVED_STATIC_IOS_INSPECTOR_AND_TEST_DESIGN_PENDING_EXECUTION_AND_CALLER_WIRING",
+  "source_baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "head": "5d9f5f4c81ff51ee70922c876eefb91c6e669d56",
+    "tree": "3fbc4908ae41fab311e5e936e3ec8913199da7ad",
+    "dirty": true,
+    "identity_scope": "Exact reviewed hashes below, not HEAD alone; unrelated existing work preserved."
+  },
+  "author_handoff": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ios-release-artifacts-author-handoff-01.json",
+    "sha256": "750a6fca63cbc8e51cd54037417f4a03a8979e1266dd6a019c863a8debf84d5a",
+    "all_two_source_hashes_independently_match": true
+  },
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios_release_artifacts.py",
+      "sha256": "e1b597f6513d18a1e35ea293e08a99d6ff7a3baefb383bb100f24988e5e83938",
+      "bytes": 19655,
+      "lines": 357,
+      "reviewed_line_ranges": [
+        [
+          1,
+          357
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_ios_release_artifacts.py",
+      "sha256": "e5239b6587b963d009a2a477de6d6e1e36bac5c03e144059c92657527ec3e1c6",
+      "bytes": 21891,
+      "lines": 375,
+      "reviewed_line_ranges": [
+        [
+          1,
+          375
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/native/ios_release_wrapper_v1/release_artifacts.py",
+      "sha256": "12ebbf1959095915c825dc8cba80da527e092963c0201e7197add1f7ca003152",
+      "bytes": 9094,
+      "lines": 163,
+      "reviewed_line_ranges": [
+        [
+          1,
+          163
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/Info.plist",
+      "sha256": "db09f2c4a3cc378f4bb24b6de29653283c90227795a27f64370c9da87ef0d0a5",
+      "bytes": 1975,
+      "lines": 61,
+      "reviewed_line_ranges": [
+        [
+          1,
+          61
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/PrivacyInfo.xcprivacy",
+      "sha256": "179da3a1bcd19580aacbfa5e847f08ae35074f024b28d189e394d451feb7455b",
+      "bytes": 1033,
+      "lines": 39,
+      "reviewed_line_ranges": [
+        [
+          1,
+          39
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/config/parlor-version.xcconfig",
+      "sha256": "4975e763730608718095d3c7342f34f333a86e20cf562eb221b9e3478fa93f9e",
+      "bytes": 202,
+      "lines": 4,
+      "reviewed_line_ranges": [
+        [
+          1,
+          4
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/config/release-policy.json",
+      "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+      "bytes": 4481,
+      "lines": 119,
+      "reviewed_line_ranges": [
+        [
+          1,
+          119
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/.gitignore",
+      "sha256": "0af8e7939bf9b5cf9aa71ee2e5e098e51f32b725d37cd18f8631444c5cbdcd97",
+      "bytes": 556,
+      "lines": 43,
+      "reviewed_line_ranges": [
+        [
+          1,
+          43
+        ]
+      ]
+    }
+  ],
+  "line_by_line_method": "Read every line of both new files and archived inspector in numbered chunks; traced source identity, package enumeration, native probes, policies, privacy and raw-resource source binding. No executable repository modules imported by reviewer.",
+  "static_findings": [],
+  "verified_source_contracts": [
+    {
+      "lines": "47-117,182-197,211-235,265-267",
+      "evidence": "Canonical package/source paths; bounded regular-file enumeration, early total ceiling, private/signing suffix rejection before byte reads, streaming hashes, per-file and whole-package mutation fingerprints. Mach-O discovery includes arbitrary named/debug dylibs; required app/framework exact paths, all native-named/executable non-Mach-O files rejected."
+    },
+    {
+      "lines": "120-157",
+      "evidence": "Only fixed file/lipo/vtool/dwarfdump commands, checked exit and 30-second timeout. All native objects must be arm64/IOSSIMULATOR with deployment <=16.0. Exactly one syntactically valid UUID line binds the full actual artifact path. No simulator/app/signing/build/network command."
+    },
+    {
+      "lines": "160-179,236-261",
+      "evidence": "Unique xcconfig assignments; Release bundle/version/platform/languages; explicit current Store-identity collision policy remains blocked. Shipped privacy structural equality permits Xcode binary plist transformation; separate raw SHA recorded. LAN declarations equal current source. Raw cases/fonts matched in exact shipping Compose namespaces, not merely basename anywhere."
+    },
+    {
+      "lines": "276-334",
+      "evidence": "Actual canonical Git-root/HEAD/tree; safe-scoped binary diff plus streamed file manifest includes build-root untracked inputs. Protected/private, unrelated untracked, audit/design files excluded; no private values inspected. Before/after identity equality ignores only excluded-count churn from parallel review reports."
+    },
+    {
+      "lines": "338-357",
+      "evidence": "Nonzero JSON FAIL on covered inspection failures, bounded accepted report, explicit metadata-only limitations. No source-only PASS substituted for package inspection."
+    }
+  ],
+  "test_design": {
+    "declared_unique_ast_methods": 29,
+    "methods": [
+      "ReleaseArtifactTest.test_every_file_and_extra_debug_dylib_is_inventoried_with_uuid",
+      "ReleaseArtifactTest.test_framework_deployment_floor_may_be_lower_than_app_floor",
+      "ReleaseArtifactTest.test_wrong_native_architecture_platform_floor_and_output_shape_fail",
+      "ReleaseArtifactTest.test_uuid_is_single_arm64_and_bound_to_actual_path",
+      "ReleaseArtifactTest.test_required_native_must_exist_and_have_macho_header",
+      "ReleaseArtifactTest.test_non_macho_extra_native_file_is_not_hidden_as_resource",
+      "ReleaseArtifactTest.test_release_identity_version_platform_deployment_and_language_are_checked",
+      "ReleaseArtifactTest.test_known_identity_collision_cannot_be_promoted_by_package_inspector",
+      "ReleaseArtifactTest.test_duplicate_version_assignments_fail",
+      "ReleaseArtifactTest.test_privacy_structural_match_accepts_binary_plist_but_not_changed_declaration",
+      "ReleaseArtifactTest.test_exact_case_and_font_bytes_are_checked_in_shipping_namespaces",
+      "ReleaseArtifactTest.test_missing_source_categories_or_unknown_font_namespace_fail",
+      "ReleaseArtifactTest.test_symlinked_package_or_resource_is_rejected",
+      "ReleaseArtifactTest.test_private_material_is_rejected_before_reading_file_bytes",
+      "ReleaseArtifactTest.test_unreviewed_extension_and_nonregular_entry_fail",
+      "ReleaseArtifactTest.test_file_total_and_plist_bounds_fail_without_large_fixture",
+      "ReleaseArtifactTest.test_package_mutation_during_native_inspection_is_rejected",
+      "ReleaseArtifactTest.test_full_verifier_binds_source_and_does_not_invalidate_for_excluded_review_evidence",
+      "ReleaseArtifactTest.test_changed_source_identity_cannot_pass",
+      "ReleaseArtifactTest.test_cli_executes_real_package_checks_with_injected_native_metadata",
+      "NativeCommandAndCliTest.test_native_probe_uses_only_fixed_readonly_commands",
+      "NativeCommandAndCliTest.test_nonmac_native_probe_cannot_claim_execution",
+      "NativeCommandAndCliTest.test_command_output_exit_and_timeout_guards_close_owned_spool",
+      "NativeCommandAndCliTest.test_cli_returns_nonzero_json_on_verification_failure",
+      "NativeCommandAndCliTest.test_cli_rejects_oversized_success_report",
+      "GitSourceIdentityTest.test_head_tree_and_dirty_and_untracked_build_input_hashes_are_actual",
+      "GitSourceIdentityTest.test_protected_and_unrelated_untracked_files_are_not_read",
+      "GitSourceIdentityTest.test_untracked_symlinked_build_input_is_rejected",
+      "GitSourceIdentityTest.test_subdirectory_cannot_masquerade_as_full_source_checkout"
+    ],
+    "executed_by_reviewer": false,
+    "assessed_assertions": "Full tests read. Synthetic package/native metadata is clearly labeled; tests cover source version/identity/namespace/privacy mismatch, malformed native output/UUID, missing/excess/unsafe files, limits, mutations, exact command vectors, nonmac rejection, CLI nonzero behavior, actual disposable Git fixture identity/untracked/scoped exclusion. Real Git fixture commits are inside fresh TemporaryDirectory with global/system Git config disabled, not repository mutation.",
+    "test_limitations": "Injected native metadata and temporary resource bytes cannot establish actual Xcode output, macOS native-tool behavior, signature integrity or runtime launch."
+  },
+  "historical_shape_crosscheck": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-release-01/release-artifact-inventory.json",
+    "sha256": "10b73d091b9c5db832691072b0d9c0751fccc064c816af8d0edcdebf63ea3a63",
+    "observed_native_paths": [
+      "Frameworks/ComposeApp.framework/ComposeApp",
+      "Parlor"
+    ],
+    "observed_raw_case_font_paths": [
+      "compose-resources/composeResources/com.parlor.games.whodunit.resources/files/cases/iskenderia-corniche.json",
+      "compose-resources/composeResources/com.parlor.games.whodunit.resources/files/cases/jasmine-ring.json",
+      "compose-resources/composeResources/com.parlor.games.whodunit.resources/files/cases/khan-el-khalili.json",
+      "compose-resources/composeResources/com.parlor.games.whodunit.resources/files/cases/last-dinner.json",
+      "compose-resources/composeResources/com.parlor.games.whodunit.resources/files/cases/layla-halabi.json",
+      "compose-resources/composeResources/com.parlor.games.whodunit.resources/files/cases/saidi-inheritance.json",
+      "compose-resources/composeResources/com.parlor.games.whodunit.resources/files/cases/zamalek-ramadan.json",
+      "compose-resources/composeResources/parlor.shared.design_system.generated.resources/font/inter.ttf",
+      "compose-resources/composeResources/parlor.shared.design_system.generated.resources/font/jetbrains_mono.ttf"
+    ],
+    "scope": "Historical 2-native/9-raw-resource shape corroborates current namespace assumptions only. Old output is not proof the new inspector/tests/current app pass."
+  },
+  "counter_evidence_and_limits": [
+    "Framework minimum15.0 with app minimum16.0 is intentional compatibility, not a mismatch; inspector correctly accepts lower native floor.",
+    "The package inspector cannot infer build freshness from existing bytes. Root must wire it only after actual successful fresh unsigned Release build AND successful stop/finalization, using owned output; no archived stop receipt may be fabricated.",
+    "Tool output uses RAM-safe temporary spool, a30-second deadline and postexecution acceptance limit; this is not a streaming disk cap. Fixed native/Git inspection commands do not intentionally start background services.",
+    "The tool inventories all regular files but does not interpret every compiled Assets.car/CVR byte as raw source equality or establish legal completeness; third_party_notices remains separate.",
+    "Included-source diff intentionally excludes protected/private paths; it is not the global Git diff hash. Source artifact build receipt still belongs to coordinated parent.",
+    "Physical devices, P2pKit LAN, Store signing/qualification, application-identity ownership, publication and legal review remain outside this package gate."
+  ],
+  "next_required_evidence": [
+    "Root focused29-method execution with actual names/results and cleanup receipt; unexecuted tests are not PASS.",
+    "Independent review of final workflow guard/source/build/stop/upload/cleanup wiring.",
+    "Fresh source-bound actual unsigned Release .app and raw metadata inventory from qualified CI; do not borrow historical package acceptance."
+  ],
+  "cleanup_and_preservation": {
+    "reviewer_started_builds_tests_apps_workers": false,
+    "reviewer_writes": "This new report only. Read/hash/AST commands completed; no generated build outputs or child workers left.",
+    "private_or_signing_material_read": false,
+    "repository_source_or_original_evidence_modified": false
+  }
+}

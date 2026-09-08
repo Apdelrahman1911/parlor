@@ -1,0 +1,78 @@
+{
+  "timestamp": "2026-09-05T10:51:56.421645+00:00",
+  "reviewer": "/root/whodunit_cont",
+  "scope": "Task-only administrative filing/reference verification; not a new source approval, application runtime test or readiness gate.",
+  "status": "PASS",
+  "exit_code": 0,
+  "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+  "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+  "branch": "main",
+  "tracked_status": "",
+  "canonical_register_sha256": "d0af0479716d110733a4a61df861ad9b7722f55c77f1a5c223e10a0b3cc9cac6",
+  "summary_sha256": "ad5c0e8966f63eb0022549d9ba518034decb75ff0972c246cd7dff37024dd1d6",
+  "supersedes_receipt_ref": "evidence/candidate-register-completeness-validation-whodunit_cont.initial.json",
+  "canonical_adjudicated_ids": 29,
+  "pending_ids": [
+    "IOS-R1"
+  ],
+  "total_allocated_ids": 30,
+  "by_adjudicated_category": {
+    "application_or_content": 10,
+    "ios_build": 1,
+    "latent_release": 3,
+    "test_registration": 1,
+    "documentation": 6,
+    "test_or_evidence_gap": 5,
+    "rejected": 3
+  },
+  "positive_by_severity": {
+    "Low": 18,
+    "Medium": 8
+  },
+  "input_reports": 88,
+  "input_report_lines": 2968,
+  "distinct_linked_evidence_paths_checked": 92,
+  "distinct_primary_source_paths_hash_checked": 41,
+  "source_ranges_bounds_checked": 82,
+  "source_reading_credit_granted": 0,
+  "new_source_approvals_granted": 0,
+  "finder_validator_identity_distinct_for_all_adjudicated": true,
+  "administrative_test_source_countercheck": {
+    "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
+    "sha256": "e903278fc8defcac9a4d03a52495c1364a361222e5f369059c5d6b6416fb6eb7",
+    "reviewed_lines": [
+      1,
+      32
+    ],
+    "purpose": "Correct false bilingual-XCTest audit wording, not new test/source behavior adjudication."
+  },
+  "supplemental_images_inspected": [
+    {
+      "path": "evidence/xcode-ui-01/home-en.png",
+      "sha256": "73bb9b6a1b4cbb766a73034c653449c5d5f82716301977ef7b30ccfda4f10717",
+      "inspection_method": "view_image high; visually inspected localized recovery-unavailable card; no causal source proof granted"
+    },
+    {
+      "path": "evidence/xcode-ui-01/home-ar.png",
+      "sha256": "781fe81a1ac5286fc8ba2b84661c1d849da04e3e16dcf6e67fd969e3cf1dbfee",
+      "inspection_method": "view_image high; visually inspected localized recovery-unavailable card; no causal source proof granted"
+    }
+  ],
+  "git_diff_check_exit_code": 0,
+  "errors": [],
+  "cleanup": {
+    "no_build_or_test_execution_by_this_subtask": true,
+    "no_task_owned_build_outputs_or_processes_created": true,
+    "gradle_stop_not_run": "No Gradle task executed by this administrative subtask; root alone owns shared build lane and cycle cleanup. No process interference.",
+    "root_xcode_ui_receipt_read": {
+      "ref": "evidence/xcode-ui-01/receipt.json",
+      "immediate_stop_exit_code": 0,
+      "final_stop_exit_code": 0,
+      "owned_device_absent": true,
+      "temporary_directory_removed": true,
+      "remaining_outputs": [],
+      "cleanup_errors": []
+    },
+    "retained_material": "Compact task-only JSON/Markdown, initial administrative checkpoint receipts, and references to preexisting root-owned screenshots; no generated application artifacts retained by this subtask."
+  }
+}

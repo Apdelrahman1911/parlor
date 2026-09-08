@@ -1,0 +1,70 @@
+{
+  "started_at": "2026-09-07T05:16:58.070784+00:00",
+  "before_head": "b4f0ece464aa44819044dd78d2f2fd137d88c91d",
+  "branch": "fix/local-readiness-2026-09-07",
+  "paths": {
+    "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitLocalLeaveTimerTest.kt": "2124dafc4168ff0712e9ff93f3a8368d6cc5ab483b252d8114dc77c9a33c1c9e",
+    "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLeaveTimerTest.kt": "99d188364e681983f5fd4c31d192d80c6fde9731a57d62d5de6e0c8fe897da6a"
+  },
+  "independent_review": "reviews/timer-test-null-assertions-verified-05.json",
+  "commands": [
+    {
+      "command": [
+        "git",
+        "add",
+        "--",
+        "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitLocalLeaveTimerTest.kt",
+        "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLeaveTimerTest.kt"
+      ],
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--check"
+      ],
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "commit",
+        "-m",
+        "test(whodunit): assert non-null timer state without unsafe calls"
+      ],
+      "exit_code": 0,
+      "output": "[fix/local-readiness-2026-09-07 875d849] test(whodunit): assert non-null timer state without unsafe calls\n 2 files changed, 33 insertions(+), 18 deletions(-)\n"
+    },
+    {
+      "command": [
+        "git",
+        "push",
+        "--porcelain",
+        "origin",
+        "HEAD:refs/heads/fix/local-readiness-2026-09-07"
+      ],
+      "exit_code": 0,
+      "output": "To https://github.com/Apdelrahman1911/parlor.git\n \tHEAD:refs/heads/fix/local-readiness-2026-09-07\tb4f0ece..875d849\nDone\n"
+    },
+    {
+      "command": [
+        "git",
+        "ls-remote",
+        "origin",
+        "refs/heads/fix/local-readiness-2026-09-07"
+      ],
+      "exit_code": 0,
+      "output": "875d849e0079452557374690b14e42c546ba2c06\trefs/heads/fix/local-readiness-2026-09-07\n"
+    }
+  ],
+  "head": "875d849e0079452557374690b14e42c546ba2c06",
+  "tree": "3be52230c713999cfa182755e69578ff6fd67797",
+  "remote_confirmed": true,
+  "scoped_changes_remaining": "",
+  "remaining_status": "M docs/WHODUNIT_TEST_CONTENT.md\n D game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt\n D game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt\n D game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/testing/MafiaDoctorFixture.kt\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/saidi-inheritance.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/zamalek-ramadan.json\n M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt\n M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt\n M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryGameTraceTest.kt\n M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitRecoveryInteractionTest.kt\n M shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt\n?? AGENTS.md\n?? audit-runs/\n?? design/\n?? docs/PARLOR_PROJECT_HANDOFF.md\n?? game-modes/mafia/src/commonTest/\n?? game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryFollowupChronologyTest.kt\n?? project-code-audit/\n?? remediation-runs/\n?? scripts/verification/\n?? shared/engine/src/commonTest/\n?? shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/LoopbackDeviceFixture.kt\n?? shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/LoopbackFixtureContractTest.kt",
+  "finished_at": "2026-09-07T05:17:05.217822+00:00"
+}

@@ -1,0 +1,376 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "reviewed_at": "2026-09-07T21:59:17.969604+00:00",
+  "classification": "ACTUAL CYCLE FAIL \u2014 SCOPED NORMAL-HOME RUNTIME PASS; EXTERNAL PROVENANCE VERIFICATION FAIL; PRECISE PROVENANCE FAILURE ROOT CAUSE UNCONFIRMED \u2014 BLOCKED",
+  "cycle": "ios-readiness-08",
+  "baseline": {
+    "commit": "b6e1947c62661631d0593038db7f64dbf25f720e",
+    "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "source_manifest_sha256": "4be6d9cbd07c891b60356921be1828c4c8f44501c979e435105494d261c65ffa",
+    "verified_source_files": 799,
+    "binding_sha256": "7a78b016f762dc22fe27beeda9f12b1a1cdac8f8417c2c560b5b67785f350a4c",
+    "source_binding_receipt_before_after_equal": true
+  },
+  "independent_reconciliation": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-ios08-independent-reconciliation-01.json",
+    "sha256": "08f5ffbc5807b2c8ab815ff7cc671440f4ef422b13c496275f4994cdf4feb1aa",
+    "method": "Reopened and reconciled retained raw XCResult JSON and compressed Xcode marker/case records using reviewer-written standard-library analysis, independently reconstructed both unified diff changes in memory and verified all739copied input before/after rows; no repository parser imported or executed."
+  },
+  "actual_result": {
+    "overall": "FAIL",
+    "xcodebuild_exit_code": 0,
+    "commands": 40,
+    "all_recorded_command_exits": 0,
+    "method_count": 1,
+    "method": "IOSAppLaunchUITests/testColdLaunchRendersComposeHomeWithoutUnexpectedAlert()",
+    "executed_repetitions": 8,
+    "passed_repetitions": 8,
+    "failed_repetitions": 0,
+    "skipped_repetitions": 0,
+    "expected_failures": 0,
+    "ui_observation_samples": 48,
+    "raw_marker_records": 64,
+    "normal_home_observation": "PASS in exact narrow scope",
+    "notice_delivery": "PASS in built and installed Debug/ad-hoc app",
+    "separate_ninth_launch_provenance": "FAIL",
+    "cleanup": "PASS corroborated"
+  },
+  "positive_evidence": [
+    "All799bound source hashes,76normal-control hashes,source07binding,source_before/source_after/input-manifest identities and739original/copied/build-after rows matched independently. All source bytes unchanged; copy changes limited to the XCTest observer and isolated Xcode build phase; zero application-source substitutions.",
+    "The three raw XCResult views independently agree on one method executed eight fixed times with identified leaf repetitions1\u20138, no failures/skips/expected failures. The summary method count1 is not misread as one repetition or inflated to eight unique methods.",
+    "Every one of64raw JSON markers was reconciled in order to a distinct UUID group and bracketed by its exact corresponding raw XCTest start/pass. Each group contains begin,samples0\u20135,complete. All48sample dictionaries match retained observations byte-parsed values; foreground/home true and alert false, monotonic sample times and final sample>=10actualpostHome seconds.",
+    "The Swift observer uses the ordinary production Home accessibility label with explicit English AppleLanguages/AppleLocale, rejects PARLOR_ fixture inputs, and does not inject app probes or seed game/settings state.",
+    "The26legal resources/99,515bytes in both built and installed notice receipts match each other and current source bytes/lengths/SHA256 plus the exact configmanifest/catalog. Actual requested package format is ios-app and87entries inspected; this is notice-delivery evidence, not legal completeness.",
+    "All10raw dwarfdump ARM64 UUID records reconcile to exact inspected candidate paths/hashes. Four built/installed native images match in retained inventory. Both actual ad-hoc codesign --verify --strict commands exited0 and reported valid-on-disk/designated-requirement satisfaction. These are file/signature checks, not mapped-image binding.",
+    "Immediately after successful Xcode completion, its isolated Gradle stop returned0; embedded phase separately recorded build_exit0/stop_exit0. Final Gradle stop returned0. Both external stop logs state no daemon running."
+  ],
+  "exact_failure_path": {
+    "caller": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+    "caller_lines": [
+      [
+        463,
+        510
+      ]
+    ],
+    "callee": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py",
+    "callee_lines": [
+      [
+        74,
+        85
+      ]
+    ],
+    "proof": [
+      "Before the separate ninth observation, source-bound runner artifact_inventory completed exact built/installed bundle comparison,26notice checks,10dwarfdump bindings and two ad-hoc signature checks.",
+      "Public simctl launch returned com.parlor.app.debug:18472. Retained initial kernel attestation binds current uid501,start[1788816034,98441],generation1480553 and exact owned installed Parlor path; bracketed_lifetime_unchanged true. This is a distinct later launch, not per-XCTest-repetition PID/image evidence.",
+      "Runner lines482\u2013485wait48*0.25seconds with output budgets and recheck kernel lifetime before invoking sample. sample-command.log reports sampling18472complete; recorded command exit0.",
+      "At runner489the post-sample kernel lifetime check must return before493is reached; its local middle value was not preserved due later failure. Raw sample presence/non-symlink/size guards490\u2013492also precede the reported parser exception.",
+      "parse_sample83\u201385validates artifact inventory then calls verify_header74\u201380. That guard requires exactly one regex-extracted Process PID equal18472 and exactly one Path equal the kernel-attested executable. It raises the retained message: External tool did not report the exact attested app PID/path.",
+      "The exact raw Process/Path headers were intentionally deleted and not retained; the receipt contains neither regex result. It is not possible to tell whether a header was absent, duplicated, redacted, differently normalized, actually mismatched, or rejected by regex formatting.",
+      "Runner494vmmapwas not reached: no vmmap command exists among40retained commands. Image table parsing, sample/vmmap address matching, selected-runtime artifact rehash and final separate-external-image-provenance.json therefore did not complete.",
+      "Finally511\u2013516deleted raw sample/mapping files while retaining the failure. Thus current candidate-file UUIDs cannot establish which Compose framework image the ninth launch actually mapped."
+    ],
+    "error": {
+      "type": "RuntimeError",
+      "message": "External tool did not report the exact attested app PID/path"
+    },
+    "precise_root_cause": "UNCONFIRMED \u2014 BLOCKED by unretained actual header shape; no appdefect, unsupportedSimulator/tool, permissionproblem, cryptofailure or historical crash diagnosis established.",
+    "safe_next_step": "Keep acceptance checks strict. Add minimal bounded failure-only diagnostics for header counts, parse results and independently attested expected identity in a separately reviewed control change; execute new owned evidence if approved. Do not reverse-engineer/unredact an original missing value from a later hostformat probe or retroactively upgrade native08."
+  },
+  "counter_evidence_and_rejections": [
+    {
+      "candidate": "All8app launches failed because overallcycle failed",
+      "classification": "FALSE POSITIVE",
+      "reason": "The8XCTest repetitions and48actualUIobservations passed before the later separate provenance guard failure."
+    },
+    {
+      "candidate": "Xcode/simulator could not compile or launch Parlor",
+      "classification": "FALSE POSITIVE FOR THIS CYCLE",
+      "reason": "Xcodeexit0/eightmatchingactualtestpasses/publicninthlaunch+kernelattestation contradict that blanketclaim."
+    },
+    {
+      "candidate": "Full runtime/provenance gate passed because sample exited0",
+      "classification": "FALSE POSITIVE",
+      "reason": "sampleprocesssuccess is followed by failed exactPID/pathguard;vmmap/imagebindingneverexecuted."
+    },
+    {
+      "candidate": "A raw/built framework UUID proves that image was executed",
+      "classification": "FALSE POSITIVE",
+      "reason": "Candidatefileinspectioncompleted;no successfulmappedimagebindingexists for08."
+    },
+    {
+      "candidate": "The eight observations fix/diagnose the historical first-four-launch crash report",
+      "classification": "UNCONFIRMED \u2014 BLOCKED",
+      "reason": "Historical failures are not reproduced or traced;noOStermination/appcrashdiagnostics establishcause. Periodic observations are not continuousPIDliveness."
+    },
+    {
+      "candidate": "The L08storagefailure is cleared by ordinaryhome launch success",
+      "classification": "FALSE POSITIVE",
+      "reason": "No L08probe,save/load/recoveryfixture,protectionmetadata,settingsmigration,gameorLANscenario ran in08;07failure remains independently unchanged."
+    }
+  ],
+  "limits": [
+    "Xcode26.5/17F42 on macOS26.2 with iOS26.5/23F77 ARM64 iPhone17ProSimulator; not pinnedStore-qualifiedXcode26.3/17C529, signed release or physicaldevice.",
+    "English-only ordinaryhome foreground/brand/noXCTestalert observations for>=10postHome seconds;notFollowSystem/ArabicRTL,settingssave,keychain/fileprotection,gameplay,rejoin,LANorprivacy-policycoverage.",
+    "XCTest samples do not prove uninterrupted processliveness betweenpolls;per-repetitionkernelPID/imageattestationwasnotcollected.",
+    "The ninthsampleprocess activelysamples;it is not passive firstlaunch timing evidence. NumericPID tools do not atomically reserveprocessgenerations; pre/post kernel checks only bound that risk.",
+    "Notice bytes delivered does not settle alllicense obligations,final-linkprovenance,rights,Storeidentitycollision,publicationdisablement,credentialsorphysicalLANgates.",
+    "Mechanical source/hash/input counts are provenance checks,not a claim that799fileswere freshly line-by-lineauditedinthisreviewor a readinesspercentage.",
+    "No whole-repository READY verdict or additional applicationdefectcount follows from thisscoped review."
+  ],
+  "cleanup_validation": {
+    "status": "PASS corroborated",
+    "commands": 40,
+    "all_recorded_command_exit_codes_zero": true,
+    "gradle_stops": [
+      {
+        "label": "stop-xcode-immediate",
+        "exit_code": 0,
+        "at": "2026-09-07T21:20:30.489206+00:00"
+      },
+      {
+        "label": "stop-final",
+        "exit_code": 0,
+        "at": "2026-09-07T21:20:50.187840+00:00"
+      }
+    ],
+    "embedded_build_stop": {
+      "build_exit": 0,
+      "stop_exit": 0
+    },
+    "owned_device_deleted": true,
+    "exact_paths_independently_absent": [
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-ios-readiness-08-pg0t611o",
+      "/Users/abdelrahman/Library/Developer/CoreSimulator/Devices/4AC9941D-A375-4870-A920-E83FD55A4184",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-17499/IB/CAC334DC-ED57-4028-832C-A8489207CA1A.RemoteToHost",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-17499/IB/CAC334DC-ED57-4028-832C-A8489207CA1A.HostToRemote",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-17499/IB",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-17499"
+    ],
+    "secondary_fifo_ownership_parent_lifetime_mode_birth_matches": true,
+    "remaining_owned_workers": [],
+    "unknown_holders": [],
+    "errors": [],
+    "limitation": "No process enumeration performed by independent reviewer; worker absence is retained owner evidence corroborated by exact temporary/device/FIFO path absence, stop logs, and final metadata."
+  },
+  "preservation": {
+    "original_failures": "native05,native07,native08 receipts preserved unchanged; no classification upgraded.",
+    "original07_review": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ios-readiness07-actual-failure-independent-review-01.json",
+      "sha256": "b6b6cc826c7d11cc4e1d4d68e3a10fee2c229c65a816b62ee3ce45c2519ef9f4"
+    },
+    "no_authorized_mutation_needed": "Reviewer modified no app/test/control source,Gitstate,Storestate,globalcache or other user work. Only new additive reviewreports were written.",
+    "reviewer_workers": "No builds/tests/probes/simulators/servers or process-control commands started by reviewer; therefore no reviewer-owned background worker/build output required cleanup."
+  },
+  "source_read_ledger": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/NormalSourceLaunchUITests.swift.in",
+      "sha256": "c3d5cd42d60371cffee6ec4e8cdc462165f953dbef352bcdbf0f3f2d2a5a4ed2",
+      "reviewed_line_ranges": [
+        [
+          1,
+          76
+        ]
+      ],
+      "note": "Complete or explicit ranges read in this continuing independent review; key execution/failure paths reopened after handoff. Other earlier ownership/control source review is separately preserved in source07approval."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py",
+      "sha256": "820a566780f15edc07331d41e0ac7818414d90e347e4833ed62d6ca4fb76b559",
+      "reviewed_line_ranges": [
+        [
+          1,
+          149
+        ]
+      ],
+      "note": "Complete or explicit ranges read in this continuing independent review; key execution/failure paths reopened after handoff. Other earlier ownership/control source review is separately preserved in source07approval."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "sha256": "5b69fc6d6c1efbdd61e049057c57f3eddb1d11e1f804bb8ec8debc7e9aba42c8",
+      "reviewed_line_ranges": [
+        [
+          1,
+          677
+        ]
+      ],
+      "note": "Complete or explicit ranges read in this continuing independent review; key execution/failure paths reopened after handoff. Other earlier ownership/control source review is separately preserved in source07approval."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_launch_receipts.py",
+      "sha256": "c1335e043f91c1a5e995fb03e9464a291cd5566e0eabfaf1f981f339c5660ae0",
+      "reviewed_line_ranges": [
+        [
+          1,
+          248
+        ]
+      ],
+      "note": "Complete or explicit ranges read in this continuing independent review; key execution/failure paths reopened after handoff. Other earlier ownership/control source review is separately preserved in source07approval."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_source_copy.py",
+      "sha256": "5920d07a43c64eb7193a1c1d03aea93948bfa21597591ee13d79073666ed54d2",
+      "reviewed_line_ranges": [
+        [
+          1,
+          51
+        ]
+      ],
+      "note": "Complete or explicit ranges read in this continuing independent review; key execution/failure paths reopened after handoff. Other earlier ownership/control source review is separately preserved in source07approval."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/copied_sources.py",
+      "sha256": "d52f4f7904d1481fee00796a1c0775ee3512934639dac45fee44704fa9b74e62",
+      "reviewed_line_ranges": [
+        [
+          1,
+          231
+        ]
+      ],
+      "note": "Complete or explicit ranges read in this continuing independent review; key execution/failure paths reopened after handoff. Other earlier ownership/control source review is separately preserved in source07approval."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/third_party_notices.py",
+      "sha256": "d5a9e8e0cafd9c2d0de9ecd8dfcb040053fa52d25d798abd9998e84ab6676bdf",
+      "reviewed_line_ranges": [
+        [
+          1,
+          480
+        ],
+        [
+          548,
+          613
+        ]
+      ],
+      "note": "Complete or explicit ranges read in this continuing independent review; key execution/failure paths reopened after handoff. Other earlier ownership/control source review is separately preserved in source07approval."
+    }
+  ],
+  "earlier_full_control_review": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ios-readiness-source07-independent-approval-01.json",
+    "sha256": "eb9b979147dcd45032e74a78c2142d5a20cc1ef96358ff893e02c4aa6c436f66"
+  },
+  "raw_evidence": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-08/receipt.json",
+      "sha256": "ac6aa010d82c394d2bf498ab14d657cd22c04a4992f908183e557c68e2d5439f",
+      "bytes": 384486
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-08/input-manifest.json",
+      "sha256": "1e0702d9f32004cd0cf2b597a8b5b17bc5818310fcd9fd143964f39354da7a6e",
+      "bytes": 160731
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-08/copied-source.diff",
+      "sha256": "01d9693f844f7d5a47222c7c888afd40a78e34fa064e5241c732232c28a13a9a",
+      "bytes": 6927
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-08/copied-source-manifest.json",
+      "sha256": "7a7b4e6e5d01fc5738ba923c7387bcc9bcdcaa9df155532e31c820f582126f6c",
+      "bytes": 212572
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-08/copied-inputs-after-build.json",
+      "sha256": "5d2214147dc0fcd1db1b9a5e7818d39d725c55ba0890db3eda4ccfb7bfac29e1",
+      "bytes": 240225
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-08/xcresult-summary.json",
+      "sha256": "1772f8705cf07bfb49261ebfb17931b86b870e1e46b75488484e6be43b8e07e3",
+      "bytes": 1105
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-08/xcresult-tests.json",
+      "sha256": "c44d8566c5f46d1e1794e7717f47a9ab85395b7d1ea0351b3b0e2ad5066ec0d2",
+      "bytes": 4469
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-08/xcresult-test-details.json",
+      "sha256": "24757b6ff3c848e40dec5938bba888d7762b8763a9bd21d681b32acc24fb8d80",
+      "bytes": 2727
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-08/normal-launch-observations.json",
+      "sha256": "3644b6a6416252cd78e3024991727d526603cab4e205a9622a39e090c5d82b41",
+      "bytes": 14869
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-08/xcodebuild.log.gz",
+      "sha256": "45aad8c609ec1427ef42d9610c1858fba25d6307a6c56a282d1db744c8472d2b",
+      "bytes": 27742
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-08/built-notice-package.json",
+      "sha256": "5b22822de051375fe5f2a6ab54daa4db11c0addfd86b183e39a200c09ace2db5",
+      "bytes": 10407
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-08/installed-notice-package.json",
+      "sha256": "5b22822de051375fe5f2a6ab54daa4db11c0addfd86b183e39a200c09ace2db5",
+      "bytes": 10407
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-08/built-installed-binary-inventory.json",
+      "sha256": "7524bfcf93f72030ad28b9ca7960cb3788ceceec88fdf98918dabf217fd03aaa",
+      "bytes": 1565
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-08/external-image-artifact-bindings.json",
+      "sha256": "d164fe21347351a16d2533807c09bc96aa9baf19c4fc8cfcd4756c69bd969741",
+      "bytes": 4739
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-08/public-launch.log",
+      "sha256": "463aa8ed69bc375ea221554dc6c177b29238511bed1217aa6820919a8c6dcc70",
+      "bytes": 28
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-08/sample-command.log",
+      "sha256": "574c26cd3f54729ac0cdb49db23868203fcaf7a7fc3132b4ba22c5595a0b6c27",
+      "bytes": 293
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-08/stop-xcode-immediate.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-08/stop-final.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-08/embedded-gradle-stop.txt",
+      "sha256": "fb55a963c8d30249ea6b8be68a62b5921facefdc7823c16ad139fea885be972f",
+      "bytes": 25
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-08/secondary-fifo-final.json",
+      "sha256": "131d2f1b045191e97d5a7e28b3eefacdf0c5678230321cbccda6d2dd68293c41",
+      "bytes": 2941
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-08/secondary-fifo-ownership.json",
+      "sha256": "131d2f1b045191e97d5a7e28b3eefacdf0c5678230321cbccda6d2dd68293c41",
+      "bytes": 2941
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-08/owned-device-after-delete.json",
+      "sha256": "755d442cf44919879856407fe199e916c770d206e3f6b050d6eb286b7af73782",
+      "bytes": 20
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-08/built-app-signature.log",
+      "sha256": "8051d68ad58871d899de387f43b529dc4fd6b029847ea523ad512d9c4fb19436",
+      "bytes": 365
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-08/installed-app-signature.log",
+      "sha256": "86ec1154f43cdcf062706f9a042802e068ae9825834381118518bda30c59030f",
+      "bytes": 411
+    }
+  ]
+}

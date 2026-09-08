@@ -1,0 +1,214 @@
+{
+  "reviewer": "/root/mafia_cont",
+  "remediation_author": "/root",
+  "reviewed_at": "2026-09-05T19:51:23.125598+00:00",
+  "identity": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "reviewed_version": "Dirty working tree, scoped hashes below; other agents own unrelated fixes"
+  },
+  "original_finder": "/root/whodunit_cont",
+  "original_independent_validator": "/root/session_cont",
+  "production_or_test_edits_by_reviewer": false,
+  "build_or_test_or_store_execution_by_reviewer": false,
+  "public_documentation_research": "mafia/rl-c1-rl-c3-independent-research.json",
+  "issue": "RL-C3",
+  "conclusion": "APPROVE SCOPED FIX — destination/source/digest checks and mutation now bind to one Play edit snapshot",
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/store_api.py",
+      "sha256": "95ba5a18b5e78d85eb15c8764f011db76293d0bdcf8ee088151321ad5d6b7012",
+      "reviewed_line_ranges": [
+        [
+          1,
+          732
+        ],
+        [
+          1680,
+          1834
+        ]
+      ],
+      "range_sha256": {
+        "1-732": "d1f21c4abe9e913240925f9b34ce4357d25276553ca1c251bc401c0df58b766e",
+        "1680-1834": "a986952262a280ff3fc66c733dbd02193d7a57398c1552ac21b5d1c42cbabca5"
+      }
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_google_promotion_edit.py",
+      "sha256": "b6ed5e950782ef5581f86cabd7a263937da52d3dfcf7c84cc45df5bcc2d147db",
+      "reviewed_line_ranges": [
+        [
+          1,
+          192
+        ]
+      ],
+      "range_sha256": {
+        "1-192": "b6ed5e950782ef5581f86cabd7a263937da52d3dfcf7c84cc45df5bcc2d147db"
+      }
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_store_api.py",
+      "sha256": "18d49c5deb8cc5383b5a9888f7f14f21884bbbfeb577348412f1930f4972a1d1",
+      "reviewed_line_ranges": [
+        [
+          1,
+          75
+        ],
+        [
+          230,
+          440
+        ]
+      ],
+      "range_sha256": {
+        "1-75": "440de60592c8412b3655995482e5a9beb85674849c28149d06f0237b718c8543",
+        "230-440": "6b6b8f74c9f737748cd948f936a71a148f52c96a5c9183f18fa8db6b539e97e3"
+      }
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/release_tool.py",
+      "sha256": "3deab649aba1fdfff07df2036c9706bcddac2d8c20e9b6d50bdc2e9240ddd185",
+      "reviewed_line_ranges": [
+        [
+          153,
+          200
+        ],
+        [
+          552,
+          630
+        ]
+      ],
+      "range_sha256": {
+        "153-200": "b5df1e8bbd6425ae05da006722906607c5b33f03680d3a7b7a7f1c99ce7b19fc",
+        "552-630": "b80e00cd7412f1003d7ff0c5e7967969c43eaef5d7673b854f18a4c0f15764ce"
+      }
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_release_tool.py",
+      "sha256": "89a2f83994e461184706e9c2ec50d13bffabc622f615793802a6f7e040f9c140",
+      "reviewed_line_ranges": [
+        [
+          90,
+          125
+        ]
+      ],
+      "range_sha256": {
+        "90-125": "114712864f96713b8206e1cbe7e7ba2e65626a6e16e7e59981eb688f05df66d8"
+      }
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/.github/workflows/production-promotion.yml",
+      "sha256": "94ca7f617c24cb4c9ffafa5860c7ebc104f08cfa46b2a2e13fbae3ed816c461b",
+      "reviewed_line_ranges": [
+        [
+          243,
+          252
+        ],
+        [
+          292,
+          333
+        ]
+      ],
+      "range_sha256": {
+        "243-252": "5f2b0948e39871e1c82e93a9df4e52bc6a21c613fad073f3a701f6da2380678b",
+        "292-333": "b8acb7ea085213bc94e5d99cb554a2d0bc2f523deccf24ca08c2b54a60e7bcb3"
+      }
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/.github/workflows/testing-external-promotion.yml",
+      "sha256": "5874b8b435e3b6fbfc02bb1cb54f8ab1d26ab01cf25b4220b2d81985fecc8a86",
+      "reviewed_line_ranges": [
+        [
+          148,
+          157
+        ],
+        [
+          189,
+          220
+        ]
+      ],
+      "range_sha256": {
+        "148-157": "3e459ac996f5d060ac61becb45f0fc23ff604ed6da413ed1448532a7c39d1590",
+        "189-220": "8fe331393a6d77910cb59ef46ec2cf936b305eed60e0871d420d5b64545c516f"
+      }
+    }
+  ],
+  "proof": [
+    "google_promote_execute inserts edit once before reading tracks/bundles. Every source/completed-release/destination-shape/digest guard uses that edit; set_track,validate,commit receive that same id.",
+    "A change before insertion appears in its snapshot and is guarded; a Console/other-edit change after insertion invalidates the edit by documented v3 semantics. Eliminates the old between-read-edit-and-mutation-edit gap.",
+    "Idempotent already-present path still validates candidate digest/source/completed destination and now exits through finally deletion without PUT/commit. Rejected guards/failures use same finally; successful commit retains original post-commit inventory/digest/destination readback.",
+    "HTTP mutation helpers retain safe_retry=False default. No new upload/rebuild/schema/protocol/signature/Store-identity behavior. Main still requires approved identity and production external receipt; dry-run creates no client.",
+    "New EditSnapshotClient overrides only HTTP request; real GoogleClient insert/list/delete/set/validate/commit/read_inventory and actual promote function run. Fixture never loads credentials and explicitly forbids network/signing. Model captures documented per-user edit invalidation and external Console change.",
+    "Updated existing tests maintain digest/idempotency assertions and add checked-edit binding/deletion/no-PUT/no-commit assertions; changed insert expectation is necessary for same-edit policy, not weakened track integrity."
+  ],
+  "counter_evidence": [
+    "This is latent release code, not an enabled Store incident; current jobs/identity blocks unchanged.",
+    "Google external invalidation already protected changes after old mutation insertion; fix closes only earlier unprotected interval.",
+    "Successful cleanup on network failure cannot be guaranteed: existing best-effort delete logs sanitized ReleaseError; server expiry/recovery remains external. The fix does not newly claim guaranteed deletion.",
+    "Fixture raises on invalidated PUT whereas official contract guarantees invalid commit has no effect; this is a synthetic model, not real API behavior evidence. Even if PUT response differs, production does not retry and commit of invalidated edit remains blocked.",
+    "Sibling internal-upload code is unchanged and not approved by this scoped promotion review."
+  ],
+  "verification": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c3-red-02/receipt.json",
+      "receipt_sha256": "f0ad03ec518d3d83ec1459258348ad390665d610ad4cf7b636af66d42362fc0a",
+      "log_sha256": "d086fbfae7dba4e0472c404a60a6f64a0cc79098c876a56ddca4c5edf57993aa",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/release/tests",
+        "-p",
+        "test_google_promotion_edit.py",
+        "-v"
+      ],
+      "exit_code": 1,
+      "status": "FAIL",
+      "stop_exit_code": 0,
+      "source_changed_during_cycle": false,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c3-green/receipt.json",
+      "receipt_sha256": "14ddb8cfe944b0e1b61a4129cfdfee66596c33c3e96887f498d37a29fe89ca17",
+      "log_sha256": "1ad87556683dfb8d7044b03460ab95b8e78ff1a8980d0e1db7c03b34ce803a9f",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/release/tests",
+        "-p",
+        "test_*promotion*.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "status": "PASS",
+      "stop_exit_code": 0,
+      "source_changed_during_cycle": false,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      }
+    }
+  ],
+  "observed_results": "Red:9 tests,2 failures (different edit trace and staged change falsely commits); green:9/9. Receipts source stable,stop0,no remaining outputs/workers or cleanup errors.",
+  "remaining_requirements": [
+    "Updated test_store_api.py tests were source-reviewed, but rl-c3-green selector runs only new promotion file; broader suite must still execute in root lane",
+    "Real controlled Google Play rehearsal requires owner-authorized identity/credentials and is not replaced by mocks",
+    "Store approval, publishing and other external gates remain blocked"
+  ],
+  "research_specific": "Fresh official Edits and tracks.update pages fetched2026-09-05 HTTP200; source/current v3 APIs are handwritten client requests, no Google SDK version assumed."
+}

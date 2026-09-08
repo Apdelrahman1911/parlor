@@ -1,0 +1,69 @@
+test_both_small_files_with_spaces_pass_gnu_shaped_stat_preflight (test_android_artifact_size.AndroidArtifactSizeTest) ... FAIL
+test_empty_dependency_report_is_rejected (test_android_artifact_size.AndroidArtifactSizeTest) ... FAIL
+test_exact_artifact_bound_is_accepted_without_allocating_512_mib (test_android_artifact_size.AndroidArtifactSizeTest) ... FAIL
+test_exact_dependency_report_bound_is_accepted (test_android_artifact_size.AndroidArtifactSizeTest) ... FAIL
+test_missing_directory_and_symlink_inputs_are_rejected (test_android_artifact_size.AndroidArtifactSizeTest) ... ok
+test_oversized_artifact_is_rejected (test_android_artifact_size.AndroidArtifactSizeTest) ... FAIL
+test_oversized_dependency_report_is_rejected (test_android_artifact_size.AndroidArtifactSizeTest) ... FAIL
+
+======================================================================
+FAIL: test_both_small_files_with_spaces_pass_gnu_shaped_stat_preflight (test_android_artifact_size.AndroidArtifactSizeTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_artifact_size.py", line 67, in test_both_small_files_with_spaces_pass_gnu_shaped_stat_preflight
+    self.assert_preflight_accepted()
+  File "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_artifact_size.py", line 61, in assert_preflight_accepted
+    self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+AssertionError: 1 != 2 : /Users/abdelrahman/Projects/parlor/scripts/release/validate_android_artifact.sh: line 21: File: unbound variable
+
+
+======================================================================
+FAIL: test_empty_dependency_report_is_rejected (test_android_artifact_size.AndroidArtifactSizeTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_artifact_size.py", line 116, in test_empty_dependency_report_is_rejected
+    self.assertEqual(result.returncode, 2)
+AssertionError: 1 != 2
+
+======================================================================
+FAIL: test_exact_artifact_bound_is_accepted_without_allocating_512_mib (test_android_artifact_size.AndroidArtifactSizeTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_artifact_size.py", line 72, in test_exact_artifact_bound_is_accepted_without_allocating_512_mib
+    self.assert_preflight_accepted()
+  File "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_artifact_size.py", line 61, in assert_preflight_accepted
+    self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+AssertionError: 1 != 2 : /Users/abdelrahman/Projects/parlor/scripts/release/validate_android_artifact.sh: line 21: File: unbound variable
+
+
+======================================================================
+FAIL: test_exact_dependency_report_bound_is_accepted (test_android_artifact_size.AndroidArtifactSizeTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_artifact_size.py", line 85, in test_exact_dependency_report_bound_is_accepted
+    self.assert_preflight_accepted()
+  File "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_artifact_size.py", line 61, in assert_preflight_accepted
+    self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+AssertionError: 1 != 2 : /Users/abdelrahman/Projects/parlor/scripts/release/validate_android_artifact.sh: line 21: File: unbound variable
+
+
+======================================================================
+FAIL: test_oversized_artifact_is_rejected (test_android_artifact_size.AndroidArtifactSizeTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_artifact_size.py", line 78, in test_oversized_artifact_is_rejected
+    self.assertEqual(result.returncode, 2)
+AssertionError: 1 != 2
+
+======================================================================
+FAIL: test_oversized_dependency_report_is_rejected (test_android_artifact_size.AndroidArtifactSizeTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_artifact_size.py", line 91, in test_oversized_dependency_report_is_rejected
+    self.assertEqual(result.returncode, 2)
+AssertionError: 1 != 2
+
+----------------------------------------------------------------------
+Ran 7 tests in 9.234s
+
+FAILED (failures=6)

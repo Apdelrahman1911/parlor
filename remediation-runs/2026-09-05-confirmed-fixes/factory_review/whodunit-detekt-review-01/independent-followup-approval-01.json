@@ -1,0 +1,308 @@
+{
+  "review_id": "WD-C3-test-detekt-followup-01",
+  "classification": "APPROVED \u2014 TEST-ONLY FOLLOW-UP",
+  "scope": "Only final explicit suspend-function-reference correction in WhodunitFinalTwoRecoveryTest; not a new application finding or a replacement for prior WD-C3 production review.",
+  "author": "/root",
+  "independent_reviewer": "/root/factory_review",
+  "reviewed_at": "2026-09-05T22:28:28.340822+00:00",
+  "baseline": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+    "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7"
+  },
+  "reviewed_source": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitFinalTwoRecoveryTest.kt",
+      "sha256": "b6f36aa2ea3615dcee2c563087d67120e321146d4ae0a2e40cb0f696e865d906",
+      "reviewed_lines": [
+        [
+          1,
+          349
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "sha256": "4d58eb3bebd3777c88ca9f8ab21d97441f6d2cd1a70e28b07a0334fdc0c8ee17",
+      "reviewed_lines": [
+        [
+          350,
+          490
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/WhodunitDefinition.kt",
+      "sha256": "3de8412afe1595f0dfc08c555523b6eff1c5c97f463e992456b2bb13d10f9ac3",
+      "reviewed_lines": [
+        [
+          1,
+          72
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/SnapshotStore.kt",
+      "sha256": "971db2ad642d795458a8ca2c9a6c018109ec09035c2b7c5648cd4f50209ec86b",
+      "reviewed_lines": [
+        [
+          1,
+          46
+        ]
+      ]
+    }
+  ],
+  "before_sha256": "58e56cfae03d3f13fa7d62b866ae4d671dc8289b8766d04f6cbed2bcb3e6b9c0",
+  "after_sha256": "b6f36aa2ea3615dcee2c563087d67120e321146d4ae0a2e40cb0f696e865d906",
+  "reverse_diff_exactly_matches_before": true,
+  "ineffective_definition_annotation_reverted": true,
+  "diff": "--- before/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitFinalTwoRecoveryTest.kt\n+++ after/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitFinalTwoRecoveryTest.kt\n@@ -298,8 +298,12 @@\n     private suspend fun assertValidRecovery(state: WhodunitState, case: ValidatedCase<WhodunitCase>) {\n         WhodunitStateValidator.requireValidForCase(state, case)\n         assertEquals(state, codec.decode(codec.encode(state)))\n+        // Keep the internal production loader's suspending contract explicit\n+        // for compiler-backed test analysis as well as the runtime compiler.\n+        val load: suspend (SnapshotStore, WhodunitDefinition, SessionId) -> Result<ResumedSession, DataError> =\n+            ::loadResumedSession\n         val recovered = assertIs<Result.Success<ResumedSession>>(\n-            loadResumedSession(store(state, case), definition, sessionId),\n+            load(store(state, case), definition, sessionId),\n         ).data\n         assertEquals(state, recovered.state)\n         assertEquals(Result.Success(Unit), validateResumedSessionForCase(recovered, case))\n",
+  "reasoning": [
+    "Helper must remain suspend because it invokes the declared suspend production loader, which invokes SnapshotStore.load and can invoke SnapshotStore.delete.",
+    "Typed ::loadResumedSession reference invokes the same production function with the same fixture, definition and session ID; no mock/no-op suspend was introduced.",
+    "All assertions, case fixture, reducer construction, codec/peer checks, terminal/early-end/replay controls and scheduler behavior are unchanged.",
+    "Final raw XML reports nine fresh runtime executions, no failures/errors/skips; exact Gradle desktopTest and detektDesktopTest lines are not FROM-CACHE/UP-TO-DATE.",
+    "Final targeted type-aware report has zero findings and the requested typeAwareStaticAnalysis aggregate/build passed. Other aggregate dependencies can be cached; this is not a claim that all underlying tasks freshly executed.",
+    "First explicit-definition-type attempt failed and was reverted; both its failure and the original combined-production-03 failure remain preserved.",
+    "Detekt tagged implementation checks resolved suspend descriptors; analyzer/compiler versions and environments differ. Exact erroneous binding-context/metadata path was not instrumented, so a particular decoder/friend-path bug is not asserted.",
+    "No production, game rule, protocol 4.2, persistence format, private projection or resource changes belong to this follow-up."
+  ],
+  "counter_evidence_considered": [
+    "Normal production reducer already terminates at final two; WD-C3 recovery test models an erroneous trusted producer, not ordinary gameplay or storage authentication bypass.",
+    "Existing defensive all-abstain fallback does not justify reopening completed current-schema games; original issue dossiers were reopened and test controls retain legal final-two terminal/replay recovery.",
+    "A green runtime test alone cannot justify deleting required suspend or disabling static checks. This correction does neither."
+  ],
+  "cycles": [
+    {
+      "cycle": "combined-production-03",
+      "status": "FAIL",
+      "exit_code": 1,
+      "started_at": "2026-09-05T22:11:20.443340+00:00",
+      "finished_at": "2026-09-05T22:16:36.652495+00:00",
+      "source_manifest_sha256": "283020fbc279db238c3c3cf449a7c0f76d1c493d2c2b07ef6f29b06f795337cb",
+      "test_sha256": "58e56cfae03d3f13fa7d62b866ae4d671dc8289b8766d04f6cbed2bcb3e6b9c0",
+      "test_xml": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-03/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest.xml",
+      "test_xml_sha256": "239a7d1f0a639a537087c75ecee512fd6cfaaee6178276b46c609956c96b1a7f",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "test_timestamp": "2026-09-05T22:14:30.239Z",
+      "test_names": [
+        "everyOwnPrivatePeerBoundaryRejectsAReopenedFinalTwo()[desktop]",
+        "earlyEndWithAndWithoutDisclosureRemainRecoverable()[desktop]",
+        "currentDecoderRejectsCanonicalJsonThatReopensTheFinalTwo()[desktop]",
+        "aLegalLastRoundKillerEliminationStillAllowsTwoInnocentSurvivors()[desktop]",
+        "legalFinalTwoKillerVictoryStillRecoversThroughPostGameAndReplay()[desktop]",
+        "productionLocalResumeLoaderRejectsAnImpossibleTrustedPayload()[desktop]",
+        "currentEncoderRejectsEveryReopenedFinalTwoSubstate()[desktop]",
+        "bareLegacyPayloadCannotRepairAnImpossibleActiveFinalTwo()[desktop]",
+        "caseBoundRecoveryRejectsFinalTwoEvenWithTheCorrectContentIdentity()[desktop]"
+      ],
+      "detekt_xml": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-03/reports/game-modes/whodunit/build/reports/detekt/detektDesktopTest.xml",
+      "detekt_xml_sha256": "d5a0056539bb5c8286a12cb2bdf26cbbea2cf47550717d8fc4b8e0555ceeb279",
+      "detekt_findings": [
+        {
+          "line": "298",
+          "column": "13",
+          "severity": "warning",
+          "message": "Function has redundant `suspend` modifier.",
+          "source": "detekt.RedundantSuspendModifier"
+        }
+      ],
+      "task_lines": [
+        {
+          "line": 1183,
+          "text": "> Task :game-modes:whodunit:desktopTestProcessResources"
+        },
+        {
+          "line": 1185,
+          "text": "> Task :game-modes:whodunit:desktopTestClasses"
+        },
+        {
+          "line": 1186,
+          "text": "> Task :game-modes:whodunit:desktopTest"
+        },
+        {
+          "line": 1476,
+          "text": "> Task :game-modes:whodunit:detektDesktopTest"
+        },
+        {
+          "line": 1480,
+          "text": "> Task :game-modes:whodunit:detektDesktopTest FAILED"
+        },
+        {
+          "line": 1496,
+          "text": "BUILD FAILED in 5m 15s"
+        }
+      ],
+      "receipt_sha256": "e8d122edb2506dbe5a9b4100656c319ab561dcb434752f8c7a08d51c784b552c",
+      "gradle_log_sha256": "24a84074b01c05f18c2864a93088051dc666552592962721b6d51a3367f4725f",
+      "stop_exit_code": 0,
+      "stop_log": "No Gradle daemons are running.",
+      "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "stopped_at": "2026-09-05T22:16:36.971675+00:00",
+      "cleanup_completed_at": "2026-09-05T22:16:38.376026+00:00",
+      "remaining_outputs": [],
+      "remaining_owned_workers": [],
+      "cleanup_errors": [],
+      "source_changed_during_cycle": false
+    },
+    {
+      "cycle": "whodunit-type-aware-01",
+      "status": "FAIL",
+      "exit_code": 1,
+      "started_at": "2026-09-05T22:19:20.955280+00:00",
+      "finished_at": "2026-09-05T22:20:11.126651+00:00",
+      "source_manifest_sha256": "240be2634d99f4e0ad560502f902260189ea7ac487d44cda7ce5f69e772e2aaa",
+      "test_sha256": "6a747e411188666caadaddec5ef97dd54ed14cf2504fe234709fc53319e88eb5",
+      "test_xml": "remediation-runs/2026-09-05-confirmed-fixes/evidence/whodunit-type-aware-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest.xml",
+      "test_xml_sha256": "9c68bccbd0cc64dfeeba4300165c43eaf72da450bca0b283ba8833290b1ff481",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "test_timestamp": "2026-09-05T22:19:44.909Z",
+      "test_names": [
+        "everyOwnPrivatePeerBoundaryRejectsAReopenedFinalTwo()[desktop]",
+        "earlyEndWithAndWithoutDisclosureRemainRecoverable()[desktop]",
+        "currentDecoderRejectsCanonicalJsonThatReopensTheFinalTwo()[desktop]",
+        "aLegalLastRoundKillerEliminationStillAllowsTwoInnocentSurvivors()[desktop]",
+        "legalFinalTwoKillerVictoryStillRecoversThroughPostGameAndReplay()[desktop]",
+        "productionLocalResumeLoaderRejectsAnImpossibleTrustedPayload()[desktop]",
+        "currentEncoderRejectsEveryReopenedFinalTwoSubstate()[desktop]",
+        "bareLegacyPayloadCannotRepairAnImpossibleActiveFinalTwo()[desktop]",
+        "caseBoundRecoveryRejectsFinalTwoEvenWithTheCorrectContentIdentity()[desktop]"
+      ],
+      "detekt_xml": "remediation-runs/2026-09-05-confirmed-fixes/evidence/whodunit-type-aware-01/reports/game-modes/whodunit/build/reports/detekt/detektDesktopTest.xml",
+      "detekt_xml_sha256": "d5a0056539bb5c8286a12cb2bdf26cbbea2cf47550717d8fc4b8e0555ceeb279",
+      "detekt_findings": [
+        {
+          "line": "298",
+          "column": "13",
+          "severity": "warning",
+          "message": "Function has redundant `suspend` modifier.",
+          "source": "detekt.RedundantSuspendModifier"
+        }
+      ],
+      "task_lines": [
+        {
+          "line": 137,
+          "text": "> Task :game-modes:whodunit:desktopTestProcessResources"
+        },
+        {
+          "line": 139,
+          "text": "> Task :game-modes:whodunit:desktopTestClasses"
+        },
+        {
+          "line": 140,
+          "text": "> Task :game-modes:whodunit:desktopTest"
+        },
+        {
+          "line": 514,
+          "text": "> Task :game-modes:whodunit:detektDesktopTest FAILED"
+        },
+        {
+          "line": 721,
+          "text": "BUILD FAILED in 49s"
+        }
+      ],
+      "receipt_sha256": "0f05529c9d4be46c104f6f8d8a64af2d467c869535e0ff020b32aaf912928e89",
+      "gradle_log_sha256": "d2b4d2a3942e755ce260db33b041ffa02420c864829ab5893f7c79ddb6db12be",
+      "stop_exit_code": 0,
+      "stop_log": "No Gradle daemons are running.",
+      "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "stopped_at": "2026-09-05T22:20:11.444644+00:00",
+      "cleanup_completed_at": "2026-09-05T22:20:12.574694+00:00",
+      "remaining_outputs": [],
+      "remaining_owned_workers": [],
+      "cleanup_errors": [],
+      "source_changed_during_cycle": false
+    },
+    {
+      "cycle": "test-type-aware-green-02",
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at": "2026-09-05T22:22:36.200809+00:00",
+      "finished_at": "2026-09-05T22:23:20.265556+00:00",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "test_sha256": "b6f36aa2ea3615dcee2c563087d67120e321146d4ae0a2e40cb0f696e865d906",
+      "test_xml": "remediation-runs/2026-09-05-confirmed-fixes/evidence/test-type-aware-green-02/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest.xml",
+      "test_xml_sha256": "3e683150c69b6d16c64b4f71100d8120d1c59658539943d75c49d80766101a16",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "test_timestamp": "2026-09-05T22:23:01.713Z",
+      "test_names": [
+        "everyOwnPrivatePeerBoundaryRejectsAReopenedFinalTwo()[desktop]",
+        "earlyEndWithAndWithoutDisclosureRemainRecoverable()[desktop]",
+        "currentDecoderRejectsCanonicalJsonThatReopensTheFinalTwo()[desktop]",
+        "aLegalLastRoundKillerEliminationStillAllowsTwoInnocentSurvivors()[desktop]",
+        "legalFinalTwoKillerVictoryStillRecoversThroughPostGameAndReplay()[desktop]",
+        "productionLocalResumeLoaderRejectsAnImpossibleTrustedPayload()[desktop]",
+        "currentEncoderRejectsEveryReopenedFinalTwoSubstate()[desktop]",
+        "bareLegacyPayloadCannotRepairAnImpossibleActiveFinalTwo()[desktop]",
+        "caseBoundRecoveryRejectsFinalTwoEvenWithTheCorrectContentIdentity()[desktop]"
+      ],
+      "detekt_xml": "remediation-runs/2026-09-05-confirmed-fixes/evidence/test-type-aware-green-02/reports/game-modes/whodunit/build/reports/detekt/detektDesktopTest.xml",
+      "detekt_xml_sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "detekt_findings": [],
+      "task_lines": [
+        {
+          "line": 137,
+          "text": "> Task :game-modes:whodunit:desktopTestProcessResources"
+        },
+        {
+          "line": 139,
+          "text": "> Task :game-modes:whodunit:desktopTestClasses"
+        },
+        {
+          "line": 140,
+          "text": "> Task :game-modes:whodunit:desktopTest"
+        },
+        {
+          "line": 528,
+          "text": "> Task :game-modes:whodunit:detektDesktopTest"
+        },
+        {
+          "line": 683,
+          "text": "> Task :typeAwareStaticAnalysis"
+        },
+        {
+          "line": 687,
+          "text": "BUILD SUCCESSFUL in 43s"
+        }
+      ],
+      "receipt_sha256": "3653b225944d313205d98993092048111c972fb1fc3736e59f34f324f93e0dbf",
+      "gradle_log_sha256": "500e58104408375fa8d384745dfe45f639d01896ebad5e85227acf42aba4293e",
+      "stop_exit_code": 0,
+      "stop_log": "No Gradle daemons are running.",
+      "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "stopped_at": "2026-09-05T22:23:20.569450+00:00",
+      "cleanup_completed_at": "2026-09-05T22:23:21.739557+00:00",
+      "remaining_outputs": [],
+      "remaining_owned_workers": [],
+      "cleanup_errors": [],
+      "source_changed_during_cycle": false
+    }
+  ],
+  "original_dossiers_read": [
+    "audit-runs/2026-09-05-source-audit/candidates/WD-C3-whodunit_cont.md",
+    "audit-runs/2026-09-05-source-audit/validations/WD-C3-root.md"
+  ],
+  "research": [
+    "remediation-runs/2026-09-05-confirmed-fixes/factory_review/whodunit-detekt-review-01/research-receipt-01.json",
+    "remediation-runs/2026-09-05-confirmed-fixes/factory_review/mafia-detekt-review-01/research-receipt-01.json"
+  ],
+  "limits": [
+    "Reviewer did not run builds; root owns single build lane. Raw captured reports/logs and source were independently inspected.",
+    "This approval is limited to the final test-only change; full production validator was not reread in this follow-up. Prior independent WD-C3 repair review is separate.",
+    "Toast follow-up has a separate reviewer; no toast approval is made here.",
+    "Combined-production-04 was running at review time and is not claimed passed.",
+    "JVM runtime evidence does not establish physical LAN, iOS/Android runtime, real-save, signing, Store or release readiness."
+  ],
+  "reviewer_cleanup": "No reviewer-started build/background processes or generated build outputs. Only compact evidence added under assigned directory. Prior cycle cleanup receipts verified; active parent build not stopped."
+}

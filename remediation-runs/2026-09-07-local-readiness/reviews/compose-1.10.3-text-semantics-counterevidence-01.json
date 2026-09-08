@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/native_fix_review",
+  "created_utc": "2026-09-07T13:18:19.164375+00:00",
+  "research_only": true,
+  "repository": "/Users/abdelrahman/Projects/parlor",
+  "scope": "Pinned Desktop common Text path used by Mafia tally/setup regression fixtures. Does not claim upstream fix, other platforms or general absence of overflow.",
+  "dependency_pins": {
+    "path": "gradle/libs.versions.toml",
+    "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+    "compose_multiplatform": "1.10.3",
+    "compose_material3": "1.9.0-beta03"
+  },
+  "references": [
+    {
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/compose/foundation/foundation-desktop/1.10.3/foundation-desktop-1.10.3-sources.jar",
+      "accessed_at": "2026-09-07T13:18:18.474347+00:00",
+      "status": 200,
+      "artifact_sha256": "b06167fd914eb3fe19b46a85e62add1ab22889f66a00897a3cc7e7cf4cbce0a4",
+      "artifact_bytes": 1093173,
+      "files": [
+        {
+          "archive_path": "commonMain/androidx/compose/foundation/text/modifiers/ParagraphLayoutCache.kt",
+          "full_source_sha256": "e7dcd7051122d18adc560db6518cdc8d4b4adaad0798e08319d9d12df0bd4db4",
+          "line_count": 428,
+          "reviewed_relevant_ranges": [
+            [
+              157,
+              197
+            ],
+            [
+              290,
+              310
+            ],
+            [
+              359,
+              403
+            ]
+          ],
+          "retained_excerpts": [
+            {
+              "lines": [
+                157,
+                197
+              ],
+              "text": "157:     fun layoutWithConstraints(constraints: Constraints, layoutDirection: LayoutDirection): Boolean {\n158:         recordHistory(LayoutCacheOperation.LayoutWithConstraints)\n159:         val finalConstraints =\n160:             if (minLines > 1) {\n161:                 useMinLinesConstrainer(constraints, layoutDirection)\n162:             } else {\n163:                 constraints\n164:             }\n165: \n166:         if (!newLayoutWillBeDifferent(finalConstraints, layoutDirection)) {\n167:             if (finalConstraints != prevConstraints) {\n168:                 // ensure size and overflow is still accurate\n169:                 val localParagraph = paragraph!!\n170:                 val layoutWidth = min(localParagraph.maxIntrinsicWidth, localParagraph.width)\n171:                 val localSize =\n172:                     finalConstraints.constrain(\n173:                         IntSize(layoutWidth.ceilToIntPx(), localParagraph.height.ceilToIntPx())\n174:                     )\n175:                 layoutSize = localSize\n176:                 didOverflow =\n177:                     overflow != TextOverflow.Visible &&\n178:                         (localSize.width < localParagraph.width ||\n179:                             localSize.height < localParagraph.height)\n180:                 prevConstraints = finalConstraints\n181:             }\n182:             return false\n183:         }\n184: \n185:         paragraph =\n186:             layoutText(finalConstraints, layoutDirection).also {\n187:                 prevConstraints = finalConstraints\n188:                 val localSize =\n189:                     finalConstraints.constrain(\n190:                         IntSize(it.width.ceilToIntPx(), it.height.ceilToIntPx())\n191:                     )\n192:                 layoutSize = localSize\n193:                 didOverflow =\n194:                     overflow != TextOverflow.Visible &&\n195:                         (localSize.width < it.width || localSize.height < it.height)\n196:             }\n197:         return true"
+            },
+            {
+              "lines": [
+                290,
+                310
+              ],
+              "text": "290:     /**\n291:      * Computes the visual position of the glyphs for painting the text.\n292:      *\n293:      * The text will layout with a width that's as close to its max intrinsic width as possible\n294:      * while still being greater than or equal to `minWidth` and less than or equal to `maxWidth`.\n295:      */\n296:     internal fun layoutText(constraints: Constraints, layoutDirection: LayoutDirection): Paragraph {\n297:         val localParagraphIntrinsics = setLayoutDirection(layoutDirection)\n298: \n299:         return Paragraph(\n300:             paragraphIntrinsics = localParagraphIntrinsics,\n301:             constraints =\n302:                 finalConstraints(\n303:                     constraints,\n304:                     softWrap,\n305:                     overflow,\n306:                     localParagraphIntrinsics.maxIntrinsicWidth,\n307:                 ),\n308:             maxLines = finalMaxLines(softWrap, overflow, maxLines),\n309:             overflow = overflow,\n310:         )"
+            },
+            {
+              "lines": [
+                359,
+                403
+              ],
+              "text": "359:     /**\n360:      * Compute a [TextLayoutResult] for the current Layout values.\n361:      *\n362:      * This does an entire Text layout to produce the result, it is slow.\n363:      *\n364:      * Exposed for semantics GetTextLayoutResult\n365:      */\n366:     fun slowCreateTextLayoutResultOrNull(style: TextStyle): TextLayoutResult? {\n367:         // make sure we're in a valid place\n368:         val localLayoutDirection = intrinsicsLayoutDirection ?: return null\n369:         val localDensity = density ?: return null\n370:         val annotatedString = AnnotatedString(text)\n371:         paragraph ?: return null\n372:         paragraphIntrinsics ?: return null\n373:         val finalConstraints = prevConstraints.copyMaxDimensions()\n374: \n375:         // and redo layout with MultiParagraph\n376:         return TextLayoutResult(\n377:             TextLayoutInput(\n378:                 annotatedString,\n379:                 style,\n380:                 emptyList(),\n381:                 maxLines,\n382:                 softWrap,\n383:                 overflow,\n384:                 localDensity,\n385:                 localLayoutDirection,\n386:                 fontFamilyResolver,\n387:                 finalConstraints,\n388:             ),\n389:             MultiParagraph(\n390:                 MultiParagraphIntrinsics(\n391:                     annotatedString = annotatedString,\n392:                     style = style,\n393:                     placeholders = emptyList(),\n394:                     density = localDensity,\n395:                     fontFamilyResolver = fontFamilyResolver,\n396:                 ),\n397:                 finalConstraints,\n398:                 maxLines,\n399:                 overflow,\n400:             ),\n401:             layoutSize,\n402:         )\n403:     }"
+            }
+          ]
+        },
+        {
+          "archive_path": "commonMain/androidx/compose/foundation/text/modifiers/LayoutUtils.kt",
+          "full_source_sha256": "3a865e3a830fa5a8dcb0e51f4eaa68c070bb8fdec25de1f60fa8c747708d14f6",
+          "line_count": 93,
+          "reviewed_relevant_ranges": [
+            [
+              23,
+              65
+            ]
+          ],
+          "retained_excerpts": [
+            {
+              "lines": [
+                23,
+                65
+              ],
+              "text": "23: /** Find the constraints to pass to Paragraph based on all the parameters. */\n24: internal fun finalConstraints(\n25:     constraints: Constraints,\n26:     softWrap: Boolean,\n27:     overflow: TextOverflow,\n28:     maxIntrinsicWidth: Float,\n29: ): Constraints =\n30:     Constraints.fitPrioritizingWidth(\n31:         minWidth = 0,\n32:         maxWidth = finalMaxWidth(constraints, softWrap, overflow, maxIntrinsicWidth),\n33:         minHeight = 0,\n34:         maxHeight = constraints.maxHeight,\n35:     )\n36: \n37: /** Find the final max width a Paragraph would use based on all parameters. */\n38: internal fun finalMaxWidth(\n39:     constraints: Constraints,\n40:     softWrap: Boolean,\n41:     overflow: TextOverflow,\n42:     maxIntrinsicWidth: Float,\n43: ): Int {\n44:     val widthMatters = softWrap || overflow.isEllipsis\n45:     val maxWidth =\n46:         if (widthMatters && constraints.hasBoundedWidth) {\n47:             constraints.maxWidth\n48:         } else {\n49:             Constraints.Infinity\n50:         }\n51: \n52:     // if minWidth == maxWidth the width is fixed.\n53:     //    therefore we can pass that value to our paragraph and use it\n54:     // if minWidth != maxWidth there is a range\n55:     //    then we should check if the max intrinsic width is in this range to decide the\n56:     //    width to be passed to Paragraph\n57:     //        if max intrinsic width is between minWidth and maxWidth\n58:     //           we can use it to layout\n59:     //        else if max intrinsic width is greater than maxWidth, we can only use maxWidth\n60:     //        else if max intrinsic width is less than minWidth, we should use minWidth\n61:     return if (constraints.minWidth == maxWidth) {\n62:         maxWidth\n63:     } else {\n64:         maxIntrinsicWidth.ceilToIntPx().coerceIn(constraints.minWidth, maxWidth)\n65:     }"
+            }
+          ]
+        },
+        {
+          "archive_path": "commonMain/androidx/compose/foundation/text/modifiers/TextStringSimpleNode.kt",
+          "full_source_sha256": "17eb39f90cff510ba13784b699516f464f79c49633bcfc586815186a40f74e14",
+          "line_count": 475,
+          "reviewed_relevant_ranges": [
+            [
+              64,
+              80
+            ],
+            [
+              291,
+              307
+            ],
+            [
+              349,
+              388
+            ],
+            [
+              414,
+              474
+            ]
+          ],
+          "retained_excerpts": [
+            {
+              "lines": [
+                64,
+                80
+              ],
+              "text": "64: /**\n65:  * Node that implements Text for [String].\n66:  *\n67:  * It has reduced functionality, and as a result gains in performance.\n68:  *\n69:  * Note that this Node never calculates [TextLayoutResult] unless needed by semantics.\n70:  */\n71: internal class TextStringSimpleNode(\n72:     private var text: String,\n73:     private var style: TextStyle,\n74:     private var fontFamilyResolver: FontFamily.Resolver,\n75:     private var overflow: TextOverflow = TextOverflow.Clip,\n76:     private var softWrap: Boolean = true,\n77:     private var maxLines: Int = Int.MAX_VALUE,\n78:     private var minLines: Int = DefaultMinLines,\n79:     private var overrideColor: ColorProducer? = null,\n80: ) : Modifier.Node(), LayoutModifierNode, DrawModifierNode, SemanticsModifierNode {"
+            },
+            {
+              "lines": [
+                291,
+                307
+              ],
+              "text": "291:     override fun SemanticsPropertyReceiver.applySemantics() {\n292:         var localSemanticsTextLayoutResult = semanticsTextLayoutResult\n293:         if (localSemanticsTextLayoutResult == null) {\n294:             localSemanticsTextLayoutResult = { textLayoutResult ->\n295:                 val layout =\n296:                     layoutCache\n297:                         .slowCreateTextLayoutResultOrNull(\n298:                             style =\n299:                                 style.merge(color = overrideColor?.invoke() ?: Color.Unspecified)\n300:                         )\n301:                         ?.also { textLayoutResult.add(it) }\n302:                 layout != null\n303:             }\n304:             semanticsTextLayoutResult = localSemanticsTextLayoutResult\n305:         }\n306: \n307:         text = AnnotatedString(this@TextStringSimpleNode.text)"
+            },
+            {
+              "lines": [
+                349,
+                388
+              ],
+              "text": "349:     /** Text layout happens here */\n350:     override fun MeasureScope.measure(\n351:         measurable: Measurable,\n352:         constraints: Constraints,\n353:     ): MeasureResult {\n354:         trace(\"TextStringSimpleNode::measure\") {\n355:             val layoutCache = getLayoutCacheForMeasure()\n356: \n357:             val didChangeLayout = layoutCache.layoutWithConstraints(constraints, layoutDirection)\n358:             // ensure measure restarts when hasStaleResolvedFonts by reading in measure\n359:             layoutCache.observeFontChanges\n360:             val paragraph = layoutCache.paragraph!!\n361:             val layoutSize = layoutCache.layoutSize\n362: \n363:             if (didChangeLayout) {\n364:                 invalidateLayer()\n365:                 // Map<AlignmentLine, Int> required for use in public API `layout` below\n366:                 @Suppress(\"PrimitiveInCollection\") var cache = baselineCache\n367:                 if (cache == null) {\n368:                     cache = HashMap(2)\n369:                     baselineCache = cache\n370:                 }\n371:                 cache[FirstBaseline] = paragraph.firstBaseline.fastRoundToInt()\n372:                 cache[LastBaseline] = paragraph.lastBaseline.fastRoundToInt()\n373:             }\n374: \n375:             // then allow children to measure _inside_ our final box, with the above placeholders\n376:             val placeable =\n377:                 measurable.measure(\n378:                     fitPrioritizingWidth(\n379:                         minWidth = layoutSize.width,\n380:                         maxWidth = layoutSize.width,\n381:                         minHeight = layoutSize.height,\n382:                         maxHeight = layoutSize.height,\n383:                     )\n384:                 )\n385: \n386:             return layout(layoutSize.width, layoutSize.height, baselineCache!!) {\n387:                 placeable.place(0, 0)\n388:             }"
+            },
+            {
+              "lines": [
+                414,
+                474
+              ],
+              "text": "414:     /** Optimized Text draw. */\n415:     override fun ContentDrawScope.draw() {\n416:         if (!isAttached) {\n417:             // no-up for !isAttached. The node will invalidate when attaching again.\n418:             return\n419:         }\n420: \n421:         val layoutCache = getLayoutCache()\n422:         val localParagraph =\n423:             requirePreconditionNotNull(layoutCache.paragraph) {\n424:                 \"Internal Error: ParagraphLayoutCache could not provide a Paragraph during the draw phase. Please report this bug on the official Issue Tracker with the following diagnostic information: (layoutCache=$_layoutCache, textSubstitution=$textSubstitution)\"\n425:             }\n426: \n427:         drawIntoCanvas { canvas ->\n428:             val willClip = layoutCache.didOverflow\n429:             if (willClip) {\n430:                 val width = layoutCache.layoutSize.width.toFloat()\n431:                 val height = layoutCache.layoutSize.height.toFloat()\n432:                 canvas.save()\n433:                 canvas.clipRect(left = 0f, top = 0f, right = width, bottom = height)\n434:             }\n435:             try {\n436:                 val textDecoration = style.textDecoration ?: TextDecoration.None\n437:                 val shadow = style.shadow ?: Shadow.None\n438:                 val drawStyle = style.drawStyle ?: Fill\n439:                 val brush = style.brush\n440:                 if (brush != null) {\n441:                     val alpha = style.alpha\n442:                     localParagraph.paint(\n443:                         canvas = canvas,\n444:                         brush = brush,\n445:                         alpha = alpha,\n446:                         shadow = shadow,\n447:                         drawStyle = drawStyle,\n448:                         textDecoration = textDecoration,\n449:                     )\n450:                 } else {\n451:                     val overrideColorVal = overrideColor?.invoke() ?: Color.Unspecified\n452:                     val color =\n453:                         if (overrideColorVal.isSpecified) {\n454:                             overrideColorVal\n455:                         } else if (style.color.isSpecified) {\n456:                             style.color\n457:                         } else {\n458:                             Color.Black\n459:                         }\n460:                     localParagraph.paint(\n461:                         canvas = canvas,\n462:                         color = color,\n463:                         shadow = shadow,\n464:                         drawStyle = drawStyle,\n465:                         textDecoration = textDecoration,\n466:                     )\n467:                 }\n468:             } finally {\n469:                 if (willClip) {\n470:                     canvas.restore()\n471:                 }\n472:             }\n473:         }\n474:     }"
+            }
+          ]
+        },
+        {
+          "archive_path": "commonMain/androidx/compose/foundation/text/BasicText.kt",
+          "full_source_sha256": "92df0f194316e605dca53913ee2fd05d274441648550715ac966893513e0895c",
+          "line_count": 748,
+          "reviewed_relevant_ranges": [
+            [
+              91,
+              155
+            ]
+          ],
+          "retained_excerpts": [
+            {
+              "lines": [
+                91,
+                155
+              ],
+              "text": "91: @Composable\n92: fun BasicText(\n93:     text: String,\n94:     modifier: Modifier = Modifier,\n95:     style: TextStyle = TextStyle.Default,\n96:     onTextLayout: ((TextLayoutResult) -> Unit)? = null,\n97:     overflow: TextOverflow = TextOverflow.Clip,\n98:     softWrap: Boolean = true,\n99:     maxLines: Int = Int.MAX_VALUE,\n100:     minLines: Int = 1,\n101:     color: ColorProducer? = null,\n102:     autoSize: TextAutoSize? = null,\n103: ) {\n104:     validateMinMaxLines(minLines = minLines, maxLines = maxLines)\n105:     val selectionRegistrar = LocalSelectionRegistrar.current\n106:     val selectionController =\n107:         if (selectionRegistrar != null) {\n108:             val backgroundSelectionColor = LocalTextSelectionColors.current.backgroundColor\n109:             val selectableId =\n110:                 rememberSaveable(selectionRegistrar, saver = selectionIdSaver(selectionRegistrar)) {\n111:                     selectionRegistrar.nextSelectableId()\n112:                 }\n113:             remember(selectableId, selectionRegistrar, backgroundSelectionColor) {\n114:                 SelectionController(selectableId, selectionRegistrar, backgroundSelectionColor)\n115:             }\n116:         } else {\n117:             null\n118:         }\n119: \n120:     val fontFamilyResolver = LocalFontFamilyResolver.current\n121: \n122:     BackgroundTextMeasurement(text = text, style = style, fontFamilyResolver = fontFamilyResolver)\n123: \n124:     val finalModifier =\n125:         if (selectionController != null || onTextLayout != null || autoSize != null) {\n126:             modifier.textModifier(\n127:                 AnnotatedString(text = text),\n128:                 style = style,\n129:                 onTextLayout = onTextLayout,\n130:                 overflow = overflow,\n131:                 softWrap = softWrap,\n132:                 maxLines = maxLines,\n133:                 minLines = minLines,\n134:                 fontFamilyResolver = LocalFontFamilyResolver.current,\n135:                 placeholders = null,\n136:                 onPlaceholderLayout = null,\n137:                 selectionController = selectionController,\n138:                 color = color,\n139:                 onShowTranslation = null,\n140:                 autoSize = autoSize,\n141:             )\n142:         } else {\n143:             modifier then\n144:                 TextStringSimpleElement(\n145:                     text = text,\n146:                     style = style,\n147:                     fontFamilyResolver = fontFamilyResolver,\n148:                     overflow = overflow,\n149:                     softWrap = softWrap,\n150:                     maxLines = maxLines,\n151:                     minLines = minLines,\n152:                     color = color,\n153:                 )\n154:         }\n155:     Layout(finalModifier, EmptyMeasurePolicy)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/compose/material3/material3-desktop/1.9.0-beta03/material3-desktop-1.9.0-beta03-sources.jar",
+      "accessed_at": "2026-09-07T13:18:19.164080+00:00",
+      "status": 200,
+      "artifact_sha256": "35f25f19fc12ff6b56294f8422817e4eabc01f05d01ebb435980dd95c0687d52",
+      "artifact_bytes": 815741,
+      "files": [
+        {
+          "archive_path": "commonMain/androidx/compose/material3/Text.kt",
+          "full_source_sha256": "f638817208f2ac7a6db976d085acba3cbdcee22c3eb2fb6f9cbf72ca5f570d65",
+          "line_count": 489,
+          "reviewed_relevant_ranges": [
+            [
+              101,
+              146
+            ]
+          ],
+          "retained_excerpts": [
+            {
+              "lines": [
+                101,
+                146
+              ],
+              "text": "101: @Composable\n102: fun Text(\n103:     text: String,\n104:     modifier: Modifier = Modifier,\n105:     color: Color = Color.Unspecified,\n106:     autoSize: TextAutoSize? = null,\n107:     fontSize: TextUnit = TextUnit.Unspecified,\n108:     fontStyle: FontStyle? = null,\n109:     fontWeight: FontWeight? = null,\n110:     fontFamily: FontFamily? = null,\n111:     letterSpacing: TextUnit = TextUnit.Unspecified,\n112:     textDecoration: TextDecoration? = null,\n113:     textAlign: TextAlign? = null,\n114:     lineHeight: TextUnit = TextUnit.Unspecified,\n115:     overflow: TextOverflow = TextOverflow.Clip,\n116:     softWrap: Boolean = true,\n117:     maxLines: Int = Int.MAX_VALUE,\n118:     minLines: Int = 1,\n119:     onTextLayout: ((TextLayoutResult) -> Unit)? = null,\n120:     style: TextStyle = LocalTextStyle.current,\n121: ) {\n122: \n123:     val textColor = color.takeOrElse { style.color.takeOrElse { LocalContentColor.current } }\n124: \n125:     BasicText(\n126:         text = text,\n127:         modifier = modifier,\n128:         style =\n129:             style.merge(\n130:                 color = textColor,\n131:                 fontSize = fontSize,\n132:                 fontWeight = fontWeight,\n133:                 textAlign = textAlign ?: TextAlign.Unspecified,\n134:                 lineHeight = lineHeight,\n135:                 fontFamily = fontFamily,\n136:                 textDecoration = textDecoration,\n137:                 fontStyle = fontStyle,\n138:                 letterSpacing = letterSpacing,\n139:             ),\n140:         onTextLayout = onTextLayout,\n141:         overflow = overflow,\n142:         softWrap = softWrap,\n143:         maxLines = maxLines,\n144:         minLines = minLines,\n145:         autoSize = autoSize,\n146:     )"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "conclusions": [
+    "Material3 String Text with no callback/autosize delegates null values to BasicText. Without selection registrar, BasicText selects TextStringSimpleElement, not the MultiParagraph onTextLayout node. Both production tally count Text call sites and Setup ReadOnlyCount use this plain String/no-callback form.",
+    "The actual draw Paragraph is created using finalConstraints whose maxWidth is clamped to maxIntrinsicWidth within incoming min/max constraints. TextStringSimpleNode measures layoutSize and paints that same cached Paragraph.",
+    "Semantics GetTextLayoutResult invokes slowCreateTextLayoutResultOrNull, rebuilding a DIFFERENT MultiParagraph with prevConstraints.copyMaxDimensions(), while copying the original narrow layoutSize. Thus hasVisualOverflow and getBoundingBox may reflect wide reconstructed paragraph geometry, not the painted Paragraph.",
+    "Raw tally probe shows actual positive7/11/14/22px width after weighted-name correction while semantics paragraph is192px. Setup15 actual width17/34px has wider reconstructed paragraph75/129/133/160px. RTL coordinates far outside frame arise from this reconstruction; they do not independently prove rendered clipping.",
+    "Reject a Setup application-defect inference based solely on hasVisualOverflow or these reconstructed glyph bounds. Retain negative-control verification with production dimensions, actual count foreground pixels, expected text and adequate intrinsic width/paragraph height.",
+    "Numeric single-line proposed assertions are appropriate only with explicit restricted applicability; do not use them as a general multiline overflow oracle. Do not add onTextLayout to production merely to make assertions convenient, because that selects a different rendering path."
+  ],
+  "recommended_numeric_assertions": [
+    "Select actual production unmerged numeric Text in exact row; assert expected numeric semantics and positive measured size.",
+    "Scroll actual count into viewport and assert displayed plus full frame containment.",
+    "Assert measured width>=ceil(reconstructed multiParagraph.intrinsics.maxIntrinsicWidth); intrinsic content width is independent of the surplus reconstruction constraints.",
+    "Assert one line and measured height>=ceil(reconstructed paragraph.height) for these unbroken numeric counts.",
+    "Capture actual count-only frame and require foreground-colored rendered pixel, not merely non-background color. Combine source proof with dimensions/pixel evidence; do not claim a screenshot-golden or every glyph raster match."
+  ],
+  "execution_limits": {
+    "new_gradle_or_runtime_tests": 0,
+    "downloaded_source_archives_retained": false,
+    "production_edits": 0,
+    "task_background_workers_started": 0,
+    "cleanup": "Downloaded archives held only in short-lived Python memory. Only this compact research evidence preserved; no build outputs/processes created."
+  }
+}

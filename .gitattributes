@@ -4,3 +4,9 @@ composeApp/src/commonMain/composeResources/files/legal/* -text
 # Their byte digests remain pinned; ordinary trailing whitespace is still an error.
 composeApp/src/commonMain/composeResources/files/legal/SLF4J-2.0.16-LICENSE.txt whitespace=cr-at-eol,-blank-at-eof
 composeApp/src/commonMain/composeResources/files/legal/WebP-COPYING.txt whitespace=-blank-at-eof
+# Audit receipts, upstream references, and frozen reproducers are hash-bound.
+# Preserve their exact bytes on every host; they are not shipping source sets.
+audit-runs/** -text
+remediation-runs/** -text
+project-code-audit/** -text
+handoffs/** -text

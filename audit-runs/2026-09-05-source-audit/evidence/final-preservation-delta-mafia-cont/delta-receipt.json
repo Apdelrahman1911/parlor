@@ -1,0 +1,65 @@
+{
+  "recorded_at": "2026-09-05T13:47:02.427860+00:00",
+  "reviewer": "/root/mafia_cont",
+  "source_sha256": "433f254527e4409d9b7dcf9f2851427951a350986b4cd8cd5ec9290a54282d3c",
+  "prior_sha256": "d9e852c61ad156b749b107e7476917f9b83cff07add328cb16e05408bd927d4b",
+  "exact_two_change_delta": true,
+  "assertions": 13,
+  "results": [
+    {
+      "name": "fixed output allowlist includes iosApp/build without changing old paths",
+      "status": "PASS"
+    },
+    {
+      "name": "absent output directories stay empty",
+      "status": "PASS"
+    },
+    {
+      "name": "existing iosApp/build detected",
+      "status": "PASS"
+    },
+    {
+      "name": "dangling iosApp/build symlink detected",
+      "status": "PASS"
+    },
+    {
+      "name": "old root output symlink detection preserved",
+      "status": "PASS"
+    },
+    {
+      "name": "absent owned simulator record stays false",
+      "status": "PASS"
+    },
+    {
+      "name": "existing owned simulator directory detected",
+      "status": "PASS"
+    },
+    {
+      "name": "dangling owned simulator symlink detected",
+      "status": "PASS"
+    },
+    {
+      "name": "only exact owned simulator path observed in metadata checks",
+      "status": "PASS"
+    },
+    {
+      "name": "unowned simulator path not traversed or treated as owned",
+      "status": "PASS"
+    },
+    {
+      "name": "iosApp output blocks cleanup verdict",
+      "status": "PASS"
+    },
+    {
+      "name": "dangling owned simulator blocks cleanup verdict",
+      "status": "PASS"
+    },
+    {
+      "name": "missing owned simulator does not block cleanup verdict",
+      "status": "PASS"
+    }
+  ],
+  "execution": "Only selected AST assignments and synthetic Path doubles; no actual checker, process, Gradle, Xcode, or simulator command.",
+  "limits": "No actual OS/runtime cleanup asserted. All path-existence/symlink answers are synthetic.",
+  "cleanup": "No generated build outputs or persistent processes. Compact source snapshots/test/JSON are required audit evidence."
+}

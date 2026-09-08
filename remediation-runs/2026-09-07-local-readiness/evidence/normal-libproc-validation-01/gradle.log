@@ -1,0 +1,23 @@
+test_generation_change_helper_change_and_bad_json_fail_before_provenance (test_kernel_image_regions.KernelImageRegionTests) ... FAIL
+
+======================================================================
+FAIL: test_generation_change_helper_change_and_bad_json_fail_before_provenance (test_kernel_image_regions.KernelImageRegionTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_kernel_image_regions.py", line 181, in test_generation_change_helper_change_and_bad_json_fail_before_provenance
+    lane.observe_kernel_regions(helper, context['record'], context['backend'], fixtures.PID, selected)
+AssertionError: (<class 'RuntimeError'>, <class 'ValueError'>) not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.016s
+
+FAILED (failures=1)
+
+{"kind": "EXPECTED_MUTATION_DETECTED_NOT_APP_TEST", "tests": 1, "expected_failures": 1, "errors": 0, "skips": 0}
+{"kind": "ACTUAL_C_COMPILER_SMOKE", "command": ["xcrun", "--sdk", "macosx", "clang", "-x", "c", "-std=c11", "-Wall", "-Wextra", "-Werror", "-arch", "arm64", "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_region.c.in", "-lproc", "-o", "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-libproc-validation-01/scratch/tmp/kernel-image-region"], "exit_code": 0, "output": ""}
+{"kind": "INVALID_REQUEST_SMOKE_NOT_NATIVE_QUERY", "arguments": [], "exit_code": 1, "observation": {"schema_version": 1, "status": "FAIL", "reason": "invalid-request", "native_error": 0}}
+{"kind": "INVALID_REQUEST_SMOKE_NOT_NATIVE_QUERY", "arguments": ["0", "1", "2", "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-libproc-validation-01/scratch/tmp/kernel-image-region"], "exit_code": 1, "observation": {"schema_version": 1, "status": "FAIL", "reason": "invalid-request", "native_error": 0}}
+{"kind": "INVALID_REQUEST_SMOKE_NOT_NATIVE_QUERY", "arguments": ["2", "0", "1", "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-libproc-validation-01/scratch/tmp/kernel-image-region"], "exit_code": 1, "observation": {"schema_version": 1, "status": "FAIL", "reason": "invalid-request", "native_error": 0}}
+{"kind": "INVALID_REQUEST_SMOKE_NOT_NATIVE_QUERY", "arguments": ["2", "1", "1", "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-libproc-validation-01/scratch/tmp/kernel-image-region"], "exit_code": 1, "observation": {"schema_version": 1, "status": "FAIL", "reason": "invalid-request", "native_error": 0}}
+{"kind": "INVALID_REQUEST_SMOKE_NOT_NATIVE_QUERY", "arguments": ["2", "1", "2", "relative"], "exit_code": 1, "observation": {"schema_version": 1, "status": "FAIL", "reason": "invalid-request", "native_error": 0}}
+{"kind": "CONTROL_AND_COMPILER_GUARDS_ONLY", "helper_sha256": "3e7aeb78c9cd86827287e492feca89f8d8ef8ba70345e0b9f7b911251abc02a0", "actual_app_provenance": "NOT_RUN", "controls_unchanged": true}

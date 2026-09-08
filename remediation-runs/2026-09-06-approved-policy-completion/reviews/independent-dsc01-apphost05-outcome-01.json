@@ -1,0 +1,321 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-06T17:21:41.979553+00:00",
+  "reviewer": "/root/release_fix_review",
+  "cycle": "dsc01-apphost-05",
+  "aggregate_classification": "FAIL",
+  "defect_classification": "TEST/EVIDENCE GAP \u2014 Mafia post-Start canonical role-assignment not reached; cause of missing transition unestablished. No application crash or confirmed new code defect.",
+  "source": {
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+    "diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "source_input_count": 669,
+    "source_drift": [],
+    "control_sha256": "19343b941ecb031788133df2427d65d6dd7332d80124fe975900e310aa7a2bc4",
+    "control_count": 32,
+    "control_drift": []
+  },
+  "evidence": {
+    "receipt_sha256": "7003fc8092850e167a99277a3553b709870bb820d2976c01540b63020e50318e",
+    "xcode_log_sha256": "6d52054081edf43d9448a8d0adda53ec54a18fabf18eb0b618ecc8c5f8788e64",
+    "summary_sha256": "7233ab43e18d9788db20406e929cb0234f9d9477f4ba44c0701862364a6d254a",
+    "tests_sha256": "6b6ba50545da41d34fbfaa85c2c51ecd4302e1d0878e85c50aab3c47521826dc",
+    "source_copy_review": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-apphost05-source-copy-01.json",
+      "sha256": "f562df5c8947e075567f0c70c94086556a6e97977e820df85b605c632a366053"
+    },
+    "raw_independent_calculation": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-apphost05-raw-computation-01.json",
+      "sha256": "68fb77f0e449acd2803b4c5c60c33b1e1f402009275e80dcb8b357eebcbc00b7"
+    }
+  },
+  "xctest": {
+    "xcode_exit_code": 65,
+    "total": 5,
+    "passed": 4,
+    "failed": 1,
+    "skipped": 0,
+    "descriptors": [
+      {
+        "nodeIdentifier": "ComposeContainerViewControllerTests/testChildUsesFullBoundsAcrossSizesAndOpposingSemanticDirections()",
+        "result": "Passed",
+        "durationInSeconds": 0.2576180696487427
+      },
+      {
+        "nodeIdentifier": "ComposeContainerViewControllerTests/testDefaultAppearanceForwardingReachesTheSameChildExactlyOnce()",
+        "result": "Passed",
+        "durationInSeconds": 0.036738038063049316
+      },
+      {
+        "nodeIdentifier": "ComposeContainerViewControllerTests/testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView()",
+        "result": "Passed",
+        "durationInSeconds": 0.035909056663513184
+      },
+      {
+        "nodeIdentifier": "ComposeContainerViewControllerTests/testSystemDecorationAndOrientationPoliciesStillBelongToTheChild()",
+        "result": "Passed",
+        "durationInSeconds": 0.03754997253417969
+      },
+      {
+        "nodeIdentifier": "IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSInvestigation()",
+        "result": "Failed",
+        "durationInSeconds": 397.4617249965668
+      }
+    ],
+    "device": {
+      "architecture": "arm64",
+      "deviceId": "B5ADF7CB-94CB-4C69-848D-E02AB689362E",
+      "deviceName": "Parlor-Audit-parlor-audit-dsc01-apphost-05-7dr2h_e6",
+      "modelName": "iPhone 17 Pro",
+      "osBuildNumber": "23F77",
+      "osVersion": "26.5",
+      "platform": "iOS Simulator"
+    },
+    "failure": {
+      "failureText": "failed - Actual settings/owner never reached required state after bounded observations",
+      "targetName": "iosAppUITests",
+      "testIdentifier": 5,
+      "testIdentifierString": "IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSInvestigation()",
+      "testIdentifierURL": "test://com.apple.xcode/iosApp/iosAppUITests/IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSInvestigation",
+      "testName": "testDSC01ActualSettingsLocalSessionsAndOSInvestigation()"
+    },
+    "failure_location": "Copied IOSAppLaunchUITests.swift612 generic observeEventually timeout, reached from158-163 waiting mafia-local/role-assignment/ltr after Startcall155; wording says settings/owner generically but actual missedpredicate is gamephase."
+  },
+  "settings": {
+    "status": "REACHED_CHECKS_PASS_WITHIN_FAILED_AGGREGATE",
+    "observations": 22,
+    "process_boots": 4,
+    "explicit_restart_cycles": 2,
+    "before_main_owner_and_previous_preference_survival": true,
+    "actual_settings_actions": true,
+    "synthetic_language_commands": 0,
+    "synthetic_previous_preference": [
+      "ar-EG",
+      "en"
+    ],
+    "actual_os_settings": false,
+    "completion_ordinal": 21
+  },
+  "whodunit": {
+    "status": "REACHED_CHECKS_PASS_WITHIN_FAILED_AGGREGATE",
+    "observations": 97,
+    "capture_ordinals": [
+      9,
+      96
+    ],
+    "canonical_observations": 88,
+    "phase": "public-intro",
+    "actual_controller_flow_reference_value_and_phase_stable": true,
+    "session_disposals": 0,
+    "actual_en_settings_before_capture": true,
+    "synthetic_store_calls": 3,
+    "actual_background_foreground_cycles": 4,
+    "first_resumed_ordinals": [
+      11,
+      39,
+      67,
+      83
+    ],
+    "passive_windows": 12,
+    "passive_samples": 72,
+    "spacing_ms": [
+      250,
+      277
+    ],
+    "directions": "ActualComposeandactualLocalUIViewController EN/LTR andAR/RTL; actualportrait+landscape bothdirections.",
+    "post_completion_row97": "Surface/checkpoint reset aftercompletion; outside9..96canonicalcaptureinterval, not countedasa failedretention row."
+  },
+  "mafia": {
+    "status": "BLOCKED_INCOMPLETE_START_TRANSITION_WITNESS",
+    "observations": 13,
+    "completed": false,
+    "local_setup_observations": [
+      8,
+      13
+    ],
+    "phase": "setup",
+    "actual_locale": "en",
+    "actual_compose_direction": "ltr",
+    "actual_native_direction": "force_ltr",
+    "owner_preferences_correct": true,
+    "checkpoint_captured": false,
+    "synthetic_language_commands": 0,
+    "lifecycle_retention_matrix": "NOT_RUN",
+    "facts": [
+      "Actualcatalogentryverifiedafterstableone-taphelper; originalgenericpicker,count5,and5distinctnamedfields+IMEdone thenContinueweretraversed.",
+      "Rawlog3832-3840Continue tonames/settingsbutton tapped371.92s.",
+      "Rawlog3844-3879Startqueryfollowedby3settingsscreenswipes,tap375.07s;lastscrollidle375.00s.",
+      "Rows8-13showlivecanonicalsetupthroughendof20secondboundedwait. NoStarttargetenabled/frame/callback/action/reducerreceipt retained.",
+      "SourceMafiaGameFlow265-267+copyanchorreadsactualcanonicalState.value.phase.id, not guessed phase. SetupScreen218-224calls onStart(settings) onlyenabledcanStart; PhaseRouter139-155launches atomicConfigureAndStart. These paths do not prove the physicaltapinvokedcallback."
+    ]
+  },
+  "os": {
+    "status": "NOT_RUN",
+    "reason": "CombinedmatrixfailedbeforeinvestigateActualOSPerAppLanguage. No OSresultfile; this cycledoesnotshowwhetherrowisavailableorunavailable."
+  },
+  "catalog": {
+    "status": "BOTH_REACHED_SUCCESSOR_CHECKS_PASS_WITHIN_FAILED_AGGREGATE",
+    "swift_geometry_assertion_cases": 14,
+    "whodunit": {
+      "rows": 9,
+      "windows": 1,
+      "final_stable_target": [
+        24,
+        671.6666870117188,
+        354,
+        99
+      ],
+      "observer": [
+        68.66666666666666,
+        134,
+        265,
+        49
+      ],
+      "tabs": [
+        [
+          24,
+          778.6666870117188,
+          173,
+          53.33331298828125
+        ],
+        [
+          205,
+          778.6666870117188,
+          173,
+          53.33331298828125
+        ]
+      ],
+      "planned_point": [
+        201.0,
+        713.1666870117188
+      ],
+      "normalized_offset": [
+        0.5,
+        0.41919191919191917
+      ],
+      "physical_tap_log": [
+        [
+          2283,
+          "    t =   138.50s Tap \"Open Whodunit and pick how you want to play., CASE FILE \u00b7 1\" Button[0.50, 0.42]"
+        ]
+      ],
+      "successor_line": 2323,
+      "final_successor_observed": true
+    },
+    "mafia": {
+      "rows": 33,
+      "windows": 5,
+      "final_stable_target": [
+        24,
+        392,
+        354,
+        371
+      ],
+      "observer": [
+        68.66666666666666,
+        134,
+        265,
+        49
+      ],
+      "tabs": [
+        [
+          24,
+          778.6666870117188,
+          173,
+          53.33331298828125
+        ],
+        [
+          205,
+          778.6666870117188,
+          173,
+          53.33331298828125
+        ]
+      ],
+      "planned_point": [
+        201.0,
+        573.3333435058594
+      ],
+      "normalized_offset": [
+        0.5,
+        0.4887691199618851
+      ],
+      "physical_tap_log": [
+        [
+          3657,
+          "    t =   342.34s Tap \"Open the Mafia game., AFTER DARK \u00b7 2, Mafia, \u062d\u0631\u0627\u0645\u064a\u0629 \u0648\u0638\u0628\u0627\u0637, Hidden roles. Quiet choices. A town deciding whom to trust.\" Button[0.50, 0.49]"
+        ]
+      ],
+      "successor_line": 3697,
+      "final_successor_observed": true
+    },
+    "independent_check": "Parsed42rawrows, recheckedcomplete6samplewindows,laststabletarget/queryguards,recomputedclippedinteriorpoint+offset,exactoneTaplogperscenario,andgenuinegenericpickerpresence+catalog/tabsdisappearance. Noauthorverifierinvoked.",
+    "scope": "SuccessofV7doesnotretrospectivelyestablishfling/occlusionasthecauseofapphost04."
+  },
+  "native_observation": {
+    "independent_identity_and_raw_geometry_rows": 126,
+    "geometry_shapes": [
+      {
+        "bounds": [
+          0,
+          0,
+          402,
+          874
+        ],
+        "insets": [
+          62,
+          0,
+          34,
+          0
+        ],
+        "orientation": "portrait"
+      },
+      {
+        "bounds": [
+          0,
+          0,
+          874,
+          402
+        ],
+        "insets": [
+          0,
+          62,
+          20,
+          62
+        ],
+        "orientation": "landscape"
+      }
+    ],
+    "proof": "Everyreachedpost-mainrowactualouter/Composecontroller/view/windowstable,singlechild/directcontainment,fullphysicalwindowbounds,nonzerosafeareasmatchingwindow,zeroobserverdisposal. These includesMafiasetupnotMafiaretainedpoststartgame."
+  },
+  "copy": {
+    "inputs": 615,
+    "original_inputs": 613,
+    "modified_original_files": 11,
+    "observer_additions": 2,
+    "independent_reconstruction": "All13diffresults rebuiltinmemoryfromfrozencurrentbytes,exactcopiedhashes. All615expected/observedafterhashesmatch; no missingextraorsymlinkedinput. No preservedcopyclaimedreopenedafterdeletion."
+  },
+  "cleanup": {
+    "status": "PASS",
+    "immediate_stop_exit_code": 0,
+    "stop_delay_seconds": 0.001737,
+    "final_stop_exit_code": 0,
+    "embedded_gradle_receipt": "build_exit=0\nstop_exit=0\n",
+    "owned_simulator_shutdown_and_delete_exit_codes": [
+      0,
+      0
+    ],
+    "owned_device_final_absent": true,
+    "owned_worker_pid_start_pairs_independently_absent": 64,
+    "exact_temp_and_bothfifo_paths_and_emptyparents_absent": true,
+    "pending_secondary_claims": [],
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "proof": "ReopenedBooted->Shutdown->absentdevicereceipts,FIFOUID/inode/birth/pairledger. Independentlycheckedexactpathsabsentandall64observedPID/startpairsnolongerlive; no globalcleanup/processstopperformed."
+  },
+  "limitations": [
+    "Parlor.debug.dylib binaryhashnotretained byunchangedrunner;launcher+Composeframeworkhashandexactsource/copy/compile/runtimebindingonly, notexhaustivebinaryinventory.",
+    "CurrentXcode26.5/iOS26.5simulatornotStore-qualified26.3,physicalLAN,realdevices,Store/signingevidence.",
+    "Actualglobal/perappOSlanguageprerequisite mustbeinvestigatedonfreshownedprofileviapublicSettingsUI; norewritingglobalhostpreferencesorblindselectorfallback.",
+    "DS-C01remainsPARTIALLYVERIFIED; neitherStartcallbackdefect norSettingsownershipregression establishedbythisfailedwitness."
+  ],
+  "reviewer_hygiene": "No builds/tests/apps/simulators/backgroundworkersstarted, no source/Git/actionsorcleanup. Onlynewcompactreviewrecords; alloriginalfailedreceiptsretainedunchanged."
+}

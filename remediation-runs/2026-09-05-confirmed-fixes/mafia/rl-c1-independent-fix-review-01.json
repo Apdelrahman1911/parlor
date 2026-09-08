@@ -1,0 +1,154 @@
+{
+  "reviewer": "/root/mafia_cont",
+  "remediation_author": "/root",
+  "reviewed_at": "2026-09-05T19:51:23.125598+00:00",
+  "identity": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "reviewed_version": "Dirty working tree, scoped hashes below; other agents own unrelated fixes"
+  },
+  "original_finder": "/root/whodunit_cont",
+  "original_independent_validator": "/root/session_cont",
+  "production_or_test_edits_by_reviewer": false,
+  "build_or_test_or_store_execution_by_reviewer": false,
+  "public_documentation_research": "mafia/rl-c1-rl-c3-independent-research.json",
+  "issue": "RL-C1",
+  "conclusion": "APPROVE SCOPED FIX — GNU/BSD stat-output root cause removed from both input size gates; no shipping runtime behavior change",
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/validate_android_artifact.sh",
+      "sha256": "d6d7e07aebac8ed438154b24b64ea823201b469cfd937731b45e82ff4cf39af9",
+      "reviewed_line_ranges": [
+        [
+          1,
+          282
+        ]
+      ],
+      "range_sha256": {
+        "1-282": "d6d7e07aebac8ed438154b24b64ea823201b469cfd937731b45e82ff4cf39af9"
+      }
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_android_artifact_size.py",
+      "sha256": "1bdf6fe45be629ed8ea6d435727e88d87644319257127732b61a529f1ce1a0b1",
+      "reviewed_line_ranges": [
+        [
+          1,
+          117
+        ]
+      ],
+      "range_sha256": {
+        "1-117": "1bdf6fe45be629ed8ea6d435727e88d87644319257127732b61a529f1ce1a0b1"
+      }
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/.github/workflows/testing-candidate.yml",
+      "sha256": "0488fc5e0c4e520a767408cfb5e7fa387bc5fdfa0edfeb9dcd29a4cb0d2c7976",
+      "reviewed_line_ranges": [
+        [
+          174,
+          188
+        ],
+        [
+          416,
+          437
+        ]
+      ],
+      "range_sha256": {
+        "174-188": "8b7f0ca147a7d8975e6b05d16636d4f291c48dc66d3ee7632a4d832b9b5b323c",
+        "416-437": "00849cb8de7a02603de177b22bc8088753b47377d9a65ddc38f531ecb53ada55"
+      }
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/config/release-policy.json",
+      "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+      "reviewed_line_ranges": [
+        [
+          1,
+          86
+        ]
+      ],
+      "range_sha256": {
+        "1-86": "2f98fe6a2237329632fe2ee6c2d0c6036dfddf86583aab6386e48dddf2f8b00c"
+      }
+    }
+  ],
+  "scope": "Only size helper/call sites (current lines20–49) approved. Full shell read for surrounding reachability; RL-C2 signature code deliberately excluded from approval and may evolve separately.",
+  "proof": [
+    "Both old command-substitution fallbacks are replaced by one Python helper; no external stat output participates in arithmetic.",
+    "os.stat(path,follow_symlinks=False) returns metadata for the supplied final path; stat.S_ISREG rejects nonregular files, st_size integer is compared to the exact existing 512MiB/10MiB bounds. Inclusive bounds preserved.",
+    "Existing no-final-symlink file checks, dependency report nonempty condition, identity/code/certificate/tool-digest gates remain. Errors exit nonzero before unpacking/signature inspection.",
+    "One helper handles both file types; no shell interpolation inside Python. Argument path quoting permits spaces without flags/code evaluation.",
+    "Test invokes real shell preflight with GNU-shaped stat shim and intentionally wrong bundletool to stop before any signing or real artifact validation. Sparse exact/over-bound files, both file types, missing/directory/symlink/empty-report cases verified. Tests preserve meaningful later-guard assertion, not generic nonzero success."
+  ],
+  "counter_evidence": [
+    "Original GNU failure modeled, not a real Linux stat binary run. The new code no longer calls stat, so source+Python boundary evidence addresses portability without pretending GNU execution.",
+    "Stat-to-later-open races are unchanged pre-existing threat assumptions; this helper does not claim to seal an attacker-writable artifact directory.",
+    "No signed AAB or complete artifact validation occurred; intentional digest failure is only a preflight oracle.",
+    "Current candidate jobs and Store identity remain disabled/blocked."
+  ],
+  "verification": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c1-red/receipt.json",
+      "receipt_sha256": "9c28f83ea3934710bae4e9e7dbb861be93625c60d7645a0a6672dca13f91f41c",
+      "log_sha256": "18514fd074f999013c38eb4b5ef91fcf6dbd52a13e4be106d168d1df91f2136c",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/release/tests",
+        "-p",
+        "test_android_artifact_size.py",
+        "-v"
+      ],
+      "exit_code": 1,
+      "status": "FAIL",
+      "stop_exit_code": 0,
+      "source_changed_during_cycle": false,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c1-green/receipt.json",
+      "receipt_sha256": "d6890d31fb004bb56ad11542c082b3201130b5e6cb586c2df6639ae41bd70adb",
+      "log_sha256": "2a55d26eb27865217a812e9eea657b762f53a60ab7d0ef9961e23bf8e24b9552",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/release/tests",
+        "-p",
+        "test_android_artifact_size.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "status": "PASS",
+      "stop_exit_code": 0,
+      "source_changed_during_cycle": false,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      }
+    }
+  ],
+  "observed_results": "Red:7 tests,6 failures (nonnumeric fallback aborts); green:7/7. Receipts source stable,stop0,no remaining task outputs/workers or cleanup errors.",
+  "remaining_requirements": [
+    "Broader release validator suite and platform CI run remain root-owned",
+    "Genuine Linux/BSD integration and real signed-artifact verification are separate gates, not established by this synthetic test",
+    "RL-C2 signature remediation independently pending"
+  ],
+  "research_specific": "mafia/python-stat-specific-reference.json confirms os.stat/no-follow/st_size semantics in Python3.9 official docs; S_ISREG official stat docs separately retained."
+}

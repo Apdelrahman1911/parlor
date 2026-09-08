@@ -1,0 +1,25 @@
+--- before/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/LoopbackFixtureContractTest.kt
++++ after/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/LoopbackFixtureContractTest.kt
+@@ -200,13 +200,15 @@
+             return Device(kit, device(kit).transport(appId, name, scope.backgroundScope))
+         }
+ 
+-        suspend fun close(): Unit = withContext(NonCancellable) {
+-            val failures = rooms.asReversed().mapNotNull { runCatching { it.leave() }.exceptionOrNull() } +
+-                kits.filter { it.stopCalls == 0 }.mapNotNull { runCatching { it.stop() }.exceptionOrNull() }
+-            // Fakes own no native resources; all rooms and never-returned kits are still closed on red paths.
+-            failures.firstOrNull()?.let { first ->
+-                failures.drop(1).filter { it !== first }.forEach(first::addSuppressed)
+-                throw first
++        suspend fun close() {
++            withContext<Unit>(NonCancellable) {
++                val failures = rooms.asReversed().mapNotNull { runCatching { it.leave() }.exceptionOrNull() } +
++                    kits.filter { it.stopCalls == 0 }.mapNotNull { runCatching { it.stop() }.exceptionOrNull() }
++                // Fakes own no native resources; all rooms and never-returned kits are still closed on red paths.
++                failures.firstOrNull()?.let { first ->
++                    failures.drop(1).filter { it !== first }.forEach(first::addSuppressed)
++                    throw first
++                }
+             }
+         }
+ 

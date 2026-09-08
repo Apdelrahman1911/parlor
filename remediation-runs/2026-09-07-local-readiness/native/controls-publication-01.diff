@@ -1,0 +1,1629 @@
+--- before/scripts/verification/ios-readiness/DSC01OSPreferenceBaseline.swift.in
++++ after/scripts/verification/ios-readiness/DSC01OSPreferenceBaseline.swift.in
+@@ -107,7 +107,7 @@
+         let absent: [String: Any] = ["setting": "system", "preferredLanguage": "ar", "hasAppOverride": false,
+             "appLanguages": [String](), "ownerPresent": false, "ownerInstalled": "none",
+             "ownerPreviousPresent": false, "ownerPrevious": [String]()]
+-        var present = absent; present["hasAppOverride"] = true; present["appLanguages"] = ["en-US", "en"]
++        var present = absent; present["hasAppOverride"] = true; present["appLanguages"] = ["ar-EG", "en"]
+         var cases: [([String: Any], Bool)] = [(absent, true), (present, true)]
+         let changes: [(String, Any)] = [("hasAppOverride", true), ("appLanguages", ["ar"]),
+             ("setting", "en"), ("preferredLanguage", "en"), ("ownerPresent", true),
+--- before/scripts/verification/ios-readiness/NativeReadinessLaunch.swift.in
++++ after/scripts/verification/ios-readiness/NativeReadinessLaunch.swift.in
+@@ -12,15 +12,24 @@
+         guard let bytes, (1...262144).contains(bytes.intValue),
+               !FileManager.default.fileExists(atPath: resultURL.path) else { throw fixtureError() }
+         let settings = try JSONDecoder().decode(DSC01Report.self, from: Data(contentsOf: url))
++        let completions = settings.observations.filter { $0.phase == "complete" }
+         guard settings.schemaVersion == 6, settings.runToken == token, settings.scenario == "settings", settings.completed,
++              (3...256).contains(settings.observations.count), completions.count == 1,
++              let completed = completions.first,
+               let first = settings.observations.first, let last = settings.observations.last,
+               first.phase == "before_main", first.fixture == "fresh",
+               first.preferences.setting == "system", !first.preferences.hasAppOverride,
+               !first.preferences.ownerPresent, first.preferences.appLanguages == [],
+-              last.phase == "complete", last.preferences.setting == "system", !last.preferences.ownerPresent,
++              completed.preferences == last.preferences, completed.boot == last.boot,
++              last.preferences.setting == "system", !last.preferences.ownerPresent,
+               last.preferences.appLanguages == ["ar-EG", "en"],
++              settings.observations.enumerated().allSatisfy({ $0.element.ordinal == $0.offset + 1 }),
++              settings.observations.filter({ $0.ordinal > completed.ordinal }).allSatisfy({
++                  $0.phase == "sample" && $0.boot == completed.boot && $0.preferences == completed.preferences
++              }),
+               settings.observations.contains(where: {
+                   $0.phase == "before_main" && $0.fixture == "previous-ar" &&
++                      $0.ordinal < completed.ordinal &&
+                       $0.preferences.appLanguages == ["ar-EG", "en"] && !$0.preferences.ownerPresent
+               }), settings.observations.allSatisfy({ $0.osDisposition == "not-investigated" }),
+               try preferences() == last.preferences else { throw fixtureError() }
+--- before/scripts/verification/ios-readiness/NativeReadinessProbe.kt.in
++++ after/scripts/verification/ios-readiness/NativeReadinessProbe.kt.in
+@@ -22,11 +22,10 @@
+ import kotlinx.coroutines.CoroutineScope
+ import kotlinx.coroutines.Dispatchers
+ import kotlinx.coroutines.SupervisorJob
+-import kotlinx.coroutines.TimeoutCancellationException
+ import kotlinx.coroutines.cancel
+ import kotlinx.coroutines.launch
+ import kotlinx.coroutines.withContext
+-import kotlinx.coroutines.withTimeout
++import kotlinx.coroutines.withTimeoutOrNull
+ import kotlinx.serialization.json.JsonArray
+ import kotlinx.serialization.json.JsonObject
+ import kotlinx.serialization.json.buildJsonObject
+@@ -94,9 +93,8 @@
+             val steps = mutableListOf<JsonObject>()
+             try {
+                 val report = try {
+-                    withTimeout(20_000) { observe(boot, steps) }
+-                } catch (_: TimeoutCancellationException) {
+-                    failure("own_timeout", boot, steps)
++                    withTimeoutOrNull(20_000) { observe(boot, steps) }
++                        ?: failure("own_timeout", boot, steps)
+                 } catch (cancelled: CancellationException) {
+                     throw cancelled
+                 } catch (_: Exception) {
+@@ -165,8 +163,8 @@
+             }
+         }
+         val expected = when (boot) { 2 -> first; 3 -> second; else -> null }
+-        step(steps, "credential-read") { secureRead(secure, key, expected) }
+-        step(steps, "snapshot-read") { snapshotRead(files, filename, expected) }
++        step(steps, "credential-read") { secureRead(secure, key, expected, firstBoot = boot == 1) }
++        step(steps, "snapshot-read") { snapshotRead(files, filename, expected, firstBoot = boot == 1) }
+         when (boot) {
+             1, 2 -> {
+                 val bytes = if (boot == 1) first else second
+@@ -181,7 +179,7 @@
+         first.fill(0); second.fill(0)
+         return buildJsonObject {
+             put("schema_version", 1)
+-            put("kind", "actual_koin_unsigned_app_host")
++            put("kind", "actual_koin_signing_disabled_simulator")
+             put("harness_status", "observation_complete")
+             put("boot_ordinal", boot)
+             put("run_token", token)
+@@ -200,13 +198,18 @@
+         steps += invocation.finish(outcome)
+     }
+ 
+-    private suspend fun secureRead(storage: SecureStorage, key: String, expected: ByteArray?): JsonObject =
++    private suspend fun secureRead(
++        storage: SecureStorage,
++        key: String,
++        expected: ByteArray?,
++        firstBoot: Boolean,
++    ): JsonObject =
+         when (val read = storage.get(key)) {
+             is Result.Failure -> kind("storage_error")
+             is Result.Success -> {
+                 val bytes = read.data
+                 try {
+-                    if (expected == null) check(bytes == null) // Fail before overwriting an unexpected initial record.
++                    if (firstBoot) check(bytes == null) // Never overwrite an unexpected initial record.
+                     kind(if (bytes == null) "absent" else if (bytes.contentEquals(expected)) "matches" else "mismatch")
+                 } finally {
+                     bytes?.fill(0)
+@@ -214,7 +217,12 @@
+             }
+         }
+ 
+-    private suspend fun snapshotRead(files: SnapshotFileSystem, name: String, expected: ByteArray?): JsonObject {
++    private suspend fun snapshotRead(
++        files: SnapshotFileSystem,
++        name: String,
++        expected: ByteArray?,
++        firstBoot: Boolean,
++    ): JsonObject {
+         val bytes = try {
+             files.read(name)
+         } catch (cancelled: CancellationException) {
+@@ -223,7 +231,7 @@
+             return kind("storage_error")
+         }
+         return try {
+-            if (expected == null) check(bytes == null)
++            if (firstBoot) check(bytes == null)
+             kind(if (bytes == null) "absent" else if (bytes.contentEquals(expected)) "matches" else "mismatch")
+         } finally {
+             bytes?.fill(0)
+--- before/scripts/verification/ios-readiness/README.md
++++ after/scripts/verification/ios-readiness/README.md
+@@ -0,0 +1,130 @@
++# iOS local-readiness controls
++
++These non-shipping controls build an explicitly bound **temporary source copy**
++on one newly created, task-owned iPhone 17 Pro / iOS 26.5 simulator. The root
++coordinator owns the only Gradle/Xcode lane. Nothing here authorizes signing,
++Store operations, personal-device use, repository changes, or publication.
++
++## What runs
++
++The copied XCTest target must execute exactly five unskipped tests: the four
++existing production `ComposeContainerViewControllerTests` and the expanded
++actual-app matrix. The matrix retains the reviewed V12 controls for:
++
++- actual English/Arabic/System Settings selections and before-App restarts;
++- both local games' actual UI setup and retained canonical session observations;
++- actual Compose/native direction and portrait/landscape containment geometry;
++- real foreground/background callbacks and bounded passive observation trains;
++- public Settings-app interaction, exact pane identity, one-activation guards,
++  and an observed English-primary / Arabic-secondary system-language list.
++
++The additions are:
++
++1. **Eight further explicit process-cold launches** of the same installed build,
++   after the Settings fixture. Each has six foreground/no-alert/native-geometry
++   samples spanning at least ten measured seconds. These are not eight fresh
++   installations, uninstrumented launches, or proof of a past crash's cause.
++2. **Actual Koin-bound storage investigation.** The original Home invocation is
++   not instrumented retroactively. A separate invocation of its production
++   recovery pipeline captures credential SecItem return statuses at the exact
++   call sites, tagged with a coroutine-context element. Concurrent unrelated
++   calls cannot borrow that attribution. Original queries, errors, dispatchers,
++   mutexes, and result mappings remain unchanged.
++3. **Synthetic cold-process durability.** A UUID-scoped secure-storage key and
++   safe `.native-readiness` file use the real backing/filesystem. Boot 1 writes,
++   boot 2 reads/overwrites, boot 3 reads/deletes, and boots 4–8 check absence.
++   Home never sees this filename as a saved game. No byte contents, credentials,
++   keys, returned CF data, or exception messages enter observation receipts.
++4. **Actual OS Arabic per-app selection.** After an attested cleanup of only
++   the earlier synthetic app-domain language seed, public Settings chooses
++   Arabic while English remains the system's primary language. The probe
++   captures actual before-App presence and ordered value; real in-app English,
++   System, and restart must preserve it exactly. ABSENT is reported honestly
++   and does **not** complete the separate PRESENT-coverage goal.
++5. **Full native provenance.** Every bundle file is checked for Mach-O magic;
++   built and installed image inventories must be identical. This includes the
++   launch stub, `Parlor.debug.dylib`, and `ComposeApp.framework/ComposeApp`.
++   Actual app-emitted dyld paths bind each executed image to those hashes.
++   `dwarfdump` UUID/architecture results and read-only owned-app `codesign`
++   metadata supplement the inventory. `CODE_SIGNING_ALLOWED=NO` describes the
++   build configuration; it does not by itself establish the bytes' signature
++   form or explain a Keychain result.
++
++## Prerequisites and explicit binding
++
++Use JDK 21, the checked-in wrapper, strict dependency verification, the installed
++iOS 26.5 runtime, and `/usr/bin/python3 -B`. This runtime is **not** the pinned
++Store-qualified Xcode 26.3 validation environment. No CocoaPods or repository
++override is introduced. Stop any earlier task-owned build lane first; these
++controls refuse pre-existing Gradle/Xcode workers and original build outputs.
++
++Run lightweight controls before any native execution:
++
++```sh
++/usr/bin/python3 -B -m unittest discover \
++  -s scripts/verification/ios-readiness -p 'test_*.py' -v
++```
++
++These synthetic tests validate parsers, source transformations, exact worker
++ownership, stale-output/exit propagation, and V12 secondary-FIFO cleanup. They
++do not establish app, iOS, Keychain, LAN, or Store success.
++
++Then freeze all tracked/untracked build inputs and controls:
++
++```sh
++CONTROL=scripts/verification/ios-readiness
++/usr/bin/python3 -B "$CONTROL/bind_source.py" --describe
++# Use the explicitly reviewed source and diff hashes from that output:
++/usr/bin/python3 -B "$CONTROL/bind_source.py" \
++  remediation-runs/CAMPAIGN/ios-readiness-source-01.json SOURCE_SHA DIFF_SHA
++/usr/bin/python3 -B "$CONTROL/run_ios_readiness.py" --control-manifest \
++  remediation-runs/CAMPAIGN/ios-readiness-source-01.json
++```
++
++A separate reviewer must inspect the complete control/source binding, the
++copy-only diff, tests, ownership, and finalization paths. Binding creation is
++not approval. After that reviewer records the exact control hash, the root
++coordinator may execute:
++
++```sh
++/usr/bin/python3 -B "$CONTROL/run_ios_readiness.py" ios-readiness-01 \
++  remediation-runs/CAMPAIGN/ios-readiness-source-01.json REVIEWED_CONTROL_SHA
++```
++
++Bindings/cycle directories are never overwritten or refreshed implicitly.
++Changing any source/control invalidates the execution binding. The runner has
++no runtime dependency on archived audit/remediation scripts; their origin
++hashes in `inherited-controls.json` are provenance, not proof of correctness.
++
++## Result and cleanup interpretation
++
++- Diagnostic delivery and stable launches are independent from storage health.
++  A nonzero native storage result remains unavailable, never an empty success.
++  A successful write followed by loss/corruption, successful deletion followed
++  by retention, or native success followed by unexplained secure-boundary
++  failure makes the local gate **FAIL** and requires investigation. It is not
++  automatically an independently confirmed application defect.
++- Failed prerequisite writes/deletes do not establish a durability defect;
++  dependent verification remains **BLOCKED**. IOS-R1 numeric evidence belongs
++  only to the exact observed credential invocation. Snapshot numerical status
++  and the original Home invocation remain explicitly unattributed.
++- Exit `0` means this bounded matrix passed; `2` means diagnostic verification
++  succeeded but storage/OS/PRESENT coverage remains partial; `1` means a gate,
++  source binding, execution, or cleanup failed. None is a production-readiness
++  or Store verdict. Full games, save-envelope recovery, physical LAN, real
++  signing, assistive technology, and past-launch root causes remain outside
++  these controls' claims.
++- Every nested/outer build path immediately stops the isolated Gradle registry.
++  After compact receipts, hashes, UUIDs, and source differences are captured,
++  the owned simulator, copy, DerivedData, and task workers are removed/stopped.
++  Cache symlinks are unlinked without deleting global caches. External Apple
++  FIFOs require PID/start/ancestry/UID/inode/birthtime/holder attestation before
++  exact unlink and empty-parent removal; unknown paths are preserved and fail
++  cleanup. Interruptions use the same finalization path.
++
++Review first: `run_ios_readiness.py`, `owned_lane.py`, `secondary_fifo.py`,
++`copied_sources.py`, `instrument_storage.py`, `NativeReadiness*`,
++`artifact_inventory.py`, and the receipt parsers. Original evidence is immutable;
++the runner writes only to its new campaign cycle directory and owned temporary
++allocation. The final receipt compares original inputs before/after and copied
++inputs after workers stop. Cleanup failures must be resolved, never relabeled.
+--- before/scripts/verification/ios-readiness/artifact_inventory.py
++++ after/scripts/verification/ios-readiness/artifact_inventory.py
+@@ -2,6 +2,7 @@
+ import hashlib
+ from pathlib import Path, PurePosixPath
+ import plistlib
++import re
+ 
+ MAGICS = {bytes.fromhex(value) for value in (
+     'feedface', 'cefaedfe', 'feedfacf', 'cffaedfe',
+@@ -19,28 +20,40 @@
+ 
+ def safe_relative(value):
+     return (isinstance(value, str) and 0 < len(value.encode()) <= 512 and
++            not any(ord(character) < 32 or ord(character) == 127 or character == '\\' for character in value) and
+             not PurePosixPath(value).is_absolute() and
+             str(PurePosixPath(value)) == value and
+             all(part not in ('.', '..') for part in PurePosixPath(value).parts))
+ 
+ 
+ def inventory_bundle(bundle):
+-    root = Path(bundle).resolve(strict=True)
++    supplied = Path(bundle)
++    if supplied.is_symlink():
++        raise RuntimeError('Application bundle must not be a symlink')
++    root = supplied.resolve(strict=True)
+     if not root.is_dir() or root.suffix != '.app':
+         raise RuntimeError('Not an owned application bundle')
+-    info = plistlib.loads((root / 'Info.plist').read_bytes())
++    info_path = root / 'Info.plist'
++    if (info_path.is_symlink() or not info_path.is_file() or info_path.stat().st_size > 1024 * 1024):
++        raise RuntimeError('Missing, symlinked or oversized bundle metadata')
++    info = plistlib.loads(info_path.read_bytes())
+     if info.get('CFBundleIdentifier') != 'com.parlor.app.debug':
+         raise RuntimeError('Unsigned Debug identity differs from source-bound expectation')
+     executable = info.get('CFBundleExecutable')
+     if not safe_relative(executable) or '/' in executable:
+         raise RuntimeError('Invalid bundle executable')
+-    rows = []
+-    for path in sorted(root.rglob('*')):
++    rows, links = [], []
++    for index, path in enumerate(sorted(root.rglob('*'))):
++        if index >= 50000:
++            raise RuntimeError('Bundle inventory file-count limit exceeded')
+         resolved = path.resolve(strict=True)
+         try:
+             resolved.relative_to(root)
+         except ValueError as error:
+             raise RuntimeError('Bundle link points outside owned app') from error
++        if path.is_symlink():
++            links.append(dict(path=str(path.relative_to(root)), resolved_path=str(resolved.relative_to(root)),
++                              directory=resolved.is_dir()))
+         if not resolved.is_file():
+             continue
+         if len(rows) >= 256:
+@@ -62,22 +75,42 @@
+     return dict(schema_version=1, bundle_identity={key: info.get(key) for key in (
+         'CFBundleIdentifier', 'CFBundleExecutable', 'CFBundleVersion', 'CFBundleShortVersionString', 'MinimumOSVersion')},
+         method='Every owned bundle file inspected for thin/fat Mach-O magic; streaming SHA256; internal links explicit',
+-        images=rows, required_images=sorted(required))
++        images=rows, required_images=sorted(required), symbolic_links=links)
+ 
+ 
+ def bind_loaded_images(built, installed, runs):
+     if built != installed:
+         raise RuntimeError('Installed binary inventory differs from the exact built app bundle')
+     by_path = {row['resolved_path']: row for row in built['images']}
++    required = {row['resolved_path'] for row in built['images'] if row['path'] in built['required_images']}
+     bound = []
+     for run in runs:
+         images = run.get('loaded_app_images')
+         if (not isinstance(images, list) or not images or len(images) > 128 or
+                 images != sorted(set(images)) or not all(safe_relative(value) for value in images)):
+             raise RuntimeError('Missing, duplicated, unsafe or unbounded actual loaded-image list')
+-        if not set(built['required_images']) <= set(images) or not set(images) <= set(by_path):
++        if not required <= set(images) or not set(images) <= set(by_path):
+             raise RuntimeError('A required executed image is missing or lacks installed/built hash binding')
+         bound.append(dict(boot_ordinal=run['boot_ordinal'], process_boot=run['process_boot'],
+                           loaded_images=[{key: by_path[path][key] for key in ('path', 'bytes', 'sha256')} for path in images]))
+     return dict(status='PASS', method='Actual app dyld paths bound to identical installed and built Mach-O inventories',
+-                runs=bound, limitation='Unsigned instrumented Debug simulator only; not Store-signature or system-library attestation')
++                runs=bound, limitation='Signing-disabled instrumented Debug simulator only; not Store-signature or system-library attestation')
++
++
++def parse_dwarfdump_uuids(output, path):
++    """Parse a successful, bounded tool receipt for the exact inventoried file."""
++    if not isinstance(output, str) or len(output.encode()) > 65536:
++        raise RuntimeError('Unbounded Mach-O UUID tool result')
++    lines = output.splitlines()
++    if not 1 <= len(lines) <= 32:
++        raise RuntimeError('Missing/unbounded Mach-O architectures')
++    rows = []
++    for line in lines:
++        match = re.fullmatch(r'UUID: ([A-Fa-f0-9]{8}(?:-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12}) '
++                             r'\((arm64|arm64e|x86_64|x86_64h|armv7|armv7s|i386)\) ' + re.escape(str(path)), line)
++        if match is None:
++            raise RuntimeError('Unrecognized UUID result or wrong file binding')
++        rows.append(dict(architecture=match[2], uuid=match[1].lower()))
++    if len({row['architecture'] for row in rows}) != len(rows):
++        raise RuntimeError('Duplicate Mach-O architecture result')
++    return rows
+--- before/scripts/verification/ios-readiness/bind_source.py
++++ after/scripts/verification/ios-readiness/bind_source.py
+@@ -0,0 +1,59 @@
++#!/usr/bin/env python3
++"""Explicit read-only source binding; never approve or start a native cycle."""
++import datetime
++import json
++import os
++from pathlib import Path
++import re
++import sys
++
++from copied_sources import allowed_path
++from owned_lane import ROOT, identity
++
++
++def checked_destination(raw, root=ROOT):
++    path = Path(raw).absolute()
++    if path.exists() or path.is_symlink():
++        raise RuntimeError('Never overwrite an earlier binding or user file')
++    if path.parent.resolve(strict=True) != path.parent or not path.parent.is_dir():
++        raise RuntimeError('Binding parent must be an existing nonsymlink campaign directory')
++    if (path.parent.parent != root / 'remediation-runs' or
++            not re.fullmatch(r'[a-z0-9-]+', path.parent.name) or
++            not re.fullmatch(r'[a-z0-9-]+\.json', path.name)):
++        raise RuntimeError('Binding must be a direct JSON file in one explicit remediation campaign')
++    return path
++
++
++def main(arguments=None):
++    arguments = sys.argv[1:] if arguments is None else arguments
++    if arguments == ['--describe']:
++        value = identity()
++        print(json.dumps({key: value[key] for key in
++              ('branch', 'commit', 'tree', 'diff_sha256', 'source_manifest_sha256')}, indent=2))
++        return 0
++    if len(arguments) != 3 or not all(re.fullmatch(r'[a-f0-9]{64}', value) for value in arguments[1:]):
++        raise SystemExit('Usage: bind_source.py OUTPUT_JSON EXPECTED_SOURCE_MANIFEST_SHA256 EXPECTED_DIFF_SHA256')
++    output = checked_destination(arguments[0])
++    before = identity()
++    if (before['source_manifest_sha256'], before['diff_sha256']) != tuple(arguments[1:]):
++        raise RuntimeError('Current tracked/untracked bytes differ from the explicitly selected source')
++    copied = [dict(path=path, sha256=digest) for path, digest in before['source_manifest'] if allowed_path(path)]
++    if before != identity():
++        raise RuntimeError('Source changed while binding; no implicit refresh permitted')
++    value = dict(schema_version=3, binding_status='REVIEW_REQUIRED_BOUND', repository=str(ROOT),
++                 created_at=datetime.datetime.now(datetime.timezone.utc).isoformat(), source_identity=before,
++                 copy_only=copied,
++                 policy='Independent source/control review still required. No build, simulator, signing or publication authorization is conferred by this file.')
++    # O_EXCL refuses a concurrently-created destination instead of replacing it.
++    descriptor = os.open(output, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
++    with os.fdopen(descriptor, 'w') as stream:
++        stream.write(json.dumps(value, indent=2) + '\n')
++        stream.flush()
++        os.fsync(stream.fileno())
++    print(json.dumps(dict(binding=str(output), source_manifest_sha256=before['source_manifest_sha256'],
++                          copied_inputs=len(copied), status='REVIEW_REQUIRED_BOUND'), indent=2))
++    return 0
++
++
++if __name__ == '__main__':
++    raise SystemExit(main())
+--- before/scripts/verification/ios-readiness/inherited-controls.json
++++ after/scripts/verification/ios-readiness/inherited-controls.json
+@@ -1,123 +1,229 @@
+ {
+   "schema_version": 1,
+-  "scope": "Starting bytes only; final files require separate independent review. Historical receipts immutable.",
++  "scope": "Provenance only, not approval or runtime evidence. Current bytes require independent review. Historical receipts are immutable and no archived code is imported at runtime.",
+   "files": [
+     {
+       "path": "secondary_fifo.py",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/secondary_fifo.py",
+-      "original_sha256": "080622194e19ef5d3ffb561e134ab8cf91e3e3ccef1e29197f59781154a7ffcc"
++      "original_sha256": "080622194e19ef5d3ffb561e134ab8cf91e3e3ccef1e29197f59781154a7ffcc",
++      "current_sha256": "080622194e19ef5d3ffb561e134ab8cf91e3e3ccef1e29197f59781154a7ffcc",
++      "disposition": "UNCHANGED_STARTING_BYTES"
+     },
+     {
+       "path": "test_secondary_fifo.py",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/test_secondary_fifo.py",
+-      "original_sha256": "2d685ebcbef9930f43f1f644c5ed6fc3b5a5c5d07d975cc218a9165273bfb826"
++      "original_sha256": "2d685ebcbef9930f43f1f644c5ed6fc3b5a5c5d07d975cc218a9165273bfb826",
++      "current_sha256": "2d685ebcbef9930f43f1f644c5ed6fc3b5a5c5d07d975cc218a9165273bfb826",
++      "disposition": "UNCHANGED_STARTING_BYTES"
+     },
+     {
+       "path": "copied-kotlin-phase.sh.in",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/copied-kotlin-phase.sh.in",
+-      "original_sha256": "1a8a5ee2c87fb4a4d8294ac3d5e2f057baaf9bd1c5a74b04564586b5f1b4baf8"
++      "original_sha256": "1a8a5ee2c87fb4a4d8294ac3d5e2f057baaf9bd1c5a74b04564586b5f1b4baf8",
++      "current_sha256": "1a8a5ee2c87fb4a4d8294ac3d5e2f057baaf9bd1c5a74b04564586b5f1b4baf8",
++      "disposition": "UNCHANGED_STARTING_BYTES"
+     },
+     {
+       "path": "copied_sources.py",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/copied_sources.py",
+-      "original_sha256": "a33fee7e8ac9cae3d80de0c9d906b252cbc0cc939ff2b670fcdd62eb349a2221"
++      "original_sha256": "a33fee7e8ac9cae3d80de0c9d906b252cbc0cc939ff2b670fcdd62eb349a2221",
++      "current_sha256": "0812cc6164c677a160943625870b6bd620ee1a36604060b0376e532fb8b083bd",
++      "disposition": "MODIFIED_REQUIRES_FULL_REVIEW"
+     },
+     {
+       "path": "DSC01CatalogSelection.swift.in",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/DSC01CatalogSelection.swift.in",
+-      "original_sha256": "2649fb97fe27e74539dfd9867f6677c6a390e722129f8e2434231f44b1d91465"
++      "original_sha256": "2649fb97fe27e74539dfd9867f6677c6a390e722129f8e2434231f44b1d91465",
++      "current_sha256": "2649fb97fe27e74539dfd9867f6677c6a390e722129f8e2434231f44b1d91465",
++      "disposition": "UNCHANGED_STARTING_BYTES"
+     },
+     {
+       "path": "DSC01ComposeObservation.kt.in",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/DSC01ComposeObservation.kt.in",
+-      "original_sha256": "e54503b0d39a1c1055a5334dd835ccad30a96a887ff62560f22202b7231c266c"
++      "original_sha256": "e54503b0d39a1c1055a5334dd835ccad30a96a887ff62560f22202b7231c266c",
++      "current_sha256": "e54503b0d39a1c1055a5334dd835ccad30a96a887ff62560f22202b7231c266c",
++      "disposition": "UNCHANGED_STARTING_BYTES"
+     },
+     {
+       "path": "DSC01InvocationBridge.kt.in",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/DSC01InvocationBridge.kt.in",
+-      "original_sha256": "fc27547c977ed48d55c2254ed6779dc22fcd64f6cc214c8f4121b9f3e110a330"
++      "original_sha256": "fc27547c977ed48d55c2254ed6779dc22fcd64f6cc214c8f4121b9f3e110a330",
++      "current_sha256": "fc27547c977ed48d55c2254ed6779dc22fcd64f6cc214c8f4121b9f3e110a330",
++      "disposition": "UNCHANGED_STARTING_BYTES"
+     },
+     {
+       "path": "DSC01MafiaStartSelection.swift.in",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/DSC01MafiaStartSelection.swift.in",
+-      "original_sha256": "50aad088497c862ff962dc5b1a569a6285f99ce761bf710d4fe8f38e3b698753"
++      "original_sha256": "50aad088497c862ff962dc5b1a569a6285f99ce761bf710d4fe8f38e3b698753",
++      "current_sha256": "50aad088497c862ff962dc5b1a569a6285f99ce761bf710d4fe8f38e3b698753",
++      "disposition": "UNCHANGED_STARTING_BYTES"
+     },
+     {
+       "path": "DSC01NativeObservation.swift.in",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/DSC01NativeObservation.swift.in",
+-      "original_sha256": "f806c5fa6533f9114ad9bf33fdc6fc4647086b1fb2daf4fe09ba93cf6029ee94"
++      "original_sha256": "f806c5fa6533f9114ad9bf33fdc6fc4647086b1fb2daf4fe09ba93cf6029ee94",
++      "current_sha256": "f806c5fa6533f9114ad9bf33fdc6fc4647086b1fb2daf4fe09ba93cf6029ee94",
++      "disposition": "UNCHANGED_STARTING_BYTES"
+     },
+     {
+       "path": "DSC01OSAppSettings.swift.in",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/DSC01OSAppSettings.swift.in",
+-      "original_sha256": "b0f427d976f886e2f092dc0c59752f0fe010316f7dd7621f8c08b3c563b34210"
++      "original_sha256": "b0f427d976f886e2f092dc0c59752f0fe010316f7dd7621f8c08b3c563b34210",
++      "current_sha256": "52e9bcfe9217998b13ca75c2cc9c097753e312afac4b0ad269a06953d1c83e38",
++      "disposition": "MODIFIED_REQUIRES_FULL_REVIEW"
+     },
+     {
+       "path": "DSC01OSPreferenceBaseline.swift.in",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/DSC01OSPreferenceBaseline.swift.in",
+-      "original_sha256": "9b5383cec7a94e7320760dc3b13f2c7934a97ce4c8c8f2b009eafd59a54eec5e"
++      "original_sha256": "9b5383cec7a94e7320760dc3b13f2c7934a97ce4c8c8f2b009eafd59a54eec5e",
++      "current_sha256": "c657f9ca83d9053d56d6debfc509d95fe07486f21e76c8b0a62ba2604978879c",
++      "disposition": "MODIFIED_REQUIRES_FULL_REVIEW"
+     },
+     {
+       "path": "DSC01OSPrerequisite.swift.in",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/DSC01OSPrerequisite.swift.in",
+-      "original_sha256": "f32e6fb10aea909569461e97ac2a4bb9bcde0d8ef0d9b1ed2a5b431f80060404"
++      "original_sha256": "f32e6fb10aea909569461e97ac2a4bb9bcde0d8ef0d9b1ed2a5b431f80060404",
++      "current_sha256": "f32e6fb10aea909569461e97ac2a4bb9bcde0d8ef0d9b1ed2a5b431f80060404",
++      "disposition": "UNCHANGED_STARTING_BYTES"
+     },
+     {
+       "path": "DSC01PublicDiagnostics.swift.in",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/DSC01PublicDiagnostics.swift.in",
+-      "original_sha256": "629e781107e9f54ebfd1419babb6496006bcf939f06144ba6cd23cc97e58aacd"
++      "original_sha256": "629e781107e9f54ebfd1419babb6496006bcf939f06144ba6cd23cc97e58aacd",
++      "current_sha256": "6dce9ea0f597ddce7fb95f41d3d94570f41762ca806cb0c6303e032a1375dd88",
++      "disposition": "MODIFIED_REQUIRES_FULL_REVIEW"
+     },
+     {
+       "path": "DSC01UIKitObservation.kt.in",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/DSC01UIKitObservation.kt.in",
+-      "original_sha256": "83b35d069e738f59b79c44d11569c3a9a3a64b4427a9cb7e7d46c12b60f81e80"
++      "original_sha256": "83b35d069e738f59b79c44d11569c3a9a3a64b4427a9cb7e7d46c12b60f81e80",
++      "current_sha256": "83b35d069e738f59b79c44d11569c3a9a3a64b4427a9cb7e7d46c12b60f81e80",
++      "disposition": "UNCHANGED_STARTING_BYTES"
+     },
+     {
+       "path": "probe_validation.py",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/probe_validation.py",
+-      "original_sha256": "7763f04799e85d0b73249fd142bfef27a6ecf4e5960ae1a348058cd664f9c4d6"
+-    },
+-    {
+-      "path": "v8_receipts.py",
++      "original_sha256": "7763f04799e85d0b73249fd142bfef27a6ecf4e5960ae1a348058cd664f9c4d6",
++      "current_sha256": "134bb3affe45711ec3f74d7091ec59b7f859ca4f5fa04df1d895ce3250fd3aa2",
++      "disposition": "MODIFIED_REQUIRES_FULL_REVIEW"
++    },
++    {
++      "path": "prerequisite_receipts.py",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/v8_receipts.py",
+-      "original_sha256": "1f50af52780c446ce4868385723e18743e201477c25abbeb9d91946bfb8ce150"
+-    },
+-    {
+-      "path": "v9_receipts.py",
++      "original_sha256": "1f50af52780c446ce4868385723e18743e201477c25abbeb9d91946bfb8ce150",
++      "current_sha256": "708116f488083da11357c053c6e56f5186bbde4707f1ba487a35ca363a09fd5b",
++      "disposition": "MODIFIED_REQUIRES_FULL_REVIEW"
++    },
++    {
++      "path": "public_interaction_receipts.py",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/v9_receipts.py",
+-      "original_sha256": "6f2a543008de3b82084d28f4926dc0c9ed2122ecfec197fe0ee635ad2d51d719"
+-    },
+-    {
+-      "path": "v10_receipts.py",
++      "original_sha256": "6f2a543008de3b82084d28f4926dc0c9ed2122ecfec197fe0ee635ad2d51d719",
++      "current_sha256": "4583b8e9545dbe16ef3ee6f59d7d34a2bfd1421402b0f532a0b84aa2b2f63040",
++      "disposition": "MODIFIED_REQUIRES_FULL_REVIEW"
++    },
++    {
++      "path": "os_action_receipts.py",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/v10_receipts.py",
+-      "original_sha256": "68bc25ab0c82c141a165e2f1c24e8001c4024d58ff7974e13f20dc79f33843f8"
+-    },
+-    {
+-      "path": "v11_receipts.py",
++      "original_sha256": "68bc25ab0c82c141a165e2f1c24e8001c4024d58ff7974e13f20dc79f33843f8",
++      "current_sha256": "54a5f6c0ceb669bae65d2be9480f691cc19bc77bcc5d77c75904cc3d4cc2e7bb",
++      "disposition": "MODIFIED_REQUIRES_FULL_REVIEW"
++    },
++    {
++      "path": "os_pane_receipts.py",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/v11_receipts.py",
+-      "original_sha256": "8307a118d414900fbf43399b569ac066c687470f8ac7fb74ce4fadb1b73b7f7b"
+-    },
+-    {
+-      "path": "v12_receipts.py",
++      "original_sha256": "8307a118d414900fbf43399b569ac066c687470f8ac7fb74ce4fadb1b73b7f7b",
++      "current_sha256": "4ffcba3ade80bfa334b14f5bcddec0527148983a99b2dbf1263bde091efc9229",
++      "disposition": "MODIFIED_REQUIRES_FULL_REVIEW"
++    },
++    {
++      "path": "os_preference_receipts.py",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/v12_receipts.py",
+-      "original_sha256": "25d31b70d606c6870df6b6b75f3b098197c2b7470509c84db2f06563fdff7d4c"
++      "original_sha256": "25d31b70d606c6870df6b6b75f3b098197c2b7470509c84db2f06563fdff7d4c",
++      "current_sha256": "9de723db33e6a074261ae6199c55da7196bdbdc257a5ecaa558bcbc19f005c52",
++      "disposition": "MODIFIED_REQUIRES_FULL_REVIEW"
+     },
+     {
+       "path": "DSC01Probe.swift.in",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/DSC01Probe.swift.in",
+       "original_sha256": "b20b07d53feb3fd7d5aebeb8a71a5742957d9ddab8eaf6bf981736318c3cfa94",
+-      "v12_rendered_sha256": "e4e89855815c4bf2769e26dc7965dad329e39fbc076e218f183fb27ebdc41772"
++      "v12_rendered_sha256": "e4e89855815c4bf2769e26dc7965dad329e39fbc076e218f183fb27ebdc41772",
++      "current_sha256": "9c22d147c4b848db6f131f1ab0e406d1aea81bf4000af2c1fc392e75acf1db6b",
++      "disposition": "MODIFIED_REQUIRES_FULL_REVIEW"
+     },
+     {
+       "path": "IOSAppLaunchUITests.swift.in",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/IOSAppLaunchUITests.swift.in",
+       "original_sha256": "82471590bf434cb0b174f6ba44f0d8c0b377e4fee3c4eb0dfe39bbfaa21946e5",
+-      "v12_rendered_sha256": "f1926d606d567eeccd43721898a05a8c9394949a95f31ca3c4b2bf642e5fa20f"
++      "v12_rendered_sha256": "f1926d606d567eeccd43721898a05a8c9394949a95f31ca3c4b2bf642e5fa20f",
++      "current_sha256": "9bdfa70f43074569a8699dda01864496188562b117289c994ea4f4e8c844bf60",
++      "disposition": "MODIFIED_REQUIRES_FULL_REVIEW"
+     },
+     {
+       "path": "run_ios_readiness.py",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/run_dsc01_apphost_cycle.py",
+-      "original_sha256": "68d1d1ac98402c9c79a991f536983c0cd058bafdc152df9a31dfefb2a0b6790d"
++      "original_sha256": "68d1d1ac98402c9c79a991f536983c0cd058bafdc152df9a31dfefb2a0b6790d",
++      "current_sha256": "28dda1e5d833014cd515f104a4390d26507bfdd5fa7041e64076191b4f0beaf2",
++      "disposition": "MODIFIED_REQUIRES_FULL_REVIEW"
++    },
++    {
++      "path": "NativeReadinessLaunch.swift.in",
++      "current_sha256": "984561f6e3dc5b9634d03c6a3de36ba58eba7dd10b984cba68d955d7dd2b3f42",
++      "disposition": "NEW_SELF_CONTAINED_CONTROL_REQUIRES_FULL_REVIEW"
++    },
++    {
++      "path": "NativeReadinessProbe.kt.in",
++      "current_sha256": "b533be8c842c2fe9e5e4f983dfd8ac3a5890ac9b513c5b6e29401b3f007b916b",
++      "disposition": "NEW_SELF_CONTAINED_CONTROL_REQUIRES_FULL_REVIEW"
++    },
++    {
++      "path": "NativeReadinessUITests.swift.in",
++      "current_sha256": "ea70eb8e4606eacf3a81f73d3e53706bbec3ba33b58ff2ff51fc1c8935e4796d",
++      "disposition": "NEW_SELF_CONTAINED_CONTROL_REQUIRES_FULL_REVIEW"
++    },
++    {
++      "path": "README.md",
++      "current_sha256": "f739167c856a226b6f11a3bc5cae8f07f854557e21eb3a62049b3a22fb5cae1a",
++      "disposition": "NEW_SELF_CONTAINED_CONTROL_REQUIRES_FULL_REVIEW"
++    },
++    {
++      "path": "artifact_inventory.py",
++      "current_sha256": "892f1b20c1a92f3e0746b703f2e3b38007ce967788f105aaf817a9bf49ec3934",
++      "disposition": "NEW_SELF_CONTAINED_CONTROL_REQUIRES_FULL_REVIEW"
++    },
++    {
++      "path": "bind_source.py",
++      "current_sha256": "0954f5c24eb61c4f09c365efe6b3ab1fdb9f8342f86bad3e7654795464b53347",
++      "disposition": "NEW_SELF_CONTAINED_CONTROL_REQUIRES_FULL_REVIEW"
++    },
++    {
++      "path": "instrument_storage.py",
++      "current_sha256": "51348e3985e6872283182a728d8a91808714d69ad0197c978298678366cb4d88",
++      "disposition": "NEW_SELF_CONTAINED_CONTROL_REQUIRES_FULL_REVIEW"
++    },
++    {
++      "path": "native_readiness_receipts.py",
++      "current_sha256": "0a41d4d77e5a27570099150b4e05af5f73cbb66658c3b1d8667154bc56dbedff",
++      "disposition": "NEW_SELF_CONTAINED_CONTROL_REQUIRES_FULL_REVIEW"
++    },
++    {
++      "path": "owned_lane.py",
++      "current_sha256": "4bf3bbb4abfa22cd1604e6b4381bf481c95662ab15bf3fbdc86355a083102742",
++      "disposition": "NEW_SELF_CONTAINED_CONTROL_REQUIRES_FULL_REVIEW"
++    },
++    {
++      "path": "test_controls.py",
++      "current_sha256": "d40966cedd298355aa948fb79ec763568b01889409d22cff90a8eb9f5d046a99",
++      "disposition": "NEW_SELF_CONTAINED_CONTROL_REQUIRES_FULL_REVIEW"
++    },
++    {
++      "path": "test_native_readiness.py",
++      "current_sha256": "a4999e118b53d31c202fd276d9aed42e65b17986f7566d5c7c297a568c551272",
++      "disposition": "NEW_SELF_CONTAINED_CONTROL_REQUIRES_FULL_REVIEW"
++    },
++    {
++      "path": "test_os_preference_receipts.py",
++      "current_sha256": "74d74d25358a1dfe557ca1a57cc7145780d95ad422cc0e29cb6d09157912a4ec",
++      "disposition": "NEW_SELF_CONTAINED_CONTROL_REQUIRES_FULL_REVIEW"
+     }
+   ]
+ }
+--- before/scripts/verification/ios-readiness/native_readiness_receipts.py
++++ after/scripts/verification/ios-readiness/native_readiness_receipts.py
+@@ -3,6 +3,7 @@
+ import re
+ 
+ import probe_validation as legacy
++from artifact_inventory import safe_relative
+ from prerequisite_receipts import records
+ 
+ TOKEN = re.compile(r'[A-Fa-f0-9]{8}(?:-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12}')
+@@ -18,13 +19,18 @@
+             type(value['boot_ordinal']) is int and value['boot_ordinal'] == ordinal and value['run_token'] == token and
+             isinstance(value['process_boot'], str) and TOKEN.fullmatch(value['process_boot']) and
+             type(value['process_id']) is int and 0 < value['process_id'] < 2**31, 'Wrong boot/context binding')
++    images = value['loaded_app_images']
++    require(isinstance(images, list) and 1 <= len(images) <= 128 and all(safe_relative(path) for path in images) and
++            images == sorted(set(images)), 'Missing/unsafe/duplicated native image names')
+     observation = value['observation']
+     require(isinstance(observation, dict) and set(observation) == {
+         'schema_version', 'kind', 'harness_status', 'boot_ordinal', 'run_token', 'steps',
+         'credential_numeric_status_is_exact_invocation', 'initial_home_numeric_attribution',
+         'snapshot_numeric_attribution', 'physical_or_signed_evidence'}, 'Wrong production-observation schema')
+-    require(observation['schema_version'] == 1 and observation['kind'] == 'actual_koin_unsigned_app_host' and
+-            observation['harness_status'] == 'observation_complete' and observation['boot_ordinal'] == ordinal and
++    require(type(observation['schema_version']) is int and observation['schema_version'] == 1 and
++            observation['kind'] == 'actual_koin_signing_disabled_simulator' and
++            observation['harness_status'] == 'observation_complete' and type(observation['boot_ordinal']) is int and
++            observation['boot_ordinal'] == ordinal and
+             observation['run_token'] == token and observation['credential_numeric_status_is_exact_invocation'] is True and
+             all(observation[key] is False for key in ('initial_home_numeric_attribution', 'snapshot_numeric_attribution',
+                                                       'physical_or_signed_evidence')), 'Wrong attribution or incomplete observation')
+@@ -56,21 +62,24 @@
+             if outcome['multiplayer'] == 'absent':
+                 require(events[0]['status'] == -25300, 'Fresh production missing-item outcome not backed by its actual query')
+             else:
+-                require(outcome['multiplayer'] == 'secure_storage_unavailable' and events[0]['status'] not in (0, -25300),
+-                        'An unexplained fresh credential failure requires investigation, not environment attribution')
++                require(outcome['multiplayer'] == 'secure_storage_unavailable' and events[0]['status'] != -25300,
++                        'An absent native item cannot be mapped to a credential failure')
+         else:
+             require(set(outcome) == {'kind'} and outcome['kind'] in {'ok', 'absent', 'matches', 'mismatch', 'storage_error'},
+                     'Unknown native step outcome')
+             if name.startswith('snapshot-'):
+                 require(not events, 'Do not numerically attribute uninstrumented snapshot operations')
++                permitted = {'absent', 'matches', 'mismatch', 'storage_error'} if name == 'snapshot-read' else {'ok', 'storage_error'}
++                require(outcome['kind'] in permitted, 'Snapshot operation has an impossible outcome')
+             elif name == 'credential-read':
+                 require(len(events) == 1 and events[0]['operation'] == 'credential-read', 'Credential read lacks exact primitive receipt')
+                 status = events[0]['status']
+                 require((outcome['kind'] == 'absent' and status == -25300) or
+                         (outcome['kind'] in {'matches', 'mismatch'} and status == 0) or
+-                        (outcome['kind'] == 'storage_error' and status not in (0, -25300)), 'Credential read/status contradiction')
++                        (outcome['kind'] == 'storage_error' and status != -25300), 'Credential read/status contradiction')
+             elif name == 'credential-remove':
+-                require(len(events) == 1 and events[0]['operation'] == 'credential-delete' and
++                require(outcome['kind'] in {'ok', 'storage_error'} and len(events) == 1 and
++                        events[0]['operation'] == 'credential-delete' and
+                         (outcome['kind'] == 'ok') == (events[0]['status'] in (0, -25300)), 'Credential delete/status contradiction')
+             else:
+                 operations = [event['operation'] for event in events]
+@@ -80,17 +89,80 @@
+                     require(events[0]['status'] == -25300, 'Add attempted despite a non-missing update outcome')
+                 if len(events) == 3:
+                     require(events[1]['status'] == -25299, 'Retry attempted without duplicate-item receipt')
++                if len(events) == 1:
++                    require(events[0]['status'] != -25300, 'Missing update cannot omit its actual add')
++                if len(events) == 2:
++                    require(events[1]['status'] != -25299, 'Duplicate add cannot omit its actual retry')
+                 require(outcome['kind'] in {'ok', 'storage_error'} and
+                         (outcome['kind'] == 'ok') == (events[-1]['status'] == 0), 'Credential write/status contradiction')
++            if name.endswith('-read'):
++                require(ordinal != 1 or outcome['kind'] in {'absent', 'storage_error'},
++                        'Unexpected first-boot values must abort before any synthetic overwrite')
++                require(ordinal in (2, 3) or outcome['kind'] != 'matches',
++                        'A post-delete/fresh read cannot match non-null expected bytes')
+         result[name] = outcome
+     return result
++
++
++def classify_storage_health(outcomes, results):
++    """A failed write is not durability proof; a successful one cannot hide loss.
++
++    FAIL here means a local verification gate failed, not an independently
++    established application defect. Exact native error codes remain evidence;
++    they are never converted into invented entitlement/signing explanations.
++    """
++    history = {store: {} for store in ('credential', 'snapshot')}
++    boots = []
++    for ordinal, (outcome, result) in enumerate(zip(outcomes, results), 1):
++        native = {step['step']: step['native_events'] for step in result['observation']['steps']}
++        checks = []
++        home = outcome['home-rerun']
++        home_status = ('FAIL' if home['multiplayer'] != 'absent' and native['home-rerun'][0]['status'] == 0 else
++                       'PASS' if home['local'] == home['multiplayer'] == 'absent' else 'BLOCKED')
++        checks.append(dict(step='home-rerun', status=home_status,
++                           reason='observed_both_sources_absent' if home_status == 'PASS' else
++                                  'native_success_followed_by_credential_failure' if home_status == 'FAIL' else
++                                  'actual_source_unavailable_cause_not_inferred'))
++        for store in ('credential', 'snapshot'):
++            step = store + '-read'
++            actual = outcome[step]['kind']
++            desired = 'matches' if ordinal in (2, 3) else 'absent'
++            predecessor = (history[store].get('write') if ordinal in (2, 3) else
++                           history[store].get('remove') if ordinal >= 4 else None)
++            prerequisite_ok = ordinal == 1 or (predecessor is not None and predecessor['outcome'] == 'ok')
++            if actual == 'storage_error':
++                status = 'FAIL' if store == 'credential' and native[step][0]['status'] == 0 else 'BLOCKED'
++                reason = 'native_success_followed_by_secure_boundary_failure' if status == 'FAIL' else 'actual_read_unavailable'
++            elif actual != desired:
++                status = 'FAIL' if prerequisite_ok else 'BLOCKED'
++                reason = 'value_differs_after_successful_predecessor' if prerequisite_ok else 'predecessor_success_not_proven'
++            else:
++                status = 'PASS'
++                reason = 'expected_value_observed'
++            checks.append(dict(step=step, status=status, expected=desired, actual=actual, reason=reason,
++                               prerequisite=predecessor))
++            action = 'write' if ordinal in (1, 2) else 'remove' if ordinal == 3 else None
++            if action is not None:
++                actual = outcome[store + '-' + action]['kind']
++                history[store][action] = dict(boot_ordinal=ordinal, operation=action, outcome=actual)
++                checks.append(dict(step=store + '-' + action, status='PASS' if actual == 'ok' else 'BLOCKED',
++                                   reason='operation_reported_success' if actual == 'ok' else 'actual_operation_unavailable'))
++        statuses = {check['status'] for check in checks}
++        boots.append(dict(boot_ordinal=ordinal, status='FAIL' if 'FAIL' in statuses else
++                          'BLOCKED' if 'BLOCKED' in statuses else 'PASS', checks=checks))
++    statuses = {boot['status'] for boot in boots}
++    return dict(storage_health='FAIL' if 'FAIL' in statuses else 'BLOCKED' if 'BLOCKED' in statuses else 'PASS',
++                storage_boots=boots)
+ 
+ 
+ def verify_native_readiness(results, scenario, settings, log):
+     token = settings.get('runToken')
+     require(isinstance(token, str) and TOKEN.fullmatch(token), 'Missing source-matrix run token')
+-    require(len(results) == 8, 'All eight cold launches require separate durable results')
++    require(isinstance(results, list) and len(results) == 8, 'All eight cold launches require separate durable results')
+     rows, starts = legacy.common(scenario, 'readiness')
++    require(scenario['runToken'] == token and type(scenario['schemaVersion']) is int and
++            all(type(event['ordinal']) is int and type(event['controllerCreations']) is int for event, _ in rows),
++            'Cold-launch scenario/counters differ from actual task context')
+     require(len(starts) == 8 and all(event['fixture'] == 'existing' for event in starts), 'Expected eight explicit cold starts')
+     require(all(event['preferences']['setting'] == 'system' and not event['preferences']['ownerPresent'] and
+                 not event['preferences']['hasAppOverride'] for event in starts), 'Synthetic language fixture was not returned to its original absence')
+@@ -105,7 +177,8 @@
+         outcomes.append(verify_boot_result(result, ordinal, token))
+         require(set(launch) == {'schema_version', 'boot_ordinal', 'process_boot', 'run_token', 'loaded_app_images',
+                               'samples', 'app_foreground', 'native_alert_present', 'probe_activations'} and
+-                launch['schema_version'] == 1 and type(launch['boot_ordinal']) is int and launch['boot_ordinal'] == ordinal and
++                type(launch['schema_version']) is int and launch['schema_version'] == 1 and
++                type(launch['boot_ordinal']) is int and launch['boot_ordinal'] == ordinal and
+                 launch['process_boot'] == result['process_boot'] == start['boot'] and launch['run_token'] == token and
+                 launch['loaded_app_images'] == result['loaded_app_images'] and launch['app_foreground'] is True and
+                 launch['native_alert_present'] is False and type(launch['probe_activations']) is int and
+@@ -114,7 +187,7 @@
+         require(isinstance(samples, list) and len(samples) == 6, 'Missing launch stability train')
+         last_time, last_sequence = -1, start['ordinal']
+         for index, sample in enumerate(samples, 1):
+-            require(set(sample) == {'ordinal', 'elapsed_milliseconds', 'observation_sequence'} and
++            require(isinstance(sample, dict) and set(sample) == {'ordinal', 'elapsed_milliseconds', 'observation_sequence'} and
+                     all(type(sample[key]) is int for key in sample) and sample['ordinal'] == index and
+                     0 <= sample['elapsed_milliseconds'] <= 120000 and sample['observation_sequence'] > last_sequence and
+                     (sample['elapsed_milliseconds'] >= 0 if index == 1 else sample['elapsed_milliseconds'] - last_time >= 1950),
+@@ -124,21 +197,11 @@
+                     legacy.geometry_fills_window(observed[0][0]['native']['geometry'], 'portrait'),
+                     'Launch sample not backed by real bound native geometry/identity')
+             last_time, last_sequence = sample['elapsed_milliseconds'], sample['observation_sequence']
++        require(last_time - samples[0]['elapsed_milliseconds'] >= 10000,
++                'Each cold-launch train must span at least ten measured seconds')
+     require(len({value['process_boot'] for value in results}) == 8, 'One process cannot impersonate eight launches')
+-    health = []
+-    for ordinal, outcome in enumerate(outcomes, 1):
+-        expected_read = 'matches' if ordinal in (2, 3) else 'absent'
+-        expected = {'credential-read': expected_read, 'snapshot-read': expected_read}
+-        if ordinal in (1, 2): expected.update({'credential-write': 'ok', 'snapshot-write': 'ok'})
+-        if ordinal == 3: expected.update({'credential-remove': 'ok', 'snapshot-remove': 'ok'})
+-        mismatches = [key for key, desired in expected.items() if outcome[key]['kind'] != desired]
+-        home = outcome['home-rerun']
+-        if home['local'] != 'absent' or home['multiplayer'] != 'absent': mismatches.append('home-rerun')
+-        health.append(dict(boot_ordinal=ordinal, status='PASS' if not mismatches else 'BLOCKED',
+-                           unverified_steps=mismatches))
+-    healthy = all(row['status'] == 'PASS' for row in health)
++    health = classify_storage_health(outcomes, results)
+     return dict(diagnostic_delivery='PASS', current_build_cold_launch='PASS', cold_launches=8,
+                 stability_samples=48, minimum_observation_span_per_launch_seconds=10,
+-                exact_rerun_credential_attribution='PASS', storage_health='PASS' if healthy else 'BLOCKED',
+-                storage_boots=health, original_first_four_launch_failures_cause='UNRESOLVED',
+-                claims='Current instrumented unsigned Debug Simulator only; not physical LAN, healthy signed Keychain, complete save/resume, Store, or prior-launch root-cause proof')
++                exact_rerun_credential_attribution='PASS', **health, original_first_four_launch_failures_cause='UNRESOLVED',
++                claims='Current instrumented signing-disabled Debug simulator only; not physical LAN, healthy signed Keychain, complete save/resume, Store, or prior-launch root-cause proof')
+--- before/scripts/verification/ios-readiness/owned_lane.py
++++ after/scripts/verification/ios-readiness/owned_lane.py
+@@ -8,6 +8,7 @@
+ import json
+ import os
+ from pathlib import Path
++import shlex
+ import signal
+ import subprocess
+ import time
+@@ -69,6 +70,17 @@
+     if any(not line.isdigit() for line in lines):
+         raise RuntimeError('Unexpected lsof ownership output')
+     return {int(line) for line in lines}
++
++
++def owns_java_tmp_argument(command, temporary):
++    """Exact argv match: a prefix, duplicate override or quoted echo is not ours."""
++    try:
++        arguments = shlex.split(command)
++    except ValueError:
++        return False
++    return (bool(arguments) and Path(arguments[0]).name == 'java' and
++            [argument for argument in arguments if argument.startswith('-Djava.io.tmpdir=')] ==
++            ['-Djava.io.tmpdir=' + str(temporary / 'tmp')])
+ 
+ 
+ 
+@@ -131,8 +143,7 @@
+         # before it opens files. Do not use a generic repository-name match.
+         for pid, item in current.items():
+             if (pid != os.getpid() and self.baseline.get(pid) != item['start']
+-                    and pid not in self.members and '/bin/java' in item['command']
+-                    and '-Djava.io.tmpdir=' + str(self.temporary / 'tmp') in item['command']):
++                    and pid not in self.members and owns_java_tmp_argument(item['command'], self.temporary)):
+                 self.remember(item, 'detached-task-worker', 'Exact task-only JVM temp-directory argument')
+         self.last = current
+         return [item for pid, item in self.members.items()
+--- before/scripts/verification/ios-readiness/run_ios_readiness.py
++++ after/scripts/verification/ios-readiness/run_ios_readiness.py
+@@ -1,5 +1,5 @@
+ #!/usr/bin/env python3
+-"""Source-bound DS-C01 temporary-copy execution; root's sole build lane.
++"""Source-bound local-readiness temporary-copy execution; root's sole build lane.
+ 
+ All production/build inputs are copied from a later explicitly frozen manifest.
+ Only reviewed copy transformations add direct observation/synthetic invocation.
+@@ -30,10 +30,10 @@
+ from copied_sources import (create_source_copy, instrument_kotlin, inspect_copied_manifest,
+                             inspect_copied_inputs_after_build, MODIFIED_KOTLIN, ADDITIONS)
+ from os_preference_receipts import verify_probe
+-from public_interaction_receipts import verify_v9_receipts
+-from os_action_receipts import verify_v10_receipts
+-from os_pane_receipts import verify_v11_receipts
+-from artifact_inventory import inventory_bundle, bind_loaded_images
++from public_interaction_receipts import verify_public_interaction_receipts
++from os_action_receipts import verify_os_action_receipts
++from os_pane_receipts import verify_os_pane_receipts
++from artifact_inventory import inventory_bundle, bind_loaded_images, parse_dwarfdump_uuids
+ from native_readiness_receipts import verify_native_readiness
+ 
+ OUT = None
+@@ -330,9 +330,12 @@
+     dest = OUT / 'evidence' / NAME
+     with (OUT / 'build-lane.lock').open('a') as lock:
+         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+-        dest.mkdir(parents=True, exist_ok=False)
++        if dest.parent.is_symlink() or dest.parent.resolve() != dest.parent.absolute():
++            raise RuntimeError('Evidence must not traverse a symbolic link')
++        dest.parent.mkdir(exist_ok=True)
++        dest.mkdir(exist_ok=False)
+         receipt = dict(cycle=NAME, started_at=now(), status='RUNNING',
+-                       execution_kind='manifest-owned-copy-unsigned-ios-local-readiness-matrix', commands=[],
++                       execution_kind='manifest-owned-copy-signing-disabled-ios-local-readiness-matrix', commands=[],
+                        runtime_evidence_status='NOT_RUN', cleanup_status='BLOCKED',
+                        scope='Four actual production-container UIKit tests; actual Settings/restart; direct Compose and actual LocalUIViewController direction; stable outer/child/window identities and full-bounds safe-area geometry in EN/AR portrait/landscape; local Whodunit/Mafia controller/flow/value continuity under synthetic real-store language setters and actual background/foreground; actual OS Arabic per-app preference; eight current-build cold launches; exact rerun credential OSStatus and synthetic storage durability; complete embedded/loaded binary inventory. No physical LAN, full-game, signed-release, Store or leak-free claim.', approved_control_sha256=approved)
+         temp, owner, env, uuid = None, None, None, None
+@@ -669,6 +672,30 @@
+                 write_json(dest / 'built-app-binary-inventory.json', built_inventory)
+                 receipt['app_identity'] = built_inventory['bundle_identity']
+                 receipt['artifacts'] = built_inventory['images']
++                uuids = []
++                actual_images = {row['resolved_path']: row for row in built_inventory['images']}
++                for index, (relative, image) in enumerate(sorted(actual_images.items())):
++                    path = app / relative
++                    filename = 'native-uuid-' + str(index).zfill(3) + '.log'
++                    if command(['xcrun', 'dwarfdump', '--uuid', path], filename) != 0:
++                        raise RuntimeError('Native UUID/architecture inspection failed')
++                    if digest(path) != image['sha256']:
++                        raise RuntimeError('Native binary changed during inventory')
++                    uuids.append(dict(path=relative, sha256=image['sha256'],
++                                      architectures=parse_dwarfdump_uuids((dest / filename).read_text(), path)))
++                receipt['native_uuid_inventory'] = uuids
++                # Read-only public metadata of this owned Debug app. No key
++                # imports, signing, identity changes, or Store operations.
++                # Signing-disabled settings alone do not prove signature form.
++                receipt['public_signature_inspection'] = dict(
++                    display_exit_code=command(['/usr/bin/codesign', '--display', '--verbose=4', app],
++                                              'owned-app-signature-display.log'),
++                    entitlements_exit_code=command(['/usr/bin/codesign', '--display', '--entitlements', ':-', app],
++                                                   'owned-app-entitlements.log'),
++                    interpretation='Raw bounded owned-app metadata retained; no private credentials read and no entitlement modification. A nonzero display is not a storage diagnosis.')
++                for filename in ('owned-app-signature-display.log', 'owned-app-entitlements.log'):
++                    if (dest / filename).stat().st_size > 65536:
++                        raise RuntimeError('Owned app signature metadata exceeded its inspection budget')
+             if command(['xcrun', 'simctl', 'get_app_container', uuid, APP_ID, 'app'], 'owned-installed-app.log') == 0:
+                 installed = Path((dest / 'owned-installed-app.log').read_text().strip()).resolve(strict=True)
+                 owned_device = (Path.home() / 'Library/Developer/CoreSimulator/Devices' / uuid).resolve(strict=True)
+@@ -681,7 +708,7 @@
+                 json.loads((dest / 'xcresult-summary.json').read_text()),
+                 json.loads((dest / 'xcresult-tests.json').read_text()), uuid)
+             receipt['catalog_entry_proof'] = verify_catalog_receipts((dest / 'xcodebuild.log').read_text())
+-            receipt['v9_public_interaction_proof'] = verify_public_interaction_receipts((dest / 'xcodebuild.log').read_text())
++            receipt['public_interaction_proof'] = verify_public_interaction_receipts((dest / 'xcodebuild.log').read_text())
+             embedded_stop = dest / 'embedded-gradle-stop.txt'
+             if not embedded_stop.is_file() or embedded_stop.read_text() != 'build_exit=0\nstop_exit=0\n':
+                 raise RuntimeError('No successful immediate stop receipt from copied nested Gradle phase')
+@@ -701,19 +728,19 @@
+                 raise RuntimeError('Complete built/installed native binary inventory is unavailable')
+             receipt['executed_binary_binding'] = bind_loaded_images(built_inventory, installed_inventory, native_results)
+             receipt['dsc01_matrix'] = verify_probe(reports, verify_legacy_settings_probe, (dest / 'xcodebuild.log').read_text())
+-            receipt['v10_os_interaction_proof'] = verify_os_action_receipts(
++            receipt['os_interaction_proof'] = verify_os_action_receipts(
+                 (dest / 'xcodebuild.log').read_text(), reports['os'], receipt['dsc01_matrix']['os_settings_gate'])
+             # V10's public-action guards are unchanged, but this run supplies
+             # the explicit V12 exact-presence/array oracle, not an invented
+             # execution of V10's historical PRESENT-only preference check.
+-            action_proof = receipt['v10_os_interaction_proof']
++            action_proof = receipt['os_interaction_proof']
+             action_proof['supplied_os_preference_oracle'] = 'actual-arabic-os-exact-post-choice-presence-array'
+             action_proof['original_present_only_os_oracle_executed'] = receipt['dsc01_matrix']['os_settings_gate'].get(
+                 'original_present_oracle_executed', False)
+             if 'original_os_ar_system_restart_oracles_required' in action_proof:
+                 action_proof['supplied_arabic_os_phase_oracles_required'] = action_proof.pop(
+                     'original_os_ar_system_restart_oracles_required')
+-            receipt['v11_pane_identity_proof'] = verify_os_pane_receipts((dest / 'xcodebuild.log').read_text())
++            receipt['pane_identity_proof'] = verify_os_pane_receipts((dest / 'xcodebuild.log').read_text())
+             receipt['probe_harness_status'] = 'observation_complete'
+             receipt['os_settings_gate'] = receipt['dsc01_matrix']['os_settings_gate']
+             if owner.secondary_errors:
+@@ -814,6 +841,9 @@
+                 receipt['source_unchanged'] = receipt.get('source_after') is not None and receipt.get('source_after') == receipt.get('source_before')
+                 receipt['cleanup_status'] = 'PASS' if safe and not errors and not receipt['remaining_outputs'] and receipt['temporary_directory_removed'] else 'FAIL'
+                 receipt['status'] = 'PASS' if receipt.get('runtime_evidence_status') == 'PASS' and not receipt.get('error') and receipt['cleanup_status'] == 'PASS' and receipt['source_unchanged'] and receipt['controls_unchanged'] and receipt['copied_sources_unchanged'] else 'FAIL'
++                if receipt['status'] == 'PASS' and receipt.get('native_readiness', {}).get('storage_health') == 'FAIL':
++                    receipt['status'] = 'FAIL'
++                    receipt['readiness_gate_failure'] = 'Observed storage inconsistency requires investigation; not automatically a confirmed application defect.'
+                 if receipt['status'] == 'PASS' and (
+                         receipt.get('os_settings_gate', {}).get('status') != 'PASS' or
+                         receipt.get('os_settings_gate', {}).get('actual_present_os_preference_coverage') is not True or
+--- before/scripts/verification/ios-readiness/test_controls.py
++++ after/scripts/verification/ios-readiness/test_controls.py
+@@ -0,0 +1,180 @@
++"""Source-copy/runner tests. All shells use disposable fake wrappers, not Gradle."""
++import contextlib
++import hashlib
++import importlib
++import io
++import json
++from pathlib import Path
++import re
++import shutil
++import subprocess
++import tempfile
++import unittest
++from unittest import mock
++
++import bind_source
++import copied_sources as copies
++import instrument_storage
++from owned_lane import ROOT
++
++HERE = Path(__file__).resolve().parent
++
++
++class SourceCopyTests(unittest.TestCase):
++    def test_credential_trace_retains_every_actual_native_call_and_guard(self):
++        original = (ROOT / instrument_storage.PATH).read_text()
++        transformed = instrument_storage.instrument_credentials(original)
++        for name in ('SecItemCopyMatching', 'SecItemUpdate', 'SecItemAdd', 'SecItemDelete'):
++            self.assertEqual(re.findall(r'\b' + name + r'\([^)]*\)', original),
++                             re.findall(r'\b' + name + r'\([^)]*\)', transformed))
++        for guard in ('requireValidKey(key)', 'require(value.size <= MAX_VALUE_BYTES)',
++                      'errSecSuccess, errSecItemNotFound -> Unit', 'value?.let(::CFRelease)',
++                      'check(retry == errSecSuccess)', 'check(CFGetTypeID(returned) == CFDataGetTypeID())'):
++            self.assertIn(guard, transformed)
++            self.assertEqual(transformed.count(guard), original.count(guard))
++        for kind in ('read', 'update', 'add', 'retry', 'delete'):
++            self.assertEqual(transformed.count('.record("credential-' + kind + '"'), 1)
++        self.assertNotIn('NativeReadinessInvocation', original)
++        self.assertEqual((ROOT / instrument_storage.PATH).read_text(), original)
++        with self.assertRaises(RuntimeError): instrument_storage.instrument_credentials(transformed)
++        with self.assertRaises(RuntimeError): instrument_storage.instrument_credentials(original + original)
++
++    def test_all_copy_only_kotlin_transformations_use_current_source_and_preserve_the_root(self):
++        with tempfile.TemporaryDirectory(prefix='parlor-native-copy-test-') as raw:
++            root = Path(raw).resolve(); manifest = dict(copy_only=[])
++            for relative in copies.MODIFIED_KOTLIN:
++                target = root / relative; target.parent.mkdir(parents=True, exist_ok=True)
++                shutil.copyfile(ROOT / relative, target)
++                manifest['copy_only'].append(dict(path=relative, sha256=copies.sha256(target)))
++            copies.instrument_kotlin(root)
++            observed = copies.inspect_copied_manifest(root, manifest, [])
++            self.assertEqual(len(observed), len(copies.MODIFIED_KOTLIN) + len(copies.ADDITIONS))
++            for entry in manifest['copy_only']:
++                self.assertEqual(copies.sha256(ROOT / entry['path']), entry['sha256'])
++            self.assertTrue(copies.inspect_copied_inputs_after_build(root, observed)['unchanged'])
++            (root / 'composeApp/build/generated').mkdir(parents=True)
++            (root / 'composeApp/build/generated/Output.kt').write_text('generated disposable fixture')
++            self.assertTrue(copies.inspect_copied_inputs_after_build(root, observed)['unchanged'])
++            unexpected = root / 'composeApp/src/iosMain/kotlin/Unexpected.kt'; unexpected.write_text('unreviewed input')
++            self.assertFalse(copies.inspect_copied_inputs_after_build(root, observed)['unchanged'])
++
++    def test_build_copy_inventory_rejects_implicit_binding_symlinks_and_partial_inputs(self):
++        required = {*copies.BUILD_ROOTS, *copies.MODIFIED_KOTLIN, 'gradle/wrapper/gradle-wrapper.jar',
++                    'gradle/verification-metadata.xml', 'iosApp/iosApp/Info.plist',
++                    'iosApp/iosApp/ComposeContainerViewController.swift',
++                    'iosApp/iosAppUITests/ComposeContainerViewControllerTests.swift'}
++        with tempfile.TemporaryDirectory(prefix='parlor-native-copy-test-') as raw:
++            base = Path(raw).resolve(); source = base / 'source'; source.mkdir()
++            entries = []
++            for relative in sorted(required):
++                path = source / relative; path.parent.mkdir(parents=True, exist_ok=True)
++                path.write_text('synthetic input: ' + relative)
++                entries.append(dict(path=relative, sha256=copies.sha256(path)))
++            binding = dict(schema_version=3, binding_status='REVIEW_REQUIRED_BOUND', copy_only=entries,
++                           source_identity=dict(source_manifest=[[entry['path'], entry['sha256']] for entry in entries]))
++            target = base / 'target'; target.mkdir()
++            copies.create_source_copy(source, target, binding)
++            self.assertEqual({str(path.relative_to(target)) for path in target.rglob('*') if path.is_file()}, required)
++            for name, altered in (
++                ('implicit', {**binding, 'binding_status': 'AUTO_REFRESHED'}),
++                ('partial', {**binding, 'copy_only': entries[:-1]}),
++            ):
++                destination = base / name; destination.mkdir()
++                with self.subTest(name=name), self.assertRaises(RuntimeError):
++                    copies.create_source_copy(source, destination, altered)
++            existing = base / 'existing'; existing.mkdir(); (existing / 'user.txt').write_text('preserve')
++            with self.assertRaises(RuntimeError): copies.create_source_copy(source, existing, binding)
++            self.assertEqual((existing / 'user.txt').read_text(), 'preserve')
++            link_input = source / 'gradlew'; link_input.unlink(); link_input.symlink_to(source / 'gradlew.bat')
++            destination = base / 'symlink'; destination.mkdir()
++            with self.assertRaises(RuntimeError): copies.create_source_copy(source, destination, binding)
++
++    def test_protected_or_unreviewed_build_paths_cannot_enter_copy(self):
++        for path in ('../composeApp/a.kt', '/composeApp/a.kt', 'composeApp/./a.kt',
++                     'composeApp/local.properties', 'composeApp/key.p12', 'composeApp/.hidden/a.kt',
++                     'composeApp/build/a.kt', 'audit-runs/foo.kt', 'design/mock.js'):
++            with self.subTest(path=path): self.assertFalse(copies.allowed_path(path))
++        self.assertTrue(copies.allowed_path('gradle/verification-metadata.xml'))
++
++
++class BindingAndImportTests(unittest.TestCase):
++    def test_runner_import_is_read_only_and_no_longer_depends_on_archived_modules(self):
++        with mock.patch('subprocess.Popen', side_effect=AssertionError('Import must not launch any worker')):
++            runner = importlib.import_module('run_ios_readiness')
++            importlib.reload(runner)
++        for function in ('verify_public_interaction_receipts', 'verify_os_action_receipts', 'verify_os_pane_receipts'):
++            self.assertTrue(callable(getattr(runner, function)))
++        with self.assertRaises(RuntimeError): runner.control_manifest()
++        text = (HERE / 'run_ios_readiness.py').read_text()
++        self.assertNotIn('spec_from_file_location', text)
++        self.assertNotIn('2026-09-06-approved-policy-completion', text)
++
++    def test_binding_destination_never_overwrites_or_traverses_a_campaign_symlink(self):
++        with tempfile.TemporaryDirectory(prefix='parlor-native-binding-test-') as raw:
++            root = Path(raw).resolve(); campaign = root / 'remediation-runs/test-campaign'; campaign.mkdir(parents=True)
++            output = campaign / 'source-01.json'
++            self.assertEqual(bind_source.checked_destination(output, root), output)
++            output.write_text('preserved earlier evidence')
++            with self.assertRaises(RuntimeError): bind_source.checked_destination(output, root)
++            self.assertEqual(output.read_text(), 'preserved earlier evidence')
++            linked = campaign.parent / 'linked'; linked.symlink_to(campaign, target_is_directory=True)
++            with self.assertRaises(RuntimeError): bind_source.checked_destination(linked / 'new.json', root)
++            with self.assertRaises(RuntimeError): bind_source.checked_destination(root / 'not-campaign.json', root)
++
++    def test_explicit_binding_refuses_drift_and_never_grants_execution_approval(self):
++        with tempfile.TemporaryDirectory(prefix='parlor-native-binding-test-') as raw:
++            output = Path(raw).resolve() / 'binding.json'
++            identity = dict(source_manifest_sha256='a' * 64, diff_sha256='b' * 64,
++                            source_manifest=[['composeApp/src/Test.kt', 'c' * 64], ['docs/Test.md', 'd' * 64]])
++            with mock.patch.object(bind_source, 'checked_destination', return_value=output), \
++                    mock.patch.object(bind_source, 'identity', return_value=identity), \
++                    contextlib.redirect_stdout(io.StringIO()):
++                with self.assertRaises(RuntimeError): bind_source.main([str(output), 'e' * 64, 'b' * 64])
++                self.assertFalse(output.exists())
++                self.assertEqual(bind_source.main([str(output), 'a' * 64, 'b' * 64]), 0)
++            value = json.loads(output.read_text())
++            self.assertEqual(value['binding_status'], 'REVIEW_REQUIRED_BOUND')
++            self.assertEqual(value['copy_only'], [dict(path='composeApp/src/Test.kt', sha256='c' * 64)])
++            self.assertIn('No build', value['policy'])
++
++
++class CopiedPhaseTests(unittest.TestCase):
++    def run_phase(self, build=0, stop=0, normalize=0, cd_missing=False):
++        with tempfile.TemporaryDirectory(prefix='parlor-native-phase-test-') as raw:
++            root = Path(raw).resolve(); source = root / 'copy'; source.mkdir()
++            calls = root / 'calls'; stop_receipt = root / 'stop.txt'
++            wrapper = source / 'gradlew'
++            wrapper.write_text('#!/bin/sh\nif [ "$1" = "--stop" ]; then\n'
++                               f'  echo stop >> "{calls}"; exit {stop}\n'
++                               f'else echo build >> "{calls}"; exit {build}\nfi\n')
++            wrapper.chmod(0o700)
++            normalizer = source / 'scripts/release/normalize_embedded_apple_framework.sh'
++            normalizer.parent.mkdir(parents=True)
++            normalizer.write_text(f'#!/bin/sh\necho normalize >> "{calls}"\nexit {normalize}\n')
++            normalizer.chmod(0o700)
++            stale = root / 'Frameworks/ComposeApp.framework/stale'
++            stale.parent.mkdir(parents=True); stale.write_text('stale fake output must not green a failed build')
++            selected = source / 'missing' if cd_missing else source
++            script = (HERE / 'copied-kotlin-phase.sh.in').read_text().replace('__PARLOR_SOURCE_ROOT__', str(selected))
++            script = script.replace('__PARLOR_STOP_RECEIPT__', str(stop_receipt))
++            phase = root / 'phase.sh'; phase.write_text(script)
++            result = subprocess.run(['/bin/sh', str(phase)], capture_output=True, text=True, timeout=10,
++                                    env={'PATH': '/usr/bin:/bin', 'TARGET_BUILD_DIR': str(root), 'FRAMEWORKS_FOLDER_PATH': 'Frameworks'})
++            self.assertEqual(stale.read_text(), 'stale fake output must not green a failed build')
++            return result.returncode, calls.read_text().splitlines() if calls.exists() else [], \
++                stop_receipt.read_text() if stop_receipt.exists() else None
++
++    def test_build_failure_stops_immediately_and_never_normalizes_stale_output(self):
++        self.assertEqual(self.run_phase(build=47), (47, ['build', 'stop'], 'build_exit=47\nstop_exit=0\n'))
++
++    def test_stop_failure_cd_failure_and_normalizer_failure_are_not_masked(self):
++        self.assertEqual(self.run_phase(stop=48), (48, ['build', 'stop'], 'build_exit=0\nstop_exit=48\n'))
++        self.assertEqual(self.run_phase(cd_missing=True), (1, [], None))
++        self.assertEqual(self.run_phase(normalize=49), (49, ['build', 'stop', 'normalize'], 'build_exit=0\nstop_exit=0\n'))
++
++    def test_success_requires_ordered_build_stop_normalize(self):
++        self.assertEqual(self.run_phase(), (0, ['build', 'stop', 'normalize'], 'build_exit=0\nstop_exit=0\n'))
++
++
++if __name__ == '__main__':
++    unittest.main()
+--- before/scripts/verification/ios-readiness/test_native_readiness.py
++++ after/scripts/verification/ios-readiness/test_native_readiness.py
+@@ -0,0 +1,307 @@
++"""Synthetic parser/ownership tests only; never native/device evidence."""
++import copy
++import json
++from pathlib import Path
++import plistlib
++import tempfile
++import unittest
++
++import artifact_inventory as artifacts
++import native_readiness_receipts as receipts
++import probe_validation as legacy
++from owned_lane import owns_java_tmp_argument
++
++TOKEN = 'deadbeef-1234-5678-9000-000000000001'
++IMAGES = ['Frameworks/ComposeApp.framework/ComposeApp', 'Parlor', 'Parlor.debug.dylib']
++
++
++def preferences(language='en', previous=None, owned=False):
++    previous = [] if previous is None else previous
++    return dict(setting=language if owned else 'system', appLanguages=[language] if owned else previous,
++                hasAppOverride=owned or bool(previous), ownerPresent=owned,
++                ownerInstalled=language if owned else 'none', ownerPreviousPresent=owned and bool(previous),
++                ownerPrevious=previous if owned else [], preferredLanguage=language)
++
++
++def event(ordinal, boot, phase='sample', preference=None, os_status='not-investigated', settings=False):
++    before = phase == 'before_main'
++    pref = copy.deepcopy(preferences() if preference is None else preference)
++    geometry = {key: [0, 0, 393, 852] for key in legacy.RECTANGLES}
++    geometry.update({key: [59, 0, 34, 0] for key in legacy.SAFE_AREAS})
++    geometry['orientation'] = 'portrait'
++    native = {key: not before for key in legacy.NATIVE_BOOLEANS}
++    native.update(attachments=0 if before else 1, disposals=0, outerDirection='unavailable' if before else 'unspecified')
++    if not before:
++        native['geometry'] = geometry
++    composition = {key: False for key in legacy.COMPOSITION_BOOLEANS}
++    composition.update({key: 0 for key in legacy.COMPOSITION_COUNTERS})
++    composition.update(settingsMounted=settings,
++                       settingsDirection=('rtl' if pref['preferredLanguage'] == 'ar' else 'ltr') if settings else 'absent',
++                       surface='none', gameDirection='absent', publicPhase='none', commandLanguage='none', commandStatus='none')
++    return dict(ordinal=ordinal, phase=phase, fixture='existing', boot=boot, preferences=pref,
++                nativeDirection='unavailable' if before else 'force_rtl' if pref['preferredLanguage'] == 'ar' else 'force_ltr',
++                native=native, controllerCreations=0 if before else 1,
++                composition=json.dumps({} if before else composition), osDisposition=os_status,
++                samplingWindow=0, samplingIndex=0, samplingElapsedMilliseconds=0, samplingContext='none')
++
++
++def native_step(name, kind, events=()):
++    return dict(step=name, outcome=dict(kind=kind), overflow=False,
++                native_events=[dict(ordinal=index, operation=operation, status=status)
++                               for index, (operation, status) in enumerate(events, 1)])
++
++
++def boot_result(ordinal):
++    home = native_step('home-rerun', 'home_observed', [('credential-read', -25300)])
++    home['outcome'].update(local='absent', multiplayer='absent', has_unavailable_source=False, original_home_invocation=False)
++    expected = 'matches' if ordinal in (2, 3) else 'absent'
++    steps = [home, native_step('credential-read', expected, [('credential-read', 0 if expected == 'matches' else -25300)]),
++             native_step('snapshot-read', expected)]
++    if ordinal in (1, 2):
++        statuses = [('credential-update', -25300), ('credential-add', 0)] if ordinal == 1 else [('credential-update', 0)]
++        steps += [native_step('credential-write', 'ok', statuses), native_step('snapshot-write', 'ok')]
++    elif ordinal == 3:
++        steps += [native_step('credential-remove', 'ok', [('credential-delete', 0)]), native_step('snapshot-remove', 'ok')]
++    return dict(schema_version=1, boot_ordinal=ordinal, process_boot=f'{ordinal:08x}-1234-5678-9000-000000000001',
++                process_id=1000 + ordinal, run_token=TOKEN, loaded_app_images=IMAGES[:],
++                observation=dict(schema_version=1, kind='actual_koin_signing_disabled_simulator', harness_status='observation_complete',
++                                 boot_ordinal=ordinal, run_token=TOKEN, steps=steps,
++                                 credential_numeric_status_is_exact_invocation=True, initial_home_numeric_attribution=False,
++                                 snapshot_numeric_attribution=False, physical_or_signed_evidence=False))
++
++
++def scenario_fixture():
++    results = [boot_result(ordinal) for ordinal in range(1, 9)]
++    report = dict(schemaVersion=6, runToken=TOKEN, scenario='readiness', completed=True, observations=[])
++    launches = []
++    for result in results:
++        boot = result['process_boot']
++        report['observations'].append(event(len(report['observations']) + 1, boot, 'before_main'))
++        samples = []
++        for ordinal in range(1, 7):
++            observation = event(len(report['observations']) + 1, boot)
++            report['observations'].append(observation)
++            samples.append(dict(ordinal=ordinal, elapsed_milliseconds=(ordinal - 1) * 2000,
++                                observation_sequence=observation['ordinal']))
++        launches.append(dict(schema_version=1, boot_ordinal=result['boot_ordinal'], process_boot=boot,
++                             run_token=TOKEN, loaded_app_images=IMAGES[:], samples=samples,
++                             app_foreground=True, native_alert_present=False, probe_activations=1))
++    report['observations'].append(event(len(report['observations']) + 1, results[-1]['process_boot'], 'complete'))
++    return results, report, launches
++
++
++def logs(launches, cleanup=True):
++    rows = []
++    if cleanup:
++        rows.append('PARLOR_NATIVE_SYNTHETIC_SEED_CLEANUP ' + json.dumps(dict(
++            schema_version=1, run_token=TOKEN, original_present=False, synthetic_previous=['ar-EG', 'en'],
++            restored_present=False, source='completed-token-bound-owned-settings-fixture-only')))
++    rows += ['PARLOR_NATIVE_COLD_LAUNCH ' + json.dumps(row) for row in launches]
++    return '\n'.join(rows)
++
++
++def step(result, name):
++    return next(value for value in result['observation']['steps'] if value['step'] == name)
++
++
++class NativeReceiptTests(unittest.TestCase):
++    def verify(self, results=None, scenario=None, launches=None, cleanup=True):
++        original_results, original_scenario, original_launches = scenario_fixture()
++        return receipts.verify_native_readiness(original_results if results is None else results,
++                                               original_scenario if scenario is None else scenario,
++                                               dict(runToken=TOKEN), logs(original_launches if launches is None else launches, cleanup))
++
++    def test_complete_synthetic_eight_launch_matrix_is_parseable_not_runtime_proof(self):
++        result = self.verify()
++        self.assertEqual(result['diagnostic_delivery'], 'PASS')
++        self.assertEqual(result['storage_health'], 'PASS')
++        self.assertEqual(result['cold_launches'], 8)
++        self.assertEqual(result['stability_samples'], 48)
++        self.assertEqual(result['original_first_four_launch_failures_cause'], 'UNRESOLVED')
++
++    def test_exact_native_missing_entitlement_is_not_healthy_storage_or_an_invented_root_cause(self):
++        results, scenario, launches = scenario_fixture()
++        for result in results:
++            home = step(result, 'home-rerun')
++            home['outcome'].update(multiplayer='secure_storage_unavailable', has_unavailable_source=True)
++            home['native_events'][0]['status'] = -34018
++            for item in result['observation']['steps']:
++                if item['step'] == 'credential-read':
++                    item['outcome']['kind'] = 'storage_error'; item['native_events'][0]['status'] = -34018
++                if item['step'] == 'credential-write':
++                    item['outcome']['kind'] = 'storage_error'
++                    item['native_events'] = [dict(ordinal=1, operation='credential-update', status=-34018)]
++                if item['step'] == 'credential-remove':
++                    item['outcome']['kind'] = 'storage_error'; item['native_events'][0]['status'] = -34018
++        result = self.verify(results, scenario, launches)
++        self.assertEqual(result['diagnostic_delivery'], 'PASS')
++        self.assertEqual(result['storage_health'], 'BLOCKED')
++        self.assertTrue(all(boot['status'] == 'BLOCKED' for boot in result['storage_boots']))
++        self.assertNotIn('cause', result)
++
++    def test_loss_or_corruption_after_successful_write_fails_the_gate(self):
++        for store in ('credential', 'snapshot'):
++            for outcome in ('absent', 'mismatch'):
++                with self.subTest(store=store, outcome=outcome):
++                    results, _, _ = scenario_fixture()
++                    item = step(results[1], store + '-read')
++                    item['outcome']['kind'] = outcome
++                    if store == 'credential': item['native_events'][0]['status'] = -25300 if outcome == 'absent' else 0
++                    self.assertEqual(self.verify(results)['storage_health'], 'FAIL')
++
++    def test_missing_value_after_failed_write_remains_blocked_not_durability_failure(self):
++        for store in ('credential', 'snapshot'):
++            with self.subTest(store=store):
++                results, _, _ = scenario_fixture()
++                write = step(results[0], store + '-write'); write['outcome']['kind'] = 'storage_error'
++                if store == 'credential':
++                    write['native_events'] = [dict(ordinal=1, operation='credential-update', status=-34018)]
++                read = step(results[1], store + '-read'); read['outcome']['kind'] = 'absent'
++                if store == 'credential': read['native_events'][0]['status'] = -25300
++                self.assertEqual(self.verify(results)['storage_health'], 'BLOCKED')
++
++    def test_retained_value_after_successful_remove_is_fail_and_after_failed_remove_is_blocked(self):
++        for store in ('credential', 'snapshot'):
++            for successful in (True, False):
++                with self.subTest(store=store, successful=successful):
++                    results, _, _ = scenario_fixture()
++                    removal = step(results[2], store + '-remove')
++                    if not successful:
++                        removal['outcome']['kind'] = 'storage_error'
++                        if store == 'credential': removal['native_events'][0]['status'] = -34018
++                    read = step(results[3], store + '-read'); read['outcome']['kind'] = 'mismatch'
++                    if store == 'credential': read['native_events'][0]['status'] = 0
++                    self.assertEqual(self.verify(results)['storage_health'], 'FAIL' if successful else 'BLOCKED')
++
++    def test_native_success_followed_by_secure_failure_is_fail_not_entitlement_attribution(self):
++        for name in ('credential-read', 'home-rerun'):
++            with self.subTest(name=name):
++                results, _, _ = scenario_fixture(); item = step(results[0], name)
++                if name == 'credential-read': item['outcome']['kind'] = 'storage_error'
++                else: item['outcome'].update(multiplayer='secure_storage_unavailable', has_unavailable_source=True)
++                item['native_events'][0]['status'] = 0
++                self.assertEqual(self.verify(results)['storage_health'], 'FAIL')
++
++    def test_write_duplicate_retry_trace_requires_all_actual_calls(self):
++        result = boot_result(1); write = step(result, 'credential-write')
++        write['native_events'][1]['status'] = -25299
++        write['native_events'].append(dict(ordinal=3, operation='credential-retry', status=0))
++        receipts.verify_boot_result(result, 1, TOKEN)
++        for count in (1, 2):
++            broken = copy.deepcopy(result); step(broken, 'credential-write')['native_events'] = write['native_events'][:count]
++            step(broken, 'credential-write')['outcome']['kind'] = 'storage_error'
++            with self.subTest(count=count), self.assertRaises(RuntimeError):
++                receipts.verify_boot_result(broken, 1, TOKEN)
++
++    def test_bound_types_privacy_and_exact_production_status_mapping(self):
++        mutations = [
++            lambda value: value.update(schema_version=True),
++            lambda value: value['observation'].update(schema_version=True),
++            lambda value: value['observation'].update(boot_ordinal=True),
++            lambda value: value['observation'].update(initial_home_numeric_attribution=True),
++            lambda value: value.update(seed='synthetic-sentinel'),
++            lambda value: value.update(loaded_app_images=['/outside/Parlor']),
++            lambda value: value.update(loaded_app_images=IMAGES + [IMAGES[0]]),
++            lambda value: step(value, 'credential-read')['native_events'][0].update(status=True),
++            lambda value: step(value, 'credential-read')['native_events'][0].update(status=0),
++            lambda value: step(value, 'snapshot-read')['native_events'].append(dict(ordinal=1, operation='credential-read', status=0)),
++            lambda value: step(value, 'home-rerun')['outcome'].update(has_unavailable_source=True),
++            lambda value: step(value, 'home-rerun').update(overflow=True),
++            lambda value: value['observation']['steps'].reverse(),
++            lambda value: step(value, 'snapshot-write')['outcome'].update(kind='matches'),
++        ]
++        for index, change in enumerate(mutations):
++            value = boot_result(1); change(value)
++            with self.subTest(index=index), self.assertRaises(RuntimeError):
++                receipts.verify_boot_result(value, 1, TOKEN)
++
++    def test_unbound_launch_missing_cleanup_reuse_and_short_stability_train_fail(self):
++        with self.assertRaises(RuntimeError): self.verify(cleanup=False)
++        with self.assertRaises(RuntimeError): self.verify(results=[])
++        with self.assertRaises(RuntimeError): self.verify(launches=[])
++        for mutation in (
++            lambda r, s, l: s.update(runToken='12345678-1234-5678-9000-000000000001'),
++            lambda r, s, l: l[0].update(probe_activations=2),
++            lambda r, s, l: l[0].update(app_foreground=False),
++            lambda r, s, l: l[0]['samples'][1].update(elapsed_milliseconds=100),
++            lambda r, s, l: l[0]['samples'][0].update(observation_sequence=1),
++            lambda r, s, l: s['observations'][1]['native']['geometry']['composeBounds'].__setitem__(3, 700),
++            lambda r, s, l: r[0].update(process_boot=r[1]['process_boot']),
++            lambda r, s, l: s['observations'][0].update(ordinal=True),
++        ):
++            results, report, launches = scenario_fixture(); mutation(results, report, launches)
++            with self.assertRaises(RuntimeError): self.verify(results, report, launches)
++
++
++class NativeArtifactTests(unittest.TestCase):
++    def make_app(self, root, name='Built.app'):
++        app = root / name; app.mkdir()
++        info = dict(CFBundleIdentifier='com.parlor.app.debug', CFBundleExecutable='Parlor',
++                    CFBundleVersion='1', CFBundleShortVersionString='1.0', MinimumOSVersion='16.0')
++        (app / 'Info.plist').write_bytes(plistlib.dumps(info))
++        for image in IMAGES:
++            target = app / image; target.parent.mkdir(parents=True, exist_ok=True)
++            # Deliberately synthetic magic-bearing data, never a compiled image.
++            target.write_bytes(bytes.fromhex('cffaedfe') + image.encode())
++        return app
++
++    def test_all_images_including_debug_dylib_bind_to_installed_and_executed_bytes(self):
++        with tempfile.TemporaryDirectory(prefix='parlor-native-inventory-test-') as raw:
++            root = Path(raw).resolve(); built = self.make_app(root); installed = self.make_app(root, 'Installed.app')
++            a = artifacts.inventory_bundle(built); b = artifacts.inventory_bundle(installed)
++            result = artifacts.bind_loaded_images(a, b, [boot_result(1)])
++            self.assertEqual(result['status'], 'PASS')
++            self.assertEqual({row['path'] for row in result['runs'][0]['loaded_images']}, set(IMAGES))
++
++    def test_missing_debug_image_tampered_install_or_unbound_executed_image_fail(self):
++        for mutation in ('missing', 'modified', 'unbound'):
++            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory(prefix='parlor-native-inventory-test-') as raw:
++                root = Path(raw).resolve(); a = self.make_app(root); b = self.make_app(root, 'Installed.app')
++                if mutation == 'missing': (a / 'Parlor.debug.dylib').unlink()
++                if mutation == 'modified': (b / 'Parlor.debug.dylib').write_bytes(bytes.fromhex('cffaedfe') + b'changed')
++                run = boot_result(1)
++                if mutation == 'unbound': run['loaded_app_images'] = sorted(IMAGES + ['NoSuch.dylib'])
++                with self.assertRaises(RuntimeError):
++                    artifacts.bind_loaded_images(artifacts.inventory_bundle(a), artifacts.inventory_bundle(b), [run])
++
++    def test_external_links_and_symlinked_metadata_are_refused(self):
++        for location in ('Info.plist', 'outside.dylib'):
++            with self.subTest(location=location), tempfile.TemporaryDirectory(prefix='parlor-native-inventory-test-') as raw:
++                root = Path(raw).resolve(); app = self.make_app(root); outside = root / 'synthetic-only.txt'
++                outside.write_text('not an application metadata record')
++                target = app / location
++                if target.exists(): target.unlink()
++                target.symlink_to(outside)
++                with self.assertRaises(RuntimeError): artifacts.inventory_bundle(app)
++
++    def test_internal_link_is_explicit_and_unsafe_relative_names_fail(self):
++        with tempfile.TemporaryDirectory(prefix='parlor-native-inventory-test-') as raw:
++            app = self.make_app(Path(raw).resolve()); (app / 'alias.dylib').symlink_to('Parlor.debug.dylib')
++            value = artifacts.inventory_bundle(app)
++            self.assertEqual(value['symbolic_links'], [dict(path='alias.dylib', resolved_path='Parlor.debug.dylib', directory=False)])
++        for name in ('../x', '/x', './x', 'x//y', 'x\\y', 'x\x00y', '', 'x' * 513):
++            with self.subTest(name=repr(name)): self.assertFalse(artifacts.safe_relative(name))
++
++    def test_uuid_architecture_receipt_is_exact_and_not_a_signature_claim(self):
++        path = Path('/owned/Parlor.app/Parlor.debug.dylib')
++        text = 'UUID: DEADBEEF-1234-5678-9000-000000000001 (arm64) ' + str(path) + '\n'
++        self.assertEqual(artifacts.parse_dwarfdump_uuids(text, path), [dict(architecture='arm64', uuid=TOKEN)])
++        for bad in ('', text * 2, text.replace('arm64', 'unknown'), text.replace('/owned/', '/not-owned/')):
++            with self.subTest(bad=bad), self.assertRaises(RuntimeError): artifacts.parse_dwarfdump_uuids(bad, path)
++
++
++class ExactJavaOwnershipTests(unittest.TestCase):
++    def test_only_one_exact_java_tmpdir_argument_can_adopt_a_detached_worker(self):
++        root = Path('/owned/parlor-cycle'); argument = '-Djava.io.tmpdir=' + str(root / 'tmp')
++        self.assertTrue(owns_java_tmp_argument('/jdk/bin/java ' + argument + ' Worker', root))
++        for command in ('/jdk/bin/java ' + argument + '-sibling Worker',
++                        '/bin/echo /jdk/bin/java ' + argument,
++                        '/jdk/bin/java ' + argument + ' -Djava.io.tmpdir=/another/task',
++                        '/jdk/bin/java ' + argument + ' ' + argument,
++                        '/jdk/bin/java "' + argument,
++                        '/jdk/bin/java --message=' + argument):
++            with self.subTest(command=command): self.assertFalse(owns_java_tmp_argument(command, root))
++
++
++if __name__ == '__main__':
++    unittest.main()
+--- before/scripts/verification/ios-readiness/test_os_preference_receipts.py
++++ after/scripts/verification/ios-readiness/test_os_preference_receipts.py
+@@ -0,0 +1,98 @@
++"""Exact OS-representation parser fixtures, not execution of Settings/XCTest.
++
++The action snippets below test only this additive sequence binding. The runner
++must also execute the complete public-action and pane-identity validators.
++"""
++import copy
++import json
++import unittest
++
++import os_preference_receipts as receipts
++from test_native_readiness import TOKEN, event, preferences
++
++
++def fixture(present=True):
++    boot1, boot2, boot3 = [f'{value:08x}-1234-5678-9000-000000000001' for value in (1, 2, 3)]
++    previous = ['ar-EG', 'en'] if present else []
++    original, restored, explicit = preferences(), preferences('ar', previous), preferences('en', previous, owned=True)
++    events = [event(1, boot1, 'before_main', original), event(2, boot1, preference=original),
++              event(3, boot1, preference=original, os_status='opened'),
++              event(4, boot2, 'before_main', restored, os_status='opened'),
++              event(5, boot2, preference=restored, os_status='opened'),
++              event(6, boot2, preference=restored, os_status='opened', settings=True),
++              event(7, boot2, preference=explicit, os_status='opened', settings=True),
++              event(8, boot2, preference=restored, os_status='opened', settings=True),
++              event(9, boot3, 'before_main', restored, os_status='opened'),
++              event(10, boot3, preference=restored, os_status='opened', settings=True),
++              event(11, boot3, preference=restored, os_status='verified-arabic', settings=True),
++              event(12, boot3, 'complete', restored, os_status='verified-arabic', settings=True)]
++    # A distinct dictionary per event is important for mutation/counter-evidence tests.
++    report = copy.deepcopy(dict(schemaVersion=6, runToken=TOKEN, scenario='os', completed=True, observations=events))
++    stages = [dict(schemaVersion=1, stage=stage, beforeChoiceSequence=2, beforeChoiceBoot=boot1,
++                   baselineSequence=5, baselineBoot=boot2, sequence=sequence, boot=boot,
++                   hasAppOverride=present, appLanguages=previous[:])
++              for stage, sequence, boot in zip(receipts.STAGES, (5, 7, 8, 10), (boot2, boot2, boot2, boot3))]
++    return report, stages
++
++
++def log(stages, action=True, repeated=False):
++    lines = ['DSC01_OS_PREFERENCE_DECISION_CONTRACT ' + json.dumps(receipts.CONTRACT)]
++    row = 'DSC01_OS_APP_INTERACTION ' + json.dumps(dict(stage='arabic', status='after-activation', fields=dict(control='arabic')))
++    if action: lines.append(row)
++    if repeated: lines.append(row)
++    lines += ['DSC01_OS_PREFERENCE_BASELINE ' + json.dumps(value) for value in stages]
++    lines.append('DSC01_OS_APP_INTERACTION ' + json.dumps(dict(stage='markerControls', status='before-activation', fields={})))
++    return '\n'.join(lines)
++
++
++class ExactOSPreferenceTests(unittest.TestCase):
++    def test_present_arabic_preference_is_preserved_through_english_system_and_restart(self):
++        report, stages = fixture()
++        result = receipts.verify_os(report, log(stages))
++        self.assertEqual(result['status'], 'PASS')
++        self.assertEqual(result['observed_os_preference_representation'], 'PRESENT')
++        self.assertTrue(result['actual_present_os_preference_coverage'])
++        self.assertTrue(result['original_present_oracle_executed'])
++
++    def test_observed_absence_is_never_reported_as_present_coverage(self):
++        report, stages = fixture(present=False)
++        result = receipts.verify_os(report, log(stages))
++        self.assertEqual(result['observed_os_preference_representation'], 'ABSENT')
++        self.assertFalse(result['actual_present_os_preference_coverage'])
++        self.assertFalse(result['original_present_oracle_executed'])
++
++    def test_forged_previous_array_or_missing_restarted_before_app_value_fails(self):
++        for sequence, field, value in (
++            (7, 'ownerPrevious', ['ar']), (7, 'ownerPreviousPresent', False),
++            (8, 'appLanguages', ['ar']), (9, 'appLanguages', []),
++            (5, 'preferredLanguage', 'en'), (4, 'ownerPresent', True),
++        ):
++            report, stages = fixture(); report['observations'][sequence - 1]['preferences'][field] = value
++            with self.subTest(sequence=sequence, field=field), self.assertRaises(RuntimeError):
++                receipts.verify_os(report, log(stages))
++
++    def test_baseline_cannot_rebase_or_reorder_and_one_real_action_receipt_remains_required(self):
++        for mutation in (
++            lambda stages: stages[1].update(appLanguages=['ar']),
++            lambda stages: stages[1].update(hasAppOverride=False),
++            lambda stages: stages.reverse(),
++            lambda stages: stages[1].update(sequence=True),
++            lambda stages: stages[0].update(beforeChoiceBoot=stages[0]['boot']),
++            lambda stages: stages[3].update(boot=stages[0]['boot']),
++        ):
++            report, stages = fixture(); mutation(stages)
++            with self.assertRaises(RuntimeError): receipts.verify_os(report, log(stages))
++        report, stages = fixture()
++        with self.assertRaises(RuntimeError): receipts.verify_os(report, log(stages, action=False))
++        with self.assertRaises(RuntimeError): receipts.verify_os(report, log(stages, repeated=True))
++
++    def test_unavailable_os_selection_remains_blocked_and_may_not_invent_a_baseline(self):
++        report, stages = fixture()
++        for event_ in report['observations'][-2:]: event_['osDisposition'] = 'selection-unavailable'
++        result = receipts.verify_os(report, log([]))
++        self.assertEqual(result['status'], 'BLOCKED')
++        with self.assertRaises(RuntimeError): receipts.verify_os(report, log(stages))
++
++
++if __name__ == '__main__':
++    unittest.main()

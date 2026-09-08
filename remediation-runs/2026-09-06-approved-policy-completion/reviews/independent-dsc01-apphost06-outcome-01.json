@@ -1,0 +1,747 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-09-06T19:39:47.844278+00:00",
+  "reviewer": "/root/release_fix_review",
+  "author": "/root/native_fix_review",
+  "executor": "/root",
+  "classification": "PARTIALLY VERIFIED — original OS per-app probe NOT_RUN; cycle FAIL is harness prerequisite mismatch, not established app defect",
+  "source": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "source_files": 669,
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+    "diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "current_source_hashes_unchanged": true
+  },
+  "evidence": {
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-06/receipt.json": "b36c3966dbc64c10daae37c9feeb995a478426940baeb5697ad0dcd5f4213cc5",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-06/xcodebuild.log": "e5da0bf51773cc424424756214c5d417d16b4bd391b84eb603f890a97dc93df0",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-06/xcresult-summary.json": "3cc01bd1a0904c2397b43bfe30f501730f0d246b8e3760fdaddbe5a712a8e4c3",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-06/xcresult-tests.json": "4c87e0599472a4c7e8b937e79c61ef9ce1dd21d5559e88a20b0f02e98a2cd8c8",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-06/input-manifest.json": "8ee2fdefc266e91c2b4e694a0d7512cb6743d36ed44347dbab77af43f9d6cad3",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-06/copied-source.diff": "b02fb653e3d29178f90856b74062a810fb5889d2df1256bcce92fe23e5027c46",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-06/copied-source-manifest.json": "16cb3e8124a7404675ac9e2c5bdaad98f630c2844c519a5d46f18dbd5e732f2c",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-06/copied-source-inputs-after-build.json": "cef3f486dfe0cb92cc210fd00f38a8ac82e40d4e7a23598e34f4c6c965195586",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-06/secondary-fifo-ownership-final.json": "2c6204e7d4207f3ec359e91248b9974a4abca4e02faeaee831c54afd572f2a49",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-06/probe-settings-result.json": "5c4cad9f8d2bd8e32e6757ffca98f3afb23d7ad36e5d971e810f90fb8ffc8564",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-06/probe-whodunit-result.json": "acca86bf06c12ac46344508c0db7d1a31c867c2d5c0af1d68cd4da771ce6046e",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-06/probe-mafia-result.json": "8d8100ba0e2d6aca6c578d86726a6d363f1b153252645f66624b6cc6614886d7",
+    "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/author-frozen-control-manifest-01.json": "baa9f7be7211d6a0d8ad90a6c35fdbadaecd524b5097dc7500c65e460816ff7e"
+  },
+  "controls": {
+    "count": 54,
+    "control_sha256": "c9e1dc146972a38b063962998b54aabed8f76524c92d8d2dcfbb1c0b31266ef2",
+    "all_rehashed_unchanged": true
+  },
+  "copy_provenance": {
+    "original_inputs": 613,
+    "final_inputs": 615,
+    "transformed_or_added_paths": 13,
+    "unified_hunks": 18,
+    "all_hunks_applied_in_memory_against_original_frozen_source": true,
+    "all_13_results_independently_reconstructed_from_approved_templates": true,
+    "all_615_result_hashes_match_manifests": true,
+    "post_worker_inventory_and_hashes_match": true,
+    "production_graph_instruments_not_replaced": true,
+    "limitation": "Deleted build copy cannot be read retrospectively; independent in-memory reconstruction plus retained before/after hashes, source and control binding. Artifact receipt omits Parlor.debug.dylib: not complete artifact provenance."
+  },
+  "xctest": {
+    "result": "FAIL",
+    "exit": 65,
+    "tests": [
+      {
+        "id": "ComposeContainerViewControllerTests/testChildUsesFullBoundsAcrossSizesAndOpposingSemanticDirections()",
+        "result": "Passed",
+        "duration_seconds": 0.34114599227905273
+      },
+      {
+        "id": "ComposeContainerViewControllerTests/testDefaultAppearanceForwardingReachesTheSameChildExactlyOnce()",
+        "result": "Passed",
+        "duration_seconds": 0.037922024726867676
+      },
+      {
+        "id": "ComposeContainerViewControllerTests/testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView()",
+        "result": "Passed",
+        "duration_seconds": 0.03653895854949951
+      },
+      {
+        "id": "ComposeContainerViewControllerTests/testSystemDecorationAndOrientationPoliciesStillBelongToTheChild()",
+        "result": "Passed",
+        "duration_seconds": 0.037960052490234375
+      },
+      {
+        "id": "IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSInvestigation()",
+        "result": "Failed",
+        "duration_seconds": 539.7254149913788
+      }
+    ],
+    "passed": 4,
+    "failed": 1,
+    "skipped": 0,
+    "failure": "IOSAppLaunchUITests.swift:1299 initialEnglishPrimary; xcodebuild.log:5088"
+  },
+  "settings": {
+    "observations": 22,
+    "actual_boots": [
+      "0C5F79E1-CFA0-4DCB-887C-2E2B1883B76D",
+      "3C308E37-C9E4-4C7E-898A-606A6B818383",
+      "38390B9A-18CC-4576-99C9-DA3397198B39",
+      "7D180A35-DF83-49CF-BB71-84409561550A"
+    ],
+    "actual_ui_ownership_restart_sequences": [
+      [
+        "fresh System EN",
+        "actual AR",
+        "restart AR",
+        "actual System EN"
+      ],
+      [
+        "synthetic prior ar-EG/en",
+        "actual EN",
+        "restart EN",
+        "actual System restores ar-EG/en"
+      ]
+    ],
+    "zero_synthetic_store_commands": true,
+    "direct_compose_directions_and_native_identities_observed": true,
+    "actual_os_preference_write_not_proven": true
+  },
+  "local_games": {
+    "whodunit": {
+      "observations": 97,
+      "capture_interval": [
+        9,
+        96
+      ],
+      "continuous_rows": 88,
+      "public_phase": "public-intro",
+      "passive_windows": [
+        {
+          "window": 1,
+          "observation_ordinals": [
+            12,
+            17
+          ],
+          "context": "foreground",
+          "command": 0,
+          "sample_intervals_ms": [
+            261,
+            284
+          ]
+        },
+        {
+          "window": 2,
+          "observation_ordinals": [
+            18,
+            23
+          ],
+          "context": "foreground",
+          "command": 0,
+          "sample_intervals_ms": [
+            261,
+            263
+          ]
+        },
+        {
+          "window": 3,
+          "observation_ordinals": [
+            24,
+            29
+          ],
+          "context": "landscape",
+          "command": 0,
+          "sample_intervals_ms": [
+            261,
+            275
+          ]
+        },
+        {
+          "window": 4,
+          "observation_ordinals": [
+            30,
+            35
+          ],
+          "context": "portrait",
+          "command": 0,
+          "sample_intervals_ms": [
+            261,
+            267
+          ]
+        },
+        {
+          "window": 5,
+          "observation_ordinals": [
+            40,
+            45
+          ],
+          "context": "foreground",
+          "command": 1,
+          "sample_intervals_ms": [
+            261,
+            267
+          ]
+        },
+        {
+          "window": 6,
+          "observation_ordinals": [
+            46,
+            51
+          ],
+          "context": "foreground",
+          "command": 1,
+          "sample_intervals_ms": [
+            261,
+            267
+          ]
+        },
+        {
+          "window": 7,
+          "observation_ordinals": [
+            52,
+            57
+          ],
+          "context": "landscape",
+          "command": 1,
+          "sample_intervals_ms": [
+            261,
+            270
+          ]
+        },
+        {
+          "window": 8,
+          "observation_ordinals": [
+            58,
+            63
+          ],
+          "context": "portrait",
+          "command": 1,
+          "sample_intervals_ms": [
+            261,
+            268
+          ]
+        },
+        {
+          "window": 9,
+          "observation_ordinals": [
+            68,
+            73
+          ],
+          "context": "foreground",
+          "command": 2,
+          "sample_intervals_ms": [
+            261,
+            272
+          ]
+        },
+        {
+          "window": 10,
+          "observation_ordinals": [
+            74,
+            79
+          ],
+          "context": "foreground",
+          "command": 2,
+          "sample_intervals_ms": [
+            261,
+            271
+          ]
+        },
+        {
+          "window": 11,
+          "observation_ordinals": [
+            84,
+            89
+          ],
+          "context": "foreground",
+          "command": 3,
+          "sample_intervals_ms": [
+            261,
+            271
+          ]
+        },
+        {
+          "window": 12,
+          "observation_ordinals": [
+            90,
+            95
+          ],
+          "context": "foreground",
+          "command": 3,
+          "sample_intervals_ms": [
+            261,
+            272
+          ]
+        }
+      ],
+      "passive_samples": 72,
+      "sample_intervals_ms": [
+        261,
+        284
+      ],
+      "first_post_foreground_ordinals": [
+        11,
+        39,
+        67,
+        83
+      ],
+      "actual_background_foreground_cycles": 4,
+      "session_disposals_in_interval": 0,
+      "actual_settings_english_before_capture": true,
+      "synthetic_actual_settings_store_commands": [
+        "ar",
+        "en",
+        "system"
+      ]
+    },
+    "mafia": {
+      "observations": 99,
+      "capture_interval": [
+        11,
+        98
+      ],
+      "continuous_rows": 88,
+      "public_phase": "role-assignment",
+      "passive_windows": [
+        {
+          "window": 1,
+          "observation_ordinals": [
+            14,
+            19
+          ],
+          "context": "foreground",
+          "command": 0,
+          "sample_intervals_ms": [
+            260,
+            267
+          ]
+        },
+        {
+          "window": 2,
+          "observation_ordinals": [
+            20,
+            25
+          ],
+          "context": "foreground",
+          "command": 0,
+          "sample_intervals_ms": [
+            262,
+            267
+          ]
+        },
+        {
+          "window": 3,
+          "observation_ordinals": [
+            26,
+            31
+          ],
+          "context": "landscape",
+          "command": 0,
+          "sample_intervals_ms": [
+            260,
+            267
+          ]
+        },
+        {
+          "window": 4,
+          "observation_ordinals": [
+            32,
+            37
+          ],
+          "context": "portrait",
+          "command": 0,
+          "sample_intervals_ms": [
+            260,
+            267
+          ]
+        },
+        {
+          "window": 5,
+          "observation_ordinals": [
+            42,
+            47
+          ],
+          "context": "foreground",
+          "command": 1,
+          "sample_intervals_ms": [
+            260,
+            267
+          ]
+        },
+        {
+          "window": 6,
+          "observation_ordinals": [
+            48,
+            53
+          ],
+          "context": "foreground",
+          "command": 1,
+          "sample_intervals_ms": [
+            260,
+            269
+          ]
+        },
+        {
+          "window": 7,
+          "observation_ordinals": [
+            54,
+            59
+          ],
+          "context": "landscape",
+          "command": 1,
+          "sample_intervals_ms": [
+            260,
+            270
+          ]
+        },
+        {
+          "window": 8,
+          "observation_ordinals": [
+            60,
+            65
+          ],
+          "context": "portrait",
+          "command": 1,
+          "sample_intervals_ms": [
+            260,
+            271
+          ]
+        },
+        {
+          "window": 9,
+          "observation_ordinals": [
+            70,
+            75
+          ],
+          "context": "foreground",
+          "command": 2,
+          "sample_intervals_ms": [
+            258,
+            270
+          ]
+        },
+        {
+          "window": 10,
+          "observation_ordinals": [
+            76,
+            81
+          ],
+          "context": "foreground",
+          "command": 2,
+          "sample_intervals_ms": [
+            260,
+            271
+          ]
+        },
+        {
+          "window": 11,
+          "observation_ordinals": [
+            86,
+            91
+          ],
+          "context": "foreground",
+          "command": 3,
+          "sample_intervals_ms": [
+            261,
+            272
+          ]
+        },
+        {
+          "window": 12,
+          "observation_ordinals": [
+            92,
+            97
+          ],
+          "context": "foreground",
+          "command": 3,
+          "sample_intervals_ms": [
+            261,
+            272
+          ]
+        }
+      ],
+      "passive_samples": 72,
+      "sample_intervals_ms": [
+        258,
+        272
+      ],
+      "first_post_foreground_ordinals": [
+        13,
+        41,
+        69,
+        85
+      ],
+      "actual_background_foreground_cycles": 4,
+      "session_disposals_in_interval": 0,
+      "actual_settings_english_before_capture": true,
+      "synthetic_actual_settings_store_commands": [
+        "ar",
+        "en",
+        "system"
+      ]
+    }
+  },
+  "native_geometry": {
+    "rows": 212,
+    "orientation_counts": {
+      "portrait": 188,
+      "landscape": 24
+    },
+    "rows_with_opposing_outer_and_actual_compose_direction": 108,
+    "all8identity_booleans_true": true,
+    "one_attachment_zero_disposals": true,
+    "rectangles_independently_recalculated": true,
+    "safe_areas_independently_recalculated": true,
+    "portrait_bounds": [
+      0,
+      0,
+      402,
+      874
+    ],
+    "portrait_safe": [
+      62,
+      0,
+      34,
+      0
+    ],
+    "landscape_bounds": [
+      0,
+      0,
+      874,
+      402
+    ],
+    "landscape_safe": [
+      0,
+      62,
+      20,
+      62
+    ]
+  },
+  "public_activation": {
+    "catalog_geometry_cases": 14,
+    "catalog": {
+      "whodunit": {
+        "raw_lines": [
+          2187,
+          2324
+        ],
+        "search_windows": 1,
+        "physical_activations": 1,
+        "before_activation_line": 2283,
+        "target": [
+          24,
+          671.6666870117188,
+          354,
+          99
+        ],
+        "viewport": [
+          0,
+          0,
+          402,
+          874
+        ],
+        "overlay": [
+          68.66666666666666,
+          134,
+          265,
+          49
+        ],
+        "recalculated_interior": [
+          36,
+          683.6666870117188,
+          330,
+          59.0
+        ],
+        "recalculated_point": [
+          201.0,
+          713.1666870117188
+        ],
+        "recalculated_normalized_point": [
+          0.5,
+          0.41919191919191917
+        ],
+        "stable_final_six_samples": true,
+        "successor_observed": true
+      },
+      "mafia": {
+        "raw_lines": [
+          3189,
+          3698
+        ],
+        "search_windows": 5,
+        "physical_activations": 1,
+        "before_activation_line": 3657,
+        "target": [
+          24,
+          387.3333435058594,
+          354,
+          371.0000305175781
+        ],
+        "viewport": [
+          0,
+          0,
+          402,
+          874
+        ],
+        "overlay": [
+          68.66666666666666,
+          134,
+          265,
+          49
+        ],
+        "recalculated_interior": [
+          36,
+          399.3333435058594,
+          330,
+          343.3333435058594
+        ],
+        "recalculated_point": [
+          201.0,
+          571.0000152587891
+        ],
+        "recalculated_normalized_point": [
+          0.5,
+          0.4950583737060569
+        ],
+        "stable_final_six_samples": true,
+        "successor_observed": true
+      }
+    },
+    "mafia_start_geometry_cases": 16,
+    "mafia_start": {
+      "raw_lines": [
+        3857,
+        4289
+      ],
+      "search_windows": 6,
+      "physical_activations": 1,
+      "before_activation_line": 4245,
+      "target": [
+        32,
+        756,
+        338,
+        52
+      ],
+      "viewport": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "overlay": [
+        68.66666666666666,
+        134,
+        265,
+        49
+      ],
+      "recalculated_interior": [
+        44,
+        768,
+        314,
+        28
+      ],
+      "recalculated_point": [
+        201.0,
+        782.0
+      ],
+      "recalculated_normalized_point": [
+        0.5,
+        0.5
+      ],
+      "stable_final_six_samples": true,
+      "successor_observed": true
+    },
+    "mafia_canonical_source_ordinals": {
+      "setup": 8,
+      "role_assignment": 9
+    },
+    "limitation": "Coordinates are observed target-relative samples, not independent OS event/callback attestation. RoleAssignment and actual canonical observations establish this one activation succeeded; apphost05 cause remains unproven."
+  },
+  "os": {
+    "status": "NOT_RUN for original per-app investigation",
+    "prerequisite_status": "BLOCKED",
+    "diagnostic_rows": 15,
+    "raw_line_range": [
+      4804,
+      5087
+    ],
+    "source_guard": "native/dsc01_apphost_v8/DSC01OSPrerequisite.swift.in:227-228 requires Arabic absent",
+    "english_primary_frame": [
+      20,
+      171.33333206176758,
+      362,
+      68
+    ],
+    "arabic_preferred_row_frame": [
+      20,
+      239.33333206176758,
+      362,
+      68
+    ],
+    "add_language_frame": [
+      20,
+      307.3333320617676,
+      362,
+      55
+    ],
+    "actual_uncovered_ordered_list_already_multilingual": true,
+    "add_search_select_primary_actions_executed": false,
+    "original_probe_result_present": false,
+    "interpretation": "Unnecessary V8 no-Arabic prerequisite rejects already satisfied public OS list. No inference about why new simulator already has Arabic; no host preference read/write evidence supplied. V9 must retain current uncovered ordered-list proof, classify already-satisfied explicitly, and still run original OS probe."
+  },
+  "cleanup": {
+    "receipt_status": "PASS",
+    "immediate_stop_exit": 0,
+    "final_stop_exit": 0,
+    "immediate_stop_start_after_xcode_seconds": 0.002051,
+    "immediate_stop_completed_after_xcode_seconds": 0.61642,
+    "owned_pid_start_identities_checked": 69,
+    "remaining_owned_identities": [],
+    "secondary_fifos": 2,
+    "secondary_empty_parents": 2,
+    "fifo_pid_parent_birth_uid_type_attestation_checked": true,
+    "task_owned_path_checks": 7,
+    "all_task_owned_paths_absent": true,
+    "source_derived_build_dirs_checked": [
+      "build",
+      "build-logic/convention/build",
+      "composeApp/build",
+      "game-modes/mafia/build",
+      "game-modes/whodunit/build",
+      "iosApp/build",
+      "shared/content/build",
+      "shared/core/build",
+      "shared/design-system/build",
+      "shared/engine-testing/build",
+      "shared/engine/build",
+      "shared/networking-testing/build",
+      "shared/networking/build",
+      "shared/session/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build"
+    ],
+    "build_dirs_present_at_record": [],
+    "receipt_cleanup_errors": [],
+    "reviewer_did_not_stop_or_delete_anything": true,
+    "current_global_idle_claim": false,
+    "explanation": "Current newer root-owned/unrelated work may run. Apphost06 exact ownership ledger is empty; no unrelated process was adopted or stopped."
+  },
+  "limitations": [
+    "Not DS-C01 completion: original actual OS per-app English/Arabic/System/restart path not executed.",
+    "No retained multiplayer-host runtime proof, physical LAN/device proof, complete-game run, or storage-resume proof from this matrix.",
+    "Current Xcode26.5/17F42 differs from Store-qualified26.3/17C529; unsigned simulator not Store/signing evidence.",
+    "Audit observer release after complete rows (Whodunit97/Mafia99) clears observer checkpoint only, not application session; source Probe192-200 and ComposeObservation113-119 reread.",
+    "No retrospective claim that apphost05 Start was an app defect or a particular scroll condition."
+  ],
+  "reviewer_execution": {
+    "builds": 0,
+    "tests": 0,
+    "apps": 0,
+    "simulators": 0,
+    "background_workers": 0,
+    "production_edits": 0,
+    "git_store_signing_mutations": 0,
+    "new_files": "This reviewer JSON only",
+    "cleanup_needed": false
+  }
+}

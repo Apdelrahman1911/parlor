@@ -1,0 +1,338 @@
+{
+  "scope": "M-C01 Doctor canonical history recovery + existing Doctor consecutive setting verification; M-C03 Mafia post-game role layout",
+  "at": "2026-09-05T18:17:29.440935+00:00",
+  "reviewer": "/root/mafia_cont",
+  "head": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+  "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+  "status": " M game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitStateValidator.kt\n M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/domain/WhodunitRulesInvariantTest.kt\n?? AGENTS.md\n?? audit-runs/\n?? design/\n?? docs/PARLOR_PROJECT_HANDOFF.md\n?? project-code-audit/\n?? remediation-runs/\n?? scripts/release/tests/test_xcode_framework_phase.py\n?? shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/JupiterDiscoveryContractTest.kt\n",
+  "module_files": [
+    {
+      "path": "game-modes/mafia/.DS_Store",
+      "sha256": "2f3201a82366a47b81da490075198f84c91cda1feb6f6a8e11210ad87617245a"
+    },
+    {
+      "path": "game-modes/mafia/build.gradle.kts",
+      "sha256": "051b892fd652e8dd5c48a4b089e40e25dd4adf360456d93b90d0a79fa7f863eb"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/composeResources/values/strings.xml",
+      "sha256": "8f46afd35f71ad31e3d5b72cac1587e21dfc9e9a903b362e69eb79c6b33b551f"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml",
+      "sha256": "8cf2f6df50a01a7c79ad388e7fb18765f1a2b63ccaf0a8127fe11ec1cf8c889c"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/MafiaDefinition.kt",
+      "sha256": "196c9186b5ae44179652caa2d212b07968a801243d8ad17d21962123ada3c884"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/MafiaIds.kt",
+      "sha256": "2e7ab38fcf3564f8f1ddce3adec802f89203ccc2b43ac2ebbf4d3c9afbdedf5c"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/di/MafiaDiModule.kt",
+      "sha256": "d8f45322ede27f18fbfdce8185002f880d3415ff13144ffee7eaae1f4f451571"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/action/MafiaAction.kt",
+      "sha256": "dc99359f4b7c18790a6e34ff3cd07852b2be9c75787d0dcf271083b6c75c350e"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/action/MafiaActionCodec.kt",
+      "sha256": "b81ee4219ab805c428d75149a3092169d9282ae0de4101f016f618e97b737eb5"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/authority/MafiaActionAuthority.kt",
+      "sha256": "ba4fd6e0f46c72080a9e6dd89cb58319fecb4a013cfd4da5e19ae2b7c5df608b"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/event/MafiaEvent.kt",
+      "sha256": "bdd9f8db0c3e9562e0e484644b0072127e1e36e09baf7b1525217a6f41319de5"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/modes/MafiaModes.kt",
+      "sha256": "3ab4aee02542d6760f61610fcb110406f6c49cfb65e6de5deed63ef7dc277f7a"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/party/MafiaReadinessGate.kt",
+      "sha256": "32abc46cd4eb222a051d64a2b546339093ff750808c72fe119c30cc12b92f3c9"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/phase/MafiaPhase.kt",
+      "sha256": "a95da47962a644cf1447c817285f1d82c84978648ae23be1db12ba8beb2e9056"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/projection/MafiaProjectionPolicy.kt",
+      "sha256": "713158db7e5cf09e479cd249537b2f1e4ead14261b9d148c9288ba45c4dc51cc"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/reducer/MafiaReducer.kt",
+      "sha256": "2ff9754d497b8258613badb057ab915a6d457786c56b0d5e725f2ba0053e56e2"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/rules/MafiaSessionRules.kt",
+      "sha256": "26ce059a7d686687b1aefc5b3105067c7fe318aa1b65de512ab461e2ecd7d7fb"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/rules/NightResolution.kt",
+      "sha256": "86f1078d5db7c23aec6da15c09625e37d0041c6a78fcb1e26f234d4e5ed26000"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/rules/RoleAssignment.kt",
+      "sha256": "89bd0e5432a1c8c6fe6c3c70ef907d75ad25d7a6e5976bce75b3b32bb4ce0573"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/rules/VoteResolution.kt",
+      "sha256": "1fe71e932ffffa4c11a377a586d865f5ab87b7014de5fde3afdf9ab21a9292c8"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/rules/WinCheck.kt",
+      "sha256": "a16a88bd17d861dcbda288e1cc0814bd5817fd6cff381e446251994793ba5ab1"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/settings/MafiaSettings.kt",
+      "sha256": "beaa58c17c44a8ff552e52e838171deedf17f8dadd76258caaef8dd2b5a336f5"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/settings/MafiaSettingsPresets.kt",
+      "sha256": "0fec32a5ccabfbd01dbce10b0afca62a8dffb9736d03eeb76c755c1bf40b4bf0"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/state/MafiaObservableStateValidator.kt",
+      "sha256": "751852ab1a9e6243df1c58c4405ac07d7ec72e2a2ac8ab2c1852a6f4df132c55"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/state/MafiaPeerSnapshotValidator.kt",
+      "sha256": "8df30438d0b5a4f6e9666de6e1863ab4c1faf8c3664126be6343c293ff8e383c"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/state/MafiaRole.kt",
+      "sha256": "2873f88de6ef75b173350bce031dddaaf89a2d7bb6db86104875cc84c683214e"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/state/MafiaState.kt",
+      "sha256": "fc890870341eb2c864b4518e24f8f2634fc61a234f4c507bf71ecf1ee40bdf87"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotCodec.kt",
+      "sha256": "9d37b28b40c2a295afb5cfd4889e39a3803f8ad86623c8c37320d7c00cf4f20c"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotRecovery.kt",
+      "sha256": "a2d00bc13749ddbce8759174ccc7729ace240d4a0d23f806306860c23ad15121"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/components/MafiaCover.kt",
+      "sha256": "a8bf4211f86f855507edb8fed0cde28f2c9d24f2273c77e5e7c2c7aeae2ab6bb"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostLobbyFlow.kt",
+      "sha256": "86dbe5ba625445dd9f8a33d754f919c1d2515e9b16f2cff6b88924ddd14c86ff"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostProgression.kt",
+      "sha256": "9538d49edcd035815e08f5f48bfdcafad61f29d64ffac63b0bdba61f45671df6"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostRoomBridge.kt",
+      "sha256": "e501318600500abc60e4bef8ed2706fb8b4955dc8c21ac75a8c06e7e2709ff45"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDeviceHostFlow.kt",
+      "sha256": "9bc03d15725da5ace2e5b4c4e79947b516a8e04cce8fbc2e203edde2da9194a1"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePeerFlow.kt",
+      "sha256": "67c50637f24919981c8aff238d497e33d46dbef476f490fe511891c36a7100fa"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+      "sha256": "3d3a643854cdecf4f9ec4983ccdfd92b906c28b21942e758cffc862e449efff8"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaNetworkErrorMessage.kt",
+      "sha256": "ec4e3f5b94a3258fd6efd078c2b0b8207d7d358e783ae2a3f55fa8b0eb6fbafa"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaPeerLobbyFlow.kt",
+      "sha256": "d2c1256c40f68eff0784c31de3232d24629b5295c8bde0c4b5f63d6ee9c3d1a8"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaPeerRoomBridge.kt",
+      "sha256": "0023dc186b7dd22df76255767e9a9d5cf65203803c768391c0e665de245e88ee"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaRetainedMultiplayerRuntime.kt",
+      "sha256": "cb196e3457759dbb0766b02d342d3698f6e90512d674d70e34a76f8516ff0543"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaGameFlow.kt",
+      "sha256": "8f250d62f8afb48e407c30e5382eb4758bc4ad53dee5168af8e3452ad3e840f6"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaLocalSessionConfig.kt",
+      "sha256": "d8bc50f79bd7d38e1364085109fb1f7916bb67e3879683e5835717fed583ddf6"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+      "sha256": "3df606724bceca7d5a78d6479bcdc44eec8c3f7f135228ccdd308dfc837c42ae"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/announce/NightAnnouncementScreen.kt",
+      "sha256": "57b87800f6c403cf9361c110ca8b96188c2e636015b4d7ca4c57a3b1c7b21ebb"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/discussion/DiscussionScreen.kt",
+      "sha256": "42e135bdec435981e7a3edd9e9837340b7b94fae3682074e8ae9309257170c1f"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/handoff/MafiaHandoffScreens.kt",
+      "sha256": "b070ec2822169b0aee33ab01361c626c8a2e55b0d98189b1eb42b482306e1de9"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/CivilianSuspectScreen.kt",
+      "sha256": "ed0fed1135c95b64a57498ef14d2b7c85280de3865d80ae0fc697c55fbd13bfe"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/DetectiveInspectScreen.kt",
+      "sha256": "9e0fb77dd2909dd48c8df8d73dd94235a02c6e7285fafac3bea976a44957f6f3"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorProtectScreen.kt",
+      "sha256": "0981c05bf8641682d5739a834954b234640ec21d3a27d0903471a2d4883523a2"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/MafiaKillVoteScreen.kt",
+      "sha256": "60eb1efce28f4fd3b9c671ffc05a11afabcca8e4b0c62033820c0d14bd628fca"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/TargetPickerScreen.kt",
+      "sha256": "325ec6093450c3ce095cb52cf05ee3b1b15b163dbb35123a7352ce25d77deb1c"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreen.kt",
+      "sha256": "051c841fc161560caaffd140014e07ca741375851a86bc45e8a6fe999b94f4e4"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/reveal/PrivateRoleCardScreen.kt",
+      "sha256": "5f03d09c502ce8cc40b570fec1f7baa3e2556f8d0100601b53807fe7323aca9c"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaPlayerEntryScreen.kt",
+      "sha256": "2daf4b0f890e14fa33b9fea37db42bc15d2e9cf0c396c5e82f9e40876b8bc7a5"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupDraft.kt",
+      "sha256": "e91e3e9d17bab4f725117c83e42096b5e9086809108a933ab5e48df4b9fb7a16"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+      "sha256": "63bc679b0b745c9b44e919b337fee9976f07d7ae1cd6831be158044bb4c4c1b5"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/vote/VoteCastScreen.kt",
+      "sha256": "fbfa34d07191ac38fed6d6edf1afef23df5e7baf3c84757c1739d216b20c8e3b"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/action/MafiaActionCodecTest.kt",
+      "sha256": "16ae65c7c81091cd906fd83efee40d1240ab561454a0e9f43cfa8b62e3a7614a"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/projection/MafiaHostOnlyRedactionSentinelTest.kt",
+      "sha256": "0145c1a390a4c430866a78aba070dd58c8bd8d57c60d53390ca94d165e2b831a"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/projection/MafiaProjectionPolicyTest.kt",
+      "sha256": "2f3a78f6aef33ac2811cf8ef1498f6abc96acbefb04a3ae626b9bf0e80a2026e"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/reducer/MafiaReducerEdgeCasesTest.kt",
+      "sha256": "bb9a4ec2178c00d277cce1f774cbd700fe231a301b96ae2b8d300cfb9bf15370"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/reducer/MafiaReducerTest.kt",
+      "sha256": "4158ddb2a2a8d1920852cb3f8072356f92561928a499363c8f8d3cf162348ae9"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/rules/MafiaSessionRulesTest.kt",
+      "sha256": "75e6819c8f70806aa60fb96e4f509cb67cb7064f32d060187fccc358839c9672"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/rules/NightResolutionTest.kt",
+      "sha256": "6cc7a758154bca14bd19032bf6db1e016f18a28fc5c46bff72051130a711e111"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/rules/RoleAssignmentTest.kt",
+      "sha256": "8d07cb8c0d4cc7308b29648455c649d1f83f85996f3834c0ef0cfcda0ff98484"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/rules/VoteResolutionTest.kt",
+      "sha256": "682dd4ed2c4fe3c8fc80bd361de9cfc09743709f5cf14d5fdab8e227a598179e"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/rules/WinCheckTest.kt",
+      "sha256": "301477a1ff2f83ea00085e8f62c0271ae9c7c9350e4539fa4009e6803ece5971"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/settings/MafiaSettingsValidationTest.kt",
+      "sha256": "12676599b9ac64cfa42f693d746578e64acb06b80ae2c863030ecd3903d09be2"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/state/MafiaPeerSnapshotValidatorTest.kt",
+      "sha256": "6cb5c82899f35ee509724a13f1dea5146b3be3c63e35cf6f437bd9ac0487d7c9"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/flow/FullGameDriveTest.kt",
+      "sha256": "26f08353e3fe3b9eb714e6d393b0dd32b32e50e4cfadb98884275e0567c1eaec"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/flow/MafiaLocalSessionConfigTest.kt",
+      "sha256": "9e2de33c89680cbfc313cfb81db49f12939c142da67bfe746f7f9f2934c4e2f0"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaAuthoritativeLifecycleTest.kt",
+      "sha256": "0255c172233026d6efc12ed532a7a4800f6a84125d665164094fa509bc009100"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaMultiDeviceProgressionTest.kt",
+      "sha256": "74ca7e596289b5b3cd55c7028886b2142551f64fd6bd145209fe2c25c787db9d"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaPeerActionAuthorityTest.kt",
+      "sha256": "0c2129f6b40e37b47e51d4c0ad6ae810c5a4acc80e79bc222066f645c66f6559"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaPeerPrivateTargetGateTest.kt",
+      "sha256": "b1b9bcaf50149485cb9ca78333f4d3d4b714d1970cb3be756b35e96145cd1ed6"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaProjectionLeakTest.kt",
+      "sha256": "fc2509fb7be45643ef2eba2e0953ebe05579f7f3a95c10ca6cb1b9393e8a09d9"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotCodecTest.kt",
+      "sha256": "3904be00fd8d62ae7b720e783477cf14cda9a312ed70636fade89008fed07ae6"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotRecoveryTest.kt",
+      "sha256": "19f594d105ba8a352922a361a6647ced90ee6c47a30c8f7f5fdcf73187e09de7"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaNetworkErrorMessageKeyTest.kt",
+      "sha256": "c91eab4b2ff15bf94a29604c5445a4e58a5b6a4ec79d34ce172533164a336666"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayNightQueueTest.kt",
+      "sha256": "a7f9cf91e4b22c66efdf50b022d38c212eca3bfecc2d50660568f4c679d337a7"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/night/TargetPickerSelectionTest.kt",
+      "sha256": "27d2c2e63af91b5cef24dc803bd6149a9a4b211686a2e2bebdd528f382f38b34"
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupDraftTest.kt",
+      "sha256": "0c3cf57afaeb8405c730225b5afc3caa058df3a1f5a4902830e44050436201cc"
+    }
+  ]
+}

@@ -1,0 +1,789 @@
+{
+  "recorded_at": "2026-09-05T23:12:25.280041+00:00",
+  "counts_are_executions_not_distinct_tests_across_cycles": true,
+  "cycles": [
+    {
+      "cycle": "combined-production-04",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/receipt.json",
+        "sha256": "4f8374afedbc3fec40353f0a95556766eaf8fa393daf1f8d307104e05694b9f4"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/gradle.log",
+        "sha256": "2eb2574058d05bbd292dcef2ba2126cf37cb86ad7ab0c41cdcabd4e57088f776"
+      },
+      "command": [
+        "./gradlew",
+        "productionCheck",
+        "--no-build-cache",
+        "--continue",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=combined-production-04",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "status": "PASS",
+      "started_at": "2026-09-05T22:24:12.261351+00:00",
+      "finished_at": "2026-09-05T22:30:19.979017+00:00",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "test_groups": [
+        {
+          "module": "composeApp",
+          "task": "desktopTest",
+          "suites": 21,
+          "tests": 95,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 95
+        },
+        {
+          "module": "composeApp",
+          "task": "testDebugUnitTest",
+          "suites": 17,
+          "tests": 76,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 76
+        },
+        {
+          "module": "composeApp",
+          "task": "testReleaseUnitTest",
+          "suites": 17,
+          "tests": 76,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 76
+        },
+        {
+          "module": "game-modes/mafia",
+          "task": "desktopTest",
+          "suites": 31,
+          "tests": 267,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 267
+        },
+        {
+          "module": "game-modes/whodunit",
+          "task": "desktopTest",
+          "suites": 53,
+          "tests": 309,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 309
+        },
+        {
+          "module": "shared/content",
+          "task": "desktopTest",
+          "suites": 5,
+          "tests": 24,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 24
+        },
+        {
+          "module": "shared/core",
+          "task": "desktopTest",
+          "suites": 2,
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 12
+        },
+        {
+          "module": "shared/design-system",
+          "task": "desktopTest",
+          "suites": 18,
+          "tests": 40,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 40
+        },
+        {
+          "module": "shared/engine",
+          "task": "desktopTest",
+          "suites": 3,
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 4
+        },
+        {
+          "module": "shared/engine-testing",
+          "task": "desktopTest",
+          "suites": 3,
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 6
+        },
+        {
+          "module": "shared/networking",
+          "task": "desktopTest",
+          "suites": 8,
+          "tests": 34,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 34
+        },
+        {
+          "module": "shared/networking-testing",
+          "task": "desktopTest",
+          "suites": 1,
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 4
+        },
+        {
+          "module": "shared/session",
+          "task": "desktopTest",
+          "suites": 13,
+          "tests": 145,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 145
+        },
+        {
+          "module": "shared/storage",
+          "task": "desktopTest",
+          "suites": 4,
+          "tests": 31,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 31
+        },
+        {
+          "module": "shared/transport-p2p",
+          "task": "desktopTest",
+          "suites": 20,
+          "tests": 252,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 3,
+          "passed": 249
+        }
+      ],
+      "artifacts": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/artifact-receipts.json",
+        "sha256": "b2baac0fac690255c23004a682f756696b09698c3b3d28a095d870cc378102be"
+      },
+      "stop_exit_code": 0,
+      "cleanup_completed_at": "2026-09-05T22:30:22.205283+00:00",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      }
+    },
+    {
+      "cycle": "native-alltests-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/receipt.json",
+        "sha256": "fae1ca61e3eb2854c2d21fae7a79c747cf5093d451a99fe957ec091fcc7043eb"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/gradle.log",
+        "sha256": "21c2da2b338a24756fea90a24b56fd76dbb5bfc4af056b659b49922767d88f33"
+      },
+      "command": [
+        "./gradlew",
+        "allTests",
+        "productionIosSimulatorRuntimeTests",
+        "--no-build-cache",
+        "--continue",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=native-alltests-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword=",
+        "-I",
+        "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/owned_ios_simulator.init.gradle"
+      ],
+      "status": "PASS",
+      "started_at": "2026-09-05T22:30:54.986075+00:00",
+      "finished_at": "2026-09-05T22:39:02.052990+00:00",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "test_groups": [
+        {
+          "module": "composeApp",
+          "task": "desktopTest",
+          "suites": 21,
+          "tests": 95,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 95
+        },
+        {
+          "module": "composeApp",
+          "task": "iosSimulatorArm64Test",
+          "suites": 16,
+          "tests": 85,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 85
+        },
+        {
+          "module": "composeApp",
+          "task": "testDebugUnitTest",
+          "suites": 17,
+          "tests": 76,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 76
+        },
+        {
+          "module": "composeApp",
+          "task": "testReleaseUnitTest",
+          "suites": 17,
+          "tests": 76,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 76
+        },
+        {
+          "module": "game-modes/mafia",
+          "task": "desktopTest",
+          "suites": 31,
+          "tests": 267,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 267
+        },
+        {
+          "module": "game-modes/whodunit",
+          "task": "desktopTest",
+          "suites": 53,
+          "tests": 309,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 309
+        },
+        {
+          "module": "game-modes/whodunit",
+          "task": "iosSimulatorArm64Test",
+          "suites": 5,
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 9
+        },
+        {
+          "module": "game-modes/whodunit",
+          "task": "testDebugUnitTest",
+          "suites": 5,
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 9
+        },
+        {
+          "module": "game-modes/whodunit",
+          "task": "testReleaseUnitTest",
+          "suites": 5,
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 9
+        },
+        {
+          "module": "shared/content",
+          "task": "desktopTest",
+          "suites": 5,
+          "tests": 24,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 24
+        },
+        {
+          "module": "shared/content",
+          "task": "iosSimulatorArm64Test",
+          "suites": 5,
+          "tests": 24,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 24
+        },
+        {
+          "module": "shared/content",
+          "task": "testDebugUnitTest",
+          "suites": 5,
+          "tests": 24,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 24
+        },
+        {
+          "module": "shared/content",
+          "task": "testReleaseUnitTest",
+          "suites": 5,
+          "tests": 24,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 24
+        },
+        {
+          "module": "shared/core",
+          "task": "desktopTest",
+          "suites": 2,
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 12
+        },
+        {
+          "module": "shared/core",
+          "task": "iosSimulatorArm64Test",
+          "suites": 2,
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 12
+        },
+        {
+          "module": "shared/core",
+          "task": "testDebugUnitTest",
+          "suites": 2,
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 12
+        },
+        {
+          "module": "shared/core",
+          "task": "testReleaseUnitTest",
+          "suites": 2,
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 12
+        },
+        {
+          "module": "shared/design-system",
+          "task": "desktopTest",
+          "suites": 18,
+          "tests": 40,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 40
+        },
+        {
+          "module": "shared/design-system",
+          "task": "iosSimulatorArm64Test",
+          "suites": 9,
+          "tests": 26,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 26
+        },
+        {
+          "module": "shared/design-system",
+          "task": "testDebugUnitTest",
+          "suites": 8,
+          "tests": 15,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 15
+        },
+        {
+          "module": "shared/design-system",
+          "task": "testReleaseUnitTest",
+          "suites": 8,
+          "tests": 15,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 15
+        },
+        {
+          "module": "shared/engine",
+          "task": "desktopTest",
+          "suites": 3,
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 4
+        },
+        {
+          "module": "shared/engine-testing",
+          "task": "desktopTest",
+          "suites": 3,
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 6
+        },
+        {
+          "module": "shared/engine-testing",
+          "task": "iosSimulatorArm64Test",
+          "suites": 3,
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 6
+        },
+        {
+          "module": "shared/engine-testing",
+          "task": "testDebugUnitTest",
+          "suites": 3,
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 6
+        },
+        {
+          "module": "shared/engine-testing",
+          "task": "testReleaseUnitTest",
+          "suites": 3,
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 6
+        },
+        {
+          "module": "shared/networking",
+          "task": "desktopTest",
+          "suites": 8,
+          "tests": 34,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 34
+        },
+        {
+          "module": "shared/networking",
+          "task": "iosSimulatorArm64Test",
+          "suites": 8,
+          "tests": 34,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 34
+        },
+        {
+          "module": "shared/networking",
+          "task": "testDebugUnitTest",
+          "suites": 8,
+          "tests": 34,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 34
+        },
+        {
+          "module": "shared/networking",
+          "task": "testReleaseUnitTest",
+          "suites": 8,
+          "tests": 34,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 34
+        },
+        {
+          "module": "shared/networking-testing",
+          "task": "desktopTest",
+          "suites": 1,
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 4
+        },
+        {
+          "module": "shared/networking-testing",
+          "task": "iosSimulatorArm64Test",
+          "suites": 1,
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 4
+        },
+        {
+          "module": "shared/networking-testing",
+          "task": "testDebugUnitTest",
+          "suites": 1,
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 4
+        },
+        {
+          "module": "shared/networking-testing",
+          "task": "testReleaseUnitTest",
+          "suites": 1,
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 4
+        },
+        {
+          "module": "shared/session",
+          "task": "desktopTest",
+          "suites": 13,
+          "tests": 145,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 145
+        },
+        {
+          "module": "shared/session",
+          "task": "iosSimulatorArm64Test",
+          "suites": 11,
+          "tests": 142,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 142
+        },
+        {
+          "module": "shared/session",
+          "task": "testDebugUnitTest",
+          "suites": 11,
+          "tests": 142,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 142
+        },
+        {
+          "module": "shared/session",
+          "task": "testReleaseUnitTest",
+          "suites": 11,
+          "tests": 142,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 142
+        },
+        {
+          "module": "shared/storage",
+          "task": "desktopTest",
+          "suites": 4,
+          "tests": 31,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 31
+        },
+        {
+          "module": "shared/storage",
+          "task": "iosSimulatorArm64Test",
+          "suites": 4,
+          "tests": 31,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 31
+        },
+        {
+          "module": "shared/storage",
+          "task": "testDebugUnitTest",
+          "suites": 4,
+          "tests": 31,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 31
+        },
+        {
+          "module": "shared/storage",
+          "task": "testReleaseUnitTest",
+          "suites": 4,
+          "tests": 31,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 31
+        },
+        {
+          "module": "shared/transport-p2p",
+          "task": "desktopTest",
+          "suites": 20,
+          "tests": 252,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 3,
+          "passed": 249
+        },
+        {
+          "module": "shared/transport-p2p",
+          "task": "iosSimulatorArm64Test",
+          "suites": 6,
+          "tests": 53,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 53
+        },
+        {
+          "module": "shared/transport-p2p",
+          "task": "testDebugUnitTest",
+          "suites": 6,
+          "tests": 53,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 53
+        },
+        {
+          "module": "shared/transport-p2p",
+          "task": "testReleaseUnitTest",
+          "suites": 6,
+          "tests": 53,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "passed": 53
+        }
+      ],
+      "artifacts": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/artifact-receipts.json",
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "stop_exit_code": 0,
+      "cleanup_completed_at": "2026-09-05T22:39:09.247928+00:00",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      }
+    },
+    {
+      "cycle": "combined-apple-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-apple-01/receipt.json",
+        "sha256": "41dd813e36c349daefb5f45237b70e85571d4238e1be0e9ef1e363b7afd6f82c"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-apple-01/gradle.log",
+        "sha256": "4faa639043c65843e2c1e41d3134797782fd00e7f1bf274272b2dce8a67be62f"
+      },
+      "command": [
+        "./gradlew",
+        "productionAppleCheck",
+        "--no-build-cache",
+        "--continue",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx6g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=combined-apple-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "status": "PASS",
+      "started_at": "2026-09-05T22:43:34.494607+00:00",
+      "finished_at": "2026-09-05T22:53:15.708031+00:00",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "test_groups": [],
+      "artifacts": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-apple-01/artifact-receipts.json",
+        "sha256": "7e8b901616e872aee7af864dd66605be20477557675894544f179398bed7f5bd"
+      },
+      "stop_exit_code": 0,
+      "cleanup_completed_at": "2026-09-05T22:53:16.378042+00:00",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      }
+    },
+    {
+      "cycle": "final-resource-checks-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-resource-checks-01/receipt.json",
+        "sha256": "42d363bcc04f84e49deac1d608f81cb92a70b97fbf51c3b9dc41c353d183f731"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-resource-checks-01/gradle.log",
+        "sha256": "4aac75c30c1e09d9ca619a2430e4b6ba72662493e875e83a785df37a2882fb85"
+      },
+      "command": [
+        "/bin/bash",
+        "-c",
+        "set -euo pipefail; echo \"Tracked diff whitespace check\"; git diff --check; echo \"Resource parity tool SHA256\"; shasum -a 256 /Users/abdelrahman/.agents/skills/localization-rtl-accessibility/scripts/validate_resource_parity.py; for module in composeApp game-modes/whodunit game-modes/mafia shared/design-system; do echo \"EN/AR structural resource parity: $module\"; /usr/bin/python3 -B /Users/abdelrahman/.agents/skills/localization-rtl-accessibility/scripts/validate_resource_parity.py --base \"$module/src/commonMain/composeResources/values\" --locale \"$module/src/commonMain/composeResources/values-ar\" --required-plural-quantities zero,one,two,few,many,other; done"
+      ],
+      "status": "PASS",
+      "started_at": "2026-09-05T22:59:26.797018+00:00",
+      "finished_at": "2026-09-05T22:59:27.326904+00:00",
+      "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+      "test_groups": [],
+      "artifacts": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-resource-checks-01/artifact-receipts.json",
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "stop_exit_code": 0,
+      "cleanup_completed_at": "2026-09-05T22:59:27.660219+00:00",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      }
+    }
+  ]
+}

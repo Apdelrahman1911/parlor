@@ -1,0 +1,297 @@
+{
+  "created_at": "2026-09-07T04:08:16.549714+00:00",
+  "source_commit": "b4f0ece464aa44819044dd78d2f2fd137d88c91d",
+  "source_tree": "d5b44350bc67386ca0f040405f39178033b884a5",
+  "reviewer": "/root/release_fix_review",
+  "requested_by": "/root",
+  "scope": "Independent follow-up of four Jasmine observations; full 342-line resource reopened in numbered non-truncated chunks. No source edits or runtime execution.",
+  "reviewed_resource": {
+    "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+    "sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+    "reviewed_ranges": [
+      [
+        1,
+        342
+      ]
+    ]
+  },
+  "reachability": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/content/BundledWhodunitCatalog.kt",
+      "sha256": "c96cd7ef0e78c01c26f6ffa77a381ae56299b19dcf2df267e0deec93cb613f02",
+      "reviewed_ranges": [
+        [
+          1,
+          18
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/content/BundledWhodunitCases.kt",
+      "sha256": "d7ba053400675b427415419785febd6179bf791b1f9bcdaf16c342dd058dce06",
+      "reviewed_ranges": [
+        [
+          1,
+          81
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/content/WhodunitCase.kt",
+      "sha256": "f256709875df70c97c883cd6558945582be4929708739f3e58132598449fff62",
+      "reviewed_ranges": [
+        [
+          1,
+          104
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/content/src/commonMain/kotlin/com/parlor/content/schema/CaseEnvelope.kt",
+      "sha256": "7babaccc7cbd543e0b149796be2652de00e70bba8568015c4051d64903ca8b0c",
+      "reviewed_ranges": [
+        [
+          1,
+          92
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt",
+      "sha256": "40db7e4fab766f77d893c7001e57e3395fd50112399937d39be44632ff6456c0",
+      "reviewed_ranges": [
+        [
+          135,
+          256
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/rules/WhodunitCluePolicy.kt",
+      "sha256": "e57491c3df9260254c1d80c9be372789775c1381c63bd9c46a0bd17420c7657f",
+      "reviewed_ranges": [
+        [
+          1,
+          91
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/components/DossierCard.kt",
+      "sha256": "44b266b675de9da122130ed50e10de7d17b104c066147de706b8a756e07a60ee",
+      "reviewed_ranges": [
+        [
+          56,
+          175
+        ],
+        [
+          225,
+          282
+        ]
+      ]
+    }
+  ],
+  "common_path": "Catalog includes Jasmine. All six characters are assigned with one seeded killer; privateSecret is rendered for every own role, whereas method/timeline are shown only to the selected killer. Clue policy draws selected-killer-only pools. Thus comparisons below do not combine mutually exclusive guilty variants. Prose is rendered literally, not normalized by validators.",
+  "candidates": [
+    {
+      "id": "JASMINE-F01",
+      "finder": "/root (requested); earlier co-observation by /root/release_fix_review disclosed",
+      "classification": "CONFIRMED CONTENT-CONSISTENCY DEFECT; independent-origin qualification applies",
+      "severity": "Low",
+      "title": "Walid return-to-search duration is ten in method but eight in exact timeline",
+      "references": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+          "sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+          "lines": [
+            42,
+            49
+          ],
+          "excerpt": "          \"method\": \"في 11:10 حين طلب والدك من الجميع الانتظار، نزلت معه إلى القبو بحجّة مساعدته في حمل صندوق. واجهتَه بشأن الوصية الجديدة. أنكر في البداية ثم اعترف وقال إنه لن يرجع. التقطتَ الخنجر من على الجدار وطعنته بحركة واحدة. أخذتَ الوصية الجديدة من الدرج وأحرقتَها في موقد القبو. أخذت الخاتم من جيبه (كان قد التقطه من العلبة قبل أن ينزل) وخبّأتَه في معطفك. صعدتَ إلى القاعة بسرعة، ثم تظاهرتَ بعد عشر دقائق بأنك ذهبتَ للبحث عنه.\",\n          \"timeline\": [\n            { \"time\": \"11:00 مساءً\", \"action\": \"على المنضدة. والدك يقدّم الشاي. الخاتم في العلبة.\" },\n            { \"time\": \"11:10 مساءً\", \"action\": \"طلب والدك من الجميع الانتظار. نزلتَ معه.\" },\n            { \"time\": \"11:13 مساءً\", \"action\": \"في القبو. مواجهة. اعترف بالوصية. طعنته بالخنجر.\" },\n            { \"time\": \"11:18 مساءً\", \"action\": \"أحرقت الوصية. أخذت الخاتم من جيبه.\" },\n            { \"time\": \"11:22 مساءً\", \"action\": \"صعدتَ إلى القاعة الخارجية، تظاهرتَ بالهدوء.\" },\n            { \"time\": \"11:30 مساءً\", \"action\": \"نزلتَ ثانيةً 'للبحث' عن والدك. صرخت.\" }"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+          "sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+          "lines": [
+            221,
+            221
+          ],
+          "excerpt": "          { \"id\": \"jr-walid-kp-2\", \"text\": \"ادّعى أنه نزل لأول مرة في 11:30، لكن خادمة المحل سمعت خطوات على الدرج الرئيسي قبل ذلك بعشر دقائق.\" },"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+          "sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+          "lines": [
+            278,
+            278
+          ],
+          "excerpt": "          { \"id\": \"jr-walid-c-1\", \"text\": \"قال إنه نزل لأول مرة في 11:30، لكن خادمة المحل سمعت خطواته قبل ذلك بعشر دقائق.\" }"
+        }
+      ],
+      "proof": "Selected Walid killer sees method saying he ascended to the hall and then pretended to search after ten minutes, beside timeline return11:22 and search11:30. Exact interval is eight. The fakeAlibi denial is separately stored and remains intentionally false.",
+      "counter_evidence": [
+        "Ten can be conversationally rounded, but method does not say approximately while timeline gives exact minute values. This limits severity; do not claim it makes the reducer impossible.",
+        "Witnesses hear steps at11:20, which could be movement on the stairs before arrival11:22; those clues need not be rewritten merely to force every sound to the arrival instant.",
+        "This reviewer had already noticed the arithmetic during earlier full reading and retained it as possibly rounded. Root is a separate reader, but do not misrepresent this reviewer as wholly unaware of the candidate before this request."
+      ],
+      "recommended_correction": "Change method interval to eight minutes or explicitly approximate it; preserving11:22 return/11:30 discovery is the smaller exact correction. Leave fakeAlibi and10-minute-before-discovery witness claims unchanged unless separate proof establishes their error.",
+      "runtime": "No fresh seed/UI run performed. Complete selected-killer dossier source path inspected."
+    },
+    {
+      "id": "JASMINE-F02",
+      "finder": "/root",
+      "classification": "UNCONFIRMED — AUTHORIAL CHRONOLOGY CLARIFICATION",
+      "severity_if_confirmed": "Low",
+      "title": "Will known as already written two months ago versus persuasion/writing last week",
+      "references": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+          "sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+          "lines": [
+            32,
+            38
+          ],
+          "excerpt": "        \"privateSecret\": \"اكتشف قبل شهرين أن والده كان قد كتب وصية جديدة سرّاً يترك فيها نصف المجموعة الخاصة لمتحف الفن الإسلامي بدلاً من توريثها له بالكامل. الوصية الجديدة كانت في درج القبو، وكان أبو وليد سيوقّعها رسمياً غداً صباحاً.\",\n        \"innocentBrief\": {\n          \"verdictLine\": \"أنت بريء.\",\n          \"alibi\": \"كنت في القاعة الخارجية مع البقية منذ 11:10 حتى نزلتُ في 11:30 لأبحث عن والدي. لم أغادر القاعة في تلك الفترة.\",\n          \"goal\": \"اكشف القاتل. لا تدع موضوع الوصية الجديدة يبدو دافعاً. تحدّث كابن فقد أباه.\",\n          \"canSayFreely\": \"حبك لوالدك. سنوات تعلّمك في المحل. حزنك المرير.\",\n          \"mustHide\": \"معرفتك بالوصية الجديدة. ما اكتشفته في درج القبو الأسبوع الماضي. ما قلتَه لوالدك يوم الثلاثاء حين تشاجرتما.\""
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+          "sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+          "lines": [
+            97,
+            103
+          ],
+          "excerpt": "        \"privateSecret\": \"كانت تعمل سرّاً على إقناع أبي وليد بالتبرّع بنصف مجموعته للمتحف. كانت قد نجحت في الأسبوع الماضي وأبو وليد كتب وصية جديدة بناءً على ذلك. لكن مصدراً داخلياً في المتحف أخبرها هذا الصباح أن المتحف قرّر بيع أي تبرّعات تأتيه لتغطية عجز ميزانيته السنوي. كل عملها سيُهدر إذا ذهبت الوصية إلى التوقيع غداً.\",\n        \"innocentBrief\": {\n          \"verdictLine\": \"أنتِ بريئة.\",\n          \"alibi\": \"كنت في القاعة الخارجية مع نديم وفادي بعد أن طلب أبو وليد منا الانتظار. لم أغادر إلا لدقيقة واحدة لاستعمال الحمّام في حدود 11:15.\",\n          \"goal\": \"اكشفي القاتل. لا تدعي عملك على الوصية يخرج. حافظي على صورة الخبيرة المحايدة.\",\n          \"canSayFreely\": \"احترامك المهني لأبي وليد. تقدير المتحف لمجموعته. حزنك بصفتك مهنية فقدت مصدراً نادراً.\",\n          \"mustHide\": \"عملك على إقناعه بالتبرّع. الوصية الجديدة. ما أخبركِ به مصدرك صباح اليوم عن نية المتحف بيع التبرّعات.\""
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+          "sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+          "lines": [
+            298,
+            299
+          ],
+          "excerpt": "          { \"id\": \"jr-walid-fs-1\", \"text\": \"نسخة من الوصية الجديدة وُجدت في محرقة مكتبه — نصف الحبر مقروء: 'نصف المجموعة لمتحف الفن الإسلامي'.\" },\n          { \"id\": \"jr-walid-fs-2\", \"text\": \"رسالة صوتية على هاتف أبي وليد ليلة الثلاثاء: 'يا ابني، الوصية أمر محسوم. لن أغيّرها'.\" }"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+          "sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+          "lines": [
+            305,
+            307
+          ],
+          "excerpt": "        \"rasha-khouli\": [\n          { \"id\": \"jr-rasha-fs-1\", \"text\": \"رسالة من مدير المتحف صباح اليوم: 'كل التبرّعات ستُباع نهاية الشهر لتغطية العجز'.\" },\n          { \"id\": \"jr-rasha-fs-2\", \"text\": \"مسوّدة الوصية الجديدة بخط أبي وليد على مكتبه: 'بناءً على وعد رشا الخولي بحفظ المجموعة في المتحف...'.\" }"
+        }
+      ],
+      "proof": "Walid privateSecret says two months ago he learned his father had written a new museum will. Rasha privateSecret says persuasion succeeded last week and father wrote a new will because of it. Both privateSecret fields are role-independent and coexist in any six-player game.",
+      "counter_evidence": [
+        "Walid mustHide separately mentions what he found in the drawer last week; this supports last-week discovery of the physical document but does not explicitly deny earlier knowledge.",
+        "Content expressly includes a copy and a draft (298,307); an earlier draft versus later completed/revised instrument is plausible, although no revision chronology is explicitly authored.",
+        "Rasha succeeding last week might mean final confirmation rather than first intent. Code cannot establish legal/editorial identity of two references to a new will."
+      ],
+      "required_question": "Should Walid first discover the already-written museum will last week (matching his drawer discovery and Rasha success), or is an earlier draft two months ago followed by later finalization intended?",
+      "recommendation": "Do not add a second/revised will as an invented explanation. If testing-content policy chooses the existing last-week anchor, replace only Walid two-month discovery and explicitly document that editorial choice. Not counted as independently confirmed by this reviewer."
+    },
+    {
+      "id": "JASMINE-F03",
+      "finder": "/root",
+      "classification": "DOCUMENTATION/CONTENT MISMATCH — SHIPPED METADATA, NOT PROVEN PLAYER-VISIBLE WEEKDAY CONFLICT",
+      "severity": "Low",
+      "title": "Thursday-evening setting metadata versus tomorrow and Thursday-morning termination note",
+      "references": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+          "sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+          "lines": [
+            15,
+            15
+          ],
+          "excerpt": "    \"settingNotes\": \"محل أنتيكا في حارة الياسمين بدمشق القديمة. سهرة أعمال يوم خميس. ستة مدعوين. خاتم زمرّد قديم على المنضدة. قتيل واحد.\""
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+          "sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+          "lines": [
+            127,
+            133
+          ],
+          "excerpt": "        \"privateSecret\": \"كان يأخذ نسبة سرّية من كل صفقة كبيرة لأبي وليد منذ سنوات، أكثر من نسبته القانونية كوكيل. اكتشف أبو وليد الأمر قبل أسبوع من ملف مدقّق حسابات جديد، وكان يخطّط لإنهاء وكالته رسمياً صباح الغد بعد توقيع الوصية. الكشف يعني نهاية مهنة فادي.\",\n        \"innocentBrief\": {\n          \"verdictLine\": \"أنت بريء.\",\n          \"alibi\": \"كنت في القاعة الخارجية مع رشا ونديم. لم أغادر بعد أن طلب أبو وليد منا الانتظار.\",\n          \"goal\": \"اكشف القاتل. لا تدع موضوع النسبة السرّية يظهر. حافظ على هدوء المحامي.\",\n          \"canSayFreely\": \"علاقتك المهنية معه. وثائق الصفقات التي ساعدتَه فيها. حزنك المضبوط.\",\n          \"mustHide\": \"النسبة السرّية. ملف المدقّق. نيّة أبي وليد بإنهاء وكالتك صباح الغد.\""
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+          "sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+          "lines": [
+            311,
+            311
+          ],
+          "excerpt": "          { \"id\": \"jr-fadi-fs-2\", \"text\": \"ملاحظة بخط أبي وليد على هامش الملف: 'إنهاء وكالته صباح الخميس، تبليغ النقابة'.\" }"
+        }
+      ],
+      "proof": "Envelope settingNotes defines Thursday evening; privateSecret/mustHide schedule termination tomorrow after will signing; finalStrong note schedules Thursday morning. Thursday morning is not the following morning of Thursday evening.",
+      "reachability_limit": "No shipping settingNotes reader was found. CaseEnvelope metadata is retained for content identity but not copied by CaseEnvelope.toSummary; WhodunitCase decodes payload only. The payload itself does not name the current weekday. Thus this is a verified authored envelope/payload inconsistency, not evidence of a currently rendered explicit Thursday-evening contradiction.",
+      "counter_evidence": [
+        "The note could be stale or refer to the following Thursday, but neither is authored; such a theory is not proof of intended behavior.",
+        "Do not call metadata test-only: it is in a shipping resource and canonical content digest."
+      ],
+      "recommended_correction": "Use morning of the following day in the note (صباح الغد) to agree with both existing role text and the authored setting, without adding a new weekday premise. Preserve signature/version compatibility through a content bump if changed."
+    },
+    {
+      "id": "JASMINE-F04",
+      "finder": "/root",
+      "classification": "UNCONFIRMED — AUTHORIAL STATUS/TIMING CLARIFICATION",
+      "severity_if_confirmed": "Low",
+      "title": "Nadim shop at risk of closing versus officially closed last week",
+      "references": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+          "sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+          "lines": [
+            65,
+            73
+          ],
+          "excerpt": "        \"publicIdentity\": \"تاجر أنتيكا منافس في حلب القديمة. صديق أبي وليد منذ خمسين عاماً. حضر السهرة لتقديم عرض شراء للخاتم.\",\n        \"publicMotive\": \"منافسة قديمة في السوق — لكنها صداقة أكثر منها عداوة.\",\n        \"privateSecret\": \"أمواله شارفت على النفاد. محله في حلب على وشك الإغلاق. كان يعرف من مصدر داخلي أن أبا وليد سيرفض عرضه الليلة. لو حصل على الخاتم بطريقة أخرى، يستطيع بيعه في إسطنبول مقابل ثلاثة أضعاف وحلّ كل مشاكله.\",\n        \"innocentBrief\": {\n          \"verdictLine\": \"أنت بريء.\",\n          \"alibi\": \"كنت في القاعة الخارجية أتحدث مع رشا وفادي طوال الفترة من 11:10 إلى 11:30. لم أتحرك.\",\n          \"goal\": \"اكشف القاتل. لا تدع وضعك المالي الحقيقي يظهر. صور نفسك تاجراً ناجحاً جاء بدافع الصداقة.\",\n          \"canSayFreely\": \"صداقتك القديمة مع أبي وليد. اهتمامك بالخاتم كقطعة فنية. حزنك.\",\n          \"mustHide\": \"وضعك المالي. صفقتك المنتظرة مع وسيط إسطنبول. اتصالك بأبي وليد صباح اليوم.\""
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+          "sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+          "lines": [
+            228,
+            228
+          ],
+          "excerpt": "          { \"id\": \"jr-nadim-kp-3\", \"text\": \"محله في حلب أُغلق رسمياً قبل أسبوع، وفقاً لسجل الحرفيين.\" },"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+          "sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+          "lines": [
+            302,
+            303
+          ],
+          "excerpt": "          { \"id\": \"jr-nadim-fs-1\", \"text\": \"إيصالات بنكية تكشف أن مديونية نديم تفوق قيمة محله بثلاثة أضعاف.\" },\n          { \"id\": \"jr-nadim-fs-2\", \"text\": \"رسائل مع وسيط في إسطنبول تكشف خطّة بيع الخاتم بعد 'استلامه' بأي طريقة.\" }"
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+          "sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+          "lines": [
+            325,
+            325
+          ],
+          "excerpt": "      \"nadim-shams\": \"في الصباح، فُتحت محادثاته على واتساب. كان وسيط إسطنبول ينتظر. خمسون عاماً من الصداقة لم تكن كافية حين كان المحل على وشك الإغلاق. تسلّل من السلّم الجانبي في 10:50، واختبأ خلف رف القناديل عند 11:00. انتظر حتى نزل أبو وليد في 11:10، ثم طعنه في 11:12. حين سُئل عن البقّال، أنكر أنه قال ذلك أصلاً. لكن البقّال كان قد سُئل، وكان قد قال.\","
+        }
+      ],
+      "proof": "PrivateSecret describes a shop on the verge of closing; selected killer clue states it officially closed last week; reveal describes the motive when it was about to close. Same Nadim-killer branch can show all three.",
+      "counter_evidence": [
+        "Final uses retrospective حين كان (when it was), which can describe the decision time before last week rather than status at death.",
+        "Administrative closure followed by permanent business failure is possible; no such distinction is explicitly given, so it must not be silently invented as a fix or called established intended behavior.",
+        "The privateSecret is compressed backstory with no explicit as-of timestamp; its current-state reading is natural but less conclusive than exact same-event timestamps."
+      ],
+      "required_question": "At the murder, is Nadim trying to prevent imminent closure, or rescue/reopen a shop that officially closed last week?",
+      "recommendation": "Choose and document one existing anchor before rewriting; do not fabricate a second business, administrative process, or reopened shop. Not counted as independently confirmed by this reviewer."
+    }
+  ],
+  "execution_and_cleanup": {
+    "builds_tests_started": false,
+    "application_or_background_workers_started": false,
+    "task_generated_build_outputs": "none",
+    "cleanup": "No build/process cleanup needed for source-reading and compact report creation; root owns active build lane."
+  },
+  "scope_preservation": "Only this new report written under remediation-runs. No production, resource, test, config, Git history, signing, device, or Store mutation."
+}

@@ -1,0 +1,47 @@
+{
+  "at": "2026-09-07T13:19:27.978345+00:00",
+  "reviewer": "/root",
+  "scope": "Root independent validation of native_fix_review tally/negative-control test drafts, plus explicit authored assertion correction (not self-approved here).",
+  "source": [
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/MafiaTallyLayoutTest.kt",
+      "sha256": "bdfe659970993e89ab0a59043e545451401ece17c60cddcdf6bcaba8a1fabb6f",
+      "read_lines": [
+        1,
+        165
+      ]
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupReadOnlyCountLayoutTest.kt",
+      "sha256": "9e9b7492aecaf8689cc007056e74d5e8c9cce980a1851d853760820b7a2bb118",
+      "read_lines": [
+        1,
+        80
+      ]
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/MafiaCountAssertions.kt",
+      "sha256": "a90b5f1c479e55ea820a9ba4acd662d27485ed98157a3ef0b921d3f4bbd9b892",
+      "read_lines": [
+        1,
+        44
+      ]
+    }
+  ],
+  "original_finder": "/root/native_fix_review",
+  "independent_defect_validation": "/root",
+  "classification": "CONFIRMED DEFECT: legal32-character names consume zero remaining count width in both actual shipping tally rows at320dp,EN/AR,1x/2x",
+  "evidence": [
+    "evidence/mafia-tally-layout-red-01",
+    "evidence/mafia-tally-layout-probe-01",
+    "evidence/mafia-tally-layout-green-02",
+    "reviews/compose-1.10.3-text-semantics-counterevidence-01.json"
+  ],
+  "counter_evidence": "Setup Civilian count has positive correct actual width; reconstructed semantics paragraph overflow is a FALSE POSITIVE, not application bug. No Setup production change. Same GetTextLayoutResult caveat after weighted tally fix; actual foreground pixels and glyph intrinsic width checked instead, plus1line/fullheight/viewport.",
+  "root_authored_changes_require_separate_approval": [
+    "Production name weighting+spacing",
+    "MafiaCountAssertions and replacement numeric checks"
+  ],
+  "discovery": "Green02 seven actual JUnit XML suites,36 methods,0failure/error/skip. Previous green01 selected no PostGameScreenLayoutTest;26 actual methods only. Green02 corrects selector and includes6 final-role methods+4 toggle.",
+  "privacy_compatibility": "Day results remain public; prior-night Mafia tally remains owned-role only. No game logic/settings/protocol/snapshot/resource changes. Root reopened both complete tally files and production role-count/final-results siblings."
+}

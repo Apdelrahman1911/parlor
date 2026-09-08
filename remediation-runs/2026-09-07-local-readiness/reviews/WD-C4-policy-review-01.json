@@ -1,0 +1,318 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-09-07T03:45:40.202261+00:00",
+  "scope": "Independent review of root-authored WD-C4 policy comments and actual-flow acceptance tests. No author edits to timer source/tests.",
+  "author": "/root",
+  "independent_reviewer": "/root/factory_review",
+  "status": "REVIEW CHANGES REQUIRED — test harness corrections, not a demonstrated production timer defect",
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "head": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+    "tree": "0b0facb91b11b87f71c01454f470e21cfc2222ca",
+    "source_manifest_sha256": "a12b9af6cee3516cad44a88c11d9902c7fa097e558d76b29b123b9dc9efabf7e",
+    "diff_sha256": "693e37d12897fdaa616aaae29699f9e05140a5db467b4d97b8ff53ed4acdeb5a"
+  },
+  "production_conclusion": {
+    "classification": "Existing intended behavior meets parent-provided Leave-confirmation exclusion policy at source level. Preserve behavior; add verification and comments rather than manufacturing a rule change.",
+    "complete_path": [
+      "SessionDrivenFlow exitConfirmationOpen substitutes SessionExitConfirmation for paused/router branches, keeping authoritative controller and SerializedSnapshotWriter alive.",
+      "HostSessionFlow leaveConfirmationOpen substitutes confirmation for multiplayer presentation; retained WhodunitHostRuntime owns canonical controller/bridge but contains no timer loop.",
+      "Only RoundSegment LaunchedEffect(timerId,session) invokes runDiscussionTickerLoop, and only when session.hostState != null. Removal cancels it at cooperative delay; peer shadows never execute it.",
+      "Stay clears confirmation boolean only. New ticker starts with fresh delay from unchanged canonical remaining seconds; no elapsed-time catch-up and no unconditional Resume action.",
+      "Host bridge lifecycle collects Suspended/Resuming/Active and tracks pausedByAppLifecycle; pre-existing manual pause is not claimed as lifecycle-owned.",
+      "Confirmed host leave finalizes process-owned runtime/room; local save flush serializes with ongoing writer and preserves seed/metadata."
+    ],
+    "compatibility": "No reducer, timer format, snapshot schema, protocol4.2, private projection, or Mafia behavior change in reviewed diff."
+  },
+  "review_findings": [
+    {
+      "id": "WD-C4-TEST-01",
+      "classification": "CONFIRMED TEST HARNESS DEFECT",
+      "location": "WhodunitHostLeaveTimerTest.kt:83",
+      "problem": "Pinned Skiko runComposeUiTest rejects nonempty effectContext; all4 host tests fail before application content mounts.",
+      "evidence": "First-cycle host XML IllegalArgumentException at SkikoComposeUiTest constructor164. Fresh official1.10.3 source download independently verifies exact guard.",
+      "remediation": "Use supported default effect context and explicitly coordinate host scheduler with Compose clock. Do not change production or upgrade API to bypass."
+    },
+    {
+      "id": "WD-C4-TEST-02",
+      "classification": "CONFIRMED TEST SELECTOR DEFECT",
+      "location": "WhodunitLocalLeaveTimerTest.kt:57,197; WhodunitHostLeaveTimerTest.kt:144",
+      "problem": "PauseOverlay renders title through EyebrowLabel.uppercase(); Text selector Paused cannot match PAUSED. Pane title is distinct semantics.",
+      "evidence": "First-cycle local paused test timeout at awaitGame197; PauseOverlay84,117–120 and EyebrowLabel17 form complete source proof.",
+      "remediation": "Match actual text or correct pane semantics; do not change production wording."
+    },
+    {
+      "id": "WD-C4-TEST-03",
+      "classification": "CONFIRMED TEST INJECTION DEFECT",
+      "location": "WhodunitLocalLeaveTimerTest.kt:81–91",
+      "problem": "Failure is injected only after canonical snapshot already persisted. Writer correctly deduplicates equal state; flush succeeds without another storage call, so test cannot witness failed save.",
+      "evidence": "First-cycle timeout at attempts counter; SerializedSnapshotWriter55–56 equality early return.",
+      "remediation": "Inject before a real state change, observe failed attempt on current snapshot, distinguish last durable data from attempted current data, then verify retry stores the unchanged frozen current snapshot."
+    },
+    {
+      "id": "WD-C4-TEST-04",
+      "classification": "TEST RELIABILITY RISK — source-proven scheduling independence; not a demonstrated app bug",
+      "location": "WhodunitLocalLeaveTimerTest.kt active-tick assertions; SerializedSnapshotWriter62–84",
+      "problem": "Latest durable snapshot read immediately after virtual-time jump may lag because writeContext is real Dispatchers.Default. Virtual advancement does not await actual persistence.",
+      "evidence": "Source dispatch boundary plus atomic latest updated only on storage completion; not a green/run failure proof.",
+      "remediation": "Await exact expected durable/attempted snapshot under a bounded real wait without ticking virtual time, then assert invariants."
+    }
+  ],
+  "first_cycle": {
+    "status": "FAIL",
+    "counts": {
+      "TickerAndRerollTest": {
+        "tests": 9,
+        "failed": 0
+      },
+      "WhodunitLocalLeaveTimerTest": {
+        "tests": 6,
+        "failed": 2
+      },
+      "WhodunitHostLeaveTimerTest": {
+        "tests": 4,
+        "failed": 4
+      },
+      "WhodunitRecoveryInteractionTest": {
+        "tests": 9,
+        "failed": 1
+      }
+    },
+    "scope_note": "Recovery tests authored by this reviewer are NOT independently approved here. Root reviews those; failing opaque-wrapper equality is separately corrected. Transport targets did not execute after Whodunit failure.",
+    "receipt": "remediation-runs/2026-09-07-local-readiness/evidence/focused-timer-retry-fixtures-01/receipt.json",
+    "cleanup": {
+      "stop_exit_code": 0,
+      "removed_outputs": [
+        "shared/core/build",
+        "shared/networking/build",
+        "shared/content/build",
+        "shared/storage/build",
+        "shared/networking-testing/build",
+        "shared/engine/build",
+        "shared/design-system/build",
+        "shared/session/build",
+        "game-modes/whodunit/build",
+        "build",
+        "build-logic/convention/build"
+      ],
+      "remaining_outputs": [],
+      "cleanup_errors": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "cleanup_completed_at": "2026-09-07T03:32:42.863858+00:00"
+    }
+  },
+  "research_record": "remediation-runs/2026-09-07-local-readiness/factory_review/WD-C4-clock-research-01.json",
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitDiscussionFixture.kt",
+      "reviewed_source_sha256": "ad15b64e9d4e150b3023c2e76c3f53e75b084f4b6000faccf97d32ee44be042c",
+      "reviewed_ranges": [
+        [
+          1,
+          132
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "basis": "Source read before first focused cycle; first-cycle manifest binds the reviewed version. Not a whole-file claim where ranges are partial."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitLocalLeaveTimerTest.kt",
+      "reviewed_source_sha256": "1075cfc42e8d0f604a7f92857a11d31a2c7b7bef24be50acd05a99243e0371c2",
+      "reviewed_ranges": [
+        [
+          1,
+          215
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "basis": "Source read before first focused cycle; first-cycle manifest binds the reviewed version. Not a whole-file claim where ranges are partial."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLeaveTimerTest.kt",
+      "reviewed_source_sha256": "292f53718a0dfd62b63124f09e377a67c459b608c39349e08ecdb2c331fbbc4d",
+      "reviewed_ranges": [
+        [
+          1,
+          258
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "basis": "Source read before first focused cycle; first-cycle manifest binds the reviewed version. Not a whole-file claim where ranges are partial."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/timer/DiscussionTickerLoop.kt",
+      "reviewed_source_sha256": "dfbcc16abc38e99131e014a0656e4a31c576cca487e732e2ef36084ffc54f07a",
+      "reviewed_ranges": [
+        [
+          1,
+          67
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "basis": "Source read before first focused cycle; first-cycle manifest binds the reviewed version. Not a whole-file claim where ranges are partial."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+      "reviewed_source_sha256": "eeb3395e84e467ef1e23cc5a8e7f6d6ae5bad76225c8931f004039db7d634dc6",
+      "reviewed_ranges": [
+        [
+          812,
+          965
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "basis": "Source read before first focused cycle; first-cycle manifest binds the reviewed version. Not a whole-file claim where ranges are partial."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "reviewed_source_sha256": "cee14cd945a1ecb76bb256eff24e0629259538fd165515cfe1c89e62f0b8fcca",
+      "reviewed_ranges": [
+        [
+          224,
+          288
+        ],
+        [
+          397,
+          500
+        ],
+        [
+          713,
+          1150
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "basis": "Source read before first focused cycle; first-cycle manifest binds the reviewed version. Not a whole-file claim where ranges are partial."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostSessionFlow.kt",
+      "reviewed_source_sha256": "d626c925a1329745bc81758b6d57f6751831e2ba9c7696f562868ee57dd54d05",
+      "reviewed_ranges": [
+        [
+          1,
+          322
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "basis": "Source read before first focused cycle; first-cycle manifest binds the reviewed version. Not a whole-file claim where ranges are partial."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitRetainedMultiplayerRuntime.kt",
+      "reviewed_source_sha256": "4cca409cc9f8703295b0e75259f3e0dec382a012271dcd86696cfef480797148",
+      "reviewed_ranges": [
+        [
+          1,
+          189
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "basis": "Source read before first focused cycle; first-cycle manifest binds the reviewed version. Not a whole-file claim where ranges are partial."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostRoomBridge.kt",
+      "reviewed_source_sha256": "f7cd9b5941749e7e29f694ef84e221529ea80ee7f883419a32fc4b82c243438e",
+      "reviewed_ranges": [
+        [
+          1,
+          230
+        ],
+        [
+          450,
+          541
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "basis": "Source read before first focused cycle; first-cycle manifest binds the reviewed version. Not a whole-file claim where ranges are partial."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt",
+      "reviewed_source_sha256": "40db7e4fab766f77d893c7001e57e3395fd50112399937d39be44632ff6456c0",
+      "reviewed_ranges": [
+        [
+          512,
+          618
+        ],
+        [
+          1068,
+          1115
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "basis": "Source read before first focused cycle; first-cycle manifest binds the reviewed version. Not a whole-file claim where ranges are partial."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt",
+      "reviewed_source_sha256": "dfdd8aed4bc9f199fadfddf644bc321d1e293cafda2d201d2ec6055bac313fa9",
+      "reviewed_ranges": [
+        [
+          196,
+          248
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "basis": "Source read before first focused cycle; first-cycle manifest binds the reviewed version. Not a whole-file claim where ranges are partial."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/safety/PauseOverlay.kt",
+      "reviewed_source_sha256": "0b942cece4a5c2da310253a46cd8a402d89c478af77445eda85e6cad1a5fe678",
+      "reviewed_ranges": [
+        [
+          60,
+          178
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "basis": "Source read before first focused cycle; first-cycle manifest binds the reviewed version. Not a whole-file claim where ranges are partial."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/EyebrowLabel.kt",
+      "reviewed_source_sha256": "eff56d62676d935fbe541f3e0df8d8ed637b2d427c949d6cfcc5ca9dd8b84494",
+      "reviewed_ranges": [
+        [
+          1,
+          23
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "basis": "Source read before first focused cycle; first-cycle manifest binds the reviewed version. Not a whole-file claim where ranges are partial."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/ControlledStartRoom.kt",
+      "reviewed_source_sha256": "cda4c061d3a34a216011d1be1846b7d9b579a8ec77eb9f517e8dc7c6f680de6e",
+      "reviewed_ranges": [
+        [
+          1,
+          186
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "basis": "Source read before first focused cycle; first-cycle manifest binds the reviewed version. Not a whole-file claim where ranges are partial."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/SerializedSnapshotWriter.kt",
+      "reviewed_source_sha256": "3ac601fe9facc504315f67a21821bf43bd746afbdd2a5509b915c642be7ee10d",
+      "reviewed_ranges": [
+        [
+          1,
+          154
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "basis": "Source read before first focused cycle; first-cycle manifest binds the reviewed version. Not a whole-file claim where ranges are partial."
+    }
+  ],
+  "limitations": [
+    "No platform Back or predictive/iOS gesture execution; tests call real entry callbacks/backRequestId and cannot prove OS gesture behavior.",
+    "ControlledStartRoom is pre-admitted synthetic transport; no discovery, credential exchange or actual physical LAN claim.",
+    "No device frame/performance measurements; acceptance concerns deterministic timer lifetime only.",
+    "No signed artifact, app-store, hardware/privacy snapshot, or physical lifecycle verification claimed."
+  ],
+  "next": [
+    "Reopen root corrections and ensure test failure paths remain visible",
+    "Rerun focused and review actual descriptors/assertions after cleanup",
+    "Only issue approval after harness corrections and successful relevant execution"
+  ],
+  "hygiene": "No author-owned Gradle/native/OS processes. A small public-source HTTPS verification Python process exited0 and retained only compact required research JSON; archive was memory-only. Root-owned cycle cleanup receipt independently inspected."
+}

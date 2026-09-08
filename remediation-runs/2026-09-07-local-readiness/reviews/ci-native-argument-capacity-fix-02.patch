@@ -1,0 +1,132 @@
+--- before/scripts/ci/darwin_worker_identity.py
++++ after/scripts/ci/darwin_worker_identity.py
+@@ -14,11 +14,13 @@
+ import time
+ from pathlib import Path
+ from typing import NamedTuple
+ 
+ MAX_PROCESSES = 4096
+-MAX_ARGUMENT_BYTES = 1024 * 1024
++MAX_ARGUMENT_BYTES = 1024 * 1024  # ARG_MAX payload excludes the leading argc word.
++ARGC_BYTES = struct.calcsize("=i")
++MAX_ARGUMENT_RECORD_BYTES = MAX_ARGUMENT_BYTES + ARGC_BYTES
+ TRACKING_KEY = b"RUNNER_TRACKING_ID="
+ 
+ 
+ class ProcessIdentity(NamedTuple):
+     pid: int
+@@ -39,19 +41,25 @@
+     )] + [("comm", ctypes.c_char * 16), ("name", ctypes.c_char * 32)] + [
+         (name, ctypes.c_uint32) for name in ("nfiles", "pgid", "pjobc", "tdev", "tpgid")
+     ] + [("nice", ctypes.c_int32), ("start_sec", ctypes.c_uint64), ("start_usec", ctypes.c_uint64)]
+ 
+ 
++def argument_record_capacity(argument_bytes: int) -> int:
++    if not ARGC_BYTES <= argument_bytes <= MAX_ARGUMENT_BYTES:
++        raise RuntimeError("Unsupported bounded process-argument capacity")
++    return argument_bytes + ARGC_BYTES
++
++
+ def parse_tracking_id(data: bytes) -> str | None:
+     """Parse KERN_PROCARGS2's argc/path/argv/NUL-separated environment, not ps text."""
+-    if not 5 <= len(data) <= MAX_ARGUMENT_BYTES or not data.endswith(b"\0"):
++    if not ARGC_BYTES + 1 <= len(data) <= MAX_ARGUMENT_RECORD_BYTES or not data.endswith(b"\0"):
+         raise RuntimeError("Invalid bounded process-argument record")
+     argc = struct.unpack_from("=i", data)[0]
+     if not 1 <= argc <= 4096:
+         raise RuntimeError("Invalid process-argument count")
+     try:
+-        offset = data.index(b"\0", 4) + 1  # Executable path, followed by NUL padding.
++        offset = data.index(b"\0", ARGC_BYTES) + 1  # Executable path, followed by NUL padding.
+         while offset < len(data) and data[offset] == 0:
+             offset += 1
+         for _ in range(argc):
+             offset = data.index(b"\0", offset) + 1
+     except ValueError as error:
+@@ -97,13 +105,11 @@
+         self.lib.sysctl.argtypes = [ctypes.POINTER(ctypes.c_int), ctypes.c_uint32,
+                                    ctypes.c_void_p, ctypes.POINTER(ctypes.c_size_t),
+                                    ctypes.c_void_p, ctypes.c_size_t]
+         self.lib.sysctl.restype = ctypes.c_int
+         # KERN_PROCARGS2 rejects a buffer larger than ARG_MAX (+ its argc word).
+-        self.argument_capacity = os.sysconf("SC_ARG_MAX") + ctypes.sizeof(ctypes.c_int)
+-        if not 8 <= self.argument_capacity <= MAX_ARGUMENT_BYTES:
+-            raise RuntimeError("Unsupported bounded process-argument capacity")
++        self.argument_capacity = argument_record_capacity(os.sysconf("SC_ARG_MAX"))
+         own = self.read(os.getpid())
+         if own is None or own.uid != os.getuid() or own.token[5] != os.getpid():
+             raise RuntimeError("Native identity capability check failed")
+ 
+     def _basic(self, pid: int):
+--- before/scripts/release/tests/test_apple_ci_hygiene.py
++++ after/scripts/release/tests/test_apple_ci_hygiene.py
+@@ -185,10 +185,56 @@
+ 
+ class NativeParsingAndSignalTest(unittest.TestCase):
+     def record(self, args=(b"worker",), environment=()):
+         return struct.pack("=i", len(args)) + b"/worker\0\0" + b"\0".join(args) + b"\0" + b"\0".join(environment) + b"\0"
+ 
++    def full_argument_record(self):
++        raw = self.record(environment=(b"RUNNER_TRACKING_ID=" + TRACKING.encode(), b"PAD="))
++        return raw[:-1] + b"x" * (native.MAX_ARGUMENT_RECORD_BYTES - len(raw)) + b"\0"
++
++    def test_argument_capacity_reserves_argc_beyond_the_payload_limit(self):
++        for payload in (native.ARGC_BYTES, 256 * 1024, 1024 * 1024):
++            with self.subTest(payload=payload):
++                self.assertEqual(native.argument_record_capacity(payload), payload + struct.calcsize("=i"))
++        self.assertEqual(native.argument_record_capacity(1024 * 1024), 1048580)
++
++    def test_argument_capacity_rejects_invalid_or_excessive_payload_limits(self):
++        for payload in (-1, 0, native.ARGC_BYTES - 1, native.MAX_ARGUMENT_BYTES + 1, 2 * native.MAX_ARGUMENT_BYTES):
++            with self.subTest(payload=payload):
++                with self.assertRaisesRegex(RuntimeError, "bounded process-argument capacity"):
++                    native.argument_record_capacity(payload)
++
++    def test_full_argmax_record_is_accepted_but_an_extra_payload_byte_is_not(self):
++        raw = self.full_argument_record()
++        self.assertEqual(len(raw), 1024 * 1024 + struct.calcsize("=i"))
++        self.assertEqual(native.parse_tracking_id(raw), TRACKING)
++        with self.assertRaisesRegex(RuntimeError, "bounded process-argument record"):
++            native.parse_tracking_id(raw[:-1] + b"x\0")
++
++    def test_tracking_read_uses_the_bounded_argc_prefixed_capacity(self):
++        backend = object.__new__(native.DarwinWorkerBackend)
++        backend.read = Mock(return_value=identity())
++        backend.argument_capacity = native.argument_record_capacity(1024 * 1024)
++        backend.lib = Mock()
++        raw = self.full_argument_record()
++
++        def sysctl(mib, count, buffer, size_pointer, new_data, new_size):
++            self.assertEqual(tuple(mib), (1, 49, identity().pid))
++            self.assertEqual(count, 3)
++            self.assertEqual((new_data, new_size), (None, 0))
++            size = ctypes.cast(size_pointer, ctypes.POINTER(ctypes.c_size_t)).contents
++            self.assertEqual(size.value, 1048580)
++            self.assertEqual(len(buffer), size.value)
++            ctypes.memmove(buffer, raw, len(raw))
++            size.value = len(raw)
++            return 0
++
++        backend.lib.sysctl.side_effect = sysctl
++        self.assertEqual(backend.tracking_id(identity()), TRACKING)
++        backend.lib.sysctl.assert_called_once()
++        self.assertEqual(backend.read.call_count, 2)
++
+     def test_only_exact_environment_entry_not_argv_or_suffix_is_a_marker(self):
+         raw = self.record(args=(b"worker", b"RUNNER_TRACKING_ID=argv"), environment=(
+             b"OTHER_RUNNER_TRACKING_ID=wrong", b"RUNNER_TRACKING_ID=" + TRACKING.encode()))
+         self.assertEqual(native.parse_tracking_id(raw), TRACKING)
+         self.assertIsNone(native.parse_tracking_id(self.record(args=(b"RUNNER_TRACKING_ID=argv",))))
+@@ -200,11 +246,11 @@
+     def test_duplicate_truncated_invalid_and_oversized_records_are_rejected(self):
+         marker = b"RUNNER_TRACKING_ID=" + TRACKING.encode()
+         malformed = (self.record(environment=(marker, marker)), self.record()[:-1] + b"x",
+                      struct.pack("=i", -1) + b"x\0", struct.pack("=i", 2) + b"x\0y\0",
+                      self.record(environment=(b"RUNNER_TRACKING_ID=\xff",)),
+-                     b"x" * (native.MAX_ARGUMENT_BYTES + 1))
++                     b"x" * (native.MAX_ARGUMENT_RECORD_BYTES + 1))
+         for raw in malformed:
+             with self.subTest(length=len(raw)):
+                 with self.assertRaises(RuntimeError):
+                     native.parse_tracking_id(raw)
+ 

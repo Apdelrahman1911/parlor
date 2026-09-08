@@ -1,0 +1,843 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-05T12:20:41.406949+00:00",
+  "candidate": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "clean": false,
+    "clean_qualification": "Tracked sources unchanged; pre-existing untracked work and the new isolated audit directory intentionally remain. Full inventory/hash binding in baseline/coverage ledgers."
+  },
+  "verdict": "NOT_READY",
+  "gates": [
+    {
+      "id": "source-preservation",
+      "status": "PASS",
+      "reason": "Tracked SHA/tree, all fingerprinted inputs, refs, stash and non-audit untracked inventory preserved; not a claim of an empty working tree.",
+      "method": "source-and-evidence-review",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/baseline.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/final-state.json"
+        }
+      ]
+    },
+    {
+      "id": "fresh-inventory-and-recorded-reading",
+      "status": "PASS",
+      "reason": "628/628 text files and 139888/139888 raw lines have reading receipts; six binaries inspected, protected/generated/prior exclusions explicit. Complete reading is not complete behavior verification. Assembly errors: []",
+      "method": "source-and-evidence-review",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/coverage/inventory.jsonl"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/coverage/FINAL_COVERAGE.jsonl"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/coverage/summary.json"
+        }
+      ]
+    },
+    {
+      "id": "observed-build-graph",
+      "status": "PASS",
+      "reason": "Fresh Gradle observation records thirteen KMP modules and actual source-set/task wiring; test fixtures/prototype/Desktop shipping distinctions independently reviewed.",
+      "method": "gradle-configuration-plus-source-review",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/coverage/observed-build-graph.txt"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/focused-storage-01/receipt.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/root-build-notes.md"
+        }
+      ]
+    },
+    {
+      "id": "focused-storage-desktop",
+      "status": "PASS",
+      "reason": "Second focused storage run executed 31 passing cases. First run command passed but its XML collection was incomplete, so its full count is not inferred.",
+      "method": "executed-tests",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/focused-storage-02/receipt.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/focused-storage-02/test-receipts.json"
+        }
+      ]
+    },
+    {
+      "id": "production-desktop-check",
+      "status": "PASS",
+      "reason": "productionDesktopCheck executed 1108 descriptors:1107 passed/1 intentional physical skip. ROOT-T3's undiscovered tests are a separate failed registration gate.",
+      "method": "executed-tests-and-compile",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/baseline-desktop-static-01/receipt.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/baseline-desktop-static-01/test-receipts.json"
+        }
+      ]
+    },
+    {
+      "id": "static-analysis",
+      "status": "PASS",
+      "reason": "Repository Detekt and shell dispatch selected in broad checks passed; retained Detekt reports have zero error entries. This is not a proof of functional correctness.",
+      "method": "executed-gradle-gates",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/baseline-desktop-static-01/receipt.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/production-check-01/receipt.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/verification-cleanup-reconciliation-mafia-cont.md"
+        }
+      ]
+    },
+    {
+      "id": "production-check",
+      "status": "PASS",
+      "reason": "Host-independent productionCheck passed: Desktop1108/1skip; app Android unit76 per variant; release Python130; validators/lint/R8/unsigned AAB. Does not include managed release runtime, real signing, Apple or physical LAN.",
+      "method": "executed-gradle-aggregate",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/production-check-01/receipt.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/production-check-01/test-receipts.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/verification-cleanup-reconciliation-mafia-cont.md"
+        }
+      ]
+    },
+    {
+      "id": "android-lint-policy",
+      "status": "PASS",
+      "reason": "Release lint passes the checked-in warning policy with 32 accepted warnings:OldTargetApi1,AGP-version4,GradleDependency3,NewerVersionAvailable24. Not zero warnings or blanket future compatibility.",
+      "method": "executed-lint-and-warning-validator",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/production-check-01/receipt.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/verification-cleanup-reconciliation-mafia-cont.md"
+        }
+      ]
+    },
+    {
+      "id": "android-unsigned-release-build",
+      "status": "PASS",
+      "reason": "R8/shrinking/unsigned AAB and configured manifest/identity validators ran. Receipts retained, generated AAB cleaned; no signed/device runtime claim.",
+      "method": "executed-release-build-without-signing",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/production-check-01/receipt.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/production-check-01/artifact-receipts.json"
+        }
+      ]
+    },
+    {
+      "id": "strict-dependency-verification",
+      "status": "PASS",
+      "reason": "All selected Gradle cycles retained strict verification; metadata/selected published artifact checks reviewed. Unconsumed cross-host artifacts are not certified by a host build.",
+      "method": "executed-strict-builds-plus-metadata-review",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/production-check-01/receipt.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/native-alltests-01/receipt.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/metadata-whodunit_cont-notes.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/verification-metadata-mafia-cont.md"
+        }
+      ]
+    },
+    {
+      "id": "alltests-executed-matrix",
+      "status": "PASS",
+      "reason": "Combined allTests/ARM64 simulator cycle:2285 descriptors,2284 passing,1 skip; Desktop1108,Android392 each variant,iOS393. The explicitly nonexecuted task matrix remains separate.",
+      "method": "executed-test-aggregate",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/native-alltests-01/receipt.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/native-alltests-01/test-receipts.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/verification-cleanup-reconciliation-mafia-cont.md"
+        }
+      ]
+    },
+    {
+      "id": "apple-release-framework-linkage",
+      "status": "PASS",
+      "reason": "productionAppleCheck at the repository6g heap linked device arm64/simulator arm64/x64 Release frameworks on Xcode26.5. Earlier audit3g OOM was an environment/harness limit, not an app crash. Linkage is not runtime/signing.",
+      "method": "executed-compile-and-link",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/apple-check-02/receipt.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/apple-check-01/receipt.json"
+        }
+      ]
+    },
+    {
+      "id": "ios-arm64-selected-runtime",
+      "status": "PASS",
+      "reason": "393 selected common/native tests ran in an owned ARM64 simulator. Mafia/engine desktop-only bodies did not run; Whodunit native has9,not288 Desktop cases.",
+      "method": "executed-simulator-tests",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/native-alltests-01/receipt.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/native-alltests-01-simulator/receipt.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/native-alltests-01/test-receipts.json"
+        }
+      ]
+    },
+    {
+      "id": "ios-wrapper-launch-smoke",
+      "status": "PASS",
+      "reason": "One checked-in English XCTest passed foreground/Home/no-native-alert assertions; EN/AR screenshots are supplemental. Does not assert recovery health, gestures, a full game or repeated-launch stability.",
+      "method": "executed-unsigned-simulator-xctest",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/xcode-ui-01/receipt.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/xcode-ui-01/xcresult-summary.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/xcode-ui-01/xcresult-tests.json"
+        }
+      ]
+    },
+    {
+      "id": "binary-format-and-wrapper-inspection",
+      "status": "PASS",
+      "reason": "Six binary inputs inspected with format/metadata/image tools; exact wrapper JAR and configured distribution checksum compared with official8.13 endpoints. No copyright/device rendering or cached distribution attestation inferred.",
+      "method": "executed-binary-inspection",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/binary-assets-wrapper-mafia-cont.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/design-font-metadata.json"
+        }
+      ]
+    },
+    {
+      "id": "ios-legacy-snapshot-quarantine",
+      "status": "FAIL",
+      "reason": "ST-C1: actual K/N production filesystem leaves malformed legacy plaintext backup-eligible;2 witnesses pass and desired-safety assertion fails. No actual backup performed.",
+      "method": "native-reproducer-plus-independent-source-proof",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/validations/ST-C1-root.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/storage-native-01/receipt.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/storage-native-01/test-receipts.json"
+        }
+      ]
+    },
+    {
+      "id": "accepted-start-commit-durability",
+      "status": "FAIL",
+      "reason": "SN-C1: valid near-deadline commit returns failure if best-effort ACK consumes the remaining receive timeout.",
+      "method": "deterministic-session-reproducer",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/validations/SN-C1-root.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/repro-session-01/receipt.json"
+        }
+      ]
+    },
+    {
+      "id": "host-opening-cancellation-ownership",
+      "status": "FAIL",
+      "reason": "SN-C2: lifecycle-registration cancellation after kit creation leaves stopCalls0 instead of1 in production transport with fake kit.",
+      "method": "production-boundary-fake-transport-reproducer",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/validations/SN-C2-root.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/repro-ui-transport-02/receipt.json"
+        }
+      ]
+    },
+    {
+      "id": "whodunit-peer-readiness-idempotence",
+      "status": "FAIL",
+      "reason": "WD-C1: reachable remount schedule automatically submits fresh duplicate ACKs. Source/effect proof, not an executed device/UI test.",
+      "method": "independent-reachable-source-proof",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/candidates/WD-C1-independent-session_cont.md"
+        }
+      ]
+    },
+    {
+      "id": "current-snapshot-reachability",
+      "status": "FAIL",
+      "reason": "M-C01 and WD-C3: accepted malformed authenticated snapshots violate Doctor-history or active-final-two rules. Normal producers/authentication bypass not demonstrated.",
+      "method": "deterministic-codec-and-resume-reproducers",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/validations/MF-C1-whodunit_cont.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/validations/WD-C3-root.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/repro-mafia-01/receipt.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/repro-pending-01/receipt.json"
+        }
+      ]
+    },
+    {
+      "id": "toast-and-result-layout",
+      "status": "FAIL",
+      "reason": "DS-C02 missing replacement toast and M-C03 zero-width final role reproduced in unchanged Desktop production composables. Other mobile geometry remains unexecuted.",
+      "method": "production-component-tests",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/validations/DS-C02-root.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/validations/M-C03-root.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/repro-ui-03/receipt.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/repro-pending-01/receipt.json"
+        }
+      ]
+    },
+    {
+      "id": "ios-follow-system-ownership",
+      "status": "FAIL",
+      "reason": "DS-C01: source plus native-equivalent two-process preference witness confirms stale owned override. Not an iOS app/device runtime measurement.",
+      "method": "source-and-native-preference-witness",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/validations/DS-C01-root.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/native-preference-01/receipt.json"
+        }
+      ]
+    },
+    {
+      "id": "recovery-action-contrast",
+      "status": "FAIL",
+      "reason": "DS-C03: reachable Light Ghost-on-black text pair has2.70034:1 contrast. Source/color calculation, not a physical screen test.",
+      "method": "independent-color-and-source-proof",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/validations/DS-C03-whodunit_cont.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/research/DS-C03-w3c-whodunit_cont.json"
+        }
+      ]
+    },
+    {
+      "id": "bundled-narrative-consistency",
+      "status": "FAIL",
+      "reason": "WD-C2: four independently traced contradictory chronologies; structural content tests do not prove editorial consistency. Ambiguous age/duration leads are excluded.",
+      "method": "independent-authored-data-to-ui-proof",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/validations/WD-C2-mafia_cont.md"
+        }
+      ]
+    },
+    {
+      "id": "xcode-framework-failure-propagation",
+      "status": "FAIL",
+      "reason": "IOS-B1: native synthetic Xcode phase exits0 after wrapper42 with stale placeholder. No actual crash/archive/signature inferred.",
+      "method": "native-shell-phase-witness",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/validations/IOS-B1-session_cont.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/native-xcode-phase-01/receipt.json"
+        }
+      ]
+    },
+    {
+      "id": "transport-jupiter-test-registration",
+      "status": "FAIL",
+      "reason": "ROOT-T3:10nonvoid annotated methods absent from normal discovery. Eight enabled bodies later passed isolated wrappers; registration remains unfixed, physical ignores remain.",
+      "method": "compiled-metadata-and-execution-reconciliation",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/validations/ROOT-T3-session_cont.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/inspect-transport-tests-02/compiled-test-methods.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/repro-pending-01/test-receipts.json"
+        }
+      ]
+    },
+    {
+      "id": "latent-release-validator-policy",
+      "status": "FAIL",
+      "reason": "RL-C1 GNU stat,RL-C2 upload-certificate trust and RL-C3 edit-snapshot TOCTOU independently confirmed. First2 source proofs; third synthetic HTTP test. Current identity/workflow disablement remains effective.",
+      "method": "independent-source-research-and-synthetic-reproducer",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/validations/RL-C1-session_cont.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/validations/RL-C2-session_cont.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/validations/RL-C3-session_cont.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/repro-release-race-01/receipt.json"
+        }
+      ]
+    },
+    {
+      "id": "documentation-and-evidence-fidelity",
+      "status": "FAIL",
+      "reason": "9 documentation mismatches and5 independently validated test/evidence gaps remain. They are separate from the16code/content/tooling defects.",
+      "method": "independent-source-and-assertion-review",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/canonical-register.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/OTHER_CANDIDATES.md"
+        }
+      ]
+    },
+    {
+      "id": "physical-lan-and-lifecycle",
+      "status": "BLOCKED",
+      "reason": "No physical multi-device same-LAN proof. Pairwise transport is insufficient for a complete game:current Whodunit needs6 devices,Mafia5\u201316. Ignored physical tests also need fixture repair without weakening admission.",
+      "method": "source-and-evidence-review",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/validations/SN-T1-root.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/validations/SN-D1-root.md"
+        }
+      ],
+      "owner": "project owner and authorized verification agent"
+    },
+    {
+      "id": "android-managed-release-runtime",
+      "status": "BLOCKED",
+      "reason": "Locally feasible but unexecuted productionAndroidRuntimeCheck/Pixel2 API35 Release instrumentation needs a disposable-device/install-ready test-signing setup not used here. Not inherently a physical-device-only gate.",
+      "method": "source-and-evidence-review",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/verification-cleanup-reconciliation-mafia-cont.md"
+        }
+      ],
+      "owner": "project owner and authorized verification agent"
+    },
+    {
+      "id": "qualified-apple-toolchain-and-real-signing",
+      "status": "BLOCKED",
+      "reason": "Installed Xcode26.5/17F42 differs from qualified26.3/17C529; no credential access/real signing/archive or device packaging verification authorized or executed.",
+      "method": "source-and-evidence-review",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/root-build-notes.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/apple-check-02/receipt.json"
+        }
+      ],
+      "owner": "release owner"
+    },
+    {
+      "id": "ios-recovery-warning-attribution",
+      "status": "BLOCKED",
+      "reason": "IOS-R1 warning is observed; original KMP local-vs-credential error not captured. Separate native probe -34018 supports environment hypothesis but does not establish actual-app cause.",
+      "method": "source-and-evidence-review",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/validations/IOS-R1-session_cont.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/iosr1-native-02/receipt.json"
+        }
+      ],
+      "owner": "project owner and authorized verification agent"
+    },
+    {
+      "id": "navigation-accessibility-and-complete-ui-journeys",
+      "status": "BLOCKED",
+      "reason": "Source reviewed, but full Android Back/predictive Back, iOS LTR/RTL gestures, keyboard/large-text/landscape/screen-reader/reduced-motion and complete live-game UI matrix was not executed. Narrow simulator smoke does not satisfy it.",
+      "method": "source-and-evidence-review",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/root-platform-shell-notes.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/whodunit-ui-followup-whodunit_cont.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/evidence/xcode-ui-01/receipt.json"
+        }
+      ],
+      "owner": "project owner and authorized verification agent"
+    },
+    {
+      "id": "native-cross-host-test-equivalence",
+      "status": "BLOCKED",
+      "reason": "13iosX64Test tasks host-disabled; Mafia/engine tests desktop-only (Native skipped, Android NO-SOURCE). Linux/Windows/other-architecture workflow execution at this tree not evidenced locally.",
+      "method": "source-and-evidence-review",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/verification-cleanup-reconciliation-mafia-cont.md"
+        }
+      ],
+      "owner": "CI/platform verification owner"
+    },
+    {
+      "id": "device-storage-and-app-switcher-privacy",
+      "status": "BLOCKED",
+      "reason": "No real-device lock/background/rejoin/OS-backup or app-switcher evidence. Post-open NSFileHandle fault remains unconfirmed; no simulator/native mock can establish all device protection behaviors.",
+      "method": "source-and-evidence-review",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/validations/storage-residual-root.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/validations/ST-C1-root.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/root-storage-shell-notes.md"
+        }
+      ],
+      "owner": "project owner and authorized verification agent"
+    },
+    {
+      "id": "whodunit-modal-clock-policy",
+      "status": "BLOCKED",
+      "reason": "WD-C4 actual cancellation/freeze is corroborated, but elapsed-time policy during Leave confirmation is unspecified. Obtain product decision before calling it a bug or changing clocks.",
+      "method": "source-and-evidence-review",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/validations/WD-C4-root.md"
+        }
+      ],
+      "owner": "game/product owner"
+    },
+    {
+      "id": "store-identity-and-live-governance",
+      "status": "BLOCKED",
+      "reason": "Tracked policy blocks canonical identity ownership and candidate/promotion jobs. No live owner/Store/protection evidence obtained; no replacements, uploads or publishing activation authorized.",
+      "method": "source-and-evidence-review",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/root-build-notes.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/validations/DOC-C4-session_cont.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/release-whodunit_cont-notes.md"
+        }
+      ],
+      "owner": "application and release owner"
+    },
+    {
+      "id": "content-rights-and-store-declarations",
+      "status": "BLOCKED",
+      "reason": "Story/icon/font rights, owner privacy/accessibility declarations and Store acceptance require owner/external evidence. Source, notices and metadata inspection do not establish legal rights or review approval.",
+      "method": "source-and-evidence-review",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/binary-assets-wrapper-mafia-cont.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/product-docs-mafia-cont.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/release-docs-whodunit_cont-notes.md"
+        }
+      ],
+      "owner": "content/legal and release owner"
+    },
+    {
+      "id": "database-migrations",
+      "status": "NOT_APPLICABLE",
+      "reason": "No Room/SQLite database schema or migrations in the observed app graph/first-party persistence. Snapshot/credential/settings migrations are applicable and separately reviewed.",
+      "method": "source-and-evidence-review",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/root-build-notes.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/root-storage-shell-notes.md"
+        }
+      ]
+    },
+    {
+      "id": "cloud-accounts-and-internet-matchmaking",
+      "status": "NOT_APPLICABLE",
+      "reason": "Current application uses offline bundled content and same-LAN rooms, with no account backend/internet matchmaking/host migration/raw-IP joining. Release Store API scripts are not an application backend.",
+      "method": "source-and-evidence-review",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/session-cont-notes.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/whodunit-content-notes.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/root-build-notes.md"
+        }
+      ]
+    },
+    {
+      "id": "timed-mafia-rounds",
+      "status": "NOT_APPLICABLE",
+      "reason": "MafiaSettings.validate rejects all nonnull timer compatibility fields as TimersNotSupported. Timed Mafia gameplay is intentionally outside the current product, not unfinished implementation.",
+      "method": "source-and-evidence-review",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/mafia-engine-notes.md"
+        }
+      ]
+    },
+    {
+      "id": "desktop-store-packaging",
+      "status": "NOT_APPLICABLE",
+      "reason": "Desktop is the declared run/deterministic-test target, not a shipping Store package. Desktop lifecycle/dependency code is still reviewed; no unused package/signing workflow is invented.",
+      "method": "source-and-evidence-review",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/root-build-notes.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/root-platform-shell-notes.md"
+        }
+      ]
+    },
+    {
+      "id": "cycle-cleanup",
+      "status": "PASS",
+      "reason": "All16Gradle cycles have immediate stop0 and exact task-output cleanup; native/Xcode companions separately record owned simulator/temp removal. Other task/version daemons and global caches preserved.",
+      "method": "per-cycle-receipts-and-independent-reconciliation",
+      "evidence": [
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/CLEANUP_LEDGER.json"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/verification-cleanup-reconciliation-mafia-cont.md"
+        },
+        {
+          "kind": "path",
+          "ref": "audit-runs/2026-09-05-source-audit/reviews/verification-cleanup-reconciliation-mafia-cont-supplement-01.md"
+        }
+      ]
+    }
+  ],
+  "artifacts": [],
+  "artifact_qualification": "No release candidate retained/approved; inspected generated bytes were hashed in cycle receipts then removed per mandatory cleanup. Unsigned/test artifacts are not Store evidence.",
+  "manual_actions": [
+    {
+      "id": "physical-lan-and-lifecycle",
+      "owner": "project owner and authorized verification agent",
+      "action": "No physical multi-device same-LAN proof. Pairwise transport is insufficient for a complete game:current Whodunit needs6 devices,Mafia5\u201316. Ignored physical tests also need fixture repair without weakening admission.",
+      "blocking": true
+    },
+    {
+      "id": "android-managed-release-runtime",
+      "owner": "project owner and authorized verification agent",
+      "action": "Locally feasible but unexecuted productionAndroidRuntimeCheck/Pixel2 API35 Release instrumentation needs a disposable-device/install-ready test-signing setup not used here. Not inherently a physical-device-only gate.",
+      "blocking": true
+    },
+    {
+      "id": "qualified-apple-toolchain-and-real-signing",
+      "owner": "release owner",
+      "action": "Installed Xcode26.5/17F42 differs from qualified26.3/17C529; no credential access/real signing/archive or device packaging verification authorized or executed.",
+      "blocking": true
+    },
+    {
+      "id": "ios-recovery-warning-attribution",
+      "owner": "project owner and authorized verification agent",
+      "action": "IOS-R1 warning is observed; original KMP local-vs-credential error not captured. Separate native probe -34018 supports environment hypothesis but does not establish actual-app cause.",
+      "blocking": true
+    },
+    {
+      "id": "navigation-accessibility-and-complete-ui-journeys",
+      "owner": "project owner and authorized verification agent",
+      "action": "Source reviewed, but full Android Back/predictive Back, iOS LTR/RTL gestures, keyboard/large-text/landscape/screen-reader/reduced-motion and complete live-game UI matrix was not executed. Narrow simulator smoke does not satisfy it.",
+      "blocking": true
+    },
+    {
+      "id": "native-cross-host-test-equivalence",
+      "owner": "CI/platform verification owner",
+      "action": "13iosX64Test tasks host-disabled; Mafia/engine tests desktop-only (Native skipped, Android NO-SOURCE). Linux/Windows/other-architecture workflow execution at this tree not evidenced locally.",
+      "blocking": true
+    },
+    {
+      "id": "device-storage-and-app-switcher-privacy",
+      "owner": "project owner and authorized verification agent",
+      "action": "No real-device lock/background/rejoin/OS-backup or app-switcher evidence. Post-open NSFileHandle fault remains unconfirmed; no simulator/native mock can establish all device protection behaviors.",
+      "blocking": true
+    },
+    {
+      "id": "whodunit-modal-clock-policy",
+      "owner": "game/product owner",
+      "action": "WD-C4 actual cancellation/freeze is corroborated, but elapsed-time policy during Leave confirmation is unspecified. Obtain product decision before calling it a bug or changing clocks.",
+      "blocking": true
+    },
+    {
+      "id": "store-identity-and-live-governance",
+      "owner": "application and release owner",
+      "action": "Tracked policy blocks canonical identity ownership and candidate/promotion jobs. No live owner/Store/protection evidence obtained; no replacements, uploads or publishing activation authorized.",
+      "blocking": true
+    },
+    {
+      "id": "content-rights-and-store-declarations",
+      "owner": "content/legal and release owner",
+      "action": "Story/icon/font rights, owner privacy/accessibility declarations and Store acceptance require owner/external evidence. Source, notices and metadata inspection do not establish legal rights or review approval.",
+      "blocking": true
+    }
+  ]
+}

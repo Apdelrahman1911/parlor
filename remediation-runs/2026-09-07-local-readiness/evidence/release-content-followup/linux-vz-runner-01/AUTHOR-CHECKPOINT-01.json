@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "author": "/root/release_fix_review",
+  "created_at": "2026-09-07T09:39:25.502201+00:00",
+  "observed_source_baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "0264b6bb6ae312b943d7ce8b8a026c5cd6a7e0c1",
+    "tree": "3aa3f48efd1b56fad64d2df6667c6b9bee4804c6"
+  },
+  "scope": "Campaign-excluded Linux control draft only; no production/shared controls/Git changes",
+  "author_review": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/linux-vz-runner-01/owned_linux_vz.py",
+      "sha256": "6a3808a5258ef9517c166e76613331c5c85ba0077745efb3af2a5156575491e6",
+      "line_ranges": [
+        [
+          1,
+          749
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "independent": false
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/linux-vz-runner-01/guest_verification.py",
+      "sha256": "37e50d18a3540b9d0c5c60394a62c40abe39ed0197a7187ece9efa738cd79652",
+      "line_ranges": [
+        [
+          1,
+          767
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "independent": false
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/linux-vz-runner-01/test_linux_vz_controls.py",
+      "sha256": "ad87ac1996fbf9117b5194b3c99d9dfdfcc1620d77b90b0cd0e44ae890fb85e6",
+      "line_ranges": [
+        [
+          1,
+          841
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "independent": false
+    }
+  ],
+  "execution": {
+    "syntax_or_pure_tests": "NOT_RUN",
+    "Gradle_Xcode_VM_emulator": "NOT_RUN",
+    "draft_import_or_execution": "NOT_RUN",
+    "image_or_JDK_download": "NOT_RUN"
+  },
+  "cleanup": {
+    "task_started_builds": 0,
+    "task_started_native_workers": 0,
+    "task_created_build_outputs": [],
+    "global_or_user_processes_stopped": false
+  },
+  "remaining": [
+    "Independent whole-control/dependency review and pure-test execution by root",
+    "Actual YAML validation and VZ boot/SSH/copy/ownership behavior",
+    "Linux Python and Desktop gates; no Python pass may conceal a Desktop failure",
+    "Bounded disk/dependency/JDK fit and whether Android SDK is needed at configuration",
+    "Real cancellation, evidence-copy failure, guest cleanup and host XPC holder checks"
+  ],
+  "freeze_sha256": "ba457bac2de1347467c3397c9da77b3e14472953d6cb16acc910df2ed23b4ef8",
+  "root_ssh_config_probe": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/openssh-effective-disabled-multiplexing-01.json",
+    "sha256": "3b271c5a13975a13b65cf0582fa3bb39b45de9dd01221be1f0c69187664e21d4"
+  }
+}

@@ -1,0 +1,284 @@
+{
+  "task": "Independent MF-C1 test follow-up / type-aware Detekt false-positive investigation",
+  "independent_reviewer": "/root/factory_review",
+  "author": "/root",
+  "review_time": "2026-09-05T22:13:29.065543+00:00",
+  "baseline": "main 3625d0663ba6eb51338cbd5f9dc45f859ec18846, dirty remediation checkout; no Git operations",
+  "classification": "APPROVED SCOPED CORRECTION \u2014 two explicit test-fixture property types, no behavior or policy weakening",
+  "original_diagnostic_classification": "FALSE POSITIVE for the suspend modifiers in these caller helpers; not a newly counted application defect.",
+  "source_proof": [
+    "peerCommand directly calls ShadowSessionController.submit (declared suspend, forwards suspend lambda) and MafiaPeerRoomBridge.acknowledgeCommandOutcome (declared suspend, enters coordinator stateMutex). Both caller suspend modifiers are semantically necessary for the existing API.",
+    "reconnectDoctor invokes InMemoryRoomBus.emitPeerLeft/emitPeerReconnected, both declared suspend. Their current tryEmit bodies being non-suspending does not change their declared call contract. Changing the shared bus API would be unrelated and unnecessary.",
+    "Official Detekt1.23.7 RedundantSuspendModifier rule reports when it finds no descendant call resolving to an isSuspend descriptor. Unresolved calls are treated as false rather than causing the rule to abandon the diagnostic.",
+    "The tagged Detekt1.23.7 version catalog pins Kotlin compiler2.0.10 while repository pins Kotlin2.4.10. This motivates resolution/inference caution, but the actual binding-context failure was not instrumented; exact metadata causality remains qualified.",
+    "Only two explicit property types changed. Reversing those exact annotations reconstructs the complete pre-followup test file SHA256. The compiler accepts the concrete types and tests/statics execute unchanged."
+  ],
+  "counter_evidence": [
+    "Source-level call declarations disprove advice to simply remove suspend. No suppression, exclusion, configuration, rule disable, dependency pin or verification metadata change was made.",
+    "completeNightAndDay also contains a local suspend helper; its absence from findings cannot establish successful resolution of every external call.",
+    "An inferred source-type sensitivity is evidenced by the failing and passing task receipts plus exact two-line delta. That does not independently prove a particular Kotlin metadata decoder bug.",
+    "The old combined-production-02 test XML was cached (older timestamp); only the focused final runtime/test task is claimed freshly executed after correction."
+  ],
+  "diff": "--- before-two-types\n+++ after-two-types\n@@ -209,7 +209,7 @@\n \n     private class LanFixture(val game: MafiaDoctorFixture, scope: CoroutineScope, initial: MafiaState) {\n         private val host = game.config.players.first { it.id != game.doctor }.id\n-        val bus = InMemoryRoomBus().also { bus -> game.config.players.forEach { bus.registerPeer(it.id) } }\n+        val bus: InMemoryRoomBus = InMemoryRoomBus().also { bus -> game.config.players.forEach { bus.registerPeer(it.id) } }\n         val session = PassAndPlaySessionController(\n             definition = game.definition,\n             config = game.config,\n@@ -237,7 +237,7 @@\n                 json = game.json,\n             )\n         }\n-        val doctorPeer = peers.single { it.selfPlayerId == game.doctor }\n+        val doctorPeer: MafiaPeerRoomBridge = peers.single { it.selfPlayerId == game.doctor }\n \n         suspend fun close() {\n             peers.forEach { it.close() }\n",
+  "current_source_sha256": "570e8f18c12f15c480a48c38e6a09025d5aef2ab1aa38cbac246b2f2f0b5a5a5",
+  "before_source_sha256": "513a87423f1de6834d3b1664d1103f83a36d67f351a888e095b53bf1bedd5be9",
+  "source_review": [
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaDoctorLanTest.kt",
+      "sha256": "570e8f18c12f15c480a48c38e6a09025d5aef2ab1aa38cbac246b2f2f0b5a5a5",
+      "reviewed_line_ranges": [
+        [
+          1,
+          248
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaPeerRoomBridge.kt",
+      "sha256": "0023dc186b7dd22df76255767e9a9d5cf65203803c768391c0e665de245e88ee",
+      "reviewed_line_ranges": [
+        [
+          1,
+          186
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/ShadowSessionController.kt",
+      "sha256": "0e87f661e12929935c35dd710d016ff0a40ef7c77314d0750c5ce74a4551de81",
+      "reviewed_line_ranges": [
+        [
+          1,
+          97
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/SessionController.kt",
+      "sha256": "51deb814a6ebf997c8896c457d7b3d48116b551f261db1b5189c2318a9d471ff",
+      "reviewed_line_ranges": [
+        [
+          1,
+          58
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/InMemoryRoomBus.kt",
+      "sha256": "695af1d049de439eeb081edf1d2698af677343d18097215db366023f8bc1c275",
+      "reviewed_line_ranges": [
+        [
+          1,
+          203
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/AuthoritativeSessionCoordinator.kt",
+      "sha256": "968eae9b5a83bc507e173bfd82e6ec0cffa6b6191de86c73d7b401221fe09114",
+      "reviewed_line_ranges": [
+        [
+          1449,
+          1540
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/src/main/kotlin/com/parlor/buildlogic/DetektConventionPlugin.kt",
+      "sha256": "8d5fd3fb3f13d9d5cb02f89c29a57aab8d71c89cdf6dd0ac41161942109bd825",
+      "reviewed_line_ranges": [
+        [
+          1,
+          59
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/build.gradle.kts",
+      "sha256": "d97140c79c500416f3ef1b5a54b2d05f6d0aa895f92b6cd85c26a70c8852ac67",
+      "reviewed_line_ranges": [
+        [
+          1,
+          62
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/build.gradle.kts",
+      "sha256": "7aceb370331f84b2fee70bb039b7779bdd818ea78aab15da3bfcfd137a76ad2d",
+      "reviewed_line_ranges": [
+        [
+          1,
+          43
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/build.gradle.kts",
+      "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+      "reviewed_line_ranges": [
+        [
+          1,
+          204
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+      "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "reviewed_line_ranges": [
+        [
+          8,
+          9
+        ],
+        [
+          36,
+          36
+        ],
+        [
+          90,
+          90
+        ],
+        [
+          103,
+          103
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    }
+  ],
+  "gate_evidence": [
+    {
+      "cycle": "combined-production-02",
+      "status": "FAIL",
+      "exit_code": 1,
+      "command": [
+        "./gradlew",
+        "productionCheck",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=combined-production-02",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "start": "2026-09-05T22:00:16.800677+00:00",
+      "finish": "2026-09-05T22:03:20.553075+00:00",
+      "reviewed_file_sha256": "513a87423f1de6834d3b1664d1103f83a36d67f351a888e095b53bf1bedd5be9",
+      "source_manifest_sha256": "9d9841ef0c9fb115ff6792f6bd276265ebec16c6c851dd684bc647cf2a966310",
+      "source_changed_during_cycle": false,
+      "test_xml": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-02/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaDoctorLanTest.xml",
+      "test_xml_sha256": "a719d214eb686a2dfadadbfd5caf9e30f291b65edd3f548d221b4636fa63c09e",
+      "tests": [
+        {
+          "name": "only_host_can_commit_setup_selection_and_no_one_can_change_it_after_start()[desktop]",
+          "pass": true
+        },
+        {
+          "name": "rejoin_preserves_doctor_restriction_setting_and_first_submission_without_host_secrets()[desktop]",
+          "pass": true
+        }
+      ],
+      "detekt_xml": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-02/reports/game-modes/mafia/build/reports/detekt/detektDesktopTest.xml",
+      "detekt_xml_sha256": "af8771ded990a78fb7a50b4b3b088ce2757f5628f7522f7c5e54de5ee84ac1a9",
+      "detekt_findings": [
+        {
+          "line": "133",
+          "column": "13",
+          "severity": "warning",
+          "message": "Function has redundant `suspend` modifier.",
+          "source": "detekt.RedundantSuspendModifier"
+        },
+        {
+          "line": "148",
+          "column": "13",
+          "severity": "warning",
+          "message": "Function has redundant `suspend` modifier.",
+          "source": "detekt.RedundantSuspendModifier"
+        }
+      ],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "cleanup_completed_at": "2026-09-05T22:03:22.543364+00:00"
+      }
+    },
+    {
+      "cycle": "mafia-type-aware-green-01",
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "./gradlew",
+        ":game-modes:mafia:desktopTest",
+        "--tests",
+        "*MafiaDoctorLanTest",
+        ":game-modes:mafia:detektDesktopTest",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=mafia-type-aware-green-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "start": "2026-09-05T22:09:01.766530+00:00",
+      "finish": "2026-09-05T22:09:25.350688+00:00",
+      "reviewed_file_sha256": "570e8f18c12f15c480a48c38e6a09025d5aef2ab1aa38cbac246b2f2f0b5a5a5",
+      "source_manifest_sha256": "283020fbc279db238c3c3cf449a7c0f76d1c493d2c2b07ef6f29b06f795337cb",
+      "source_changed_during_cycle": false,
+      "test_xml": "remediation-runs/2026-09-05-confirmed-fixes/evidence/mafia-type-aware-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaDoctorLanTest.xml",
+      "test_xml_sha256": "bc69f574159cfd4c45276f9573512726ab5de2ffc5cd76be5086b16c0072f845",
+      "tests": [
+        {
+          "name": "only_host_can_commit_setup_selection_and_no_one_can_change_it_after_start()[desktop]",
+          "pass": true
+        },
+        {
+          "name": "rejoin_preserves_doctor_restriction_setting_and_first_submission_without_host_secrets()[desktop]",
+          "pass": true
+        }
+      ],
+      "detekt_xml": "remediation-runs/2026-09-05-confirmed-fixes/evidence/mafia-type-aware-green-01/reports/game-modes/mafia/build/reports/detekt/detektDesktopTest.xml",
+      "detekt_xml_sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+      "detekt_findings": [],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "cleanup_completed_at": "2026-09-05T22:09:25.879863+00:00"
+      }
+    }
+  ],
+  "execution_verdict": "Fresh mafia-type-aware-green-01: both MafiaDoctorLanTest cases execute and PASS, detektDesktopTest executes with zero findings. No test skip. Full repository combined rerun remains root responsibility.",
+  "compatibility": "Test-only type annotations. ON/OFF Doctor scenarios, deterministic scheduler ordering, rejoin/settings/private projection assertions, host authority and all production/source formats unchanged.",
+  "research_ref": "research-receipt-01.json (official Detekt tagged rule, complete spec, version pins; URLs/access times/hashes recorded)",
+  "hygiene": "Reviewer started no Gradle/native/test process and edited no application or test source. Only small owned research/review evidence created. Root receipt stop0/remaining workers0/outputs0/cleanup errors0 independently parsed."
+}

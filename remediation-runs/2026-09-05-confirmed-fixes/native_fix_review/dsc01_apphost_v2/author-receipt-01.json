@@ -1,0 +1,171 @@
+{
+  "created_at": "2026-09-06T01:25:53.739081+00:00",
+  "author": "/root/native_fix_review",
+  "status": "AUTHORED_AWAITING_INDEPENDENT_REVIEW_AND_ROOT_EXECUTION",
+  "authorized_scope": "Evidence-only harness/source research under native_fix_review; no application, test-source, config, Git history, preferences or devices modified.",
+  "v1_controls_unchanged_sha256": "82c4efd11d4c9885423066e6318967321c5dc1a7c3afe550cae42c3ff1cdb375",
+  "v2_control_sha256": "5eed8a6fb73960bcf352c8792a4961fa58bee6b52a41861bce5af449aa8dca0f",
+  "v2_control_manifest": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost_v2/run_dsc01_apphost_cycle.py",
+      "sha256": "e15ff915e0006d0242de3ad15dac3ac8a839b59b4169edfa4f2988ca1ce403cc"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/run_gradle_cycle.py",
+      "sha256": "d2d18c2311d59554db88be3f92e609ec5ca46fc8af4c79702836f9e4c130240f"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/run_android_managed_cycle.py",
+      "sha256": "b34ad4662ac906bff0a2f4e8ebe25c0757229098361e8e34c29b7c06681730c0"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost_v2/secondary_fifo.py",
+      "sha256": "e1546ef645e2f87dfadd41d4e7f3f1c97cef1e38fe6392fb6a778f6db6333dbd"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost_v2/test_secondary_fifo.py",
+      "sha256": "81ba5e75fbb5c7a6fb4acd7e728880f8e7a63a38defdc2715ff2d78395cb5155"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost_v2/test_harness_contract.py",
+      "sha256": "1493231b21031ede21643b2dfe664ac14093d11d6fdd42327dd4ba21d67613cf"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost_v2/DSC01Probe.swift.in",
+      "sha256": "0ff5c1fd101e4f5e689f959aef7db1ebe1c1f48dda68f489957e849c915130ac"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost_v2/IOSAppLaunchUITests.swift.in",
+      "sha256": "2751f2eff71c6f5ece7d9b98c54b1a72832aa10f7225328c58a04818b2a52c3a"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost_v2/copied-kotlin-phase.sh.in",
+      "sha256": "1a8a5ee2c87fb4a4d8294ac3d5e2f057baaf9bd1c5a74b04564586b5f1b4baf8"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost_v2/source-bindings.json",
+      "sha256": "67af03150c2464ceda76e6d54d28f3005429fe6057ef24d3ad06a9a87cf4fd0e"
+    }
+  ],
+  "changed_v1_copy_files": [
+    "run_dsc01_apphost_cycle.py",
+    "test_harness_contract.py",
+    "IOSAppLaunchUITests.swift.in",
+    "README.md"
+  ],
+  "v1_to_v2_diff_sha256": "c606bff3e26e02fae23e5b00e42ec97912870bfbdffd9bbafcbd811500595d19",
+  "unchanged_v1_copy_files": [
+    "secondary_fifo.py",
+    "test_secondary_fifo.py",
+    "DSC01Probe.swift.in",
+    "copied-kotlin-phase.sh.in",
+    "source-bindings.json"
+  ],
+  "source_binding": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+    "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7"
+  },
+  "regression_contracts": {
+    "authored_total": 36,
+    "unchanged_cases": 30,
+    "new_cases": 6,
+    "executed_by_author": false,
+    "runtime_test_execution_by_author": false
+  },
+  "v1_failure_adjudication": {
+    "actual_xctests_executed": 1,
+    "actual_xctests_failed": 1,
+    "actual_xctests_skipped": 0,
+    "locale_mutations_reached": 0,
+    "probe_events": 2,
+    "process_boots": 1,
+    "classification": "FAILED SELECTOR / EVIDENCE; not app-crash proof, not DS-C01 repair proof",
+    "harness_reporting_defect": "Strict verify_xctest raised before v1 assigned runtime_evidence_status; NOT_RUN contradicts retained raw XCTest. No original receipt changed."
+  },
+  "v1_failure_evidence": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/receipt.json",
+      "sha256": "33b7d8a4ee78dd34903aa4b3131fabc0df578b4148deafe30b818dff7885e89c"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/xcresult-summary.json",
+      "sha256": "5ff56f9fd7d257ba1d197faf60610ed6e36954f4f8de1f42bf1009e31a2787e7"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/xcresult-tests.json",
+      "sha256": "92d9d3621dbc7ba6b6dfb83ec5716fdd2487e365543542f088e5be2be013664d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/probe-result.json",
+      "sha256": "478f184e9417f27cc586edd2964a18e29e5d124ddb480692109f67d924edb272"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/xcodebuild.log",
+      "sha256": "8353492ada0a19c9aef1d2a3c1277166b0026ce128ad882ab6ae605e12557422"
+    }
+  ],
+  "application_source_proof": [
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/AppNavigationHost.kt",
+      "lines": "117-140",
+      "claim": "Current real Home Settings entry is the bottom tab with label and contentDescription resources.",
+      "sha256": "c53d585b74f4e93f0a4fad66bf0b353aaa76eb56e0b11f37bbdc5e09b98378a5"
+    },
+    {
+      "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorBottomTabBar.kt",
+      "lines": "1-112",
+      "claim": "Selectable(Role.Tab) parent supplies description; only speaking child is uppercase label; icon has null description.",
+      "sha256": "6e93652ad09dd7e15fc69adefd903b18d5cbabcdfe57fe1b49e3251a1a216816"
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/shell/settings/SettingsScreen.kt",
+      "lines": "1-325",
+      "claim": "Language options use actual SettingsStore mutations; OptionRow has sole text label and non-speaking selection decorations.",
+      "sha256": "f97da085d85ed5fe01ac9f4725580ea2f86e399dcd330f532d9babc1925535c5"
+    },
+    {
+      "path": "composeApp/src/commonMain/composeResources/values/strings.xml",
+      "lines": "7-8,77-80",
+      "claim": "English labels.",
+      "sha256": "076cedf11593aa46aba9bb3ee0ec5538de78512d1a8d2caaa65646f5373a5883"
+    },
+    {
+      "path": "composeApp/src/commonMain/composeResources/values-ar/strings.xml",
+      "lines": "7-8,77-80",
+      "claim": "Arabic labels.",
+      "sha256": "f853e9921a57a2865bba39d7ec479b217628a99a6d7a9bb1c94b36de5fda52dd"
+    }
+  ],
+  "authoritative_references": [
+    {
+      "receipt": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01-accessibility-source-01/receipt.json",
+      "sha256": "409776d23f5317ba2d8703b30511027b1f2bd8170832d1339b01956afc4fa998"
+    },
+    {
+      "receipt": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01-accessibility-source-02/receipt.json",
+      "sha256": "52ca203c1679a4bc925714f7cf8bf586c4fcb3fcf1a23314c7a9184731396eb5"
+    },
+    {
+      "receipt": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/dsc01-accessibility-counterevidence-01/receipt.json",
+      "sha256": "cfd8b3bc62f7de107ba01c20f110a712cbd3493e0085cb75102dea72fa07646a"
+    }
+  ],
+  "proof_chain": [
+    "Pinned foundation Selectable.kt289-305 derives Clickable with null onClickLabel; Clickable.kt1597-1616 merges descendants.",
+    "UIKit sync1551 uses unmerged root; SemanticsOwner48-59 sets mergingEnabled=false; per-node contentDescription prioritizes description then Text.",
+    "UIKit Accessibility.Semantics217-228 exposes description for labels; OnClick.label alone maps to hint.",
+    "UIKit traverse1417-1522 retains actual Text child beneath merging parent; fake children emit in SemanticsNode450-506 but create owner-null virtual LayoutNode and fail UIKit isValid1804-1805.",
+    "UIKit makeAccessibilityLabel1882-1940 DFS collects parent then child descriptions with comma-space; exact current labels are Open settings., SETTINGS and افتح الإعدادات., الإعدادات.",
+    "OptionRow has no parent description; same mapper produces sole child text. Existing Language/System/English/Arabic selectors are preserved."
+  ],
+  "limits": [
+    "Author has not run any v2 test/build/app.",
+    "Source-derived exact selector still requires actual root-run XCTest evidence.",
+    "Does not establish direct Compose LocalLayoutDirection, active-session retention, OS Settings UI, physical LAN, signing/Store, power-loss durability or unknown legacy-preference provenance policy.",
+    "No app state or arbitrary accessibility tree dump; diagnostics query only12 reviewed labels and never perform fallback taps."
+  ],
+  "cleanup": "No builds/tests/devices/workers or generated build outputs started by this agent. Downloaded source jars held only in memory; retained bounded required extracts/receipts."
+}

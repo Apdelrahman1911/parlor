@@ -1,0 +1,948 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-06T16:16:54.119157+00:00",
+  "reviewer": "/root/factory_review",
+  "classification": "PASS — MATERIALIZED_SOURCE_PATCH_MAP_AND_BASELINE_PRESERVATION",
+  "scope": "Postmaterialization integrity/reconstruction/preservation review only; not new runtime tests, final campaign completion or Git integration.",
+  "source": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e"
+  },
+  "source_freeze": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/source-freeze-02.json",
+    "sha256": "7b471f8561a728f4e429d957460f368ecb432aa83833c0f97d26c9ba819e70a4",
+    "bytes": 133128
+  },
+  "fresh_inventory": {
+    "files": 669,
+    "equals_freeze02": true,
+    "equals_generated_source_identity": true,
+    "equals_matrix": true,
+    "source_drift": [],
+    "protected_filename_exclusions": [],
+    "symlinks_not_read": [],
+    "excluded_namespaces": [
+      "audit-runs/",
+      "remediation-runs/",
+      "project-code-audit/",
+      "design/"
+    ],
+    "meaning": "Fresh git source enumeration and fullinput bytehashes; excluded evidence/design separately baseline-preserved, not shipping inputs."
+  },
+  "materialized_outputs": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/final/source-identity.json",
+      "sha256": "0f0545086a19d2e15cf592cd07dd2c9fd109d10794fa5f736837928ca71760ff",
+      "bytes": 124335
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/final/diff-identity.json",
+      "sha256": "88f62f3dffc7d8204b11db5fa40fd9ed72fc2d980c1c277d43a82c3637b091ce",
+      "bytes": 61023
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/final/issue-source-map.json",
+      "sha256": "697b439979901b42d649fa2084405f76dac1b31aa7761eb791c6c2b6286c5464",
+      "bytes": 79898
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/final/remediation.patch",
+      "sha256": "71b17c8e05ab9e5850c523ff0c25a29a576a6bc088636c4a265e0944efcfc000",
+      "bytes": 464728
+    }
+  ],
+  "patch_validation": {
+    "bytes": 464728,
+    "sha256": "71b17c8e05ab9e5850c523ff0c25a29a576a6bc088636c4a265e0944efcfc000",
+    "files": 84,
+    "modified_tracked": 45,
+    "new_untracked": 39,
+    "hunks_checked": 161,
+    "binary_sections": 0,
+    "method": "Read every unified hunk as bytes; assert old/context lines against HEAD (or /dev/null for newfile), independently reconstruct in memory, compare exact output bytes to currentfile+freezeSHA. Assert old/newGitblob abbreviated indexes and newfilemodes. No subprocess gitapply, worktreecopies or mutation.",
+    "all_targets_equal_current": true,
+    "per_file": [
+      {
+        "path": "composeApp/build.gradle.kts",
+        "kind": "modified",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 27271,
+        "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt",
+        "kind": "modified",
+        "hunks_checked": 2,
+        "reconstructed_bytes": 17436,
+        "sha256": "00e0d9c8af2d59562ae1a68cc514382f6e017b0c63613ac43810ad407a9d4ba6",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+        "kind": "modified",
+        "hunks_checked": 8,
+        "reconstructed_bytes": 20742,
+        "sha256": "8a99e60647c3d9f137ca8783e636b37798d06f4883df3609bf6cd2a0568bdf48",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "docs/MAFIA_RULES.md",
+        "kind": "modified",
+        "hunks_checked": 2,
+        "reconstructed_bytes": 9933,
+        "sha256": "4051a05d1c3bd769329178be3a2191be20617f792f18fd0328ab105c2ec29d95",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "docs/PRODUCTION_ARCHITECTURE.md",
+        "kind": "modified",
+        "hunks_checked": 2,
+        "reconstructed_bytes": 16744,
+        "sha256": "e5fd25fbdcf8e157c90cf2095ab64d8d62777dbefe6b7b8ef58a74927345252d",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "docs/RELEASE_AUTOMATION.md",
+        "kind": "modified",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 45536,
+        "sha256": "5598e91447aae3f111654b217118aa64cc9ea0c0c3c34d36f0440c51c0b7f206",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/mafia/build.gradle.kts",
+        "kind": "modified",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 1544,
+        "sha256": "7aceb370331f84b2fee70bb039b7779bdd818ea78aab15da3bfcfd137a76ad2d",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml",
+        "kind": "modified",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 28140,
+        "sha256": "a9416283c7bf130d9ca98b4ff0e08ae420bad4b935f476ed7166178c42c3bdcc",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotRecovery.kt",
+        "kind": "modified",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 24030,
+        "sha256": "64525b0d14b07d87e99729c3707dd0af4a083f8f4a98a5a948575755482ea3fd",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+        "kind": "modified",
+        "hunks_checked": 2,
+        "reconstructed_bytes": 24910,
+        "sha256": "09de10c3735f1afeb7b36550dca57c4e9fd190d985faf6ff0eae8c0b8d21a784",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+        "kind": "modified",
+        "hunks_checked": 2,
+        "reconstructed_bytes": 28730,
+        "sha256": "1371eb747579362548f3962a520c2c3f3c2f6225ef551bad93e3e690e08a1fe6",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreen.kt",
+        "kind": "modified",
+        "hunks_checked": 2,
+        "reconstructed_bytes": 4598,
+        "sha256": "2ebe210da47584cd0ed1105a921b4b2884cde23227b6cfb0086f25f3aec70aa9",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+        "kind": "modified",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 22628,
+        "sha256": "c1dc2d1e5f4bf72ac1c2946341143f22936dd7903aab2d02b58c0d63709e87e4",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+        "kind": "modified",
+        "hunks_checked": 3,
+        "reconstructed_bytes": 41273,
+        "sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+        "kind": "modified",
+        "hunks_checked": 3,
+        "reconstructed_bytes": 40914,
+        "sha256": "12167f59be005d880c3a4861e58cb9ec2f5ff94dbbda8ddfc02a2846e5df6fef",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+        "kind": "modified",
+        "hunks_checked": 3,
+        "reconstructed_bytes": 36988,
+        "sha256": "f4c5ff253a82220f937328de09161d09110b05a98eb6bb012934a80f60a5b96d",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+        "kind": "modified",
+        "hunks_checked": 3,
+        "reconstructed_bytes": 39869,
+        "sha256": "a0db6acb459d69bf75a4c15a809b64d1b7cd5c21714dceaedc5973ba2d951826",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/composeResources/values-ar/strings.xml",
+        "kind": "modified",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 33942,
+        "sha256": "4009a4813e51af96e49e5e6c71c66ed931a6436e92fee97e877ff6abe0122a10",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/composeResources/values/strings.xml",
+        "kind": "modified",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 28354,
+        "sha256": "aea6aa1abb5cf4d68734de65fb21e1f71cdc520039dbe12e2c88cdad3c2865f9",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitStateValidator.kt",
+        "kind": "modified",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 51812,
+        "sha256": "c391101ba10792d4ba81eb0aa3a21771162c458e075b90bfbf06d4cb33d139c1",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+        "kind": "modified",
+        "hunks_checked": 7,
+        "reconstructed_bytes": 62079,
+        "sha256": "726d948937f757496807bab91381abcb9d050240695fb63dbdbdc21181cb9334",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+        "kind": "modified",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 47857,
+        "sha256": "11b188ca7ecfa7a02086ab2513fe9e40230f3aab9db9a9fa25c79204b4e9b0b7",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/WhodunitContentIdentityTest.kt",
+        "kind": "modified",
+        "hunks_checked": 2,
+        "reconstructed_bytes": 3110,
+        "sha256": "c6f88217dc835c33f93e0af0de8a086c005056b13ae436441990c48f21b8f3a1",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/domain/WhodunitRulesInvariantTest.kt",
+        "kind": "modified",
+        "hunks_checked": 2,
+        "reconstructed_bytes": 24100,
+        "sha256": "593a7e3937abc330e11ab76f4a4802e21bcde7231fb9b5220657a5bcc7d5d513",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitCaseBindingTest.kt",
+        "kind": "modified",
+        "hunks_checked": 2,
+        "reconstructed_bytes": 13855,
+        "sha256": "528b7ab77dee6a1acbdf280bcfe58a641bc69e21c24cff77a795fe65af3e1754",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitResumeReconstructionTest.kt",
+        "kind": "modified",
+        "hunks_checked": 3,
+        "reconstructed_bytes": 24360,
+        "sha256": "e2ef51a27dd6ba794ff5241326d7f3e1c49e88a730c872bde7cd6bdde1623b09",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "iosApp/iosApp.xcodeproj/project.pbxproj",
+        "kind": "modified",
+        "hunks_checked": 7,
+        "reconstructed_bytes": 21657,
+        "sha256": "625103b4676a017beb4619c61b705efc84c2be47b71603bddd840c1d3856ea9d",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "iosApp/iosApp/ContentView.swift",
+        "kind": "modified",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 2277,
+        "sha256": "5881b354ccc45340100356fbf37480e94efdcc2e8fe823f0bb6b5b60f8ccaa87",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "scripts/release/store_api.py",
+        "kind": "modified",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 85434,
+        "sha256": "95ba5a18b5e78d85eb15c8764f011db76293d0bdcf8ee088151321ad5d6b7012",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "scripts/release/tests/test_store_api.py",
+        "kind": "modified",
+        "hunks_checked": 2,
+        "reconstructed_bytes": 45179,
+        "sha256": "18d49c5deb8cc5383b5a9888f7f14f21884bbbfeb577348412f1930f4972a1d1",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "scripts/release/validate_android_artifact.sh",
+        "kind": "modified",
+        "hunks_checked": 2,
+        "reconstructed_bytes": 13514,
+        "sha256": "e0100ed6274e41113e18d1cdaa5310242f749d2f337fdb0c5b85920a011cece6",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/HostDisconnectedOverlay.kt",
+        "kind": "modified",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 3387,
+        "sha256": "a4cf551ee4846b8529b7ba1352a92a286d28831ecff086ef3a5a1ea3a30c450d",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorButton.kt",
+        "kind": "modified",
+        "hunks_checked": 4,
+        "reconstructed_bytes": 7444,
+        "sha256": "06ac462915e5371344abb953d29eab22bb9b622c800c70c5ebc96cca96efac0b",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt",
+        "kind": "modified",
+        "hunks_checked": 4,
+        "reconstructed_bytes": 9011,
+        "sha256": "ea4e554c099511942e13e07281df48419c333948be7a64d65a72b7dd49ea25b0",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ReconnectingOverlay.kt",
+        "kind": "modified",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 4599,
+        "sha256": "587a0b4c7f8af7b7d0b762035855beee02cf4d1e9b4f4b532862b5f9821a10b5",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/components/ParlorToastStateTest.kt",
+        "kind": "modified",
+        "hunks_checked": 2,
+        "reconstructed_bytes": 1910,
+        "sha256": "6fb9a4c16974a10c978a325c57deffcbeb80d36bb9afd394cea55837cbf79cd1",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+        "kind": "modified",
+        "hunks_checked": 4,
+        "reconstructed_bytes": 3016,
+        "sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/SessionStartHandshake.kt",
+        "kind": "modified",
+        "hunks_checked": 2,
+        "reconstructed_bytes": 16749,
+        "sha256": "eab3e1743484280bbdf1731f033b9984ad0b9e1d2aea31a94e40a6c29fe17512",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/transport-p2p/src/androidMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.android.kt",
+        "kind": "modified",
+        "hunks_checked": 2,
+        "reconstructed_bytes": 3834,
+        "sha256": "280b7f13d26939972416c805a184efe8fb8041f48db219f2e41797adbe456a11",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/AppLifecycleRoomCoordinator.kt",
+        "kind": "modified",
+        "hunks_checked": 2,
+        "reconstructed_bytes": 2787,
+        "sha256": "7761d49b0de180d34daa32f790768a541f2af8d0de98b94eeb89ab20bf2d1e68",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+        "kind": "modified",
+        "hunks_checked": 14,
+        "reconstructed_bytes": 212558,
+        "sha256": "a5e2536e41c81c54b58ec27da135ea9046969db9cb80084e2a0da3b15ddde7c7",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/transport-p2p/src/desktopMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.desktop.kt",
+        "kind": "modified",
+        "hunks_checked": 2,
+        "reconstructed_bytes": 3497,
+        "sha256": "7bb0e36a15dfde7e193c74f1ab2a3d10f35c01e04c0fb3ba4e08a8a8cf88d3cb",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt",
+        "kind": "modified",
+        "hunks_checked": 9,
+        "reconstructed_bytes": 228751,
+        "sha256": "947a86aebdca10d7d9cfa97a5677c1a79733601dca887effc6c218280a098b1b",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+        "kind": "modified",
+        "hunks_checked": 2,
+        "reconstructed_bytes": 12031,
+        "sha256": "cda4755e373172719f6fc7a4d72a38416ec061b44f356d9ef4f3529e29588737",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/transport-p2p/src/iosMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.ios.kt",
+        "kind": "modified",
+        "hunks_checked": 2,
+        "reconstructed_bytes": 2535,
+        "sha256": "bea599aa4d6dd9820477f2cbee57c213a9988da33e51eada0eb061d25fd77753",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosLegacySnapshotBackupTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 9690,
+        "sha256": "5d5cf8beedcddd77b3d99d3842f02f472da221f0bbcdc35c6212e3f5d56d0351",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "docs/PRE_RELEASE_COMPATIBILITY.md",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 3361,
+        "sha256": "32ae112de9fd761636191c3308faf28fa5a3a8f3fd694064bbeaf3f2ffe69060",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "docs/WHODUNIT_TEST_CONTENT.md",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 6125,
+        "sha256": "19a2ca3a4cba3d60117f76897c7fc0d1cc55f97beb5002aead43fdc020b12756",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibility.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 537,
+        "sha256": "e6f616148cd77a6832c08175b769c31885e7b8b16bfb272d19729dc507bcb34a",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 7794,
+        "sha256": "5fe2144436f87162e2d29bcbef6d57ac9b9cede6ab328b406b63cceebcdd501b",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaDoctorLanTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 12655,
+        "sha256": "570e8f18c12f15c480a48c38e6a09025d5aef2ab1aa38cbac246b2f2f0b5a5a5",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 18673,
+        "sha256": "d1d830e0330d5a47f2011b9f87d025a5ce1e0bc2d3cb08be742ca1ff4403f743",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/testing/MafiaDoctorFixture.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 4943,
+        "sha256": "fa5a85db72638033569368062722fc1e1f97fcf1c3948e912c7954324e1e2ba7",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostLanguageContinuityTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 18771,
+        "sha256": "027f36dda4a27b68fad6d5abf1740f9778cce897a2ba7dea7fc152acf7bce743",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibilityTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 3326,
+        "sha256": "c2d196af55bbf14d3518973e86df9da3de3954ffbab27038aca4c2ef14ed70f1",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 6026,
+        "sha256": "27b4894a394bf06952bc1435324ab23acb5c7f38242b65df5feb01e8df16b777",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaDoctorSettingUiTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 3170,
+        "sha256": "47720879336a7ac14436a6cc9e186cce3afc8d00743a1339ff161c0fefb58055",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 7374,
+        "sha256": "9325933fab3a9547d14898319c4964e2d791af3bab8011eff68a68f768333c9b",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 12197,
+        "sha256": "dfdd8aed4bc9f199fadfddf644bc321d1e293cafda2d201d2ec6055bac313fa9",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryGameTraceTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 7377,
+        "sha256": "ca31ec98fc19aaeba3675e6d56135abec745d9307a471fc81543e57bd6f6c058",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitFinalTwoRecoveryTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 15525,
+        "sha256": "b6f36aa2ea3615dcee2c563087d67120e321146d4ae0a2e40cb0f696e865d906",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/PeerReadinessRemountTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 16006,
+        "sha256": "e443c59bc953b1e35113ce26bf3a2638839cd44723e6a36c90c014b77f5cb6d3",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitRecoveryInteractionTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 14272,
+        "sha256": "ce78251562131202f41648b26ef897034fd712c59f9cbb5d0af5207a3c47aa57",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLanguageContinuityTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 17228,
+        "sha256": "97e55bc43b465a0efc241810520db0e6e642f4991860b3f7fc843effa5667323",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "iosApp/iosApp/ComposeContainerViewController.swift",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 2150,
+        "sha256": "9bdeeaf67a569f4016bc5359ae865b6df9eeaa2a9f6ee36e01041bf79000a903",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "iosApp/iosAppUITests/ComposeContainerViewControllerTests.swift",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 4899,
+        "sha256": "a4730b77ad93d01df60a4b6fde558bfea264f71b19ee5aa6c4a08d33480eacc8",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "scripts/release/PrepareAndroidUploadTrust.java",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 9413,
+        "sha256": "a74b92902839047353aa4b5816bc226e43526960da7c4d2df117e25c9375c211",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "scripts/release/tests/test_android_artifact_size.py",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 5041,
+        "sha256": "1bdf6fe45be629ed8ea6d435727e88d87644319257127732b61a529f1ce1a0b1",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "scripts/release/tests/test_android_upload_signature.py",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 18691,
+        "sha256": "fd9723397cd3ae4336371cd6fdd93164d225919d1ed615d5fd48f75055b3eade",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "scripts/release/tests/test_google_promotion_edit.py",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 9285,
+        "sha256": "b6ed5e950782ef5581f86cabd7a263937da52d3dfcf7c84cc45df5bcc2d147db",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "scripts/release/tests/test_xcode_framework_phase.py",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 4314,
+        "sha256": "3033307b0a029d87ab9c8c14d3b3b4d3a0d4db9d183012d6da58fb1e8b5c4a73",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastConcurrencyTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 3007,
+        "sha256": "d1ce19edccb66916930b4fa27d90f7e390f851442de923b351bef1258a0f90d9",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastLifetimeTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 4211,
+        "sha256": "bac61913c5d79ace76748320f0b073669ced0bd0c12f3063c90be7bbec142adc",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/RecoveryActionContrastTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 3543,
+        "sha256": "bf9742cdc49fa3b8765b3219774e4b6e7f6e849c4725e9049dca5fc7343d5e20",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 2604,
+        "sha256": "959ab1a8cb955e484c806c8ce5af65ca841a20cfcd9b1f205443a1cfe768da20",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/design-system/src/iosTest/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwnerTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 6503,
+        "sha256": "dbf610cd2fe07dd690b994c70434c863a96833305d5fc47c0e0c9d95072acf7e",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/ControlledStartRoom.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 8835,
+        "sha256": "cda4c061d3a34a216011d1be1846b7d9b579a8ec77eb9f517e8dc7c6f680de6e",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/SessionStartCommitDeadlineTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 12417,
+        "sha256": "9f0dc6cb2904dc14b24114ea0e019422e2e84e912e80e359276ab4fd38c816b2",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitCreation.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 1526,
+        "sha256": "e924988dfcbde7eb1ac2eae763e5078a28bdd568ca1b05e4ece6284a3183a95e",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/AppLifecycleRoomRegistrationTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 5124,
+        "sha256": "bfda11cf208b13b039ae74061d81fcf04a11fdfe3945c490371aa71b730f6d6b",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/HostOpeningCancellationTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 7210,
+        "sha256": "13cdebd30a42ff4ed04be36f9e2ffe3693b488badd05e19edb2a004a180c6bff",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/JupiterDiscoveryContractTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 1788,
+        "sha256": "94682d196381d97a37f6c5e925b63646f102b864d76eb55252cfbd082abcb305",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitCreationTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 10521,
+        "sha256": "aa03b4fc5e37dbd234848594641dd46eec5aef5bf78dcc478783987d6ee0dc70",
+        "git_blob_index_matches": true
+      },
+      {
+        "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/PeerOpeningCancellationTest.kt",
+        "kind": "new",
+        "hunks_checked": 1,
+        "reconstructed_bytes": 15522,
+        "sha256": "e72ab2b4e013af3a626f50677e3284518120b4320a556c7d5cb7a662fe4c0e68",
+        "git_blob_index_matches": true
+      }
+    ]
+  },
+  "source_map_validation": {
+    "issues": 16,
+    "files": 84,
+    "all_hashes_absolute_paths_line_counts_correct": true,
+    "current_change_ranges_equal_independent_matrix": true,
+    "per_issue_pathsets_equal_matrix": true,
+    "shared_issue_attribution_consistent": true,
+    "missing_files": [],
+    "extra_files": [],
+    "materializer_script_unchanged_from_independent_source_review": true,
+    "matrix": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/final-matrix-support-01.json",
+      "sha256": "c968be5fbcb7bff58288039b6d8ae4dc6e0c1f91a6a4344a42746ed04b9ab391",
+      "bytes": 200891
+    },
+    "script_review": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-final-source-materializer-review-01.json",
+      "sha256": "95e37af6a282bb36ba5a502e296ae4c84e1fe40de7f85458da24350c2d0cf8a6",
+      "bytes": 6314
+    },
+    "semantic_note": "Generatedmap intentionally omits repair status. Matrix still15verified+1partial; mapmaterialization doesnotupgrade status."
+  },
+  "baseline_preservation": {
+    "baseline": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/baseline.json",
+      "sha256": "ed49f68cf2f6d583e28f461428b56afb8cdfbdba619858cc8d541117e3b147df",
+      "bytes": 831093
+    },
+    "baseline_files": 2180,
+    "byte_identical": 2167,
+    "authorized_changed": [
+      {
+        "path": "docs/PRODUCTION_ARCHITECTURE.md",
+        "baseline_sha256": "1d795dfd86c3620f6359f9398f162470bfa441ef35127d30148b34879b3e1808",
+        "current_sha256": "e5fd25fbdcf8e157c90cf2095ab64d8d62777dbefe6b7b8ef58a74927345252d",
+        "baseline_bytes": 15007,
+        "current_bytes": 16744
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+        "baseline_sha256": "d1397ac1e0dc3669d3e5ff5e147aabf88647bc6726621cb7239392eb4e4cd9ca",
+        "current_sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+        "baseline_bytes": 41178,
+        "current_bytes": 41273
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+        "baseline_sha256": "b1b1d73cedc751f321c51f1e1523b74e57d515d408a7760add328c73c8dcc5e4",
+        "current_sha256": "12167f59be005d880c3a4861e58cb9ec2f5ff94dbbda8ddfc02a2846e5df6fef",
+        "baseline_bytes": 40916,
+        "current_bytes": 40914
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+        "baseline_sha256": "c36b20ed19f94b7eea5809f7c2f1ef38be1f97ac6e2598a8a5de0233ee9e89af",
+        "current_sha256": "f4c5ff253a82220f937328de09161d09110b05a98eb6bb012934a80f60a5b96d",
+        "baseline_bytes": 36979,
+        "current_bytes": 36988
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+        "baseline_sha256": "954752e02c72ab8b4ac8fe7b03598857252c539ba07d1f781683be3b42c07d1d",
+        "current_sha256": "a0db6acb459d69bf75a4c15a809b64d1b7cd5c21714dceaedc5973ba2d951826",
+        "baseline_bytes": 39867,
+        "current_bytes": 39869
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/composeResources/values-ar/strings.xml",
+        "baseline_sha256": "b18d147fe4954978569288eb41517448c4b0697c4e0f1cfc1fdb079c955e5d20",
+        "current_sha256": "4009a4813e51af96e49e5e6c71c66ed931a6436e92fee97e877ff6abe0122a10",
+        "baseline_bytes": 33649,
+        "current_bytes": 33942
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/composeResources/values/strings.xml",
+        "baseline_sha256": "d3dda6f96c9ca4a5aac8ef104736894b3d672b147cc0596a57fecfbb8a89a53e",
+        "current_sha256": "aea6aa1abb5cf4d68734de65fb21e1f71cdc520039dbe12e2c88cdad3c2865f9",
+        "baseline_bytes": 28126,
+        "current_bytes": 28354
+      },
+      {
+        "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+        "baseline_sha256": "4d58eb3bebd3777c88ca9f8ab21d97441f6d2cd1a70e28b07a0334fdc0c8ee17",
+        "current_sha256": "726d948937f757496807bab91381abcb9d050240695fb63dbdbdc21181cb9334",
+        "baseline_bytes": 61855,
+        "current_bytes": 62079
+      },
+      {
+        "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/WhodunitContentIdentityTest.kt",
+        "baseline_sha256": "f131e0d1d02e9330b042a521f229fc1ec3a4693554f8f3ed923807903676541c",
+        "current_sha256": "c6f88217dc835c33f93e0af0de8a086c005056b13ae436441990c48f21b8f3a1",
+        "baseline_bytes": 3061,
+        "current_bytes": 3110
+      },
+      {
+        "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitCaseBindingTest.kt",
+        "baseline_sha256": "aa10bb67020bbc5d6c790d578695c02014616fcf29b3e6809c275cf70e62c583",
+        "current_sha256": "528b7ab77dee6a1acbdf280bcfe58a641bc69e21c24cff77a795fe65af3e1754",
+        "baseline_bytes": 14000,
+        "current_bytes": 13855
+      },
+      {
+        "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitResumeReconstructionTest.kt",
+        "baseline_sha256": "1396e3434b5d4c4d10433bb1693fb05d4ce1aa6e141f3fd1778197ed1adb03f7",
+        "current_sha256": "e2ef51a27dd6ba794ff5241326d7f3e1c49e88a730c872bde7cd6bdde1623b09",
+        "baseline_bytes": 23966,
+        "current_bytes": 24360
+      },
+      {
+        "path": "iosApp/iosApp.xcodeproj/project.pbxproj",
+        "baseline_sha256": "dbf9c4d8f1c8e51cf78682afd5f32729566f75df6355735d3df37841e46fabfe",
+        "current_sha256": "625103b4676a017beb4619c61b705efc84c2be47b71603bddd840c1d3856ea9d",
+        "baseline_bytes": 20257,
+        "current_bytes": 21657
+      },
+      {
+        "path": "iosApp/iosApp/ContentView.swift",
+        "baseline_sha256": "2e9bf560447c78c84462daccafc67cee961428dbd592adb6e12ddf085ab67a55",
+        "current_sha256": "5881b354ccc45340100356fbf37480e94efdcc2e8fe823f0bb6b5b60f8ccaa87",
+        "baseline_bytes": 2209,
+        "current_bytes": 2277
+      }
+    ],
+    "missing": [],
+    "changed_set_exactly_equals_prior_rebind02_03": true,
+    "preserved_groups": [
+      {
+        "name": "original_audit",
+        "files": 912,
+        "byte_identical": 912,
+        "missing_or_modified": []
+      },
+      {
+        "name": "prior_remediation",
+        "files": 534,
+        "byte_identical": 534,
+        "missing_or_modified": []
+      },
+      {
+        "name": "project_code_audit",
+        "files": 72,
+        "byte_identical": 72,
+        "missing_or_modified": []
+      },
+      {
+        "name": "design",
+        "files": 4,
+        "byte_identical": 4,
+        "missing_or_modified": []
+      }
+    ],
+    "AGENTS_unchanged": true,
+    "refs_same": true,
+    "stash_list_same": true,
+    "staged_index_diff_same": true,
+    "refs_sha256": "180495798b5ad4dd63204fa9d95f306440f4cb61e15607ff492c42825a609007",
+    "stash_list_sha256": "ca7d3dff9247e248a72ccc87c6e1931cceb7e943f5d6cdec7054388f7706d3ac",
+    "index_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "index_qualification": "Logical stageddiff unchanged; not claiming byte-identical Gitindex statcache. Stashref also bound by same complete show-ref output; stash contents not inspected.",
+    "protected_baseline_exclusions": [],
+    "working_tree_note": "Intentionallydirty approvedwork preserved; not claimingcleanGitworktree. No tracked/untrackedsource was deleted, staged, stashed, reset or checkedout."
+  },
+  "cycle_receipt": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/final-source-materialize-01/receipt.json",
+      "sha256": "bcdfc3712157df60197847a50b3a07c26f6de80acd00f3c0ceaf0a351f88bb51",
+      "bytes": 259309
+    },
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-06-approved-policy-completion/root/prepare_final_source.py"
+    ],
+    "source_before_after_equal_freeze02": true,
+    "status": "PASS",
+    "exit_code": 0,
+    "started_at": "2026-09-06T15:37:10.592223+00:00",
+    "finished_at": "2026-09-06T15:37:11.637769+00:00",
+    "stop_log": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/final-source-materialize-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-06T15:37:12.036109+00:00",
+    "removed_outputs": [],
+    "remaining_outputs": [],
+    "remaining_owned_workers": [],
+    "cleanup_errors": [],
+    "cleanup_completed_at": "2026-09-06T15:37:12.086702+00:00",
+    "cycle_kind": "Pythonreportmaterialization, not Gradlebuild; rootlaneneverthelessimmediatelystoppedGradle. No generatedbuildoutputs were produced."
+  },
+  "current_original_build_outputs": [],
+  "current_output_qualification": "Read-only existence check; any nextroot native/copiedlane processes are outside thiscompleted materialization receipt and were not stopped or deleted.",
+  "remaining": [
+    "DS-C01 nativeV7/Mafia/actualOS evidence and separateindependentreview remainrootowned; campaignnotfinished.",
+    "Final report/gateassembly and last post-native source/preservation/process/output verification pending.",
+    "PhysicalLAN, signedStorecandidate/qualifiedXcode/identity/legal/a11y externalrequirements remain separate; WD-C4policy andIOS-R1evidencegap unchanged.",
+    "No commit/integration/push/Store/GitHubclose authorized or performed."
+  ],
+  "reviewer_hygiene": {
+    "builds_tests_apps_workers_started": 0,
+    "source_or_existing_deliverables_changed": false,
+    "new_evidence_only": true,
+    "cleanup": "No build/app/test/backgroundworker or disposableoutputcreated; only thiscompactrequiredreceipt. Rootactivebuilds/globalcaches untouched."
+  }
+}

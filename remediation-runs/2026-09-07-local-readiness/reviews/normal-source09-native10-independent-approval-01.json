@@ -1,0 +1,373 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "reviewed_at": "2026-09-08T01:15:54.462489+00:00",
+  "classification": "EXACT-BOUND CONDITIONAL EXECUTION APPROVED \u2014 NORMAL-SOURCE IOS-READINESS-10 ONLY; NOT A RUNTIME PASS, STORAGE REPAIR, INSTRUMENTED L08 APPROVAL OR STORE/GIT AUTHORIZATION",
+  "scope": "Independent source/control and ownership-safety review for one proposed normal-source Debug simulator cycle. Root exclusively owns execution, live process/disk preflight and cleanup. This review does not re-audit all shipping source or approve any production source change.",
+  "baseline": {
+    "commit": "e1dd40c0f1ff14561ecac6c25967fced8cda74d2",
+    "tree": "1d4822ebea89148635e0d71c74060fce1ab61824",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\n M scripts/verification/ios-readiness/L08StorageProbe.kt.in\n M scripts/verification/ios-readiness/l08_receipts.py\n M scripts/verification/ios-readiness/test_l08_diagnostics.py",
+    "diff_sha256": "36dd70117778d1f5d038acfab1ab46ffb464cd8c78b2428552214bfe6fdffed1",
+    "source_manifest_sha256": "35f9d58c3d1a151ed34a9f7c62c3a32cdcf147cf010fe621571ca888957eedbc"
+  },
+  "binding": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-09.json",
+    "sha256": "6401adebe483073d6760d5ed928725cc07910b9090ac2d382476a151fe98152a"
+  },
+  "control_manifest": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-source09-control-manifest-01.json",
+    "sha256": "0573e70c655da607da674abec45cf37ae9807c9a818977b9530ab6e2ec091f25",
+    "files": 78,
+    "control_sha256": "efa971d9dfb259bc227e9c5abeb90ab915851a6f25422f8e24e5252591ab9ff4"
+  },
+  "fresh_identity_verification": {
+    "source_rows": 800,
+    "copy_inputs": 740,
+    "control_files": 78,
+    "source_identity_and_every_hash_match": true,
+    "complete_current_copy_selection_matches": true,
+    "complete_current_control_enumeration_and_every_hash_match": true,
+    "source_manifest_digest_matches": true,
+    "control_digest_matches": true,
+    "method": "Independently reconstructed reviewed policy using standard-library streaming SHA256 and read-only Git cached/untracked enumeration. No executable repository imports. Fresh directory enumeration of HERE/SUPPORT controls plus exact frozen Darwin helper and binding; protected/private exclusions applied before source reads. Counts attest exact-byte binding, not new line-by-line coverage of800 files.",
+    "source08_delta": [
+      "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "scripts/verification/ios-readiness/owned_lane.py",
+      "scripts/verification/ios-readiness/secondary_fifo.py",
+      "scripts/verification/ios-readiness/test_owned_lane_lsof.py",
+      "scripts/verification/ios-readiness/test_secondary_fifo.py"
+    ],
+    "copy_delta": "Four ownership-support source/test files; docs inventory is excluded from copy. One new holder-test file makes source800/copy740.",
+    "control_delta": "Four ownership-support source/test files plus source08 binding replaced by source09 binding; no normal/L08 diagnostic or shipping-source change from source08.",
+    "final_readonly_git_check": "HEAD and tracked status remained identical immediately before this additive report."
+  },
+  "source_reopening": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "sha256": "36276fb27423ca04c9fe41d033042c3ae25d5a512183b96b80230b4f58ad2e8d",
+      "reviewed_lines": [
+        [
+          1,
+          697
+        ]
+      ],
+      "scope": "Full driver reopened in this approval assignment; allocation, source copy, subprocess/repetition/provenance and all finalization branches reviewed. Additional fresh reopening after continuation covers1\u2013120,238\u2013378,380\u2013697."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_source_copy.py",
+      "sha256": "5920d07a43c64eb7193a1c1d03aea93948bfa21597591ee13d79073666ed54d2",
+      "reviewed_lines": [
+        [
+          1,
+          51
+        ]
+      ],
+      "scope": "Full copy transformer and exact two-file/no-addition inventory reopened in this assignment."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/NormalSourceLaunchUITests.swift.in",
+      "sha256": "c3d5cd42d60371cffee6ec4e8cdc462165f953dbef352bcdbf0f3f2d2a5a4ed2",
+      "reviewed_lines": [
+        [
+          1,
+          76
+        ]
+      ],
+      "scope": "Full actual test body: eight fixed test repetitions, six observations each, real10-second post-home minimum, no retry-on-failure; explicit English fixture is not Follow System evidence."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py",
+      "sha256": "ec19eb8c910f42c180ea17bae1af2fed259cb989174c61cf306a0324800200ef",
+      "reviewed_lines": [
+        [
+          1,
+          192
+        ]
+      ],
+      "scope": "Full strict PID/path parser, artifact UUID/address binding, lifetime checks, diagnostic-only redaction, original rejection and limitations freshly reopened."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/copied-kotlin-phase.sh.in",
+      "sha256": "4992e516f99df2b5f1425688c51ae532086f8859618b1968937fbede818f49b0",
+      "reviewed_lines": [
+        [
+          1,
+          45
+        ]
+      ],
+      "scope": "Full phase reopened in this assignment: current copied source, explicit Debug simulator signing context and immediate wrapper-stop evidence."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/bind_source.py",
+      "sha256": "0954f5c24eb61c4f09c365efe6b3ab1fdb9f8342f86bad3e7654795464b53347",
+      "reviewed_lines": [
+        [
+          1,
+          59
+        ]
+      ],
+      "scope": "Full exact source binding selector, frozen before/after and O_EXCL non-overwrite path reopened."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/owned_lane.py",
+      "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+      "reviewed_lines": [
+        [
+          1,
+          228
+        ]
+      ],
+      "scope": "Full canonical source identity, explicit process ownership and corrected warning-enabled holder query reopened. Output acceptance limits occur after subprocess capture, not hard RAM ceilings."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/copied_sources.py",
+      "sha256": "d52f4f7904d1481fee00796a1c0775ee3512934639dac45fee44704fa9b74e62",
+      "reviewed_lines": [
+        [
+          1,
+          231
+        ]
+      ],
+      "scope": "Full input whitelist, protected exclusions, required copied-input checks and post-build drift checks reopened. Instrumentation helpers are imported but normal driver never calls instrument_kotlin."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/secondary_fifo.py",
+      "sha256": "170586ec941b02866acfa4b8e54aa3dd0842dbc7bc9c4b50410bca4b1149440a",
+      "reviewed_lines": [
+        [
+          1,
+          252
+        ]
+      ],
+      "scope": "Full canonical partial-pair transaction/identity/cleanup implementation reopened in this assignment; independently reviewed exact source and canonical172 controls linked below."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/simulator_signing.py",
+      "sha256": "89524b777694f8504008a83b60299725cae01e8b642c10754283d79ce1974d1e",
+      "reviewed_lines": [
+        [
+          1,
+          190
+        ]
+      ],
+      "scope": "Full ad-hoc-only override contract, no credential/profile/custom entitlement acceptance, exact target/SDK/source path and exclusive phase receipt reopened."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/run_ios_readiness.py",
+      "sha256": "85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8",
+      "reviewed_lines": [
+        [
+          1,
+          61
+        ],
+        [
+          90,
+          96
+        ],
+        [
+          152,
+          176
+        ],
+        [
+          278,
+          326
+        ],
+        [
+          920,
+          936
+        ]
+      ],
+      "scope": "Canonical imported ownership constructor, PID UID callback, parent signal deferral, binding-path validation and relevant cleanup caller paths reopened in this assignment/integration review. Instrumented main is not invoked."
+    }
+  ],
+  "prior_same_hash_source_reviews": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-header-diagnostics-independent-source-review-01.json",
+      "sha256": "79c453bfbc7f469aae74a023d1563d1fe3776160db5fc35e73018452ca1ef747"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-header-diagnostics-independent-verified-02.json",
+      "sha256": "d6b7c0b543b60dc4718bc303addfd6a058a0fb5bb02225bd0243feaf7a8c1d25"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/partial-fifo-attestation-draft01-independent-review-01.json",
+      "sha256": "84308f1d14ee8a731c246daba6d8bde7da37c81b67a9fefd10f27b8a1570fa92"
+    }
+  ],
+  "source_conclusions": [
+    "Main requires exact cycle form, canonical source binding, matching reviewed control hash and the shared nonblocking build-lane lock. Source and all applicable copied bytes are checked before build and again after task-owned workers stop.",
+    "Copying changes exactly the UI test source and reviewed Xcode shell phase; production Kotlin/Swift source and resources are unchanged. Every copied allowed input is hash-bound; no unregistered copied source additions are accepted.",
+    "Creation establishes a canonical unique mkdtemp allocation and metadata identity before subprocesses. Fresh owned simulator name/UUID, exact task paths and isolated Gradle home constrain ownership; shared global caches are pointers and are never recursively deleted.",
+    "Exact Xcode26.5/17F42, iOS26.5 ARM64 Debug simulator and JDK21 are enforced. This intentionally is not the Store-qualified Xcode26.3/17C529 gate. The sole signing option is credential-free ad-hoc Debug simulator signing, verified after build/install.",
+    "Actual XCResult summary/tests/details must agree with all eight observation trains. Nonzero Xcode or failed embedded Gradle build/stop cannot become success from markers or stale output.",
+    "Built/installed image inventories and source-bound notice-package receipts precede a separate ninth app launch. Numeric-PID sample/vmmap are bracketed by attested process generation and current artifact hashes; this is not per-repetition mapped-image proof or mapped-memory hashing.",
+    "Failure-only header diagnostics do not relax original exact PID/path/UUID/address acceptance. Raw temporary stacks/maps are removed; original failure remains. The provenance parser may still fail honestly on this host format.",
+    "Canonical partial FIFO handling preserves the live observed identity across a later exited-worker query; new sibling inode acceptance still requires trusted live-state evidence. Pending cache128/path ledger256 bounds remain. First-seen-after-exit workers are not silently adopted.",
+    "lsof -nP -t +w keeps warnings visible, retains all exit1 partial-selection PIDs and fails closed on warnings/malformed/unexpected output. Unknown holders or retained secondary-attestation errors prevent successful cleanup.",
+    "Finally paths stop copied Gradle immediately after Xcode and again before cleanup, shutdown/delete only the owned simulator, stop exact owned workers, clean attested FIFOs, retain compact evidence and remove only exact owned copy/build/DerivedData/temp outputs. Any cleanup error blocks overall PASS and subsequent cycle."
+  ],
+  "executed_controls": [
+    {
+      "cycle": "native-holder-warning-green-01",
+      "receipt": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native-holder-warning-green-01/receipt.json",
+        "sha256": "473c20f832384f026d9ac87c4e1950582a2ea099dfd698f251c527cb14ac354d"
+      },
+      "independent_review": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/canonical-native-holder-warning-independent-review-01.json",
+        "sha256": "ef8f27e87fa0ef973e95825e7572ee079d7062b70933de7377507b7c0ed17438"
+      },
+      "actual_tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "status": "PASS",
+      "stop_exit_code": 0,
+      "cleanup_completed_at": "2026-09-08T00:02:54.499628+00:00",
+      "remaining_outputs": [],
+      "cleanup_errors": [],
+      "scope": "Focused canonical holder query controls; original red7 retained."
+    },
+    {
+      "cycle": "native-ownership-canonical-controls-01",
+      "receipt": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native-ownership-canonical-controls-01/receipt.json",
+        "sha256": "3b89c91d02128a8b82ca4ca8f765f1fbc3065104721ef6264d8d59d9bcf0716f"
+      },
+      "independent_review": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/partial-fifo-and-canonical172-independent-reconciliation-01.json",
+        "sha256": "5117406b0aec39d831171c3f5cccda6184cc48ef5bab17b069245360fde03995"
+      },
+      "actual_tests": 172,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "status": "PASS",
+      "stop_exit_code": 0,
+      "cleanup_completed_at": "2026-09-08T00:13:08.904736+00:00",
+      "remaining_outputs": [],
+      "cleanup_errors": [],
+      "scope": "Actual canonical discovery IDs independently reconciled. Includes39 FIFO and7 holder tests; one host Swift/Foundation test contains18 subcases, not18 additional tests."
+    },
+    {
+      "cycle": "normal-after-ownership-controls-01",
+      "receipt": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-after-ownership-controls-01/receipt.json",
+        "sha256": "be91d1835b93e3d21bb08cdafd8579692e3f81d397ef0dfe1b8b717e258a4f44"
+      },
+      "independent_review": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-after-ownership99-independent-reconciliation-01.json",
+        "sha256": "28898a58dbd3ee47bf50ac0f3a1525c2dd20a2ce65dc04899662649e000c0976"
+      },
+      "actual_tests": 99,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "status": "PASS",
+      "stop_exit_code": 0,
+      "cleanup_completed_at": "2026-09-08T00:20:17.104816+00:00",
+      "remaining_outputs": [],
+      "cleanup_errors": [],
+      "scope": "Dependent normal-runner controls: AST, declared, discovered and actual IDs agree;77-file before/after and26 actual imports bound. Pure control tests, not an app launch."
+    },
+    {
+      "cycle": "native-ownership-release-controls-01",
+      "receipt": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native-ownership-release-controls-01/receipt.json",
+        "sha256": "e68d140cddd2dcc2fbb778e4f0694b61cd389a4f3ff8a37fc9e38f73bf7bac9f"
+      },
+      "independent_review": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native-ownership-inventory-release347-independent-review-01.json",
+        "sha256": "6092fe73576d96ca3d5383194a8e5538d6bc813299e586873f822b04f024a1bb"
+      },
+      "actual_tests": 347,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "status": "PASS",
+      "stop_exit_code": 0,
+      "cleanup_completed_at": "2026-09-08T00:29:21.680567+00:00",
+      "remaining_outputs": [],
+      "cleanup_errors": [],
+      "scope": "Release Python controls plus workflow contract, inventory freshness, pinned download, ShellCheck and actionlint checks. Not app/Store verification."
+    }
+  ],
+  "native09_original": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/receipt.json",
+    "sha256": "7035d9505efe8cf1d5d9012024c6c5883c0e9371b97a5a5c5a0cfa15ccf36567"
+  },
+  "native09_disposition": {
+    "original_status": "FAIL",
+    "original_runtime_status": "FAIL",
+    "original_cleanup_status": "FAIL",
+    "xcodebuild_exit_code": 65,
+    "original_fail_unchanged": true,
+    "independent_runtime_classification": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native09-independent-classification-01.json",
+      "sha256": "89e82e99a8bf0477cb67e8b37081216851ccb38e5f93dc83360e4395341a6cc1"
+    },
+    "meaning": "Four UIKit tests passed; the app-host storage test failed. Directory Complete protection metadata assertion was not satisfied after WhodunitClassic save/same-process load/envelope equality. File sample was diagnostic-only. Volume support true is not permission to label this unsupported. Other L08 scenarios and final provenance were not reached; no application/platform root cause is approved here.",
+    "supplemental_cleanup": {
+      "status": "RECOVERED_CLEANUP_ONLY",
+      "independent_reconciliation": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09-secondary-recovery03-independent-reconciliation-01.json",
+        "sha256": "c50c47f279c06d5038ae25ca2878057c6c01106dcde0daaff65011926ee44517"
+      },
+      "execution": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native09-secondary-fifo-recovery-execute-03/receipt.json",
+        "sha256": "e823b4110c6d401c3128697b3e867581fc949afdb6c6e5346417d0ff918a582c"
+      },
+      "wrapper": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native09-secondary-recovery-execution-03/receipt.json",
+        "sha256": "fa82a311c6f3e14b505f97cf585463c06cb1f6a18e1a250ffe013d4af18fbd61"
+      },
+      "removed": "Exactly two already-attested native09 FIFOs and two empty parent directories, no other deletion.",
+      "independence": "This reviewer authored the isolated03 query adjustment under earlier specific authorization; root independently approved it and factory_review independently reconciled actual27 controls/verify/execution and exact absence. This report relies on that separate validation, not self-approval.",
+      "meaning": "Original09 remains FAIL/cleanupFAIL. Supplemental exact recovery closes only the identified residual blocker. Source09 canonical ownership fixes and fresh controls separately address prevention; no unconditional guarantee to observe every short-lived worker."
+    },
+    "supersession": "This is a new source09 normal10-only conditional approval. It does not relabel09 cleanupPASS or reuse the earlier source08 approval unchanged."
+  },
+  "approved_invocation": {
+    "cycle": "ios-readiness-10",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "ios-readiness-10",
+      "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-09.json",
+      "efa971d9dfb259bc227e9c5abeb90ab915851a6f25422f8e24e5252591ab9ff4",
+      "--simulator-signing=adhoc"
+    ],
+    "executor": "/root only",
+    "purpose": "Uninstrumented production-source Debug home repetitions, followed by separately classified ninth-launch image provenance and notice checks.",
+    "preconditions": [
+      "Root freshly verifies shared lane ownership, no competing build workers, adequate free disk/RAM, no pre-existing original build outputs and unused ios-readiness-10 evidence destination. Reviewer has not probed these changing host conditions.",
+      "Exact HEAD/tree/tracked diff/source800/copy740 and bound78 controls remain equal to this report. Do not edit source, support, normal diagnostics or binding during execution. Additional source-excluded reports alone do not alter source identity.",
+      "The native09 supplemental recovery and all control cycles are finalized; no known unresolved task-owned residual is carried into the new cycle.",
+      "Use only the exact command and fresh owned simulator. No instrumented L08 invocation, user device/profile, credentials, Store signing, publication or alternate SDK is authorized.",
+      "Preserve compact real exit/test/provenance/notice/cleanup receipts on success, failure, timeout or cancellation. Do not treat a failure witness or passing diagnostic as repair evidence.",
+      "Perform mandatory immediate Gradle stop and exact-owned cleanup after the cycle. If any worker/file ownership or cleanup condition fails, preserve necessary evidence and stop before another cycle; never broaden deletion or suppress the failure.",
+      "A separate post-run review must reconcile actual XCResult/observations/artifact and source bindings, provenance limitations and cleanup before any runtime PASS is reported."
+    ]
+  },
+  "limits": [
+    "This is conditional execution approval, not proof that native10 has run. No new iOS test, app launch, Gradle/Xcode build, sample/vmmap/lsof/ps query or simulator/process control was performed by reviewer.",
+    "Normal test language overrides and home-only observations cannot verify DS-C01 Follow System, L08 storage/migration, game flows, local/LAN behavior, app-switcher privacy or physical-device networking.",
+    "Even eight successful cold process launches on one fresh simulator do not explain historical first-four-launch failures or prove their absence on user devices.",
+    "No mapped-page rehash, independent native-image observation for preceding eight test launches, iOS16 runtime, physical-device, Store-qualified signing, identity clearance, legal clearance or Store readiness claim.",
+    "Binding/source inventory counts are not an exhaustive fresh audit percentage. Supplemental exact cleanup and pure controls do not turn original failed native runs into successes.",
+    "Process generation bracketing is not atomic reservation; trusted-same-UID ownership assumptions and conservative first-observation/host-output uncertainty remain as documented."
+  ],
+  "preservation_and_cleanup": {
+    "repository_modules_imported": false,
+    "tests_builds_native_queries": false,
+    "process_signals_or_deletion": false,
+    "git_history_store_or_application_mutations": false,
+    "background_workers_started": false,
+    "build_outputs_created": false,
+    "private_material_read": false,
+    "only_write": "This new additive review JSON; existing receipts, source, user changes and reports preserved. No reviewer task-owned worker/output cleanup is required; root remains sole native build lane."
+  }
+}

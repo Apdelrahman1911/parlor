@@ -1,0 +1,433 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-06T19:40:48.419240+00:00",
+  "author": "/root/native_fix_review",
+  "classification": "TEST/EVIDENCE GAP",
+  "application_defect_established": false,
+  "original_controls": {
+    "sha256": "c9e1dc146972a38b063962998b54aabed8f76524c92d8d2dcfbb1c0b31266ef2",
+    "source_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+    "diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "source_unchanged": true,
+    "controls_unchanged": true
+  },
+  "receipts": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-06/receipt.json",
+      "sha256": "b36c3966dbc64c10daae37c9feeb995a478426940baeb5697ad0dcd5f4213cc5"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-06/xcodebuild.log",
+      "sha256": "e5da0bf51773cc424424756214c5d417d16b4bd391b84eb603f890a97dc93df0"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-06/xcresult-summary.json",
+      "sha256": "3cc01bd1a0904c2397b43bfe30f501730f0d246b8e3760fdaddbe5a712a8e4c3"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-06/xcresult-tests.json",
+      "sha256": "4c87e0599472a4c7e8b937e79c61ef9ce1dd21d5559e88a20b0f02e98a2cd8c8"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-06/embedded-gradle-stop.txt",
+      "sha256": "fb55a963c8d30249ea6b8be68a62b5921facefdc7823c16ad139fea885be972f"
+    }
+  ],
+  "native_outcome": {
+    "xcode_exit": 65,
+    "tests_passed": 4,
+    "tests_failed": 1,
+    "skipped": 0,
+    "matrix_failure": "Actual OS multilingual prerequisite BLOCKED at public stage: initialEnglishPrimary",
+    "no_app_crash_proven": true
+  },
+  "raw_local_matrices": [
+    {
+      "scenario": "settings",
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-06/probe-settings-result.json",
+      "sha256": "5c4cad9f8d2bd8e32e6757ffca98f3afb23d7ad36e5d971e810f90fb8ffc8564",
+      "schema": 6,
+      "completed": true,
+      "observations": 22,
+      "passive_samples": 0,
+      "before_main_rows": 4,
+      "limitation": "Raw counts and completion markers, not a substitute for the independent complete probe-oracle review."
+    },
+    {
+      "scenario": "whodunit",
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-06/probe-whodunit-result.json",
+      "sha256": "acca86bf06c12ac46344508c0db7d1a31c867c2d5c0af1d68cd4da771ce6046e",
+      "schema": 6,
+      "completed": true,
+      "observations": 97,
+      "passive_samples": 72,
+      "before_main_rows": 1,
+      "limitation": "Raw counts and completion markers, not a substitute for the independent complete probe-oracle review."
+    },
+    {
+      "scenario": "mafia",
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-06/probe-mafia-result.json",
+      "sha256": "8d8100ba0e2d6aca6c578d86726a6d363f1b153252645f66624b6cc6614886d7",
+      "schema": 6,
+      "completed": true,
+      "observations": 99,
+      "passive_samples": 72,
+      "before_main_rows": 1,
+      "limitation": "Raw counts and completion markers, not a substitute for the independent complete probe-oracle review."
+    }
+  ],
+  "public_start": {
+    "rows": 40,
+    "search_samples": 36,
+    "before_activation_rows": 1,
+    "last_public_successor": {
+      "elapsedMilliseconds": 24024,
+      "fields": {
+        "alertPresent": false,
+        "enabled": false,
+        "foreground": true,
+        "gameDirection": "ltr",
+        "hittable": false,
+        "keyboardPresent": false,
+        "overlay": {
+          "present": true,
+          "rectangle": [
+            68.66666666666666,
+            134,
+            265,
+            49
+          ],
+          "validFiniteRectangle": true
+        },
+        "overlayCountCapped16": 1,
+        "publicContext": {
+          "publicPhase": "role-assignment",
+          "scenario": "mafia",
+          "surface": "mafia-local"
+        },
+        "target": {
+          "present": false
+        },
+        "targetCountCapped16": 0,
+        "viewport": {
+          "present": true,
+          "rectangle": [
+            0,
+            0,
+            402,
+            874
+          ],
+          "validFiniteRectangle": true
+        }
+      },
+      "kind": "successor",
+      "ordinal": 40,
+      "schemaVersion": 1
+    },
+    "limitation": "Sampled coordinate is not OS event-location/callback attestation."
+  },
+  "public_initial_prerequisite": {
+    "rows": 15,
+    "last_observe": {
+      "fields": {
+        "addLanguageSuccessorFrame": {
+          "present": true,
+          "rectangle": [
+            20,
+            307.3333320617676,
+            362,
+            55
+          ],
+          "validFiniteRectangle": true
+        },
+        "addLanguageSuccessorHittableEnabled": true,
+        "alertCountCapped16": 0,
+        "arabicCellCountCapped16": 1,
+        "arabicObserved": true,
+        "arabicPreferredRowFrame": {
+          "present": true,
+          "rectangle": [
+            20,
+            239.33333206176758,
+            362,
+            68
+          ],
+          "validFiniteRectangle": true
+        },
+        "arabicPreferredRowObserved": true,
+        "arabicTextCountCapped16": 2,
+        "englishPrimaryCellCountCapped16": 1,
+        "englishPrimaryFrame": {
+          "present": true,
+          "rectangle": [
+            20,
+            171.33333206176758,
+            362,
+            68
+          ],
+          "validFiniteRectangle": true
+        },
+        "englishPrimaryHittable": true,
+        "englishPrimaryObserved": true,
+        "foreground": true,
+        "keyboardPresent": false,
+        "knownControl": "addLanguage",
+        "knownNavigationTitles": [
+          {
+            "countCapped16": 0,
+            "knownTitle": "Settings"
+          },
+          {
+            "countCapped16": 0,
+            "knownTitle": "General"
+          },
+          {
+            "countCapped16": 1,
+            "knownTitle": "Language & Region"
+          },
+          {
+            "countCapped16": 0,
+            "knownTitle": "Add Language"
+          },
+          {
+            "countCapped16": 0,
+            "knownTitle": "iPhone Language"
+          }
+        ],
+        "languageRegionTitleHittable": true,
+        "languageRegionTitleObserved": true,
+        "mergedEnglishPrimaryCountCapped16": 0,
+        "searchFieldCountCapped16": 0,
+        "selectorClasses": [
+          {
+            "atMostTwo": [
+              {
+                "enabled": true,
+                "frame": {
+                  "present": true,
+                  "rectangle": [
+                    20,
+                    307.3333320617676,
+                    362,
+                    55
+                  ],
+                  "validFiniteRectangle": true
+                },
+                "hittable": true
+              }
+            ],
+            "countCapped16": 1,
+            "kind": "cell-containing-known-text"
+          },
+          {
+            "atMostTwo": [
+              {
+                "enabled": true,
+                "frame": {
+                  "present": true,
+                  "rectangle": [
+                    36,
+                    323.6666653951009,
+                    123.66666666666666,
+                    22.33333333333337
+                  ],
+                  "validFiniteRectangle": true
+                },
+                "hittable": true
+              }
+            ],
+            "countCapped16": 1,
+            "kind": "known-button"
+          },
+          {
+            "atMostTwo": [],
+            "countCapped16": 0,
+            "kind": "known-text"
+          }
+        ],
+        "viewport": {
+          "present": true,
+          "rectangle": [
+            0,
+            0,
+            402,
+            874
+          ],
+          "validFiniteRectangle": true
+        }
+      },
+      "ordinal": 14,
+      "schemaVersion": 1,
+      "stage": "initialEnglishPrimary",
+      "status": "observe"
+    },
+    "blocked_row": {
+      "fields": {
+        "addLanguageSuccessorFrame": {
+          "present": true,
+          "rectangle": [
+            20,
+            307.3333320617676,
+            362,
+            55
+          ],
+          "validFiniteRectangle": true
+        },
+        "addLanguageSuccessorHittableEnabled": true,
+        "alertCountCapped16": 0,
+        "arabicCellCountCapped16": 1,
+        "arabicObserved": true,
+        "arabicPreferredRowFrame": {
+          "present": true,
+          "rectangle": [
+            20,
+            239.33333206176758,
+            362,
+            68
+          ],
+          "validFiniteRectangle": true
+        },
+        "arabicPreferredRowObserved": true,
+        "arabicTextCountCapped16": 2,
+        "englishPrimaryCellCountCapped16": 1,
+        "englishPrimaryFrame": {
+          "present": true,
+          "rectangle": [
+            20,
+            171.33333206176758,
+            362,
+            68
+          ],
+          "validFiniteRectangle": true
+        },
+        "englishPrimaryHittable": true,
+        "englishPrimaryObserved": true,
+        "foreground": true,
+        "keyboardPresent": false,
+        "knownControl": "addLanguage",
+        "knownNavigationTitles": [
+          {
+            "countCapped16": 0,
+            "knownTitle": "Settings"
+          },
+          {
+            "countCapped16": 0,
+            "knownTitle": "General"
+          },
+          {
+            "countCapped16": 1,
+            "knownTitle": "Language & Region"
+          },
+          {
+            "countCapped16": 0,
+            "knownTitle": "Add Language"
+          },
+          {
+            "countCapped16": 0,
+            "knownTitle": "iPhone Language"
+          }
+        ],
+        "languageRegionTitleHittable": true,
+        "languageRegionTitleObserved": true,
+        "mergedEnglishPrimaryCountCapped16": 0,
+        "searchFieldCountCapped16": 0,
+        "selectorClasses": [
+          {
+            "atMostTwo": [
+              {
+                "enabled": true,
+                "frame": {
+                  "present": true,
+                  "rectangle": [
+                    20,
+                    307.3333320617676,
+                    362,
+                    55
+                  ],
+                  "validFiniteRectangle": true
+                },
+                "hittable": true
+              }
+            ],
+            "countCapped16": 1,
+            "kind": "cell-containing-known-text"
+          },
+          {
+            "atMostTwo": [
+              {
+                "enabled": true,
+                "frame": {
+                  "present": true,
+                  "rectangle": [
+                    36,
+                    323.6666653951009,
+                    123.66666666666666,
+                    22.33333333333337
+                  ],
+                  "validFiniteRectangle": true
+                },
+                "hittable": true
+              }
+            ],
+            "countCapped16": 1,
+            "kind": "known-button"
+          },
+          {
+            "atMostTwo": [],
+            "countCapped16": 0,
+            "kind": "known-text"
+          }
+        ],
+        "viewport": {
+          "present": true,
+          "rectangle": [
+            0,
+            0,
+            402,
+            874
+          ],
+          "validFiniteRectangle": true
+        }
+      },
+      "ordinal": 15,
+      "schemaVersion": 1,
+      "stage": "initialEnglishPrimary",
+      "status": "BLOCKED"
+    },
+    "mutating_language_stages_seen": []
+  },
+  "source_level_reason": [
+    "V8 DSC01OSPrerequisite.swift.in:227 requires englishPrimaryObserved true AND arabicObserved false. Complete actual public observation already satisfies the stronger final exposed/ordered preferred-list guards but violates only the absent-Arabic requirement.",
+    "V8 runner creates a fresh uniquely named simulator; it does not establish a monolingual global preferred-language baseline before this branch.",
+    "V8 DSC01Probe.swift.in:119 writes a synthetic previous per-app AppleLanguages array through UserDefaults.standard, explicitly scoped to the owned Debug application. Current production IosLanguageOverrideOwner likewise handles the application persistent domain. No global preference initialization path was found in the reviewed fixture.",
+    "Fresh identity implies ownership, not a guaranteed set of initial global languages. No evidence here establishes whether the observed pair originates from Simulator defaults, initialization behavior, or another OS mechanism; host preferences/private files were not inspected."
+  ],
+  "v9_correction": [
+    "Preserve V8 and original full matrix bytes; add already-satisfied path only after current strict public language-list proof and second full observation.",
+    "No Add/search/keep-English action on already-satisfied path; distinct disposition and arabicAddedByThisPrerequisite=false. Retain original missing-Arabic addition steps and final proof.",
+    "Require original actual per-app Settings\u2192English, actual in-app AR\u2192System, process restart and own-preference restoration proof after either prerequisite branch. A prerequisite alone is never OS PASS.",
+    "24 actual Swift pure decision assertions plus18 executable Python contract methods authored; not yet executed by this author."
+  ],
+  "cleanup": {
+    "source": "Completed root receipt; no child build/process started",
+    "status": "PASS",
+    "gradle_stops": [
+      {
+        "label": "stop-xcode-immediate",
+        "exit_code": 0,
+        "at": "2026-09-06T19:12:52.124208+00:00"
+      },
+      {
+        "label": "stop-final",
+        "exit_code": 0,
+        "at": "2026-09-06T19:12:53.492451+00:00"
+      }
+    ],
+    "temporary_directory_removed": true,
+    "owned_device_absent": true,
+    "owned_processes_remaining": [],
+    "remaining_outputs": [],
+    "cleanup_errors": []
+  },
+  "independent_validation": "Root/release_fix_review separately reopened raw initial public observation and confirmed the harness-only absent-Arabic assumption in its message; full V9 control approval and future runtime review still required."
+}

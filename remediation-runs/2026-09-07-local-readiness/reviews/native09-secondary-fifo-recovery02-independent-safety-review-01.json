@@ -1,0 +1,276 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "reviewed_at": "2026-09-07T23:50:30.265751+00:00",
+  "assignment": "Independent bounded safety review of factory-authored native09 recovery02 before destructive execution; subsequent03 draft authored only after root direction and requires a different reviewer.",
+  "decision": "BLOCK --execute for frozen02; approve only non-destructive controls/verify inspection. Draft03 addresses the identified warning-visibility gap but is NOT independently approved by its author.",
+  "original_native09": {
+    "runtime": "FAIL",
+    "cleanup": "FAIL",
+    "receipt": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/receipt.json",
+      "sha256": "7035d9505efe8cf1d5d9012024c6c5883c0e9371b97a5a5c5a0cfa15ccf36567"
+    },
+    "any_later_supplement_can_only_resolve_residual_cleanup": true
+  },
+  "reviewed_files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09_secondary_fifo_recovery_02.py",
+      "sha256": "7ae5a99dd4e916529c4d3f108a97cd13eb21168e2b2a8f06a82062a81107c088",
+      "line_ranges": [
+        [
+          1,
+          198
+        ]
+      ],
+      "coverage": "complete"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/test_native09_secondary_fifo_recovery_02.py",
+      "sha256": "3afea3bbb96dd192bea2791115e5f97a510ac352af9930a03b8431acf42f8114",
+      "line_ranges": [
+        [
+          1,
+          205
+        ]
+      ],
+      "coverage": "complete; all24 test bodies/branches/assertions read, no execution"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/secondary_fifo.py",
+      "sha256": "080622194e19ef5d3ffb561e134ab8cf91e3e3ccef1e29197f59781154a7ffcc",
+      "line_ranges": [
+        [
+          1,
+          205
+        ]
+      ],
+      "coverage": "complete original path/identity/late-pending and cleanup proof"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/run_ios_readiness.py",
+      "sha256": "85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8",
+      "line_ranges": [
+        [
+          278,
+          315
+        ]
+      ],
+      "coverage": "original observation error retention and ownership adaptation"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09-secondary-fifo-recovery-independent-proposal-01.json",
+      "sha256": "691caf73451570aae8cab30279ef84d180d15496d8d3fa39625593901855cc37"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09-secondary-fifo-recovery-draft-02.json",
+      "sha256": "04b985ad2f0817747dc207af8b740b9e3cfc03e5502402f40c24eac0170a9c6b"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09-secondary-lsof-contract-research-and-draft02-01.json",
+      "sha256": "cdfbe44a33d024497b6ef4c723095294563b647743fc9323db79294696787c65"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09-secondary-fifo-recovery-root-review-01.json",
+      "sha256": "c8957eecf40cc27e74a2a0abac3f101226377d28a9ccbd23145f8915201854da"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09-secondary-fifo-recovery-01-to-02.patch",
+      "sha256": "a844e4a007c1c061576f89f296dc6937b121a54816f7f6fbf00c28a89a01f69f"
+    }
+  ],
+  "original_ownership_reconciliation": {
+    "immutable_six_evidence_hashes_match": true,
+    "historical_child_and_parent_exact_original_receipt_members": true,
+    "original_sibling_record_and_pending_claim_exact": true,
+    "original_parent_and_sibling_device_inode_uid_mode_birth_match_new_plan": true,
+    "pending_new_inode": 85822501,
+    "not_historical_inode_attestation": "HostToRemote was only an exact pending pair claim in native09. Factory later recorded its current inode separately; no historical inode/creator-PID proof was invented.",
+    "source_proof": "secondary_fifo.py:78-136 verifies exact live child/parent/start/argv/pair/UID before pending claim. Lines139-152 attest only existing leaves. Late observed mismatch is retained by run_ios_readiness.py:295-303. Original cleanup154-158 correctly refuses pending existing leaf.",
+    "reconstruction_limit": "Exact cycle-created parent/sibling continuity and live-attested unique historical pair justify only this one reviewed path-origin reconstruction under trusted same-UID operating conditions. Not a rule permitting generic pending adoption or hostile-actor forensic proof.",
+    "live_preflight": "No reviewer process/holder/current-file inspection executed. Root owns live guards and separate results."
+  },
+  "safety_properties_verified_from_source": [
+    {
+      "lines": "02:14-22,36-59,165-170",
+      "conclusion": "Literal repository/campaign/root/nonce/PIDs. Exact script approval hash, plan hash and original evidence hashes. Frozen11 ancestor/target records; no path discovery for removal; UID501/cycle birth bound and newly reviewed pending inode85822501 fixed."
+    },
+    {
+      "lines": "02:95-126",
+      "conclusion": "No-follow descriptor walk from / through literal ancestors. Directory descriptors checked against device/inode/uid/mode/birth; repeated named and fd stat identities detect moved/replaced parents. Root contents exactly IB, IB exactly remaining pair. FIFOs must be exact, zero-sized, single-link and proper mode."
+    },
+    {
+      "lines": "02:79-85,127-158",
+      "conclusion": "Both original PIDs must be absent, including reuse. Every returned holder PID except current helper is rejected. File/ancestor/contents guards run before/after external queries, before each unlink and each parent rmdir. Empty-dir rmdir prevents recursive or unknown-file removal."
+    },
+    {
+      "lines": "02:103-110,133-159",
+      "conclusion": "ExitStack closes all directory fds on normal/early/exception paths. No FIFO is opened/read. Only two exact FIFO unlinks and two empty-parent rmdirs exist. No signal, glob deletion, rmtree or Git operation."
+    },
+    {
+      "lines": "02:171-193",
+      "conclusion": "New exclusive evidence directory and x-mode claim/events/final receipt. Claim and each event flush/fsync. Failures preserve remainder with blocked status; partial mutations keep prior events. No retries/adoption of changed paths or overwriting original09/01 evidence."
+    }
+  ],
+  "query_contract_review": {
+    "legitimate_exit1_with_pids": "Confirmed. Actual held-dirfd witness logged exact lsof+D exit1 and PID52505 with empty stderr. Official Apple main.c1499-1543 makes1 possible when any requested file is unused, even though another selection found a PID. 02 retains all PIDs and only relaxes its one exact lsof command.",
+    "ps_contract": "No relaxation. Exact two-PID query rejects any existing/reused PID and ambiguous code/output. Independent original raw probe gives1/empty for absent selection and0/self for known-owned probe. No broad process scan or signal authorization.",
+    "own_fd_exemption": "Source opens only ancestor directory descriptors, never FIFOs. Production holder exclusion is exactly os.getpid; not PID52505 or an arbitrary historical worker. Any other returned holder blocks.",
+    "blocking_gap": {
+      "id": "RECOVERY02-WARN-VISIBILITY",
+      "classification": "CONFIRMED SAFETY GAP IN ONE-SHOT HELPER GUARANTEE; NOT A NEW APPLICATION DEFECT",
+      "source_locations": [
+        [
+          62,
+          75
+        ],
+        [
+          83,
+          85
+        ]
+      ],
+      "expected": "Native ownership-query errors/warnings must remain observable and block deletion; do not equate a partial holder list with complete safe enumeration.",
+      "actual": "The production+allowlisted query requests -w -t. -t itself sets warning suppression. Empty stderr therefore does not establish that no warning/error caused lsof to omit a selected path.",
+      "reachable_source_proof": "Apple arg.c:1058-1069 continues after OpenDir failure, printing warning only if !Fwarn; lines1142-1151 continue after a failed selected-entry lstat with the same warning guard. main.c:880-882 sets Fterse=Fwarn=1 for -t. Thus an omitted selection may leave no stderr under02. Current helper only validates captured output shape and returned PIDs, not omitted selection completeness.",
+      "counter_evidence": "Exact before/after directory/file identities, old-PID absence, owner-only-write tree, current-user execution and four-object size reduce practical exposure and remain valuable. They do not prove an external lsof query had no transient read/stat failure. No actual other holder or warning on native09 was established by this review.",
+      "decision": "Controls02/verify02 results remain legitimate for their exercised path but do not waive this gap. Keep02 unchanged and do not execute its destructive mode.",
+      "narrow_correction": "Use exact /usr/sbin/lsof -nP -t +w +D <frozen root>, with +w AFTER -t, both at production call and partial-selection allowlist. Continue retaining every PID and failing on any stderr for every accepted exit form. No warning filtering or blind retry."
+    },
+    "explicit_selections_considered": "Four explicit file selections would avoid directory descent, but each deletion changes live selection set and needs additional stage allowlists. Root directed minimal +D retained because exact contents are guarded pre/post and are only four objects. Warning visibility is the correction; no extra discovery/scope expansion.",
+    "residual_limits": "Post-capture byte checks are acceptance bounds, not streaming RAM ceilings. A native process snapshot is not an atomic lock against hostile same-UID changes, and no absolute kernel-level enumeration guarantee is claimed. Any surfaced warning becomes BLOCKED."
+  },
+  "test_quality": {
+    "02_declared_AST_tests": 24,
+    "AST_matches_frozen_manifest": true,
+    "review": "All positive/non-deletion, changed leaf/parent/uid/birth, symlink, regular-file, hardlink, nonce, unknown-entry, PID/holder/query error, query-race and interruption assertions inspected. Synthetic TemporaryDirectory and addCleanup own every fixture; native query calls are mocked.",
+    "02_gap": "Mocked stderr cases prove rejection only when stderr is present; no test demonstrated that production -w -t did not hide native warnings. Passing24 and real verify-only cannot prove destructive safety outside that exercised path.",
+    "actual02_results": "Root reports24PASS plus VERIFIED_NO_DELETION with cleanup0. Those completed results are not independently reconciled in this static review; no claim they repaired warning visibility.",
+    "03_declared_AST_tests": 27,
+    "03_new_coverage": "Exact production subprocess argv has -t then+w; suppressed/missing/misordered or extra warning argv cannot use relaxed exit1/PID contract; warning stderr always fatal for exit0/1 with empty, self or other PIDs.",
+    "03_execution": "NOT RUN by author; root must independently inspect and execute."
+  },
+  "authoritative_research": [
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/lsof/7a8a1b2a3c0f35c30a5fcd0927f31d441c3e5255/lsof/main.c",
+      "accessed_at": "2026-09-07T23:45:08.109503+00:00",
+      "sha256": "74656c434777d77626d8962bd1fd06f17b59c286f02c72e40520ebf03a8b8cae",
+      "relevant_line_ranges": [
+        [
+          880,
+          882
+        ],
+        [
+          938,
+          940
+        ],
+        [
+          1499,
+          1543
+        ],
+        [
+          1757,
+          1762
+        ]
+      ],
+      "claim": "-t sets warning suppression, later+w enables warnings; exit1 with partial matches is legitimate and exit1 is not inherently error-free."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/lsof/7a8a1b2a3c0f35c30a5fcd0927f31d441c3e5255/lsof/arg.c",
+      "accessed_at": "2026-09-07T23:45:08.772634+00:00",
+      "sha256": "1aaa7a9b134df024f6f2c35d475ce05460cfb998f3e1dc67fca7819bc2ed1585",
+      "relevant_line_ranges": [
+        [
+          1000,
+          1069
+        ],
+        [
+          1094,
+          1180
+        ]
+      ],
+      "claim": "Exact directory tree selection can skip errored operations with conditional warnings. Re-enable warnings; do not infer missing warnings from empty stderr under-w."
+    },
+    {
+      "path": "/usr/share/man/man8/lsof.8",
+      "sha256": "b3e81bbde414e488160ead258804afbb09438c49b3aaba2e59f185314cc8ac1e",
+      "reviewed_lines": [
+        [
+          436,
+          478
+        ],
+        [
+          1725,
+          1750
+        ]
+      ],
+      "claim": "+D recursively selects root contents without symlink/mount following by default; depends on stat permissions and may use memory; -t implies-w."
+    },
+    {
+      "path": "/usr/share/man/man1/ps.1",
+      "sha256": "fbddf023ce4960c7e6eadebcfb7f0badf0ab6c3f59b2b97c2807d3f67a85142d",
+      "reviewed_lines": [
+        [
+          190,
+          198
+        ],
+        [
+          640,
+          650
+        ]
+      ],
+      "claim": "-p explicitly selects IDs; no extrapolated lsof exit semantics."
+    }
+  ],
+  "research_limitations": [
+    "Official immutable Apple lsof-76 source and installed manual agree with observed local exit1/PID witness; this is not a reproducible-build mapping of installed lsof to that tag.",
+    "Attempted additional public dialects/darwin/dproc.c URL returned404 and supplied no evidence. No claims rely on that nonexistent path."
+  ],
+  "03_draft_handoff": {
+    "author": "/root/release_fix_review",
+    "required_independent_reviewer": "/root (or another reviewer who did not author03)",
+    "decision": "DRAFT ONLY; author cannot give independent approval. Eligible for separate root review + synthetic controls + non-destructive preflight before any destructive authorization.",
+    "files": [
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09_secondary_fifo_recovery_03.py",
+        "sha256": "5e0b2dbcc82ee4af777437c8c6c0181869411dc7e564d3930b1a4d84a805a458"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/test_native09_secondary_fifo_recovery_03.py",
+        "sha256": "c0f14540737a0ba4738fde2caf34bd8198fc11a7faf4a0ad652f4232d8362300"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09-secondary-fifo-recovery-02-to-03.patch",
+        "sha256": "da6c2952cf21226ea1a2aee34ef88ddf94020dcb65bd027c697012ce2a1ea506"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09-secondary-fifo-recovery-draft-03.json",
+        "sha256": "59d3908d5338c56b5b6ffe67caab989b32e06a0b57bec2503d4920f0defdf7e0"
+      }
+    ],
+    "ExactRecovery_AST_unchanged": true,
+    "all24_prior_test_bodies_unchanged_after_deliberate_argv_normalization": true,
+    "source_changes": "Only exact query command/allowlist warning flags, explanatory comment and separate03 evidence directory names; no ownership/deletion/state-machine refactor.",
+    "execution_or_result_claim": "None"
+  },
+  "evidence_read": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native09-secondary-recovery-preflight-01/gradle.log",
+      "sha256": "bd9bc4a11b3640bf1a3f2c8285561e7a38912488f9701684654c6036c67466c5"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native09-secondary-query-probe-01/gradle.log",
+      "sha256": "3905e13180e6cf0feb5e37973995fb349640735d7cc191aab7546d69961f6065"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native09-secondary-query-openfds-01/gradle.log",
+      "sha256": "a1480a0709bfeb25582b83df5a0b1c916e1ac2b195685a320902e3f061690107"
+    }
+  ],
+  "preservation_and_hygiene": {
+    "02_and_original_immutable_evidence_hashes_unchanged": true,
+    "application_or_control_source_changes": false,
+    "native_queries_builds_tests_process_control_deletion": false,
+    "new_workers_or_build_outputs": false,
+    "writes": "Only additive03 helper/tests/patch/manifest requested by root and this additive report. No source/Git/Store/user file modifications. Public-source reads bounded to1MiB with timeouts; no retained downloads."
+  }
+}

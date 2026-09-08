@@ -1,0 +1,149 @@
+{
+  "timestamp": "2026-09-05T11:02:41.793649+00:00",
+  "reviewer": "/root/session_cont",
+  "references": [
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/security/errsecmissingentitlement.json",
+      "accessed_utc": "2026-09-05T10:47:46.145026+00:00",
+      "http_status": 200,
+      "sha256": "a09771e4effdb7a2743eccdf2c3b95dd9ded4794e74bbc3dd2ef3ba06bd36410",
+      "bytes": 15413,
+      "file": "errsecmissingentitlement.json",
+      "canonical_url": "https://developer.apple.com/documentation/security/errsecmissingentitlement",
+      "reviewed_extract": "errsecmissingentitlement-full.md",
+      "extract_sha256": "83d7ab77a65f90f6f42f92c44478f5a821595a7c040437accc26911e1d4fac25",
+      "claim": "Missing entitlement; default access-group omission is supported; detailed entitlement diagnosis is directed at hardware-target artifacts, not Simulator.",
+      "applicability": "Apple Security/Foundation APIs present in installed iPhoneSimulator26.5 SDK; Parlor iOS implementation invokes them. Online page is current at access date, not immutable historical API proof.",
+      "limitations": "Does not prove unsigned simulator always returns this code. Native02 separately observed it.",
+      "reviewer": "/root/session_cont"
+    },
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/security/errsecitemnotfound.json",
+      "accessed_utc": "2026-09-05T10:47:49.089356+00:00",
+      "http_status": 200,
+      "sha256": "a2db6e50bdc426446682b1d3084871a97af00626def4ab6aff3cc5a1459a832d",
+      "bytes": 7107,
+      "file": "errsecitemnotfound.json",
+      "canonical_url": "https://developer.apple.com/documentation/security/errsecitemnotfound",
+      "reviewed_extract": "errsecitemnotfound-full.md",
+      "extract_sha256": "1417e4476ed30fad1357d07e2e14c66ff12e5d5a5dc9b8f213bec22fae51733c",
+      "claim": "Item cannot be found; matches production success-null branch.",
+      "applicability": "Apple Security/Foundation APIs present in installed iPhoneSimulator26.5 SDK; Parlor iOS implementation invokes them. Online page is current at access date, not immutable historical API proof.",
+      "limitations": "Absence status must be observed; it cannot be inferred from a fresh install.",
+      "reviewer": "/root/session_cont"
+    },
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/security/ksecattraccessgroup.json",
+      "accessed_utc": "2026-09-05T10:47:51.084010+00:00",
+      "http_status": 200,
+      "sha256": "1c8ed38f2a55f039773cdbb32d9e145b911bcd5f45d5350a5c33bc2ca6cc13b7",
+      "bytes": 21634,
+      "file": "ksecattraccessgroup.json",
+      "canonical_url": "https://developer.apple.com/documentation/security/ksecattraccessgroup",
+      "reviewed_extract": "ksecattraccessgroup-full.md",
+      "extract_sha256": "41a2cdbaaf16b535e2971dd736d1b177d3a6d9368352913c091384cb3852dd1a",
+      "claim": "Default access groups derive from app identity/entitlements; an explicit sharing group is not required for ordinary own-app storage.",
+      "applicability": "Apple Security/Foundation APIs present in installed iPhoneSimulator26.5 SDK; Parlor iOS implementation invokes them. Online page is current at access date, not immutable historical API proof.",
+      "limitations": "No signed Parlor artifact or private signing material inspected.",
+      "reviewer": "/root/session_cont"
+    },
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/security/secitemcopymatching(_:_:).json",
+      "accessed_utc": "2026-09-05T10:47:52.500772+00:00",
+      "http_status": 200,
+      "sha256": "e659791ed867488cb7dd61aa8105a1705c8161c5cb1e1f98ac3c6ed6cd0e9cca",
+      "bytes": 50220,
+      "file": "secitemcopymatching.json",
+      "canonical_url": "https://developer.apple.com/documentation/security/secitemcopymatching(_:_:)",
+      "reviewed_extract": "secitemcopymatching-full.md",
+      "extract_sha256": "3143cf9cfb6cb81daa0c57ccfe10683b40cab361eb7bf3f19c18bf25202fe323",
+      "claim": "Returns OSStatus for query, defaults/access-group behavior; blocking API belongs off main thread.",
+      "applicability": "Apple Security/Foundation APIs present in installed iPhoneSimulator26.5 SDK; Parlor iOS implementation invokes them. Online page is current at access date, not immutable historical API proof.",
+      "limitations": "Production Default dispatcher and probe background queue inspected; no timing/performance proof.",
+      "reviewer": "/root/session_cont"
+    },
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/foundation/filemanager/url(for:in:appropriatefor:create:).json",
+      "accessed_utc": "2026-09-05T10:52:59.030452+00:00",
+      "http_status": 200,
+      "file": "filemanager-url.json",
+      "bytes": 44129,
+      "sha256": "282ba787d7afc50b3ee33a1f11329f5da8450d8b8c3a27f0eadbfa2b96382f9f",
+      "canonical_url": "https://developer.apple.com/documentation/foundation/filemanager/url(for:in:appropriatefor:create:)",
+      "reviewed_extract": "filemanager-url-full.md",
+      "extract_sha256": "ce75bfebef5260022f9dc942cf72004d49d9b75457a24c3e422d635adadf23d9",
+      "claim": "create parameter controls creation of the requested standard directory.",
+      "applicability": "Apple Security/Foundation APIs present in installed iPhoneSimulator26.5 SDK; Parlor iOS implementation invokes them. Online page is current at access date, not immutable historical API proof.",
+      "limitations": "Actual OS/container calls can still fail; Foundation stages observed only in separate native probe.",
+      "reviewer": "/root/session_cont"
+    },
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/foundation/filemanager/createdirectory(atpath:withintermediatedirectories:attributes:).json",
+      "accessed_utc": "2026-09-05T10:53:02.284386+00:00",
+      "http_status": 200,
+      "file": "filemanager-create-directory.json",
+      "bytes": 39611,
+      "sha256": "ec47b77c3ff9fc96bba8129b239ff6b379c002b2f5c0ab4cfe7c52873a8d3c4c",
+      "canonical_url": "https://developer.apple.com/documentation/foundation/filemanager/createdirectory(atpath:withintermediatedirectories:attributes:)",
+      "reviewed_extract": "filemanager-create-directory-full.md",
+      "extract_sha256": "44d18648cf7bfff410c97486eeffc91f634348f4710df9a2766e777d4bda16df",
+      "claim": "Intermediate-directory flag creates missing parents; existing directory is not itself a missing-parent error.",
+      "applicability": "Apple Security/Foundation APIs present in installed iPhoneSimulator26.5 SDK; Parlor iOS implementation invokes them. Online page is current at access date, not immutable historical API proof.",
+      "limitations": "Not a guarantee against filesystem/protection errors.",
+      "reviewer": "/root/session_cont"
+    },
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/foundation/filemanager/contentsofdirectory(atpath:).json",
+      "accessed_utc": "2026-09-05T10:53:04.786584+00:00",
+      "http_status": 200,
+      "file": "filemanager-contents.json",
+      "bytes": 37421,
+      "sha256": "769171f1ff1bf1c1a346354b8ee769760b5fc85aa05e735d30d47e8ea8ab131b",
+      "canonical_url": "https://developer.apple.com/documentation/foundation/filemanager/contentsofdirectory(atpath:)",
+      "reviewed_extract": "filemanager-contents-full.md",
+      "extract_sha256": "7aa1a714bb629ae9234d4005032f231cfe1cf4c964dea351727714c1acae2b79",
+      "claim": "Returns empty array for empty directory and error on failed read.",
+      "applicability": "Apple Security/Foundation APIs present in installed iPhoneSimulator26.5 SDK; Parlor iOS implementation invokes them. Online page is current at access date, not immutable historical API proof.",
+      "limitations": "Kotlin bridge/actual app container not separately instrumented.",
+      "reviewer": "/root/session_cont"
+    }
+  ],
+  "local_sdk_headers": [
+    {
+      "absolute_path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/Security.framework/Headers/SecBase.h",
+      "resolved_path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/Security.framework/Headers/SecBase.h",
+      "sha256": "89fb27ba55c7139c7d3ca15054aa92380f897b6c95e36013efb740c8beb018c4",
+      "reviewed_ranges": [
+        [
+          325,
+          365
+        ]
+      ],
+      "excerpt": "SecBase.h.selected.txt",
+      "reviewer": "/root/session_cont",
+      "claim": "Installed public SDK constants/group contract; errSecMissingEntitlement=-34018 and errSecItemNotFound=-25300 in SecBase."
+    },
+    {
+      "absolute_path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/Security.framework/Headers/SecItem.h",
+      "resolved_path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/Security.framework/Headers/SecItem.h",
+      "sha256": "1a5a731dc52e85cf7fb6ebe26d75aa467113c07b6ec3389c98e183d75c651eaf",
+      "reviewed_ranges": [
+        [
+          197,
+          219
+        ],
+        [
+          1005,
+          1062
+        ]
+      ],
+      "excerpt": "SecItem.h.selected.txt",
+      "reviewer": "/root/session_cont",
+      "claim": "Installed public SDK constants/group contract; errSecMissingEntitlement=-34018 and errSecItemNotFound=-25300 in SecBase."
+    }
+  ],
+  "protected_exclusions": [
+    "No signing identities/certificates/profiles/private keys or existing player/container data read."
+  ],
+  "limitation": "Reference-resolution extracts omit page chrome and images; only relevant public API claims are asserted, not whole website review."
+}

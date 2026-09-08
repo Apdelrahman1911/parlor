@@ -1,0 +1,978 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-07T05:56:54.783941+00:00",
+  "reviewer": "/root/native_fix_review",
+  "status": "EXECUTION_PREPARATION_ONLY_NATIVE_NOT_RUN",
+  "author_independence": "Native control author may trace reachability and prepare interpretations, but cannot independently approve own controls. /root/factory_review remains required for exact execution approval. Canonical helper author is /root/release_fix_review; this reviewer independently approved that helper correction separately.",
+  "status_clarification": {
+    "prior_receipt": "native/production-storage-locale-trace-01.json",
+    "prior_sha256": "d839d66872f7f90b6c217fd507b3980207bbf988cea1c876dae81e08332dcc51",
+    "clarification": "Prior BLOCKED entries described then-unexecuted native prerequisites, not a final campaign classification. Per root coordination IOS-R1 is an EVIDENCE GAP \u2014 PENDING NATIVE MATRIX, not currently a final blocker or a confirmed defect. Original receipt is preserved unchanged."
+  },
+  "observed_source_preview": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "875d849e0079452557374690b14e42c546ba2c06",
+    "tree": "3be52230c713999cfa182755e69578ff6fd67797",
+    "tracked_status": "M docs/WHODUNIT_TEST_CONTENT.md\n D game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt\n D game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt\n D game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/testing/MafiaDoctorFixture.kt\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/saidi-inheritance.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/zamalek-ramadan.json\n M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt\n M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt\n M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryGameTraceTest.kt\n M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitRecoveryInteractionTest.kt\n M shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+    "diff_sha256": "e367bd8eef2aaa1fb7378a5197d00e7e9a99a79091b87fad625ee764d77b30a6",
+    "source_manifest_sha256": "4c0986f7c893f2cc9ffa4350e34749784d83e67cab117c75a5cd1af73e4b85e9"
+  },
+  "preview_caveat": "No actual source binding created, no execution control hash approved, and no freeze of root work imposed. Root must describe/bind after focused verification and cleanup on its chosen exact final source.",
+  "controls_integrity": {
+    "freeze_path": "remediation-runs/2026-09-07-local-readiness/native/controls-review-freeze-04.json",
+    "freeze_sha256": "e483933975c5ec1873f69a297a1058c9477705e351d0909857f72781a933a136",
+    "file_count": 38,
+    "lines": 8209,
+    "all_hashes_and_lines_match": true,
+    "rows": [
+      {
+        "path": "scripts/verification/ios-readiness/DSC01CatalogSelection.swift.in",
+        "sha256": "2649fb97fe27e74539dfd9867f6677c6a390e722129f8e2434231f44b1d91465",
+        "lines": 280,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/DSC01ComposeObservation.kt.in",
+        "sha256": "e54503b0d39a1c1055a5334dd835ccad30a96a887ff62560f22202b7231c266c",
+        "lines": 178,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/DSC01InvocationBridge.kt.in",
+        "sha256": "fc27547c977ed48d55c2254ed6779dc22fcd64f6cc214c8f4121b9f3e110a330",
+        "lines": 63,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/DSC01MafiaStartSelection.swift.in",
+        "sha256": "50aad088497c862ff962dc5b1a569a6285f99ce761bf710d4fe8f38e3b698753",
+        "lines": 236,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/DSC01NativeObservation.swift.in",
+        "sha256": "f806c5fa6533f9114ad9bf33fdc6fc4647086b1fb2daf4fe09ba93cf6029ee94",
+        "lines": 97,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/DSC01OSAppSettings.swift.in",
+        "sha256": "52e9bcfe9217998b13ca75c2cc9c097753e312afac4b0ad269a06953d1c83e38",
+        "lines": 400,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/DSC01OSPreferenceBaseline.swift.in",
+        "sha256": "c657f9ca83d9053d56d6debfc509d95fe07486f21e76c8b0a62ba2604978879c",
+        "lines": 149,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/DSC01OSPrerequisite.swift.in",
+        "sha256": "f266cc919734bd840a6a6e9288088e9e437a67b2ed41d16c8a02337ad19627d8",
+        "lines": 398,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/DSC01Probe.swift.in",
+        "sha256": "9c22d147c4b848db6f131f1ab0e406d1aea81bf4000af2c1fc392e75acf1db6b",
+        "lines": 451,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/DSC01PublicDiagnostics.swift.in",
+        "sha256": "6dce9ea0f597ddce7fb95f41d3d94570f41762ca806cb0c6303e032a1375dd88",
+        "lines": 35,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/DSC01UIKitObservation.kt.in",
+        "sha256": "83b35d069e738f59b79c44d11569c3a9a3a64b4427a9cb7e7d46c12b60f81e80",
+        "lines": 51,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/IOSAppLaunchUITests.swift.in",
+        "sha256": "9bdfa70f43074569a8699dda01864496188562b117289c994ea4f4e8c844bf60",
+        "lines": 665,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/NativeReadinessLaunch.swift.in",
+        "sha256": "984561f6e3dc5b9634d03c6a3de36ba58eba7dd10b984cba68d955d7dd2b3f42",
+        "lines": 104,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/NativeReadinessProbe.kt.in",
+        "sha256": "b533be8c842c2fe9e5e4f983dfd8ac3a5890ac9b513c5b6e29401b3f007b916b",
+        "lines": 281,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/NativeReadinessUITests.swift.in",
+        "sha256": "ea70eb8e4606eacf3a81f73d3e53706bbec3ba33b58ff2ff51fc1c8935e4796d",
+        "lines": 64,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/README.md",
+        "sha256": "073dfc3e309374e4e45dec27e3332eb06260573d3bf5309a007eda843b6efdbc",
+        "lines": 141,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/artifact_inventory.py",
+        "sha256": "8573fde3df191027d867a91fcdf9e4d544be319f6dc6e474ddeb83a6e84d9066",
+        "lines": 116,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/bind_source.py",
+        "sha256": "0954f5c24eb61c4f09c365efe6b3ab1fdb9f8342f86bad3e7654795464b53347",
+        "lines": 59,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/copied-kotlin-phase.sh.in",
+        "sha256": "1a8a5ee2c87fb4a4d8294ac3d5e2f057baaf9bd1c5a74b04564586b5f1b4baf8",
+        "lines": 42,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/copied_sources.py",
+        "sha256": "69548443720fde323a069dfba1d038234cdb501208f6910ef428dc2cbcc99b6a",
+        "lines": 228,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/inherited-controls.json",
+        "sha256": "a2e2e1d09fc1228add7a8fc71c8c81e30c6b140890cec2b749b0010bcea65dd5",
+        "lines": 239,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/instrument_storage.py",
+        "sha256": "51348e3985e6872283182a728d8a91808714d69ad0197c978298678366cb4d88",
+        "lines": 42,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/native_readiness_receipts.py",
+        "sha256": "0a41d4d77e5a27570099150b4e05af5f73cbb66658c3b1d8667154bc56dbedff",
+        "lines": 207,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/os_action_receipts.py",
+        "sha256": "54a5f6c0ceb669bae65d2be9480f691cc19bc77bcc5d77c75904cc3d4cc2e7bb",
+        "lines": 179,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/os_pane_receipts.py",
+        "sha256": "4ffcba3ade80bfa334b14f5bcddec0527148983a99b2dbf1263bde091efc9229",
+        "lines": 66,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/os_preference_receipts.py",
+        "sha256": "9de723db33e6a074261ae6199c55da7196bdbdc257a5ecaa558bcbc19f005c52",
+        "lines": 141,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/owned_lane.py",
+        "sha256": "4bf3bbb4abfa22cd1604e6b4381bf481c95662ab15bf3fbdc86355a083102742",
+        "lines": 221,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/prerequisite_receipts.py",
+        "sha256": "708116f488083da11357c053c6e56f5186bbde4707f1ba487a35ca363a09fd5b",
+        "lines": 153,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/probe_validation.py",
+        "sha256": "134bb3affe45711ec3f74d7091ec59b7f859ca4f5fa04df1d895ce3250fd3aa2",
+        "lines": 348,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/public_interaction_receipts.py",
+        "sha256": "4583b8e9545dbe16ef3ee6f59d7d34a2bfd1421402b0f532a0b84aa2b2f63040",
+        "lines": 124,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/run_ios_readiness.py",
+        "sha256": "464719dd100ca8d941126a2113611650e8febde8889abd2a97e9dbdb22dffb20",
+        "lines": 898,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/secondary_fifo.py",
+        "sha256": "080622194e19ef5d3ffb561e134ab8cf91e3e3ccef1e29197f59781154a7ffcc",
+        "lines": 205,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/simulator_entitlements.py",
+        "sha256": "57bee1eeb1fdd58bb6fef10545a37e1b0afae09be7107c2c6710f788905450f3",
+        "lines": 261,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_controls.py",
+        "sha256": "64b3f92b4d88d7022d966b47fd1b3dcba7064ec0dd5997e1b2c1bcbcd9260820",
+        "lines": 221,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_native_readiness.py",
+        "sha256": "a4999e118b53d31c202fd276d9aed42e65b17986f7566d5c7c297a568c551272",
+        "lines": 307,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_os_preference_receipts.py",
+        "sha256": "74d74d25358a1dfe557ca1a57cc7145780d95ad422cc0e29cb6d09157912a4ec",
+        "lines": 98,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_secondary_fifo.py",
+        "sha256": "2d685ebcbef9930f43f1f644c5ed6fc3b5a5c5d07d975cc218a9165273bfb826",
+        "lines": 249,
+        "matches_freeze": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_simulator_entitlements.py",
+        "sha256": "0beea984b56aab3bec2c8e14558edf875f01ce341142708121b9d6d2c5f1e4b2",
+        "lines": 212,
+        "matches_freeze": true
+      }
+    ],
+    "inventory_digest_not_execution_hash": "792c1dacf2e466b49735335da3a6e85edcdeb3b779e773e0cd77017ab88b7dcb",
+    "independent_review": "reviews/native-controls-freeze04-independent-review.json"
+  },
+  "canonical_helper_integrity": {
+    "freeze_sha256": "364cc631db07701e957e995803fa527b5f574a13ac723efa7919ecc956249658",
+    "all_six_files_match": true,
+    "rows": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/run_with_identity.py",
+        "sha256": "e8396c59ab871ee7b8222875d24f22fd28456f4105b745963f57774053888e3e",
+        "lines": 222,
+        "matches_freeze": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/classpath_validation.py",
+        "sha256": "2f8a730d1f3a7259bc76e43f5d5de142dd4739f374cfcea6c34f4c73ab8bcfb7",
+        "lines": 91,
+        "matches_freeze": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/test_classpath_validation.py",
+        "sha256": "4be8910b306e7c6545afe49ed18b7d5808229b4abd18d015cb9e87a3e8324eae",
+        "lines": 157,
+        "matches_freeze": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/capture-runtime-classpath.init.gradle",
+        "sha256": "6fc59f266231486563a10dac6613d1da3862f9f3f869f4dce5a7835604a464a9",
+        "lines": 51,
+        "matches_freeze": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/VerifyContentIdentity.java",
+        "sha256": "82b022878c56fe180f056f937a9d4e51b2a19e53e8bb22df75c433c1e18358c5",
+        "lines": 52,
+        "matches_freeze": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/README.md",
+        "sha256": "ba1869142feafc980b6c317742c47563db15f070a406ce1b0a668229fe06c147",
+        "lines": 56,
+        "matches_freeze": true
+      }
+    ],
+    "existing_independent_review": "reviews/canonical-identity-classpath-review-01/independent-review.json",
+    "verification_current_pass": "No Gradle/Java executed here; earlier 16 synthetic cases are separate evidence. Focused root run must execute real desktopTest capture and Java18-record corroboration; original classpath is not filtered."
+  },
+  "source_anchor_checks": [
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/shell/settings/SettingsScreen.kt",
+      "anchor_line": 77,
+      "occurrences": 1,
+      "source_sha256": "f97da085d85ed5fe01ac9f4725580ea2f86e399dcd330f532d9babc1925535c5"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "anchor_line": 812,
+      "occurrences": 1,
+      "source_sha256": "cee14cd945a1ecb76bb256eff24e0629259538fd165515cfe1c89e62f0b8fcca"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaGameFlow.kt",
+      "anchor_line": 265,
+      "occurrences": 1,
+      "source_sha256": "8f250d62f8afb48e407c30e5382eb4758bc4ad53dee5168af8e3452ad3e840f6"
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+      "anchor_line": 1,
+      "occurrences": 1,
+      "source_sha256": "c77abd03ddcae230b4752d888b16c3d74231d89c967624c31129d176a5ed20ce"
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+      "anchor_line": 39,
+      "occurrences": 1,
+      "source_sha256": "c77abd03ddcae230b4752d888b16c3d74231d89c967624c31129d176a5ed20ce"
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+      "anchor_line": 45,
+      "occurrences": 1,
+      "source_sha256": "c77abd03ddcae230b4752d888b16c3d74231d89c967624c31129d176a5ed20ce"
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+      "anchor_line": 52,
+      "occurrences": 1,
+      "source_sha256": "c77abd03ddcae230b4752d888b16c3d74231d89c967624c31129d176a5ed20ce"
+    },
+    {
+      "path": "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+      "anchor_line": 56,
+      "occurrences": 1,
+      "source_sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/setup/PlayerEntryScreen.kt",
+      "anchor_line": 20,
+      "occurrences": 1,
+      "source_sha256": "878a154d1b5e44a6d857c73fb77119f2a1ff5e6d5727b2346c620fb4f87e0977"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/screens/setup/PlayerEntryScreen.kt",
+      "anchor_line": 141,
+      "occurrences": 1,
+      "source_sha256": "878a154d1b5e44a6d857c73fb77119f2a1ff5e6d5727b2346c620fb4f87e0977"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaPlayerEntryScreen.kt",
+      "anchor_line": 20,
+      "occurrences": 1,
+      "source_sha256": "2daf4b0f890e14fa33b9fea37db42bc15d2e9cf0c396c5e82f9e40876b8bc7a5"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaPlayerEntryScreen.kt",
+      "anchor_line": 136,
+      "occurrences": 1,
+      "source_sha256": "2daf4b0f890e14fa33b9fea37db42bc15d2e9cf0c396c5e82f9e40876b8bc7a5"
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSecureKeyValueBacking.kt",
+      "source_sha256": "4bce714c161a892ecd66fff662561d925db7e045af8cacf28e5b698c887015c7",
+      "in_memory_exact_credential_transformation": "PASS",
+      "output_written": false,
+      "claim": "Primitive observers inserted at exact reviewed anchors; no compilation or runtime evidence."
+    },
+    {
+      "path": "iosApp/iosApp/ContentView.swift",
+      "anchor_line": 29,
+      "occurrences": 1,
+      "source_sha256": "5881b354ccc45340100356fbf37480e94efdcc2e8fe823f0bb6b5b60f8ccaa87"
+    },
+    {
+      "path": "iosApp/iosApp/ContentView.swift",
+      "anchor_line": 56,
+      "occurrences": 1,
+      "source_sha256": "5881b354ccc45340100356fbf37480e94efdcc2e8fe823f0bb6b5b60f8ccaa87"
+    },
+    {
+      "path": "iosApp/iosApp/iOSApp.swift",
+      "anchor_line": 4,
+      "occurrences": 1,
+      "source_sha256": "01d47afe5d13eb9ec48d9e8987c7920e72f2fefa5b06ec525087025caa809386"
+    }
+  ],
+  "source_copy_reachability": {
+    "predicted_copied_input_count": 659,
+    "required_observer_additions_absent_in_original": [
+      "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/auditcopy/DSC01ComposeObservation.kt",
+      "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/auditcopy/DSC01UIKitObservation.kt",
+      "composeApp/src/iosMain/kotlin/com/parlor/app/readiness/NativeReadinessProbe.kt"
+    ],
+    "app_source_chain": "settings.gradle.kts includes app/shared/games. composeApp commonMain depends on storage, design-system, transport and both games; iosSimulatorArm64 framework is dynamic ComposeApp. Shared convention default hierarchy includes iosMain. Original Xcode source phases include iOSApp, ContentView and the same production container in app and test targets.",
+    "nonshipping_controls": "No source-set path points to scripts/verification templates. Runner inserts .in Kotlin only in owned temporary source roots, replaces only copied XCTest/Swift overlays and one copied Xcode phase, binds exact diff and post-instrumentation inputs. Original graph/dependencies and production query/results remain unchanged.",
+    "swift_discovery": "Expected exactly four production ComposeContainerViewControllerTests plus IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSInvestigation(). Strict xcresult test identifiers/results required; no hidden skips or physical tests enabled.",
+    "native_test_limit": "The 25 separately reread iosTest annotations are NOT run by this five-XCTest app-host matrix; their execution requires separate gate receipts.",
+    "source_review_ledger": [
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpComposeLibraryConventionPlugin.kt",
+        "sha256": "d8a7cd25a7062f20ae871a068b724c061c98f3831aae4d90701c5cbbf7b4e660",
+        "lines": 19,
+        "reviewed_line_ranges": [
+          [
+            1,
+            19
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpLibraryConventionPlugin.kt",
+        "sha256": "9d3b07942123f5a4c2da229aa873d5d7b7d422b120d1ff42014cfe066eefbc63",
+        "lines": 72,
+        "reviewed_line_ranges": [
+          [
+            1,
+            72
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/build.gradle.kts",
+        "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+        "lines": 627,
+        "reviewed_line_ranges": [
+          [
+            1,
+            627
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaGameFlow.kt",
+        "sha256": "8f250d62f8afb48e407c30e5382eb4758bc4ad53dee5168af8e3452ad3e840f6",
+        "lines": 509,
+        "reviewed_line_ranges": [
+          [
+            254,
+            278
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+        "sha256": "cee14cd945a1ecb76bb256eff24e0629259538fd165515cfe1c89e62f0b8fcca",
+        "lines": 1432,
+        "reviewed_line_ranges": [
+          [
+            801,
+            825
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp.xcodeproj/project.pbxproj",
+        "sha256": "625103b4676a017beb4619c61b705efc84c2be47b71603bddd840c1d3856ea9d",
+        "lines": 539,
+        "reviewed_line_ranges": [
+          [
+            1,
+            130
+          ],
+          [
+            230,
+            290
+          ],
+          [
+            408,
+            506
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosAppUITests/ComposeContainerViewControllerTests.swift",
+        "sha256": "a4730b77ad93d01df60a4b6fde558bfea264f71b19ee5aa6c4a08d33480eacc8",
+        "lines": 104,
+        "reviewed_line_ranges": [
+          [
+            1,
+            104
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/README.md",
+        "sha256": "ba1869142feafc980b6c317742c47563db15f070a406ce1b0a668229fe06c147",
+        "lines": 56,
+        "reviewed_line_ranges": [
+          [
+            1,
+            56
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/VerifyContentIdentity.java",
+        "sha256": "82b022878c56fe180f056f937a9d4e51b2a19e53e8bb22df75c433c1e18358c5",
+        "lines": 52,
+        "reviewed_line_ranges": [
+          [
+            1,
+            52
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/capture-runtime-classpath.init.gradle",
+        "sha256": "6fc59f266231486563a10dac6613d1da3862f9f3f869f4dce5a7835604a464a9",
+        "lines": 51,
+        "reviewed_line_ranges": [
+          [
+            1,
+            51
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/classpath_validation.py",
+        "sha256": "2f8a730d1f3a7259bc76e43f5d5de142dd4739f374cfcea6c34f4c73ab8bcfb7",
+        "lines": 91,
+        "reviewed_line_ranges": [
+          [
+            1,
+            91
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/run_with_identity.py",
+        "sha256": "e8396c59ab871ee7b8222875d24f22fd28456f4105b745963f57774053888e3e",
+        "lines": 222,
+        "reviewed_line_ranges": [
+          [
+            1,
+            222
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/test_classpath_validation.py",
+        "sha256": "4be8910b306e7c6545afe49ed18b7d5808229b4abd18d015cb9e87a3e8324eae",
+        "lines": 157,
+        "reviewed_line_ranges": [
+          [
+            1,
+            157
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/DSC01ComposeObservation.kt.in",
+        "sha256": "e54503b0d39a1c1055a5334dd835ccad30a96a887ff62560f22202b7231c266c",
+        "lines": 178,
+        "reviewed_line_ranges": [
+          [
+            1,
+            178
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/DSC01InvocationBridge.kt.in",
+        "sha256": "fc27547c977ed48d55c2254ed6779dc22fcd64f6cc214c8f4121b9f3e110a330",
+        "lines": 63,
+        "reviewed_line_ranges": [
+          [
+            1,
+            63
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/DSC01Probe.swift.in",
+        "sha256": "9c22d147c4b848db6f131f1ab0e406d1aea81bf4000af2c1fc392e75acf1db6b",
+        "lines": 451,
+        "reviewed_line_ranges": [
+          [
+            1,
+            205
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/DSC01UIKitObservation.kt.in",
+        "sha256": "83b35d069e738f59b79c44d11569c3a9a3a64b4427a9cb7e7d46c12b60f81e80",
+        "lines": 51,
+        "reviewed_line_ranges": [
+          [
+            1,
+            51
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/IOSAppLaunchUITests.swift.in",
+        "sha256": "9bdfa70f43074569a8699dda01864496188562b117289c994ea4f4e8c844bf60",
+        "lines": 665,
+        "reviewed_line_ranges": [
+          [
+            1,
+            235
+          ],
+          [
+            395,
+            480
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/NativeReadinessLaunch.swift.in",
+        "sha256": "984561f6e3dc5b9634d03c6a3de36ba58eba7dd10b984cba68d955d7dd2b3f42",
+        "lines": 104,
+        "reviewed_line_ranges": [
+          [
+            1,
+            104
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/NativeReadinessProbe.kt.in",
+        "sha256": "b533be8c842c2fe9e5e4f983dfd8ac3a5890ac9b513c5b6e29401b3f007b916b",
+        "lines": 281,
+        "reviewed_line_ranges": [
+          [
+            1,
+            281
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/NativeReadinessUITests.swift.in",
+        "sha256": "ea70eb8e4606eacf3a81f73d3e53706bbec3ba33b58ff2ff51fc1c8935e4796d",
+        "lines": 64,
+        "reviewed_line_ranges": [
+          [
+            1,
+            64
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/README.md",
+        "sha256": "073dfc3e309374e4e45dec27e3332eb06260573d3bf5309a007eda843b6efdbc",
+        "lines": 141,
+        "reviewed_line_ranges": [
+          [
+            1,
+            141
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/bind_source.py",
+        "sha256": "0954f5c24eb61c4f09c365efe6b3ab1fdb9f8342f86bad3e7654795464b53347",
+        "lines": 59,
+        "reviewed_line_ranges": [
+          [
+            1,
+            59
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/copied-kotlin-phase.sh.in",
+        "sha256": "1a8a5ee2c87fb4a4d8294ac3d5e2f057baaf9bd1c5a74b04564586b5f1b4baf8",
+        "lines": 42,
+        "reviewed_line_ranges": [
+          [
+            1,
+            42
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/copied_sources.py",
+        "sha256": "69548443720fde323a069dfba1d038234cdb501208f6910ef428dc2cbcc99b6a",
+        "lines": 228,
+        "reviewed_line_ranges": [
+          [
+            1,
+            228
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/instrument_storage.py",
+        "sha256": "51348e3985e6872283182a728d8a91808714d69ad0197c978298678366cb4d88",
+        "lines": 42,
+        "reviewed_line_ranges": [
+          [
+            1,
+            42
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/native_readiness_receipts.py",
+        "sha256": "0a41d4d77e5a27570099150b4e05af5f73cbb66658c3b1d8667154bc56dbedff",
+        "lines": 207,
+        "reviewed_line_ranges": [
+          [
+            1,
+            207
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/owned_lane.py",
+        "sha256": "4bf3bbb4abfa22cd1604e6b4381bf481c95662ab15bf3fbdc86355a083102742",
+        "lines": 221,
+        "reviewed_line_ranges": [
+          [
+            1,
+            221
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/run_ios_readiness.py",
+        "sha256": "464719dd100ca8d941126a2113611650e8febde8889abd2a97e9dbdb22dffb20",
+        "lines": 898,
+        "reviewed_line_ranges": [
+          [
+            1,
+            898
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/settings.gradle.kts",
+        "sha256": "27a40495b1adf18ca90b5a8fdd345448c2ecf2f9ac726c753468a5e627b27d18",
+        "lines": 55,
+        "reviewed_line_ranges": [
+          [
+            1,
+            55
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/build.gradle.kts",
+        "sha256": "118d898f900e3b8ccc76db6fca658d69a0d211c5220b6985738f14428a99f78d",
+        "lines": 25,
+        "reviewed_line_ranges": [
+          [
+            1,
+            25
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/shared/storage/build.gradle.kts",
+        "sha256": "096e9f4f67d514fd0a41de6853ad599cf5e3f3168b3294d8c3d71db5eaeac87f",
+        "lines": 20,
+        "reviewed_line_ranges": [
+          [
+            1,
+            20
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/build.gradle.kts",
+        "sha256": "ac439a069b3c99d1bef803bbc053580c4b99cbd7f4775a98d98a2b40482d96d7",
+        "lines": 95,
+        "reviewed_line_ranges": [
+          [
+            1,
+            95
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "scope": "incremental source/binding reachability reopen; not a new independent approval of self-authored controls"
+      }
+    ]
+  },
+  "minimal_run_order": [
+    {
+      "order": 1,
+      "owner": "root",
+      "action": "Complete focused source/tests and canonical Java identity check in existing sole lane. Capture command exits/test XML/classpath and18identity rows. Immediately stop Gradle and clean owned outputs; preserve only compact required evidence. Resolve current focused failures before relying on green outputs."
+    },
+    {
+      "order": 2,
+      "owner": "root",
+      "action": "Freeze chosen source/control bytes. Finish any separately authorized Git-history operation BEFORE binding, never during native run. Do not remove unrelated user work. Require no competing Gradle8.13/Xcode worker and no original build outputs; do not kill another task to satisfy guard."
+    },
+    {
+      "order": 3,
+      "owner": "root",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/verification/ios-readiness/bind_source.py",
+        "--describe"
+      ],
+      "action": "Read-only preview. Independently review returned current branch/commit/tree/source_manifest_sha256/diff_sha256 and all applicable tracked/untracked copy inputs. Values in this preparatory receipt are not an implicit selection."
+    },
+    {
+      "order": 4,
+      "owner": "root",
+      "command_template": "/usr/bin/python3 -B scripts/verification/ios-readiness/bind_source.py remediation-runs/2026-09-07-local-readiness/ios-readiness-source-NN.json REVIEWED_SOURCE_MANIFEST_SHA256 REVIEWED_DIFF_SHA256",
+      "action": "Fresh binding file directly under campaign; never overwrite/refresh prior binding. Creation verifies source identity twice and writes exclusively. Creation itself is not approval."
+    },
+    {
+      "order": 5,
+      "owner": "root then factory",
+      "command_template": "/usr/bin/python3 -B scripts/verification/ios-readiness/run_ios_readiness.py --control-manifest remediation-runs/2026-09-07-local-readiness/ios-readiness-source-NN.json",
+      "action": "Read-only calculation of execution hash over38control rows plus actual binding row (ordered path/sha objects). Factory must independently approve that exact hash and source/copy binding; freeze04triplet digest cannot substitute."
+    },
+    {
+      "order": 6,
+      "owner": "root",
+      "command_template": "/usr/bin/python3 -B scripts/verification/ios-readiness/run_ios_readiness.py ios-readiness-NN remediation-runs/2026-09-07-local-readiness/ios-readiness-source-NN.json FACTORY_APPROVED_EXECUTION_CONTROL_SHA256",
+      "action": "Single native lane on newly owned iPhone17Pro/iOS26.5 simulator. No real device, private signing, OS-global user profile, Store, publication or identity mutation."
+    },
+    {
+      "order": 7,
+      "owner": "root plus independent reviewers",
+      "action": "Read actual command/XCTest/probe/image/entitlement/cleanup receipts before conclusions. Code0=bounded full matrix success; code2=diagnostics succeeded but storage or OS PRESENT coverage partial; code1=evidence/execution/cleanup failure. Independent reviewer must distinguish harness errors from application failures. No first-four-crash cause follows from any code."
+    }
+  ],
+  "actual_matrix_order": [
+    "Four original UIKit container tests and one expanded XCTest method (xcresult owns execution order).",
+    "Within expanded method: catalog/start control synthetic contracts; real Settings Arabic restart and previous-AR synthetic English restart with System restoration.",
+    "Attested cleanup of that one synthetic app-domain seed, then eight process-cold launches with production-bound credential/snapshot synthetic I/O and48stability observations.",
+    "Actual local Whodunit setup to public-intro and Mafia setup to role-assignment; real Settings before start, synthetic invocation of real SettingsStore during active session, identity/reference/value and EN/AR layout/lifecycle checks.",
+    "Public owned-simulator English-primary/Arabic-secondary system prerequisite; actual OS per-app Arabic selection; actual in-app English\u2192System\u2192new process, exact observed presence/ordered value."
+  ],
+  "keychain_diagnostic_decision_tree": [
+    {
+      "when": "Missing source binding, changed source/control bytes, wrong app/simulator/token, incomplete native event receipt, or image-binding mismatch",
+      "conclusion": "EVIDENCE INVALID/INCOMPLETE; do not classify storage or historical crashes. Preserve failure and cleanup receipts; repair controls only after separate independent review."
+    },
+    {
+      "when": "Exact credential-read reports errSecItemNotFound(-25300)",
+      "expected": "SecureStorage success(null); Home multiplayer absent. If local store also absent, rerun recovery warning false. A different local error remains independently visible.",
+      "limit": "Only this invocation; no attribution to original Home or snapshotKeychain."
+    },
+    {
+      "when": "Exact credential-read reports errSecSuccess(0) and secure boundary accepts expected synthetic64-byte payload",
+      "expected": "Matches at boots2/3 after successful predecessor write; same installed build can support this bounded cold-process durability observation.",
+      "limit": "Not hardware lock/backup/signing/credential rotation proof."
+    },
+    {
+      "when": "Exact credential-read reports errSecSuccess(0) but secure boundary or Home credential decoder fails",
+      "conclusion": "LOCAL VERIFICATION FAIL requiring investigation of actual type/length/decoder guards and source path. Not automatically an independently confirmed application defect, and never reinterpret it as an absent credential."
+    },
+    {
+      "when": "Exact credential operation reports errSecMissingEntitlement(-34018) with storage_error",
+      "conclusion": "Record exact native status and failing operation on the invoked signing-disabled Simulator artifact. It establishes native API unavailability for this invocation only.",
+      "next": "Compare actual built/installed linker XML/binary entitlement sections, generated app .xcent, public codesign metadata, exact invocation overrides and installed SDK/platform defaults. Apple hardware-target guidance remains a separate requirement.",
+      "forbidden": "Do not infer a particular absent entitlement, add access groups/team IDs, hide warning, infer signed hardware behavior, or diagnose historical first launches from this number alone."
+    },
+    {
+      "when": "Other nonzero native status",
+      "conclusion": "Keep exact operation/status and accepted/failure mapping. Resolve symbolic semantics from installed SDK and authoritative Apple docs before causal classification; do not infer from a numeric label alone."
+    },
+    {
+      "when": "Credential put",
+      "expected": "update0 succeeds; update-25300 permits add; duplicate-add-25299 permits one retry; all other errors remain errors. Rejected native writes do not establish durable-state guarantees for later boots."
+    },
+    {
+      "when": "Successful synthetic write followed by absence/mismatch on next cold boot, or successful remove followed by retained/mismatched content",
+      "conclusion": "LOCAL VERIFICATION FAIL; retain complete predecessor/next-read proof and independently investigate root cause. A failed prerequisite instead leaves dependent persistence unverified, not a defect witness."
+    },
+    {
+      "when": "Snapshot operation reports storage_error",
+      "conclusion": "Snapshot backend unavailable at that step. There are deliberately no attributed snapshot numerical events; do not borrow the credential status or claim a specific missing snapshot entitlement."
+    },
+    {
+      "when": "Eight cold-launch stability trains pass",
+      "conclusion": "Current instrumented unsigned Debug build stayed foreground/no-alert through48bounded geometry samples across8new process boots. Original first-four-launch cause remains unresolved; no leak-free or complete-runtime claim."
+    },
+    {
+      "when": "OS-created language value observed ABSENT rather than PRESENT",
+      "conclusion": "Record exact absence and tested effective Arabic behavior; PRESENT-specific coverage remains incomplete. Do not synthesize an OS value or relabel absence as a completed PRESENT gate."
+    }
+  ],
+  "cleanup_and_safety": {
+    "builds_started": 0,
+    "app_test_simulator_processes_started": 0,
+    "production_or_control_changes": 0,
+    "binding_files_created": 0,
+    "temporary_source_copies_created": 0,
+    "python_mode": "-B; read/hash and in-memory anchor validation only",
+    "root_lane_left_undisturbed": true,
+    "retained": "this compact report only; source/controls/evidence unchanged"
+  },
+  "pending": [
+    "Root focused-regression outcome/cleanup",
+    "Root selected final exact source binding",
+    "Factory exact execution-hash approval",
+    "Root-owned native matrix actual receipts",
+    "Independent runtime/cleanup interpretation and source identity comparison"
+  ]
+}

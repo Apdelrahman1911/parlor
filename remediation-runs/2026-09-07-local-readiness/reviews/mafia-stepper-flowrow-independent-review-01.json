@@ -1,0 +1,533 @@
+{
+  "schema": 1,
+  "created_at": "2026-09-07T09:05:00.959073+00:00",
+  "reviewer": "/root/release_fix_review",
+  "production_author": "/root",
+  "test_author": "/root/factory_review",
+  "independence": "Reviewer authored neither changed production code nor regression test. No new builds/tests/Git mutations were performed by this reviewer.",
+  "conclusion": "APPROVED — compact Mafia role/max-revote stepper root cause fixed; executable RED02/GREEN01 oracle is valid for its stated scope.",
+  "source_commit": "a224c513059cec8c2c626aac11d8b5c917098a00",
+  "source_tree": "17ea62fe703474b770723abaea330e0dd97fd909",
+  "diff_sha256": "88c8f1417462b6554708f936f60f613815b44eed209200403aa428775689ced4",
+  "verified_source_manifest_sha256": "b7c043a8767254d959dab5f0e2c5a9000a6d1f2e09913e1f7d4d8eef9417f1b4",
+  "reviewed_files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+      "sha256": "4b98a283b3d92bcfbbdeaa699a8c3e552b38440b90874795273a8edb0dada3dd",
+      "line_ranges": [
+        [
+          1,
+          529
+        ]
+      ],
+      "changed_lines": [
+        [
+          5,
+          5
+        ],
+        [
+          356,
+          360
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupStepperLayoutTest.kt",
+      "sha256": "306d7e76f6275440b9ceab2150b8e4cbcd8d6e8e47a7fe9ad3fcea45fad9d302",
+      "line_ranges": [
+        [
+          1,
+          133
+        ]
+      ],
+      "test_methods": 4
+    }
+  ],
+  "source_identity_checks": {
+    "red_and_green_test_bytes_identical": true,
+    "only_red_green_manifest_difference": [
+      "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt"
+    ],
+    "current_production_and_test_match_green": true,
+    "current_tracked_diff_matches_green": true
+  },
+  "root_cause": "The original outer Row measures the potentially long role/revote label before the unweighted grouped minus/count/plus Row. In the actual 320dp fixture, screen and card padding leave 192dp: a 185dp Arabic revote label leaves only7dp for a group whose icon actions individually require48dp. Later buttons shrink to0dp. FlowRow can place the intact controls group on the next line with8dp vertical spacing instead of constraining it to the label remainder.",
+  "reachable_paths": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+      "lines": [
+        [
+          72,
+          92
+        ],
+        [
+          139,
+          157
+        ]
+      ],
+      "proof": "Local Setup phase renders the same screen and submits ConfigureAndStart through SessionController."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+      "lines": [
+        [
+          103,
+          126
+        ],
+        [
+          200,
+          228
+        ]
+      ],
+      "proof": "LAN SetupSegment shows the same editor only when isHost; peers retain WaitingScreen. The submit callback is unchanged."
+    }
+  ],
+  "oracle_review": [
+    "All133 test lines reread. Four Unit-returning @Test methods exercise English/Arabic at density1 and font scales1/2 with the real MafiaSetupScreen constrained to320x640dp.",
+    "The localized action descriptions identify each real icon button. Label selection is bound to the exact layout parent of its controls group, avoiding the duplicate English Mafia title. This ancestry is true under both old Row and new FlowRow; RED02 failures are actual width assertions, not selector errors.",
+    "SemanticsNode.size is used for un-clipped measured layout geometry, so inflated touch bounds cannot hide a0/7/19/41px button. density1 makes48px the production48dp minimum from ParlorIconButton/ParlorSpacing.xxl.",
+    "Each nonzero button is individually scrolled into view before clipped/unclipped bounds are compared; scrolling a shorter label alone is not treated as proof that its taller control is visible. Assertions also reject screen overflow and overlap with label or sibling.",
+    "Zero-width controls are not silently skipped: the48px assertion still fails. A scroll attempt is skipped only for zero geometry to avoid masking the width witness with an unrelated scroll exception.",
+    "All three role steppers and the separate Maximum revotes stepper are checked, including the valid disabled decrement for Mafia count1. The regression intentionally tests layout, not click dispatch or every possible viewport/font scale."
+  ],
+  "compatibility_and_regression_review": [
+    "Diff changes only FlowRow import and outer layout/vertical arrangement. Child icons, localized names, callbacks, enabling conditions, count formatting, role-count bounds, shared controls, and state ownership are unchanged.",
+    "Reread SetupDraft: Doctor repeat-protection flag, self-heal flag, defaults, and compatibility-only timer fields are preserved by applyTo. No protocol, serialized settings, snapshot, reducer or role-projection change.",
+    "Reread MafiaActionAuthority classification and reducer setup guards: ConfigureAndStart remains host-only and is validated atomically in Setup. Local/LAN authority is not bypassed by the layout change.",
+    "Siblings inspected: weighted-label ToggleRow remains intact; RuleChoiceCard and derived civilian read-only row are unaffected. No Whodunit or generic networking/session file appears in the diff.",
+    "Wrapping increases content height deliberately; the existing verticalScroll container owns the overflow. No fixed height, smaller text, ellipsis, hard-coded LTR placement, or accessibility suppression was introduced."
+  ],
+  "execution_evidence": {
+    "mafia-stepper-layout-red-02": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-red-02/receipt.json",
+      "receipt_sha256": "b8cb8d687e539342067cffd8c6a854e783590bc3b1634704377616fb8e55f5c2",
+      "source": {
+        "commit": "a224c513059cec8c2c626aac11d8b5c917098a00",
+        "tree": "17ea62fe703474b770723abaea330e0dd97fd909",
+        "branch": "fix/local-readiness-2026-09-07",
+        "tracked_status": "",
+        "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_manifest_sha256": "cc017e7a38a7324423b9edf046adc5607e5a1e405eef9ea7d31b824e98bb586d"
+      },
+      "before_after_source_equal": true,
+      "reported_exit_code": 1,
+      "reported_status": "FAIL",
+      "root_command": [
+        "./gradlew",
+        ":game-modes:mafia:desktopTest",
+        "--tests",
+        "*MafiaSetupStepperLayoutTest",
+        "--no-build-cache",
+        "--rerun-tasks",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=mafia-stepper-layout-red-02",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "stop_log": "No Gradle daemons are running.",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "remaining_owned_workers": [],
+      "stepper_xml_sha256": "e49ed2c95683101c1c4f4c7e838ccf69ac80c4b678a397cc2912033e3830d422",
+      "stepper_cases": [
+        {
+          "name": "arabic_compact_stepper_controls_keep_their_full_size()[desktop]",
+          "failure_type": "org.opentest4j.AssertionFailedError",
+          "failure_message": "org.opentest4j.AssertionFailedError: Arabic fontScale=1.0:\nأنقص عدد الحد الأقصى لإعادات التصويت measured 7 x 48; bounds=Rect.fromLTRB(64.0, 592.0, 71.0, 640.0); label=Rect.fromLTRB(71.0, 605.0, 256.0, 627.0)\nزد عدد الحد الأقصى لإعادات التصويت measured 0 x 48; bounds=Rect.fromLTRB(64.0, 592.0, 64.0, 640.0); label=Rect.fromLTRB(71.0, 605.0, 256.0, 627.0)"
+        },
+        {
+          "name": "english_compact_stepper_controls_keep_their_full_size()[desktop]",
+          "failure_type": "org.opentest4j.AssertionFailedError",
+          "failure_message": "org.opentest4j.AssertionFailedError: English fontScale=1.0:\nIncrease Detective count measured 19 x 48; bounds=Rect.fromLTRB(237.0, 281.0, 256.0, 329.0); label=Rect.fromLTRB(64.0, 295.0, 141.0, 316.0)\nIncrease Doctor count measured 41 x 48; bounds=Rect.fromLTRB(215.0, 337.0, 256.0, 385.0); label=Rect.fromLTRB(64.0, 351.0, 119.0, 372.0)\nIncrease Maximum revotes count measured 0 x 48; bounds=Rect.fromLTRB(256.0, 592.0, 256.0, 640.0); label=Rect.fromLTRB(64.0, 606.0, 207.0, 627.0)"
+        },
+        {
+          "name": "arabic_compact_large_text_stepper_controls_keep_their_full_size()[desktop]",
+          "failure_type": "org.opentest4j.AssertionFailedError",
+          "failure_message": "org.opentest4j.AssertionFailedError: Arabic fontScale=2.0:\nزد عدد حرامي measured 15 x 48; bounds=Rect.fromLTRB(64.0, 319.0, 79.0, 367.0); label=Rect.fromLTRB(175.0, 321.0, 256.0, 365.0)\nزد عدد محقق measured 29 x 48; bounds=Rect.fromLTRB(64.0, 375.0, 93.0, 423.0); label=Rect.fromLTRB(189.0, 377.0, 256.0, 421.0)\nزد عدد دكتور measured 30 x 48; bounds=Rect.fromLTRB(64.0, 431.0, 94.0, 479.0); label=Rect.fromLTRB(190.0, 433.0, 256.0, 477.0)\nأنقص عدد الحد الأقصى لإعادات التصويت measured 0 x 48; bounds=Rect.fromLTRB(64.0, 537.0, 64.0, 585.0); label=Rect.fromLTRB(64.0, 482.0, 256.0, 640.0)\nزد عدد الحد الأقصى لإعادات التصويت measured 0 x 48; bounds=Rect.fromLTRB(64.0, 537.0, 64.0, 585.0); label=Rect.fromLTRB(64.0, 482.0, 256.0, 640.0)"
+        },
+        {
+          "name": "english_compact_large_text_stepper_controls_keep_their_full_size()[desktop]",
+          "failure_type": "org.opentest4j.AssertionFailedError",
+          "failure_message": "org.opentest4j.AssertionFailedError: English fontScale=2.0:\nIncrease Mafia count measured 6 x 48; bounds=Rect.fromLTRB(250.0, 307.0, 256.0, 355.0); label=Rect.fromLTRB(64.0, 311.0, 154.0, 352.0)\nDecrease Detective count measured 39 x 48; bounds=Rect.fromLTRB(217.0, 363.0, 256.0, 411.0); label=Rect.fromLTRB(64.0, 367.0, 217.0, 408.0)\nIncrease Detective count measured 0 x 48; bounds=Rect.fromLTRB(256.0, 363.0, 256.0, 411.0); label=Rect.fromLTRB(64.0, 367.0, 217.0, 408.0)\nIncrease Doctor count measured 0 x 48; bounds=Rect.fromLTRB(256.0, 419.0, 256.0, 467.0); label=Rect.fromLTRB(64.0, 423.0, 173.0, 464.0)\nDecrease Maximum revotes count measured 0 x 48; bounds=Rect.fromLTRB(256.0, 570.0, 256.0, 618.0); label=Rect.fromLTRB(64.0, 547.0, 256.0, 640.0)\nIncrease Maximum revotes count measured 0 x 48; bounds=Rect.fromLTRB(256.0, 570.0, 256.0, 618.0); label=Rect.fromLTRB(64.0, 547.0, 256.0, 640.0)"
+        }
+      ],
+      "suite_count": 1,
+      "tests": 4,
+      "failures": 4,
+      "errors": 0,
+      "skipped": 0,
+      "raw_xml_inventory": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-red-02/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupStepperLayoutTest.xml",
+          "sha256": "e49ed2c95683101c1c4f4c7e838ccf69ac80c4b678a397cc2912033e3830d422",
+          "tests": 4,
+          "failures": 4,
+          "errors": 0,
+          "skipped": 0
+        }
+      ]
+    },
+    "mafia-stepper-layout-green-01": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/receipt.json",
+      "receipt_sha256": "d63aa86dfd6f9efa25e230804db7594acdef778479e0a8b9b4d1330300a73e41",
+      "source": {
+        "commit": "a224c513059cec8c2c626aac11d8b5c917098a00",
+        "tree": "17ea62fe703474b770723abaea330e0dd97fd909",
+        "branch": "fix/local-readiness-2026-09-07",
+        "tracked_status": "M game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+        "diff_sha256": "88c8f1417462b6554708f936f60f613815b44eed209200403aa428775689ced4",
+        "source_manifest_sha256": "b7c043a8767254d959dab5f0e2c5a9000a6d1f2e09913e1f7d4d8eef9417f1b4"
+      },
+      "before_after_source_equal": true,
+      "reported_exit_code": 0,
+      "reported_status": "PASS",
+      "root_command": [
+        "./gradlew",
+        ":game-modes:mafia:desktopTest",
+        ":game-modes:mafia:detekt",
+        "--no-build-cache",
+        "--rerun-tasks",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=mafia-stepper-layout-green-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "stop_log": "No Gradle daemons are running.",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "remaining_owned_workers": [],
+      "stepper_xml_sha256": "3f45b9175910a6c97bd3777ce51497914d1a65efd8a7c605f4f3f9e710b270b3",
+      "stepper_cases": [
+        {
+          "name": "arabic_compact_stepper_controls_keep_their_full_size()[desktop]",
+          "failure_type": null,
+          "failure_message": null
+        },
+        {
+          "name": "english_compact_stepper_controls_keep_their_full_size()[desktop]",
+          "failure_type": null,
+          "failure_message": null
+        },
+        {
+          "name": "arabic_compact_large_text_stepper_controls_keep_their_full_size()[desktop]",
+          "failure_type": null,
+          "failure_message": null
+        },
+        {
+          "name": "english_compact_large_text_stepper_controls_keep_their_full_size()[desktop]",
+          "failure_type": null,
+          "failure_message": null
+        }
+      ],
+      "suite_count": 34,
+      "tests": 277,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "raw_xml_inventory": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.MafiaDoctorRulesTest.xml",
+          "sha256": "e77adba60fded34a584546723efeebaddaa18ba382ca62d011c6e57e5c965288",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.action.MafiaActionCodecTest.xml",
+          "sha256": "766f7a951383965ae5f48ab5eed7719d8715aa31fbf0c05151f5c7c648682c28",
+          "tests": 16,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.projection.MafiaHostOnlyRedactionSentinelTest.xml",
+          "sha256": "5847b325c27bf2f02710227fb0c196a831028d47b7cf77e5fafc83427473f78c",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.projection.MafiaProjectionPolicyTest.xml",
+          "sha256": "c217322ea7a4c9359cee751c02fe695e9ab9b877cb841a6a5a22803069a17f1d",
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.reducer.MafiaReducerEdgeCasesTest.xml",
+          "sha256": "dd892241830581058b5b0ce0e6a116ac603df048690f197f0554e002e22f4118",
+          "tests": 27,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.reducer.MafiaReducerTest.xml",
+          "sha256": "3dcc7461ed005803865a7c9767aff9fbcca8340d12364e66f1265b99dc1fddbc",
+          "tests": 24,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.MafiaSessionRulesTest.xml",
+          "sha256": "d2ee4ebd8850bd0ce2062e57cbaeab33df85a0ea60e0d17385993d5f227f392b",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.NightResolutionTest.xml",
+          "sha256": "342fe0eca7eaa53ac1ce6228210e013a077201a6e42c64d162399806b5047eb0",
+          "tests": 13,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.RoleAssignmentTest.xml",
+          "sha256": "828e983d20792756a84a74ff122999969fbdce6b83354cefc40b0ecdd1b98e47",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.VoteResolutionTest.xml",
+          "sha256": "03800b9572023031042c60c35f96a86849029175c5a812be0f017b52c9b1e648",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.WinCheckTest.xml",
+          "sha256": "68b34fbf400e7fbc69ae7c5fea9f2b569b783609a50904b25d9e8038322c1c01",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.settings.MafiaSettingsValidationTest.xml",
+          "sha256": "0110f19aef91f797d1df9a8eea25b6d9321aae4c6420b875932bf64e42bcfd52",
+          "tests": 20,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.state.MafiaPeerSnapshotValidatorTest.xml",
+          "sha256": "1deedbc9076bb50f20d558fe48997f803fab0c6329f17d507bdc357f845999ea",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.flow.FullGameDriveTest.xml",
+          "sha256": "4d949decebd01202cefb4d649a207c2ed8a75d56a93d888a00799807b5895046",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.flow.MafiaLocalSessionConfigTest.xml",
+          "sha256": "9d8a6fa560fa6bbf1dfeb518eeb299fcb6b3a200540fb4ef1aea5d609ed549e8",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaAuthoritativeLifecycleTest.xml",
+          "sha256": "9f8fd4b513f85ad79547a0961679533082d8c0f53c7c401f8cc3aa1151b8af01",
+          "tests": 15,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaDoctorLanTest.xml",
+          "sha256": "e77645dddf638b7dec26fd01d798521d92629ff22b720298cfedf869a830dd53",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaMultiDeviceProgressionTest.xml",
+          "sha256": "1a8cfa9aa1f3f8a85e5abe52e26eaa5056a1421e3c2e23c60fb30bfc0d8cd085",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaPeerActionAuthorityTest.xml",
+          "sha256": "9c552c64afb0f16c2d5fc516715b85a2b1409f5326f33f3f1d5a524dbe61c4dd",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaPeerPrivateTargetGateTest.xml",
+          "sha256": "864bccb1a02f36c152a0f8dbebdcd68dd8145944e61a5ca97403a80de13b4160",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaProjectionLeakTest.xml",
+          "sha256": "4ffde08bfd2479e514b3b25196d976557d01199ef0629e4130015673a7655f48",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest.xml",
+          "sha256": "262615e172f15de3393a986e5dc290141b89a670d5390073b3c4be9f5a9d813c",
+          "tests": 15,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaSnapshotCodecTest.xml",
+          "sha256": "1a776bc29615e1122a90824060702d2611a9fb4c96047d1ac2caa2e4c2f8c518",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaSnapshotRecoveryTest.xml",
+          "sha256": "b77955c6ee59e1e79d34d442fdff015ac38e5d071b0110d9fa863d0573b710e4",
+          "tests": 23,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLanguageContinuityTest.xml",
+          "sha256": "bdb0555eb22bf0f5e6fe055d7f203e65a9cef54ac208037a736c16ceeeb60607",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.multidevice.MafiaNetworkErrorMessageKeyTest.xml",
+          "sha256": "9121583b7ee602a4a170f815e3fc69802530f7027550121abfd860ffd229ba5d",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.passandplay.MafiaPassAndPlayNightQueueTest.xml",
+          "sha256": "56848ed676db917cdd0daa3594d150ba85afd44a6ab9fd2be31273ea2b85ff63",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest.xml",
+          "sha256": "556cd642cb0915b5bb32625c921339929be8b4d343bd980c564c896edda6121b",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.night.TargetPickerSelectionTest.xml",
+          "sha256": "c79c1a670293374cb03cbae207d19bd6f6eab1151ada126add0f3f165d1e8067",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest.xml",
+          "sha256": "5653182cf0d3267bd4e3710cf42231c4220bb8ca938017c665a4018def8070b4",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest.xml",
+          "sha256": "81acb8c402c400707cf4645eb06e328f261dbf2c669cb184da8bb1bfab630eae",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupDraftTest.xml",
+          "sha256": "5d36b4f720150feb92bed40d0df34193ec5981b1f5c9010e1742c42978fde230",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupStepperLayoutTest.xml",
+          "sha256": "3f45b9175910a6c97bd3777ce51497914d1a65efd8a7c605f4f3f9e710b270b3",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupToggleLayoutTest.xml",
+          "sha256": "0d9266d0257b549a2433737ceffff840ed4a0f93ca71d47eeb3ae673bae4faa8",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ]
+    }
+  },
+  "limits": [
+    "Reviewer parsed and compared actual XML/receipts/logs; did not personally rerun tests. Root is the coordinated execution owner.",
+    "GREEN01 is277 Mafia Desktop tests in34 suites plus the actual Mafia Detekt task, no failures/errors/skips. It is not Whodunit runtime, Android/iOS rendering, physical VoiceOver/TalkBack, all viewports, or Store release evidence.",
+    "This review approves the small local defect repair and its executable regression, not a whole-project readiness verdict. Wider native and combined runs remain root-owned.",
+    "Ancestry-specific test selectors deliberately fail if future layout nesting changes; future refactors must retain the geometry oracle rather than merely relaxing selectors."
+  ],
+  "cleanup": {
+    "reviewer_started_build_test_vm_processes": 0,
+    "reviewer_deleted_files": 0,
+    "source_or_artifact_modifications": 0,
+    "root_red_and_green_receipts_report_stop_zero_no_workers_no_outputs": true
+  }
+}

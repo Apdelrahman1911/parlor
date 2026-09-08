@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root",
+  "author_of_helper": "/root/factory_review",
+  "recorded_at": "2026-09-07T23:41:16.908507+00:00",
+  "source_commit": "b6e1947c62661631d0593038db7f64dbf25f720e",
+  "classification": "APPROVED FOR EXACT VERIFY-ONLY; EXECUTION CONDITIONAL ON GENUINE PASS AND UNCHANGED GUARDS",
+  "reviewed_lines": {
+    "reviews/native09_secondary_fifo_recovery_02.py": [
+      [
+        1,
+        198
+      ]
+    ],
+    "reviews/test_native09_secondary_fifo_recovery_02.py": [
+      [
+        1,
+        205
+      ]
+    ],
+    "run_gradle_cycle.py": [
+      [
+        1,
+        344
+      ]
+    ],
+    "scripts/verification/ios-readiness/secondary_fifo.py": [
+      [
+        1,
+        205
+      ]
+    ],
+    "scripts/verification/ios-readiness/run_ios_readiness.py": [
+      [
+        278,
+        315
+      ]
+    ]
+  },
+  "reasoning": [
+    "Complete independent reconstructed claim binds exact native09 original receipts plus all ancestor and four target inodes; original pending record is not retroactively relabeled as attested.",
+    "Only exact lsof command accepts exit1 with numeric PIDs; every PID remains subject to own-process-only holder exemption. ps and other targets remain strict.",
+    "Descriptor-relative O_NOFOLLOW traversal, UID/birth/device/inode/type/link/children equality, repeated guards, empty-only rmdir and no recursive removal constrain execution to four task-owned objects.",
+    "Unknown holders, live/reused old PIDs, changed inodes, redirected evidence, unknown contents, failed queries or partial failures preserve remainder and do not blind retry.",
+    "24 actual synthetic tests passed; original19 preserved plus5 new lsof contract regressions. No physical or app runtime evidence implied.",
+    "Same-UID hostile concurrent replacement cannot be forensically excluded; narrow one-cycle operational ownership is accepted under recorded trusted-user assumption, not generalized cleanup authority."
+  ],
+  "validation": {
+    "actual_tests": 24,
+    "skips": 0,
+    "exit_code": 0,
+    "gradle_stop_exit_code": 0,
+    "cleanup_errors": [],
+    "current_native09_result": "FAIL",
+    "current_native09_original_cleanup_result": "FAIL"
+  },
+  "evidence": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09_secondary_fifo_recovery_02.py",
+      "sha256": "7ae5a99dd4e916529c4d3f108a97cd13eb21168e2b2a8f06a82062a81107c088"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/test_native09_secondary_fifo_recovery_02.py",
+      "sha256": "3afea3bbb96dd192bea2791115e5f97a510ac352af9930a03b8431acf42f8114"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native09-secondary-fifo-recovery-independent-proposal-01.json",
+      "sha256": "691caf73451570aae8cab30279ef84d180d15496d8d3fa39625593901855cc37"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native09-secondary-recovery-controls-02/receipt.json",
+      "sha256": "584e9e3577e3c0b5454a88e1a1fef85080510a8011ccbde27ad5ff3bf2d4cf21"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native09-secondary-recovery-controls-02/gradle.log",
+      "sha256": "756fe8540b6a371ff0690ee1d66268a4961129def7b32fcad92c5599ce20c23e"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native09-secondary-recovery-controls-02/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    }
+  ]
+}

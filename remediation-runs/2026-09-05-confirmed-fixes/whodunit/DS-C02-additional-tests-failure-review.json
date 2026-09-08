@@ -1,0 +1,105 @@
+{
+  "at": "2026-09-05T20:12:05.115316+00:00",
+  "reviewer": "/root/whodunit_cont",
+  "author": "/root",
+  "status": "TEST HARNESS SCHEDULING FAILURE CONFIRMED; corrected source requires rerun",
+  "cycle": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01",
+  "tested_lifetime_source_sha256": "5a44e710b9bc28cb117e67c07c0d449ef6c9f04782f61ce1991bda261f70f0bc",
+  "failure_line": 46,
+  "actual_xml": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastLifetimeTest.xml",
+  "xml_sha256": "35ddaf2043b0bad95993680dbe60bc443d6ef7c34ece5c88d1825f282bd67d3f",
+  "cases": [
+    {
+      "name": "replacement_state_owner_with_same_numeric_id_gets_its_own_lifetime()[desktop]",
+      "status": "FAIL",
+      "failure_message": "java.lang.AssertionError: Failed to perform isDisplayed check.\nReason: Expected exactly '1' node but could not find any node that satisfies: (Text + InputText + EditableText contains 'Replacement owner' (ignoreCase: false))\n"
+    },
+    {
+      "name": "replacement_after_automatic_dismiss_gets_fresh_visibility_and_timer()[desktop]",
+      "status": "PASS",
+      "failure_message": null
+    },
+    {
+      "name": "identical_text_after_automatic_dismiss_is_a_new_lifetime()[desktop]",
+      "status": "PASS",
+      "failure_message": null
+    }
+  ],
+  "classification_reason": "The replacement-state mutation runs after pre-action idling while autoAdvance=false. No composition frame follows it before querying replacement text. Official exact test implementation returns idle despite pending recomposition when clock paused, so absence of replacement text here does not test the replacement lifetime.",
+  "counter_evidence": [
+    "All prior auto-dismiss replacement cases still pass",
+    "Both real-thread concurrency tests passed",
+    "Failure is at first immediate replacement query, not later expiry observation",
+    "Source host uses state+id key; no production delta since prior passed fix"
+  ],
+  "proposed_correction": "Explicit bounded frame settlement after owner mutation; keep original equal-ID, delayed visibility, queue count and eventual automatic expiry assertions. Flow-owner collector restart may require a second frame; not a need for arbitrary sleeps or altered duration.",
+  "research": [
+    {
+      "path": "DS-C02-frame-clock-research.json",
+      "reviewed_ranges": {
+        "MainTestClock.kt": [
+          [
+            42,
+            101
+          ]
+        ],
+        "ComposeUiTest.kt": [
+          [
+            114,
+            153
+          ]
+        ],
+        "ComposeUiTest.skiko.kt": [
+          [
+            325,
+            363
+          ],
+          [
+            378,
+            385
+          ]
+        ],
+        "AbstractMainTestClock.kt": [
+          [
+            20,
+            108
+          ]
+        ]
+      }
+    },
+    {
+      "path": "DS-C02-owner-flow-research-resolved.json",
+      "reviewed_ranges": {
+        "SnapshotFlow.kt": [
+          [
+            35,
+            70
+          ]
+        ],
+        "ProduceState.kt": [
+          [
+            114,
+            143
+          ]
+        ]
+      }
+    },
+    {
+      "path": "DS-C02-desktop-runtime-provenance.json",
+      "scope": "Full api/runtime dependency variant metadata for exact Desktop wrapper pin"
+    }
+  ],
+  "superseded_research": "DS-C02-owner-flow-research.json downloaded a source-only EmptyFile wrapper; it is explicitly NOT implementation evidence. Official wrapper metadata and AndroidX1.10.5 sources resolve the applicability.",
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-05T19:56:40.568193+00:00",
+    "cleanup_completed_at": "2026-09-05T19:56:40.847118+00:00",
+    "cleanup_errors": [],
+    "remaining_outputs": [],
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    }
+  },
+  "child_execution": "Only bounded HTTP source research and evidence parsing; all Python commands exited, no archive jars/builds/daemons/servers created."
+}

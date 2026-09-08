@@ -1,0 +1,51 @@
+import groovy.json.JsonOutput
+import java.nio.file.Files
+import java.nio.file.LinkOption
+import java.nio.file.Path
+import java.nio.file.StandardOpenOption
+import org.gradle.api.tasks.testing.Test
+
+// Campaign-only, read-only classpath capture. No dependency or task-selection changes.
+def destination = System.getProperty('parlor.audit.whodunit.classpath')
+if (destination == null || !Path.of(destination).isAbsolute()) {
+    throw new GradleException('Expected an absolute campaign-owned classpath destination')
+}
+allprojects { project ->
+    if (project.path == ':game-modes:whodunit') {
+        project.tasks.withType(Test).configureEach { testTask ->
+            if (testTask.name == 'desktopTest') {
+                testTask.doFirst {
+                    def classpath = testTask.classpath.asPath
+                    def entries = testTask.classpath.files.collect { file ->
+                        def path = file.toPath()
+                        def noFollow = LinkOption.NOFOLLOW_LINKS
+                        def kind = Files.isSymbolicLink(path) ? 'symlink' :
+                            Files.isRegularFile(path, noFollow) ? 'file' :
+                            Files.isDirectory(path, noFollow) ? 'directory' :
+                            Files.exists(path, noFollow) ? 'other' : 'missing'
+                        [path: file.absolutePath, kind: kind,
+                         exists: Files.exists(path, noFollow)]
+                    }
+                    def javaTasks = ['compileDesktopMainJava', 'compileDesktopTestJava'].collect { name ->
+                        def javaTask = project.tasks.named(name).get()
+                        [path: javaTask.path,
+                         destination: javaTask.destinationDirectory.get().asFile.absolutePath,
+                         executed: javaTask.state.executed,
+                         no_source: javaTask.state.noSource,
+                         skipped: javaTask.state.skipped,
+                         skip_message: javaTask.state.skipMessage,
+                         failure: javaTask.state.failure != null,
+                         source_empty: javaTask.source.isEmpty()]
+                    }
+                    def state = [schema: 1, captured_for: testTask.path, classpath: classpath,
+                                 entries: entries, java_compile_tasks: javaTasks]
+                    Files.writeString(Path.of(destination), classpath,
+                        StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE)
+                    Files.writeString(Path.of(destination + '.state.json'),
+                        JsonOutput.prettyPrint(JsonOutput.toJson(state)) + '\n',
+                        StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE)
+                }
+            }
+        }
+    }
+}

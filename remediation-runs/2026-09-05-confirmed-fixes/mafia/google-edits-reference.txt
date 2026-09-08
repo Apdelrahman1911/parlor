@@ -1,0 +1,89 @@
+ API reference page notes specifically whether
+the methods for that resource use the "edits" model.
+When you first create an edit, the edit is a copy of the current
+deployed state of the app. You can then modify the edit by calling the
+Edits methods. When the edit is ready to go, you commit it,
+making the changes live. You can also abandon the edit at any time,
+discarding the changes and leaving your app as it was.
+You can only use this API to make changes to an
+existing
+app (that
+has at least one APK uploaded); thus, you will have to upload at least
+one APK through the Play Console before you can use this
+API. Furthermore, you cannot use this API to change an app's state
+from "published" to "unpublished", or to fill out the legal consents
+required for publishing. To publish the app, you have to use the
+Play Console.
+Caution:
+If anyone makes any changes to the app through
+the Google Play Console while you have an edit in progress,
+your edit is discarded and the Play Console changes take effect.
+Workflow
+This section shows the typical way you would use the Google Play Developer Publishing API
+Edits methods
+to make modifications to an app.
+Create a new edit, by calling
+Edits:
+Insert
+and specifying the app you want
+to modify.
+This creates a new edit of the specified app. The app's initial
+settings--the APKs, store listings, expansi
+
+---
+
+n make
+further changes or discard the edit in progress without affecting
+the user experience.
+Note:
+Each user may have only a single edit open at a time. If you create a
+new edit, any existing edit you may have open is invalidated. In addition,
+if anyone commits an edit or makes changes to an app through the Play
+Console,
+all
+other edits for the app (owned by any user) are invalidated.
+If you try to commit an invalid edit, the operation will throw an exception
+and have no effect.
+Commit the edit.
+When you call
+Edits: commit
+, if there
+are no validation errors, then all the changes specified in the
+edits resource go "live", replacing the current state of the
+app. These changes can take several hours to take effect, just as
+when you make changes through the Play Console.
+Except as otherwise noted, the content of this page is licensed under the
+Creative Commons Attribution 4.0 License
+, and code samples are licensed under the
+Apache 2.0 License
+. For details, see the
+Google Developers Site Policies
+. Java is a registered trademark of Oracle and/or its affiliates.
+Last updated 2025-12-18 UTC.
+[[["Easy to understand","easyToUnderstand","thumb-up"],["Solved my problem","solvedMyProblem","thumb-up"],["Other","otherUp","thumb-up"]],[["Missing the information I need","missingTheInformationINeed","thumb-down"],["Too complicated / too many
+
+---
+
+o an app through the Play
+Console,
+all
+other edits for the app (owned by any user) are invalidated.
+If you try to commit an invalid edit, the operation will throw an exception
+and have no effect.
+Commit the edit.
+When you call
+Edits: commit
+, if there
+are no validation errors, then all the changes specified in the
+edits resource go "live", replacing the current state of the
+app. These changes can take several hours to take effect, just as
+when you make changes through the Play Console.
+Except as otherwise noted, the content of this page is licensed under the
+Creative Commons Attribution 4.0 License
+, and code samples are licensed under the
+Apache 2.0 License
+. For details, see the
+Google Developers Site Policies
+. Java is a registered trademark of Oracle and/or its affiliates.
+Last updated 2025-12-18 UTC.
+[[["Easy to understand","easyToUnderstand","thumb-up"],["Solved my problem","solvedMyProblem","thumb-up"],["Other","otherUp","thumb-up"]],[["Missing the information I need","missingTheInformationINeed","thumb-down"],["Too complicated / too many steps","tooComplicatedTooManySteps","thumb-down"],["Out of date","outOfDate","thumb-down"],["Samples / code issue","samplesCodeIssue","thumb-down"],["Other","otherDown","thumb-down"]],["Last updated 2025-12-18 UTC."],[],["The Google Play Developer Publishing API uses \"edits\" to manage 

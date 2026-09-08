@@ -1,0 +1,28 @@
+[
+  {
+    "url": "https://android.googlesource.com/platform/packages/modules/adb/+/refs/heads/main/docs/dev/services.md?format=TEXT",
+    "accessed_at": "2026-09-07T05:04:00.215710+00:00",
+    "sha256": "f5a1c1158311230cf029da544bd149d49466c1febcb5595b4336a7fa9bf2899a",
+    "applicability": "official upstream main docs, not installed-binary runtime evidence",
+    "excerpts": [
+      {
+        "from": 7,
+        "to": 23,
+        "text": "\nhost:version\n    Ask the ADB server for its internal version number.\n\nhost:kill\n    Ask the ADB server to quit immediately. This is used when the\n    ADB client detects that an obsolete server is running after an\n    upgrade.\n\nhost:devices\nhost:devices-l\n    Ask to return the list of available Android devices and their\n    state. devices-l includes the device paths in the state.\n    After the OKAY, this is followed by a 4-byte hex len,\n    and a string that will be dumped as-is by the client, then\n    the connection is closed\n"
+      }
+    ]
+  },
+  {
+    "url": "https://android.googlesource.com/platform/packages/modules/adb/+/refs/heads/main/docs/dev/protocol.md?format=TEXT",
+    "accessed_at": "2026-09-07T05:04:02.341685+00:00",
+    "sha256": "fd8e5b25c73a04c28bd6d6d93eaa897f4f84a16f8e23ea111f4347a8e8bb14dc",
+    "applicability": "official upstream main docs, not installed-binary runtime evidence",
+    "excerpts": [
+      {
+        "from": 283,
+        "to": 299,
+        "text": "------------------------------------------------------------------------\n\n--- smartsockets -------------------------------------------------------\n\nPort 5037 is used for smart sockets which allow a client on the host\nside to request access to a service in the host adb daemon or in the\nremote (device) daemon.  The service is requested by ascii name,\npreceeded by a 4 digit hex length.  Upon successful connection an\n\"OKAY\" response is sent, otherwise a \"FAIL\" message is returned.  Once\nconnected the client is talking to that (remote or local) service.\n\nclient: <hex4> <service-name>\nserver: \"OKAY\"\n\nclient: <hex4> <service-name>\nserver: \"FAIL\" <hex4> <reason>\n```"
+      }
+    ]
+  }
+]

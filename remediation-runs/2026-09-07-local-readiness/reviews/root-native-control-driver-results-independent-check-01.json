@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/native_fix_review",
+  "reviewed_at": "2026-09-07T11:26:48.232077+00:00",
+  "scope": "Independent review of ROOT-authored discovery driver and actual raw98 outcomes only; NOT self-approval of reviewer-authored path fix. Root independent path approval remains separate.",
+  "files": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/run_native_path_controls_01.py",
+      "sha256": "f8df0d6d8216a921956f7938b503749b6bb186f490b9075f1902fcd4f3247d48"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/native-path-controls-01/gradle.log",
+      "sha256": "e4ad17cfb678c4b0b09639dc5346a5d7c34de8021d654010b05a5f1fd92d2dfe"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/native-path-controls-01/receipt.json",
+      "sha256": "593bcb67a346ca842df0d8c5696cb6b3025053f6cd79c7bd8bad63b742179ebc"
+    }
+  ],
+  "driver_reviewed_lines": [
+    1,
+    51
+  ],
+  "disposition": "COUNTS_AND_EXECUTION_RECEIPTS_VERIFIED_WITH_STATED_PROVENANCE_LIMIT",
+  "evidence": {
+    "declared_ids": 98,
+    "unique_declared_ids": 98,
+    "discovered_ids": 98,
+    "raw_unique_test_descriptors": 98,
+    "all_three_exact_sets_match": true,
+    "reported_tests": 98,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "duration_seconds": 26.557,
+    "control_files_bracketed": 44,
+    "recorded_initial_imports": 21,
+    "before_after_controls_identical": true,
+    "all_bracketed_control_hashes_match_current": true,
+    "host_foundation_subcases": 18,
+    "host_foundation_subcases_in_unittest_methods": 1,
+    "gradle_tests_claimed": 0,
+    "ios_device_execution_claimed": false
+  },
+  "source_manifest_sha256": "61e22ba3c507e0cb2e7d88017004cbac38c4431e6563b2a7af6bd6ec4c3e345d",
+  "cleanup": {
+    "status": "PASS_FOR_THIS_COMPLETED_CYCLE",
+    "stop_exit_code": 0,
+    "stop_at": "2026-09-07T11:08:32.036471+00:00",
+    "outputs": [],
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "errors": [],
+    "completed_at": "2026-09-07T11:08:32.127569+00:00"
+  },
+  "provenance_limit": "The outer runner_before/after manifest hashes run_gradle_cycle.py, not the campaign-only run_native_path_controls_01.py. The latter was fully read and hashed now, but its own bytes were not historically before/after bracketed in the retained log. No drift indicated. The44 imported-control/source files ARE bound by both the log bracket and source manifest. Do not call this a historical driver-byte bracket.",
+  "counterevidence": [
+    "Driver fails on incorrect98declared/discovered count, missing IDs, non-success result, any skip, or control-byte drift. Current source contains no duplicated methods.",
+    "Captured root native JSON includes both original Foundation alias witness and corrected helper acceptance; it cannot be counted as18Python tests or iOS proof.",
+    "The code13 historical rejected path was never retained; the host witness does not identify that exact path.",
+    "Native diagnostic fix independent approval was authored by /root, not this report author."
+  ],
+  "reviewer_actions": "Read-only source/results and one compact report. No tests, builds, workers, process stops, source edits, or root readiness04 interference."
+}

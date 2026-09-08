@@ -1,0 +1,520 @@
+{
+  "timestamp": "2026-09-05T12:28:59.833804+00:00",
+  "reviewer": "/root/session_cont",
+  "source_identity": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "status_short": "?? AGENTS.md\n?? audit-runs/\n?? design/\n?? docs/PARLOR_PROJECT_HANDOFF.md\n?? project-code-audit/",
+    "worktree_diff_names": "",
+    "index_diff_names": ""
+  },
+  "current_first_party_files": [
+    {
+      "path": "build.gradle.kts",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/build.gradle.kts",
+      "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+      "line_count": 204,
+      "reviewed_ranges": [
+        [
+          1,
+          180
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T12:28:59.833804+00:00",
+      "status": "REOPENED_ANDROID_RUNTIME_CLOSEOUT_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "build/task-graph",
+      "cross_file_paths": [
+        "Root managed runtime task -> Release managed device -> ephemeral injected test signing -> InstrumentationTestRunner -> actual MainActivity/settings FIFO and multicast-lock fixture",
+        "Active CI caller and disabled candidate caller vs separate real Store signing gate",
+        "Existing iOS launch-only fixture vs unexecuted local UI scenario matrix"
+      ],
+      "evidence": [
+        "reviews/android-runtime-closeout-session_cont.md",
+        "research/android-runtime-closeout-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "No build/runtime/SDK/device command run in this bounded pass. Actual emulator/image/tool prerequisites delegated to parent; unexecuted local evidence is not a demonstrated external blocker."
+    },
+    {
+      "path": "composeApp/build.gradle.kts",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/build.gradle.kts",
+      "sha256": "ae5e49b02e3480e2ca7f678778f4620178a790847f613675ce6d84e159b6ad87",
+      "line_count": 615,
+      "reviewed_ranges": [
+        [
+          1,
+          193
+        ],
+        [
+          195,
+          578
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T12:28:59.833804+00:00",
+      "status": "REOPENED_ANDROID_RUNTIME_CLOSEOUT_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "build/application-runtime-and-signing",
+      "cross_file_paths": [
+        "Root managed runtime task -> Release managed device -> ephemeral injected test signing -> InstrumentationTestRunner -> actual MainActivity/settings FIFO and multicast-lock fixture",
+        "Active CI caller and disabled candidate caller vs separate real Store signing gate",
+        "Existing iOS launch-only fixture vs unexecuted local UI scenario matrix"
+      ],
+      "evidence": [
+        "reviews/android-runtime-closeout-session_cont.md",
+        "research/android-runtime-closeout-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "No build/runtime/SDK/device command run in this bounded pass. Actual emulator/image/tool prerequisites delegated to parent; unexecuted local evidence is not a demonstrated external blocker."
+    },
+    {
+      "path": "scripts/android/run_release_managed_device_smoke.sh",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/scripts/android/run_release_managed_device_smoke.sh",
+      "sha256": "5b6dc8fcdd7b11c9cefd39da3adb8783321b647cd9a8459ff761ef7fa031262d",
+      "line_count": 58,
+      "reviewed_ranges": [
+        [
+          1,
+          58
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T12:28:59.833804+00:00",
+      "status": "REOPENED_ANDROID_RUNTIME_CLOSEOUT_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "build/test-harness",
+      "cross_file_paths": [
+        "Root managed runtime task -> Release managed device -> ephemeral injected test signing -> InstrumentationTestRunner -> actual MainActivity/settings FIFO and multicast-lock fixture",
+        "Active CI caller and disabled candidate caller vs separate real Store signing gate",
+        "Existing iOS launch-only fixture vs unexecuted local UI scenario matrix"
+      ],
+      "evidence": [
+        "reviews/android-runtime-closeout-session_cont.md",
+        "research/android-runtime-closeout-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "No build/runtime/SDK/device command run in this bounded pass. Actual emulator/image/tool prerequisites delegated to parent; unexecuted local evidence is not a demonstrated external blocker."
+    },
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/.github/workflows/production-verification.yml",
+      "sha256": "965e47ddb4c47b19d8017c9494239d0a0309b26f465eb0f6b655bd90113a929c",
+      "line_count": 347,
+      "reviewed_ranges": [
+        [
+          1,
+          126
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T12:28:59.833804+00:00",
+      "status": "REOPENED_ANDROID_RUNTIME_CLOSEOUT_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "build/ci",
+      "cross_file_paths": [
+        "Root managed runtime task -> Release managed device -> ephemeral injected test signing -> InstrumentationTestRunner -> actual MainActivity/settings FIFO and multicast-lock fixture",
+        "Active CI caller and disabled candidate caller vs separate real Store signing gate",
+        "Existing iOS launch-only fixture vs unexecuted local UI scenario matrix"
+      ],
+      "evidence": [
+        "reviews/android-runtime-closeout-session_cont.md",
+        "research/android-runtime-closeout-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "No build/runtime/SDK/device command run in this bounded pass. Actual emulator/image/tool prerequisites delegated to parent; unexecuted local evidence is not a demonstrated external blocker."
+    },
+    {
+      "path": ".github/workflows/testing-candidate.yml",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/.github/workflows/testing-candidate.yml",
+      "sha256": "0488fc5e0c4e520a767408cfb5e7fa387bc5fdfa0edfeb9dcd29a4cb0d2c7976",
+      "line_count": 1244,
+      "reviewed_ranges": [
+        [
+          1,
+          183
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T12:28:59.833804+00:00",
+      "status": "REOPENED_ANDROID_RUNTIME_CLOSEOUT_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "build/disabled-release-caller",
+      "cross_file_paths": [
+        "Root managed runtime task -> Release managed device -> ephemeral injected test signing -> InstrumentationTestRunner -> actual MainActivity/settings FIFO and multicast-lock fixture",
+        "Active CI caller and disabled candidate caller vs separate real Store signing gate",
+        "Existing iOS launch-only fixture vs unexecuted local UI scenario matrix"
+      ],
+      "evidence": [
+        "reviews/android-runtime-closeout-session_cont.md",
+        "research/android-runtime-closeout-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "No build/runtime/SDK/device command run in this bounded pass. Actual emulator/image/tool prerequisites delegated to parent; unexecuted local evidence is not a demonstrated external blocker."
+    },
+    {
+      "path": "composeApp/src/androidInstrumentedTest/java/com/parlor/app/ReleaseRuntimeSmokeTest.java",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/androidInstrumentedTest/java/com/parlor/app/ReleaseRuntimeSmokeTest.java",
+      "sha256": "bfa1c7a05d6310d467ebaa993225f72a80a8ed9ea0791cc67640d5810a248a13",
+      "line_count": 62,
+      "reviewed_ranges": [
+        [
+          1,
+          62
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T12:28:59.833804+00:00",
+      "status": "REOPENED_ANDROID_RUNTIME_CLOSEOUT_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "test/android-instrumentation",
+      "cross_file_paths": [
+        "Root managed runtime task -> Release managed device -> ephemeral injected test signing -> InstrumentationTestRunner -> actual MainActivity/settings FIFO and multicast-lock fixture",
+        "Active CI caller and disabled candidate caller vs separate real Store signing gate",
+        "Existing iOS launch-only fixture vs unexecuted local UI scenario matrix"
+      ],
+      "evidence": [
+        "reviews/android-runtime-closeout-session_cont.md",
+        "research/android-runtime-closeout-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "No build/runtime/SDK/device command run in this bounded pass. Actual emulator/image/tool prerequisites delegated to parent; unexecuted local evidence is not a demonstrated external blocker."
+    },
+    {
+      "path": "composeApp/src/androidInstrumentedTest/kotlin/com/parlor/app/MainActivityColdStartTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/androidInstrumentedTest/kotlin/com/parlor/app/MainActivityColdStartTest.kt",
+      "sha256": "14055d93940b37c4f1a03b91d0df87b8042b146cdd58a9e061da752d375094f9",
+      "line_count": 188,
+      "reviewed_ranges": [
+        [
+          1,
+          188
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T12:28:59.833804+00:00",
+      "status": "REOPENED_ANDROID_RUNTIME_CLOSEOUT_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "test/android-instrumentation",
+      "cross_file_paths": [
+        "Root managed runtime task -> Release managed device -> ephemeral injected test signing -> InstrumentationTestRunner -> actual MainActivity/settings FIFO and multicast-lock fixture",
+        "Active CI caller and disabled candidate caller vs separate real Store signing gate",
+        "Existing iOS launch-only fixture vs unexecuted local UI scenario matrix"
+      ],
+      "evidence": [
+        "reviews/android-runtime-closeout-session_cont.md",
+        "research/android-runtime-closeout-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "No build/runtime/SDK/device command run in this bounded pass. Actual emulator/image/tool prerequisites delegated to parent; unexecuted local evidence is not a demonstrated external blocker."
+    },
+    {
+      "path": "composeApp/src/androidMain/kotlin/com/parlor/app/MainActivity.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/androidMain/kotlin/com/parlor/app/MainActivity.kt",
+      "sha256": "23d3107249b2dbfdce0cd88361e644a71ef8c9c94316617c8782fb2a00ec2a45",
+      "line_count": 69,
+      "reviewed_ranges": [
+        [
+          1,
+          69
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T12:28:59.833804+00:00",
+      "status": "REOPENED_ANDROID_RUNTIME_CLOSEOUT_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/android-entry",
+      "cross_file_paths": [
+        "Root managed runtime task -> Release managed device -> ephemeral injected test signing -> InstrumentationTestRunner -> actual MainActivity/settings FIFO and multicast-lock fixture",
+        "Active CI caller and disabled candidate caller vs separate real Store signing gate",
+        "Existing iOS launch-only fixture vs unexecuted local UI scenario matrix"
+      ],
+      "evidence": [
+        "reviews/android-runtime-closeout-session_cont.md",
+        "research/android-runtime-closeout-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "No build/runtime/SDK/device command run in this bounded pass. Actual emulator/image/tool prerequisites delegated to parent; unexecuted local evidence is not a demonstrated external blocker."
+    },
+    {
+      "path": "composeApp/src/androidMain/AndroidManifest.xml",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/androidMain/AndroidManifest.xml",
+      "sha256": "daddfd606b67536858d5e7d3272aacabeb4210db5c2a2fab0bc9e172c9d903ca",
+      "line_count": 33,
+      "reviewed_ranges": [
+        [
+          1,
+          33
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T12:28:59.833804+00:00",
+      "status": "REOPENED_ANDROID_RUNTIME_CLOSEOUT_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "build/android-platform",
+      "cross_file_paths": [
+        "Root managed runtime task -> Release managed device -> ephemeral injected test signing -> InstrumentationTestRunner -> actual MainActivity/settings FIFO and multicast-lock fixture",
+        "Active CI caller and disabled candidate caller vs separate real Store signing gate",
+        "Existing iOS launch-only fixture vs unexecuted local UI scenario matrix"
+      ],
+      "evidence": [
+        "reviews/android-runtime-closeout-session_cont.md",
+        "research/android-runtime-closeout-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "No build/runtime/SDK/device command run in this bounded pass. Actual emulator/image/tool prerequisites delegated to parent; unexecuted local evidence is not a demonstrated external blocker."
+    },
+    {
+      "path": "composeApp/src/androidMain/kotlin/com/parlor/app/storage/AndroidSettingsKeyValueBacking.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/androidMain/kotlin/com/parlor/app/storage/AndroidSettingsKeyValueBacking.kt",
+      "sha256": "ce10248b5968e5627631cc315623412e190f20c40d3bfbdd69fd7a74070aa626",
+      "line_count": 65,
+      "reviewed_ranges": [
+        [
+          1,
+          65
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T12:28:59.833804+00:00",
+      "status": "REOPENED_ANDROID_RUNTIME_CLOSEOUT_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/android-settings",
+      "cross_file_paths": [
+        "Root managed runtime task -> Release managed device -> ephemeral injected test signing -> InstrumentationTestRunner -> actual MainActivity/settings FIFO and multicast-lock fixture",
+        "Active CI caller and disabled candidate caller vs separate real Store signing gate",
+        "Existing iOS launch-only fixture vs unexecuted local UI scenario matrix"
+      ],
+      "evidence": [
+        "reviews/android-runtime-closeout-session_cont.md",
+        "research/android-runtime-closeout-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "No build/runtime/SDK/device command run in this bounded pass. Actual emulator/image/tool prerequisites delegated to parent; unexecuted local evidence is not a demonstrated external blocker."
+    },
+    {
+      "path": "composeApp/src/androidMain/kotlin/com/parlor/app/storage/PlatformStorage.android.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/androidMain/kotlin/com/parlor/app/storage/PlatformStorage.android.kt",
+      "sha256": "7cd14c2a4e100b9c31dfec11d57df581d18c461e75a3e2eae99d46c3deddfa5b",
+      "line_count": 20,
+      "reviewed_ranges": [
+        [
+          1,
+          20
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T12:28:59.833804+00:00",
+      "status": "REOPENED_ANDROID_RUNTIME_CLOSEOUT_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/di",
+      "cross_file_paths": [
+        "Root managed runtime task -> Release managed device -> ephemeral injected test signing -> InstrumentationTestRunner -> actual MainActivity/settings FIFO and multicast-lock fixture",
+        "Active CI caller and disabled candidate caller vs separate real Store signing gate",
+        "Existing iOS launch-only fixture vs unexecuted local UI scenario matrix"
+      ],
+      "evidence": [
+        "reviews/android-runtime-closeout-session_cont.md",
+        "research/android-runtime-closeout-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "No build/runtime/SDK/device command run in this bounded pass. Actual emulator/image/tool prerequisites delegated to parent; unexecuted local evidence is not a demonstrated external blocker."
+    },
+    {
+      "path": "composeApp/src/androidMain/kotlin/com/parlor/app/ParlorApplication.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/androidMain/kotlin/com/parlor/app/ParlorApplication.kt",
+      "sha256": "82070ae7caa7971b9e0bcf869950407edf5e839bfc7786ba57dd934629a2daaa",
+      "line_count": 25,
+      "reviewed_ranges": [
+        [
+          1,
+          25
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T12:28:59.833804+00:00",
+      "status": "REOPENED_ANDROID_RUNTIME_CLOSEOUT_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "production/android-entry",
+      "cross_file_paths": [
+        "Root managed runtime task -> Release managed device -> ephemeral injected test signing -> InstrumentationTestRunner -> actual MainActivity/settings FIFO and multicast-lock fixture",
+        "Active CI caller and disabled candidate caller vs separate real Store signing gate",
+        "Existing iOS launch-only fixture vs unexecuted local UI scenario matrix"
+      ],
+      "evidence": [
+        "reviews/android-runtime-closeout-session_cont.md",
+        "research/android-runtime-closeout-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "No build/runtime/SDK/device command run in this bounded pass. Actual emulator/image/tool prerequisites delegated to parent; unexecuted local evidence is not a demonstrated external blocker."
+    },
+    {
+      "path": "iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
+      "sha256": "e903278fc8defcac9a4d03a52495c1364a361222e5f369059c5d6b6416fb6eb7",
+      "line_count": 32,
+      "reviewed_ranges": [
+        [
+          1,
+          32
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T12:28:59.833804+00:00",
+      "status": "REOPENED_ANDROID_RUNTIME_CLOSEOUT_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "test/ios-ui-scope-counterexample",
+      "cross_file_paths": [
+        "Root managed runtime task -> Release managed device -> ephemeral injected test signing -> InstrumentationTestRunner -> actual MainActivity/settings FIFO and multicast-lock fixture",
+        "Active CI caller and disabled candidate caller vs separate real Store signing gate",
+        "Existing iOS launch-only fixture vs unexecuted local UI scenario matrix"
+      ],
+      "evidence": [
+        "reviews/android-runtime-closeout-session_cont.md",
+        "research/android-runtime-closeout-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "No build/runtime/SDK/device command run in this bounded pass. Actual emulator/image/tool prerequisites delegated to parent; unexecuted local evidence is not a demonstrated external blocker."
+    },
+    {
+      "path": "config/release-policy.json",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/config/release-policy.json",
+      "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+      "line_count": 119,
+      "reviewed_ranges": [
+        [
+          1,
+          115
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T12:28:59.833804+00:00",
+      "status": "REOPENED_ANDROID_RUNTIME_CLOSEOUT_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "build/public-release-policy",
+      "cross_file_paths": [
+        "Root managed runtime task -> Release managed device -> ephemeral injected test signing -> InstrumentationTestRunner -> actual MainActivity/settings FIFO and multicast-lock fixture",
+        "Active CI caller and disabled candidate caller vs separate real Store signing gate",
+        "Existing iOS launch-only fixture vs unexecuted local UI scenario matrix"
+      ],
+      "evidence": [
+        "reviews/android-runtime-closeout-session_cont.md",
+        "research/android-runtime-closeout-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "No build/runtime/SDK/device command run in this bounded pass. Actual emulator/image/tool prerequisites delegated to parent; unexecuted local evidence is not a demonstrated external blocker."
+    },
+    {
+      "path": "docs/RELEASE_GATES.md",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/RELEASE_GATES.md",
+      "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32",
+      "line_count": 109,
+      "reviewed_ranges": [
+        [
+          1,
+          109
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T12:28:59.833804+00:00",
+      "status": "REOPENED_ANDROID_RUNTIME_CLOSEOUT_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "documentation",
+      "cross_file_paths": [
+        "Root managed runtime task -> Release managed device -> ephemeral injected test signing -> InstrumentationTestRunner -> actual MainActivity/settings FIFO and multicast-lock fixture",
+        "Active CI caller and disabled candidate caller vs separate real Store signing gate",
+        "Existing iOS launch-only fixture vs unexecuted local UI scenario matrix"
+      ],
+      "evidence": [
+        "reviews/android-runtime-closeout-session_cont.md",
+        "research/android-runtime-closeout-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "No build/runtime/SDK/device command run in this bounded pass. Actual emulator/image/tool prerequisites delegated to parent; unexecuted local evidence is not a demonstrated external blocker."
+    },
+    {
+      "path": "gradle.properties",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/gradle.properties",
+      "sha256": "2df8685921ad2c6eead097a6d9994bbcc93dbc5cbdeb0bce8911ffa4e83162ce",
+      "line_count": 29,
+      "reviewed_ranges": [
+        [
+          1,
+          29
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T12:28:59.833804+00:00",
+      "status": "REOPENED_ANDROID_RUNTIME_CLOSEOUT_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "build/tracked-configuration",
+      "cross_file_paths": [
+        "Root managed runtime task -> Release managed device -> ephemeral injected test signing -> InstrumentationTestRunner -> actual MainActivity/settings FIFO and multicast-lock fixture",
+        "Active CI caller and disabled candidate caller vs separate real Store signing gate",
+        "Existing iOS launch-only fixture vs unexecuted local UI scenario matrix"
+      ],
+      "evidence": [
+        "reviews/android-runtime-closeout-session_cont.md",
+        "research/android-runtime-closeout-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "No build/runtime/SDK/device command run in this bounded pass. Actual emulator/image/tool prerequisites delegated to parent; unexecuted local evidence is not a demonstrated external blocker."
+    },
+    {
+      "path": "gradle/wrapper/gradle-wrapper.properties",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/gradle/wrapper/gradle-wrapper.properties",
+      "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2",
+      "line_count": 8,
+      "reviewed_ranges": [
+        [
+          1,
+          8
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T12:28:59.833804+00:00",
+      "status": "REOPENED_ANDROID_RUNTIME_CLOSEOUT_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "build/wrapper-pin",
+      "cross_file_paths": [
+        "Root managed runtime task -> Release managed device -> ephemeral injected test signing -> InstrumentationTestRunner -> actual MainActivity/settings FIFO and multicast-lock fixture",
+        "Active CI caller and disabled candidate caller vs separate real Store signing gate",
+        "Existing iOS launch-only fixture vs unexecuted local UI scenario matrix"
+      ],
+      "evidence": [
+        "reviews/android-runtime-closeout-session_cont.md",
+        "research/android-runtime-closeout-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "No build/runtime/SDK/device command run in this bounded pass. Actual emulator/image/tool prerequisites delegated to parent; unexecuted local evidence is not a demonstrated external blocker."
+    },
+    {
+      "path": "gradle/libs.versions.toml",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+      "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "line_count": 106,
+      "reviewed_ranges": [
+        [
+          1,
+          35
+        ]
+      ],
+      "reviewer": "/root/session_cont",
+      "timestamp": "2026-09-05T12:28:59.833804+00:00",
+      "status": "REOPENED_ANDROID_RUNTIME_CLOSEOUT_SOURCE_REVIEW",
+      "file_type": "text",
+      "relevance": "build/dependency-pins",
+      "cross_file_paths": [
+        "Root managed runtime task -> Release managed device -> ephemeral injected test signing -> InstrumentationTestRunner -> actual MainActivity/settings FIFO and multicast-lock fixture",
+        "Active CI caller and disabled candidate caller vs separate real Store signing gate",
+        "Existing iOS launch-only fixture vs unexecuted local UI scenario matrix"
+      ],
+      "evidence": [
+        "reviews/android-runtime-closeout-session_cont.md",
+        "research/android-runtime-closeout-session_cont/research-ledger.json"
+      ],
+      "uncertainty": "No build/runtime/SDK/device command run in this bounded pass. Actual emulator/image/tool prerequisites delegated to parent; unexecuted local evidence is not a demonstrated external blocker."
+    }
+  ],
+  "file_count": 18,
+  "reviewed_lines_this_bounded_pass": 1914,
+  "tool_availability_only": {
+    "host": "Darwin arm64",
+    "java": "/usr/bin/java",
+    "keytool": "/usr/bin/keytool",
+    "adb": "/Users/abdelrahman/Library/Android/sdk/platform-tools/adb",
+    "sdkmanager": "/opt/homebrew/bin/sdkmanager",
+    "avdmanager": "/opt/homebrew/bin/avdmanager",
+    "emulator": "not on PATH; installation/image status not checked",
+    "xcodebuild": "/usr/bin/xcodebuild",
+    "xcrun": "/usr/bin/xcrun"
+  },
+  "command_limitations": "command -v and uname only for availability; no SDK file reads or SDK/device command execution by this reviewer",
+  "report_sha256": "b4949bf80f9d7a682d0139856c40e3f3c08011f79af4acf0be7c16069e88454b",
+  "cleanup": "SOURCE_ONLY_NO_BUILD_OUTPUT_OR_PERSISTENT_PROCESS; parent build lane untouched"
+}

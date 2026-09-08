@@ -1,0 +1,138 @@
+{
+  "reviewer": "/root",
+  "author": "/root/release_fix_review",
+  "date": "2026-09-07T07:50:03.854913+00:00",
+  "baseline": "1f809b87c15a4deb079809bc14718a58cf0fe451",
+  "classification": {
+    "MT-T1": "TEST/EVIDENCE GAP repaired; not an allegation that current Gradle artifact hashes are wrong",
+    "DOC-C4": "DOCUMENTATION MISMATCH repaired",
+    "INV-C01": "TEST/EVIDENCE wording gap repaired; generated current CSV refresh is separate and still pending"
+  },
+  "verdict": "APPROVED scoped source/test/doc corrections; require inventory regeneration and final combined gate separately",
+  "reopened_source": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/VerificationMetadataAssertions.kt",
+      "sha256": "649281b5d784e5fda09b091efc65c81d063fbc84c32ff8a779543e51ee4be9d0",
+      "reviewed_lines": [
+        [
+          1,
+          75
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/VerificationMetadataAssertionsTest.kt",
+      "sha256": "6ac331a136d63dad585275c7149ac1de88cb5d2461695c773797eb23e10d8e99",
+      "reviewed_lines": [
+        [
+          1,
+          151
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitMavenProvenanceContractTest.kt",
+      "sha256": "ffa72cc843188326bd0fdc7f6ac1b6cc6876b5e033d4cc51fd57d0e6c7e2f4ed",
+      "reviewed_lines": [
+        [
+          1,
+          157
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/DesktopDependencyVerificationContractTest.kt",
+      "sha256": "f43a4c548da2ddbd8020b970787fec3d10a332c53c86ea514a750f3a90d55f13",
+      "reviewed_lines": [
+        [
+          1,
+          160
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/RELEASE_AUTOMATION.md",
+      "sha256": "5105189dd5562e8fc39f7141a36e2e878aaaf41b7b183d2acb8664c64a6a0794",
+      "reviewed_lines": [
+        [
+          310,
+          363
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/review/README.md",
+      "sha256": "65c8afcce2708c4574229a7d4e3215ca70bd7f0075738bf7fd646982b4429565",
+      "reviewed_lines": [
+        [
+          1,
+          50
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/generate_review_inventory.py",
+      "sha256": "c65ec66aa1ea18e91ddae521de4feda15a08ecffa024f06b8dbde0c1999c5a52",
+      "reviewed_lines": [
+        [
+          1,
+          409
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_review_inventory.py",
+      "sha256": "841961fda25e9d4455c3178a3beab93f713e41667592538fcaef0621af74b78c",
+      "reviewed_lines": [
+        [
+          1,
+          173
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_release_documentation.py",
+      "sha256": "414579949e9668da6971d41dd4ef7434271fd17b8af4547b0009162ea5c83046",
+      "reviewed_lines": [
+        [
+          1,
+          31
+        ]
+      ]
+    }
+  ],
+  "reachable_paths": [
+    "Both metadata assertions run as :shared:transport-p2p:desktopTest; helper is desktopTest-only, no shipping source dependency",
+    "Root productionReleaseAutomationCheck invokes validate_release_system.sh -> release Python discovery + inventory --check",
+    "Protected-branch instructions identify all five live workflow job names; no live GitHub-rule state claim"
+  ],
+  "root_cause_review": [
+    "Exact component coordinates, direct artifact name and direct primary SHA256 are bound together; invalid or ambiguous records rejected",
+    "JDK21 default DOM namespace-aware parser disables DTD/XInclude/entity expansion and external DTD/schema access; no new dependency",
+    "Historical overrides preserved as historical references; mechanical membership never creates a source-review attestation or no-defect claim",
+    "Existing synthetic Git history/determinism assertions retained; new tests execute actual generator and current workflow/doc inputs"
+  ],
+  "counter_evidence": [
+    "Strict Gradle verification already protects actual downloads; MT-T1 was a false-green contract assertion, not demonstrated supply-chain compromise",
+    "No blanket also-trust change; metadata and dependency pins unchanged",
+    "No claims about live branch-protection configuration or original human-audit completeness",
+    "Generated CSV intentionally still old until authorized regeneration; it must not pass freshness yet"
+  ],
+  "evidence": [
+    "evidence/story-final-metadata-green-13/test-receipts.json",
+    "evidence/story-final-metadata-green-13/identity/focused-gradle.log",
+    "evidence/review-evidence-controls-01/gradle.log",
+    "evidence/review-evidence-controls-01/receipt.json"
+  ],
+  "execution": {
+    "metadata_assertion_regressions": 18,
+    "production_provenance_contract_tests": 5,
+    "focused_python_tests": 5,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "whodunit_and_transport_detekt": "PASS",
+    "metadata_unchanged": true
+  },
+  "cleanup": "Both root cycles stop0, no remaining generated build outputs/task workers; synthetic Git fixtures removed by TemporaryDirectory; no Store/native/device operation."
+}

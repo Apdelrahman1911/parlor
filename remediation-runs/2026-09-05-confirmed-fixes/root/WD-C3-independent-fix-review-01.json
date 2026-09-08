@@ -1,0 +1,37 @@
+{
+  "id": "WD-C3",
+  "at": "2026-09-05T20:43:37.463999+00:00",
+  "author": "/root/whodunit_cont",
+  "independent_reviewer": "/root",
+  "conclusion": "APPROVED \u2014 focused root cause and regression review; final combined verification pending",
+  "baseline_commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+  "reviewed_source": "Dirty scoped remediation checkout, not pristine HEAD",
+  "files": [
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitStateValidator.kt",
+      "sha256": "c391101ba10792d4ba81eb0aa3a21771162c458e075b90bfbf06d4cb33d139c1"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitFinalTwoRecoveryTest.kt",
+      "sha256": "58e56cfae03d3f13fa7d62b866ae4d671dc8289b8766d04f6cbed2bcb3e6b9c0"
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/domain/WhodunitRulesInvariantTest.kt",
+      "sha256": "593a7e3937abc330e11ab76f4a4802e21bcde7231fb9b5220657a5bcc7d5d513"
+    }
+  ],
+  "review_reasoning": [
+    "Reopened complete changed diff,new tests,phase-shape surroundings and original independent reducer/codec/local-load/peer proof. Active Elimination Round/TiedRevote rejects <=2 survivors, matching existing immediate terminal reducer policy. Classic and valid Reveal/PostGame are unchanged.",
+    "Nine executed tests build a real six-seat bundled case game, then forge only active terminal presentation. Encoder/current decoder/bare legacy/case-bound local load/all own-private peers reject; legitimate killer/player victory,early end,postgame,replay round-trip. Existing impossible fallback fixture now rejects recovery while retaining defensive reducer exercise.",
+    "No schema/game/protocol/content version migration. Malformed formerly accepted states are rejected rather than repaired. Whodunit309passed, not overall cycle green due unrelated design test."
+  ],
+  "focused_evidence": {
+    "cycle": "design-whodunit-desktop-01",
+    "suite": "WhodunitFinalTwoRecoveryTest",
+    "tests": 9,
+    "failures": 0,
+    "skips": 0,
+    "receipt_sha256": "6ec583de55d5b45847ece8177a5c09124958c078d795db5abe2a4d2b13055aae"
+  },
+  "original_dossiers": "audit-runs/2026-09-05-source-audit/canonical-register.json references; originals preserved"
+}

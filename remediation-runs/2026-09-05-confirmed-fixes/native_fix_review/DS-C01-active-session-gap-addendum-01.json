@@ -1,0 +1,137 @@
+{
+  "reviewer": "/root/native_fix_review",
+  "created_at": "2026-09-06T01:03:04.227595+00:00",
+  "classification": "SCOPED TEST/EVIDENCE GAP, NOT A CONFIRMED APPLICATION DEFECT",
+  "task": "Non-invasive same-process active-session locale-continuity feasibility after narrowed DS-C01 apphost matrix",
+  "source_scope": [
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/App.kt",
+      "sha256": "622b679a2ef023fab17bf6c8ed8eb38c1fbc2b76a391f5f9a8298d59da9dda59",
+      "reviewed_ranges": [
+        [
+          57,
+          99
+        ],
+        [
+          298,
+          337
+        ]
+      ]
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/AppNavigation.kt",
+      "sha256": "f489d1db51d516b6b94dce1c4bc1fae2344644749209f098a4e76919126c1a19",
+      "reviewed_ranges": [
+        [
+          65,
+          111
+        ]
+      ]
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/shell/settings/SettingsScreen.kt",
+      "sha256": "f97da085d85ed5fe01ac9f4725580ea2f86e399dcd330f532d9babc1925535c5",
+      "reviewed_ranges": [
+        [
+          74,
+          134
+        ]
+      ]
+    },
+    {
+      "path": "shared/storage/src/commonMain/kotlin/com/parlor/storage/settings/Settings.kt",
+      "sha256": "9636bb4f0bf9415f81865b9e6b4b15038dd89132ff56ed7b10194717334139dc",
+      "reviewed_ranges": [
+        [
+          1,
+          33
+        ]
+      ]
+    },
+    {
+      "path": "shared/storage/src/commonMain/kotlin/com/parlor/storage/settings/PersistentSettingsStore.kt",
+      "sha256": "179e00506a2f3c7083d9f9231aa683e8bb73220a807ef6f1f5b04bb5496dac10",
+      "reviewed_ranges": [
+        [
+          1,
+          110
+        ]
+      ]
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaGameFlow.kt",
+      "sha256": "8f250d62f8afb48e407c30e5382eb4758bc4ad53dee5168af8e3452ad3e840f6",
+      "reviewed_ranges": [
+        [
+          216,
+          355
+        ]
+      ]
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "sha256": "4d58eb3bebd3777c88ca9f8ab21d97441f6d2cd1a70e28b07a0334fdc0c8ee17",
+      "reviewed_ranges": [
+        [
+          218,
+          377
+        ],
+        [
+          760,
+          818
+        ]
+      ]
+    },
+    {
+      "path": "shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/ProcessMultiplayerSessionOwner.kt",
+      "sha256": "daba67ff9106b54f73eff57635bd36547674df5f5b861177932687498296320c",
+      "reviewed_ranges": [
+        [
+          161,
+          171
+        ],
+        [
+          217,
+          246
+        ]
+      ]
+    },
+    {
+      "path": "composeApp/build.gradle.kts",
+      "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+      "reviewed_ranges": [
+        [
+          108,
+          174
+        ]
+      ]
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/di/AppModule.kt",
+      "sha256": "b449781eb52418300504344c1af978ef7cb41e4e1f35f8d50faa4b8662bbdb76",
+      "reviewed_ranges": [
+        [
+          1,
+          82
+        ]
+      ]
+    }
+  ],
+  "conclusions": [
+    "Settings language mutation is not a current in-game UI journey: App hides top-level tabs and AppNavigator rejects top-level selection while a game route owns the active flow.",
+    "PersistentSettingsStore samples platform backing once at construction and updates its live flow only through its setter; changing UserDefaults externally after launch does not exercise the actual live settings flow.",
+    "Both local controllers are private composable remember values, created directly rather than registered as session Koin singletons; one Swift root-controller UUID cannot establish their reference identity or unchanged canonical state.",
+    "The current Swift-only fixture therefore cannot claim live game/session/runtime retention; process restart ownership is a different scenario.",
+    "An invocation-only additive Kotlin bridge could call the actual Koin SettingsStore while an actual UI-created game stays mounted. This is controlled artificial store mutation, not a currently available user Settings path.",
+    "Direct local controller identity/canonical equality additionally needs a separately reviewed copy-only observation seam or an appropriate existing test interface; do not substitute fake tokens, snapshots, private reflection or production navigation bypasses.",
+    "A test-only Kotlin bridge could observe generic retained host runtime reference through ProcessMultiplayerSession.runtime without changing shipping infrastructure; controlled in-memory setup would still not prove physical P2P."
+  ],
+  "action": "No bridge, hook, navigation change, test execution or source edit authorized/performed for this addendum. Keep gap explicit.",
+  "current_matrix_scope": "Actual Settings resources, UIKit semantic direction, persisted owner before original App initialization, process terminate/relaunch/System behavior only; await root raw runtime receipt.",
+  "broader_claims_prohibited": [
+    "actual active-session retention verified",
+    "direct Compose LocalLayoutDirection measurement",
+    "physical LAN verified",
+    "Store ready"
+  ]
+}

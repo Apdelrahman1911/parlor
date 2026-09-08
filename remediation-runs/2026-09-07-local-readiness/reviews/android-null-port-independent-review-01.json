@@ -1,0 +1,309 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-07T08:13:38.952092+00:00",
+  "reviewer": "/root/native_fix_review",
+  "finder": "/root",
+  "author": "/root/release_fix_review",
+  "scope": "Excluded Android ARM64 verification-runner control, not a new Parlor production defect or one of the16 app fixes; no application/control changes by reviewer.",
+  "classification": "CONFIRMED VERIFICATION-CONTROL DEFECT: original helper conflates usable-port absence after native success with permission denial and immediately aborts; actual original failure beforeAVD is preserved.",
+  "conclusion": "SOURCE AND TEST VALIDITY APPROVED for exactdraft. Existing2RED/61GREEN results independently checked. Request exactimport+before/aftercontrolhash supplemental61run before native retry because generic cycle source manifest excludes campaigncontrols. No native/app/Android success is asserted.",
+  "review_time_head": "94e0c4c7f5c97fe95c3ced5b220cb0ff201523dc",
+  "freeze": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin-null-port-retry-01/draft-freeze-01.json",
+    "sha256": "47f23f40ee6f2d65e25a948f16d96bf625375b71751ea54922fbe8202636bce8",
+    "all_six_frozen_input_hashes_match": true,
+    "patch_sha256": "2eed4d7c0381f2f9a0b07b9aaa2cc01efcfe93c13818415901ee71b912929869",
+    "patch_exact_diff": true,
+    "all_other_ast_unchanged": true
+  },
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py",
+      "sha256": "148a71180b6768858f47d7cf5607104169898dafdee48ecbf41937cd46e71a1d",
+      "reviewed_ranges": [
+        [
+          1,
+          357
+        ]
+      ],
+      "type": "verification-control",
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/test_darwin_owned_processes.py",
+      "sha256": "30e28929a5305fbef65c855d56e5e2c16d9fc2c5b30c1c7e3bc5f0ef5350f9c9",
+      "reviewed_ranges": [
+        [
+          1,
+          333
+        ]
+      ],
+      "type": "test",
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/owned_arm64_smoke.py",
+      "sha256": "38ea4c0000a2c426f8475b4616e77ee0d8bb25bb424dc7516348c2095cd08b48",
+      "reviewed_ranges": [
+        [
+          1,
+          473
+        ]
+      ],
+      "type": "verification-control",
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/test_owned_arm64_smoke.py",
+      "sha256": "404e2fa8f88f140cb5a1d40395e8422bcc35b8714dbe6020e60cef8ca7f4b29a",
+      "reviewed_ranges": [
+        [
+          1,
+          258
+        ]
+      ],
+      "type": "test",
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin-null-port-retry-01/darwin_owned_processes.py",
+      "sha256": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378",
+      "reviewed_ranges": [
+        [
+          1,
+          368
+        ]
+      ],
+      "type": "verification-control",
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin-null-port-retry-01/test_task_name_null_retry.py",
+      "sha256": "0fb15e65e59812213a0952c90ed90fb07057da92bd39bb46bae911d9588623b6",
+      "reviewed_ranges": [
+        [
+          1,
+          251
+        ]
+      ],
+      "type": "test",
+      "reviewer": "/root/native_fix_review"
+    }
+  ],
+  "original_runtime": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runtime-01/run.json",
+    "sha256": "6e984bc2d9b606bce75a055fcd92a2d29b8ef78287c24593613ad2b5e8ced6d5",
+    "status": "FAIL",
+    "commands": "adb version completes; emulator -version raises ownership-controlRuntimeError beforeavd-create; no Android app/tests ran",
+    "failure": "RuntimeError: task_name_for_pid denied for attested candidate 17498: 0; owned command cleanup failed: task_name_for_pid denied for attested candidate 17498: 0",
+    "cleanup_supplement": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runtime-01/cleanup-supplement-01.json",
+      "sha256": "b54c6dc1432f0fde48c8ae1246f4cf9d8150973b61283ca9a3e168a0a3043e05",
+      "status": "PASS",
+      "original_failure_unchanged": true,
+      "no_signals_sent": true,
+      "root_now_absent": true
+    }
+  },
+  "source_proof": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py",
+      "lines": [
+        104,
+        110
+      ],
+      "claim": "Old code0+NULL with BSDpresent immediately raises denied:0, before a subsequent successfulport or independentlyconfirmedexit can be observed; red2 exacttrace proves path."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin-null-port-retry-01/darwin_owned_processes.py",
+      "lines": [
+        104,
+        135
+      ],
+      "claim": "NewonlysuccessNULL branch retries max3 calls with2interruptible0.01s sleeps. Every unusable result first checks _basic: onlyindependently gone/zombie returnsNone. Real nativefailure stillimmediatefailure for liveBSDproc; persistentNULL fails/noidentity/no signal. Positiveport paths enter original task_info andfinallydeallocation."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin-null-port-retry-01/darwin_owned_processes.py",
+      "lines": [
+        137,
+        161
+      ],
+      "claim": "Token acquisition is still bracketed by independent BSDlifetimes/uid/command checks and second completeaudittoken. Crossedprocesslifetimes or execgeneration trigger bounded reattestation; unstableness fails."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin-null-port-retry-01/darwin_owned_processes.py",
+      "lines": [
+        184,
+        368
+      ],
+      "claim": "WNOWAIT directchild/groupauthorization, historicalPIDreuse guards, boundedownership ledger, currentaudit-token kernel signaling, no numericPID/PGID fallback and shutdownfailure remain unchanged."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/owned_arm64_smoke.py",
+      "lines": [
+        209,
+        267
+      ],
+      "claim": "Reachable in Commands construction/selfsanity and every commandregistration/poll via OwnedProcesses.refresh/read/_token; failures propagate to command/finalizer, not successful emulatorrun."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/owned_arm64_smoke.py",
+      "lines": [
+        297,
+        457
+      ],
+      "claim": "Original failure occurs command349 beforeAVDcreation352 and tests412. Persistentunattestability remainsfailed and ownedfilespreserved if cleanupcannotconfirm. No userdevices/profile or globalADB scope added."
+    }
+  ],
+  "counter_evidence": [
+    "ExactXNU conversion may yieldNULL on taskipc teardown; copyout mayalsoyieldNULL on resourcefailure. No claim of proven exit/transientrace behindPID17498 or guaranteed retry success.",
+    "SuccessfulNULL doesnotauthorize signal or ignoringalivecandidate; new `_basic`result and repeatedread validations must succeed. Nonzeroerrors, BSDinspectionfailure, malformedtokens/task_infoerrors stayfailclosed.",
+    "Native port obtained successfully stillusesoriginalfinally; sleepoccurs onlywhen portNULL/noportresource. Cancellation fromsleep propagates; tokenread KeyboardInterrupt stilldeallocates.",
+    "Nozeroexit or OKsummary alone counted. Actual61 logdescriptors exactly equal staticmethodidentities across20ownership+21runner+20new, no duplicate/skipped/disabledmethods. Nativecalls mocked; filesystemfixturetests selfcleanup."
+  ],
+  "research": {
+    "independent_fetch": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/darwin-null-port-independent-research-01/references.json",
+    "sha256": "f8ba22af6efbd9966fff8d13c1881995c37236bfec4b2e967bdce25a1d518bf6",
+    "host": {
+      "macos": "26.2 /25C56",
+      "darwin": "25.2.0",
+      "xnu": "xnu-12377.61.12~1/RELEASE_ARM64_T8132",
+      "method": "Fresh read-only sw_vers and sysctl kern.version"
+    },
+    "references": [
+      {
+        "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-12377.61.12/bsd/kern/kern_proc.c",
+        "accessed_at": "2026-09-07T08:08:31.905390+00:00",
+        "http_status": 200,
+        "bytes": 153684,
+        "sha256": "c91c30c057df84dae520d18db01ac6b795a7d70d8a7988a6770b7c50ff86f85b",
+        "matches_author_reference": true,
+        "retained_file": "remediation-runs/2026-09-07-local-readiness/native/darwin-null-port-independent-research-01/kern_proc.c.gz",
+        "review_ranges": [
+          [
+            2441,
+            2500
+          ],
+          [
+            5938,
+            6023
+          ]
+        ],
+        "status": "MATCH"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-12377.61.12/osfmk/kern/ipc_tt.c",
+        "accessed_at": "2026-09-07T08:08:34.804335+00:00",
+        "http_status": 200,
+        "bytes": 127213,
+        "sha256": "927d2656f1f8cd482b1c30ee622c7b82556f587087aa21f152945edb8621082f",
+        "matches_author_reference": true,
+        "retained_file": "remediation-runs/2026-09-07-local-readiness/native/darwin-null-port-independent-research-01/ipc_tt.c.gz",
+        "review_ranges": [
+          [
+            3577,
+            3648
+          ],
+          [
+            3687,
+            3692
+          ]
+        ],
+        "status": "MATCH"
+      },
+      {
+        "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-12377.61.12/osfmk/ipc/ipc_port.c",
+        "accessed_at": "2026-09-07T08:08:37.020851+00:00",
+        "http_status": 200,
+        "bytes": 86271,
+        "sha256": "c72667b8c564c6aafd9663fc6e9f2b5f4de98e5cecd039eb799719db4281f0cb",
+        "matches_author_reference": true,
+        "retained_file": "remediation-runs/2026-09-07-local-readiness/native/darwin-null-port-independent-research-01/ipc_port.c.gz",
+        "review_ranges": [
+          [
+            2940,
+            2974
+          ]
+        ],
+        "status": "MATCH"
+      }
+    ],
+    "conclusion": "Exacttag code establishes success+NULLpossibility vsordinarydenialKERN_FAILURE; doesnot prove observedkernelcause."
+  },
+  "verification_receipts": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-nullport-red-01",
+      "receipt_sha256": "5e4ddc895e4f5c289a75844bb7bdbb8368a80c548c2ec66d3a1e4fca2c9c5dc5",
+      "log_sha256": "cd667ebb93b4caa87df27ae1350fa2c358276d480187fe9181abbff64f4132b0",
+      "stop_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "command": [
+        "/usr/bin/env",
+        "PYTHONPATH=/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner:/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin-null-port-retry-01",
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_task_name_null_retry.NullTaskNamePortTest.test_successful_null_port_then_valid_token_is_retried_not_denied",
+        "test_task_name_null_retry.NullTaskNamePortTest.test_null_port_then_independently_confirmed_exit_returns_absent"
+      ],
+      "started_at": "2026-09-07T07:57:07.888246+00:00",
+      "finished_at": "2026-09-07T07:57:08.202986+00:00",
+      "status": "FAIL",
+      "exit_code": 1,
+      "tests": 2,
+      "errors": 2,
+      "failures": 0,
+      "skips": 0,
+      "cleanup_completed_at": "2026-09-07T07:57:08.517720+00:00",
+      "source_unchanged_during_cycle": true,
+      "cleanup_status": "PASS"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-nullport-green-01",
+      "receipt_sha256": "504aacd3c0d5667fecfc41185e572101f4a9f4d9f4876f0ff8580ff6a066f16b",
+      "log_sha256": "cb6ded412288994fbd17eb10048cf6514f4a2e1cb4671dcfec2394c07941969d",
+      "stop_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "command": [
+        "/usr/bin/env",
+        "PYTHONPATH=/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin-null-port-retry-01:/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner",
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_darwin_owned_processes",
+        "test_owned_arm64_smoke",
+        "test_task_name_null_retry"
+      ],
+      "started_at": "2026-09-07T08:00:33.807030+00:00",
+      "finished_at": "2026-09-07T08:00:34.256523+00:00",
+      "status": "PASS",
+      "exit_code": 0,
+      "tests": 61,
+      "errors": 0,
+      "failures": 0,
+      "skips": 0,
+      "cleanup_completed_at": "2026-09-07T08:00:34.688873+00:00",
+      "source_unchanged_during_cycle": true,
+      "cleanup_status": "PASS"
+    }
+  ],
+  "execution_binding_note": {
+    "status": "SUPPLEMENT REQUESTED",
+    "reason": "Rawgreen directly selects draftfirst PYTHONPATH and61test behavior agrees, sourcefilescurrentmatch datedfreeze, but originaloutermanifest excludesremediationcontrols andnoexplicit imported__file__/hashbeforeafterappears. This report doesnotinventmissingreceipt.",
+    "requested": "Root-ownedpure61run or integratedpreflight requiringactualmodulepaths==expected5importtargets andall6freezehashesbeforeafter; retainoriginalRED/GREEN intact. Separateappliedcontrol/newruntimefreeze also required."
+  },
+  "remaining_gates": [
+    "ActualARM64emulatorretry hasnotrun withdraft. PersistentNULL,permissionorotherhostbehavior remain legitimatepossibleBLOCKED outcomes.",
+    "This controlsuite isnot Androidruntime,physicalLAN,Store signing, iOSreadiness, or a historicalappcrash diagnosis.",
+    "Samepatchappliedintoeffectiveparenthelpermustmatch reviewedSHA2f2ad2...; sourcebinding+ownedAPKfreeze+cleanup needed perrootlane."
+  ],
+  "cleanup": {
+    "reviewer_started_builds_tests_emulators_workers": false,
+    "research_requests_completed": true,
+    "reviewer_generated_outputs": "Only compactreport +3publicsourcegzipreferences",
+    "root_red_green": "stop0 each, no buildsoutputs/workersrecorded, scratchabsent. Syntheticfixturecleanupverifiedthrough source+green assertions; no broaduserprocess/file scans orcleanup byreviewer.",
+    "preexisting_controls_application_and_original_receipts": "Unmodified byreviewer"
+  }
+}

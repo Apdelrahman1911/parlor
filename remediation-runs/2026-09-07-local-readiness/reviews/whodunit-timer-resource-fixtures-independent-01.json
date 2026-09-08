@@ -1,0 +1,289 @@
+{
+  "review_id": "whodunit-timer-resource-fixtures-independent-01",
+  "recorded_at": "2026-09-07T17:58:20.859720+00:00",
+  "author": "/root",
+  "independent_reviewer": "/root/release_fix_review",
+  "executor": "/root",
+  "scope": "Only the two Whodunit Desktop timer-fixture files. Explicitly excludes approval of the separate locale synchronization patch.",
+  "disposition": "APPROVED: source correction and focused local Desktop regression results. Linux hosted rerun remains pending; no physical-LAN or mobile-runtime pass is claimed.",
+  "current_checkout": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "8c04d5e2294c40fc3341b1dbeb1711b3721145c8",
+    "tree": "b246ad0be0245f04e7ba6eddafc336fe7861c62c",
+    "scoped_diff_sha256": "3055b5a4ffcbb7fb496513673578fb222c5ef5680dcba91d182da9bf44861841"
+  },
+  "reviewed_files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitLocalLeaveTimerTest.kt",
+      "sha256": "6d5a70f96b33c067e3247a9ea085cf7fa1e2f3b6768b9a8d6f8e0a3e5606c7e6",
+      "reviewed_lines": [
+        [
+          1,
+          259
+        ]
+      ],
+      "role": "Desktop-only test fixture; not shipping code",
+      "matches_executed_source": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLeaveTimerTest.kt",
+      "sha256": "24d6a0f768a0140b8ff89d8707f2f25181c99d3c41803089bc668a5f4b2075e2",
+      "reviewed_lines": [
+        [
+          1,
+          283
+        ]
+      ],
+      "role": "Desktop-only test fixture; not shipping code",
+      "matches_executed_source": true
+    }
+  ],
+  "original_evidence": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34143924756-evidence/failing-junit-01/0-TEST-com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest.xml",
+      "sha256": "b7ddb97c2d4c76faa9277721246c0e613fe3e1c4ac3cde9b450fd296c35c7a41",
+      "suite": "com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+      "cases": 6,
+      "failed_cases": [
+        {
+          "name": "eliminationConfirmationTimeIsExcludedAndStayRestartsOnlyOneTicker()[desktop]",
+          "type": "kotlinx.coroutines.test.UncompletedCoroutinesError",
+          "message": "kotlinx.coroutines.test.UncompletedCoroutinesError: After waiting for 1m, the test body did not run to completion"
+        },
+        {
+          "name": "classicConfirmationTimeIsExcludedAndStayRestartsOnlyOneTicker()[desktop]",
+          "type": "kotlinx.coroutines.test.UncompletedCoroutinesError",
+          "message": "kotlinx.coroutines.test.UncompletedCoroutinesError: After waiting for 1m, the test body did not run to completion"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34143924756-evidence/failing-junit-01/1-TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest.xml",
+      "sha256": "48d80a9523561053dcd698ba96150d8dd329299283a4939838041f6bb73d53df",
+      "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+      "cases": 4,
+      "failed_cases": [
+        {
+          "name": "lifecycleResumeBehindConfirmationDoesNotRestartHiddenDiscussion()[desktop]",
+          "type": "kotlinx.coroutines.test.UncompletedCoroutinesError",
+          "message": "kotlinx.coroutines.test.UncompletedCoroutinesError: After waiting for 1m, the test body did not run to completion"
+        },
+        {
+          "name": "stayAndLifecycleResumeDoNotReleaseManualPause()[desktop]",
+          "type": "kotlinx.coroutines.test.UncompletedCoroutinesError",
+          "message": "kotlinx.coroutines.test.UncompletedCoroutinesError: After waiting for 1m, the test body did not run to completion"
+        }
+      ]
+    }
+  ],
+  "root_cause": [
+    "Original hosted Linux failures are test deadline exceptions after 60 real seconds, not demonstrated application assertion failures or app crashes.",
+    "Pinned Compose Multiplatform 1.10.3 Skiko UI test renders every 16 virtual milliseconds. The original 360000ms modal dwell requires 22500 render passes per dwell on the default 1024x768 framebuffer despite the 360x760 child modifier.",
+    "The correction reaches a reducer-legal late-discussion state with the real bundled 180-second authored total and identity intact, then dwells 60000 virtual milliseconds, still beyond the entire remaining 30-second deadline. This avoids unnecessarily rasterizing six minutes per modal.",
+    "Explicit runSkikoComposeUiTest size now bounds the actual framebuffer to 360x760. Explicit testTimeout=60.seconds preserves the original runComposeUiTest deadline rather than accepting the Skiko overload's infinite default."
+  ],
+  "counter_evidence_and_regression_review": [
+    "30-second remaining state is produced by the real TimerTicked reducer path, not fabricated by copying canonical state. Local setup applies it before pre-existing Pause/PauseDiscussionTimer or last-second fixture actions; host setup submits after the real start barrier and asserts Success.",
+    "All ten test functions remain discoverable Unit-returning kotlin.test.Test methods. No assertion was removed; initial totalSeconds=180 and remainingSeconds=30 are asserted. The 1-second expiry edge remains covered.",
+    "Repeated Stay verifies unchanged full saved/canonical state and timer identity while covered, exact post-Stay progression, no catch-up or duplicate ticker, and unchanged private/host-only data. Existing manual/session/per-timer pause, failed-save/retry/resume, lifecycle and confirmed-leave cleanup assertions remain.",
+    "No production reducer, story, content identity/version, persistence codec, protocol or Mafia source is changed. Host test uses controlled pre-admitted transport and deliberately test-only host progression, not peer readiness or physical LAN evidence."
+  ],
+  "cross_file_review": [
+    {
+      "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitDiscussionFixture.kt",
+      "reviewed_lines": [
+        [
+          1,
+          139
+        ]
+      ],
+      "purpose": "Real bundled last-dinner content; authentic reducer/start/readiness/role/clue progression and authored 180-second timer before final fixture actions.",
+      "sha256": "9656ee3f05824b0572019ac672334c06ef7b3ddc996ab7bee8158e41c367a1ac"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt",
+      "reviewed_lines": [
+        [
+          1,
+          150
+        ],
+        [
+          480,
+          600
+        ]
+      ],
+      "purpose": "Authored timer creation, legal decreasing TimerTicked values, preserved identity/total, pause/increase guards and <=1 expiry precondition.",
+      "sha256": "40db7e4fab766f77d893c7001e57e3395fd50112399937d39be44632ff6456c0"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/authority/WhodunitActionAuthority.kt",
+      "reviewed_lines": [
+        [
+          1,
+          97
+        ]
+      ],
+      "purpose": "TimerTicked remains host-only.",
+      "sha256": "b2d5eef9598694564e96130466cb958bdb51df1c39002474d2504a38a2cb0dc8"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/timer/DiscussionTickerLoop.kt",
+      "reviewed_lines": [
+        [
+          1,
+          67
+        ]
+      ],
+      "purpose": "Only live eligible timer decrements/expiry after one second; manual/per-timer pause guards.",
+      "sha256": "dfbcc16abc38e99131e014a0656e4a31c576cca487e732e2ef36084ffc54f07a"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "reviewed_lines": [
+        [
+          835,
+          940
+        ]
+      ],
+      "purpose": "Local retained writer/confirmation composition ownership; Stay does not invoke Resume.",
+      "sha256": "73f75eb87e2636e5e616c9bbade054fd0f44ed8bcd9ad158b930eba99fd8aa14"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostSessionFlow.kt",
+      "reviewed_lines": [
+        [
+          143,
+          275
+        ]
+      ],
+      "purpose": "Retained host owner/route persists while confirmation replaces game presentation.",
+      "sha256": "d626c925a1329745bc81758b6d57f6751831e2ba9c7696f562868ee57dd54d05"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+      "reviewed_lines": [
+        [
+          830,
+          900
+        ]
+      ],
+      "purpose": "Round segment owns authoritative-only ticker LaunchedEffect.",
+      "sha256": "eeb3395e84e467ef1e23cc5a8e7f6d6ae5bad76225c8931f004039db7d634dc6"
+    }
+  ],
+  "verification": {
+    "receipt": "remediation-runs/2026-09-07-local-readiness/evidence/linux-ui-fixtures-green-01/receipt.json",
+    "receipt_sha256": "0e8e3868dceae0a85268480530440ea10fc8f737d033024f1eadd83a58838c8a",
+    "executed_commit": "b26a3947b763e262b488d52761f050df5d57cfc1",
+    "executed_diff_sha256": "0ec1de1de127ed852ea696700246109f6552422492565a464be1f7a995bf6d34",
+    "source_manifest_sha256": "eda570729460fdba75acdd5024c896479908665d45b255ce45916996428477ac",
+    "command": [
+      "./gradlew",
+      ":game-modes:whodunit:desktopTest",
+      "--tests",
+      "*WhodunitLocalLeaveTimerTest*",
+      "--tests",
+      "*WhodunitHostLeaveTimerTest*",
+      ":shared:design-system:desktopTest",
+      ":game-modes:whodunit:detekt",
+      ":game-modes:whodunit:detektDesktopTest",
+      ":shared:design-system:detekt",
+      ":shared:design-system:detektDesktopTest",
+      "--no-daemon",
+      "--no-parallel",
+      "--max-workers=1",
+      "--no-configuration-cache",
+      "--dependency-verification=strict",
+      "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=linux-ui-fixtures-green-01",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-Pparlor.android.signing.storeFile=",
+      "-Pparlor.android.signing.storePassword=",
+      "-Pparlor.android.signing.keyAlias=",
+      "-Pparlor.android.signing.keyPassword="
+    ],
+    "started_at": "2026-09-07T17:31:23.151975+00:00",
+    "finished_at": "2026-09-07T17:32:05.223074+00:00",
+    "exit_code": 0,
+    "platform": "macOS Desktop JVM; lane label linux-ui-fixtures describes the failure target, not the execution platform",
+    "junit_suites": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/linux-ui-fixtures-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest.xml",
+        "sha256": "5ec88c6200e3464f591bae0152e5e6dd6f3d2b170ce2318ffea189e6a0e6fa77",
+        "suite": "com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+        "actual_testcase_count": 6,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "seconds": "4.439",
+        "cases": [
+          "eliminationConfirmationTimeIsExcludedAndStayRestartsOnlyOneTicker()[desktop]",
+          "stayDoesNotReleaseAnExistingPerTimerPause()[desktop]",
+          "lastSecondCannotExpireBehindConfirmationButExpiresAfterStay()[desktop]",
+          "failedSaveKeepsTimeFrozenAndSuccessfulSaveResumesWithoutCatchingUp()[desktop]",
+          "stayDoesNotReleaseAnExistingSessionPause()[desktop]",
+          "classicConfirmationTimeIsExcludedAndStayRestartsOnlyOneTicker()[desktop]"
+        ]
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/linux-ui-fixtures-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest.xml",
+        "sha256": "572305200b411dd003fc13fed553fe1900fe19ad490d17aaf1842602d837cc7f",
+        "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+        "actual_testcase_count": 4,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "seconds": "3.844",
+        "cases": [
+          "classicHostConfirmationExcludesTimeAndConfirmedLeaveStopsTicker()[desktop]",
+          "lifecycleResumeBehindConfirmationDoesNotRestartHiddenDiscussion()[desktop]",
+          "eliminationHostConfirmationExcludesTimeAndConfirmedLeaveStopsTicker()[desktop]",
+          "stayAndLifecycleResumeDoNotReleaseManualPause()[desktop]"
+        ]
+      }
+    ],
+    "accepted_test_count": 10,
+    "accepted_failures": 0,
+    "accepted_errors": 0,
+    "accepted_skips": 0,
+    "detekt": "Both Whodunit Detekt XML reports have zero error nodes; static analysis is not additional JUnit tests.",
+    "separate_lane_results": "40 design-system cases also executed; this report does not independently accept the locale patch or claim 54 tests (four Detekt XML reports are not tests).",
+    "source_unchanged_during_cycle": true,
+    "runner_unchanged_during_cycle": true
+  },
+  "research": "Pinned published ui-test 1.10.3 source and source/URL/hash receipts are retained under reviews/linux-ui-resource-research-01. Reviewed runCompose wrapper, runSkiko overload, frame rendering loop, AbstractMainTestClock scheduling and public timeout declarations. Source establishes a performance reduction, not hosted-runner overload certainty.",
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-07T17:32:05.497009+00:00",
+    "removed_outputs": [
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "build",
+      "build-logic/convention/build"
+    ],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "artifact_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "cleanup_errors": [],
+    "completed_at": "2026-09-07T17:32:05.822992+00:00",
+    "reviewer_processes": "No builds, tests, native tools, app workers, process termination or cleanup were executed by this independent reviewer."
+  },
+  "remaining_limits": [
+    "Fresh Linux CI execution of exact corrected source remains required.",
+    "These tests do not establish physical P2pKit transport behavior or Android/iOS UI runtime behavior.",
+    "Separate locale test harness race review remains open and must not be bundled into this approval."
+  ]
+}

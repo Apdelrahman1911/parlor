@@ -1,0 +1,259 @@
+--- v1/run_dsc01_apphost_cycle.py
++++ v2/run_dsc01_apphost_cycle.py
+@@ -512,6 +512,9 @@
+             results = temp / 'Results.xcresult'
+             gradle_attempted = True
+             receipt['temporary_artifact_retention_reason'] = 'Only current-cycle framework outputs needed during copied Swift link/runtime; remove after result extraction.'
++            receipt['runtime_evidence_status'] = 'RUNNING'
++            receipt['runtime_attempted_at'] = now()
++            save()
+             try:
+                 xcode = command(['xcodebuild', '-project', project.parent, '-scheme', 'iosApp',
+                     '-configuration', 'Debug', '-sdk', 'iphonesimulator', '-destination', 'id=' + uuid,
+@@ -574,6 +577,10 @@
+             if receipt['runtime_evidence_status'] != 'PASS':
+                 raise RuntimeError('No complete DS-C01 matrix; inspect retained evidence, not an inferred application failure')
+         except BaseException as error:
++            # Failed validation after an attempted runtime is not an unexecuted
++            # check. This records an evidence failure, not an application defect.
++            if receipt['runtime_evidence_status'] != 'NOT_RUN':
++                receipt['runtime_evidence_status'] = 'FAIL'
+             receipt['error'] = dict(type=type(error).__name__, message=str(error)[:800])
+         finally:
+             deferred = []
+--- v1/test_harness_contract.py
++++ v2/test_harness_contract.py
+@@ -1,4 +1,5 @@
+ """Pure receipt validators and disposable shell stubs; no real builds/devices."""
++import ast
+ import copy
+ import json
+ import os
+@@ -7,6 +8,7 @@
+ import tempfile
+ import unittest
+ import uuid
++import xml.etree.ElementTree as ET
+ 
+ import run_dsc01_apphost_cycle as runner
+ 
+@@ -71,6 +73,120 @@
+         with self.assertRaises(RuntimeError):
+             runner.verify_xctest(dict(result='Passed',totalTestCount=1,passedTests=0,
+                                       failedTests=0,skippedTests=1,expectedFailures=0),{},'synthetic')
++
++
++class RuntimeStatusContractTest(unittest.TestCase):
++    """Exercise the real runner's exception statements with synthetic evidence.
++
++    These tests do not launch main(), Gradle, Xcode, a simulator, or an app.
++    AST checks bind the isolated exception replay to the actual protected call.
++    """
++    def outer_runtime_guard(self):
++        tree = ast.parse(Path(runner.__file__).read_text())
++        main = next(node for node in tree.body if isinstance(node, ast.FunctionDef) and node.name == 'main')
++        def writes_error(handler):
++            return any(isinstance(node, ast.Assign) and any(
++                isinstance(target, ast.Subscript) and isinstance(target.value, ast.Name) and
++                target.value.id == 'receipt' and isinstance(target.slice, ast.Constant) and target.slice.value == 'error'
++                for target in node.targets) for node in ast.walk(handler))
++        pairs = [(node, handler) for node in ast.walk(main) if isinstance(node, ast.Try)
++                 for handler in node.handlers if writes_error(handler)]
++        self.assertEqual(1, len(pairs), 'Locate the actual unique runtime-error receipt handler')
++        return pairs[0]
++
++    def apply_actual_error_handler(self, status, error):
++        _, handler = self.outer_runtime_guard()
++        receipt = dict(runtime_evidence_status=status)
++        fragment = ast.Module(body=copy.deepcopy(handler.body), type_ignores=[])
++        context = {'receipt': receipt, 'error': error}
++        exec(compile(ast.fix_missing_locations(fragment), 'actual-runner-error-handler', 'exec'), context)
++        return receipt
++
++    def test_executed_failed_xctest_summary_cannot_remain_not_run(self):
++        # Synthetic failing summary reproduces v1's verifier-exception path;
++        # it is NOT evidence that a real XCTest executed in this unit test.
++        summary = dict(result='Failed', totalTestCount=1, passedTests=0,
++                       failedTests=1, skippedTests=0, expectedFailures=0)
++        try:
++            runner.verify_xctest(summary, {}, 'synthetic')
++        except RuntimeError as error:
++            receipt = self.apply_actual_error_handler('RUNNING', error)
++        else:
++            self.fail('The original failed XCTest summary must still be rejected')
++        self.assertEqual('FAIL', receipt['runtime_evidence_status'])
++        self.assertEqual('RuntimeError', receipt['error']['type'])
++
++    def test_preflight_failure_is_still_not_run(self):
++        receipt = self.apply_actual_error_handler('NOT_RUN', RuntimeError('synthetic preflight failure'))
++        self.assertEqual('NOT_RUN', receipt['runtime_evidence_status'])
++        self.assertEqual('RuntimeError', receipt['error']['type'])
++
++    def test_later_evidence_failure_cannot_leave_pass(self):
++        receipt = self.apply_actual_error_handler('PASS', RuntimeError('synthetic late evidence failure'))
++        self.assertEqual('FAIL', receipt['runtime_evidence_status'])
++
++    def test_running_is_persisted_before_the_guarded_xcode_call(self):
++        guard, _ = self.outer_runtime_guard()
++        nodes = list(ast.walk(guard))
++        builds = [node for node in nodes if isinstance(node, ast.Call) and
++                  isinstance(node.func, ast.Name) and node.func.id == 'command' and node.args and
++                  isinstance(node.args[0], ast.List) and node.args[0].elts and
++                  isinstance(node.args[0].elts[0], ast.Constant) and node.args[0].elts[0].value == 'xcodebuild']
++        self.assertEqual(1, len(builds), 'Bind test to the one actual Xcode invocation')
++        starts = [node for node in nodes if isinstance(node, ast.Assign) and
++                  isinstance(node.value, ast.Constant) and node.value.value == 'RUNNING' and any(
++                      isinstance(target, ast.Subscript) and isinstance(target.value, ast.Name) and
++                      target.value.id == 'receipt' and isinstance(target.slice, ast.Constant) and
++                      target.slice.value == 'runtime_evidence_status' for target in node.targets)]
++        self.assertEqual(1, len(starts))
++        self.assertLess(starts[0].lineno, builds[0].lineno)
++        saves = [node for node in nodes if isinstance(node, ast.Call) and
++                 isinstance(node.func, ast.Name) and node.func.id == 'save' and
++                 starts[0].lineno < node.lineno < builds[0].lineno]
++        self.assertTrue(saves, 'Persist attempted/running status before any Xcode failure is possible')
++
++
++class SelectorSourceContractTest(unittest.TestCase):
++    def expected_labels(self):
++        labels = set()
++        tabs = []
++        for locale in ('values', 'values-ar'):
++            path = runner.ROOT / 'composeApp/src/commonMain/composeResources' / locale / 'strings.xml'
++            strings = {node.attrib['name']: node.text for node in ET.parse(path).getroot() if node.tag == 'string'}
++            description = strings['navigation_settings_description']
++            visible = strings['navigation_settings_label'].upper()
++            merged = description + ', ' + visible
++            tabs.append(merged)
++            labels.update([merged, description, visible, strings['settings_language_label'].upper(),
++                           strings['settings_language_system'], strings['settings_language_english'],
++                           strings['settings_language_arabic']])
++        return tabs, labels
++
++    def test_exact_tab_selector_matches_reviewed_pinned_merge_and_actual_resources(self):
++        source = (Path(__file__).parent / 'IOSAppLaunchUITests.swift.in').read_text()
++        start = source.index('@MainActor private func openSettings(')
++        end = source.index('@MainActor private func assertSettingsStrings(', start)
++        for expected in self.expected_labels()[0]:
++            self.assertIn('"' + expected + '"', source[start:end])
++        self.assertIn('NSPredicate(format: "label == %@", label)', source)
++        self.assertNotIn('label CONTAINS', source)
++        self.assertNotIn('label BEGINSWITH', source)
++
++    def test_diagnostics_are_exact_whitelisted_bounded_and_never_a_fallback_tap(self):
++        source = (Path(__file__).parent / 'IOSAppLaunchUITests.swift.in').read_text()
++        start = source.index('@MainActor private func recordSelectorDiagnostics(')
++        end = source.index('@MainActor private func observe(', start)
++        body = source[start:end]
++        literal = body.split('let labels = ', 1)[1].split('\n        let observations:', 1)[0].strip()
++        self.assertEqual(self.expected_labels()[1], set(json.loads(literal)))
++        self.assertIn('NSPredicate(format: "label == %@", known)', body)
++        self.assertIn('count < 32', body)
++        self.assertIn('.prefix(4)', body)
++        self.assertIn('data.count <= 8192', body)
++        self.assertNotIn('.tap(', body)
++        self.assertNotIn('debugDescription', body)
++        self.assertNotIn('.label', body)
++        self.assertNotIn('.value', body)
+ 
+ 
+ class CopiedPhaseContractTest(unittest.TestCase):
+--- v1/IOSAppLaunchUITests.swift.in
++++ v2/IOSAppLaunchUITests.swift.in
+@@ -98,7 +98,10 @@
+     }
+ 
+     @MainActor private func openSettings(_ app: XCUIApplication, language: String) throws {
+-        try tap(app, label: language == "ar" ? "افتح الإعدادات." : "Open settings.")
++        // CMP UI 1.10.3 UIKit combines this selectable parent description
++        // with its uppercase Text child, using a comma-space separator.
++        // Exact pinned-source proof is retained beside this versioned harness.
++        try tap(app, label: language == "ar" ? "افتح الإعدادات., الإعدادات" : "Open settings., SETTINGS")
+         try assertSettingsStrings(app, language: language)
+     }
+ 
+@@ -112,11 +115,39 @@
+ 
+     @MainActor private func tap(_ app: XCUIApplication, label: String) throws {
+         let query = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", label))
+-        XCTAssertTrue(query.firstMatch.waitForExistence(timeout: 15), "Missing exact actual-app label")
++        let exists = query.firstMatch.waitForExistence(timeout: 15)
++        if !exists { recordSelectorDiagnostics(app, expected: label) }
++        XCTAssertTrue(exists, "Missing exact actual-app label; this is a selector/evidence failure, not crash proof")
+         let matches = query.allElementsBoundByIndex
++        if matches.count >= 32 { recordSelectorDiagnostics(app, expected: label) }
+         XCTAssertLessThan(matches.count, 32, "Selector unexpectedly broad")
+-        let element = try XCTUnwrap(matches.first(where: { $0.isHittable }), "No hittable exact-label control")
++        let hittable = matches.first(where: { $0.isHittable })
++        if hittable == nil { recordSelectorDiagnostics(app, expected: label) }
++        let element = try XCTUnwrap(hittable, "No hittable exact-label control")
+         element.tap()
++    }
++
++    @MainActor private func recordSelectorDiagnostics(_ app: XCUIApplication, expected: String) {
++        // Diagnostic queries are exact and source-whitelisted. They never pick a
++        // fallback target, export a hierarchy, or read arbitrary labels/values.
++        let labels = ["Open settings., SETTINGS", "افتح الإعدادات., الإعدادات",
++                      "Open settings.", "افتح الإعدادات.", "SETTINGS", "الإعدادات",
++                      "LANGUAGE", "اللغة", "System language", "لغة النظام", "English", "العربية"]
++        let observations: [[String: Any]] = labels.map { known in
++            let query = app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", known))
++            let count = query.count
++            let inspected = count < 32 ? Array(query.allElementsBoundByIndex.prefix(4)) : []
++            return ["knownLabel": known, "countCappedAt32": min(count, 32),
++                    "inspectedAtMost4": inspected.count,
++                    "hittableAmongInspected": inspected.filter { $0.isHittable }.count]
++        }
++        let report: [String: Any] = ["schemaVersion": 1,
++            "expectedKnownLabel": labels.contains(expected) ? expected : "not-allowlisted",
++            "observations": observations]
++        if let data = try? JSONSerialization.data(withJSONObject: report, options: [.sortedKeys]),
++           data.count <= 8192, let text = String(data: data, encoding: .utf8) {
++            print("DSC01_SELECTOR_DIAGNOSTICS " + text)
++        }
+     }
+ 
+     @MainActor private func observe(_ app: XCUIApplication) throws -> [String: Any] {
+--- v1/README.md
++++ v2/README.md
+@@ -1,6 +1,6 @@
+-# DS-C01 — task-owned app-host verification harness
++# DS-C01 — task-owned app-host verification harness v2
+ 
+-**Author:** `/root/native_fix_review`. **Status:** authored, not executed; independent review and root's sole build lane are required. This is evidence infrastructure, not a shipping application change. Original audit receipts and archived runner are unchanged.
++**Author:** `/root/native_fix_review`. **Status:** authored, not executed; independent review and root's sole build lane are required. This is evidence infrastructure, not a shipping application change. Frozen v1 controls, its failed-runtime receipts, original audit receipts, and archived runner are unchanged.
+ 
+ ## Scope
+ 
+@@ -29,13 +29,13 @@
+ 
+ ```sh
+ /usr/bin/python3 -B -m unittest discover \
+-  -s remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost \
++  -s remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost_v2 \
+   -p 'test_*.py' -v
+ ```
+ 
+-These are 19 synthetic FIFO-safety cases and 11 receipt/copied-shell-phase cases, **not iOS runtime tests**. Shell tests use a disposable fake `gradlew`, not the repository wrapper. Every fixture is a `TemporaryDirectory`; no device, preference, process signal or heavyweight build is involved. Tests have not been run by the author.
++These are 19 synthetic FIFO-safety cases and 17 receipt/status/selector/copied-shell-phase cases (36 total), **not iOS runtime tests**. New status tests replay the actual runner exception statements using synthetic failed evidence; source contracts verify status persistence before the guarded Xcode call and exact source-whitelisted selectors. They do not claim XCTest execution. Shell tests use a disposable fake `gradlew`, not the repository wrapper. Every fixture is a `TemporaryDirectory`; no device, preference, process signal or heavyweight build is involved. Tests have not been run by the author.
+ 
+-Then root may invoke `run_dsc01_apphost_cycle.py dsc01-apphost-01 REVIEWED_CONTROL_SHA256` after the independent reviewer supplies approval for the exact control manifest. The CLI hash pins reviewed content; it is not independent authorization by itself. Refuse reused cycle IDs and changed controls/source. Runtime is pinned to an available iOS 26.5 iPhone 17 Pro simulator; if unavailable, stop and review explicit adaptation rather than silently selecting an existing device. Only the newly created UUID is booted/deleted.
++Then root may invoke `run_dsc01_apphost_cycle.py dsc01-apphost-02 REVIEWED_CONTROL_SHA256` after the independent reviewer supplies approval for the exact control manifest. The CLI hash pins reviewed content; it is not independent authorization by itself. Refuse reused cycle IDs and changed controls/source. Runtime is pinned to an available iOS 26.5 iPhone 17 Pro simulator; if unavailable, stop and review explicit adaptation rather than silently selecting an existing device. Only the newly created UUID is booted/deleted.
+ 
+ ## Cleanup and safety
+ 
+@@ -52,7 +52,13 @@
+ 
+ ## Review notes
+ 
+-Root caught a fixture selector mismatch before execution: `EyebrowLabel` uppercases English `Language` to `LANGUAGE`. The fixture now expects actual rendered text; no application defect was inferred. Navigation uses the source-defined `Open settings.` / `افتح الإعدادات.` accessibility description. A runtime selector failure must be diagnosed, not rewritten into an application success.
++V1 (`evidence/dsc01-apphost-01`) genuinely ran one XCTest and failed at its first Settings tap. Its initial Home/observer succeeded; two probe events show one English/System boot and no language mutation. This is **failed selector/evidence**, not an app crash or proof about DS-C01. V1's receipt incorrectly retained `runtime_evidence_status=NOT_RUN` when the strict XCTest verifier threw; raw XCTest failure evidence remains intact.
++
++V2 changes only the source-informed tab selector, failure diagnostics, and runtime-status bookkeeping; the original probe, process/restart matrix, all assertions, source bindings, copied build phase, ownership, and cleanup remain unchanged. The exact tab label is `Open settings., SETTINGS` / `افتح الإعدادات., الإعدادات`. Pinned CMP UI 1.10.3 `Accessibility.uikit.kt:1882–1940` collects the selectable parent's content description then child text, joined with comma-space; `OnClick.label`, not the description, maps to the hint. Common fake role/description nodes do not duplicate it: they have unattached virtual LayoutNodes and are rejected by UIKit's `isValid` gate. See `../dsc01-accessibility-source-{01,02}/receipt.json` and the independent factory counter-evidence.
++
++Selectors remain exact equality. A miss never chooses a looser fallback. Bounded diagnostic output queries only 12 EN/AR source-whitelisted literal labels, caps counts at 32, inspects at most four matching elements per label, and emits at most 8 KiB. It exports no arbitrary label/value/hierarchy and performs no mutation. The existing `LANGUAGE`/`اللغة` section and option labels remain unchanged.
++
++The runner now persists `RUNNING` plus an attempt timestamp **before** Xcode and marks attempted evidence `FAIL` when verification throws. A preflight failure remains `NOT_RUN`. `FAIL` describes the verification attempt, not an inferred application defect. Passing still requires the exact unskipped XCTest, complete bounded probe matrix, successful stops/cleanup, and unchanged source/controls.
+ 
+ The helper tests include process UID versus inode UID separately, old parent creation time, holder-query failure, PID reuse, symlinks, unknown contents, substituted inode, pending late-created paths, and synthetic cancellation/timeout finalization. The copied phase tests exercise stale artifacts with failed Gradle, failed `cd`, failed stop, failed normalizer, and correct stop-before-normalize ordering.
+ 

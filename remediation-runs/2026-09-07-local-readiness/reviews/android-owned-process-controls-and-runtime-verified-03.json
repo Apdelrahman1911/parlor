@@ -1,0 +1,97 @@
+{
+  "reviewer": "/root/factory_review",
+  "probe_author_executor": "/root",
+  "control_author": "/root/release_fix_review",
+  "reviewed_at": "2026-09-07T05:39:51.986521+00:00",
+  "conclusion": "SOURCE-BOUND41SYNTHETIC TESTS AND3BOUNDED REAL-DARWIN OWNED-CHILD SCENARIOS INDEPENDENTLY APPROVED",
+  "scope": "Native ownership helper and narrowprobe; NOT Android emulator/application/LAN/Store success.",
+  "source_identity": {
+    "control_freeze_file": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/hardening-freeze-02.json",
+    "control_freeze_sha256": "ca77042e2b6b799ef7e3ac1474727d9866d0c568c286ccef76edf45c4f4cc903",
+    "probe_sha256": "c28d355945c358b135e690fa6ba9be664fcc7f6d07ff5550ae32d7c9a5cb89b7",
+    "control_sha256": "148a71180b6768858f47d7cf5607104169898dafdee48ecbf41937cd46e71a1d",
+    "all_frozen_control_hashes_match": true
+  },
+  "unit_evidence": {
+    "receipt": "remediation-runs/2026-09-07-local-readiness/evidence/android-controls-02/receipt.json",
+    "receipt_sha256": "6d389f87a49deb2b733d41833316b21e85527765c9f5c67408af766234f25cbd",
+    "log_sha256": "61a3ad0a6e5260b255c0eda844e698822a9b7bfa98aa167afea48a645d5f5fb1",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "exit_code": 0,
+    "actual_executed": 41,
+    "failed": 0,
+    "skipped": 0,
+    "classification_independence": "release_fix_review authored correction, factory_review found candidate, root independently confirms exactXNU zero+errno and changed sibling guards/tests."
+  },
+  "real_probe_evidence": {
+    "receipt": "remediation-runs/2026-09-07-local-readiness/evidence/android-native-ownership-probe-01/receipt.json",
+    "receipt_sha256": "7224526bb1efd10408799670a53c7a2b9a79827a9508c8ed1001d429ed4bf2d6",
+    "started_at": "2026-09-07T05:36:17.536650+00:00",
+    "finished_at": "2026-09-07T05:36:21.531631+00:00",
+    "receipt_status": "PASS",
+    "scenarios": [
+      {
+        "name": "ordinary",
+        "status": "PASS",
+        "pid": 72017,
+        "attested_pids": [
+          72017
+        ],
+        "exit_code": -15
+      },
+      {
+        "name": "exec",
+        "status": "PASS",
+        "pid": 72031,
+        "attested_pids": [
+          72031
+        ],
+        "exit_code": -15
+      },
+      {
+        "name": "detached-child",
+        "status": "PASS",
+        "pid": 72050,
+        "attested_pids": [
+          72050,
+          72051
+        ],
+        "exit_code": -15
+      }
+    ],
+    "actual_audit_token_SIGTERM_deliveries": 4,
+    "direct_children_retired_and_reaped": 3,
+    "remaining_live_attested_workers": [],
+    "cleanup_errors": [],
+    "interrupts": [],
+    "outer_process_exit_code": "Not independently present in saved receipt; source returns0forPASS and root execution tool owns rawexit evidence."
+  },
+  "checks": [
+    "Read entire41-test raw log; exact41ok methods and exit0. Guarderror andnegativecases genuinelyexecuted; no skippedtests ordiscoveryinference.",
+    "Allfinalfreeze02rawhashes match livecontrols, and actualprobe records exact111-line source and357-line control reviewed above.",
+    "Threeexpectedscenarios and4signals align exactly with attestedPIDs; execscenario signal uses /bin/sleep afterPythonexec; detachedextraPIDsignaled afterseparate-session observation.",
+    "Three directPopen children report retired and returncode-15; implementation waits/reaps after finaldescendantcapture. No currentlyobserved liveowners survive. Descendant zombie/reaper state is not separatelyclaimed."
+  ],
+  "limits": [
+    "No synthetic PID-reuse race executed against real OS; fake race tests plus exactkernel source establish that boundary. No forcedSIGTERM/callerinterruption probeexecuted.",
+    "No adbserver/emulator/applicationfixture executed bythese results; larger runner mustretain source/APK/devicebinding and inspect nativehelper behavior.",
+    "Sampling cannot provearbitrary double-fork escapeabsence; no universal descendantkerneltracing claim.",
+    "This reviewer authored noownershipcontrol orprobe, originatedzero+errno candidate; root separatelyclassified candidate and confirmed correctivechangedguard/tests as receipt states."
+  ],
+  "cleanup": {
+    "root_unit": "TemporaryDirectory/addCleanup removed syntheticnodes; no Gradle/emulator/adb started; -B no pycache.",
+    "root_native": "Rawprobe receipts all3directlaunchesretired/reaped, no liveattestedworkers/cleanup errors. Staticfixtures create no files/buildoutput; onlycompact receipt retained.",
+    "reviewer": "Only source/log/hashreadsandisolated review write; no test/native/server/buildprocess started or worktreecleanup attempted."
+  }
+}

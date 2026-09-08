@@ -1,0 +1,1951 @@
+{
+  "id": "final-cross-game-review-01",
+  "at_utc": "2026-09-05T23:19:30.063994+00:00",
+  "reviewer": "/root/factory_review",
+  "authors": {
+    "MF-C1": "/root/mafia_cont",
+    "WD-C1": "/root/whodunit_cont",
+    "WD-C3": "/root/whodunit_cont"
+  },
+  "scope": "Additional independent final regression review of MF-C1, WD-C1, WD-C3 and bounded sibling paths; not a fresh complete-repository audit.",
+  "decision": {
+    "MF-C1": "APPROVED in reviewed source and executed JVM/Compose scope",
+    "WD-C1": "APPROVED in reviewed source and executed JVM/Compose scope",
+    "WD-C3": "APPROVED in reviewed source and executed JVM/Compose scope",
+    "new_confirmed_blockers": []
+  },
+  "source_identity": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+    "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7"
+  },
+  "coverage_statistics": {
+    "files": 66,
+    "complete_text_files": 54,
+    "subrange_files": 12,
+    "reviewed_lines": 16767
+  },
+  "coverage_ledger": [
+    {
+      "path": "build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpLibraryConventionPlugin.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpLibraryConventionPlugin.kt",
+      "sha256": "9d3b07942123f5a4c2da229aa873d5d7b7d422b120d1ff42014cfe066eefbc63",
+      "line_count": 72,
+      "reviewed_ranges": [
+        [
+          1,
+          72
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "build",
+      "topics": [
+        "MF-C1",
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "composeApp/build.gradle.kts",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/build.gradle.kts",
+      "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+      "line_count": 627,
+      "reviewed_ranges": [
+        [
+          122,
+          147
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "caller/callee subranges only; remaining lines not claimed re-reviewed",
+      "kind": "build",
+      "topics": [
+        "MF-C1",
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "docs/MAFIA_RULES.md",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/MAFIA_RULES.md",
+      "sha256": "4051a05d1c3bd769329178be3a2191be20617f792f18fd0328ab105c2ec29d95",
+      "line_count": 209,
+      "reviewed_ranges": [
+        [
+          1,
+          209
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "documentation",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/build.gradle.kts",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/build.gradle.kts",
+      "sha256": "7aceb370331f84b2fee70bb039b7779bdd818ea78aab15da3bfcfd137a76ad2d",
+      "line_count": 43,
+      "reviewed_ranges": [
+        [
+          1,
+          43
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "build",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml",
+      "sha256": "a9416283c7bf130d9ca98b4ff0e08ae420bad4b935f476ed7166178c42c3bdcc",
+      "line_count": 307,
+      "reviewed_ranges": [
+        [
+          62,
+          86
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "caller/callee subranges only; remaining lines not claimed re-reviewed",
+      "kind": "resource",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/composeResources/values/strings.xml",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/composeResources/values/strings.xml",
+      "sha256": "8f46afd35f71ad31e3d5b72cac1587e21dfc9e9a903b362e69eb79c6b33b551f",
+      "line_count": 307,
+      "reviewed_ranges": [
+        [
+          62,
+          86
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "caller/callee subranges only; remaining lines not claimed re-reviewed",
+      "kind": "resource",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/MafiaDefinition.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/MafiaDefinition.kt",
+      "sha256": "196c9186b5ae44179652caa2d212b07968a801243d8ad17d21962123ada3c884",
+      "line_count": 71,
+      "reviewed_ranges": [
+        [
+          1,
+          71
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/action/MafiaActionCodec.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/action/MafiaActionCodec.kt",
+      "sha256": "b81ee4219ab805c428d75149a3092169d9282ae0de4101f016f618e97b737eb5",
+      "line_count": 61,
+      "reviewed_ranges": [
+        [
+          1,
+          61
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/authority/MafiaActionAuthority.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/authority/MafiaActionAuthority.kt",
+      "sha256": "ba4fd6e0f46c72080a9e6dd89cb58319fecb4a013cfd4da5e19ae2b7c5df608b",
+      "line_count": 77,
+      "reviewed_ranges": [
+        [
+          1,
+          77
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/projection/MafiaProjectionPolicy.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/projection/MafiaProjectionPolicy.kt",
+      "sha256": "713158db7e5cf09e479cd249537b2f1e4ead14261b9d148c9288ba45c4dc51cc",
+      "line_count": 94,
+      "reviewed_ranges": [
+        [
+          1,
+          94
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/reducer/MafiaReducer.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/reducer/MafiaReducer.kt",
+      "sha256": "2ff9754d497b8258613badb057ab915a6d457786c56b0d5e725f2ba0053e56e2",
+      "line_count": 1054,
+      "reviewed_ranges": [
+        [
+          1,
+          1054
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/rules/NightResolution.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/rules/NightResolution.kt",
+      "sha256": "86f1078d5db7c23aec6da15c09625e37d0041c6a78fcb1e26f234d4e5ed26000",
+      "line_count": 115,
+      "reviewed_ranges": [
+        [
+          1,
+          115
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/rules/WinCheck.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/rules/WinCheck.kt",
+      "sha256": "a16a88bd17d861dcbda288e1cc0814bd5817fd6cff381e446251994793ba5ab1",
+      "line_count": 29,
+      "reviewed_ranges": [
+        [
+          1,
+          29
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/settings/MafiaSettings.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/settings/MafiaSettings.kt",
+      "sha256": "beaa58c17c44a8ff552e52e838171deedf17f8dadd76258caaef8dd2b5a336f5",
+      "line_count": 133,
+      "reviewed_ranges": [
+        [
+          1,
+          133
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/settings/MafiaSettingsPresets.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/settings/MafiaSettingsPresets.kt",
+      "sha256": "0fec32a5ccabfbd01dbce10b0afca62a8dffb9736d03eeb76c755c1bf40b4bf0",
+      "line_count": 39,
+      "reviewed_ranges": [
+        [
+          1,
+          39
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/state/MafiaObservableStateValidator.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/state/MafiaObservableStateValidator.kt",
+      "sha256": "751852ab1a9e6243df1c58c4405ac07d7ec72e2a2ac8ab2c1852a6f4df132c55",
+      "line_count": 371,
+      "reviewed_ranges": [
+        [
+          1,
+          371
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/state/MafiaPeerSnapshotValidator.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/state/MafiaPeerSnapshotValidator.kt",
+      "sha256": "8df30438d0b5a4f6e9666de6e1863ab4c1faf8c3664126be6343c293ff8e383c",
+      "line_count": 292,
+      "reviewed_ranges": [
+        [
+          1,
+          292
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/state/MafiaState.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/state/MafiaState.kt",
+      "sha256": "fc890870341eb2c864b4518e24f8f2634fc61a234f4c507bf71ecf1ee40bdf87",
+      "line_count": 232,
+      "reviewed_ranges": [
+        [
+          1,
+          232
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotCodec.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotCodec.kt",
+      "sha256": "9d37b28b40c2a295afb5cfd4889e39a3803f8ad86623c8c37320d7c00cf4f20c",
+      "line_count": 55,
+      "reviewed_ranges": [
+        [
+          1,
+          55
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotRecovery.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotRecovery.kt",
+      "sha256": "64525b0d14b07d87e99729c3707dd0af4a083f8f4a98a5a948575755482ea3fd",
+      "line_count": 535,
+      "reviewed_ranges": [
+        [
+          1,
+          535
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostProgression.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostProgression.kt",
+      "sha256": "9538d49edcd035815e08f5f48bfdcafad61f29d64ffac63b0bdba61f45671df6",
+      "line_count": 81,
+      "reviewed_ranges": [
+        [
+          1,
+          81
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostRoomBridge.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostRoomBridge.kt",
+      "sha256": "e501318600500abc60e4bef8ed2706fb8b4955dc8c21ac75a8c06e7e2709ff45",
+      "line_count": 493,
+      "reviewed_ranges": [
+        [
+          1,
+          493
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDeviceHostFlow.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDeviceHostFlow.kt",
+      "sha256": "9bc03d15725da5ace2e5b4c4e79947b516a8e04cce8fbc2e203edde2da9194a1",
+      "line_count": 297,
+      "reviewed_ranges": [
+        [
+          85,
+          190
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "caller/callee subranges only; remaining lines not claimed re-reviewed",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePeerFlow.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePeerFlow.kt",
+      "sha256": "67c50637f24919981c8aff238d497e33d46dbef476f490fe511891c36a7100fa",
+      "line_count": 215,
+      "reviewed_ranges": [
+        [
+          1,
+          215
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+      "sha256": "09de10c3735f1afeb7b36550dca57c4e9fd190d985faf6ff0eae8c0b8d21a784",
+      "line_count": 628,
+      "reviewed_ranges": [
+        [
+          89,
+          410
+        ],
+        [
+          550,
+          628
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "caller/callee subranges only; remaining lines not claimed re-reviewed",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaPeerRoomBridge.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaPeerRoomBridge.kt",
+      "sha256": "0023dc186b7dd22df76255767e9a9d5cf65203803c768391c0e665de245e88ee",
+      "line_count": 186,
+      "reviewed_ranges": [
+        [
+          1,
+          186
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaRetainedMultiplayerRuntime.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaRetainedMultiplayerRuntime.kt",
+      "sha256": "cb196e3457759dbb0766b02d342d3698f6e90512d674d70e34a76f8516ff0543",
+      "line_count": 172,
+      "reviewed_ranges": [
+        [
+          1,
+          172
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaGameFlow.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaGameFlow.kt",
+      "sha256": "8f250d62f8afb48e407c30e5382eb4758bc4ad53dee5168af8e3452ad3e840f6",
+      "line_count": 509,
+      "reviewed_ranges": [
+        [
+          95,
+          365
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "caller/callee subranges only; remaining lines not claimed re-reviewed",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+      "sha256": "1371eb747579362548f3962a520c2c3f3c2f6225ef551bad93e3e690e08a1fe6",
+      "line_count": 751,
+      "reviewed_ranges": [
+        [
+          55,
+          435
+        ],
+        [
+          696,
+          751
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "caller/callee subranges only; remaining lines not claimed re-reviewed",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibility.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibility.kt",
+      "sha256": "e6f616148cd77a6832c08175b769c31885e7b8b16bfb272d19729dc507bcb34a",
+      "line_count": 14,
+      "reviewed_ranges": [
+        [
+          1,
+          14
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupDraft.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupDraft.kt",
+      "sha256": "e91e3e9d17bab4f725117c83e42096b5e9086809108a933ab5e48df4b9fb7a16",
+      "line_count": 66,
+      "reviewed_ranges": [
+        [
+          1,
+          66
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+      "sha256": "c1dc2d1e5f4bf72ac1c2946341143f22936dd7903aab2d02b58c0d63709e87e4",
+      "line_count": 526,
+      "reviewed_ranges": [
+        [
+          1,
+          526
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+      "sha256": "5fe2144436f87162e2d29bcbef6d57ac9b9cede6ab328b406b63cceebcdd501b",
+      "line_count": 156,
+      "reviewed_ranges": [
+        [
+          1,
+          156
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "test/fixture",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaDoctorLanTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaDoctorLanTest.kt",
+      "sha256": "570e8f18c12f15c480a48c38e6a09025d5aef2ab1aa38cbac246b2f2f0b5a5a5",
+      "line_count": 248,
+      "reviewed_ranges": [
+        [
+          1,
+          248
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "test/fixture",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "sha256": "d1d830e0330d5a47f2011b9f87d025a5ce1e0bc2d3cb08be742ca1ff4403f743",
+      "line_count": 383,
+      "reviewed_ranges": [
+        [
+          1,
+          383
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "test/fixture",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/testing/MafiaDoctorFixture.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/testing/MafiaDoctorFixture.kt",
+      "sha256": "fa5a85db72638033569368062722fc1e1f97fcf1c3948e912c7954324e1e2ba7",
+      "line_count": 120,
+      "reviewed_ranges": [
+        [
+          1,
+          120
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "test/fixture",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibilityTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibilityTest.kt",
+      "sha256": "c2d196af55bbf14d3518973e86df9da3de3954ffbab27038aca4c2ef14ed70f1",
+      "line_count": 75,
+      "reviewed_ranges": [
+        [
+          1,
+          75
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "test/fixture",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaDoctorSettingUiTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaDoctorSettingUiTest.kt",
+      "sha256": "47720879336a7ac14436a6cc9e186cce3afc8d00743a1339ff161c0fefb58055",
+      "line_count": 71,
+      "reviewed_ranges": [
+        [
+          1,
+          71
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "test/fixture",
+      "topics": [
+        "MF-C1"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/whodunit/build.gradle.kts",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build.gradle.kts",
+      "sha256": "2eb4b00a53ff1eff42f2a64b3de1a1c4d28b08d419ad2828045a063320e4696c",
+      "line_count": 53,
+      "reviewed_ranges": [
+        [
+          1,
+          53
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "build",
+      "topics": [
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/WhodunitDefinition.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/WhodunitDefinition.kt",
+      "sha256": "3de8412afe1595f0dfc08c555523b6eff1c5c97f463e992456b2bb13d10f9ac3",
+      "line_count": 72,
+      "reviewed_ranges": [
+        [
+          1,
+          72
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/action/WhodunitActionCodec.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/action/WhodunitActionCodec.kt",
+      "sha256": "fea56d057cee80c93040bae00185c696d21b116b796e680eb0b63fc8ab341d81",
+      "line_count": 94,
+      "reviewed_ranges": [
+        [
+          1,
+          94
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/authority/WhodunitActionAuthority.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/authority/WhodunitActionAuthority.kt",
+      "sha256": "b2d5eef9598694564e96130466cb958bdb51df1c39002474d2504a38a2cb0dc8",
+      "line_count": 97,
+      "reviewed_ranges": [
+        [
+          1,
+          97
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/projection/WhodunitProjectionPolicy.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/projection/WhodunitProjectionPolicy.kt",
+      "sha256": "e6ea5d4a7a818ea660dc4f69e3021dd964d95549e2d649b7033db55e5f96c4d1",
+      "line_count": 87,
+      "reviewed_ranges": [
+        [
+          1,
+          87
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt",
+      "sha256": "40db7e4fab766f77d893c7001e57e3395fd50112399937d39be44632ff6456c0",
+      "line_count": 1261,
+      "reviewed_ranges": [
+        [
+          1,
+          1261
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitState.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitState.kt",
+      "sha256": "34677072d8e58b82d8c4f3dee193fe01eac39dd9a85b0d0a142abce3098157ab",
+      "line_count": 140,
+      "reviewed_ranges": [
+        [
+          1,
+          140
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitStateValidator.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitStateValidator.kt",
+      "sha256": "c391101ba10792d4ba81eb0aa3a21771162c458e075b90bfbf06d4cb33d139c1",
+      "line_count": 1092,
+      "reviewed_ranges": [
+        [
+          1,
+          1092
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/snapshot/WhodunitSnapshotCodec.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/snapshot/WhodunitSnapshotCodec.kt",
+      "sha256": "9025274980744440fd12342afd2ecc128a943c8fa3f3e7ed9aadb73d504a3bef",
+      "line_count": 190,
+      "reviewed_ranges": [
+        [
+          1,
+          190
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/snapshot/WhodunitSnapshotFormat.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/snapshot/WhodunitSnapshotFormat.kt",
+      "sha256": "ad7fc803baf9c4eb426534f973804fa47ab8b45f443923e157022a25252fe35a",
+      "line_count": 28,
+      "reviewed_ranges": [
+        [
+          1,
+          28
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "sha256": "4d58eb3bebd3777c88ca9f8ab21d97441f6d2cd1a70e28b07a0334fdc0c8ee17",
+      "line_count": 1425,
+      "reviewed_ranges": [
+        [
+          350,
+          490
+        ],
+        [
+          1170,
+          1425
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "caller/callee subranges only; remaining lines not claimed re-reviewed",
+      "kind": "production",
+      "topics": [
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+      "sha256": "11b188ca7ecfa7a02086ab2513fe9e40230f3aab9db9a9fa25c79204b4e9b0b7",
+      "line_count": 1135,
+      "reviewed_ranges": [
+        [
+          1,
+          1135
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostRoomBridge.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostRoomBridge.kt",
+      "sha256": "f7cd9b5941749e7e29f694ef84e221529ea80ee7f883419a32fc4b82c243438e",
+      "line_count": 568,
+      "reviewed_ranges": [
+        [
+          1,
+          568
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitPeerRoomBridge.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitPeerRoomBridge.kt",
+      "sha256": "79926523e13593a0ecb4519dbd20f34fa8577af8692d3911301031b8a11d1bc7",
+      "line_count": 216,
+      "reviewed_ranges": [
+        [
+          1,
+          216
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitRetainedMultiplayerRuntime.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitRetainedMultiplayerRuntime.kt",
+      "sha256": "4cca409cc9f8703295b0e75259f3e0dec382a012271dcd86696cfef480797148",
+      "line_count": 189,
+      "reviewed_ranges": [
+        [
+          1,
+          189
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/whodunit/src/commonTest/kotlin/com/parlor/games/whodunit/testing/ValidatedWhodunitCaseFixture.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonTest/kotlin/com/parlor/games/whodunit/testing/ValidatedWhodunitCaseFixture.kt",
+      "sha256": "9bd9105f8fa54e78b15f802058251ce37f7deaec46adc5e0ac740e109684a501",
+      "line_count": 136,
+      "reviewed_ranges": [
+        [
+          1,
+          136
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "test/fixture",
+      "topics": [
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/domain/WhodunitRulesInvariantTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/domain/WhodunitRulesInvariantTest.kt",
+      "sha256": "593a7e3937abc330e11ab76f4a4802e21bcde7231fb9b5220657a5bcc7d5d513",
+      "line_count": 549,
+      "reviewed_ranges": [
+        [
+          1,
+          549
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "test/fixture",
+      "topics": [
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitFinalTwoRecoveryTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitFinalTwoRecoveryTest.kt",
+      "sha256": "b6f36aa2ea3615dcee2c563087d67120e321146d4ae0a2e40cb0f696e865d906",
+      "line_count": 349,
+      "reviewed_ranges": [
+        [
+          1,
+          349
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "test/fixture",
+      "topics": [
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/PeerReadinessRemountTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/PeerReadinessRemountTest.kt",
+      "sha256": "e443c59bc953b1e35113ce26bf3a2638839cd44723e6a36c90c014b77f5cb6d3",
+      "line_count": 370,
+      "reviewed_ranges": [
+        [
+          1,
+          370
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "test/fixture",
+      "topics": [
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "shared/networking/src/commonMain/kotlin/com/parlor/networking/protocol/Protocol.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/networking/src/commonMain/kotlin/com/parlor/networking/protocol/Protocol.kt",
+      "sha256": "82e65dc7ec04855a192106766b97c658934e160ed7cf4fc299e8c7b0e3953d9f",
+      "line_count": 384,
+      "reviewed_ranges": [
+        [
+          1,
+          90
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "caller/callee subranges only; remaining lines not claimed re-reviewed",
+      "kind": "production",
+      "topics": [
+        "MF-C1",
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "shared/networking/src/commonMain/kotlin/com/parlor/networking/protocol/ProtocolValidation.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/networking/src/commonMain/kotlin/com/parlor/networking/protocol/ProtocolValidation.kt",
+      "sha256": "c4c6ee42e4c890fc99be0fe8dcae5677c614e872e53eb15a0393dd3e3d20e628",
+      "line_count": 261,
+      "reviewed_ranges": [
+        [
+          1,
+          190
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "caller/callee subranges only; remaining lines not claimed re-reviewed",
+      "kind": "production",
+      "topics": [
+        "MF-C1",
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "shared/session/src/commonMain/kotlin/com/parlor/session/SessionController.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/SessionController.kt",
+      "sha256": "51deb814a6ebf997c8896c457d7b3d48116b551f261db1b5189c2318a9d471ff",
+      "line_count": 58,
+      "reviewed_ranges": [
+        [
+          1,
+          58
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1",
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/AuthoritativeSessionCoordinator.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/AuthoritativeSessionCoordinator.kt",
+      "sha256": "968eae9b5a83bc507e173bfd82e6ec0cffa6b6191de86c73d7b401221fe09114",
+      "line_count": 1970,
+      "reviewed_ranges": [
+        [
+          1,
+          265
+        ],
+        [
+          415,
+          548
+        ],
+        [
+          1072,
+          1970
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "caller/callee subranges only; remaining lines not claimed re-reviewed",
+      "kind": "production",
+      "topics": [
+        "MF-C1",
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/ShadowSessionController.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/ShadowSessionController.kt",
+      "sha256": "0e87f661e12929935c35dd710d016ff0a40ef7c77314d0750c5ce74a4551de81",
+      "line_count": 97,
+      "reviewed_ranges": [
+        [
+          1,
+          97
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1",
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "shared/session/src/commonMain/kotlin/com/parlor/session/party/PartyAwareSession.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/party/PartyAwareSession.kt",
+      "sha256": "9eb291761264e54b509cdd8baa5cbb8d54348f616646746a44801bdcd783a483",
+      "line_count": 86,
+      "reviewed_ranges": [
+        [
+          1,
+          86
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1",
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "shared/session/src/commonMain/kotlin/com/parlor/session/passandplay/PassAndPlaySessionController.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/passandplay/PassAndPlaySessionController.kt",
+      "sha256": "d2a6b6fbc0a78685fe192e16894907cc98a51f1a30dd48ce0095a0d2745d8008",
+      "line_count": 159,
+      "reviewed_ranges": [
+        [
+          1,
+          159
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1",
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/SnapshotStore.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/SnapshotStore.kt",
+      "sha256": "971db2ad642d795458a8ca2c9a6c018109ec09035c2b7c5648cd4f50209ec86b",
+      "line_count": 46,
+      "reviewed_ranges": [
+        [
+          1,
+          46
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "complete text read for bounded regression review",
+      "kind": "production",
+      "topics": [
+        "MF-C1",
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    },
+    {
+      "path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+      "sha256": "a5e2536e41c81c54b58ec27da135ea9046969db9cb80084e2a0da3b15ddde7c7",
+      "line_count": 4811,
+      "reviewed_ranges": [
+        [
+          1910,
+          2050
+        ]
+      ],
+      "reader": "/root/factory_review",
+      "disposition": "caller/callee subranges only; remaining lines not claimed re-reviewed",
+      "kind": "production",
+      "topics": [
+        "MF-C1",
+        "WD-C1",
+        "WD-C3"
+      ],
+      "matches_combined_before_and_after": true
+    }
+  ],
+  "cross_file_paths": [
+    "Mafia setup draft -> local/LAN ConfigureAndStart -> host authority -> pure reducer -> NightResolution -> private previous target + canonical nightLog -> strict snapshot codec/load -> restored local controller.",
+    "Mafia host snapshotFor -> public projection + only recipient private -> strict peer bridge validator -> atomic own-player flow -> local/LAN Doctor eligibility; history/role map/seed not sent.",
+    "Whodunit retained peer -> command-progress cover/remount -> PeerPhaseScreens own-player StateFlow check -> PartyAwareSession multiplayer passthrough -> Shadow -> peer coordinator -> transport-attested actor -> host action authority -> canonical readiness set.",
+    "Host command receipt revision -> peer result reconciliation -> own-player snapshot installation before Idle -> remount suppression; phase/assignment generation and owner replacement checked.",
+    "Whodunit legal Elimination resolveVote -> immediate Reveal at final two -> current/bare codec and case-bound load/peer validators reject active reopening but accept legal terminal/postgame/replay."
+  ],
+  "verification": {
+    "executor": "/root (single build lane); reviewer ran no build/test",
+    "cycle": "combined-production-04",
+    "command": [
+      "./gradlew",
+      "productionCheck",
+      "--no-build-cache",
+      "--continue",
+      "--no-daemon",
+      "--no-parallel",
+      "--max-workers=1",
+      "--no-configuration-cache",
+      "--dependency-verification=strict",
+      "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=combined-production-04",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-Pparlor.android.signing.storeFile=",
+      "-Pparlor.android.signing.storePassword=",
+      "-Pparlor.android.signing.keyAlias=",
+      "-Pparlor.android.signing.keyPassword="
+    ],
+    "started_at": "2026-09-05T22:24:12.261351+00:00",
+    "finished_at": "2026-09-05T22:30:19.979017+00:00",
+    "exit_code": 0,
+    "status": "PASS",
+    "receipt_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/receipt.json",
+    "receipt_sha256": "4f8374afedbc3fec40353f0a95556766eaf8fa393daf1f8d307104e05694b9f4",
+    "gradle_log_sha256": "2eb2574058d05bbd292dcef2ba2126cf37cb86ad7ab0c41cdcabd4e57088f776",
+    "source_changed_during_cycle": false,
+    "reviewed_files_current_match_cycle_before_and_after": true,
+    "all_selected_test_tasks_fresh": "Raw gradle task lines have no FROM-CACHE/UP-TO-DATE for desktopTest; command --no-build-cache; 826 executed/77 up-to-date aggregate.",
+    "module_xml_counts": [
+      {
+        "module": "game-modes/mafia",
+        "suites": 31,
+        "tests": 267,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "skipped_cases": []
+      },
+      {
+        "module": "game-modes/whodunit",
+        "suites": 53,
+        "tests": 309,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "skipped_cases": []
+      },
+      {
+        "module": "shared/session",
+        "suites": 13,
+        "tests": 145,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "skipped_cases": []
+      },
+      {
+        "module": "shared/networking",
+        "suites": 8,
+        "tests": 34,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "skipped_cases": []
+      },
+      {
+        "module": "shared/transport-p2p",
+        "suites": 20,
+        "tests": 252,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 3,
+        "skipped_cases": [
+          "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]",
+          "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+          "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.host_broadcast_reaches_every_peer()[desktop]"
+        ]
+      }
+    ],
+    "focused_suite_details": [
+      {
+        "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.MafiaDoctorRulesTest.xml",
+        "sha256": "5e7c8303b0a4223b90e355ba5d7bd45f0adb371265203379f1462213b534bdee",
+        "suite": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+        "timestamp": "2026-09-05T22:27:56.232Z",
+        "counts": {
+          "tests": 8,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "cases": [
+          {
+            "name": "enabled_setting_saves_same_living_target_for_four_consecutive_nights()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "repeat_is_default_off_for_every_supported_player_count()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "enabling_repeats_does_not_allow_dead_targets_or_a_non_doctor_actor()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "skipped_night_clears_previous_effective_target_but_consumes_submission()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "repeat_and_self_protection_settings_are_independent()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "setup_draft_and_action_codec_commit_selection_once_without_changing_assignment()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "disabled_setting_rejects_repeat_and_allows_alternating_targets()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "first_valid_target_cannot_be_replaced_or_skipped_later_that_night()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaDoctorLanTest.xml",
+        "sha256": "a34634a220d646cc3b04ae713d69c3ea0c9dd8b1027066d312d284742c4500d9",
+        "suite": "com.parlor.games.mafia.multidevice.MafiaDoctorLanTest",
+        "timestamp": "2026-09-05T22:27:58Z",
+        "counts": {
+          "tests": 2,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "cases": [
+          {
+            "name": "only_host_can_commit_setup_selection_and_no_one_can_change_it_after_start()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "rejoin_preserves_doctor_restriction_setting_and_first_submission_without_host_secrets()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest.xml",
+        "sha256": "ba6d3c53eadcce0887ba308a70455a043be5a802a2e0373275d5114f3cb1a0c4",
+        "suite": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+        "timestamp": "2026-09-05T22:27:58.191Z",
+        "counts": {
+          "tests": 15,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "cases": [
+          {
+            "name": "killed_doctor_keeps_last_effective_target_until_next_resolution_then_clears_it()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "terminal_cleanup_does_not_require_historical_protection_to_be_erased()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "repeated_protection_history_is_valid_only_with_setting_enabled()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "mafia_coordination_revote_preserves_doctor_history_and_own_submission()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "resumed_local_controller_enforces_the_persisted_repeat_setting()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "peer_projections_keep_only_own_private_history_and_do_not_require_host_logs()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "no_doctor_configuration_keeps_null_history_and_rejects_foreign_private_history()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "private_previous_protection_must_match_retained_history_in_every_active_phase()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "initial_setup_role_assignment_and_first_night_have_no_previous_protection()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "null_effective_protection_cannot_be_replaced_by_an_old_legal_target()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "doctor_eliminated_by_day_vote_retains_previous_night_binding()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "history_binding_also_applies_during_a_day_revote()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "latest_binding_survives_history_capping_without_requiring_missing_predecessors()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "death_of_previous_target_does_not_erase_last_effective_protection()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "normal_terminal_win_also_clears_private_history_without_discarding_host_history()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest.xml",
+        "sha256": "629c1c083192f329780fecdb927f9144fed4516261b20f7f0baa128423301c98",
+        "suite": "com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest",
+        "timestamp": "2026-09-05T22:27:58.277Z",
+        "counts": {
+          "tests": 2,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "cases": [
+          {
+            "name": "canonical_local_and_projected_lan_choices_honor_both_independent_settings()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "eligibility_matches_reducer_acceptance_before_each_first_submission()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest.xml",
+        "sha256": "b9f8571c3f0dc6ab69b6c84c43543e1b4a22ba605fc48c0f21fc48972e64a0e4",
+        "suite": "com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest",
+        "timestamp": "2026-09-05T22:27:59.006Z",
+        "counts": {
+          "tests": 2,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "cases": [
+          {
+            "name": "arabic_consecutive_nights_toggle_defaults_off_and_commits_on_and_off()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "english_consecutive_nights_toggle_defaults_off_and_commits_on_and_off()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.WhodunitRulesInvariantTest.xml",
+        "sha256": "68cbe26312bf99d6307dfcb033df83f0292db0a40c0a85d5ec3fab0575356f0e",
+        "suite": "com.parlor.games.whodunit.domain.WhodunitRulesInvariantTest",
+        "timestamp": "2026-09-05T22:28:03.238Z",
+        "counts": {
+          "tests": 9,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "cases": [
+          {
+            "name": "modelDrivePreservesInvariantsForEveryShippingModeAndSupportedCount()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "displayNamesMustBeCanonicalBoundedAndSafeAtTheDomainBoundary()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "defensiveFinalTwoFallbackDoesNotMakeAnActiveSnapshotValid()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "invalidCountModeIdentityAndSeatAreRejectedBeforeSessionStarts()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "everySupportedCountAndSeedProducesOneDeterministicKillerAndUniqueDossiers()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "exactDuplicateDisplayNamesAreRejectedAtTheAuthoritativeBoundary()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "seededKillerSelectionHasNoMaterialSeatBias()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "eliminationVoteOpensOnlyAfterACompletedDiscussion()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "privacyRerollChangesKillerAndEveryPreviouslyViewedDossier()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest.xml",
+        "sha256": "f7e17520f7fcd8978256aa041fa545cd9c39a0c59d1a2c2970e4967c1947d531",
+        "suite": "com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest",
+        "timestamp": "2026-09-05T22:28:05.807Z",
+        "counts": {
+          "tests": 9,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "cases": [
+          {
+            "name": "everyOwnPrivatePeerBoundaryRejectsAReopenedFinalTwo()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "earlyEndWithAndWithoutDisclosureRemainRecoverable()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "currentDecoderRejectsCanonicalJsonThatReopensTheFinalTwo()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "aLegalLastRoundKillerEliminationStillAllowsTwoInnocentSurvivors()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "legalFinalTwoKillerVictoryStillRecoversThroughPostGameAndReplay()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "productionLocalResumeLoaderRejectsAnImpossibleTrustedPayload()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "currentEncoderRejectsEveryReopenedFinalTwoSubstate()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "bareLegacyPayloadCannotRepairAnImpossibleActiveFinalTwo()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "caseBoundRecoveryRejectsFinalTwoEvenWithTheCorrectContentIdentity()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "xml_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest.xml",
+        "sha256": "d5c2d5a2695d411f99b391a2337bcf564f8b3a150ab2f13c20fe5c7c8c869499",
+        "suite": "com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest",
+        "timestamp": "2026-09-05T22:28:07.328Z",
+        "counts": {
+          "tests": 12,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "cases": [
+          {
+            "name": "introAcknowledgementDoesNotRepeatAfterCommandCoverRemount()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "freshIntroSnapshotWinsOverAStaleComposeProjection()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "replayInTheSameRenderedPhaseAcknowledgesTheNewGeneration()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "replayBeforeEffectDoesNotAcknowledgeTheStaleAssignmentGeneration()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "freshBriefingSnapshotWinsOverAStaleComposeProjection()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "acknowledgedBriefingSurvivesUiRecreationAndDisconnectPause()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "rejectionWithoutHostAcknowledgementDoesNotCreateOptimisticReadiness()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "briefingAcknowledgementDoesNotRepeatAfterCommandCoverRemount()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "phaseChangeBeforeEffectDoesNotSendThePreviousPhaseAcknowledgement()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "aReplacementControllerRechecksReadinessInTheSamePhase()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "unrelatedBriefingUpdatesDoNotResendWhileAuthorityHasNotResponded()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          },
+          {
+            "name": "acknowledgedIntroSurvivesUiRecreationAndDisconnectPause()[desktop]",
+            "failed": false,
+            "error": false,
+            "skipped": false
+          }
+        ]
+      }
+    ],
+    "xml_manifest_sha256": "82f36c681c32bdd10247ff56a57507a2700605fce4d2dd74532cf926263eabce",
+    "type_aware_static_analysis": "PASS as part of root productionCheck; raw task/log/exit checked. Not independent runtime proof."
+  },
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-05T22:30:20.307635+00:00",
+    "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+    "completed_at": "2026-09-05T22:30:22.205283+00:00",
+    "method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership.",
+    "errors": [],
+    "remaining_owned_workers": [],
+    "remaining_outputs": [],
+    "retained_outputs": [],
+    "reviewer_owned_processes_or_build_outputs": "None started or generated. Evidence JSON/Markdown only; did not stop/delete root-owned active Apple lane.",
+    "limitation": "Cleanup recorded for completed combined-production-04, not a claim about a later concurrently root-owned Apple cycle."
+  },
+  "counter_evidence": [
+    "Doctor repeat setting already existed with default OFF and no two-night cap; this correction is canonical-history consistency plus shared UI predicate extraction/copy/tests, not a new Doctor game rule.",
+    "At most one Doctor is proven before singleOrNull binding; no-Doctor and first-night null values remain valid. Terminal private clearing intentionally differs from retained canonical history.",
+    "Old history predecessor outside retained 128-entry suffix is deliberately unknown; latest record remains present and compared. ON skips only historical repeat restriction, not cross-field equality.",
+    "Whodunit host auto-ACK sibling may rerun on remount but is a local canonical no-op without peer command cover/error feedback loop; no multiplayer reducer validation was weakened.",
+    "Readiness can be retried after a definitive rejection with no host readiness, but no speculative success or blind non-idempotent command replay is added.",
+    "Classic does not use Elimination final-two policy. Valid Reveal/PostGame/final-two innocent survivors and fresh replay are expressly accepted.",
+    "Mafia LAN fixture skips admission/start/credential plumbing; explicitly reconciles safe initial public placeholders before private assertions. It is not physical P2pKit evidence.",
+    "Whodunit readiness fixture uses the real composable/passive controller with explicit host reductions and controlled subtree removal; it is not the complete radio/coordinator flow. Current coordinator source independently explains production ordering."
+  ],
+  "limitations": [
+    "No physical Android/iOS LAN, app-switcher, native accessibility, real large-text setting, or cold credential-backed rejoin executed by this reviewer.",
+    "No Apple result inferred from the root-owned concurrent lane; only completed combined-production-04 used here.",
+    "Three physical P2pKit tests remain correctly skipped; successful host advertisement is not a peer round-trip.",
+    "No Store/signing/legal verification or source change authorization inferred.",
+    "WD-C4 modal-timer policy remains outside these repairs and unresolved; WD-C2 authorial/content decisions and other issue statuses belong to root register.",
+    "No whole-repository completeness or absence-of-all-defects claim; partial caller ranges remain explicit."
+  ],
+  "original_dossiers": [
+    "audit-runs/2026-09-05-source-audit/candidates/M-C01-doctor-recovery-history.md",
+    "audit-runs/2026-09-05-source-audit/validations/MF-C1-whodunit_cont.md",
+    "audit-runs/2026-09-05-source-audit/candidates/WD-C1-whodunit_cont.md",
+    "audit-runs/2026-09-05-source-audit/candidates/WD-C1-independent-session_cont.md",
+    "audit-runs/2026-09-05-source-audit/candidates/WD-C3-whodunit_cont.md",
+    "audit-runs/2026-09-05-source-audit/validations/WD-C3-root.md"
+  ],
+  "separate_scoped_type_analysis_followups": [
+    "remediation-runs/2026-09-05-confirmed-fixes/factory_review/mafia-detekt-review-01/independent-followup-approval-01.json",
+    "remediation-runs/2026-09-05-confirmed-fixes/factory_review/whodunit-detekt-review-01/independent-followup-approval-01.json"
+  ],
+  "research": "No new platform/API assumption needed for these bounded rule/guard changes. Existing exact-version Compose effect research and independent current runtime regressions were considered; no new external research or network requests performed in this final cross-game pass.",
+  "unauthorized_changes": "None by reviewer. No production/test/config edits, Gradle/native commands, credentials, signing, Git mutations or publication. Only two new evidence files in assigned location."
+}

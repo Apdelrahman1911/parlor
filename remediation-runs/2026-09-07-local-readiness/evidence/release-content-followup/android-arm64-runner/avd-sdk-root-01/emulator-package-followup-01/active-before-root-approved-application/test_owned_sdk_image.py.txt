@@ -1,0 +1,216 @@
+"""DRAFT pure tests; fake clones are not APFS/CLI/emulator runtime evidence."""
+import ctypes
+import errno
+import hashlib
+import os
+from pathlib import Path
+import tempfile
+import unittest
+from unittest.mock import Mock, patch
+
+import owned_sdk_image as control
+
+
+class FakeOwned:
+    def __init__(self, path):
+        self.path = path
+        self.path.mkdir()
+        self.valid = True
+
+    def attest(self):
+        if not self.valid:
+            raise RuntimeError("Ownership lost")
+
+
+class SdkRootTests(unittest.TestCase):
+    def setUp(self):
+        self.temporary = tempfile.TemporaryDirectory(prefix="parlor-sdk-pure-")
+        self.addCleanup(self.temporary.cleanup)
+        self.base = Path(self.temporary.name).resolve()
+        self.sdk = self.base / "installed SDK"
+        self.image = self.sdk / control.IMAGE_RELATIVE
+        self.image.mkdir(parents=True)
+        (self.image / "package.xml").write_bytes(b"<public-fixture/>")
+        (self.image / "source.properties").write_bytes(b"Pkg.Revision=9\n")
+        (self.image / "system.img").write_bytes(b"synthetic image")
+        (self.image / "data").mkdir()
+        (self.image / "data/empty_data_disk").write_bytes(b"synthetic data")
+        self.owned = FakeOwned(self.base / "owned space ; literal")
+        for name in ("home", "tmp"):
+            (self.owned.path / name).mkdir()
+        expected = {name: hashlib.sha256((self.image / name).read_bytes()).hexdigest()
+                    for name in control.METADATA_HASHES}
+        for patcher in (patch.object(control, "METADATA_HASHES", expected),
+                        patch.object(control, "MIN_FREE_BYTES", 0)):
+            patcher.start()
+            self.addCleanup(patcher.stop)
+
+    @staticmethod
+    def fake_clone(source_fd, parent_fd, name):
+        # A bounded synthetic copy ONLY IN TESTS, never a native fallback.
+        os.lseek(source_fd, 0, os.SEEK_SET)
+        destination = os.open(name, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600, dir_fd=parent_fd)
+        with os.fdopen(destination, "wb") as stream:
+            stream.write(os.read(source_fd, 4096))
+
+    def clone(self, clone_one=None, checkpoint=lambda: None):
+        return control.clone_installed_image(self.sdk, self.owned, checkpoint,
+                                             clone_one=clone_one or self.fake_clone)
+
+    def test_clone_records_all_files_with_equal_bytes_and_distinct_inodes(self):
+        before = control._inventory(self.image)
+        result = self.clone()
+        self.assertEqual(before, control._inventory(self.image))
+        self.assertEqual(4, len(result["files"]))
+        self.assertEqual(str(self.owned.path / "sdk"), result["owned_sdk"])
+        for item in result["files"]:
+            source = self.image / item["path"]
+            target = Path(result["owned_image"]) / item["path"]
+            self.assertEqual(source.read_bytes(), target.read_bytes())
+            self.assertNotEqual(source.stat().st_ino, target.stat().st_ino)
+        # Scanner-like writes touch only the owned metadata and SDK root.
+        (Path(result["owned_sdk"]) / ".knownPackages").write_bytes(b"owned")
+        (Path(result["owned_image"]) / "package.xml").write_bytes(b"owned replacement")
+        self.assertEqual(b"<public-fixture/>", (self.image / "package.xml").read_bytes())
+        self.assertFalse((self.sdk / ".knownPackages").exists())
+
+    def test_error_propagates_without_copy_fallback_or_source_cleanup(self):
+        before = control._inventory(self.image)
+        fail = Mock(side_effect=OSError(errno.ENOTSUP, "unsupported clone"))
+        with self.assertRaises(OSError):
+            self.clone(fail)
+        self.assertEqual(1, fail.call_count)
+        self.assertEqual(before, control._inventory(self.image))
+        self.assertTrue((self.owned.path / "sdk").is_dir())
+
+    def test_existing_owned_sdk_is_never_reused(self):
+        (self.owned.path / "sdk").mkdir()
+        (self.owned.path / "sdk/user-marker").write_text("preserve")
+        with self.assertRaises(FileExistsError):
+            self.clone()
+        self.assertEqual("preserve", (self.owned.path / "sdk/user-marker").read_text())
+
+    def test_symlinks_and_hardlinks_in_source_are_rejected_before_clone(self):
+        clone = Mock()
+        link = self.image / "escape"
+        link.symlink_to(self.base)
+        with self.assertRaises(ValueError):
+            self.clone(clone)
+        link.unlink()
+        os.link(self.image / "system.img", link)
+        with self.assertRaises(ValueError):
+            self.clone(clone)
+        clone.assert_not_called()
+
+    def test_special_file_and_unbounded_inventory_are_rejected(self):
+        special = self.image / "pipe"
+        os.mkfifo(special)
+        with self.assertRaises(ValueError):
+            self.clone()
+        special.unlink()
+        with patch.object(control, "MAX_ENTRIES", 2), self.assertRaises(ValueError):
+            self.clone()
+        with patch.object(control, "MAX_IMAGE_BYTES", 1), self.assertRaises(ValueError):
+            self.clone()
+
+    def test_metadata_drift_and_missing_metadata_fail_closed(self):
+        (self.image / "package.xml").write_text("wrong revision")
+        with self.assertRaisesRegex(ValueError, "metadata differs"):
+            self.clone()
+
+    def test_missing_metadata_fails_instead_of_accepting_partial_tree(self):
+        (self.image / "package.xml").unlink()
+        with self.assertRaisesRegex(ValueError, "metadata is absent"):
+            self.clone()
+
+    def test_incorrect_clone_bytes_fail(self):
+        def corrupt(source_fd, parent_fd, name):
+            self.fake_clone(source_fd, parent_fd, name)
+            fd = os.open(name, os.O_WRONLY | os.O_TRUNC, dir_fd=parent_fd)
+            os.close(fd)
+        with self.assertRaises(ValueError):
+            self.clone(corrupt)
+
+    def test_source_mutation_during_clone_fails(self):
+        def mutate(source_fd, parent_fd, name):
+            self.fake_clone(source_fd, parent_fd, name)
+            (self.image / "source.properties").write_bytes(b"changed public fixture")
+        with self.assertRaises(ValueError):
+            self.clone(mutate)
+
+    def test_cancel_and_owner_loss_fail_without_changing_installed_sdk(self):
+        before = control._inventory(self.image)
+        def cancel():
+            raise InterruptedError("cancelled")
+        with self.assertRaises(InterruptedError):
+            self.clone(checkpoint=cancel)
+        self.assertEqual(before, control._inventory(self.image))
+        self.owned.valid = False
+        with self.assertRaisesRegex(RuntimeError, "Ownership lost"):
+            self.clone()
+
+    def test_low_disk_fails_before_destination_creation(self):
+        usage = Mock(free=1)
+        with patch.object(control.shutil, "disk_usage", return_value=usage), \
+                patch.object(control, "MIN_FREE_BYTES", 2), self.assertRaises(RuntimeError):
+            self.clone()
+        self.assertFalse((self.owned.path / "sdk").exists())
+
+    def test_native_abi_is_exact_and_error_has_no_fallback(self):
+        fake = Mock()
+        fake.fclonefileat.return_value = -1
+        ctypes.set_errno(errno.ENOTSUP)
+        with patch.object(control.platform, "system", return_value="Darwin"), \
+                patch.object(control.ctypes, "CDLL", return_value=fake) as load:
+            with self.assertRaises(OSError) as caught:
+                control._clone_open_file(10, 11, "system.img")
+        self.assertEqual(errno.ENOTSUP, caught.exception.errno)
+        load.assert_called_once_with("/usr/lib/libSystem.B.dylib", use_errno=True)
+        fake.fclonefileat.assert_called_once_with(10, 11, b"system.img", 3)
+        self.assertEqual(ctypes.c_int, fake.fclonefileat.restype)
+        self.assertEqual([ctypes.c_int, ctypes.c_int, ctypes.c_char_p, ctypes.c_uint32],
+                         fake.fclonefileat.argtypes)
+
+    def test_explicit_java_sdk_and_environment_are_not_shell_parsed(self):
+        result = self.clone()
+        cli = self.base / "CLI 20 ; quoted"
+        (cli / "bin").mkdir(parents=True)
+        (cli / "lib").mkdir()
+        (cli / "bin/avdmanager").write_bytes(b"public wrapper fixture")
+        (cli / "lib/avdmanager-classpath.jar").write_bytes(b"classpath fixture")
+        metadata = cli / "source.properties"
+        metadata.write_bytes(b"Pkg.Revision=20.0\n")
+        java = self.base / "java 21"
+        java.write_bytes(b"public executable fixture")
+        env = {key: "hostile fixture" for key in control.JAVA_ENV_OPTIONS}
+        env.update(HOME=str(self.owned.path / "home"), ANDROID_HOME=str(self.sdk),
+                   ANDROID_SDK_ROOT=str(self.sdk))
+        pinned = hashlib.sha256(metadata.read_bytes()).hexdigest()
+        with patch.object(control, "CLI20_PROPERTIES_SHA256", pinned):
+            argv, effective = control.cli20_invocation(java, cli / "bin/avdmanager", self.owned,
+                                                       result["owned_sdk"], env, ["list", "avd"])
+        properties = [part for part in argv if part.startswith("-Dcom.android.sdkmanager.toolsdir=")]
+        self.assertEqual(1, len(properties))
+        toolsdir = Path(properties[0].split("=", 1)[1])
+        self.assertEqual(Path(result["owned_sdk"]), toolsdir.parent.parent)
+        self.assertEqual(str(java), argv[0])
+        self.assertEqual(["list", "avd"], argv[-2:])
+        self.assertEqual(str(cli / "lib/avdmanager-classpath.jar"), argv[argv.index("-classpath") + 1])
+        self.assertEqual(str(self.owned.path / "sdk"), effective["ANDROID_HOME"])
+        self.assertEqual(effective["ANDROID_HOME"], effective["ANDROID_SDK_ROOT"])
+        self.assertTrue(set(control.JAVA_ENV_OPTIONS).isdisjoint(effective))
+        self.assertEqual(str(self.sdk), env["ANDROID_HOME"])
+
+    def test_unexpected_config_paths_rejected_not_rewritten(self):
+        result = self.clone()
+        correct = {"image.sysdir.1": control.IMAGE_RELATIVE.as_posix() + "/"}
+        self.assertEqual(result["owned_image"], control.validate_created_image_path(correct, result["owned_sdk"]))
+        for wrong in (str(self.image), "../system.img", "/tmp/unowned/", ""):
+            with self.assertRaises(ValueError):
+                control.validate_created_image_path({"image.sysdir.1": wrong}, result["owned_sdk"])
+        with self.assertRaises(ValueError):
+            control.validate_created_image_path(dict(correct, **{"image.sysdir.2": ""}), result["owned_sdk"])
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,0 +1,170 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-06T02:33:13.176016+00:00",
+  "reviewer": "/root/release_fix_review",
+  "observation_author": "/root",
+  "conclusion": "APPROVED WITH EXPLICIT LIMITATIONS: actual final observation and additive finalization note accurately bind source/preservation, finished cycle cleanup dispositions and their point-in-time process/output checks. No production/Store-ready verdict or blanket historical RAM guarantee.",
+  "reviewed_observation": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/final/final-observation.json",
+    "sha256": "1dc184c09e6b5ee74387844cb1fd7273acc327684a96e812f499c0e7af566119"
+  },
+  "reviewed_finalization_note": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/final/FINALIZATION.md",
+    "sha256": "991056ced3962cc893b5b10f48622944a1db55699d1e641861814ba3d8e495bf"
+  },
+  "observation_recorded_at": "2026-09-06T02:17:24.537745+00:00",
+  "independent_later_observation_at": "2026-09-06T02:28:07.524509+00:00",
+  "pre_observation_review": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/final-report-continuation-review-03.json",
+    "sha256": "43866cabd6e8c1ee6b3cd4f972af573946e59dd7fe7b2fc80284648c4435dcb4"
+  },
+  "direct_reconciliation_evidence": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/final-observation-binding-04.json",
+    "sha256": "7a62375cf28c2d4af2711d51e959d9a7e2217a70852846c9827c1937e42d36a1"
+  },
+  "direct_reader_command_receipt": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/final-reader-attempt-04b.json",
+    "sha256": "75ded5555a2f92ce03750cbfc903141980b33104d1e840291684c58c7e48d88a"
+  },
+  "method_control": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/observe_final_result_04b.py",
+    "sha256": "b52df11799aee40229b4fa91e5942193fb2e8ac8a4b1057ebe0508d1969ee524"
+  },
+  "source_and_preservation": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+    "tracked_diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+    "complete_patch_sha256": "305b8f3db676a79ddc98faf72e08d4269596528cdc30cafbbf4c6811312f03f9",
+    "actual_recheck": "Re-enumerated current Git-eligible source paths; hashed all658source files. Exact current tracked binary diff and28untracked additions reconstruct the same62-file complete patch.1618baseline original files compared:1584unchanged and34scoped tracked changes;990pre-existing untracked unchanged. Refs/stash/index preserved. Intentionally dirty worktree is not described as a clean release candidate."
+  },
+  "bound_files_and_links": {
+    "observation_reference_count": 107,
+    "observation_distinct_referenced_files": 107,
+    "final_deliverables": 16,
+    "markdown_links_verified": 28,
+    "coverage": "All observation file refs rehashed, including34changed-source records,49cycle receipts,6associated records,16final files,baseline and recorder. Exact final directory equals bound16files plus observation itself. All continuation/finalization Markdown file targets and the remaining-work fragment resolve. Earlier353refs/188files and11original milestones were freshly rechecked by the source reader.",
+    "prior_evidence_integrity": "No original final milestone, failing cycle, report, source or old control overwritten. New finalization note plus observation added outside old milestone bytes; this reviewer result remains outside final/ to avoid recursive hash invalidation."
+  },
+  "cycle_evaluation": {
+    "total": 49,
+    "actual_command_results": {
+      "PASS": 31,
+      "FAIL": 18
+    },
+    "schemas": {
+      "gradle-cycle": 46,
+      "dsc01-apphost": 2,
+      "legacy-shell-cycle": 1
+    },
+    "cleanup": "48modern complete cleanup dispositions +1 pinned legacy limited disposition reconciled independently from raw fields; no call/import of author cleanup evaluator.49finished receipt names exactly equal current evidence/*/receipt.json inventory. All projected fields compared to raw receipts; no failure relabeled test success.",
+    "stop_receipts": "53retained stop-status/log files inspected and hash-bound:47standard stop.log plus4outer apphost logs plus2embedded build/stop status files. All expected stop results0; log bodies actually read.",
+    "native_children": "Three exact owned-simulator child receipts compare byte-structure to embedded observations. Each9commands recorded exit0; shutdown/delete/create logs read; createUUID matches. Before/after runner manifests and current helper/init/source hashes match. Five total recorded owned simulator directories are currently absent, without simctl or user-profile access.",
+    "apphost_details": "Both apphost finalization stage lists, immediate/final stops, embedded stop, shutdown/delete, secondary attestation/FIFO cleanup, temp absence, unknown holders and worker/output dispositions verified. Fresh source/copy/PID binding reproduced the earlier71and54known-PID absence observations.",
+    "historical_limit": "ios-b1-red original receipt remains exactSHA1a1c0d\u2026 with empty scan/exit1 but no recorded scan command or PID/start ledger. Evaluated cleanup retains explicit historical_pid_evidence_complete:false; whole observation correctly sets historical_cleanup_evidence_complete:false. No invented historical worker absence."
+  },
+  "current_observation": {
+    "at": "2026-09-06T02:28:07.524509+00:00",
+    "generated_build_paths_checked": 17,
+    "remaining_generated_outputs": [],
+    "cycle_scratch_remaining": [],
+    "known_gradle_kotlin_workers": [],
+    "owned_simulator_uuid_referencing_processes": [],
+    "process_query_exit": 0,
+    "owned_device_directories_checked": 5,
+    "current_free_disk_bytes": 20768866304,
+    "limits": "Point in time only; no authority to terminate unrelated processes. Disk-free snapshots may change with unrelated activity. Retained-evidence byte count in root observation was sampled before its own/newer reviewer files, not asserted to remain constant. No systemwide RAM-use measurement or absence guarantee."
+  },
+  "native_inventory_privacy_qualification": {
+    "source": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/owned_ios_simulator.py",
+      "sha256": "184684f4cdba8733217a124b53552e4f73f234618e82ade9d8ead566fb748712"
+    },
+    "reviewed_line_ranges": [
+      [
+        1,
+        137
+      ]
+    ],
+    "explanation": "devices()49-59 intentionally deletes parsed inventory logs to avoid retaining unrelated personal simulator names, including partial failure logs. Final raw inventory sets cannot be reparsed now. Pre-existing-device preservation is supported by pinned actually-executed helper paths80-94/107-132 and compact child receipt, not a freshly independently reconstructed private inventory. No inventories were regenerated.",
+    "reader_diagnostic": "Exploratory metadata query tried nonexistent inventory-before.log and exited1 after stop-log reading. Source inspection established intentional privacy deletion; this query was not reported PASS and created no build outputs."
+  },
+  "standalone_invocation_provenance": {
+    "record": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/root/final-observation-invocation-01.json",
+      "sha256": "bf093aeeda7af5addc7fd23a3627584cb38fcbde47b03619dd43d916b8a5cece"
+    },
+    "transcribed_tool_chunk": "be4531",
+    "root_reported_actual_exit": 0,
+    "checked": "Actual transcribed shasum lines match current note/pre-review/recorder; stdout SHA matches transcript and embedded observation hash/checks. Recorder hash also bound inside observation; current283line source reread unchanged against prior approvedhash.",
+    "limits": "Execution output is transparently a later root transcription from tool result, not a direct separately witnessed reviewer run. No immediate after-process control hash or exact shell start/end time was captured/backfilled. Later root observation at02:21:50UTC is separately identified. Independent reviewer re-evaluated result facts rather than treating this transcript as proof."
+  },
+  "intervening_unknown_reader_match": {
+    "preserved_failed_attempt": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/final-reader-attempt-04-failure.json",
+      "sha256": "76e70e281ab5438c0f2cda7f95a82d54c5a46792d32aa2bf5f4c794b98040ddc"
+    },
+    "preserved_original_control": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/observe_final_result_04.py",
+      "sha256": "a78958db406543f11c6eeb0c1d668c37318595f6c79e1acdadac8870f5479f60"
+    },
+    "classification": "UNCONFIRMED transient metadata-observer match, exact cause/ownership unknown. Not an application/cleanup defect finding, not a false-positive claim.",
+    "reason": "Original reader aborted at process predicate without preserving candidate PID rows. Subsequent diagnostic query was empty; later04b at02:28:07UTC is a distinct completed observation, not proof that first sample was empty. V4b only emits candidates before the unchanged rejecting predicate. Never signaled a process or weakened an application test.",
+    "time_limit": "Exact original sampler timestamp absent; earlier approximate~02:24message is not authoritative evidence. Existing root02:17observation remains immutable."
+  },
+  "project_scope_unchanged": {
+    "completion": "14/16 =87.5% scoped repairs FIXED AND VERIFIED, not readiness/GitHub closure.",
+    "issues": {
+      "DS-C01": "PARTIALLY VERIFIED: actual four-process native restart/System matrix passes; unmarked legacy ownership policy and active-session/direct Compose/OS Settings and other declared limits remain.",
+      "WD-C2": "BLOCKED: four story chronology author choices and version/digest/save compatibility decision remain; story bytes untouched."
+    },
+    "gates": "38gates23PASS/15BLOCKED, NOT_READY. Previously reviewed game/privacy/protocol/recovery fixes unchanged; this evidence-only continuation is not another exhaustive line-by-line project audit.",
+    "external_or_separate": "WD-C4 policy unresolved, IOS-R1 evidence-only; physical LAN/devices, signing/Store identity collision/legal/release requirements not waived. No commit/stage/branch/integration/GitHub/signing/publication authorization exercised."
+  },
+  "review_coverage": [
+    {
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/FINALIZATION.md",
+        "sha256": "991056ced3962cc893b5b10f48622944a1db55699d1e641861814ba3d8e495bf"
+      },
+      "reviewed_line_ranges": [
+        [
+          1,
+          57
+        ]
+      ],
+      "method": "Complete new finalization prose and every linked target/fragment checked."
+    },
+    {
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/record_final_observation_v2.py",
+        "sha256": "f5dabf6f162f4b4e359e928a5b371a6f42e1e1420c1c357b738707fc1753533d"
+      },
+      "reviewed_line_ranges": [
+        [
+          1,
+          283
+        ]
+      ],
+      "method": "Complete current recorder source reread, unchanged approved version; independent result logic executed separately."
+    },
+    {
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/final-observation.json",
+        "sha256": "1dc184c09e6b5ee74387844cb1fd7273acc327684a96e812f499c0e7af566119"
+      },
+      "method": "All2217lines parsed; entire top-level metadata, all49cycle dispositions and every associated child record reviewed as structured content. All fields/hash refs and modified/new-source arrays machine-reconciled. Not a claim to newly read every referenced production file."
+    }
+  ],
+  "reviewer_hygiene": {
+    "application_test_configuration_edits": 0,
+    "build_or_test_launches": 0,
+    "gradle_native_simulator_launches": 0,
+    "process_signals": 0,
+    "git_state_mutations": 0,
+    "new_background_workers_left": 0,
+    "generated_build_outputs_created": 0,
+    "outputs": "Only required additive review JSON/Markdown and read-only observation controls under release_fix_review/. Old failed reader/control preserved; no broad cleanup or unrelated files touched."
+  }
+}

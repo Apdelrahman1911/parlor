@@ -1,0 +1,248 @@
+{
+  "status": "PASS",
+  "scope": "Disposable-signed APK packaging; NOT Store signing/runtime proof",
+  "author": "/root/release_fix_review",
+  "started_epoch": 1788778410.788682,
+  "source_before": {
+    "commit": "f5ea8045bd903c255041b198f54aca67e893612f",
+    "tree": "b109c8ec6ec579b9197f449b36bda2c39105a652",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "87f96b69dd8b62a3e3bbf2b22355220850325fe420097e356497ce0b5aa580e8"
+  },
+  "outer_cycle_receipt": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-arm64-apks-03/receipt.json",
+  "control_before": {
+    "/Users/abdelrahman/Projects/parlor/composeApp/build.gradle.kts": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py": "172c4f3162dc6a6b20e912e6551eaca9f33a32ba3d0d6f150ad8becfd30865ea",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-build-helper/build_and_retain_apks.py": "1b22b01f1b78534539dbf1491208cf25df5692a32e16f3fc3155573d293dd0d8",
+    "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/release": "7befd86565133fbebfa54138e55ec5b03bb59649ea5dda35d9f9b95265226756",
+    "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/bin/java": "04005388bac0c272ea914210ca519ce94b2f873ea3962b9874a6859f74d7f279",
+    "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/bin/keytool": "1ee2f76502dea0fbfcdf4a2b18526904228281e6b88933db2f09685e8e3621c5",
+    "/Users/abdelrahman/Library/Android/sdk/build-tools/36.0.0/apksigner": "b47549e373b895ce6ca620d0c7887e674d9615ffa837a86ac601dcfd04adb0f0",
+    "/Users/abdelrahman/Library/Android/sdk/build-tools/36.0.0/lib/apksigner.jar": "3716d9311e55d2b0918a2fd9d54ba9e406c5f6abeea700b287f11259bc163dec"
+  },
+  "stage_identity": [
+    16777232,
+    84619576,
+    501
+  ],
+  "stage_nonce": "c83d09c9-8ed8-4dac-9af6-cd77c70ff076",
+  "commands": [
+    {
+      "label": "jdk-version",
+      "command": [
+        "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/bin/java",
+        "-version"
+      ],
+      "started_epoch": 1788778410.813956,
+      "log": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-arm64-apks-03/android-apk-helper-logs/jdk-version.log",
+      "exit_code": 0,
+      "finished_epoch": 1788778410.916757,
+      "sha256": "30b5b10762a8ff64f7513be4354be86724a53322c3d52106cf2587d90570bb32"
+    },
+    {
+      "label": "create-disposable-key",
+      "command": [
+        "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/bin/keytool",
+        "-J-Xmx128m",
+        "-genkeypair",
+        "-alias",
+        "parlor-disposable-android-runtime",
+        "-keyalg",
+        "RSA",
+        "-keysize",
+        "2048",
+        "-sigalg",
+        "SHA256withRSA",
+        "-validity",
+        "2",
+        "-dname",
+        "CN=Disposable Parlor Android Runtime Fixture",
+        "-keystore",
+        "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-arm64-apks-03/scratch/tmp/android-signing-rbl5lfal/disposable.p12",
+        "-storetype",
+        "PKCS12",
+        "-storepass:env",
+        "PARLOR_ANDROID_KEYSTORE_PASSWORD",
+        "-keypass:env",
+        "PARLOR_ANDROID_KEY_PASSWORD",
+        "-noprompt"
+      ],
+      "started_epoch": 1788778410.916842,
+      "log": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-arm64-apks-03/android-apk-helper-logs/create-disposable-key.log",
+      "exit_code": 0,
+      "finished_epoch": 1788778411.237911,
+      "sha256": "108aefc491db0195a787316aa6e502194d6037cbe0006248bca4c03f28b98168"
+    },
+    {
+      "label": "export-disposable-certificate",
+      "command": [
+        "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/bin/keytool",
+        "-J-Xmx128m",
+        "-exportcert",
+        "-alias",
+        "parlor-disposable-android-runtime",
+        "-keystore",
+        "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-arm64-apks-03/scratch/tmp/android-signing-rbl5lfal/disposable.p12",
+        "-storepass:env",
+        "PARLOR_ANDROID_KEYSTORE_PASSWORD",
+        "-file",
+        "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-arm64-apks-03/scratch/tmp/android-signing-rbl5lfal/public.der"
+      ],
+      "started_epoch": 1788778411.2379851,
+      "log": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-arm64-apks-03/android-apk-helper-logs/export-disposable-certificate.log",
+      "exit_code": 0,
+      "finished_epoch": 1788778411.4581308,
+      "sha256": "59569026060ad4cdbf9807253bdcb13fc04c1b42dcc44d9b8f26985d1fc962f9"
+    },
+    {
+      "label": "assemble-release-apks",
+      "command": [
+        "/Users/abdelrahman/Projects/parlor/gradlew",
+        ":composeApp:assembleRelease",
+        ":composeApp:assembleReleaseAndroidTest",
+        "--dependency-verification=strict",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--no-build-cache",
+        "--console=plain",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=android-arm64-apks-03"
+      ],
+      "started_epoch": 1788778411.4583051,
+      "log": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-arm64-apks-03/android-apk-helper-logs/assemble-release-apks.log",
+      "exit_code": 0,
+      "finished_epoch": 1788778512.686146,
+      "sha256": "15f9ada2f880fec114e409b6abdfc89d260ed3afeafb42560f7764370bbbd477"
+    },
+    {
+      "label": "immediate-gradle-stop",
+      "command": [
+        "/Users/abdelrahman/Projects/parlor/gradlew",
+        "--stop"
+      ],
+      "started_epoch": 1788778512.686852,
+      "log": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-arm64-apks-03/android-apk-helper-logs/immediate-gradle-stop.log",
+      "exit_code": 0,
+      "finished_epoch": 1788778513.012737,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "label": "verify-releaseAndroidTest",
+      "command": [
+        "/Users/abdelrahman/Library/Android/sdk/build-tools/36.0.0/apksigner",
+        "-JXmx256M",
+        "verify",
+        "--verbose",
+        "--print-certs",
+        "/Users/abdelrahman/Projects/parlor/composeApp/build/outputs/apk/androidTest/release/composeApp-release-androidTest.apk"
+      ],
+      "started_epoch": 1788778513.014266,
+      "log": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-arm64-apks-03/android-apk-helper-logs/verify-releaseAndroidTest.log",
+      "exit_code": 0,
+      "finished_epoch": 1788778513.236539,
+      "sha256": "aea70cc711b6ca8dd48bd50e2aea1edf0c5888a209290749ab7ed90ad94507b5"
+    },
+    {
+      "label": "verify-release",
+      "command": [
+        "/Users/abdelrahman/Library/Android/sdk/build-tools/36.0.0/apksigner",
+        "-JXmx256M",
+        "verify",
+        "--verbose",
+        "--print-certs",
+        "/Users/abdelrahman/Projects/parlor/composeApp/build/outputs/apk/release/composeApp-release.apk"
+      ],
+      "started_epoch": 1788778513.236974,
+      "log": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-arm64-apks-03/android-apk-helper-logs/verify-release.log",
+      "exit_code": 0,
+      "finished_epoch": 1788778513.4550998,
+      "sha256": "aea70cc711b6ca8dd48bd50e2aea1edf0c5888a209290749ab7ed90ad94507b5"
+    }
+  ],
+  "artifacts": [
+    {
+      "variant": "releaseAndroidTest",
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-03/release-androidTest.apk",
+      "sha256": "754daf608683abb2c32988287a19d0438c86699fcbfc259a62e117138ec9893d",
+      "bytes": 14008,
+      "signer_sha256": "a3e32e98880dd405b9859b064276284e266db6e7049a0f420c8b4dd526f0aa58",
+      "application_id": "com.parlor.app.test",
+      "metadata_sha256": "4226f0778f7e7c2912870981c0327b859e5bb73a3d23813fd5b312018e02f882"
+    },
+    {
+      "variant": "release",
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-03/release.apk",
+      "sha256": "561b269c883de7be33efda9eb7b2dcabb412ce2706ffd38ad79f3f04c2c5a8cb",
+      "bytes": 4835301,
+      "signer_sha256": "a3e32e98880dd405b9859b064276284e266db6e7049a0f420c8b4dd526f0aa58",
+      "application_id": "com.parlor.app",
+      "metadata_sha256": "e060375f09cc26d89f08e9651ffa193f72aa57b10800ac9c9cc7b9f708b2484e"
+    }
+  ],
+  "retention": "Keep the two APKs only through the following owned ARM64 runtime/inspection",
+  "acceptance": "Requires outer cycle PASS, unchanged complete source manifest, and matching APK hashes",
+  "owned_scratch": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-arm64-apks-03/scratch/tmp/android-signing-rbl5lfal",
+  "disposable_certificate_sha256": "a3e32e98880dd405b9859b064276284e266db6e7049a0f420c8b4dd526f0aa58",
+  "workers": [
+    {
+      "pid": 76239,
+      "label": "jdk-version",
+      "retired": true,
+      "exit_code": 0
+    },
+    {
+      "pid": 76240,
+      "label": "create-disposable-key",
+      "retired": true,
+      "exit_code": 0
+    },
+    {
+      "pid": 76247,
+      "label": "export-disposable-certificate",
+      "retired": true,
+      "exit_code": 0
+    },
+    {
+      "pid": 76250,
+      "label": "assemble-release-apks",
+      "retired": true,
+      "exit_code": 0
+    },
+    {
+      "pid": 77492,
+      "label": "immediate-gradle-stop",
+      "retired": true,
+      "exit_code": 0
+    },
+    {
+      "pid": 77506,
+      "label": "verify-releaseAndroidTest",
+      "retired": true,
+      "exit_code": 0
+    },
+    {
+      "pid": 77517,
+      "label": "verify-release",
+      "retired": true,
+      "exit_code": 0
+    }
+  ],
+  "token_signals": [],
+  "private_key_and_scratch_removed": true,
+  "control_after": {
+    "/Users/abdelrahman/Projects/parlor/composeApp/build.gradle.kts": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py": "172c4f3162dc6a6b20e912e6551eaca9f33a32ba3d0d6f150ad8becfd30865ea",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-build-helper/build_and_retain_apks.py": "1b22b01f1b78534539dbf1491208cf25df5692a32e16f3fc3155573d293dd0d8",
+    "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/release": "7befd86565133fbebfa54138e55ec5b03bb59649ea5dda35d9f9b95265226756",
+    "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/bin/java": "04005388bac0c272ea914210ca519ce94b2f873ea3962b9874a6859f74d7f279",
+    "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/bin/keytool": "1ee2f76502dea0fbfcdf4a2b18526904228281e6b88933db2f09685e8e3621c5",
+    "/Users/abdelrahman/Library/Android/sdk/build-tools/36.0.0/apksigner": "b47549e373b895ce6ca620d0c7887e674d9615ffa837a86ac601dcfd04adb0f0",
+    "/Users/abdelrahman/Library/Android/sdk/build-tools/36.0.0/lib/apksigner.jar": "3716d9311e55d2b0918a2fd9d54ba9e406c5f6abeea700b287f11259bc163dec"
+  },
+  "cleanup_errors": [],
+  "finished_epoch": 1788778513.472435
+}

@@ -1,0 +1,19 @@
+[
+  {
+    "url": "https://android.googlesource.com/platform/packages/modules/adb/+/refs/heads/main/SERVICES.TXT?format=TEXT",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "url": "https://android.googlesource.com/platform/packages/modules/adb/+/refs/heads/main/adb.cpp?format=TEXT",
+    "accessed_at": "2026-09-07T05:03:02.704626+00:00",
+    "sha256": "1274bc59800964c3ff83c29a31133df121a809b62b8122caa91856396f3eeeb9",
+    "applicability": "official upstream main; not a source-to-binary proof for installed platform-tools37.0.0",
+    "excerpts": [
+      {
+        "from": 1273,
+        "to": 1299,
+        "text": "}\n\nHostRequestResult handle_host_request(std::string_view service, TransportType type,\n                                      const char* serial, TransportId transport_id, int reply_fd,\n                                      asocket* s) {\n    if (service == \"kill\") {\n        if (g_reject_kill_server) {\n            LOG(WARNING) << \"adb server ignoring kill-server\";\n            SendFail(reply_fd, \"kill-server rejected by remote server\");\n        } else {\n            fprintf(stderr, \"adb server killed by remote request\\n\");\n            SendOkay(reply_fd);\n\n            // Rely on process exit to close the socket for us.\n            exit(0);\n        }\n    }\n\n    VLOG(SERVICES) << \"handle_host_request(\" << service << \")\";\n\n    // Transport selection:\n    if (service.starts_with(\"transport\") || service.starts_with(\"tport:\")) {\n        TransportType type = kTransportAny;\n\n        std::string serial_storage;\n        bool legacy = true;\n"
+      }
+    ]
+  }
+]

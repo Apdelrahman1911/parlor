@@ -1,0 +1,442 @@
+{
+  "reviewer": "/root/release_fix_review",
+  "reviewed_at": "2026-09-07T13:08:37.713098+00:00",
+  "classification": "APPROVED \u2014 Runtime06 three-test APK03 smoke and scoped owned-worker/AVD cleanup evidence",
+  "scope": "Independent read-only verification of raw runtime descriptors, build/artifact/control/source binding, SDK preservation and owned-runtime cleanup; no build or runtime executed by this review.",
+  "review_checkout": {
+    "commit": "711dd4163f4afa97954f47eddc98fd1a4df0b4ae",
+    "tree": "e0b610b0ad32bb7f0be4a2aac822042a8bcf1f02",
+    "status": " M .github/workflows/production-verification.yml\n M game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/MafiaKillVoteScreen.kt\n M game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/vote/VoteCastScreen.kt\n?? AGENTS.md\n?? audit-runs/\n?? design/\n?? docs/PARLOR_PROJECT_HANDOFF.md\n?? game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/MafiaTallyLayoutTest.kt\n?? game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupReadOnlyCountLayoutTest.kt\n?? project-code-audit/\n?? remediation-runs/\n?? scripts/ci/\n?? scripts/release/tests/test_ci_verification_hygiene.py\n"
+  },
+  "artifact_source": {
+    "commit": "f5ea8045bd903c255041b198f54aca67e893612f",
+    "tree": "b109c8ec6ec579b9197f449b36bda2c39105a652",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "87f96b69dd8b62a3e3bbf2b22355220850325fe420097e356497ce0b5aa580e8"
+  },
+  "artifact_source_verification": {
+    "tracked_file_blob_hashes_independently_compared": 683,
+    "tracked_mismatches": [],
+    "additional_manifest_paths": 44,
+    "additional_manifest_scope": "AGENTS.md, project handoff and scripts/verification/ios-readiness/*; not silently excluded from the complete source hash",
+    "source_manifest_rows": 727,
+    "source_stability": "APK outer before/after source identities equal; recomputed complete manifest SHA matches; stage fields match outer",
+    "warning": "f5ea-built APKs, not current711dd or dirtycc167 UI. Runtime wrapper source identity is a separate orchestration identity, not a rebuild."
+  },
+  "runtime_orchestration_source": {
+    "commit": "cc1679788fa7dc0c5c1a106aebee6d9b50531d49",
+    "tree": "0b60954a3fd9984818b058ae72374cb4cffbb526",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "M .github/workflows/production-verification.yml\n M game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/components/MafiaCover.kt",
+    "diff_sha256": "e0cda87bab7dd50923442e0e6ee81c92e02e142a67a3849712bb88905b695b91",
+    "source_manifest_sha256": "c5fcaf8a166ca7f537e0d5af0fbe628d7de656c6d117415e59b60fff292d66ac"
+  },
+  "artifacts": [
+    {
+      "variant": "releaseAndroidTest",
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-03/release-androidTest.apk",
+      "sha256": "754daf608683abb2c32988287a19d0438c86699fcbfc259a62e117138ec9893d",
+      "bytes": 14008,
+      "signer_sha256": "a3e32e98880dd405b9859b064276284e266db6e7049a0f420c8b4dd526f0aa58",
+      "application_id": "com.parlor.app.test",
+      "metadata_sha256": "4226f0778f7e7c2912870981c0327b859e5bb73a3d23813fd5b312018e02f882",
+      "review_rehash_matches": true
+    },
+    {
+      "variant": "release",
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-03/release.apk",
+      "sha256": "561b269c883de7be33efda9eb7b2dcabb412ce2706ffd38ad79f3f04c2c5a8cb",
+      "bytes": 4835301,
+      "signer_sha256": "a3e32e98880dd405b9859b064276284e266db6e7049a0f420c8b4dd526f0aa58",
+      "application_id": "com.parlor.app",
+      "metadata_sha256": "e060375f09cc26d89f08e9651ffa193f72aa57b10800ac9c9cc7b9f708b2484e",
+      "review_rehash_matches": true
+    }
+  ],
+  "signature_scope": "Existing APK03 apksigner logs independently hash-bound: one disposable RSA2048 synthetic signer, v2/v3 verified, fingerprint a3e32e98880dd405b9859b064276284e266db6e7049a0f420c8b4dd526f0aa58. No signing commands rerun; not Store signing or upload-certificate approval.",
+  "instrumentation": {
+    "executed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "class_invocations": 2,
+    "descriptors": [
+      {
+        "log": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-runtime-06/022-tests.log",
+        "sha256": "6f3c017cafc42c8008abc25ffc681e6f5a9bcbda8e9448a682c2b5cb7d0fd6ba",
+        "events": [
+          {
+            "class": "com.parlor.app.MainActivityColdStartTest",
+            "method": "testColdStartDisplaysContentWhileSettingsIoIsBlocked",
+            "code": 1,
+            "numtests": 1,
+            "current": 1
+          },
+          {
+            "class": "com.parlor.app.MainActivityColdStartTest",
+            "method": "testColdStartDisplaysContentWhileSettingsIoIsBlocked",
+            "code": 0,
+            "numtests": 1,
+            "current": 1
+          }
+        ],
+        "final_codes": [
+          -1
+        ],
+        "result": "PASS"
+      },
+      {
+        "log": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-runtime-06/024-tests.log",
+        "sha256": "a16e6ade5e6664563063c3e4744e9a84d1f2638827bcf0d0997e9e98b571930f",
+        "events": [
+          {
+            "class": "com.parlor.app.ReleaseRuntimeSmokeTest",
+            "method": "testReleaseBuildCanAcquireDeclaredMulticastLock",
+            "code": 1,
+            "numtests": 2,
+            "current": 1
+          },
+          {
+            "class": "com.parlor.app.ReleaseRuntimeSmokeTest",
+            "method": "testReleaseBuildCanAcquireDeclaredMulticastLock",
+            "code": 0,
+            "numtests": 2,
+            "current": 1
+          },
+          {
+            "class": "com.parlor.app.ReleaseRuntimeSmokeTest",
+            "method": "testReleaseBuildLaunchesCanonicalActivityWithoutDebuggableFlag",
+            "code": 1,
+            "numtests": 2,
+            "current": 2
+          },
+          {
+            "class": "com.parlor.app.ReleaseRuntimeSmokeTest",
+            "method": "testReleaseBuildLaunchesCanonicalActivityWithoutDebuggableFlag",
+            "code": 0,
+            "numtests": 2,
+            "current": 2
+          }
+        ],
+        "final_codes": [
+          -1
+        ],
+        "result": "PASS"
+      }
+    ],
+    "actual_test_meaning": [
+      "Compose content has visible bounds and receives draw while a real SharedPreferences FIFO disk read remains blocked; FIFO failure propagates and fixture finalizer runs.",
+      "Canonical com.parlor.app MainActivity launches without FLAG_DEBUGGABLE; activity remains alive through idle.",
+      "Declared CHANGE_WIFI_MULTICAST_STATE permission and real platform MulticastLock acquire/isHeld/release; not packet delivery or LAN-session verification."
+    ],
+    "discovery": "Platform InstrumentationTestRunner/JUnit3 public test* methods, not a Jupiter or Gradle XML count. Outer test-receipts.json is intentionally empty; actual execution evidence is the raw Android logs."
+  },
+  "device": {
+    "kind": "owned API35 ARM64 emulator",
+    "attestation": {
+      "ro.product.cpu.abi": "arm64-v8a",
+      "ro.build.version.sdk": "35",
+      "ro.kernel.qemu": "1",
+      "ro.boot.qemu.avd_name": "parlor_arm64_d2d5737e6b4c43878c0bbd77d93ac3c6",
+      "ro.kernel.qemu.avd_name": ""
+    },
+    "avd": "Fresh random owned profile only; five attested properties checked before installing or destructive settings fixture",
+    "adb_version": "37.0.0-14910828 (bridge1.0.41)",
+    "emulator_version": "36.6.11.0 build15507667",
+    "image": "API35 Google APIs ARM64 revision9",
+    "host_from_adb_log": "Darwin25.2.0 arm64",
+    "requested_ram_mb": 2048,
+    "actual_emulator_reported_ram_mb": 2560,
+    "ram_evidence": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-runtime-06/emulator.log:5"
+  },
+  "control_binding": {
+    "files": [
+      {
+        "path": "owned_arm64_smoke_sdk.py",
+        "sha256": "4d782120c55efaf0a096241c7e34304ab616da0c1b613f70fd708e625b244eb6"
+      },
+      {
+        "path": "darwin_owned_processes.py",
+        "sha256": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378"
+      },
+      {
+        "path": "avd-sdk-root-01/owned_sdk_image.py",
+        "sha256": "82490e1769445cbb1f4e95ab41007dcc47473a243f78224c1042e2743f8b47a0"
+      }
+    ],
+    "sha256": "569a088d62d3c4b5f63b559e737f792afdabbfccb8764deb39df64884b07dacb",
+    "current_control_files_match": true
+  },
+  "worker_cleanup": {
+    "direct_launches": 27,
+    "all_retired": true,
+    "token_signal_events": 29,
+    "unique_signalled_lifetimes": 4,
+    "all_signals": "SIGTERM15; kernel audit-token bound, with PID/start/generation recorded. No SIGKILL/numeric group/global kill fallback in reviewed control.",
+    "lifetime_groups": [
+      {
+        "pid": 28098,
+        "started": [
+          1788785519,
+          272521
+        ],
+        "generation": 1014400,
+        "command": "/Users/abdelrahman/Library/Android/sdk/emulator/qemu/darwin-aarch64/qemu-system-aarch64-headless",
+        "signal_events": 16
+      },
+      {
+        "pid": 28110,
+        "started": [
+          1788785520,
+          262713
+        ],
+        "generation": 1014421,
+        "command": "/Users/abdelrahman/Library/Android/sdk/emulator/netsimd",
+        "signal_events": 11
+      },
+      {
+        "pid": 28267,
+        "started": [
+          1788785549,
+          347704
+        ],
+        "generation": 1014753,
+        "command": "/Users/abdelrahman/Library/Android/sdk/emulator/emulator",
+        "signal_events": 1
+      },
+      {
+        "pid": 28097,
+        "started": [
+          1788785519,
+          164887
+        ],
+        "generation": 1014395,
+        "command": "/Users/abdelrahman/Library/Android/sdk/platform-tools/adb",
+        "signal_events": 1
+      }
+    ],
+    "nonzero_direct_exits": [
+      {
+        "pid": 28097,
+        "label": "adb-server",
+        "retired": true,
+        "exit_code": -15
+      },
+      {
+        "pid": 28102,
+        "label": "boot",
+        "retired": true,
+        "exit_code": 1
+      }
+    ],
+    "nonzero_explanation": "The initial boot poll correctly reports unavailable device before boot; later boot equals1. Owned adb-server exits\u221215 from cleanup. Neither is a skipped/failed test.",
+    "cleanup_errors": [],
+    "shutdown_order": "Native owner shutdown/retirement before private-socket host:kill and bounded liveness check.",
+    "private_socket_shutdown_acknowledged": false,
+    "ack_explanation": "False is correct for the already absent/inactive endpoint after worker retirement; no successful acknowledgement fabricated. Subsequent liveness check succeeded by source path and empty cleanup errors.",
+    "temporary_root": "/private/tmp/parlor-arm64-hrsn6o_s",
+    "temporary_root_absent_on_review": true,
+    "limitations": "Historical process evidence plus reviewed native owner; no current PID probing/signal/ADB performed by reviewer. This does not prove every arbitrary transient OS service was captured."
+  },
+  "sdk_preservation": {
+    "observed_metadata_files": 6,
+    "before_after_cli_final_and_review_equal": true,
+    "comparison": "SHA256 plus device/inode/size/mtime/ctime for the six selected public SDK metadata files; current read-only observations also matched.",
+    "clone_selected_entries": 447,
+    "clone_selected_logical_bytes": 5254594975,
+    "clone_regular_files": 382,
+    "receipt_file_digest_checks": "Both complete package-list hashes recomputed; file-size sums match; source-and-clone file hashing and bounded read-only source descriptor guards inspected.",
+    "native_clone_probe": {
+      "status": "PASS",
+      "method": "real fclonefileat",
+      "independent_inodes": true,
+      "clone_mutation_preserved_source": true,
+      "source_sha256": "6fd92cca4f2a24a028c2c6ab72315bd4b2f78cbd7c2b3fdc97474a3dbc79f5cf"
+    },
+    "limitation": "Logical CoW bytes are not physical disk reclaimed. No5GB global-image rehash performed by this review, and no global SDK write prohibition claim beyond source/recorded observations."
+  },
+  "outer_cleanup": {
+    "runtime_exit_code": 0,
+    "stop_exit_code": 0,
+    "stop_log": "No Gradle daemons are running.",
+    "runtime_outputs_before": [],
+    "remaining_outputs": [],
+    "remaining_owned_workers": [],
+    "cleanup_errors": [],
+    "source_changed": false,
+    "runner_changed": false,
+    "apk_build_removed_output_directories": [
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build",
+      "build",
+      "composeApp/build",
+      "build-logic/convention/build"
+    ],
+    "artifacts_temporarily_retained": "APK03 app/test binaries remain solely through this final hash inspection. Parent notified that exact staged APKs can now be deleted once no later inspection needs them. This reviewer does not delete root-owned artifacts."
+  },
+  "shared_temp_exclusion": {
+    "classification": "UNVERIFIED SHARED-PATH WRITE/CLEANUP SCOPE \u2014 not an application defect",
+    "evidence": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-runtime-06/emulator.log:28",
+    "path": "/tmp/android-abdelrahman/emu-crash-36.6.11.db",
+    "metadata_only": {
+      "present": true,
+      "type": "directory",
+      "device": 16777232,
+      "inode": 83358392,
+      "uid": 501,
+      "mtime_ns": 1788751292926519299,
+      "ctime_ns": 1788751292926519299
+    },
+    "disposition": "Directory metadata predates Runtime06. Shared diagnostic store is outside task-owned TMPDIR and has no per-cycle ownership claim; contents not opened, enumerated or deleted. Cannot claim all emulator side outputs cleaned or attribute new contents to this run. Preserve it; research explicit owned crash-output configuration before future runner reuse."
+  },
+  "counter_evidence": [
+    "Original Runtime05 remains overallFAIL: live owned adb socket despite all three tests passing. Its receipt was not altered or reclassified.",
+    "Early connect refused/device-not-found and empty boot polls are visible; successful later boot/attestation precede installations/tests.",
+    "CLI20 SDK XMLv4 warning remains in raw log; successful authentic package selection, clone path, installed image revision and unchanged selected SDK metadata are independently bound. No warning hidden.",
+    "Emulator legacy adb announcement cannot connect to reserved nonlistening private TCP port; internal emulator-5554 settings commands fail, while approved explicit127.0.0.1:5555/private socket operations succeed. This proves only observed tests, not all emulator auxiliary commands.",
+    "MulticastLock success is not peer discovery/connection/state synchronization proof.",
+    "Outer runtime receipt uses cc167 with two pre-existing modifications, but APKs bind f5ea and full727-file manifest; no current UI claims."
+  ],
+  "not_evidence_for": [
+    "Current post-f5ea UI or exact current checkout runtime",
+    "Physical Android/iOS devices or physical P2pKit LAN",
+    "Linux x86/KVM Gradle-managed devices",
+    "All user journeys, accessibility, screen layouts or session recovery",
+    "Store signing, identity approval, publication, legal checks",
+    "Global absence of all temporary artifacts or OS services"
+  ],
+  "source_reading": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/owned_arm64_smoke_sdk.py",
+      "sha256": "4d782120c55efaf0a096241c7e34304ab616da0c1b613f70fd708e625b244eb6",
+      "read_line_ranges": [
+        [
+          1,
+          579
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py",
+      "sha256": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378",
+      "read_line_ranges": [
+        [
+          1,
+          368
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/owned_sdk_image.py",
+      "sha256": "82490e1769445cbb1f4e95ab41007dcc47473a243f78224c1042e2743f8b47a0",
+      "read_line_ranges": [
+        [
+          1,
+          269
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "sha256": "172c4f3162dc6a6b20e912e6551eaca9f33a32ba3d0d6f150ad8becfd30865ea",
+      "read_line_ranges": [
+        [
+          94,
+          131
+        ],
+        [
+          232,
+          284
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/androidInstrumentedTest/kotlin/com/parlor/app/MainActivityColdStartTest.kt",
+      "git_version": "f5ea8045bd903c255041b198f54aca67e893612f",
+      "sha256": "14055d93940b37c4f1a03b91d0df87b8042b146cdd58a9e061da752d375094f9",
+      "read_line_ranges": [
+        [
+          1,
+          188
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/androidInstrumentedTest/java/com/parlor/app/ReleaseRuntimeSmokeTest.java",
+      "git_version": "f5ea8045bd903c255041b198f54aca67e893612f",
+      "sha256": "bfa1c7a05d6310d467ebaa993225f72a80a8ed9ea0791cc67640d5810a248a13",
+      "read_line_ranges": [
+        [
+          1,
+          62
+        ]
+      ]
+    }
+  ],
+  "evidence": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-runtime-06/run.json",
+      "sha256": "421cb91f09a40f50986d9dc131f4cdbe0563a445ab6f5cf31744e4dcdce18bcb"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-runtime-06/022-tests.log",
+      "sha256": "6f3c017cafc42c8008abc25ffc681e6f5a9bcbda8e9448a682c2b5cb7d0fd6ba"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-runtime-06/024-tests.log",
+      "sha256": "a16e6ade5e6664563063c3e4744e9a84d1f2638827bcf0d0997e9e98b571930f"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-runtime-06/emulator.log",
+      "sha256": "0a42db8df88010c10a507332eff1a239b7a41dbe3e52c1665e59a8c71db87015"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-runtime-06/adb-server.log",
+      "sha256": "2561593ad8f47b2ea1f68701fa81b833ee5ae9acbf8b09a0f8ddccea53b69b83"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-arm64-runtime-06/receipt.json",
+      "sha256": "91b58a3306b84cb6e02373bb456c1524b6e8a08a5ff932d31d00d958e83b6eb0"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-arm64-runtime-06/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-arm64-apks-03/receipt.json",
+      "sha256": "225551dfea7026d8d6af3c26542341d1a22d24604e16b1ea24f86031f7334108"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-03/receipt.json",
+      "sha256": "f8ef0b228a53b4a8e7bd0605813e08b9f22fe6a64629b5bab172c80151da5234"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-arm64-apks-03/android-apk-helper-logs/assemble-release-apks.log",
+      "sha256": "15f9ada2f880fec114e409b6abdfc89d260ed3afeafb42560f7764370bbbd477"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-arm64-apks-03/android-apk-helper-logs/verify-release.log",
+      "sha256": "aea70cc711b6ca8dd48bd50e2aea1edf0c5888a209290749ab7ed90ad94507b5"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-arm64-apks-03/android-apk-helper-logs/verify-releaseAndroidTest.log",
+      "sha256": "aea70cc711b6ca8dd48bd50e2aea1edf0c5888a209290749ab7ed90ad94507b5"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-runtime-05/run.json",
+      "sha256": "57c12bbce3b7b625b1765098af738803c75257e46bc83ea60d5c15af91b245a1"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/release-android-shutdown-order-independent-review-01.json",
+      "sha256": "308afe3af0e83a19139502e00d1f5cb5e445ef22824cc0dc0a1e972fe4828f41"
+    }
+  ],
+  "review_hygiene": "Only synchronous read-only commands and additive review JSON. No Gradle/Xcode/ADB/emulator/test/app/server launched, no active controls or application source modified, no existing file removed, no shared path opened. A compact metadata summarizer initially assumed an integer was a list and raised TypeError; corrected read-only parser completed. This was not a runtime test or a project validation failure."
+}

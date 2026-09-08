@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "reviewed_at": "2026-09-07T04:55:07.428875+00:00",
+  "conclusion": "APPROVED FOR BYTE-IDENTICAL REUSE WITH CURRENT ROOT BUILD LANE",
+  "source_files": [
+    {
+      "source": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/owned_ios_simulator.py",
+      "proposed_copy": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/owned_ios_simulator.py",
+      "sha256": "184684f4cdba8733217a124b53552e4f73f234618e82ade9d8ead566fb748712",
+      "reviewed_ranges": [
+        [
+          1,
+          137
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "source": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/owned_ios_simulator.init.gradle",
+      "proposed_copy": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/owned_ios_simulator.init.gradle",
+      "sha256": "e857bd0d8fbc18199ee1fbaef7e01ae325785397b5e23f82186462f9a33c3b34",
+      "reviewed_ranges": [
+        [
+          1,
+          68
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    }
+  ],
+  "context": {
+    "root": "/Users/abdelrahman/Projects/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "head": "b4f0ece464aa44819044dd78d2f2fd137d88c91d",
+    "lane_sha256": "172c4f3162dc6a6b20e912e6551eaca9f33a32ba3d0d6f150ad8becfd30865ea",
+    "lane_independent_review": "reviews/build-lane-group-retirement-independent-review.json",
+    "applicability": "KGP2.4.10, Gradle8.13, JDK21, AppleSilicon macOS with iOS26.5/iPhone17Pro runtime. Root allTests/productionIosSimulatorRuntimeTests native unit-test runner, NOT an app-host/Xcode workflow."
+  },
+  "source_assessment": [
+    "OwnedIosSimulator captures preexisting UUID inventory, chooses a fresh UUID4-derived exact name, and allocates only named iOS26.5/iPhone17Pro simulator. It never selects an existing device or starts Simulator.app; no wildcard, erase, broad device-set deletion or physical-device command.",
+    "creation_attempted is set before simctl create. The same exact-name/runtime/not-preexisting inventory recovery is used after creation and in cleanup, rather than trusting stdout after timeout. Ambiguous identity or changed UUID fails closed. UUID syntax checked before boot/shutdown/delete.",
+    "Every invoked command has bounded timeout, exit code and timestamps. Inventory logs that can contain unrelated device names are removed in finally, including command failure paths. Receipt retains only synthetic owned identifiers/counts. Environment receives selected UUID only after successful explicit bootstatus.",
+    "Cleanup attempts exact recovery, shutdown and exact UUID deletion; verifies final absence and preexisting UUID preservation and scans residual exactUUID processes. Failures accumulate and raise; shared services or unrelated workers are not signalled. Root lane additionally owns mandatory immediate Gradle-stop, PID/start process cleanup and exact generated module outputs.",
+    "Init file validates UUID and exact repository path, class ancestry and Property APIs. It applies only iosSimulatorArm64Test, sets exact UUID/standalone=false, rejects any other enabled simulator target or debugger mode, disallows property changes and requires nonempty executable simulator task selection. Disabled architecture tasks are logged without evaluating default-device providers; not enabled by the fixture.",
+    "Official exact-version KGP source confirms standalone=false omits --standalone from xcrun simctl spawn, leaving boot/shutdown to caller; default device and standalone providers finalize on read. Current ARM64-host factory sets iosX64 tasks disabled and ARM64 simulator enabled. Init configures before provider reads and seals before execution.",
+    "Root allTests explicitly aggregates every registered module allTests; productionIosSimulatorRuntimeTests aggregates every named ARM64 simulator runtime task. Module convention createsiosX64,iosArm64,iosSimulatorArm64. No excluded physical P2P test is enabled or made to appear as device evidence by these controls.",
+    "Current root lane binds helper+init hashes in runner_before/after when --ios-simulator selected, passes init only to runtime Gradle invocation (never --stop), stops Gradle before simulator cleanup and preserves compact XML/evidence before exact outputs removal. No Xcode/ibtool workflow selected; secondary FIFO app-host controls not bypassed because this lane does not use that workflow."
+  ],
+  "caller_ranges": {
+    "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py": [
+      [
+        1,
+        291
+      ]
+    ],
+    "build.gradle.kts": [
+      [
+        1,
+        70
+      ],
+      [
+        171,
+        207
+      ]
+    ],
+    "build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpLibraryConventionPlugin.kt": [
+      [
+        1,
+        72
+      ]
+    ]
+  },
+  "authoritative_references": [
+    {
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin/v2.4.10/libraries/tools/kotlin-gradle-plugin/src/common/kotlin/org/jetbrains/kotlin/gradle/targets/native/tasks/KotlinNativeTest.kt",
+      "access_date": "2026-09-07",
+      "http_status": 200,
+      "response_sha256": "f3538844f82046975c2036c821a5c942debc01109e7294e16aa4ba1b1999df72",
+      "local_artifact": "/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin/2.4.10/687bc5c96eeca0e5cfc2c4176e57f8ea7a7cac9f/kotlin-gradle-plugin-2.4.10-gradle813-sources.jar",
+      "entry": "org/jetbrains/kotlin/gradle/targets/native/tasks/KotlinNativeTest.kt",
+      "online_source_matches_pinned_cached_source": true,
+      "reviewed_ranges": [
+        [
+          240,
+          310
+        ]
+      ]
+    },
+    {
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin/v2.4.10/libraries/tools/kotlin-gradle-plugin/src/common/kotlin/org/jetbrains/kotlin/gradle/targets/native/KotlinNativeTestRunFactories.kt",
+      "access_date": "2026-09-07",
+      "http_status": 200,
+      "response_sha256": "b4443aa960e98012841671c9a741455c61629952bb48c1977ecac2ffed01f324",
+      "local_artifact": "/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin/2.4.10/687bc5c96eeca0e5cfc2c4176e57f8ea7a7cac9f/kotlin-gradle-plugin-2.4.10-gradle813-sources.jar",
+      "entry": "org/jetbrains/kotlin/gradle/targets/native/KotlinNativeTestRunFactories.kt",
+      "online_source_matches_pinned_cached_source": true,
+      "reviewed_ranges": [
+        [
+          46,
+          105
+        ]
+      ]
+    }
+  ],
+  "verification_limits": [
+    "No Gradle, simctl, simulator or app execution by this reviewer. Source/API approval is not runtime PASS.",
+    "Root must verify intended copied bytes exactly match listed hashes and retain current runner hash before execution.",
+    "Each actual cycle must prove AUDIT_SIMULATOR_BOUND exact UUIDs and unskipped test counts from logs/XML, plus stop/cleanup receipts and final device absence. KGP host-disabled/skipped targets cannot count as executed.",
+    "Actual device service timeout/cancellation/races are not established by source review alone; any failed recovery/cleanup remains failure and must be inspected, not relabeled.",
+    "Native unit-test binary is not signed iOS app, real device, physical LAN, Store readiness or historical launch-crash evidence. Current Xcode26.5 is not pinned Store-qualified26.3."
+  ],
+  "reviewer_safety": "No production/control files modified. No builds/tests/simulators/server/background workers started. Only source/official-URL/cache-source reads and this evidence file; Python-B avoids generated cache. Other task outputs/processes preserved."
+}

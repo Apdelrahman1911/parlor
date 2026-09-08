@@ -1,0 +1,357 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-08T06:07:09.568363+00:00",
+  "author": "/root/native_fix_review",
+  "kind": "SOURCE_CORRECTION_BASELINE_NO_EXECUTION",
+  "head": "8b9e3b0cdfdab82e7cff3ad8135d0eae9a0b8ca3",
+  "tree": "c1e92b5e00ab64a293c4d7f9c9b5e2b85887be88",
+  "before": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py",
+      "sha256": "95c9f53c93a6d1ecf727d632741ec3f27133a09c94947b184e9e1dd89aa5cab7",
+      "bytes": 16924,
+      "archive": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-sample-star-vmmap-failure-01/before/external_image_provenance.py.original.gz",
+      "archive_sha256": "eef66307cf2ca2db034a1bb6da46d78e35161ab82a1381c2b4777b796bb73753"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_diagnostics.py",
+      "sha256": "53d3729d2aa85053078be6335144cea558a096e1ee116af1f84da543e46d6738",
+      "bytes": 12035,
+      "archive": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-sample-star-vmmap-failure-01/before/external_image_diagnostics.py.original.gz",
+      "archive_sha256": "4e7b8e3b57db0df3d25487d66fff848da275793d2965f5d5efb0c34825bb3714"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "sha256": "24b1b618381423ff4c6da70c90c215b6cc2c418a154ca32374aebf14a780efad",
+      "bytes": 50114,
+      "archive": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-sample-star-vmmap-failure-01/before/run_normal_ios_launch.py.original.gz",
+      "archive_sha256": "6a107347ea5ab3e3e09a7ff5a2ded71863d01c69709a77cdc562574a94903f93"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+      "sha256": "2270fde48cad1be099a1bd8fbfd136314309522dd7a4fd9196c14b8dc024e240",
+      "bytes": 2837,
+      "archive": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-sample-star-vmmap-failure-01/before/run_control_tests.py.original.gz",
+      "archive_sha256": "b505a0f031c6bc7732460d62e2f9e51cf8a1b685ceaaa3cf01b25a887334f8e4"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+      "sha256": "2408d25cbab8e19c63ca6c022a57eff6278063e754a0d04ee6b34b4285b19dc4",
+      "bytes": 14754,
+      "archive": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-sample-star-vmmap-failure-01/before/README.md.original.gz",
+      "archive_sha256": "34181a77518edd8a05b1efcbb48a926011281aa5913422b774c03891937012ed"
+    }
+  ],
+  "original_tests": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_header_diagnostics.py",
+      "sha256": "e2d835d4c7919c1448eebc51079d5f0673e71b3a1a8998ed97b616325e5bd06a",
+      "declared_ids": [
+        "test_header_diagnostics.HeaderDiagnosticTests.test_exact_headers_are_only_diagnostics_and_do_not_retain_paths_or_stacks",
+        "test_header_diagnostics.HeaderDiagnosticTests.test_public_redaction_shapes_remain_rejected_by_original_header_validator",
+        "test_header_diagnostics.HeaderDiagnosticTests.test_unknown_text_components_are_hashed_instead_of_disclosed",
+        "test_header_diagnostics.HeaderDiagnosticTests.test_duplicate_missing_and_wrong_pid_headers_do_not_become_success",
+        "test_header_diagnostics.HeaderDiagnosticTests.test_diagnostic_input_headers_and_component_counts_remain_bounded",
+        "test_header_diagnostics.HeaderDiagnosticTests.test_runner_keeps_parser_failure_and_only_preserves_sanitized_receipt",
+        "test_header_diagnostics.HeaderDiagnosticTests.test_diagnostic_write_failure_cannot_replace_or_hide_original_failure",
+        "test_header_diagnostics.HeaderDiagnosticTests.test_successful_parser_does_not_emit_or_consume_diagnostics"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_image_diagnostic_orchestration.py",
+      "sha256": "133fbc769d331581d7ad6e1154d5d1c6bf35bf9a853e28fc56bafa25049e5a8d",
+      "declared_ids": [
+        "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_original_real_unbound_sample_rejection_gathers_sibling_diagnostics_not_provenance",
+        "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_successful_sample_and_vmmap_have_unchanged_provenance_and_no_diagnostics",
+        "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_successful_sample_vmmap_rejection_has_successful_sample_interval_reference",
+        "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_successful_sample_command_is_required_before_any_sibling_invocation",
+        "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_sample_parser_cancellation_never_becomes_optional_diagnostic_work",
+        "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_post_sample_changed_lifetime_never_reaches_parser_or_vmmap",
+        "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_failure_only_preflight_detects_exit_reuse_and_exec_before_invocation",
+        "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_failure_only_postflight_failure_preserves_primary_and_does_not_collect_unattested_maps",
+        "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_failure_only_command_error_timeout_and_interruption_keep_primary_and_postflight",
+        "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_failure_only_command_and_postflight_errors_are_both_recorded",
+        "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_diagnostic_collection_failure_preserves_primary_without_serializing_exception_text",
+        "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_diagnostic_write_failure_keeps_original_exception_object_and_no_provenance",
+        "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_interrupting_sample_diagnostics_preserves_primary_and_prevents_vmmap",
+        "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_interrupting_vmmap_diagnostics_preserves_primary_and_cleanup",
+        "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_failure_only_empty_output_is_not_collected_or_credited",
+        "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_overbudget_watch_does_not_start_sibling_after_sample_failure",
+        "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_run_keeps_original_failure_and_all_finalization_even_when_diagnostics_succeed",
+        "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_original_exception_contract_kills_removing_post_diagnostic_reraise"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_image_diagnostics.py",
+      "sha256": "80f4ca531634bcb377d29803e58f5a99522e74e10402ce8221448b9d3ef3ab2c",
+      "declared_ids": [
+        "test_image_diagnostics.ImageDiagnosticTests.test_exact_rows_report_only_inventory_indexes_and_equality_not_authority",
+        "test_image_diagnostics.ImageDiagnosticTests.test_user_only_existing_policy_remains_explicit_and_default_stays_exact",
+        "test_image_diagnostics.ImageDiagnosticTests.test_foreign_user_container_and_copied_origin_never_become_bound",
+        "test_image_diagnostics.ImageDiagnosticTests.test_unknown_components_are_hashed_and_known_component_indexes_are_exact",
+        "test_image_diagnostics.ImageDiagnosticTests.test_unknown_uuid_never_escapes_and_does_not_match_known_inventory",
+        "test_image_diagnostics.ImageDiagnosticTests.test_malformed_uuid_address_and_owned_trailing_text_are_diagnostic_not_repaired",
+        "test_image_diagnostics.ImageDiagnosticTests.test_path_redaction_angle_markers_cannot_corrupt_recognized_uuid_metadata",
+        "test_image_diagnostics.ImageDiagnosticTests.test_duplicate_raw_alias_rows_retain_both_candidates_without_deduplication",
+        "test_image_diagnostics.ImageDiagnosticTests.test_missing_or_duplicate_table_never_scans_other_sections",
+        "test_image_diagnostics.ImageDiagnosticTests.test_pre_table_owned_stack_ignored_post_table_malformed_owned_row_recorded",
+        "test_image_diagnostics.ImageDiagnosticTests.test_unrelated_rows_and_named_symbols_outside_relevant_image_paths_are_not_retained",
+        "test_image_diagnostics.ImageDiagnosticTests.test_zero_reversed_and_overwide_intervals_are_visible_but_still_rejected",
+        "test_image_diagnostics.ImageDiagnosticTests.test_copied_framework_uuid_relation_keeps_origins_and_different_bytes_distinct",
+        "test_image_diagnostics.ImageDiagnosticTests.test_vmmap_without_successful_sample_has_no_selected_or_uuid_claim",
+        "test_image_diagnostics.ImageDiagnosticTests.test_vmmap_compares_only_to_supplied_successful_sample_ranges",
+        "test_image_diagnostics.ImageDiagnosticTests.test_vmmap_unknown_missing_duplicate_and_malformed_text_rows_remain_rejected",
+        "test_image_diagnostics.ImageDiagnosticTests.test_vmmap_non_text_maps_and_unrelated_private_paths_are_excluded",
+        "test_image_diagnostics.ImageDiagnosticTests.test_input_tool_context_and_output_budgets_cannot_be_weakened",
+        "test_image_diagnostics.ImageDiagnosticTests.test_relevant_row_line_path_and_component_limits_are_explicit",
+        "test_image_diagnostics.ImageDiagnosticTests.test_repeated_known_components_cannot_amplify_diagnostic_memory_without_bound",
+        "test_image_diagnostics.ImageDiagnosticTests.test_literal_asterisk_temp_path_is_not_an_authorized_copy_or_derived_alias",
+        "test_image_diagnostics.ImageDiagnosticTests.test_changed_inventory_and_invalid_sample_references_are_not_trusted",
+        "test_image_diagnostics.ImageDiagnosticTests.test_collector_neither_mutates_inputs_nor_queries_files_processes_or_accounts",
+        "test_image_diagnostics.ImageDiagnosticTests.test_failure_only_contract_kills_provenance_true_mutation",
+        "test_image_diagnostics.ImageDiagnosticTests.test_privacy_contract_kills_unknown_component_plaintext_mutation"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+      "sha256": "af5c912dbc9655468d5d428b18f5a7c16d7b0f2fa421e14cf559ee674eaceb76",
+      "declared_ids": [
+        "test_normal_launch_controls.MarkerTests.test_eight_complete_trains_are_48_samples_not_48_tests",
+        "test_normal_launch_controls.MarkerTests.test_seven_launches_fail",
+        "test_normal_launch_controls.MarkerTests.test_ninth_attempt_fails_even_if_it_is_incomplete",
+        "test_normal_launch_controls.MarkerTests.test_duplicate_lifetime_fails",
+        "test_normal_launch_controls.MarkerTests.test_interleaved_trains_fail",
+        "test_normal_launch_controls.MarkerTests.test_out_of_order_or_repeated_sample_fails",
+        "test_normal_launch_controls.MarkerTests.test_final_sample_must_itself_reach_ten_seconds",
+        "test_normal_launch_controls.MarkerTests.test_complete_cannot_move_back_before_last_sample",
+        "test_normal_launch_controls.MarkerTests.test_boolean_duration_is_not_a_number",
+        "test_normal_launch_controls.MarkerTests.test_nonfinite_json_fails",
+        "test_normal_launch_controls.MarkerTests.test_duplicate_json_keys_fail",
+        "test_normal_launch_controls.MarkerTests.test_failing_foreground_home_alert_observations_fail",
+        "test_normal_launch_controls.MarkerTests.test_unrecognized_marker_field_fails",
+        "test_normal_launch_controls.MarkerTests.test_clock_regression_fails",
+        "test_normal_launch_controls.XCTestTests.test_actual_runs_not_aggregate_method_count_establish_eight",
+        "test_normal_launch_controls.XCTestTests.test_aggregate_without_actual_runs_fails",
+        "test_normal_launch_controls.XCTestTests.test_seventh_or_ninth_actual_run_fails",
+        "test_normal_launch_controls.XCTestTests.test_duplicate_run_hierarchy_fails",
+        "test_normal_launch_controls.XCTestTests.test_repeated_leaf_names_beneath_distinct_repetitions_are_valid",
+        "test_normal_launch_controls.XCTestTests.test_nested_actual_runs_cannot_inflate_count",
+        "test_normal_launch_controls.XCTestTests.test_wrong_selected_method_fails",
+        "test_normal_launch_controls.XCTestTests.test_additional_test_case_cannot_hide_in_summary",
+        "test_normal_launch_controls.XCTestTests.test_any_skip_failure_expected_failure_or_unknown_fails",
+        "test_normal_launch_controls.XCTestTests.test_aggregate_skip_even_with_passed_case_nodes_fails",
+        "test_normal_launch_controls.XCTestTests.test_wrong_device_architecture_platform_and_configuration_fail",
+        "test_normal_launch_controls.XCTestTests.test_too_short_actual_run_fails_even_with_good_markers",
+        "test_normal_launch_controls.XCTestTests.test_boolean_count_fails",
+        "test_normal_launch_controls.XCTestTests.test_unknown_result_structure_fails_closed",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_exact_public_launch_pid_is_required",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_exact_new_target_attestation",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_wrong_executable_uid_old_lifetime_or_preexisting_pid_fails",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_disappearance_reuse_and_token_change_fail",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_tool_images_and_addresses_bind_only_allowed_artifacts",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_wrong_tool_pid_or_executable_fails",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_missing_binary_images_is_not_disk_provenance",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_wrong_runtime_uuid_fails",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_unbound_compose_framework_cannot_be_silently_ignored",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_known_build_framework_remains_distinct_from_installed",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_copied_framework_uuid_must_match_embedded_but_signing_bytes_remain_distinct",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_duplicate_framework_or_image_fails",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_vmmap_without_all_text_mappings_fails",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_vmmap_must_map_same_load_address",
+        "test_normal_launch_controls.ExternalProvenanceTests.test_vmmap_mapping_cannot_exceed_sample_image_range",
+        "test_normal_launch_controls.CopiedSourceTests.test_only_ui_test_and_owned_phase_may_change",
+        "test_normal_launch_controls.CopiedSourceTests.test_app_instrumentation_is_rejected",
+        "test_normal_launch_controls.CopiedSourceTests.test_kotlin_instrumentation_is_rejected",
+        "test_normal_launch_controls.CopiedSourceTests.test_unregistered_addition_is_rejected",
+        "test_normal_launch_controls.CopiedSourceTests.test_missing_input_and_redirected_input_are_rejected",
+        "test_normal_launch_controls.CopiedSourceTests.test_ambiguous_or_wrong_shell_phase_is_rejected",
+        "test_normal_launch_controls.RunnerGuards.test_allocation_canonicalizes_parent_before_mkdtemp_and_retains_exact_identity",
+        "test_normal_launch_controls.RunnerGuards.test_deferred_interrupt_after_mkdtemp_keeps_finalizer_ownership",
+        "test_normal_launch_controls.RunnerGuards.test_allocation_receipt_failure_does_not_strand_owned_directory",
+        "test_normal_launch_controls.RunnerGuards.test_owner_constructor_failure_retains_preworker_cleanup_identity",
+        "test_normal_launch_controls.RunnerGuards.test_owned_name_failure_retains_preowner_cleanup_identity",
+        "test_normal_launch_controls.RunnerGuards.test_mkdtemp_failure_has_no_allocation_or_cleanup_target",
+        "test_normal_launch_controls.RunnerGuards.test_existing_allocation_cannot_be_replaced",
+        "test_normal_launch_controls.RunnerGuards.test_fixed_test_arguments_have_no_retry_or_parallel_escape",
+        "test_normal_launch_controls.RunnerGuards.test_environment_drops_probes_loader_credentials_and_foreign_gradle_options",
+        "test_normal_launch_controls.RunnerGuards.test_adhoc_is_explicit_and_does_not_inherit_a_real_identity",
+        "test_normal_launch_controls.RunnerGuards.test_failed_xcode_attempt_immediately_stops_gradle",
+        "test_normal_launch_controls.RunnerGuards.test_notices_check_built_and_installed_apps_using_frozen_copy",
+        "test_normal_launch_controls.RunnerGuards.test_failed_notice_verifier_cannot_pass_package_gate",
+        "test_normal_launch_controls.RunnerGuards.test_source_only_or_failed_notice_receipt_is_not_package_evidence",
+        "test_normal_launch_controls.RunnerGuards.test_unexecuted_notice_verification_cannot_be_overall_pass",
+        "test_normal_launch_controls.RunnerGuards.test_interrupted_xcode_attempt_immediately_stops_gradle",
+        "test_normal_launch_controls.RunnerGuards.test_timed_out_xcode_attempt_immediately_stops_gradle",
+        "test_normal_launch_controls.RunnerGuards.test_finalization_removes_only_exact_task_allocation",
+        "test_normal_launch_controls.RunnerGuards.test_failed_gradle_stop_does_not_skip_device_workers_and_file_cleanup",
+        "test_normal_launch_controls.RunnerGuards.test_unknown_holders_preserve_allocation_and_fail_cleanup",
+        "test_normal_launch_controls.RunnerGuards.test_secondary_path_attestation_failure_is_not_cleanup_success",
+        "test_normal_launch_controls.RunnerGuards.test_cache_link_cleanup_does_not_remove_dependency_cache",
+        "test_normal_launch_controls.RunnerGuards.test_changed_cache_link_preserves_allocation",
+        "test_normal_launch_controls.RunnerGuards.test_replaced_allocation_inode_refuses_removal",
+        "test_normal_launch_controls.RunnerGuards.test_source_drift_invalidates_overall_result",
+        "test_normal_launch_controls.RunnerGuards.test_control_drift_invalidates_overall_result",
+        "test_normal_launch_controls.RunnerGuards.test_preexisting_original_output_is_preserved_not_deleted",
+        "test_normal_launch_controls.RunnerGuards.test_oversized_watch_file_is_rejected",
+        "test_normal_launch_controls.RunnerGuards.test_failed_observation_releases_watch_before_final_shutdown"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_owned_tool_paths.py",
+      "sha256": "f310d2af99449e4d8570dcc2eba8db4f1cb99c44574eeb1bfc32e447bcff6b58",
+      "declared_ids": [
+        "test_owned_tool_paths.OwnedToolPathTests.test_default_remains_exact_and_rejects_user_only_presentation",
+        "test_owned_tool_paths.OwnedToolPathTests.test_raw_and_user_only_headers_rows_and_mappings_have_explicit_proof_limits",
+        "test_owned_tool_paths.OwnedToolPathTests.test_every_other_path_component_and_username_spelling_stays_exact",
+        "test_owned_tool_paths.OwnedToolPathTests.test_wrong_missing_and_duplicate_headers_are_rejected_with_opt_in",
+        "test_owned_tool_paths.OwnedToolPathTests.test_foreign_account_device_or_installed_container_context_fails",
+        "test_owned_tool_paths.OwnedToolPathTests.test_second_installed_container_or_false_relative_path_is_rejected",
+        "test_owned_tool_paths.OwnedToolPathTests.test_build_and_derived_artifacts_do_not_gain_any_user_alias",
+        "test_owned_tool_paths.OwnedToolPathTests.test_account_home_outside_users_and_literal_user_account_are_raw_only",
+        "test_owned_tool_paths.OwnedToolPathTests.test_alias_collisions_cannot_redirect_an_existing_exact_artifact",
+        "test_owned_tool_paths.OwnedToolPathTests.test_noncanonical_and_control_character_paths_cannot_gain_aliases",
+        "test_owned_tool_paths.OwnedToolPathTests.test_mutated_inventory_and_selected_artifact_are_not_accepted",
+        "test_owned_tool_paths.OwnedToolPathTests.test_raw_plus_alias_sample_duplicates_are_one_canonical_image_and_fail",
+        "test_owned_tool_paths.OwnedToolPathTests.test_malformed_raw_and_alias_owned_rows_never_disappear",
+        "test_owned_tool_paths.OwnedToolPathTests.test_user_only_presentation_does_not_bypass_uuid_or_unbound_image_checks",
+        "test_owned_tool_paths.OwnedToolPathTests.test_vmmap_raw_alias_duplicates_unknown_paths_and_ranges_fail",
+        "test_owned_tool_paths.OwnedToolPathTests.test_copied_framework_keeps_distinct_bytes_and_must_have_an_exact_path",
+        "test_owned_tool_paths.DriverContextTests.test_elevated_uid_is_rejected_before_account_lookup",
+        "test_owned_tool_paths.DriverContextTests.test_os_account_database_not_environment_supplies_home",
+        "test_owned_tool_paths.DriverContextTests.test_foreign_account_or_kernel_record_is_rejected",
+        "test_owned_tool_paths.DriverContextTests.test_missing_account_database_entry_is_not_replaced_with_environment",
+        "test_owned_tool_paths.DriverContextTests.test_production_driver_opts_in_only_after_kernel_attestation_and_passes_one_policy"
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_xcode26_repetitions.py",
+      "sha256": "3e51f197304d1b7f16da4ee3269fcd48bf0fa6f0632d2dbc36ab395e68d5e66a",
+      "declared_ids": [
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_observed_one_method_eight_destination_leaf_repetitions_pass",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_leaf_layout_requires_the_observed_single_method_summary",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_direct_repetition_counts_must_match_both_queries",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_duplicate_repetition_ids_fail_despite_distinct_names",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_reordered_repetitions_fail",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_destination_execution_count_is_not_method_count",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_leaf_repetition_identity_is_required",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_independent_query_duration_must_agree",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_missing_tree_repetitions_cannot_be_replaced_with_details",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_nonpassing_repetition_or_summary_is_never_accepted",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_repetition_durations_are_bounded_and_not_boolean",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_extra_repetition_outside_selected_case_is_rejected",
+        "test_xcode26_repetitions.ObservedXcodeRepetitionTests.test_mixed_leaf_and_nested_run_layout_is_rejected"
+      ]
+    }
+  ],
+  "original_declared_count": 163,
+  "native13_source_evidence": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-13/receipt.json",
+      "sha256": "721c991fec4dc3073cfa11e1a6f2ee1196deea35f54b1aaa3fc03bd48f7c0a2f"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-13/sample-images-failure.json",
+      "sha256": "e2b2ff422ae91d88be59d044d779132e8064f8f47ecff2ab6c02c5c7ba314cc2"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-13/sample-header-failure.json",
+      "sha256": "93c74cc89654684ff2924525de4cbaa95a873a2e5e12b61463f06ae6b430e909"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-13/external-image-artifact-bindings.json",
+      "sha256": "ac6c9dad1acc66b354a9b07b9cc4a280ec4d6c8165574233d444fe009869c62f"
+    }
+  ],
+  "native13_component_proof": [
+    {
+      "table_line": 1,
+      "image_name": "Parlor",
+      "strict_row_syntax": true,
+      "unique_exact_installed_components_except_user_star": [
+        1
+      ],
+      "uuid_matching_indexes": [
+        1,
+        5
+      ],
+      "interval": {
+        "syntax_matches": true,
+        "start": 4373020672,
+        "end": 4373034711,
+        "start_hex_digits": 9,
+        "end_hex_digits": 9,
+        "within_u64": true,
+        "ordered_nonzero": true,
+        "end_inclusive": true
+      },
+      "prior_classification": "UNBOUND"
+    },
+    {
+      "table_line": 3,
+      "image_name": "Parlor.debug.dylib",
+      "strict_row_syntax": true,
+      "unique_exact_installed_components_except_user_star": [
+        2
+      ],
+      "uuid_matching_indexes": [
+        2,
+        6
+      ],
+      "interval": {
+        "syntax_matches": true,
+        "start": 4373299200,
+        "end": 4373344859,
+        "start_hex_digits": 9,
+        "end_hex_digits": 9,
+        "within_u64": true,
+        "ordered_nonzero": true,
+        "end_inclusive": true
+      },
+      "prior_classification": "UNBOUND"
+    },
+    {
+      "table_line": 12,
+      "image_name": "ComposeApp",
+      "strict_row_syntax": true,
+      "unique_exact_installed_components_except_user_star": [
+        0
+      ],
+      "uuid_matching_indexes": [
+        0,
+        4,
+        8,
+        9
+      ],
+      "interval": {
+        "syntax_matches": true,
+        "start": 4457938944,
+        "end": 4500656855,
+        "start_hex_digits": 9,
+        "end_hex_digits": 9,
+        "within_u64": true,
+        "ordered_nonzero": true,
+        "end_inclusive": true
+      },
+      "prior_classification": "UNBOUND"
+    }
+  ],
+  "actual_prior_vmmap": [
+    {
+      "command": [
+        "/usr/bin/vmmap",
+        "-w",
+        "62322"
+      ],
+      "started_at": "2026-09-08T04:43:29.910795+00:00",
+      "log": "temporary-only/owned-app.vmmap.txt",
+      "exit_code": 255,
+      "finished_at": "2026-09-08T04:43:32.256229+00:00"
+    }
+  ],
+  "limits": [
+    "Prior native13 remains FAIL; no missing raw stdout or cause is reconstructed",
+    "New alias scope only literal star at current-user component in sample Binary Images; header/vmmap keep prior exact/USER policies",
+    "Proof reads retained sanitized controlled-room metadata, not active profiles/private data",
+    "No modules imported, tests executed, build or native/process calls issued"
+  ]
+}

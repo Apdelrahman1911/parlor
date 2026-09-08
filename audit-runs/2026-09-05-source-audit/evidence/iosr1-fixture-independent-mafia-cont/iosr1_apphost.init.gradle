@@ -1,0 +1,84 @@
+// Invocation-only, simulator-Debug source addition. Never install as a global init script.
+// No repositories, dependencies, production source files, signing material or validators change.
+import groovy.json.JsonSlurper
+import java.security.MessageDigest
+import org.gradle.api.GradleException
+
+final String auditedRoot = '/Users/abdelrahman/Projects/parlor'
+final File fixtureDirectory = new File(auditedRoot,
+    'audit-runs/2026-09-05-source-audit/reproducers/iosr1_apphost')
+final File bindingFile = new File(fixtureDirectory, 'source-bindings.json')
+
+def requireUnsignedSimulatorContext = {
+    def required = [
+        PARLOR_AUDIT_IOSR1_APPHOST: '1',
+        CONFIGURATION: 'Debug',
+        CODE_SIGNING_ALLOWED: 'NO',
+        CODE_SIGNING_REQUIRED: 'NO',
+    ]
+    if (required.any { key, value -> System.getenv(key) != value } ||
+        !(System.getenv('SDK_NAME') ?: '').startsWith('iphonesimulator') ||
+        ['CODE_SIGN_IDENTITY', 'DEVELOPMENT_TEAM', 'EXPANDED_CODE_SIGN_IDENTITY'].any {
+            !(System.getenv(it) ?: '').trim().isEmpty()
+        }) {
+        throw new GradleException('IOS-R1 fixture requires explicit unsigned Debug simulator audit context')
+    }
+}
+
+def sha256 = { File file ->
+    MessageDigest.getInstance('SHA-256').digest(file.bytes).encodeHex().toString()
+}
+
+gradle.beforeProject { project ->
+    if (project.rootProject.projectDir.canonicalPath != auditedRoot || project.path != ':composeApp') return
+    requireUnsignedSimulatorContext()
+    def binding = new JsonSlurper().parse(bindingFile)
+    if (binding.repository != auditedRoot || binding.schema_version != 1) {
+        throw new GradleException('Unexpected IOS-R1 source binding')
+    }
+    (binding.original_files + binding.additive_kotlin_files).each { entry ->
+        File source = new File(auditedRoot, entry.path as String)
+        if (!source.canonicalPath.startsWith(auditedRoot + File.separator) ||
+            source.canonicalPath != source.absolutePath || !source.isFile() ||
+            sha256(source) != entry.sha256) {
+            throw new GradleException('IOS-R1 source binding differs; re-review before compiling')
+        }
+    }
+    def expectedKotlin = binding.additive_kotlin_files.collect {
+        new File(auditedRoot, it.path as String).canonicalPath
+    }.toSet()
+    def actualKotlin = project.fileTree(fixtureDirectory) { include '**/*.kt' }.files.collect {
+        it.canonicalPath
+    }.toSet()
+    if (actualKotlin != expectedKotlin || actualKotlin.size() != 2) {
+        throw new GradleException('Unexpected IOS-R1 additive Kotlin source inventory')
+    }
+    project.pluginManager.withPlugin('org.jetbrains.kotlin.multiplatform') {
+        project.extensions.getByName('kotlin').sourceSets.matching { it.name == 'iosMain' }.configureEach {
+            it.kotlin.srcDir(fixtureDirectory)
+        }
+    }
+    project.logger.lifecycle("AUDIT_IOSR1_SOURCE_BINDING ${sha256(bindingFile)} additiveFiles=${actualKotlin.size()}")
+}
+
+gradle.projectsEvaluated { invocation ->
+    if (invocation.rootProject.projectDir.canonicalPath != auditedRoot) return
+    requireUnsignedSimulatorContext()
+    def app = invocation.rootProject.project(':composeApp')
+    def sources = app.extensions.getByName('kotlin').sourceSets.getByName('iosMain').kotlin.srcDirs
+    if (!sources.any { it.canonicalPath == fixtureDirectory.canonicalPath }) {
+        throw new GradleException('IOS-R1 fixture did not join the actual iosMain source set')
+    }
+    invocation.taskGraph.whenReady { graph ->
+        def allowedEntry = graph.hasTask(':composeApp:embedAndSignAppleFrameworkForXcode') ||
+            graph.hasTask(':composeApp:linkDebugFrameworkIosSimulatorArm64')
+        def forbidden = graph.allTasks.any { task ->
+            task.name ==~ /linkReleaseFrameworkIos.*/ ||
+                task.name ==~ /(?:compileKotlin|linkDebugFramework)Ios(?:Arm64|X64)/ ||
+                task.name.endsWith('Test') || task.name == 'clean'
+        }
+        if (!allowedEntry || forbidden) {
+            throw new GradleException('IOS-R1 init is only for Debug ARM64 simulator framework compilation/embedding')
+        }
+    }
+}

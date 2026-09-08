@@ -1,0 +1,24 @@
+{
+  "reviewer": "/root/release_fix_review",
+  "recorded_at": "2026-09-07T18:44:19.930391+00:00",
+  "supplements": {
+    "path": "ci-inventory-dependency-gates-independent-01.json",
+    "sha256": "8b024db84415ab3ae9ca72d3ebcbcfb3f054b59845163f3dc0ae7b4887d88dd6"
+  },
+  "fresh_ci_observation": {
+    "reported_by": "/root",
+    "independently_fetched_by_this_reviewer": false,
+    "run_id": 34152138368,
+    "reported_head_sha": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+    "reported_jobs": "all5 in_progress",
+    "conclusion": "No final C01\u2013C05 PASS. New dispatch is now reported launched; do not dispatch a duplicate same-ref run and cancel it inadvertently."
+  },
+  "cache_evidence_rules": [
+    "Distinguish Gradle task execution from UP-TO-DATE/FROM-CACHE restored XML. XML presence alone is not current runtime execution.",
+    "For each suite retain exact task outcome plus XML totals/descriptors and source identity. Cache reuse may remain useful input-bound evidence, but label it as reused rather than fresh execution.",
+    "If final acceptance requires fresh runtime, run the clean-output --no-build-cache suite in root-owned coordinated lane; retain cleanup and actual execution evidence. Do not weaken assertions or count compile/link as tests.",
+    "Hosted run success requires all5 actual job conclusions and required task/skip/cleanup/artifact receipts at the exact frozen SHA; do not borrow a local macOS result for Linux/Windows or Xcode26.3."
+  ],
+  "dependency_depth_clarification": "dependency_inventory.py bounds POM inheritance using len(ancestors)>=5 (at most5 POM nodes including the selected component); the earlier concise phrase max5parent chain means bounded inheritance, not an authorization for5 additional parent hops.",
+  "hygiene": "No build/test/native/process-control operations; this supplement is the only new artifact."
+}

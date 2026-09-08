@@ -1,0 +1,122 @@
+{
+  "reviewer": "/root/native_fix_review",
+  "accessed_at": "2026-09-07T06:57:34.742523+00:00",
+  "scope": "Official documentation only; no JDK archive, Gradle, test, native executable or simulator launched.",
+  "records": [
+    {
+      "url": "https://docs.gradle.org/8.13/userguide/toolchains.html",
+      "actual_url": "https://docs.gradle.org/8.13/userguide/toolchains.html",
+      "http_status": 200,
+      "sha256": "26870e8978a9575e08594c8fc68ff367c1f6ec0cb2daf586701520d0af545458",
+      "bytes": 209085,
+      "evidence": "references/gradle813-toolchains.html.gz",
+      "excerpts": [
+        {
+          "term": "org.gradle.java.installations.auto-detect",
+          "text": "out a bin/java executable will be ignored with a warning, but they won&#8217;t generate an error. How to disable auto-detection In order to disable auto-detection, you can use the org.gradle.java.installations.auto-detect Gradle property: Either start gradle using -Porg.gradle.java.installations.auto-detect=false Or put org.gradle.java.installations.auto-detect=false into your gradle.properties file. Auto-provisioning If Gradle can&#8217;t find a locally available toolchain that matches the requirements of the build, it can automatically download one (as long as a toolchain download repository has been configured; for detail, see relevant section ). Gradle installs the downloaded JDKs in the Gradle User Home . Gradle onl"
+        },
+        {
+          "term": "org.gradle.java.installations.auto-download",
+          "text": " the build, how they are detected and what kind of metadata Gradle knows about those toolchains. Disabling auto provisioning In order to disable auto-provisioning, you can use the org.gradle.java.installations.auto-download Gradle property: Either start gradle using -Porg.gradle.java.installations.auto-download=false Or put org.gradle.java.installations.auto-download=false into a gradle.properties file. After disabling the auto provisioning, ensure that the specified JRE/JDK version in the build file is already installed locally. Then, stop the Gradle daemon so that it can be reinitialized for the next build. You can use the ./gradlew --stop command to stop the daemon process. Removing an auto-provisioned toolchain When "
+        },
+        {
+          "term": "org.gradle.java.installations.paths",
+          "text": " | Location: /Users/username/myJavaInstalls/8.0.242.hs-adpt/jre | Language Version: 8 | Vendor: AdoptOpenJDK | Architecture: x86_64 | Is JDK: false | Detected by: Gradle property 'org.gradle.java.installations.paths' + Microsoft JDK 16.0.2+7 | Location: /Users/username/.sdkman/candidates/java/16.0.2.7.1-ms | Language Version: 16 | Vendor: Microsoft | Architecture: aarch64 | Is JDK: true | Detected by: SDKMAN! + OpenJDK 15-ea | Location: /Users/user/customJdks/15.ea.21-open | Language Version: 15 | Vendor: AdoptOpenJDK | Architecture: x86_64 | Is JDK: true | Detected by: environment variable 'JDK16' + Oracle JDK 1.7.0_80 | Location: /Library/Java/JavaVirtualMachines/jdk1.7.0_80.jdk/Contents/Home/jre | Language Version: 7 "
+        },
+        {
+          "term": "javaLauncher",
+          "text": "withType&lt;JavaCompile&gt;().configureEach { javaCompiler = javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(8) } } tasks.register&lt;Test&gt;(\"testsOn17\") { javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(17) } } list/build.gradle tasks.withType(JavaCompile).configureEach { javaCompiler = javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(8) } } tasks.register('testsOn17', Test) { javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(17) } } In addition, in the application subproject, we add another Java execution task to run our application with JDK 17. application/build.gradle.kts tasks.register&lt;JavaExec&gt;"
+        },
+        {
+          "term": "javaCompiler",
+          "text": "ks to use Java 8. Additionally, we introduce a new Test task that will run our unit tests using a JDK 17. list/build.gradle.kts tasks.withType&lt;JavaCompile&gt;().configureEach { javaCompiler = javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(8) } } tasks.register&lt;Test&gt;(\"testsOn17\") { javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(17) } } list/build.gradle tasks.withType(JavaCompile).configureEach { javaCompiler = javaToolchains.compilerFor { languageVersion = JavaLanguageVersion.of(8) } } tasks.register('testsOn17', Test) { javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(17) } } In addition, in the application subproje"
+        },
+        {
+          "term": "org.gradle.java.installations.fromEnv",
+          "text": "17 point to valid java installations, the following instructs Gradle to resolve those environment variables and consider those installations when looking for a matching toolchain. org.gradle.java.installations.fromEnv=JDK8,JRE17 Additionally, you can provide a comma-separated list of paths to specific installations using the org.gradle.java.installations.paths property. For example, using the following in your gradle.properties will let Gradle know which directories to look at when detecting toolchains. Gradle will treat these directories as possible installations but will not descend into any nested directories. org.gradle.java.installations.paths=/custom/path/jdk1.8,/shared/jre11 Gradle does not prioritize custom toolc"
+        },
+        {
+          "term": "toolchain",
+          "text": "cookie-banner .text-footnote { color: #FFF; } { \"@context\": \"http://schema.org\", \"@type\": \"WebPage\", \"name\": \"Gradle Documentation\", \"url\": \"https://docs.gradle.org/8.13/userguide/toolchains.html\" } Gradle User Manual Theme const btn = document.querySelector(\".theme-toggle\"); const prefersDarkScheme = window.matchMedia(\"(prefers-color-scheme: dark)\"); const currentTheme = localStorage.getItem(\"theme\"); if (currentTheme == \"dark\") { document.body.classList.toggle(\"dark-theme\"); } else if (currentTheme == \"light\") { document.body.classList.toggle(\"light-theme\"); } btn.addEventListener(\"click\", function () { if (prefersDarkScheme.matches) { document.body.classList.toggle(\"light-theme\"); var theme = document.body.classList.c"
+        }
+      ]
+    },
+    {
+      "url": "https://docs.gradle.org/8.13/userguide/build_environment.html",
+      "actual_url": "https://docs.gradle.org/8.13/userguide/build_environment.html",
+      "http_status": 200,
+      "sha256": "d7b0428e485732d5f89ad751f0b4e958c4e8c5a8b19595f953bffe5463979a64",
+      "bytes": 195679,
+      "evidence": "references/gradle813-build-environment.html.gz",
+      "excerpts": [
+        {
+          "term": "org.gradle.java.home",
+          "text": "the environment that executes Gradle Here are all possible configurations of specifying the JDK installation directory in order of priority: Command Line $ ./gradlew exampleTask -Dorg.gradle.java.home=/path/to/your/java/home --scan Gradle Properties File gradle.properties org.gradle.java.home=/path/to/your/java/home Environment Variable $ export JAVA_HOME=/path/to/your/java/home The gradle.properties file Gradle properties, system properties, and project properties can be found in the gradle.properties file: gradle.properties # Gradle properties org.gradle.parallel=true org.gradle.caching=true org.gradle.jvmargs=-Duser.language=en -Duser.country=US -Dfile.encoding=UTF-8 # System properties systemProp.pts.enabled=true sys"
+        },
+        {
+          "term": "JAVA_HOME",
+          "text": "radle settings and the Java process that executes your build org.gradle.logging.level=quiet Environment variables Properties that configure build behavior based on the environment JAVA_HOME Priority for configurations When configuring Gradle behavior, you can use these methods, but you must consider their priority. The following table lists these methods in order of highest to lowest precedence (the first one wins): Priority Method Location Notes 1 Command-line &gt; Command line Flags have precedence over properties and environment variables 2 System properties &gt; Project Root Dir Stored in a gradle.properties file 3 Gradle properties &gt; GRADLE_USER_HOME &gt; Project Root Dir &gt; GRADLE_HOME Stored in a gradle.prope"
+        }
+      ]
+    },
+    {
+      "url": "https://docs.gradle.org/8.13/userguide/init_scripts.html",
+      "actual_url": "https://docs.gradle.org/8.13/userguide/init_scripts.html",
+      "http_status": 200,
+      "sha256": "bd9848b70b9419dabb85507de60c55ad4f6a26a8ef7d8685f29c3e5b3fe1ee36",
+      "bytes": 178727,
+      "evidence": "references/gradle813-init-scripts.html.gz",
+      "excerpts": [
+        {
+          "term": "init script",
+          "text": "of Core Plugins How To Guides How to share outputs between projects Samples Glossary Cookbook Single Page Version PDF Version Initialization Scripts version 8.13 Contents Using an init script Invoking an init script Writing an init script Adding external dependencies Applying plugins Initialization scripts are scripts that run before the build script is executed. They allow you to customize the build environment or configure settings early in the build. Initialization scripts can be useful for setting up common configurations, such as repositories, plugins, or custom tasks, across multiple projects. Using an init script Initialization scripts, also called init scripts , are similar to other scripts in Gradle. Initializat"
+        }
+      ]
+    },
+    {
+      "url": "https://docs.gradle.org/8.13/dsl/org.gradle.api.tasks.testing.Test.html",
+      "actual_url": "https://docs.gradle.org/8.13/dsl/org.gradle.api.tasks.testing.Test.html",
+      "http_status": 200,
+      "sha256": "9ffcac81be08dbadcf2cf8d67fab2d6d1791bb2326575065a123095062396189",
+      "bytes": 147752,
+      "evidence": "references/gradle813-test-api.html.gz",
+      "excerpts": [
+        {
+          "term": "javaLauncher",
+          "text": "his limit is reached. ignoreFailures Specifies whether the build should break when the verifications performed by this task fail. includes The include patterns for test execution. javaLauncher Configures the java executable to be used to run the tests. jvmArgs The extra arguments to use to launch the JVM for the process. Does not include system properties and the minimum/maximum heap size. jvmArgumentProviders Command line argument providers for the java process to fork. maxHeapSize The maximum heap size for the process, if any. maxParallelForks The maximum number of test processes to start in parallel. minHeapSize The minimum heap size for the process, if any. modularity The module path handling of this test task. optio"
+        },
+        {
+          "term": "toolchain",
+          "text": "est execution. Default with java plugin: [] Property &lt; JavaLauncher &gt; javaLauncher Configures the java executable to be used to run the tests. Default with java plugin: java.toolchain List &lt; String &gt; jvmArgs The extra arguments to use to launch the JVM for the process. Does not include system properties and the minimum/maximum heap size. Default with java plugin: [] List &lt; CommandLineArgumentProvider &gt; jvmArgumentProviders (read-only) Command line argument providers for the java process to fork. Default with java plugin: [] String maxHeapSize The maximum heap size for the process, if any. Default with java plugin: null int maxParallelForks The maximum number of test processes to start in parallel. By de"
+        }
+      ]
+    },
+    {
+      "url": "https://docs.gradle.org/8.13/dsl/org.gradle.api.tasks.compile.JavaCompile.html",
+      "actual_url": "https://docs.gradle.org/8.13/dsl/org.gradle.api.tasks.compile.JavaCompile.html",
+      "http_status": 200,
+      "sha256": "6481393b533ed62d7a9b2ac0a35ce08033831fac2091848aab1052c3616a1964",
+      "bytes": 74510,
+      "evidence": "references/gradle813-java-compile-api.html.gz",
+      "excerpts": [
+        {
+          "term": "javaCompiler",
+          "text": "nationDirectory The directory property that represents the directory to generate the .class files into. excludes The set of exclude patterns. includes The set of include patterns. javaCompiler Configures the java compiler to be used to compile the Java source. modularity The module path handling of this compile task. options The compilation options. source The source for this task, after the include and exclude patterns have been applied. Ignores source files which do not exist. sourceCompatibility The Java language level to use to compile the source files. targetCompatibility The target JVM to generate the .class files for. Methods Method Description exclude (excludeSpec) Adds an exclude spec. This method may be called "
+        },
+        {
+          "term": "toolchain",
+          "text": "cludes The set of include patterns. Property &lt; JavaCompiler &gt; javaCompiler Configures the java compiler to be used to compile the Java source. Default with java plugin: java.toolchain ModularitySpec modularity (read-only) The module path handling of this compile task. CompileOptions options (read-only) The compilation options. FileTree source (read-only) The source for this task, after the include and exclude patterns have been applied. Ignores source files which do not exist. The PathSensitivity for the sources is configured to be PathSensitivity.ABSOLUTE . If your sources are less strict, please change it accordingly by overriding this method in your subclass. Default with java plugin: sourceSet .java String sour"
+        }
+      ]
+    },
+    {
+      "url": "https://kotlinlang.org/docs/gradle-compilation-and-caches.html",
+      "actual_url": "https://kotlinlang.org/docs/gradle-compilation-and-caches.html",
+      "http_status": 200,
+      "sha256": "75fa4c09cced2e3a7625c5d73c9a0cab199060ad9e90995ee25626f1c5be2034",
+      "bytes": 38173,
+      "evidence": "references/kotlin-gradle-compilation.html.gz",
+      "excerpts": []
+    }
+  ]
+}

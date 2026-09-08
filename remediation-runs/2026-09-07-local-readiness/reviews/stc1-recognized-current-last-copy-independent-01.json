@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-07T16:56:04.906809+00:00",
+  "original_finder": "/root",
+  "independent_validator": "/root/release_fix_review",
+  "classification": "CONFIRMED REACHABLE PRE-EXISTING PURGE; RESIDUAL LAST-COPY REQUIREMENT MISMATCH, NOT AN ST-C1 PATCH REGRESSION",
+  "register_scope": "Supplement to the current ST-C1 preservation requirement, not an invented17th defect or an IOS-R1/cryptographic failure. Original audit scope and historical intentional policy are preserved below.",
+  "severity": "Medium if applying the current last-recoverable-copy requirement: requires a retained legacy/current pair and unreadable current record; can remove the only intact saved-state encoding during cold inventory. No fresh-install incidence or real-user data loss observed.",
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "0b3090a40ff8135b04e0d6e9933c0af5d160daba",
+    "identity": "Exact source hashes below apply; repository never checked out/reset/stashed by reviewer."
+  },
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "sha256": "8a99e60647c3d9f137ca8783e636b37798d06f4883df3609bf6cd2a0568bdf48",
+      "lines": 500,
+      "reviewed_line_ranges": [
+        [
+          1,
+          500
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotKeychain.kt",
+      "sha256": "511aff877a27eb3f42ce4891203a830ba8879781de405e2248c3873f5f381a5e",
+      "lines": 205,
+      "reviewed_line_ranges": [
+        [
+          1,
+          205
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosStorageSafetyTest.kt",
+      "sha256": "2ecae719e0cbbdaefa412ede46656f59b63777087c8b653e215053359b42218b",
+      "lines": 195,
+      "reviewed_line_ranges": [
+        [
+          1,
+          195
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosLegacySnapshotBackupTest.kt",
+      "sha256": "5d5cf8beedcddd77b3d99d3842f02f472da221f0bbcdc35c6212e3f5d56d0351",
+      "lines": 222,
+      "reviewed_line_ranges": [
+        [
+          1,
+          222
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/PlatformStorage.ios.kt",
+      "sha256": "cb69b6de029bf7d9f84dbc5bf19139150906a29d64cf29a60994259ca657a0c0",
+      "lines": 19,
+      "reviewed_line_ranges": [
+        [
+          1,
+          19
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/di/StorageModule.kt",
+      "sha256": "9734dde8f751d0e5792577692c322051aa0adc7f45ed0fa6ac5961cf9295e87c",
+      "lines": 23,
+      "reviewed_line_ranges": [
+        [
+          1,
+          23
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/storage/PlatformStorage.kt",
+      "sha256": "1f56d8b7adca7d5148445ec9e8f69d2f9a74f253d4c425cc2abd00a84594b690",
+      "lines": 41,
+      "reviewed_line_ranges": [
+        [
+          1,
+          41
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+      "sha256": "e2ca0be28fd2f0eafee1a55022653190cf30a8c6da620dc3dfe56f361e0da27f",
+      "lines": 246,
+      "reviewed_line_ranges": [
+        [
+          1,
+          246
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeRecoveryAvailability.kt",
+      "sha256": "4c8a962fba7ec8334cc8f4dfe0a75f221b201178481ae115d85ae391647fbb2a",
+      "lines": 146,
+      "reviewed_line_ranges": [
+        [
+          1,
+          146
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/validations/ST-C1-root.md",
+      "sha256": "c2694a45ce4daf01a5824e2494a66fccdeaac948a5c084e60fb72d7c7372ac8e",
+      "lines": 127,
+      "reviewed_line_ranges": [
+        [
+          1,
+          127
+        ]
+      ]
+    }
+  ],
+  "expected_vs_actual": {
+    "current_user_requirement": "Protect or safely quarantine retained legacy records on failed migration. Do not destroy the user\u2019s last recoverable copy to make the check pass.",
+    "expected": "After a failed current decrypt, remain fail-closed on the current record and protect/preserve a retained legacy copy rather than deleting the only intact prior encoding before user Discard. No silent stale fallback is authorized.",
+    "actual": "readProtectedOrMigrate175 first excludes the legacy directory, but recognized magic181 enters try/finally183 and unlinks legacy188 regardless of decryption success/failure/cancellation. Other malformed-current headers198 retain it. Both behaviors enforce current precedence, but only the latter retains last-copy evidence."
+  },
+  "complete_source_proof": [
+    "Let V be a valid legacy-compatible saved GameSnapshot byte encoding produced by the real snapshot envelope writer (FileBackedSnapshotStore173-176), with a valid game-owned payload. The following branch never inspects legacy contents, so its unlink behavior applies identically to V, not only to the old tests\u2019 toy JSON.",
+    "A dual-copy precondition is supported by production migration: migrateLegacy211-214 reads legacy, writes authenticated current, then deletes old; process interruption after replacement/before deletion leaves both. A file-level backup-exclusion failure after writeProtected369 but before legacy delete also retains both. This proves why a legacy/current pair is legitimate without assuming a Store release occurred.",
+    "For a deterministic corrupted-current case, retain V at Documents/snapshots/<safe-id>.snapshot.json and place only PARSNAP + byteArrayOf(0,16) at Application Support/Parlor/snapshots/<same-name>. This models recognized-but-truncated/corrupt current bytes; no actual power-loss, disk corruption or real-save incident is claimed.",
+    "Production iOS DI14 -> singleton FileBackedSnapshotStore18 -> readLocalRecoveryInventory50 -> listUnfinished120 -> filesystem.list169 calls readProtectedOrMigrate for each legacy name before a user opens/discards it. Direct store load75/loadMetadata93 reaches the same branch.",
+    "Legacy backup exclusion175/222-227 succeeds first. hasMagic381-382 accepts the eight-byte prefix. decrypt283-290 rejects invalid version/truncation before Keychain access. finally183-188 nevertheless removes matching legacy through deletePathIfPresent245-253. Current corrupt bytes remain. V was never read, validated, transferred, quarantined or protected as a separate retained copy.",
+    "Cold inventory catches the resulting ordinary error only after unlink through migrateSnapshotRecordsIndependently31-38; it returns the name. Later metadata/load maps failure to CorruptedData, but cannot undo deletion. Retry UI therefore does not establish that the old intact bytes remain.",
+    "Sibling recognized-magic failures behave the same: absent key299 (readExisting returns null only on errSecItemNotFound), platform key-read exceptions298-329, wrong MAC310-312, and injected structural cancellation324-325 all execute the outer finally. Cancellation propagation is preserved, but old data is still deleted first."
+  ],
+  "counter_evidence_and_historical_intent": [
+    "Commit d54ab0cec246ed7ed23647b7e084e748c49534cd, fix(storage): purge legacy iOS plaintext on protected read, explicitly changed successful-decrypt-only .also deletion to finally. This was a deliberate earlier privacy policy, not a new regression introduced by the approved legacy-directory exclusion fix.",
+    "Original ST-C1 candidate/validation explicitly limited its confirmed defect to backup-eligible retained legacy records and called recognized-magic cleanup already handled. Do not rewrite that historical finding or claim its old test receipt proves retention.",
+    "IosStorageSafetyTest80 and101 deliberately assert absence of legacy after invalid-version/missing-key reads. They corroborate intent and the destructive branch, but their legacy JSON is only a synthetic hiddenRole object, not a complete valid GameSnapshot. They cannot establish that losing an intact game is acceptable under the new last-copy requirement.",
+    "Current IosLegacySnapshotBackupTest36/49/61/75 correctly preserves last-copy bytes for malformed legacy/unrecognized current/oversized files and proves native directory exclusion. The legacy-exclusion calls now precede recognized decrypt too; therefore the old inline reason that keeping it would leave it backup-visible indefinitely (184-187) is stale.",
+    "Fail-closed current-record precedence does not logically require unlinking its excluded legacy sibling. Retention is not permission to automatically restore stale state. No cryptography, protocol, reducer authority or game-rule weakness is necessary.",
+    "Successful authenticated migration/read cleanup and explicit Discard are separate intended operations. This review does not demand retaining every obsolete legacy record forever or resurrecting deleted games."
+  ],
+  "recommended_scoped_followup": [
+    "If enforcing the user\u2019s current last-copy constraint across all failed reads/migration retries, retain the excluded legacy sibling when decrypt fails/cancels, or quarantine it without destroying the last copy. Never fall back to legacy when current exists and is unreadable.",
+    "The smallest platform-local correction is success-only legacy cleanup following authenticated current decryption, keeping the already-required excludeLegacyDirectoryFromBackup before access. Leave successful migration and explicit delete paths intact; update the stale backup-visible rationale and two contradictory old assertions.",
+    "Do not turn missing Keychain into empty storage, add entitlements, change key semantics, or claim IOS-R1 repaired. Do not change format/version/game codecs or transmit retained bytes to peers."
+  ],
+  "proposed_regressions": [
+    "Use a valid synthetic game-owned snapshot/envelope, not only hiddenRole toy JSON. Invalid version/truncated recognized header direct read AND cold list must fail current load but retain exact legacy/current bytes and true backup-exclusion readback.",
+    "Missing key, injected key-read exception, bad authentication tag and CancellationException must retain legacy; cancellation identity must propagate. Current record must never be replaced by legacy.",
+    "Successful authenticated current read still returns current data and removes stale legacy; successful full migration encrypts/atomically writes before deletion. Use isolated synthetic key fixtures where needed, not real signing/user material.",
+    "Keep existing malformed-magic, legacy-only corrupt/oversized, exclusion failure, retry/recreation, mixed inventory and explicit-discard checks. Discard must remove both without retrying a failed legacy excluder.",
+    "Run actual iOS Foundation tests/app-host persistence where available with owned simulator/build cleanup. Local JVM source proof or existing intentionally destructive witnesses are not a passing native repair test."
+  ],
+  "verification_status": "SOURCE-LEVEL PROOF ONLY FOR THIS RESIDUAL; no new tests executed and no application code changed by reviewer. Prior native receipts prove their original exact assertions only. Real corruption incidence, physical backup/restore, Store history and owner data remain unverified.",
+  "preservation": "Read only public first-party source/tests and sanitized task evidence. No real snapshot, signing key, credential, app profile, native process, build task or unrelated filesystem inspected/modified; only this additive report written."
+}

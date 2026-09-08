@@ -1,0 +1,170 @@
+// Separate functional companion; never an upgrade of original strict L08 or physical storage evidence.
+extension IOSAppLaunchUITests {
+    @MainActor private func verifyL08FunctionalStoreResume(_ app: XCUIApplication) throws {
+        var boots = Set<String>()
+        for ordinal in 1...13 {
+            app.launchEnvironment["PARLOR_L08_STORAGE_FUNCTIONAL_BOOT"] = String(ordinal)
+            try startScenario(app, name: "l08-storage-functional")
+            let initial = try observe(app)
+            let boot = try string(initial, "boot")
+            XCTAssertTrue(boots.insert(boot).inserted, "Every checkpoint recovery must be a different process")
+            try assertNative(initial)
+            var actions: [String] = []
+            if [1, 3, 5, 7].contains(ordinal) {
+                _ = try l08StorageFunctionalAction(app, action: "save", ordinal: ordinal, boot: boot)
+                actions = ["save"]
+            } else if [2, 4, 6, 8, 10].contains(ordinal) {
+                let aliases = [2: "wc", 4: "we", 6: "mon", 8: "moff", 10: "legacy"]
+                let load = ordinal == 10 ? "legacy-load" : "load"
+                _ = try l08StorageFunctionalAction(app, action: load, ordinal: ordinal, boot: boot)
+                try l08TapExactPublicControl(app, identifier: "l08-home-" + aliases[ordinal]!)
+                _ = try l08StorageFunctionalAction(app, action: "continue", ordinal: ordinal, boot: boot)
+                actions = [load, "continue"]
+            } else if ordinal == 9 {
+                _ = try l08StorageFunctionalAction(app, action: "legacy-seed", ordinal: ordinal, boot: boot)
+                actions = ["legacy-seed"]
+            } else if [11, 12].contains(ordinal) {
+                let check = ordinal == 11 ? "legacy-neighbor" : "dual-preserved"
+                let alias = ordinal == 11 ? "damaged" : "dual"
+                _ = try l08StorageFunctionalAction(app, action: check, ordinal: ordinal, boot: boot)
+                try l08TapExactPublicControl(app, identifier: "l08-home-" + alias)
+                try l08WaitRecovery(app, shows: 1)
+                try l08TapExactPublicControl(app, identifier: "l08-recovery-retry")
+                try l08WaitRecovery(app, shows: 2)
+                try l08TapExactPublicControl(app, identifier: "l08-recovery-discard")
+                _ = try l08StorageFunctionalAction(app, action: "discard-observed", ordinal: ordinal, boot: boot)
+                actions = [check, "discard-observed"]
+            } else {
+                _ = try l08StorageFunctionalAction(app, action: "final-absence", ordinal: ordinal, boot: boot)
+                actions = ["final-absence"]
+            }
+            let row: [String: Any] = ["schema_version": 1, "boot_ordinal": ordinal, "process_boot": boot,
+                "actions": actions, "foreground": app.state == .runningForeground,
+                "alert_present": app.alerts.firstMatch.exists,
+                "run_token": app.launchEnvironment["PARLOR_DSC01_RUN_TOKEN"] ?? ""]
+            let encoded = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
+            XCTAssertLessThanOrEqual(encoded.count, 2048)
+            print("PARLOR_L08_STORAGE_FUNCTIONAL_BOOT " + String(decoding: encoded, as: UTF8.self))
+        }
+        app.buttons["parlor-dsc01-complete"].tap()
+        XCTAssertEqual(try observe(app)["completed"] as? Bool, true)
+        app.launchEnvironment.removeValue(forKey: "PARLOR_L08_STORAGE_FUNCTIONAL_BOOT")
+    }
+
+    @MainActor private func l08StorageFunctionalAction(_ app: XCUIApplication, action: String,
+                                            ordinal: Int, boot: String) throws -> [String: Any] {
+        try l08TapExactPublicControl(app, identifier: "l08-functional-action-" + action)
+        let state = app.staticTexts["l08-storage-functional-result"]
+        XCTAssertTrue(state.waitForExistence(timeout: 10))
+        let done = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            guard let text = state.value as? String, !["pending", "running"].contains(text) else { return false }
+            guard let bytes = text.data(using: .utf8), bytes.count <= 16384,
+                  let value = (try? JSONSerialization.jsonObject(with: bytes)) as? [String: Any] else { return true }
+            return value["action"] as? String == action
+        }, object: nil)
+        XCTAssertEqual(XCTWaiter.wait(for: [done], timeout: 75), .completed)
+        let bytes = try XCTUnwrap((state.value as? String)?.data(using: .utf8))
+        XCTAssertLessThanOrEqual(bytes.count, 16384)
+        let value = try XCTUnwrap(JSONSerialization.jsonObject(with: bytes) as? [String: Any])
+        XCTAssertEqual(value["process_boot"] as? String, boot)
+        XCTAssertEqual(value["boot_ordinal"] as? Int, ordinal)
+        XCTAssertEqual(value["action"] as? String, action)
+        XCTAssertEqual(value["run_token"] as? String, app.launchEnvironment["PARLOR_DSC01_RUN_TOKEN"])
+        let result = try dictionary(value, "observation")
+        XCTAssertEqual(result["kind"] as? String, "l08-storage-functional")
+        XCTAssertEqual(result["functional_status"] as? String, "PASS")
+        let comparisons = try XCTUnwrap(result["complete_comparisons"] as? [[String: Any]])
+        XCTAssertLessThanOrEqual(comparisons.count, 4)
+        for comparison in comparisons {
+            XCTAssertTrue(["PASS", "FAIL"].contains(try string(comparison, "comparison")))
+        } // A FAIL here remains a required metadata FAIL in the strict host verifier.
+        XCTAssertEqual(result["physical_or_store_evidence"] as? Bool, false)
+        XCTAssertEqual(app.state, .runningForeground)
+        XCTAssertFalse(app.alerts.firstMatch.exists)
+        return value
+    }
+
+    @MainActor private func l08TapExactPublicControl(_ app: XCUIApplication, identifier: String) throws {
+        XCTAssertTrue(identifier.hasPrefix("l08-"))
+        let homeAliases = ["wc", "we", "mon", "moff", "legacy", "damaged", "dual"]
+        let isHome = homeAliases.contains { identifier == "l08-home-" + $0 }
+        let query = app.descendants(matching: .any).matching(identifier: identifier)
+        if isHome {
+            let lists = app.descendants(matching: .any).matching(identifier: "l08-home-list")
+            XCTAssertTrue(lists.firstMatch.waitForExistence(timeout: 15))
+            XCTAssertEqual(lists.count, 1)
+            let list = lists.firstMatch
+            // A LazyColumn may not compose an offscreen tile at all. Inspect
+            // only its exact identity, then use real bounded list gestures.
+            for attempt in 0..<8 {
+                XCTAssertLessThanOrEqual(query.count, 1)
+                let target = query.firstMatch
+                try l08PublicControlObservation(app, identifier: identifier, attempt: attempt)
+                if target.exists && target.isEnabled && target.isHittable { break }
+                XCTAssertTrue(list.exists && list.isEnabled && list.isHittable)
+                list.swipeUp() // No coordinates, alternate selector, or direct application callback.
+            }
+        }
+        XCTAssertTrue(query.firstMatch.waitForExistence(timeout: 15))
+        XCTAssertEqual(query.count, 1)
+        let target = query.firstMatch
+        let ready = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            target.exists && target.isEnabled && target.isHittable
+        }, object: nil)
+        let result = XCTWaiter.wait(for: [ready], timeout: 15)
+        // Retain the individual predicates and public geometry before an
+        // assertion can stop the XCTest; never retain labels or private state.
+        try l08PublicControlObservation(app, identifier: identifier, attempt: 8)
+        XCTAssertEqual(result, .completed)
+        target.tap() // No alternate selector, coordinate fallback, or repeat activation.
+    }
+
+    @MainActor private func l08PublicControlObservation(_ app: XCUIApplication,
+                                                       identifier: String, attempt: Int) throws {
+        let allowed = ["l08-home-wc", "l08-home-we", "l08-home-mon", "l08-home-moff",
+                       "l08-home-legacy", "l08-home-damaged", "l08-home-dual"]
+        guard allowed.contains(identifier) else { return }
+        XCTAssertTrue((0...8).contains(attempt))
+        func observation(_ key: String) -> [String: Any] {
+            let nodes = app.descendants(matching: .any).matching(identifier: key)
+            let count = nodes.count
+            var row: [String: Any] = ["count": count]
+            if count == 1 {
+                let node = nodes.firstMatch
+                row["exists"] = node.exists
+                row["enabled"] = node.isEnabled
+                row["hittable"] = node.isHittable
+                let frame = node.frame
+                if [frame.minX, frame.minY, frame.width, frame.height].allSatisfy({ $0.isFinite }) {
+                    row["frame"] = ["x": frame.minX, "y": frame.minY,
+                                    "width": frame.width, "height": frame.height]
+                }
+            }
+            return row
+        }
+        let row: [String: Any] = ["schema_version": 1, "identifier": identifier, "attempt": attempt,
+            "target": observation(identifier), "list": observation("l08-home-list"),
+            "overlay": observation("parlor-dsc01-overlay"), "proves_recovery": false]
+        let data = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
+        XCTAssertLessThanOrEqual(data.count, 2048)
+        print("PARLOR_L08_PUBLIC_CONTROL " + String(decoding: data, as: UTF8.self))
+    }
+
+    @MainActor private func l08WaitRecovery(_ app: XCUIApplication, shows: Int) throws {
+        // Observe completion of the actual asynchronous resume coordinator, not
+        // merely that an old Retry/Discard button survived recomposition.
+        for _ in 0..<24 {
+            try l08TapExactPublicControl(app, identifier: "l08-ui-observe")
+            let node = app.staticTexts["l08-ui-result"]
+            let data = try XCTUnwrap((node.value as? String)?.data(using: .utf8))
+            XCTAssertLessThanOrEqual(data.count, 1024)
+            let value = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+            if value["recovery_shows"] as? Int == shows { return }
+            let interval = XCTestExpectation(description: "L08 bounded recovery observation")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { interval.fulfill() }
+            XCTAssertEqual(XCTWaiter.wait(for: [interval], timeout: 2), .completed)
+        }
+        XCTFail("Original resume coordinator did not retain the expected failed-recovery route")
+        throw NSError(domain: "L08RecoveryObservation", code: 1)
+    }
+}

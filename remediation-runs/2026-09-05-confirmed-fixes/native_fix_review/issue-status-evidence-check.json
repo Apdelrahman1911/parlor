@@ -1,0 +1,3186 @@
+{
+  "reviewer": "/root/native_fix_review",
+  "checked_at": "2026-09-05T22:08:20.778230+00:00",
+  "scope": "Independent evidence/count/citation reconciliation for16 authorized defects. Not a new full-source audit or independent authorship of the fixes. Reopened patch-review reports, actual retained XML/test logs and source hash bindings; newly reopened all six Doctor regression/fixture files and native source-contract correction. No build execution by this reviewer.",
+  "baseline": {
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "current_tracked_diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+    "reviewed_tree": "Dirty uncommitted remediation checkout; focused receipts bind build-consumed untracked source, not HEAD/diff alone."
+  },
+  "canonical_register": {
+    "path": "audit-runs/2026-09-05-source-audit/canonical-register.json",
+    "sha256": "2767d98befc138dc9222ab0007209b52032f31033d1cbf8a71e6b4e665fe897e"
+  },
+  "counting": {
+    "scoped_canonical_defects": 16,
+    "full_scoped_corrections_independently_approved_and_focused_green": 14,
+    "bounded_fix_fraction": "14/16 = 87.5%",
+    "partial": 1,
+    "blocked": 1,
+    "any_implementation_including_partial": 15,
+    "any_implementation_fraction": "15/16 = 93.75% — NOT completion",
+    "ds_c01_not_counted_complete": true,
+    "wd_c2_not_counted_complete": true,
+    "mf_c1_alias_not_double_counted": true,
+    "wd_c2_four_manifestations_counted_once": true,
+    "sn_c2_host_peer_factory_siblings_counted_once": true,
+    "no_github_closed_issue_count_inferred": true,
+    "readiness_or_audit_coverage_percentage": null,
+    "global_combined_pass_at_cutoff": false,
+    "qualification": "87.5% describes bounded corrections with independent review and focused evidence only. Final combined/platform verification is still pending; not production/Store readiness or all-application coverage."
+  },
+  "issues": [
+    {
+      "id": "ST-C1",
+      "canonical_id": "ST-C1",
+      "aliases": [],
+      "original_title": "Failed iOS legacy migration retains backup-eligible application plaintext",
+      "original_severity": "Medium",
+      "original_finder": "/root/session_cont",
+      "original_independent_validator": "/root",
+      "original_refs": [
+        {
+          "path": "audit-runs/2026-09-05-source-audit/candidates/ST-C1-ios-legacy-backup-eligibility.md",
+          "sha256": "d65fb58571bb30c35de0c82b0fde00b07f6db96963b32754c36001be03be207a"
+        },
+        {
+          "path": "audit-runs/2026-09-05-source-audit/validations/ST-C1-root.md",
+          "sha256": "c2694a45ce4daf01a5824e2494a66fccdeaac948a5c084e60fb72d7c7372ac8e"
+        }
+      ],
+      "correction_exists": true,
+      "full_scoped_root_cause_approved": true,
+      "fix_author": "/root/session_cont",
+      "remediation_independent_reviewer": "native_fix_review",
+      "correction": "Exclude/verify legacy snapshot directory before listing/migration/direct read, preserve failed legacy bytes.",
+      "status": "FIXED AND VERIFIED — FOCUSED SCOPE; COMBINED PENDING",
+      "independent_refs": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/independent-review.json",
+          "sha256": "f2daf4d18fc856bbe2ae45f269c6e612f7d63e4ab9253fb36c75a2809e0cd334"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/INDEPENDENT_REVIEW.md",
+          "sha256": "3b23002f8a347aa22a8c70bd797d791cc08fcbc921ba4a6015297340608fce46"
+        }
+      ],
+      "evidence_limits": "Foundation filesystem flag/retention tests8 plus existing safety6; actual backup/restore and Keychain-backed healthy migration not claimed.",
+      "compatibility": "No snapshot/encryption format or key change; OS exclusion is guidance, not never-backed-up guarantee.",
+      "combined_status": "PENDING — no whole-repository completion claimed",
+      "focused_cycle": "native-storage-language-02",
+      "focused_batch_status": "PASS",
+      "focused_xml": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-storage-language-02/reports/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.IosLegacySnapshotBackupTest.xml",
+          "sha256": "f60bbf8fc630b3873007d7754b697ad4b3127029ae2b6419d3ea1116c7bef2a0",
+          "suite": "com.parlor.app.storage.IosLegacySnapshotBackupTest",
+          "counts": {
+            "tests": 8,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "cases": [
+            {
+              "name": "coldInventoryProtectsMalformedLegacyWithoutDestroyingItsLastCopy[iosSimulatorArm64]",
+              "status": "PASS"
+            },
+            {
+              "name": "directReadProtectsMalformedLegacyWithoutPriorInventory[iosSimulatorArm64]",
+              "status": "PASS"
+            },
+            {
+              "name": "damagedCurrentHeaderKeepsPrecedenceAndExcludesRetainedLegacy[iosSimulatorArm64]",
+              "status": "PASS"
+            },
+            {
+              "name": "oversizedLegacyIsExcludedBeforeBoundedReadRejectsIt[iosSimulatorArm64]",
+              "status": "PASS"
+            },
+            {
+              "name": "exclusionFailureIsNotSwallowedByInventoryAndDoesNotPreventExplicitDiscard[iosSimulatorArm64]",
+              "status": "PASS"
+            },
+            {
+              "name": "retryReappliesLegacyExclusionInsteadOfCachingIt[iosSimulatorArm64]",
+              "status": "PASS"
+            },
+            {
+              "name": "nativeExclusionRejectsMissingPathsRatherThanClaimingProtection[iosSimulatorArm64]",
+              "status": "PASS"
+            },
+            {
+              "name": "nativeExclusionIsReappliedAfterSyntheticDirectoryRecreation[iosSimulatorArm64]",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-storage-language-02/reports/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.IosStorageSafetyTest.xml",
+          "sha256": "50ddacb1668a22b1fb763973769c38cb55c8c0310d302eef6e3666fcf0f2f5ab",
+          "suite": "com.parlor.app.storage.IosStorageSafetyTest",
+          "counts": {
+            "tests": 6,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "cases": [
+            {
+              "name": "boundedReaderRejectsAfterReadingOnlyLimitPlusOneBytes[iosSimulatorArm64]",
+              "status": "PASS"
+            },
+            {
+              "name": "boundedReaderAcceptsAFileExactlyAtTheLimit[iosSimulatorArm64]",
+              "status": "PASS"
+            },
+            {
+              "name": "keychainDataSupportsAnEmptyValueWithoutAddressingAMissingElement[iosSimulatorArm64]",
+              "status": "PASS"
+            },
+            {
+              "name": "commonCryptoRoundTripsAnEmptySnapshotPayload[iosSimulatorArm64]",
+              "status": "PASS"
+            },
+            {
+              "name": "unreadableProtectedSnapshotRemovesMatchingLegacyPlaintext[iosSimulatorArm64]",
+              "status": "PASS"
+            },
+            {
+              "name": "protectedSnapshotWithMissingKeyRemovesMatchingLegacyPlaintext[iosSimulatorArm64]",
+              "status": "PASS"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SN-C1",
+      "canonical_id": "SN-C1",
+      "aliases": [],
+      "original_title": "Late valid start commit can fail while sending its best-effort acknowledgement",
+      "original_severity": "Medium",
+      "original_finder": "/root/session_cont",
+      "original_independent_validator": "/root",
+      "original_refs": [
+        {
+          "path": "audit-runs/2026-09-05-source-audit/candidates/SN-C1-start-ack-deadline.md",
+          "sha256": "08f1b7149ee7acc4a8b5263ef3eb23c92b3b0eb09e3328308d0812ce444472ac"
+        },
+        {
+          "path": "audit-runs/2026-09-05-source-audit/validations/SN-C1-root.md",
+          "sha256": "f4e3ef713b280f8072be33a7023265a5a01dc3d2786463a0bed9c53dd0a16c6c"
+        }
+      ],
+      "correction_exists": true,
+      "full_scoped_root_cause_approved": true,
+      "fix_author": "/root/session_cont",
+      "remediation_independent_reviewer": "root",
+      "correction": "Move accepted irreversible start commit outside receive timeout before separately bounded best-effort ACK; preserve caller cancellation.",
+      "status": "FIXED AND VERIFIED — FOCUSED SCOPE; COMBINED PENDING",
+      "independent_refs": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/root/SN-C1-independent-fix-review-01.json",
+          "sha256": "a42e2f920214d4ff464b4dddf3f7baa8f6789c415c668b169754fbfe6100a4c3"
+        }
+      ],
+      "evidence_limits": "Production handshake and peer coordinator under synthetic room/virtual time, not physical LAN.",
+      "compatibility": "Protocol4.2 and reducer/projection/persistence compatibility unchanged.",
+      "combined_status": "PENDING — no whole-repository completion claimed",
+      "focused_cycle": "games-session-desktop-03",
+      "focused_batch_status": "FAIL",
+      "focused_xml": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+          "sha256": "2350b143779ed4aad41acff19dae4bf3fa96deaea4bd415b16def7948368253e",
+          "suite": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+          "counts": {
+            "tests": 9,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "cases": [
+            {
+              "name": "coordinatorReacknowledgesDuplicateAndAcceptsFirstSnapshotAfterLateCommit()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "callerCancellationDuringAcknowledgementStillPropagates()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "lateAcceptedCommitSurvivesSlowAcknowledgement()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "acknowledgementAdapterExceptionDoesNotUndoAcceptedStart()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "matchingStartWithInvalidVersionIsRejectedWithoutAcknowledgement()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "acknowledgementFailureAfterReceiveDeadlineStillEntersCommittedStart()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "absentCommitStillTimesOutWithoutAnAcknowledgement()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "acknowledgementTimeoutOnlyBoundsDeliveryAfterAcceptedCommit()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "commitForAnotherStartCannotEscapeTheReceiveDeadline()[desktop]",
+              "status": "PASS"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SN-C2",
+      "canonical_id": "SN-C2",
+      "aliases": [],
+      "original_title": "Cancellation after host advertising but before ownership return",
+      "original_severity": "Medium",
+      "original_finder": "/root/session_cont",
+      "original_independent_validator": "/root",
+      "original_refs": [
+        {
+          "path": "audit-runs/2026-09-05-source-audit/candidates/SN-C2-host-registration-cancellation.md",
+          "sha256": "6ac3313fad5c6ed698e9c9c481e4385f7bca06a4de28bbead16ecbe284f8d5f7"
+        },
+        {
+          "path": "audit-runs/2026-09-05-source-audit/validations/SN-C2-root.md",
+          "sha256": "853c0098a995d0585289adff7c6d9e419fb0cdc6376790466b4e7b527d97a5be"
+        }
+      ],
+      "correction_exists": true,
+      "full_scoped_root_cause_approved": true,
+      "fix_author": "session_cont + root",
+      "remediation_independent_reviewer": "factory_review",
+      "correction": "Cancellation-safe ownership from synchronous kit creation through host/peer registration and transfer; cleanup unreturned rooms and exact registration in NonCancellable.",
+      "status": "FIXED AND VERIFIED — FOCUSED SCOPE; COMBINED PENDING",
+      "independent_refs": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/SN-C2-independent-remediation-review-02.json",
+          "sha256": "4d5f1113d9265a0b86abc1483c609cc6029cedb1ad73895d0dbf063dc5ad001d"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/SN-C2-independent-remediation-review-02.md",
+          "sha256": "49718eece1cc2f8b1aafd1a6d6964148a7ef63183013733838a533ff76f7f5ee"
+        }
+      ],
+      "evidence_limits": "Factory9/host5/peer12/coordinator3 deterministic cases; native factory wiring source-reviewed, physical radio not measured.",
+      "compatibility": "Protocol4.2, credential/snapshot versions, original same-seat membership and both game authority unchanged.",
+      "combined_status": "PENDING — no whole-repository completion claimed",
+      "focused_cycle": "transport-static-green-02",
+      "focused_batch_status": "PASS",
+      "focused_xml": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitCreationTest.xml",
+          "sha256": "26c59d499d18c0b2caf4f82c2127dd60248effff789efc3bec0c4025e92885f2",
+          "suite": "com.parlor.transport.p2p.P2pKitCreationTest",
+          "counts": {
+            "tests": 9,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "cases": [
+            {
+              "name": "cancellationBeforeDispatcherEntryDoesNotConstructKit()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "cancellationDuringSameDispatcherConstructionStopsKit()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "hostAndJoinPreserveFactoryCancellationWithoutStartingOrStoppingTwice()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "cancellationDuringDifferentDispatcherConstructionStopsKit()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "cancelledReturnDispatchStopsSuccessfullyConstructedKit()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "failedConstructionPreservesOriginalFailure()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "cleanupFailureDoesNotReplaceOriginalCallerCancellation()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "cancelledOwnerAwaitsSuspendingNonCancellableStop()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "successfulCreationTransfersOwnershipWithoutStoppingKit()[desktop]",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.HostOpeningCancellationTest.xml",
+          "sha256": "286b09408c29945ed7c700af0b8f5511ef339b5ea3efe07769c23b38ae489be2",
+          "suite": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+          "counts": {
+            "tests": 5,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "cases": [
+            {
+              "name": "cancelledRegistrationClosesRoomBeforeQueuedForegroundCanReviveIt()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "returnedHostRetainsOwnershipUntilIdempotentLeave()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "registrationFailureClosesUnreturnedRoomAndDetachesLifecycle()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "cancellationDuringAdvertisingClosesArmedRoom()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "cancellationDuringKitStartStopsUnownedKit()[desktop]",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.PeerOpeningCancellationTest.xml",
+          "sha256": "6aff398c1b8e2c6f3c6e9deec334b2a017072a9ca0a37ab06b48652cbb5b33ab",
+          "suite": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "counts": {
+            "tests": 12,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "cases": [
+            {
+              "name": "cancellingResumeReadyClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "failedJoinRegistrationReleasesRoomAndDetachesLifecycle()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "cancellingResumeAckClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "failedResumeRegistrationReleasesRoomAndDetachesLifecycle()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "cancellingAdmissionAckClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "failedAdmissionReadyStopsKitOnlyOnceAndReleasesCollectors()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "failedResumeReadyStopsKitOnlyOnceAndReleasesCollectors()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "ordinaryAdmissionAckLossStillReturnsAnOwnedRoom()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "ordinaryResumeAckLossStillReturnsAnOwnedRoom()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "cancellingAdmissionReadyClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "cancelledResumeRegistrationCannotResumeOrExpireAReplacementCredential()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "cancelledJoinRegistrationCannotResumeOrExpireAReplacementCredential()[desktop]",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+          "sha256": "0099ce6a434c36cf235f6f64366865ba0f70f85b8586a729fb278cd88f4f7fb0",
+          "suite": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+          "counts": {
+            "tests": 3,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "cases": [
+            {
+              "name": "cancellationBeforeRegistrationLockDoesNotDetachExistingRoom()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "cancelledRegistrationDetachesBeforeQueuedForeground()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "failedRegistrationDetachesBeforeQueuedForeground()[desktop]",
+              "status": "PASS"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "WD-C1",
+      "canonical_id": "WD-C1",
+      "aliases": [],
+      "original_title": "Whodunit peer readiness resubmits when command overlay removes router",
+      "original_severity": "Medium",
+      "original_finder": "/root/whodunit_cont",
+      "original_independent_validator": "/root/session_cont",
+      "original_refs": [
+        {
+          "path": "audit-runs/2026-09-05-source-audit/candidates/WD-C1-whodunit_cont.md",
+          "sha256": "30f32df63588381c554559cc567deabe87d01e5802c3f1790238601587ac200e"
+        },
+        {
+          "path": "audit-runs/2026-09-05-source-audit/candidates/WD-C1-independent-session_cont.md",
+          "sha256": "11f8eb9bb17d71dc4324d7c61e3b6c5b12e569f8667a5b180b90bc2fa597a4ae"
+        }
+      ],
+      "correction_exists": true,
+      "full_scoped_root_cause_approved": true,
+      "fix_author": "/root/whodunit_cont",
+      "remediation_independent_reviewer": "root",
+      "correction": "Read current authoritative own-player readiness in remount-safe effect with session/phase/seat/generation keys.",
+      "status": "FIXED AND VERIFIED — FOCUSED SCOPE; COMBINED PENDING",
+      "independent_refs": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/root/WD-C1-independent-fix-review-01.json",
+          "sha256": "df7ba7e34da2d34e88ee6937c6838a0f8d061ca0bc4f1375e8b185788ddebf3f"
+        }
+      ],
+      "evidence_limits": "Twelve real Compose-router tests with synthetic host/peer session controllers, not physical multiplayer.",
+      "compatibility": "No optimistic canonical writes, no command/revision/protocol validation relaxation.",
+      "combined_status": "PENDING — no whole-repository completion claimed",
+      "focused_cycle": "design-whodunit-desktop-01",
+      "focused_batch_status": "FAIL",
+      "focused_xml": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest.xml",
+          "sha256": "7d5225642d778c2e298a5c136e7b00ca8353442830f53e7b55f84be85bbbe979",
+          "suite": "com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest",
+          "counts": {
+            "tests": 12,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "cases": [
+            {
+              "name": "introAcknowledgementDoesNotRepeatAfterCommandCoverRemount()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "freshIntroSnapshotWinsOverAStaleComposeProjection()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "replayInTheSameRenderedPhaseAcknowledgesTheNewGeneration()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "replayBeforeEffectDoesNotAcknowledgeTheStaleAssignmentGeneration()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "freshBriefingSnapshotWinsOverAStaleComposeProjection()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "acknowledgedBriefingSurvivesUiRecreationAndDisconnectPause()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "rejectionWithoutHostAcknowledgementDoesNotCreateOptimisticReadiness()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "briefingAcknowledgementDoesNotRepeatAfterCommandCoverRemount()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "phaseChangeBeforeEffectDoesNotSendThePreviousPhaseAcknowledgement()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "aReplacementControllerRechecksReadinessInTheSamePhase()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "unrelatedBriefingUpdatesDoNotResendWhileAuthorityHasNotResponded()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "acknowledgedIntroSurvivesUiRecreationAndDisconnectPause()[desktop]",
+              "status": "PASS"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IOS-B1",
+      "canonical_id": "IOS-B1",
+      "aliases": [],
+      "original_title": "Xcode can continue after the Kotlin framework build fails",
+      "original_severity": "Medium",
+      "original_finder": "/root",
+      "original_independent_validator": "/root/session_cont",
+      "original_refs": [
+        {
+          "path": "audit-runs/2026-09-05-source-audit/candidates/IOS-B1-xcode-swallowed-framework-failure.md",
+          "sha256": "231c7cc3e5020fd4d13b4a418b7a0e5be0ff8a238de8e7797619c2bce8acf93c"
+        },
+        {
+          "path": "audit-runs/2026-09-05-source-audit/validations/IOS-B1-session_cont.md",
+          "sha256": "951f83318a03aedcb2339da088297b0da90c171cc8982055e0e4a12366fe5503"
+        }
+      ],
+      "correction_exists": true,
+      "full_scoped_root_cause_approved": true,
+      "fix_author": "/root/root",
+      "remediation_independent_reviewer": "session_cont",
+      "correction": "Fail actual Xcode embed shell immediately on failed cd/Gradle; normalize only after success.",
+      "status": "FIXED AND VERIFIED — FOCUSED SCOPE; COMBINED PENDING",
+      "independent_refs": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/IOS-B1-independent-remediation-review-01.json",
+          "sha256": "3e04f4aeed79ba9f7528357fe18136386abcb90c5fe84abb86f3b76e64e236ab"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/IOS-B1-independent-remediation-review-01.md",
+          "sha256": "8d0f2eb8693356379329e17e134d63a991ef37d0111a6a7df472a4ee41e82b01"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/IOS-B1-independent-remediation-review-02-green.md",
+          "sha256": "6dd99298c8d85295227f1a3435ba1fd8f271e7fd4ec155b7110ea36fc98c52c9"
+        }
+      ],
+      "evidence_limits": "Five actual shell-phase tests and three normalizer tests; not a corrected qualified-Xcode app build or diagnosis of historical launch crashes.",
+      "compatibility": "No application identity/signing/embedding task/version changes beyond error propagation.",
+      "combined_status": "PENDING — no whole-repository completion claimed",
+      "focused_cycle": "ios-b1-phase-green",
+      "focused_python_tests": 8,
+      "broader_release_cycle": "release-system-green-01",
+      "broader_release_tests": 172
+    },
+    {
+      "id": "ROOT-T3",
+      "canonical_id": "ROOT-T3",
+      "aliases": [],
+      "original_title": "Non-Unit Jupiter tests silently omitted from discovery",
+      "original_severity": "Medium",
+      "original_finder": "/root",
+      "original_independent_validator": "/root/session_cont",
+      "original_refs": [
+        {
+          "path": "audit-runs/2026-09-05-source-audit/candidates/ROOT-T3-nonvoid-test-registration.md",
+          "sha256": "b9404a7b0d16b8bfb42d04f9af2fa3a83c220a7e1904d8c628303e7d2fc2d630"
+        },
+        {
+          "path": "audit-runs/2026-09-05-source-audit/validations/ROOT-T3-session_cont.md",
+          "sha256": "38275715c4b099d974fe980d788f2087029716b7859a63ee97cd104fd4951c21"
+        }
+      ],
+      "correction_exists": true,
+      "full_scoped_root_cause_approved": true,
+      "fix_author": "/root/root",
+      "remediation_independent_reviewer": "session_cont",
+      "correction": "Add explicit Unit result to10 annotated methods and actual compiled-signature discovery guard.",
+      "status": "FIXED AND VERIFIED — FOCUSED SCOPE; COMBINED PENDING",
+      "independent_refs": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/ROOT-T3-independent-remediation-review-01.json",
+          "sha256": "875e0723d0175ff193f7fee77a38333597a8114bf943aafc0eb837b0a604c199"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/session_cont/ROOT-T3-independent-remediation-review-01.md",
+          "sha256": "20c958f269669878dc68a58c6ab8a5eeaf5a7702b6591f3b74327771fc3aa85e"
+        }
+      ],
+      "evidence_limits": "Eight formerly omitted enabled methods now execute; two restored disabled descriptors remain skipped along with third existing physical skip.",
+      "compatibility": "No assertions/ignores weakened; no physical tests enabled.",
+      "combined_status": "PENDING — no whole-repository completion claimed",
+      "focused_cycle": "transport-static-green-02",
+      "focused_batch_status": "PASS",
+      "focused_xml": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+          "sha256": "dc215c94e2d6e0750fa2c52e57b14f8423b1ef528ef9d011de78441816c46134",
+          "suite": "com.parlor.transport.p2p.JupiterDiscoveryContractTest",
+          "counts": {
+            "tests": 1,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "cases": [
+            {
+              "name": "annotated_tests_including_disabled_tests_are_discoverable()[desktop]",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.xml",
+          "sha256": "c553824cfaffc14184e7388b81fba2e0a44c5ef2cdbcbdaac5c43d083d1f2865",
+          "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest",
+          "counts": {
+            "tests": 130,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "cases": [
+            {
+              "name": "host_overwrites_forged_reliable_start_ack_actors_with_authenticated_peer()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "expired_process_credential_invalidation_failure_is_explicit_and_redacted()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "final_leave_revokes_a_committed_rotation_that_has_not_been_adopted()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "process_resume_rejects_a_host_session_presenting_a_different_fingerprint()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "cancellation_during_kit_start_cleans_up_and_still_propagates()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "admission_pending_opens_a_separate_host_approval_window()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "closing_admissions_excludes_and_invalidates_disconnected_lobby_members()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_collector_drops_decoded_command_with_oversized_payload_and_accepts_followup()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "authoritative_session_end_disables_credential_resume_after_socket_close()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "foreground_permanent_rejection_revokes_the_entire_rotated_membership()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "failed_start_cleanup_preserves_membership_until_explicit_final_discard()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "peer_emits_host_lost_on_terminal_session_close()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "stale_permanent_rejection_cannot_erase_a_concurrently_rotated_generation()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "stale_room_leave_or_expiry_cannot_erase_a_newer_different_room_credential()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_application_queue_applies_bounded_backpressure_without_dropping_gameplay()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "fourth_fresh_wrong_code_attempt_from_same_identity_is_rate_limited()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_send_propagates_coroutine_cancellation()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "cancelling_discovery_aborts_immediately_and_stops_the_kit()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "failed_acceptance_delivery_rolls_back_the_seat_without_a_ghost_member()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "final_discard_from_abandoned_room_revokes_a_concurrently_rotated_membership()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_background_closes_existing_sessions_before_the_lifecycle_call_returns()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "explicit_cold_resume_discard_revokes_the_stored_membership()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_leave_finishes_cleanup_after_caller_is_cancelled()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_rejects_reliable_start_acknowledgements_before_admission()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "collectors_drop_non_binary_frames_and_accept_followup()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "disconnect_during_acceptance_rolls_back_the_seat_without_a_ghost_member()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "closing_admissions_is_an_atomic_barrier_around_in_flight_approval()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_emits_peer_left_and_removes_member_when_session_closes()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_rejects_a_session_without_an_authenticated_peer_fingerprint()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "cancellation_while_only_mismatched_admission_frames_arrive_propagates_and_cleans_up()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "peer_leave_finishes_cleanup_after_caller_is_cancelled()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_reports_actionable_denial_only_for_typed_permission_evidence()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "retirement_rolls_back_a_resume_offer_that_is_mid_delivery()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_emits_peer_left_and_removes_member_when_session_fails()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "terminal_frame_is_staged_until_the_session_layer_validates_it()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "resume_ready_failure_or_cancellation_closes_the_adopted_physical_session()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "join_surfaces_display_name_conflict_and_cleans_up()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "wrong_direction_frames_disconnect_only_the_modified_peer_after_three_strikes()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "cancellation_during_acceptance_propagates_after_rolling_back_the_seat()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "caller_timeout_cancellation_is_not_confused_with_the_join_deadline()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "repeated_background_notification_is_idempotent_and_does_not_extend_deadline()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "join_rejects_stale_peer_whose_last_seen_is_too_old()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_keeps_a_correct_code_request_pending_until_explicit_approval()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_capacity_is_atomic_across_concurrent_approvals()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "validated_terminal_commit_cancels_and_joins_resume_before_revocation()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "peer_sends_leave_notice_before_closing_session_on_leave()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_reports_operational_access_only_after_real_advertising_succeeds()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_marks_member_disconnected_on_reconnecting_then_emits_reconnected_on_recovery()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "pending_admissions_and_pre_admission_sessions_have_hard_room_limits()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "permanent_rejection_invalidation_failure_surfaces_secure_storage_error()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "peer_transport_recovery_while_backgrounded_cannot_reactivate_retired_session()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "cancellation_during_process_resume_stops_the_fresh_kit_and_propagates()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "peer_emits_host_lost_then_host_restored_on_reconnect_cycle()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "process_recreation_prefers_a_pending_different_room_that_the_host_may_have_committed()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "peer_rejects_encoded_frames_above_the_directional_host_limit()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_rejects_a_physical_session_that_arrives_after_background_retirement()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "simultaneous_same_name_requests_create_only_one_pending_seat()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "authenticated_permanent_resume_rejection_invalidates_matching_credential()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_rejects_a_session_whose_authenticated_peer_id_disagrees_with_the_peer()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "staged_terminal_from_replaced_session_cannot_revoke_rotated_membership()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_leave_continues_cleanup_after_a_session_close_fails()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "collectors_drop_oversized_wire_frames_and_accept_followup()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "join_rejects_a_noncanonical_host_display_identity_before_storing_membership()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "join_surfaces_wrong_code_and_cleans_up_when_visible_hosts_reject_it()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "fatal_kit_factory_and_startup_failures_are_not_mapped_to_transport_results()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_overwrites_forged_client_command_actor_with_authenticated_peer()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "fatal_send_and_cleanup_failures_are_never_converted_to_normal_results()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "transport_serializes_platform_lifecycle_into_the_active_host_room()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "peer_arms_its_host_message_collector_before_room_construction_returns()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_leave_is_idempotent_and_stops_the_kit_once()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "idle_pre_admission_sessions_expire_on_virtual_deadline_and_release_tracking_slots()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "peer_terminal_disconnect_while_foreground_starts_credential_resume()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_rejects_resume_when_the_presented_fingerprint_differs_from_the_stored_credential()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_emits_peer_reconnected_for_a_returning_player_via_new_session()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_foreground_does_not_reactivate_the_session_retired_on_background()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "foreground_identity_mismatch_is_transient_and_retries_without_expiring_membership()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "successful_resume_that_loses_terminal_ownership_race_closes_unadopted_session()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "credential_store_failure_is_diagnostic_and_never_exports_credential_material()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "cancellation_from_credential_invalidation_propagates_after_room_cleanup()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "invalid_room_code_or_display_name_is_rejected_before_kit_initialization()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "explicit_final_leave_reports_secure_delete_failure_and_can_retry_after_close()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "peer_send_propagates_coroutine_cancellation()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "peer_foreground_within_grace_uses_a_fresh_credential_bound_session()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "room_code_entry_is_not_claimed_as_manual_endpoint_connection()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "join_accepts_peer_with_null_last_seen_when_name_matches_room_code()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "collectors_drop_truncated_cbor_frames_and_accept_followup()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "explicit_cold_resume_discard_fails_closed_when_secure_removal_fails()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "peer_disconnects_a_modified_host_that_sends_peer_protocol_frames()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_emits_peer_left_when_peer_sends_leave_notice()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "transient_process_resume_failure_retains_exact_credential()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "failed_terminal_commit_does_not_disable_the_live_room()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "collectors_drop_wrong_direction_frames_and_accept_followup()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_keeps_generic_start_failure_unclassified_instead_of_guessing_denial()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_send_direct_returns_not_connected_after_session_closes()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "peer_replaces_terminal_session_with_rotated_pinned_resume_before_host_restored()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "peer_application_queue_applies_bounded_backpressure_to_host_snapshots()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "retransmitted_request_on_same_pending_session_is_idempotent_not_rate_limited()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "peer_background_retires_the_old_session_before_the_lifecycle_call_returns()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_arms_a_new_sessions_inbound_collector_before_accepting_another_session()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_background_close_preserves_cancellation()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "lifecycle_grace_expiry_is_terminal_and_stops_the_kit_once()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "wrong_room_does_not_end_search_before_a_late_correct_candidate_appears()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_leave_stops_advertising_before_stopping_kit()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_atomically_reserves_exact_display_names_across_host_pending_and_member_seats()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "terminal_policy_tracks_the_current_rotated_generation_not_the_old_collector()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_emits_peer_joined_and_updates_members_when_session_arrives()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "failed_final_discard_is_reported_and_remains_retryable()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "lifecycle_grace_expires_without_an_additional_platform_callback()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "expired_process_credential_is_conditionally_invalidated_before_resume_is_offered()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_broadcast_isolates_peer_failure_and_attempts_later_connected_peers()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "cancelling_an_in_flight_candidate_dial_propagates_and_stops_the_kit()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "retiring_a_frozen_disconnected_seat_revokes_rejoin_and_is_idempotent()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_leave_clears_members_and_emits_no_events_after_cancellation()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "credential_resume_replaces_retired_session_even_if_old_session_reports_connected()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "kit_factory_cancellation_is_never_mapped_to_transport_failure()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "foreground_authenticated_permanent_rejection_expires_and_invalidates_credential()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "process_recreation_resumes_from_protected_storage_with_pinned_identity_and_ready_handoff()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "peer_send_to_host_returns_not_connected_after_session_closes()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "peer_leave_and_lifecycle_expiry_conditionally_invalidate_their_matching_credential()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "join_times_out_when_no_matching_room_appears()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "authenticated_terminal_frame_invalidates_matching_credential_before_ui_cleanup()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "peer_leave_is_idempotent_and_stops_the_kit_once()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_advertisement_never_contains_the_room_code()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "transport_arms_the_host_session_acceptor_before_advertising()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_does_not_publish_peer_joined_until_peer_inbound_collector_is_ready()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "admission_waits_ignore_reordered_and_duplicate_frames_from_other_phases()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_rejects_a_wrong_code_without_creating_a_member_or_pending_seat()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "terminal_unadmitted_sessions_release_their_state_collectors()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "host_broadcast_returns_not_connected_when_no_peer_is_connected()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "transient_connect_failures_retry_same_candidate_with_bounded_backoff()[desktop]",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+          "sha256": "f04dd0ef4d357d63b7812f061580d5c51233191cab0582bfd7e89a897118a67c",
+          "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+          "counts": {
+            "tests": 4,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 3
+          },
+          "cases": [
+            {
+              "name": "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]",
+              "status": "SKIP"
+            },
+            {
+              "name": "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+              "status": "SKIP"
+            },
+            {
+              "name": "host_broadcast_reaches_every_peer()[desktop]",
+              "status": "SKIP"
+            },
+            {
+              "name": "host_advertises_a_room_code_that_join_resolves_to()[desktop]",
+              "status": "PASS"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MF-C1",
+      "canonical_id": "M-C01",
+      "aliases": [
+        "MF-C1"
+      ],
+      "original_title": "Doctor recovery history can contradict the last resolved night",
+      "original_severity": "Low",
+      "original_finder": "/root/mafia_cont",
+      "original_independent_validator": "/root/whodunit_cont",
+      "original_refs": [
+        {
+          "path": "audit-runs/2026-09-05-source-audit/candidates/M-C01-doctor-recovery-history.md",
+          "sha256": "a2d1d8f129397a432ba61404554874225c4ef50a2741663be5d8b46ef74e473b"
+        },
+        {
+          "path": "audit-runs/2026-09-05-source-audit/validations/MF-C1-whodunit_cont.md",
+          "sha256": "fb830e272c4f73b514ec79b3a1a51db24f3cbb750887ba087f279562a1bb1c00"
+        }
+      ],
+      "correction_exists": true,
+      "full_scoped_root_cause_approved": true,
+      "fix_author": "/root/mafia_cont",
+      "remediation_independent_reviewer": "whodunit_cont",
+      "correction": "Bind nonterminal Doctor private previous protection to newest canonical night record regardless of repeat setting/death/history cap. Reuse existing setting and shared Mafia-only UI predicate.",
+      "status": "FIXED AND VERIFIED — FOCUSED SCOPE; COMBINED PENDING",
+      "independent_refs": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MF-C1-M-C03-independent-evidence.json",
+          "sha256": "08b7012c575315873f0822d3dbaa6bb46c205e1b71e71f3d7f59a3f3b172ae91"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MF-C1-M-C03-independent-review.md",
+          "sha256": "ae821d8d7b8f8480b5691e9f60c3dd657c80f756512c5e43ffb46f57cd6bdff9"
+        }
+      ],
+      "evidence_limits": "Existing ON feature independently exercised across four nights; OFF restriction, skips, self flag, recovery, phase, death, caps, local resume and in-memory peer paths checked.",
+      "compatibility": "Existing default OFF, existing serialized flag, snapshot schema/protocol4.2 preserved; legitimate ON saves accepted, malformed mismatches rejected; host history not sent to peers.",
+      "combined_status": "PENDING — no whole-repository completion claimed",
+      "focused_cycle": "games-session-desktop-03",
+      "focused_batch_status": "FAIL",
+      "focused_xml": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.MafiaDoctorRulesTest.xml",
+          "sha256": "5f445dc1aa3cdcfdc985ed0c7bb757663dcc818ceb31141c4f48a17e0cc26769",
+          "suite": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+          "counts": {
+            "tests": 8,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "cases": [
+            {
+              "name": "enabled_setting_saves_same_living_target_for_four_consecutive_nights()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "repeat_is_default_off_for_every_supported_player_count()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "enabling_repeats_does_not_allow_dead_targets_or_a_non_doctor_actor()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "skipped_night_clears_previous_effective_target_but_consumes_submission()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "repeat_and_self_protection_settings_are_independent()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "setup_draft_and_action_codec_commit_selection_once_without_changing_assignment()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "disabled_setting_rejects_repeat_and_allows_alternating_targets()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "first_valid_target_cannot_be_replaced_or_skipped_later_that_night()[desktop]",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest.xml",
+          "sha256": "e2be79ec9e5b5855e28174b3b795b16056bdec32851852caa9a8fd4c2d97a29e",
+          "suite": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+          "counts": {
+            "tests": 15,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "cases": [
+            {
+              "name": "killed_doctor_keeps_last_effective_target_until_next_resolution_then_clears_it()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "terminal_cleanup_does_not_require_historical_protection_to_be_erased()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "repeated_protection_history_is_valid_only_with_setting_enabled()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "mafia_coordination_revote_preserves_doctor_history_and_own_submission()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "resumed_local_controller_enforces_the_persisted_repeat_setting()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "peer_projections_keep_only_own_private_history_and_do_not_require_host_logs()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "no_doctor_configuration_keeps_null_history_and_rejects_foreign_private_history()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "private_previous_protection_must_match_retained_history_in_every_active_phase()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "initial_setup_role_assignment_and_first_night_have_no_previous_protection()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "null_effective_protection_cannot_be_replaced_by_an_old_legal_target()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "doctor_eliminated_by_day_vote_retains_previous_night_binding()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "history_binding_also_applies_during_a_day_revote()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "latest_binding_survives_history_capping_without_requiring_missing_predecessors()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "death_of_previous_target_does_not_erase_last_effective_protection()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "normal_terminal_win_also_clears_private_history_without_discarding_host_history()[desktop]",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaDoctorLanTest.xml",
+          "sha256": "a719d214eb686a2dfadadbfd5caf9e30f291b65edd3f548d221b4636fa63c09e",
+          "suite": "com.parlor.games.mafia.multidevice.MafiaDoctorLanTest",
+          "counts": {
+            "tests": 2,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "cases": [
+            {
+              "name": "only_host_can_commit_setup_selection_and_no_one_can_change_it_after_start()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "rejoin_preserves_doctor_restriction_setting_and_first_submission_without_host_secrets()[desktop]",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest.xml",
+          "sha256": "53d3d4d2927520297d26c07805953abf6215eb52b8a1d97afa6fc6c7cb704aa6",
+          "suite": "com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest",
+          "counts": {
+            "tests": 2,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "cases": [
+            {
+              "name": "canonical_local_and_projected_lan_choices_honor_both_independent_settings()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "eligibility_matches_reducer_acceptance_before_each_first_submission()[desktop]",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest.xml",
+          "sha256": "c5bc4063f6311e7ae9286bd27a1be0c433bfa3ed8d1fb31130e2aceefb1db8bc",
+          "suite": "com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest",
+          "counts": {
+            "tests": 2,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "cases": [
+            {
+              "name": "arabic_consecutive_nights_toggle_defaults_off_and_commits_on_and_off()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "english_consecutive_nights_toggle_defaults_off_and_commits_on_and_off()[desktop]",
+              "status": "PASS"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "WD-C3",
+      "canonical_id": "WD-C3",
+      "aliases": [],
+      "original_title": "Active final-two Elimination snapshot accepted",
+      "original_severity": "Low",
+      "original_finder": "/root/whodunit_cont",
+      "original_independent_validator": "/root",
+      "original_refs": [
+        {
+          "path": "audit-runs/2026-09-05-source-audit/candidates/WD-C3-whodunit_cont.md",
+          "sha256": "3e8e7ac801e7d6af280dca961301bd59be61fa0637564524a2e02fac697eab45"
+        },
+        {
+          "path": "audit-runs/2026-09-05-source-audit/validations/WD-C3-root.md",
+          "sha256": "ac1e4e6da1f61b35c9973c5e9dfc29f6d1c8378c3075d2c92d35c7434ceae6cc"
+        }
+      ],
+      "correction_exists": true,
+      "full_scoped_root_cause_approved": true,
+      "fix_author": "/root/whodunit_cont",
+      "remediation_independent_reviewer": "root",
+      "correction": "Reject active Elimination Round/TiedRevote states with at most two living survivors; retain legitimate terminal states.",
+      "status": "FIXED AND VERIFIED — FOCUSED SCOPE; COMBINED PENDING",
+      "independent_refs": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/root/WD-C3-independent-fix-review-01.json",
+          "sha256": "32b0b19e68baa5f72f2c9e169cf66206490ce97b8dc72ac5b2378549314577fe"
+        }
+      ],
+      "evidence_limits": "Nine strict encode/decode/local-load/own-private tests with real6-seat bundled case; no normal producer or cryptographic bypass allegation.",
+      "compatibility": "No schema/content/protocol version change; fail closed instead of repairing malformed state.",
+      "combined_status": "PENDING — no whole-repository completion claimed",
+      "focused_cycle": "design-whodunit-desktop-01",
+      "focused_batch_status": "FAIL",
+      "focused_xml": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest.xml",
+          "sha256": "28cb42f4796624751890b004af8b0d48f94fa20691e120bcbdf344f0187d5438",
+          "suite": "com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest",
+          "counts": {
+            "tests": 9,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "cases": [
+            {
+              "name": "everyOwnPrivatePeerBoundaryRejectsAReopenedFinalTwo()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "earlyEndWithAndWithoutDisclosureRemainRecoverable()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "currentDecoderRejectsCanonicalJsonThatReopensTheFinalTwo()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "aLegalLastRoundKillerEliminationStillAllowsTwoInnocentSurvivors()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "legalFinalTwoKillerVictoryStillRecoversThroughPostGameAndReplay()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "productionLocalResumeLoaderRejectsAnImpossibleTrustedPayload()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "currentEncoderRejectsEveryReopenedFinalTwoSubstate()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "bareLegacyPayloadCannotRepairAnImpossibleActiveFinalTwo()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "caseBoundRecoveryRejectsFinalTwoEvenWithTheCorrectContentIdentity()[desktop]",
+              "status": "PASS"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M-C03",
+      "canonical_id": "M-C03",
+      "aliases": [],
+      "original_title": "Legal long player name can erase final-role text in Mafia post-game row",
+      "original_severity": "Low",
+      "original_finder": "/root/mafia_cont",
+      "original_independent_validator": "/root",
+      "original_refs": [
+        {
+          "path": "audit-runs/2026-09-05-source-audit/candidates/M-C03-mafia-row-layout.md",
+          "sha256": "c18e3ef2aef2a61d723e050a1d6fcceab19a1b119e14d13431b073915faeb494"
+        },
+        {
+          "path": "audit-runs/2026-09-05-source-audit/validations/M-C03-root.md",
+          "sha256": "b2273fdaae369f53d02dd6b13ce3343c8e81a8825a9cbdc6616468e946fe92ed"
+        }
+      ],
+      "correction_exists": true,
+      "full_scoped_root_cause_approved": true,
+      "fix_author": "/root/mafia_cont",
+      "remediation_independent_reviewer": "whodunit_cont",
+      "correction": "Use full-width name-over-role Column in shared Mafia final-results composable.",
+      "status": "FIXED AND VERIFIED — FOCUSED SCOPE; COMBINED PENDING",
+      "independent_refs": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MF-C1-M-C03-independent-evidence.json",
+          "sha256": "08b7012c575315873f0822d3dbaa6bb46c205e1b71e71f3d7f59a3f3b172ae91"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MF-C1-M-C03-independent-review.md",
+          "sha256": "ae821d8d7b8f8480b5691e9f60c3dd657c80f756512c5e43ffb46f57cd6bdff9"
+        }
+      ],
+      "evidence_limits": "Six Desktop real-composable cases EN/AR,320dp,landscape,font scales1/2; native screens/readers remain separate.",
+      "compatibility": "Only final intentional public-role layout; no game-rule or private-state change.",
+      "combined_status": "PENDING — no whole-repository completion claimed",
+      "focused_cycle": "games-session-desktop-03",
+      "focused_batch_status": "FAIL",
+      "focused_xml": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest.xml",
+          "sha256": "6512c799cfcdf12d94af62319f3ef45036dcd855d7ef5372e6368948f40584ef",
+          "suite": "com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest",
+          "counts": {
+            "tests": 6,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "cases": [
+            {
+              "name": "compact_arabic_long_name_does_not_consume_final_role_width()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "compact_english_long_name_does_not_consume_final_role_width()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "landscape_large_text_arabic_roles_remain_scrollable()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "compact_large_text_english_preserves_every_final_role()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "landscape_large_text_english_roles_remain_scrollable()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "compact_large_text_arabic_preserves_every_final_role()[desktop]",
+              "status": "PASS"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DS-C01",
+      "canonical_id": "DS-C01",
+      "aliases": [],
+      "original_title": "iOS Follow System can retain the app's explicit language after restart",
+      "original_severity": "Low",
+      "original_finder": "/root/mafia_cont",
+      "original_independent_validator": "/root",
+      "original_refs": [
+        {
+          "path": "audit-runs/2026-09-05-source-audit/candidates/DS-C01-ios-follow-system-locale.md",
+          "sha256": "91c012cf770f6edc4e75b7c42cb12e1f218fa2b555afb901cbf6a9b3ddcd54f2"
+        },
+        {
+          "path": "audit-runs/2026-09-05-source-audit/validations/DS-C01-root.md",
+          "sha256": "f694719ff8faf5dc7d1b0b4ab8beaf31a14353d403fec5f61f45b19c6ff2622c"
+        }
+      ],
+      "correction_exists": true,
+      "full_scoped_root_cause_approved": false,
+      "fix_author": "/root/root",
+      "remediation_independent_reviewer": "native_fix_review",
+      "correction": "Persist provenance for Parlor-owned iOS language override, reconcile application-domain prior value/absence on System/disposal/restart; update stale source-contract test and declare platform locale inputs.",
+      "status": "PARTIALLY VERIFIED",
+      "independent_refs": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/independent-review.json",
+          "sha256": "f2daf4d18fc856bbe2ae45f269c6e612f7d63e4ab9253fb36c75a2809e0cd334"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/INDEPENDENT_REVIEW.md",
+          "sha256": "3b23002f8a347aa22a8c70bd797d791cc08fcbc921ba4a6015297340608fce46"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C01-source-contract-review-03.json",
+          "sha256": "28b7723ede03eeb10302dbf4a6aa64649774529b6b8c719844aa31dc75d4e076"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C01-source-contract-green-review-04.json",
+          "sha256": "fbe3a4d016e12baeeeaba20a3adf516868aa6f3b77f9fb399ef6be26e89e20ba"
+        }
+      ],
+      "evidence_limits": "Native11 owner tests pass; unmarked legacy values cannot be distinguished from OS-managed values. Same-value external writes and asynchronous UserDefaults durability remain limitations. No actual killed/relaunched-app or live UIKit session continuity matrix.",
+      "compatibility": "No session recreation or settings-schema migration; new private ownership bookkeeping does not justify deleting unowned AppleLanguages.",
+      "combined_status": "PENDING — no whole-repository completion claimed",
+      "focused_cycle": "native-storage-language-02",
+      "focused_batch_status": "PASS",
+      "focused_xml": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-storage-language-02/reports/shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest.xml",
+          "sha256": "d445405c37d48da03915f4d8e8b4ec636fc58c06c7ba5b9e82df32d2dbcab3ca",
+          "suite": "com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest",
+          "counts": {
+            "tests": 11,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "cases": [
+            {
+              "name": "system_after_interrupted_lifetime_removes_only_owned_override[iosSimulatorArm64]",
+              "status": "PASS"
+            },
+            {
+              "name": "explicit_choice_after_restart_keeps_original_os_value_for_later_system[iosSimulatorArm64]",
+              "status": "PASS"
+            },
+            {
+              "name": "fallback_language_is_never_promoted_to_the_application_domain[iosSimulatorArm64]",
+              "status": "PASS"
+            },
+            {
+              "name": "external_preference_changes_win_over_owned_cleanup[iosSimulatorArm64]",
+              "status": "PASS"
+            },
+            {
+              "name": "unmarked_identical_values_are_not_claimed_or_removed[iosSimulatorArm64]",
+              "status": "PASS"
+            },
+            {
+              "name": "interrupted_preparation_does_not_delete_an_unmodified_preference[iosSimulatorArm64]",
+              "status": "PASS"
+            },
+            {
+              "name": "malformed_owner_record_cannot_clear_os_preferences[iosSimulatorArm64]",
+              "status": "PASS"
+            },
+            {
+              "name": "malformed_previous_value_is_never_installed_as_a_language_array[iosSimulatorArm64]",
+              "status": "PASS"
+            },
+            {
+              "name": "interrupted_preparation_without_previous_value_keeps_fallback_unowned[iosSimulatorArm64]",
+              "status": "PASS"
+            },
+            {
+              "name": "interrupted_release_cannot_restore_over_a_new_os_preference[iosSimulatorArm64]",
+              "status": "PASS"
+            },
+            {
+              "name": "multiple_runtime_switches_restore_original_preference[iosSimulatorArm64]",
+              "status": "PASS"
+            }
+          ]
+        }
+      ],
+      "source_contract_followup_cycle": "locale-source-contract-green-01",
+      "source_contract_xml": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/locale-source-contract-green-01/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.ProductionUiAccessibilityContractTest.xml",
+        "sha256": "2b80f06056bd7359e34cd0f7db4d4dd3fc322f242d9d14989fbc412407cfccf6",
+        "suite": "com.parlor.app.ProductionUiAccessibilityContractTest",
+        "counts": {
+          "tests": 13,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "cases": [
+          {
+            "name": "controls_use_vector_icons_instead_of_font_dependent_text_glyphs()[desktop]",
+            "status": "PASS"
+          },
+          {
+            "name": "game_catalog_renders_only_registered_shipping_games()[desktop]",
+            "status": "PASS"
+          },
+          {
+            "name": "shell_done_actions_dismiss_the_software_keyboard()[desktop]",
+            "status": "PASS"
+          },
+          {
+            "name": "passive_waiting_surfaces_do_not_publish_no_op_click_actions()[desktop]",
+            "status": "PASS"
+          },
+          {
+            "name": "localized_format_resources_use_the_platform_formatter()[desktop]",
+            "status": "PASS"
+          },
+          {
+            "name": "fullscreen_text_surfaces_keep_actions_reachable_with_large_text()[desktop]",
+            "status": "PASS"
+          },
+          {
+            "name": "mafia_target_rows_expose_radio_selection_and_revalidate_stale_selection()[desktop]",
+            "status": "PASS"
+          },
+          {
+            "name": "wax_seal_exposes_a_one_shot_button_action_beside_pointer_hold()[desktop]",
+            "status": "PASS"
+          },
+          {
+            "name": "fullscreen_recovery_and_confirmation_states_hide_or_replace_interactive_content()[desktop]",
+            "status": "PASS"
+          },
+          {
+            "name": "every_custom_click_or_selection_surface_declares_an_accessibility_role()[desktop]",
+            "status": "PASS"
+          },
+          {
+            "name": "recovery_surfaces_are_announced_and_continuous_indicators_are_motion_aware()[desktop]",
+            "status": "PASS"
+          },
+          {
+            "name": "nullable_language_override_and_platform_motion_preference_reach_the_app_shell()[desktop]",
+            "status": "PASS"
+          },
+          {
+            "name": "platform_locale_overrides_are_commit_scoped_and_do_not_mutate_shared_resources()[desktop]",
+            "status": "PASS"
+          }
+        ]
+      }
+    },
+    {
+      "id": "DS-C02",
+      "canonical_id": "DS-C02",
+      "aliases": [],
+      "original_title": "reusing live-queue-derived toast IDs can hide a new notification permanently",
+      "original_severity": "Low",
+      "original_finder": "/root/mafia_cont",
+      "original_independent_validator": "/root",
+      "original_refs": [
+        {
+          "path": "audit-runs/2026-09-05-source-audit/candidates/DS-C02-toast-identity-reuse.md",
+          "sha256": "6cf95b1ac317cfb56a7c846c0adad91ff7532e3d69b3519a3ef9b7253040e5ef"
+        },
+        {
+          "path": "audit-runs/2026-09-05-source-audit/validations/DS-C02-root.md",
+          "sha256": "0f3991333a99bdca544ffd352d59c1d1e9f8816695be55c648c33b3163526830"
+        }
+      ],
+      "correction_exists": true,
+      "full_scoped_root_cause_approved": true,
+      "fix_author": "/root/root",
+      "remediation_independent_reviewer": "whodunit_cont",
+      "correction": "Reserve distinct toast lifetimes independently of live queue and key presentation by owner+identity.",
+      "status": "FIXED AND VERIFIED — FOCUSED SCOPE; COMBINED PENDING",
+      "independent_refs": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-C03-independent-evidence.json",
+          "sha256": "1f0b7e23936e89091983b7728bba968e0c958d5dacc7c3ecff28c80df35da21d"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-C03-independent-review.md",
+          "sha256": "18f751fa243ff134a25725cb284363f7af0990a4f374cc183a1ea3415bad55c0"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-additional-tests-execution-approval.json",
+          "sha256": "059db45339be3d0b7f7096fd296b5e2326ac069e618b71652983d5abc5404513"
+        }
+      ],
+      "evidence_limits": "State4/lifetime3/concurrency2 tests; Desktop timing only. Paused-frame fixture failure investigated, not hidden.",
+      "compatibility": "Queue4/coalescing/stale dismissal/expiry retained; bounded concurrency evidence not proof of all schedules.",
+      "combined_status": "PENDING — no whole-repository completion claimed",
+      "focused_cycle": "design-toast-cover-02",
+      "focused_batch_status": "PASS",
+      "focused_xml": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+          "sha256": "2892ce0c8e7a58d22920838a3c6e94efcad23f0e322bde49e4dede7b03c3cf6f",
+          "suite": "com.parlor.designsystem.components.ParlorToastStateTest",
+          "counts": {
+            "tests": 4,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "cases": [
+            {
+              "name": "queue_is_bounded_and_keeps_the_latest_distinct_messages()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "adjacent_duplicate_message_is_coalesced()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "dismissed_identity_cannot_dismiss_a_new_lifetime_even_with_identical_text()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "coalescing_preserves_existing_lifetime_and_eviction_does_not_recycle_it()[desktop]",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastLifetimeTest.xml",
+          "sha256": "4b30b6a773dd7ce3d55fa7a1ca51700b7471143840fdc9a64ee776a86515894b",
+          "suite": "com.parlor.designsystem.components.ParlorToastLifetimeTest",
+          "counts": {
+            "tests": 3,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "cases": [
+            {
+              "name": "replacement_state_owner_with_same_numeric_id_gets_its_own_lifetime()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "replacement_after_automatic_dismiss_gets_fresh_visibility_and_timer()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "identical_text_after_automatic_dismiss_is_a_new_lifetime()[desktop]",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastConcurrencyTest.xml",
+          "sha256": "3f4c707d5b8d6c9c149cd78c43ba9eb70b830c5fc4a81a18b27353d39988774d",
+          "suite": "com.parlor.designsystem.components.ParlorToastConcurrencyTest",
+          "counts": {
+            "tests": 2,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "cases": [
+            {
+              "name": "concurrent_identical_messages_still_coalesce_and_floods_remain_bounded()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "concurrent_producers_cannot_reuse_lifetime_ids_or_lose_a_non_overflowing_wave()[desktop]",
+              "status": "PASS"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "DS-C03",
+      "canonical_id": "DS-C03",
+      "aliases": [],
+      "original_title": "light-theme recovery Leave labels use dark text on black",
+      "original_severity": "Low",
+      "original_finder": "/root/mafia_cont",
+      "original_independent_validator": "/root/whodunit_cont",
+      "original_refs": [
+        {
+          "path": "audit-runs/2026-09-05-source-audit/candidates/DS-C03-light-cover-ghost-contrast.md",
+          "sha256": "83356495a74bc999dc292e32118cdc50e66cbc4b71b85197aeacd5c735e94337"
+        },
+        {
+          "path": "audit-runs/2026-09-05-source-audit/validations/DS-C03-whodunit_cont.md",
+          "sha256": "81a740b63f3524d2f56abb6aa414501a749021c1d9214a918cc69d604d3b880b"
+        }
+      ],
+      "correction_exists": true,
+      "full_scoped_root_cause_approved": true,
+      "fix_author": "/root/root",
+      "remediation_independent_reviewer": "whodunit_cont",
+      "correction": "Add CoverGhost using cover foreground for black recovery surfaces, leave ordinary Ghost unchanged.",
+      "status": "FIXED AND VERIFIED — FOCUSED SCOPE; COMBINED PENDING",
+      "independent_refs": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-C03-independent-evidence.json",
+          "sha256": "1f0b7e23936e89091983b7728bba968e0c958d5dacc7c3ecff28c80df35da21d"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-C03-independent-review.md",
+          "sha256": "18f751fa243ff134a25725cb284363f7af0990a4f374cc183a1ea3415bad55c0"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-additional-tests-execution-approval.json",
+          "sha256": "059db45339be3d0b7f7096fd296b5e2326ac069e618b71652983d5abc5404513"
+        }
+      ],
+      "evidence_limits": "Three actual-composable contrast cases plus focus regression; analytic pressed/disabled contrasts not physical a11y proof.",
+      "compatibility": "No privacy-cover/back/callback semantics or ordinary light-theme button color regression identified.",
+      "combined_status": "PENDING — no whole-repository completion claimed",
+      "focused_cycle": "design-toast-cover-02",
+      "focused_batch_status": "PASS",
+      "focused_xml": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.RecoveryActionContrastTest.xml",
+          "sha256": "be5e05973449b8afb7446ff18e38328b93268dbbd5c04dad59055858cb46770e",
+          "suite": "com.parlor.designsystem.components.RecoveryActionContrastTest",
+          "counts": {
+            "tests": 3,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "cases": [
+            {
+              "name": "disconnected_host_leave_is_readable_in_both_themes()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "reconnecting_leave_is_readable_in_both_themes()[desktop]",
+              "status": "PASS"
+            },
+            {
+              "name": "ordinary_ghost_button_retains_its_theme_appropriate_foreground()[desktop]",
+              "status": "PASS"
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ReconnectingOverlayFocusTest.xml",
+          "sha256": "7306ee6a10e82b463340d54712dab6f1936c2f703972cdd70145a01d98fcd33e",
+          "suite": "com.parlor.designsystem.components.ReconnectingOverlayFocusTest",
+          "counts": {
+            "tests": 1,
+            "failures": 0,
+            "errors": 0,
+            "skipped": 0
+          },
+          "cases": [
+            {
+              "name": "overlay_excludes_covered_controls_from_keyboard_focus_until_hidden()[desktop]",
+              "status": "PASS"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "WD-C2",
+      "canonical_id": "WD-C2",
+      "aliases": [],
+      "original_title": "Bundled Whodunit chronologies contain incompatible facts",
+      "original_severity": "Low",
+      "original_finder": "/root/whodunit_cont",
+      "original_independent_validator": "/root/mafia_cont",
+      "original_refs": [
+        {
+          "path": "audit-runs/2026-09-05-source-audit/candidates/WD-C2-whodunit_cont.md",
+          "sha256": "afdd8a9f8669f8ff5c543cf36f15b9bf0045947162896026f2efa8a10487e615"
+        },
+        {
+          "path": "audit-runs/2026-09-05-source-audit/validations/WD-C2-mafia_cont.md",
+          "sha256": "e6a632d2c371a642da9183d1334ab6806daffad4c8319ea58c974cec33181df4"
+        }
+      ],
+      "correction_exists": false,
+      "full_scoped_root_cause_approved": false,
+      "fix_author": "none; owner decision required",
+      "remediation_independent_reviewer": "mafia_cont",
+      "correction": "NO FIX APPLIED: four incompatible story chronologies await specific author choices.",
+      "status": "BLOCKED",
+      "independent_refs": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/WD-C2-blocked.md",
+          "sha256": "5e70e73ec73e946b92abb10e1189ef5549b4f37ee1cccbf8b0d24cb5ea2c1bb1"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/wd-c2-unmodified-resources.json",
+          "sha256": "0de7e18da4500b58542daba4217a96426679d903ba456ff846093762833de232"
+        }
+      ],
+      "evidence_limits": "Last Dinner9:00/9:15; Layla outage9:05/9:45; Jasmine hiding duration; Khan poisoning/arrival times unresolved.",
+      "compatibility": "All four raw resources remain1.0.0 and byte-identical to HEAD. Later edits change canonical content digest and require explicit save/admission compatibility decision.",
+      "combined_status": "PENDING — no whole-repository completion claimed"
+    },
+    {
+      "id": "RL-C1",
+      "canonical_id": "RL-C1",
+      "aliases": [],
+      "original_title": "Android artifact size guard mixes BSD/GNU stat output",
+      "original_severity": "Medium",
+      "original_finder": "/root/whodunit_cont",
+      "original_independent_validator": "/root/session_cont",
+      "original_refs": [
+        {
+          "path": "audit-runs/2026-09-05-source-audit/candidates/RL-C1-whodunit_cont.md",
+          "sha256": "03534c76b1cb3c1d83921fdb2d2604322d66527109766e5b1cd70be362b09635"
+        },
+        {
+          "path": "audit-runs/2026-09-05-source-audit/validations/RL-C1-session_cont.md",
+          "sha256": "d949d53eae4943723e17010d266595f717a3bb499d90c977e32240e34ea048bd"
+        }
+      ],
+      "correction_exists": true,
+      "full_scoped_root_cause_approved": true,
+      "fix_author": "/root/root",
+      "remediation_independent_reviewer": "mafia_cont + release_fix_review",
+      "correction": "Replace both BSD/GNU stat fallbacks with one strict portable Python regular-file size guard.",
+      "status": "FIXED AND VERIFIED — FOCUSED SCOPE; COMBINED PENDING",
+      "independent_refs": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/mafia/rl-c1-independent-fix-review-01.json",
+          "sha256": "623d83ad4b20674179887f49c2e733026f0149bd831e91f3ab3ae100e94f941f"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-interactions-01.json",
+          "sha256": "bd900c84f3e0949c0ae3dd04cc1173c171e24150e2e8f78bb36ba64d74386201"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-approval-02.json",
+          "sha256": "e4d58a9ea4131b7399347ff38b5858630a9c8068f6ddf9683ca2f68e20ed5e30"
+        }
+      ],
+      "evidence_limits": "Seven real shell-preflight fixtures include exact/over bounds and GNU-shaped shim; not an actual Linux signed-AAB run.",
+      "compatibility": "Existing512MiB/10MiB bounds, digest/identity/signature safeguards preserved; publication remains disabled.",
+      "combined_status": "PENDING — no whole-repository completion claimed",
+      "focused_cycle": "rl-c1-green",
+      "focused_python_tests": 7,
+      "broader_release_cycle": "release-system-green-01",
+      "broader_release_tests": 172
+    },
+    {
+      "id": "RL-C2",
+      "canonical_id": "RL-C2",
+      "aliases": [],
+      "original_title": "Strict JAR verification lacks upload-certificate trust input",
+      "original_severity": "Medium",
+      "original_finder": "/root/whodunit_cont",
+      "original_independent_validator": "/root/session_cont",
+      "original_refs": [
+        {
+          "path": "audit-runs/2026-09-05-source-audit/candidates/RL-C2-whodunit_cont.md",
+          "sha256": "89482c9c2a08c1ce58866f4f620de7f499926b86ce74561b5aa59b8a99f5d9e8"
+        },
+        {
+          "path": "audit-runs/2026-09-05-source-audit/validations/RL-C2-session_cont.md",
+          "sha256": "260c5fe7144299805ad533c6dfd8c7bac9fb4fb983288728d7666da883bd826e"
+        }
+      ],
+      "correction_exists": true,
+      "full_scoped_root_cause_approved": true,
+      "fix_author": "/root/root",
+      "remediation_independent_reviewer": "release_fix_review",
+      "correction": "Verify each signed payload and approved leaf; validate self-signed certificate policy before ephemeral public trust, then require strict jarsigner. Separate TSA trust.",
+      "status": "FIXED AND VERIFIED — FOCUSED SCOPE; COMBINED PENDING",
+      "independent_refs": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/RL-C2-independent-remediation-review-01.json",
+          "sha256": "0dfb26b45804abd11dcea5d3f5fce4c5b168822f01a9598cd774935cf968bbdb"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/RL-C2-independent-remediation-review-01.md",
+          "sha256": "f2d0d7ac7f7cb40ef66e50bf6ba8b0df619dff1f4d112d711dbcf3bc3be40554"
+        }
+      ],
+      "evidence_limits": "21 local synthetic tests including actual owned descendant cleanup; not Store credentials/signed candidate/positive RFC3161 integration.",
+      "compatibility": "No blanket exit4 waiver, no weak-algorithm/fingerprint/unsigned-payload bypass; Java helper is release tooling only.",
+      "combined_status": "PENDING — no whole-repository completion claimed",
+      "focused_cycle": "rl-c2-green-02",
+      "focused_python_tests": 21,
+      "broader_release_cycle": "release-system-green-01",
+      "broader_release_tests": 172
+    },
+    {
+      "id": "RL-C3",
+      "canonical_id": "RL-C3",
+      "aliases": [],
+      "original_title": "Play destination policy checked in an edit different from mutation",
+      "original_severity": "Medium",
+      "original_finder": "/root/whodunit_cont",
+      "original_independent_validator": "/root/session_cont",
+      "original_refs": [
+        {
+          "path": "audit-runs/2026-09-05-source-audit/candidates/RL-C3-whodunit_cont.md",
+          "sha256": "66ce8bc916728d7e0351ea2b0d016ec7982d7b3d3c17361607414d81dc9c1193"
+        },
+        {
+          "path": "audit-runs/2026-09-05-source-audit/validations/RL-C3-session_cont.md",
+          "sha256": "978a19af9d7d541a0cc7be4d9f6e0021f3695e3a8556d14dfe2044d8ac700d72"
+        }
+      ],
+      "correction_exists": true,
+      "full_scoped_root_cause_approved": true,
+      "fix_author": "/root/root",
+      "remediation_independent_reviewer": "mafia_cont + release_fix_review",
+      "correction": "Read/validate source,destination and bundle digest within the same edit used for mutation/commit; cleanup attempted, no blind mutation retry.",
+      "status": "FIXED AND VERIFIED — FOCUSED SCOPE; COMBINED PENDING",
+      "independent_refs": [
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/mafia/rl-c3-independent-fix-review-01.json",
+          "sha256": "2911a5629eb8b16f34936834301a59c883b1913597a42fa2cd7ecbd49e3c322b"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-interactions-01.json",
+          "sha256": "bd900c84f3e0949c0ae3dd04cc1173c171e24150e2e8f78bb36ba64d74386201"
+        },
+        {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/release-docs-approval-02.json",
+          "sha256": "e4d58a9ea4131b7399347ff38b5858630a9c8068f6ddf9683ca2f68e20ed5e30"
+        }
+      ],
+      "evidence_limits": "Nine new production-helper mocked-HTTP tests plus complete172-test release suite; no Google Play operations.",
+      "compatibility": "Staged-rollout/digest/idempotency/identity/disabled-publication safeguards preserved.",
+      "combined_status": "PENDING — no whole-repository completion claimed",
+      "focused_cycle": "rl-c3-green",
+      "focused_python_tests": 9,
+      "broader_release_cycle": "release-system-green-01",
+      "broader_release_tests": 172
+    }
+  ],
+  "finished_cycle_checks": {
+    "foundation-transport-green": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/foundation-transport-green/receipt.json",
+        "sha256": "f2b412ec493dbaf36b00e95480e4b152a32326fb4811ac41a26b94cdd1ba6992"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/foundation-transport-green/gradle.log",
+        "sha256": "23ccf868b06c8aaa6214a49f6440b4f1a9707af4ec7f3b8d3eddb5e1c38af137"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "./gradlew",
+        ":shared:transport-p2p:desktopTest",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=foundation-transport-green",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "started_at": "2026-09-05T18:39:26.181966+00:00",
+      "finished_at": "2026-09-05T18:40:01.575266+00:00",
+      "source_before_manifest_sha256": "097a4977a8287bdb0c501f6c9b6856a17be3886f1a1f1783d63797a8875aa770",
+      "source_after_manifest_sha256": "097a4977a8287bdb0c501f6c9b6856a17be3886f1a1f1783d63797a8875aa770",
+      "source_changed_during_cycle": false,
+      "raw_xml_group_counts": {
+        "shared/transport-p2p:desktopTest": {
+          "tests": 223,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 3,
+          "suites": 16
+        }
+      },
+      "python_unittest_count": null,
+      "python_log_ends_OK": null,
+      "relevant_task_lines": [
+        "> Task :shared:transport-p2p:desktopTest"
+      ],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-05T18:40:02.005578+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "cleanup_completed_at": "2026-09-05T18:40:02.210615+00:00"
+      }
+    },
+    "games-session-desktop-03": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/receipt.json",
+        "sha256": "b7dd7cbcd744cc9ba75cb01a53ac747b875f9467c96ebcbc9c6659595fa11ae5"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/gradle.log",
+        "sha256": "1b57cd425d2891fbb5430a3eff8d032435115f88611bbcdd94564eaa7c496755"
+      },
+      "status": "FAIL",
+      "exit_code": 1,
+      "command": [
+        "./gradlew",
+        ":game-modes:mafia:desktopTest",
+        ":game-modes:whodunit:desktopTest",
+        ":shared:session:desktopTest",
+        ":shared:transport-p2p:desktopTest",
+        "--continue",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=games-session-desktop-03",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "started_at": "2026-09-05T19:41:01.693890+00:00",
+      "finished_at": "2026-09-05T19:42:03.940194+00:00",
+      "source_before_manifest_sha256": "a4f16c504c995b0d8992307aa5a45b4ca117135dd8be330b8101d6787469b6b0",
+      "source_after_manifest_sha256": "a4f16c504c995b0d8992307aa5a45b4ca117135dd8be330b8101d6787469b6b0",
+      "source_changed_during_cycle": false,
+      "raw_xml_group_counts": {
+        "game-modes/mafia:desktopTest": {
+          "tests": 267,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suites": 31
+        },
+        "shared/session:desktopTest": {
+          "tests": 145,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suites": 13
+        },
+        "shared/transport-p2p:desktopTest": {
+          "tests": 243,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 3,
+          "suites": 19
+        }
+      },
+      "python_unittest_count": null,
+      "python_log_ends_OK": null,
+      "relevant_task_lines": [
+        "> Task :game-modes:mafia:desktopTest",
+        "> Task :shared:session:desktopTest",
+        "> Task :shared:transport-p2p:desktopTest"
+      ],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-05T19:42:04.204530+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "cleanup_completed_at": "2026-09-05T19:42:04.581043+00:00"
+      }
+    },
+    "design-whodunit-desktop-01": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/receipt.json",
+        "sha256": "6ec583de55d5b45847ece8177a5c09124958c078d795db5abe2a4d2b13055aae"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/gradle.log",
+        "sha256": "d18e06cafa8a99d5d81e22d0d2953bd49b9642f161a9077c6cb685ada8bc36b4"
+      },
+      "status": "FAIL",
+      "exit_code": 1,
+      "command": [
+        "./gradlew",
+        ":shared:design-system:desktopTest",
+        ":game-modes:whodunit:desktopTest",
+        "--continue",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=design-whodunit-desktop-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "started_at": "2026-09-05T19:56:12.544655+00:00",
+      "finished_at": "2026-09-05T19:56:40.260644+00:00",
+      "source_before_manifest_sha256": "f98bd829b6cf77875c08a175cd521d6c23e4b3ba2f3d8f77ee2a674a43c6e24f",
+      "source_after_manifest_sha256": "f98bd829b6cf77875c08a175cd521d6c23e4b3ba2f3d8f77ee2a674a43c6e24f",
+      "source_changed_during_cycle": false,
+      "raw_xml_group_counts": {
+        "game-modes/whodunit:desktopTest": {
+          "tests": 309,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suites": 53
+        },
+        "shared/design-system:desktopTest": {
+          "tests": 40,
+          "failures": 1,
+          "errors": 0,
+          "skipped": 0,
+          "suites": 18
+        }
+      },
+      "python_unittest_count": null,
+      "python_log_ends_OK": null,
+      "relevant_task_lines": [
+        "> Task :game-modes:whodunit:desktopTest"
+      ],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-05T19:56:40.568193+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "cleanup_completed_at": "2026-09-05T19:56:40.847118+00:00"
+      }
+    },
+    "design-toast-cover-02": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/receipt.json",
+        "sha256": "1623724c52d9c7dcc3eb6e5279b4d350c584a32a3dc514ddffb5397665ee847a"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/gradle.log",
+        "sha256": "9cea7d1080ece4d22f16d0cfee5f73e81522421814e6157164399d8497dd1b89"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "./gradlew",
+        ":shared:design-system:desktopTest",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=design-toast-cover-02",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "started_at": "2026-09-05T20:27:59.492135+00:00",
+      "finished_at": "2026-09-05T20:28:16.746812+00:00",
+      "source_before_manifest_sha256": "c9b114757de5b70204623023e76de7498b7fdd5e63ba36faf20f2709bb949cfc",
+      "source_after_manifest_sha256": "c9b114757de5b70204623023e76de7498b7fdd5e63ba36faf20f2709bb949cfc",
+      "source_changed_during_cycle": false,
+      "raw_xml_group_counts": {
+        "shared/design-system:desktopTest": {
+          "tests": 40,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suites": 18
+        }
+      },
+      "python_unittest_count": null,
+      "python_log_ends_OK": null,
+      "relevant_task_lines": [
+        "> Task :shared:design-system:desktopTest"
+      ],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-05T20:28:17.059923+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "cleanup_completed_at": "2026-09-05T20:28:17.196419+00:00"
+      }
+    },
+    "native-storage-language-02": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-storage-language-02/receipt.json",
+        "sha256": "3708df669d6ec74a668b701eca5dcfca97cafbe6e6262d65712cc3d0630ab331"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-storage-language-02/gradle.log",
+        "sha256": "74a78dbd8f6df743150cbca5128667c7f0f31dd4a82b66530abb263524daa59f"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "./gradlew",
+        ":shared:design-system:iosSimulatorArm64Test",
+        ":composeApp:iosSimulatorArm64Test",
+        "--tests",
+        "*IosLegacySnapshotBackupTest*",
+        "--tests",
+        "*IosStorageSafetyTest*",
+        "--continue",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=native-storage-language-02",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword=",
+        "-I",
+        "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/owned_ios_simulator.init.gradle"
+      ],
+      "started_at": "2026-09-05T20:42:27.242254+00:00",
+      "finished_at": "2026-09-05T20:44:16.450197+00:00",
+      "source_before_manifest_sha256": "fbea29c6e4f53108c632b49ff4e8b9da644f6caeb9e48876b70948d6a90e430f",
+      "source_after_manifest_sha256": "fbea29c6e4f53108c632b49ff4e8b9da644f6caeb9e48876b70948d6a90e430f",
+      "source_changed_during_cycle": false,
+      "raw_xml_group_counts": {
+        "composeApp:iosSimulatorArm64Test": {
+          "tests": 14,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suites": 2
+        },
+        "shared/design-system:iosSimulatorArm64Test": {
+          "tests": 26,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suites": 9
+        }
+      },
+      "python_unittest_count": null,
+      "python_log_ends_OK": null,
+      "relevant_task_lines": [
+        "> Task :shared:design-system:iosSimulatorArm64Test",
+        "> Task :composeApp:iosSimulatorArm64Test"
+      ],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-05T20:44:16.946167+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "cleanup_completed_at": "2026-09-05T20:44:21.103803+00:00"
+      }
+    },
+    "transport-static-green-02": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/receipt.json",
+        "sha256": "df1dde732388bad7cbb37ffe6294eea973fca7dfc7b4a30d49a9a4d338cf1ff4"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/gradle.log",
+        "sha256": "1a51b36b466b2d0d6a61da14aba303a1bd0316d6a05ee420d15a94083b8609ba"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "./gradlew",
+        ":shared:transport-p2p:desktopTest",
+        "staticAnalysis",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=transport-static-green-02",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "started_at": "2026-09-05T21:30:38.209679+00:00",
+      "finished_at": "2026-09-05T21:31:18.369194+00:00",
+      "source_before_manifest_sha256": "353e5843b782befea35cf48cf144a96e490054abc9f78948668c18dd8d53b580",
+      "source_after_manifest_sha256": "353e5843b782befea35cf48cf144a96e490054abc9f78948668c18dd8d53b580",
+      "source_changed_during_cycle": false,
+      "raw_xml_group_counts": {
+        "shared/transport-p2p:desktopTest": {
+          "tests": 252,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 3,
+          "suites": 20
+        }
+      },
+      "python_unittest_count": null,
+      "python_log_ends_OK": null,
+      "relevant_task_lines": [
+        "> Task :shared:transport-p2p:desktopTest",
+        "> Task :staticAnalysis"
+      ],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-05T21:31:18.629220+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "cleanup_completed_at": "2026-09-05T21:31:18.814411+00:00"
+      }
+    },
+    "ios-b1-phase-green": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/ios-b1-phase-green/receipt.json",
+        "sha256": "06726b151d585a80f8df7c1ff67b7238dd1d3df39fb5437aab2e6bf43258c045"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/ios-b1-phase-green/gradle.log",
+        "sha256": "cc22b2dd61af8017737a2204f97e1daabe2902e7ddb2dd4dda4882ed45b5312f"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/release/tests",
+        "-p",
+        "test_*framework*.py",
+        "-v"
+      ],
+      "started_at": "2026-09-05T18:43:51.925458+00:00",
+      "finished_at": "2026-09-05T18:43:57.739590+00:00",
+      "source_before_manifest_sha256": "349b4f8c35be6757e972fa6499c879e219ecfc1eda8c8319d1ddf84a2742dace",
+      "source_after_manifest_sha256": "349b4f8c35be6757e972fa6499c879e219ecfc1eda8c8319d1ddf84a2742dace",
+      "source_changed_during_cycle": false,
+      "raw_xml_group_counts": {},
+      "python_unittest_count": 8,
+      "python_log_ends_OK": true,
+      "relevant_task_lines": [],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-05T18:43:57.997660+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "cleanup_completed_at": "2026-09-05T18:43:58.066256+00:00"
+      }
+    },
+    "rl-c1-green": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c1-green/receipt.json",
+        "sha256": "d6890d31fb004bb56ad11542c082b3201130b5e6cb586c2df6639ae41bd70adb"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c1-green/gradle.log",
+        "sha256": "2a55d26eb27865217a812e9eea657b762f53a60ab7d0ef9961e23bf8e24b9552"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/release/tests",
+        "-p",
+        "test_android_artifact_size.py",
+        "-v"
+      ],
+      "started_at": "2026-09-05T19:29:54.620367+00:00",
+      "finished_at": "2026-09-05T19:29:55.450298+00:00",
+      "source_before_manifest_sha256": "2ea96223d1a0d345bd8807d18050f1352d5322d9dee81030599b90c1ae3ef100",
+      "source_after_manifest_sha256": "2ea96223d1a0d345bd8807d18050f1352d5322d9dee81030599b90c1ae3ef100",
+      "source_changed_during_cycle": false,
+      "raw_xml_group_counts": {},
+      "python_unittest_count": 7,
+      "python_log_ends_OK": true,
+      "relevant_task_lines": [],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-05T19:29:55.706207+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "cleanup_completed_at": "2026-09-05T19:29:55.763332+00:00"
+      }
+    },
+    "rl-c2-green-02": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c2-green-02/receipt.json",
+        "sha256": "cbd27e89676f8ea5bdd575ab45462b7861e5bf3e11ca1929dba42871f7515979"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c2-green-02/gradle.log",
+        "sha256": "8f6e39bd215c5a40bd85f7e6ec9e4d1f3dc305de1b16b751b7f9c306532d8710"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/release/tests",
+        "-p",
+        "test_android_upload_signature.py",
+        "-v"
+      ],
+      "started_at": "2026-09-05T21:12:58.902903+00:00",
+      "finished_at": "2026-09-05T21:13:18.767587+00:00",
+      "source_before_manifest_sha256": "e3015f25d2c5ee501251af007b8769aa994b8139a9fdcd1f307aed040094db12",
+      "source_after_manifest_sha256": "e3015f25d2c5ee501251af007b8769aa994b8139a9fdcd1f307aed040094db12",
+      "source_changed_during_cycle": false,
+      "raw_xml_group_counts": {},
+      "python_unittest_count": 21,
+      "python_log_ends_OK": true,
+      "relevant_task_lines": [],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-05T21:13:19.175839+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "cleanup_completed_at": "2026-09-05T21:13:19.238428+00:00"
+      }
+    },
+    "rl-c3-green": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c3-green/receipt.json",
+        "sha256": "14ddb8cfe944b0e1b61a4129cfdfee66596c33c3e96887f498d37a29fe89ca17"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c3-green/gradle.log",
+        "sha256": "1ad87556683dfb8d7044b03460ab95b8e78ff1a8980d0e1db7c03b34ce803a9f"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/release/tests",
+        "-p",
+        "test_*promotion*.py",
+        "-v"
+      ],
+      "started_at": "2026-09-05T19:38:23.927606+00:00",
+      "finished_at": "2026-09-05T19:38:24.415075+00:00",
+      "source_before_manifest_sha256": "a4f16c504c995b0d8992307aa5a45b4ca117135dd8be330b8101d6787469b6b0",
+      "source_after_manifest_sha256": "a4f16c504c995b0d8992307aa5a45b4ca117135dd8be330b8101d6787469b6b0",
+      "source_changed_during_cycle": false,
+      "raw_xml_group_counts": {},
+      "python_unittest_count": 9,
+      "python_log_ends_OK": true,
+      "relevant_task_lines": [],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-05T19:38:24.838394+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "cleanup_completed_at": "2026-09-05T19:38:24.903343+00:00"
+      }
+    },
+    "release-system-green-01": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/release-system-green-01/receipt.json",
+        "sha256": "5b330259a8ae0c0bed366bc7131f356bd3c4363030b93917a712a70559c84139"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/release-system-green-01/gradle.log",
+        "sha256": "2bcab5ae1243fde620a0205af0fae788fbe3910ae22b44c83b8cfb1b0dff83aa"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "bash",
+        "scripts/release/validate_release_system.sh"
+      ],
+      "started_at": "2026-09-05T21:37:00.583616+00:00",
+      "finished_at": "2026-09-05T21:38:25.671710+00:00",
+      "source_before_manifest_sha256": "1ec1541532ba78549efebbeef28e82f31a7a16d83c7ffec5c80b9611ca8423b4",
+      "source_after_manifest_sha256": "1ec1541532ba78549efebbeef28e82f31a7a16d83c7ffec5c80b9611ca8423b4",
+      "source_changed_during_cycle": false,
+      "raw_xml_group_counts": {},
+      "python_unittest_count": 172,
+      "python_log_ends_OK": true,
+      "relevant_task_lines": [],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-05T21:38:25.929391+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "cleanup_completed_at": "2026-09-05T21:38:25.989717+00:00"
+      }
+    },
+    "locale-source-contract-green-01": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/locale-source-contract-green-01/receipt.json",
+        "sha256": "ad2e08caea2cc9009a33532d9158842edb5ff436ad827f7008b7d8465c54fc95"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/locale-source-contract-green-01/gradle.log",
+        "sha256": "7f4d8d97ce0fe73864a9fbc8d0dba46e8c32265ede934778bab5905e26085635"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "command": [
+        "./gradlew",
+        ":composeApp:desktopTest",
+        "--tests",
+        "*ProductionUiAccessibilityContractTest*",
+        "-I",
+        "remediation-runs/2026-09-05-confirmed-fixes/root/verify-locale-contract-inputs.init.gradle",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=locale-source-contract-green-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "started_at": "2026-09-05T21:55:09.997108+00:00",
+      "finished_at": "2026-09-05T21:55:32.681175+00:00",
+      "source_before_manifest_sha256": "9d9841ef0c9fb115ff6792f6bd276265ebec16c6c851dd684bc647cf2a966310",
+      "source_after_manifest_sha256": "9d9841ef0c9fb115ff6792f6bd276265ebec16c6c851dd684bc647cf2a966310",
+      "source_changed_during_cycle": false,
+      "raw_xml_group_counts": {
+        "composeApp:desktopTest": {
+          "tests": 13,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "suites": 1
+        }
+      },
+      "python_unittest_count": null,
+      "python_log_ends_OK": null,
+      "relevant_task_lines": [
+        "> Task :composeApp:desktopTest"
+      ],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-05T21:55:32.945942+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "cleanup_completed_at": "2026-09-05T21:55:33.237554+00:00"
+      }
+    }
+  },
+  "review_source_hash_checks": {
+    "native_fix_review/independent-review.json": {
+      "matches": 26,
+      "drift": [
+        {
+          "path": "composeApp/build.gradle.kts",
+          "reviewed_sha256": "ae5e49b02e3480e2ca7f678778f4620178a790847f613675ce6d84e159b6ad87",
+          "current_sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5"
+        }
+      ]
+    },
+    "root/SN-C1-independent-fix-review-01.json": {
+      "matches": 2,
+      "drift": []
+    },
+    "factory_review/SN-C2-independent-remediation-review-02.json": {
+      "matches": 14,
+      "drift": []
+    },
+    "root/WD-C1-independent-fix-review-01.json": {
+      "matches": 2,
+      "drift": []
+    },
+    "session_cont/IOS-B1-independent-remediation-review-01.json": {
+      "matches": 6,
+      "drift": []
+    },
+    "session_cont/ROOT-T3-independent-remediation-review-01.json": {
+      "matches": 4,
+      "drift": [
+        {
+          "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt",
+          "reviewed_sha256": "5867121ada82c856b6dcfb4e885b83876363dbf78120c098a2e84bd9830afa95",
+          "current_sha256": "947a86aebdca10d7d9cfa97a5677c1a79733601dca887effc6c218280a098b1b"
+        }
+      ]
+    },
+    "whodunit/MF-C1-M-C03-independent-evidence.json": {
+      "matches": 39,
+      "drift": []
+    },
+    "root/WD-C3-independent-fix-review-01.json": {
+      "matches": 3,
+      "drift": []
+    },
+    "native_fix_review/DS-C01-source-contract-review-03.json": {
+      "matches": 4,
+      "drift": []
+    },
+    "native_fix_review/DS-C01-source-contract-green-review-04.json": {
+      "matches": 4,
+      "drift": []
+    },
+    "whodunit/DS-C02-C03-independent-evidence.json": {
+      "matches": 18,
+      "drift": [
+        {
+          "path": "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastLifetimeTest.kt",
+          "reviewed_sha256": "6ff26ac88435dddbb12cc5fbd5af04a4b4a6a6c7aad0b54cabdd585755f067eb",
+          "current_sha256": "4bec7f140fa576210c1abc9c33decf1bac5b6ca24112d15d69dee2d0ad702cc9"
+        },
+        {
+          "path": "composeApp/build.gradle.kts",
+          "reviewed_sha256": "ae5e49b02e3480e2ca7f678778f4620178a790847f613675ce6d84e159b6ad87",
+          "current_sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5"
+        }
+      ]
+    },
+    "whodunit/DS-C02-additional-tests-execution-approval.json": {
+      "matches": 8,
+      "drift": []
+    },
+    "whodunit/wd-c2-unmodified-resources.json": {
+      "matches": 4,
+      "drift": []
+    },
+    "mafia/rl-c1-independent-fix-review-01.json": {
+      "matches": 3,
+      "drift": [
+        {
+          "path": "scripts/release/validate_android_artifact.sh",
+          "reviewed_sha256": "d6d7e07aebac8ed438154b24b64ea823201b469cfd937731b45e82ff4cf39af9",
+          "current_sha256": "e0100ed6274e41113e18d1cdaa5310242f749d2f337fdb0c5b85920a011cece6"
+        }
+      ]
+    },
+    "release_fix_review/release-docs-interactions-01.json": {
+      "matches": 13,
+      "drift": [
+        {
+          "path": "docs/RELEASE_AUTOMATION.md",
+          "reviewed_sha256": "20047f6576aa37b8a456895f388e930c300a0d66c692eb3b3fa44c90340bd81c",
+          "current_sha256": "5598e91447aae3f111654b217118aa64cc9ea0c0c3c34d36f0440c51c0b7f206"
+        }
+      ]
+    },
+    "release_fix_review/release-docs-approval-02.json": {
+      "matches": 0,
+      "drift": []
+    },
+    "release_fix_review/RL-C2-independent-remediation-review-01.json": {
+      "matches": 8,
+      "drift": []
+    },
+    "mafia/rl-c3-independent-fix-review-01.json": {
+      "matches": 7,
+      "drift": []
+    }
+  },
+  "source_drift_adjudication": [
+    {
+      "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt",
+      "reason": "Compared current text with old ROOT-T3 reviewed hash after reversing exactly the two FakeP2pKit.stop comment lines; hash equals original review. Current executable signature/assertion content unchanged; final SN-C2 review and transport252 descriptors cover current bytes."
+    },
+    {
+      "path": "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastLifetimeTest.kt",
+      "reason": "Initial review superseded by separately reviewed additional-owner/clock fixture and design-toast-cover02 actual3case execution; production toast source unchanged."
+    },
+    {
+      "path": "composeApp/build.gradle.kts",
+      "reason": "New native locale contract Test.inputs follows combined01 stale assertion failure. Entire scoped diff independently reviewed in source-contract03; source-contract04 binds13passing tests and actual7file input assertion; native behavior source unchanged."
+    },
+    {
+      "path": "scripts/release/validate_android_artifact.sh",
+      "reason": "RL-C1 original shell hash changed for authorized RL-C2 signature repair. Final RL-C2 and cross-fix release reviewer reopened exact current shell/size interactions; release-system172tests pass current bytes. No stale wholefile hash claimed current."
+    },
+    {
+      "path": "docs/RELEASE_AUTOMATION.md",
+      "reason": "Interaction review requested wording precision; final release-docs-approval02 reopens and approves exact current hash."
+    }
+  ],
+  "doctor_required_behavior_evidence": {
+    "source_and_test_review_refs": [
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MF-C1-M-C03-independent-review.md",
+        "sha256": "ae821d8d7b8f8480b5691e9f60c3dd657c80f756512c5e43ffb46f57cd6bdff9"
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/documentation-review-02-approval.json",
+        "sha256": "1fdb96feefbe2e6e8b3cd059fef8a67c9bb6fcc0f759048a49004bed52d05aa1"
+      }
+    ],
+    "newly_read_test_sources": [
+      {
+        "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+        "sha256": "5fe2144436f87162e2d29bcbef6d57ac9b9cede6ab328b406b63cceebcdd501b",
+        "fully_reopened_test_assertion_ranges_by_this_reviewer": [
+          [
+            1,
+            156
+          ]
+        ],
+        "matches_executed_before_after": true
+      },
+      {
+        "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/testing/MafiaDoctorFixture.kt",
+        "sha256": "fa5a85db72638033569368062722fc1e1f97fcf1c3948e912c7954324e1e2ba7",
+        "fully_reopened_test_assertion_ranges_by_this_reviewer": [
+          [
+            1,
+            120
+          ]
+        ],
+        "matches_executed_before_after": true
+      },
+      {
+        "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaDoctorLanTest.kt",
+        "sha256": "513a87423f1de6834d3b1664d1103f83a36d67f351a888e095b53bf1bedd5be9",
+        "fully_reopened_test_assertion_ranges_by_this_reviewer": [
+          [
+            1,
+            248
+          ]
+        ],
+        "matches_executed_before_after": true
+      },
+      {
+        "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+        "sha256": "d1d830e0330d5a47f2011b9f87d025a5ce1e0bc2d3cb08be742ca1ff4403f743",
+        "fully_reopened_test_assertion_ranges_by_this_reviewer": [
+          [
+            1,
+            383
+          ]
+        ],
+        "matches_executed_before_after": true
+      },
+      {
+        "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibilityTest.kt",
+        "sha256": "c2d196af55bbf14d3518973e86df9da3de3954ffbab27038aca4c2ef14ed70f1",
+        "fully_reopened_test_assertion_ranges_by_this_reviewer": [
+          [
+            1,
+            75
+          ]
+        ],
+        "matches_executed_before_after": true
+      },
+      {
+        "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaDoctorSettingUiTest.kt",
+        "sha256": "47720879336a7ac14436a6cc9e186cce3afc8d00743a1339ff161c0fefb58055",
+        "fully_reopened_test_assertion_ranges_by_this_reviewer": [
+          [
+            1,
+            71
+          ]
+        ],
+        "matches_executed_before_after": true
+      }
+    ],
+    "on_four_nights": {
+      "source": "MafiaDoctorRulesTest.kt:29-43",
+      "proof": "For each supported engine player count, repeat(4) protects same living civilian against same-target kill. Every resolution asserts wasSaved, canonical/private target equality and valid recovery; phase reachesNight5. Actual named XML case PASS."
+    },
+    "on_peer_four_total_nights": {
+      "source": "MafiaDoctorLanTest.kt:72-124,159-208",
+      "proof": "One legal initial reducer night plus three actual host-bridge resolutions for ON, Doctor commands from peer, nightLog size4, own-only public/private redaction and repeated rejoin checks. In-memory admission/start-bypassing fixture; not physical/cold credential rejoin."
+    },
+    "off_rejection_alternation": {
+      "source": "MafiaDoctorRulesTest.kt:47-61",
+      "proof": "Repeated A rejected before first submission; alternate B saves, then A saves. ResolvesA/B/A across3nights, not4."
+    },
+    "off_long_trace": {
+      "source": "MafiaDoctorHistoryRecoveryTest.kt:156-170",
+      "proof": "Both settings drive128+2=130nights; OFF alternates targets, ON repeats same. Latest128retained logs, first retained day3, save/load accepts and forged-null previous rejected."
+    },
+    "skip_and_self": {
+      "source": "MafiaDoctorRulesTest.kt:65-109,113-137",
+      "proof": "Explicit skip consumes nightly submission, nullifies effective previous target, allows next eligible target; four repeat/self flag combinations; no dead target/nonDoctor/duplicate authorization."
+    },
+    "recovery": {
+      "source": "MafiaDoctorHistoryRecoveryTest.kt:35-340,342-365",
+      "proof": "Strict encode/decode plus InMemorySnapshotStore+loadMafiaResumedSession checks valid/forgednull/wrong previous across reachable active phases, revotes, role assignment/first night, death/noDoctor/terminal and caps. Both flags retained by resumed local controller. Not platform encrypted-file durability."
+    },
+    "ui_and_settings": "EN/AR real Compose setup toggles2pass; canonical/projected eligibility2pass; host-only setup and immutable started settings tested through real session/bridges. Existing flag defaultOFF, not newly invented feature.",
+    "counts": "29Doctor regressions actualPASS +6Mafia finalrole cases actualPASS within267Mafia PASS; multi-module cycle neverthelessFAIL at Whodunit compilation."
+  },
+  "wd_c2_resources": [
+    {
+      "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+      "sha256": "c36b20ed19f94b7eea5809f7c2f1ef38be1f97ac6e2598a8a5de0233ee9e89af",
+      "unchanged_from_head_and_blocker_dossier": true,
+      "content_version": "1.0.0"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+      "sha256": "954752e02c72ab8b4ac8fe7b03598857252c539ba07d1f781683be3b42c07d1d",
+      "unchanged_from_head_and_blocker_dossier": true,
+      "content_version": "1.0.0"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+      "sha256": "d1397ac1e0dc3669d3e5ff5e147aabf88647bc6726621cb7239392eb4e4cd9ca",
+      "unchanged_from_head_and_blocker_dossier": true,
+      "content_version": "1.0.0"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+      "sha256": "b1b1d73cedc751f321c51f1e1523b74e57d515d408a7760add328c73c8dcc5e4",
+      "unchanged_from_head_and_blocker_dossier": true,
+      "content_version": "1.0.0"
+    }
+  ],
+  "excluded_false_green_and_red_receipts": [
+    {
+      "cycle": "ios-b1-green",
+      "classification": "INSUFFICIENT SELECTOR",
+      "reason": "3normalizer tests only; phase fix proof requires ios-b1-phase-green8cases or later172suite."
+    },
+    {
+      "cycle": "ios-b1-red",
+      "classification": "VALID ORIGINAL DEFECT WITNESS; NOT REPAIR PASS",
+      "reason": "Two safety assertions fail after original phase masks producer/cd error."
+    },
+    {
+      "cycle": "root-t3-red",
+      "classification": "VALID ORIGINAL DEFECT WITNESS; NOT REPAIR PASS",
+      "reason": "Compiled guard finds10nonvoid annotated signatures including2intentionallydisabled."
+    },
+    {
+      "cycle": "games-session-desktop-01",
+      "classification": "BUILD/TEST FIXTURE COMPILATION FAILURE",
+      "reason": "Pinned DpRect width/height mismatch; zero tests ran."
+    },
+    {
+      "cycle": "games-session-desktop-02",
+      "classification": "FAILED INTERMEDIATE/FIXTURE RUN",
+      "reason": "6FlowRow semantic-overflow assertions and1pre-reconciliation LAN-placeholder assertion failed. Not proof of final Column/rejoin failure or repair."
+    },
+    {
+      "cycle": "games-session-desktop-03",
+      "classification": "PARTIAL MODULE GREEN; BATCH FAIL",
+      "reason": "Mafia267/session145/transport240passed3skipped; Whodunit test compile failed, no Whodunit execution."
+    },
+    {
+      "cycle": "design-whodunit-desktop-01",
+      "classification": "PARTIAL MODULE GREEN; BATCH FAIL",
+      "reason": "Whodunit309pass; toast owner-swap paused-clock fixture failed. Later design-toast-cover02 supersedes fixture with40pass."
+    },
+    {
+      "cycle": "native-storage-language-01",
+      "classification": "FAILED FIXTURE ASSUMPTION",
+      "reason": "Two native expected-ar fallback assertions ignored global-before-registration preference order. Corrected tests compare actual fallback; production native hashes unchanged; native02isgreen."
+    },
+    {
+      "cycle": "rl-c3-red",
+      "classification": "INVALID DEFECT REPRODUCTION",
+      "reason": "ModuleNotFoundError importing store_api; oneunittestloadererror, no production promote path ran."
+    },
+    {
+      "cycle": "rl-c3-red-02",
+      "classification": "VALID ORIGINAL DEFECT WITNESS; NOT REPAIR PASS",
+      "reason": "9tests2fail reveal two-edit binding and invalidated-snapshot mutation; later9greenrepairs."
+    },
+    {
+      "cycle": "rl-c2-red",
+      "classification": "ORIGINAL+NEW-PLUMBING ORACLES; NOT REPAIR PASS",
+      "reason": "Approvedselfsigned failure validates original defect; Java-stub propagation failure is newplumbing boundary not seconddefect."
+    },
+    {
+      "cycle": "sn-c2-factory-green-01",
+      "classification": "FAIL DESPITE DIRECTORY NAME",
+      "reason": "30tests6fail from JVM recovered-exception identity assumptions; corrected bounded-cause assertions retain cleanup semantics; finaltransport02green."
+    },
+    {
+      "cycle": "combined-production-01",
+      "classification": "ACTUAL COMBINED FAIL",
+      "reason": "95composeDesktop tests1failure in stale inline iOS locale source assertion. Actual appAndroid tests76debug+76releasepass do not make wholeproductionCheckpass. Source-contract13greenfollowup resolves observed assertion;combined02pending."
+    }
+  ],
+  "combined_snapshot": {
+    "receipt_path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-02/receipt.json",
+    "observed_status": "FAIL",
+    "observed_exit_code": 1,
+    "final_receipt_hash": null,
+    "interpretation": "Root-owned in-progress mutable receipt deliberately not treated as immutable PASS evidence; root must reconcile its terminal status, cached/executed tasks, skips and cleanup."
+  },
+  "remaining_nonrepair_items": [
+    "IOS-R1 remains TEST/EVIDENCE GAP, not silently fixed/hidden.",
+    "WD-C4 leave-modal timer policy remains unresolved product decision, not included among16confirmed repairs.",
+    "Physical P2pKit tests remain3intentionalSKIP; no devices/signing/Store/legal readiness inferred.",
+    "QualifiedXcode26.3/17C529 and native platform/app-host/device/runtime/release gates remain separate; current evidence native26.5notqualified release.",
+    "No assertion here that exhaustive audit coverage/other unrelated evidence gaps are complete."
+  ],
+  "reviewer_hygiene": {
+    "builds_tests_signing_store_commands_started": false,
+    "gradle_workers_started": false,
+    "production_test_config_or_git_changes": false,
+    "only_deliverables_created_under": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/native_fix_review",
+    "unnecessary_generated_outputs": [],
+    "cleanup": "No task-owned build artifacts or workers were created by evidence parsing. Root-owned build lane and concurrent artifacts untouched. Completed cited cycle stop/cleanup receipts independently parsed.",
+    "tooling_note": "Initial XML parsing with ambient Homebrew Python3.14 failed loading expat; reran successfully using /usr/bin/python3 -B. Reader failure is not application/test defect or pass evidence."
+  }
+}

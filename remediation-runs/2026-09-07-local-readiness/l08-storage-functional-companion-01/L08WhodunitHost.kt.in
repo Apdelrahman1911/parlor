@@ -1,0 +1,94 @@
+// COPY-ONLY native host witness; no private values or hashes leave this class.
+package com.parlor.games.whodunit.readiness
+
+import com.parlor.content.validation.ValidatedCase
+import com.parlor.core.result.Result
+import com.parlor.engine.session.SubmitError
+import com.parlor.games.whodunit.WhodunitIds
+import com.parlor.games.whodunit.content.WhodunitCase
+import com.parlor.games.whodunit.content.contentIdentity
+import com.parlor.games.whodunit.domain.action.WhodunitAction
+import com.parlor.games.whodunit.domain.phase.WhodunitPhase
+import com.parlor.games.whodunit.domain.state.WhodunitState
+import com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostRuntime
+import com.parlor.networking.protocol.HostMessage
+import com.parlor.session.multidevice.HostStartGateState
+import com.parlor.session.multidevice.ProcessMultiplayerSession
+import com.parlor.games.whodunit.domain.event.WhodunitEvent
+import com.parlor.session.SessionController
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.Job
+
+class L08WhodunitHost(private val owned: ProcessMultiplayerSession, private val case: ValidatedCase<WhodunitCase>) {
+    private val runtime get() = owned.runtime.value as? WhodunitHostRuntime
+    private var capturedRuntime: WhodunitHostRuntime? = null
+    private var baseline: WhodunitState? = null
+    private var controller: SessionController<WhodunitState, WhodunitAction, WhodunitEvent>? = null
+    private var canonical: StateFlow<WhodunitState>? = null
+    private var captured = false
+
+    fun waiting(): Boolean {
+        val value = runtime ?: return false
+        check(value.startGate.value == HostStartGateState.Starting)
+        check(checkNotNull(value.session.canonicalState).value.phase == WhodunitPhase.Setup)
+        return true
+    }
+
+    fun protocol() = checkNotNull(runtime).bridge.protocol
+    fun accepts(offer: HostMessage.SessionStarting): Boolean {
+        val identity = case.envelope.contentIdentity()
+        return offer.caseId == case.envelope.caseId && offer.modeId == WhodunitIds.ClassicVoteModeId.raw &&
+            offer.caseVersion == identity.version && offer.caseDigest == identity.digest
+    }
+
+    fun started(): Boolean {
+        val value = runtime ?: return false
+        val state = checkNotNull(value.session.canonicalState).value
+        return value.startGate.value == HostStartGateState.Started && state.phase == WhodunitPhase.PublicIntro &&
+            owned.room.selfPlayerId in state.public.introAcknowledged
+    }
+
+    fun capture() {
+        check(!captured && started())
+        val value = checkNotNull(runtime)
+        val state = checkNotNull(value.session.canonicalState).value
+        check(state.players.size == 6 && state.privatePerPlayer.size == 6 && state.public.timer == null)
+        capturedRuntime = value
+        controller = value.session
+        canonical = value.session.canonicalState
+        baseline = state
+        captured = true
+        retained()
+    }
+
+    fun retained() {
+        val value = checkNotNull(capturedRuntime)
+        val initial = checkNotNull(baseline)
+        check(runtime === value && value.session === controller && value.session.canonicalState === canonical)
+        val current = checkNotNull(value.session.canonicalState).value
+        check(current === initial && current == initial)
+        check(current.hostOnly == initial.hostOnly && current.privatePerPlayer == initial.privatePerPlayer)
+        check(value.seed == owned.hostSeed && current.hostOnly.randomSeed == owned.hostSeed)
+        check(value.scope.coroutineContext[Job]?.isActive == true)
+        check(value.startGate.value == HostStartGateState.Started && current.phase == WhodunitPhase.PublicIntro)
+    }
+
+    suspend fun suspendedAck() {
+        retained()
+        val value = checkNotNull(capturedRuntime)
+        val result = value.session.submit(WhodunitAction.AcknowledgeIntro(owned.room.selfPlayerId))
+        check(result == Result.Failure(SubmitError.SessionSuspended))
+        retained()
+    }
+
+    suspend fun activeAck() {
+        retained()
+        val value = checkNotNull(capturedRuntime)
+        val result = value.session.submit(WhodunitAction.AcknowledgeIntro(owned.room.selfPlayerId))
+        check(result is Result.Success && !result.data.stateChanged && !result.data.awaitingAuthority)
+        retained()
+    }
+
+    fun runtimeClosed() { check(checkNotNull(capturedRuntime).scope.coroutineContext[Job]?.isCompleted == true) }
+    fun release() { baseline = null; canonical = null; controller = null; capturedRuntime = null }
+}

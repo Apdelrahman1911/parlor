@@ -1,0 +1,883 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "author": "/root/native_fix_review",
+  "recorded_at": "2026-09-06T22:52:13.024497+00:00",
+  "classification": "PARTIALLY VERIFIED \u2014 actual OS per-app ownership flow remains BLOCKED. Five passing XCTest methods are not DS-C01 completion.",
+  "source": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e"
+  },
+  "source_input_count": 669,
+  "current_source_and_tracked_diff_rehashed_unchanged": true,
+  "evidence_sha256": {
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-08/receipt.json": "12f35c635d496917898e3314282702e488d3010b94b85d3e54da484d2714119c",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-08/xcodebuild.log": "083e3bed139e8a23080fccf80dc2174a4c002d81e0cfa6c277b5df74f4f576d4",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-08/xcresult-summary.json": "5895dd720757649f1fc2447ceacbc3a2d8794582f273990c2a17165583dd5a89",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-08/xcresult-tests.json": "04a43ad342a25d1d64e09e18f2ef670d6a33481f105db74ba52bde2afd82d87d",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-08/copied-source.diff": "bda85418896c44a48c51764844c8aa3e32f9dd1df87a7f1661b414742929c7ab",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-08/copied-source-manifest.json": "e46a45aa09ada31623f97a9e46a4660cdbf9d64c41e0f39bdeab438175ea7e6e",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-08/copied-source-inputs-after-build.json": "5d03540ef7448455e4147b1186294586f1796dd8618cf4329a32c8b72fb40323",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-08/secondary-fifo-ownership-final.json": "9b2cccefe424153b25904fb72997d278709d1c48d4983e805e81a7895d9cfa94",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-08/probe-settings-result.json": "284ea17f855b040d98d47533688eca00f11abefac97938228a5f03ea7f6cd8ca",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-08/probe-whodunit-result.json": "ec08b59a3068444a425acc590755aedc20a9a6f26d3b44d93a3f3608e21d7abd",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-08/probe-mafia-result.json": "adb660a661e1f90e68c1ea35ee7862edbd4b21f2973fc5af4f1ebf14d1d83168",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-08/probe-os-result.json": "bae9212324d34b6a9accdc0be50e9f23744a2e48437b359a36f4381967165aed",
+    "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v10/author-frozen-control-manifest-01.json": "519adcba980d77c2e980d03113b0080039d513883878e69a3e603458992f2400"
+  },
+  "controls": {
+    "count": 107,
+    "all_rehashed_unchanged": true,
+    "aggregate_sha256": "b283a47498a024538b6aed6dfa9cc75bea04f6281fdf2bd210ea07b0a9c6c0f0"
+  },
+  "copy_provenance": {
+    "original_inputs": 613,
+    "final_inputs": 615,
+    "transformed_or_added_paths": 13,
+    "hunks": 18,
+    "all_hunks_independently_applied_against_frozen_source": true,
+    "all_copied_and_post_worker_hashes_matched": true,
+    "literal_renderer_and_appended_controls_match_actual_copied_ui": true,
+    "unexpected_missing_or_symlink_inputs": [],
+    "limitation": "Required cleanup deleted the build copy; retained full diff reconstructs it. Artifact receipt omits Parlor.debug.dylib and is not complete binary provenance."
+  },
+  "xctest": {
+    "result": "PASS",
+    "xcode_exit": 0,
+    "runner_exit": 2,
+    "tests": [
+      {
+        "id": "ComposeContainerViewControllerTests/testChildUsesFullBoundsAcrossSizesAndOpposingSemanticDirections()",
+        "result": "Passed",
+        "duration_seconds": 0.2929939031600952
+      },
+      {
+        "id": "ComposeContainerViewControllerTests/testDefaultAppearanceForwardingReachesTheSameChildExactlyOnce()",
+        "result": "Passed",
+        "duration_seconds": 0.040292978286743164
+      },
+      {
+        "id": "ComposeContainerViewControllerTests/testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView()",
+        "result": "Passed",
+        "duration_seconds": 0.03974306583404541
+      },
+      {
+        "id": "ComposeContainerViewControllerTests/testSystemDecorationAndOrientationPoliciesStillBelongToTheChild()",
+        "result": "Passed",
+        "duration_seconds": 0.03879702091217041
+      },
+      {
+        "id": "IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSInvestigation()",
+        "result": "Passed",
+        "duration_seconds": 574.8596270084381
+      }
+    ],
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0,
+    "actual_platform": "iOS Simulator26.5 arm64 owned iPhone17Pro",
+    "scope": "Four actual production UIKit wrapper tests and one matrix XCTest. Synthetic Swift contracts execute within the matrix, not separate methods."
+  },
+  "settings": {
+    "observations": 22,
+    "boots": [
+      "98283341-FBBF-4AF5-9893-E6EC91F7D631",
+      "927D65DF-BA91-4D1F-8F52-12F878C1B25C",
+      "71E340DB-B41D-4D76-93D8-2C2C3455F9F4",
+      "0EC5B490-63DD-4922-BCC6-58E8D8170433"
+    ],
+    "all_ownership_tuples_independently_checked": true,
+    "zero_synthetic_store_commands": true,
+    "sequence1": [
+      "fresh System EN",
+      "actual AR",
+      "restart AR",
+      "actual System EN"
+    ],
+    "sequence2": [
+      "synthetic prior ar-EG/en",
+      "actual EN",
+      "restart EN",
+      "actual System restores ar-EG/en"
+    ],
+    "limitation": "Prior ar-EG/en is synthetic app-domain fixture, not a real OS per-app write."
+  },
+  "local_games": {
+    "whodunit": {
+      "observations": 97,
+      "capture_interval": [
+        9,
+        96
+      ],
+      "continuous_rows": 88,
+      "phase": "public-intro",
+      "passive_samples": 72,
+      "windows": [
+        {
+          "window": 1,
+          "ordinals": [
+            12,
+            17
+          ],
+          "context": "foreground",
+          "command": 0,
+          "interval_ms": [
+            262,
+            266
+          ]
+        },
+        {
+          "window": 2,
+          "ordinals": [
+            18,
+            23
+          ],
+          "context": "foreground",
+          "command": 0,
+          "interval_ms": [
+            262,
+            267
+          ]
+        },
+        {
+          "window": 3,
+          "ordinals": [
+            24,
+            29
+          ],
+          "context": "landscape",
+          "command": 0,
+          "interval_ms": [
+            257,
+            268
+          ]
+        },
+        {
+          "window": 4,
+          "ordinals": [
+            30,
+            35
+          ],
+          "context": "portrait",
+          "command": 0,
+          "interval_ms": [
+            266,
+            267
+          ]
+        },
+        {
+          "window": 5,
+          "ordinals": [
+            40,
+            45
+          ],
+          "context": "foreground",
+          "command": 1,
+          "interval_ms": [
+            258,
+            267
+          ]
+        },
+        {
+          "window": 6,
+          "ordinals": [
+            46,
+            51
+          ],
+          "context": "foreground",
+          "command": 1,
+          "interval_ms": [
+            266,
+            268
+          ]
+        },
+        {
+          "window": 7,
+          "ordinals": [
+            52,
+            57
+          ],
+          "context": "landscape",
+          "command": 1,
+          "interval_ms": [
+            264,
+            269
+          ]
+        },
+        {
+          "window": 8,
+          "ordinals": [
+            58,
+            63
+          ],
+          "context": "portrait",
+          "command": 1,
+          "interval_ms": [
+            266,
+            267
+          ]
+        },
+        {
+          "window": 9,
+          "ordinals": [
+            68,
+            73
+          ],
+          "context": "foreground",
+          "command": 2,
+          "interval_ms": [
+            270,
+            273
+          ]
+        },
+        {
+          "window": 10,
+          "ordinals": [
+            74,
+            79
+          ],
+          "context": "foreground",
+          "command": 2,
+          "interval_ms": [
+            270,
+            272
+          ]
+        },
+        {
+          "window": 11,
+          "ordinals": [
+            84,
+            89
+          ],
+          "context": "foreground",
+          "command": 3,
+          "interval_ms": [
+            268,
+            273
+          ]
+        },
+        {
+          "window": 12,
+          "ordinals": [
+            90,
+            95
+          ],
+          "context": "foreground",
+          "command": 3,
+          "interval_ms": [
+            271,
+            274
+          ]
+        }
+      ],
+      "interval_ms": [
+        257,
+        274
+      ],
+      "first_post_foreground_ordinals": [
+        11,
+        39,
+        67,
+        83
+      ],
+      "background_foreground_cycles": 4,
+      "disposals": 0,
+      "same_actual_controller_flow_reference_value_phase": true,
+      "synthetic_actual_store_invocations": [
+        "ar",
+        "en",
+        "system"
+      ],
+      "initial_english_before_capture_from_actual_settings_ui": true
+    },
+    "mafia": {
+      "observations": 99,
+      "capture_interval": [
+        11,
+        98
+      ],
+      "continuous_rows": 88,
+      "phase": "role-assignment",
+      "passive_samples": 72,
+      "windows": [
+        {
+          "window": 1,
+          "ordinals": [
+            14,
+            19
+          ],
+          "context": "foreground",
+          "command": 0,
+          "interval_ms": [
+            266,
+            267
+          ]
+        },
+        {
+          "window": 2,
+          "ordinals": [
+            20,
+            25
+          ],
+          "context": "foreground",
+          "command": 0,
+          "interval_ms": [
+            263,
+            267
+          ]
+        },
+        {
+          "window": 3,
+          "ordinals": [
+            26,
+            31
+          ],
+          "context": "landscape",
+          "command": 0,
+          "interval_ms": [
+            258,
+            267
+          ]
+        },
+        {
+          "window": 4,
+          "ordinals": [
+            32,
+            37
+          ],
+          "context": "portrait",
+          "command": 0,
+          "interval_ms": [
+            266,
+            269
+          ]
+        },
+        {
+          "window": 5,
+          "ordinals": [
+            42,
+            47
+          ],
+          "context": "foreground",
+          "command": 1,
+          "interval_ms": [
+            266,
+            271
+          ]
+        },
+        {
+          "window": 6,
+          "ordinals": [
+            48,
+            53
+          ],
+          "context": "foreground",
+          "command": 1,
+          "interval_ms": [
+            258,
+            268
+          ]
+        },
+        {
+          "window": 7,
+          "ordinals": [
+            54,
+            59
+          ],
+          "context": "landscape",
+          "command": 1,
+          "interval_ms": [
+            268,
+            269
+          ]
+        },
+        {
+          "window": 8,
+          "ordinals": [
+            60,
+            65
+          ],
+          "context": "portrait",
+          "command": 1,
+          "interval_ms": [
+            266,
+            272
+          ]
+        },
+        {
+          "window": 9,
+          "ordinals": [
+            70,
+            75
+          ],
+          "context": "foreground",
+          "command": 2,
+          "interval_ms": [
+            270,
+            272
+          ]
+        },
+        {
+          "window": 10,
+          "ordinals": [
+            76,
+            81
+          ],
+          "context": "foreground",
+          "command": 2,
+          "interval_ms": [
+            263,
+            271
+          ]
+        },
+        {
+          "window": 11,
+          "ordinals": [
+            86,
+            91
+          ],
+          "context": "foreground",
+          "command": 3,
+          "interval_ms": [
+            267,
+            273
+          ]
+        },
+        {
+          "window": 12,
+          "ordinals": [
+            92,
+            97
+          ],
+          "context": "foreground",
+          "command": 3,
+          "interval_ms": [
+            270,
+            274
+          ]
+        }
+      ],
+      "interval_ms": [
+        258,
+        274
+      ],
+      "first_post_foreground_ordinals": [
+        13,
+        41,
+        69,
+        85
+      ],
+      "background_foreground_cycles": 4,
+      "disposals": 0,
+      "same_actual_controller_flow_reference_value_phase": true,
+      "synthetic_actual_store_invocations": [
+        "ar",
+        "en",
+        "system"
+      ],
+      "initial_english_before_capture_from_actual_settings_ui": true
+    }
+  },
+  "native_geometry": {
+    "rows": 219,
+    "orientation_counts": {
+      "portrait": 195,
+      "landscape": 24
+    },
+    "opposing_outer_and_actual_compose_direction_rows": 108,
+    "all_eight_identity_booleans_true": true,
+    "one_attachment_zero_disposals": true,
+    "full_bounds_and_safe_areas_independently_recalculated": true
+  },
+  "public_activation": {
+    "whodunit-catalog": {
+      "rows": 9,
+      "raw_range": [
+        2187,
+        2324
+      ],
+      "search_windows": 1,
+      "stable_final_six_raw_lines": [
+        2187,
+        2202,
+        2217,
+        2232,
+        2247,
+        2262
+      ],
+      "before_activation_line": 2283,
+      "after_activation_line": 2305,
+      "successor_line": 2324,
+      "target": [
+        24,
+        671.6666870117188,
+        354,
+        99
+      ],
+      "viewport": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "overlay": [
+        68.66666666666666,
+        134,
+        265,
+        49
+      ],
+      "recalculated_interior": [
+        36,
+        683.6666870117188,
+        330,
+        59.0
+      ],
+      "recalculated_point": [
+        201.0,
+        713.1666870117188
+      ],
+      "recalculated_normalized_point": [
+        0.5,
+        0.41919191919191917
+      ]
+    },
+    "mafia-catalog": {
+      "rows": 39,
+      "raw_range": [
+        3189,
+        3788
+      ],
+      "search_windows": 6,
+      "stable_final_six_raw_lines": [
+        3651,
+        3666,
+        3681,
+        3696,
+        3711,
+        3726
+      ],
+      "before_activation_line": 3747,
+      "after_activation_line": 3769,
+      "successor_line": 3788,
+      "target": [
+        24,
+        392,
+        354,
+        371
+      ],
+      "viewport": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "overlay": [
+        68.66666666666666,
+        134,
+        265,
+        49
+      ],
+      "recalculated_interior": [
+        36,
+        404,
+        330,
+        338.66668701171875
+      ],
+      "recalculated_point": [
+        201.0,
+        573.3333435058594
+      ],
+      "recalculated_normalized_point": [
+        0.5,
+        0.4887691199618851
+      ]
+    },
+    "mafia-start": {
+      "rows": 40,
+      "raw_range": [
+        3947,
+        4379
+      ],
+      "search_windows": 6,
+      "stable_final_six_raw_lines": [
+        4269,
+        4279,
+        4289,
+        4299,
+        4309,
+        4319
+      ],
+      "before_activation_line": 4335,
+      "after_activation_line": 4351,
+      "successor_line": 4379,
+      "target": [
+        32,
+        756,
+        338,
+        52
+      ],
+      "viewport": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "overlay": [
+        68.66666666666666,
+        134,
+        265,
+        49
+      ],
+      "recalculated_interior": [
+        44,
+        768,
+        314,
+        28
+      ],
+      "recalculated_point": [
+        201.0,
+        782.0
+      ],
+      "recalculated_normalized_point": [
+        0.5,
+        0.5
+      ]
+    }
+  },
+  "os_prerequisite": {
+    "result": "PASS",
+    "disposition": "already-satisfied",
+    "rows": 16,
+    "raw_lines": [
+      4895,
+      5219
+    ],
+    "contract_cases": 24,
+    "contract_part_of_matrix_not_24_xctests": true,
+    "three_final_rows_independently_checked": true,
+    "ordered_unique_current_english_primary_arabic_add_language": true,
+    "english_frame": [
+      20,
+      171.33333206176758,
+      362,
+      68
+    ],
+    "arabic_frame": [
+      20,
+      239.33333206176758,
+      362,
+      68
+    ],
+    "add_language_frame": [
+      20,
+      307.3333320617676,
+      362,
+      55
+    ],
+    "arabicAddedByThisPrerequisite": false,
+    "navigation_activations": [
+      "General",
+      "Language & Region"
+    ],
+    "add_search_select_or_primary_language_mutations": false
+  },
+  "os_original_gate": {
+    "result": "BLOCKED",
+    "blocked_stage": "initialPane",
+    "selector_raw_line": 5548,
+    "all_exact_labels_absent_except_generic_Settings": true,
+    "all_five_language_prefixes_absent": true,
+    "actual_settings_app_pane_proven": false,
+    "actual_os_english_selection_executed": false,
+    "actual_public_route_actions": [],
+    "observations": 8,
+    "boots": [
+      "D0B158F3-C37D-45A3-8DE9-22F3BCA2F6D0"
+    ],
+    "dispositions": [
+      "not-investigated",
+      "not-investigated",
+      "not-investigated",
+      "not-investigated",
+      "opened",
+      "language-control-unavailable",
+      "language-control-unavailable",
+      "language-control-unavailable"
+    ],
+    "completed_flag_not_success_proof": true,
+    "not_application_crash_evidence": true,
+    "query_divergence_evidence": {
+      "raw_lines": [
+        5332,
+        5369,
+        5406,
+        5443,
+        5480,
+        5517
+      ],
+      "attempts": 6,
+      "observed_panes": [
+        "settings",
+        "apps",
+        "parlor"
+      ],
+      "label_predicate_counts": [
+        0,
+        0,
+        0
+      ],
+      "multi_property_matching_Settings_count": 1,
+      "raw_identifier_value_not_observed": true
+    },
+    "source_proof": "Helper osPaneMetadata92\u2013105 eligibility uses navigationBars label-IN; knownNavigationTitles uses matching(identifier:). awaitOSPane141\u2013155 rejects all six zero-count eligible queries and reports BLOCKED before any public navigation. Apple documents multi-property matching; the positive diagnostic does not establish identifier==Settings or a Parlor pane.",
+    "application_defect_established": false
+  },
+  "v10_terminal_reporting": {
+    "result": "PASS",
+    "raw_interaction_rows": 25,
+    "swift_contract_cases": 24,
+    "swift_contract_raw_line": 5221,
+    "public_route_activations": 0,
+    "guarded_terminal_activations": [
+      {
+        "control": "showMarkers",
+        "target": [
+          158.66666666666666,
+          183,
+          85,
+          11
+        ],
+        "sample_raw_lines": [
+          5575,
+          5594,
+          5613
+        ],
+        "before_raw_line": 5633,
+        "after_raw_line": 5640
+      },
+      {
+        "control": "noRow",
+        "target": [
+          4,
+          183,
+          394,
+          44
+        ],
+        "sample_raw_lines": [
+          5714,
+          5733,
+          5752
+        ],
+        "before_raw_line": 5772,
+        "after_raw_line": 5779
+      },
+      {
+        "control": "complete",
+        "target": [
+          72.33333333333333,
+          138,
+          42.33333333333334,
+          11
+        ],
+        "sample_raw_lines": [
+          5803,
+          5822,
+          5841
+        ],
+        "before_raw_line": 5861,
+        "after_raw_line": 5868
+      }
+    ],
+    "expanded_panel_raw_line": 5695,
+    "expanded_marker_frames": [
+      [
+        4,
+        183,
+        394,
+        44
+      ],
+      [
+        4,
+        231,
+        394,
+        44
+      ],
+      [
+        4,
+        279,
+        394,
+        44
+      ]
+    ],
+    "durable_marker": {
+      "raw_line": 5784,
+      "probe_sequence": 6,
+      "status": "language-control-unavailable"
+    },
+    "completion": {
+      "raw_line": 5873,
+      "probe_sequence": 7
+    },
+    "ordered_panel_marker_complete_backed_by_original_probe": true,
+    "does_not_prove_OS_English_selection": true
+  },
+  "cleanup": {
+    "receipt": "PASS",
+    "stop_exits": [
+      0,
+      0
+    ],
+    "immediate_stop_start_delay_seconds": 0.008759,
+    "immediate_stop_finish_delay_seconds": 0.631283,
+    "owned_pid_start_identities_checked": 64,
+    "remaining_owned_identities": [],
+    "owned_paths_checked": [
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-dsc01-apphost-08-ekvcp03u",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-dsc01-apphost-08-ekvcp03u/copy",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-dsc01-apphost-08-ekvcp03u/DerivedData",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-92303/IB/3445AE63-3EFB-4BE0-84AD-F236BA7D7014.RemoteToHost",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-92303/IB/3445AE63-3EFB-4BE0-84AD-F236BA7D7014.HostToRemote",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-92303/IB",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-92303"
+    ],
+    "all_absent": true,
+    "secondary_fifo_count": 2,
+    "secondary_empty_parent_count": 2,
+    "fifo_pid_start_parent_uid_birth_type_attestation_checked": true,
+    "owned_device_absent": true,
+    "global_idle_claim": false,
+    "unrelated_resources_not_touched": true
+  },
+  "research_records": [
+    "reviews/independent-v11-exact-identifier-research-02.json",
+    "reviews/independent-v11-pinned-xctest-declarations-01.json"
+  ],
+  "suggested_next_scope": [
+    "Investigate conservative exact identifier-or-label pane predicate with measured per-attribute provenance, union uniqueness, foreground/title/frame/keyboard/alert guards. Do not equate matching(identifier:) with exact identifier.",
+    "Diagnostic count from title/value/placeholder only must not invent identifier/label evidence. Zero/ambiguous/hidden panes remain BLOCKED.",
+    "Retain exact English->in-appAR->System->restart oracles, original148 controls and V10 terminal reporting. No application source change justified by this harness observation.",
+    "Review/freeze next copy-only delta, root focused controls, independent result review and separate native GO; no next native attempt authorized here."
+  ],
+  "limitations": [
+    "No actual OS English selection, post-OS Arabic/System restoration or post-OS restart proof.",
+    "No complete-game/storage-resume/retained-multiplayer/physical-LAN or physical-accessibility proof.",
+    "Xcode26.5/17F42 simulator is not Store-qualified26.3, signing or Store evidence.",
+    "Copied overlay is observation instrumentation and may perturb SwiftUI outside passive windows."
+  ],
+  "reviewer_execution": {
+    "builds": 0,
+    "application_tests": 0,
+    "apps": 0,
+    "simulators": 0,
+    "background_workers": 0,
+    "source_edits": 0,
+    "git_store_signing_mutations": 0,
+    "process_stops": 0,
+    "build_outputs_created": 0,
+    "cleanup_required": false
+  },
+  "arithmetic_script_sha256": "4c25992604e401dad27361fa82a032a1143f4e88eeefcbbacb96438e4d5186ad"
+}

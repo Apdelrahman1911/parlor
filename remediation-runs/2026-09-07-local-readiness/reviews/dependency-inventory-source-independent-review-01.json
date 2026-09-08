@@ -1,0 +1,396 @@
+{
+  "schema_version": 1,
+  "reviewed_at": "2026-09-07T13:58:05.831381+00:00",
+  "reviewer": "/root/factory_review",
+  "author": "/root",
+  "decision": "APPROVED_FOR_ROOT_ONLY_FOCUSED_EXECUTION",
+  "blocking_findings": [],
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "2085367999a1b6e998567e83e978785f02607b3d",
+    "tree": "887a4e26d8f43198d1bd8c4e4e6727fc126c4f8c",
+    "git_status": [
+      " M .github/workflows/production-verification.yml",
+      "?? AGENTS.md",
+      "?? audit-runs/",
+      "?? design/",
+      "?? docs/PARLOR_PROJECT_HANDOFF.md",
+      "?? project-code-audit/",
+      "?? remediation-runs/",
+      "?? scripts/ci/",
+      "?? scripts/release/tests/test_ci_verification_hygiene.py",
+      "?? scripts/release/tests/test_dependency_inventory.py",
+      "?? scripts/verification/dependency_inventory.py",
+      "?? scripts/verification/resolved_dependencies.init.gradle"
+    ]
+  },
+  "scope": "New opt-in four-platform resolved-input CycloneDX and publisher-POM declaration evidence; not shipping application behavior or Store/legal approval.",
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/resolved_dependencies.init.gradle",
+      "sha256": "422cf94df25cb2e89982e1bfbc4a3ffb2de055e4ae45c5024774f386ab8b5a20",
+      "reviewed_lines": [
+        [
+          1,
+          99
+        ]
+      ],
+      "disposition": "FULLY_READ",
+      "relevance": "opt-in verification exporter"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/dependency_inventory.py",
+      "sha256": "f82c3365ff59b602d3ad03ad19fa085f6831e79fff5753898785a06c478045ce",
+      "reviewed_lines": [
+        [
+          1,
+          265
+        ]
+      ],
+      "disposition": "FULLY_READ",
+      "relevance": "verification implementation"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_dependency_inventory.py",
+      "sha256": "d64f617bfe5cf55be71305e764288bd0dd1ecf60bc69b42349dc8d97b6c8c211",
+      "reviewed_lines": [
+        [
+          1,
+          177
+        ]
+      ],
+      "disposition": "FULLY_READ",
+      "relevance": "test-only"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/build.gradle.kts",
+      "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+      "reviewed_lines": [
+        [
+          1,
+          627
+        ]
+      ],
+      "disposition": "FULLY_READ_FOR_BOUNDED_BUILD_GRAPH_REVIEW",
+      "relevance": "surrounding graph/task wiring"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/settings.gradle.kts",
+      "sha256": "27a40495b1adf18ca90b5a8fdd345448c2ecf2f9ac726c753468a5e627b27d18",
+      "reviewed_lines": [
+        [
+          1,
+          55
+        ]
+      ],
+      "disposition": "FULLY_READ_FOR_BOUNDED_BUILD_GRAPH_REVIEW",
+      "relevance": "surrounding graph/task wiring"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/gradle.properties",
+      "sha256": "2df8685921ad2c6eead097a6d9994bbcc93dbc5cbdeb0bce8911ffa4e83162ce",
+      "reviewed_lines": [
+        [
+          1,
+          29
+        ]
+      ],
+      "disposition": "FULLY_READ_FOR_BOUNDED_BUILD_GRAPH_REVIEW",
+      "relevance": "surrounding graph/task wiring"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+      "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "reviewed_lines": [
+        [
+          1,
+          106
+        ]
+      ],
+      "disposition": "FULLY_READ_FOR_BOUNDED_BUILD_GRAPH_REVIEW",
+      "relevance": "surrounding graph/task wiring"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/gradle/wrapper/gradle-wrapper.properties",
+      "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2",
+      "reviewed_lines": [
+        [
+          1,
+          8
+        ]
+      ],
+      "disposition": "FULLY_READ_FOR_BOUNDED_BUILD_GRAPH_REVIEW",
+      "relevance": "surrounding graph/task wiring"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build-logic/convention/src/main/kotlin/com/parlor/buildlogic/KmpLibraryConventionPlugin.kt",
+      "sha256": "9d3b07942123f5a4c2da229aa873d5d7b7d422b120d1ff42014cfe066eefbc63",
+      "reviewed_lines": [
+        [
+          1,
+          72
+        ]
+      ],
+      "disposition": "FULLY_READ_FOR_BOUNDED_BUILD_GRAPH_REVIEW",
+      "relevance": "surrounding graph/task wiring"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/content/build.gradle.kts",
+      "sha256": "f956862a089a95ba41f4de714e95d1ac44a23d80994c323ba61a1c0c28d34939",
+      "reviewed_lines": [
+        [
+          1,
+          24
+        ]
+      ],
+      "disposition": "FULLY_READ_FOR_BOUNDED_BUILD_GRAPH_REVIEW",
+      "relevance": "surrounding graph/task wiring"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/build.gradle.kts",
+      "sha256": "6ce2fd726bd41031a5b26d0d30f8ee8f693b4dc942da90bdc48b40fbf040c3b7",
+      "reviewed_lines": [
+        [
+          1,
+          100
+        ]
+      ],
+      "disposition": "FULLY_READ_FOR_BOUNDED_BUILD_GRAPH_REVIEW",
+      "relevance": "surrounding graph/task wiring"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/engine/build.gradle.kts",
+      "sha256": "4cbe86781aa8f11d2ef91381855ab3bcb3b126ef53b6a8272b79c478f90fc38a",
+      "reviewed_lines": [
+        [
+          1,
+          24
+        ]
+      ],
+      "disposition": "FULLY_READ_FOR_BOUNDED_BUILD_GRAPH_REVIEW",
+      "relevance": "surrounding graph/task wiring"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/engine-testing/build.gradle.kts",
+      "sha256": "096e9f4f67d514fd0a41de6853ad599cf5e3f3168b3294d8c3d71db5eaeac87f",
+      "reviewed_lines": [
+        [
+          1,
+          20
+        ]
+      ],
+      "disposition": "FULLY_READ_FOR_BOUNDED_BUILD_GRAPH_REVIEW",
+      "relevance": "surrounding graph/task wiring"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/networking-testing/build.gradle.kts",
+      "sha256": "81ed6260d7ac49fada4f0a922dde7db77fc557b86ab0a5884d5b20a64ec74f7e",
+      "reviewed_lines": [
+        [
+          1,
+          17
+        ]
+      ],
+      "disposition": "FULLY_READ_FOR_BOUNDED_BUILD_GRAPH_REVIEW",
+      "relevance": "surrounding graph/task wiring"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/validate_release_system.sh",
+      "sha256": "ce52c9c08edecba968337d6de42c90895badec127c7029a5afc16737d3b8864a",
+      "reviewed_lines": [
+        [
+          1,
+          104
+        ]
+      ],
+      "disposition": "FULLY_READ_FOR_BOUNDED_BUILD_GRAPH_REVIEW",
+      "relevance": "surrounding graph/task wiring"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/build.gradle.kts",
+      "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+      "reviewed_lines": [
+        [
+          59,
+          70
+        ],
+        [
+          139,
+          149
+        ]
+      ],
+      "disposition": "PARTIALLY_READ_FOR_TASK_WIRING_ONLY",
+      "relevance": "root aggregation; not whole-file approval"
+    }
+  ],
+  "research": [
+    {
+      "url": "https://raw.githubusercontent.com/gradle/gradle/v8.13.0/subprojects/core-api/src/main/java/org/gradle/api/artifacts/result/ResolutionResult.java",
+      "sha256": "492cdb59ab741dd9664954f12eb716470a1f16568d0c6e5fe9ecdb3885c73b32",
+      "claim": "getRootComponent returns Provider<ResolvedComponentResult> since7.4; getAllComponents returns all resolved nodes; valid in pinned8.13.0",
+      "lines": [
+        [
+          49,
+          58
+        ],
+        [
+          98,
+          104
+        ]
+      ],
+      "accessed_at": "2026-09-07T13:58:05.831381+00:00",
+      "method": "Public HTTPS GET, bounded read, selected exact-source/schema inspection; no credentials or confidential source transmitted"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/gradle/gradle/v8.13.0/subprojects/core-api/src/main/java/org/gradle/api/artifacts/ArtifactView.java",
+      "sha256": "06f30e0bd6cbcce50dd563ec04599ec60c6c67c81da2d98886c47b4d0af63537",
+      "claim": "componentFilter restricts returned artifacts/files to selected identifiers; lenient mode separate and not enabled",
+      "lines": [
+        [
+          51,
+          63
+        ]
+      ],
+      "accessed_at": "2026-09-07T13:58:05.831381+00:00",
+      "method": "Public HTTPS GET, bounded read, selected exact-source/schema inspection; no credentials or confidential source transmitted"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/gradle/gradle/v8.13.0/subprojects/core-api/src/main/java/org/gradle/api/artifacts/result/ResolvedComponentResult.java",
+      "sha256": "225c3deecc46e2a13d3228865af572f4addeb1c91cfd9838c41d839750e68306",
+      "claim": "dependencies includes resolved and unresolved edges; component-level aggregation combines selected variants rather than representing each variant separately",
+      "lines": [
+        [
+          41,
+          47
+        ],
+        [
+          75,
+          97
+        ]
+      ],
+      "accessed_at": "2026-09-07T13:58:05.831381+00:00",
+      "method": "Public HTTPS GET, bounded read, selected exact-source/schema inspection; no credentials or confidential source transmitted"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/gradle/gradle/v8.13.0/subprojects/core-api/src/main/java/org/gradle/api/artifacts/result/DependencyResult.java",
+      "sha256": "0b8afacbd26908efca8e6bf47a5173e1a12f24edeb4cfe1f0ddae4098ef87eae",
+      "claim": "isConstraint distinguishes dependency constraints, supported since5.1",
+      "lines": [
+        [
+          49,
+          55
+        ]
+      ],
+      "accessed_at": "2026-09-07T13:58:05.831381+00:00",
+      "method": "Public HTTPS GET, bounded read, selected exact-source/schema inspection; no credentials or confidential source transmitted"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/gradle/gradle/v8.13.0/subprojects/core-api/src/main/java/org/gradle/api/artifacts/component/ProjectComponentIdentifier.java",
+      "sha256": "67175abc97bf289cb765b01ea20dcf45500735a8df25b32d126c026d967a5003",
+      "claim": "projectPath is relative to build, not globally unique; current first-party shipping graph has no included external build substitution, so no current collision was found",
+      "lines": [
+        [
+          29,
+          51
+        ]
+      ],
+      "accessed_at": "2026-09-07T13:58:05.831381+00:00",
+      "method": "Public HTTPS GET, bounded read, selected exact-source/schema inspection; no credentials or confidential source transmitted"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/JetBrains/kotlin/v2.4.10/libraries/tools/kotlin-gradle-plugin-api/src/common/kotlin/org/jetbrains/kotlin/gradle/plugin/KotlinCompilation.kt",
+      "sha256": "2a15f9b05cf133422ab4d15bd4710b6e594e9198abe4a8773a2c90da03961d10",
+      "claim": "compileDependencyConfigurationName explicitly names all resolved compilation dependencies at exactKGP2.4.10; main/iosArm64+iosSimulatorArm64+iosX64 configured by composeApp",
+      "lines": [
+        [
+          150,
+          160
+        ]
+      ],
+      "accessed_at": "2026-09-07T13:58:05.831381+00:00",
+      "method": "Public HTTPS GET, bounded read, selected exact-source/schema inspection; no credentials or confidential source transmitted"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/CycloneDX/specification/1.6/schema/bom-1.6.schema.json",
+      "sha256": "3e92dddbc30cf7f6a02b80f0942b1a4cfd4fb1c26f1dfc4310afa9d613cafb93",
+      "claim": "Named licenses, nested file components, SHA-256 hashes and dependency ref/dependsOn supported; real generated outputs still require schema validation",
+      "json_paths": [
+        "definitions.license",
+        "definitions.licenseChoice",
+        "definitions.component",
+        "definitions.dependency"
+      ],
+      "accessed_at": "2026-09-07T13:58:05.831381+00:00",
+      "method": "Public HTTPS GET, bounded read, selected exact-source/schema inspection; no credentials or confidential source transmitted"
+    }
+  ],
+  "verified_source_paths": [
+    "Gradle init registration -> strict startParameter guard -> explicit fresh output -> source identity + untracked shipping/build-input rejection -> releaseRuntimeClasspath/native main compile configs -> non-lenient graph walk -> external-only artifact collection -> streamed SHA256 -> final source equality -> completion manifest.",
+    "Python bounded manifest+graph load -> exact source/graph-name/hash binding -> fixed-origin coordinate-derived POM fetch with pre-follow redirect rejection -> bounded UTF8-only/noDTD parse -> exact coordinate identity -> explicit bounded parent-license inheritance -> post-fetch graph equality -> declaration report and BOM draft.",
+    "Existing root productionReleaseAutomationCheck invokes unittest discovery test_*.py, so new test file is registered in that standard script path; current13 method signatures parsed, not executed by reviewer.",
+    "Android production graph contains no first-party local file dependency; the SDK test stub under androidInstrumentedTest is test-only. Shared testing fixture dependencies remain commonTest only in inspected modules. Native external compile inputs are not final binary contents."
+  ],
+  "resolved_draft_review_comments": [
+    {
+      "id": "DI-R1",
+      "original_problem": "Renderer relabeled stale graphs with current Git identity; emitter omitted baseline and config-cache incompatibility.",
+      "resolution": "Emitter captures source before/after resolution, refuses untracked app/library/build/config inputs, and marks task incompatible with configuration cache; renderer consumes captured graph identity rather than querying currentGit.",
+      "limits": "Parent must still freeze and hash whole-source/control inputs before Gradle configuration and after run; untracked exporter/control files and ignored local environment are not represented by gitdiff alone."
+    },
+    {
+      "id": "DI-R2",
+      "original_problem": "A failed final-source check left four apparently valid graphs.",
+      "resolution": "Completion manifest written only after equality; renderer requires it and matches all four graphs/hashes/source."
+    },
+    {
+      "id": "DI-R3",
+      "original_problem": "Renderer re-read graph hashes only after network research and could bind different bytes to consumed content.",
+      "resolution": "Bounded initial raw-byte hash retained; graphs and hashes reread and compared after research."
+    },
+    {
+      "id": "DI-R4",
+      "original_problem": "ASCII byte scan failed to detect UTF16 DTD/entity declarations.",
+      "resolution": "Strict UTF8 decode, NUL rejection, declaration encoding guard and fulltext DTD/entity rejection; UTF16/LE test fixtures added."
+    },
+    {
+      "id": "DI-R5",
+      "original_problem": "Final response URL check occurred after default redirect following.",
+      "resolution": "RejectRedirect.redirect_request raises before issuing redirected request; final response URL check also remains."
+    }
+  ],
+  "counter_evidence_and_limits": [
+    "All source claims are source review only; no actual newGradle graph run, generatedBOM schema validation, livePOM run or test execution had been supplied at this approval.",
+    "Graph completion receipt is integrity binding under trusted local owned run, not cryptographic attestation against malicious file-owner replacement. Future external receipts must bind source/control scripts and successful exit.",
+    "POM declarations are fetched separately as publicresearch and explicitly not a replacement for strictGradle metadata verification or proof of redistributed notice compliance.",
+    "No default license is invented; missing/unresolved licenses return UNRESOLVED and overall exit1. Parent inheritance retains parent evidence/attribution. First-party license remains OWNER_DECISION_REQUIRED.",
+    "Compilation/runtime inputsuperset does not prove postR8 or finalKotlinNative completeness; compiler/platform runtimes, assets/fonts, embedded or vendored code and buildtools require separate inspection.",
+    "All graphs aggregate component-level selected variants; they are not variant-by-variant dependency provenance. Desktop is deliberately excluded from shipping resolvedinput inventory; Desktop remains test/dev only.",
+    "Unknown artifact/component shapes and unsupportedPOMs fail rather than silently fabricating declarations; real graph export is required to discover actual version-specific shapes.",
+    "No private signing/player files, cachecontents unrelated to this task, credentials or native processes were inspected/started. Public APIresearch ran only short bounded Python HTTPS reads, all exited0; no generatedbuild outputs."
+  ],
+  "verification": {
+    "python_AST": "PASS_STATIC_PARSE_ONLY",
+    "test_methods_detected": [
+      "test_resolved_graph_and_cyclonedx_keep_edges_bytes_and_declared_status",
+      "test_constraints_are_not_misrepresented_as_runtime_dependency_edges",
+      "test_graph_rejects_unverified_duplicate_dangling_and_forged_inputs",
+      "test_coordinates_cannot_escape_metadata_repository",
+      "test_direct_pom_license_identity_and_parent_are_explicit",
+      "test_pom_inherited_group_and_version_do_not_erase_identity",
+      "test_unsafe_or_unresolved_pom_metadata_is_not_accepted",
+      "test_missing_license_is_reported_as_unresolved_never_a_default",
+      "test_parent_license_is_fetched_bound_and_attributed",
+      "test_cycle_and_excessive_inheritance_fail_closed",
+      "test_redirect_handler_refuses_before_following_another_origin",
+      "test_graph_receipt_binds_success_source_and_exact_consumed_bytes",
+      "test_gradle_exporter_never_adds_repositories_or_weakens_verification"
+    ],
+    "test_method_count": 13,
+    "actual_test_execution": "NOT_RUN_BY_REVIEWER; parent shared build lane required",
+    "actual_gradle_graph_export": "NOT_RUN_AT_REVIEW",
+    "actual_cyclonedx_schema_validation": "NOT_RUN_AT_REVIEW",
+    "actual_publisher_pom_resolution": "NOT_RUN_AT_REVIEW",
+    "cleanup": "No reviewer build/app/test/Gradle workers or taskbuild outputs created; no Gradle stop invoked against parent lane."
+  },
+  "final_conclusion": "Safe to proceed to parent-owned focused executable verification of exactly these hashes, with strict verification and complete source/control receipts. This is not a claim that SBOM/legal evidence gap is complete."
+}

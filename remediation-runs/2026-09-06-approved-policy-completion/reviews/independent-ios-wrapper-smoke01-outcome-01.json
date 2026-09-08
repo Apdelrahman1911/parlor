@@ -1,0 +1,251 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-06T15:12:56.910718+00:00",
+  "reviewer": "/root/release_fix_review",
+  "cycle": "ios-wrapper-smoke-01",
+  "classification": "PASS_WITH_NARROW_EXECUTED_SCOPE",
+  "receipt_sha256": "72c13301a3e9882d4742ed10f8801108a028201d4a40c5dd8f2050e69576bbe3",
+  "xcode_exit_code": 0,
+  "source": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+    "diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "count": 669,
+    "independent_current_drift": []
+  },
+  "controls": {
+    "sha256": "59e97515d3fa919edc0232d7717bee987d0ad3d7a30a89ac2a743933651619cd",
+    "count": 11,
+    "independent_current_drift": [],
+    "approval_record": "independent-ios-wrapper-smoke-v1-execution-approval-01.json"
+  },
+  "copy": {
+    "inputs": 613,
+    "unchanged_original_input_files": 612,
+    "only_changed_file": "iosApp/iosApp.xcodeproj/project.pbxproj",
+    "proof": "Recomputed exact sole shellScript replacement from approved template+owned paths in memory; copied PBX SHA matches. All613 sourceoriginal and after-build expected/observed SHA links independently verified.0additions/missing/symlinks.",
+    "application_and_original_test_source_bytes_unchanged": true,
+    "observer_or_store_invocation": false,
+    "app_container_or_player_data_read": false,
+    "raw_diff_sha256": "ce13cb25f56f1302568d6c25c681fbf972bba203203ec1a4b4bf55f3f8b7661e"
+  },
+  "runtime": {
+    "total_tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0,
+    "descriptors": [
+      {
+        "method": "ComposeContainerViewControllerTests/testChildUsesFullBoundsAcrossSizesAndOpposingSemanticDirections()",
+        "result": "Passed",
+        "seconds": 0.22227096557617188
+      },
+      {
+        "method": "ComposeContainerViewControllerTests/testDefaultAppearanceForwardingReachesTheSameChildExactlyOnce()",
+        "result": "Passed",
+        "seconds": 0.03480994701385498
+      },
+      {
+        "method": "ComposeContainerViewControllerTests/testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView()",
+        "result": "Passed",
+        "seconds": 0.03514993190765381
+      },
+      {
+        "method": "ComposeContainerViewControllerTests/testSystemDecorationAndOrientationPoliciesStillBelongToTheChild()",
+        "result": "Passed",
+        "seconds": 0.03610801696777344
+      },
+      {
+        "method": "IOSAppLaunchUITests/testColdLaunchRendersComposeHomeWithoutUnexpectedAlert()",
+        "result": "Passed",
+        "seconds": 6.846670031547546
+      }
+    ],
+    "descriptor_proof": "Exact methods independently extracted from both original Swift test source files; equal raw xcresult descriptors and raw log PASS lines. Same ownedARM64device in summary/details.",
+    "device": {
+      "architecture": "arm64",
+      "deviceId": "37638C58-9F8E-4F72-9EBE-D653D0D0305D",
+      "deviceName": "Parlor-Audit-parlor-audit-ios-wrapper-smoke-01-u_7uva4s",
+      "modelName": "iPhone 17 Pro",
+      "osBuildNumber": "23F77",
+      "osVersion": "26.5",
+      "platform": "iOS Simulator"
+    },
+    "actual_cold_launch_count": 1,
+    "original_launch_scope": "Explicit English launch arguments; foreground, actual Compose parlor-home-brand, no alert for2seconds, continued foreground. ActualXCTest6.8467seconds.",
+    "container_scope": "Four original UIKit fixtures compile same productioncontainer; source tests read completely. They are not real Compose child instances.",
+    "compile_source_receipts": "xcodebuild.log1298-1300 productioncontainer app compile;1334-1336ContentView;1346Parlor.debug.dylib link;1395-1397samecontainer testtarget;1409/1437 originaltestcompiles.",
+    "gradle_result": "BUILD SUCCESSFUL in1m31s; runtime separately executed, not inferred from compilation."
+  },
+  "artifacts": {
+    "app_identity": {
+      "CFBundleIdentifier": "com.parlor.app.debug",
+      "CFBundleVersion": "1",
+      "CFBundleShortVersionString": "1.0.0",
+      "MinimumOSVersion": "16.0"
+    },
+    "executor_hash_receipts": [
+      {
+        "path": "Parlor",
+        "bytes": 40344,
+        "sha256": "b3e604caacfde2add2c5c5782485c3574a8b8180b12e12a9cbd375c4a25aafa4"
+      },
+      {
+        "path": "Frameworks/ComposeApp.framework/ComposeApp",
+        "bytes": 82187656,
+        "sha256": "09bad936bb7aa7aaf07b39bae93abb753494b0b335a15c804d04397828071e88"
+      }
+    ],
+    "limitation": "Executor retained only app launcher stub and Compose framework hashes, not Parlor.debug.dylib hash. Raw compile/link log plus source/copy manifests bind executed source, but this is not a complete cryptographic inventory of every binary. All binaries removed after executor evidence capture; reviewer did not reopen removed binaries."
+  },
+  "cleanup": {
+    "status": "PASS",
+    "immediate_xcode_stop_exit_code": 0,
+    "immediate_stop_delay_seconds": 0.006508,
+    "final_stop_exit_code": 0,
+    "embedded_receipt": "build_exit=0\nstop_exit=0\n",
+    "owned_simulator_shutdown_exit_code": 0,
+    "owned_simulator_delete_exit_code": 0,
+    "owned_temp_and_device_directories_independently_absent": true,
+    "exact_attested_fifo_paths_absent": 2,
+    "exact_empty_parent_paths_absent": 2,
+    "observed_worker_pid_start_pairs": 56,
+    "current_survivors": [],
+    "pending_secondary_claims": [],
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "method": "Read original device receipts Booted->Shutdown->absent and FIFO UID/inode/birth/workerstart ledger. Independently checked exact owned paths absent and every56PID/start pair no longer live. No global or newcycle process stopped."
+  },
+  "warnings_preserved": [
+    "Two AppIntents metadata-extraction warnings: no AppIntents.framework dependency.",
+    "Simulator XCTest runner reported duplicated OSUIAccessibilityLoaderWebShared class and launch measurement events unavailable; warning text is not evidence of observed app crash.",
+    "Xcode IDELaunchParametersSnapshot reported missing debugger version; test still ran and passed. No causal claim about historical user launch failures.",
+    "Automatic XCTest hierarchy/snapshot diagnostics after waiting for absence of alerts do not mean testfailure; raw summary and method reportPASS. No arbitrary app/player hierarchy exported by reviewer."
+  ],
+  "scope_exclusions": [
+    "No FollowSystem/actualSettings/retainedgame/ArabicCompose/orientation/Backgesture/physicalLAN inference from unchanged coldlaunch.",
+    "Apphost04 matrix remains aggregateFAIL; previousfailedrecordsunchanged. DS-C01stillpartial until Mafia+OSrows independently verified.",
+    "No repeatedfive-launch scenario: 5tests consist of1launch+4fixturemethods.",
+    "Unsigned Debug iOS26.5 local simulator/Xcode26.5 is not Store-qualified26.3, physicaldevice, signing or Store readiness."
+  ],
+  "evidence": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/boot.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/bootstatus.log",
+      "sha256": "16d9859ee4484662a8ec4a81ab4091561a97afaa63a8bc7203648db696d83a99",
+      "bytes": 4811
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/copied-source-inputs-after-build.json",
+      "sha256": "4513ba994837b608befc727084c174ea8680f1eb0155041ba9b7d37a37f5996f",
+      "bytes": 201472
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/copied-source-manifest.json",
+      "sha256": "e88384abc68c3a616f2e957dadff96b5df93a01e8617c8259ddfa26deaeb446a",
+      "bytes": 178481
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/copied-source.diff",
+      "sha256": "ce13cb25f56f1302568d6c25c681fbf972bba203203ec1a4b4bf55f3f8b7661e",
+      "bytes": 2605
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/create.log",
+      "sha256": "510278e835fd28ba1443ccd7d4539e04ec4523d3c2522811a6cddf956a13e879",
+      "bytes": 37
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/delete.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/embedded-gradle-stop.txt",
+      "sha256": "fb55a963c8d30249ea6b8be68a62b5921facefdc7823c16ad139fea885be972f",
+      "bytes": 25
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/input-manifest.json",
+      "sha256": "2ace5cd4024e06c16e9d1d833457575c97e682749ff92bb62bd6ce2d56c47685",
+      "bytes": 131213
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/owned-device-after-delete.json",
+      "sha256": "755d442cf44919879856407fe199e916c770d206e3f6b050d6eb286b7af73782",
+      "bytes": 20
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/owned-device-after-shutdown.json",
+      "sha256": "68ab07c49835ca03c7b3ee09f88534aa50b5c70f8f5310a2ed0b1dd0b234df1c",
+      "bytes": 252
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/owned-device-before-delete.json",
+      "sha256": "68ab07c49835ca03c7b3ee09f88534aa50b5c70f8f5310a2ed0b1dd0b234df1c",
+      "bytes": 252
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/owned-device-before-shutdown.json",
+      "sha256": "a0d4549181b1cb197a41542b9d249950aa60fab8a3ab08cd7aa248866b386346",
+      "bytes": 250
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/receipt.json",
+      "sha256": "72c13301a3e9882d4742ed10f8801108a028201d4a40c5dd8f2050e69576bbe3",
+      "bytes": 312642
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/sdk-version.log",
+      "sha256": "25205f2e2f02dc71036ee827e19c49b893b231a3d1af240e35a3ac55aa8cdcb6",
+      "bytes": 5
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/secondary-fifo-ownership-final.json",
+      "sha256": "567aefeaa01b5f090f5d6680992e025a0931874edd86671f2de54b375206241d",
+      "bytes": 2940
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/secondary-fifo-ownership.json",
+      "sha256": "567aefeaa01b5f090f5d6680992e025a0931874edd86671f2de54b375206241d",
+      "bytes": 2940
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/shutdown.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/stop-final.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/stop-xcode-immediate.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/xcodebuild.log",
+      "sha256": "52c7bcb8cce96554f63cdfa1904995f6a0944c106a33a29d0cb7067c4da3ec0f",
+      "bytes": 222688
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/xcresult-summary.json",
+      "sha256": "f0f124d6bf86b21a084d20a8834387dc1dd109e29306c7f625c9e32f26b5c137",
+      "bytes": 1004
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/xcresult-tests.json",
+      "sha256": "8f93bbe7493dd4d865e1afb8fd189b9a26bd90536863af3ff4445e3aadf5e1c5",
+      "bytes": 4660
+    }
+  ],
+  "reviewer_preservation": "No source/test/config edits, test/build/native execution, process termination or cleanup. Only this independent result record written."
+}

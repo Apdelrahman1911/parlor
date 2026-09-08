@@ -1,0 +1,294 @@
+{
+  "reviewer": "/root/release_fix_review",
+  "read_only": true,
+  "source_run": 34152138368,
+  "source_sha": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+  "producer": "Xcode 26.3 / 17C529",
+  "operations": [
+    {
+      "label": "parser-xcode-version",
+      "command": [
+        "xcodebuild",
+        "-version"
+      ],
+      "started_at": "2026-09-07T20:07:30.381145+00:00",
+      "finished_at": "2026-09-07T20:07:30.681558+00:00",
+      "exit_code": 0,
+      "stdout": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/c05-parser-xcode-version-01.txt",
+      "bytes": 31,
+      "sha256": "5f6350250c6f298d06e1435819ddd1539d6c84785aaa8d824c2ac74f57914d03",
+      "stderr": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/c05-parser-xcode-version-01-stderr.txt",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "parser-path",
+      "command": [
+        "xcrun",
+        "--find",
+        "xcresulttool"
+      ],
+      "started_at": "2026-09-07T20:07:30.681602+00:00",
+      "finished_at": "2026-09-07T20:07:30.687043+00:00",
+      "exit_code": 0,
+      "stdout": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/c05-parser-path-01.txt",
+      "bytes": 64,
+      "sha256": "07cf084da010156644436c6377f1b0abab87e67f26c8a722a38f3e3776b4d557",
+      "stderr": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/c05-parser-path-01-stderr.txt",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "xcresult-tests",
+      "command": [
+        "xcrun",
+        "xcresulttool",
+        "get",
+        "test-results",
+        "tests",
+        "--path",
+        "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/build/ci-evidence/ios-ui-tests.xcresult",
+        "--compact"
+      ],
+      "started_at": "2026-09-07T20:07:30.687101+00:00",
+      "finished_at": "2026-09-07T20:07:30.776692+00:00",
+      "exit_code": 0,
+      "stdout": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/c05-xcresult-tests-01.json",
+      "bytes": 3201,
+      "sha256": "09f82512488f63d370281d7b4f4788a1644d798153e95640e9dee4f8b1d7b0ba",
+      "stderr": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/c05-xcresult-tests-01-stderr.txt",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "xcresult-summary",
+      "command": [
+        "xcrun",
+        "xcresulttool",
+        "get",
+        "test-results",
+        "summary",
+        "--path",
+        "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/build/ci-evidence/ios-ui-tests.xcresult",
+        "--compact"
+      ],
+      "started_at": "2026-09-07T20:07:30.776740+00:00",
+      "finished_at": "2026-09-07T20:07:30.801010+00:00",
+      "exit_code": 0,
+      "stdout": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/c05-xcresult-summary-01.json",
+      "bytes": 730,
+      "sha256": "5f1815d0fc81cc365d03f5b4cc87cb7870d59003858df4a495f0c75c3820553f",
+      "stderr": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/c05-xcresult-summary-01-stderr.txt",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "bundle_files": [
+    {
+      "path": "Data/data.0~4VqMqsI5lOfxRppnud6-VDWcNsU8J7VgFCJfW2dXPwOcAkvU-I8Um5yp9n0Zv6nr3VmcxYggaVMDFfR0U_vjKw==",
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "Data/data.0~72LJ0WUMo1KNk7_Of8TY3acy90a1e3OILe-qIB5LdDyWoS0bdiJQXJ2KJ4akzTwKUoRA1-bK8hU50Yx5QE-F5Q==",
+      "bytes": 612,
+      "sha256": "4dea9d881fd573588ad7e5f39e4de28f0813163c7cf9672fe56ed87761b4493d"
+    },
+    {
+      "path": "Data/data.0~7izwvKMEnKwHhZkYV3cvGmCFmGpa8kJJx1fYUqXhsi5gOjFDXQVJ0UbMFGnTmEKeLLQTfH-MeSPWK4pRPFsQkQ==",
+      "bytes": 1823,
+      "sha256": "58fb480fcfe8697646ba44aafb0ee1fdaf84c197170af3315d2bc1ce494ed069"
+    },
+    {
+      "path": "Data/data.0~AOlTIPdUjUBRN1jNaLK7VMUZ40_i0w4ZYf2hnwfHqYlfJ5XNcUCRkNhi8fUwDCBAELSUgHu5gicGz5_SM5BQNg==",
+      "bytes": 617,
+      "sha256": "f5b76af0b57f037f427b3a406d9a69eb250c5d48c8952a091bba832fea05f985"
+    },
+    {
+      "path": "Data/data.0~MX3KaT3FWIfbVuQ9u-Nwm1JYAX3tYfr1l51-pFzAAMy1_G63CIywnejFlJGl325V_pgjE8e5aQ-6OP9P0klY3g==",
+      "bytes": 4406,
+      "sha256": "09ad208544996859272acfb24482f6334975f8ff8eba3ccd9bc56f43521ed042"
+    },
+    {
+      "path": "Data/data.0~S1LqbKZW4PijmuFk-ZciMzdjgVSy4UJRnE36ng52YnM9v-58v30uA6pHc8XU7JhrhsiATNBC0HGrjL8EFS1AJg==",
+      "bytes": 1690,
+      "sha256": "52acb1dee4aaa32b3cba23341804de5e18836fce318ad5992468aafb0393162e"
+    },
+    {
+      "path": "Data/data.0~YlRxL8tf6sfSmSyD8pHBShpGbtUUFuzsoheTiRoak8P_81_te8urXuCrX-91MEmHImQclk203K7SaHL_GBNruw==",
+      "bytes": 12652,
+      "sha256": "b57489cacfb4167e938beec3c689ae2f2b8870aaf299d64d28ff7d23a06faa81"
+    },
+    {
+      "path": "Data/data.0~cs2vitUOejtulSU3AQQWMudIgo0npeB8Wn8DNad9aAVimICAalQScAvOhMMIWj6dLbG2yWxav-ZvYlMhneT_Gg==",
+      "bytes": 139,
+      "sha256": "c9913e12d45124d6ce31af93d7fad0bd6e3d50de8e220e662094d08fad8cf818"
+    },
+    {
+      "path": "Data/data.0~ei6oESlKGp1zB5psYFyfL02CX2s407lSDdrnr0xq2KMV0Qx1LWGMWsVaT0lKgd2bsXFvcz7k08dCC_foPwMG6Q==",
+      "bytes": 40751,
+      "sha256": "ffb0a4fc113c07df5d3436d5fdcb16c8c4cb0417519e9263d179dfdd8d3a58f3"
+    },
+    {
+      "path": "Data/data.0~f8ozwqSHrn-GukgpYq1ylYIUVeuYdEu120A4jbcbCjmwsOFbm_-uCwtkzy5QxDrhB5-aZ1xGdVa-POQZMZjyBQ==",
+      "bytes": 623,
+      "sha256": "89363ccd0d3857bc295579a35385b42907f859631decde05cd1a214f2d77b0ff"
+    },
+    {
+      "path": "Data/data.0~jVxB3CbKiEq46Tmt4QHvEEOf_yVmV9KVKkSy44JPzNVfkFTBKgYCMiqO22BBti99DK8D6nORAxwQV-wIBBqR8w==",
+      "bytes": 107,
+      "sha256": "17d18aadfc48e253d2bc2a6c29702b7b570074397ba878aef34142206ef6e24b"
+    },
+    {
+      "path": "Data/data.0~kYZHLwbtSZ_f0SBPXWsy0PvcHGH4zxsQNbZj_Z4MzqaGSYt329OKvWzBV1ecCSaI7N1u7E_7nuv1Bl7mUu5tKA==",
+      "bytes": 23000,
+      "sha256": "440d98e4f3eb31d9f7e4c323adbab8a02d1dd78653a72a36c0de5a2662c702b2"
+    },
+    {
+      "path": "Data/data.0~lgoAChuKshn3qIz2NeWXFinON93dyjIXk09TlPL4O8DIDq6HL_WYMgCS3IqlT1syhvJajyJhdF-JTBxfbjTdew==",
+      "bytes": 1289,
+      "sha256": "b947525cb8cca78755535cb29f0eb6674a380e58d2364cecc6a10a5acd8f9daf"
+    },
+    {
+      "path": "Data/data.0~m73DhrgF1LwLEin0AXIghK7JimIctQ8c026TVOXh_NHTds5km1yDTaXuaJ1Jy_ZCe1zBb5AT8dTyhs39BlNuwQ==",
+      "bytes": 220,
+      "sha256": "88296cc2eb4633049713aa4b896f394703e348177fd0f4d9bb2d8349d5bc230e"
+    },
+    {
+      "path": "Data/data.0~o13-Wq_qANXNNdvnwik_VjaR9hG_Q207hpQ2Wo0Erdk3SMauYg4iHlXPk2dyct9laTLej4UgoVGDpRu85q0wug==",
+      "bytes": 1583,
+      "sha256": "5a6d54a9fd292fbde5f9d923f5640ca15e626599c366dd9600d4c9a1e6a601c4"
+    },
+    {
+      "path": "Data/data.0~sQVHE6p5aVTQCC0B2H0OSt6dlON5ff9ocjDNv-MojbCw1MVZph5P2dfGOlRo74JF5lhRD5p8H7_0mijjEJwVgA==",
+      "bytes": 287,
+      "sha256": "e94b9fcd2f9161337ac91fd71c8f820937af5e1f4960b307a786060fa6ab1eee"
+    },
+    {
+      "path": "Data/data.0~tWO6uMiGQD9nVx-pw-Omu0N0a0c1uYRwpQJf3awcqm6l5grBoZr7vnIR9Yxh0BNNzgiTy2qek8poYcoXfn6Bbw==",
+      "bytes": 610,
+      "sha256": "8ef3c4ed2990e12b830d2ed0a75db0981c4afff46e7bd8fb86d97659ba54bb44"
+    },
+    {
+      "path": "Data/data.0~twFoi5GgzZzuEl1vmdD-cni0fttoP8HeUKO6MITht_teCEZqCl7w8XPQ_unm-ki5RBqrzN3vKorrAoQVMGig8g==",
+      "bytes": 1161,
+      "sha256": "2b49e0a11286dba33ae51e129d852318768feedabbcd8dac788af1772e198227"
+    },
+    {
+      "path": "Data/data.0~uU7MWX9MBekvokPXSWOw8HYdvktENtPCNgJe3Mt_NnROxzJ9vfMy0WONAvVTTuu51dSsmPp7KeR1f73mZ3xAfA==",
+      "bytes": 38,
+      "sha256": "c6734c8f2e683db7e43e46b1d0c7df5b7da705bb15c83ff1b119482849034e55"
+    },
+    {
+      "path": "Data/data.0~yoZm_58bFTj_yN186pd5M0uEwWsRvuhwhPoopVbS6iPnCiFkx9Uo6y30DWfREtMzRPfX3Nf5VKcFqAoF5ODmnA==",
+      "bytes": 317,
+      "sha256": "cbbc353567739dcb6cb2d1731b5a153d4190f3247da049a255d4f8db1dfc436d"
+    },
+    {
+      "path": "Data/refs.0~4VqMqsI5lOfxRppnud6-VDWcNsU8J7VgFCJfW2dXPwOcAkvU-I8Um5yp9n0Zv6nr3VmcxYggaVMDFfR0U_vjKw==",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "Data/refs.0~72LJ0WUMo1KNk7_Of8TY3acy90a1e3OILe-qIB5LdDyWoS0bdiJQXJ2KJ4akzTwKUoRA1-bK8hU50Yx5QE-F5Q==",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "Data/refs.0~7izwvKMEnKwHhZkYV3cvGmCFmGpa8kJJx1fYUqXhsi5gOjFDXQVJ0UbMFGnTmEKeLLQTfH-MeSPWK4pRPFsQkQ==",
+      "bytes": 331,
+      "sha256": "edc28115916e307e0b85f6e5bb8a9be0ba75d8f62ecb8160600fddd43948e462"
+    },
+    {
+      "path": "Data/refs.0~AOlTIPdUjUBRN1jNaLK7VMUZ40_i0w4ZYf2hnwfHqYlfJ5XNcUCRkNhi8fUwDCBAELSUgHu5gicGz5_SM5BQNg==",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "Data/refs.0~MX3KaT3FWIfbVuQ9u-Nwm1JYAX3tYfr1l51-pFzAAMy1_G63CIywnejFlJGl325V_pgjE8e5aQ-6OP9P0klY3g==",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "Data/refs.0~S1LqbKZW4PijmuFk-ZciMzdjgVSy4UJRnE36ng52YnM9v-58v30uA6pHc8XU7JhrhsiATNBC0HGrjL8EFS1AJg==",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "Data/refs.0~YlRxL8tf6sfSmSyD8pHBShpGbtUUFuzsoheTiRoak8P_81_te8urXuCrX-91MEmHImQclk203K7SaHL_GBNruw==",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "Data/refs.0~cs2vitUOejtulSU3AQQWMudIgo0npeB8Wn8DNad9aAVimICAalQScAvOhMMIWj6dLbG2yWxav-ZvYlMhneT_Gg==",
+      "bytes": 199,
+      "sha256": "5699d15a297cb511195b157a829871d389bb749519dbb2f2f2f927aa883f8902"
+    },
+    {
+      "path": "Data/refs.0~ei6oESlKGp1zB5psYFyfL02CX2s407lSDdrnr0xq2KMV0Qx1LWGMWsVaT0lKgd2bsXFvcz7k08dCC_foPwMG6Q==",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "Data/refs.0~f8ozwqSHrn-GukgpYq1ylYIUVeuYdEu120A4jbcbCjmwsOFbm_-uCwtkzy5QxDrhB5-aZ1xGdVa-POQZMZjyBQ==",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "Data/refs.0~jVxB3CbKiEq46Tmt4QHvEEOf_yVmV9KVKkSy44JPzNVfkFTBKgYCMiqO22BBti99DK8D6nORAxwQV-wIBBqR8w==",
+      "bytes": 133,
+      "sha256": "1434c5e1cac6d13d1cfd770a60bfd395044074cd83ec8a40a0471938a7474d12"
+    },
+    {
+      "path": "Data/refs.0~kYZHLwbtSZ_f0SBPXWsy0PvcHGH4zxsQNbZj_Z4MzqaGSYt329OKvWzBV1ecCSaI7N1u7E_7nuv1Bl7mUu5tKA==",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "Data/refs.0~lgoAChuKshn3qIz2NeWXFinON93dyjIXk09TlPL4O8DIDq6HL_WYMgCS3IqlT1syhvJajyJhdF-JTBxfbjTdew==",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "Data/refs.0~m73DhrgF1LwLEin0AXIghK7JimIctQ8c026TVOXh_NHTds5km1yDTaXuaJ1Jy_ZCe1zBb5AT8dTyhs39BlNuwQ==",
+      "bytes": 199,
+      "sha256": "ed7f7fc14c54319dd04dcac9b761535bb0fba6fd7592b3e5b67ef1a172d73bed"
+    },
+    {
+      "path": "Data/refs.0~o13-Wq_qANXNNdvnwik_VjaR9hG_Q207hpQ2Wo0Erdk3SMauYg4iHlXPk2dyct9laTLej4UgoVGDpRu85q0wug==",
+      "bytes": 331,
+      "sha256": "1479e5c8768f396da7f91b75cc9117641545a1e53c3ad8e2f4760bc7421ee7a9"
+    },
+    {
+      "path": "Data/refs.0~sQVHE6p5aVTQCC0B2H0OSt6dlON5ff9ocjDNv-MojbCw1MVZph5P2dfGOlRo74JF5lhRD5p8H7_0mijjEJwVgA==",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "Data/refs.0~tWO6uMiGQD9nVx-pw-Omu0N0a0c1uYRwpQJf3awcqm6l5grBoZr7vnIR9Yxh0BNNzgiTy2qek8poYcoXfn6Bbw==",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "Data/refs.0~twFoi5GgzZzuEl1vmdD-cni0fttoP8HeUKO6MITht_teCEZqCl7w8XPQ_unm-ki5RBqrzN3vKorrAoQVMGig8g==",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "Data/refs.0~uU7MWX9MBekvokPXSWOw8HYdvktENtPCNgJe3Mt_NnROxzJ9vfMy0WONAvVTTuu51dSsmPp7KeR1f73mZ3xAfA==",
+      "bytes": 67,
+      "sha256": "c0e661dd9f6a3367d3cd17861fdcf0e230088c5c72d7f7355e241631de3d03ab"
+    },
+    {
+      "path": "Data/refs.0~yoZm_58bFTj_yN186pd5M0uEwWsRvuhwhPoopVbS6iPnCiFkx9Uo6y30DWfREtMzRPfX3Nf5VKcFqAoF5ODmnA==",
+      "bytes": 1,
+      "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+    },
+    {
+      "path": "Info.plist",
+      "bytes": 715,
+      "sha256": "18b1a26d6d30b9ed80fa2a5da870d3ed501fe0aff5620f6e9db6f31c55239ecb"
+    }
+  ],
+  "task_processes": "All four bounded read-only subprocesses reaped; no build, app, simulator, or native ownership worker started."
+}

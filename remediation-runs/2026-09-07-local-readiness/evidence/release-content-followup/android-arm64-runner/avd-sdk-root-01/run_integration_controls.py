@@ -1,0 +1,67 @@
+"""Root-lane synthetic tests with source/import/discovery receipts; no VM evidence."""
+import ast
+import hashlib
+import json
+from pathlib import Path
+import sys
+import unittest
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(HERE.parent))
+
+
+def bindings():
+    paths = [HERE / name for name in ("run_integration_controls.py", "owned_sdk_image.py",
+                                     "test_owned_sdk_image.py", "test_root_integration.py",
+                                     "test_cli20_preferences.py", "test_runtime_shutdown.py")]
+    paths += [HERE.parent / name for name in ("owned_arm64_smoke_sdk.py", "owned_arm64_smoke.py",
+                                             "darwin_owned_processes.py")]
+    if any(p.is_symlink() or not p.is_file() for p in paths):
+        raise RuntimeError("Control path missing or redirected")
+    return {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+
+
+def flatten(suite):
+    for item in suite:
+        if isinstance(item, unittest.TestSuite):
+            yield from flatten(item)
+        else:
+            yield item
+
+
+def main():
+    if len(sys.argv) != 1:
+        raise RuntimeError("The frozen synthetic driver takes no arguments")
+    before = bindings()
+    declared = []
+    for path in sorted(HERE.glob("test_*.py")):
+        for node in ast.parse(path.read_text()).body:
+            if isinstance(node, ast.ClassDef):
+                declared += [path.stem + "." + node.name + "." + method.name
+                             for method in node.body if isinstance(method, ast.FunctionDef)
+                             and method.name.startswith("test_")]
+    suite = unittest.defaultTestLoader.discover(str(HERE), pattern="test_*.py")
+    actual = sorted(test.id() for test in flatten(suite))
+    if len(actual) != 46 or len(set(actual)) != 46 or sorted(declared) != actual:
+        raise RuntimeError("Actual discovery differs from the 46 source signatures")
+    imports = {name: str(Path(sys.modules[name].__file__).resolve()) for name in
+               ("test_root_integration", "test_owned_sdk_image", "owned_sdk_image",
+                "owned_arm64_smoke_sdk", "darwin_owned_processes", "test_cli20_preferences",
+                "test_runtime_shutdown")}
+    if not set(imports.values()) <= set(before):
+        raise RuntimeError("Unexpected imported control path")
+    print(json.dumps(dict(kind="SYNTHETIC_CONTROLS_NOT_ANDROID_RUNTIME", before=before,
+                          imports=imports, discovered_ids=actual, declared_ids=sorted(declared))), flush=True)
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
+    after = bindings()
+    print(json.dumps(dict(kind="SYNTHETIC_CONTROLS_NOT_ANDROID_RUNTIME", after=after,
+                          source_unchanged=before == after, tests=result.testsRun,
+                          failures=len(result.failures), errors=len(result.errors),
+                          skips=len(result.skipped))), flush=True)
+    return 0 if (result.wasSuccessful() and result.testsRun == 46 and
+                 not result.skipped and before == after) else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,584 @@
+{
+  "reviewer": "/root/release_fix_review",
+  "at": "2026-09-06T10:23:05.213746+00:00",
+  "classification": "PARTIALLY VERIFIED; BOTH EXECUTION FAIL RECEIPTS RETAINED",
+  "scope": "Independent actual raw runtime/result and source-bound observer review; not a new confirmed application defect or fix approval.",
+  "cycles": [
+    {
+      "cycle": "dsc01-apphost-01",
+      "receipt_sha256": "ac4b9691556c92e2e7b18de02189f099ad0fa20d8e7ba26018a5c7a8ce151a7f",
+      "control_sha256": "521b0e4cac65fe89ab4913e153dc4b544a589eae497c67e465d18f01437790e4",
+      "xcodebuild_exit_code": 65,
+      "status": "FAIL",
+      "runtime_status": "FAIL",
+      "cleanup_status": "PASS",
+      "xctest": {
+        "result": "Failed",
+        "totalTestCount": 1,
+        "passedTests": 0,
+        "failedTests": 1,
+        "skippedTests": 0
+      },
+      "settings": {
+        "completed": true,
+        "observation_count": 22,
+        "distinct_boots": 4
+      },
+      "whodunit": {
+        "completed": false,
+        "observations": [
+          {
+            "ordinal": 1,
+            "native": "unavailable",
+            "setting": "system",
+            "owner": "none",
+            "gameDirection": null,
+            "phase": null,
+            "continuity": {
+              "checkpointCaptured": null,
+              "sameController": null,
+              "sameCanonicalFlow": null,
+              "sameCanonicalReference": null,
+              "sameCanonicalValue": null,
+              "samePublicPhase": null,
+              "disposalsSinceCapture": null,
+              "backgroundSinceCapture": null,
+              "foregroundSinceCapture": null
+            }
+          },
+          {
+            "ordinal": 2,
+            "native": "force_rtl",
+            "setting": "system",
+            "owner": "none",
+            "gameDirection": "absent",
+            "phase": "none",
+            "continuity": {
+              "checkpointCaptured": false,
+              "sameController": false,
+              "sameCanonicalFlow": false,
+              "sameCanonicalReference": false,
+              "sameCanonicalValue": false,
+              "samePublicPhase": false,
+              "disposalsSinceCapture": 0,
+              "backgroundSinceCapture": 0,
+              "foregroundSinceCapture": 0
+            }
+          },
+          {
+            "ordinal": 3,
+            "native": "force_rtl",
+            "setting": "system",
+            "owner": "none",
+            "gameDirection": "absent",
+            "phase": "none",
+            "continuity": {
+              "checkpointCaptured": false,
+              "sameController": false,
+              "sameCanonicalFlow": false,
+              "sameCanonicalReference": false,
+              "sameCanonicalValue": false,
+              "samePublicPhase": false,
+              "disposalsSinceCapture": 0,
+              "backgroundSinceCapture": 0,
+              "foregroundSinceCapture": 0
+            }
+          },
+          {
+            "ordinal": 4,
+            "native": "force_rtl",
+            "setting": "system",
+            "owner": "none",
+            "gameDirection": "absent",
+            "phase": "none",
+            "continuity": {
+              "checkpointCaptured": false,
+              "sameController": false,
+              "sameCanonicalFlow": false,
+              "sameCanonicalReference": false,
+              "sameCanonicalValue": false,
+              "samePublicPhase": false,
+              "disposalsSinceCapture": 0,
+              "backgroundSinceCapture": 0,
+              "foregroundSinceCapture": 0
+            }
+          },
+          {
+            "ordinal": 5,
+            "native": "force_ltr",
+            "setting": "en",
+            "owner": "en",
+            "gameDirection": "absent",
+            "phase": "none",
+            "continuity": {
+              "checkpointCaptured": false,
+              "sameController": false,
+              "sameCanonicalFlow": false,
+              "sameCanonicalReference": false,
+              "sameCanonicalValue": false,
+              "samePublicPhase": false,
+              "disposalsSinceCapture": 0,
+              "backgroundSinceCapture": 0,
+              "foregroundSinceCapture": 0
+            }
+          }
+        ]
+      },
+      "unreached": [
+        "Mafia actual local session continuity scenario",
+        "OSSettings application inspection/selector scenario"
+      ],
+      "source_and_controls": {
+        "source_unchanged": true,
+        "controls_unchanged": true,
+        "copied_sources_unchanged": true
+      },
+      "cleanup_summary": {
+        "gradle_stops": [
+          {
+            "label": "stop-xcode-immediate",
+            "exit_code": 0,
+            "at": "2026-09-06T08:27:17.102793+00:00"
+          },
+          {
+            "label": "stop-final",
+            "exit_code": 0,
+            "at": "2026-09-06T08:27:18.198634+00:00"
+          }
+        ],
+        "owned_device_absent": true,
+        "temporary_directory_removed": true,
+        "remaining_outputs": [],
+        "owned_processes_remaining": [],
+        "unknown_holders": [],
+        "cleanup_errors": []
+      },
+      "evidence": [
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-01/xcodebuild.log",
+          "sha256": "3a1262f21e420c3edaa2901b74c97b89564afe43a69b12ece35688801256e7e3"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-01/xcresult-summary.json",
+          "sha256": "017daab87d491ef8ce09fe576ded1cd7268d304d1448d42d58cac8d0cdcaec9f"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-01/xcresult-tests.json",
+          "sha256": "269f113ef58b2a1ea8c6149dabdd8e3a7ebbc51c4a134ee5eb21815f990252b8"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-01/probe-settings-result.json",
+          "sha256": "bdd270961d22f726c9e4baf18c2f7a79be79f8af9a60200a52d49568becc2c0f"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-01/probe-whodunit-result.json",
+          "sha256": "53f671a6af93902835008b5b2661fc63c62b88a234ccb95b6d286e6fc11be2da"
+        }
+      ],
+      "classification": "Harness interaction failure before Whodunit public session: sixth field lacked keyboard focus during typeText; fifth field retained focus. App crash/root UX defect not established; cause of tap focus state not proven."
+    },
+    {
+      "cycle": "dsc01-apphost-02",
+      "receipt_sha256": "c03616f76e91061c810debf7884b98d7b0bf02abcfd83cbcfa21c4ba8049e13e",
+      "control_sha256": "5b3a5cae3e693d1dd8836d58f8a9a423336c8f32a08dd9d0b23c135a89e3ff60",
+      "xcodebuild_exit_code": 65,
+      "status": "FAIL",
+      "runtime_status": "FAIL",
+      "cleanup_status": "FAIL",
+      "xctest": {
+        "result": "Failed",
+        "totalTestCount": 1,
+        "passedTests": 0,
+        "failedTests": 1,
+        "skippedTests": 0
+      },
+      "settings": {
+        "completed": true,
+        "observation_count": 22,
+        "distinct_boots": 4
+      },
+      "whodunit": {
+        "completed": false,
+        "observations": [
+          {
+            "ordinal": 1,
+            "native": "unavailable",
+            "setting": "system",
+            "owner": "none",
+            "gameDirection": null,
+            "phase": null,
+            "continuity": {
+              "checkpointCaptured": null,
+              "sameController": null,
+              "sameCanonicalFlow": null,
+              "sameCanonicalReference": null,
+              "sameCanonicalValue": null,
+              "samePublicPhase": null,
+              "disposalsSinceCapture": null,
+              "backgroundSinceCapture": null,
+              "foregroundSinceCapture": null
+            }
+          },
+          {
+            "ordinal": 2,
+            "native": "force_rtl",
+            "setting": "system",
+            "owner": "none",
+            "gameDirection": "absent",
+            "phase": "none",
+            "continuity": {
+              "checkpointCaptured": false,
+              "sameController": false,
+              "sameCanonicalFlow": false,
+              "sameCanonicalReference": false,
+              "sameCanonicalValue": false,
+              "samePublicPhase": false,
+              "disposalsSinceCapture": 0,
+              "backgroundSinceCapture": 0,
+              "foregroundSinceCapture": 0
+            }
+          },
+          {
+            "ordinal": 3,
+            "native": "force_rtl",
+            "setting": "system",
+            "owner": "none",
+            "gameDirection": "absent",
+            "phase": "none",
+            "continuity": {
+              "checkpointCaptured": false,
+              "sameController": false,
+              "sameCanonicalFlow": false,
+              "sameCanonicalReference": false,
+              "sameCanonicalValue": false,
+              "samePublicPhase": false,
+              "disposalsSinceCapture": 0,
+              "backgroundSinceCapture": 0,
+              "foregroundSinceCapture": 0
+            }
+          },
+          {
+            "ordinal": 4,
+            "native": "force_rtl",
+            "setting": "system",
+            "owner": "none",
+            "gameDirection": "absent",
+            "phase": "none",
+            "continuity": {
+              "checkpointCaptured": false,
+              "sameController": false,
+              "sameCanonicalFlow": false,
+              "sameCanonicalReference": false,
+              "sameCanonicalValue": false,
+              "samePublicPhase": false,
+              "disposalsSinceCapture": 0,
+              "backgroundSinceCapture": 0,
+              "foregroundSinceCapture": 0
+            }
+          },
+          {
+            "ordinal": 5,
+            "native": "force_ltr",
+            "setting": "en",
+            "owner": "en",
+            "gameDirection": "absent",
+            "phase": "none",
+            "continuity": {
+              "checkpointCaptured": false,
+              "sameController": false,
+              "sameCanonicalFlow": false,
+              "sameCanonicalReference": false,
+              "sameCanonicalValue": false,
+              "samePublicPhase": false,
+              "disposalsSinceCapture": 0,
+              "backgroundSinceCapture": 0,
+              "foregroundSinceCapture": 0
+            }
+          },
+          {
+            "ordinal": 6,
+            "native": "force_ltr",
+            "setting": "en",
+            "owner": "en",
+            "gameDirection": "ltr",
+            "phase": "public-intro",
+            "continuity": {
+              "checkpointCaptured": false,
+              "sameController": false,
+              "sameCanonicalFlow": false,
+              "sameCanonicalReference": false,
+              "sameCanonicalValue": false,
+              "samePublicPhase": false,
+              "disposalsSinceCapture": 0,
+              "backgroundSinceCapture": 0,
+              "foregroundSinceCapture": 0
+            }
+          },
+          {
+            "ordinal": 7,
+            "native": "force_ltr",
+            "setting": "en",
+            "owner": "en",
+            "gameDirection": "ltr",
+            "phase": "public-intro",
+            "continuity": {
+              "checkpointCaptured": true,
+              "sameController": true,
+              "sameCanonicalFlow": true,
+              "sameCanonicalReference": true,
+              "sameCanonicalValue": true,
+              "samePublicPhase": true,
+              "disposalsSinceCapture": 0,
+              "backgroundSinceCapture": 0,
+              "foregroundSinceCapture": 0
+            }
+          },
+          {
+            "ordinal": 8,
+            "native": "force_ltr",
+            "setting": "en",
+            "owner": "en",
+            "gameDirection": "ltr",
+            "phase": "public-intro",
+            "continuity": {
+              "checkpointCaptured": true,
+              "sameController": true,
+              "sameCanonicalFlow": true,
+              "sameCanonicalReference": true,
+              "sameCanonicalValue": true,
+              "samePublicPhase": true,
+              "disposalsSinceCapture": 0,
+              "backgroundSinceCapture": 0,
+              "foregroundSinceCapture": 0
+            }
+          },
+          {
+            "ordinal": 9,
+            "native": "force_ltr",
+            "setting": "en",
+            "owner": "en",
+            "gameDirection": "ltr",
+            "phase": "public-intro",
+            "continuity": {
+              "checkpointCaptured": true,
+              "sameController": true,
+              "sameCanonicalFlow": true,
+              "sameCanonicalReference": true,
+              "sameCanonicalValue": true,
+              "samePublicPhase": true,
+              "disposalsSinceCapture": 0,
+              "backgroundSinceCapture": 0,
+              "foregroundSinceCapture": 0
+            }
+          },
+          {
+            "ordinal": 10,
+            "native": "force_rtl",
+            "setting": "ar",
+            "owner": "ar",
+            "gameDirection": "rtl",
+            "phase": "public-intro",
+            "continuity": {
+              "checkpointCaptured": true,
+              "sameController": true,
+              "sameCanonicalFlow": true,
+              "sameCanonicalReference": true,
+              "sameCanonicalValue": true,
+              "samePublicPhase": true,
+              "disposalsSinceCapture": 0,
+              "backgroundSinceCapture": 0,
+              "foregroundSinceCapture": 0
+            }
+          },
+          {
+            "ordinal": 11,
+            "native": "force_rtl",
+            "setting": "ar",
+            "owner": "ar",
+            "gameDirection": "rtl",
+            "phase": "public-intro",
+            "continuity": {
+              "checkpointCaptured": true,
+              "sameController": true,
+              "sameCanonicalFlow": true,
+              "sameCanonicalReference": true,
+              "sameCanonicalValue": true,
+              "samePublicPhase": true,
+              "disposalsSinceCapture": 0,
+              "backgroundSinceCapture": 0,
+              "foregroundSinceCapture": 0
+            }
+          },
+          {
+            "ordinal": 12,
+            "native": "force_rtl",
+            "setting": "ar",
+            "owner": "ar",
+            "gameDirection": "rtl",
+            "phase": "public-intro",
+            "continuity": {
+              "checkpointCaptured": true,
+              "sameController": true,
+              "sameCanonicalFlow": true,
+              "sameCanonicalReference": true,
+              "sameCanonicalValue": true,
+              "samePublicPhase": true,
+              "disposalsSinceCapture": 0,
+              "backgroundSinceCapture": 1,
+              "foregroundSinceCapture": 1
+            }
+          },
+          {
+            "ordinal": 13,
+            "native": "force_rtl",
+            "setting": "ar",
+            "owner": "ar",
+            "gameDirection": "rtl",
+            "phase": "public-intro",
+            "continuity": {
+              "checkpointCaptured": true,
+              "sameController": true,
+              "sameCanonicalFlow": true,
+              "sameCanonicalReference": true,
+              "sameCanonicalValue": true,
+              "samePublicPhase": true,
+              "disposalsSinceCapture": 0,
+              "backgroundSinceCapture": 1,
+              "foregroundSinceCapture": 1
+            }
+          },
+          {
+            "ordinal": 14,
+            "native": "force_ltr",
+            "setting": "en",
+            "owner": "en",
+            "gameDirection": "ltr",
+            "phase": "public-intro",
+            "continuity": {
+              "checkpointCaptured": true,
+              "sameController": true,
+              "sameCanonicalFlow": true,
+              "sameCanonicalReference": true,
+              "sameCanonicalValue": true,
+              "samePublicPhase": true,
+              "disposalsSinceCapture": 0,
+              "backgroundSinceCapture": 1,
+              "foregroundSinceCapture": 1
+            }
+          },
+          {
+            "ordinal": 15,
+            "native": "force_ltr",
+            "setting": "en",
+            "owner": "en",
+            "gameDirection": "ltr",
+            "phase": "public-intro",
+            "continuity": {
+              "checkpointCaptured": true,
+              "sameController": true,
+              "sameCanonicalFlow": true,
+              "sameCanonicalReference": true,
+              "sameCanonicalValue": true,
+              "samePublicPhase": true,
+              "disposalsSinceCapture": 0,
+              "backgroundSinceCapture": 1,
+              "foregroundSinceCapture": 1
+            }
+          },
+          {
+            "ordinal": 16,
+            "native": "force_rtl",
+            "setting": "en",
+            "owner": "en",
+            "gameDirection": "ltr",
+            "phase": "public-intro",
+            "continuity": {
+              "checkpointCaptured": true,
+              "sameController": true,
+              "sameCanonicalFlow": true,
+              "sameCanonicalReference": true,
+              "sameCanonicalValue": true,
+              "samePublicPhase": true,
+              "disposalsSinceCapture": 0,
+              "backgroundSinceCapture": 2,
+              "foregroundSinceCapture": 2
+            }
+          }
+        ]
+      },
+      "unreached": [
+        "Mafia actual local session continuity scenario",
+        "OSSettings application inspection/selector scenario"
+      ],
+      "source_and_controls": {
+        "source_unchanged": true,
+        "controls_unchanged": true,
+        "copied_sources_unchanged": true
+      },
+      "cleanup_summary": {
+        "gradle_stops": [
+          {
+            "label": "stop-xcode-immediate",
+            "exit_code": 0,
+            "at": "2026-09-06T09:31:22.701296+00:00"
+          },
+          {
+            "label": "stop-final",
+            "exit_code": 0,
+            "at": "2026-09-06T09:31:23.809291+00:00"
+          }
+        ],
+        "owned_device_absent": true,
+        "temporary_directory_removed": true,
+        "remaining_outputs": [],
+        "owned_processes_remaining": [],
+        "unknown_holders": [],
+        "cleanup_errors": [
+          {
+            "stage": "secondary-attestation-completeness",
+            "error_type": "UnattestedSecondaryPath",
+            "message": "Known attestation errors require targeted ownership review; no success claim"
+          }
+        ]
+      },
+      "evidence": [
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-02/xcodebuild.log",
+          "sha256": "27992af52e3fb12619c194d3ecde0ccd1fd7813333ccc264a390a7e31be19d52"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-02/xcresult-summary.json",
+          "sha256": "ead8fa3696cfbcbafec2746ca7dbdc485350c7c9bf74d6064c344bb6f59637f4"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-02/xcresult-tests.json",
+          "sha256": "e11ca6740489c1f01e3ea006503e6765f288c35c7f017f4345005b17fab7a542"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-02/probe-settings-result.json",
+          "sha256": "9ffd251acc9a2bcab81f52a51b2673b292f862f8a45ac76a355216428d6eaea1"
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-02/probe-whodunit-result.json",
+          "sha256": "bb70ef5af1016b78edb8068011834825b3f32a5d1af5bb2236a341388ce0fbd0"
+        }
+      ],
+      "classification": "Observed native/Compose direction inconsistency after second real Home/activate with EN active. Initial EN, ARchange/background, and ENchange-before-background passed. Final snapshot still has same controller/flow/canonical object/value/public phase, zero disposals and correctEN ownership, but nativeforceRTL vs directgameLTR. Persistent runtime reachability/rootwriter not yet established; do not mislabel as first EN or AR failure."
+    }
+  ],
+  "source_paths_reopened": {
+    "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt": "1-83; only SideEffect applies native direction; preferenceownership unchanged.",
+    "composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt": "1-56; actualComposecontroller/App/Koin/lifecycle entry.",
+    "iosApp/iosApp/ContentView.swift": "1-62; SwiftUI scenephase modifiers and forwarding, representable update is no-op.",
+    "native/dsc01_apphost_v4/IOSAppLaunchUITests.swift.in": "100-250; observed language sequence, realHome/activate, fullstrictcontinuityoracle, originalIME nameentry.",
+    "native/dsc01_apphost_v4/DSC01Probe.swift.in": "102-236; weakactualcontroller attachment, nativeattribute/read-only fixedschema, original syntheticSettingsStorebridge."
+  },
+  "remaining": [
+    "Determine if native direction change is stable or transient with bounded timed read-only samples, strict expected direction retained.",
+    "Establish natural productionSettings reachability; synthetic activegame settings injection is not actual in-gameSettingsroute.",
+    "Identify reset writer/timing before productionchange; SwiftUI environment overwrite is only hypothesis.",
+    "Complete bothgameSystem/retention andOSSettings scenarios; unavailablephysicalVoiceOver/gesture/appswitcher tests remain external."
+  ],
+  "cleanup_supplement": "reviews/independent-dsc01-apphost02-cleanup-supplement-01.json independently verifies exactrecorded4paths/2PIDs ABSENT without changing originalFAIL or asserting UIDerrorcause.",
+  "review_actions": "Read-onlysource/rawlogs/results and compactreviewfilewrites. No builds/tests/processes/simulators/source/Git/Store mutations."
+}

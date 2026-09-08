@@ -1,0 +1,336 @@
+{
+  "schema_version": 1,
+  "finding_id": "CI-NATIVE-UID-01",
+  "author": "/root/factory_review",
+  "recorded_at": "2026-09-07T17:16:35.196749+00:00",
+  "disposition": "REACHABLE_CI_INVENTORY_DEFECT_WITH_DRAFT_CORRECTION; FIX_NOT_EXECUTED_OR_INDEPENDENTLY_APPROVED",
+  "severity": "High: required Apple verification cannot start on an ordinary unprivileged host with foreign-UID processes. This is a CI tooling defect, not evidence of an application launch crash.",
+  "source_identity": {
+    "hosted_commit": "0b3090a40ff8135b04e0d6e9933c0af5d160daba",
+    "hosted_tree": "7a53259db144b3cc96722935e727a50dc99a9413",
+    "draft_recorded_base_commit": "b26a3947b763e262b488d52761f050df5d57cfc1",
+    "current_commit_at_report": "b26a3947b763e262b488d52761f050df5d57cfc1",
+    "target_source_bytes_match_recorded_bases": true,
+    "qualification": "Root changed unrelated tracked files/committed during the read-only investigation. Both draft targets still match the hosted source bytes; draft creation did not edit live source or Git."
+  },
+  "hosted_evidence": {
+    "run_id": 34143924756,
+    "attempt": 1,
+    "job_id": 101811725263,
+    "job_url": "https://github.com/Apdelrahman1911/parlor/actions/runs/34143924756/job/101811725263",
+    "job_conclusion": "failure",
+    "runner": "macos-15-arm64 image20260829.0321.1; macOS15.7.9/24G830; JDK21.0.12+101.0; /usr/bin/python3 resolves through selected Xcode26.3 Python3.9 framework",
+    "toolchain_qualification": "DEVELOPER_DIR points to Xcode26.3, but the actual version/17C529 check was skipped after preflight failed. Do not claim this run qualified the compiler or SDK.",
+    "log": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34143924756-evidence/101811725263.log",
+      "sha256": "cbd13502d4c1c5827cb22a9011b57625e6b72bbb79087fb5123d868927bab1d2"
+    },
+    "download_receipt": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34143924756-evidence/101811725263-receipt.json",
+      "sha256": "8773a3b2c450701a7ad3c7e46499246b28063541e3d9f2365aad4697b7c9a000"
+    },
+    "jobs_observation": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34143924756-evidence/jobs-observation-01.json",
+      "sha256": "815797012248fbe6e46d76b2950ac90e69d968db79d380539d65da1826b8663b"
+    },
+    "relevant_lines": {
+      "host_identity": [
+        1,
+        24
+      ],
+      "checked_out_sha": [
+        116,
+        122
+      ],
+      "java": [
+        170,
+        179
+      ],
+      "failure": [
+        197,
+        223
+      ],
+      "aggregate_finalizer": [
+        224,
+        237
+      ],
+      "skipped_cycles": [
+        238,
+        263
+      ],
+      "cleanup": [
+        304,
+        324
+      ]
+    },
+    "exact_path": [
+      "workflow apple_aggregate_prepare",
+      "apple_verification_hygiene.main():260 constructs DarwinWorkerBackend then calls prepare",
+      "prepare():79 invokes backend.lifetimes()",
+      "darwin_worker_identity.lifetimes():198 invokes _basic(pid)",
+      "_basic():122 raises Cannot read complete native process identity"
+    ],
+    "observed_failure_is_not": [
+      "The Kotlin ProductionVerificationWorkflowContractTest assertion: no Gradle tests ran before the Apple failure.",
+      "A failing iOS test selector, Swift/Kotlin build, app exception or OS app termination: corresponding steps were skipped.",
+      "Evidence that Xcode26.3 is missing or Python3.9 cannot parse the module: configuration and backend construction reached prepare successfully."
+    ],
+    "unrecorded_hosted_trigger": "The old error omitted PID, returned bytes and errno. The exact offending PID/errno/ABI result cannot be recovered from this log and is not invented here. Foreign-UID denial has a complete reachable source proof and is consistent with the observed failure; the exact hosted record remains unobserved."
+  },
+  "root_cause_proof": [
+    "Both lifetimes() and snapshot() enumerate proc_listallpids(): every UID is included, except zero/self filtering, and neither source path first filters candidate ownership in the kernel.",
+    "Both then call _basic(PROC_PIDTBSDINFO=3) before checking info.uid; the requested full BSD information is privileged across different effective UIDs.",
+    "Apple XNU proc_pidinfo leaves PROC_PIDTBSDINFO in CHECK_SAME_USER. proc_security_policy compares effective UIDs and returns EPERM to an ordinary caller lacking PRIV_GLOBAL_PROC_INFO for a foreign target.",
+    "The public libproc wrapper converts the failing syscall to returned size0 while errno remains EPERM. _basic only treats ESRCH/ENOENT as absence, so the intended later info.uid filter is unreachable for a denied foreign PID.",
+    "Thus a live ordinary foreign-UID process creates a deterministic preflight failure and can also stop worker-cleanup inventory even though that process is outside ownership scope.",
+    "Backend construction already completed its own-process full BSD/path/audit-token capability check in the hosted execution. This counters the assumption that every identity API or the 136-byte layout was universally unusable."
+  ],
+  "minimal_correction": {
+    "promotion_patch": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/darwin-ci-uid-inventory-01/promotion.patch",
+      "sha256": "22e3ddeccade733190658549cb85f4d8183a77fba9c1ff60e8c08a286c4acc18"
+    },
+    "draft_manifest": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/darwin-ci-uid-inventory-01/manifest.json",
+      "sha256": "f41ac5be0800717eeb54beda8deb2dbb5c40ca7111e8a2d94a7f34d721b86817"
+    },
+    "files": [
+      {
+        "path": "scripts/ci/darwin_worker_identity.py",
+        "base_sha256": "ee61ed6ff7f3b3333ad540431a5f6764d0acd24e0a4d9a5617a59f0dba9b2b86",
+        "draft_sha256": "939ac6c98628046f9f45547135cbc439f217403e60c7e4033db5f541ab017ecc",
+        "base_lines": 253,
+        "draft_lines": 273
+      },
+      {
+        "path": "scripts/release/tests/test_apple_ci_hygiene.py",
+        "base_sha256": "28ad6d083da0088087b2196ff1c102e19944e190d9d4484facd511b1d4063be1",
+        "draft_sha256": "0ceea9e5afacd3feeaa8b0aa55134dd559482ffeaaff259906c605cfc41e3549",
+        "base_lines": 576,
+        "draft_lines": 749
+      }
+    ],
+    "implemented_in_draft": [
+      "Bind public proc_listpids(uint32_t,uint32_t,void*,int) with ctypes c_int return and select PROC_UID_ONLY=4 plus os.geteuid().",
+      "Validate byte-return units, minimum whole PID record, divisibility and maximum4096 records with4097-slot allocation; a full/truncated allocation is failure.",
+      "Reject malformed negative/duplicate PID records rather than silently normalizing them. Continue excluding kernel PID0 and current process from worker candidates.",
+      "Retain all existing per-candidate UID, original lifetime, start-boundary, executable, tracking marker, full audit-token and token-bound signal checks. No global scan, elevated permission, PID/PGID fallback, or blanket EPERM suppression.",
+      "Capture numeric errno immediately and report only numeric PID/size/expected-size/returned-PID/errno (inventory also numeric UID/capacity). No executable/environment/tracking contents are added to diagnostics."
+    ],
+    "unchanged_sibling_controls": [
+      "read(), _token(), tracking_id(), signal() behavior and their full identity checks",
+      "lifetimes/snapshot UID rechecks and old-baseline exclusion",
+      "apple_verification_hygiene start boundary, bounded history/queues, task/source/tracking bindings and always-finalizer receipts",
+      "Fresh owned simulator policy, Store identity collision/publication disablement, application source, content, snapshots and protocol"
+    ],
+    "effective_uid_qualification": "The selector uses effective UID as defined by PROC_UID_ONLY. Existing constructor/read/claim checks still refuse mismatched real/effective identities rather than broadening worker ownership. No support for a privileged/setuid execution path is introduced."
+  },
+  "regression_coverage": {
+    "status": "NOT RUN; only AST syntax/discovery inspected by author",
+    "previous_tests": 37,
+    "draft_tests": 50,
+    "new_tests": 13,
+    "all_previous_method_ids_preserved": true,
+    "new_method_ids": [
+      "NativeInventoryAndBasicInfoTest.test_constructor_binds_uid_selector_and_byte_buffer_pointer_abi",
+      "NativeInventoryAndBasicInfoTest.test_denial_short_record_and_wrong_pid_remain_explicit_numeric_failures",
+      "NativeInventoryAndBasicInfoTest.test_denied_selected_candidate_never_becomes_missing_or_cleanup_success",
+      "NativeInventoryAndBasicInfoTest.test_exact_maximum_is_accepted_but_full_buffer_truncation_is_not",
+      "NativeInventoryAndBasicInfoTest.test_failed_zero_negative_unaligned_and_over_capacity_counts_fail_closed",
+      "NativeInventoryAndBasicInfoTest.test_inventory_diagnostic_retains_only_numeric_boundary_failure",
+      "NativeInventoryAndBasicInfoTest.test_inventory_uses_effective_uid_and_byte_count_not_global_scan",
+      "NativeInventoryAndBasicInfoTest.test_lifetimes_reads_only_kernel_uid_selected_processes",
+      "NativeInventoryAndBasicInfoTest.test_negative_and_duplicate_pid_records_are_not_normalized_away",
+      "NativeInventoryAndBasicInfoTest.test_only_actual_absence_or_zombie_can_be_no_basic_identity",
+      "NativeInventoryAndBasicInfoTest.test_self_only_inventory_is_a_valid_empty_worker_set",
+      "NativeInventoryAndBasicInfoTest.test_snapshot_preserves_baseline_exclusion_and_full_identity_read",
+      "NativeInventoryAndBasicInfoTest.test_uid_change_after_kernel_selection_is_still_excluded"
+    ],
+    "execution_wiring": "scripts/release/validate_release_system.sh:26 uses unittest discover on scripts/release/tests/test_*.py. After exact draft adoption, the affected file declares50 test methods; author has not run any.",
+    "source_level_original_failure": "Retained hosted failure plus full macOS15 source-level privilege proof; no fabricated before-fix test execution. Constructor/global-enumeration fixture rejects the old API and exercises the actual ctypes-facing methods when root runs it.",
+    "limitations": "Mock native boundary/pointer tests prove wiring and failure semantics, not actual hosted kernel permissions, task-marker propagation or successful native cleanup. A fresh exact macOS15/Xcode26.3 hosted run remains required."
+  },
+  "counter_evidence_and_alternatives": [
+    "A disappearing PID already maps ESRCH/ENOENT to None; blanket skip-on-any-error would instead hide genuine same-UID candidate ownership failures and is explicitly not the fix.",
+    "Short BSD-info is publicly readable but lacks the full start-time proof; using an extra short-record UID probe is more complex than kernel UID selection and does not justify weakening the full identity checks.",
+    "A broken struct/API could also produce the old generic exception, but own-process capability passed. Numeric diagnostics preserve future distinctions without asserting the unrecorded hosted errno.",
+    "The old37 synthetic Apple tests covered high-level mocked Workers, tokens and simulator controls but did not exercise _pids/_basic/lifetimes process-enumeration privilege ordering; their earlier green result is not native evidence.",
+    "Do not remove the failing cleanup outcome checks: they are expected propagation of failed preflight and not proof that actual build outputs leaked."
+  ],
+  "other_jobs_context": [
+    {
+      "job_id": 101811724991,
+      "name": "Desktop strict verification (Linux arm64)",
+      "conclusion": "failure",
+      "classification": "TEST_CONTRACT_DEFECT_DISTINCT_FROM_APPLE_PREFLIGHT",
+      "log": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34143924756-evidence/101811724991.log",
+        "sha256": "f96a5d3bad1a3c1377599db1ed913bdcb814e684a4c9763a54e68c6d220c843a"
+      },
+      "proof": "Each log reports ProductionVerificationWorkflowContractTest.kt:401,277 tests completed/1 failed/3 skipped. The hosted source:394-405 requires old xcrun simctl list devices available --json, but current workflow:551 uses fresh owned create-simulator. Root independently handles this separate correction."
+    },
+    {
+      "job_id": 101811725145,
+      "name": "Desktop and Kotlin Native strict verification (macOS x64)",
+      "conclusion": "failure",
+      "classification": "TEST_CONTRACT_DEFECT_DISTINCT_FROM_APPLE_PREFLIGHT",
+      "log": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34143924756-evidence/101811725145.log",
+        "sha256": "c0c00b64ed5dfce33ce6230e79e802c6d5049461b051f5ecfc1179687dccd03c"
+      },
+      "proof": "Each log reports ProductionVerificationWorkflowContractTest.kt:401,277 tests completed/1 failed/3 skipped. The hosted source:394-405 requires old xcrun simctl list devices available --json, but current workflow:551 uses fresh owned create-simulator. Root independently handles this separate correction."
+    },
+    {
+      "job_id": 101811725175,
+      "name": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+      "conclusion": "failure",
+      "classification": "TEST_CONTRACT_DEFECT_DISTINCT_FROM_APPLE_PREFLIGHT",
+      "log": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34143924756-evidence/101811725175.log",
+        "sha256": "e694d4a8f4ebcdefbc21019d0dbec0d90021cce7022bd8c603b2a2bf705c594c"
+      },
+      "proof": "Each log reports ProductionVerificationWorkflowContractTest.kt:401,277 tests completed/1 failed/3 skipped. The hosted source:394-405 requires old xcrun simctl list devices available --json, but current workflow:551 uses fresh owned create-simulator. Root independently handles this separate correction."
+    }
+  ],
+  "uncompleted_context_job": {
+    "job_id": 101811725277,
+    "disposition": "The retained jobs observation says in_progress; no final result inferred."
+  },
+  "cleanup_evidence": {
+    "aggregate_finish": "FAIL because prepare failed; Gradle stop exit0 with No Gradle daemons are running",
+    "ui_and_wrapper_finish": "NOT_RUN/NOT_CREATED; both Gradle stops exit0, not runtime PASS",
+    "final_output_cleanup": "FAIL due Apple receipt/outcome mismatch. Receipt explicitly lists all27 output candidates not_created, removed[], retained[]. Do not weaken this gate.",
+    "job_artifact_uploads": "Logs show evidence and cleanup receipts uploaded; this review did not download/extract those archives or claim contents beyond raw log records.",
+    "author_owned_resources": "Only bounded public-source HTTPS reads, source/JSON reads, AST parses and draft/report writes. No application/test/build/native worker/simulator started, no source removed, no process signaled; no build cleanup needed or performed on root lane."
+  },
+  "authoritative_research": {
+    "record": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/apple-ci-native-inventory-research-independent-01.json",
+      "sha256": "bf0560275842862add8c9291b065457c15a5bb8485ccebb86ad89fd3d618a164"
+    },
+    "references": [
+      {
+        "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-11215.1.10/libsyscall/wrappers/libproc/libproc.c",
+        "accessed_at": "2026-09-07T17:01:16.383761+00:00",
+        "status": 200,
+        "bytes": 28996,
+        "sha256": "5c8a771427e04c5e1d55c4cdf5a077f3b52c5be4a091683b970084bfdda76df2",
+        "line_count": 1216,
+        "applicability": "Apple public macOS15 first-release XNU source; hosted15.7.9 exact patch-kernel revision is not established. Public API/guard semantics reference, not runtime proof.",
+        "reviewed_relevant_ranges": [
+          [
+            45,
+            110
+          ]
+        ]
+      },
+      {
+        "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-11215.1.10/bsd/sys/proc_info.h",
+        "accessed_at": "2026-09-07T17:01:18.135437+00:00",
+        "status": 200,
+        "bytes": 31420,
+        "sha256": "e0057ffeb90dfcebe891609ea9152d7728180ce4e59e45e9b2ccb0ee45216023",
+        "line_count": 857,
+        "applicability": "Apple public macOS15 first-release XNU source; hosted15.7.9 exact patch-kernel revision is not established. Public API/guard semantics reference, not runtime proof.",
+        "reviewed_relevant_ranges": [
+          [
+            51,
+            82
+          ]
+        ]
+      },
+      {
+        "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-11215.1.10/bsd/kern/proc_info.c",
+        "accessed_at": "2026-09-07T17:01:20.954708+00:00",
+        "status": 200,
+        "bytes": 103447,
+        "sha256": "03ac30db1853bb56d162c56eb97dbcf267fd2da1463864d23594154f11faeabf",
+        "line_count": 4065,
+        "applicability": "Apple public macOS15 first-release XNU source; hosted15.7.9 exact patch-kernel revision is not established. Public API/guard semantics reference, not runtime proof.",
+        "reviewed_relevant_ranges": [
+          [
+            357,
+            481
+          ],
+          [
+            1995,
+            2004
+          ],
+          [
+            2130,
+            2239
+          ],
+          [
+            3122,
+            3164
+          ]
+        ]
+      }
+    ],
+    "limitations": "xnu-11215.1.10 is the public first macOS15 release, not a falsely asserted exact15.7.9 patch-kernel. The selectors, full BSD privilege guard and syscall return units are relevant public source contracts; actual hosted trigger and repaired runtime still require new evidence."
+  },
+  "independent_review": {
+    "status": "PENDING",
+    "requested_reviewer": "/root/release_fix_review",
+    "author_cannot_approve_own_fix": true,
+    "next_steps": [
+      "Root confirms no target drift and adopts promotion.patch into live source without including unrelated user work.",
+      "Author submits exact adopted source/diff, original log/source proof and test plan to separate release reviewer.",
+      "Root alone executes affected50-test suite with discovery counts and no-skips, broad release controls as appropriate, preserves results, then mandatory stop/cleanup.",
+      "Independent reviewer reopens full diff/callers/callees and actual execution receipts; revise the draft if they identify defects.",
+      "After local validation, separately authorized hosted verification must prove Apple preflight, runtime/linkage and scoped cleanup. Source/control bindings for normal-iOS must be refreshed independently."
+    ]
+  },
+  "source_reads": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/ci/darwin_worker_identity.py",
+      "sha256": "ee61ed6ff7f3b3333ad540431a5f6764d0acd24e0a4d9a5617a59f0dba9b2b86",
+      "reviewed_ranges": [
+        [
+          1,
+          253
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/ci/apple_verification_hygiene.py",
+      "sha256": "d9c554781750d3cbbf2a4adce3b040edb83d0de5fec4c04eac700c526fca1c3c",
+      "reviewed_ranges": [
+        [
+          1,
+          278
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_apple_ci_hygiene.py",
+      "sha256": "28ad6d083da0088087b2196ff1c102e19944e190d9d4484facd511b1d4063be1",
+      "reviewed_ranges": [
+        [
+          1,
+          576
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/.github/workflows/production-verification.yml",
+      "sha256": "f823182501d7a28dd20d117781b59dd46bc5103baef5b016316a5a672a18258f",
+      "reviewed_ranges": [
+        [
+          444,
+          669
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/validate_release_system.sh",
+      "sha256": "ce52c9c08edecba968337d6de42c90895badec127c7029a5afc16737d3b8864a",
+      "reviewed_ranges": [
+        [
+          1,
+          104
+        ]
+      ]
+    }
+  ]
+}

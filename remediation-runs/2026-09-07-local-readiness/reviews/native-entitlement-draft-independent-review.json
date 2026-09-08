@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "author": "/root/native_fix_review",
+  "reviewed_at": "2026-09-07T05:07:56.849072+00:00",
+  "conclusion": "DRAFT SOURCE APPROVED; ROOT HOLDS PUBLICATION WHILE FOCUS05 RUNS; NOT EXECUTION APPROVAL",
+  "draft_files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/control-drafts-02/simulator_entitlements.py",
+      "sha256": "57bee1eeb1fdd58bb6fef10545a37e1b0afae09be7107c2c6710f788905450f3",
+      "lines": 261,
+      "reviewed_ranges": [
+        [
+          1,
+          261
+        ]
+      ],
+      "method": "Complete new source/test read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/control-drafts-02/test_simulator_entitlements.py",
+      "sha256": "56c5418a538c2919394334b0ac0a81cb890aaefa8a66b4f9c4982edec63b6479",
+      "lines": 190,
+      "reviewed_ranges": [
+        [
+          1,
+          190
+        ]
+      ],
+      "method": "Complete new source/test read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/control-drafts-02/run_ios_readiness.py",
+      "sha256": "464719dd100ca8d941126a2113611650e8febde8889abd2a97e9dbdb22dffb20",
+      "lines": 898,
+      "reviewed_ranges": [
+        [
+          1,
+          898
+        ]
+      ],
+      "method": "Complete freeze03 source previously read + every changed overlay line/caller reopened"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/control-drafts-02/README.md",
+      "sha256": "073dfc3e309374e4e45dec27e3332eb06260573d3bf5309a007eda843b6efdbc",
+      "lines": 141,
+      "reviewed_ranges": [
+        [
+          1,
+          141
+        ]
+      ],
+      "method": "Complete freeze03 source previously read + every changed overlay line/caller reopened"
+    }
+  ],
+  "overlay_diff_sha256": "b8a1f5bfe1b8e5015da931a4802afa454910c09a8eb9930857afeef212656d58",
+  "assessment": [
+    "New diagnostics only: no signing command, entitlement/AppID change, private keychain query, extra DI graph or production-code modification. Runner receives same four explicit unsigned flags from one constrained environment dictionary and uses them identically as command-line arguments.",
+    "owned_path enforces exact root ancestry/canonical no-symlink paths and file/directory kinds. Current Debug app identity and bounded inventory required; each resolved image hash checked before and after parsing. Internal aliases inspected once with consistent hash. Installed owner remains exact freshly created simulatorUUID subtree.",
+    "Mach-O parser bounds16fat slices,4MiB load commands,4096commands,1024sections per segment,256images and64KiB parsed payload. Correct endian/width offsets independently checked against actual SDK26.5 headers. Invalid headers/lengths/section bounds/slice overlap/CPU disagreement/ambiguous sections reject. Oversized entitlements are not parsed; DER records presence/size/hash only.",
+    "XML/binary plist parser rejects duplicates and invalid public field shapes. Unknown keys/values not emitted; only public app/team identifiers,get-task-allow,keychain access groups plus unknown-key count. Malformed data reports MALFORMED_REDACTED without exception/raw payload leakage. No diagnosis or storage success inferred from presence/absence/parseability.",
+    "Generated entitlement inspection reads only two exact app-target Parlor.app.xcent / Parlor.app-Simulated.xcent paths inside owned DerivedData, not recursive discovery or unrelated signing material. Symlinks rejected; absent, oversized and malformed records remain explicit.",
+    "Actual installed Xcode/platform/SDK metadata are separately recorded from exact invocation overrides. I reopened platform/SDK defaults and verified their conflicting AD_HOC/CODE_SIGNING values, and reopened Embedded-Simulator.xcspec46-75. Therefore raw flags/codesign display alone cannot establish linker entitlements or Keychain health. Merged effective target settings explicitly not claimed.",
+    "Runner overlay inspects outputs only after immediate Gradle stop and preserves compact receipts before existing finalizer deletes owned artifacts. Two additional public read-only tool path queries use existing bounded command ownership/error handling. All runtime/signature/storage/OSPRESENT/cleanup gates unchanged.",
+    "Nine new discoverable unittest methods contain real assertions: publicallowlist XML+binary, malformed/duplicate/oversized/private redaction,32/64 both endian sections/absence,oversized payload, fat variants and architecture mismatch,invalidcommand/header/sectionbounds, owner/identity/hash/symlink/traversal, exact xcent whitelist, and SDKdefaults/overrides distinction. No native command/build or private file fixture. Tests not yet executed by root."
+  ],
+  "research": {
+    "author_receipt": "native/research-controls-04.json",
+    "independent_local_checks": [
+      {
+        "file": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/usr/include/mach-o/loader.h",
+        "sha256": "5862aeb7fbf183453080bc887c0d502fe25a86ff5bd81291bbcc408bd7fe6e74",
+        "reviewed_ranges": [
+          [
+            62,
+            70
+          ],
+          [
+            80,
+            89
+          ],
+          [
+            379,
+            391
+          ],
+          [
+            399,
+            411
+          ],
+          [
+            459,
+            486
+          ]
+        ],
+        "claim": "Verified32/64 header, segment and section layouts against code offsets/endianness. Parser commands/sections consume exact tables and bounds; no full binary-signature validity claim."
+      },
+      {
+        "file": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/usr/include/mach-o/fat.h",
+        "sha256": "19925cdb5fed9b5b7981b05420856f65b99abb54bca34ea95e0e581da8cc580f",
+        "reviewed_ranges": [
+          [
+            57,
+            68
+          ],
+          [
+            80,
+            87
+          ]
+        ],
+        "claim": "Verified fat32/fat64 architecture table layouts; slice offsets relative to image, size/nonoverlap/inner-outer cpu binding."
+      },
+      {
+        "file": "/Applications/Xcode.app/Contents/SharedFrameworks/XCBuild.framework/Versions/A/PlugIns/XCBBuildService.bundle/Contents/PlugIns/XCBSpecifications.ideplugin/Contents/Resources/Embedded-Simulator.xcspec",
+        "sha256": "4e1eabad3ee62995bfbebec304fedec08a7a5e8a46704b253d5db3f9845afdc3",
+        "reviewed_ranges": [
+          [
+            46,
+            75
+          ]
+        ],
+        "claim": "Exact installed build spec passes -sectcreate __TEXT __entitlements and __TEXT __ents_der for linker inputs; separate from codesign displayed entitlements."
+      }
+    ],
+    "limitations": "Installed26.5 SDK/source specification, not pinned Store-qualified26.3. Apple documentation applies required entitlement failure generally; does not identify missing entitlement for IOS-R1 or prove a historical launch cause."
+  },
+  "required_next": [
+    "Root-authorized publication after focused cycle cleanup; exact fresh control freeze includes2newfiles and overlays+provenance metadata.",
+    "Root must execute full68lightweight tests (59existing+9new) on published frozen controls and preserve raw results/cleanup.",
+    "Independent reviewer rechecks published hashes against draft and full source/control binding before native execution.",
+    "Actual built/installed binary/xcent/Keychain receipts only from later owned native cycle. IOS-R1 remains evidence gap unless independently established application defect."
+  ],
+  "cleanup": "Reviewer did not execute builds/tests/native commands or start servers/background workers. Read source/cache/header/public SDK metadata only and wrote this isolated evidence. No source/control edits; no other task outputs/processes touched."
+}

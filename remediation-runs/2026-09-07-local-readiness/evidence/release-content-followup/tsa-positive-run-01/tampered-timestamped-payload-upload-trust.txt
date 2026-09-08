@@ -1,0 +1,9 @@
+Picked up JAVA_TOOL_OPTIONS: -Xmx256m -Duser.home=/private/tmp/pl-tsa-5jbga9_l/home -Djava.io.tmpdir=/private/tmp/pl-tsa-5jbga9_l/tmp -Dhttp.maxRedirects=0 -Dsun.net.http.retryPost=false -Dsun.net.client.defaultReadTimeout=15000
+Exception in thread "main" java.lang.SecurityException: SHA-256 digest error for base/assets/synthetic.txt
+	at java.base/sun.security.util.ManifestEntryVerifier.verify(ManifestEntryVerifier.java:254)
+	at java.base/java.util.jar.JarVerifier.processEntry(JarVerifier.java:248)
+	at java.base/java.util.jar.JarVerifier.update(JarVerifier.java:235)
+	at java.base/java.util.jar.JarVerifier$VerifierStream.read(JarVerifier.java:453)
+	at java.base/java.io.InputStream.read(InputStream.java:220)
+	at PrepareAndroidUploadTrust.verifiedSigners(PrepareAndroidUploadTrust.java:88)
+	at PrepareAndroidUploadTrust.main(PrepareAndroidUploadTrust.java:42)

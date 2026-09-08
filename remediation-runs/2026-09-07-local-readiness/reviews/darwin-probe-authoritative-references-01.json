@@ -1,0 +1,78 @@
+{
+  "reviewer": "/root/factory_review",
+  "actual_kernel": "25.2.0 xnu-12377.61.12~1 ARM64",
+  "sources": [
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-12377.61.12/libsyscall/wrappers/libproc/libproc.c",
+      "accessed_at": "2026-09-07T05:21:41.179407+00:00",
+      "sha256": "5c8a771427e04c5e1d55c4cdf5a077f3b52c5be4a091683b970084bfdda76df2",
+      "lines": 1216,
+      "reviewed_excerpts": [
+        {
+          "from": 45,
+          "to": 110,
+          "text": "45: int\n46: proc_listpids(uint32_t type, uint32_t typeinfo, void *buffer, int buffersize)\n47: {\n48: \tint retval;\n49: \n50: \tif ((type >= PROC_ALL_PIDS) || (type <= PROC_PPID_ONLY)) {\n51: \t\tif ((retval = __proc_info(PROC_INFO_CALL_LISTPIDS, type, typeinfo, (uint64_t)0, buffer, buffersize)) == -1) {\n52: \t\t\treturn 0;\n53: \t\t}\n54: \t} else {\n55: \t\terrno = EINVAL;\n56: \t\tretval = 0;\n57: \t}\n58: \treturn retval;\n59: }\n60: \n61: \n62: int\n63: proc_listallpids(void * buffer, int buffersize)\n64: {\n65: \tint numpids;\n66: \tnumpids = proc_listpids(PROC_ALL_PIDS, (uint32_t)0, buffer, buffersize);\n67: \n68: \tif (numpids == -1) {\n69: \t\treturn -1;\n70: \t} else {\n71: \t\treturn numpids / sizeof(int);\n72: \t}\n73: }\n74: \n75: int\n76: proc_listpgrppids(pid_t pgrpid, void * buffer, int buffersize)\n77: {\n78: \tint numpids;\n79: \tnumpids = proc_listpids(PROC_PGRP_ONLY, (uint32_t)pgrpid, buffer, buffersize);\n80: \tif (numpids == -1) {\n81: \t\treturn -1;\n82: \t} else {\n83: \t\treturn numpids / sizeof(int);\n84: \t}\n85: }\n86: \n87: int\n88: proc_listchildpids(pid_t ppid, void * buffer, int buffersize)\n89: {\n90: \tint numpids;\n91: \tnumpids = proc_listpids(PROC_PPID_ONLY, (uint32_t)ppid, buffer, buffersize);\n92: \tif (numpids == -1) {\n93: \t\treturn -1;\n94: \t} else {\n95: \t\treturn numpids / sizeof(int);\n96: \t}\n97: }\n98: \n99: \n100: int\n101: proc_pidinfo(int pid, int flavor, uint64_t arg, void *buffer, int buffersize)\n102: {\n103: \tint retval;\n104: \n105: \tif ((retval = __proc_info(PROC_INFO_CALL_PIDINFO, pid, flavor, arg, buffer, buffersize)) == -1) {\n106: \t\treturn 0;\n107: \t}\n108: \n109: \treturn retval;\n110: }"
+        },
+        {
+          "from": 485,
+          "to": 506,
+          "text": "485: \n486: int\n487: proc_signal_with_audittoken(audit_token_t *audittoken, int sig)\n488: {\n489: \tint retval = __proc_info(PROC_INFO_CALL_SIGNAL_AUDITTOKEN, 0, sig, 0, audittoken, sizeof(audit_token_t));\n490: \tif (retval == -1) {\n491: \t\treturn errno;\n492: \t}\n493: \n494: \treturn 0;\n495: }\n496: \n497: int\n498: proc_terminate_with_audittoken(audit_token_t *audittoken, int *sig)\n499: {\n500: \tint retval;\n501: \n502: \tif (!sig) {\n503: \t\treturn EINVAL;\n504: \t}\n505: \n506: \tretval = __proc_info(PROC_INFO_CALL_TERMINATE_AUDITTOKEN, 0, 0, 0, audittoken, sizeof(audit_token_t));"
+        }
+      ]
+    },
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-12377.61.12/bsd/kern/proc_info.c",
+      "accessed_at": "2026-09-07T05:21:42.585474+00:00",
+      "sha256": "d3207a2dcc1aed2913b9a0b1e268ac3cd44639178bed9dc9bf2ad4de8ee33d50",
+      "lines": 4155,
+      "reviewed_excerpts": [
+        {
+          "from": 3585,
+          "to": 3653,
+          "text": "3585:  * @param retval Return value for libproc callers\n3586:  */\n3587: static int\n3588: psignal_by_audit_token(audit_token_t *instigator, audit_token_t target, int signum, bool should_terminate, int32_t *retval)\n3589: {\n3590: \tint error = 0;\n3591: \tproc_t target_proc = PROC_NULL;\n3592: \tstruct proc_ident i_ident;\n3593: \tstruct proc_ident t_ident;\n3594: \tkauth_cred_t uc = kauth_cred_get();\n3595: \n3596: \t// Check that the signal number is valid\n3597: \tif (!((signum > 0) && (signum < NSIG)) || retval == NULL) {\n3598: \t\terror = EINVAL;\n3599: \t\tgoto out;\n3600: \t}\n3601: \n3602: \t// If instigator is not NULL, successful lookup is required\n3603: \tif (instigator != NULL && (proc_ident_for_audit_token(&i_ident, *instigator) != 0)) {\n3604: \t\terror = ESRCH;\n3605: \t\tgoto out;\n3606: \t}\n3607: \n3608: \t// Lookup of target process must succeed\n3609: \tif (proc_ident_for_audit_token(&t_ident, target) != 0) {\n3610: \t\terror = ESRCH;\n3611: \t\tgoto out;\n3612: \t}\n3613: \n3614: \t// Check MACF policy without holding any refs, proceed if the signal is allowed to be sent.\n3615: \tif (mac_proc_check_signal(current_proc(), instigator == NULL ? NULL : &i_ident, &t_ident, signum) != 0) {\n3616: \t\terror = EPERM;\n3617: \t\tgoto out;\n3618: \t}\n3619: \n3620: \t// Acquire the target process ref to actually send the signal\n3621: \tif ((target_proc = proc_find_ident(&t_ident)) == PROC_NULL) {\n3622: \t\terror = ESRCH;\n3623: \t\tgoto out;\n3624: \t}\n3625: \n3626: \t// Check the calling process privileges\n3627: \tif (!cansignal_nomac(current_proc(), uc, target_proc, signum)) {\n3628: \t\terror = EPERM;\n3629: \t\tgoto out;\n3630: \t}\n3631: \n3632: \t// Determine if the process should be immediately terminated\n3633: \t// proc_terminate_with_proc() sets retval to the signal that was\n3634: \t// sent (either SIGTERM or SIGKILL).\n3635: \tif (should_terminate) {\n3636: \t\terror = proc_terminate_with_proc(target_proc, retval);\n3637: \t\tgoto out;\n3638: \t}\n3639: \n3640: \t/* Send the signal */\n3641: \tpsignal(target_proc, signum);\n3642: \t*retval = 0;\n3643: out:\n3644: \tif (target_proc != PROC_NULL) {\n3645: \t\tproc_rele(target_proc);\n3646: \t\ttarget_proc = PROC_NULL;\n3647: \t}\n3648: \treturn error;\n3649: }\n3650: \n3651: #define delegateSignalEntitlement \"com.apple.private.delegate-signals\"\n3652: static int\n3653: proc_signal_delegate(user_addr_t buffer, size_t buffersize, int signum, int32_t *retval)"
+        },
+        {
+          "from": 3694,
+          "to": 3721,
+          "text": "3694: \t}\n3695: \n3696: \t/* Final signal checks on current_proc */\n3697: \treturn psignal_by_audit_token(&info.instigator, info.target, SIGTERM, true, retval);\n3698: }\n3699: \n3700: static int\n3701: proc_signal_with_audittoken(user_addr_t buffer, size_t buffersize, int signum, int32_t *retval)\n3702: {\n3703: \tint error = 0;\n3704: \taudit_token_t target = INVALID_AUDIT_TOKEN_VALUE;\n3705: \n3706: \tif (buffer == USER_ADDR_NULL || buffersize != sizeof(audit_token_t)) {\n3707: \t\terror = EINVAL;\n3708: \t\tgoto out;\n3709: \t}\n3710: \n3711: \terror = copyin(buffer, &target, sizeof(audit_token_t));\n3712: \tif (error != 0) {\n3713: \t\tgoto out;\n3714: \t}\n3715: \n3716: \terror = psignal_by_audit_token(NULL, target, signum, false, retval);\n3717: out:\n3718: \treturn error;\n3719: }\n3720: \n3721: /*"
+        }
+      ]
+    },
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-12377.61.12/bsd/kern/kern_proc.c",
+      "accessed_at": "2026-09-07T05:21:44.976221+00:00",
+      "sha256": "c91c30c057df84dae520d18db01ac6b795a7d70d8a7988a6770b7c50ff86f85b",
+      "lines": 6833,
+      "reviewed_excerpts": [
+        {
+          "from": 522,
+          "to": 549,
+          "text": "522:  * will validate that the embedded pidver matches.\n523:  */\n524: proc_t\n525: proc_find_audit_token(const audit_token_t token)\n526: {\n527: \tproc_t proc = PROC_NULL;\n528: \n529: \tpid_t pid = get_audit_token_pid(&token);\n530: \tif (pid <= 0) {\n531: \t\treturn PROC_NULL;\n532: \t}\n533: \n534: \tif ((proc = proc_find(pid)) == PROC_NULL) {\n535: \t\treturn PROC_NULL;\n536: \t}\n537: \n538: \t/* Check the target proc pidversion */\n539: \tint pidversion = proc_pidversion(proc);\n540: \tif (pidversion != token.val[7]) {\n541: \t\tproc_rele(proc);\n542: \t\treturn PROC_NULL;\n543: \t}\n544: \n545: \treturn proc;\n546: }\n547: \n548: /*\n549:  * Function: proc_find_ident_validated"
+        },
+        {
+          "from": 5967,
+          "to": 6016,
+          "text": "5967: \t\trefheld = 1;\n5968: \n5969: \t\tif ((p->p_stat != SZOMB)\n5970: \t\t    && ((current_proc() == p)\n5971: \t\t    || kauth_cred_issuser(kauth_cred_get())\n5972: \t\t    || ((kauth_cred_getuid(target_cred) == kauth_cred_getuid(kauth_cred_get())) &&\n5973: \t\t    ((kauth_cred_getruid(target_cred) == kauth_getruid())))\n5974: \t\t    || IOCurrentTaskHasEntitlement(\"com.apple.system-task-ports.name.safe\")\n5975: \t\t    )) {\n5976: \t\t\tif (proc_task(p) != TASK_NULL) {\n5977: \t\t\t\tstruct proc_ident pident = proc_ident_with_policy(p, IDENT_VALIDATION_PROC_EXACT);\n5978: \n5979: \t\t\t\ttask_t task = proc_task(p);\n5980: \n5981: \t\t\t\ttask_reference(task);\n5982: \t\t\t\tproc_rele(p);\n5983: \t\t\t\tp = PROC_NULL;\n5984: #if CONFIG_MACF\n5985: \t\t\t\terror = mac_proc_check_get_task(kauth_cred_get(), &pident, TASK_FLAVOR_NAME);\n5986: \t\t\t\tif (error) {\n5987: \t\t\t\t\ttask_deallocate(task);\n5988: \t\t\t\t\tgoto noperm;\n5989: \t\t\t\t}\n5990: #endif\n5991: \t\t\t\tsright = (void *)convert_task_name_to_port(task);\n5992: \t\t\t\ttask = NULL;\n5993: \t\t\t\ttret = ipc_port_copyout_send(sright,\n5994: \t\t\t\t    get_task_ipcspace(current_task()));\n5995: \t\t\t} else {\n5996: \t\t\t\ttret  = MACH_PORT_NULL;\n5997: \t\t\t}\n5998: \n5999: \t\t\tAUDIT_ARG(mach_port2, tret);\n6000: \t\t\t(void) copyout((char *)&tret, task_addr, sizeof(mach_port_name_t));\n6001: \t\t\ttask_deallocate(t1);\n6002: \t\t\terror = KERN_SUCCESS;\n6003: \t\t\tgoto tnfpout;\n6004: \t\t}\n6005: \t}\n6006: \n6007: #if CONFIG_MACF\n6008: noperm:\n6009: #endif\n6010: \ttask_deallocate(t1);\n6011: \ttret = MACH_PORT_NULL;\n6012: \t(void) copyout((char *) &tret, task_addr, sizeof(mach_port_name_t));\n6013: \terror = KERN_FAILURE;\n6014: tnfpout:\n6015: \tif (refheld != 0) {\n6016: \t\tkauth_cred_unref(&target_cred);"
+        }
+      ]
+    },
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-12377.61.12/osfmk/kern/task.c",
+      "accessed_at": "2026-09-07T05:21:46.776312+00:00",
+      "sha256": "971c32e96a601cbc30019052340265dccea61f922950a54ed7f6a7ebdf87da93",
+      "lines": 10945,
+      "reviewed_excerpts": [
+        {
+          "from": 5826,
+          "to": 5846,
+          "text": "5826: \n5827: \tcase TASK_AUDIT_TOKEN:\n5828: \t{\n5829: \t\taudit_token_t   *audit_token_p;\n5830: \n5831: \t\tif (*task_info_count < TASK_AUDIT_TOKEN_COUNT) {\n5832: \t\t\terror = KERN_INVALID_ARGUMENT;\n5833: \t\t\tbreak;\n5834: \t\t}\n5835: \n5836: \t\taudit_token_p = (audit_token_t *) task_info_out;\n5837: \n5838: \t\t*audit_token_p = *task_get_audit_token(task);\n5839: \n5840: \t\t*task_info_count = TASK_AUDIT_TOKEN_COUNT;\n5841: \t\tbreak;\n5842: \t}\n5843: \n5844: \tcase TASK_SCHED_INFO:\n5845: \t\terror = KERN_INVALID_ARGUMENT;\n5846: \t\tbreak;"
+        },
+        {
+          "from": 6496,
+          "to": 6519,
+          "text": "6496: kern_return_t\n6497: task_info_from_user(\n6498: \tmach_port_t             task_port,\n6499: \ttask_flavor_t           flavor,\n6500: \ttask_info_t             task_info_out,\n6501: \tmach_msg_type_number_t  *task_info_count)\n6502: {\n6503: \ttask_t task;\n6504: \tkern_return_t ret;\n6505: \n6506: \tif (flavor == TASK_DYLD_INFO) {\n6507: \t\ttask = convert_port_to_task_read(task_port);\n6508: \t} else {\n6509: \t\ttask = convert_port_to_task_name(task_port);\n6510: \t}\n6511: \n6512: \tret = task_info(task, flavor, task_info_out, task_info_count);\n6513: \n6514: \ttask_deallocate(task);\n6515: \n6516: \treturn ret;\n6517: }\n6518: \n6519: /*"
+        }
+      ]
+    }
+  ]
+}

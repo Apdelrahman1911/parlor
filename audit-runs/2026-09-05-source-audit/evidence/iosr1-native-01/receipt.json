@@ -1,0 +1,200 @@
+{
+  "started_at": "2026-09-05T10:50:20.594409+00:00",
+  "source_before": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "tracked_status": ""
+  },
+  "cycle": "iosr1-native-01",
+  "status": "FAIL",
+  "commands": [
+    {
+      "command": [
+        "xcrun",
+        "--sdk",
+        "iphonesimulator",
+        "clang",
+        "-arch",
+        "arm64",
+        "-isysroot",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk",
+        "-mios-simulator-version-min=16.0",
+        "-fobjc-arc",
+        "-framework",
+        "UIKit",
+        "-framework",
+        "Foundation",
+        "-framework",
+        "Security",
+        "-Wl,-no_adhoc_codesign",
+        "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/reproducers/IOSR1NativeProbe.m",
+        "-o",
+        "/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-native-01-xr1vtxa4/Probe.app/Probe"
+      ],
+      "started_at": "2026-09-05T10:50:20.626838+00:00",
+      "log": "compile.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:50:21.455107+00:00"
+    },
+    {
+      "command": [
+        "./gradlew",
+        "--stop"
+      ],
+      "started_at": "2026-09-05T10:50:21.455453+00:00",
+      "log": "stop-immediate.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:50:21.838196+00:00"
+    },
+    {
+      "command": [
+        "codesign",
+        "-d",
+        "--entitlements",
+        ":-",
+        "/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-native-01-xr1vtxa4/Probe.app"
+      ],
+      "started_at": "2026-09-05T10:50:21.838776+00:00",
+      "log": "signature-inspection.log",
+      "exit_code": 1,
+      "finished_at": "2026-09-05T10:50:21.863483+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "create",
+        "Parlor-Audit-iosr1-native-01",
+        "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+        "com.apple.CoreSimulator.SimRuntime.iOS-26-5"
+      ],
+      "started_at": "2026-09-05T10:50:21.863827+00:00",
+      "log": "create.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:50:22.067438+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "boot",
+        "52EFC001-F873-4268-9431-E8E7C55BB345"
+      ],
+      "started_at": "2026-09-05T10:50:22.068034+00:00",
+      "log": "boot.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:50:22.493919+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "bootstatus",
+        "52EFC001-F873-4268-9431-E8E7C55BB345",
+        "-b"
+      ],
+      "started_at": "2026-09-05T10:50:22.495228+00:00",
+      "log": "bootstatus.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:50:44.790995+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "install",
+        "52EFC001-F873-4268-9431-E8E7C55BB345",
+        "/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-native-01-xr1vtxa4/Probe.app"
+      ],
+      "started_at": "2026-09-05T10:50:44.791878+00:00",
+      "log": "install.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:50:48.984686+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "launch",
+        "52EFC001-F873-4268-9431-E8E7C55BB345",
+        "audit.parlor.iosr1-native"
+      ],
+      "started_at": "2026-09-05T10:50:48.985355+00:00",
+      "log": "launch.log",
+      "exit_code": 1,
+      "finished_at": "2026-09-05T10:50:50.401761+00:00"
+    },
+    {
+      "command": [
+        "./gradlew",
+        "--stop"
+      ],
+      "started_at": "2026-09-05T10:50:50.403043+00:00",
+      "log": "stop-final.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:50:51.199228+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "terminate",
+        "52EFC001-F873-4268-9431-E8E7C55BB345",
+        "audit.parlor.iosr1-native"
+      ],
+      "started_at": "2026-09-05T10:50:51.200133+00:00",
+      "log": "terminate.log",
+      "exit_code": 3,
+      "finished_at": "2026-09-05T10:50:51.437333+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "shutdown",
+        "52EFC001-F873-4268-9431-E8E7C55BB345"
+      ],
+      "started_at": "2026-09-05T10:50:51.438208+00:00",
+      "log": "shutdown.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:50:54.712421+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "delete",
+        "52EFC001-F873-4268-9431-E8E7C55BB345"
+      ],
+      "started_at": "2026-09-05T10:50:54.713670+00:00",
+      "log": "delete.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T10:50:54.856812+00:00"
+    }
+  ],
+  "owned_temp": "/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-native-01-xr1vtxa4",
+  "reproducer": "reproducers/IOSR1NativeProbe.m",
+  "reproducer_sha256": "34e699306f7e7d151321bfe1d6b5586336ca05442cf1a810746e6c76e0b9d50b",
+  "scope": "Native equivalent APIs, not actual KMP/Home error attribution. Unsigned isolated simulator only.",
+  "signing": "No signing operation or entitlements; linker automatic ad-hoc signing explicitly disabled.",
+  "compile_exit_code": 0,
+  "immediate_stop_exit_code": 0,
+  "binary_sha256": "f52659335b776c44520b4e1d6000a165d9c4a7a848f6245c279721c9b7562d01",
+  "owned_uuid": "52EFC001-F873-4268-9431-E8E7C55BB345",
+  "error": "RuntimeError: Probe runtime operation failed: launch.log",
+  "final_stop_exit_code": 0,
+  "shutdown_exit_code": 0,
+  "delete_exit_code": 0,
+  "owned_device_absent": true,
+  "owned_uuid_processes_remaining": [],
+  "owned_temporary_outputs_removed": true,
+  "remaining_build_outputs": [],
+  "source_after": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "tracked_status": ""
+  },
+  "finished_at": "2026-09-05T10:50:55.008111+00:00"
+}

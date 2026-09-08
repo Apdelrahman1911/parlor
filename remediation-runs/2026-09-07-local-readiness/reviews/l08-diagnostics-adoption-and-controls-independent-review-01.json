@@ -1,0 +1,241 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-07T20:14:58.379088+00:00",
+  "reviewer": "/root/factory_review",
+  "author": "/root/native_fix_review (diagnostic draft), /root (driver and exact adoption)",
+  "executor": "/root",
+  "decision": "ACCEPT EXACT THREE-FILE DIAGNOSTIC ADOPTION WITH EXECUTED CONTROL REGRESSIONS; NO NATIVE/RUNTIME PASS OR STORAGE ROOT-CAUSE CLAIM",
+  "scope": {
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "commit": "75f29dcd9f1777a70a307bb9522e055ea8cc6e29",
+    "tree": "901459e75c916ac8a1afbb45a747565da853495c",
+    "tracked_diff_sha256": "8842032c71a31bd7733adf153c00c813fd475777a9e209e57bdb47cf7fc09993",
+    "tracked_status": " M scripts/verification/ios-readiness/L08StorageProbe.kt.in\n M scripts/verification/ios-readiness/l08_receipts.py\n",
+    "source_manifest_sha256": "a8e97dcb61cc613faaf8a6ba8d3bb1d1422e780e2d24a223629c1dff124fad61",
+    "actual_source_rows": 799,
+    "current_all_source_hashes_match_verified_rows": true,
+    "repair_paths": [
+      {
+        "path": "scripts/verification/ios-readiness/L08StorageProbe.kt.in",
+        "sha256": "28f4158cc701f1355a9320da1edd9a6d7825cf76828b2b0472ea194611750b75",
+        "lines": 499
+      },
+      {
+        "path": "scripts/verification/ios-readiness/l08_receipts.py",
+        "sha256": "3cab6914886db081ba883629242d33a262158c0106e8658bc7b777387826f867",
+        "lines": 422
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_l08_diagnostics.py",
+        "sha256": "97d6bb76316151b850e2e85ed84aac5524743184a78c499fb9b2c7db1bf9980a",
+        "lines": 151
+      }
+    ],
+    "scope_note": "Two tracked control modifications and one new control test. No application source, signing, runner, protocol, save format or game-rule change. Git authorization remains parent/user responsibility, separate from this source acceptance."
+  },
+  "prior_independent_reviews": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-save-diagnostics-draft-independent-review-01.json",
+      "sha256": "3fbdac0dcb86a61440f09ad35244fdecbff65b244d61bd64da0a243f53a7646d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-diagnostics-isolated-driver-independent-review-01.json",
+      "sha256": "4e4ba5eb958d8478363ba1e641c10c3bacb68b4a40802028b78236e1969e0e8c"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-diagnostics-isolated-driver-import-clarification-01.json",
+      "sha256": "64dda6a34fa840b0c1efa130a1ad07d4c940b85b638f7de197973dd4fc14155e"
+    }
+  ],
+  "adoption": {
+    "author_receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-diagnostics-adoption-01.json",
+      "sha256": "5a6b3b91def5e7ad48b23829caff9cf0170f79dcc8eb68676838679afa4919da"
+    },
+    "approved_patch": {
+      "path": "remediation-runs/2026-09-07-local-readiness/drafts/l08-save-diagnostics-01/proposed.patch",
+      "sha256": "31d592cf63988001c6cd30e1f0a7df0cc18bc23a8f173d6986372daccb948044"
+    },
+    "all_three_live_files_byte_identical_to_reviewed_draft": true,
+    "original_two_control_hashes_match_HEAD": true,
+    "full_current_tracked_diff_reread": true,
+    "new_test_file": "Exact151-line previously read draft now byte-identical at live path; all9 methods executed.",
+    "retained_source_reasoning": "Stage-only diagnostics; closed27-literal enum; deepest metadata failure retained, previous stage restored on success only; all original assertions/bounds/cancellation/zeroization and PASS schema unchanged.13 of14 parser function ASTs unchanged.",
+    "compatibility": "No application migration/version changes. Failure-only schema1 enum expanded while retaining all15 historical stage labels. New source/control freeze required; source06 approval is obsolete for edited controls."
+  },
+  "verification": {
+    "isolated": {
+      "cycle": "l08-diagnostics-isolated-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-diagnostics-isolated-01/receipt.json",
+        "sha256": "38e236da15eabcb57ff2ceebfda17558febaebc7fdc0a6a25935fee457b2f488"
+      },
+      "raw_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-diagnostics-isolated-01/gradle.log",
+        "sha256": "d12d43c22edce11673879f0068a0964162910188c9980bf09815b81d167653b9"
+      },
+      "stop_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-diagnostics-isolated-01/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "status": "PASS",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-07-local-readiness/reviews/run_l08_diagnostics_isolated_01.py"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-09-07T20:03:24.926180+00:00",
+      "finished_at": "2026-09-07T20:03:32.387723+00:00",
+      "source_manifest_sha256": "ca2b99d237a921513a4c8d922666b9d8df838b8c2ac04064f7563e474204e711",
+      "source_manifest_rows": 798,
+      "source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "stop_exit_code": 0,
+      "owned_workers_remaining": [],
+      "artifact_workers_remaining": [],
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "scratch_absent": true,
+      "source_drift": false,
+      "runner_drift": false,
+      "tests": 43,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "current_ast_declared_discovered_unique_raw_ids_equal": true,
+      "copied_input_rows": 739,
+      "copied_inputs_equal_source06_plus_exact_draft": true,
+      "actual_imports_bound": 15,
+      "copy_and_original_hashes_unchanged": true,
+      "exact_owned_copy_removed": true,
+      "driver": {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/run_l08_diagnostics_isolated_01.py",
+        "sha256": "25c4187cff6dbe5122cda3c82f96533ed3e5a9dc2190b061da44e3fea84dab5e"
+      }
+    },
+    "adopted": {
+      "cycle": "l08-diagnostics-adopted-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-diagnostics-adopted-01/receipt.json",
+        "sha256": "192f937130dd6a281b7447d4dc8c3508c671ab00ec227cf51c155663639c8f26"
+      },
+      "raw_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-diagnostics-adopted-01/gradle.log",
+        "sha256": "daf619cdba4d6e708e3c52a1487e184e294e6758781bba162747cd190fcb57ae"
+      },
+      "stop_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-diagnostics-adopted-01/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "status": "PASS",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/verification/ios-readiness",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-09-07T20:06:54.803175+00:00",
+      "finished_at": "2026-09-07T20:07:16.056098+00:00",
+      "source_manifest_sha256": "a8e97dcb61cc613faaf8a6ba8d3bb1d1422e780e2d24a223629c1dff124fad61",
+      "source_manifest_rows": 799,
+      "source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "stop_exit_code": 0,
+      "owned_workers_remaining": [],
+      "artifact_workers_remaining": [],
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "scratch_absent": true,
+      "source_drift": false,
+      "runner_drift": false,
+      "tests": 141,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "current_ast_unique_raw_ids_equal": true,
+      "raw_descriptor_breakdown": {
+        "single_line_ok": 140,
+        "host_foundation_descriptor_with_json_then_ok": 1
+      },
+      "host_foundation_subcases": 18,
+      "classification": "Control suite with one actual macOS Foundation Swift compile/execute test; not exclusively Python and not iOS/app/device evidence. NativePathControlTests asserts its owned /private/var temporary binary/cache/fixtures removed after success; root outer worker cleanup also passed."
+    },
+    "normal_after_adoption": {
+      "cycle": "normal-after-l08-diagnostics-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-after-l08-diagnostics-01/receipt.json",
+        "sha256": "48ef5df02345303a33e72c44e7eddfd7a50510d469adc3e48fb0317d0197e2fd"
+      },
+      "raw_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-after-l08-diagnostics-01/gradle.log",
+        "sha256": "ffa3dd4f6824e21772a6433bdea8fe4356499c687651b65a2c020f2292fa7ca8"
+      },
+      "stop_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-after-l08-diagnostics-01/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "status": "PASS",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py"
+      ],
+      "exit_code": 0,
+      "started_at": "2026-09-07T20:08:31.380944+00:00",
+      "finished_at": "2026-09-07T20:08:31.893539+00:00",
+      "source_manifest_sha256": "a8e97dcb61cc613faaf8a6ba8d3bb1d1422e780e2d24a223629c1dff124fad61",
+      "source_manifest_rows": 799,
+      "source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "stop_exit_code": 0,
+      "owned_workers_remaining": [],
+      "artifact_workers_remaining": [],
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "scratch_absent": true,
+      "source_drift": false,
+      "runner_drift": false,
+      "tests": 91,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "current_ast_declared_discovered_unique_raw_ids_equal": true,
+      "full_control_before_after_current_rows_equal": 75,
+      "actual_imports_bound": 25,
+      "control_delta_from_parser_green02": [
+        "L08StorageProbe.kt.in",
+        "l08_receipts.py",
+        "test_l08_diagnostics.py"
+      ],
+      "classification": "Pure parser/control tests against adopted shared helper bytes; not normal app-runtime execution."
+    }
+  },
+  "execution_reasoning": {
+    "undiscovered_tests": "All141 live AST test IDs matched141 completed raw descriptors. A naive strict single-line parser counted140 because host Foundation prints its bounded18-subcase JSON within a descriptor; following raw line66 is ok. This was examined, not silently counted as a skip.",
+    "fixture_vs_production": "No synthetic parser result is promoted to application success. Diagnostics source-contract tests do not compile the new Kotlin code; macOS host Foundation test does not compile the iOS application.",
+    "same_verified_tree": "Adopted141 and normal91 both bind identical799source rows and tracked diff8842032c71a31bd7733adf153c00c813fd475777a9e209e57bdb47cf7fc09993. Before/after source+runner identity equal and current file hashes equal.",
+    "historical_preservation": "Original native05/native06 failure receipts untouched. Expanded diagnostics do not retroactively identify or repair native05 failure."
+  },
+  "remaining_before_native": [
+    "Record finalized exact source07/source-copy/control hashes after separate authorized Git actions, if any.",
+    "Obtain independent source07 execution approval for each normal and L08 lane with explicit simulator mode.",
+    "Fresh normal8 repetitions plus separate9th external-image provenance and package/notice verification.",
+    "Fresh L08 native matrix to identify old broad failure boundary; new Kotlin diagnostics have not run yet.",
+    "Treat unavailable physical-device backup/lock/P2pKitLAN/signing/Store evidence independently."
+  ],
+  "cleanup": {
+    "three_cycles": "All exit0/stop0, no source or runner drift, no owned workers/artifact workers/retained or remaining outputs/cleanup errors; actual cycle scratch paths absent.",
+    "reviewer": "No builds, tests, native probes, process termination or Git writes. Only static source/AST/hash/raw-receipt checks and this additive report."
+  }
+}

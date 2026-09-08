@@ -1,0 +1,119 @@
+{
+  "at": "2026-09-05T19:34:33.360481+00:00",
+  "reviewer": "/root/mafia_cont",
+  "status": "SOURCE FROZEN; root build and independent runtime/delta approval pending",
+  "source_files": [
+    {
+      "path": "game-modes/mafia/build.gradle.kts",
+      "sha256": "7aceb370331f84b2fee70bb039b7779bdd818ea78aab15da3bfcfd137a76ad2d",
+      "lines": 43
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml",
+      "sha256": "a9416283c7bf130d9ca98b4ff0e08ae420bad4b935f476ed7166178c42c3bdcc",
+      "lines": 307
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotRecovery.kt",
+      "sha256": "64525b0d14b07d87e99729c3707dd0af4a083f8f4a98a5a948575755482ea3fd",
+      "lines": 535
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+      "sha256": "09de10c3735f1afeb7b36550dca57c4e9fd190d985faf6ff0eae8c0b8d21a784",
+      "lines": 628
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+      "sha256": "1371eb747579362548f3962a520c2c3f3c2f6225ef551bad93e3e690e08a1fe6",
+      "lines": 751
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibility.kt",
+      "sha256": "e6f616148cd77a6832c08175b769c31885e7b8b16bfb272d19729dc507bcb34a",
+      "lines": 14
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreen.kt",
+      "sha256": "2ebe210da47584cd0ed1105a921b4b2884cde23227b6cfb0086f25f3aec70aa9",
+      "lines": 102
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+      "sha256": "c1dc2d1e5f4bf72ac1c2946341143f22936dd7903aab2d02b58c0d63709e87e4",
+      "lines": 526
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+      "sha256": "5fe2144436f87162e2d29bcbef6d57ac9b9cede6ab328b406b63cceebcdd501b",
+      "lines": 156
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaDoctorLanTest.kt",
+      "sha256": "513a87423f1de6834d3b1664d1103f83a36d67f351a888e095b53bf1bedd5be9",
+      "lines": 248
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "sha256": "d1d830e0330d5a47f2011b9f87d025a5ce1e0bc2d3cb08be742ca1ff4403f743",
+      "lines": 383
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/testing/MafiaDoctorFixture.kt",
+      "sha256": "fa5a85db72638033569368062722fc1e1f97fcf1c3948e912c7954324e1e2ba7",
+      "lines": 120
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibilityTest.kt",
+      "sha256": "c2d196af55bbf14d3518973e86df9da3de3954ffbab27038aca4c2ef14ed70f1",
+      "lines": 75
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt",
+      "sha256": "27b4894a394bf06952bc1435324ab23acb5c7f38242b65df5feb01e8df16b777",
+      "lines": 135
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaDoctorSettingUiTest.kt",
+      "sha256": "47720879336a7ac14436a6cc9e186cce3afc8d00743a1339ff161c0fefb58055",
+      "lines": 71
+    }
+  ],
+  "preceding_cycle": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-02/receipt.json",
+    "status": "FAIL",
+    "exit_code": 1,
+    "stop_exit_code": 0,
+    "cleanup_errors": [],
+    "remaining_outputs": []
+  },
+  "failures_reviewed": [
+    {
+      "case": "PostGameScreenLayoutTest: all 6 cases",
+      "evidence": "6 failed at TextLayoutResult.hasVisualOverflow after positive bounds/display/horizontal-viewport assertions passed. XML contains no size diagnostics; exact first-attempt overflow dimension not established.",
+      "change": "Replaced failed FlowRow attempt with a full-width name-over-role Column, full-width Text nodes; no ellipsis, text-scale cap, name-policy change, maxLines, or relaxed assertions. Expanded failure diagnostics to identify size/paragraph/bounds/overflow dimensions."
+    },
+    {
+      "case": "MafiaDoctorLanTest initial assertPrivateProjection, before reconnect",
+      "evidence": "Peer coordinator requiresInitialSnapshot=false when acceptedStartId=null; hasAuthoritativeSnapshot begins true; initial recovery is not launched. The fixture bypasses start, so all own slices initially remain public placeholders. ShadowSessionController uses direct MutableStateFlow, not lazy subscription.",
+      "source_path": [
+        "AuthoritativeSessionCoordinator.kt:1353-1359,1433-1444,1543-1556,1590-1635",
+        "MafiaPeerRoomBridge.kt:68-96,121-161",
+        "MafiaHostRoomBridge.kt:65-104,237-248"
+      ],
+      "change": "Retain and additionally assert initial private-placeholder emptiness; emit synthetic HostRestored only after collectors attach, invoking actual peer SnapshotRequest/host snapshot/install pipeline. Keep all own-only/privacy assertions. No production networking changes."
+    }
+  ],
+  "assertions_removed_or_weakened": false,
+  "source_check": {
+    "command": "git diff --check -- game-modes/mafia",
+    "exit_code": 0
+  },
+  "compilation_or_tests_run_by_this_agent": false,
+  "independent_review": "/root/whodunit_cont source review of recovery approved in principle; this delta/runtime result pending. LAN missing initial-publication explanation independently located by validator before author source confirmation.",
+  "remaining_limits": [
+    "Physical Android/iOS rendering and VoiceOver/TalkBack not run",
+    "In-memory LAN fixture bypasses lobby/start; not credential/discovery/radio evidence",
+    "No assertion of successful fix until root rerun passes"
+  ]
+}

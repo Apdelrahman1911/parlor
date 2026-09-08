@@ -1,0 +1,378 @@
+{
+  "recorded_at": "2026-09-06T11:08:11.606311+00:00",
+  "author": "/root/factory_review",
+  "status": "DRAFT_NOT_EXECUTED_NOT_INSTALLED",
+  "scope": "Four actual-game retained-host Desktop Compose verification tests; no production correction or native-device evidence",
+  "independent_review": {
+    "requested_from": "/root/release_fix_review",
+    "status": "PENDING"
+  },
+  "baseline": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+    "diff_sha256": "38326880d1f9332618d193f73d49cebc6de063dd26c7e87a8711be9a04a5a430"
+  },
+  "current_tracked_diff_sha256": "38326880d1f9332618d193f73d49cebc6de063dd26c7e87a8711be9a04a5a430",
+  "tracked_diff_matches_frozen": true,
+  "files": [
+    {
+      "draft": "remediation-runs/2026-09-06-approved-policy-completion/native/host-continuity-draft/ControlledStartRoom.kt",
+      "proposed_destination": "shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/ControlledStartRoom.kt",
+      "sha256": "cda4c061d3a34a216011d1be1846b7d9b579a8ec77eb9f517e8dc7c6f680de6e",
+      "lines": 186,
+      "destination_currently_exists": false
+    },
+    {
+      "draft": "remediation-runs/2026-09-06-approved-policy-completion/native/host-continuity-draft/WhodunitHostLanguageContinuityTest.kt",
+      "proposed_destination": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLanguageContinuityTest.kt",
+      "sha256": "2d51c63febafa4861c3049ee682490be9df7aea9334fc18188bb9dd0e4af9179",
+      "lines": 322,
+      "destination_currently_exists": false
+    },
+    {
+      "draft": "remediation-runs/2026-09-06-approved-policy-completion/native/host-continuity-draft/MafiaHostLanguageContinuityTest.kt",
+      "proposed_destination": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostLanguageContinuityTest.kt",
+      "sha256": "66adc4894b5bfc199fab09bcb97352727df5d341ff791f57e4ed8f2549a35333",
+      "lines": 340,
+      "destination_currently_exists": false
+    },
+    {
+      "draft": "remediation-runs/2026-09-06-approved-policy-completion/native/host-continuity-draft/README.md",
+      "proposed_destination": null,
+      "sha256": "d4790960306257d184f7b01d39892e63c78d25e53d5588b800ab17ddc8bc066c",
+      "lines": 103,
+      "destination_currently_exists": false
+    }
+  ],
+  "source_references": [
+    {
+      "path": "shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/InMemoryRoomBus.kt",
+      "sha256": "695af1d049de439eeb081edf1d2698af677343d18097215db366023f8bc1c275",
+      "total_lines": 203,
+      "reopened_ranges": [
+        [
+          1,
+          203
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "shared/networking-testing/build.gradle.kts",
+      "sha256": "81ed6260d7ac49fada4f0a922dde7db77fc557b86ab0a5884d5b20a64ec74f7e",
+      "total_lines": 17,
+      "reopened_ranges": [
+        [
+          1,
+          17
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "shared/networking/src/commonMain/kotlin/com/parlor/networking/protocol/ProtocolValidation.kt",
+      "sha256": "c4c6ee42e4c890fc99be0fe8dcae5677c614e872e53eb15a0393dd3e3d20e628",
+      "total_lines": 261,
+      "reopened_ranges": [
+        [
+          1,
+          225
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "shared/networking/src/commonMain/kotlin/com/parlor/networking/protocol/Protocol.kt",
+      "sha256": "82e65dc7ec04855a192106766b97c658934e160ed7cf4fc299e8c7b0e3953d9f",
+      "total_lines": 384,
+      "reopened_ranges": [
+        [
+          1,
+          98
+        ],
+        [
+          170,
+          196
+        ],
+        [
+          211,
+          255
+        ],
+        [
+          350,
+          384
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "shared/networking/src/commonMain/kotlin/com/parlor/networking/room/LocalRoom.kt",
+      "sha256": "b6fea659d9f84457624f611d0a2f01a1c9542b4f32fd287bc31541be901d3268",
+      "total_lines": 247,
+      "reopened_ranges": [
+        [
+          1,
+          246
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/ProcessMultiplayerSessionOwner.kt",
+      "sha256": "daba67ff9106b54f73eff57635bd36547674df5f5b861177932687498296320c",
+      "total_lines": 1048,
+      "reopened_ranges": [
+        [
+          1,
+          456
+        ],
+        [
+          460,
+          675
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/AuthoritativeSessionCoordinator.kt",
+      "sha256": "968eae9b5a83bc507e173bfd82e6ec0cffa6b6191de86c73d7b401221fe09114",
+      "total_lines": 1970,
+      "reopened_ranges": [
+        [
+          1,
+          145
+        ],
+        [
+          278,
+          455
+        ],
+        [
+          594,
+          837
+        ],
+        [
+          930,
+          1080
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "shared/session/src/commonMain/kotlin/com/parlor/session/passandplay/PassAndPlaySessionController.kt",
+      "sha256": "d2a6b6fbc0a78685fe192e16894907cc98a51f1a30dd48ce0095a0d2745d8008",
+      "total_lines": 159,
+      "reopened_ranges": [
+        [
+          100,
+          153
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/ProvideAppLanguage.kt",
+      "sha256": "b4f4286459fe923ebaa3e156f4a9995232ce40ad32ae9bc43f73a929da77dc18",
+      "total_lines": 62,
+      "reopened_ranges": [
+        [
+          1,
+          62
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "shared/design-system/src/desktopMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.desktop.kt",
+      "sha256": "e0a776351f34c0c8b6bfaa76c840c331ac6b226f75cca3d10ad7144e1c6afbbf",
+      "total_lines": 44,
+      "reopened_ranges": [
+        [
+          1,
+          44
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitRetainedMultiplayerRuntime.kt",
+      "sha256": "4cca409cc9f8703295b0e75259f3e0dec382a012271dcd86696cfef480797148",
+      "total_lines": 189,
+      "reopened_ranges": [
+        [
+          1,
+          189
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaRetainedMultiplayerRuntime.kt",
+      "sha256": "cb196e3457759dbb0766b02d342d3698f6e90512d674d70e34a76f8516ff0543",
+      "total_lines": 172,
+      "reopened_ranges": [
+        [
+          1,
+          172
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "sha256": "b5b57dfe7675a0f85e299719f5161d9e50d75e6c0f1c25cfb72379e7b032ec36",
+      "total_lines": 1432,
+      "reopened_ranges": [
+        [
+          985,
+          1205
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+      "sha256": "11b188ca7ecfa7a02086ab2513fe9e40230f3aab9db9a9fa25c79204b4e9b0b7",
+      "total_lines": 1135,
+      "reopened_ranges": [
+        [
+          90,
+          145
+        ],
+        [
+          180,
+          240
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt",
+      "sha256": "40db7e4fab766f77d893c7001e57e3395fd50112399937d39be44632ff6456c0",
+      "total_lines": 1261,
+      "reopened_ranges": [
+        [
+          225,
+          285
+        ],
+        [
+          1070,
+          1145
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDeviceHostFlow.kt",
+      "sha256": "9bc03d15725da5ace2e5b4c4e79947b516a8e04cce8fbc2e203edde2da9194a1",
+      "total_lines": 297,
+      "reopened_ranges": [
+        [
+          1,
+          297
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+      "sha256": "09de10c3735f1afeb7b36550dca57c4e9fd190d985faf6ff0eae8c0b8d21a784",
+      "total_lines": 628,
+      "reopened_ranges": [
+        [
+          1,
+          220
+        ],
+        [
+          242,
+          308
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostProgression.kt",
+      "sha256": "9538d49edcd035815e08f5f48bfdcafad61f29d64ffac63b0bdba61f45671df6",
+      "total_lines": 81,
+      "reopened_ranges": [
+        [
+          1,
+          81
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+      "sha256": "c1dc2d1e5f4bf72ac1c2946341143f22936dd7903aab2d02b58c0d63709e87e4",
+      "total_lines": 526,
+      "reopened_ranges": [
+        [
+          1,
+          220
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/reveal/PrivateRoleCardScreen.kt",
+      "sha256": "5f03d09c502ce8cc40b570fec1f7baa3e2556f8d0100601b53807fe7323aca9c",
+      "total_lines": 147,
+      "reopened_ranges": [
+        [
+          1,
+          147
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt",
+      "sha256": "dfdd8aed4bc9f199fadfddf644bc321d1e293cafda2d201d2ec6055bac313fa9",
+      "total_lines": 248,
+      "reopened_ranges": [
+        [
+          195,
+          248
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "game-modes/mafia/build.gradle.kts",
+      "sha256": "7aceb370331f84b2fee70bb039b7779bdd818ea78aab15da3bfcfd137a76ad2d",
+      "total_lines": 43,
+      "reopened_ranges": [
+        [
+          1,
+          43
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "game-modes/whodunit/build.gradle.kts",
+      "sha256": "2eb4b00a53ff1eff42f2a64b3de1a1c4d28b08d419ad2828045a063320e4696c",
+      "total_lines": 53,
+      "reopened_ranges": [
+        [
+          1,
+          53
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    }
+  ],
+  "full_source_coverage_claim": false,
+  "commands_run": [],
+  "test_count_proposed": 4,
+  "test_count_executed": 0,
+  "cleanup": {
+    "builds_started": false,
+    "gradle_started": false,
+    "app_simulator_server_workers_started": false,
+    "generated_build_outputs_created": false,
+    "scope": "Only draft deliverables and read-only source inspection; root-owned lane left untouched"
+  }
+}

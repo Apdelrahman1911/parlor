@@ -1,0 +1,1283 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "author": "/root/native_fix_review",
+  "recorded_at": "2026-09-07T01:02:32.636441+00:00",
+  "classification": "PASS — source-bound complete owned-iOS-Simulator DS-C01 matrix, including measured ABSENT OS baseline restoration. Scoped DS-C01 local repair completion supported; actual OS-created PRESENT counterpart remains a named TEST/EVIDENCE GAP.",
+  "scoped_ds_c01_completion_approved": true,
+  "whole_project_or_store_readiness_approved": false,
+  "source": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e"
+  },
+  "source_input_count": 669,
+  "evidence_sha256": {
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-10/receipt.json": "030995c5e3ed5e9e387c51eb94beeddf46328e13e51097b4aec22bbf623f30ab",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-10/xcodebuild.log": "92c06e06dc076e68a4f5846577b36a988d7bdf3ee880c785dc6962b9b191209d",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-10/xcresult-summary.json": "1a21c79225ac8a455875875b56377d9623cd435952b6a4e3f6d4d770eefa76e7",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-10/xcresult-tests.json": "b354e3733260a1240dfd9eed9fc78decc2d24c2f075e520c8a1c131421aa5036",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-10/copied-source.diff": "2bcc1db7edb4c1c13311ba4bd90b076b38929a0ea09eb45fb5801d35d3ed23f8",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-10/copied-source-manifest.json": "e077f4b00f3ebf17d795db342ec77b2a8e3576a199455d8d26b77dc2ae92f76e",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-10/copied-source-inputs-after-build.json": "465a3b475db484eda0ed7c046d2f70c66f46ea230311d42beae13d394f941c62",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-10/secondary-fifo-ownership-final.json": "e392565a8013944007af55cb9c55f0511d4f66ed74a12733a8b49796fa0cb992",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-10/probe-settings-result.json": "438ad5b0e3d077fce7672f6802d604a41ab4fe602df982af87b1b96ff1600cb4",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-10/probe-whodunit-result.json": "4db924b3b44e51bc00a9ae2cc88331fe8458c49d5b9d78d8a8d420212fce55aa",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-10/probe-mafia-result.json": "ae95b39b3bff76268612ee6507300e180c31b01be3bd1b8e859888e3e1dfea7a",
+    "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-10/probe-os-result.json": "8c6ac5fd19313471b6409817a1f455ddd1a24fde83c6d40b79e2d7825d7c0e55",
+    "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/author-frozen-control-manifest-01.json": "02f88b8fba23c2a969a0068a0b877fec949347493b546560b0208db9ff13dc80"
+  },
+  "controls": {
+    "count": 171,
+    "aggregate_sha256": "1f709a4f0af27e085c4d36665c90b0102f70c185f97ce93b6175a29f4bc5b201",
+    "all_rehashed_unchanged": true,
+    "source_inputs_rehashed_unchanged": 669,
+    "tracked_diff_unchanged": true
+  },
+  "copy_provenance": {
+    "original_inputs": 613,
+    "final_inputs": 615,
+    "paths": 13,
+    "hunks": 18,
+    "all_hunks_reconstructed_against_frozen_source": true,
+    "all615copied_and_post_worker_hashes_matched": true,
+    "actual_copied_ui_equals_literal_renderer_and_reviewed_helpers": true,
+    "unexpected_missing_or_symlink_inputs": [],
+    "limitation": "Build copy was correctly deleted after results; retained complete diff reconstructs source. Artifact receipt excludes Parlor.debug.dylib and is not complete binary-artifact provenance."
+  },
+  "xctest": {
+    "result": "PASS",
+    "xcode_exit": 0,
+    "runner_exit": 0,
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0,
+    "tests": [
+      {
+        "id": "ComposeContainerViewControllerTests/testChildUsesFullBoundsAcrossSizesAndOpposingSemanticDirections()",
+        "result": "Passed",
+        "duration_seconds": 0.2722829580307007
+      },
+      {
+        "id": "ComposeContainerViewControllerTests/testDefaultAppearanceForwardingReachesTheSameChildExactlyOnce()",
+        "result": "Passed",
+        "duration_seconds": 0.04009294509887695
+      },
+      {
+        "id": "ComposeContainerViewControllerTests/testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView()",
+        "result": "Passed",
+        "duration_seconds": 0.04019904136657715
+      },
+      {
+        "id": "ComposeContainerViewControllerTests/testSystemDecorationAndOrientationPoliciesStillBelongToTheChild()",
+        "result": "Passed",
+        "duration_seconds": 0.03528189659118652
+      },
+      {
+        "id": "IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSInvestigation()",
+        "result": "Passed",
+        "duration_seconds": 659.1121380329132
+      }
+    ],
+    "actual_device": {
+      "architecture": "arm64",
+      "deviceId": "0920F44B-9642-4EC5-8BF7-26733E8BDC13",
+      "deviceName": "Parlor-Audit-parlor-audit-dsc01-apphost-10-xpq90_hh",
+      "modelName": "iPhone 17 Pro",
+      "osBuildNumber": "23F77",
+      "osVersion": "26.5",
+      "platform": "iOS Simulator"
+    },
+    "raw_passes_match_structured_descriptors": true,
+    "scope": "Four production UIKit-wrapper fixture tests and one659second fullmatrix XCTest in a source-bound instrumented Debug copy. Native helper contracts execute inside that matrix; they are not additional XCTest methods."
+  },
+  "native_contracts": {
+    "DSC01_CATALOG_GEOMETRY_CONTRACT": {
+      "raw_line": 1575,
+      "value": {
+        "schemaVersion": 1,
+        "cases": 14,
+        "passed": true
+      }
+    },
+    "DSC01_MAFIA_START_GEOMETRY_CONTRACT": {
+      "raw_line": 1576,
+      "value": {
+        "schemaVersion": 1,
+        "cases": 16,
+        "passed": true
+      }
+    },
+    "DSC01_OS_PREREQUISITE_DECISION_CONTRACT": {
+      "raw_line": 4804,
+      "value": {
+        "schemaVersion": 1,
+        "cases": 24,
+        "passed": true
+      }
+    },
+    "DSC01_OS_INTERACTION_DECISION_CONTRACT": {
+      "raw_line": 5132,
+      "value": {
+        "schemaVersion": 1,
+        "cases": 24,
+        "passed": true
+      }
+    },
+    "DSC01_OS_PANE_IDENTITY_DECISION_CONTRACT": {
+      "raw_line": 5133,
+      "value": {
+        "schemaVersion": 1,
+        "attributeCases": 12,
+        "unionCases": 2,
+        "identityGuardCases": 2,
+        "passed": true
+      }
+    },
+    "DSC01_OS_PREFERENCE_DECISION_CONTRACT": {
+      "raw_line": 5131,
+      "value": {
+        "schemaVersion": 1,
+        "shapeCases": 14,
+        "ownershipCases": 6,
+        "restoreCases": 4,
+        "passed": true
+      }
+    }
+  },
+  "settings": {
+    "status": "PASS",
+    "observations": 22,
+    "boots": [
+      "F2ED7092-9C6F-491E-AEE5-91BF390BD974",
+      "90399FD3-DA22-45A9-A12E-BA241E91D04E",
+      "6035B069-C9DC-4679-A58B-D86354E6514A",
+      "7D085FD0-CD06-4E62-872F-1578A99B3AB9"
+    ],
+    "zero_synthetic_language_commands": true,
+    "first_sequence": [
+      "fresh SystemEN",
+      "actual appArabic",
+      "fresh restartArabic",
+      "actual SystemEN"
+    ],
+    "second_sequence": [
+      "synthetic prior ar-EG/en",
+      "actual appEnglish",
+      "fresh restartEnglish",
+      "actual System restores exact ar-EG/en"
+    ],
+    "limitation": "Previous-present fixture is synthetic app-domain input; real Foundation/persisted settings and actual screen actions execute, but it is not OS-created PRESENT evidence."
+  },
+  "local_games": {
+    "whodunit": {
+      "observations": 97,
+      "continuous_captured_rows": 88,
+      "interval": [
+        9,
+        96
+      ],
+      "public_phase": "public-intro",
+      "passive_samples": 72,
+      "windows": [
+        {
+          "window": 1,
+          "ordinals": [
+            12,
+            17
+          ],
+          "context": "foreground",
+          "command": 0,
+          "interval_ms": [
+            254,
+            264
+          ]
+        },
+        {
+          "window": 2,
+          "ordinals": [
+            18,
+            23
+          ],
+          "context": "foreground",
+          "command": 0,
+          "interval_ms": [
+            259,
+            267
+          ]
+        },
+        {
+          "window": 3,
+          "ordinals": [
+            24,
+            29
+          ],
+          "context": "landscape",
+          "command": 0,
+          "interval_ms": [
+            254,
+            266
+          ]
+        },
+        {
+          "window": 4,
+          "ordinals": [
+            30,
+            35
+          ],
+          "context": "portrait",
+          "command": 0,
+          "interval_ms": [
+            266,
+            267
+          ]
+        },
+        {
+          "window": 5,
+          "ordinals": [
+            40,
+            45
+          ],
+          "context": "foreground",
+          "command": 1,
+          "interval_ms": [
+            266,
+            267
+          ]
+        },
+        {
+          "window": 6,
+          "ordinals": [
+            46,
+            51
+          ],
+          "context": "foreground",
+          "command": 1,
+          "interval_ms": [
+            261,
+            270
+          ]
+        },
+        {
+          "window": 7,
+          "ordinals": [
+            52,
+            57
+          ],
+          "context": "landscape",
+          "command": 1,
+          "interval_ms": [
+            264,
+            269
+          ]
+        },
+        {
+          "window": 8,
+          "ordinals": [
+            58,
+            63
+          ],
+          "context": "portrait",
+          "command": 1,
+          "interval_ms": [
+            266,
+            267
+          ]
+        },
+        {
+          "window": 9,
+          "ordinals": [
+            68,
+            73
+          ],
+          "context": "foreground",
+          "command": 2,
+          "interval_ms": [
+            261,
+            273
+          ]
+        },
+        {
+          "window": 10,
+          "ordinals": [
+            74,
+            79
+          ],
+          "context": "foreground",
+          "command": 2,
+          "interval_ms": [
+            263,
+            275
+          ]
+        },
+        {
+          "window": 11,
+          "ordinals": [
+            84,
+            89
+          ],
+          "context": "foreground",
+          "command": 3,
+          "interval_ms": [
+            262,
+            275
+          ]
+        },
+        {
+          "window": 12,
+          "ordinals": [
+            90,
+            95
+          ],
+          "context": "foreground",
+          "command": 3,
+          "interval_ms": [
+            267,
+            274
+          ]
+        }
+      ],
+      "interval_ms": [
+        254,
+        275
+      ],
+      "post_foreground_ordinals": [
+        11,
+        39,
+        67,
+        83
+      ],
+      "lifecycle_cycles": 4,
+      "disposals": 0,
+      "unchanged_actual_controller_flow_reference_value_phase": true
+    },
+    "mafia": {
+      "observations": 99,
+      "continuous_captured_rows": 88,
+      "interval": [
+        11,
+        98
+      ],
+      "public_phase": "role-assignment",
+      "passive_samples": 72,
+      "windows": [
+        {
+          "window": 1,
+          "ordinals": [
+            14,
+            19
+          ],
+          "context": "foreground",
+          "command": 0,
+          "interval_ms": [
+            266,
+            267
+          ]
+        },
+        {
+          "window": 2,
+          "ordinals": [
+            20,
+            25
+          ],
+          "context": "foreground",
+          "command": 0,
+          "interval_ms": [
+            262,
+            268
+          ]
+        },
+        {
+          "window": 3,
+          "ordinals": [
+            26,
+            31
+          ],
+          "context": "landscape",
+          "command": 0,
+          "interval_ms": [
+            263,
+            267
+          ]
+        },
+        {
+          "window": 4,
+          "ordinals": [
+            32,
+            37
+          ],
+          "context": "portrait",
+          "command": 0,
+          "interval_ms": [
+            263,
+            268
+          ]
+        },
+        {
+          "window": 5,
+          "ordinals": [
+            42,
+            47
+          ],
+          "context": "foreground",
+          "command": 1,
+          "interval_ms": [
+            257,
+            267
+          ]
+        },
+        {
+          "window": 6,
+          "ordinals": [
+            48,
+            53
+          ],
+          "context": "foreground",
+          "command": 1,
+          "interval_ms": [
+            263,
+            270
+          ]
+        },
+        {
+          "window": 7,
+          "ordinals": [
+            54,
+            59
+          ],
+          "context": "landscape",
+          "command": 1,
+          "interval_ms": [
+            266,
+            267
+          ]
+        },
+        {
+          "window": 8,
+          "ordinals": [
+            60,
+            65
+          ],
+          "context": "portrait",
+          "command": 1,
+          "interval_ms": [
+            266,
+            267
+          ]
+        },
+        {
+          "window": 9,
+          "ordinals": [
+            70,
+            75
+          ],
+          "context": "foreground",
+          "command": 2,
+          "interval_ms": [
+            260,
+            270
+          ]
+        },
+        {
+          "window": 10,
+          "ordinals": [
+            76,
+            81
+          ],
+          "context": "foreground",
+          "command": 2,
+          "interval_ms": [
+            263,
+            268
+          ]
+        },
+        {
+          "window": 11,
+          "ordinals": [
+            86,
+            91
+          ],
+          "context": "foreground",
+          "command": 3,
+          "interval_ms": [
+            260,
+            273
+          ]
+        },
+        {
+          "window": 12,
+          "ordinals": [
+            92,
+            97
+          ],
+          "context": "foreground",
+          "command": 3,
+          "interval_ms": [
+            266,
+            272
+          ]
+        }
+      ],
+      "interval_ms": [
+        257,
+        273
+      ],
+      "post_foreground_ordinals": [
+        13,
+        41,
+        69,
+        85
+      ],
+      "lifecycle_cycles": 4,
+      "disposals": 0,
+      "unchanged_actual_controller_flow_reference_value_phase": true
+    }
+  },
+  "native_geometry": {
+    "rows": 229,
+    "orientation_counts": {
+      "portrait": 205,
+      "landscape": 24
+    },
+    "opposing_outer_and_compose_direction_rows": 110,
+    "all_eight_identity_flags_true": true,
+    "attachments": 1,
+    "disposals": 0,
+    "full_window_bounds_and_safeareas_independently_recomputed": true
+  },
+  "actual_catalog_and_start": {
+    "whodunit-catalog": {
+      "rows": 9,
+      "search_windows": 1,
+      "before_line": 2283,
+      "after_line": 2305,
+      "successor_line": 2324,
+      "stable_final_six_lines": [
+        2187,
+        2202,
+        2217,
+        2232,
+        2247,
+        2262
+      ],
+      "target": [
+        24,
+        671.6666870117188,
+        354,
+        99
+      ],
+      "viewport": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "interior": [
+        36,
+        683.6666870117188,
+        330,
+        59.0
+      ],
+      "planned_point": [
+        201.0,
+        713.1666870117188
+      ],
+      "normalized_point": [
+        0.5,
+        0.41919191919191917
+      ]
+    },
+    "mafia-catalog": {
+      "rows": 33,
+      "search_windows": 5,
+      "before_line": 3657,
+      "after_line": 3679,
+      "successor_line": 3698,
+      "stable_final_six_lines": [
+        3561,
+        3576,
+        3591,
+        3606,
+        3621,
+        3636
+      ],
+      "target": [
+        24,
+        392,
+        354,
+        371
+      ],
+      "viewport": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "interior": [
+        36,
+        404,
+        330,
+        338.66668701171875
+      ],
+      "planned_point": [
+        201.0,
+        573.3333435058594
+      ],
+      "normalized_point": [
+        0.5,
+        0.4887691199618851
+      ]
+    },
+    "mafia-start": {
+      "rows": 40,
+      "search_windows": 6,
+      "before_line": 4245,
+      "after_line": 4261,
+      "successor_line": 4289,
+      "stable_final_six_lines": [
+        4179,
+        4189,
+        4199,
+        4209,
+        4219,
+        4229
+      ],
+      "target": [
+        32,
+        756,
+        338,
+        52
+      ],
+      "viewport": [
+        0,
+        0,
+        402,
+        874
+      ],
+      "interior": [
+        44,
+        768,
+        314,
+        28
+      ],
+      "planned_point": [
+        201.0,
+        782.0
+      ],
+      "normalized_point": [
+        0.5,
+        0.5
+      ]
+    }
+  },
+  "public_os_prerequisite": {
+    "status": "PASS",
+    "disposition": "already-satisfied",
+    "rows": 16,
+    "raw_lines": [
+      4805,
+      5129
+    ],
+    "actual_english_primary_and_arabic_order_geometry_checked": true,
+    "arabic_added": false,
+    "source_of_existing_languages_not_inferred": true,
+    "only_navigation_actions": [
+      "General",
+      "Language & Region"
+    ],
+    "no_add_search_primary_language_mutation": true
+  },
+  "public_os_actions": {
+    "status": "PASS",
+    "rows": 44,
+    "actual_four_route_actions": [
+      {
+        "control": "apps",
+        "pane": "settings",
+        "before_line": 5396,
+        "after_line": 5403,
+        "stable_last_three_lines": [
+          5323,
+          5347,
+          5371
+        ],
+        "target": [
+          16,
+          718.3333333333334,
+          370,
+          54
+        ],
+        "activation_count": 1
+      },
+      {
+        "control": "parlor",
+        "pane": "apps",
+        "before_line": 5568,
+        "after_line": 5575,
+        "stable_last_three_lines": [
+          5495,
+          5519,
+          5543
+        ],
+        "target": [
+          16,
+          615.3333333333333,
+          370,
+          54
+        ],
+        "activation_count": 1
+      },
+      {
+        "control": "language",
+        "pane": "parlor",
+        "before_line": 5692,
+        "after_line": 5699,
+        "stable_last_three_lines": [
+          5619,
+          5643,
+          5667
+        ],
+        "target": [
+          16,
+          380.3333333333333,
+          370,
+          54
+        ],
+        "activation_count": 1
+      },
+      {
+        "control": "english",
+        "pane": "language",
+        "before_line": 5816,
+        "after_line": 5823,
+        "stable_last_three_lines": [
+          5743,
+          5767,
+          5791
+        ],
+        "target": [
+          20,
+          171.33333206176758,
+          362,
+          68
+        ],
+        "activation_count": 1
+      }
+    ],
+    "terminal_reporting_actions": [
+      {
+        "control": "showMarkers",
+        "pane": "audit",
+        "before_line": 6142,
+        "after_line": 6149,
+        "stable_last_three_lines": [
+          6084,
+          6103,
+          6122
+        ],
+        "target": [
+          158.66666666666666,
+          183,
+          85,
+          11
+        ],
+        "activation_count": 1
+      },
+      {
+        "control": "verified",
+        "pane": "audit",
+        "before_line": 6281,
+        "after_line": 6288,
+        "stable_last_three_lines": [
+          6223,
+          6242,
+          6261
+        ],
+        "target": [
+          4,
+          279,
+          394,
+          44
+        ],
+        "activation_count": 1
+      },
+      {
+        "control": "complete",
+        "pane": "audit",
+        "before_line": 6370,
+        "after_line": 6377,
+        "stable_last_three_lines": [
+          6312,
+          6331,
+          6350
+        ],
+        "target": [
+          287.3333333333333,
+          138,
+          42.333333333333314,
+          11
+        ],
+        "activation_count": 1
+      }
+    ],
+    "known_public_pane_rows": [
+      {
+        "raw_line": 5251,
+        "pane": "settings",
+        "actual_property": "identifier",
+        "known_literal": "Settings"
+      },
+      {
+        "raw_line": 5293,
+        "pane": "settings",
+        "actual_property": "identifier",
+        "known_literal": "Settings"
+      },
+      {
+        "raw_line": 5323,
+        "pane": "settings",
+        "actual_property": "identifier",
+        "known_literal": "Settings"
+      },
+      {
+        "raw_line": 5347,
+        "pane": "settings",
+        "actual_property": "identifier",
+        "known_literal": "Settings"
+      },
+      {
+        "raw_line": 5371,
+        "pane": "settings",
+        "actual_property": "identifier",
+        "known_literal": "Settings"
+      },
+      {
+        "raw_line": 5396,
+        "pane": "settings",
+        "actual_property": "identifier",
+        "known_literal": "Settings"
+      },
+      {
+        "raw_line": 5423,
+        "pane": "apps",
+        "actual_property": "identifier",
+        "known_literal": "Apps"
+      },
+      {
+        "raw_line": 5465,
+        "pane": "apps",
+        "actual_property": "identifier",
+        "known_literal": "Apps"
+      },
+      {
+        "raw_line": 5495,
+        "pane": "apps",
+        "actual_property": "identifier",
+        "known_literal": "Apps"
+      },
+      {
+        "raw_line": 5519,
+        "pane": "apps",
+        "actual_property": "identifier",
+        "known_literal": "Apps"
+      },
+      {
+        "raw_line": 5543,
+        "pane": "apps",
+        "actual_property": "identifier",
+        "known_literal": "Apps"
+      },
+      {
+        "raw_line": 5568,
+        "pane": "apps",
+        "actual_property": "identifier",
+        "known_literal": "Apps"
+      },
+      {
+        "raw_line": 5595,
+        "pane": "parlor",
+        "actual_property": "identifier",
+        "known_literal": "Parlor"
+      },
+      {
+        "raw_line": 5619,
+        "pane": "parlor",
+        "actual_property": "identifier",
+        "known_literal": "Parlor"
+      },
+      {
+        "raw_line": 5643,
+        "pane": "parlor",
+        "actual_property": "identifier",
+        "known_literal": "Parlor"
+      },
+      {
+        "raw_line": 5667,
+        "pane": "parlor",
+        "actual_property": "identifier",
+        "known_literal": "Parlor"
+      },
+      {
+        "raw_line": 5692,
+        "pane": "parlor",
+        "actual_property": "identifier",
+        "known_literal": "Parlor"
+      },
+      {
+        "raw_line": 5719,
+        "pane": "language",
+        "actual_property": "identifier",
+        "known_literal": "Language"
+      },
+      {
+        "raw_line": 5743,
+        "pane": "language",
+        "actual_property": "identifier",
+        "known_literal": "Language"
+      },
+      {
+        "raw_line": 5767,
+        "pane": "language",
+        "actual_property": "identifier",
+        "known_literal": "Language"
+      },
+      {
+        "raw_line": 5791,
+        "pane": "language",
+        "actual_property": "identifier",
+        "known_literal": "Language"
+      },
+      {
+        "raw_line": 5816,
+        "pane": "language",
+        "actual_property": "identifier",
+        "known_literal": "Language"
+      }
+    ],
+    "audit_reporting_pane_rows": 15,
+    "one_activation_each": true,
+    "three_stable_samples_each": true,
+    "three44point_marker_rows_verified": true,
+    "marker_sequence": 18,
+    "complete_sequence": 19,
+    "coordinate_fallback": false
+  },
+  "os_baseline_evidence": {
+    "status": "PASS",
+    "observed_representation": "ABSENT",
+    "baseline_pair": {
+      "hasAppOverride": false,
+      "appLanguages": []
+    },
+    "os_probe": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-10/probe-os-result.json",
+      "sha256": "8c6ac5fd19313471b6409817a1f455ddd1a24fde83c6d40b79e2d7825d7c0e55"
+    },
+    "actual_runtime_receipt": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-10/receipt.json",
+      "sha256": "030995c5e3ed5e9e387c51eb94beeddf46328e13e51097b4aec22bbf623f30ab"
+    },
+    "boot_before_choice": "6028E605-71B1-4220-A45E-5D9E0562323D",
+    "boot_after_choice": "998DB110-106C-42FD-9CCB-A0CE265E8A43",
+    "boot_after_explicit_restart": "99C267B3-1BF4-4417-8E6C-7846C31D2AF3",
+    "before_choice_ordinal": 4,
+    "before_app_after_choice_ordinal": 6,
+    "before_app_restart_ordinal": 14,
+    "ordered_proof": [
+      {
+        "raw_line": 5847,
+        "stage": "baseline",
+        "sequence": 7,
+        "boot": "998DB110-106C-42FD-9CCB-A0CE265E8A43",
+        "preferences": {
+          "ownerPreviousPresent": false,
+          "hasAppOverride": false,
+          "preferredLanguage": "en",
+          "setting": "system",
+          "ownerPrevious": [],
+          "ownerInstalled": "none",
+          "appLanguages": [],
+          "ownerPresent": false
+        },
+        "native_direction": "force_ltr",
+        "composition": {
+          "settingsMounted": false,
+          "settingsDirection": "absent",
+          "surface": "none",
+          "gameDirection": "absent",
+          "publicPhase": "none",
+          "checkpointCaptured": false,
+          "sameController": false,
+          "sameCanonicalFlow": false,
+          "sameCanonicalReference": false,
+          "sameCanonicalValue": false,
+          "samePublicPhase": false,
+          "disposalsSinceCapture": 0,
+          "backgroundSinceCapture": 0,
+          "foregroundSinceCapture": 0,
+          "backgroundCallbacks": 0,
+          "foregroundCallbacks": 1,
+          "inactiveCallbacks": 1,
+          "commandOrdinal": 0,
+          "commandLanguage": "none",
+          "commandStatus": "none"
+        }
+      },
+      {
+        "raw_line": 5923,
+        "stage": "arabic",
+        "sequence": 10,
+        "boot": "998DB110-106C-42FD-9CCB-A0CE265E8A43",
+        "preferences": {
+          "ownerPreviousPresent": false,
+          "hasAppOverride": true,
+          "preferredLanguage": "ar",
+          "setting": "ar",
+          "ownerPrevious": [],
+          "ownerInstalled": "ar",
+          "appLanguages": [
+            "ar"
+          ],
+          "ownerPresent": true
+        },
+        "native_direction": "force_rtl",
+        "composition": {
+          "settingsMounted": true,
+          "settingsDirection": "rtl",
+          "surface": "none",
+          "gameDirection": "absent",
+          "publicPhase": "none",
+          "checkpointCaptured": false,
+          "sameController": false,
+          "sameCanonicalFlow": false,
+          "sameCanonicalReference": false,
+          "sameCanonicalValue": false,
+          "samePublicPhase": false,
+          "disposalsSinceCapture": 0,
+          "backgroundSinceCapture": 0,
+          "foregroundSinceCapture": 0,
+          "backgroundCallbacks": 0,
+          "foregroundCallbacks": 1,
+          "inactiveCallbacks": 1,
+          "commandOrdinal": 0,
+          "commandLanguage": "none",
+          "commandStatus": "none"
+        }
+      },
+      {
+        "raw_line": 5969,
+        "stage": "system",
+        "sequence": 12,
+        "boot": "998DB110-106C-42FD-9CCB-A0CE265E8A43",
+        "preferences": {
+          "appLanguages": [],
+          "hasAppOverride": false,
+          "ownerPresent": false,
+          "ownerInstalled": "none",
+          "ownerPrevious": [],
+          "preferredLanguage": "en",
+          "ownerPreviousPresent": false,
+          "setting": "system"
+        },
+        "native_direction": "force_ltr",
+        "composition": {
+          "settingsMounted": true,
+          "settingsDirection": "ltr",
+          "surface": "none",
+          "gameDirection": "absent",
+          "publicPhase": "none",
+          "checkpointCaptured": false,
+          "sameController": false,
+          "sameCanonicalFlow": false,
+          "sameCanonicalReference": false,
+          "sameCanonicalValue": false,
+          "samePublicPhase": false,
+          "disposalsSinceCapture": 0,
+          "backgroundSinceCapture": 0,
+          "foregroundSinceCapture": 0,
+          "backgroundCallbacks": 0,
+          "foregroundCallbacks": 1,
+          "inactiveCallbacks": 1,
+          "commandOrdinal": 0,
+          "commandLanguage": "none",
+          "commandStatus": "none"
+        }
+      },
+      {
+        "raw_line": 6061,
+        "stage": "restart",
+        "sequence": 17,
+        "boot": "99C267B3-1BF4-4417-8E6C-7846C31D2AF3",
+        "preferences": {
+          "appLanguages": [],
+          "hasAppOverride": false,
+          "ownerPresent": false,
+          "ownerInstalled": "none",
+          "ownerPrevious": [],
+          "preferredLanguage": "en",
+          "ownerPreviousPresent": false,
+          "setting": "system"
+        },
+        "native_direction": "force_ltr",
+        "composition": {
+          "settingsMounted": true,
+          "settingsDirection": "ltr",
+          "surface": "none",
+          "gameDirection": "absent",
+          "publicPhase": "none",
+          "checkpointCaptured": false,
+          "sameController": false,
+          "sameCanonicalFlow": false,
+          "sameCanonicalReference": false,
+          "sameCanonicalValue": false,
+          "samePublicPhase": false,
+          "disposalsSinceCapture": 0,
+          "backgroundSinceCapture": 0,
+          "foregroundSinceCapture": 0,
+          "backgroundCallbacks": 0,
+          "foregroundCallbacks": 1,
+          "inactiveCallbacks": 1,
+          "commandOrdinal": 0,
+          "commandLanguage": "none",
+          "commandStatus": "none"
+        }
+      }
+    ],
+    "actual_english_settings_before_arabic_ordinal": 8,
+    "actual_english_settings_after_restart_ordinals": [
+      16,
+      17
+    ],
+    "before_app_controller_creations": 0,
+    "post_os_synthetic_language_setters": 0,
+    "original_present_only_oracle_executed": false,
+    "unchanged_v10_v11_guards_executed": true,
+    "unobserved_counterpart": {
+      "id": "ios-actual-os-language-baseline-counterpart",
+      "classification": "TEST/EVIDENCE GAP",
+      "gate_status": "BLOCKED",
+      "representation": "Actual OS-created PRESENT app-domain preference and complete Arabic/System/restart restoration",
+      "reason": "This genuine OS English action produced typed ABSENT before app initialization. Synthetic PRESENT fixtures are not real OS-created PRESENT evidence.",
+      "ownership": "Platform verification owner; investigate explicitly owned local Simulator first, controlled devices if needed. Not automatically physical-only; no source defect established."
+    }
+  },
+  "source_reasoning": [
+    "Copied iOSApp.init prepares before original ContentView/Koin/Compose; recovered existing and continue branches only read language preferences. Only previous-ar fixture writes the synthetic priorarray, during the separate Settings scenario.",
+    "After genuine public English action, before-main6 already records System/unowned/ABSENT/effectiveEN. Production owner.release returns when no owner; no fallback is promoted to an app-domain preference.",
+    "Actual appArabic creates its own override with ownerPreviousPresent=false and empty previousarray. Actual System releases only that owned override and returns ABSENT with English strings and native/ComposeLTR.",
+    "Explicit fresh restart before-main14 plus actual EnglishSettings16/17 preserves that exact pair without synthetic reseeding; raw stageboots/sequences/action ordering and fullgeometry corroborate the result.",
+    "Existing source ownership handler supports synthetic previousPRESENT restoration; direct Settings/restart branch again executes with ar-EG/en. Scope does not claim that those bytes were authored by iOSSettings.",
+    "Whodunit/Mafia retained local controllers/canonical references/values/public phases remain stable across three realStore language setter invocations and four actual lifecycle cycles each; this is not a complete-game or persistence-resume test."
+  ],
+  "reviewed_surrounding_source": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+      "sha256": "959ab1a8cb955e484c806c8ce5af65ca841a20cfcd9b1f205443a1cfe768da20",
+      "reviewed_ranges": [
+        [
+          1,
+          61
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+      "sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098",
+      "reviewed_ranges": [
+        [
+          1,
+          83
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/ContentView.swift",
+      "sha256": "5881b354ccc45340100356fbf37480e94efdcc2e8fe823f0bb6b5b60f8ccaa87",
+      "reviewed_ranges": [
+        [
+          1,
+          62
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/ComposeContainerViewController.swift",
+      "sha256": "9bdeeaf67a569f4016bc5359ae865b6df9eeaa2a9f6ee36e01041bf79000a903",
+      "reviewed_ranges": [
+        [
+          1,
+          48
+        ]
+      ]
+    }
+  ],
+  "cleanup": {
+    "status": "PASS",
+    "stop_exits": [
+      0,
+      0
+    ],
+    "nested_build_and_stop_exit": [
+      0,
+      0
+    ],
+    "immediate_stop_start_delay_seconds": 0.001721,
+    "immediate_stop_finish_delay_seconds": 0.610886,
+    "owned_pid_start_identities_checked": 55,
+    "remaining_owned_identities": [],
+    "owned_paths_checked": [
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-dsc01-apphost-10-xpq90_hh",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-dsc01-apphost-10-xpq90_hh/copy",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-dsc01-apphost-10-xpq90_hh/DerivedData",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-30849/IB/00C735B8-4CFE-45A6-9773-E5E1C80A9E40.RemoteToHost",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-30849/IB/00C735B8-4CFE-45A6-9773-E5E1C80A9E40.HostToRemote",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-30849/IB",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-30849"
+    ],
+    "all_absent": true,
+    "secondary_fifo_count": 2,
+    "secondary_empty_parent_count": 2,
+    "exact_worker_parent_uid_birth_filetype_attestation_checked": true,
+    "owned_simulator_absent": true,
+    "generated_module_root_dirs_absent": 16,
+    "global_idle_claim": false,
+    "unrelated_user_resources_touched": false
+  },
+  "prior_native09": {
+    "result": "FAIL",
+    "review": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-dsc01-apphost09-outcome-01.json",
+      "sha256": "5028e03ad93d0f37f96f91e470fa5ce8fc64bdd3ad3a99c907f7b924808370b9"
+    },
+    "explanation": "Prior mandatory-PRESENT predicate stopped the matrix. Its incomplete outcome is never retroactively changed by successful native10."
+  },
+  "research": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-apphost09-domain-research-01.json",
+    "sha256": "43e22b97585c87f484f7b21162739df40366e67e7ca437709011e4453181a6ee"
+  },
+  "limitations": [
+    "This supports scoped DS-C01 local correction, not whole-project clean/READY or Store-readiness approval.",
+    "Actual OS-created PRESENT counterpart remains named and locally investigable. Current fullcycle proves only actual ABSENT; synthetic PRESENT runtime/unit/source coverage remains separately described.",
+    "Native language proof uses current source-bound Debug simulatorcopy and observedcontroller/publicmetadata; not a signed/release app runtime, complete binary hashchain, physicalLAN, physicala11y or all navigation gestures.",
+    "Artifact receipt omits Parlor.debug.dylib; binary completeness cannot be asserted after proper cleanup. Separate existing Release arm64Simulator build/artifact review is linkage/packaging evidence, not language runtime.",
+    "Xcode26.5/17F42 and simulator26.5 are not Store-qualified26.3/17C529. No signing, Store, legal/identity owner actions authorized.",
+    "Local continuity is public-intro Whodunit/role-assignment Mafia, not completegame/playback/snapshotrestore. Retained multiplayer gate is NOT_RUN in this nativecycle; other focused host JVM evidence must stay separately attributed.",
+    "Two raw AppIntentsmetadata warnings state no AppIntents.framework dependency; no hidden-warning suppression used. IOS-R1evidencegap and WD-C4productdecision are not closed by these results."
+  ],
+  "reviewer_execution": {
+    "builds": 0,
+    "application_tests": 0,
+    "apps": 0,
+    "simulators": 0,
+    "background_workers": 0,
+    "production_or_test_edits": 0,
+    "git_store_signing_mutations": 0,
+    "process_stops": 0,
+    "generated_build_outputs": 0,
+    "cleanup_required": false
+  },
+  "reviewer_arithmetic_correction": "Initial read-only metadata reconciliation halted before writing a report because it expected TEST SUCCEEDED to be the last raw line. Actual immutable Xcode log has one success sentinel followed only by a blank line and Testing started. All5raw descriptor passes and structured results matched. Reconciler now checks the unique success sentinel and permits exactly that observed trailing logger text; no test/harness/application code or evidence changed.",
+  "arithmetic_script_sha256": "a19835405945a4416847252d626ad31479b0450013c58bb0055387ef26b8c1c9"
+}

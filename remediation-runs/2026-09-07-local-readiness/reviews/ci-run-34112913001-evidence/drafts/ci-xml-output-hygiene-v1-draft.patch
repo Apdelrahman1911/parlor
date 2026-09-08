@@ -1,0 +1,705 @@
+--- a/.github/workflows/production-verification.yml
++++ b/.github/workflows/production-verification.yml
+@@ -41,6 +41,13 @@
+           distribution: temurin
+           java-version: "21"
+           check-latest: false
++
++      - name: Claim fresh verification output ownership
++        shell: python
++        run: |
++          import runpy, sys
++          sys.argv = ["verification_hygiene.py", "prepare"]
++          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+ 
+       - name: Install pinned Android SDK packages
+         shell: bash
+@@ -74,9 +81,25 @@
+       - name: Run common, desktop, Android, static-analysis, and release gates
+         run: ./gradlew productionCheck productionStaticAnalysis productionReleaseAutomationCheck allTests --dependency-verification=strict --no-daemon --stacktrace --console=plain
+ 
++      - name: Stop Gradle after common-android
++        if: always()
++        shell: python
++        run: |
++          import runpy, sys
++          sys.argv = ["verification_hygiene.py", "stop", "common-android"]
++          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
++
+       - name: Run release Android managed-device smoke tests
+         shell: bash
+         run: scripts/android/run_release_managed_device_smoke.sh
++
++      - name: Stop Gradle after managed-device
++        if: always()
++        shell: python
++        run: |
++          import runpy, sys
++          sys.argv = ["verification_hygiene.py", "stop", "managed-device"]
++          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+ 
+       - name: Inspect unsigned Android release artifact and merged manifest
+         shell: bash
+@@ -104,12 +127,33 @@
+             build/ci-evidence/
+             **/build/reports/detekt/
+             **/build/reports/tests/
++            **/build/test-results/**/*.xml
++            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
++            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
+             **/build/reports/androidTests/managedDevice/
+             **/build/outputs/androidTest-results/managedDevice/
+             **/build/reports/lint-results-*
+             composeApp/build/outputs/mapping/release/
+             composeApp/build/outputs/bundle/release/*.aab
+ 
++      # Required follow-up builds and final evidence upload have consumed these outputs.
++      - name: Clean only attested verification outputs
++        if: always()
++        shell: python
++        run: |
++          import runpy, sys
++          sys.argv = ["verification_hygiene.py", "cleanup"]
++          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
++
++      - name: Upload verification cleanup receipt
++        if: always()
++        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
++        with:
++          name: verification-cleanup-${{ github.job }}
++          if-no-files-found: warn
++          retention-days: 14
++          path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
++
+   desktop-linux-arm64:
+     name: Desktop strict verification (Linux arm64)
+     runs-on: ubuntu-24.04-arm
+@@ -129,6 +173,13 @@
+           java-version: "21"
+           check-latest: false
+ 
++      - name: Claim fresh verification output ownership
++        shell: python
++        run: |
++          import runpy, sys
++          sys.argv = ["verification_hygiene.py", "prepare"]
++          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
++
+       - name: Require the Linux arm64 host
+         shell: bash
+         run: |
+@@ -142,6 +193,45 @@
+         shell: bash
+         run: ./gradlew productionDesktopCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain
+ 
++      - name: Stop Gradle after linux-arm64
++        if: always()
++        shell: python
++        run: |
++          import runpy, sys
++          sys.argv = ["verification_hygiene.py", "stop", "linux-arm64"]
++          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
++
++      - name: Upload Desktop verification descriptors
++        if: always()
++        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
++        with:
++          name: desktop-verification-${{ github.job }}
++          if-no-files-found: warn
++          retention-days: 14
++          path: |
++            **/build/reports/tests/
++            **/build/test-results/**/*.xml
++            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
++            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
++
++      # Required follow-up builds and final evidence upload have consumed these outputs.
++      - name: Clean only attested verification outputs
++        if: always()
++        shell: python
++        run: |
++          import runpy, sys
++          sys.argv = ["verification_hygiene.py", "cleanup"]
++          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
++
++      - name: Upload verification cleanup receipt
++        if: always()
++        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
++        with:
++          name: verification-cleanup-${{ github.job }}
++          if-no-files-found: warn
++          retention-days: 14
++          path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
++
+   desktop-macos-x64:
+     name: Desktop and Kotlin Native strict verification (macOS x64)
+     runs-on: macos-15-intel
+@@ -161,6 +251,13 @@
+           java-version: "21"
+           check-latest: false
+ 
++      - name: Claim fresh verification output ownership
++        shell: python
++        run: |
++          import runpy, sys
++          sys.argv = ["verification_hygiene.py", "prepare"]
++          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
++
+       - name: Require the macOS x64 host
+         shell: bash
+         run: |
+@@ -174,6 +271,45 @@
+         shell: bash
+         run: ./gradlew productionDesktopCheck :composeApp:downloadKotlinNativeDistribution --dependency-verification=strict --no-daemon --stacktrace --console=plain
+ 
++      - name: Stop Gradle after macos-x64
++        if: always()
++        shell: python
++        run: |
++          import runpy, sys
++          sys.argv = ["verification_hygiene.py", "stop", "macos-x64"]
++          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
++
++      - name: Upload Desktop verification descriptors
++        if: always()
++        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
++        with:
++          name: desktop-verification-${{ github.job }}
++          if-no-files-found: warn
++          retention-days: 14
++          path: |
++            **/build/reports/tests/
++            **/build/test-results/**/*.xml
++            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
++            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
++
++      # Required follow-up builds and final evidence upload have consumed these outputs.
++      - name: Clean only attested verification outputs
++        if: always()
++        shell: python
++        run: |
++          import runpy, sys
++          sys.argv = ["verification_hygiene.py", "cleanup"]
++          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
++
++      - name: Upload verification cleanup receipt
++        if: always()
++        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
++        with:
++          name: verification-cleanup-${{ github.job }}
++          if-no-files-found: warn
++          retention-days: 14
++          path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
++
+   desktop-windows-x64:
+     name: Desktop, Kotlin Native, and Android resources strict verification (Windows x64)
+     runs-on: windows-2025
+@@ -192,6 +328,13 @@
+           distribution: temurin
+           java-version: "21"
+           check-latest: false
++
++      - name: Claim fresh verification output ownership
++        shell: python
++        run: |
++          import runpy, sys
++          sys.argv = ["verification_hygiene.py", "prepare"]
++          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+ 
+       - name: Require the Windows x64 host
+         shell: pwsh
+@@ -215,6 +358,45 @@
+       - name: Resolve and test the Windows x64 host-selected graphs
+         shell: pwsh
+         run: .\gradlew.bat productionDesktopCheck :composeApp:downloadKotlinNativeDistribution :composeApp:processDebugResources --dependency-verification=strict --no-daemon --stacktrace --console=plain
++
++      - name: Stop Gradle after windows-x64
++        if: always()
++        shell: python
++        run: |
++          import runpy, sys
++          sys.argv = ["verification_hygiene.py", "stop", "windows-x64"]
++          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
++
++      - name: Upload Desktop verification descriptors
++        if: always()
++        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
++        with:
++          name: desktop-verification-${{ github.job }}
++          if-no-files-found: warn
++          retention-days: 14
++          path: |
++            **/build/reports/tests/
++            **/build/test-results/**/*.xml
++            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
++            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
++
++      # Required follow-up builds and final evidence upload have consumed these outputs.
++      - name: Clean only attested verification outputs
++        if: always()
++        shell: python
++        run: |
++          import runpy, sys
++          sys.argv = ["verification_hygiene.py", "cleanup"]
++          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
++
++      - name: Upload verification cleanup receipt
++        if: always()
++        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
++        with:
++          name: verification-cleanup-${{ github.job }}
++          if-no-files-found: warn
++          retention-days: 14
++          path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
+ 
+   ios:
+     name: iOS tests, release frameworks, and Swift wrapper
+@@ -240,6 +422,13 @@
+           distribution: temurin
+           java-version: "21"
+           check-latest: false
++
++      - name: Claim fresh verification output ownership
++        shell: python
++        run: |
++          import runpy, sys
++          sys.argv = ["verification_hygiene.py", "prepare"]
++          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+ 
+       - name: Record Xcode toolchain and exact source
+         shell: bash
+@@ -264,6 +453,14 @@
+           set -euo pipefail
+           echo "productionIosSimulatorRuntimeTests runs all executable iosSimulatorArm64 runtime tests; productionAppleCheck runs Apple type-aware static analysis and linkage-only checks for iosArm64, iosSimulatorArm64, and iosX64."
+           ./gradlew productionIosSimulatorRuntimeTests productionAppleCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain
++
++      - name: Stop Gradle after apple-aggregate
++        if: always()
++        shell: python
++        run: |
++          import runpy, sys
++          sys.argv = ["verification_hygiene.py", "stop", "apple-aggregate"]
++          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+ 
+       - name: Validate iOS plist and privacy manifest
+         shell: bash
+@@ -307,6 +504,14 @@
+             -derivedDataPath build/xcode-derived-data \
+             -resultBundlePath build/ci-evidence/ios-ui-tests.xcresult \
+             test | tee build/ci-evidence/xcode-ui-test.log
++
++      - name: Stop Gradle after apple-ui
++        if: always()
++        shell: python
++        run: |
++          import runpy, sys
++          sys.argv = ["verification_hygiene.py", "stop", "apple-ui"]
++          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+ 
+       - name: Build unsigned Swift Release wrapper
+         shell: bash
+@@ -333,6 +538,14 @@
+           file "$app/Parlor" | tee build/ci-evidence/xcode-binary.txt
+           shasum -a 256 "$app/Parlor" | tee build/ci-evidence/xcode-binary.sha256
+ 
++      - name: Stop Gradle after apple-wrapper
++        if: always()
++        shell: python
++        run: |
++          import runpy, sys
++          sys.argv = ["verification_hygiene.py", "stop", "apple-wrapper"]
++          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
++
+       - name: Upload Apple verification evidence
+         if: always()
+         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+@@ -345,3 +558,25 @@
+             build/xcode-derived-data/Build/Products/Release-iphonesimulator/Parlor.app.dSYM/
+             **/build/reports/detekt/
+             **/build/reports/tests/
++            **/build/test-results/**/*.xml
++            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
++            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
++
++      # Required follow-up builds and final evidence upload have consumed these outputs.
++      - name: Clean only attested verification outputs
++        if: always()
++        shell: python
++        run: |
++          import runpy, sys
++          sys.argv = ["verification_hygiene.py", "cleanup"]
++          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
++
++      - name: Upload verification cleanup receipt
++        if: always()
++        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
++        with:
++          name: verification-cleanup-${{ github.job }}
++          if-no-files-found: warn
++          retention-days: 14
++          path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
++
+--- /dev/null
++++ b/scripts/ci/verification_hygiene.py
+@@ -0,0 +1,188 @@
++#!/usr/bin/env python3
++"""Bounded cleanup for the fresh, task-owned GitHub verification checkout.
++
++This is not a local-worktree cleaner and never kills arbitrary worker processes.
++Initialize before any build output exists; upload required evidence before cleanup.
++"""
++from __future__ import annotations
++
++import json
++import os
++import re
++import shutil
++import subprocess
++import sys
++from datetime import datetime, timezone
++from pathlib import Path, PurePosixPath
++
++
++def timestamp() -> str:
++    return datetime.now(timezone.utc).isoformat()
++
++
++def git(root: Path, *args: str) -> str:
++    return subprocess.check_output(["git", "-C", str(root), *args], text=True)
++
++
++def output_roots(tracked: list[str]) -> list[str]:
++    roots = {"build", "iosApp/build"}
++    for name in tracked:
++        path = PurePosixPath(name)
++        if path.name in {"build.gradle", "build.gradle.kts", "settings.gradle", "settings.gradle.kts"}:
++            roots.add(str(path.parent / "build"))
++        if path.suffix == ".py":
++            roots.add(str(path.parent / "__pycache__"))
++    for output in roots:
++        if any(name == output or name.startswith(output + "/") for name in tracked):
++            raise RuntimeError(f"Refusing a generated-output root containing tracked files: {output}")
++    return sorted(roots)
++
++
++def checked_path(root: Path, relative: str) -> Path:
++    path = PurePosixPath(relative)
++    if path.is_absolute() or not path.parts or any(part in {".", ".."} for part in path.parts):
++        raise RuntimeError("Invalid output claim")
++    target = root.joinpath(*path.parts)
++    current = root
++    for part in path.parts:
++        current = current / part
++        if current.is_symlink():
++            raise RuntimeError(f"Refusing symlink output path: {relative}")
++    if target.resolve() != target.absolute():
++        raise RuntimeError(f"Refusing redirected output path: {relative}")
++    return target
++
++
++def source_identity(root: Path) -> dict:
++    if Path(git(root, "rev-parse", "--show-toplevel").strip()).resolve() != root:
++        raise RuntimeError("Not the checkout root")
++    tracked = git(root, "ls-files", "-z").split("\0")
++    tracked = [name for name in tracked if name]
++    return {
++        "root": str(root),
++        "head": git(root, "rev-parse", "HEAD").strip(),
++        "tree": git(root, "rev-parse", "HEAD^{tree}").strip(),
++        "outputs": output_roots(tracked),
++    }
++
++
++def write_new(path: Path, value: dict) -> None:
++    with path.open("x", encoding="utf-8") as stream:
++        json.dump(value, stream, indent=2)
++        stream.write("\n")
++
++
++def prepare(root: Path, claim_path: Path, task: dict) -> dict:
++    claim = source_identity(root)
++    if git(root, "status", "--porcelain").strip():
++        raise RuntimeError("Verification must begin from a clean checkout")
++    for relative in claim["outputs"]:
++        path = checked_path(root, relative)
++        if path.exists():
++            raise RuntimeError(f"Pre-existing output is not task-owned: {relative}")
++    claim.update(task=task, prepared_at=timestamp(), retention_reason=(
++        "Same-job follow-up builds/linkage and artifact inspection consume these outputs; "
++        "the always-run final upload precedes their exact cleanup."
++    ))
++    write_new(claim_path, claim)
++    return claim
++
++
++def gradle_stop_command(windows: bool = os.name == "nt") -> list[str]:
++    if windows:
++        return [os.environ.get("COMSPEC", "cmd.exe"), "/d", "/c", "gradlew.bat", "--stop"]
++    return ["./gradlew", "--stop"]
++
++
++def stop_gradle(root: Path) -> dict:
++    command = gradle_stop_command()
++    result = {"command": command, "started_at": timestamp()}
++    try:
++        process = subprocess.run(command, cwd=root, text=True, stdout=subprocess.PIPE,
++                                 stderr=subprocess.STDOUT, timeout=90, check=False)
++        result.update(exit_code=process.returncode, output=process.stdout[-16000:])
++    except (OSError, subprocess.TimeoutExpired) as error:
++        result.update(exit_code=1, error=type(error).__name__)
++    result["finished_at"] = timestamp()
++    return result
++
++
++def cleanup(root: Path, claim_path: Path, task: dict) -> dict:
++    receipt = {"task": task, "started_at": timestamp(), "removed": [], "not_created": [], "errors": []}
++    receipt["gradle_stop"] = stop_gradle(root)
++    try:
++        if receipt["gradle_stop"]["exit_code"] != 0:
++            raise RuntimeError("Gradle stop failed; do not race active workers by deleting outputs")
++        if claim_path.is_symlink() or not claim_path.is_file():
++            raise RuntimeError("No trustworthy pre-build ownership claim")
++        claim = json.loads(claim_path.read_text(encoding="utf-8"))
++        current = source_identity(root)
++        if claim.get("task") != task or any(claim.get(key) != value for key, value in current.items()):
++            raise RuntimeError("Task/source/output ownership changed; refuse cleanup")
++        # Preflight every path before deleting any output, so a redirected sibling fails closed.
++        paths = [(relative, checked_path(root, relative)) for relative in current["outputs"]]
++        for relative, path in paths:
++            if not path.exists():
++                receipt["not_created"].append(relative)
++                continue
++            if not path.is_dir():
++                raise RuntimeError(f"Claimed output is not a directory: {relative}")
++        for relative, path in paths:
++            if not path.exists():
++                continue
++            try:
++                shutil.rmtree(path)
++                if path.exists() or path.is_symlink():
++                    raise RuntimeError("Output remains after cleanup")
++                receipt["removed"].append(relative)
++            except OSError as error:
++                receipt["errors"].append({"path": relative, "error": type(error).__name__})
++    except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
++        receipt["errors"].append({"error": str(error)})
++    receipt.update(result="FAIL" if receipt["errors"] else "PASS", finished_at=timestamp(),
++                   scope="Only attested checkout build/Python-cache directories; no global caches or source",
++                   worker_scope="Gradle stop receipt only; no claim that this terminates unrelated native services")
++    return receipt
++
++
++def context() -> tuple[Path, Path, dict]:
++    if os.environ.get("GITHUB_ACTIONS") != "true":
++        raise RuntimeError("This helper is restricted to the isolated GitHub verification job")
++    task = {key: os.environ[key] for key in ("GITHUB_RUN_ID", "GITHUB_RUN_ATTEMPT", "GITHUB_JOB")}
++    if not all(re.fullmatch(r"[A-Za-z0-9_-]+", value) for value in task.values()):
++        raise RuntimeError("Unsafe task identity")
++    root = Path(os.environ["GITHUB_WORKSPACE"]).resolve(strict=True)
++    if root != Path.cwd().resolve():
++        raise RuntimeError("Run only from the task checkout root")
++    temporary = Path(os.environ["RUNNER_TEMP"]).resolve(strict=True)
++    if temporary == root or root in temporary.parents:
++        raise RuntimeError("Receipts must survive checkout-output cleanup")
++    prefix = "parlor-verification-" + "-".join(task.values())
++    return root, temporary / prefix, task
++
++
++def main() -> int:
++    root, prefix, task = context()
++    claim_path = Path(str(prefix) + "-ownership.json")
++    mode = sys.argv[1]
++    if mode == "prepare":
++        prepare(root, claim_path, task)
++        return 0
++    if mode == "stop":
++        label = sys.argv[2]
++        if not re.fullmatch(r"[a-z0-9-]+", label):
++            raise RuntimeError("Invalid cycle label")
++        result = {"task": task, **stop_gradle(root)}
++        write_new(Path(str(prefix) + "-stop-" + label + ".json"), result)
++        print(json.dumps(result))
++        return 0 if result["exit_code"] == 0 else 1
++    if mode == "cleanup":
++        receipt = cleanup(root, claim_path, task)
++        write_new(Path(str(prefix) + "-cleanup.json"), receipt)
++        print(json.dumps(receipt))
++        return 0 if receipt["result"] == "PASS" else 1
++    raise RuntimeError("Unknown hygiene mode")
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+--- /dev/null
++++ b/scripts/release/tests/test_ci_verification_hygiene.py
+@@ -0,0 +1,170 @@
++from __future__ import annotations
++
++import importlib.util
++import json
++import os
++import sys
++import unittest
++from pathlib import Path
++from tempfile import TemporaryDirectory
++from unittest.mock import patch
++
++ROOT = Path(__file__).resolve().parents[3]
++SPEC = importlib.util.spec_from_file_location("ci_verification_hygiene", ROOT / "scripts/ci/verification_hygiene.py")
++assert SPEC and SPEC.loader
++hygiene = importlib.util.module_from_spec(SPEC)
++SPEC.loader.exec_module(hygiene)
++
++
++class VerificationHygieneTest(unittest.TestCase):
++    def setUp(self) -> None:
++        self.temporary = TemporaryDirectory(prefix="parlor-ci-hygiene-test-")
++        self.addCleanup(self.temporary.cleanup)
++        self.base = Path(self.temporary.name).resolve()
++        self.root = self.base / "checkout"
++        self.root.mkdir()
++        self.claim = self.base / "claim.json"
++        self.task = {"GITHUB_RUN_ID": "123", "GITHUB_RUN_ATTEMPT": "1", "GITHUB_JOB": "test"}
++        self.identity = {"root": str(self.root), "head": "a" * 40, "tree": "b" * 40,
++                         "outputs": ["build", "build-logic/convention/build", "composeApp/build"]}
++        self.identity_patch = patch.object(hygiene, "source_identity", return_value=self.identity)
++        self.identity_patch.start()
++        self.addCleanup(self.identity_patch.stop)
++        self.git_patch = patch.object(hygiene, "git", return_value="")
++        self.git_patch.start()
++        self.addCleanup(self.git_patch.stop)
++        self.stop_patch = patch.object(hygiene, "stop_gradle", return_value={"exit_code": 0})
++        self.stop = self.stop_patch.start()
++        self.addCleanup(self.stop_patch.stop)
++
++    def prepare(self) -> None:
++        hygiene.prepare(self.root, self.claim, self.task)
++
++    def test_roots_include_build_logic_and_only_known_generated_directories(self) -> None:
++        roots = hygiene.output_roots(["build.gradle.kts", "build-logic/settings.gradle.kts",
++                                     "build-logic/convention/build.gradle.kts", "composeApp/build.gradle.kts",
++                                     "scripts/release/tests/test_fixture.py"])
++        self.assertEqual(roots, ["build", "build-logic/build", "build-logic/convention/build",
++                                 "composeApp/build", "iosApp/build", "scripts/release/tests/__pycache__"])
++        with self.assertRaisesRegex(RuntimeError, "tracked files"):
++            hygiene.output_roots(["build.gradle.kts", "build/keep-source.txt"])
++
++    def test_preexisting_outputs_are_never_claimed(self) -> None:
++        (self.root / "build").mkdir()
++        (self.root / "build/user-work.txt").write_text("preserve")
++        with self.assertRaisesRegex(RuntimeError, "Pre-existing"):
++            self.prepare()
++        self.assertFalse(self.claim.exists())
++        self.assertEqual((self.root / "build/user-work.txt").read_text(), "preserve")
++
++    def test_cleanup_removes_only_claimed_outputs_and_keeps_evidence_and_source(self) -> None:
++        self.prepare()
++        source = self.root / "source.kt"
++        source.write_text("preserve")
++        for name in self.identity["outputs"]:
++            output = self.root / name
++            output.mkdir(parents=True)
++            (output / "generated.bin").write_bytes(b"generated")
++        receipt = hygiene.cleanup(self.root, self.claim, self.task)
++        self.assertEqual(receipt["result"], "PASS")
++        self.assertEqual(receipt["removed"], self.identity["outputs"])
++        self.assertTrue(self.claim.is_file())
++        self.assertEqual(source.read_text(), "preserve")
++        self.stop.assert_called_once_with(self.root)
++
++    def test_failed_stop_preserves_generated_output_and_reports_failure(self) -> None:
++        self.prepare()
++        (self.root / "build").mkdir()
++        self.stop.return_value = {"exit_code": 1}
++        receipt = hygiene.cleanup(self.root, self.claim, self.task)
++        self.assertEqual(receipt["result"], "FAIL")
++        self.assertTrue((self.root / "build").is_dir())
++
++    def test_changed_source_or_task_cannot_authorize_cleanup(self) -> None:
++        self.prepare()
++        (self.root / "build").mkdir()
++        tampered = json.loads(self.claim.read_text())
++        tampered["head"] = "c" * 40
++        self.claim.write_text(json.dumps(tampered))
++        self.assertEqual(hygiene.cleanup(self.root, self.claim, self.task)["result"], "FAIL")
++        self.assertTrue((self.root / "build").is_dir())
++
++    def test_tampered_source_path_claim_is_rejected(self) -> None:
++        self.prepare()
++        source = self.root / "source"
++        source.mkdir()
++        (source / "keep.kt").write_text("keep")
++        tampered = json.loads(self.claim.read_text())
++        tampered["outputs"].append("source")
++        self.claim.write_text(json.dumps(tampered))
++        self.assertEqual(hygiene.cleanup(self.root, self.claim, self.task)["result"], "FAIL")
++        self.assertTrue((source / "keep.kt").is_file())
++
++    def test_symlink_sibling_rejects_cleanup_before_any_deletion(self) -> None:
++        self.prepare()
++        (self.root / "build").mkdir()
++        outside = self.base / "outside"
++        outside.mkdir()
++        (outside / "keep").write_text("preserve")
++        (self.root / "composeApp").mkdir()
++        try:
++            (self.root / "composeApp/build").symlink_to(outside, target_is_directory=True)
++        except OSError:
++            self.skipTest("This host does not permit an owned symlink fixture")
++        self.assertEqual(hygiene.cleanup(self.root, self.claim, self.task)["result"], "FAIL")
++        self.assertTrue((self.root / "build").is_dir())
++        self.assertEqual((outside / "keep").read_text(), "preserve")
++
++    def test_nested_output_symlink_does_not_delete_external_target(self) -> None:
++        self.prepare()
++        (self.root / "build").mkdir()
++        outside = self.base / "outside"
++        outside.mkdir()
++        (outside / "keep").write_text("preserve")
++        try:
++            (self.root / "build/link").symlink_to(outside, target_is_directory=True)
++        except OSError:
++            self.skipTest("This host does not permit an owned symlink fixture")
++        self.assertEqual(hygiene.cleanup(self.root, self.claim, self.task)["result"], "PASS")
++        self.assertEqual((outside / "keep").read_text(), "preserve")
++
++    def test_missing_claim_fails_without_deleting_outputs(self) -> None:
++        (self.root / "build").mkdir()
++        self.assertEqual(hygiene.cleanup(self.root, self.claim, self.task)["result"], "FAIL")
++        self.assertTrue((self.root / "build").is_dir())
++
++    def test_both_hosts_use_the_repository_wrapper_for_stop(self) -> None:
++        self.assertEqual(hygiene.gradle_stop_command(False), ["./gradlew", "--stop"])
++        self.assertEqual(hygiene.gradle_stop_command(True)[1:], ["/d", "/c", "gradlew.bat", "--stop"])
++
++    def test_cli_rejects_local_worktrees_before_cleaning(self) -> None:
++        with patch.dict(os.environ, {"GITHUB_ACTIONS": "false"}):
++            with self.assertRaisesRegex(RuntimeError, "restricted"):
++                hygiene.context()
++
++
++class VerificationWorkflowHygieneTest(unittest.TestCase):
++    def test_every_job_retains_xml_before_always_run_cleanup(self) -> None:
++        import re
++        workflow = (ROOT / ".github/workflows/production-verification.yml").read_text()
++        jobs = re.split(r"(?m)^  (?=[a-z][a-z0-9-]*:\n)", workflow.split("jobs:\n", 1)[1])[1:]
++        self.assertEqual(len(jobs), 5)
++        expected_stops = {"desktop-android": 2, "desktop-linux-arm64": 1, "desktop-macos-x64": 1,
++                          "desktop-windows-x64": 1, "ios": 3}
++        for job in jobs:
++            name = job.split(":\n", 1)[0]
++            with self.subTest(job=name):
++                self.assertEqual(job.count('"verification_hygiene.py", "prepare"'), 1)
++                self.assertEqual(job.count('"verification_hygiene.py", "stop",'), expected_stops[name])
++                self.assertIn("**/build/test-results/**/*.xml", job)
++                self.assertLess(job.index("**/build/test-results/**/*.xml"),
++                                job.index("- name: Clean only attested verification outputs"))
++                steps = re.split(r"(?m)^      - name: ", job)[1:]
++                cleanup_steps = [step for step in steps if step.startswith(("Stop Gradle after", "Clean only", "Upload verification cleanup"))]
++                self.assertEqual(len(cleanup_steps), expected_stops[name] + 2)
++                for step in cleanup_steps:
++                    self.assertIn("        if: always()", step)
++
++
++if __name__ == "__main__":
++    unittest.main()

@@ -1,0 +1,24 @@
+{
+  "started_at": "2026-09-07T05:36:17.387971+00:00",
+  "finished_at": "2026-09-07T05:36:17.494917+00:00",
+  "command": [
+    "/usr/bin/python3",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "exit_code": 0,
+  "freeze_sha256": "ca77042e2b6b799ef7e3ac1474727d9866d0c568c286ccef76edf45c4f4cc903",
+  "controls_unchanged": true,
+  "status": "PASS",
+  "reviewer": "/root",
+  "independence": "release_fix_review authored correction, factory_review found candidate, root independently confirms exactXNU zero+errno and changed sibling guards/tests.",
+  "source_conclusion": "_list now rejects native enumeration errors aserrors, not emptylist. No runtime signals yet.41data/mocktests only.",
+  "cleanup": "TemporaryDirectory/addCleanup removed syntheticnodes; no Gradle/emulator/adb started; -B no pycache."
+}

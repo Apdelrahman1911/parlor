@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest" tests="4" skipped="0" failures="2" errors="0" timestamp="2026-09-07T16:51:36.971Z" hostname="runnervmejwal" time="247.025">
+  <properties/>
+  <testcase name="classicHostConfirmationExcludesTimeAndConfirmedLeaveStopsTicker()[desktop]" classname="com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest" time="43.572"/>
+  <testcase name="lifecycleResumeBehindConfirmationDoesNotRestartHiddenDiscussion()[desktop]" classname="com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest" time="80.252">
+    <failure message="kotlinx.coroutines.test.UncompletedCoroutinesError: After waiting for 1m, the test body did not run to completion" type="kotlinx.coroutines.test.UncompletedCoroutinesError">kotlinx.coroutines.test.UncompletedCoroutinesError: After waiting for 1m, the test body did not run to completion
+	at app//kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt$runTest$2$1$2.invokeSuspend$lambda$0(TestBuilders.kt:353)
+	at app//kotlinx.coroutines.InvokeOnCancelling.invoke(JobSupport.kt:1571)
+	at app//kotlinx.coroutines.JobSupport.notifyCancelling(JobSupport.kt:1603)
+	at app//kotlinx.coroutines.JobSupport.tryMakeCancelling(JobSupport.kt:826)
+	at app//kotlinx.coroutines.JobSupport.makeCancelling(JobSupport.kt:786)
+	at app//kotlinx.coroutines.JobSupport.cancelImpl$kotlinx_coroutines_core(JobSupport.kt:702)
+	at app//kotlinx.coroutines.JobSupport.cancelCoroutine(JobSupport.kt:689)
+	at app//kotlinx.coroutines.TimeoutCoroutine.run(Timeout.kt:243)
+	at app//kotlinx.coroutines.EventLoopImplBase$DelayedRunnableTask.run(EventLoop.common.kt:498)
+	at app//kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:256)
+	at app//kotlinx.coroutines.DefaultExecutor.run(DefaultExecutor.kt:105)
+	at java.base@21.0.12.1/java.lang.Thread.run(Thread.java:1583)
+</failure>
+  </testcase>
+  <testcase name="eliminationHostConfirmationExcludesTimeAndConfirmedLeaveStopsTicker()[desktop]" classname="com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest" time="43.46"/>
+  <testcase name="stayAndLifecycleResumeDoNotReleaseManualPause()[desktop]" classname="com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest" time="79.741">
+    <failure message="kotlinx.coroutines.test.UncompletedCoroutinesError: After waiting for 1m, the test body did not run to completion" type="kotlinx.coroutines.test.UncompletedCoroutinesError">kotlinx.coroutines.test.UncompletedCoroutinesError: After waiting for 1m, the test body did not run to completion
+	at app//kotlinx.coroutines.test.TestBuildersKt__TestBuildersKt$runTest$2$1$2.invokeSuspend$lambda$0(TestBuilders.kt:353)
+	at app//kotlinx.coroutines.InvokeOnCancelling.invoke(JobSupport.kt:1571)
+	at app//kotlinx.coroutines.JobSupport.notifyCancelling(JobSupport.kt:1603)
+	at app//kotlinx.coroutines.JobSupport.tryMakeCancelling(JobSupport.kt:826)
+	at app//kotlinx.coroutines.JobSupport.makeCancelling(JobSupport.kt:786)
+	at app//kotlinx.coroutines.JobSupport.cancelImpl$kotlinx_coroutines_core(JobSupport.kt:702)
+	at app//kotlinx.coroutines.JobSupport.cancelCoroutine(JobSupport.kt:689)
+	at app//kotlinx.coroutines.TimeoutCoroutine.run(Timeout.kt:243)
+	at app//kotlinx.coroutines.EventLoopImplBase$DelayedRunnableTask.run(EventLoop.common.kt:498)
+	at app//kotlinx.coroutines.EventLoopImplBase.processNextEvent(EventLoop.common.kt:256)
+	at app//kotlinx.coroutines.DefaultExecutor.run(DefaultExecutor.kt:105)
+	at java.base@21.0.12.1/java.lang.Thread.run(Thread.java:1583)
+</failure>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/scripts/verification/dependency_inventory.py", line 265, in <module>
+    raise SystemExit(main())
+  File "/Users/abdelrahman/Projects/parlor/scripts/verification/dependency_inventory.py", line 233, in main
+    graphs, graph_hashes, source = read_graphs(args.graph_directory)
+  File "/Users/abdelrahman/Projects/parlor/scripts/verification/dependency_inventory.py", line 219, in read_graphs
+    graph = validate_graph(json.loads(raw))
+  File "/Users/abdelrahman/Projects/parlor/scripts/verification/dependency_inventory.py", line 71, in validate_graph
+    raise ValueError("Missing or duplicate artifact owner")
+ValueError: Missing or duplicate artifact owner

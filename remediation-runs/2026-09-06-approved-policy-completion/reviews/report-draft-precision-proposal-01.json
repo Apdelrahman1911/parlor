@@ -1,0 +1,136 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-06T23:21:50.613095+00:00",
+  "proposer": "/root/factory_review",
+  "status": "PROPOSED_REPORT_ONLY_NOT_APPLIED_OR_FINAL_OUTCOME_APPROVAL",
+  "purpose": "Exact four narrative refinements requested by root. Root owns actual report changes and later independently reviewed final selection. No native09 orV11 outcome is inferred.",
+  "base_report": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/root/REPORT-DRAFT.md",
+    "sha256": "ad243965c6910ea1cfa01ece8111e64c9bdcb14b7867be5c65c3351d68b94517",
+    "reviewed_line_ranges": [
+      [
+        1,
+        138
+      ]
+    ]
+  },
+  "common_inputs": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/root/completion-selection-common-draft-02.json",
+    "sha256": "f97a127dd40f1776628f16b3a3972bd5890dc4ddb529880050051a6399c711f6"
+  },
+  "prior_limitations": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/final-selection-native-pass-preparation-01.json",
+    "sha256": "f6ef3a9666975bda1410c1af4cdf9943641bc9fcb98c6d8b018049d743ce6c95"
+  },
+  "common_input_approval": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-completion-common-draft02-review-01.json",
+    "sha256": "38d9784056bf0eaeb0b9b2462cda159007d7eb6cf92d7c504ee8a52ff89d886a"
+  },
+  "proposal_patch": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/report-draft-precision-proposal-01.patch",
+    "sha256": "384f8114de245cd22607ed772cacad864c3199f2c218885998a4213decc6ec5f"
+  },
+  "proposed_result_sha256": "3723214234582bc39d47768813ab248d06e31b54f36dcc09e1d0d49634c659fc",
+  "proposed_line_count": 143,
+  "replacement_blocks": [
+    {
+      "id": "NATIVE-INTERACTION-SCOPE",
+      "original_line_range": [
+        93,
+        93
+      ],
+      "old": "Verification includes 11 actual Foundation ownership tests, 13 Desktop structural contracts, four actual host-composable continuity cases, four UIKit container tests and an uninstrumented Swift/Compose cold-launch smoke test. Host tests use real retained runtimes and gated start handshakes with controlled transport; they do not establish physical LAN behavior.",
+      "new": "Verification includes 11 actual Foundation ownership tests, 13 Desktop structural contracts, four actual host-composable continuity cases, four UIKit container tests and an uninstrumented Swift/Compose cold-launch smoke test. Host tests use real retained runtimes and gated start handshakes with controlled transport; they do not establish physical LAN behavior.\n\nThe instrumented native matrix distinguishes **actual Settings-screen interactions** from **copy-only invocations of the real injected SettingsStore**. Local-game entry and setup use the public UI. Once a game is active, continuity checks change language through the latter mechanism, because active game routes do not expose Settings; these are not Settings-screen taps. In-app Settings choices and actual iOS per-app language selection are separate scenarios whose outcomes require their own evidence.",
+      "reason": "Prevents actual native game setup/retained state from overstating how mid-game language changes were driven; leaves actual OS pass pending."
+    },
+    {
+      "id": "ALL-DEBUG-ARTIFACT-SCOPE",
+      "original_line_range": [
+        117,
+        117
+      ],
+      "old": "The unsigned AAB was **8,803,044 bytes**, SHA-256 `f30780bf995741a372646dd9c6a27705cb4eb0368c1d5a4de7197386d3a61473`, with 354 archive entries. Framework/plist and AAB metadata receipts were retained before deleting large outputs. None is a signed/approved Store candidate. The smoke receipt hashes the launcher and Compose framework, but not `Parlor.debug.dylib`; it is not a complete binary inventory.",
+      "new": "The unsigned AAB was **8,803,044 bytes**, SHA-256 `f30780bf995741a372646dd9c6a27705cb4eb0368c1d5a4de7197386d3a61473`, with 354 archive entries. Framework/plist and AAB metadata receipts were retained before deleting large outputs. None is a signed/approved Store candidate.\n\nThe **Debug artifact inventories—both smoke and instrumented app-host—omit `Parlor.debug.dylib`**: they capture only the launcher executable and Compose framework. Copied-source manifests/diffs and compile/runtime receipts identify the source exercised, but are **not a complete cryptographic inventory of every executed Debug binary**. The separately inspected Release app belongs to a different build and does not fill this Debug provenance gap.",
+      "reason": "Extends existing smoke caveat to all current Debug inventories without conflating the separate complete Release artifact inventory."
+    },
+    {
+      "id": "IOS-R1-LOCAL-APPLICABILITY",
+      "original_line_range": [
+        122,
+        122
+      ],
+      "old": "- **IOS-R1:** remains a storage/Keychain **test-evidence gap**, not a new entitlement fix or permission to return empty storage on failure.",
+      "new": "- **IOS-R1:** remains a **locally investigable app-host storage/Keychain evidence gap**, outside the 16 repairs—not a confirmed defect or a physical-device-only blocker. Use an explicitly owned app-host investigation to establish healthy Keychain-backed migration/recovery before attributing a new defect. Do not hide storage errors, return empty stores on failure or add entitlements blindly. Real backup/restore remains a separate physical-device gate.",
+      "reason": "Carries approved common02 split into human narrative; neither invents a seventeenth defect nor classifies this practical local investigation as external-only."
+    },
+    {
+      "id": "PHYSICAL-P2P-FIXTURE-PREREQUISITE",
+      "original_line_range": [
+        123,
+        123
+      ],
+      "old": "- Actual physical Android/iOS LAN, Local Network denial/recovery, app-switcher behavior, real backup/restore, native gestures/VoiceOver/TalkBack/large text and sustained lifecycle/performance validation remain separate gates.",
+      "new": "- **Physical P2pKit fixture readiness:** the three ignored tests retain historical admission/approval assumptions. Independently align and review their fixtures against the current protocol before relying on real-device results; do not merely remove `@Ignore`. Then execute controlled two-/three-device host/peer, permission-denial/rejoin, radio and lifecycle checks. In-memory tests are not physical LAN evidence.\n- Actual physical Android/iOS LAN, Local Network denial/recovery, app-switcher behavior, real backup/restore, native gestures/VoiceOver/TalkBack/large text and sustained lifecycle/performance validation remain separate gates.",
+      "reason": "Carries common02 historical-fixture warning/action to narrative without enabling physical tests or counting unavailable runs as passes."
+    }
+  ],
+  "evidence_basis": [
+    {
+      "path": "native/dsc01_apphost_v10/IOSAppLaunchUITests.swift.in",
+      "line_ranges": [
+        [
+          96,
+          102
+        ],
+        [
+          114,
+          156
+        ]
+      ],
+      "meaning": "Actual publicUIsetup versus synthetic invocation of actualSettingsStore for retained localgame continuity; explicit call to distinct OSinvestigation."
+    },
+    {
+      "path": "native/dsc01_apphost_v10/run_dsc01_apphost_cycle.py",
+      "line_ranges": [
+        [
+          678,
+          683
+        ]
+      ],
+      "meaning": "Debug inventory contains only launcher and Compose framework, neverParlor.debug.dylib."
+    },
+    {
+      "path": "root/completion-selection-common-draft-02.json",
+      "meaning": "Approved locally investigableIOS-R1/physicalbackup split and current-protocol physicalfixture prerequisites."
+    }
+  ],
+  "preserved_markers_and_counts": {
+    "draft_status": true,
+    "pending_ds_c01_status": true,
+    "final_native_placeholder": true,
+    "final_preservation_placeholder": true,
+    "final_scope_counts_placeholder": true,
+    "materializer_release_insertion_anchor": true,
+    "materializer_remaining_insertion_anchor": true,
+    "issue_and_test_counts_unchanged": true,
+    "no_new_native_pass_claim": true
+  },
+  "integration_notes": [
+    "Do not duplicate theseIOS-R1/P2P bullets if also adding them through selection.additional_remaining_markdown.",
+    "The strict full-completion materializer remains on hold until actualOS/native outcome, independent review and cleanup are complete. Existing08partial evidence is not selectable as finalPASS.",
+    "If a final native insertion mentions24Swift guard cases, call them parameter/assertion cases inside the one matrixXCTest—not24additional discovered tests. This proposal intentionally leaves the actual native result/count placeholder untouched.",
+    "This is proposed prose, not renewed independent approval of the source repairs or any running/planned native verification."
+  ],
+  "hygiene": {
+    "application_source_test_control_or_final_output_edits": 0,
+    "report_draft_edits": 0,
+    "build_test_native_or_materializer_commands": 0,
+    "git_operations": 0,
+    "network_fetches": 0,
+    "processes_or_background_workers_started": 0,
+    "process_signals": 0,
+    "generated_build_outputs_created": 0,
+    "cleanup_required": false,
+    "written": "Only two exclusive additive proposal evidence files; current report/common/source/final outputs untouched."
+  }
+}

@@ -1,0 +1,941 @@
+{
+  "review_id": "locale-public-idle-fix-independent-01",
+  "recorded_at": "2026-09-07T18:18:09.949226+00:00",
+  "implementation_author": "/root",
+  "independent_reviewer": "/root/release_fix_review",
+  "executor": "/root",
+  "disposition": "APPROVED: both root-owned Desktop test-fixture corrections and executed local combined regressions. Fresh hosted Linux CI remains pending. No new production locale defect or mobile/device execution is claimed.",
+  "supersedes": "The two-write-only patch HOLD in locale-snapshot-idleness-independent-diagnosis-01.json is resolved by these different source hashes. Prior diagnosis/evidence remain intact.",
+  "source_baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "d453f80586ae76d37fba953731758e20f5c4bd67",
+    "tree": "43a7c924d5cbe5f2783d0456350755cab8e579b2",
+    "executed_diff_sha256": "af7c6336a6281f7b300c306c883e2970a2b3567aa35cee11ff3c311285757993",
+    "source_manifest_sha256": "d57b02f6c04a3c05e1f84c78695de8886e0dcaefd0edb3815bb21071f6a00957",
+    "scoped_live_diff_sha256": "af7c6336a6281f7b300c306c883e2970a2b3567aa35cee11ff3c311285757993",
+    "scoped_live_diff_equals_executed_diff": true,
+    "other_concurrent_changes_excluded_from_review": [
+      "scripts/verification/ios-readiness/README.md",
+      "scripts/verification/ios-readiness/copied_sources.py",
+      "scripts/verification/ios-readiness/run_ios_readiness.py"
+    ],
+    "note": "During report preparation root-owned ios-readiness changes appeared. No whole-current-tree green claim is made; scope is exactly the two unchanged executed test files."
+  },
+  "reviewed_files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/localization/ProvideAppLanguageDesktopTest.kt",
+      "sha256": "7a4cbdada5fdf0591cca21d4168e34ab9216c5b0cc70220ac1a81e3b9dd6af27",
+      "reviewed_lines": [
+        [
+          1,
+          101
+        ]
+      ],
+      "relevance": "Desktop test source only; not shipping",
+      "matches_executed_source": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/RtlFormattingTest.kt",
+      "sha256": "a91267077cc9c91a020c457c944f24905402b71c46823dd1313857d2587a5115",
+      "reviewed_lines": [
+        [
+          1,
+          154
+        ]
+      ],
+      "relevance": "Desktop test source only; not shipping",
+      "matches_executed_source": true
+    }
+  ],
+  "root_cause_and_fix": [
+    "The old UnitApplier/Recomposer/runCurrent fixtures drained their own test scheduler without joining persistent GlobalSnapshotManager apply notifications. sendApplyNotifications does not await callbacks already captured by another thread.",
+    "The earlier two-write patch synchronized selectedLanguage writes but left the production provider's internal appliedLanguageTag effect write global. The RTL sibling retained the primary write race.",
+    "Both tests now use public runSkikoComposeUiTest real-scene ownership, autoAdvance=true by default, runOnIdle mutations and subsequent waitForIdle. Pinned ui-test1.10.3 isIdle336–350 checks pending snapshot changes, in-flight notification count and scene invalidations, so it accounts for both paths.",
+    "A320x640 framebuffer bounds the small fixture's rendering cost. Explicit60-second timeout preserves the original deadline rather than accepting the Skiko API's infinite default. No sleeps, speculative snapshot calls, retries, disabled assertions, remount key or production workaround were added."
+  ],
+  "assertion_review": {
+    "initial_loading": "Ordered SideEffect records assert first Loading, final Content, nonempty loading observations and empty text during all loading observations. This preserves the old immediate-loading requirement despite public setContent waiting off the UI thread.",
+    "language_and_state": "Actual Leave -> مغادرة -> Leave resources, ar -> en-US locale, stable remembered object, zero intermediate disposal and no repeated loading during switches are asserted.",
+    "system_basis": "Initial default is Locale.US. English effect saves US/installs en; disposal restores US before Arabic saves US/installs ar; Arabic disposal restores US before null/System uses US unchanged. The en-US and final Locale.US assertions follow the actual Desktop provider ownership.",
+    "teardown": "The public scene closes/disposes and drains scheduled foreground events in its finally. Successful fixture asserts exactly one content disposal and Locale.US; unconditional outer finally restores the original process locale even if assertions/teardown fail.",
+    "rtl": "Both complete RenderedFormatting expectations remain: LTR English middle-dot separator, RTL Arabic comma separator, and unchanged bullet/timer formatting. Locale and selectedLanguage mutate together on UI thread; idle follows outside callback. Source-call-site punctuation test/root-search/regex are unchanged.",
+    "discovery": "Both replaced methods use Unit/void block bodies with unchanged kotlin.test.Test names/annotations. Raw XML contains all3 descriptors from changed files and zero skipped cases.",
+    "regression_boundaries": "No production state, settings, navigation, resources, game rules, protocol, host authority, private projection, snapshot format, content identity/version or dependency changes."
+  },
+  "counter_evidence": [
+    "runOnIdle waits before callback, not after; every mutation here has an explicit subsequent waitForIdle outside the UI thread callback.",
+    "Neither fixture disables autoAdvance; its false branch would bypass snapshot/recomposer idle checks.",
+    "Desktop resources use synchronous remember/runBlocking; no asynchronous-I/O explanation is invented.",
+    "Initial loading and retained-state/disposal assertions were not replaced with final-text-only checks; a force-remount fix would fail the retained state tests.",
+    "The fixed test harness does not establish any new production locale defect or iOS/Android preference behavior."
+  ],
+  "cross_file_review": [
+    {
+      "path": "shared/design-system/src/desktopMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.desktop.kt",
+      "sha256": "e0a776351f34c0c8b6bfaa76c840c331ac6b226f75cca3d10ad7144e1c6afbbf",
+      "reviewed_lines": [
+        [
+          1,
+          44
+        ]
+      ]
+    },
+    {
+      "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/ProvideAppLanguage.kt",
+      "sha256": "b4f4286459fe923ebaa3e156f4a9995232ce40ad32ae9bc43f73a929da77dc18",
+      "reviewed_lines": [
+        [
+          1,
+          62
+        ]
+      ]
+    },
+    {
+      "path": "shared/design-system/build.gradle.kts",
+      "sha256": "118d898f900e3b8ccc76db6fca658d69a0d211c5220b6985738f14428a99f78d",
+      "reviewed_lines": [
+        [
+          1,
+          25
+        ]
+      ]
+    },
+    {
+      "path": "game-modes/whodunit/build.gradle.kts",
+      "sha256": "2eb4b00a53ff1eff42f2a64b3de1a1c4d28b08d419ad2828045a063320e4696c",
+      "reviewed_lines": [
+        [
+          1,
+          53
+        ]
+      ]
+    },
+    {
+      "path": "shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/components/ParlorToastLifetimeTest.kt",
+      "sha256": "bac61913c5d79ace76748320f0b073669ced0bd0c12f3063c90be7bbec142adc",
+      "reviewed_lines": [
+        [
+          1,
+          89
+        ]
+      ]
+    }
+  ],
+  "resources": "Parsed the unchanged English/Arabic XML entries session_exit_affordance, whodunit_list_separator, round_clue_bullet_format, timer_elapsed_format and timer_total_format; they exactly match asserted values. This is not a full resource-file reading claim.",
+  "verification": {
+    "receipt": "remediation-runs/2026-09-07-local-readiness/evidence/locale-public-idle-green-01/receipt.json",
+    "receipt_sha256": "5cd8c5252b50efede8e32d35d3fbc3c8998d28e503dbe0ffa6c6be463fd96549",
+    "test_receipts_sha256": "17ca29fda3e05afbd77a932359c1b31df51476f544c8fa9e6a37385c5c718613",
+    "gradle_log_sha256": "c07dbe27a4b52b603cb224712da80685e12e4ba7b1680a862c78615745dfc25d",
+    "command": [
+      "./gradlew",
+      ":shared:design-system:desktopTest",
+      ":game-modes:whodunit:desktopTest",
+      "--tests",
+      "*RtlFormattingTest*",
+      "--tests",
+      "*WhodunitLocalLeaveTimerTest*",
+      "--tests",
+      "*WhodunitHostLeaveTimerTest*",
+      ":shared:design-system:detektDesktopTest",
+      ":game-modes:whodunit:detektDesktopTest",
+      "--no-daemon",
+      "--no-parallel",
+      "--max-workers=1",
+      "--no-configuration-cache",
+      "--dependency-verification=strict",
+      "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=locale-public-idle-green-01",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-Pparlor.android.signing.storeFile=",
+      "-Pparlor.android.signing.storePassword=",
+      "-Pparlor.android.signing.keyAlias=",
+      "-Pparlor.android.signing.keyPassword="
+    ],
+    "exit_code": 0,
+    "started_at": "2026-09-07T18:10:08.428913+00:00",
+    "finished_at": "2026-09-07T18:10:46.821654+00:00",
+    "platform": "macOS ARM64 host, Desktop JVM runtime; not Linux-hosted execution",
+    "totals": {
+      "tests": 52,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "design_system": 40,
+      "rtl": 2,
+      "timer": 10,
+      "detekt_reports": 2
+    },
+    "raw_xml_matches_test_receipts": true,
+    "raw_suites": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/locale-public-idle-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.RtlFormattingTest.xml",
+        "sha256": "6620b9a5228b462861cc7184075f582501c8ee01909c910c0344f3520e11a04b",
+        "suite": "com.parlor.games.whodunit.ui.RtlFormattingTest",
+        "timestamp": "2026-09-07T18:10:30.692Z",
+        "seconds": "0.306",
+        "cases": [
+          {
+            "name": "affected_rendering_uses_resources_instead_of_raw_punctuation()[desktop]",
+            "classname": "com.parlor.games.whodunit.ui.RtlFormattingTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "localized_resources_render_english_and_arabic_output_with_matching_direction()[desktop]",
+            "classname": "com.parlor.games.whodunit.ui.RtlFormattingTest",
+            "skipped": false,
+            "failed": false
+          }
+        ],
+        "actual_count": 2,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/locale-public-idle-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest.xml",
+        "sha256": "ed1ade88537a2560efff118ea121235cd61894ef7ff50830ef033d391468bb59",
+        "suite": "com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+        "timestamp": "2026-09-07T18:10:30.999Z",
+        "seconds": "3.848",
+        "cases": [
+          {
+            "name": "eliminationConfirmationTimeIsExcludedAndStayRestartsOnlyOneTicker()[desktop]",
+            "classname": "com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "stayDoesNotReleaseAnExistingPerTimerPause()[desktop]",
+            "classname": "com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "lastSecondCannotExpireBehindConfirmationButExpiresAfterStay()[desktop]",
+            "classname": "com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "failedSaveKeepsTimeFrozenAndSuccessfulSaveResumesWithoutCatchingUp()[desktop]",
+            "classname": "com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "stayDoesNotReleaseAnExistingSessionPause()[desktop]",
+            "classname": "com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "classicConfirmationTimeIsExcludedAndStayRestartsOnlyOneTicker()[desktop]",
+            "classname": "com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+            "skipped": false,
+            "failed": false
+          }
+        ],
+        "actual_count": 6,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/locale-public-idle-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest.xml",
+        "sha256": "cbbe2203a51385f55237061cd0e7992417c299ecc60ed6be13d497dc9524d5ac",
+        "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+        "timestamp": "2026-09-07T18:10:34.848Z",
+        "seconds": "3.789",
+        "cases": [
+          {
+            "name": "classicHostConfirmationExcludesTimeAndConfirmedLeaveStopsTicker()[desktop]",
+            "classname": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "lifecycleResumeBehindConfirmationDoesNotRestartHiddenDiscussion()[desktop]",
+            "classname": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "eliminationHostConfirmationExcludesTimeAndConfirmedLeaveStopsTicker()[desktop]",
+            "classname": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "stayAndLifecycleResumeDoNotReleaseManualPause()[desktop]",
+            "classname": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+            "skipped": false,
+            "failed": false
+          }
+        ],
+        "actual_count": 4,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/locale-public-idle-green-01/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.ActiveTextContrastCallSiteTest.xml",
+        "sha256": "34d052990473a9a990574de6f746f9937468b34848fb46eb8c0bcdc1525f260d",
+        "suite": "com.parlor.designsystem.ActiveTextContrastCallSiteTest",
+        "timestamp": "2026-09-07T18:10:21.914Z",
+        "seconds": "0.015",
+        "cases": [
+          {
+            "name": "material_color_scheme_uses_the_same_reviewed_on_accent_token()[desktop]",
+            "classname": "com.parlor.designsystem.ActiveTextContrastCallSiteTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "button_banner_tab_and_toast_call_sites_use_reviewed_token_pairs()[desktop]",
+            "classname": "com.parlor.designsystem.ActiveTextContrastCallSiteTest",
+            "skipped": false,
+            "failed": false
+          }
+        ],
+        "actual_count": 2,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/locale-public-idle-green-01/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorSafeAreaTest.xml",
+        "sha256": "756faf6c2e998d6ec436afd9c5e73bc0031dc38977122ba13614441fc4c5320d",
+        "suite": "com.parlor.designsystem.components.ParlorSafeAreaTest",
+        "timestamp": "2026-09-07T18:10:21.930Z",
+        "seconds": "0.003",
+        "cases": [
+          {
+            "name": "visual spacing is added outside every safe-area edge()[desktop]",
+            "classname": "com.parlor.designsystem.components.ParlorSafeAreaTest",
+            "skipped": false,
+            "failed": false
+          }
+        ],
+        "actual_count": 1,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/locale-public-idle-green-01/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastConcurrencyTest.xml",
+        "sha256": "2181e1422e4d6374d74829e9b0161adf5fa6c48569fa999f53cd1350100ac908",
+        "suite": "com.parlor.designsystem.components.ParlorToastConcurrencyTest",
+        "timestamp": "2026-09-07T18:10:21.934Z",
+        "seconds": "0.015",
+        "cases": [
+          {
+            "name": "concurrent_identical_messages_still_coalesce_and_floods_remain_bounded()[desktop]",
+            "classname": "com.parlor.designsystem.components.ParlorToastConcurrencyTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "concurrent_producers_cannot_reuse_lifetime_ids_or_lose_a_non_overflowing_wave()[desktop]",
+            "classname": "com.parlor.designsystem.components.ParlorToastConcurrencyTest",
+            "skipped": false,
+            "failed": false
+          }
+        ],
+        "actual_count": 2,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/locale-public-idle-green-01/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastHostInsetsTest.xml",
+        "sha256": "fc4d05aece5c9f0a04747e016715afb60ea55d3572b97110ceca7e300359d0ea",
+        "suite": "com.parlor.designsystem.components.ParlorToastHostInsetsTest",
+        "timestamp": "2026-09-07T18:10:21.949Z",
+        "seconds": "0.002",
+        "cases": [
+          {
+            "name": "toast host keeps horizontal and bottom safe areas without adding a top inset()[desktop]",
+            "classname": "com.parlor.designsystem.components.ParlorToastHostInsetsTest",
+            "skipped": false,
+            "failed": false
+          }
+        ],
+        "actual_count": 1,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/locale-public-idle-green-01/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastLifetimeTest.xml",
+        "sha256": "e142e39d5b384332db77e501a723460a864778b091775357cb094db3da7e84e4",
+        "suite": "com.parlor.designsystem.components.ParlorToastLifetimeTest",
+        "timestamp": "2026-09-07T18:10:21.951Z",
+        "seconds": "0.507",
+        "cases": [
+          {
+            "name": "replacement_state_owner_with_same_numeric_id_gets_its_own_lifetime()[desktop]",
+            "classname": "com.parlor.designsystem.components.ParlorToastLifetimeTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "replacement_after_automatic_dismiss_gets_fresh_visibility_and_timer()[desktop]",
+            "classname": "com.parlor.designsystem.components.ParlorToastLifetimeTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "identical_text_after_automatic_dismiss_is_a_new_lifetime()[desktop]",
+            "classname": "com.parlor.designsystem.components.ParlorToastLifetimeTest",
+            "skipped": false,
+            "failed": false
+          }
+        ],
+        "actual_count": 3,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/locale-public-idle-green-01/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+        "sha256": "e914aff08ef40876ffc5c24571119864084f58ae133f01c49b3d044793324999",
+        "suite": "com.parlor.designsystem.components.ParlorToastStateTest",
+        "timestamp": "2026-09-07T18:10:22.459Z",
+        "seconds": "0.002",
+        "cases": [
+          {
+            "name": "queue_is_bounded_and_keeps_the_latest_distinct_messages()[desktop]",
+            "classname": "com.parlor.designsystem.components.ParlorToastStateTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "adjacent_duplicate_message_is_coalesced()[desktop]",
+            "classname": "com.parlor.designsystem.components.ParlorToastStateTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "dismissed_identity_cannot_dismiss_a_new_lifetime_even_with_identical_text()[desktop]",
+            "classname": "com.parlor.designsystem.components.ParlorToastStateTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "coalescing_preserves_existing_lifetime_and_eviction_does_not_recycle_it()[desktop]",
+            "classname": "com.parlor.designsystem.components.ParlorToastStateTest",
+            "skipped": false,
+            "failed": false
+          }
+        ],
+        "actual_count": 4,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/locale-public-idle-green-01/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ReconnectingOverlayFocusTest.xml",
+        "sha256": "dc7fd827439d37f411f9f375209516eb99c66825005732187b714e37a5936927",
+        "suite": "com.parlor.designsystem.components.ReconnectingOverlayFocusTest",
+        "timestamp": "2026-09-07T18:10:22.462Z",
+        "seconds": "0.055",
+        "cases": [
+          {
+            "name": "overlay_excludes_covered_controls_from_keyboard_focus_until_hidden()[desktop]",
+            "classname": "com.parlor.designsystem.components.ReconnectingOverlayFocusTest",
+            "skipped": false,
+            "failed": false
+          }
+        ],
+        "actual_count": 1,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/locale-public-idle-green-01/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.RecoveryActionContrastTest.xml",
+        "sha256": "be46093d609523d81e3406c70ed7aa361307c8a62b9df6dbae8dcfbe1d0935f7",
+        "suite": "com.parlor.designsystem.components.RecoveryActionContrastTest",
+        "timestamp": "2026-09-07T18:10:22.517Z",
+        "seconds": "0.09",
+        "cases": [
+          {
+            "name": "disconnected_host_leave_is_readable_in_both_themes()[desktop]",
+            "classname": "com.parlor.designsystem.components.RecoveryActionContrastTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "reconnecting_leave_is_readable_in_both_themes()[desktop]",
+            "classname": "com.parlor.designsystem.components.RecoveryActionContrastTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "ordinary_ghost_button_retains_its_theme_appropriate_foreground()[desktop]",
+            "classname": "com.parlor.designsystem.components.RecoveryActionContrastTest",
+            "skipped": false,
+            "failed": false
+          }
+        ],
+        "actual_count": 3,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/locale-public-idle-green-01/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.SessionExitBackPolicyTest.xml",
+        "sha256": "987e4c35fc9e6d62cffd1966bd99ea814023b39b3fe9fb20659d1ea8179b29c5",
+        "suite": "com.parlor.designsystem.components.SessionExitBackPolicyTest",
+        "timestamp": "2026-09-07T18:10:22.608Z",
+        "seconds": "0.001",
+        "cases": [
+          {
+            "name": "active_local_sessions_always_confirm_before_the_save_transaction()[desktop]",
+            "classname": "com.parlor.designsystem.components.SessionExitBackPolicyTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "multiplayer_setup_exits_immediately_but_started_games_confirm()[desktop]",
+            "classname": "com.parlor.designsystem.components.SessionExitBackPolicyTest",
+            "skipped": false,
+            "failed": false
+          }
+        ],
+        "actual_count": 2,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/locale-public-idle-green-01/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.SessionExitOverlayLayoutTest.xml",
+        "sha256": "632d8b9c6a663f5e9c7290253c6de473976f66db941e6736d4cbbd12eeea97c8",
+        "suite": "com.parlor.designsystem.components.SessionExitOverlayLayoutTest",
+        "timestamp": "2026-09-07T18:10:22.609Z",
+        "seconds": "0.02",
+        "cases": [
+          {
+            "name": "safe_content_starts_below_the_measured_exit_control()[desktop]",
+            "classname": "com.parlor.designsystem.components.SessionExitOverlayLayoutTest",
+            "skipped": false,
+            "failed": false
+          }
+        ],
+        "actual_count": 1,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/locale-public-idle-green-01/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.SessionExitOverlayTest.xml",
+        "sha256": "6b93b9ad210b55d9c3a0bb080094b7d45a77c02c741f6da43785e43444eb0718",
+        "suite": "com.parlor.designsystem.components.SessionExitOverlayTest",
+        "timestamp": "2026-09-07T18:10:22.629Z",
+        "seconds": "0.001",
+        "cases": [
+          {
+            "name": "content starts after the measured affordance and both visual margins()[desktop]",
+            "classname": "com.parlor.designsystem.components.SessionExitOverlayTest",
+            "skipped": false,
+            "failed": false
+          }
+        ],
+        "actual_count": 1,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/locale-public-idle-green-01/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.StickyActionLayoutTest.xml",
+        "sha256": "0fdeddc2f8ccfb5b0f22e75b58dfe88c5f28aa570d3eae69aa6ad11f4eaf6c0b",
+        "suite": "com.parlor.designsystem.components.StickyActionLayoutTest",
+        "timestamp": "2026-09-07T18:10:22.630Z",
+        "seconds": "0.018",
+        "cases": [
+          {
+            "name": "measured_two_button_bar_never_overlaps_content_at_large_text_scale()[desktop]",
+            "classname": "com.parlor.designsystem.components.StickyActionLayoutTest",
+            "skipped": false,
+            "failed": false
+          }
+        ],
+        "actual_count": 1,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/locale-public-idle-green-01/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.icons.ParlorIconsTest.xml",
+        "sha256": "86675255e6969bebca324b37d5fd8250ee8b708ca7689d69ad2b27b6cb9b3651",
+        "suite": "com.parlor.designsystem.icons.ParlorIconsTest",
+        "timestamp": "2026-09-07T18:10:22.648Z",
+        "seconds": "0.003",
+        "cases": [
+          {
+            "name": "directional_icons_mirror_with_layout_direction()[desktop]",
+            "classname": "com.parlor.designsystem.icons.ParlorIconsTest",
+            "skipped": false,
+            "failed": false
+          }
+        ],
+        "actual_count": 1,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/locale-public-idle-green-01/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.localization.AppLanguageSelectionTest.xml",
+        "sha256": "104deffd22455a9114d2df3ded27edd5759f744b99d7b5162dea845a2361e6ce",
+        "suite": "com.parlor.designsystem.localization.AppLanguageSelectionTest",
+        "timestamp": "2026-09-07T18:10:22.651Z",
+        "seconds": "0.001",
+        "cases": [
+          {
+            "name": "explicit_override_wins_over_the_system_language()[desktop]",
+            "classname": "com.parlor.designsystem.localization.AppLanguageSelectionTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "null_override_follows_a_supported_system_language()[desktop]",
+            "classname": "com.parlor.designsystem.localization.AppLanguageSelectionTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "unsupported_system_language_falls_back_to_english()[desktop]",
+            "classname": "com.parlor.designsystem.localization.AppLanguageSelectionTest",
+            "skipped": false,
+            "failed": false
+          }
+        ],
+        "actual_count": 3,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/locale-public-idle-green-01/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.localization.PlatformAppLocaleLoadingContractTest.xml",
+        "sha256": "92d9682cecbe3eb70a237b60037b92ba4c754b114503a11027a5c9ee762abf70",
+        "suite": "com.parlor.designsystem.localization.PlatformAppLocaleLoadingContractTest",
+        "timestamp": "2026-09-07T18:10:22.653Z",
+        "seconds": "0.001",
+        "cases": [
+          {
+            "name": "ios_provider_keeps_uikit_start_edge_in_sync_with_runtime_language()[desktop]",
+            "classname": "com.parlor.designsystem.localization.PlatformAppLocaleLoadingContractTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "production_provider_supplies_a_full_screen_loading_surface()[desktop]",
+            "classname": "com.parlor.designsystem.localization.PlatformAppLocaleLoadingContractTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "every_platform_loads_initially_without_keying_applied_state_to_language_changes()[desktop]",
+            "classname": "com.parlor.designsystem.localization.PlatformAppLocaleLoadingContractTest",
+            "skipped": false,
+            "failed": false
+          }
+        ],
+        "actual_count": 3,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/locale-public-idle-green-01/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.localization.ProvideAppLanguageDesktopTest.xml",
+        "sha256": "de161dc77711c2ae3d5dfffc052ebabf273c08989736a8e89d4e3f1a3cb14f3c",
+        "suite": "com.parlor.designsystem.localization.ProvideAppLanguageDesktopTest",
+        "timestamp": "2026-09-07T18:10:22.654Z",
+        "seconds": "0.014",
+        "cases": [
+          {
+            "name": "locale_switches_resources_without_replacing_remembered_content_state()[desktop]",
+            "classname": "com.parlor.designsystem.localization.ProvideAppLanguageDesktopTest",
+            "skipped": false,
+            "failed": false
+          }
+        ],
+        "actual_count": 1,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/locale-public-idle-green-01/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.motion.ParlorMotionTest.xml",
+        "sha256": "55df734964d2b442a1eb6490d16e78aba25dfa6a2ef90defc8bbde71946d5960",
+        "suite": "com.parlor.designsystem.motion.ParlorMotionTest",
+        "timestamp": "2026-09-07T18:10:22.669Z",
+        "seconds": "0.0",
+        "cases": [
+          {
+            "name": "either_app_or_system_preference_enables_reduced_motion()[desktop]",
+            "classname": "com.parlor.designsystem.motion.ParlorMotionTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "reduced_tokens_keep_only_a_short_fade_and_disable_continuous_cycles()[desktop]",
+            "classname": "com.parlor.designsystem.motion.ParlorMotionTest",
+            "skipped": false,
+            "failed": false
+          }
+        ],
+        "actual_count": 2,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/locale-public-idle-green-01/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.tokens.PaletteCoverageTest.xml",
+        "sha256": "18aadb8dc5a3d688c8838e40de943339a69c573b513e7804c9aaea7a6d6e1f1b",
+        "suite": "com.parlor.designsystem.tokens.PaletteCoverageTest",
+        "timestamp": "2026-09-07T18:10:22.670Z",
+        "seconds": "0.003",
+        "cases": [
+          {
+            "name": "every_palette_field_inverts_or_is_explicitly_pinned_identical()[desktop]",
+            "classname": "com.parlor.designsystem.tokens.PaletteCoverageTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "active_normal_text_pairs_used_by_design_system_components_meet_AA()[desktop]",
+            "classname": "com.parlor.designsystem.tokens.PaletteCoverageTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "text_hierarchy_remains_readable_on_standard_surfaces()[desktop]",
+            "classname": "com.parlor.designsystem.tokens.PaletteCoverageTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "text_primary_has_strong_contrast_with_canvas()[desktop]",
+            "classname": "com.parlor.designsystem.tokens.PaletteCoverageTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "light_canvas_is_actually_light_and_dark_is_actually_dark()[desktop]",
+            "classname": "com.parlor.designsystem.tokens.PaletteCoverageTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "evidence_paper_text_pairs_meet_AA()[desktop]",
+            "classname": "com.parlor.designsystem.tokens.PaletteCoverageTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "accent_ember_has_AA_contrast_with_canvas()[desktop]",
+            "classname": "com.parlor.designsystem.tokens.PaletteCoverageTest",
+            "skipped": false,
+            "failed": false
+          },
+          {
+            "name": "every_game_accent_meets_active_text_contrast_contracts()[desktop]",
+            "classname": "com.parlor.designsystem.tokens.PaletteCoverageTest",
+            "skipped": false,
+            "failed": false
+          }
+        ],
+        "actual_count": 8,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      }
+    ],
+    "analysis_reports": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/locale-public-idle-green-01/reports/game-modes/whodunit/build/reports/detekt/detektDesktopTest.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "error_nodes": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/locale-public-idle-green-01/reports/shared/design-system/build/reports/detekt/detektDesktopTest.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "error_nodes": 0
+      }
+    ],
+    "source_and_runner_unchanged": true,
+    "observed_suite_order": [
+      {
+        "suite": "com.parlor.designsystem.ActiveTextContrastCallSiteTest",
+        "timestamp": "2026-09-07T18:10:21.914Z"
+      },
+      {
+        "suite": "com.parlor.designsystem.components.ParlorSafeAreaTest",
+        "timestamp": "2026-09-07T18:10:21.930Z"
+      },
+      {
+        "suite": "com.parlor.designsystem.components.ParlorToastConcurrencyTest",
+        "timestamp": "2026-09-07T18:10:21.934Z"
+      },
+      {
+        "suite": "com.parlor.designsystem.components.ParlorToastHostInsetsTest",
+        "timestamp": "2026-09-07T18:10:21.949Z"
+      },
+      {
+        "suite": "com.parlor.designsystem.components.ParlorToastLifetimeTest",
+        "timestamp": "2026-09-07T18:10:21.951Z"
+      },
+      {
+        "suite": "com.parlor.designsystem.components.ParlorToastStateTest",
+        "timestamp": "2026-09-07T18:10:22.459Z"
+      },
+      {
+        "suite": "com.parlor.designsystem.components.ReconnectingOverlayFocusTest",
+        "timestamp": "2026-09-07T18:10:22.462Z"
+      },
+      {
+        "suite": "com.parlor.designsystem.components.RecoveryActionContrastTest",
+        "timestamp": "2026-09-07T18:10:22.517Z"
+      },
+      {
+        "suite": "com.parlor.designsystem.components.SessionExitBackPolicyTest",
+        "timestamp": "2026-09-07T18:10:22.608Z"
+      },
+      {
+        "suite": "com.parlor.designsystem.components.SessionExitOverlayLayoutTest",
+        "timestamp": "2026-09-07T18:10:22.609Z"
+      },
+      {
+        "suite": "com.parlor.designsystem.components.SessionExitOverlayTest",
+        "timestamp": "2026-09-07T18:10:22.629Z"
+      },
+      {
+        "suite": "com.parlor.designsystem.components.StickyActionLayoutTest",
+        "timestamp": "2026-09-07T18:10:22.630Z"
+      },
+      {
+        "suite": "com.parlor.designsystem.icons.ParlorIconsTest",
+        "timestamp": "2026-09-07T18:10:22.648Z"
+      },
+      {
+        "suite": "com.parlor.designsystem.localization.AppLanguageSelectionTest",
+        "timestamp": "2026-09-07T18:10:22.651Z"
+      },
+      {
+        "suite": "com.parlor.designsystem.localization.PlatformAppLocaleLoadingContractTest",
+        "timestamp": "2026-09-07T18:10:22.653Z"
+      },
+      {
+        "suite": "com.parlor.designsystem.localization.ProvideAppLanguageDesktopTest",
+        "timestamp": "2026-09-07T18:10:22.654Z"
+      },
+      {
+        "suite": "com.parlor.designsystem.motion.ParlorMotionTest",
+        "timestamp": "2026-09-07T18:10:22.669Z"
+      },
+      {
+        "suite": "com.parlor.designsystem.tokens.PaletteCoverageTest",
+        "timestamp": "2026-09-07T18:10:22.670Z"
+      },
+      {
+        "suite": "com.parlor.games.whodunit.ui.RtlFormattingTest",
+        "timestamp": "2026-09-07T18:10:30.692Z"
+      },
+      {
+        "suite": "com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+        "timestamp": "2026-09-07T18:10:30.999Z"
+      },
+      {
+        "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+        "timestamp": "2026-09-07T18:10:34.848Z"
+      }
+    ],
+    "order_interpretation": "Design-system real ParlorToastLifetimeTest starts18:10:21.951Z; other real UI fixtures follow; provider starts18:10:22.654Z. Its persistent global notifier was therefore initialized by earlier tests in the module JVM. Whodunit RTL ran before its10 timer tests in a separate Gradle test task; no reverse-order claim.",
+    "actual_tasks": "Both desktopTest tasks and both desktop Detekt tasks executed, not merely cache restoration. Production class compiles were FROM-CACHE where logged. Static-analysis reports are not additional tests.",
+    "explicit_warnings": [
+      "Gradle8.13 deprecation for future Kotlin2.5 requirement remains visible and unsuppressed.",
+      "iosX64Test host-incompatible warning remains explicit; no native test requested or counted.",
+      "SKIPPED configuration-error/processResources and NO-SOURCE resource tasks are not skipped JUnit cases."
+    ]
+  },
+  "research": {
+    "ui_test_version": "org.jetbrains.compose.ui:ui-test-desktop:1.10.3",
+    "ui_test_url": "https://repo.maven.apache.org/maven2/org/jetbrains/compose/ui/ui-test-desktop/1.10.3/ui-test-desktop-1.10.3-sources.jar",
+    "runtime_version": "androidx.compose.runtime:runtime-desktop:1.10.5",
+    "runtime_url": "https://dl.google.com/dl/android/maven2/androidx/compose/runtime/runtime-desktop/1.10.5/runtime-desktop-1.10.5-sources.jar",
+    "access_date": "2026-09-07",
+    "receipts": "reviews/linux-ui-resource-research-01/receipt.json and supplements02/03 retain exact source/URL/hash evidence.",
+    "reopened_this_pass": "ComposeUiTest.skiko.kt70–103,234–295,320–423; ComposeUiTest.desktop.kt1–93. Prior independent diagnosis records detailed Snapshot/Recomposer/GlobalSnapshotManager source ranges."
+  },
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-07T18:10:47.093861+00:00",
+    "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+    "removed_outputs": [
+      {
+        "path": "shared/core/build",
+        "absent_at_independent_review": true
+      },
+      {
+        "path": "shared/networking/build",
+        "absent_at_independent_review": true
+      },
+      {
+        "path": "shared/content/build",
+        "absent_at_independent_review": true
+      },
+      {
+        "path": "shared/storage/build",
+        "absent_at_independent_review": true
+      },
+      {
+        "path": "shared/networking-testing/build",
+        "absent_at_independent_review": true
+      },
+      {
+        "path": "shared/engine/build",
+        "absent_at_independent_review": true
+      },
+      {
+        "path": "shared/design-system/build",
+        "absent_at_independent_review": true
+      },
+      {
+        "path": "shared/session/build",
+        "absent_at_independent_review": true
+      },
+      {
+        "path": "game-modes/whodunit/build",
+        "absent_at_independent_review": true
+      },
+      {
+        "path": "build",
+        "absent_at_independent_review": true
+      },
+      {
+        "path": "build-logic/convention/build",
+        "absent_at_independent_review": true
+      }
+    ],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "artifact_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "errors": [],
+    "completed_at": "2026-09-07T18:10:47.414444+00:00",
+    "reviewer_actions": "Reads/diff/hash/XML inspection and this additive report only. No build/test/app/native/simulator process, Git mutation, process stop or cleanup command started. One report-generation identity assertion correctly detected unrelated concurrent root changes before writing; the final report binds the unchanged scoped diff instead."
+  },
+  "remaining_limits": [
+    "Fresh hosted Linux execution is pending.",
+    "No forced delayed-observer runtime witness was added/executed; original failure plus exact pinned source reachability supports diagnosis.",
+    "Tests validate resources/order/state ownership, not physical-device UI, screen-reader behavior, Store readiness or absence of other defects."
+  ]
+}

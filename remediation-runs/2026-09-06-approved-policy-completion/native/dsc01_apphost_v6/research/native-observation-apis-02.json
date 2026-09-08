@@ -1,0 +1,390 @@
+[
+  {
+    "topic": "XCTest orientation",
+    "url": "https://developer.apple.com/tutorials/data/documentation/xcuiautomation/xcuidevice/orientation.json",
+    "accessed_at": "2026-09-06T12:44:23.125963+00:00",
+    "status": 200,
+    "sha256": "cc9850338ec634cd3a686902e582de47e8dfd33e1f7c6c5a7d112c60ea17823f",
+    "content": {
+      "metadata": {
+        "externalID": "c:objc(cs)XCUIDevice(py)orientation",
+        "fragments": [
+          {
+            "kind": "keyword",
+            "text": "var"
+          },
+          {
+            "kind": "text",
+            "text": " "
+          },
+          {
+            "kind": "identifier",
+            "text": "orientation"
+          },
+          {
+            "kind": "text",
+            "text": ": "
+          },
+          {
+            "kind": "typeIdentifier",
+            "preciseIdentifier": "c:@E@UIDeviceOrientation",
+            "text": "UIDeviceOrientation"
+          }
+        ],
+        "modules": [
+          {
+            "name": "XCUIAutomation"
+          }
+        ],
+        "navigatorTitle": [
+          {
+            "kind": "identifier",
+            "text": "orientation"
+          }
+        ],
+        "platforms": [
+          {
+            "beta": false,
+            "deprecated": false,
+            "name": "iOS",
+            "unavailable": false
+          },
+          {
+            "beta": false,
+            "deprecated": false,
+            "name": "iPadOS",
+            "unavailable": false
+          },
+          {
+            "beta": false,
+            "deprecated": false,
+            "name": "Mac Catalyst",
+            "unavailable": false
+          },
+          {
+            "beta": false,
+            "deprecated": false,
+            "introducedAt": "16.3",
+            "name": "Xcode",
+            "unavailable": false
+          }
+        ],
+        "role": "symbol",
+        "roleHeading": "Instance Property",
+        "symbolKind": "property",
+        "title": "orientation"
+      },
+      "abstract": [
+        {
+          "text": "The orientation of the device.",
+          "type": "text"
+        }
+      ],
+      "primaryContentSections": [
+        {
+          "declarations": [
+            {
+              "languages": [
+                "swift"
+              ],
+              "platforms": [
+                "iOS",
+                "iPadOS",
+                "Mac Catalyst"
+              ],
+              "tokens": [
+                {
+                  "kind": "keyword",
+                  "text": "var"
+                },
+                {
+                  "kind": "text",
+                  "text": " "
+                },
+                {
+                  "kind": "identifier",
+                  "text": "orientation"
+                },
+                {
+                  "kind": "text",
+                  "text": ": "
+                },
+                {
+                  "identifier": "doc://com.apple.documentation/documentation/UIKit/UIDeviceOrientation",
+                  "kind": "typeIdentifier",
+                  "preciseIdentifier": "c:@E@UIDeviceOrientation",
+                  "text": "UIDeviceOrientation"
+                },
+                {
+                  "kind": "text",
+                  "text": " { "
+                },
+                {
+                  "kind": "keyword",
+                  "text": "get"
+                },
+                {
+                  "kind": "text",
+                  "text": " "
+                },
+                {
+                  "kind": "keyword",
+                  "text": "set"
+                },
+                {
+                  "kind": "text",
+                  "text": " }"
+                }
+              ]
+            }
+          ],
+          "kind": "declarations"
+        },
+        {
+          "content": [
+            {
+              "anchor": "Discussion",
+              "level": 2,
+              "text": "Discussion",
+              "type": "heading"
+            },
+            {
+              "inlineContent": [
+                {
+                  "text": "To simulate a change in the physical orientation of a device under test, set the value of the ",
+                  "type": "text"
+                },
+                {
+                  "identifier": "doc://com.apple.xcuiautomation/documentation/XCUIAutomation/XCUIDevice/orientation",
+                  "isActive": true,
+                  "type": "reference"
+                },
+                {
+                  "text": " property for the shared ",
+                  "type": "text"
+                },
+                {
+                  "identifier": "doc://com.apple.xcuiautomation/documentation/XCUIAutomation/XCUIDevice",
+                  "isActive": true,
+                  "type": "reference"
+                },
+                {
+                  "text": " object to one of the ",
+                  "type": "text"
+                },
+                {
+                  "identifier": "doc://com.apple.documentation/documentation/UIKit/UIDeviceOrientation",
+                  "isActive": true,
+                  "type": "reference"
+                },
+                {
+                  "text": " constants UIKit defines. This impacts the ",
+                  "type": "text"
+                },
+                {
+                  "identifier": "doc://com.apple.documentation/documentation/UIKit/UIDevice/orientation",
+                  "isActive": true,
+                  "type": "reference"
+                },
+                {
+                  "text": " property UIKit uses to identify a device\u2019s physical orientation. These constants aren\u2019t tied directly to the orientation of your app\u2019s user interface. The example below sets the device orientation to landscape right:",
+                  "type": "text"
+                }
+              ],
+              "type": "paragraph"
+            },
+            {
+              "code": [
+                "XCUIDevice.shared.orientation = .landscapeRight"
+              ],
+              "syntax": "swift",
+              "type": "codeListing"
+            },
+            {
+              "inlineContent": [
+                {
+                  "text": "Set the property once in your test fixture\u2019s setup or intialization code to set an orientation for all the test methods in that fixture.",
+                  "type": "text"
+                }
+              ],
+              "type": "paragraph"
+            },
+            {
+              "inlineContent": [
+                {
+                  "text": "Available in iOS.",
+                  "type": "text"
+                }
+              ],
+              "type": "paragraph"
+            }
+          ],
+          "kind": "content"
+        }
+      ]
+    }
+  },
+  {
+    "topic": "UIKit containment",
+    "url": "https://developer.apple.com/library/archive/featuredarticles/ViewControllerPGforiPhoneOS/ImplementingaContainerViewController.html",
+    "accessed_at": "2026-09-06T12:44:24.594828+00:00",
+    "status": 200,
+    "sha256": "189f674ca63099949b6d0b3d417800b7e6430b8de3802dea976651ae18fc0f09",
+    "relevant_excerpt": "Adding a Child View Controller to Your Content . Implementing a Custom Container View Controller To implement a container view controller, you must establish relationships between your view controller and its child view controllers. Establishing these parent-child relationships is required before you try to manage the views of any child view controllers. Doing so lets UIKit know that your view controller is managing the size and position of the children. You can create these relationships in Interface Builder or create them programmatically. When creating parent-child relationships programmatically, you explicitly add and remove child view controllers as part of your view controller setup. Adding a Child View Controller to Your Content To incorporate a child view controller into your content programmatically, create a parent-child relationship between the relevant view controllers by doing the following: Call the addChildViewController: method of your container view controller. This method tells UIKit that your container view controller is now managing the view of the child view controller. Add the child\u2019s root view to your container\u2019s view hierarchy. Always remember to set the size and position of the child\u2019s frame as part of this process. Add any constraints for managing the size and position of the child\u2019s root view. Call the didMoveToParentViewController: method of the child view controller. Listing 5-1 shows how a container embeds a child view controller in its container. After establishing the parent-child relationship, the container sets the frame of its child and adds the child\u2019s view to its own view hierarchy. Setting the frame size of the child\u2019s view is important and ensures that the view shows up correctly in your container. After adding the view, the container calls the child\u2019s didMoveToParentViewController: method to give the child view controller a chance to respond to the change in view ownership. Listing 5-1 Adding a child view controller to a container - ( void ) displayContentController: ( UIViewController * ) content { [ self addChildViewController: content ]; content . view . frame = [ self frameForContentController ]; [ self . view addSubview: self . currentClientView ]; [ content didMoveToParentViewController: self ]; } In the preceding example, notice that you call only the didMoveToParentViewController: method of the child. That is because the addChildViewController: method calls the child\u2019s willMoveToParentViewController: method for you. The reason that you must call the didMoveToParentViewController: method yourself is that the method cannot be called until after you embed the child\u2019s view into your container\u2019s view hierarchy. When using Auto Layout, set up constraints between the container and child after adding the child to the container\u2019s view hierarchy. Your constraints should affect the size and position of only the child\u2019s root view. Do not alter the contents of the root view or any other views in the child\u2019s view hierarchy. Removing a Child View Controller To remove a child view controller from your content, remove the parent-child relationship between the view controllers by doing the following: Call the child\u2019s willMoveToParentViewController: method with the value nil . Remove any constraints that you configured with the child\u2019s root view. Remove the child\u2019s root view from your container\u2019s view hierarchy. Call the child\u2019s removeFromParentViewController method to finalize the end of the parent-child relationship. Removing a child view controller permanently severs the relationship between parent and child. Remove a child view controller only when you no longer need to refer to it. For example, a navigation controller does not remove its current child view controllers when a new one is pushed onto the navigation stack. It removes them only when they are popped off the stack. Listing 5-2 shows you how to remove a child view controller from its container. Calling the willMoveToParentViewController: method with the value nil gives the child view controller an opportunity to prepare for the change. The removeFromParentViewController method also calls the child\u2019s didMoveToParentViewController: method, passing that method a value of nil . Setting the parent view controller to nil finalizes the removal of the child\u2019s view from your container. Listing 5-2 Removing a child view controller from a container - ( void ) hideContentController: ( UIViewController * ) content { [ content willMoveToParentViewController: nil ]; [ content . view removeFromSuperview ]; [ content removeFromParentViewController ]; } Transitioning Between Child View Controllers When you want to animate the replacement of one child view controller with another, incorporate the addition and removal of the child view controllers into the transition animation process. Before the animations, make sure both child view controllers are part of your content but let the current child know that it is about to go away. Durin"
+  },
+  {
+    "topic": "UIView conversion references",
+    "url": "https://developer.apple.com/tutorials/data/documentation/uikit/uiview.json",
+    "accessed_at": "2026-09-06T12:44:25.463922+00:00",
+    "status": 200,
+    "sha256": "616b09c83236d3c439bb4cacc8d53f37c174284919724b805f2a1a10d3d69ab6",
+    "references": [
+      {
+        "abstract": [
+          {
+            "text": "Converts a point from the receiver\u2019s coordinate system to that of the specified view.",
+            "type": "text"
+          }
+        ],
+        "fragments": [
+          {
+            "kind": "keyword",
+            "text": "func"
+          },
+          {
+            "kind": "text",
+            "text": " "
+          },
+          {
+            "kind": "identifier",
+            "text": "convert"
+          },
+          {
+            "kind": "text",
+            "text": "("
+          },
+          {
+            "kind": "typeIdentifier",
+            "preciseIdentifier": "c:@S@CGPoint",
+            "text": "CGPoint"
+          },
+          {
+            "kind": "text",
+            "text": ", "
+          },
+          {
+            "kind": "externalParam",
+            "text": "to"
+          },
+          {
+            "kind": "text",
+            "text": ": "
+          },
+          {
+            "kind": "typeIdentifier",
+            "preciseIdentifier": "c:objc(cs)UIView",
+            "text": "UIView"
+          },
+          {
+            "kind": "text",
+            "text": "?) -> "
+          },
+          {
+            "kind": "typeIdentifier",
+            "preciseIdentifier": "c:@S@CGPoint",
+            "text": "CGPoint"
+          }
+        ],
+        "identifier": "doc://com.apple.uikit/documentation/UIKit/UIView/convert(_:to:)-1xizt",
+        "kind": "symbol",
+        "navigatorTitle": [
+          {
+            "kind": "text",
+            "text": "- "
+          },
+          {
+            "kind": "identifier",
+            "text": "convertPoint:toView:"
+          }
+        ],
+        "role": "symbol",
+        "title": "convert(_:to:)",
+        "type": "topic",
+        "url": "/documentation/uikit/uiview/convert(_:to:)-1xizt"
+      },
+      {
+        "abstract": [
+          {
+            "text": "Converts a rectangle from the receiver\u2019s coordinate system to that of another view.",
+            "type": "text"
+          }
+        ],
+        "fragments": [
+          {
+            "kind": "keyword",
+            "text": "func"
+          },
+          {
+            "kind": "text",
+            "text": " "
+          },
+          {
+            "kind": "identifier",
+            "text": "convert"
+          },
+          {
+            "kind": "text",
+            "text": "("
+          },
+          {
+            "kind": "typeIdentifier",
+            "preciseIdentifier": "c:@S@CGRect",
+            "text": "CGRect"
+          },
+          {
+            "kind": "text",
+            "text": ", "
+          },
+          {
+            "kind": "externalParam",
+            "text": "to"
+          },
+          {
+            "kind": "text",
+            "text": ": "
+          },
+          {
+            "kind": "typeIdentifier",
+            "preciseIdentifier": "c:objc(cs)UIView",
+            "text": "UIView"
+          },
+          {
+            "kind": "text",
+            "text": "?) -> "
+          },
+          {
+            "kind": "typeIdentifier",
+            "preciseIdentifier": "c:@S@CGRect",
+            "text": "CGRect"
+          }
+        ],
+        "identifier": "doc://com.apple.uikit/documentation/UIKit/UIView/convert(_:to:)-2kf3d",
+        "kind": "symbol",
+        "navigatorTitle": [
+          {
+            "kind": "text",
+            "text": "- "
+          },
+          {
+            "kind": "identifier",
+            "text": "convertRect:toView:"
+          }
+        ],
+        "role": "symbol",
+        "title": "convert(_:to:)",
+        "type": "topic",
+        "url": "/documentation/uikit/uiview/convert(_:to:)-2kf3d"
+      }
+    ]
+  }
+]

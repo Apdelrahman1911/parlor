@@ -1,0 +1,78 @@
+[
+  {
+    "source": "installed Homebrew OpenJDK21.0.11 lib/src.zip!/java.base/sun/net/www/protocol/http/HttpURLConnection.java",
+    "read_at": "2026-09-07T05:59:44.191410+00:00",
+    "sha256": "a35c10a43e94fae3b71d691fa5dfd2c23c4b99321a5c082cbef02d2339175dee",
+    "lines": 4080,
+    "reviewed_excerpts": [
+      {
+        "from": 241,
+        "to": 261,
+        "text": "241:     }\n242: \n243:     static {\n244:         Properties props = GetPropertyAction.privilegedGetProperties();\n245:         maxRedirects = GetIntegerAction.privilegedGetProperty(\n246:                 \"http.maxRedirects\", defaultmaxRedirects);\n247:         version = props.getProperty(\"java.version\");\n248:         String agent = props.getProperty(\"http.agent\");\n249:         if (agent == null) {\n250:             agent = \"Java/\"+version;\n251:         } else {\n252:             agent = agent + \" Java/\"+version;\n253:         }\n254:         userAgent = agent;\n255: \n256:         // A set of net properties to control the use of authentication schemes\n257:         // when proxying/tunneling.\n258:         String p = getNetProperty(\"jdk.http.auth.tunneling.disabledSchemes\");\n259:         disabledTunnelingSchemes = schemesListToSet(p);\n260:         p = getNetProperty(\"jdk.http.auth.proxying.disabledSchemes\");\n261:         disabledProxyingSchemes = schemesListToSet(p);"
+      },
+      {
+        "from": 2029,
+        "to": 2051,
+        "text": "2029:                     }\n2030:                 }\n2031:                 poster = null;\n2032:                 strOutputStream = null;\n2033:                 return inputStream;\n2034:             } while (redirects < maxRedirects);\n2035: \n2036:             throw new ProtocolException(\"Server redirected too many times (\" +\n2037:                     redirects + \")\");\n2038:         } catch (RuntimeException e) {\n2039:             disconnectInternal();\n2040:             rememberedException = e;\n2041:             throw e;\n2042:         } catch (IOException e) {\n2043:             rememberedException = e;\n2044: \n2045:             // buffer the error stream if bytes < 4k\n2046:             // and it can be buffered within 1 second\n2047:             String te = responses.findValue(\"Transfer-Encoding\");\n2048:             if (http != null && http.isKeepingAlive() && enableESBuffer &&\n2049:                 (cl > 0 || (te != null && te.equalsIgnoreCase(\"chunked\")))) {\n2050:                 errorStream = ErrorStream.getErrorStream(inputStream, cl, http);\n2051:             }"
+      },
+      {
+        "from": 2796,
+        "to": 2836,
+        "text": "2796:      * resets the url, re-connects, and resets the request\n2797:      * property.\n2798:      */\n2799:     @SuppressWarnings(\"removal\")\n2800:     private boolean followRedirect() throws IOException {\n2801:         if (!getInstanceFollowRedirects()) {\n2802:             return false;\n2803:         }\n2804: \n2805:         final int stat = getResponseCode();\n2806:         if (stat < 300 || stat > 307 || stat == 306\n2807:                                 || stat == HTTP_NOT_MODIFIED) {\n2808:             return false;\n2809:         }\n2810:         final String loc = getHeaderField(\"Location\");\n2811:         if (loc == null) {\n2812:             /* this should be present - if not, we have no choice\n2813:              * but to go forward w/ the response we got\n2814:              */\n2815:             return false;\n2816:         }\n2817: \n2818:         URL locUrl;\n2819:         try {\n2820:             locUrl = newURL(loc);\n2821:             if (!url.getProtocol().equalsIgnoreCase(locUrl.getProtocol())) {\n2822:                 return false;\n2823:             }\n2824: \n2825:         } catch (MalformedURLException mue) {\n2826:             // treat loc as a relative URI to conform to popular browsers\n2827:            locUrl = newURL(url, loc);\n2828:         }\n2829: \n2830:         final URL locUrl0 = locUrl;\n2831:         socketPermission = null; // force recalculation\n2832:         SocketPermission p = URLtoSocketPermission(locUrl);\n2833: \n2834:         if (p != null) {\n2835:             try {\n2836:                 return AccessController.doPrivilegedWithCombiner("
+      }
+    ]
+  },
+  {
+    "source": "installed Homebrew OpenJDK21.0.11 lib/src.zip!/java.base/sun/net/www/http/HttpClient.java",
+    "read_at": "2026-09-07T05:59:44.192453+00:00",
+    "sha256": "d2e6ee35f00882d194ec94754918b9982f5109292535724c83ccfb2d1a198a1d",
+    "lines": 1176,
+    "reviewed_excerpts": [
+      {
+        "from": 66,
+        "to": 86,
+        "text": "66: \n67:     // true if we are in streaming mode (fixed length or chunked)\n68:     boolean streaming;\n69: \n70:     // if we've had one io error\n71:     boolean failedOnce = false;\n72: \n73:     /** Response code for CONTINUE */\n74:     private boolean ignoreContinue = true;\n75:     private static final int    HTTP_CONTINUE = 100;\n76: \n77:     /** Default port number for http daemons. REMIND: make these private */\n78:     static final int    httpPortNumber = 80;\n79: \n80:     /** return default port number (subclasses may override) */\n81:     protected int getDefaultPort () { return httpPortNumber; }\n82: \n83:     private static int getDefaultPort(String proto) {\n84:         if (\"http\".equalsIgnoreCase(proto))\n85:             return 80;\n86:         if (\"https\".equalsIgnoreCase(proto))"
+      },
+      {
+        "from": 102,
+        "to": 124,
+        "text": "102:     /* where we cache currently open, persistent connections */\n103:     protected static KeepAliveCache kac = new KeepAliveCache();\n104: \n105:     private static boolean keepAliveProp = true;\n106: \n107:     // retryPostProp is true by default so as to preserve behavior\n108:     // from previous releases.\n109:     private static boolean retryPostProp = true;\n110: \n111:     /* Value of the system property jdk.ntlm.cache;\n112:        if false, then NTLM connections will not be cached.\n113:        The default value is 'true'. */\n114:     private static final boolean cacheNTLMProp;\n115:     /* Value of the system property jdk.spnego.cache;\n116:        if false, then connections authentified using the Negotiate/Kerberos\n117:        scheme will not be cached.\n118:        The default value is 'true'. */\n119:     private static final boolean cacheSPNEGOProp;\n120: \n121:     protected volatile AuthCacheImpl authcache;\n122: \n123:     volatile boolean keepingAlive;    /* this is a keep-alive connection */\n124:     volatile boolean disableKeepAlive;/* keep-alive has been disabled for this"
+      },
+      {
+        "from": 196,
+        "to": 232,
+        "text": "196:     }\n197: \n198:     static {\n199:         Properties props = GetPropertyAction.privilegedGetProperties();\n200:         String keepAlive = props.getProperty(\"http.keepAlive\");\n201:         String retryPost = props.getProperty(\"sun.net.http.retryPost\");\n202:         String cacheNTLM = props.getProperty(\"jdk.ntlm.cache\");\n203:         String cacheSPNEGO = props.getProperty(\"jdk.spnego.cache\");\n204: \n205:         String s = props.getProperty(\"jdk.https.negotiate.cbt\");\n206:         spnegoCBT = normalizeCBT(s);\n207: \n208:         if (keepAlive != null) {\n209:             keepAliveProp = Boolean.parseBoolean(keepAlive);\n210:         } else {\n211:             keepAliveProp = true;\n212:         }\n213: \n214:         if (retryPost != null) {\n215:             retryPostProp = Boolean.parseBoolean(retryPost);\n216:         } else {\n217:             retryPostProp = true;\n218:         }\n219: \n220:         if (cacheNTLM != null) {\n221:             cacheNTLMProp = Boolean.parseBoolean(cacheNTLM);\n222:         } else {\n223:             cacheNTLMProp = true;\n224:         }\n225: \n226:         if (cacheSPNEGO != null) {\n227:             cacheSPNEGOProp = Boolean.parseBoolean(cacheSPNEGO);\n228:         } else {\n229:             cacheSPNEGOProp = true;\n230:         }\n231:     }\n232: "
+      },
+      {
+        "from": 765,
+        "to": 793,
+        "text": "765:             }\n766:             throw stex;\n767:         } catch (IOException e) {\n768:             closeServer();\n769:             cachedHttpClient = false;\n770:             if (!failedOnce && requests != null) {\n771:                 Thread thread = Thread.currentThread();\n772:                 boolean doNotRetry = thread.isVirtual() && thread.isInterrupted();\n773:                 failedOnce = true;\n774:                 if (getRequestMethod().equals(\"CONNECT\")\n775:                     || streaming\n776:                     || doNotRetry\n777:                     || (httpuc.getRequestMethod().equals(\"POST\")\n778:                         && !retryPostProp)) {\n779:                     // do not retry the request\n780:                 }  else {\n781:                     // try once more\n782:                     openServer();\n783:                     checkTunneling(httpuc);\n784:                     afterConnect();\n785:                     writeRequests(requests, poster);\n786:                     return parseHTTP(responses, httpuc);\n787:                 }\n788:             }\n789:             throw e;\n790:         }\n791: \n792:     }\n793: "
+      },
+      {
+        "from": 933,
+        "to": 958,
+        "text": "933:                     } else {\n934:                         keepAliveConnections = 5;\n935:                     }\n936:                 }\n937:             } else if (nread != 8) {\n938:                 if (!failedOnce && requests != null) {\n939:                     failedOnce = true;\n940:                     if (getRequestMethod().equals(\"CONNECT\")\n941:                         || streaming\n942:                         || (httpuc.getRequestMethod().equals(\"POST\")\n943:                             && !retryPostProp)) {\n944:                         // do not retry the request\n945:                     } else {\n946:                         closeServer();\n947:                         cachedHttpClient = false;\n948:                         openServer();\n949:                         checkTunneling(httpuc);\n950:                         afterConnect();\n951:                         writeRequests(requests, poster);\n952:                         return parseHTTP(responses, httpuc);\n953:                     }\n954:                 }\n955:                 throw new SocketException(\"Unexpected end of file from server\");\n956:             } else {\n957:                 // we can't vouche for what this is....\n958:                 responses.set(\"Content-type\", \"unknown/unknown\");"
+      },
+      {
+        "from": 1015,
+        "to": 1035,
+        "text": "1015:                 keepAliveConnections = 1;\n1016:                 keepingAlive = false;\n1017:             } else {\n1018:                 keepingAlive = !disableKeepAlive;\n1019:             }\n1020:             failedOnce = false;\n1021:         } else {\n1022: \n1023:             /*\n1024:              * If it's a keep alive connection then we will keep\n1025:              * (alive if :-\n1026:              * 1. content-length is specified, or\n1027:              * 2. \"Not-Modified\" or \"No-Content\" responses - RFC 2616 states that\n1028:              *    204 or 304 response must not include a message body.\n1029:              */\n1030:             String cls = responses.findValue(\"content-length\");\n1031:             if (cls != null) {\n1032:                 try {\n1033:                     cl = Long.parseLong(cls);\n1034:                 } catch (NumberFormatException e) {\n1035:                     cl = -1;"
+      },
+      {
+        "from": 1047,
+        "to": 1067,
+        "text": "1047:             if (keepAliveConnections > 1 &&\n1048:                 (cl >= 0 ||\n1049:                  code == HttpURLConnection.HTTP_NOT_MODIFIED ||\n1050:                  code == HttpURLConnection.HTTP_NO_CONTENT)) {\n1051:                 keepingAlive = !disableKeepAlive;\n1052:                 failedOnce = false;\n1053:             } else if (keepingAlive) {\n1054:                 /* Previously we were keeping alive, and now we're not.  Remove\n1055:                  * this from the cache (but only here, once) - otherwise we get\n1056:                  * multiple removes and the cache count gets messed up.\n1057:                  */\n1058:                 keepingAlive=false;\n1059:             }\n1060:         }\n1061: \n1062:         /* wrap a KeepAliveStream/MeteredStream around it if appropriate */\n1063: \n1064:         if (cl > 0) {\n1065:             // In this case, content length is well known, so it is okay\n1066:             // to wrap the input stream with KeepAliveStream/MeteredStream.\n1067: "
+      },
+      {
+        "from": 1071,
+        "to": 1091,
+        "text": "1071:             boolean useKeepAliveStream = isKeepingAlive() || disableKeepAlive;\n1072:             if (useKeepAliveStream)   {\n1073:                 // Wrap KeepAliveStream if keep alive is enabled.\n1074:                 logFinest(\"KeepAlive stream used: \" + url);\n1075:                 serverInput = new KeepAliveStream(serverInput, cl, this);\n1076:                 failedOnce = false;\n1077:             }\n1078:             else        {\n1079:                 serverInput = new MeteredStream(serverInput, cl);\n1080:             }\n1081:         }\n1082:         return ret;\n1083:     }\n1084: \n1085:     public InputStream getInputStream() {\n1086:         lock();\n1087:         try {\n1088:             return serverInput;\n1089:         } finally {\n1090:             unlock();\n1091:         }"
+      },
+      {
+        "from": 1121,
+        "to": 1142,
+        "text": "1121:         }\n1122:         return \"\";\n1123:     }\n1124: \n1125:     public void setDoNotRetry(boolean value) {\n1126:         // failedOnce is used to determine if a request should be retried.\n1127:         failedOnce = value;\n1128:     }\n1129: \n1130:     public void setIgnoreContinue(boolean value) {\n1131:         ignoreContinue = value;\n1132:     }\n1133: \n1134:     /* Use only on connections in error. */\n1135:     @Override\n1136:     public void closeServer() {\n1137:         try {\n1138:             keepingAlive = false;\n1139:             serverSocket.close();\n1140:         } catch (Exception e) {}\n1141:     }\n1142: "
+      }
+    ]
+  }
+]

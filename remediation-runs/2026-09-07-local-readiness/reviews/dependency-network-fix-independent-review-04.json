@@ -1,0 +1,207 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "author": "/root",
+  "reviewed_at": "2026-09-07T14:33:40.671368+00:00",
+  "decision": "APPROVED_NARROW_PYTHON39_NETWORK_FAILURE_CORRECTION_AND_EXECUTED_REGRESSIONS",
+  "blocking_findings": [],
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/dependency_inventory.py",
+      "sha256": "fc0238d4d6ea0abd60d2985ed214af6516a239e439269978139fcc9519a20534",
+      "reviewed_line_ranges": [
+        [
+          1,
+          271
+        ]
+      ],
+      "method": "Fullsource reread forrenderer+tests; emitterunchanged exactfullreview02hashrechecked."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_dependency_inventory.py",
+      "sha256": "a3c454f08af038a59381360a1290a470d2b04e3ad4201fa1ca63bc96d01f1b91",
+      "reviewed_line_ranges": [
+        [
+          1,
+          216
+        ]
+      ],
+      "method": "Fullsource reread forrenderer+tests; emitterunchanged exactfullreview02hashrechecked."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/resolved_dependencies.init.gradle",
+      "sha256": "5120cb8d7c12825ad889f23d73075ef29ae48b66e4966d1e2335aa2d11995f59",
+      "reviewed_line_ranges": [
+        [
+          1,
+          107
+        ]
+      ],
+      "method": "Fullsource reread forrenderer+tests; emitterunchanged exactfullreview02hashrechecked."
+    }
+  ],
+  "original_failure": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-02/command.log",
+    "sha256": "4b6f19f316e1cd308a4354c1a6699b85cf73d54bceebf6db08822f47ee4e6d78",
+    "classification": "Reachable actualPython3.9 sockettimeout abortedmetadataresearch beforefinalreports."
+  },
+  "root_cause_and_fix": {
+    "location": "/Users/abdelrahman/Projects/parlor/scripts/verification/dependency_inventory.py:168-173",
+    "cause": "OnPython3.9 socket.timeout inheritsOSError, notTimeoutError. OtherHTTPread/reset exceptions likewiseescapedtheoriginalnarrowhandler.",
+    "fix": "Catchsocket.timeout,HTTPException andConnectionError inaddition toexisting declarednetwork/parser exceptions; keep arbitraryOSError/evidencewritefailures fatal.",
+    "flow": "Fixed-originresponseopen/read -> exception -> classifiedattempt +alternateapprovedorigin -> UNRESOLVED withno guessedlicense -> mainstillreturns1ifunresolved. Exceptionsduringevidencewriteare notconvertedtoabsence."
+  },
+  "counter_evidence_and_regression_review": [
+    "Thefixchangesverificationtool only, not appdependencies/gamerules/protocol/persistence.",
+    "Response.read fixture actuallyraisesfourdifferentexceptiontypes, includingdistinct3.9socket.timeout. Itassertsexact2originsattempted,explicitUNRESOLVED,emptylicenses,classedattempts,andnopartialPOMfiles.",
+    "PermissionError fixture usesvalidPOMresponse thenfailsactualPath.open, ensuringdisk failureisnotmasked asmissingmetadata.",
+    "Existingstrictsourcecompletion/hashes,XMLcontrols,coordinates,redirectdenial,metadataidentity,inheritancebounds andparservalidation remainunchanged.",
+    "KeyboardInterrupt/SystemExitareoutsidecaughtExceptiontypes; callerinterruptionisnotconvertedtoUNRESOLVED.",
+    "Actualnew15testgreenisnotfull456POMresearch/schemaorlegalapproval. Research03resultspending."
+  ],
+  "verification": [
+    {
+      "cycle": "dependency-network-red-01",
+      "receipt_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-network-red-01/receipt.json",
+      "receipt_sha256": "d3723f0d474b9fc9bb2527ab515d85f2c17d4c43bf1b83a8df7a9a91486af824",
+      "raw_log_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-network-red-01/gradle.log",
+      "raw_log_sha256": "007e2292e7a85cd30acf0304f8a0b7415c6713da6ec141f1055edef1ace1ca06",
+      "source_hashes": {
+        "scripts/verification/dependency_inventory.py": "f82c3365ff59b602d3ad03ad19fa085f6831e79fff5753898785a06c478045ce",
+        "scripts/release/tests/test_dependency_inventory.py": "a3c454f08af038a59381360a1290a470d2b04e3ad4201fa1ca63bc96d01f1b91",
+        "scripts/verification/resolved_dependencies.init.gradle": "5120cb8d7c12825ad889f23d73075ef29ae48b66e4966d1e2335aa2d11995f59"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/release/tests",
+        "-p",
+        "test_dependency_inventory.py",
+        "-v"
+      ],
+      "status": "FAIL",
+      "exit_code": 1,
+      "started_at": "2026-09-07T14:29:09.252625+00:00",
+      "finished_at": "2026-09-07T14:29:09.644104+00:00",
+      "stop_exit_code": 0,
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "remaining_outputs": [],
+      "cleanup_errors": [],
+      "source_changed_during_cycle": false,
+      "runner_changed_during_cycle": false,
+      "tests": 15,
+      "subtest_errors": [
+        "socket.timeout",
+        "http.client.IncompleteRead",
+        "ConnectionResetError"
+      ],
+      "failures": 0,
+      "errors": 3,
+      "skips": 0,
+      "scope": "Red actual regression, notrepairproof;14othermethodsandbuilt-inTimeoutErrorsubcasepass."
+    },
+    {
+      "cycle": "dependency-network-green-01",
+      "receipt_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-network-green-01/receipt.json",
+      "receipt_sha256": "1f1bdcfc66de10932b3b7ed664a1e8f6a7c02cb246dfcfdbffbacc072316ea21",
+      "raw_log_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-network-green-01/gradle.log",
+      "raw_log_sha256": "67d49e2281fa7ec0c437b6c5e223be8c0654cee255241f01b2cbcd6e49589829",
+      "source_hashes": {
+        "scripts/verification/dependency_inventory.py": "fc0238d4d6ea0abd60d2985ed214af6516a239e439269978139fcc9519a20534",
+        "scripts/release/tests/test_dependency_inventory.py": "a3c454f08af038a59381360a1290a470d2b04e3ad4201fa1ca63bc96d01f1b91",
+        "scripts/verification/resolved_dependencies.init.gradle": "5120cb8d7c12825ad889f23d73075ef29ae48b66e4966d1e2335aa2d11995f59"
+      },
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/release/tests",
+        "-p",
+        "test_dependency_inventory.py",
+        "-v"
+      ],
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at": "2026-09-07T14:30:06.644477+00:00",
+      "finished_at": "2026-09-07T14:30:06.971236+00:00",
+      "stop_exit_code": 0,
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "remaining_outputs": [],
+      "cleanup_errors": [],
+      "source_changed_during_cycle": false,
+      "runner_changed_during_cycle": false,
+      "actual_test_methods": [
+        "test_constraints_are_not_misrepresented_as_runtime_dependency_edges",
+        "test_coordinates_cannot_escape_metadata_repository",
+        "test_cycle_and_excessive_inheritance_fail_closed",
+        "test_direct_pom_license_identity_and_parent_are_explicit",
+        "test_evidence_write_errors_are_not_misclassified_as_missing_network_metadata",
+        "test_gradle_exporter_never_adds_repositories_or_weakens_verification",
+        "test_graph_receipt_binds_success_source_and_exact_consumed_bytes",
+        "test_graph_rejects_unverified_duplicate_dangling_and_forged_inputs",
+        "test_missing_license_is_reported_as_unresolved_never_a_default",
+        "test_network_read_failures_remain_unresolved_without_losing_the_inventory",
+        "test_parent_license_is_fetched_bound_and_attributed",
+        "test_pom_inherited_group_and_version_do_not_erase_identity",
+        "test_redirect_handler_refuses_before_following_another_origin",
+        "test_resolved_graph_and_cyclonedx_keep_edges_bytes_and_declared_status",
+        "test_unsafe_or_unresolved_pom_metadata_is_not_accepted"
+      ],
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "AST_actual_method_equality": true
+    }
+  ],
+  "combined_prior_controls": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ci-native-and-dependency-controls-01/receipt.json",
+    "sha256": "2de7071c9d8f3106220a52e4449b5deda40dde1d1bdc8ff70feb2eabeda15fb4",
+    "counts": [
+      55,
+      13
+    ],
+    "actual_unique_ok_descriptors": 68,
+    "limitation": "Thisprecededthenewnetworktests; latest15executionisgreen01above. No borrowingold13asnew15PASS."
+  },
+  "authoritative_references": [
+    {
+      "url": "https://docs.python.org/3/library/socket.html#socket.timeout",
+      "accessed_at": "2026-09-07",
+      "document_sha256": "72226705230dff946399a3cd9cf4e4cc43b084ef7b8be90839458dbb0764bb32",
+      "claim": "socket.timeoutmadeTimeoutErroralias only3.10."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/python/cpython/v3.9.6/Modules/socketmodule.c",
+      "accessed_at": "2026-09-07",
+      "sha256": "1826831dc1c2168746558b20b4a8ac7a791d9bb082fc2297d85dba439a797f33",
+      "line_ranges": [
+        [
+          7179,
+          7180
+        ]
+      ],
+      "claim": "Exact3.9.6sourceconstructsseparatesocket.timeoutexceptionwithOSErrorbase; actualredrunusesXcodePython3.9."
+    }
+  ],
+  "pending": [
+    "Actualresearch03completionandexplicitdispositionofall456GAVs",
+    "Actual4CycloneDXoutputs officialschemavalidation",
+    "Finalfrozenwhole-treecombinedgates",
+    "Binary/native/assets/notice/legalobligationsremainseparate"
+  ],
+  "preservation_and_cleanup": "Originalred/nativefailure/evidencereceipts preserved. Newreportonly; nosourceedits/Gitwrites/builds/tests/nativeprocessesrunbyreviewer. Rootred+greenreceipts eachshowstop0,noremainingownedworkers/outputs,andnocleanuperrors."
+}

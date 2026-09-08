@@ -1,0 +1,15 @@
+{
+  "date": "2026-09-05T21:29:05.935425+00:00",
+  "cycle": "sn-c2-factory-green-01",
+  "status": "FAIL",
+  "execution": {
+    "tests": 30,
+    "failures": 6,
+    "skips": 0
+  },
+  "failure": "Six identity assertions assumed exception objects survive coroutine stacktrace recovery unchanged. XML shows different objects of same class/message. Production helper was not altered to accommodate tests.",
+  "correction": "Retain standard CancellationException fixtures. Assert class/message and exact originating exception in bounded cause chain. Assert suppressed cleanup failure at actual helper return boundary before a later async await can discard recovered-copy suppressed metadata. Stop/no-transfer/one-attempt/readiness/lifecycle assertions unchanged.",
+  "research": "coroutines-recovery-research-01/references.json and official1.11.0 StackTraceRecovery.kt/ExceptionsConstructor.kt",
+  "independent_validator": "/root/factory_review; reviewed proposed correction against exact sources",
+  "cleanup": "stop0, no workers/outputs, reports preserved"
+}

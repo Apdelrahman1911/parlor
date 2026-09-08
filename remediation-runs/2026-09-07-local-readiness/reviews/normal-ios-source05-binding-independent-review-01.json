@@ -1,0 +1,518 @@
+{
+  "schema_version": 1,
+  "review_id": "NORMAL-IOS-SOURCE05-INDEPENDENT-BINDING-01",
+  "reviewer": "/root/factory_review",
+  "recorded_at": "2026-09-07T16:47:29.299936+00:00",
+  "disposition": "SOURCE05_BINDING_AND_CURRENT_PURE_CONTROLS_VERIFIED; RUNTIME_AUTHORIZATION_WITHHELD_PENDING_SOURCE06_REFREEZE",
+  "scope": "Independent read-only verification of the proposed one root-owned normal-source local Debug iOS simulator attempt, not execution or whole-app approval.",
+  "source_binding": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-05.json",
+    "sha256": "577dec4b5a4e82559d2c3007adde68bf008b6670196a99e569e786a6e1b51f1f",
+    "binding_status": "REVIEW_REQUIRED_BOUND",
+    "schema_version": 3,
+    "source": {
+      "commit": "0b3090a40ff8135b04e0d6e9933c0af5d160daba",
+      "tree": "7a53259db144b3cc96722935e727a50dc99a9413",
+      "branch": "fix/local-readiness-2026-09-07",
+      "tracked_status": "",
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_manifest_sha256": "fff0a0f9f001dbc6587b7e3262f101414cfac12508611c9cb730bc39d265ae9a"
+    },
+    "bound_source_entries": 779,
+    "bound_copy_inputs": 719,
+    "independent_full_identity_match_at_recording": true,
+    "independent_copy_subset_match_at_recording": true,
+    "unsafe_build_symlinks": [],
+    "manifest_reconstruction_method": "Read Git cached plus nonignored untracked names; apply exact reviewed protected/excluded path policy; stream SHA-256 of eligible nonsymlink files; compare ordered JSON list digest and actual Git metadata. No repository Python modules imported or runners executed. Hash equality is byte identity, not a claim to source-review 779 files."
+  },
+  "controls": {
+    "proposal": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-ios-source05-controls.json",
+      "sha256": "c965e73dfb5be1dce6ab77612fd0789b340dec6eb2127378c72a6641d2f38077"
+    },
+    "count": 54,
+    "independently_reconstructed_sha256": "ae38298943b254333448179a3a5c59f013f37835e3057b770b1bd04407e76615",
+    "proposal_rows_and_digest_match": true,
+    "unbound_count": 53,
+    "unbound_sha256": "c6ca2feba7275a68d181ace7dbc4ac0d161c90fd8387e352a528e6163db636b8",
+    "current_files": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py",
+        "sha256": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/ios-readiness-source-05.json",
+        "sha256": "577dec4b5a4e82559d2c3007adde68bf008b6670196a99e569e786a6e1b51f1f"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/NormalSourceLaunchUITests.swift.in",
+        "sha256": "c3d5cd42d60371cffee6ec4e8cdc462165f953dbef352bcdbf0f3f2d2a5a4ed2"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+        "sha256": "ea7c3f62b2468350dba20264a38afee8ac6041130078516f4364a0976c9f5752"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py",
+        "sha256": "820a566780f15edc07331d41e0ac7818414d90e347e4833ed62d6ca4fb76b559"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_launch_receipts.py",
+        "sha256": "7753fccfbda4678289d889f58c5c3b4454e954eec0dbee7d8b654780f55d42f5"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_source_copy.py",
+        "sha256": "5920d07a43c64eb7193a1c1d03aea93948bfa21597591ee13d79073666ed54d2"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+        "sha256": "5fd60d980954bdf23ef277196a557a74cd6736fb3338aee23a213e9072560fd3"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+        "sha256": "5b69fc6d6c1efbdd61e049057c57f3eddb1d11e1f804bb8ec8debc7e9aba42c8"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+        "sha256": "af5c912dbc9655468d5d428b18f5a7c16d7b0f2fa421e14cf559ee674eaceb76"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/DSC01CatalogSelection.swift.in",
+        "sha256": "2649fb97fe27e74539dfd9867f6677c6a390e722129f8e2434231f44b1d91465"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/DSC01ComposeObservation.kt.in",
+        "sha256": "e54503b0d39a1c1055a5334dd835ccad30a96a887ff62560f22202b7231c266c"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/DSC01InvocationBridge.kt.in",
+        "sha256": "fc27547c977ed48d55c2254ed6779dc22fcd64f6cc214c8f4121b9f3e110a330"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/DSC01MafiaStartSelection.swift.in",
+        "sha256": "50aad088497c862ff962dc5b1a569a6285f99ce761bf710d4fe8f38e3b698753"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/DSC01NativeObservation.swift.in",
+        "sha256": "f806c5fa6533f9114ad9bf33fdc6fc4647086b1fb2daf4fe09ba93cf6029ee94"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/DSC01OSAppSettings.swift.in",
+        "sha256": "52e9bcfe9217998b13ca75c2cc9c097753e312afac4b0ad269a06953d1c83e38"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/DSC01OSPreferenceBaseline.swift.in",
+        "sha256": "c657f9ca83d9053d56d6debfc509d95fe07486f21e76c8b0a62ba2604978879c"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/DSC01OSPrerequisite.swift.in",
+        "sha256": "f266cc919734bd840a6a6e9288088e9e437a67b2ed41d16c8a02337ad19627d8"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/DSC01Probe.swift.in",
+        "sha256": "1c4b113ec8695d8da2115e4f386fdaf8820411879af6ff9492109b62c7770746"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/DSC01PublicDiagnostics.swift.in",
+        "sha256": "6dce9ea0f597ddce7fb95f41d3d94570f41762ca806cb0c6303e032a1375dd88"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/DSC01UIKitObservation.kt.in",
+        "sha256": "83b35d069e738f59b79c44d11569c3a9a3a64b4427a9cb7e7d46c12b60f81e80"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/IOSAppLaunchUITests.swift.in",
+        "sha256": "9bdfa70f43074569a8699dda01864496188562b117289c994ea4f4e8c844bf60"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/NativeReadinessLaunch.swift.in",
+        "sha256": "df8f0cce3f45bedbfea47df3ca0b2e56c6a777383395fc170f0f07b83f8d143a"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/NativeReadinessPathControls.swift.in",
+        "sha256": "efc84b3b49c099185d17ff56ceb53b0134ee2332ff35220a537dade5168a76c9"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/NativeReadinessProbe.kt.in",
+        "sha256": "c976abef22d10d17fd9da744f2d0edb271f3e475596c44f5ce4dfcc41f0ec3a7"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/NativeReadinessUITests.swift.in",
+        "sha256": "fa2dc7dbc97c576262ad14cd85b22f65aa908b1629ab1a205b22aa4873f5c0dc"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/README.md",
+        "sha256": "744558b8b8a4782dbdda43b572cbfdaab4e7917c9a213e83ddd29c5aea1beb1f"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/artifact_inventory.py",
+        "sha256": "485196bd7dcebccaa5ad552896c7e2da781fbf6fa6fff6ef2ab350ecc9360124"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/bind_source.py",
+        "sha256": "0954f5c24eb61c4f09c365efe6b3ab1fdb9f8342f86bad3e7654795464b53347"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/copied-kotlin-phase.sh.in",
+        "sha256": "4992e516f99df2b5f1425688c51ae532086f8859618b1968937fbede818f49b0"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/copied_sources.py",
+        "sha256": "5597d1e4b6a123a1c23bd82c66e30fdd86cb00cf85c831d6c6f281e023cbd752"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/inherited-controls.json",
+        "sha256": "a2e2e1d09fc1228add7a8fc71c8c81e30c6b140890cec2b749b0010bcea65dd5"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/instrument_storage.py",
+        "sha256": "51348e3985e6872283182a728d8a91808714d69ad0197c978298678366cb4d88"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/native_failure_receipts.py",
+        "sha256": "9376f5f7244dc297edf9bca964357a1148c1972a41b44fdfd60fd8c988a007d6"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/native_readiness_receipts.py",
+        "sha256": "d350c850e7f2152cbbeaf369465580ecfaa80e6691269130efbcdd8c936f816f"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/os_action_receipts.py",
+        "sha256": "54a5f6c0ceb669bae65d2be9480f691cc19bc77bcc5d77c75904cc3d4cc2e7bb"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/os_pane_receipts.py",
+        "sha256": "4ffcba3ade80bfa334b14f5bcddec0527148983a99b2dbf1263bde091efc9229"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/os_preference_receipts.py",
+        "sha256": "9de723db33e6a074261ae6199c55da7196bdbdc257a5ecaa558bcbc19f005c52"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/owned_lane.py",
+        "sha256": "4bf3bbb4abfa22cd1604e6b4381bf481c95662ab15bf3fbdc86355a083102742"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/prerequisite_receipts.py",
+        "sha256": "708116f488083da11357c053c6e56f5186bbde4707f1ba487a35ca363a09fd5b"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/probe_validation.py",
+        "sha256": "134bb3affe45711ec3f74d7091ec59b7f859ca4f5fa04df1d895ce3250fd3aa2"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/public_interaction_receipts.py",
+        "sha256": "4583b8e9545dbe16ef3ee6f59d7d34a2bfd1421402b0f532a0b84aa2b2f63040"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/run_ios_readiness.py",
+        "sha256": "9bd997ec5836fe8da4e3afcdb3604eb10f180d3b55a63718c1ea9ba1f9893f2c"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/secondary_fifo.py",
+        "sha256": "080622194e19ef5d3ffb561e134ab8cf91e3e3ccef1e29197f59781154a7ffcc"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/simulator_entitlements.py",
+        "sha256": "8cd4f66b83d44c69bf60cb21362d0425774f67eece8f13adc1b0f4795f260e4a"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/simulator_signing.py",
+        "sha256": "89524b777694f8504008a83b60299725cae01e8b642c10754283d79ce1974d1e"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_controls.py",
+        "sha256": "9c1948c6f5ce8ace176df6a9324d851004162e5296d1157a3648d50344e3ea8f"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_native_failure_receipts.py",
+        "sha256": "9d015aa4ce2cac5ac6e6aa770fcb0c0df00dd40435002529d807b744baa7c19b"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_native_paths.py",
+        "sha256": "11c0bcbba09de36d5e2eb5a276c8f8d3c52024c3b395558e6aebd2f12875007a"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_native_readiness.py",
+        "sha256": "45e486ad5dde50250cd244e8ffd8ae5ebbf17f4154eb1f98e7cbd84242a14ba0"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_os_preference_receipts.py",
+        "sha256": "74d74d25358a1dfe557ca1a57cc7145780d95ad422cc0e29cb6d09157912a4ec"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_secondary_fifo.py",
+        "sha256": "2d685ebcbef9930f43f1f644c5ed6fc3b5a5c5d07d975cc218a9165273bfb826"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_simulator_entitlements.py",
+        "sha256": "22049b900643c5345bc4cb440b9c2002ae105e4566b3cdeb3837e765a4527d80"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_simulator_signing.py",
+        "sha256": "af6327b4e1f62f6326a062faa70cc5132df0cde6657c15fc38a47ec2b112b54a"
+      }
+    ],
+    "normal_runner": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "sha256": "5b69fc6d6c1efbdd61e049057c57f3eddb1d11e1f804bb8ec8debc7e9aba42c8"
+    },
+    "darwin_helper_sha256": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378"
+  },
+  "pure_control_execution": {
+    "evidence_directory": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-system-package-controls-01",
+    "receipt": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-system-package-controls-01/receipt.json",
+      "sha256": "2240ab20c6d63632b6f3f6b3be3bf22d0205e9498842391d04748579697f4b99"
+    },
+    "log": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-system-package-controls-01/gradle.log",
+      "sha256": "f48bacd7ae1ddedcf2710daae5e0d910299bec42c1e46e590f9e722186df32d7"
+    },
+    "before_json_line": 153,
+    "after_json_line": 237,
+    "executed_tests": 78,
+    "unique_raw_ok_descriptors": 78,
+    "test_ids_sha256": "cc3601e9cb2edac633e57dd17f5c342c0612cb405c63ea395acfd23e0464586b",
+    "actual_ast_declared_discovered_executed_ids_equal": true,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "current_53_controls_equal_executed_before_and_after": true,
+    "imported_modules": 22,
+    "imports_all_in_bound_manifest": true,
+    "driver": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+      "sha256": "5fd60d980954bdf23ef277196a557a74cd6736fb3338aee23a213e9072560fd3"
+    },
+    "test_source": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+      "sha256": "af5c912dbc9655468d5d428b18f5a7c16d7b0f2fa421e14cf559ee674eaceb76"
+    },
+    "current_readme_in_executed_manifest": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+      "sha256": "ea7c3f62b2468350dba20264a38afee8ac6041130078516f4364a0976c9f5752"
+    },
+    "scope": "Synthetic Python control tests only. These do not execute XCTest, build or launch the app, prove actual package layout or validate physical devices."
+  },
+  "earlier_cycle_source_distinction": {
+    "commit": "5d9f5f4c81ff51ee70922c876eefb91c6e669d56",
+    "tree": "3fbc4908ae41fab311e5e936e3ec8913199da7ad",
+    "source_manifest_sha256": "fbe71edc05220102285ab690c3adaaf653633e33840381963fa2cfb6d4643699",
+    "later_source05_manifest_changed_paths": [
+      "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv"
+    ],
+    "all_719_copy_input_bytes_same_in_earlier_cycle": true,
+    "explanation": "The test cycle predates the source05 Git commit and differs only in the review-inventory CSV; no claim that it ran after or at the source05 commit. The exact 53 executed controls and all copied build inputs match source05."
+  },
+  "notice_binding": {
+    "bound_notice_resources": 26,
+    "total_source_bytes": 99515,
+    "all_resource_hashes_match": true,
+    "verifier": {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/third_party_notices.py",
+      "sha256": "d5a9e8e0cafd9c2d0de9ecd8dfcb040053fa52d25d798abd9998e84ab6676bdf"
+    },
+    "configuration": {
+      "path": "/Users/abdelrahman/Projects/parlor/config/third-party-notices.json",
+      "sha256": "4b501223b3841017477a226515d3758bc60848fe00d579fac3152a81928d6406"
+    },
+    "runtime_requirement": "Both built and installed apps must execute the copied source-bound verifier successfully with nonempty package receipts and all 26 exact resource bytes. A source-only package:null receipt cannot satisfy the gate; legal approval is not implied."
+  },
+  "reopened_source_ranges": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/bind_source.py",
+      "sha256": "0954f5c24eb61c4f09c365efe6b3ab1fdb9f8342f86bad3e7654795464b53347",
+      "line_ranges": [
+        [
+          1,
+          59
+        ]
+      ],
+      "qualification": "Targeted current reopen plus byte comparison to this reviewer’s earlier static review, not a new exhaustive whole-file claim where ranges are partial."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/owned_lane.py",
+      "sha256": "4bf3bbb4abfa22cd1604e6b4381bf481c95662ab15bf3fbdc86355a083102742",
+      "line_ranges": [
+        [
+          1,
+          221
+        ]
+      ],
+      "qualification": "Targeted current reopen plus byte comparison to this reviewer’s earlier static review, not a new exhaustive whole-file claim where ranges are partial."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/copied_sources.py",
+      "sha256": "5597d1e4b6a123a1c23bd82c66e30fdd86cb00cf85c831d6c6f281e023cbd752",
+      "line_ranges": [
+        [
+          1,
+          229
+        ]
+      ],
+      "qualification": "Targeted current reopen plus byte comparison to this reviewer’s earlier static review, not a new exhaustive whole-file claim where ranges are partial."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+      "sha256": "5fd60d980954bdf23ef277196a557a74cd6736fb3338aee23a213e9072560fd3",
+      "line_ranges": [
+        [
+          1,
+          65
+        ]
+      ],
+      "qualification": "Targeted current reopen plus byte comparison to this reviewer’s earlier static review, not a new exhaustive whole-file claim where ranges are partial."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_source_copy.py",
+      "sha256": "5920d07a43c64eb7193a1c1d03aea93948bfa21597591ee13d79073666ed54d2",
+      "line_ranges": [
+        [
+          1,
+          51
+        ]
+      ],
+      "qualification": "Targeted current reopen plus byte comparison to this reviewer’s earlier static review, not a new exhaustive whole-file claim where ranges are partial."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/NormalSourceLaunchUITests.swift.in",
+      "sha256": "c3d5cd42d60371cffee6ec4e8cdc462165f953dbef352bcdbf0f3f2d2a5a4ed2",
+      "line_ranges": [
+        [
+          1,
+          76
+        ]
+      ],
+      "qualification": "Targeted current reopen plus byte comparison to this reviewer’s earlier static review, not a new exhaustive whole-file claim where ranges are partial."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+      "sha256": "ea7c3f62b2468350dba20264a38afee8ac6041130078516f4364a0976c9f5752",
+      "line_ranges": [
+        [
+          1,
+          139
+        ]
+      ],
+      "qualification": "Targeted current reopen plus byte comparison to this reviewer’s earlier static review, not a new exhaustive whole-file claim where ranges are partial."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "sha256": "5b69fc6d6c1efbdd61e049057c57f3eddb1d11e1f804bb8ec8debc7e9aba42c8",
+      "line_ranges": [
+        [
+          1,
+          145
+        ],
+        [
+          230,
+          430
+        ],
+        [
+          600,
+          677
+        ]
+      ],
+      "qualification": "Targeted current reopen plus byte comparison to this reviewer’s earlier static review, not a new exhaustive whole-file claim where ranges are partial."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+      "sha256": "af5c912dbc9655468d5d428b18f5a7c16d7b0f2fa421e14cf559ee674eaceb76",
+      "line_ranges": [
+        [
+          680,
+          833
+        ]
+      ],
+      "qualification": "Targeted current reopen plus byte comparison to this reviewer’s earlier static review, not a new exhaustive whole-file claim where ranges are partial."
+    }
+  ],
+  "prior_static_evidence": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-ios-source03-runtime-execution-approval-02.json",
+      "sha256": "c55bf5a19c407265cb62682a82f55f179b5ddd7f9bdf2d8140963b52e55b863f"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-ios-source04-delta-preparation-01.json",
+      "sha256": "6f397a0ed4038c03e72b2991291fed0ed7dcb62d171f72b01e9712e1d69192e9"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-ios-notice-package-wiring-independent-review-01.json",
+      "sha256": "30574aa0d9f83f75243078e60f964c8ebed11ceb3dd8ed339af0d21d5c4f12b0"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/notice-implementation-independent-static-review-01.json",
+      "sha256": "6d3d75e25116a15ab4a5b6f1fd7b54253fa0204275c0c0ced0c3ea741615d69f"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/package-controls01-inspectors-normal-independent-execution-review-01.json",
+      "sha256": "6e5d31d3d8edefbbeeb9305ee0712fb6ab2eefa813e8163cd9813206136dc824"
+    }
+  ],
+  "reviewed_acceptance_conditions": [
+    "Only the copied UI-test file and copied Xcode embedding/stop shell phase may differ; production Kotlin, Swift, resources, settings and game inputs remain identical.",
+    "One fresh owned iPhone17Pro/iOS26.5 simulator, eight fixed nonparallel XCTest repetitions with process relaunch enabled and no retry-on-failure; each needs six foreground/Home/no-native-alert observations over at least ten post-Home seconds.",
+    "Require actual eight individually passing Test Case Run records plus eight serial UUID marker trains. UUIDs are observations, not kernel process identities.",
+    "Ninth simctl launch/public sample/vmmap image observation must independently bind PID/kernel lifetime/UID/audit token/path/UUID/mappings to current built and installed artifacts; it is not retroactive per-boot image proof for the first eight.",
+    "Immediate isolated Gradle stops and finally-path exact owned simulator/worker/FIFO/allocation cleanup; source/control drift, unknown holders, changed inode/link, unexecuted notice checks or extraction failures must prevent overall PASS."
+  ],
+  "historical_proposed_command": [
+    "/usr/bin/python3",
+    "-B",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+    "ios-readiness-05",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-05.json",
+    "ae38298943b254333448179a3a5c59f013f37835e3057b770b1bd04407e76615",
+    "--simulator-signing=adhoc"
+  ],
+  "runtime_authorization": {
+    "authorized": false,
+    "status": "WITHHELD",
+    "reason": "During this independent review root reported final-production-check-01 exposed a stale workflow contract expecting the earlier simulator selection. Root requested no source05 run, correction and independent testing, then a new source06 binding. The source05 byte review is historical conditional evidence only; it cannot authorize a later changed tree.",
+    "required_before_new_attempt": [
+      "Finish current productionCheck artifact inspection and mandatory cleanup in the sole build lane.",
+      "Correct/review/execute the affected workflow contract regression and preserve results/cleanup.",
+      "Create and independently review a new exact source06 binding plus controls for one unused evidence directory.",
+      "Require no competing builds, original build outputs or user-device use before starting."
+    ],
+    "source05_evidence_directory_exists_at_recording": false
+  },
+  "prior_cycle_cleanup": {
+    "exit_code": 0,
+    "stop_exit_code": 0,
+    "stop_log": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-system-package-controls-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    "stop_log_text": "No Gradle daemons are running.",
+    "cleanup_completed_at": "2026-09-07T16:25:18.917461+00:00",
+    "cleanup_errors": [],
+    "remaining_outputs": [],
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "artifact_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "scratch_absent_at_recording": true,
+    "qualification": "Prior pure/control cycle only, not a claim that root’s currently active productionCheck finalizer has completed."
+  },
+  "remaining_evidence_limits": [
+    "No source05 app runtime was attempted or observed by this reviewer.",
+    "Xcode26.5/17F42 Debug adhoc simulator differs from Store-qualified26.3/17C529; no Store-signing, owner credentials, publication or production readiness approval.",
+    "English launch conditions do not verify Follow System, Arabic/RTL, game/session retention, LAN, physical devices, accessibility entirety or the cause of historical launch crashes.",
+    "Periodic UI samples are not uninterrupted process liveness; sample suspends the ninth process and no mapped-page hash claim is made."
+  ],
+  "reviewer_actions": {
+    "repository_modules_imported": false,
+    "tests_or_builds_run": false,
+    "native_probes_or_devices_started": false,
+    "source_or_git_writes": false,
+    "processes_signaled": false,
+    "only_output": "This new independent JSON review receipt.",
+    "cleanup": "No reviewer-owned background workers or build outputs were created. Root owns ongoing lane cleanup; no unrelated processes or files were touched."
+  }
+}

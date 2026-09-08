@@ -1,0 +1,85 @@
+{
+  "status": "FAIL",
+  "runtime_kind": "owned API35 ARM64 emulator",
+  "not_evidence_for": [
+    "physical LAN",
+    "Linux x86/KVM GMD",
+    "Store signing"
+  ],
+  "tests": [],
+  "cleanup": [
+    {
+      "workers": "error",
+      "error": "task_name_for_pid denied for attested candidate 17498: 0"
+    }
+  ],
+  "source_commit": "1f809b87c15a4deb079809bc14718a58cf0fe451",
+  "source_binding": "Caller-provided commit; campaign freeze and Gradle receipt must bind dirty source. Artifact hashes alone do not prove source.",
+  "image_properties": {
+    "Pkg.Desc": "System Image arm64-v8a with Google APIs.",
+    "Pkg.Revision": "9",
+    "Pkg.Dependencies": "emulator#33.1.24",
+    "AndroidVersion.ApiLevel": "35",
+    "AndroidVersion.ExtensionLevel": "13",
+    "AndroidVersion.IsBaseSdk": "true",
+    "SystemImage.Abi": "arm64-v8a",
+    "SystemImage.TagId": "google_apis",
+    "SystemImage.TagDisplay": "Google APIs",
+    "SystemImage.GpuSupport": "true",
+    "Addon.VendorId": "google",
+    "Addon.VendorDisplay": "Google Inc."
+  },
+  "artifacts": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-01/release.apk",
+      "sha256": "2cbcd12b525d949cc2cd03c82560946d3e9b7216ef86c7e3e08beaa9bc5a7308"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-01/release-androidTest.apk",
+      "sha256": "d4678433917e46bb7c6e05d6f288bbf8bcd80538230218349c693e789d836024"
+    }
+  ],
+  "temporary_root": "/private/tmp/parlor-arm64-v00offqp",
+  "legacy_adb_port_reserved": 59220,
+  "failure": "RuntimeError: task_name_for_pid denied for attested candidate 17498: 0; owned command cleanup failed: task_name_for_pid denied for attested candidate 17498: 0",
+  "owned_adb_shutdown_acknowledged": false,
+  "commands": [
+    {
+      "args": [
+        "/Users/abdelrahman/Library/Android/sdk/platform-tools/adb",
+        "version"
+      ],
+      "started_epoch": 1788766596.787125,
+      "seconds": 0.111,
+      "exit_code": 0,
+      "log": "000-adb-version.log",
+      "failure": null
+    },
+    {
+      "args": [
+        "/Users/abdelrahman/Library/Android/sdk/emulator/emulator",
+        "-version"
+      ],
+      "started_epoch": 1788766596.897728,
+      "seconds": 0.526,
+      "exit_code": null,
+      "log": "001-emulator-version.log",
+      "failure": "task_name_for_pid denied for attested candidate 17498: 0; owned command cleanup failed: task_name_for_pid denied for attested candidate 17498: 0"
+    }
+  ],
+  "worker_exit_codes": [
+    {
+      "pid": 17490,
+      "label": "adb-version",
+      "retired": true,
+      "exit_code": 0
+    },
+    {
+      "pid": 17491,
+      "label": "emulator-version",
+      "retired": false,
+      "exit_code": null
+    }
+  ],
+  "token_bound_signals": []
+}

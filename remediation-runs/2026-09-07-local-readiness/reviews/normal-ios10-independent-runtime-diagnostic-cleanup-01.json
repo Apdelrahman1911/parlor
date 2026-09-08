@@ -1,0 +1,561 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "reviewed_at": "2026-09-08T01:47:42.196468+00:00",
+  "classification": "INDEPENDENTLY RECONCILED: eight Home observations PASS; notices PASS; separate external image provenance FAIL; cleanup PASS; overall FAIL remains immutable",
+  "scope": "Post-finalization source/evidence inspection only. No native or build execution, Git mutation, repository-module imports, process queries/signals, or deletion by this reviewer.",
+  "source_binding": {
+    "commit": "e1dd40c0f1ff14561ecac6c25967fced8cda74d2",
+    "tree": "1d4822ebea89148635e0d71c74060fce1ab61824",
+    "branch": "fix/local-readiness-2026-09-07",
+    "diff_sha256": "36dd70117778d1f5d038acfab1ab46ffb464cd8c78b2428552214bfe6fdffed1",
+    "source_manifest_sha256": "35f9d58c3d1a151ed34a9f7c62c3a32cdcf147cf010fe621571ca888957eedbc",
+    "binding": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-09.json",
+      "sha256": "6401adebe483073d6760d5ed928725cc07910b9090ac2d382476a151fe98152a"
+    },
+    "source_rows": 800,
+    "copied_rows": 740,
+    "native_control_rows": 78,
+    "native_control_sha256": "efa971d9dfb259bc227e9c5abeb90ab915851a6f25422f8e24e5252591ab9ff4",
+    "control_manifest": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-source09-control-manifest-01.json",
+      "sha256": "0573e70c655da607da674abec45cf37ae9807c9a818977b9530ab6e2ec091f25"
+    },
+    "current_bound_source_and_control_hashes_all_match": true,
+    "native_input_before_after_binding_equal": true,
+    "copied_input_originals_equal_binding": true,
+    "copied_postbuild_inputs_equal_recorded_transformed_copy": true,
+    "changed_copy_inputs": [
+      "iosApp/iosApp.xcodeproj/project.pbxproj",
+      "iosApp/iosAppUITests/IOSAppLaunchUITests.swift"
+    ],
+    "application_source_transformations": 0,
+    "additional_missing_or_symlink_copy_inputs": [],
+    "limitation": "Current all-bound-file hash check is not a new full Git-untracked source enumeration. The full source inventory was independently compared in the preexecution approval."
+  },
+  "prior_exact_execution_approval": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-source09-native10-independent-approval-01.json",
+    "sha256": "51dd3041941c91c7dba5fca85b1327e2d88abc3a462c46c5d532c7935cd63108"
+  },
+  "runtime": {
+    "status": "PASS",
+    "scope": "One Debug English XCTest Home test method executed eight fixed times on the same fresh simulator installation. Not eight distinct tests, continuous liveness, or eight kernel/image attestations.",
+    "method": "IOSAppLaunchUITests/testColdLaunchRendersComposeHomeWithoutUnexpectedAlert()",
+    "xcodebuild_exit": 0,
+    "xcresult_query_exits": {
+      "summary": 0,
+      "tests": 0,
+      "test-details": 0
+    },
+    "summary_methods": 1,
+    "destination_executions": 8,
+    "independently_matching_tree_and_details_runs": [
+      {
+        "duration": "15s",
+        "durationInSeconds": 15.925696015357971,
+        "name": "Repetition 1",
+        "nodeIdentifier": "1",
+        "nodeType": "Repetition",
+        "result": "Passed"
+      },
+      {
+        "duration": "13s",
+        "durationInSeconds": 13.820665001869202,
+        "name": "Repetition 2",
+        "nodeIdentifier": "2",
+        "nodeType": "Repetition",
+        "result": "Passed"
+      },
+      {
+        "duration": "13s",
+        "durationInSeconds": 13.731480956077576,
+        "name": "Repetition 3",
+        "nodeIdentifier": "3",
+        "nodeType": "Repetition",
+        "result": "Passed"
+      },
+      {
+        "duration": "13s",
+        "durationInSeconds": 13.831622004508972,
+        "name": "Repetition 4",
+        "nodeIdentifier": "4",
+        "nodeType": "Repetition",
+        "result": "Passed"
+      },
+      {
+        "duration": "13s",
+        "durationInSeconds": 13.81779396533966,
+        "name": "Repetition 5",
+        "nodeIdentifier": "5",
+        "nodeType": "Repetition",
+        "result": "Passed"
+      },
+      {
+        "duration": "13s",
+        "durationInSeconds": 13.827749967575073,
+        "name": "Repetition 6",
+        "nodeIdentifier": "6",
+        "nodeType": "Repetition",
+        "result": "Passed"
+      },
+      {
+        "duration": "13s",
+        "durationInSeconds": 13.77029299736023,
+        "name": "Repetition 7",
+        "nodeIdentifier": "7",
+        "nodeType": "Repetition",
+        "result": "Passed"
+      },
+      {
+        "duration": "13s",
+        "durationInSeconds": 13.752719044685364,
+        "name": "Repetition 8",
+        "nodeIdentifier": "8",
+        "nodeType": "Repetition",
+        "result": "Passed"
+      }
+    ],
+    "failed": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "raw_marker_events": 64,
+    "samples": 48,
+    "observations": [
+      {
+        "observation_id": "09D0D2CD-C8CB-4D5E-9E3B-F85332BE6ECE",
+        "raw_log_line_range": [
+          1643,
+          1722
+        ],
+        "sample_count": 6,
+        "final_sample_seconds": 10.392762583345757,
+        "post_home_complete_seconds": 10.39281075001054,
+        "result": "PASS"
+      },
+      {
+        "observation_id": "B4880E0F-B1CD-4F05-A93D-36E900DE2AD6",
+        "raw_log_line_range": [
+          1740,
+          1821
+        ],
+        "sample_count": 6,
+        "final_sample_seconds": 10.39376529166475,
+        "post_home_complete_seconds": 10.393805375002557,
+        "result": "PASS"
+      },
+      {
+        "observation_id": "934146AA-AD67-4DE7-A95A-59E5346D2395",
+        "raw_log_line_range": [
+          1839,
+          1920
+        ],
+        "sample_count": 6,
+        "final_sample_seconds": 10.388822124994476,
+        "post_home_complete_seconds": 10.388859833328752,
+        "result": "PASS"
+      },
+      {
+        "observation_id": "BD65ABEA-2DD6-40BD-BDDB-63B9C62215F0",
+        "raw_log_line_range": [
+          1937,
+          2017
+        ],
+        "sample_count": 6,
+        "final_sample_seconds": 10.466627541667549,
+        "post_home_complete_seconds": 10.46666520832514,
+        "result": "PASS"
+      },
+      {
+        "observation_id": "1A320954-C91D-4E8A-A528-BC905C53EB30",
+        "raw_log_line_range": [
+          2034,
+          2114
+        ],
+        "sample_count": 6,
+        "final_sample_seconds": 10.456510416668607,
+        "post_home_complete_seconds": 10.456552041665418,
+        "result": "PASS"
+      },
+      {
+        "observation_id": "35F91568-F6D5-4949-AE0D-E22D77DDABB4",
+        "raw_log_line_range": [
+          2131,
+          2211
+        ],
+        "sample_count": 6,
+        "final_sample_seconds": 10.453407208333374,
+        "post_home_complete_seconds": 10.453447833337123,
+        "result": "PASS"
+      },
+      {
+        "observation_id": "8E3C0188-C789-4D7B-ACE9-960B4C7A4179",
+        "raw_log_line_range": [
+          2228,
+          2308
+        ],
+        "sample_count": 6,
+        "final_sample_seconds": 10.430017083330313,
+        "post_home_complete_seconds": 10.430058250000002,
+        "result": "PASS"
+      },
+      {
+        "observation_id": "DD629989-7339-4E6E-8CC4-DC418C127998",
+        "raw_log_line_range": [
+          2325,
+          2405
+        ],
+        "sample_count": 6,
+        "final_sample_seconds": 10.42751766667061,
+        "post_home_complete_seconds": 10.42755937500624,
+        "result": "PASS"
+      }
+    ],
+    "raw_xcode_log_uncompressed_sha256": "a361c3005b396bcde6cb6ce394049652470dd0fa2cb9670117203170bcb23684",
+    "raw_xcode_log_lines": 2423,
+    "warnings": [
+      {
+        "line": 1420,
+        "message": "2026-09-08 04:23:49.208 appintentsmetadataprocessor[97151:4943590] warning: Metadata extraction skipped. No AppIntents.framework dependency found."
+      },
+      {
+        "line": 1550,
+        "message": "2026-09-08 04:23:50.629 appintentsmetadataprocessor[97172:4943779] warning: Metadata extraction skipped. No AppIntents.framework dependency found."
+      }
+    ],
+    "warning_classification": "Two AppIntents metadata-extraction warnings are compile/tool warnings, not skipped test methods."
+  },
+  "platform": {
+    "device": {
+      "architecture": "arm64",
+      "deviceId": "409DD74A-21BA-438F-80DC-04502E750FE6",
+      "deviceName": "Parlor-Audit-parlor-audit-ios-readiness-10-ooepwug4",
+      "modelName": "iPhone 17 Pro",
+      "osBuildNumber": "23F77",
+      "osVersion": "26.5",
+      "platform": "iOS Simulator"
+    },
+    "toolchain_scope": "Xcode26.5/17F42 Debug simulator; not Store-qualified26.3/17C529",
+    "signing": "Debug ad-hoc; no private signing identity/profile/custom entitlement. Built and installed codesign --verify --strict exits0; not Store validation.",
+    "effective_phase": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/effective-simulator-app-phase.json",
+      "sha256": "112de75a03aa7a52a44148294a32fe418e84b19a98a272c4349ccf1161de7929"
+    }
+  },
+  "notices_and_disk_artifacts": {
+    "notice_status": "PASS",
+    "notice_files": 26,
+    "notice_bytes": 99515,
+    "built_installed_notice_reports_identical": true,
+    "all_notice_source_hashes_and_lengths_rechecked": true,
+    "built_installed_macho_inventory_count": 4,
+    "artifact_bindings": 10,
+    "all_ten_exact_path_arm64_dwarfdump_uuid_logs_reconciled": true,
+    "framework_origins_remain_distinct": [
+      {
+        "path": "/Users/abdelrahman/Library/Developer/CoreSimulator/Devices/409DD74A-21BA-438F-80DC-04502E750FE6/data/Containers/Bundle/Application/1F9F575B-C77A-4CD7-A4CA-6D94F6E3CC39/Parlor.app/Frameworks/ComposeApp.framework/ComposeApp",
+        "origin": "installed-app",
+        "relative_path": "Frameworks/ComposeApp.framework/ComposeApp",
+        "sha256": "267df1ce24872a31e5e7a1010b7f160659f799dbc9b3979cef9187b9bbdf9aff",
+        "bytes": 81949648,
+        "uuid": "adbb99a1-4568-3eb3-83bc-b746812d2672",
+        "kind": "compose-framework"
+      },
+      {
+        "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-ios-readiness-10-ooepwug4/DerivedData/Build/Products/Debug-iphonesimulator/Parlor.app/Frameworks/ComposeApp.framework/ComposeApp",
+        "origin": "owned-derived-app",
+        "relative_path": "Frameworks/ComposeApp.framework/ComposeApp",
+        "sha256": "267df1ce24872a31e5e7a1010b7f160659f799dbc9b3979cef9187b9bbdf9aff",
+        "bytes": 81949648,
+        "uuid": "adbb99a1-4568-3eb3-83bc-b746812d2672",
+        "kind": "compose-framework"
+      },
+      {
+        "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-ios-readiness-10-ooepwug4/copy/composeApp/build/bin/iosSimulatorArm64/debugFramework/ComposeApp.framework/ComposeApp",
+        "origin": "owned-copy-build",
+        "relative_path": "bin/iosSimulatorArm64/debugFramework/ComposeApp.framework/ComposeApp",
+        "sha256": "ba0b167b612a7daece6e26d8e055ecdbb37fd2bf6ff300c7b62ecc1cebe03085",
+        "bytes": 82410632,
+        "uuid": "adbb99a1-4568-3eb3-83bc-b746812d2672",
+        "kind": "compose-framework"
+      },
+      {
+        "path": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-ios-readiness-10-ooepwug4/copy/composeApp/build/xcode-frameworks/Debug/iphonesimulator26.5/ComposeApp.framework/ComposeApp",
+        "origin": "owned-copy-build",
+        "relative_path": "xcode-frameworks/Debug/iphonesimulator26.5/ComposeApp.framework/ComposeApp",
+        "sha256": "ba0b167b612a7daece6e26d8e055ecdbb37fd2bf6ff300c7b62ecc1cebe03085",
+        "bytes": 82410632,
+        "uuid": "adbb99a1-4568-3eb3-83bc-b746812d2672",
+        "kind": "compose-framework"
+      }
+    ],
+    "limitation": "File inventories and matching UUIDs do not establish which framework was mapped. Embedded/installed signed framework bytes differ from copied-build framework bytes despite equal UUID. Native10 reached neither sample image table nor vmmap. Notice delivery is not legal clearance."
+  },
+  "external_provenance": {
+    "status": "FAIL",
+    "original_error": {
+      "type": "RuntimeError",
+      "message": "External tool did not report the exact attested app PID/path"
+    },
+    "separate_ninth_launch": {
+      "pid": 97973,
+      "uid": 501,
+      "started": [
+        1788830767,
+        286539
+      ],
+      "executable": "/Users/abdelrahman/Library/Developer/CoreSimulator/Devices/409DD74A-21BA-438F-80DC-04502E750FE6/data/Containers/Bundle/Application/1F9F575B-C77A-4CD7-A4CA-6D94F6E3CC39/Parlor.app/Parlor",
+      "generation": 1687976,
+      "audit_token_sha256": "7c89d9a32df52e76615a07054997cb30f2c96ddde80476cd77ee9fc7072af595",
+      "bracketed_lifetime_unchanged": true
+    },
+    "sample_exit": 0,
+    "sample_header_diagnostic": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/sample-header-failure.json",
+      "sha256": "97d95532748c3a58ad7ef0f0d4b9d36f4353eca6bfbf35ebd14aae211c7844a3"
+    },
+    "independent_reconstruction": {
+      "process_headers": 1,
+      "parsed_pids": 1,
+      "exact_pid_matches": true,
+      "path_headers": 1,
+      "components": 15,
+      "path_utf8_bytes": 178,
+      "sole_different_component": 2,
+      "sole_public_marker": "USER",
+      "all_other_components_match_same_expected_index": true,
+      "wildcard_or_other_unknown_component": false
+    },
+    "source_path_proof": [
+      "external_image_provenance.py:74-80 exact PID/path predicate rejects this USER spelling.",
+      "external_image_provenance.py:126-129 validates header before accessing the Binary Images table.",
+      "run_normal_ios_launch.py:478-489 attests current UID/executable/lifetime and checks it after sample before parsing.",
+      "run_normal_ios_launch.py:493-499 does not invoke vmmap until sample parsing returns.",
+      "run_normal_ios_launch.py:520-536 retains failure-only bounded diagnostics and rethrows the original RuntimeError."
+    ],
+    "post_sample_attestation_limit": "Reaching the header error demonstrates middle unchanged_target did not throw, but only the initial double-read attestation was durably stored; the three-attestation success record was never produced.",
+    "binary_images_status": "NOT VERIFIED; parser not reached; raw file deliberately removed.",
+    "vmmap_status": "NOT RUN; no vmmap command in receipt.",
+    "interpretation": "The exact USER-only presentation explains this validator failure, not an app crash. It neither diagnoses native08 historical failure nor retrospectively establishes mapped-image provenance.",
+    "raw_stack_mapping_files_removed": true
+  },
+  "cleanup": {
+    "status": "PASS",
+    "immediate_stop_start_delay_seconds_after_xcode": 0.004603,
+    "stop_records": [
+      {
+        "label": "stop-xcode-immediate",
+        "exit_code": 0,
+        "at": "2026-09-08T01:26:02.056456+00:00"
+      },
+      {
+        "label": "stop-final",
+        "exit_code": 0,
+        "at": "2026-09-08T01:26:23.774420+00:00"
+      }
+    ],
+    "embedded_stop": {
+      "build_exit": 0,
+      "stop_exit": 0
+    },
+    "finalization_stages": [
+      {
+        "stage": "final-isolated-gradle-stop",
+        "status": "PASS",
+        "at": "2026-09-08T01:26:23.774454+00:00"
+      },
+      {
+        "stage": "shutdown-owned-simulator-and-app",
+        "status": "PASS",
+        "at": "2026-09-08T01:26:27.887304+00:00"
+      },
+      {
+        "stage": "delete-owned-simulator",
+        "status": "PASS",
+        "at": "2026-09-08T01:26:28.920262+00:00"
+      },
+      {
+        "stage": "stop-owned-command-workers",
+        "status": "PASS",
+        "at": "2026-09-08T01:26:29.342051+00:00"
+      },
+      {
+        "stage": "cleanup-attested-secondary-fifos",
+        "status": "PASS",
+        "at": "2026-09-08T01:26:29.638228+00:00"
+      },
+      {
+        "stage": "preserve-secondary-fifo-final-ledger",
+        "status": "PASS",
+        "at": "2026-09-08T01:26:29.638494+00:00"
+      },
+      {
+        "stage": "verify-workers-before-file-removal",
+        "status": "PASS",
+        "at": "2026-09-08T01:26:29.789685+00:00"
+      },
+      {
+        "stage": "verify-copied-inputs-after-workers-stop",
+        "status": "PASS",
+        "at": "2026-09-08T01:26:29.959982+00:00"
+      },
+      {
+        "stage": "compact-required-xcode-evidence",
+        "status": "PASS",
+        "at": "2026-09-08T01:26:29.968632+00:00"
+      },
+      {
+        "stage": "remove-exact-owned-copy-build-deriveddata-temp",
+        "status": "PASS",
+        "at": "2026-09-08T01:26:31.707659+00:00"
+      },
+      {
+        "stage": "read-final-source-identity",
+        "status": "PASS",
+        "at": "2026-09-08T01:26:31.987384+00:00"
+      },
+      {
+        "stage": "read-final-control-identity",
+        "status": "PASS",
+        "at": "2026-09-08T01:26:31.993088+00:00"
+      }
+    ],
+    "secondary_fifo": {
+      "records": 2,
+      "removed_objects": [
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-96932/IB/97D2447E-3E1F-48D5-B351-9691BE034A52.RemoteToHost",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-96932/IB/97D2447E-3E1F-48D5-B351-9691BE034A52.HostToRemote",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-96932/IB",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-96932"
+      ],
+      "pending": [],
+      "basis": "Two FIFO files are inode/UID/device/birth-time attested to exact observed owned ibtoold/AssetCatalogSimulatorAgent ancestry. Birth times differ by2.7303126s; parent metadata stable. Only the attested FIFO pair and empty parent directories were removed. This one run does not prove all short-lived native workers are discoverable."
+    },
+    "owned_processes_remaining": [],
+    "unknown_holders": [],
+    "cleanup_errors": [],
+    "exact_path_absence_read_at": "2026-09-08T01:47:42.196468+00:00",
+    "exact_paths_independently_lstat_absent": [
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-ios-readiness-10-ooepwug4",
+      "/Users/abdelrahman/Library/Developer/CoreSimulator/Devices/409DD74A-21BA-438F-80DC-04502E750FE6",
+      "/Users/abdelrahman/Projects/parlor/build",
+      "/Users/abdelrahman/Projects/parlor/build-logic/build",
+      "/Users/abdelrahman/Projects/parlor/build-logic/convention/build",
+      "/Users/abdelrahman/Projects/parlor/composeApp/build",
+      "/Users/abdelrahman/Projects/parlor/game-modes/mafia/build",
+      "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build",
+      "/Users/abdelrahman/Projects/parlor/iosApp/build",
+      "/Users/abdelrahman/Projects/parlor/shared/content/build",
+      "/Users/abdelrahman/Projects/parlor/shared/core/build",
+      "/Users/abdelrahman/Projects/parlor/shared/design-system/build",
+      "/Users/abdelrahman/Projects/parlor/shared/engine/build",
+      "/Users/abdelrahman/Projects/parlor/shared/engine-testing/build",
+      "/Users/abdelrahman/Projects/parlor/shared/networking/build",
+      "/Users/abdelrahman/Projects/parlor/shared/networking-testing/build",
+      "/Users/abdelrahman/Projects/parlor/shared/session/build",
+      "/Users/abdelrahman/Projects/parlor/shared/storage/build",
+      "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/build",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-96932/IB/97D2447E-3E1F-48D5-B351-9691BE034A52.RemoteToHost",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-96932/IB/97D2447E-3E1F-48D5-B351-9691BE034A52.HostToRemote",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-96932/IB",
+      "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-96932"
+    ],
+    "reviewer_no_live_process_probe": true,
+    "process_evidence_limitation": "Worker/daemon termination is based on inspected root-owned receipts and stop logs; reviewer only independently rechecked exact path absence, without broad enumeration or process control."
+  },
+  "evidence": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/receipt.json",
+      "sha256": "0daf830ce66ad7c11c271431dcd53996ea530e55dd1b5b4c2ff89d15abf14589"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/input-manifest.json",
+      "sha256": "960ca881bcf028fc91d14b8e2a2f17a20d14b45d417ac37718b669c1d72b5004"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/copied-source-manifest.json",
+      "sha256": "5797a28d01f7fc6ae4b0a3f2479b74df748bbb43c8c149abfff6c324db98ef41"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/copied-source.diff",
+      "sha256": "b43621825944c917ef8adb2c95cac96f3cab487154812ac0c0da37eabf9bb06f"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/copied-inputs-after-build.json",
+      "sha256": "9127ef218b4a40675919a47882df2c6e2682c3e98a45d94e084ea27ee82cc88d"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/effective-simulator-app-phase.json",
+      "sha256": "112de75a03aa7a52a44148294a32fe418e84b19a98a272c4349ccf1161de7929"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/normal-launch-observations.json",
+      "sha256": "911b721c29c959bd6b49aa8cb06623bb98993f332cafd8f66fbb834311d40d68"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/xcresult-summary.json",
+      "sha256": "e4b5aa6152b9831ac1c60cf8b484160394b291662b76882aed6a860ec5006b3d"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/xcresult-tests.json",
+      "sha256": "40cd6ec5573445e1a2a89f5986a5b5a714d2a5131d34809f2787c2e21a93dd3b"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/xcresult-test-details.json",
+      "sha256": "81b0ab60b3628a86bc137491b89641bc05020f4e2df4cf2d3f3d49409ba33d49"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/sample-header-failure.json",
+      "sha256": "97d95532748c3a58ad7ef0f0d4b9d36f4353eca6bfbf35ebd14aae211c7844a3"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/built-installed-binary-inventory.json",
+      "sha256": "85fc9099d94e9561f049db401deb9ffb0ea7889f7759c168ad65070df08b8291"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/external-image-artifact-bindings.json",
+      "sha256": "184949d064e25603de519a003816eb11183bcbdc02ffcf665a0ba8e7f12de6dd"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/built-notice-package.json",
+      "sha256": "5b22822de051375fe5f2a6ab54daa4db11c0addfd86b183e39a200c09ace2db5"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/installed-notice-package.json",
+      "sha256": "5b22822de051375fe5f2a6ab54daa4db11c0addfd86b183e39a200c09ace2db5"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/secondary-fifo-final.json",
+      "sha256": "26d65eac22f38d67dd5d44250502def96385d4c2a2a54aceb6d89225303db46d"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/owned-device-after-delete.json",
+      "sha256": "755d442cf44919879856407fe199e916c770d206e3f6b050d6eb286b7af73782"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/embedded-gradle-stop.txt",
+      "sha256": "fb55a963c8d30249ea6b8be68a62b5921facefdc7823c16ad139fea885be972f"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/stop-xcode-immediate.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/stop-final.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    }
+  ],
+  "not_established": [
+    "Historical four-start crash cause or absence of all launch bugs",
+    "Follow System ownership or DS-C01 native restart matrix",
+    "L08 protection/recovery health or IOS-R1 resolution",
+    "Full games, LAN/rejoin, privacy gestures or physical devices",
+    "iOS16 execution or Store-qualified Xcode/signing/release readiness",
+    "Any actual Binary Images/vmmap mapping or independent mapped-memory hashing"
+  ],
+  "hygiene": {
+    "writes": "Only this additive report; original evidence untouched.",
+    "task_owned_builds_workers_started": 0,
+    "cleanup_needed_for_reviewer": false
+  }
+}

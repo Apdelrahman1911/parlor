@@ -1,0 +1,69 @@
+{
+  "author": "/root/release_fix_review",
+  "created_at": "2026-09-07T06:25:36.922417+00:00",
+  "status": "SOURCE_READ_AND_AST_ONLY_NOT_EXECUTED",
+  "reviewed_sources": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/build.gradle.kts",
+      "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+      "bytes": 27271,
+      "lines": 627,
+      "reviewed_lines": [
+        [
+          1,
+          627
+        ]
+      ],
+      "claims_verified": "Existing env precedence, exact release ID/debug suffix, release signing config, releaseAndroidTest source mapping and release test build type; no config modified"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/android/run_release_managed_device_smoke.sh",
+      "sha256": "5b6dc8fcdd7b11c9cefd39da3adb8783321b647cd9a8459ff761ef7fa031262d",
+      "bytes": 1511,
+      "lines": 58,
+      "reviewed_lines": [
+        [
+          1,
+          58
+        ]
+      ],
+      "claims_verified": "Existing source injects android.injected.signing.* for disposable runtime builds; helper reuses those property names via env rather than argv"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "sha256": "172c4f3162dc6a6b20e912e6551eaca9f33a32ba3d0d6f150ad8becfd30865ea",
+      "bytes": 17040,
+      "lines": 291,
+      "reviewed_lines": [
+        [
+          1,
+          291
+        ]
+      ],
+      "claims_verified": "Outer --command selects exact helper; holds lane flock, binds dirty-source manifest, owns output absence/preflight, stop and build-root cleanup"
+    },
+    {
+      "path": "/Users/abdelrahman/Library/Android/sdk/build-tools/36.0.0/apksigner",
+      "sha256": "b47549e373b895ce6ca620d0c7887e674d9615ffa837a86ac601dcfd04adb0f0",
+      "bytes": 2959,
+      "lines": 97,
+      "reviewed_lines": [
+        [
+          1,
+          105
+        ]
+      ],
+      "claims_verified": "Installed shell entry invokes bundled apksigner.jar and supports initial -JXmx heap override"
+    }
+  ],
+  "skills_applied": [
+    "native-release-signing-and-packaging: ephemeral env-only synthetic key, independent artifact signature/fingerprint validation, cleanup on failure",
+    "release-provenance-and-promotion: bind exact outer dirty-source manifest/diff and both APK digests; outer PASS required before use",
+    "mobile-app-identities-and-services: preserve canonical/debug IDs; same Release identity only on a new task-owned emulator, not personal phone; identity collision/publication safeguards unchanged"
+  ],
+  "limits": [
+    "Metadata format and exact APK signing/instrumentation identities remain subject to actual build/runtime receipts",
+    "No private Store material read; no real signing, publication, upload or identity operation",
+    "Default main workspace/global dependency caches remain owned by root; no child build started"
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "at": "2026-09-08T04:55:09.264643+00:00",
+  "origin": "Root transcription of this turn functions.exec/exec_command tool-call input/output, chunk c2d65e session91926. Not an independently retained OS-level transcript.",
+  "outer_shell": "zsh default; two sequential commands separated by newline; no set-e or && between Python preflight and native runner",
+  "failing_python_line_number": 9,
+  "failing_python_line": "conflicts=[dict(pid=k,kind='build') for k,v in run.snapshot_processes().items() if 'org.gradle.launcher.daemon.bootstrap.GradleDaemon' in v['command'] or v['command'].split()[0].endswith('/xcodebuild')];assert not conflicts",
+  "tool_output": "Traceback (most recent call last):\n  File \"<stdin>\", line 9, in <module>\nAssertionError\n",
+  "raw_command_preservation": "Full preceding here-document was not independently captured to disk. The exact tool-call remains in conversation history. This supplement records the failing line/output and shell-continuation behavior, not a claim to reconstruct missing PID rows.",
+  "native_command": [
+    "/usr/bin/python3",
+    "-B",
+    "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+    "ios-readiness-13",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-12.json",
+    "d18ef9c99264353396dcd026ac2bd0c755d3ea3cbc93c6c6c260a4dd6f6c9a7d",
+    "--simulator-signing=adhoc"
+  ],
+  "native_session_completion": {
+    "chunk_id": "718e25",
+    "exit_code": 1
+  },
+  "unknown": [
+    "Actual matched process set",
+    "Whether there were any matches besides the launching shell",
+    "Historical application crash cause"
+  ],
+  "classification": "PreflightFAIL/rootreported; independently review native own guards/results separately. No claim of passing thispreflight."
+}

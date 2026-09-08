@@ -1,0 +1,2658 @@
+{
+  "at": "2026-09-05T19:53:06.584146+00:00",
+  "reviewer": "/root/whodunit_cont",
+  "author": "/root/mafia_cont",
+  "scope": "Independent bounded second review of MF-C1/M-C01 and M-C03; not whole-repository approval",
+  "baseline": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d"
+  },
+  "status": {
+    "MF-C1": "BOUNDED FIX APPROVED",
+    "M-C03": "BOUNDED FIX APPROVED",
+    "combined_cycle03": "FAIL — Whodunit test compilation; no Whodunit tests ran",
+    "mafia_desktop": "PASS — all 267 tests including 35 added",
+    "physical_devices_and_store": "NOT VERIFIED"
+  },
+  "source_binding": {
+    "receipt": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/receipt.json",
+    "receipt_sha256": "b7dd7cbcd744cc9ba75cb01a53ac747b875f9467c96ebcbc9c6659595fa11ae5",
+    "cycle_manifest_sha256": "a4f16c504c995b0d8992307aa5a45b4ca117135dd8be330b8101d6787469b6b0",
+    "stable_during_cycle": true,
+    "changed_mafia_files": [
+      {
+        "path": "game-modes/mafia/build.gradle.kts",
+        "sha256": "7aceb370331f84b2fee70bb039b7779bdd818ea78aab15da3bfcfd137a76ad2d",
+        "author_manifest_match": true,
+        "cycle03_before_match": true,
+        "cycle03_after_match": true
+      },
+      {
+        "path": "game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml",
+        "sha256": "a9416283c7bf130d9ca98b4ff0e08ae420bad4b935f476ed7166178c42c3bdcc",
+        "author_manifest_match": true,
+        "cycle03_before_match": true,
+        "cycle03_after_match": true
+      },
+      {
+        "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotRecovery.kt",
+        "sha256": "64525b0d14b07d87e99729c3707dd0af4a083f8f4a98a5a948575755482ea3fd",
+        "author_manifest_match": true,
+        "cycle03_before_match": true,
+        "cycle03_after_match": true
+      },
+      {
+        "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+        "sha256": "09de10c3735f1afeb7b36550dca57c4e9fd190d985faf6ff0eae8c0b8d21a784",
+        "author_manifest_match": true,
+        "cycle03_before_match": true,
+        "cycle03_after_match": true
+      },
+      {
+        "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+        "sha256": "1371eb747579362548f3962a520c2c3f3c2f6225ef551bad93e3e690e08a1fe6",
+        "author_manifest_match": true,
+        "cycle03_before_match": true,
+        "cycle03_after_match": true
+      },
+      {
+        "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibility.kt",
+        "sha256": "e6f616148cd77a6832c08175b769c31885e7b8b16bfb272d19729dc507bcb34a",
+        "author_manifest_match": true,
+        "cycle03_before_match": true,
+        "cycle03_after_match": true
+      },
+      {
+        "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreen.kt",
+        "sha256": "2ebe210da47584cd0ed1105a921b4b2884cde23227b6cfb0086f25f3aec70aa9",
+        "author_manifest_match": true,
+        "cycle03_before_match": true,
+        "cycle03_after_match": true
+      },
+      {
+        "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+        "sha256": "c1dc2d1e5f4bf72ac1c2946341143f22936dd7903aab2d02b58c0d63709e87e4",
+        "author_manifest_match": true,
+        "cycle03_before_match": true,
+        "cycle03_after_match": true
+      },
+      {
+        "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+        "sha256": "5fe2144436f87162e2d29bcbef6d57ac9b9cede6ab328b406b63cceebcdd501b",
+        "author_manifest_match": true,
+        "cycle03_before_match": true,
+        "cycle03_after_match": true
+      },
+      {
+        "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaDoctorLanTest.kt",
+        "sha256": "513a87423f1de6834d3b1664d1103f83a36d67f351a888e095b53bf1bedd5be9",
+        "author_manifest_match": true,
+        "cycle03_before_match": true,
+        "cycle03_after_match": true
+      },
+      {
+        "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+        "sha256": "d1d830e0330d5a47f2011b9f87d025a5ce1e0bc2d3cb08be742ca1ff4403f743",
+        "author_manifest_match": true,
+        "cycle03_before_match": true,
+        "cycle03_after_match": true
+      },
+      {
+        "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/testing/MafiaDoctorFixture.kt",
+        "sha256": "fa5a85db72638033569368062722fc1e1f97fcf1c3948e912c7954324e1e2ba7",
+        "author_manifest_match": true,
+        "cycle03_before_match": true,
+        "cycle03_after_match": true
+      },
+      {
+        "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibilityTest.kt",
+        "sha256": "c2d196af55bbf14d3518973e86df9da3de3954ffbab27038aca4c2ef14ed70f1",
+        "author_manifest_match": true,
+        "cycle03_before_match": true,
+        "cycle03_after_match": true
+      },
+      {
+        "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt",
+        "sha256": "27b4894a394bf06952bc1435324ab23acb5c7f38242b65df5feb01e8df16b777",
+        "author_manifest_match": true,
+        "cycle03_before_match": true,
+        "cycle03_after_match": true
+      },
+      {
+        "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaDoctorSettingUiTest.kt",
+        "sha256": "47720879336a7ac14436a6cc9e186cce3afc8d00743a1339ff161c0fefb58055",
+        "author_manifest_match": true,
+        "cycle03_before_match": true,
+        "cycle03_after_match": true
+      }
+    ]
+  },
+  "coverage": [
+    {
+      "path": "game-modes/mafia/build.gradle.kts",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/build.gradle.kts",
+      "sha256": "7aceb370331f84b2fee70bb039b7779bdd818ea78aab15da3bfcfd137a76ad2d",
+      "line_count": 43,
+      "reviewed_ranges": [
+        [
+          1,
+          43
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "build",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml",
+      "sha256": "a9416283c7bf130d9ca98b4ff0e08ae420bad4b935f476ed7166178c42c3bdcc",
+      "line_count": 307,
+      "reviewed_ranges": [
+        [
+          74,
+          79
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "shipped-resource",
+      "full_file_read": false,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": "Only listed caller/diff ranges reviewed in this bounded remediation pass; do not claim complete file review."
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotRecovery.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotRecovery.kt",
+      "sha256": "64525b0d14b07d87e99729c3707dd0af4a083f8f4a98a5a948575755482ea3fd",
+      "line_count": 535,
+      "reviewed_ranges": [
+        [
+          1,
+          535
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+      "sha256": "09de10c3735f1afeb7b36550dca57c4e9fd190d985faf6ff0eae8c0b8d21a784",
+      "line_count": 628,
+      "reviewed_ranges": [
+        [
+          104,
+          230
+        ],
+        [
+          254,
+          390
+        ],
+        [
+          547,
+          628
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": false,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": "Only listed caller/diff ranges reviewed in this bounded remediation pass; do not claim complete file review."
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+      "sha256": "1371eb747579362548f3962a520c2c3f3c2f6225ef551bad93e3e690e08a1fe6",
+      "line_count": 751,
+      "reviewed_ranges": [
+        [
+          70,
+          174
+        ],
+        [
+          245,
+          442
+        ],
+        [
+          711,
+          751
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": false,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": "Only listed caller/diff ranges reviewed in this bounded remediation pass; do not claim complete file review."
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibility.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibility.kt",
+      "sha256": "e6f616148cd77a6832c08175b769c31885e7b8b16bfb272d19729dc507bcb34a",
+      "line_count": 14,
+      "reviewed_ranges": [
+        [
+          1,
+          14
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreen.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreen.kt",
+      "sha256": "2ebe210da47584cd0ed1105a921b4b2884cde23227b6cfb0086f25f3aec70aa9",
+      "line_count": 102,
+      "reviewed_ranges": [
+        [
+          1,
+          102
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+      "sha256": "c1dc2d1e5f4bf72ac1c2946341143f22936dd7903aab2d02b58c0d63709e87e4",
+      "line_count": 526,
+      "reviewed_ranges": [
+        [
+          88,
+          235
+        ],
+        [
+          339,
+          413
+        ],
+        [
+          484,
+          526
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": false,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": "Only listed caller/diff ranges reviewed in this bounded remediation pass; do not claim complete file review."
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+      "sha256": "5fe2144436f87162e2d29bcbef6d57ac9b9cede6ab328b406b63cceebcdd501b",
+      "line_count": 156,
+      "reviewed_ranges": [
+        [
+          1,
+          156
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "test-only",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaDoctorLanTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/multidevice/MafiaDoctorLanTest.kt",
+      "sha256": "513a87423f1de6834d3b1664d1103f83a36d67f351a888e095b53bf1bedd5be9",
+      "line_count": 248,
+      "reviewed_ranges": [
+        [
+          1,
+          248
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "test-only",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "sha256": "d1d830e0330d5a47f2011b9f87d025a5ce1e0bc2d3cb08be742ca1ff4403f743",
+      "line_count": 383,
+      "reviewed_ranges": [
+        [
+          1,
+          383
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "test-only",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/testing/MafiaDoctorFixture.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/testing/MafiaDoctorFixture.kt",
+      "sha256": "fa5a85db72638033569368062722fc1e1f97fcf1c3948e912c7954324e1e2ba7",
+      "line_count": 120,
+      "reviewed_ranges": [
+        [
+          1,
+          120
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "test-only",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibilityTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibilityTest.kt",
+      "sha256": "c2d196af55bbf14d3518973e86df9da3de3954ffbab27038aca4c2ef14ed70f1",
+      "line_count": 75,
+      "reviewed_ranges": [
+        [
+          1,
+          75
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "test-only",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt",
+      "sha256": "27b4894a394bf06952bc1435324ab23acb5c7f38242b65df5feb01e8df16b777",
+      "line_count": 135,
+      "reviewed_ranges": [
+        [
+          1,
+          135
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "test-only",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaDoctorSettingUiTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaDoctorSettingUiTest.kt",
+      "sha256": "47720879336a7ac14436a6cc9e186cce3afc8d00743a1339ff161c0fefb58055",
+      "line_count": 71,
+      "reviewed_ranges": [
+        [
+          1,
+          71
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "test-only",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/MafiaDefinition.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/MafiaDefinition.kt",
+      "sha256": "196c9186b5ae44179652caa2d212b07968a801243d8ad17d21962123ada3c884",
+      "line_count": 71,
+      "reviewed_ranges": [
+        [
+          1,
+          71
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/authority/MafiaActionAuthority.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/authority/MafiaActionAuthority.kt",
+      "sha256": "ba4fd6e0f46c72080a9e6dd89cb58319fecb4a013cfd4da5e19ae2b7c5df608b",
+      "line_count": 77,
+      "reviewed_ranges": [
+        [
+          1,
+          77
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/projection/MafiaProjectionPolicy.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/projection/MafiaProjectionPolicy.kt",
+      "sha256": "713158db7e5cf09e479cd249537b2f1e4ead14261b9d148c9288ba45c4dc51cc",
+      "line_count": 94,
+      "reviewed_ranges": [
+        [
+          1,
+          94
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/reducer/MafiaReducer.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/reducer/MafiaReducer.kt",
+      "sha256": "2ff9754d497b8258613badb057ab915a6d457786c56b0d5e725f2ba0053e56e2",
+      "line_count": 1054,
+      "reviewed_ranges": [
+        [
+          1,
+          1054
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/rules/MafiaSessionRules.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/rules/MafiaSessionRules.kt",
+      "sha256": "26ce059a7d686687b1aefc5b3105067c7fe318aa1b65de512ab461e2ecd7d7fb",
+      "line_count": 39,
+      "reviewed_ranges": [
+        [
+          1,
+          39
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/rules/NightResolution.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/rules/NightResolution.kt",
+      "sha256": "86f1078d5db7c23aec6da15c09625e37d0041c6a78fcb1e26f234d4e5ed26000",
+      "line_count": 115,
+      "reviewed_ranges": [
+        [
+          1,
+          115
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/settings/MafiaSettings.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/settings/MafiaSettings.kt",
+      "sha256": "beaa58c17c44a8ff552e52e838171deedf17f8dadd76258caaef8dd2b5a336f5",
+      "line_count": 133,
+      "reviewed_ranges": [
+        [
+          1,
+          133
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/settings/MafiaSettingsPresets.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/settings/MafiaSettingsPresets.kt",
+      "sha256": "0fec32a5ccabfbd01dbce10b0afca62a8dffb9736d03eeb76c755c1bf40b4bf0",
+      "line_count": 39,
+      "reviewed_ranges": [
+        [
+          1,
+          39
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/state/MafiaObservableStateValidator.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/state/MafiaObservableStateValidator.kt",
+      "sha256": "751852ab1a9e6243df1c58c4405ac07d7ec72e2a2ac8ab2c1852a6f4df132c55",
+      "line_count": 371,
+      "reviewed_ranges": [
+        [
+          1,
+          371
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/state/MafiaPeerSnapshotValidator.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/state/MafiaPeerSnapshotValidator.kt",
+      "sha256": "8df30438d0b5a4f6e9666de6e1863ab4c1faf8c3664126be6343c293ff8e383c",
+      "line_count": 292,
+      "reviewed_ranges": [
+        [
+          1,
+          292
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/state/MafiaState.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/state/MafiaState.kt",
+      "sha256": "fc890870341eb2c864b4518e24f8f2634fc61a234f4c507bf71ecf1ee40bdf87",
+      "line_count": 232,
+      "reviewed_ranges": [
+        [
+          1,
+          232
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotCodec.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotCodec.kt",
+      "sha256": "9d37b28b40c2a295afb5cfd4889e39a3803f8ad86623c8c37320d7c00cf4f20c",
+      "line_count": 55,
+      "reviewed_ranges": [
+        [
+          1,
+          55
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostRoomBridge.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostRoomBridge.kt",
+      "sha256": "e501318600500abc60e4bef8ed2706fb8b4955dc8c21ac75a8c06e7e2709ff45",
+      "line_count": 493,
+      "reviewed_ranges": [
+        [
+          1,
+          493
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaPeerRoomBridge.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaPeerRoomBridge.kt",
+      "sha256": "0023dc186b7dd22df76255767e9a9d5cf65203803c768391c0e665de245e88ee",
+      "line_count": 186,
+      "reviewed_ranges": [
+        [
+          1,
+          186
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupDraft.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupDraft.kt",
+      "sha256": "e91e3e9d17bab4f725117c83e42096b5e9086809108a933ab5e48df4b9fb7a16",
+      "line_count": 66,
+      "reviewed_ranges": [
+        [
+          1,
+          66
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorCard.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorCard.kt",
+      "sha256": "e764e6c7e09dc72464ad3eb14b41328a609a7d47475941054fb7af292f7a9d51",
+      "line_count": 55,
+      "reviewed_ranges": [
+        [
+          1,
+          55
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/tokens/ParlorTypography.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/tokens/ParlorTypography.kt",
+      "sha256": "eb442c5c7a41e34a4cf8e1c31466ef1a3e07e6582c3259d9a14c7942ee990f15",
+      "line_count": 190,
+      "reviewed_ranges": [
+        [
+          1,
+          190
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "shared/networking/src/commonMain/kotlin/com/parlor/networking/room/RoomInputPolicy.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/networking/src/commonMain/kotlin/com/parlor/networking/room/RoomInputPolicy.kt",
+      "sha256": "f4fe96788fbb709ac7e9a1d2b66a010b124d4456e5779272527f2392f43bd118",
+      "line_count": 100,
+      "reviewed_ranges": [
+        [
+          1,
+          100
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/InMemoryRoomBus.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/InMemoryRoomBus.kt",
+      "sha256": "695af1d049de439eeb081edf1d2698af677343d18097215db366023f8bc1c275",
+      "line_count": 203,
+      "reviewed_ranges": [
+        [
+          1,
+          203
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "test-only",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/ShadowSessionController.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/ShadowSessionController.kt",
+      "sha256": "0e87f661e12929935c35dd710d016ff0a40ef7c77314d0750c5ce74a4551de81",
+      "line_count": 97,
+      "reviewed_ranges": [
+        [
+          1,
+          97
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "shared/session/src/commonMain/kotlin/com/parlor/session/passandplay/PassAndPlaySessionController.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/passandplay/PassAndPlaySessionController.kt",
+      "sha256": "d2a6b6fbc0a78685fe192e16894907cc98a51f1a30dd48ce0095a0d2745d8008",
+      "line_count": 159,
+      "reviewed_ranges": [
+        [
+          1,
+          159
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": true,
+      "cross_file_path": "MF-C1 / M-C03 complete implementation and surrounding contracts",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": null
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaGameFlow.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaGameFlow.kt",
+      "sha256": "8f250d62f8afb48e407c30e5382eb4758bc4ad53dee5168af8e3452ad3e840f6",
+      "line_count": 509,
+      "reviewed_ranges": [
+        [
+          100,
+          282
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": false,
+      "cross_file_path": "MF-C1 successful canonical load -> retained local controller and setup submission",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": "Only listed caller/diff ranges reviewed in this bounded remediation pass; do not claim complete file review."
+    },
+    {
+      "path": "shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/AuthoritativeSessionCoordinator.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/AuthoritativeSessionCoordinator.kt",
+      "sha256": "968eae9b5a83bc507e173bfd82e6ec0cffa6b6191de86c73d7b401221fe09114",
+      "line_count": 1970,
+      "reviewed_ranges": [
+        [
+          81,
+          280
+        ],
+        [
+          449,
+          510
+        ],
+        [
+          766,
+          805
+        ],
+        [
+          1311,
+          1452
+        ],
+        [
+          1520,
+          1650
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "production",
+      "full_file_read": false,
+      "cross_file_path": "Host-only reducer receipt and snapshot serializer -> passive peer request/decode/install; no-start fixture initialization/correction",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": "Only listed caller/diff ranges reviewed in this bounded remediation pass; do not claim complete file review."
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/composeResources/values/strings.xml",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/composeResources/values/strings.xml",
+      "sha256": "8f46afd35f71ad31e3d5b72cac1587e21dfc9e9a903b362e69eb79c6b33b551f",
+      "line_count": 307,
+      "reviewed_ranges": [
+        [
+          74,
+          79
+        ]
+      ],
+      "reviewer": "/root/whodunit_cont",
+      "relevance": "shipped-resource",
+      "full_file_read": false,
+      "cross_file_path": "Existing English setting wording matches unconstrained consecutive nights; Arabic delta only",
+      "matches_executed_before": true,
+      "matches_executed_after": true,
+      "evidence": [
+        "MF-C1-M-C03-independent-review.md"
+      ],
+      "limits": "Only listed caller/diff ranges reviewed in this bounded remediation pass; do not claim complete file review."
+    }
+  ],
+  "coverage_limits": [
+    "Complete-file reads and listed subranges are separate; no inherited unrelated audit-completeness claim.",
+    "The seven new tests/fixture were read completely; existing tests passing does not mean every old assertion was reopened here.",
+    "Other parts of partially reviewed callers are not marked reviewed in this record."
+  ],
+  "xml_summary": {
+    "suite_count": 31,
+    "tests": 267,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "test_xml": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.MafiaDoctorRulesTest.xml",
+      "sha256": "5f445dc1aa3cdcfdc985ed0c7bb757663dcc818ceb31141c4f48a17e0cc26769",
+      "suite": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+      "counts": {
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "enabled_setting_saves_same_living_target_for_four_consecutive_nights()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "repeat_is_default_off_for_every_supported_player_count()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "enabling_repeats_does_not_allow_dead_targets_or_a_non_doctor_actor()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "skipped_night_clears_previous_effective_target_but_consumes_submission()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "repeat_and_self_protection_settings_are_independent()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "setup_draft_and_action_codec_commit_selection_once_without_changing_assignment()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "disabled_setting_rejects_repeat_and_allows_alternating_targets()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "first_valid_target_cannot_be_replaced_or_skipped_later_that_night()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.action.MafiaActionCodecTest.xml",
+      "sha256": "52bbb2adb2302dba5a54d36a698ac4b9c74ee06722de3cf0cb35e0930781e1bd",
+      "suite": "com.parlor.games.mafia.domain.action.MafiaActionCodecTest",
+      "counts": {
+        "tests": 16,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "acknowledge_actions_round_trip()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "encoded_payload_carries_discriminator_for_forward_compat()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "abstain_round_trips()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "mafia_kill_vote_round_trips_with_nullable_target()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "atomic_configure_and_start_round_trips_with_nested_settings()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "retired_actions_are_rejected_explicitly()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "apply_settings_round_trips_with_nested_role_counts()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "malformedUtf8IsRejectedInsteadOfBeingReplacedInsideJsonStrings()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "detective_inspect_round_trips()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "host_lifecycle_singletons_round_trip()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "singleton_data_object_round_trips()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "cast_vote_round_trips()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "civilian_suspicion_round_trips()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "doctor_protect_round_trips()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "oversizedActionIsRejectedOnEncodeAndDecode()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "connection_chrome_actions_round_trip()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.projection.MafiaHostOnlyRedactionSentinelTest.xml",
+      "sha256": "92c2aa984d54905fad5c39d6b0792380ff9708b1b6df731b300d5fefdefbe6bc",
+      "suite": "com.parlor.games.mafia.domain.projection.MafiaHostOnlyRedactionSentinelTest",
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "redacted_host_only_equals_empty_constructor_baseline()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "redaction_sentinel_requires_review_when_host_only_schema_changes()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "to_public_redacts_every_known_host_only_field()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "to_player_redacts_every_known_host_only_field()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.projection.MafiaProjectionPolicyTest.xml",
+      "sha256": "791e35b9ccb391d28e6bcff78e479f5867a66dd4ceb243e1c15a1b4c67b5d1ce",
+      "suite": "com.parlor.games.mafia.domain.projection.MafiaProjectionPolicyTest",
+      "counts": {
+        "tests": 11,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "to_public_strips_private_and_host_only_buckets()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "non_mafia_viewer_sees_no_mafia_coordination_snapshot()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "to_public_keeps_living_player_roles_null()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "to_player_exposes_only_own_private_slice()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "post_game_public_and_player_projections_reveal_every_final_role()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "to_host_returns_full_state_unmodified()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "property_no_non_mafia_projection_references_any_mafia_role()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "detective_viewer_sees_their_own_pending_result()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "non_detective_viewer_has_no_pending_detective_result()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "property_to_player_for_mafia_only_contains_own_slice_not_other_mafia()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "mafia_viewer_sees_mafia_coordination_snapshot()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.reducer.MafiaReducerEdgeCasesTest.xml",
+      "sha256": "fba94c9f6f196065c4f001c1fae5cee59eaade5de389c030b3e9d6a0cccd94bd",
+      "suite": "com.parlor.games.mafia.domain.reducer.MafiaReducerEdgeCasesTest",
+      "counts": {
+        "tests": 27,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "detective_result_is_available_immediately_and_blocks_resolution_until_acknowledged()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "duplicate_night_submission_is_idempotent_and_cannot_replace_first_choice()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "doctor_self_protect_rejected_when_setting_disabled()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "doctor_consecutive_target_is_rejected_at_submission_boundary()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "close_vote_is_noop_until_every_ballot_member_has_acted()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "continue_without_player_during_active_game_ends_and_reveals_every_role()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "detective_self_inspect_rejected_when_setting_disabled()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "terminal_state_clears_every_concurrent_disconnect_marker()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "cast_vote_by_non_ballot_voter_is_rejected()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "close_vote_that_reaches_mafia_parity_enters_post_game_immediately()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "mafia_targeting_another_mafia_is_rejected_when_setting_disabled()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "mafia_coordination_snapshot_is_null_for_everyone_after_night_resolution()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "mafia_targeting_mafia_accepted_when_setting_enabled()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "eliminated_spectator_disconnect_does_not_enter_gameplay_recovery()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "cast_vote_for_non_candidate_target_is_rejected()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "doctor_self_protect_accepted_when_setting_enabled()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "end_game_from_post_game_is_idempotent()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "cast_self_vote_rejected_when_setting_disabled()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "ballot_is_final_after_cast_and_later_abstain_is_ignored()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "eliminated_players_cannot_acknowledge_living_player_announcements()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "explicit_end_also_clears_disconnect_markers()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "ballot_is_final_after_abstain_and_later_cast_is_ignored()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "cast_self_vote_accepted_when_setting_enabled()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "mafia_coordination_snapshot_reinitialised_for_living_mafia_on_next_night()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "night_cannot_resolve_until_every_active_living_player_submits()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "close_vote_with_clear_plurality_records_correct_tally()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "resolve_night_with_no_detective_pick_delivers_no_pending_result()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.reducer.MafiaReducerTest.xml",
+      "sha256": "d4983ff083552d85b88e364e9854e9e24ab914552f3b4cd07fdfad4751aaea6a",
+      "suite": "com.parlor.games.mafia.domain.reducer.MafiaReducerTest",
+      "counts": {
+        "tests": 24,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "apply_settings_outside_setup_is_a_no_op()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "configure_and_start_commits_rules_and_roles_in_one_transition()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "advance_from_role_assignment_succeeds_after_all_ack()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "advance_from_role_assignment_blocks_until_everyone_acks()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "apply_settings_in_setup_commits_to_public()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "initial_state_is_setup_with_preset_settings()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "start_game_assigns_roles_and_advances_to_role_assignment()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "abstain_then_close_with_no_other_votes_ends_in_skipped_all_abstained()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "cast_vote_during_voting_records_choice()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "mafia_revote_uses_a_deterministic_tied_target_when_round_two_is_still_tied()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "mafia_submitting_doctor_protect_is_a_no_op()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "mafia_coordination_snapshot_only_lives_in_mafia_private()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "continue_without_player_rejects_a_connected_seat()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "apply_invalid_settings_is_rejected()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "configure_and_start_rejects_invalid_rules_without_starting_old_rules()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "authoritative_reducer_rejects_excessive_revote_settings()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "setup_grace_expiry_cancels_to_a_recoverable_unassigned_terminal_state()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "end_game_jumps_to_post_game()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "setup_disconnect_reconnects_before_grace_expiry_without_dropping_seat()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "mark_player_disconnected_and_reconnected_round_trips()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "configure_and_start_is_idempotent_after_game_has_started()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "host_open_vote_from_discussion_advances_to_voting()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "mafia_revote_round_opens_when_round_one_tied_and_revote_configured()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "non_mafia_submitting_kill_vote_is_a_no_op()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.MafiaSessionRulesTest.xml",
+      "sha256": "535d8e3a5d0c9eee6bc3ef7432b352da85aedd7fe2dc38f167828afea701108a",
+      "suite": "com.parlor.games.mafia.domain.rules.MafiaSessionRulesTest",
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "names_must_be_bounded_trimmed_and_free_of_control_or_format_characters()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "player_count_identity_and_seat_mutations_are_rejected()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "exact_duplicate_display_names_are_rejected_at_the_authoritative_boundary()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "unsupported_mode_is_rejected_before_authoritative_state_is_created()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "every_supported_classic_roster_is_accepted_at_the_definition_boundary()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.NightResolutionTest.xml",
+      "sha256": "270032a9b71ebb79b0f8a9a4c8431729db321eb090039b01fc58e99bb28e2e97",
+      "suite": "com.parlor.games.mafia.domain.rules.NightResolutionTest",
+      "counts": {
+        "tests": 13,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "mafia_plurality_kills_target_when_doctor_not_protecting()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "detective_inspection_returns_correct_team_seen()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "doctor_can_repeat_same_target_when_setting_on()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "random_tied_pick_is_invariant_to_tally_insertion_order_for_every_sampled_seed()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "doctor_saves_target_when_protecting_same_player_as_mafia_target()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "detective_inspection_of_town_player()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "doctor_self_heal_gated_by_setting()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "tied_kill_with_no_kill_kills_no_one()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "tied_kill_with_random_tied_picks_from_tied_set()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "doctor_cannot_repeat_same_target_when_setting_off()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "empty_mafia_tally_yields_no_kill()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "mafia_target_not_alive_results_in_no_kill()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "no_detective_target_yields_no_result()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.RoleAssignmentTest.xml",
+      "sha256": "4d9e2b697edbdf97fc219eabb92631f1a437a6a9bf6877d2908af0bd4ce29074",
+      "suite": "com.parlor.games.mafia.domain.rules.RoleAssignmentTest",
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "differs_for_different_seeds_in_general()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "every_player_gets_exactly_one_role()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "non_mafia_have_empty_known_teammates()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "counts_match_settings_with_civilians_as_remainder()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "deterministic_for_same_seed()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "mafia_members_know_their_teammates_exactly()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.VoteResolutionTest.xml",
+      "sha256": "089fb25f58cae58579c694f887a3df963d2ecf6c7073a924859dee71a7514359",
+      "suite": "com.parlor.games.mafia.domain.rules.VoteResolutionTest",
+      "counts": {
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "all_abstained_returns_skipped()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "skip_elimination_policy_remains_the_reason_when_revoting_is_disabled()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "tied_at_max_revotes_returns_max_revotes_reached()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "tied_at_max_revotes_zero_returns_max_revotes_reached()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "tied_with_skip_elimination_short_circuits_to_skipped()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "tied_outcome_is_canonical_for_every_cast_map_permutation()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "clear_plurality_resolves()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "tied_with_revote_all_carries_full_candidate_list()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "tied_with_revote_tied_only_carries_only_top_targets()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.WinCheckTest.xml",
+      "sha256": "9d27d6d2b9f3e366818be20ec1dcf2aa922f5746b7f38a4ba326cafe63e4201d",
+      "suite": "com.parlor.games.mafia.domain.rules.WinCheckTest",
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "town_wins_when_no_mafia_alive()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "mafia_wins_when_mafia_majority()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "mafia_wins_when_mafia_equals_town()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "game_continues_when_mafia_strict_minority()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "all_dead_yields_town_win_boundary()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.settings.MafiaSettingsValidationTest.xml",
+      "sha256": "bc1b3f22aedfc422c79eea241fb0407dd5a270b0581cadcaa931923ab80e56b2",
+      "suite": "com.parlor.games.mafia.domain.settings.MafiaSettingsValidationTest",
+      "counts": {
+        "tests": 20,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "valid_for_five_player_preset()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejects_player_count_below_minimum()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejects_zero_civilians()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejects_player_count_above_shipping_maximum()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejects_multiple_detectives_or_doctors_for_single_role_ruleset()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "accepts_maximum_supported_revotes()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejects_negative_max_revotes()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejects_duration_below_minimum()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejects_max_revotes_above_authoritative_limit()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "accepts_mafia_strict_minority()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "accepts_zero_max_revotes()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "role_counts_civilians_is_remainder()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejects_zero_mafia()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejects_mafia_equal_to_town_at_start()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejects_negative_optional_role_counts()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejects_negative_civilian_remainder()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "presets_are_valid_across_supported_band()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejects_non_null_timer_until_timer_transitions_are_implemented()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejects_mafia_majority_at_start()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "null_durations_are_valid()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.state.MafiaPeerSnapshotValidatorTest.xml",
+      "sha256": "765b8ab6b83f2c699d775e55fac59400a8bd2b25b7d76ced362e1678eaf39f5c",
+      "suite": "com.parlor.games.mafia.domain.state.MafiaPeerSnapshotValidatorTest",
+      "counts": {
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "terminal_projection_rejects_reducer_impossible_mortality_and_vote_history()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "round_two_projection_requires_revote_policy_and_a_bounded_first_round_tally()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "role_assignment_and_first_night_reject_private_history_from_a_future_transition()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "town_projection_in_round_two_must_retain_its_completed_round_one_action()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "terminal_projection_winner_exactly_matches_the_public_role_reveal()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.flow.FullGameDriveTest.xml",
+      "sha256": "4cf930de8b8b490c2ff9c2e75224ab3a3616f74408f1617dedd070053ea6ba51",
+      "suite": "com.parlor.games.mafia.flow.FullGameDriveTest",
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "every_supported_role_distribution_completes_a_valid_night_and_day_cycle()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "seven_player_mafia_win_via_night_kills()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "five_player_town_wins_when_mafia_is_voted_out()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "winner_is_set_immediately_when_last_mafia_dies_during_night()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.flow.MafiaLocalSessionConfigTest.xml",
+      "sha256": "fedc5b8167ae915991e6d2206ae542355f2f5a444df2e091fccb0054141fcafd",
+      "suite": "com.parlor.games.mafia.flow.MafiaLocalSessionConfigTest",
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "freshIdsUseIndependentEntropyRatherThanTheGameplaySeed()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "resumePreservesThePersistedIdWithoutConsumingFreshEntropy()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaAuthoritativeLifecycleTest.xml",
+      "sha256": "699e1723a3d25938399d1dab00a6905ba106bf3608b8b62ba626990ef5442221",
+      "suite": "com.parlor.games.mafia.multidevice.MafiaAuthoritativeLifecycleTest",
+      "counts": {
+        "tests": 15,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "suspended_room_rejects_host_gameplay_without_mutating_state()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "retained_peer_completes_rejoin_start_replay_without_a_second_lobby_collector()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "disconnect_pauses_commands_and_reconnect_cancels_expiry_then_resyncs()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "failed_transport_retirement_keeps_the_player_disconnected_and_retryable()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "reconnect_keeps_seat_disconnected_until_start_commit_is_acknowledged()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "host_can_continue_without_before_expiry_and_cancels_the_grace_job()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "eliminated_spectator_disconnect_neither_blocks_game_nor_expires_the_session()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "close_waits_for_host_and_peer_room_event_collectors()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "terminate_waits_for_authenticated_terminal_delivery_before_returning()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "reconnect_handshake_failure_leaves_grace_deadline_authoritative()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "production_topology_reconciliation_observes_disconnect_before_bridge_creation()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "post_game_disconnect_does_not_cover_terminal_results_with_reconnect_state()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "one_departure_ending_game_clears_other_concurrent_disconnects()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "stamped_start_and_explicit_host_leave_are_terminal_for_peer()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejoin_grace_expiry_deterministically_finishes_active_game()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaDoctorLanTest.xml",
+      "sha256": "a719d214eb686a2dfadadbfd5caf9e30f291b65edd3f548d221b4636fa63c09e",
+      "suite": "com.parlor.games.mafia.multidevice.MafiaDoctorLanTest",
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "only_host_can_commit_setup_selection_and_no_one_can_change_it_after_start()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "rejoin_preserves_doctor_restriction_setting_and_first_submission_without_host_secrets()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaMultiDeviceProgressionTest.xml",
+      "sha256": "daac94e58f475a31dca380904e302264701247693143ed6384061747150cfde5",
+      "suite": "com.parlor.games.mafia.multidevice.MafiaMultiDeviceProgressionTest",
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "multi_device_host_driver_progresses_a_full_game_to_a_winner()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "role_assignment_does_not_advance_until_every_active_player_has_acked()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "announcement_controls_are_exposed_only_to_living_active_seats()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "ready_advance_is_suspended_during_disconnect_and_reoffered_after_reconnect()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "retained_host_driver_reoffers_the_same_ready_advance_after_foregrounding()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "an_eliminated_host_can_still_resolve_the_night()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaPeerActionAuthorityTest.xml",
+      "sha256": "565b1aac390090e518dd1863658a918ac1347de2a93fd71e541703b408c7d676",
+      "suite": "com.parlor.games.mafia.multidevice.MafiaPeerActionAuthorityTest",
+      "counts": {
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "session_starting_does_not_leak_role_seed()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "peer_self_actor_with_impersonated_sender_is_rejected()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "peer_in_dropped_players_cannot_submit_actions()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "peer_cannot_forge_sender_to_impersonate_another_player()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "peer_self_actor_with_correct_sender_is_accepted()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "peer_host_only_action_is_rejected()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "peer_malformed_payload_is_silently_dropped()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaPeerPrivateTargetGateTest.xml",
+      "sha256": "a9f4937d99223a68445be7b0805538f395093f35eded054ac6e6e02480551bc7",
+      "suite": "com.parlor.games.mafia.multidevice.MafiaPeerPrivateTargetGateTest",
+      "counts": {
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "peer_installs_its_direct_private_slice_from_valid_atomic_snapshot()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "peer_rejects_privacy_safe_but_reducer_impossible_public_snapshot()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "peer_rejects_malformed_utf8_snapshot_without_replacing_last_good_state()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "peer_rejects_snapshot_whose_public_payload_contains_host_secrets()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "peer_rejects_private_payload_from_wrong_game_envelope()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "peer_rejects_active_snapshot_with_a_permanently_dropped_seat_atomically()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "peer_redacts_an_accidentally_canonical_initial_placeholder()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "peer_rejects_a_structurally_valid_roster_substitution_for_the_same_session()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaProjectionLeakTest.xml",
+      "sha256": "14beeae2ab67c2bf2ac8b16b1f59b06c867bc31af2c8e9787d4cd95c2e5554de",
+      "suite": "com.parlor.games.mafia.multidevice.MafiaProjectionLeakTest",
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "no_non_mafia_projection_references_any_mafia_private_data()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "public_projection_never_carries_private_or_host_only_buckets()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "no_non_detective_projection_references_any_detective_result()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest.xml",
+      "sha256": "e2be79ec9e5b5855e28174b3b795b16056bdec32851852caa9a8fd4c2d97a29e",
+      "suite": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+      "counts": {
+        "tests": 15,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "killed_doctor_keeps_last_effective_target_until_next_resolution_then_clears_it()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "terminal_cleanup_does_not_require_historical_protection_to_be_erased()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "repeated_protection_history_is_valid_only_with_setting_enabled()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "mafia_coordination_revote_preserves_doctor_history_and_own_submission()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "resumed_local_controller_enforces_the_persisted_repeat_setting()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "peer_projections_keep_only_own_private_history_and_do_not_require_host_logs()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "no_doctor_configuration_keeps_null_history_and_rejects_foreign_private_history()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "private_previous_protection_must_match_retained_history_in_every_active_phase()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "initial_setup_role_assignment_and_first_night_have_no_previous_protection()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "null_effective_protection_cannot_be_replaced_by_an_old_legal_target()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "doctor_eliminated_by_day_vote_retains_previous_night_binding()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "history_binding_also_applies_during_a_day_revote()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "latest_binding_survives_history_capping_without_requiring_missing_predecessors()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "death_of_previous_target_does_not_erase_last_effective_protection()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "normal_terminal_win_also_clears_private_history_without_discarding_host_history()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaSnapshotCodecTest.xml",
+      "sha256": "2c5bc1a0ee06f1ec994702d9bcaf044b8a3ead6fda43528e52c4ab10e92912bc",
+      "suite": "com.parlor.games.mafia.snapshot.MafiaSnapshotCodecTest",
+      "counts": {
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "setup_phase_state_round_trips()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "full_state_round_trips()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "current_snapshot_boundaries_reject_oversized_history_instead_of_rewriting_it()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "sustained_session_history_keeps_only_the_newest_serialized_records()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "current_payload_must_be_canonical_and_bounded()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "voting_phase_with_active_vote_round_trips()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "post_game_state_round_trips_with_winner()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "impossible_public_state_is_rejected_on_decode()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "impossible_public_state_is_rejected_on_encode()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaSnapshotRecoveryTest.xml",
+      "sha256": "9cf11197a076581b78eac553bdab05bcce622381231fa6e55bf3d3a4a62be30d",
+      "suite": "com.parlor.games.mafia.snapshot.MafiaSnapshotRecoveryTest",
+      "counts": {
+        "tests": 23,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "cancellation_during_snapshot_validation_is_not_reported_as_corruption()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "missing_play_mode_is_rejected_because_mafia_has_no_legacy_snapshot_format()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "unassigned_post_game_accepts_only_the_exact_setup_cancellation_shape()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "fatal_error_during_snapshot_validation_is_not_reported_as_corruption()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "phase_day_and_active_vote_must_form_a_reducer_reachable_state()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "authoritative_resolution_history_must_be_complete_and_reducer_valid()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "public_announcements_must_match_the_authoritative_resolution_log()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "terminal_winner_must_exactly_match_the_revealed_alive_roles()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "role_map_counts_and_private_team_identity_cannot_be_forged()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "pending_night_target_requires_the_reducer_submission_flag()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "terminal_state_erases_transient_private_action_data_before_persistence()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "unknown_local_play_mode_is_not_silently_changed_to_pass_and_play()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "eliminated_spectator_cannot_be_restored_as_gameplay_disconnected()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "non_terminal_state_cannot_already_satisfy_a_win_condition()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "revote_candidates_must_be_reducer_reachable_for_the_configured_tie_policy()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "structurally_inconsistent_roster_is_rejected_after_authentic_decoding()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "snapshot_from_another_game_is_rejected_before_state_installation()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "pregame_and_first_night_private_history_must_be_reducer_reachable()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "private_night_action_and_detective_result_must_be_reducer_reachable()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "round_two_mafia_coordination_requires_revote_rules_and_reachable_round_one_history()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "player_and_public_roster_order_or_name_mutations_are_not_recoverable()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "valid_local_snapshot_restores_full_authoritative_state()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "initial_vote_requires_the_exact_ordered_eligible_ballot_and_candidate_set()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.multidevice.MafiaNetworkErrorMessageKeyTest.xml",
+      "sha256": "a99627b24691a579bfd192527a0f608739783c41f989cdbd5ea6958866726d38",
+      "suite": "com.parlor.games.mafia.ui.flow.multidevice.MafiaNetworkErrorMessageKeyTest",
+      "counts": {
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "everyNetworkFailureKeepsItsActionableUiClassification()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.passandplay.MafiaPassAndPlayNightQueueTest.xml",
+      "sha256": "059463a56451d36bf5d2e0f53d9ee63b1174058045ca6fd4f62816517bd969ce",
+      "suite": "com.parlor.games.mafia.ui.flow.passandplay.MafiaPassAndPlayNightQueueTest",
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "queue_advances_only_after_reducer_commits_the_players_action()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "coordination_revote_contains_only_mafia_without_round_two_submission()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest.xml",
+      "sha256": "53d3d4d2927520297d26c07805953abf6215eb52b8a1d97afa6fc6c7cb704aa6",
+      "suite": "com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest",
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "canonical_local_and_projected_lan_choices_honor_both_independent_settings()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "eligibility_matches_reducer_acceptance_before_each_first_submission()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.night.TargetPickerSelectionTest.xml",
+      "sha256": "6ac99e7adebb887c9a7a6d7b49d08b25d84130ded76947ba9bd49a822ff4e9e7",
+      "suite": "com.parlor.games.mafia.ui.screens.night.TargetPickerSelectionTest",
+      "counts": {
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "absent_selection_is_never_invented()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "enabled_current_target_remains_submittable()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "removed_or_disabled_target_is_rejected_before_submit()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest.xml",
+      "sha256": "6512c799cfcdf12d94af62319f3ef45036dcd855d7ef5372e6368948f40584ef",
+      "suite": "com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest",
+      "counts": {
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "compact_arabic_long_name_does_not_consume_final_role_width()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "compact_english_long_name_does_not_consume_final_role_width()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "landscape_large_text_arabic_roles_remain_scrollable()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "compact_large_text_english_preserves_every_final_role()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "landscape_large_text_english_roles_remain_scrollable()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "compact_large_text_arabic_preserves_every_final_role()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest.xml",
+      "sha256": "c5bc4063f6311e7ae9286bd27a1be0c433bfa3ed8d1fb31130e2aceefb1db8bc",
+      "suite": "com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest",
+      "counts": {
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "arabic_consecutive_nights_toggle_defaults_off_and_commits_on_and_off()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "english_consecutive_nights_toggle_defaults_off_and_commits_on_and_off()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupDraftTest.xml",
+      "sha256": "7698bb8ae709554a8075996aae6f26e9c02b9bade0c4190ee371711c29fbc7e6",
+      "suite": "com.parlor.games.mafia.ui.screens.setup.MafiaSetupDraftTest",
+      "counts": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "cases": [
+        {
+          "name": "setup_options_are_exhaustive_for_serialized_rule_enums()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "round_trip_preserves_every_shipping_editable_rule()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "setup_contract_classifies_every_serialized_setting()[desktop]",
+          "status": "PASS"
+        },
+        {
+          "name": "edits_every_shipping_rule_without_changing_compatibility_only_timers()[desktop]",
+          "status": "PASS"
+        }
+      ]
+    }
+  ],
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-05T19:42:04.204530+00:00",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "removed_outputs": [
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build",
+      "build",
+      "build-logic/convention/build"
+    ],
+    "remaining_outputs": [],
+    "cleanup_completed_at": "2026-09-05T19:42:04.581043+00:00",
+    "cleanup_errors": [],
+    "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership."
+  },
+  "cleanup_independent_check": "Every removed output path was absent when explicitly inspected after cycle03 and before any next cycle; no child build/process mutation was performed.",
+  "external_source_ranges": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MC03-ParagraphLayoutCache.kt.txt",
+      "sha256": "e7dcd7051122d18adc560db6518cdc8d4b4adaad0798e08319d9d12df0bd4db4",
+      "reviewed_ranges": [
+        [
+          125,
+          218
+        ],
+        [
+          290,
+          314
+        ],
+        [
+          364,
+          428
+        ]
+      ],
+      "full_file_read": false,
+      "purpose": "Counter-evidence: semantic TextLayoutResult may report intrinsic-width overflow independently of fitted Paragraph draw; not an app finding"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MC03-TextStringSimpleNode.kt.txt",
+      "sha256": "17eb39f90cff510ba13784b699516f464f79c49633bcfc586815186a40f74e14",
+      "reviewed_ranges": [
+        [
+          277,
+          324
+        ],
+        [
+          362,
+          411
+        ],
+        [
+          416,
+          455
+        ]
+      ],
+      "full_file_read": false,
+      "purpose": "Counter-evidence: semantic TextLayoutResult may report intrinsic-width overflow independently of fitted Paragraph draw; not an app finding"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MC03-TextLayoutResult.kt.txt",
+      "sha256": "1a4969fae5f0a58bb3848cee1c34a6f4134c65cb298288f287019b7f3d44edfc",
+      "reviewed_ranges": [
+        [
+          286,
+          331
+        ]
+      ],
+      "full_file_read": false,
+      "purpose": "Counter-evidence: semantic TextLayoutResult may report intrinsic-width overflow independently of fitted Paragraph draw; not an app finding"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MC03-Material3Text.kt.txt",
+      "sha256": "f638817208f2ac7a6db976d085acba3cbdcee22c3eb2fb6f9cbf72ca5f570d65",
+      "reviewed_ranges": [
+        [
+          90,
+          150
+        ]
+      ],
+      "full_file_read": false,
+      "purpose": "Counter-evidence: semantic TextLayoutResult may report intrinsic-width overflow independently of fitted Paragraph draw; not an app finding"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MC03-BasicText.kt.txt",
+      "sha256": "92df0f194316e605dca53913ee2fd05d274441648550715ac966893513e0895c",
+      "reviewed_ranges": [
+        [
+          90,
+          160
+        ]
+      ],
+      "full_file_read": false,
+      "purpose": "Counter-evidence: semantic TextLayoutResult may report intrinsic-width overflow independently of fitted Paragraph draw; not an app finding"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MC03-MultiParagraph.kt.txt",
+      "sha256": "793ba1ec967b66dd0b94f9baaa9c7a7b04b684f68c9f66c3812ecee40592edb4",
+      "reviewed_ranges": [
+        [
+          412,
+          466
+        ]
+      ],
+      "full_file_read": false,
+      "purpose": "Counter-evidence: semantic TextLayoutResult may report intrinsic-width overflow independently of fitted Paragraph draw; not an app finding"
+    }
+  ],
+  "research_receipts": [
+    "MC03-overflow-research.json",
+    "MC03-overflow-research-callers.json"
+  ],
+  "unverified": [
+    "Android/iOS native render, physical screen readers/large text settings",
+    "Real P2pKit discovery/admission/start/credentials/cold rejoin/OS lifecycle",
+    "Broader static analysis and Apple/Android gates managed by root",
+    "No claim setup/tally sibling layouts were confirmed/fixed"
+  ],
+  "performed_by_this_validator": [
+    "Source/diff review",
+    "Actual XML parsing and before/after/current SHA-256 binding",
+    "Official exact-version source research",
+    "Evidence-only report writing"
+  ],
+  "not_performed_by_this_validator": [
+    "Gradle/compiler/Xcode builds",
+    "Device/simulator/server starts",
+    "Process termination",
+    "Commits/branches/checkout/stash/reset/integration/push",
+    "GitHub issue or Store actions"
+  ]
+}

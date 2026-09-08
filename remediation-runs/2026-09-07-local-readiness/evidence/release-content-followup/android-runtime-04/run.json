@@ -1,0 +1,2812 @@
+{
+  "status": "FAIL",
+  "runtime_kind": "owned API35 ARM64 emulator",
+  "not_evidence_for": [
+    "physical LAN",
+    "Linux x86/KVM GMD",
+    "Store signing"
+  ],
+  "tests": [],
+  "cleanup": [],
+  "source_commit": "f5ea8045bd903c255041b198f54aca67e893612f",
+  "source_binding": "Caller-provided commit; campaign freeze and Gradle receipt must bind dirty source. Artifact hashes alone do not prove source.",
+  "controls_before": {
+    "files": [
+      {
+        "path": "owned_arm64_smoke_sdk.py",
+        "sha256": "3a425d8dafac853ac3f8c189a68e4951eb1874e79c57f458825d1145d0289991"
+      },
+      {
+        "path": "darwin_owned_processes.py",
+        "sha256": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378"
+      },
+      {
+        "path": "avd-sdk-root-01/owned_sdk_image.py",
+        "sha256": "722b18056cf5c130076edcd5dfd53a4524f68bd4f68e8f8ad65812ce50eabc61"
+      }
+    ],
+    "sha256": "561eb8ae83b9a1639d571f49e929141d02868b83ffb10333ba2b50ce42aac7fa"
+  },
+  "global_sdk_metadata_before": [
+    {
+      "path": ".knownPackages",
+      "present": true,
+      "sha256": "2c745ac1361465d6c8829b94852c594dd5a34293ec5f2a1e49d2f169a8cce545",
+      "identity": [
+        16777232,
+        868916,
+        16,
+        1788614208880530858,
+        1788614208880530858
+      ]
+    },
+    {
+      "path": "system-images/android-35/google_apis/arm64-v8a/package.xml",
+      "present": true,
+      "sha256": "9bbfa7f3f8b7386ae31ee3130748aeb32a37c3404d2be5fb8ac7f0f731ea9642",
+      "identity": [
+        16777232,
+        1186852,
+        19631,
+        1766752554252213151,
+        1766752554252213151
+      ]
+    },
+    {
+      "path": "system-images/android-35/google_apis/arm64-v8a/source.properties",
+      "present": true,
+      "sha256": "bd5cb4bc86ef478b0f37a034aa2b460165b391e8cb6504cb13b8ca1c462c4848",
+      "identity": [
+        16777232,
+        1186810,
+        363,
+        1766752544512494673,
+        1766752544512494673
+      ]
+    },
+    {
+      "path": "emulator/package.xml",
+      "present": true,
+      "sha256": "5c06a9b6ea0d9f436d351e8a9b2420619082b30222d650643a572ca5dd6ab7c8",
+      "identity": [
+        16777232,
+        19337213,
+        18597,
+        1781513914525170169,
+        1781513914525170169
+      ]
+    },
+    {
+      "path": "emulator/source.properties",
+      "present": true,
+      "sha256": "a0cdf354b08f5d21b426dd6d8d58a3c6e5d1527d84740bba1df88b4249ca32e4",
+      "identity": [
+        16777232,
+        19337116,
+        103,
+        1781513913686690171,
+        1781513913686690171
+      ]
+    },
+    {
+      "path": "emulator/lib/hardware-properties.ini",
+      "present": true,
+      "sha256": "13a89cc7cfa84c5fe48cd7eb8d296bca321dcd0d90f7bcb751efd963ae2c653d",
+      "identity": [
+        16777232,
+        19337141,
+        31318,
+        1781513914332672190,
+        1781513914332672190
+      ]
+    }
+  ],
+  "image_properties": {
+    "Pkg.Desc": "System Image arm64-v8a with Google APIs.",
+    "Pkg.Revision": "9",
+    "Pkg.Dependencies": "emulator#33.1.24",
+    "AndroidVersion.ApiLevel": "35",
+    "AndroidVersion.ExtensionLevel": "13",
+    "AndroidVersion.IsBaseSdk": "true",
+    "SystemImage.Abi": "arm64-v8a",
+    "SystemImage.TagId": "google_apis",
+    "SystemImage.TagDisplay": "Google APIs",
+    "SystemImage.GpuSupport": "true",
+    "Addon.VendorId": "google",
+    "Addon.VendorDisplay": "Google Inc."
+  },
+  "artifacts": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-03/release.apk",
+      "sha256": "561b269c883de7be33efda9eb7b2dcabb412ce2706ffd38ad79f3f04c2c5a8cb"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-03/release-androidTest.apk",
+      "sha256": "754daf608683abb2c32988287a19d0438c86699fcbfc259a62e117138ec9893d"
+    }
+  ],
+  "temporary_root": "/private/tmp/parlor-arm64-1gyff3c9",
+  "legacy_adb_port_reserved": 52098,
+  "native_clone_probe": {
+    "status": "PASS",
+    "method": "real fclonefileat",
+    "independent_inodes": true,
+    "clone_mutation_preserved_source": true,
+    "source_sha256": "6fd92cca4f2a24a028c2c6ab72315bd4b2f78cbd7c2b3fdc97474a3dbc79f5cf"
+  },
+  "sdk_clone": {
+    "source_image": "/Users/abdelrahman/Library/Android/sdk/system-images/android-35/google_apis/arm64-v8a",
+    "owned_sdk": "/private/tmp/parlor-arm64-1gyff3c9/sdk",
+    "owned_image": "/private/tmp/parlor-arm64-1gyff3c9/sdk/system-images/android-35/google_apis/arm64-v8a",
+    "logical_bytes": 4058038626,
+    "method": "fclonefileat per regular file; no fallback; source+clone SHA256 compared",
+    "files": [
+      {
+        "path": "NOTICE.txt",
+        "size": 20106158,
+        "sha256": "cd037fbc74785480bdef48894b9245b3f157db65327f05ace0e8f68abd1b37f4",
+        "mode": "0644"
+      },
+      {
+        "path": "VerifiedBootParams.textproto",
+        "size": 356,
+        "sha256": "47bec2cf2e3f822c1ee9a299f5a723674ce3f67565661123940be0605360e02b",
+        "mode": "0644"
+      },
+      {
+        "path": "advancedFeatures.ini",
+        "size": 758,
+        "sha256": "b293a499caf9a3a2b0ba8e95fbc3d9113c8d3c33da27af59c6284e5f81119e5e",
+        "mode": "0644"
+      },
+      {
+        "path": "build.prop",
+        "size": 4758,
+        "sha256": "0e90e5c253335e4fc7ba24502a077bfecbf93d524db19ad75798e27fa50135f4",
+        "mode": "0644"
+      },
+      {
+        "path": "data/empty_data_disk",
+        "size": 107,
+        "sha256": "e4dc7c33a83013f3d9eb9b5a5693c912e83a9c7f978933b5c7600039dbfde903",
+        "mode": "0644"
+      },
+      {
+        "path": "data/local.prop",
+        "size": 46,
+        "sha256": "49b05d093a46d35d85df01fb99133f077fcc725cc49efe1a1bedae884d24e20b",
+        "mode": "0644"
+      },
+      {
+        "path": "data/misc/GoldfishSkinConfig",
+        "size": 783,
+        "sha256": "763b66cad27dc57354f456bb763e27acf8859059890e6515daba90e77c906b75",
+        "mode": "0644"
+      },
+      {
+        "path": "data/misc/apns/apns-conf.xml",
+        "size": 6575,
+        "sha256": "c35b899f2b6296aee4a9742302651cce9eb64622669d4d8fe8d276ca11060eb6",
+        "mode": "0644"
+      },
+      {
+        "path": "data/misc/emulator/config/radioconfig.xml",
+        "size": 1433,
+        "sha256": "534a81b662ad62fc70ec0ea22715670524a05a066afc9fdac8e7c0f5a7789cd7",
+        "mode": "0644"
+      },
+      {
+        "path": "data/misc/emulator/version.txt",
+        "size": 112,
+        "sha256": "2f4ecb211f6b497d6011a75390fb0469ceaec4b816c10209198e43bafa57c695",
+        "mode": "0644"
+      },
+      {
+        "path": "data/misc/modem_simulator/etc/modem_simulator/files/numeric_operator.xml",
+        "size": 297,
+        "sha256": "c2557e604beea20b67642cdbb14ae7b792f804e4476b3f6cf47035690234f436",
+        "mode": "0644"
+      },
+      {
+        "path": "data/misc/modem_simulator/iccprofile_for_carrierapitests.xml",
+        "size": 16537,
+        "sha256": "dc4b5f5344f084fc44f89250bbcf2b12e452eb98c104e4ef3ec115366eb6ce32",
+        "mode": "0644"
+      },
+      {
+        "path": "data/misc/modem_simulator/iccprofile_for_sim0.xml",
+        "size": 14647,
+        "sha256": "a2744726a306b18d7547251026201aa5c6a9e120aa1555992eeb8b0a3b4aa6d9",
+        "mode": "0644"
+      },
+      {
+        "path": "data/misc/modem_simulator/iccprofile_for_sim_tel_alaska.xml",
+        "size": 14474,
+        "sha256": "462cc26ddaa9d6c470a2d9415771c80e323b526b1863f099accb298955b14db3",
+        "mode": "0644"
+      },
+      {
+        "path": "data/misc/pixel_9_pro_fold/devicestate/device_state_configuration.xml",
+        "size": 1644,
+        "sha256": "8bebf4943ed3fc50973ac428ab8c8c0d71700af81419f44fc95a59f52f873838",
+        "mode": "0644"
+      },
+      {
+        "path": "data/misc/pixel_9_pro_fold/display_settings.xml",
+        "size": 303,
+        "sha256": "2adca8f98a2c8ee0f780e10ca16587ac92641df5e93ab4437c3c47ad41b0041d",
+        "mode": "0644"
+      },
+      {
+        "path": "data/misc/pixel_9_pro_fold/displayconfig/display_layout_configuration.xml",
+        "size": 1311,
+        "sha256": "a64e2eca65bc2f9196215fb72a88c9035a584319f8b3da3606fff161be642be8",
+        "mode": "0644"
+      },
+      {
+        "path": "data/misc/pixel_9_pro_fold/extra_feature.xml",
+        "size": 829,
+        "sha256": "ba27b7a61457027e2a77917f8b07d716d3e918097901a14833749252b15aa38f",
+        "mode": "0644"
+      },
+      {
+        "path": "data/misc/pixel_fold/devicestate/device_state_configuration.xml",
+        "size": 1644,
+        "sha256": "8bebf4943ed3fc50973ac428ab8c8c0d71700af81419f44fc95a59f52f873838",
+        "mode": "0644"
+      },
+      {
+        "path": "data/misc/pixel_fold/display_settings.xml",
+        "size": 303,
+        "sha256": "2adca8f98a2c8ee0f780e10ca16587ac92641df5e93ab4437c3c47ad41b0041d",
+        "mode": "0644"
+      },
+      {
+        "path": "data/misc/pixel_fold/displayconfig/display_layout_configuration.xml",
+        "size": 1311,
+        "sha256": "a64e2eca65bc2f9196215fb72a88c9035a584319f8b3da3606fff161be642be8",
+        "mode": "0644"
+      },
+      {
+        "path": "data/misc/pixel_fold/extra_feature.xml",
+        "size": 829,
+        "sha256": "ba27b7a61457027e2a77917f8b07d716d3e918097901a14833749252b15aa38f",
+        "mode": "0644"
+      },
+      {
+        "path": "encryptionkey.img",
+        "size": 18874368,
+        "sha256": "522bd0b6a2c92e37de465059bb9487bb9597a9aae032b469a8ebe0b38146d8c3",
+        "mode": "0644"
+      },
+      {
+        "path": "kernel-ranchu",
+        "size": 14474326,
+        "sha256": "a9dda2ae115395ea352bca2201294b4df0020a7f425cbfae879ee66a03a8f19f",
+        "mode": "0644"
+      },
+      {
+        "path": "kernel_cmdline.txt",
+        "size": 16,
+        "sha256": "5bd6571f46a3e593053a7c6c37f4eed840c0da2278506fa53d1ff021e9d4d8e4",
+        "mode": "0644"
+      },
+      {
+        "path": "package.xml",
+        "size": 19631,
+        "sha256": "9bbfa7f3f8b7386ae31ee3130748aeb32a37c3404d2be5fb8ac7f0f731ea9642",
+        "mode": "0644"
+      },
+      {
+        "path": "ramdisk.img",
+        "size": 2080115,
+        "sha256": "46ff502d0e0a1d8f844d29c084a8b797107513d26199825f0d827836a87e84d7",
+        "mode": "0644"
+      },
+      {
+        "path": "source.properties",
+        "size": 363,
+        "sha256": "bd5cb4bc86ef478b0f37a034aa2b460165b391e8cb6504cb13b8ca1c462c4848",
+        "mode": "0644"
+      },
+      {
+        "path": "system.img",
+        "size": 3891265536,
+        "sha256": "5d9c9213a36f9034e85719baffba88d0a4b6ab992bbf80fdc7c4dfd21d070597",
+        "mode": "0644"
+      },
+      {
+        "path": "vendor.img",
+        "size": 111149056,
+        "sha256": "af71ded6307254f8bfa4711c87cbc82f60fe1f31b424ccff20db540639ab460b",
+        "mode": "0644"
+      }
+    ],
+    "files_sha256": "7ddd1bde255d7373183de43963432fab69b0c348a8e1b61d63adb0a12add6987",
+    "owned_emulator": "/private/tmp/parlor-arm64-1gyff3c9/sdk/emulator",
+    "packages": [
+      {
+        "path": "system-images/android-35/google_apis/arm64-v8a",
+        "source": "/Users/abdelrahman/Library/Android/sdk/system-images/android-35/google_apis/arm64-v8a",
+        "destination": "/private/tmp/parlor-arm64-1gyff3c9/sdk/system-images/android-35/google_apis/arm64-v8a",
+        "entries": 46,
+        "logical_bytes": 4058038626,
+        "files": [
+          {
+            "path": "NOTICE.txt",
+            "size": 20106158,
+            "sha256": "cd037fbc74785480bdef48894b9245b3f157db65327f05ace0e8f68abd1b37f4",
+            "mode": "0644"
+          },
+          {
+            "path": "VerifiedBootParams.textproto",
+            "size": 356,
+            "sha256": "47bec2cf2e3f822c1ee9a299f5a723674ce3f67565661123940be0605360e02b",
+            "mode": "0644"
+          },
+          {
+            "path": "advancedFeatures.ini",
+            "size": 758,
+            "sha256": "b293a499caf9a3a2b0ba8e95fbc3d9113c8d3c33da27af59c6284e5f81119e5e",
+            "mode": "0644"
+          },
+          {
+            "path": "build.prop",
+            "size": 4758,
+            "sha256": "0e90e5c253335e4fc7ba24502a077bfecbf93d524db19ad75798e27fa50135f4",
+            "mode": "0644"
+          },
+          {
+            "path": "data/empty_data_disk",
+            "size": 107,
+            "sha256": "e4dc7c33a83013f3d9eb9b5a5693c912e83a9c7f978933b5c7600039dbfde903",
+            "mode": "0644"
+          },
+          {
+            "path": "data/local.prop",
+            "size": 46,
+            "sha256": "49b05d093a46d35d85df01fb99133f077fcc725cc49efe1a1bedae884d24e20b",
+            "mode": "0644"
+          },
+          {
+            "path": "data/misc/GoldfishSkinConfig",
+            "size": 783,
+            "sha256": "763b66cad27dc57354f456bb763e27acf8859059890e6515daba90e77c906b75",
+            "mode": "0644"
+          },
+          {
+            "path": "data/misc/apns/apns-conf.xml",
+            "size": 6575,
+            "sha256": "c35b899f2b6296aee4a9742302651cce9eb64622669d4d8fe8d276ca11060eb6",
+            "mode": "0644"
+          },
+          {
+            "path": "data/misc/emulator/config/radioconfig.xml",
+            "size": 1433,
+            "sha256": "534a81b662ad62fc70ec0ea22715670524a05a066afc9fdac8e7c0f5a7789cd7",
+            "mode": "0644"
+          },
+          {
+            "path": "data/misc/emulator/version.txt",
+            "size": 112,
+            "sha256": "2f4ecb211f6b497d6011a75390fb0469ceaec4b816c10209198e43bafa57c695",
+            "mode": "0644"
+          },
+          {
+            "path": "data/misc/modem_simulator/etc/modem_simulator/files/numeric_operator.xml",
+            "size": 297,
+            "sha256": "c2557e604beea20b67642cdbb14ae7b792f804e4476b3f6cf47035690234f436",
+            "mode": "0644"
+          },
+          {
+            "path": "data/misc/modem_simulator/iccprofile_for_carrierapitests.xml",
+            "size": 16537,
+            "sha256": "dc4b5f5344f084fc44f89250bbcf2b12e452eb98c104e4ef3ec115366eb6ce32",
+            "mode": "0644"
+          },
+          {
+            "path": "data/misc/modem_simulator/iccprofile_for_sim0.xml",
+            "size": 14647,
+            "sha256": "a2744726a306b18d7547251026201aa5c6a9e120aa1555992eeb8b0a3b4aa6d9",
+            "mode": "0644"
+          },
+          {
+            "path": "data/misc/modem_simulator/iccprofile_for_sim_tel_alaska.xml",
+            "size": 14474,
+            "sha256": "462cc26ddaa9d6c470a2d9415771c80e323b526b1863f099accb298955b14db3",
+            "mode": "0644"
+          },
+          {
+            "path": "data/misc/pixel_9_pro_fold/devicestate/device_state_configuration.xml",
+            "size": 1644,
+            "sha256": "8bebf4943ed3fc50973ac428ab8c8c0d71700af81419f44fc95a59f52f873838",
+            "mode": "0644"
+          },
+          {
+            "path": "data/misc/pixel_9_pro_fold/display_settings.xml",
+            "size": 303,
+            "sha256": "2adca8f98a2c8ee0f780e10ca16587ac92641df5e93ab4437c3c47ad41b0041d",
+            "mode": "0644"
+          },
+          {
+            "path": "data/misc/pixel_9_pro_fold/displayconfig/display_layout_configuration.xml",
+            "size": 1311,
+            "sha256": "a64e2eca65bc2f9196215fb72a88c9035a584319f8b3da3606fff161be642be8",
+            "mode": "0644"
+          },
+          {
+            "path": "data/misc/pixel_9_pro_fold/extra_feature.xml",
+            "size": 829,
+            "sha256": "ba27b7a61457027e2a77917f8b07d716d3e918097901a14833749252b15aa38f",
+            "mode": "0644"
+          },
+          {
+            "path": "data/misc/pixel_fold/devicestate/device_state_configuration.xml",
+            "size": 1644,
+            "sha256": "8bebf4943ed3fc50973ac428ab8c8c0d71700af81419f44fc95a59f52f873838",
+            "mode": "0644"
+          },
+          {
+            "path": "data/misc/pixel_fold/display_settings.xml",
+            "size": 303,
+            "sha256": "2adca8f98a2c8ee0f780e10ca16587ac92641df5e93ab4437c3c47ad41b0041d",
+            "mode": "0644"
+          },
+          {
+            "path": "data/misc/pixel_fold/displayconfig/display_layout_configuration.xml",
+            "size": 1311,
+            "sha256": "a64e2eca65bc2f9196215fb72a88c9035a584319f8b3da3606fff161be642be8",
+            "mode": "0644"
+          },
+          {
+            "path": "data/misc/pixel_fold/extra_feature.xml",
+            "size": 829,
+            "sha256": "ba27b7a61457027e2a77917f8b07d716d3e918097901a14833749252b15aa38f",
+            "mode": "0644"
+          },
+          {
+            "path": "encryptionkey.img",
+            "size": 18874368,
+            "sha256": "522bd0b6a2c92e37de465059bb9487bb9597a9aae032b469a8ebe0b38146d8c3",
+            "mode": "0644"
+          },
+          {
+            "path": "kernel-ranchu",
+            "size": 14474326,
+            "sha256": "a9dda2ae115395ea352bca2201294b4df0020a7f425cbfae879ee66a03a8f19f",
+            "mode": "0644"
+          },
+          {
+            "path": "kernel_cmdline.txt",
+            "size": 16,
+            "sha256": "5bd6571f46a3e593053a7c6c37f4eed840c0da2278506fa53d1ff021e9d4d8e4",
+            "mode": "0644"
+          },
+          {
+            "path": "package.xml",
+            "size": 19631,
+            "sha256": "9bbfa7f3f8b7386ae31ee3130748aeb32a37c3404d2be5fb8ac7f0f731ea9642",
+            "mode": "0644"
+          },
+          {
+            "path": "ramdisk.img",
+            "size": 2080115,
+            "sha256": "46ff502d0e0a1d8f844d29c084a8b797107513d26199825f0d827836a87e84d7",
+            "mode": "0644"
+          },
+          {
+            "path": "source.properties",
+            "size": 363,
+            "sha256": "bd5cb4bc86ef478b0f37a034aa2b460165b391e8cb6504cb13b8ca1c462c4848",
+            "mode": "0644"
+          },
+          {
+            "path": "system.img",
+            "size": 3891265536,
+            "sha256": "5d9c9213a36f9034e85719baffba88d0a4b6ab992bbf80fdc7c4dfd21d070597",
+            "mode": "0644"
+          },
+          {
+            "path": "vendor.img",
+            "size": 111149056,
+            "sha256": "af71ded6307254f8bfa4711c87cbc82f60fe1f31b424ccff20db540639ab460b",
+            "mode": "0644"
+          }
+        ],
+        "files_sha256": "7ddd1bde255d7373183de43963432fab69b0c348a8e1b61d63adb0a12add6987"
+      },
+      {
+        "path": "emulator",
+        "source": "/Users/abdelrahman/Library/Android/sdk/emulator",
+        "destination": "/private/tmp/parlor-arm64-1gyff3c9/sdk/emulator",
+        "entries": 401,
+        "logical_bytes": 1196556349,
+        "files": [
+          {
+            "path": "._LICENSE",
+            "size": 11090,
+            "sha256": "9d9618553961f405b80e320507091d3b9bde2b6c4cb36919b1445b4286b83c43",
+            "mode": "0644"
+          },
+          {
+            "path": "._NOTICE.csv",
+            "size": 11087,
+            "sha256": "1ef30502bb1dce27d3be42a19c1594a1accacbefaf1e8c119b0a9bb6dd98ba88",
+            "mode": "0644"
+          },
+          {
+            "path": "._NOTICE.txt",
+            "size": 11088,
+            "sha256": "54bab35e63efbcf8847e8c1966ddd2a5bd3f49fbae159696a719200d6fe48b27",
+            "mode": "0644"
+          },
+          {
+            "path": "._source.properties",
+            "size": 11087,
+            "sha256": "049c3620a6e64fc7fb4b39e3c8db67d1aae1ecef88781c3a12487d480817059e",
+            "mode": "0644"
+          },
+          {
+            "path": "LICENSE",
+            "size": 524,
+            "sha256": "f2afd2180c83fc2b9faad741599dfe2095fd2557df2e479873bf87af62cf111d",
+            "mode": "0644"
+          },
+          {
+            "path": "NOTICE.csv",
+            "size": 29501,
+            "sha256": "294b90d2cd5d3f76598ff157155b062410e02c72b6530467c4c1d9c71c328356",
+            "mode": "0644"
+          },
+          {
+            "path": "NOTICE.txt",
+            "size": 231417,
+            "sha256": "9f7502e12de708a6cdd225e48af5819952ce8cc337fec96f952b793b6b47ca09",
+            "mode": "0644"
+          },
+          {
+            "path": "_CodeSignature/CodeResources",
+            "size": 60842,
+            "sha256": "dad0a0e75730dfea11c7ca197a58d104a40fd960c0311950a6c2b39e0c92350f",
+            "mode": "0644"
+          },
+          {
+            "path": "bin64/e2fsck",
+            "size": 608160,
+            "sha256": "55093b3e3f230b30314ffd8b8a24b443a0d918e0307003caadde0bbec713ac6c",
+            "mode": "0755"
+          },
+          {
+            "path": "bin64/fsck.ext4",
+            "size": 608160,
+            "sha256": "4f6e7bb7e5f13400e9dcb43bd2d635cf56ed5413326e30dba3dfeb35e717bce9",
+            "mode": "0755"
+          },
+          {
+            "path": "bin64/mkfs.ext4",
+            "size": 465824,
+            "sha256": "976d377beeee8b547a38f6ad8887efacb2729950f95621b78facd3826136fee6",
+            "mode": "0755"
+          },
+          {
+            "path": "bin64/resize2fs",
+            "size": 256528,
+            "sha256": "ff913c5ef38ae43dc5be54cacee4186ae8af8c546a63099f5caabdac1cff706e",
+            "mode": "0755"
+          },
+          {
+            "path": "bin64/tune2fs",
+            "size": 426320,
+            "sha256": "cbd7640535813fd7bf3e5a63536aa22219923564322680e9fb15022926a47662",
+            "mode": "0755"
+          },
+          {
+            "path": "crashpad_handler",
+            "size": 1049472,
+            "sha256": "8492126898b22f2ac5472511454f752e7ae0d5e2bd5c01a94d6bd056146ceeba",
+            "mode": "0755"
+          },
+          {
+            "path": "crashreport",
+            "size": 1682256,
+            "sha256": "3d552eef437bd6be95d715eef11259387209906ccabd11e45499e8de6a533686",
+            "mode": "0755"
+          },
+          {
+            "path": "emulator",
+            "size": 1115808,
+            "sha256": "c12c8d72da94cb5abd7f9d2578923d05ff94ea827f0ee593c6e563c96edc0d42",
+            "mode": "0755"
+          },
+          {
+            "path": "emulator-check",
+            "size": 12076832,
+            "sha256": "5d061b97755235c4a8b3ef62a43fdae230443e4b78c20e099273f6f9890d8214",
+            "mode": "0755"
+          },
+          {
+            "path": "include/flatbuffers/allocator.h",
+            "size": 2588,
+            "sha256": "19b1e7e9439ed7c7fdc61c04c99a14d33fc11295b590b6d0b1557ffcae4e4a59",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/array.h",
+            "size": 9201,
+            "sha256": "7a2111cc9670a5ed62502e5cc89216867e81df952dbfb7b3179c17ed2d5425fd",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/base.h",
+            "size": 17446,
+            "sha256": "b37c21af8a35cff08702496aee90471e8451f7454c9873b7d73e544ed51e0575",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/buffer.h",
+            "size": 7376,
+            "sha256": "10c1e7db57f0a291eb48fbfc718a0ff0ee3b7a3f226c38168a361c1d9c32a39c",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/buffer_ref.h",
+            "size": 1511,
+            "sha256": "e846dd9096c4c66b649811e63797770e240b0d2a8d5e7cfdd9be805f956080ba",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/code_generator.h",
+            "size": 2978,
+            "sha256": "01eb3d35c58f4eed0c5d463e04924fd231b789cfe1935eb9f6fb79d6f434c7a5",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/code_generators.h",
+            "size": 8288,
+            "sha256": "d3a38cb5a981113d12a0ff045dd9f91557bda6ae24b6ce5d069072a786cedb11",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/default_allocator.h",
+            "size": 2381,
+            "sha256": "51bd4a216a795323af2cf98811bc2910264081a2eac7e6cc980b25e7d54c47fb",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/detached_buffer.h",
+            "size": 3256,
+            "sha256": "85dfd3113aad26671e8e9a39cc922b1b0ee2725d7fb298f2fecd1e62da71528b",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/file_manager.h",
+            "size": 1399,
+            "sha256": "fa0c6e689b7550098990a78cc1e2ed96ee5e72e2dc33771f3f35e2fc8680816a",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/flatbuffer_builder.h",
+            "size": 62731,
+            "sha256": "8ebd8cd6d32889f957d6bc7c17d1e21c0eb500c00f206a2fa3d28c76dde7993f",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/flatbuffers.h",
+            "size": 10998,
+            "sha256": "dee86570da5c2a6f1bbf090f7717d3279d8d7a94691ae20626c552673a766b39",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/flatc.h",
+            "size": 4038,
+            "sha256": "7cdf9618206ed257abfa91f14b34e35adc5ac25669430ed1df6cc1e7966fc55f",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/flex_flat_util.h",
+            "size": 1220,
+            "sha256": "96de66fbed8d2d46350429455d68c117fe08c566edf48491257a7cbf4539266e",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/flexbuffers.h",
+            "size": 66984,
+            "sha256": "2c4d667994225897c72dc2c4abe9e420f8648f053ef91577f07b4bf505eb3b74",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/grpc.h",
+            "size": 9932,
+            "sha256": "1f70c3d9717d5730cdcf6a40a393d5e3e9d7670e14b113c5df3244554e7b38c6",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/hash.h",
+            "size": 3627,
+            "sha256": "c8ef6b8b751f7f180fe773644f3075d43a4e2d8e57d2d2ee4c283cae387e0169",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/idl.h",
+            "size": 47300,
+            "sha256": "a77ce48c585a93cac9a25bc9c42365fcc4f4bb6d4ab604242d6d8fa66b96bfcd",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/minireflect.h",
+            "size": 13657,
+            "sha256": "ea5b81759194cf8d63dd17b7c182ca498ba3b495357ef3bef9fd803ed6d23504",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/pch/flatc_pch.h",
+            "size": 1119,
+            "sha256": "37195f7b266d7fe3c22f4c9f9ac24312cfd531bae348286617dd0ca07a11cd29",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/pch/pch.h",
+            "size": 995,
+            "sha256": "5d5d75331e551c125476f0ee7e5deb75952783b5042c520116c433a8d9d8fadc",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/reflection.h",
+            "size": 22086,
+            "sha256": "7fa3873b1781d738f1ddddeea095c0df7481b9395ec6bc08a6993362eca749d0",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/reflection_generated.h",
+            "size": 58569,
+            "sha256": "66b75dc1a85f96c0093db829a0766f42afd1942ae84f9c89dcaf3b71ac05c575",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/registry.h",
+            "size": 4520,
+            "sha256": "229fc098bc2cb65d3abf991f25695e151220115587a4078ec7591742bf9d109c",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/stl_emulation.h",
+            "size": 19107,
+            "sha256": "a6a8033b4738e18b1e0fc0fb4a1e18b446d25799b9769e6d20ffe25395051882",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/string.h",
+            "size": 2198,
+            "sha256": "b2ce182c22bae4b85ab9593c0c4969b1ed2eabd606063b5df3198a16ba60b7fe",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/struct.h",
+            "size": 1577,
+            "sha256": "6a799f26e99ca576ef2c9f4b06ce1993eccfe43821025a041224d3c7c2b11bda",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/table.h",
+            "size": 6756,
+            "sha256": "6e08518accda07f5abba53fc86132264a579597b97f02dcfa4b9130188e1c6ee",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/util.h",
+            "size": 26593,
+            "sha256": "208506db1108e0f837b8f9aa6fd8f137f769a3fe446c6e59a7022e347a3f9ece",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/vector.h",
+            "size": 13491,
+            "sha256": "1af3513e1e4ce81947411588ecbc508bb4bcc20c02467dcd9912615712ee412b",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/vector_downward.h",
+            "size": 8666,
+            "sha256": "7bccddc6f48718a9457f71ece5542f90f7f8674134c92e8f5f5261d5333d3f33",
+            "mode": "0644"
+          },
+          {
+            "path": "include/flatbuffers/verifier.h",
+            "size": 13494,
+            "sha256": "9eaf61e1d68f67545b816ef3c92f4ee7d88b582cfeca0f178dd024dab73d4a0e",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/adb_service.proto",
+            "size": 3291,
+            "sha256": "10d5a120f68f05d094eac6d9b2a6aca9527712b38338858625250508a20f9355",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/advancedFeatures.ini",
+            "size": 27575,
+            "sha256": "f4b27be7c3f994435b70ef7f007a6a753e1e079a1b7dcbc5462c603627f8da6c",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/ca-bundle.pem",
+            "size": 258424,
+            "sha256": "0f119da204025da7808273fab42ed8e030cafb5c7ea4e1deda4e75f066f528fb",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/cmake/flatbuffers/BuildFlatBuffers.cmake",
+            "size": 17082,
+            "sha256": "27334ab7a7bc7f35fc01cfa99670c63511486125180b99d9161afdcfc0512ca8",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/cmake/flatbuffers/FlatBuffersTargets-release.cmake",
+            "size": 903,
+            "sha256": "5414bb54c851f469c31e64955abe649d87addfec25bec3a05bff1800770f1b0f",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/cmake/flatbuffers/FlatBuffersTargets.cmake",
+            "size": 4209,
+            "sha256": "4905518ebdb3257edd8c4e9200fb1cd65c81a3d90896a8c67942ff943024731f",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/cmake/flatbuffers/flatbuffers-config-version.cmake",
+            "size": 369,
+            "sha256": "ff8c1a9b6ad24dc91cde5c4e9b95838cf9e3064400a0a76378281a7eb6fc8109",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/cmake/flatbuffers/flatbuffers-config.cmake",
+            "size": 281,
+            "sha256": "3a6a3c94c870e6c9bfcf4a29790bf60daafbbb4f1e72730e1aaa62fe174174a7",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/control_socket.proto",
+            "size": 2784,
+            "sha256": "dd9bad5ab22dd5753eaba524034b1d8b3125ab6d8cc6f80f57a1623a350af9b0",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/emu-original-feature-flags.protobuf",
+            "size": 23491,
+            "sha256": "8f724ff9fd5803637a24711bf7d8bde86fe0e88db6378be9ffd6954be19ff9fe",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/emulated_bluetooth.proto",
+            "size": 2073,
+            "sha256": "f59389735fc2e74fd4617c14ecef6702ac68354afa6a5eed96b75686a6d17f16",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/emulated_bluetooth_device.proto",
+            "size": 14655,
+            "sha256": "8fafd7fe1f54d30d105ce71875bd5d50c26e03b20c22b9a47ff78f84417e1fdc",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/emulator_access.json",
+            "size": 6499,
+            "sha256": "c70a962250289c5840c3fd414a63382048de93a0e97cade9bef3d60257004fc3",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/emulator_controller.proto",
+            "size": 80222,
+            "sha256": "5a18f729a3df31c3ede3a290af12acce2eca258133555f73126157749764a9c2",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/emulator_stats.proto",
+            "size": 1840,
+            "sha256": "5b87475e665984dd15b046e2763429be7010a2f60dc3b9358dd3ef52e15779ad",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/grpc_endpoint_description.proto",
+            "size": 2408,
+            "sha256": "766cc29cb9683e4e90e825e78769a616d8de024e456bc90c6b87bd97a85d60bf",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/hardware-properties.ini",
+            "size": 31318,
+            "sha256": "13a89cc7cfa84c5fe48cd7eb8d296bca321dcd0d90f7bcb751efd963ae2c653d",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/hostapd.conf",
+            "size": 72186,
+            "sha256": "ec59f9e548f8abac42bfa45f466646e57d4e61231a6f2256d3a9952086a9ffd6",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/libflatbuffers.a",
+            "size": 10006992,
+            "sha256": "05d63a7aeb4f8485b60385c7cd0d791cb84b0e3bd158fd4d1e6994d5d31e5756",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/bios-256k.bin",
+            "size": 262144,
+            "sha256": "fae6e5c734757b1ba3424c0d78b39147610b738402b04ddfd6cf9f99a1523c86",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/bios.bin",
+            "size": 131072,
+            "sha256": "8d9b43b9a1631980487183feee0db866f2587e86cd97623e10e17cfbf314a389",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/efi-e1000.rom",
+            "size": 240128,
+            "sha256": "db2344767bb7b496f1b8741913b480dad8ce6f826244611aa6e5cdc5579784a3",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/efi-e1000e.rom",
+            "size": 240128,
+            "sha256": "ccfecb84f8120d1433ebb89188d1aea8310da79a36ca7ea46c0047a9c2ae16b0",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/efi-virtio.rom",
+            "size": 242176,
+            "sha256": "ba7dac7b2af9bb08e1c1d5bf3123b1f1c59a7aba6ed55a0445d23980d9b7ffb9",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/Makefile",
+            "size": 1194,
+            "sha256": "d56661825a549ad83390aafa11881eeb3d0f8b55febeeeb5c7b5f13c297bb738",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/ar",
+            "size": 18962,
+            "sha256": "0ce160bedfc412d71a5c9f0083c7224296c150439bfd6063ad7dafb962331603",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/bepo",
+            "size": 18975,
+            "sha256": "ee683d00b9758d88cf4f50154188ecf7e5a3f81d5d684a83fb22e69df124f1de",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/common",
+            "size": 2077,
+            "sha256": "a0cc3f3721bb11df45348baa879072ab373ecfe92a7fd1e45541ed902adc7074",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/cz",
+            "size": 20375,
+            "sha256": "d5f6a644729ba9bb5da4d83d699fe433fc8c5e7d7e60218bef8cce09d89627ad",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/da",
+            "size": 20396,
+            "sha256": "f8dd3484dfb5617f96fd87c9564e18f16dc19824e9e1e6f698d4d206378b7c23",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/de",
+            "size": 20497,
+            "sha256": "7c18ff304868a3611874792318f82da2a62aab46521e43897162f9f6d50ada4b",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/de-ch",
+            "size": 20380,
+            "sha256": "bd096e27852d4dab5827e3bfeeca9353554a1bd0538be787b5e1f386eb35bfd3",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/en-gb",
+            "size": 20385,
+            "sha256": "7429d2cc9ce055da9ef5b20144db459285a62b0cd33a8d4eada9ada638f674f7",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/en-us",
+            "size": 18252,
+            "sha256": "b487efae070850c1edc651c5a72c5f31eaf6b0d72640b4f1515acd9bfffd3564",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/es",
+            "size": 20369,
+            "sha256": "63927c650cef2ccd6fdcb7a8f4da53de23126a24c0d3b73b5ad7fa2da9db748d",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/et",
+            "size": 18457,
+            "sha256": "abca485e8b4752f37aa9b315a0c8af7481878d4d9efab1c8940d8876c8670695",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/fi",
+            "size": 19770,
+            "sha256": "905486ffce53aca5bff69821ad14e15fc6d3f9054f67a4fb5dc33834c0721948",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/fo",
+            "size": 20383,
+            "sha256": "9f13f8af355921d91c390f0945902dd5f93f09f72690f47d86cefb6832570ed2",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/fr",
+            "size": 20399,
+            "sha256": "5f656b7504d85be95e51d93161904f40be0c201d23782c135cc6bc7583d9ac6c",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/fr-be",
+            "size": 20377,
+            "sha256": "0f915ed333321390967b3043ca519f3d684b9e715162061e7c8ad61ca8ec93e9",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/fr-ca",
+            "size": 18730,
+            "sha256": "7b946ab38f0bc5d992b71a73793858d688408a2c37601e6de9311dfa39789088",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/fr-ch",
+            "size": 20381,
+            "sha256": "c64dc95002d93a74515d9d7632b5661c7aa89e585962ff147e335fbf92dacc42",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/hr",
+            "size": 20421,
+            "sha256": "05bac1ef2b94794e9d77905f6960f0af190bace7607ebd17705094efe331a047",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/hu",
+            "size": 20373,
+            "sha256": "ef53e3162c420c74c1adcf9eed9e59435ca4258e3806c217ee46d0a06273bff3",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/is",
+            "size": 20420,
+            "sha256": "096e635b078e3f635c6aa5851b70b360fe511a054e2f469f1a664266273624ad",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/it",
+            "size": 20478,
+            "sha256": "1e917ee38a18e93ea3b6234c13615e771451ca833349410409ee3cc4cce18949",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/ja",
+            "size": 18329,
+            "sha256": "076e0bc30c928c0b528fb687623850e829f22f5486bf1d51f693aafcd25f5bfc",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/lt",
+            "size": 20332,
+            "sha256": "2f237f9724fc4a3b9801b391079078aa0f019a54abbec988a881307aee4348f4",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/lv",
+            "size": 19784,
+            "sha256": "391c46335d2d06f503c88fcd468225192f9ac06e59f9983a68638c214c20d8e5",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/mk",
+            "size": 18851,
+            "sha256": "076dd9aa5a9f4468087fc83adb071a6eb4c1ab6b8c12a3d0c6080cb9edc39303",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/modifiers",
+            "size": 293,
+            "sha256": "7714afcbbc888df1db09ba7e329cc0415bdc0594bf3622b2edd9ca10512f52bd",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/nl",
+            "size": 20434,
+            "sha256": "ed8b82551b1776f7f21eb4ae331c128773969a249c95f427448281778e283683",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/nl-be",
+            "size": 43,
+            "sha256": "5e9664de1730b593dd2a5096cde16d37a265d16f659231a88c59a0ebe9151e0c",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/no",
+            "size": 20729,
+            "sha256": "ed52d795be968fc2892ea9d3f29caeafbce47d6b5f5f80da2da55e003faea2e6",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/pl",
+            "size": 20493,
+            "sha256": "b7588b8d461ea09aa41ea0942f99902b7eaba89e16184d290fa1654c69f227ea",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/pt",
+            "size": 20361,
+            "sha256": "21ff17368b2e3b15f4b677a115c1d190924f59a0bf52328359704629c68f979b",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/pt-br",
+            "size": 20341,
+            "sha256": "2c199c0b905e51970baf1a13d459a15a12a454653757c024cccac60d107caed8",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/ru",
+            "size": 18870,
+            "sha256": "3283cf206340af4d5f2bfbe304bba4ef721529b530b47f9123c82fc60734499e",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/sl",
+            "size": 2293,
+            "sha256": "260e63359a991493a76589da8d76b143a7415b1f59f9782cba0381f4dfd26541",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/sv",
+            "size": 1008,
+            "sha256": "36f7e8de76d5ad57aca36a07be7f3e6edeec4dbc478538cf33251045837e8ac4",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/th",
+            "size": 18995,
+            "sha256": "de4fdfe7466b06dac19cb130966294bab9f56cc3dc03f6a798184c684f099550",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/keymaps/tr",
+            "size": 20308,
+            "sha256": "f6de025aa8c4e1d2305fb5c445b74ead4279edeef2753dec1d22b1d11bbd3520",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/kvmvapic.bin",
+            "size": 9216,
+            "sha256": "cdf057a71b07e3b52b19cbe210bdefa59250d01a9810b960f7fe1f98eed95a27",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/linuxboot.bin",
+            "size": 1024,
+            "sha256": "72e0d9f4f1c280c8deb0f21a075f2e312ff00a969117c4155fc3a4f6eb20ead4",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/linuxboot_dma.bin",
+            "size": 1536,
+            "sha256": "9c49e255340c78fc12e54ed043462bca02fb7fca29b7cfab62ff88a5344b6950",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/multiboot.bin",
+            "size": 1024,
+            "sha256": "502944f1158be61a6315ee5f84588185433cbf5c5cea2f50ef098ac31e529777",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/vgabios-cirrus.bin",
+            "size": 38400,
+            "sha256": "e890de8e603b518cc3f2e4f094d33eda44915638b2cb33fdd914093b46812cb1",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/vgabios-stdvga.bin",
+            "size": 38912,
+            "sha256": "6f939e75651ce4fe99ee9326bd9e5561d92e17ade1e75c8f7e8cfa47a4ec197b",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pc-bios/vgabios-virtio.bin",
+            "size": 38912,
+            "sha256": "58506fd17a02f7a70fc64f225bb842c9ca53f7262874159f4a58121b8e101569",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/pkgconfig/flatbuffers.pc",
+            "size": 287,
+            "sha256": "ca11543f1bc15dadcce27c3a3d7f6d05b53cffcbaabca59e586a8abe08a3ae32",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/snapshot.proto",
+            "size": 5555,
+            "sha256": "7b5c7907ec96d7ab35932466894cb285b4fada2ba276b09b726cbc77b890c14c",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/snapshot_service.proto",
+            "size": 14107,
+            "sha256": "0aacf854e1e774f6a054e0112a9210ab71bca29906f8db06255b29d6af11b531",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/ui_controller_service.proto",
+            "size": 5092,
+            "sha256": "cfc3a635cbb5fdfa55090aaab8c6dc0bf61c31938ed3ed2bf0fd9b9853d0945a",
+            "mode": "0644"
+          },
+          {
+            "path": "lib/waterfall.proto",
+            "size": 4135,
+            "sha256": "efe47c46e7becba6c717df4fac02598ebef166765845b2e2853271e68985a4fc",
+            "mode": "0644"
+          },
+          {
+            "path": "lib64/gles_angle/libEGL.dylib",
+            "size": 517040,
+            "sha256": "c817a82a95bb59cf42132a03217be16dc6c93d74784a0a8757f9a4e767b0d31a",
+            "mode": "0644"
+          },
+          {
+            "path": "lib64/gles_angle/libGLESv2.dylib",
+            "size": 14248080,
+            "sha256": "c3d13c6a283eff97cb4088590ed7a5bed63ca761269a8bcffa7f590b416077cb",
+            "mode": "0644"
+          },
+          {
+            "path": "lib64/gles_angle/libswiftshader_libEGL.dylib",
+            "size": 553264,
+            "sha256": "60adfd48044611248a1499caa4a1efb94c2a01809550c6c1dee17254e2c458d6",
+            "mode": "0644"
+          },
+          {
+            "path": "lib64/gles_angle/libswiftshader_libGLESv2.dylib",
+            "size": 25111088,
+            "sha256": "8fbcbd1ebee7bf2a2df8214ac91b9575078f479d24869f9f9f768a395a91549a",
+            "mode": "0644"
+          },
+          {
+            "path": "lib64/gles_angle/libvk_swiftshader.dylib",
+            "size": 27784624,
+            "sha256": "3086db48ec2a6a9ee5b8789aa6b597c65f3a98ba5efad83504cfc862c1f45752",
+            "mode": "0644"
+          },
+          {
+            "path": "lib64/gles_angle/vk_swiftshader_icd.json",
+            "size": 110,
+            "sha256": "d717d915e31e7c27948b80b36ab34e2d897888114c5c7d0af835f93eb53e58f5",
+            "mode": "0644"
+          },
+          {
+            "path": "lib64/libabseil_dll.dylib",
+            "size": 1002096,
+            "sha256": "7fe8800fa2045982051d1505b962c5420efb741272ea41b3f0e9fa277f07c5cf",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/libandroid-emu-agents.dylib",
+            "size": 76512,
+            "sha256": "31113994857cafd07523b15ad5f59343c2ac4eb8902918aa82f656c8a8820bfb",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/libandroid-emu-base-logging.dylib",
+            "size": 122528,
+            "sha256": "94050196181c2375a8da6c18da9e60e700c3999635160a413735449252716d43",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/libandroid-emu-curl.dylib",
+            "size": 3033984,
+            "sha256": "ff8180357bba30db35fb35a830f9f03ba998651a51544444a16856721616af89",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/libandroid-emu-metrics.dylib",
+            "size": 6231888,
+            "sha256": "54a4d18dcde810a7f8f1c8755130d2fbaddf06b68dea6d27c9d3d213aecd4434",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/libandroid-emu-protos.dylib",
+            "size": 938384,
+            "sha256": "2f4a4e42ce50dd3610b1edc1985192c9b9abb68ae44eac0e02cb3009538489a8",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/libandroid-emu-shared.dylib",
+            "size": 5020944,
+            "sha256": "12ebc3b59f217853fae95dc8f863fed2e2e5cefa9a58ce4403c91930131647d1",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/libandroid-emu-tracing.dylib",
+            "size": 138896,
+            "sha256": "84bfbe6c5f065dd56e823109b563b12955fa3aeb648bb67051cc464b0a609f56",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/libemugl_common.dylib",
+            "size": 113840,
+            "sha256": "c84a29d50906ef5be86cce90cea2f2f6348ac243700eef3e9d86d68f59bfcaef",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/libgfxstream_backend.dylib",
+            "size": 16201200,
+            "sha256": "4bb5e5befd03ba3b02c53adae717812ada08fb46de4d92f7e5e0688e31c5ad19",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/libglib2_darwin-aarch64.dylib",
+            "size": 1337968,
+            "sha256": "d24489ba081535f7e96d828ac117235a4a7ab981fb2cc32b84e30435f3e3a1e4",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/libimage_converter.dylib",
+            "size": 36752,
+            "sha256": "bc56772e0bee177e828d7d4c766cd33cb88c236647226954d9840a13a03e7074",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/libprotobuf.28.4.0.dylib",
+            "size": 2962000,
+            "sha256": "8f34f94848f7cb1a9a2ace29b57e0b0389900c557e57551f5ee5656c02abc1e5",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/libprotobuf.dylib",
+            "size": 2962000,
+            "sha256": "127fb5db80ec09f2ae21335ad738c4b539470667b26012d3f63b679f50563012",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/libshadertranslator.dylib",
+            "size": 5142784,
+            "sha256": "485b8edb78ac0636992b4c10b2701162b411f44c53eac6d52fea47ae4d64ca4b",
+            "mode": "0644"
+          },
+          {
+            "path": "lib64/qt/lib/libQt6CoreAndroidEmu.6.5.3.dylib",
+            "size": 8637264,
+            "sha256": "175011e167751f6993396ec4f9ec383ff7c10540ec4ef4ee30265f3386f93bda",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/lib/libQt6DBusAndroidEmu.6.5.3.dylib",
+            "size": 1424336,
+            "sha256": "ef023ed5c8dfcfbce6e27f842798d6dc50e81381b8ef7857716227690be1dcf2",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/lib/libQt6GuiAndroidEmu.6.5.3.dylib",
+            "size": 11092848,
+            "sha256": "7c55750028090cad661da84ad3fb3ca913cd2b9d4e6cf859ee41b5318fa47f6b",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/lib/libQt6NetworkAndroidEmu.6.5.3.dylib",
+            "size": 2479392,
+            "sha256": "cdb9075d273d3c6fddb79efa0e16a57c62bd8d66f75d89871953a9b77d64dae1",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/lib/libQt6PositioningAndroidEmu.6.5.3.dylib",
+            "size": 1037456,
+            "sha256": "b88b865209ab7eaf65b98b954a7641b9efe91c2e36ed37808fcd977c69b10a91",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/lib/libQt6QmlAndroidEmu.6.5.3.dylib",
+            "size": 7667088,
+            "sha256": "6f07ecdbc8af8e4e174bc01dd1731dfad0ff21fceb1bfc8d574405a1e8700b76",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/lib/libQt6QmlModelsAndroidEmu.6.5.3.dylib",
+            "size": 1354064,
+            "sha256": "e0d461405459b2848a19570692a5b38665c5b8a9f8b457684b4ddaee6b9031f7",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/lib/libQt6QuickAndroidEmu.6.5.3.dylib",
+            "size": 9964144,
+            "sha256": "ed67cdc3e4c0a5b3699c81ea5a4f901ee0165fb766e44b2980ebf1a85d68ef33",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/lib/libQt6QuickWidgetsAndroidEmu.6.5.3.dylib",
+            "size": 226752,
+            "sha256": "5ce4db4fa3c302650c7321e1e763d35a27778ecba57f1028d5c3c5db31543e11",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/lib/libQt6SvgAndroidEmu.6.5.3.dylib",
+            "size": 490448,
+            "sha256": "954b200b1d8a803908853d1cd6ee0d4be12f7bc9f434483a513de67f0510ff99",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/lib/libQt6SvgWidgetsAndroidEmu.6.5.3.dylib",
+            "size": 124464,
+            "sha256": "d60014f5c7023033f3bfd57772bc8b168356bc99d274e61a9acb7f9e6b382155",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/lib/libQt6WebChannelAndroidEmu.6.5.3.dylib",
+            "size": 440432,
+            "sha256": "b0b7e041529a38b9cc2f63c02c808e97da3b8be9ece35aa8b26f7b8ae13a1fc1",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/lib/libQt6WebEngineCoreAndroidEmu.6.5.3.dylib",
+            "size": 322798560,
+            "sha256": "f9774bdc40517a57d38ec8299671d352589015fc63f4aae47d0e75d090c2ef6b",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/lib/libQt6WebEngineWidgetsAndroidEmu.6.5.3.dylib",
+            "size": 300000,
+            "sha256": "3cb64d26ca3dbae745b3c9e51a4a8bf86624df83711d625227523e391768f2b7",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/lib/libQt6WebSocketsAndroidEmu.6.5.3.dylib",
+            "size": 360432,
+            "sha256": "f5387a7d57e091a48a8865a8a1a42d9eb0dcc6060776e8758b60f8920e39a1fe",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/lib/libQt6WidgetsAndroidEmu.6.5.3.dylib",
+            "size": 9443280,
+            "sha256": "8942f2afea5a0e011281576d0ec64f3fd008def62d1c540320424c3247eb4ff5",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/QtWebEngineProcess",
+            "size": 88288,
+            "sha256": "72a961ef63c74a4d5dbeb5ec380906899b9a351b6d7c001ce1cb7321ccbe0510",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/icudtl.dat",
+            "size": 10462432,
+            "sha256": "97b978a19edd4746e9a44d9a44bb4bc519e127a203c247837ec0922f573449e3",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_devtools_resources.pak",
+            "size": 8556507,
+            "sha256": "efc43024e9d5f2a15fcc9a8cd107cc70858291dc0d37c2fabc5ecaffbdc9a9a6",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/am.pak",
+            "size": 550608,
+            "sha256": "55c0d0fa643718fe22e7932d1d3f259a54d9aa71de118b436ae1a05f8eefeecf",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/ar.pak",
+            "size": 602710,
+            "sha256": "5ee30cb8d13939698e0b94c1bfdbc88299a32af945b99442bab3fac6c3c074a6",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/bg.pak",
+            "size": 628598,
+            "sha256": "e049be5e3cef6613da4c20ed440da8c4a84120f723b292715c352709e8ee264f",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/bn.pak",
+            "size": 812620,
+            "sha256": "4e51d8eeb34d3a581661bc7be026190351ef15b6bb9729cc145b543a0852164e",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/ca.pak",
+            "size": 382390,
+            "sha256": "7a8f0998c735560e8f8a9e04841b88a43f58f499dc63c9ba778c974b917dd6b3",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/cs.pak",
+            "size": 392817,
+            "sha256": "780da5a31cf7e8a86ad875ce07d0fd85ee878f58cdf01932f09ef73f2d759013",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/da.pak",
+            "size": 354013,
+            "sha256": "7e4535efa4c4c3506628b0a9d9c360e449ceeee5ad796eb1458dcf2beab57516",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/de.pak",
+            "size": 379246,
+            "sha256": "48b965a70bcd8ab00c214eda53d04d34bcb68763f600e8ad2da442e7ba64adaf",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/el.pak",
+            "size": 689462,
+            "sha256": "d8e8dbfd8a1e2e719586552a0d64cb9dfefdcfae8f471df4775151276f671212",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/en-GB.pak",
+            "size": 308666,
+            "sha256": "3a2d37339ad90ad0a3c51a19faf2a4650aea18d8afbf05e344e25d7d1c870ded",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/en-US.pak",
+            "size": 312080,
+            "sha256": "e092b153d0b58ecdad1aee71d04dc79bc5537b2cb125fe27316f4246db03e31c",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/es-419.pak",
+            "size": 377679,
+            "sha256": "f1ebdb5fdac78815cfe11ced64fbb540cb93973ae1996bef67a8c13518e5d343",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/es.pak",
+            "size": 377751,
+            "sha256": "3cbd3e448f7c3a755552913fd69714d1dbbb18a95424b0f94604bece891c2ee3",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/et.pak",
+            "size": 340290,
+            "sha256": "19b231e12f1dd225ae793f770fd4b813dd1ceacf7f5e03c1129c09905efc5190",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/fa.pak",
+            "size": 558911,
+            "sha256": "ebb8a71e27b12561b562acacb0d9c30563e06dfbdd7ce728166df937da7bed0c",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/fi.pak",
+            "size": 349311,
+            "sha256": "aa339541e9a0f3e5f21dd52ee48dcd87692a93204a3cff9b67e4422d7d1b56a9",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/fil.pak",
+            "size": 394599,
+            "sha256": "fae798974541fff0e7348c421af0c26a789e9f84438905943fad03c77063f195",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/fr.pak",
+            "size": 409063,
+            "sha256": "32e52401569b6a92267a81a9d5a7241cb8ccdbe42d9fcee5e4d53a07c3b2cba1",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/gu.pak",
+            "size": 787403,
+            "sha256": "b3651565d35b08d0b83fe4efc3995a8f845062e2ccdc62945c0db9d9f72759fe",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/he.pak",
+            "size": 488375,
+            "sha256": "16a89a364304e6922281410520e21b743a3aeaa4bcf66c56e4c49fdda9b34c5f",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/hi.pak",
+            "size": 825209,
+            "sha256": "2bafd070c90e22c272ba027076754f2589308b78af8acd550381447d806785b7",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/hr.pak",
+            "size": 379885,
+            "sha256": "0bb0259365de14282c9bb5347a87c176b2eae87be1aa5cd0dc268bc15ae60a1f",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/hu.pak",
+            "size": 409012,
+            "sha256": "6df5cd827b105be88bab37587d2ebf0b382f07ae1bf3c3b8b872d1c23cbf9258",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/id.pak",
+            "size": 335599,
+            "sha256": "1bcbf97aca342655992eb98d5f49055fdad484d23a4045abf0ebac9396e5a2f8",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/it.pak",
+            "size": 371879,
+            "sha256": "bc35a6596b672ea2c7f3295ff3bbac10f251ec75d702dd6d3142bb4e04ac4cd3",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/ja.pak",
+            "size": 455078,
+            "sha256": "ef9a2f843359a15a741fc3799c0264b03a99e84fef738385d8822523d3fa6b7f",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/kn.pak",
+            "size": 911507,
+            "sha256": "8653a67f877307c6744a07a6ae06da1a0af4a5584bc97982b5aa5a2625f6dc7b",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/ko.pak",
+            "size": 382866,
+            "sha256": "4c356280035af84388451350d25c0bf479586e7e2d5ac19febc6b0efca15b130",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/lt.pak",
+            "size": 413552,
+            "sha256": "ece613b36f9993a5880016c47fd234e7983be232a0a0adc34bf7a1818fbd6587",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/lv.pak",
+            "size": 410473,
+            "sha256": "9253d7d76857914c6ef14bcdecc5b60231210700786bb99b2fb519c13f650ce5",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/ml.pak",
+            "size": 946815,
+            "sha256": "69262127a6aa77d147da5d18be3c315b59c8afef82cb0f74dc090d8be99e44cf",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/mr.pak",
+            "size": 771909,
+            "sha256": "04fb678dc4129f6ba41af086610b58eb9afcf529cbb197f1fafd3fcbf8228b07",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/ms.pak",
+            "size": 351371,
+            "sha256": "243ef7d4dc4f381c7243ffd2ab4c06fbb335b0787bf6e7838d76511b3e2b6fa7",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/nb.pak",
+            "size": 342061,
+            "sha256": "7208bee6100b2c83b9d3cf871422cb926ad280118975c166109ebaf3000fb828",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/nl.pak",
+            "size": 354004,
+            "sha256": "10d5d2cc93826c65172ee851e6ce81d29c206859b064bd8b08b7c79c43ae8b43",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/pl.pak",
+            "size": 394909,
+            "sha256": "20b352d2f9231bc1ff6fcc662bfda5f9b505aeab204c648d3136d661ba6566b3",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/pt-BR.pak",
+            "size": 373510,
+            "sha256": "f89e745aba88c31cc2c1195eb94f877188cfedfbb743e62ae33b492dbd8f8d6c",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/pt-PT.pak",
+            "size": 374956,
+            "sha256": "f2c645d0a90ca6c546e14bee3c89ff4628251c69dcdf8cc5c308850f30e1d582",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/ro.pak",
+            "size": 386356,
+            "sha256": "7db487d48518d029fb0d612f8b5b7bd471dcd9354b50c3fe755ec2cb7f3a8a37",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/ru.pak",
+            "size": 631636,
+            "sha256": "9ab88ccede90560fbb8e6ea6e7bf0fc79ec3472d7d26914337033840d0a3140f",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/sk.pak",
+            "size": 399471,
+            "sha256": "228c955c9476c4357f332dda501f15739a63a7c68c59f85e1318626160c3aba7",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/sl.pak",
+            "size": 383664,
+            "sha256": "2eb32164aad93663020b90b9e40a57726c9ee5a46aef0faeddaa3322478ee77c",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/sr.pak",
+            "size": 594024,
+            "sha256": "a2d4ac545e91e083b731292bd3957fb3c09d8d026751b3d6b98997cca18fe09d",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/sv.pak",
+            "size": 344882,
+            "sha256": "ccc2a21f9cb058f7132f5d186f0a1c5b28abfcc9ef61448ee45ae29ae49c4e78",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/sw.pak",
+            "size": 363326,
+            "sha256": "f58020ce211c4ff01bb1776df05d9dae6d1e7f9a1c9a112ec1e64ce1731825ed",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/ta.pak",
+            "size": 936038,
+            "sha256": "e4e7c6b40a3711e882dd42b2a4d0914c090c6e38facbe7ce49818b9a1da20847",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/te.pak",
+            "size": 866127,
+            "sha256": "dfb5f8f60789cbd78be766cf7761472b9183d02330a945f42f235859f2a5d029",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/th.pak",
+            "size": 729160,
+            "sha256": "ccdaf8486daf684b59a51f866f24a93eebe99d3e44bc1dc7f8211df083ae73e3",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/tr.pak",
+            "size": 369802,
+            "sha256": "4cb26b9fb462ba9f6642861e84f50ce6a52ca2dd3bbc32a1d935d99d2e10a659",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/uk.pak",
+            "size": 632968,
+            "sha256": "25092fd940b163f51fce6f8383f11d6a9e4e087fd06c280693be56502f4cd89e",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/vi.pak",
+            "size": 439876,
+            "sha256": "dedcd863a63f2cde27a61294fad3f5877278a41623a86b43e87f8dd5aa53e7cf",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/zh-CN.pak",
+            "size": 318558,
+            "sha256": "4a404eab4989cf1c802f0a8bcca9160e0254a3e3b9a75cdf5bbf6bcc0545014d",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_locales/zh-TW.pak",
+            "size": 315747,
+            "sha256": "43f9d72564e658c02a83b5c971b9a7a87be0d22d2f41be8e5cf0d693512b326e",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_resources.pak",
+            "size": 1906218,
+            "sha256": "bd3519f41325e80ca3cb083056570db5dc93d827da2f26c6843330a37dc8a19e",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_resources_100p.pak",
+            "size": 74801,
+            "sha256": "533564f71f765a95ddb5e04cf0c3e6bca86f8ec8eaf302b1eeb55fa53928a218",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/libexec/qtwebengine_resources_200p.pak",
+            "size": 85837,
+            "sha256": "7b7a8b29226d57aca9d95c1573817409ee89bd4aa61915ac9a26852154e2fc04",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/plugins/iconengines/libqsvgiconAndroidEmu.dylib",
+            "size": 128464,
+            "sha256": "3f5fd5a7e403f53dc42050c0e3d947fb325f14a46581408f927a55633a679d78",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/plugins/imageformats/libqgifAndroidEmu.dylib",
+            "size": 102752,
+            "sha256": "c8d5ff80eaa1179199411cff1c10dc0f2bdd9255d981608323a7dc4dd146f25b",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/plugins/imageformats/libqicnsAndroidEmu.dylib",
+            "size": 105712,
+            "sha256": "316e7bfb03156d6968ec2f375ad10203c6fcbff0afcd052183c4b59bf6dbb148",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/plugins/imageformats/libqicoAndroidEmu.dylib",
+            "size": 105216,
+            "sha256": "ff19d2454c4248b9b659390cc8b82fc8fe384adfe90f012b2d3815f9e8ff2bd6",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/plugins/imageformats/libqjpegAndroidEmu.dylib",
+            "size": 598240,
+            "sha256": "39bece2dd5a52fab4efda700ef3d5cf94ea58084a519e5a9cb5367b5126f7a1b",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/plugins/imageformats/libqmacheifAndroidEmu.dylib",
+            "size": 106480,
+            "sha256": "3dae82c9894cee18a50f300fa81920e69861beee041764b2f8e6626ea324daa2",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/plugins/imageformats/libqmacjp2AndroidEmu.dylib",
+            "size": 106016,
+            "sha256": "6d89fdff6ba1ea4b96ba6fdc89017ec3bedd3e343ce0a44863ce4dd140baeb1d",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/plugins/imageformats/libqsvgAndroidEmu.dylib",
+            "size": 103568,
+            "sha256": "3f724b4cf8ebba96f14f82518d0da7fdad9b98754736472e87b52a87f8a54695",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/plugins/imageformats/libqtgaAndroidEmu.dylib",
+            "size": 101568,
+            "sha256": "b9792ea077dc5090d9ca5735fb97e5e263f6f6aeb5b503e88fc9c8dd7c534208",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/plugins/imageformats/libqtiffAndroidEmu.dylib",
+            "size": 558592,
+            "sha256": "86bc971ff394cf9cd7853a10a6443c6c9f0711e7d55d3fbad071ff00a933a6bd",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/plugins/imageformats/libqwbmpAndroidEmu.dylib",
+            "size": 99952,
+            "sha256": "9b2fe81e73e7681cc30ca9263de96f827bb054c4468fb09d2e4ab3bd3d02d60e",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/plugins/imageformats/libqwebpAndroidEmu.dylib",
+            "size": 645632,
+            "sha256": "a9460ab1320abf0f5732f04a20b69e261706764d1ce6141e99f6ae42c8d60d5e",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/plugins/platforms/libqcocoaAndroidEmu.dylib",
+            "size": 1382368,
+            "sha256": "86f29e09ab67b8fa48d18974c83b98e8bb10020a3e15a82afb9130f90bee1615",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/plugins/styles/libqmacstyleAndroidEmu.dylib",
+            "size": 316400,
+            "sha256": "7c614c5f7d1dcbc0a9c0f15e339df1f4f2b6be35d3c7dd7f55318fbc4d6806dc",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/resources/icudtl.dat",
+            "size": 10462432,
+            "sha256": "97b978a19edd4746e9a44d9a44bb4bc519e127a203c247837ec0922f573449e3",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/resources/qtwebengine_devtools_resources.pak",
+            "size": 8556507,
+            "sha256": "efc43024e9d5f2a15fcc9a8cd107cc70858291dc0d37c2fabc5ecaffbdc9a9a6",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/resources/qtwebengine_resources.pak",
+            "size": 1906218,
+            "sha256": "bd3519f41325e80ca3cb083056570db5dc93d827da2f26c6843330a37dc8a19e",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/resources/qtwebengine_resources_100p.pak",
+            "size": 74801,
+            "sha256": "533564f71f765a95ddb5e04cf0c3e6bca86f8ec8eaf302b1eeb55fa53928a218",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/resources/qtwebengine_resources_200p.pak",
+            "size": 85837,
+            "sha256": "7b7a8b29226d57aca9d95c1573817409ee89bd4aa61915ac9a26852154e2fc04",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/am.pak",
+            "size": 550608,
+            "sha256": "55c0d0fa643718fe22e7932d1d3f259a54d9aa71de118b436ae1a05f8eefeecf",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/ar.pak",
+            "size": 602710,
+            "sha256": "5ee30cb8d13939698e0b94c1bfdbc88299a32af945b99442bab3fac6c3c074a6",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/bg.pak",
+            "size": 628598,
+            "sha256": "e049be5e3cef6613da4c20ed440da8c4a84120f723b292715c352709e8ee264f",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/bn.pak",
+            "size": 812620,
+            "sha256": "4e51d8eeb34d3a581661bc7be026190351ef15b6bb9729cc145b543a0852164e",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/ca.pak",
+            "size": 382390,
+            "sha256": "7a8f0998c735560e8f8a9e04841b88a43f58f499dc63c9ba778c974b917dd6b3",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/cs.pak",
+            "size": 392817,
+            "sha256": "780da5a31cf7e8a86ad875ce07d0fd85ee878f58cdf01932f09ef73f2d759013",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/da.pak",
+            "size": 354013,
+            "sha256": "7e4535efa4c4c3506628b0a9d9c360e449ceeee5ad796eb1458dcf2beab57516",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/de.pak",
+            "size": 379246,
+            "sha256": "48b965a70bcd8ab00c214eda53d04d34bcb68763f600e8ad2da442e7ba64adaf",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/el.pak",
+            "size": 689462,
+            "sha256": "d8e8dbfd8a1e2e719586552a0d64cb9dfefdcfae8f471df4775151276f671212",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/en-GB.pak",
+            "size": 308666,
+            "sha256": "3a2d37339ad90ad0a3c51a19faf2a4650aea18d8afbf05e344e25d7d1c870ded",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/en-US.pak",
+            "size": 312080,
+            "sha256": "e092b153d0b58ecdad1aee71d04dc79bc5537b2cb125fe27316f4246db03e31c",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/es-419.pak",
+            "size": 377679,
+            "sha256": "f1ebdb5fdac78815cfe11ced64fbb540cb93973ae1996bef67a8c13518e5d343",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/es.pak",
+            "size": 377751,
+            "sha256": "3cbd3e448f7c3a755552913fd69714d1dbbb18a95424b0f94604bece891c2ee3",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/et.pak",
+            "size": 340290,
+            "sha256": "19b231e12f1dd225ae793f770fd4b813dd1ceacf7f5e03c1129c09905efc5190",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/fa.pak",
+            "size": 558911,
+            "sha256": "ebb8a71e27b12561b562acacb0d9c30563e06dfbdd7ce728166df937da7bed0c",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/fi.pak",
+            "size": 349311,
+            "sha256": "aa339541e9a0f3e5f21dd52ee48dcd87692a93204a3cff9b67e4422d7d1b56a9",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/fil.pak",
+            "size": 394599,
+            "sha256": "fae798974541fff0e7348c421af0c26a789e9f84438905943fad03c77063f195",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/fr.pak",
+            "size": 409063,
+            "sha256": "32e52401569b6a92267a81a9d5a7241cb8ccdbe42d9fcee5e4d53a07c3b2cba1",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/gu.pak",
+            "size": 787403,
+            "sha256": "b3651565d35b08d0b83fe4efc3995a8f845062e2ccdc62945c0db9d9f72759fe",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/he.pak",
+            "size": 488375,
+            "sha256": "16a89a364304e6922281410520e21b743a3aeaa4bcf66c56e4c49fdda9b34c5f",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/hi.pak",
+            "size": 825209,
+            "sha256": "2bafd070c90e22c272ba027076754f2589308b78af8acd550381447d806785b7",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/hr.pak",
+            "size": 379885,
+            "sha256": "0bb0259365de14282c9bb5347a87c176b2eae87be1aa5cd0dc268bc15ae60a1f",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/hu.pak",
+            "size": 409012,
+            "sha256": "6df5cd827b105be88bab37587d2ebf0b382f07ae1bf3c3b8b872d1c23cbf9258",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/id.pak",
+            "size": 335599,
+            "sha256": "1bcbf97aca342655992eb98d5f49055fdad484d23a4045abf0ebac9396e5a2f8",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/it.pak",
+            "size": 371879,
+            "sha256": "bc35a6596b672ea2c7f3295ff3bbac10f251ec75d702dd6d3142bb4e04ac4cd3",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/ja.pak",
+            "size": 455078,
+            "sha256": "ef9a2f843359a15a741fc3799c0264b03a99e84fef738385d8822523d3fa6b7f",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/kn.pak",
+            "size": 911507,
+            "sha256": "8653a67f877307c6744a07a6ae06da1a0af4a5584bc97982b5aa5a2625f6dc7b",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/ko.pak",
+            "size": 382866,
+            "sha256": "4c356280035af84388451350d25c0bf479586e7e2d5ac19febc6b0efca15b130",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/lt.pak",
+            "size": 413552,
+            "sha256": "ece613b36f9993a5880016c47fd234e7983be232a0a0adc34bf7a1818fbd6587",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/lv.pak",
+            "size": 410473,
+            "sha256": "9253d7d76857914c6ef14bcdecc5b60231210700786bb99b2fb519c13f650ce5",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/ml.pak",
+            "size": 946815,
+            "sha256": "69262127a6aa77d147da5d18be3c315b59c8afef82cb0f74dc090d8be99e44cf",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/mr.pak",
+            "size": 771909,
+            "sha256": "04fb678dc4129f6ba41af086610b58eb9afcf529cbb197f1fafd3fcbf8228b07",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/ms.pak",
+            "size": 351371,
+            "sha256": "243ef7d4dc4f381c7243ffd2ab4c06fbb335b0787bf6e7838d76511b3e2b6fa7",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/nb.pak",
+            "size": 342061,
+            "sha256": "7208bee6100b2c83b9d3cf871422cb926ad280118975c166109ebaf3000fb828",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/nl.pak",
+            "size": 354004,
+            "sha256": "10d5d2cc93826c65172ee851e6ce81d29c206859b064bd8b08b7c79c43ae8b43",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/pl.pak",
+            "size": 394909,
+            "sha256": "20b352d2f9231bc1ff6fcc662bfda5f9b505aeab204c648d3136d661ba6566b3",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/pt-BR.pak",
+            "size": 373510,
+            "sha256": "f89e745aba88c31cc2c1195eb94f877188cfedfbb743e62ae33b492dbd8f8d6c",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/pt-PT.pak",
+            "size": 374956,
+            "sha256": "f2c645d0a90ca6c546e14bee3c89ff4628251c69dcdf8cc5c308850f30e1d582",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/ro.pak",
+            "size": 386356,
+            "sha256": "7db487d48518d029fb0d612f8b5b7bd471dcd9354b50c3fe755ec2cb7f3a8a37",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/ru.pak",
+            "size": 631636,
+            "sha256": "9ab88ccede90560fbb8e6ea6e7bf0fc79ec3472d7d26914337033840d0a3140f",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/sk.pak",
+            "size": 399471,
+            "sha256": "228c955c9476c4357f332dda501f15739a63a7c68c59f85e1318626160c3aba7",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/sl.pak",
+            "size": 383664,
+            "sha256": "2eb32164aad93663020b90b9e40a57726c9ee5a46aef0faeddaa3322478ee77c",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/sr.pak",
+            "size": 594024,
+            "sha256": "a2d4ac545e91e083b731292bd3957fb3c09d8d026751b3d6b98997cca18fe09d",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/sv.pak",
+            "size": 344882,
+            "sha256": "ccc2a21f9cb058f7132f5d186f0a1c5b28abfcc9ef61448ee45ae29ae49c4e78",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/sw.pak",
+            "size": 363326,
+            "sha256": "f58020ce211c4ff01bb1776df05d9dae6d1e7f9a1c9a112ec1e64ce1731825ed",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/ta.pak",
+            "size": 936038,
+            "sha256": "e4e7c6b40a3711e882dd42b2a4d0914c090c6e38facbe7ce49818b9a1da20847",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/te.pak",
+            "size": 866127,
+            "sha256": "dfb5f8f60789cbd78be766cf7761472b9183d02330a945f42f235859f2a5d029",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/th.pak",
+            "size": 729160,
+            "sha256": "ccdaf8486daf684b59a51f866f24a93eebe99d3e44bc1dc7f8211df083ae73e3",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/tr.pak",
+            "size": 369802,
+            "sha256": "4cb26b9fb462ba9f6642861e84f50ce6a52ca2dd3bbc32a1d935d99d2e10a659",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/uk.pak",
+            "size": 632968,
+            "sha256": "25092fd940b163f51fce6f8383f11d6a9e4e087fd06c280693be56502f4cd89e",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/vi.pak",
+            "size": 439876,
+            "sha256": "dedcd863a63f2cde27a61294fad3f5877278a41623a86b43e87f8dd5aa53e7cf",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/zh-CN.pak",
+            "size": 318558,
+            "sha256": "4a404eab4989cf1c802f0a8bcca9160e0254a3e3b9a75cdf5bbf6bcc0545014d",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/qt/translations/qtwebengine_locales/zh-TW.pak",
+            "size": 315747,
+            "sha256": "43f9d72564e658c02a83b5c971b9a7a87be0d22d2f41be8e5cf0d693512b326e",
+            "mode": "0755"
+          },
+          {
+            "path": "lib64/vulkan/MoltenVK_icd.json",
+            "size": 179,
+            "sha256": "578ff08cd0d8734619357541771a5abc9c3470ca300030219a971a9e9dbbe466",
+            "mode": "0644"
+          },
+          {
+            "path": "lib64/vulkan/glslangValidator",
+            "size": 13173408,
+            "sha256": "4c62a940a21a6265959f5fe9c9e8681edd98464a78987ee615ebb5c0b76bb9d6",
+            "mode": "0644"
+          },
+          {
+            "path": "lib64/vulkan/libLLVM.dylib",
+            "size": 152508416,
+            "sha256": "50fb3c4c4cbe3b9a6600dd2a6a79044c0f53affe862d55dda1d9ca289ee8b2c2",
+            "mode": "0644"
+          },
+          {
+            "path": "lib64/vulkan/libMoltenVK.dylib",
+            "size": 11527888,
+            "sha256": "bc978a787c0e82a97a162a57764fa64bf42e840a4205c15f31cbbc2e96d56528",
+            "mode": "0644"
+          },
+          {
+            "path": "lib64/vulkan/libkosmickrisp_icd.json",
+            "size": 146,
+            "sha256": "be75f1b3c7cd013b723f9046a78d500a4640a3cd29c33309e2b597adfd5942d4",
+            "mode": "0644"
+          },
+          {
+            "path": "lib64/vulkan/libvk_swiftshader.dylib",
+            "size": 25690848,
+            "sha256": "8e9cda83ce7216a5f8bae9f4082212b9b6ed404876334323f0f638736f9dfe3a",
+            "mode": "0644"
+          },
+          {
+            "path": "lib64/vulkan/libvulkan.dylib",
+            "size": 679200,
+            "sha256": "fc855b1a2227f3aa6d87f0d298d631aa1333f55a413432380a58a9465ff2a322",
+            "mode": "0644"
+          },
+          {
+            "path": "lib64/vulkan/libvulkan_kosmickrisp.dylib",
+            "size": 12264880,
+            "sha256": "703c1f703784c9fb433c5026dc18d8cbdeeac3c3f978aac91bacbc322472decc",
+            "mode": "0644"
+          },
+          {
+            "path": "lib64/vulkan/libvulkan_lvp.dylib",
+            "size": 68165648,
+            "sha256": "9734c7f060c77ea3d23d435eae4aeca76ebdfe476dd2b578279fea2cf27cbc8c",
+            "mode": "0644"
+          },
+          {
+            "path": "lib64/vulkan/libz3.4.15.dylib",
+            "size": 15111728,
+            "sha256": "71f0b5e3a53a9963cf0e65e98de117e1aa454b3080109f401633b9d1cf82629a",
+            "mode": "0644"
+          },
+          {
+            "path": "lib64/vulkan/libzstd.1.dylib",
+            "size": 655344,
+            "sha256": "7434d24495492c10f003273d82c4123ec033b65ba45ff5e6e4a2e25be2fa428c",
+            "mode": "0644"
+          },
+          {
+            "path": "lib64/vulkan/lvp_icd.json",
+            "size": 171,
+            "sha256": "6336c8314502a41d3802a771fcd45b52c67cdd4c904a3d580f112dccaf311cf4",
+            "mode": "0644"
+          },
+          {
+            "path": "lib64/vulkan/vk_swiftshader_icd.json",
+            "size": 129,
+            "sha256": "4ee6615da66a67839b66d6932103e527e7cbf5eabfefd3e1ca1fa821c10b3f1d",
+            "mode": "0644"
+          },
+          {
+            "path": "mksdcard",
+            "size": 71280,
+            "sha256": "76352e7a02e3e1cd3b577029d0fd59e312e3931aa6774776a941fe4a979c8eca",
+            "mode": "0755"
+          },
+          {
+            "path": "netsimd",
+            "size": 24612816,
+            "sha256": "e3104eeb0684c5921b20d7f2b6acae6ec6cf969ef9f8eff907c29489133f5579",
+            "mode": "0755"
+          },
+          {
+            "path": "nimble_bridge",
+            "size": 12329216,
+            "sha256": "edd383b6dfe1854c01b550e89d4164abd01471976da5a2810c0e1930a2978c52",
+            "mode": "0755"
+          },
+          {
+            "path": "package.xml",
+            "size": 18597,
+            "sha256": "5c06a9b6ea0d9f436d351e8a9b2420619082b30222d650643a572ca5dd6ab7c8",
+            "mode": "0644"
+          },
+          {
+            "path": "qemu/darwin-aarch64/qemu-system-aarch64",
+            "size": 55290752,
+            "sha256": "8c92acf48adc8e231f1ce90aae4b02464f43dd43a7de0005d74b77c7419ddc48",
+            "mode": "0755"
+          },
+          {
+            "path": "qemu/darwin-aarch64/qemu-system-aarch64-headless",
+            "size": 45400000,
+            "sha256": "4324b12002d535af88f0f4a3e8267730dd495ddfa704c0f5cb141abf679c9b08",
+            "mode": "0755"
+          },
+          {
+            "path": "qemu/darwin-aarch64/qemu-system-armel",
+            "size": 55009408,
+            "sha256": "5940594c1c63dc6d9341ca5305b7158e5301da7eefe9462a9a1031258b982c61",
+            "mode": "0755"
+          },
+          {
+            "path": "qemu/darwin-aarch64/qemu-system-armel-headless",
+            "size": 45135072,
+            "sha256": "b40927bcdbaec502fe3959e37d8798db6857a1c2620d58ae816f065e6bbf008d",
+            "mode": "0755"
+          },
+          {
+            "path": "qemu-img",
+            "size": 1537552,
+            "sha256": "90dfdd5e20444353c680ac3b0f44307dfccb9e42c356f33f72256ad363ed56b9",
+            "mode": "0755"
+          },
+          {
+            "path": "qsn",
+            "size": 19966112,
+            "sha256": "7a39e64d881c899894eea806301395ee8507e5b4251354de839833db765a459d",
+            "mode": "0755"
+          },
+          {
+            "path": "resources/Toren1BD.mtl",
+            "size": 345,
+            "sha256": "e8ac9e5f35aa6cb2d7eacaf407a328324f925587c12e093dcb6efef775bcc438",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/Toren1BD.obj",
+            "size": 3609412,
+            "sha256": "2e1884867d1aa0c332f7e4a353de0feb3b56ce6e0234ce1994c44b6af79f492a",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/Toren1BD.posters",
+            "size": 157,
+            "sha256": "76df35d81794eb16636209d9d51759464a4fae51e4a9a454061ab29e4cf3039f",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/Toren1BD_Decor.png",
+            "size": 3669905,
+            "sha256": "12dd7b5496b5f839da200388cb1bb8c3103eb718a1b5cf146a54b2b9f6051376",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/Toren1BD_Main.png",
+            "size": 3845619,
+            "sha256": "3684940df1a01acd0a698550fbfc7f645c4b02597f5444d2286d39414f59a0f4",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/default.jpg",
+            "size": 289695,
+            "sha256": "e5831817a8c8b4f82583501fdc0b48d9e8d16557ffd8e997a7074d1847c7d810",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/default.mp4",
+            "size": 500254,
+            "sha256": "2bc1cdd0a57d16d0c995d912e310751c3b44525822c8c1fe130cca463d90debf",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/default360.jpg",
+            "size": 474640,
+            "sha256": "fae25b1eb03fb34424028beb4d1c908e93b36dd35c19ccb8ca7eea6d092ead04",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/macroPreviews/Reset_position.mp4",
+            "size": 240740,
+            "sha256": "8bdc6c977cd38168281b6751ee4ead48e6a4fa937de91eec0dd6036d39e5925c",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/macroPreviews/Track_horizontal_plane.mp4",
+            "size": 972478,
+            "sha256": "d8bd23d3ac6bbd7a9932da20bc6e6cb3b1de3cc3a6ec722acdd440edfdcab063",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/macroPreviews/Track_vertical_plane.mp4",
+            "size": 631994,
+            "sha256": "cedfde80f46a8e64638653d44e99971eca9603dc235004acb108a1213bfed7b4",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/macroPreviews/Walk_to_image_room.mp4",
+            "size": 950115,
+            "sha256": "7b10ef6070e8798b62881a972c7e80565fe08961ef100fa37bd8b798b9262475",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/macros/Reset_position",
+            "size": 28,
+            "sha256": "dc8cca7cf6a5293cc6b577a4fd0b6d3339d52117e57f3a8dcd5d5f5a5928d862",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/macros/Track_horizontal_plane",
+            "size": 52928,
+            "sha256": "7690a7b85173fa45215b8810c3e5b4994196191a5be4105f1f145eb843870c84",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/macros/Track_vertical_plane",
+            "size": 28373,
+            "sha256": "626498bdc8882365093e7a38dbea66cf9a2a812d3c31ad7355435d7e564a2324",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/macros/Walk_to_image_room",
+            "size": 37137,
+            "sha256": "b0a7017912cab2023e40d2d7de7773632342ba2832fd334496f0b3aaa714fda5",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/poster.png",
+            "size": 164254,
+            "sha256": "2d92ce9c1674b01e6409cd0b9e5d905dee4785075abbb976e56afe97606df5e9",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/skins/android-36/data/misc/pixel_10_pro_fold/devicestate/device_state_configuration.xml",
+            "size": 3290,
+            "sha256": "86e021141048b6b957b021c3478c3e74a76ac0ec4e7312bceae74a81dcf3c8b9",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/skins/android-36/data/misc/pixel_10_pro_fold/display_settings.xml",
+            "size": 303,
+            "sha256": "2adca8f98a2c8ee0f780e10ca16587ac92641df5e93ab4437c3c47ad41b0041d",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/skins/android-36/data/misc/pixel_10_pro_fold/displayconfig/display_layout_configuration.xml",
+            "size": 1311,
+            "sha256": "a64e2eca65bc2f9196215fb72a88c9035a584319f8b3da3606fff161be642be8",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/skins/android-36/data/misc/pixel_10_pro_fold/extra_feature.xml",
+            "size": 829,
+            "sha256": "ba27b7a61457027e2a77917f8b07d716d3e918097901a14833749252b15aa38f",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/skins/android-36/user/pixel_10/EmulationPixel10Overlay.apk",
+            "size": 16797,
+            "sha256": "9705621e2b460277c4f7becd6f8a892d94369159f56ba23a945eb5553656746f",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/skins/android-36/user/pixel_10/SystemUIEmulationPixel10Overlay.apk",
+            "size": 16962,
+            "sha256": "4458926c0067bc431eeddc38e27a63a544f8c617b07e65efa465cfd1e4d41a44",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/skins/android-36/user/pixel_10_pro/EmulationPixel10ProOverlay.apk",
+            "size": 16797,
+            "sha256": "dc11c373410b2be83c8f7ed31391f63e22b96a5ea29c0b3bf972f1ba0b35160b",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/skins/android-36/user/pixel_10_pro/SystemUIEmulationPixel10ProOverlay.apk",
+            "size": 16962,
+            "sha256": "078dea08e2092bc1ec31d4a2e2dff6397a81f29605fb4a49571adb2c95efa46d",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/skins/android-36/user/pixel_10_pro_fold/EmulationPixel10ProFoldOverlay.apk",
+            "size": 20893,
+            "sha256": "cf79ffeec7b6e94d50a9f0e7f4d3e36b7b43c2202a87538ab7b08d6561457bbc",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/skins/android-36/user/pixel_10_pro_fold/SystemUIEmulationPixel10ProFoldOverlay.apk",
+            "size": 12701,
+            "sha256": "efc97b7848d330b67cc71eeea7f808c2fc9396f41a93feb51bee7274b2d3e13f",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/skins/android-36/user/pixel_10_pro_xl/EmulationPixel10ProXLOverlay.apk",
+            "size": 16797,
+            "sha256": "8c8111671d4e5132d715df50387cd99fcd343cb7d91d5cb652c05a00654c0481",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/skins/android-36/user/pixel_10_pro_xl/SystemUIEmulationPixel10ProXLOverlay.apk",
+            "size": 16962,
+            "sha256": "6601e676b933c59f4c9b92be5b0842176e3b2babc615eae97d7e08e266f21f75",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/skins/android-36/userdebug/pixel_10/EmulationPixel10Overlay.apk",
+            "size": 8542,
+            "sha256": "b8e7242ddb14feba8c9239026c518f112aeef942d638da4715492fc71be61a82",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/skins/android-36/userdebug/pixel_10/SystemUIEmulationPixel10Overlay.apk",
+            "size": 12803,
+            "sha256": "f225123a8b970943787d466cdb4449a361bfcd5b68cd8e66744cf622cf889c36",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/skins/android-36/userdebug/pixel_10_pro/EmulationPixel10ProOverlay.apk",
+            "size": 8542,
+            "sha256": "8dfeef3440b549bbb9ec8946c8b040f4e3591ce20d689d01a1345ca2c0a4fa5a",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/skins/android-36/userdebug/pixel_10_pro/SystemUIEmulationPixel10ProOverlay.apk",
+            "size": 12803,
+            "sha256": "ae48b0d2f2b9ed49bb8929ea7dc05bb630b83eb6acf210cbe9d0ddcf5f383fed",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/skins/android-36/userdebug/pixel_10_pro_fold/EmulationPixel10ProFoldOverlay.apk",
+            "size": 16734,
+            "sha256": "f6cdb777249a693d29b008f201db62cb45329448c4f9def0c3a494426f522b3f",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/skins/android-36/userdebug/pixel_10_pro_fold/SystemUIEmulationPixel10ProFoldOverlay.apk",
+            "size": 8542,
+            "sha256": "83fddb604f55eaebf8575287fa7849cb73d572f3a4d2ff138568efa599ac3c7c",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/skins/android-36/userdebug/pixel_10_pro_xl/EmulationPixel10ProXLOverlay.apk",
+            "size": 8542,
+            "sha256": "8a5de141eb996dd339e5e7e4cfccacd563697c943e69c35a067fff2f03edc0e1",
+            "mode": "0644"
+          },
+          {
+            "path": "resources/skins/android-36/userdebug/pixel_10_pro_xl/SystemUIEmulationPixel10ProXLOverlay.apk",
+            "size": 12803,
+            "sha256": "3465cff51a49676771de16af07aeb385cea5cca22bb31366e9588695d6209579",
+            "mode": "0644"
+          },
+          {
+            "path": "source.properties",
+            "size": 103,
+            "sha256": "a0cdf354b08f5d21b426dd6d8d58a3c6e5d1527d84740bba1df88b4249ca32e4",
+            "mode": "0644"
+          }
+        ],
+        "files_sha256": "d44aeda35c21f088546f15a87e9612087d7fdedb303b7d336f2e81b7016376da"
+      }
+    ],
+    "selected_entries": 447,
+    "selected_logical_bytes": 5254594975
+  },
+  "jdk_release_sha256": "7befd86565133fbebfa54138e55ec5b03bb59649ea5dda35d9f9b95265226756",
+  "failure": "RuntimeError: avd-create exited 1; see 002-avd-create.log",
+  "owned_adb_shutdown_acknowledged": false,
+  "commands": [
+    {
+      "args": [
+        "/Users/abdelrahman/Library/Android/sdk/platform-tools/adb",
+        "version"
+      ],
+      "started_epoch": 1788781137.8839538,
+      "seconds": 0.112,
+      "exit_code": 0,
+      "log": "000-adb-version.log",
+      "failure": null
+    },
+    {
+      "args": [
+        "/Users/abdelrahman/Library/Android/sdk/emulator/emulator",
+        "-version"
+      ],
+      "started_epoch": 1788781137.99607,
+      "seconds": 0.546,
+      "exit_code": 0,
+      "log": "001-emulator-version.log",
+      "failure": null
+    },
+    {
+      "args": [
+        "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/bin/java",
+        "-Xmx256m",
+        "-Dcom.android.sdkmanager.toolsdir=/private/tmp/parlor-arm64-1gyff3c9/sdk/cmdline-tools/owned-placeholder",
+        "-Duser.home=/private/tmp/parlor-arm64-1gyff3c9/home",
+        "-Djava.io.tmpdir=/private/tmp/parlor-arm64-1gyff3c9/tmp",
+        "-XX:ErrorFile=/private/tmp/parlor-arm64-1gyff3c9/tmp/hs_err_pid%p.log",
+        "-classpath",
+        "/opt/homebrew/share/android-commandlinetools/cmdline-tools/latest/lib/avdmanager-classpath.jar",
+        "com.android.sdklib.tool.AvdManagerCli",
+        "create",
+        "avd",
+        "--name",
+        "parlor_arm64_cdfcb961300846ff9c0cc532c40996a3",
+        "--path",
+        "/private/tmp/parlor-arm64-1gyff3c9/avd/parlor_arm64_cdfcb961300846ff9c0cc532c40996a3.avd",
+        "--package",
+        "system-images;android-35;google_apis;arm64-v8a",
+        "--device",
+        "pixel_2"
+      ],
+      "started_epoch": 1788781142.887135,
+      "seconds": 0.634,
+      "exit_code": 1,
+      "log": "002-avd-create.log",
+      "failure": null
+    }
+  ],
+  "worker_exit_codes": [
+    {
+      "pid": 97599,
+      "label": "adb-version",
+      "retired": true,
+      "exit_code": 0
+    },
+    {
+      "pid": 97600,
+      "label": "emulator-version",
+      "retired": true,
+      "exit_code": 0
+    },
+    {
+      "pid": 97632,
+      "label": "avd-create",
+      "retired": true,
+      "exit_code": 1
+    }
+  ],
+  "token_bound_signals": [],
+  "global_sdk_metadata_after": [
+    {
+      "path": ".knownPackages",
+      "present": true,
+      "sha256": "2c745ac1361465d6c8829b94852c594dd5a34293ec5f2a1e49d2f169a8cce545",
+      "identity": [
+        16777232,
+        868916,
+        16,
+        1788614208880530858,
+        1788614208880530858
+      ]
+    },
+    {
+      "path": "system-images/android-35/google_apis/arm64-v8a/package.xml",
+      "present": true,
+      "sha256": "9bbfa7f3f8b7386ae31ee3130748aeb32a37c3404d2be5fb8ac7f0f731ea9642",
+      "identity": [
+        16777232,
+        1186852,
+        19631,
+        1766752554252213151,
+        1766752554252213151
+      ]
+    },
+    {
+      "path": "system-images/android-35/google_apis/arm64-v8a/source.properties",
+      "present": true,
+      "sha256": "bd5cb4bc86ef478b0f37a034aa2b460165b391e8cb6504cb13b8ca1c462c4848",
+      "identity": [
+        16777232,
+        1186810,
+        363,
+        1766752544512494673,
+        1766752544512494673
+      ]
+    },
+    {
+      "path": "emulator/package.xml",
+      "present": true,
+      "sha256": "5c06a9b6ea0d9f436d351e8a9b2420619082b30222d650643a572ca5dd6ab7c8",
+      "identity": [
+        16777232,
+        19337213,
+        18597,
+        1781513914525170169,
+        1781513914525170169
+      ]
+    },
+    {
+      "path": "emulator/source.properties",
+      "present": true,
+      "sha256": "a0cdf354b08f5d21b426dd6d8d58a3c6e5d1527d84740bba1df88b4249ca32e4",
+      "identity": [
+        16777232,
+        19337116,
+        103,
+        1781513913686690171,
+        1781513913686690171
+      ]
+    },
+    {
+      "path": "emulator/lib/hardware-properties.ini",
+      "present": true,
+      "sha256": "13a89cc7cfa84c5fe48cd7eb8d296bca321dcd0d90f7bcb751efd963ae2c653d",
+      "identity": [
+        16777232,
+        19337141,
+        31318,
+        1781513914332672190,
+        1781513914332672190
+      ]
+    }
+  ],
+  "controls_after": {
+    "files": [
+      {
+        "path": "owned_arm64_smoke_sdk.py",
+        "sha256": "3a425d8dafac853ac3f8c189a68e4951eb1874e79c57f458825d1145d0289991"
+      },
+      {
+        "path": "darwin_owned_processes.py",
+        "sha256": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378"
+      },
+      {
+        "path": "avd-sdk-root-01/owned_sdk_image.py",
+        "sha256": "722b18056cf5c130076edcd5dfd53a4524f68bd4f68e8f8ad65812ce50eabc61"
+      }
+    ],
+    "sha256": "561eb8ae83b9a1639d571f49e929141d02868b83ffb10333ba2b50ce42aac7fa"
+  },
+  "temporary_root_removed": true
+}

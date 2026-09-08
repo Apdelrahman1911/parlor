@@ -1,0 +1,91 @@
+[
+  {
+    "url": "https://docs.oracle.com/en/java/javase/21/docs/specs/man/jarsigner.html",
+    "final_url": "https://docs.oracle.com/en/java/javase/21/docs/specs/man/jarsigner.html",
+    "accessed_at": "2026-09-07T05:42:18.161399+00:00",
+    "status": 200,
+    "sha256": "3ca0815cce7fadc0395555b3fc714163be9b937e56cf87326f10ff0e6a30849b",
+    "bytes_read": 61980,
+    "excerpts": [
+      "ic key certificate to be present in the keystore. To generate the time stamp, jarsigner communicates with the TSA with the Time-Stamp Protocol (TSP) defined in RFC 3161. When successful, the time stamp token returned by the TSA is stored with the signature in the signature block file. -tsacert alias When -tsacert alias appears on the command line when signing a JAR file, a time stamp i",
+      "ed Algorithms . Signature Time Stamp The jarsigner command used with the following options generates and stores a signature time stamp when signing a JAR file: -tsa url -tsacert alias -tsapolicyid policyid -tsadigestalg algorithm See Options for jarsigner . JAR File Verification A successful JAR file verification occurs when the signatures are valid, and none of the files that were",
+      " OCSP responses and CRLs if the -revCheck option is specified on the command line. Note that revocation checks are not enabled unless this option is specified. -tsa url If -tsa http://example.tsa.url appears on the command line when signing a JAR file then a time stamp is generated for the signature. The URL, http://example.tsa.url , identifies the location of the Time Stamping Aut",
+      "ses and CRLs if the -revCheck option is specified on the command line. Note that revocation checks are not enabled unless this option is specified. -tsa url If -tsa http://example.tsa.url appears on the command line when signing a JAR file then a time stamp is generated for the signature. The URL, http://example.tsa.url , identifies the location of the Time Stamping Authority (TSA)",
+      "ature. The URL, http://example.tsa.url , identifies the location of the Time Stamping Authority (TSA) and overrides any URL found with the -tsacert option. The -tsa option doesn't require the TSA public key certificate to be present in the keystore. To generate the time stamp, jarsigner communicates with the TSA with the Time-Stamp Protocol (TSP) defined in RFC 3161. When successfu",
+      "\":{\"short_name\":\"javase\",\"element_name\":\"Java SE\",\"display_in_url\":true},\"release\":{\"short_name\":\"21\",\"element_name\":\"21\",\"display_in_url\":true}}} {\"@context\":\"https://schema.org\",\"@type\":\"WebPage\",\"name\":\"The jarsigner Command\",\"datePublished\":\"2026-01-20 CST\",\"dateModified\":\"2026-01-20 CST\"} window.ohcglobal || document.write(' \\x3C/script>') Java SE 21 & JDK 21 API OTHER SPECIFIC"
+    ]
+  },
+  {
+    "url": "https://docs.digicert.com/en/software-trust-manager/code-signing/sign-with-third-party-signing-tools/jarsigner.html",
+    "final_url": "https://docs.digicert.com/en/404.html",
+    "accessed_at": "2026-09-07T05:42:22.651207+00:00",
+    "status": 200,
+    "sha256": "7768b9814cfd62010dbf25c09feb1197f63e31444d24a878b7bd5a4bded05ba7",
+    "bytes_read": 13153,
+    "excerpts": []
+  },
+  {
+    "url": "https://knowledge.digicert.com/solution/how-to-properly-time-stamp-signed-code",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "url": "https://support.globalsign.com/code-signing/code-signing-certificate/advanced-using-globalsign-timestamping-service",
+    "error": "HTTP Error 404: Not Found"
+  },
+  {
+    "source": "installed Homebrew OpenJDK21.0.11 lib/src.zip!/java.base/sun/security/timestamp/HttpTimestamper.java",
+    "read_at": "2026-09-07T05:42:32.040795+00:00",
+    "sha256": "06a7fb4a49a1dd68d91b50be4a6a83c36cb8b174c6547b7504d5f8c5a254a13c",
+    "lines": 168,
+    "excerpts": [
+      {
+        "from": 39,
+        "to": 62,
+        "text": "39: /**\n40:  * A timestamper that communicates with a Timestamping Authority (TSA)\n41:  * over HTTP.\n42:  * It supports the Time-Stamp Protocol defined in:\n43:  * <a href=\"http://www.ietf.org/rfc/rfc3161.txt\">RFC 3161</a>.\n44:  *\n45:  * @since 1.5\n46:  * @author Vincent Ryan\n47:  */\n48: \n49: public class HttpTimestamper implements Timestamper {\n50: \n51:     private static final int CONNECT_TIMEOUT = 15000; // 15 seconds\n52: \n53:     // The MIME type for a timestamp query\n54:     private static final String TS_QUERY_MIME_TYPE =\n55:         \"application/timestamp-query\";\n56: \n57:     // The MIME type for a timestamp reply\n58:     private static final String TS_REPLY_MIME_TYPE =\n59:         \"application/timestamp-reply\";\n60: \n61:     private static final Debug debug = Debug.getInstance(\"ts\");\n62: "
+      },
+      {
+        "from": 71,
+        "to": 127,
+        "text": "71:      * @param tsaURI The location of the TSA. It must be an HTTP or HTTPS URI.\n72:      * @throws IllegalArgumentException if tsaURI is not an HTTP or HTTPS URI\n73:      */\n74:     public HttpTimestamper(URI tsaURI) {\n75:         if (!tsaURI.getScheme().equalsIgnoreCase(\"http\") &&\n76:                 !tsaURI.getScheme().equalsIgnoreCase(\"https\")) {\n77:             throw new IllegalArgumentException(\n78:                     \"TSA must be an HTTP or HTTPS URI\");\n79:         }\n80:         this.tsaURI = tsaURI;\n81:     }\n82: \n83:     /**\n84:      * Connects to the TSA and requests a timestamp.\n85:      *\n86:      * @param tsQuery The timestamp query.\n87:      * @return The result of the timestamp query.\n88:      * @throws IOException The exception is thrown if a problem occurs while\n89:      *         communicating with the TSA.\n90:      */\n91:     public TSResponse generateTimestamp(TSRequest tsQuery) throws IOException {\n92: \n93:         HttpURLConnection connection =\n94:             (HttpURLConnection) tsaURI.toURL().openConnection();\n95:         connection.setDoOutput(true);\n96:         connection.setUseCaches(false); // ignore cache\n97:         connection.setRequestProperty(\"Content-Type\", TS_QUERY_MIME_TYPE);\n98:         connection.setRequestMethod(\"POST\");\n99:         // Avoids the \"hang\" when a proxy is required but none has been set.\n100:         connection.setConnectTimeout(CONNECT_TIMEOUT);\n101: \n102:         if (debug != null) {\n103:             Set<Map.Entry<String, List<String>>> headers =\n104:                 connection.getRequestProperties().entrySet();\n105:             debug.println(connection.getRequestMethod() + \" \" + tsaURI +\n106:                 \" HTTP/1.1\");\n107:             for (Map.Entry<String, List<String>> e : headers) {\n108:                 debug.println(\"  \" + e);\n109:             }\n110:             debug.println();\n111:         }\n112:         connection.connect(); // No HTTP authentication is performed\n113: \n114:         // Send the request\n115:         try (var output = new DataOutputStream(connection.getOutputStream())) {\n116:             byte[] request = tsQuery.encode();\n117:             output.write(request, 0, request.length);\n118:             output.flush();\n119:             if (debug != null) {\n120:                 debug.println(\"sent timestamp query (length=\" +\n121:                         request.length + \")\");\n122:             }\n123:         }\n124: \n125:         // Receive the reply\n126:         byte[] replyBuffer;\n127:         try (var input = connection.getInputStream()) {"
+      }
+    ]
+  },
+  {
+    "source": "installed Homebrew OpenJDK21.0.11 lib/src.zip!/java.base/sun/security/timestamp/TSRequest.java",
+    "read_at": "2026-09-07T05:42:32.041717+00:00",
+    "sha256": "085cae0a54308b3336a934a90f412f19c9b0a0d6eb64a34518ef42e5f5383544",
+    "lines": 179,
+    "excerpts": [
+      {
+        "from": 36,
+        "to": 68,
+        "text": "36: import sun.security.x509.AlgorithmId;\n37: \n38: /**\n39:  * This class provides a timestamp request, as defined in\n40:  * <a href=\"http://www.ietf.org/rfc/rfc3161.txt\">RFC 3161</a>.\n41:  *\n42:  * The TimeStampReq ASN.1 type has the following definition:\n43:  * <pre>\n44:  *\n45:  *     TimeStampReq ::= SEQUENCE {\n46:  *         version           INTEGER { v1(1) },\n47:  *         messageImprint    MessageImprint\n48:  *           -- a hash algorithm OID and the hash value of the data to be\n49:  *           -- time-stamped.\n50:  *         reqPolicy         TSAPolicyId    OPTIONAL,\n51:  *         nonce             INTEGER        OPTIONAL,\n52:  *         certReq           BOOLEAN        DEFAULT FALSE,\n53:  *         extensions        [0] IMPLICIT Extensions OPTIONAL }\n54:  *\n55:  *     MessageImprint ::= SEQUENCE {\n56:  *         hashAlgorithm     AlgorithmIdentifier,\n57:  *         hashedMessage     OCTET STRING }\n58:  *\n59:  *     TSAPolicyId ::= OBJECT IDENTIFIER\n60:  *\n61:  * </pre>\n62:  *\n63:  * @since 1.5\n64:  * @author Vincent Ryan\n65:  * @see Timestamper\n66:  */\n67: \n68: public class TSRequest {"
+      },
+      {
+        "from": 74,
+        "to": 89,
+        "text": "74:     private final byte[] hashValue;\n75: \n76:     private String policyId;\n77: \n78:     private BigInteger nonce = null;\n79: \n80:     private boolean returnCertificate = false;\n81: \n82:     private X509Extension[] extensions = null;\n83: \n84:     /**\n85:      * Constructs a timestamp request for the supplied data.\n86:      *\n87:      * @param toBeTimeStamped  The data to be timestamped.\n88:      * @param messageDigest The MessageDigest of the hash algorithm to use.\n89:      * @throws NoSuchAlgorithmException if the hash algorithm is not supported"
+      },
+      {
+        "from": 92,
+        "to": 107,
+        "text": "92:         throws NoSuchAlgorithmException {\n93: \n94:         this.policyId = tSAPolicyID;\n95:         this.hashAlgorithmId = AlgorithmId.get(messageDigest.getAlgorithm());\n96:         this.hashValue = messageDigest.digest(toBeTimeStamped);\n97:     }\n98: \n99:     public byte[] getHashedMessage() {\n100:         return hashValue.clone();\n101:     }\n102: \n103:     /**\n104:      * Sets the Time-Stamp Protocol version.\n105:      *\n106:      * @param version The TSP version.\n107:      */"
+      },
+      {
+        "from": 118,
+        "to": 139,
+        "text": "118:         this.policyId = policyId;\n119:     }\n120: \n121:     /**\n122:      * Sets a nonce.\n123:      * A nonce is a single-use random number.\n124:      *\n125:      * @param nonce The nonce value.\n126:      */\n127:     public void setNonce(BigInteger nonce) {\n128:         this.nonce = nonce;\n129:     }\n130: \n131:     /**\n132:      * Request that the TSA include its signing certificate in the response.\n133:      *\n134:      * @param returnCertificate True if the TSA should return its signing\n135:      *                          certificate. By default, it is not returned.\n136:      */\n137:     public void requestCertificate(boolean returnCertificate) {\n138:         this.returnCertificate = returnCertificate;\n139:     }"
+      },
+      {
+        "from": 146,
+        "to": 161,
+        "text": "146:     public void setExtensions(X509Extension[] extensions) {\n147:         this.extensions = extensions;\n148:     }\n149: \n150:     public byte[] encode() throws IOException {\n151: \n152:         DerOutputStream request = new DerOutputStream();\n153: \n154:         // encode version\n155:         request.putInteger(version);\n156: \n157:         // encode messageImprint\n158:         DerOutputStream messageImprint = new DerOutputStream();\n159:         hashAlgorithmId.encode(messageImprint);\n160:         messageImprint.putOctetString(hashValue);\n161:         request.write(DerValue.tag_Sequence, messageImprint);"
+      },
+      {
+        "from": 164,
+        "to": 179,
+        "text": "164: \n165:         if (policyId != null) {\n166:             request.putOID(ObjectIdentifier.of(policyId));\n167:         }\n168:         if (nonce != null) {\n169:             request.putInteger(nonce);\n170:         }\n171:         if (returnCertificate) {\n172:             request.putBoolean(true);\n173:         }\n174: \n175:         DerOutputStream out = new DerOutputStream();\n176:         out.write(DerValue.tag_Sequence, request);\n177:         return out.toByteArray();\n178:     }\n179: }"
+      }
+    ]
+  }
+]

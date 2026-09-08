@@ -1,0 +1,277 @@
+{
+  "reviewer": "/root/session_cont (implementation owner; not independent fix approval)",
+  "read_at": "2026-09-05T19:59:57.775400+00:00",
+  "cycle": {
+    "cycle": "games-session-desktop-03",
+    "started_at": "2026-09-05T19:41:01.693890+00:00",
+    "command": [
+      "./gradlew",
+      ":game-modes:mafia:desktopTest",
+      ":game-modes:whodunit:desktopTest",
+      ":shared:session:desktopTest",
+      ":shared:transport-p2p:desktopTest",
+      "--continue",
+      "--no-daemon",
+      "--no-parallel",
+      "--max-workers=1",
+      "--no-configuration-cache",
+      "--dependency-verification=strict",
+      "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=games-session-desktop-03",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-Pparlor.android.signing.storeFile=",
+      "-Pparlor.android.signing.storePassword=",
+      "-Pparlor.android.signing.keyAlias=",
+      "-Pparlor.android.signing.keyPassword="
+    ],
+    "status": "FAIL",
+    "exit_code": 1,
+    "finished_at": "2026-09-05T19:42:03.940194+00:00",
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-05T19:42:04.204530+00:00",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "removed_outputs": [
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build",
+      "build",
+      "build-logic/convention/build"
+    ],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "cleanup_completed_at": "2026-09-05T19:42:04.581043+00:00",
+    "source_changed_during_cycle": false,
+    "cleanup_errors": []
+  },
+  "original_receipt_sha256": "b7dd7cbcd744cc9ba75cb01a53ac747b875f9467c96ebcbc9c6659595fa11ae5",
+  "test_receipts_sha256": "a84cff2f4304fdf15b9fbc5d0e5a4a596cb83ae8bb5bbc026b334d57b6182f87",
+  "selected_test_suites": [
+    {
+      "file": "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+      "suite": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "cases": [
+        {
+          "name": "cancellationBeforeRegistrationLockDoesNotDetachExistingRoom()[desktop]",
+          "classname": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "cancelledRegistrationDetachesBeforeQueuedForeground()[desktop]",
+          "classname": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "failedRegistrationDetachesBeforeQueuedForeground()[desktop]",
+          "classname": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+          "skipped": false,
+          "failed": false
+        }
+      ]
+    },
+    {
+      "file": "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.PeerOpeningCancellationTest.xml",
+      "suite": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+      "tests": "12",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "cases": [
+        {
+          "name": "cancellingResumeReadyClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+          "classname": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "failedJoinRegistrationReleasesRoomAndDetachesLifecycle()[desktop]",
+          "classname": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "cancellingResumeAckClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+          "classname": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "failedResumeRegistrationReleasesRoomAndDetachesLifecycle()[desktop]",
+          "classname": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "cancellingAdmissionAckClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+          "classname": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "failedAdmissionReadyStopsKitOnlyOnceAndReleasesCollectors()[desktop]",
+          "classname": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "failedResumeReadyStopsKitOnlyOnceAndReleasesCollectors()[desktop]",
+          "classname": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "ordinaryAdmissionAckLossStillReturnsAnOwnedRoom()[desktop]",
+          "classname": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "ordinaryResumeAckLossStillReturnsAnOwnedRoom()[desktop]",
+          "classname": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "cancellingAdmissionReadyClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+          "classname": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "cancelledResumeRegistrationCannotResumeOrExpireAReplacementCredential()[desktop]",
+          "classname": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "cancelledJoinRegistrationCannotResumeOrExpireAReplacementCredential()[desktop]",
+          "classname": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+          "skipped": false,
+          "failed": false
+        }
+      ]
+    },
+    {
+      "file": "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.HostOpeningCancellationTest.xml",
+      "suite": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+      "tests": "5",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "cases": [
+        {
+          "name": "cancelledRegistrationClosesRoomBeforeQueuedForegroundCanReviveIt()[desktop]",
+          "classname": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "returnedHostRetainsOwnershipUntilIdempotentLeave()[desktop]",
+          "classname": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "registrationFailureClosesUnreturnedRoomAndDetachesLifecycle()[desktop]",
+          "classname": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "cancellationDuringAdvertisingClosesArmedRoom()[desktop]",
+          "classname": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "cancellationDuringKitStartStopsUnownedKit()[desktop]",
+          "classname": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+          "skipped": false,
+          "failed": false
+        }
+      ]
+    },
+    {
+      "file": "shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+      "suite": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+      "tests": "9",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "cases": [
+        {
+          "name": "coordinatorReacknowledgesDuplicateAndAcceptsFirstSnapshotAfterLateCommit()[desktop]",
+          "classname": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "callerCancellationDuringAcknowledgementStillPropagates()[desktop]",
+          "classname": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "lateAcceptedCommitSurvivesSlowAcknowledgement()[desktop]",
+          "classname": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "acknowledgementAdapterExceptionDoesNotUndoAcceptedStart()[desktop]",
+          "classname": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "matchingStartWithInvalidVersionIsRejectedWithoutAcknowledgement()[desktop]",
+          "classname": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "acknowledgementFailureAfterReceiveDeadlineStillEntersCommittedStart()[desktop]",
+          "classname": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "absentCommitStillTimesOutWithoutAnAcknowledgement()[desktop]",
+          "classname": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "acknowledgementTimeoutOnlyBoundsDeliveryAfterAcceptedCommit()[desktop]",
+          "classname": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+          "skipped": false,
+          "failed": false
+        },
+        {
+          "name": "commitForAnotherStartCannotEscapeTheReceiveDeadline()[desktop]",
+          "classname": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+          "skipped": false,
+          "failed": false
+        }
+      ]
+    }
+  ],
+  "native_ST_C1_status": "NOT RUN in this cycle",
+  "limitations": "Full cycle FAIL at unrelated Whodunit compileTestKotlinDesktop. These are deterministic tests with fake P2pKit, not physical-LAN/runtime-device proof. Independent fix review belongs to root."
+}

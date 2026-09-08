@@ -1,0 +1,34 @@
+// Audit-only observers: preserve normal test registration and all Ignore annotations.
+gradle.projectsEvaluated {
+    def p = rootProject.findProject(':shared:transport-p2p')
+    if (p == null) return // Init scripts also run for the included convention build.
+    p.tasks.register('auditInspectCompiledTestMethods') {
+        dependsOn p.tasks.named('desktopTestClasses')
+        doLast {
+            def test = p.tasks.named('desktopTest').get()
+            def cp = test.classpath.asPath
+            println("AUDIT_TEST_TASK ${test.path} options=${test.options.class.name}")
+            test.classpath.files.sort { it.absolutePath }.each {
+                println("AUDIT_TEST_CLASSPATH ${it.absolutePath}")
+            }
+            def config = p.configurations.findByName('desktopTestRuntimeClasspath')
+            if (config != null) {
+                config.incoming.resolutionResult.allComponents.sort { it.id.displayName }.each {
+                    println("AUDIT_TEST_RESOLVED_COMPONENT ${it.id.displayName}")
+                }
+            }
+            p.exec {
+                commandLine([new File(System.getProperty('java.home'), 'bin/java').absolutePath,
+                             '-Xmx256m', '--class-path', cp,
+                             rootProject.file('audit-runs/2026-09-05-source-audit/reproducers/AuditTestMethodScanner.java').absolutePath]
+                            + test.testClassesDirs.files.collect { it.absolutePath })
+            }
+            p.exec {
+                commandLine new File(System.getProperty('java.home'), 'bin/javap').absolutePath,
+                    '-p', '-s', '-classpath', cp,
+                    'com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest',
+                    'com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest'
+            }
+        }
+    }
+}

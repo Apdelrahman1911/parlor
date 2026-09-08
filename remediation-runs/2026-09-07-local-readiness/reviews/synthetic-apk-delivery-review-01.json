@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "at": "2026-09-08T07:57:03.023160+00:00",
+  "reviewer": "/root/release_fix_review",
+  "status": "RECOMMEND_EXPLICIT_GIT_DELIVERY_EXCLUSION_PRESERVE_LOCAL",
+  "scope": "Advice only; root owns staging and deletion decisions; reviewer performed no binary execution, Store operation, private-key read, Git operation or deletion",
+  "artifacts": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-02/release-androidTest.apk",
+      "bytes": 14009,
+      "sha256": "b81fae3f6635508c0898459e863078b30ce173c5ed9d93f04a183563c29b0383"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-02/release.apk",
+      "bytes": 4835297,
+      "sha256": "3c305f9f6bbe988bad441dfa02b457ef5762ac7336f5810c5789cc40ce2fbeaf"
+    }
+  ],
+  "stage_receipt": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-stage-02/receipt.json",
+    "bytes": 12391,
+    "sha256": "368fc18603565003d0257c9ea29e3a9dc155f654bc85221c6a394f4bca815992"
+  },
+  "producer": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-build-helper/build_and_retain_apks.py",
+    "bytes": 22915,
+    "sha256": "1b22b01f1b78534539dbf1491208cf25df5692a32e16f3fc3155573d293dd0d8"
+  },
+  "source_binding": {
+    "commit": "0264b6bb6ae312b943d7ce8b8a026c5cd6a7e0c1",
+    "tree": "3aa3f48efd1b56fad64d2df6667c6b9bee4804c6",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "bf9ca3280992d2e8f30f9c4f8586ebcad85cdc4a4287bafb7efc9a53f95fc1ff"
+  },
+  "historical_use": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-runtime-02/run.json",
+      "bytes": 3231,
+      "sha256": "2a0caf8057aa4df92c9b74307c1db5b4547d8aa2d3f3bcd9fd06f91a68abd2ea"
+    },
+    "status": "FAIL_BEFORE_APP_INSTALL_OR_TESTS",
+    "actual_tests": 0,
+    "reason": "avd-create exit 1; no actual app execution in this attempt",
+    "temporary_root_removed": true
+  },
+  "recommendation": [
+    "Exclude these two compiled synthetic APKs explicitly from the source/evidence Git continuation commit; preserve them locally and document the exclusion with exact hashes, provenance and producer.",
+    "Keep the stage receipt, raw build/signature/runtime logs and helper source in the delivery. No exact-byte continuation need was found beyond the historical failed runtime02 attempt; final-source runtime verification must build new artifacts.",
+    "Do not claim exact byte-reproducibility: the disposable signing key was removed, so new signing can produce different bytes/hashes. The verification workload can be rerun with a fresh synthetic key and new source-bound receipts.",
+    "Old helper pins bind historical composeApp/run_gradle_cycle bytes and must be reviewed/re-frozen before reuse; do not bypass pins or label old APKs final-source verification.",
+    "These use com.parlor.app/com.parlor.app.test under a synthetic certificate. Never install on a user phone/profile, upload, or treat them as Store-signed artifacts."
+  ],
+  "not_secret_material": "Receipt and producer create a two-day disposable fixture key and keep passwords in environment only. Public fingerprints/artifact hashes are not private keys. Private key/scratch removal is recorded; exact owned scratch is absent. No signing key was opened.",
+  "remaining_authority": "Root may preserve local bytes while excluding from Git; deletion requires its ownership/retention decision. If an exact-byte follow-up need emerges, revise the disposition before staging.",
+  "reviewer_cleanup": "No new APKs, generated outputs or worker processes created; only metadata/source/hash reads and this additive evidence."
+}

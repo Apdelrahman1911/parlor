@@ -1,0 +1,14 @@
+{
+  "url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-12377.61.12/osfmk/ipc/ipc_port.c",
+  "accessed_at": "2026-09-07T07:50:47.790737+00:00",
+  "http_status": 200,
+  "final_url": "https://raw.githubusercontent.com/apple-oss-distributions/xnu/xnu-12377.61.12/osfmk/ipc/ipc_port.c",
+  "sha256": "c72667b8c564c6aafd9663fc6e9f2b5f4de98e5cecd039eb799719db4281f0cb",
+  "bytes": 86271,
+  "line_count": 3463,
+  "lines": [
+    2900,
+    2974
+  ],
+  "text": "\t\t\tipc_port_copy_send_any_locked(port);\n\t\t} else {\n\t\t\tsright = IP_DEAD;\n\t\t}\n\t\tip_mq_unlock(port);\n\t}\n\n\treturn sright;\n}\n\nipc_port_t\nipc_port_copy_send_mqueue(\n\tipc_port_t      port)\n{\n\tipc_port_t sright = port;\n\n\tif (IP_VALID(port)) {\n\t\tip_mq_lock(port);\n\t\tif (__improbable(!ip_active(port))) {\n\t\t\tsright = IP_DEAD;\n\t\t} else if (__improbable(ip_is_kobject(port))) {\n\t\t\tsright = IP_NULL;\n\t\t} else {\n\t\t\tipc_port_copy_send_any_locked(port);\n\t\t}\n\t\tip_mq_unlock(port);\n\t}\n\n\treturn sright;\n}\n\n/*\n *\tRoutine:\tipc_port_copyout_send\n *\tPurpose:\n *\t\tCopyout a naked send right (possibly null/dead),\n *\t\tor if that fails, destroy the right.\n *\tConditions:\n *\t\tNothing locked.\n */\n\nstatic mach_port_name_t\nipc_port_copyout_send_internal(\n\tipc_port_t      sright,\n\tipc_space_t     space,\n\tipc_object_copyout_flags_t flags)\n{\n\tmach_port_name_t name;\n\n\tif (IP_VALID(sright)) {\n\t\tkern_return_t kr;\n\n\t\tkr = ipc_object_copyout(space, sright, MACH_MSG_TYPE_PORT_SEND,\n\t\t    flags, NULL, &name);\n\t\tif (kr != KERN_SUCCESS) {\n\t\t\tif (kr == KERN_INVALID_CAPABILITY) {\n\t\t\t\tname = MACH_PORT_DEAD;\n\t\t\t} else {\n\t\t\t\tname = MACH_PORT_NULL;\n\t\t\t}\n\t\t}\n\t} else {\n\t\tname = CAST_MACH_PORT_TO_NAME(sright);\n\t}\n\n\treturn name;\n}\n\nmach_port_name_t\nipc_port_copyout_send(\n\tipc_port_t      sright, /* can be invalid */\n\tipc_space_t     space)\n{\n\treturn ipc_port_copyout_send_internal(sright, space,\n\t           IPC_OBJECT_COPYOUT_FLAGS_NONE);\n}"
+}

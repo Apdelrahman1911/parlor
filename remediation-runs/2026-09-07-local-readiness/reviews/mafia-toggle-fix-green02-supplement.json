@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "fix_author": "/root",
+  "created_at": "2026-09-07T08:32:01.557114+00:00",
+  "scope": "Final strengthened52dp layout oracle and unchanged2line ToggleRow production fix; supplements prior full independent fix review without rewriting it.",
+  "conclusion": "FIX REVIEW PASS. Original measurement root cause addressed; final52dp regression actually executed. No issue found requiring further scoped code changes.",
+  "prior_review": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/mafia-toggle-fix-independent-review-01.json",
+    "sha256": "b202e861afcd51d53b0f8a1a7657efdae8d665c2930b12f9f503a6d7b785f473"
+  },
+  "baseline": {
+    "commit": "94e0c4c7f5c97fe95c3ced5b220cb0ff201523dc",
+    "tree": "426856eef87705d070df6ccf0d200e7947de5e3d",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "M game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+    "diff_sha256": "998f94fe626b8c6a79dab1b7567cfc815872b11727c3c488be415c710562a848",
+    "source_manifest_sha256": "ca69fda738e901b57e0c7e875bb68d1042e9dbbca0c188358709ca2d991389bc"
+  },
+  "current_source_hashes_match_verified_inputs": true,
+  "sources": [
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+      "sha256": "91fdd1317981899fbd2af1ede5461895d6e20571a81d286b2bd5bd9efb8fe9be",
+      "reviewed_ranges": [
+        [
+          495,
+          527
+        ]
+      ],
+      "prior_complete_file_review": true
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupToggleLayoutTest.kt",
+      "sha256": "36bdc52bb345999bd8a43187ac74a4f44e1c9aa618419e7088cfe0b09644be50",
+      "reviewed_ranges": [
+        [
+          1,
+          67
+        ]
+      ],
+      "prior_complete_file_review": true
+    }
+  ],
+  "analysis": [
+    "Final test now requires actual row-minus-text geometry>=52px at controlled density1, matching pinned Material3 track width rather than earlier48px threshold.",
+    "Four actual new cases English/Arabic fontScale1/2 exercise public MafiaSetupScreen at320x640dp; no test-only alternate ToggleRow or production tag/callback modifications.",
+    "Previously independently inspected pinned Row measurement reserves fixed Switch52dp plus16dp relative spacing before weighted label. Toggleable Role.Switch and one parent callback preserved; no font/maxLines cap.",
+    "Full existingMafia suite still executes including Doctor rules/history, ON/OFF setup, target filtering, in-memoryLAN/rejoin and host-continuity tests; no Whodunit/domain/session/protocol/save mutation in scoped patch.",
+    "Original RED failures retained; final tests are not ignored, discovery-only, selector-only or successful failure witnesses. GREEN02 verifies all4newlayout assertions pass.",
+    "This supplemental review resolves prior nonblocking48->52threshold recommendation. Source-level RTL and JVMlayout evidence do not establish physicalVoiceOver/TalkBack/mobilepixel correctness."
+  ],
+  "verification": {
+    "command": [
+      "./gradlew",
+      ":game-modes:mafia:desktopTest",
+      ":game-modes:mafia:detekt",
+      "--no-daemon",
+      "--no-parallel",
+      "--max-workers=1",
+      "--no-configuration-cache",
+      "--dependency-verification=strict",
+      "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=mafia-toggle-layout-green-02",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-Pparlor.android.signing.storeFile=",
+      "-Pparlor.android.signing.storePassword=",
+      "-Pparlor.android.signing.keyAlias=",
+      "-Pparlor.android.signing.keyPassword="
+    ],
+    "status": "PASS",
+    "exit_code": 0,
+    "test_counts": {
+      "tests": 273,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "suite_count": 33,
+    "layout_test_cases": [
+      "english_compact_toggle_keeps_room_for_its_switch()[desktop]",
+      "arabic_compact_large_text_toggle_keeps_room_for_its_switch()[desktop]",
+      "english_compact_large_text_toggle_keeps_room_for_its_switch()[desktop]",
+      "arabic_compact_toggle_keeps_room_for_its_switch()[desktop]"
+    ],
+    "detekt_actually_executed": true,
+    "receipt": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-toggle-layout-green-02/receipt.json",
+    "receipt_sha256": "ef3a51ba8dbe320e4932c5affcaa8e475d2b827c6d68c3951b4b6fe6294e08bf",
+    "log_sha256": "1c3e14e9dcdd531c565c8f6dc725c3cf6acdbebc69e7d123856fb23e2cb70830",
+    "layout_xml": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-toggle-layout-green-02/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupToggleLayoutTest.xml",
+    "layout_xml_sha256": "dd1c409290fc036c6f28b0014e03211fcd1f21831acfb68cf4a2691b99ed53f8",
+    "source_changed_during_cycle": false,
+    "runner_changed_during_cycle": false
+  },
+  "cleanup": {
+    "stop_exit_code": 0,
+    "remaining_outputs": [],
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "cleanup_errors": [],
+    "cleanup_completed_at": "2026-09-07T08:16:50.396738+00:00"
+  },
+  "reviewer_processes_or_build_outputs_created": false,
+  "compatibility": "No persisted/protocol/content/game version or deterministic behavior changes.",
+  "separate_unconfirmed_candidate": "RoleCountStepperRow lead remains separate and unconfirmed pending root execution of a drafted bounds witness; not attributed to this ToggleRow correction."
+}

@@ -1,0 +1,166 @@
+{
+  "at": "2026-09-05T20:23:04.350936+00:00",
+  "reviewer": "/root/mafia_cont",
+  "original_runner_author": "/root",
+  "baseline": {
+    "root": "/Users/abdelrahman/Projects/parlor",
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "scope": "Current dirty remediation checkout, not pristine HEAD. Other agents own application modifications. This reviewer only changed the two task-owned Python helpers and added the named synthetic test file with explicit root authorization."
+  },
+  "classification": "CONDITIONAL SOURCE APPROVAL of original native ownership design; root independent approval of reviewer-authored corrections and root execution receipts required before native evidence is accepted",
+  "reviewed_files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/owned_ios_simulator.py",
+      "sha256": "184684f4cdba8733217a124b53552e4f73f234618e82ade9d8ead566fb748712",
+      "reviewed_lines": [
+        [
+          1,
+          137
+        ]
+      ],
+      "reviewer": "/root/mafia_cont",
+      "relevance": "task-owned audit/build-lane control or synthetic safety tests; not application production code"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/run_gradle_cycle.py",
+      "sha256": "d2d18c2311d59554db88be3f92e609ec5ca46fc8af4c79702836f9e4c130240f",
+      "reviewed_lines": [
+        [
+          1,
+          283
+        ]
+      ],
+      "reviewer": "/root/mafia_cont",
+      "relevance": "task-owned audit/build-lane control or synthetic safety tests; not application production code"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/owned_ios_simulator.init.gradle",
+      "sha256": "e857bd0d8fbc18199ee1fbaef7e01ae325785397b5e23f82186462f9a33c3b34",
+      "reviewed_lines": [
+        [
+          1,
+          68
+        ]
+      ],
+      "reviewer": "/root/mafia_cont",
+      "relevance": "task-owned audit/build-lane control or synthetic safety tests; not application production code"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/mafia/test_owned_ios_simulator_safety.py",
+      "sha256": "9672cd25e8ef0775bc0c621563c8141eba9a48f4e715cdc1568f2a48bc2dfdba",
+      "reviewed_lines": [
+        [
+          1,
+          413
+        ]
+      ],
+      "reviewer": "/root/mafia_cont",
+      "relevance": "task-owned audit/build-lane control or synthetic safety tests; not application production code"
+    }
+  ],
+  "corrections": [
+    {
+      "id": "RUNNER-NATIVE-MF-1",
+      "finder": "/root/mafia_cont",
+      "root_cause": "devices() invoked command() before its try/finally, so nonzero/timeout/read failures after a partial inventory write left unrelated simulator names in a durable raw log.",
+      "change": "Invocation moved inside the finalizer-covered scope; exact owned log unlinked with missing_ok=True on all catchable exits.",
+      "source": "owned_ios_simulator.py:49-59",
+      "author": "/root/mafia_cont",
+      "independent_validator_required": "/root"
+    },
+    {
+      "id": "RUNNER-NATIVE-MF-2",
+      "finder": "/root/mafia_cont",
+      "root_cause": "Application identity excluded remediation-runs including the build-consumed simulator init and runner controls; receipt bound paths but not their bytes.",
+      "change": "Explicit before/after manifest for runner plus native helper/init; missing or symlinked control refuses; control drift makes status FAIL.",
+      "source": "run_gradle_cycle.py:113-125,211,265-269",
+      "author": "/root/mafia_cont",
+      "independent_validator_required": "/root"
+    },
+    {
+      "id": "RUNNER-NATIVE-MF-3",
+      "finder": "/root/mafia_cont",
+      "root_cause": "Owned UUID ps check was not time-bounded.",
+      "change": "Single ps check now timeout=10; failures remain explicit cleanup failures rather than false success. No invented OS settling guarantee added.",
+      "source": "owned_ios_simulator.py:125-132",
+      "author": "/root/mafia_cont",
+      "independent_validator_required": "/root"
+    },
+    {
+      "id": "RUNNER-SOURCE-DRIFT",
+      "finder": "/root",
+      "root_cause": "Source drift was recorded without preventing overall command/cleanup PASS.",
+      "change": "PASS additionally requires source_changed_during_cycle=false; no old receipts relabeled.",
+      "source": "run_gradle_cycle.py:264,269",
+      "author": "/root/mafia_cont at root request",
+      "independent_validator_required": "/root"
+    }
+  ],
+  "ownership_paths_reviewed": [
+    "Root acquires shared lane lock; refuses pre-existing output dirs/symlinks and Gradle8.13 daemons before build work.",
+    "Fresh UUID4 name, baseline inventory, collision refusal, exact name/runtime/new UUID recovery; printed create UUID alone is not trusted.",
+    "Inventory UUID grammar, ambiguity and changed-attested-UUID reject paths; no arbitrary name, booted shortcut, user profile or device-set directory used for shutdown/delete.",
+    "Initial inventory failure prevents creation; create timeout with already-visible allocation is recoverable; boot/bootstatus errors enter root finalization.",
+    "Independent cleanup attempts retain errors while trying shutdown, exact delete, absence/preexisting UUID checks and bounded process scan.",
+    "No ownership guess after malformed/ambiguous/changed inventory. Explicit failure and possible retained device are safer than deleting a user profile.",
+    "Root finalizer defers repeat INT/TERM, runs Gradle stop, simulator cleanup, owned-worker cleanup, evidence capture, precise generated-dir cleanup and final source/control identity.",
+    "Evidence capture or tracked-worker failure retains required generated outputs and makes cycle FAIL; no global Gradle cache deletion.",
+    "Init binds exact repo arm64 simulator tasks via KGP public Property, disables standalone mode, rejects enabled unbound tasks/debug-wait/no simulator graph, locks properties; disabled tasks do not force default device providers."
+  ],
+  "tests": {
+    "file": "mafia/test_owned_ios_simulator_safety.py",
+    "declared_cases": 32,
+    "status": "NOT RUN by this reviewer",
+    "run_by": "root shared build lane only",
+    "command": "/usr/bin/python3 -B remediation-runs/2026-09-05-confirmed-fixes/mafia/test_owned_ios_simulator_safety.py -v (through the root --command finalizer)",
+    "boundary": "Real ownership helper and runner_identity functions, fake simctl invoke, fake ps, blocked real Popen, isolated TemporaryDirectory fixtures. Does not run real simctl/Gradle/test binaries.",
+    "matrix": [
+      "Successful create/boot/shutdown/delete with preexisting user state unchanged; only own UUID exported.",
+      "Create stdout attempts selecting an existing UUID; exact inventory wins.",
+      "Preexisting name collision, reused baseline UUID, wrong runtime, malformed UUID, ambiguous names, changed UUID, external rename.",
+      "Inventory nonzero, timeout, no log created, malformed JSON; partial raw logs removed.",
+      "Create timeout after allocation, create error before allocation, post-create attestation failure, boot error, bootstatus cancellation.",
+      "Cleanup attestation failure, shutdown error/cancellation without skipping delete, delete error, final-inventory timeout, externally disappeared baseline UUID.",
+      "Owned UUID process leftovers and ps timeout fail explicitly without broad process killing.",
+      "Synthetic late allocation visible only in final sample is reported retained/failure; does not invent later-absence proof.",
+      "Native three-file manifest, non-native runner-only manifest, changed init, missing file, symlinked control."
+    ],
+    "not_exercised": "Actual process-group tracking/signals, CoreSimulator or Gradle commands, Groovy init execution, OS daemon timing, disk-full receipt failure and runtime unit tests require separate root evidence."
+  },
+  "authoritative_source": {
+    "url": "https://raw.githubusercontent.com/JetBrains/kotlin/v2.4.10/libraries/tools/kotlin-gradle-plugin/src/common/kotlin/org/jetbrains/kotlin/gradle/targets/native/tasks/KotlinNativeTest.kt",
+    "accessed_at": "2026-09-05T09:51:54.690777+00:00",
+    "retained_file": "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/research/kgp-simulator-session_cont/official-KotlinNativeTest.kt",
+    "sha256": "f3538844f82046975c2036c821a5c942debc01109e7294e16aa4ba1b1999df72",
+    "matches_retained_fetch_receipt": true,
+    "reviewed_lines": [
+      [
+        1,
+        310
+      ]
+    ],
+    "relevant_claim": "Pinned KGP2.4.10 device/standalone Properties, xcrun simctl spawn command, no default owned-device guarantee, SkipWhenEmpty/executable guard; binding a task is not proof its tests ran.",
+    "related_read": "NativeAppleSimulatorTCServiceMessagesClient.kt complete; exit149 message for standalone=false and unavailable boot; current libs.versions.toml pins Kotlin2.4.10; actual root aggregate task wiring reopened."
+  },
+  "remaining_limits": [
+    "Reviewer authored the corrections and cannot self-approve them under the independent-validation rule; root must inspect exact hashes before execution.",
+    "Synthetic tests have not run yet; neither their names nor successful source review count as PASS.",
+    "Current simulator target is iOS26.5/iPhone17Pro; this is not Store-qualified Xcode26.3/17C529 evidence and not a physical iPhone, app-host UX, LAN, signing or Store gate.",
+    "Final inventory/ps are point-in-time checks, not proof against undocumented asynchronous allocation after the last sample. No actual CoreSimulator delayed-allocation behavior inferred.",
+    "Ambiguous ownership/unavailable inventory/delete failures can leave an owned simulator with an explicit FAIL; root must resolve before next cycle, never broad-delete.",
+    "UUID command-line scan cannot prove absence of every unidentifiable shared service; shared CoreSimulator user services must not be killed. Root owns independent known-worker receipts.",
+    "Catchable exceptions and INT/TERM finalization are reviewed, not SIGKILL/power-loss/disk-loss durability guarantees. Receipt writes are not a crash-atomic journal.",
+    "No Xcode/ibtool app-host step in this direct KGP native-test route; secondary FIFO helper and DerivedData ownership need fresh review before adding such a step.",
+    "The synthetic test source is outside the application manifest; root must preserve this report hash and rehash the test after its run to bind synthetic evidence.",
+    "No production code, game rules, protocol, credentials, native devices, branches, commits or release operations changed/executed during this helper review."
+  ],
+  "cleanup": {
+    "builds_or_tests_executed_by_reviewer": false,
+    "generated_build_outputs_created": false,
+    "native_devices_created": false,
+    "gradle_stop_required_on_this_lane": false,
+    "reason": "Only source reading, task-owned helper/test authoring and compact evidence hashing occurred. Root alone owns build/test/finalizer execution."
+  }
+}

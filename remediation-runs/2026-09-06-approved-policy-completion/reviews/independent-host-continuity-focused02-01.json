@@ -1,0 +1,105 @@
+{
+  "at": "2026-09-06T12:18:06.039994+00:00",
+  "reviewer": "/root/release_fix_review",
+  "authors": [
+    "/root/factory_review (originalfixture/tests)",
+    "/root (APIcalls/warningcleanup)"
+  ],
+  "conclusion": "APPROVED \u20144Desktop hostcontinuity tests actuallypass; current warningcleanup sourceapproved but needsrerun/currenttreebinding",
+  "prior_complete_source_review": "reviews/independent-host-continuity-draft-review-01.json (848lines). Entirecurrentdelta independentlyread, surroundingretain/lifecycle/setup/cleanup/signatures reopened.",
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/ControlledStartRoom.kt",
+      "tested_sha256": "cda4c061d3a34a216011d1be1846b7d9b579a8ec77eb9f517e8dc7c6f680de6e",
+      "current_sha256": "cda4c061d3a34a216011d1be1846b7d9b579a8ec77eb9f517e8dc7c6f680de6e",
+      "draft_sha256": "cda4c061d3a34a216011d1be1846b7d9b579a8ec77eb9f517e8dc7c6f680de6e",
+      "current_line_count": 186
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLanguageContinuityTest.kt",
+      "tested_sha256": "5556fdba4dfe5805c0484246a9d7d19fd43ad0e55bea82d0a5f1dd30cb68f89c",
+      "current_sha256": "97e55bc43b465a0efc241810520db0e6e642f4991860b3f7fc843effa5667323",
+      "draft_sha256": "2d51c63febafa4861c3049ee682490be9df7aea9334fc18188bb9dd0e4af9179",
+      "current_line_count": 320
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostLanguageContinuityTest.kt",
+      "tested_sha256": "a0cc9abea76f409bd7975ca9b136e5da46c993cba6562ba1e57b1c71d56a2e45",
+      "current_sha256": "027f36dda4a27b68fad6d5abf1740f9778cce897a2ba7dea7fc152acf7bce743",
+      "draft_sha256": "66adc4894b5bfc199fab09bcb97352727df5d341ff791f57e4ed8f2549a35333",
+      "current_line_count": 338
+    }
+  ],
+  "changes_reviewed": [
+    "13positional waitUntil(5000)calls changed to namedtimeoutMillis. This fixes pinnedComposeTestAPI resolution; unchangedtimeout/conditions/assertions. Namedcallbytes included in hostfocused02PASS.",
+    "Currentaftertestcleanup removes redundant if(Result.Success) only after assertTrue success with contractsmartcast; stateChanged/awaitingAuthorityassertions retained, nowunconditional aftertypeguard. Noassertionremoved/weakened.",
+    "Currenterrorwording Ownedphysicalroom\u2192Ownedroom ishonest for inMemorytestroom.",
+    "ControlledStartRoom exactdraftimport unchanged. Itremainstestfixtureonly; no shippinggraph changes."
+  ],
+  "execution": {
+    "receipt": "remediation-runs/2026-09-06-approved-policy-completion/evidence/host-continuity-focused-02/receipt.json",
+    "receipt_sha256": "67d65f4c312e79bd903770a8518a8c2154ae93a6120ae773857146998ae6aea8",
+    "started_at": "2026-09-06T11:51:56.031769+00:00",
+    "finished_at": "2026-09-06T11:52:32.968697+00:00",
+    "exit_code": 0,
+    "source_manifest_sha256": "31fd9f9b73ef6118c3f295fa1734a365cce32db8a12f5f8afb1a003735bf5b9e",
+    "diff_sha256": "1b781fe7796300db69d01e046169bbe47735d66091791c9f31809a4e509c59bb",
+    "source_changed_during_cycle": false,
+    "raw_xml": [
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/host-continuity-focused-02/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLanguageContinuityTest.xml",
+        "sha256": "ea6c0cd7b8ee643c9eb67c67e04624dcd318f38b4b2027b00fbd5f215a2da58b",
+        "suite": "com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLanguageContinuityTest",
+        "tests": "2",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "cases": [
+          "languageChangesAndRemountRetainStartedHostWithRepeatProtectionOn()[desktop]",
+          "suspendedHostRetainsIdentityAndGuardsCommandsWithRepeatProtectionOff()[desktop]"
+        ]
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/host-continuity-focused-02/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLanguageContinuityTest.xml",
+        "sha256": "2388d2e945a5671f8db712efefa38a4f183ad7349cc8117cc82db134f5b7f55f",
+        "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLanguageContinuityTest",
+        "tests": "2",
+        "failures": "0",
+        "errors": "0",
+        "skipped": "0",
+        "cases": [
+          "suspendedAndResumingHostRetainsIdentityAndGuardsCommands()[desktop]",
+          "languageChangesAndRemountRetainActualStartedHost()[desktop]"
+        ]
+      }
+    ],
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "gradle_log_sha256": "46f2b97690a6bc13abc4f7bce0db9877f666817e7f0c1f1f388e1724c5f64698"
+  },
+  "positive_scope": [
+    "ActualrealComposable host flow constructs internal retainedruntime/controller from ProcessMultiplayerSessionOwner acquired/frozenroom, not manuallyinjectedcanonicalstate.",
+    "Realhandshakevalidation/offer/commit/ACK and snapshotenvelopetraffic over syntheticpre-admittedroom; fixed6roster andWDcontentidentity/Mafia settingownership.",
+    "Bothgames retainruntime/controller/canonicalStateFlow/state-reference/rolemap/seed acrossEN/AR/EN/System/AR/System andpresentationunmount/remount.",
+    "MafiaactualsetupON/defaultOFF+ConfigureAndStart choosesroles; legalownack eventuallymutatescanonicalstatebutdoesnotadvancebeforeotherreadyseats.",
+    "Suspended/Resuming both rejectcommands withoutmutations; resumedactive acceptsproperownack (WDpreviousackedidempotentNoop, Mafiafirstrealackstatechange).",
+    "Finally closesactualowner/sessionruntime, fixtureworkerCount0, processJobcomplete,Koinclosed andDesktopdefaultlocale restored."
+  ],
+  "limitations": [
+    "NoactualSettingsroute/storageinteraction; providerseam isexplicit.",
+    "DesktopnotiOSorSwiftUI/ComposeUIViewController; no demonstrationnewSwiftcontainercompiled.",
+    "InMemorytransport/pre-admittedsyntheticseatsoverride notP2pKitphysicalLAN/admissiondurability/nativeOSpermissions.",
+    "No claim snapshotgamepayload installedanddecodedbyeverypeer, completegame/rejoin or networklossbehavior beyond specified syntheticlifecycleseam.",
+    "Executionwasprior two redundant-if/message cleanup edits; nextcombinedgate mustbindcurrentbytes."
+  ],
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+    "remaining_outputs": [],
+    "remaining_owned_workers": [],
+    "cleanup_errors": [],
+    "finished_at": "2026-09-06T11:52:33.521582+00:00"
+  },
+  "reviewer_safety": "No builds/tests/apps/workers started or stopped; sourceunchanged; compactreviewevidenceonly."
+}

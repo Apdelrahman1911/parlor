@@ -1,0 +1,755 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-09-07T09:58:47.736973+00:00",
+  "reviewer": "/root/factory_review",
+  "finder": "/root/factory_review",
+  "independent_original_defect_validator": "/root",
+  "fix_and_regression_author": "/root",
+  "reviewer_authored_fix_or_test": false,
+  "conclusion": "PASS — root-authored minimal repair and unchanged executable regression independently reviewed; current source binds to actual green Desktop XMLs. Not physical-device or complete accessibility proof.",
+  "baseline": {
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "head": "0264b6bb6ae312b943d7ce8b8a026c5cd6a7e0c1",
+    "tree": "3aa3f48efd1b56fad64d2df6667c6b9bee4804c6",
+    "tracked_status": "M game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+    "production_diff_sha256": "2abaf553a8601e5b9cb280abf5a913a997a003238c03c7c3e15b800d1d18a372"
+  },
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "sha256": "73f75eb87e2636e5e616c9bbade054fd0f44ed8bcd9ad158b930eba99fd8aa14",
+      "read_ranges": [
+        [
+          1333,
+          1432
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "Reopened implementation/test and complete diff; surrounding callers plus source ranges carried by immediately preceding hash-bound current-source review."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/PeerPausedCoverContrastTest.kt",
+      "sha256": "681c049792b523c33d431b15650e3f6832d513314186525872cfe417a5ac7d9e",
+      "read_ranges": [
+        [
+          1,
+          89
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "Reopened implementation/test and complete diff; surrounding callers plus source ranges carried by immediately preceding hash-bound current-source review."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/tokens/ParlorColors.kt",
+      "sha256": "99c60bb3b07cd6295c51adf7d9cf684bf5890d401395d323e1d7a4f11c6bb5e8",
+      "read_ranges": [
+        [
+          1,
+          160
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "Reopened implementation/test and complete diff; surrounding callers plus source ranges carried by immediately preceding hash-bound current-source review."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/tokens/ParlorTypography.kt",
+      "sha256": "eb442c5c7a41e34a4cf8e1c31466ef1a3e07e6582c3259d9a14c7942ee990f15",
+      "read_ranges": [
+        [
+          90,
+          102
+        ],
+        [
+          147,
+          160
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "Reopened implementation/test and complete diff; surrounding callers plus source ranges carried by immediately preceding hash-bound current-source review."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/theme/ParlorTheme.kt",
+      "sha256": "b751abc30f088d8e8a8b30bcaa43b7927a97ba06b7040f472c20f5e5c9d8ff00",
+      "read_ranges": [
+        [
+          64,
+          147
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "Reopened implementation/test and complete diff; surrounding callers plus source ranges carried by immediately preceding hash-bound current-source review."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/App.kt",
+      "sha256": "622b679a2ef023fab17bf6c8ed8eb38c1fbc2b76a391f5f9a8298d59da9dda59",
+      "read_ranges": [
+        [
+          1,
+          110
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "Reopened implementation/test and complete diff; surrounding callers plus source ranges carried by immediately preceding hash-bound current-source review."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build.gradle.kts",
+      "sha256": "2eb4b00a53ff1eff42f2a64b3de1a1c4d28b08d419ad2828045a063320e4696c",
+      "read_ranges": [
+        [
+          1,
+          53
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "Reopened implementation/test and complete diff; surrounding callers plus source ranges carried by immediately preceding hash-bound current-source review."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "sha256": "172c4f3162dc6a6b20e912e6551eaca9f33a32ba3d0d6f150ad8becfd30865ea",
+      "read_ranges": [
+        [
+          120,
+          155
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "Reopened implementation/test and complete diff; surrounding callers plus source ranges carried by immediately preceding hash-bound current-source review."
+    }
+  ],
+  "original_failure": {
+    "reachability": "App.themeMode -> ParlorTheme Light -> WhodunitMultiplayerPeerFlow own atomic host projection -> paused=true with initial snapshot and Idle command -> PeerHostPausedBanner.",
+    "expected": "Opaque host-paused cover remains legible in both themes while exposing no role/session secrets.",
+    "root_cause": "Both body ordinary textPrimary and title ordinary accentEmber came from light palette, but backdrop stays black in both themes.",
+    "actual_red": "Both EN/AR light tests fail for both title4.0187454<4.5 and body1.172982<3. Dark tests pass.",
+    "witness_identity": "Reconstructed red source from HEAD with visibility-only internal access matches retained pre-fix source SHA exactly. Same test source bytes used red and green."
+  },
+  "fix": {
+    "production_changes": [
+      "private->internal test access, still module-internal",
+      "Title uses coverScreenTextSecondary",
+      "Body uses coverScreenTextPrimary"
+    ],
+    "unchanged": [
+      "No palette mutation; ordinary light-theme controls unchanged",
+      "No network/session/reducer/Doctor changes",
+      "Same paused host-projection branch; peers cannot resume",
+      "Opaque black surface, paneTitle, assertive live region and heading preserved",
+      "No secret strings or host-only data enter UI/a11y",
+      "No snapshot/protocol/content/serialized version change"
+    ]
+  },
+  "test_review": {
+    "test_methods": 4,
+    "configurations": [
+      "EN Light",
+      "AR Light",
+      "EN Dark",
+      "AR Dark"
+    ],
+    "checks": [
+      "Actual production composable, no duplicate fake UI",
+      "Black backdrop sampled from rendered image",
+      "Foreground read from actual TextLayoutResult; opaque text required",
+      "4.5:1 small title,3:1 28sp-bold body thresholds",
+      "Displayed text, pane title, assertive live region and heading semantics"
+    ],
+    "limitations": [
+      "Density1/fontScale1 and 320x640dp test viewport, not exhaustive text scaling",
+      "No VoiceOver/TalkBack or physical iOS/Android execution",
+      "No screenshot pixel-glyph contrast assertion beyond actual text style and opaque rendered background"
+    ]
+  },
+  "cycles": [
+    {
+      "cycle": "peer-paused-cover-red-01",
+      "receipt_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-red-01/receipt.json",
+      "receipt_sha256": "4bc19c062eb9ffdb4a9cf389cf986e16a467373e355e798ca24bca5d9130d4f7",
+      "command": [
+        "./gradlew",
+        ":game-modes:whodunit:desktopTest",
+        "--tests",
+        "*PeerPausedCoverContrastTest*",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=peer-paused-cover-red-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "status": "FAIL",
+      "exit_code": 1,
+      "started_at": "2026-09-07T09:43:07.016333+00:00",
+      "finished_at": "2026-09-07T09:43:39.604994+00:00",
+      "source_hashes": {
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt": "eff9b4a9230365f7e8f38e1fa21d038b90b630009d0350b33adad6a4ac09f224",
+        "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/PeerPausedCoverContrastTest.kt": "681c049792b523c33d431b15650e3f6832d513314186525872cfe417a5ac7d9e"
+      },
+      "source_changed_during_cycle": false,
+      "actual_xml_suites": 1,
+      "actual_xml_testcase_elements": 4,
+      "totals": {
+        "tests": 4,
+        "failures": 2,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_suite": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-red-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerPausedCoverContrastTest.xml",
+        "sha256": "305f2638f5703970d2959180da27dd73fc490fb737d773f0f15028951da2e13a",
+        "cases": [
+          {
+            "name": "arabicLightCoverTextRemainsReadable()[desktop]",
+            "failed": true,
+            "skipped": false,
+            "failure_message": "org.opentest4j.AssertionFailedError: Light Arabic pause-cover contrast: متوقّفة: 4.0187454:1 < 4.5:1, المضيف أوقف اللعبة مؤقتًا.: 1.172982:1 < 3.0:1"
+          },
+          {
+            "name": "arabicDarkCoverTextRemainsReadable()[desktop]",
+            "failed": false,
+            "skipped": false,
+            "failure_message": null
+          },
+          {
+            "name": "englishLightCoverTextRemainsReadable()[desktop]",
+            "failed": true,
+            "skipped": false,
+            "failure_message": "org.opentest4j.AssertionFailedError: Light English pause-cover contrast: PAUSED: 4.0187454:1 < 4.5:1, The host paused the game.: 1.172982:1 < 3.0:1"
+          },
+          {
+            "name": "englishDarkCoverTextRemainsReadable()[desktop]",
+            "failed": false,
+            "skipped": false,
+            "failure_message": null
+          }
+        ]
+      },
+      "all_suite_identities": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-red-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerPausedCoverContrastTest.xml",
+          "sha256": "305f2638f5703970d2959180da27dd73fc490fb737d773f0f15028951da2e13a",
+          "suite": "com.parlor.games.whodunit.ui.flow.PeerPausedCoverContrastTest",
+          "testcase_count": 4
+        }
+      ],
+      "stop_exit_code": 0,
+      "stop_log": "No Gradle daemons are running.",
+      "removed_outputs": [
+        "shared/core/build",
+        "shared/networking/build",
+        "shared/content/build",
+        "shared/storage/build",
+        "shared/networking-testing/build",
+        "shared/engine/build",
+        "shared/design-system/build",
+        "shared/session/build",
+        "game-modes/whodunit/build",
+        "build",
+        "build-logic/convention/build"
+      ],
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "cleanup_errors": [],
+      "cleanup_completed_at": "2026-09-07T09:43:40.113702+00:00"
+    },
+    {
+      "cycle": "peer-paused-cover-green-01",
+      "receipt_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/receipt.json",
+      "receipt_sha256": "9f46bbbeedcc499e985b78b5ebe39cbd9b3dd6191d7d706240b7aafd7c6e3896",
+      "command": [
+        "./gradlew",
+        ":game-modes:whodunit:desktopTest",
+        ":game-modes:whodunit:detekt",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=peer-paused-cover-green-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at": "2026-09-07T09:46:42.117774+00:00",
+      "finished_at": "2026-09-07T09:48:01.629161+00:00",
+      "source_hashes": {
+        "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt": "73f75eb87e2636e5e616c9bbade054fd0f44ed8bcd9ad158b930eba99fd8aa14",
+        "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/PeerPausedCoverContrastTest.kt": "681c049792b523c33d431b15650e3f6832d513314186525872cfe417a5ac7d9e"
+      },
+      "source_changed_during_cycle": false,
+      "actual_xml_suites": 63,
+      "actual_xml_testcase_elements": 360,
+      "totals": {
+        "tests": 360,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "selected_suite": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerPausedCoverContrastTest.xml",
+        "sha256": "15cd830b7b221c4bb67fffc8f8f315165c424a5758b82622870b5ed69d18fa0e",
+        "cases": [
+          {
+            "name": "arabicLightCoverTextRemainsReadable()[desktop]",
+            "failed": false,
+            "skipped": false,
+            "failure_message": null
+          },
+          {
+            "name": "arabicDarkCoverTextRemainsReadable()[desktop]",
+            "failed": false,
+            "skipped": false,
+            "failure_message": null
+          },
+          {
+            "name": "englishLightCoverTextRemainsReadable()[desktop]",
+            "failed": false,
+            "skipped": false,
+            "failure_message": null
+          },
+          {
+            "name": "englishDarkCoverTextRemainsReadable()[desktop]",
+            "failed": false,
+            "skipped": false,
+            "failure_message": null
+          }
+        ]
+      },
+      "all_suite_identities": [
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.WhodunitPlayModePolicyTest.xml",
+          "sha256": "b7c29f4622f645c95f3f9e9a21ae1891fe8096e1d7474b8b1757fdc6d32c7b95",
+          "suite": "com.parlor.games.whodunit.WhodunitPlayModePolicyTest",
+          "testcase_count": 1
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.action.WhodunitActionCodecTest.xml",
+          "sha256": "ce0b31f984acba4ceb90a2d9d8ff7d1625f2c668b64df0249c0387af316bf805",
+          "suite": "com.parlor.games.whodunit.action.WhodunitActionCodecTest",
+          "testcase_count": 12
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.authority.WhodunitActionAuthorityTest.xml",
+          "sha256": "fd9cace65767ec9d15d310e44723cbc09779f0fb2469a8f4e80cae45c8f178c1",
+          "suite": "com.parlor.games.whodunit.authority.WhodunitActionAuthorityTest",
+          "testcase_count": 7
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.ArabicCaseValidationTest.xml",
+          "sha256": "c8150623cbbc0b304145188324f27f8f26b9f90c989636801e5d297ce4dcc10e",
+          "suite": "com.parlor.games.whodunit.content.ArabicCaseValidationTest",
+          "testcase_count": 3
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.BundledCaseLoadingTest.xml",
+          "sha256": "c8fa50c22ee8febce7649ca48bf7124b7efda8f6ff7dda2a8f9e4b07e1390386",
+          "suite": "com.parlor.games.whodunit.content.BundledCaseLoadingTest",
+          "testcase_count": 5
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.CasePickerDiscoveryTest.xml",
+          "sha256": "93ed9ce3898e1621814fbfe3a053e3db15a6847878be67d96b4843378de82add",
+          "suite": "com.parlor.games.whodunit.content.CasePickerDiscoveryTest",
+          "testcase_count": 5
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.ResReadBytesProbeTest.xml",
+          "sha256": "c4ac5836cdce21e2dec60037e54fce641f9f28f96fbbb88eb60546a422b36637",
+          "suite": "com.parlor.games.whodunit.content.ResReadBytesProbeTest",
+          "testcase_count": 1
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryChronologyTest.xml",
+          "sha256": "6447003a32479c58d24e5ed1e3d60e06d69a8b74474f577a4422e965f7d01e84",
+          "suite": "com.parlor.games.whodunit.content.TestingStoryChronologyTest",
+          "testcase_count": 5
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryCompatibilityTest.xml",
+          "sha256": "ae315e1635e1c2deb930ca6bf70ae7ced225fa1dbf8c046f9430236a6233e952",
+          "suite": "com.parlor.games.whodunit.content.TestingStoryCompatibilityTest",
+          "testcase_count": 4
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryFollowupChronologyTest.xml",
+          "sha256": "1a4ef3d65414fb3c14bc4e18389025cc2fd4820324ea1f0a3a59c8bca78f4b55",
+          "suite": "com.parlor.games.whodunit.content.TestingStoryFollowupChronologyTest",
+          "testcase_count": 13
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryGameTraceTest.xml",
+          "sha256": "a2d05d85e1692333f57362b973e81109c29929dd7256ddbcc9434cde759f8f55",
+          "suite": "com.parlor.games.whodunit.content.TestingStoryGameTraceTest",
+          "testcase_count": 1
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryRemainingChronologyTest.xml",
+          "sha256": "e35a81bb80e867215cfc580fc78aeb73aed07a9a31460e1b8e9e403a345a9f60",
+          "suite": "com.parlor.games.whodunit.content.TestingStoryRemainingChronologyTest",
+          "testcase_count": 3
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.WhodunitContentIdentityTest.xml",
+          "sha256": "66762eb712d1fbf5e68ded628890979553cf5b50ddc67b273ef21091e2fa74bc",
+          "suite": "com.parlor.games.whodunit.content.WhodunitContentIdentityTest",
+          "testcase_count": 2
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.WhodunitPayloadHardeningTest.xml",
+          "sha256": "2f091564ec9081207584de0ab88ab77a56d22daa76a908c07ad9637a1693c9ec",
+          "suite": "com.parlor.games.whodunit.content.WhodunitPayloadHardeningTest",
+          "testcase_count": 10
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.CluePolicyTest.xml",
+          "sha256": "ba9ccbbf8c375a663bf7dc3362727587744b4fb5bee0dfab23cd68cc5a772331",
+          "suite": "com.parlor.games.whodunit.domain.CluePolicyTest",
+          "testcase_count": 5
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.PartyReadinessTest.xml",
+          "sha256": "e2fec02e7630fc83d04874d01b82db3c2c3c7e202a192a812bed80fdab3e2695",
+          "suite": "com.parlor.games.whodunit.domain.PartyReadinessTest",
+          "testcase_count": 9
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.WhodunitReducerProductionGuardsTest.xml",
+          "sha256": "c568963026542103e2bf31e27bb59af416b5a5080e98aa9011c71cd4a2e00941",
+          "suite": "com.parlor.games.whodunit.domain.WhodunitReducerProductionGuardsTest",
+          "testcase_count": 8
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.WhodunitRulesInvariantTest.xml",
+          "sha256": "51d1fc54e40adc2094a5ca65922475fd18a2fb854aa179db17719ba48f44c26f",
+          "suite": "com.parlor.games.whodunit.domain.WhodunitRulesInvariantTest",
+          "testcase_count": 9
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.WhodunitTerminalAndCluePolicyTest.xml",
+          "sha256": "17e91aef5c586fa50148ce914c4890819d0202e335a9a82d34231dd7ebd258cf",
+          "suite": "com.parlor.games.whodunit.domain.WhodunitTerminalAndCluePolicyTest",
+          "testcase_count": 6
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.rules.WhodunitPolicyGoldenTest.xml",
+          "sha256": "194c1c244f022a423dbebb18438134bd70661a2640938f526527e2e1bae6de46",
+          "suite": "com.parlor.games.whodunit.domain.rules.WhodunitPolicyGoldenTest",
+          "testcase_count": 2
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.ContinueWithoutPlayerTest.xml",
+          "sha256": "b8759e1bc805939af4a17d71085da521e427c07e4e095d8c75ec9b3888b0e411",
+          "suite": "com.parlor.games.whodunit.flow.ContinueWithoutPlayerTest",
+          "testcase_count": 8
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.FullGameDriveTest.xml",
+          "sha256": "6ded7fbea9e086aa4921b1c1b4a57ce8cdba6b5404d98b537f01408a018a75c1",
+          "suite": "com.parlor.games.whodunit.flow.FullGameDriveTest",
+          "testcase_count": 6
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.IntroAndBriefingReadinessTest.xml",
+          "sha256": "54f5b0db463f1b8a0b671e513c6f2408122af97aa437474620f235be770e5b94",
+          "suite": "com.parlor.games.whodunit.flow.IntroAndBriefingReadinessTest",
+          "testcase_count": 4
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.PartyFlowControllerTest.xml",
+          "sha256": "a4bcb7d04a9288c3a18499f74fe88e195c09a97d3fe0aa4c579439f9f89e9bee",
+          "suite": "com.parlor.games.whodunit.flow.PartyFlowControllerTest",
+          "testcase_count": 7
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.PauseRefuseLeaveTest.xml",
+          "sha256": "7a6cdf9a346229ff3465b3d2e50affbe392a195e1aef5cc17fce909149c87f3d",
+          "suite": "com.parlor.games.whodunit.flow.PauseRefuseLeaveTest",
+          "testcase_count": 10
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.SimultaneousCharacterRevealTest.xml",
+          "sha256": "c7ad505af5c4bbb8eaf82b007b0559ba59e2ef8a4cfa17284135fed6ef1a02ff",
+          "suite": "com.parlor.games.whodunit.flow.SimultaneousCharacterRevealTest",
+          "testcase_count": 6
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.TickerAndRerollTest.xml",
+          "sha256": "1d7e335e39f8926019a5207818483b81076057df5de03362d9ecf03a1fa958c4",
+          "suite": "com.parlor.games.whodunit.flow.TickerAndRerollTest",
+          "testcase_count": 9
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.TiedRevoteTest.xml",
+          "sha256": "25e20dc332291dcbcb25ad33024d37b253b80222a432b7decfde550f106303b8",
+          "suite": "com.parlor.games.whodunit.flow.TiedRevoteTest",
+          "testcase_count": 7
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.WhodunitLocalSessionConfigTest.xml",
+          "sha256": "1226c8ba29d9c15af22293422aa0bf5fe0bb3926a9142cf66e9b1619f497a6ad",
+          "suite": "com.parlor.games.whodunit.flow.WhodunitLocalSessionConfigTest",
+          "testcase_count": 2
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.layout.ResponsiveLayoutAuditTest.xml",
+          "sha256": "548f52d950d355618004a2c0fa4b74bb639737186a71d3225be6908238e46f95",
+          "suite": "com.parlor.games.whodunit.layout.ResponsiveLayoutAuditTest",
+          "testcase_count": 1
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.layout.TokenDisciplineTest.xml",
+          "sha256": "b2bb4fc61fba61fa6c73c84ad10281ff720212ab57b8212d918b5c3de8e9f37d",
+          "suite": "com.parlor.games.whodunit.layout.TokenDisciplineTest",
+          "testcase_count": 2
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.HostLostTimeoutTest.xml",
+          "sha256": "364b25b87913ca0addd3f828d439cc8c7063611454727ddb077d2dc39fcf9923",
+          "suite": "com.parlor.games.whodunit.multidevice.HostLostTimeoutTest",
+          "testcase_count": 3
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.MultiDevicePartyPlayContractTest.xml",
+          "sha256": "798063f1570f1fa402fca89db8bdf9780cff55f39c12658a86be4be63e0bf2d2",
+          "suite": "com.parlor.games.whodunit.multidevice.MultiDevicePartyPlayContractTest",
+          "testcase_count": 3
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.PartyConnectionEventsTest.xml",
+          "sha256": "f155557d59b6cf34b061d327e605f45dd7425df57c8dcee0042f4a292b76a850",
+          "suite": "com.parlor.games.whodunit.multidevice.PartyConnectionEventsTest",
+          "testcase_count": 17
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.PartyPlayPassAndPlayParityTest.xml",
+          "sha256": "e9bd5b7934d652aa6cbaf0f5ee5fc8da9e80b15e5af8f4a2298c9463b5582b41",
+          "suite": "com.parlor.games.whodunit.multidevice.PartyPlayPassAndPlayParityTest",
+          "testcase_count": 1
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.QueuedActionSafetyTest.xml",
+          "sha256": "af5059bdbcdf33598e019bb1e832fab03c68a721255a70ad2cc295336353397a",
+          "suite": "com.parlor.games.whodunit.multidevice.QueuedActionSafetyTest",
+          "testcase_count": 2
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.SelfOfflineTimeoutTest.xml",
+          "sha256": "1e22b6d1ba250240c6527f21f71f6522961f4da1331627f53e0cbad44448480c",
+          "suite": "com.parlor.games.whodunit.multidevice.SelfOfflineTimeoutTest",
+          "testcase_count": 1
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.WhodunitMultiDeviceShapeTest.xml",
+          "sha256": "10055538b34aa31ec5d5d94d864764a06a9ada9cdae87d4dbed51b9395c6e12e",
+          "suite": "com.parlor.games.whodunit.multidevice.WhodunitMultiDeviceShapeTest",
+          "testcase_count": 6
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.WhodunitPeerProjectionBoundaryTest.xml",
+          "sha256": "07759af1fa6ac402d77b07dc35af97d0ced9242a26937756dff4d023bcad2d8b",
+          "suite": "com.parlor.games.whodunit.multidevice.WhodunitPeerProjectionBoundaryTest",
+          "testcase_count": 7
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.projection.VoteRedactionTest.xml",
+          "sha256": "a6f1bf445c45379f4eaaf8d34cb01f0bed029f1db811e465cbcd9b788ec0de4c",
+          "suite": "com.parlor.games.whodunit.projection.VoteRedactionTest",
+          "testcase_count": 6
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitCaseBindingTest.xml",
+          "sha256": "0956d9d448bed82b0ae646529a011389282cf816616506720282d38a4ad20df4",
+          "suite": "com.parlor.games.whodunit.snapshot.WhodunitCaseBindingTest",
+          "testcase_count": 8
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest.xml",
+          "sha256": "5ee39b94e626ae6aaf04a52fe67392e24b65e0190a770f9c98cae55f678ae9f7",
+          "suite": "com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest",
+          "testcase_count": 9
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitLegacySnapshotGoldenTest.xml",
+          "sha256": "8186ee3255f7cb35e6209a52b6158ca0dfee28b45ac09159213e894d717a3714",
+          "suite": "com.parlor.games.whodunit.snapshot.WhodunitLegacySnapshotGoldenTest",
+          "testcase_count": 1
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest.xml",
+          "sha256": "e9c388ac8768e215289bd899eb42a87681ddec71e3abeda7ce9b235f72b6912e",
+          "suite": "com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest",
+          "testcase_count": 11
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitSnapshotRoundTripTest.xml",
+          "sha256": "4cea6650a4b4d427702b8f5d8905d5c1fb8cbc6112a155e22dc7cd2e64ce9cb8",
+          "suite": "com.parlor.games.whodunit.snapshot.WhodunitSnapshotRoundTripTest",
+          "testcase_count": 4
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitSnapshotValidationTest.xml",
+          "sha256": "7e70b56952756b6a6597a1cdd7b0b82d74929ff34cd00ab3fd0014480aa1322b",
+          "suite": "com.parlor.games.whodunit.snapshot.WhodunitSnapshotValidationTest",
+          "testcase_count": 46
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.PrivacyConcernPolicyTest.xml",
+          "sha256": "6725af9a167b3ecbf2cfdf20a203dc007abcc6c3c2df0ac298ddddd867d226ab",
+          "suite": "com.parlor.games.whodunit.ui.PrivacyConcernPolicyTest",
+          "testcase_count": 2
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.RtlFormattingTest.xml",
+          "sha256": "592af0665182c054f1eb22a37775c206d9e0dcd167eee929cc825a349203e99e",
+          "suite": "com.parlor.games.whodunit.ui.RtlFormattingTest",
+          "testcase_count": 2
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.WhodunitAccessibilitySemanticsTest.xml",
+          "sha256": "4b68814c1a5d44a7204f4c6a873453a5bdcc1c8322ab50e739674cfbc386c584",
+          "suite": "com.parlor.games.whodunit.ui.WhodunitAccessibilitySemanticsTest",
+          "testcase_count": 5
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.WhodunitCasePickerScreenTest.xml",
+          "sha256": "072cac1d85cd00aa37e8f208ba449ee55224bf3ad2cefbe00aab69fb78221ca9",
+          "suite": "com.parlor.games.whodunit.ui.WhodunitCasePickerScreenTest",
+          "testcase_count": 1
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.WhodunitNetErrorMessageKeyTest.xml",
+          "sha256": "ad989ea2fbe37075be46b3c630296f58b57857373761a9660963293a5222f7ed",
+          "suite": "com.parlor.games.whodunit.ui.WhodunitNetErrorMessageKeyTest",
+          "testcase_count": 1
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.components.RevealCompletionGateTest.xml",
+          "sha256": "b169d56f132d6307eb47170c1d420ffa8374c070ecda2e9410c00347dcba441c",
+          "suite": "com.parlor.games.whodunit.ui.components.RevealCompletionGateTest",
+          "testcase_count": 1
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.EliminationVoteOwnershipIntegrationTest.xml",
+          "sha256": "d8024fae048511e211a1894a9c83bdf0dee42773d5427ad65541df5236eb1221",
+          "suite": "com.parlor.games.whodunit.ui.flow.EliminationVoteOwnershipIntegrationTest",
+          "testcase_count": 2
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerPausedCoverContrastTest.xml",
+          "sha256": "15cd830b7b221c4bb67fffc8f8f315165c424a5758b82622870b5ed69d18fa0e",
+          "suite": "com.parlor.games.whodunit.ui.flow.PeerPausedCoverContrastTest",
+          "testcase_count": 4
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest.xml",
+          "sha256": "2cc24f76ba9f43818d2df2e6051ecc1166fff626abe5c1c402d9de096d0cc494",
+          "suite": "com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest",
+          "testcase_count": 12
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.VoteTurnPolicyTest.xml",
+          "sha256": "e8cc56ad2dc28c1083405544a12fdd8b884b4030c09bfd2885bed7e99a865939",
+          "suite": "com.parlor.games.whodunit.ui.flow.VoteTurnPolicyTest",
+          "testcase_count": 5
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest.xml",
+          "sha256": "d92e897ddb6018ec720e015aca29de30df448e512efe0e1afb154be4a915323b",
+          "suite": "com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+          "testcase_count": 6
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest.xml",
+          "sha256": "e3f8ceccefafeef00c247caf7ce12aceca369abb2993bb3c91e76bffe279b22f",
+          "suite": "com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest",
+          "testcase_count": 9
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLanguageContinuityTest.xml",
+          "sha256": "f3317e19447afec4341b519c92dce110a7b683fb712ba3fc2b1fb160a3335823",
+          "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLanguageContinuityTest",
+          "testcase_count": 2
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest.xml",
+          "sha256": "dfd0b8b468a18584865d9a355ad506a4913ba02cce55e107b85e27967af2e902",
+          "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+          "testcase_count": 4
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerSessionFlowPolicyTest.xml",
+          "sha256": "5682a6238386c50dfd266d30857686e74d133f7424a3784d55590b3965233446",
+          "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerSessionFlowPolicyTest",
+          "testcase_count": 2
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.screens.setup.WhodunitCaseLanguageLabelTest.xml",
+          "sha256": "132f82660607a691ad7a5632b7b802e2d21468d3f3dce2f9ff8209f53e02b7ef",
+          "suite": "com.parlor.games.whodunit.ui.screens.setup.WhodunitCaseLanguageLabelTest",
+          "testcase_count": 2
+        },
+        {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.screens.setup.WhodunitModeChoiceTest.xml",
+          "sha256": "df23ab694cee84a1719ec95c91b2e3f6e821377b6b242b6f470a5567ad65a4e6",
+          "suite": "com.parlor.games.whodunit.ui.screens.setup.WhodunitModeChoiceTest",
+          "testcase_count": 2
+        }
+      ],
+      "stop_exit_code": 0,
+      "stop_log": "No Gradle daemons are running.",
+      "removed_outputs": [
+        "shared/core/build",
+        "shared/networking/build",
+        "shared/content/build",
+        "shared/storage/build",
+        "shared/networking-testing/build",
+        "shared/engine/build",
+        "shared/design-system/build",
+        "shared/session/build",
+        "game-modes/whodunit/build",
+        "build",
+        "build-logic/convention/build"
+      ],
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "cleanup_errors": [],
+      "cleanup_completed_at": "2026-09-07T09:48:02.211759+00:00"
+    }
+  ],
+  "detekt": {
+    "status": "PASS",
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/peer-paused-cover-green-01/reports/game-modes/whodunit/build/reports/detekt/detekt.xml",
+    "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+    "error_elements": 0
+  },
+  "research": [
+    {
+      "url": "https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html",
+      "accessed_at_utc": "2026-09-07T09:58:47.427578+00:00",
+      "http_status": 200,
+      "final_url": "https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html",
+      "sha256": "3352aaf477e9739155628467c4b62997e18ea4cab917c0eb4fc4fb39c5238a2e",
+      "bytes": 75590,
+      "claim": "Contrast minimum: 4.5:1 for ordinary text, 3:1 for large text (18-point normal or 14-point bold).",
+      "applicability": "Actual labelSmall is11sp; actual displayMedium is28sp bold. Test independently reads final TextLayoutResult colors and rendered black backdrop; preserved styles exceed the large-text condition for body."
+    }
+  ],
+  "reviewer_cleanup": {
+    "builds_tests_apps_started": 0,
+    "workers_remaining": 0,
+    "generated_outputs_created": 0,
+    "source_or_git_writes": 0,
+    "evidence_only": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/peer-paused-cover-fix-independent-review-01.json",
+    "note": "Inspected existing raw XMLs and receipts after root cleanup. Did not stop another task's shared-lane processes."
+  },
+  "followup": "Earlier game-contract-current-source-review-01 intentionally retains original UNCONFIRMED candidate status; this separate supplement records later independent root validation and verified fix without rewriting prior evidence."
+}

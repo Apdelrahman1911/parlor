@@ -1,0 +1,1204 @@
+{
+  "id": "FINAL-SESSION-CROSS-CHECK-01",
+  "at_utc": "2026-09-05T23:36:10.063447+00:00",
+  "reviewer": "/root/factory_review",
+  "fix_authors": [
+    "/root/session_cont (SN-C1 and SN-C2 host/peer/coordinator)",
+    "/root (SN-C2 factory helper and actual factory wiring)"
+  ],
+  "scope": "Independent supplemental SN-C1 review plus exact SN-C2 prior approval rebind; no claim of a new whole-repository audit or device/Store approval.",
+  "decision": {
+    "SN-C1": "APPROVED in reviewed source and executed deterministic JVM/session scope; root cause addressed; no new scoped blocker established.",
+    "SN-C2": "Prior independent APPROVED conclusion remains bound to all14 exact reviewed file versions and fresh combined verification; no new native-device execution inferred."
+  },
+  "source_identity": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+    "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7"
+  },
+  "source_identity_limitation": "Dirty remediation checkout, not pristine HEAD; hashes include reviewed untracked regression files. Only reviewed source rows and tracked diff were recomputed here, not an invented whole-repository rehash/review.",
+  "coverage_ledger": [
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/SessionStartHandshake.kt",
+      "relative_path": "shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/SessionStartHandshake.kt",
+      "sha256": "eab3e1743484280bbdf1731f033b9984ad0b9e1d2aea31a94e40a6c29fe17512",
+      "line_count": 397,
+      "reviewed_line_ranges": [
+        [
+          1,
+          397
+        ]
+      ],
+      "full_file_reviewed_this_addendum": true,
+      "reviewer": "/root/factory_review",
+      "relevance": "production-common; full changed handshake",
+      "matches_frozen_and_cycle_before_after": true
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/SessionStartCommitDeadlineTest.kt",
+      "relative_path": "shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/SessionStartCommitDeadlineTest.kt",
+      "sha256": "9f0dc6cb2904dc14b24114ea0e019422e2e84e912e80e359276ab4fd38c816b2",
+      "line_count": 334,
+      "reviewed_line_ranges": [
+        [
+          1,
+          334
+        ]
+      ],
+      "full_file_reviewed_this_addendum": true,
+      "reviewer": "/root/factory_review",
+      "relevance": "commonTest; full new regression and fixture",
+      "matches_frozen_and_cycle_before_after": true
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitPeerSessionFlow.kt",
+      "relative_path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitPeerSessionFlow.kt",
+      "sha256": "ecd9d044bce61c82a5c8e85f7d12ce499cc154396c2ad11162c20fcaf82a7ff0",
+      "line_count": 728,
+      "reviewed_line_ranges": [
+        [
+          615,
+          728
+        ]
+      ],
+      "full_file_reviewed_this_addendum": false,
+      "reviewer": "/root/factory_review",
+      "relevance": "production-common; retained checkpoint and actual Whodunit peer start caller",
+      "matches_frozen_and_cycle_before_after": true
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaPeerLobbyFlow.kt",
+      "relative_path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaPeerLobbyFlow.kt",
+      "sha256": "d2c1256c40f68eff0784c31de3232d24629b5295c8bde0c4b5f63d6ee9c3d1a8",
+      "line_count": 593,
+      "reviewed_line_ranges": [
+        [
+          532,
+          593
+        ]
+      ],
+      "full_file_reviewed_this_addendum": false,
+      "reviewer": "/root/factory_review",
+      "relevance": "production-common; retained checkpoint and actual Mafia peer start caller",
+      "matches_frozen_and_cycle_before_after": true
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/AuthoritativeSessionCoordinator.kt",
+      "relative_path": "shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/AuthoritativeSessionCoordinator.kt",
+      "sha256": "968eae9b5a83bc507e173bfd82e6ec0cffa6b6191de86c73d7b401221fe09114",
+      "line_count": 1970,
+      "reviewed_line_ranges": [
+        [
+          689,
+          756
+        ],
+        [
+          870,
+          1010
+        ],
+        [
+          1072,
+          1244
+        ],
+        [
+          1270,
+          1450
+        ],
+        [
+          1530,
+          1630
+        ],
+        [
+          1720,
+          1838
+        ]
+      ],
+      "full_file_reviewed_this_addendum": false,
+      "reviewer": "/root/factory_review",
+      "relevance": "production-common; bounded host commit/deadline, replay, peer ownership, initial snapshot and validation caller ranges; full prior peer review referenced separately",
+      "matches_frozen_and_cycle_before_after": true
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/RetainedSessionOperation.kt",
+      "relative_path": "shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/RetainedSessionOperation.kt",
+      "sha256": "865209475486d4efa955cdf245d3c796a901559627e1fa4233c186bac7cc79bb",
+      "line_count": 53,
+      "reviewed_line_ranges": [
+        [
+          1,
+          53
+        ]
+      ],
+      "full_file_reviewed_this_addendum": true,
+      "reviewer": "/root/factory_review",
+      "relevance": "production-common; full session-owned cancellation and retained operation",
+      "matches_frozen_and_cycle_before_after": true
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+      "relative_path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+      "sha256": "a5e2536e41c81c54b58ec27da135ea9046969db9cb80084e2a0da3b15ddde7c7",
+      "line_count": 4811,
+      "reviewed_line_ranges": [
+        [
+          4574,
+          4695
+        ]
+      ],
+      "full_file_reviewed_this_addendum": false,
+      "reviewer": "/root/factory_review",
+      "relevance": "production-common; actual peer send and failed-start cleanup context",
+      "matches_frozen_and_cycle_before_after": true
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/SessionStartHandshakeTest.kt",
+      "relative_path": "shared/session/src/commonTest/kotlin/com/parlor/session/multidevice/SessionStartHandshakeTest.kt",
+      "sha256": "9edc1e47794d607a28d8449b0e233786260e672dab051b2b3ed14d922f5b84f8",
+      "line_count": 1302,
+      "reviewed_line_ranges": [
+        [
+          904,
+          1037
+        ],
+        [
+          1250,
+          1301
+        ]
+      ],
+      "full_file_reviewed_this_addendum": false,
+      "reviewer": "/root/factory_review",
+      "relevance": "commonTest; original immediate failed-ACK and first-snapshot sibling assertions/fake",
+      "matches_frozen_and_cycle_before_after": true
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/session/build.gradle.kts",
+      "relative_path": "shared/session/build.gradle.kts",
+      "sha256": "3be79bcdba5c593eed5ac93d6000043911cd913ab1d7d2c70ab0be7ea37c80b8",
+      "line_count": 22,
+      "reviewed_line_ranges": [
+        [
+          1,
+          22
+        ]
+      ],
+      "full_file_reviewed_this_addendum": true,
+      "reviewer": "/root/factory_review",
+      "relevance": "build; full common production/commonTest dependency wiring",
+      "matches_frozen_and_cycle_before_after": true
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitCreation.kt",
+      "relative_path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitCreation.kt",
+      "sha256": "e924988dfcbde7eb1ac2eae763e5078a28bdd568ca1b05e4ece6284a3183a95e",
+      "line_count": 39,
+      "reviewed_line_ranges": [
+        [
+          1,
+          39
+        ]
+      ],
+      "full_file_reviewed_this_addendum": true,
+      "reviewer": "/root/factory_review",
+      "relevance": "production-common; full supplemental reopening of already independently approved SN-C2 factory helper",
+      "matches_frozen_and_cycle_before_after": true
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/AppLifecycleRoomCoordinator.kt",
+      "relative_path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/AppLifecycleRoomCoordinator.kt",
+      "sha256": "7761d49b0de180d34daa32f790768a541f2af8d0de98b94eeb89ab20bf2d1e68",
+      "line_count": 76,
+      "reviewed_line_ranges": [
+        [
+          1,
+          76
+        ]
+      ],
+      "full_file_reviewed_this_addendum": true,
+      "reviewer": "/root/factory_review",
+      "relevance": "production-common; full supplemental reopening of already independently approved SN-C2 registration helper",
+      "matches_frozen_and_cycle_before_after": true
+    }
+  ],
+  "coverage_statistics": {
+    "files": 11,
+    "full_files_this_addendum": 6,
+    "reviewed_lines_this_addendum": 2188
+  },
+  "sn_c2_prior_approval_binding": {
+    "dossier": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/SN-C2-independent-remediation-review-02.json",
+    "sha256": "4d5f1113d9265a0b86abc1483c609cc6029cedb1ad73895d0dbf063dc5ad001d",
+    "method": "Each original row source hash independently recomputed from current bytes and compared with frozen identity and both combined-production-04 manifests. Earlier exact ranges retained as prior review, not misrepresented as fresh rereads.",
+    "files": [
+      {
+        "relative_path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitCreation.kt",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitCreation.kt",
+        "sha256": "e924988dfcbde7eb1ac2eae763e5078a28bdd568ca1b05e4ece6284a3183a95e",
+        "prior_reviewed_line_ranges": [
+          [
+            1,
+            39
+          ]
+        ],
+        "prior_full_file_reviewed": true,
+        "matches_prior_review_current_and_frozen_cycle_before_after": true
+      },
+      {
+        "relative_path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitFactory.kt",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitFactory.kt",
+        "sha256": "5c45ff87104b0ed58b03ce57141020ec898aeeab27a949e9167593f05942dd6f",
+        "prior_reviewed_line_ranges": [
+          [
+            1,
+            28
+          ]
+        ],
+        "prior_full_file_reviewed": true,
+        "matches_prior_review_current_and_frozen_cycle_before_after": true
+      },
+      {
+        "relative_path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/AppLifecycleRoomCoordinator.kt",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/AppLifecycleRoomCoordinator.kt",
+        "sha256": "7761d49b0de180d34daa32f790768a541f2af8d0de98b94eeb89ab20bf2d1e68",
+        "prior_reviewed_line_ranges": [
+          [
+            1,
+            76
+          ]
+        ],
+        "prior_full_file_reviewed": true,
+        "matches_prior_review_current_and_frozen_cycle_before_after": true
+      },
+      {
+        "relative_path": "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+        "sha256": "a5e2536e41c81c54b58ec27da135ea9046969db9cb80084e2a0da3b15ddde7c7",
+        "prior_reviewed_line_ranges": [
+          [
+            1,
+            630
+          ],
+          [
+            684,
+            865
+          ],
+          [
+            1604,
+            2248
+          ],
+          [
+            3120,
+            4811
+          ]
+        ],
+        "prior_full_file_reviewed": false,
+        "matches_prior_review_current_and_frozen_cycle_before_after": true
+      },
+      {
+        "relative_path": "shared/transport-p2p/src/androidMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.android.kt",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/androidMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.android.kt",
+        "sha256": "280b7f13d26939972416c805a184efe8fb8041f48db219f2e41797adbe456a11",
+        "prior_reviewed_line_ranges": [
+          [
+            1,
+            97
+          ]
+        ],
+        "prior_full_file_reviewed": true,
+        "matches_prior_review_current_and_frozen_cycle_before_after": true
+      },
+      {
+        "relative_path": "shared/transport-p2p/src/desktopMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.desktop.kt",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.desktop.kt",
+        "sha256": "7bb0e36a15dfde7e193c74f1ab2a3d10f35c01e04c0fb3ba4e08a8a8cf88d3cb",
+        "prior_reviewed_line_ranges": [
+          [
+            1,
+            94
+          ]
+        ],
+        "prior_full_file_reviewed": true,
+        "matches_prior_review_current_and_frozen_cycle_before_after": true
+      },
+      {
+        "relative_path": "shared/transport-p2p/src/iosMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.ios.kt",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/iosMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.ios.kt",
+        "sha256": "bea599aa4d6dd9820477f2cbee57c213a9988da33e51eada0eb061d25fd77753",
+        "prior_reviewed_line_ranges": [
+          [
+            1,
+            71
+          ]
+        ],
+        "prior_full_file_reviewed": true,
+        "matches_prior_review_current_and_frozen_cycle_before_after": true
+      },
+      {
+        "relative_path": "shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/AppLifecycleRoomRegistrationTest.kt",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonTest/kotlin/com/parlor/transport/p2p/AppLifecycleRoomRegistrationTest.kt",
+        "sha256": "bfda11cf208b13b039ae74061d81fcf04a11fdfe3945c490371aa71b730f6d6b",
+        "prior_reviewed_line_ranges": [
+          [
+            1,
+            139
+          ]
+        ],
+        "prior_full_file_reviewed": true,
+        "matches_prior_review_current_and_frozen_cycle_before_after": true
+      },
+      {
+        "relative_path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/HostOpeningCancellationTest.kt",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/HostOpeningCancellationTest.kt",
+        "sha256": "13cdebd30a42ff4ed04be36f9e2ffe3693b488badd05e19edb2a004a180c6bff",
+        "prior_reviewed_line_ranges": [
+          [
+            1,
+            187
+          ]
+        ],
+        "prior_full_file_reviewed": true,
+        "matches_prior_review_current_and_frozen_cycle_before_after": true
+      },
+      {
+        "relative_path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/PeerOpeningCancellationTest.kt",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/PeerOpeningCancellationTest.kt",
+        "sha256": "e72ab2b4e013af3a626f50677e3284518120b4320a556c7d5cb7a662fe4c0e68",
+        "prior_reviewed_line_ranges": [
+          [
+            1,
+            392
+          ]
+        ],
+        "prior_full_file_reviewed": true,
+        "matches_prior_review_current_and_frozen_cycle_before_after": true
+      },
+      {
+        "relative_path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitCreationTest.kt",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitCreationTest.kt",
+        "sha256": "aa03b4fc5e37dbd234848594641dd46eec5aef5bf78dcc478783987d6ee0dc70",
+        "prior_reviewed_line_ranges": [
+          [
+            1,
+            273
+          ]
+        ],
+        "prior_full_file_reviewed": true,
+        "matches_prior_review_current_and_frozen_cycle_before_after": true
+      },
+      {
+        "relative_path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/JupiterDiscoveryContractTest.kt",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/JupiterDiscoveryContractTest.kt",
+        "sha256": "94682d196381d97a37f6c5e925b63646f102b864d76eb55252cfbd082abcb305",
+        "prior_reviewed_line_ranges": [
+          [
+            1,
+            40
+          ]
+        ],
+        "prior_full_file_reviewed": true,
+        "matches_prior_review_current_and_frozen_cycle_before_after": true
+      },
+      {
+        "relative_path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt",
+        "sha256": "947a86aebdca10d7d9cfa97a5677c1a79733601dca887effc6c218280a098b1b",
+        "prior_reviewed_line_ranges": [
+          [
+            5185,
+            5413
+          ]
+        ],
+        "prior_full_file_reviewed": false,
+        "matches_prior_review_current_and_frozen_cycle_before_after": true
+      },
+      {
+        "relative_path": "shared/transport-p2p/build.gradle.kts",
+        "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/build.gradle.kts",
+        "sha256": "ac439a069b3c99d1bef803bbc053580c4b99cbd7f4775a98d98a2b40482d96d7",
+        "prior_reviewed_line_ranges": [
+          [
+            1,
+            95
+          ]
+        ],
+        "prior_full_file_reviewed": true,
+        "matches_prior_review_current_and_frozen_cycle_before_after": true
+      }
+    ]
+  },
+  "sn_c1_reachable_proof": [
+    "Both shipping peer-lobby callers await this common production function through retained session-owned operations. Success alone installs Started; preparation validates game/content/roster before Ready. Pass-and-play does not use this handshake.",
+    "Host commitStart records completedStart, publishes Started and completes start success before delivery. ACK deadline ends delivery without rollback. ACK cannot legitimately decide game-start authority.",
+    "Current matching commit first passes unchanged startId and exact local protocol validation, returns Result.Success from receive withTimeoutOrNull at263, then sends acknowledgement at278-288 outside that timeout. Slow/lost/exceptional ACK can use its independent bounded send budget without becoming the old receive-timeout failure.",
+    "sendStartAcknowledgement retains withTimeoutOrNull(sendTimeoutMs), rethrows CancellationException, and only treats ordinary defensive adapter exceptions as dropped acknowledgement. Exact coroutines1.11.0 source151-168 catches only its own TimeoutCoroutine exception; owner/nested timeout cancellation propagates. No NonCancellable was added to the start decision.",
+    "awaitAuthoritativeSessionStart finally cancels its merged producer. RetainedSessionOperation owns work in session scope and explicitly rethrows cancellation. The delayed-ACK regression checks collector disposal and genuine owner cancellation rather than swallowing it.",
+    "Transport send still checks room/connection ownership, encodes bounded peer frames and calls suspending P2pSession.send. Snapshot/coordinator recovery runs only after committed runtime entry: sole inbox collector attaches undispatched and bounded initial reconciliation requests a fresh projection, allowing dropped eager revision-zero frames to recover.",
+    "No game reducer, seed, host authority, command sequence/revision validation, actor binding, public/private projection codec, protocol4.2, snapshot format or rejoin-credential setting changed in SN-C1/SN-C2."
+  ],
+  "counter_evidence": [
+    "Immediate failed ACK was already correctly handled; original existing test931-952 does not cross the receive deadline. Original isolated1test witness failure is retained as defect evidence only, not a repair PASS; its draft NOT EXECUTED banner is stale relative to the actual XML/receipt.",
+    "Missing commit, wrong start and invalid game/protocol metadata must still fail or time out; current regressions prove these are not converted to success. General simultaneous timer/receive boundary behavior is not changed or claimed eliminated; the repaired defect is ACK consuming an already accepted decision deadline.",
+    "Best-effort ACK remains synchronous but independently bounded; this is not fabricated transport-delivery success. An explicit cancelled owner still leaves the await cancelled.",
+    "First snapshot may be dropped while replacing the handshake collector; existing coordinator retry/heartbeat recovery is intentionally authoritative and unchanged. New fixture checks actual coordinator duplicateACK+revision0acceptance but does not run real admission or physical LAN.",
+    "SN-C2 prior process-owner/factory/coordinator proof and counter-evidence remain in original independent dossier.14current rows match byte-for-byte; no unseen implementation drift is hidden by reusing the approval."
+  ],
+  "verification": {
+    "cycle": "combined-production-04",
+    "receipt_sha256": "4f8374afedbc3fec40353f0a95556766eaf8fa393daf1f8d307104e05694b9f4",
+    "command": [
+      "./gradlew",
+      "productionCheck",
+      "--no-build-cache",
+      "--continue",
+      "--no-daemon",
+      "--no-parallel",
+      "--max-workers=1",
+      "--no-configuration-cache",
+      "--dependency-verification=strict",
+      "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=combined-production-04",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-Pparlor.android.signing.storeFile=",
+      "-Pparlor.android.signing.storePassword=",
+      "-Pparlor.android.signing.keyAlias=",
+      "-Pparlor.android.signing.keyPassword="
+    ],
+    "status": "PASS",
+    "exit_code": 0,
+    "started_at": "2026-09-05T22:24:12.261351+00:00",
+    "finished_at": "2026-09-05T22:30:19.979017+00:00",
+    "source_unchanged": true,
+    "raw_log_checks": [
+      ":shared:session:desktopTest at line1235 and :shared:transport-p2p:desktopTest at1247 execute without FROM-CACHE/UP-TO-DATE markers.",
+      "BUILD SUCCESSFUL at1576;903tasks,826executed,77up-to-date at1577. Type-aware detekt tasks execute, including sessionDesktopTest/sharedMetadata and transportAndroidRelease/DesktopMain/DesktopTest/sharedMetadata."
+    ],
+    "module_totals": {
+      "session": {
+        "suites": 13,
+        "tests": 145,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "passed": 145
+      },
+      "transport-p2p": {
+        "suites": 20,
+        "tests": 252,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 3,
+        "passed": 249
+      }
+    },
+    "focused_regressions": {
+      "SN-C1": {
+        "executed": 9,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0
+      },
+      "SN-C2": {
+        "executed": 29,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "suites": "HostOpeningCancellation5 + PeerOpeningCancellation12 + AppLifecycleRoomRegistration3 + P2pKitCreation9"
+      }
+    },
+    "xml_receipts": [
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.RetainedSessionOperationTest.xml",
+        "sha256": "c7b3170f1daa8acf198f7b84e153c77fa419175b10042017a80b9c4ccfee697e",
+        "suite": "com.parlor.session.multidevice.RetainedSessionOperationTest",
+        "timestamp": "2026-09-05T22:28:17.037Z",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "testcases": [
+          {
+            "name": "sessionCancellationIsNotMappedToAnOrdinaryFailure()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "losingTheUiCallerDoesNotCancelProcessOwnedWork()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "unexpectedFailureBecomesTheExplicitSafeState()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "concurrentInstallersLaunchTheOperationExactlyOnce()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          }
+        ]
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+        "sha256": "28fd1648e590ef0720414d613ac335be00238a391a27d39ac1675b66dc9a2b4f",
+        "suite": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+        "timestamp": "2026-09-05T22:28:17.044Z",
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "testcases": [
+          {
+            "name": "coordinatorReacknowledgesDuplicateAndAcceptsFirstSnapshotAfterLateCommit()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "callerCancellationDuringAcknowledgementStillPropagates()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "lateAcceptedCommitSurvivesSlowAcknowledgement()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "acknowledgementAdapterExceptionDoesNotUndoAcceptedStart()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "matchingStartWithInvalidVersionIsRejectedWithoutAcknowledgement()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "acknowledgementFailureAfterReceiveDeadlineStillEntersCommittedStart()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "absentCommitStillTimesOutWithoutAnAcknowledgement()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "acknowledgementTimeoutOnlyBoundsDeliveryAfterAcceptedCommit()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "commitForAnotherStartCannotEscapeTheReceiveDeadline()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          }
+        ]
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.SessionStartHandshakeTest.xml",
+        "sha256": "a88cef7d099f5d99088b819c14fcafa1e7740880cc7c5e52e35d7a284dbbf97b",
+        "suite": "com.parlor.session.multidevice.SessionStartHandshakeTest",
+        "timestamp": "2026-09-05T22:28:17.066Z",
+        "tests": 31,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "testcases": [
+          {
+            "name": "cancelling host start propagates cancellation and aborts transaction()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "peer lobby has no pre-offer timeout and late valid start succeeds()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "peer transaction deadline begins at offer and terminal lifecycle fails()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "throwing duplicate commit acknowledgement cannot kill peer inbox()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "game coordinator reacks delayed duplicate commit()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "fatal preparation error is never converted into a start failure()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "hanging start send cannot block absolute host deadline()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "host start gate retains typed failure and exit transition is idempotent()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "lost commit acknowledgement in a multi-peer room never rolls commit back()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "peer lobby reports terminal credential commit failure without accepting end()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "peer validates wire version against local protocol major and minor()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "initial snapshot recovery retries are bounded and expose timeout()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "resend start retries each phase and only succeeds after commit acknowledgement()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "slow preparation and first dropped commit use fresh delivery deadlines()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "concurrent resend transactions are isolated per player()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "peer enters on irreversible commit even when acknowledgement send is lost()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "wrong actor and stale ready cannot advance host transaction()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "resend ready deadline is bounded and delayed frames cannot revive it()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "host coordinator requires the start barrier by default()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "peer start transaction ignores terminal frame no longer owned by transport()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "cancelled resend cannot commit when its abort signal loses to a full mailbox()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "unexpected local preparation failure remains typed and cancellation propagates()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "throwing snapshot transport is retried and cannot strand loading forever()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "seat resend progresses while another initial commit acknowledgement is outstanding()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "caller cancellation racing irreversible commit cannot abort the session()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "host commits after all ready and commit acknowledgement is delivery only()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "peer ignores transient host loss and reacks ready on restoration()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "peer rejects non-canonical start seats before local preparation()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "host pre-commit deadline is terminal and bounded()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "dropped eager snapshot and initial request recover from revision-zero heartbeat()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "duplicate ready flood during commit does not amplify responses()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          }
+        ]
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+        "sha256": "692159a8451a8302cc3dc8b312c6fb1a232b9147c157abdd84dbb6f5b8b8c94e",
+        "suite": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+        "timestamp": "2026-09-05T22:28:20.844Z",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "testcases": [
+          {
+            "name": "cancellationBeforeRegistrationLockDoesNotDetachExistingRoom()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "cancelledRegistrationDetachesBeforeQueuedForeground()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "failedRegistrationDetachesBeforeQueuedForeground()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          }
+        ]
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.HostOpeningCancellationTest.xml",
+        "sha256": "f7b4a2074b9b65e05e37df5fb17318907d3d47ab4d44c5c7b4f88d39191c5ed1",
+        "suite": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+        "timestamp": "2026-09-05T22:28:20.932Z",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "testcases": [
+          {
+            "name": "cancelledRegistrationClosesRoomBeforeQueuedForegroundCanReviveIt()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "returnedHostRetainsOwnershipUntilIdempotentLeave()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "registrationFailureClosesUnreturnedRoomAndDetachesLifecycle()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "cancellationDuringAdvertisingClosesArmedRoom()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "cancellationDuringKitStartStopsUnownedKit()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          }
+        ]
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+        "sha256": "fabc170786e0432c35c368921dd956ba4a2a5e8e1f47616b919552aa9aacc384",
+        "suite": "com.parlor.transport.p2p.JupiterDiscoveryContractTest",
+        "timestamp": "2026-09-05T22:28:20.970Z",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "testcases": [
+          {
+            "name": "annotated_tests_including_disabled_tests_are_discoverable()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          }
+        ]
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitCreationTest.xml",
+        "sha256": "40ad32707bf2053de5388ab63de3e87058481d82d621a096de93c27458969dc8",
+        "suite": "com.parlor.transport.p2p.P2pKitCreationTest",
+        "timestamp": "2026-09-05T22:28:21.482Z",
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "testcases": [
+          {
+            "name": "cancellationBeforeDispatcherEntryDoesNotConstructKit()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "cancellationDuringSameDispatcherConstructionStopsKit()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "hostAndJoinPreserveFactoryCancellationWithoutStartingOrStoppingTwice()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "cancellationDuringDifferentDispatcherConstructionStopsKit()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "cancelledReturnDispatchStopsSuccessfullyConstructedKit()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "failedConstructionPreservesOriginalFailure()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "cleanupFailureDoesNotReplaceOriginalCallerCancellation()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "cancelledOwnerAwaitsSuspendingNonCancellableStop()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "successfulCreationTransfersOwnershipWithoutStoppingKit()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          }
+        ]
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+        "sha256": "c20906d82ef865b7a737c855567d2073765b9a80d9a198ae4ca5eb9445d08bbc",
+        "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "timestamp": "2026-09-05T22:28:34.018Z",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 3,
+        "testcases": [
+          {
+            "name": "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]",
+            "skipped": true,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+            "skipped": true,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "host_broadcast_reaches_every_peer()[desktop]",
+            "skipped": true,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "host_advertises_a_room_code_that_join_resolves_to()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          }
+        ]
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.PeerOpeningCancellationTest.xml",
+        "sha256": "2a3b0dd5970049f896c603d8cd9c44ddce1ffff38e07bf12e4743658c07df0fe",
+        "suite": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+        "timestamp": "2026-09-05T22:28:38.461Z",
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "testcases": [
+          {
+            "name": "cancellingResumeReadyClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "failedJoinRegistrationReleasesRoomAndDetachesLifecycle()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "cancellingResumeAckClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "failedResumeRegistrationReleasesRoomAndDetachesLifecycle()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "cancellingAdmissionAckClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "failedAdmissionReadyStopsKitOnlyOnceAndReleasesCollectors()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "failedResumeReadyStopsKitOnlyOnceAndReleasesCollectors()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "ordinaryAdmissionAckLossStillReturnsAnOwnedRoom()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "ordinaryResumeAckLossStillReturnsAnOwnedRoom()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "cancellingAdmissionReadyClosesUnreturnedRoomWithoutRevokingMembership()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "cancelledResumeRegistrationCannotResumeOrExpireAReplacementCredential()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          },
+          {
+            "name": "cancelledJoinRegistrationCannotResumeOrExpireAReplacementCredential()[desktop]",
+            "skipped": false,
+            "failure": false,
+            "error": false
+          }
+        ]
+      }
+    ],
+    "original_witness": {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/repro-session-01/reports/shared/session/build/test-results/desktopTest/TEST-audit.parlor.SN_C1LateStartCommitAckTest.xml",
+      "sha256": "6fadaa051d93b1fa1455570a8288ff3e0664461a168a0232174cd9459f624345",
+      "tests": 1,
+      "failures": 1,
+      "role": "Archived original deterministic defect witness; not rerun by reviewer and never counted as repair success."
+    }
+  },
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-05T22:30:20.307635+00:00",
+    "removed_outputs": [
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build",
+      "build",
+      "composeApp/build",
+      "build-logic/convention/build"
+    ],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "cleanup_completed_at": "2026-09-05T22:30:22.205283+00:00",
+    "cleanup_errors": [],
+    "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership."
+  },
+  "limitations": [
+    "Reviewer launched no build/test/Gradle/Xcode/app/simulator process. Evidence analysis is distinct from executing root-owned tests.",
+    "Physical Android/iOS multi-device LAN, Bonjour/admission timing, radios, OS lifecycle, app-switcher, cold credential recovery and socket shutdown remain external runtime gates; no approval inferred from in-memory fixtures.",
+    "Three physical loopback methods remain skipped; host advertisement passing does not prove room join/message/broadcast.",
+    "SN-C2 platform factories reviewed at exact hashes; Apple/Android compilation and any native-runtime gate must be recorded by root, not inferred by this addendum.",
+    "No Store signing/upload/promotion/publication and no Git/source edits authorized or performed. Other independent issues/product decisions remain owned by their reports."
+  ],
+  "research": {
+    "receipt": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/sn-c1-timeout-research-01.json",
+    "read_line_ranges": [
+      [
+        1,
+        248
+      ]
+    ],
+    "claim": "Coroutines1.11.0 withTimeoutOrNull151-168 swallows only its own timeout;223-234 installs disposal on completion, so separate post-return ACK cannot remain inside completed receive timeout. Documentation177-178 also cautions asynchronous timeout; no unlimited deadline race immunity claimed."
+  },
+  "evidence_references": [
+    {
+      "path": "audit-runs/2026-09-05-source-audit/candidates/SN-C1-start-ack-deadline.md",
+      "sha256": "08f1b7149ee7acc4a8b5263ef3eb23c92b3b0eb09e3328308d0812ce444472ac"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/validations/SN-C1-root.md",
+      "sha256": "f4e3ef713b280f8072be33a7023265a5a01dc3d2786463a0bed9c53dd0a16c6c"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/reproducers/SN-C1LateStartCommitAckTest.kt",
+      "sha256": "2a5ebd0edb7db47a9f8684f6092ef4e04cdb303bb1d47049eed746cf7790ec92"
+    },
+    {
+      "path": "audit-runs/2026-09-05-source-audit/evidence/repro-session-01/reports/shared/session/build/test-results/desktopTest/TEST-audit.parlor.SN_C1LateStartCommitAckTest.xml",
+      "sha256": "6fadaa051d93b1fa1455570a8288ff3e0664461a168a0232174cd9459f624345"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/root/SN-C1-independent-fix-review-01.json",
+      "sha256": "a42e2f920214d4ff464b4dddf3f7baa8f6789c415c668b169754fbfe6100a4c3"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/SN-C2-independent-remediation-review-02.json",
+      "sha256": "4d5f1113d9265a0b86abc1483c609cc6029cedb1ad73895d0dbf063dc5ad001d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/SN-C2-independent-remediation-review-02.md",
+      "sha256": "49718eece1cc2f8b1aafd1a6d6964148a7ef63183013733838a533ff76f7f5ee"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/final-cross-game-review-01.json",
+      "sha256": "8d7e917e0ce176257c347541b5273f6b8e6af489883309c8cea238e6cbda4c9a"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/final-cross-game-review-01.md",
+      "sha256": "5e0ac7056931ac261fcdd9dadf8757061ece2aca0f01ab39c2ef7b7aedb5489c"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/sn-c1-timeout-research-01.json",
+      "sha256": "9a6ba46bb527f4c45d40325a55615dcc50590ccbbf65d6466c6ab73431c63191"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/sn-c1-coroutines-1.11.0-Timeout.kt.txt",
+      "sha256": "42de9d9c26614a2f713ebe45ac64ad09c5f8a0c4bf1183a8c66c38222ad7e48e"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/receipt.json",
+      "sha256": "4f8374afedbc3fec40353f0a95556766eaf8fa393daf1f8d307104e05694b9f4"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/gradle.log",
+      "sha256": "2eb2574058d05bbd292dcef2ba2126cf37cb86ad7ab0c41cdcabd4e57088f776"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/source-identity.json",
+      "sha256": "e710c5705cf066033d8e16747c04fe5e9a9383fb4dfc7f73e2fdc38af0206830"
+    }
+  ],
+  "reviewer_hygiene": "Only compact factory_review research/evidence files created. No generated build output, daemon or background worker started; no root lane resource stopped/deleted. Root combined-production-04 stop/log/cleanup verified, later lane state not asserted here."
+}

@@ -1,0 +1,16 @@
+{
+  "recorded_at": "2026-09-07T05:42:32.398339+00:00",
+  "recorded_by": "/root",
+  "source": "Observed root exec/write_stdin receipt for session49298; no invented runtime output.",
+  "command": [
+    "/usr/bin/python3",
+    "-B",
+    "remediation-runs/2026-09-07-local-readiness/reviews/probe_android_owned_processes.py"
+  ],
+  "outer_shell_exit_code": 0,
+  "probe_exit_code_basis": "Probe main returns0 only if its storedstatusPASS; it was last command in the observed shell invocation.",
+  "receipt_sha256": "7224526bb1efd10408799670a53c7a2b9a79827a9508c8ed1001d429ed4bf2d6",
+  "preceding_cycle": "evidence/android-controls-02",
+  "independent_result": "reviews/android-owned-process-controls-and-runtime-verified-03.json",
+  "scope": "Only task-created short-lived process fixtures. No Android/Gradle/Xcode/app runtime."
+}

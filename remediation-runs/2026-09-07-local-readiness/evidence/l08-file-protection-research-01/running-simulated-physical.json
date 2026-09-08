@@ -1,0 +1,477 @@
+{
+  "abstract": [
+    {
+      "text": "Launch your app on a simulated iOS, iPadOS, tvOS, visionOS, or watchOS device, or on a physical device paired with your Mac.",
+      "type": "text"
+    }
+  ],
+  "accessed_at_utc": "2026-09-07T20:28:08.368344+00:00",
+  "bytes": 18233,
+  "final_url": "https://developer.apple.com/tutorials/data/documentation/xcode/running-your-app-on-simulated-or-physical-devices.json",
+  "name": "running-simulated-physical",
+  "primaryContentSections": [
+    {
+      "content": [
+        {
+          "anchor": "Overview",
+          "level": 2,
+          "text": "Overview",
+          "type": "heading"
+        },
+        {
+          "inlineContent": [
+            {
+              "text": "To test your app, build and run it on a simulated or physical device. Use simulated devices to debug your app on a variety of hardware that you might not have access to. Be aware that simulators run within Device Hub on your Mac and don\u2019t replicate the performance or features of a physical device. To verify that your app runs exactly as intended, run it on one or more physical devices.",
+              "type": "text"
+            }
+          ],
+          "type": "paragraph"
+        },
+        {
+          "anchor": "Select-a-build-scheme-and-run-destination",
+          "level": 2,
+          "text": "Select a build scheme and run destination",
+          "type": "heading"
+        },
+        {
+          "inlineContent": [
+            {
+              "text": "Before you build and run your app, select a build scheme that includes the target for your app in Xcode. A ",
+              "type": "text"
+            },
+            {
+              "inlineContent": [
+                {
+                  "text": "scheme",
+                  "type": "text"
+                }
+              ],
+              "type": "emphasis"
+            },
+            {
+              "text": " is a collection of project details and settings that tell Xcode how to build and run a product from your project. In the toolbar, choose a scheme from the pop-up menu on the left of the run-destination.",
+              "type": "text"
+            }
+          ],
+          "type": "paragraph"
+        },
+        {
+          "inlineContent": [
+            {
+              "text": "Then choose a simulated or physical device from the run destination pop-up menu. Xcode populates the run destination menu with a list of available devices, including simulators for common hardware and the latest operating systems, based on the scheme that you select. For example, if the scheme contains a watchOS app, Xcode shows only watchOS simulated and physical devices as available run destinations. For a scheme containing a macOS app, or the macOS version of an iPad app, choose My Mac from the run destination pop-up menu.",
+              "type": "text"
+            }
+          ],
+          "type": "paragraph"
+        },
+        {
+          "inlineContent": [
+            {
+              "text": "To add physical devices to the run destination pop-up menu, choose Manage Devices and then use Device Hub to pair devices with your Mac. For more information, see ",
+              "type": "text"
+            },
+            {
+              "identifier": "doc://com.apple.Xcode/documentation/Xcode/managing-your-simulated-and-physical-devices-in-device-hub",
+              "isActive": true,
+              "type": "reference"
+            },
+            {
+              "text": ".",
+              "type": "text"
+            }
+          ],
+          "type": "paragraph"
+        },
+        {
+          "inlineContent": [
+            {
+              "text": "If you don\u2019t have platform support installed for your target, you can\u2019t build and run your app on a device. To install platform support, click the Get button that appears next to the ",
+              "type": "text"
+            },
+            {
+              "code": "Any [Platform] Device",
+              "type": "codeVoice"
+            },
+            {
+              "text": " run destination. Alternatively, manage your downloads later in Components settings (see ",
+              "type": "text"
+            },
+            {
+              "identifier": "doc://com.apple.Xcode/documentation/Xcode/downloading-and-installing-additional-xcode-components",
+              "isActive": true,
+              "type": "reference"
+            },
+            {
+              "text": ").",
+              "type": "text"
+            }
+          ],
+          "type": "paragraph"
+        },
+        {
+          "inlineContent": [
+            {
+              "text": "To learn more about schemes, see ",
+              "type": "text"
+            },
+            {
+              "identifier": "doc://com.apple.Xcode/documentation/Xcode/customizing-the-build-schemes-for-a-project",
+              "isActive": true,
+              "type": "reference"
+            },
+            {
+              "text": ".",
+              "type": "text"
+            }
+          ],
+          "type": "paragraph"
+        },
+        {
+          "content": [
+            {
+              "inlineContent": [
+                {
+                  "text": "When running apps in a simulator in Device Hub, some hardware-specific features might not be available. Frameworks that provide access to device-specific features also provide API to tell you when those features are available. Call those APIs and handle the case where a feature isn\u2019t available. To test the feature itself, run your code on a physical device.",
+                  "type": "text"
+                }
+              ],
+              "type": "paragraph"
+            }
+          ],
+          "name": "Important",
+          "style": "important",
+          "type": "aside"
+        },
+        {
+          "anchor": "Run-the-app",
+          "level": 2,
+          "text": "Run the app",
+          "type": "heading"
+        },
+        {
+          "inlineContent": [
+            {
+              "text": "To build and run the app on the selected simulated or physical device, click the Run button in the toolbar or choose Product > Run. View the status of the build in the activity area of the toolbar.",
+              "type": "text"
+            }
+          ],
+          "type": "paragraph"
+        },
+        {
+          "inlineContent": [
+            {
+              "text": "If the build is successful, Xcode runs the app and opens a debugging session in the",
+              "type": "text"
+            },
+            {
+              "text": " ",
+              "type": "text"
+            },
+            {
+              "text": "debug area. Use the controls in the debug area to step through your code, inspect",
+              "type": "text"
+            },
+            {
+              "text": " ",
+              "type": "text"
+            },
+            {
+              "text": "variables, and interact with the debugger. To run the app without the debugger, turn off the Debug executable option in the Info tab of the scheme editor.",
+              "type": "text"
+            }
+          ],
+          "type": "paragraph"
+        },
+        {
+          "inlineContent": [
+            {
+              "text": "If you choose a simulator as a run destination, Device Hub opens a compact window by default that shows your app on a device screen where you can interact with it using your Mac.",
+              "type": "text"
+            }
+          ],
+          "type": "paragraph"
+        },
+        {
+          "inlineContent": [
+            {
+              "identifier": "device-hub-compact-view",
+              "type": "image"
+            }
+          ],
+          "type": "paragraph"
+        },
+        {
+          "inlineContent": [
+            {
+              "text": "The first time you run your app on a physical device other than a Mac, Xcode needs to register the device and create a provisioning profile that contains the device. To set up a profile, see ",
+              "type": "text"
+            },
+            {
+              "identifier": "doc://com.apple.Xcode/documentation/Xcode/running-your-app-on-simulated-or-physical-devices#Set-up-code-signing-for-physical-devices",
+              "isActive": true,
+              "type": "reference"
+            },
+            {
+              "text": ". Then Xcode runs the app on the device, and you can interact with your app using both the device and Device Hub. To use Device Hub, select the device in the sidebar and click View Screen in the canvas area.",
+              "type": "text"
+            }
+          ],
+          "type": "paragraph"
+        },
+        {
+          "inlineContent": [
+            {
+              "text": "For more information on interacting with different device types in Device Hub, see  ",
+              "type": "text"
+            },
+            {
+              "identifier": "doc://com.apple.Xcode/documentation/Xcode/interacting-with-your-app-in-device-hub",
+              "isActive": true,
+              "type": "reference"
+            },
+            {
+              "text": " and ",
+              "type": "text"
+            },
+            {
+              "identifier": "doc://com.apple.Xcode/documentation/Xcode/configuring-the-environment-of-a-simulated-device",
+              "isActive": true,
+              "type": "reference"
+            },
+            {
+              "text": ".",
+              "type": "text"
+            }
+          ],
+          "type": "paragraph"
+        },
+        {
+          "inlineContent": [
+            {
+              "text": "If Xcode stops building the app because it encounters an error, click the indicators in the activity area to read the error and warning messages in the Issue navigator. If you want Xcode to show all build errors, toggle off \u201cStop build on first error\u201d under Issues in General settings, then run the app again.",
+              "type": "text"
+            }
+          ],
+          "type": "paragraph"
+        },
+        {
+          "inlineContent": [
+            {
+              "text": "When you\u2019re done testing your app in Device Hub, click the Stop button in the Xcode toolbar.",
+              "type": "text"
+            }
+          ],
+          "type": "paragraph"
+        },
+        {
+          "anchor": "Set-up-code-signing-for-physical-devices",
+          "level": 2,
+          "text": "Set up code signing for physical devices",
+          "type": "heading"
+        },
+        {
+          "inlineContent": [
+            {
+              "text": "If you choose a physical device as the run destination, perform a few additional steps to create a development provisioning profile in Xcode.",
+              "type": "text"
+            },
+            {
+              "text": " ",
+              "type": "text"
+            },
+            {
+              "text": "First, sign in with your Apple Developer Program or personal Apple Account in Xcode > Settings > Apple Accounts.",
+              "type": "text"
+            }
+          ],
+          "type": "paragraph"
+        },
+        {
+          "inlineContent": [
+            {
+              "text": "Then, in the Signing & Capabilities pane of the project editor, click Set Up Signing under Signing if it appears. In the sheet, choose your team from the Team pop-up menu, enter a unique bundle ID (",
+              "type": "text"
+            },
+            {
+              "identifier": "doc://com.apple.documentation/documentation/BundleResources/Information-Property-List/CFBundleIdentifier",
+              "isActive": true,
+              "type": "reference"
+            },
+            {
+              "text": ") in the Bundle Identifier field, and click Set Up. If your bundle ID isn\u2019t unique, Xcode shows a warning at the bottom and inactivates the Set Up button.",
+              "type": "text"
+            }
+          ],
+          "type": "paragraph"
+        },
+        {
+          "inlineContent": [
+            {
+              "identifier": "set-up-signing",
+              "type": "image"
+            }
+          ],
+          "type": "paragraph"
+        },
+        {
+          "inlineContent": [
+            {
+              "text": "If the Set Up Signing button doesn\u2019t appear, toggle \u201cAutomatically manage signing\u201d on, assign your project to a team, and enter a bundle ID in the Signing & Capabilities pane instead.",
+              "type": "text"
+            }
+          ],
+          "type": "paragraph"
+        },
+        {
+          "inlineContent": [
+            {
+              "text": "In the toolbar of the project editor, choose the physical device as the run destination. When you enable the \u201cAutomatically manage signing\u201d option, Xcode registers the device and creates the development provisioning profile for you. If a Register button appears under Signing, click it to add it to the provisioning profile.",
+              "type": "text"
+            }
+          ],
+          "type": "paragraph"
+        },
+        {
+          "content": [
+            {
+              "inlineContent": [
+                {
+                  "text": "You don\u2019t need to set up signing to run your macOS app on your Mac unless you add capabilities that require provisioning.",
+                  "type": "text"
+                }
+              ],
+              "type": "paragraph"
+            }
+          ],
+          "name": "Note",
+          "style": "note",
+          "type": "aside"
+        },
+        {
+          "inlineContent": [
+            {
+              "text": "For more information on developer accounts, see ",
+              "type": "text"
+            },
+            {
+              "identifier": "https://developer.apple.com/support/compare-memberships/",
+              "isActive": true,
+              "type": "reference"
+            },
+            {
+              "text": ".",
+              "type": "text"
+            }
+          ],
+          "type": "paragraph"
+        }
+      ],
+      "kind": "content"
+    }
+  ],
+  "relevant_references": {
+    "device-hub-compact-view": {
+      "alt": "A screenshot of the Device Hub compact window for an Apple Vision Pro simulator running an app launched from Xcode.",
+      "identifier": "device-hub-compact-view",
+      "type": "image",
+      "variants": [
+        {
+          "traits": [
+            "2x",
+            "light"
+          ],
+          "url": "/images/com.apple.Xcode/device-hub-compact-view@2x.png"
+        },
+        {
+          "traits": [
+            "2x",
+            "dark"
+          ],
+          "url": "/images/com.apple.Xcode/device-hub-compact-view~dark@2x.png"
+        }
+      ]
+    },
+    "doc://com.apple.Xcode/documentation/Xcode/configuring-the-environment-of-a-simulated-device": {
+      "abstract": [
+        {
+          "text": "Modify the settings of a simulated device.",
+          "type": "text"
+        }
+      ],
+      "identifier": "doc://com.apple.Xcode/documentation/Xcode/configuring-the-environment-of-a-simulated-device",
+      "kind": "article",
+      "role": "article",
+      "title": "Configuring the environment of a simulated device",
+      "type": "topic",
+      "url": "/documentation/xcode/configuring-the-environment-of-a-simulated-device"
+    },
+    "doc://com.apple.Xcode/documentation/Xcode/device-hub": {
+      "abstract": [
+        {
+          "text": "Manage the simulated and physical devices that you use to test your app.",
+          "type": "text"
+        }
+      ],
+      "identifier": "doc://com.apple.Xcode/documentation/Xcode/device-hub",
+      "kind": "article",
+      "role": "collectionGroup",
+      "title": "Device Hub",
+      "type": "topic",
+      "url": "/documentation/xcode/device-hub"
+    },
+    "doc://com.apple.Xcode/documentation/Xcode/downloading-and-installing-additional-xcode-components": {
+      "abstract": [
+        {
+          "text": "Add more simulated devices, optional features, and support for additional platforms.",
+          "type": "text"
+        }
+      ],
+      "identifier": "doc://com.apple.Xcode/documentation/Xcode/downloading-and-installing-additional-xcode-components",
+      "kind": "article",
+      "role": "article",
+      "title": "Downloading and installing additional Xcode components",
+      "type": "topic",
+      "url": "/documentation/xcode/downloading-and-installing-additional-xcode-components"
+    },
+    "doc://com.apple.Xcode/documentation/Xcode/interacting-with-your-app-in-device-hub": {
+      "abstract": [
+        {
+          "text": "Use Device Hub to control interactions with your apps on simulated and physical devices.",
+          "type": "text"
+        }
+      ],
+      "identifier": "doc://com.apple.Xcode/documentation/Xcode/interacting-with-your-app-in-device-hub",
+      "kind": "article",
+      "role": "article",
+      "title": "Interacting with your app in Device Hub",
+      "type": "topic",
+      "url": "/documentation/xcode/interacting-with-your-app-in-device-hub"
+    },
+    "doc://com.apple.Xcode/documentation/Xcode/managing-your-simulated-and-physical-devices-in-device-hub": {
+      "abstract": [
+        {
+          "text": "Add custom simulators and pair physical devices with your Mac so you can choose them as run destinations in Xcode.",
+          "type": "text"
+        }
+      ],
+      "identifier": "doc://com.apple.Xcode/documentation/Xcode/managing-your-simulated-and-physical-devices-in-device-hub",
+      "kind": "article",
+      "role": "article",
+      "title": "Managing your simulated and physical devices in Device Hub",
+      "type": "topic",
+      "url": "/documentation/xcode/managing-your-simulated-and-physical-devices-in-device-hub"
+    },
+    "doc://com.apple.Xcode/documentation/Xcode/running-your-app-on-simulated-or-physical-devices#Set-up-code-signing-for-physical-devices": {
+      "abstract": [],
+      "identifier": "doc://com.apple.Xcode/documentation/Xcode/running-your-app-on-simulated-or-physical-devices#Set-up-code-signing-for-physical-devices",
+      "kind": "section",
+      "title": "Set up code signing for physical devices",
+      "type": "topic",
+      "url": "/documentation/xcode/running-your-app-on-simulated-or-physical-devices#Set-up-code-signing-for-physical-devices"
+    }
+  },
+  "request_url": "https://developer.apple.com/tutorials/data/documentation/xcode/running-your-app-on-simulated-or-physical-devices.json",
+  "response_sha256": "bba44d442e3aa168811e468592bd36dfa4ca7becd7a1efd713bda7bca57c172e",
+  "status": 200,
+  "title": "Running your app on simulated or physical devices"
+}

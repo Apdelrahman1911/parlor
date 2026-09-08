@@ -1,0 +1,37 @@
+test_ambiguous_new_name_never_selects_arbitrary_device (__main__.OwnedSimulatorSafetyTest) ... ok
+test_boot_failure_still_deletes_attested_device (__main__.OwnedSimulatorSafetyTest) ... ok
+test_bootstatus_cancellation_still_shuts_down_and_deletes (__main__.OwnedSimulatorSafetyTest) ... ok
+test_cancelled_shutdown_does_not_skip_later_finalizers (__main__.OwnedSimulatorSafetyTest) ... ok
+test_changed_attested_uuid_refuses_deleting_replacement (__main__.OwnedSimulatorSafetyTest) ... ok
+test_create_failure_without_allocation_does_not_delete_anything (__main__.OwnedSimulatorSafetyTest) ... ok
+test_create_timeout_after_allocation_is_recovered_and_deleted (__main__.OwnedSimulatorSafetyTest) ... ok
+test_device_appearing_only_at_final_inventory_is_failure_not_absence (__main__.OwnedSimulatorSafetyTest) ... ok
+test_external_loss_of_preexisting_device_is_not_claimed_preserved (__main__.OwnedSimulatorSafetyTest) ... ok
+test_failed_cleanup_attestation_does_not_guess_a_device (__main__.OwnedSimulatorSafetyTest) ... ok
+test_failed_delete_preserves_explicit_cleanup_failure (__main__.OwnedSimulatorSafetyTest) ... ok
+test_failed_final_inventory_is_unverified_not_success (__main__.OwnedSimulatorSafetyTest) ... ok
+test_failed_shutdown_does_not_skip_delete_or_hide_failure (__main__.OwnedSimulatorSafetyTest) ... ok
+test_initial_attestation_failure_is_recovered_during_cleanup (__main__.OwnedSimulatorSafetyTest) ... ok
+test_invalid_inventory_uuid_never_reaches_destructive_command (__main__.OwnedSimulatorSafetyTest) ... ok
+test_inventory_failure_before_log_creation_preserves_original_error (__main__.OwnedSimulatorSafetyTest) ... ok
+test_malformed_inventory_removes_partial_private_log (__main__.OwnedSimulatorSafetyTest) ... ok
+test_matching_name_in_other_runtime_does_not_attest_ownership (__main__.OwnedSimulatorSafetyTest) ... ok
+test_nonzero_inventory_command_removes_partial_private_log (__main__.OwnedSimulatorSafetyTest) ... ok
+test_preexisting_name_collision_refuses_creation (__main__.OwnedSimulatorSafetyTest) ... ok
+test_preexisting_uuid_cannot_be_reclaimed_by_new_name (__main__.OwnedSimulatorSafetyTest) ... ok
+test_process_scan_timeout_is_explicit_cleanup_failure (__main__.OwnedSimulatorSafetyTest) ... ok
+test_renamed_owned_device_is_not_silently_forgotten (__main__.OwnedSimulatorSafetyTest) ... ok
+test_stdout_cannot_select_a_preexisting_uuid (__main__.OwnedSimulatorSafetyTest) ... ok
+test_success_targets_only_new_uuid_and_preserves_user_state (__main__.OwnedSimulatorSafetyTest) ... ok
+test_timed_out_inventory_command_removes_partial_private_log (__main__.OwnedSimulatorSafetyTest) ... ok
+test_uuid_process_leftovers_are_failure_without_broad_killing (__main__.OwnedSimulatorSafetyTest) ... ok
+test_changed_init_changes_manifest_identity (__main__.RunnerIdentitySafetyTest) ... ok
+test_missing_native_control_fails_closed (__main__.RunnerIdentitySafetyTest) ... ok
+test_native_manifest_binds_exact_three_control_files (__main__.RunnerIdentitySafetyTest) ... ok
+test_non_native_manifest_does_not_require_native_controls (__main__.RunnerIdentitySafetyTest) ... ok
+test_symlinked_native_control_fails_closed (__main__.RunnerIdentitySafetyTest) ... ok
+
+----------------------------------------------------------------------
+Ran 32 tests in 0.089s
+
+OK

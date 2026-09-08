@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "reviewed_at": "2026-09-08T04:36:40.643969+00:00",
+  "classification": "EXACT SOURCE12 / 82-CONTROL NORMAL IOS-READINESS-13 EXECUTION TECHNICALLY APPROVED WITH EXPLICIT BOUNDS",
+  "execution_owner": "/root only, shared exclusive build lane; reviewers do not run native or process probes",
+  "binding": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-12.json",
+    "sha256": "bb155cd42fd6fd0ce29c2479a196b04e58aea641b2593c4a78a9543d0f31a199"
+  },
+  "control_manifest": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-source12-control-manifest-01.json",
+    "sha256": "e01df80126f2545a5e5a627c4bb5249844c67d4425a9bdaa31d4eaf9654804bf"
+  },
+  "combined_control_sha256": "d18ef9c99264353396dcd026ac2bd0c755d3ea3cbc93c6c6c260a4dd6f6c9a7d",
+  "exact_command": [
+    "/usr/bin/python3",
+    "-B",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+    "ios-readiness-13",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-12.json",
+    "d18ef9c99264353396dcd026ac2bd0c755d3ea3cbc93c6c6c260a4dd6f6c9a7d",
+    "--simulator-signing=adhoc"
+  ],
+  "working_directory": "/Users/abdelrahman/Projects/parlor",
+  "source_identity": {
+    "commit": "8b9e3b0cdfdab82e7cff3ad8135d0eae9a0b8ca3",
+    "tree": "c1e92b5e00ab64a293c4d7f9c9b5e2b85887be88",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "c4d3387a95ff1a4462071147afe92411f5a08ee8b10f78852a59494c8d3e4420"
+  },
+  "source_verification": {
+    "fresh_read_only_git_tracked_untracked_inventory": true,
+    "all800current_source_hashes_match": true,
+    "source800_identical_to_source10": true,
+    "copy740_exact_allowed_current_source": true,
+    "copy740_hash": "10ff0d5bce923414ff33c1243333fa3138dd5c1aa146e798ea8703f99685767e",
+    "copy740_canonical_nonsymlink_and_identical_to_source10": true,
+    "all82_current_controls_match": true,
+    "only_extra_control_vs_executed_canonical81": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-12.json",
+    "canonical163_before_after_controls_byte_equal": true,
+    "protected_contents_unread": true,
+    "protected_exclusions": 0,
+    "nonbuild_symlink_exclusions": 0,
+    "read_only_current_git_commit_tree_branch_clean_diff_matched": true,
+    "remote_not_queried_by_reviewer": "Root reports exact remote; this review grants no Git authority."
+  },
+  "reopened_current_reads": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/bind_source.py",
+      "sha256": "0954f5c24eb61c4f09c365efe6b3ab1fdb9f8342f86bad3e7654795464b53347",
+      "lines": [
+        [
+          1,
+          59
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/copied_sources.py",
+      "sha256": "d52f4f7904d1481fee00796a1c0775ee3512934639dac45fee44704fa9b74e62",
+      "lines": [
+        [
+          1,
+          231
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_source_copy.py",
+      "sha256": "5920d07a43c64eb7193a1c1d03aea93948bfa21597591ee13d79073666ed54d2",
+      "lines": [
+        [
+          1,
+          51
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/owned_lane.py",
+      "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+      "lines": [
+        [
+          196,
+          228
+        ]
+      ]
+    }
+  ],
+  "prior_source_review": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-image-diagnostics-independent-source-01.json",
+    "sha256": "350b375fbfa057d1894455c597878041d69d8ac670727a530d4bbc9d0a597c4f"
+  },
+  "canonical_adoption_execution_review": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-image-diagnostics-canonical-independent-01.json",
+    "sha256": "8822e2fa7e283eb55f837602b97d841520dbb837d6a57c32381da6a840444acd"
+  },
+  "previous_normal_lane_boundary_review": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-source10-native11-independent-approval-01.json",
+    "sha256": "b6e941eede7789b5c0510e7d63a1948166f5f9d87a4341bf50b18eba0a3cfee4"
+  },
+  "preexecution_known_paths_absent": [
+    "/Users/abdelrahman/Projects/parlor/build",
+    "/Users/abdelrahman/Projects/parlor/build-logic/build",
+    "/Users/abdelrahman/Projects/parlor/build-logic/convention/build",
+    "/Users/abdelrahman/Projects/parlor/composeApp/build",
+    "/Users/abdelrahman/Projects/parlor/game-modes/mafia/build",
+    "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build",
+    "/Users/abdelrahman/Projects/parlor/iosApp/build",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-13",
+    "/Users/abdelrahman/Projects/parlor/shared/content/build",
+    "/Users/abdelrahman/Projects/parlor/shared/core/build",
+    "/Users/abdelrahman/Projects/parlor/shared/design-system/build",
+    "/Users/abdelrahman/Projects/parlor/shared/engine/build",
+    "/Users/abdelrahman/Projects/parlor/shared/engine-testing/build",
+    "/Users/abdelrahman/Projects/parlor/shared/networking/build",
+    "/Users/abdelrahman/Projects/parlor/shared/networking-testing/build",
+    "/Users/abdelrahman/Projects/parlor/shared/session/build",
+    "/Users/abdelrahman/Projects/parlor/shared/storage/build",
+    "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/build"
+  ],
+  "allowed_scope": [
+    "One fresh owned iPhone17Pro/iOS26.5 Debug/ad-hoc run on Xcode26.5/17F42 with JDK21 and strict dependency verification. No Store identity/signing/profile or production source modification.",
+    "All740 copy inputs preserved except exact reviewed UI-test replacement and isolated Gradle-stop/embedding shell phase. No Kotlin/production Swift instrumentation; imported instrumented support helpers are not invoked by the normal path.",
+    "Exactly8 selected XCTest repetitions with48 bounded post-Home observations and no retry-on-failure; one separate ninth public simctl launch for provenance, not a ninth UI test.",
+    "The independently reviewed new diagnostics may preserve bounded sanitized failure metadata, never create aliases or satisfy provenance. After successful sample and attested unchanged lifetime, one guarded failure-only vmmap attempt is allowed on parser RuntimeError; interruption skips optional work, pre/post lifetime and45s/16MiB bounds remain, no sample-selected authority inferred on failure.",
+    "Unchanged canonical acceptance parser, USER-only lossy presentation policy, UUID/path/address/hash/inventory checks, root-owned resource limits and cleanup finalizers remain in force."
+  ],
+  "conditions": [
+    "Root must perform live disk/RAM and competing-process preflight; reviewer has not measured host capacity or queried processes. Preserve unrelated resources and do not execute if the shared lane is occupied.",
+    "Use exact command once with unchanged source12/82control binding. No automatic rerun, new aliases, parser relaxation, fallback debugger, extra source transforms or changed flags.",
+    "Immediately stop owned Gradle after Xcode/build; collect compact required evidence, execute full identity-attested secondary cleanup, stop owned app/device/workers, verify source/control/copy identity and remove only the task allocation/build/DerivedData/temp after evidence capture. Retain failed cleanup explicitly rather than claiming completion.",
+    "Keep every original failed receipt immutable. Diagnose actual new failure rows only from retained structured evidence; never retrospectively call native11 PASS or assume why it failed.",
+    "Independent postrun review must reconcile repeated-test IDs, markers, notices/native inventories, external lifetime/mapping/parser diagnostics and final cleanup. This preflight approval does not preapprove a PASS result."
+  ],
+  "limitations": [
+    "Normal English application-source Simulator observation is not physical-device, Store-qualified Xcode26.3, iOS16, full games, LAN, Follow System/L08, IOS-R1 or historical crash-cause proof.",
+    "USER presentation aliases are lossy full-path display mappings, not independent kernel proof of each non-launcher image; numericPID bracketing is not an atomic generation reservation; no mapped-page hash claimed.",
+    "Pure163control execution is fully reconciled but cannot establish actual native13 runtime or parser format success before execution."
+  ],
+  "original_failed_receipts_unchanged": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-09/receipt.json",
+      "sha256": "7035d9505efe8cf1d5d9012024c6c5883c0e9371b97a5a5c5a0cfa15ccf36567"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-10/receipt.json",
+      "sha256": "0daf830ce66ad7c11c271431dcd53996ea530e55dd1b5b4c2ff89d15abf14589"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-11/receipt.json",
+      "sha256": "d06746d020ca6601e8c5398076c64a4684bd5081687eb519e0de986914df91f5"
+    }
+  ],
+  "hygiene": {
+    "reviewer_builds_tests_native_process_account_probes": 0,
+    "source_canonical_Git_mutations": 0,
+    "deletions_or_signals": 0,
+    "new_additive_review_json_only": true,
+    "read_only_stdlib_binding_reconciliation_exit_code": 0
+  }
+}

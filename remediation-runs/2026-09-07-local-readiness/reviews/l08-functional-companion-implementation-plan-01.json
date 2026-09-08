@@ -1,0 +1,631 @@
+{
+  "schema_version": 1,
+  "at": "2026-09-08T02:08:04.319913+00:00",
+  "author": "/root/native_fix_review",
+  "disposition": "PREPARATION_ONLY_AWAIT_WIRE_VALID_FOUNDATION_COMPARISON_AND_PARENT_AUTHORIZATION",
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "aecaa1bb07f560d7550951ec90c9bce038b77d23",
+    "tree": "adf87af6858a0b53adcbc406da9974c57f2e4408",
+    "tracked_status": ""
+  },
+  "prior_design": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-functional-observation-design-01.json",
+    "sha256": "e3bc68c515775b45793a576f0be6738378a3b2f1459d9a0fc751b1907a28d1a1"
+  },
+  "fresh_source_reading": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08StorageProbe.kt.in",
+      "sha256": "a1202e47e1b41feb7e5c558e4df9515704e27762e437778b6ae79c777bfce651",
+      "reviewed_lines_this_continuation": [
+        [
+          1,
+          630
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08StorageLaunch.swift.in",
+      "sha256": "679532441cf6c8fcf6ada88d6e94d0452d1ea3e3979fe0f981aa1935ba83947f",
+      "reviewed_lines_this_continuation": [
+        [
+          1,
+          71
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08StorageUITests.swift.in",
+      "sha256": "2f0ce45e329efa15a8e28f681af0b201c4d503e59348a1ad507e2a2a8883e864",
+      "reviewed_lines_this_continuation": [
+        [
+          1,
+          111
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08UiSeam.kt.in",
+      "sha256": "22d9e352ba6c4b8e161b2e69f1aae208a0c9a654ed85284ef4a34c2ea63399e4",
+      "reviewed_lines_this_continuation": [
+        [
+          1,
+          71
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/l08_copy.py",
+      "sha256": "c2bf28bf0efd9449d646c451d7b8e665000e8d11a3a6eea76de95e1fb4a55a5f",
+      "reviewed_lines_this_continuation": [
+        [
+          1,
+          166
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/copied_sources.py",
+      "sha256": "d52f4f7904d1481fee00796a1c0775ee3512934639dac45fee44704fa9b74e62",
+      "reviewed_lines_this_continuation": [
+        [
+          1,
+          231
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/run_ios_readiness.py",
+      "sha256": "85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8",
+      "reviewed_lines_this_continuation": [
+        [
+          1,
+          1004
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/owned_lane.py",
+      "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+      "reviewed_lines_this_continuation": [
+        [
+          1,
+          228
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/probe_validation.py",
+      "sha256": "134bb3affe45711ec3f74d7091ec59b7f859ca4f5fa04df1d895ce3250fd3aa2",
+      "reviewed_lines_this_continuation": [
+        [
+          1,
+          348
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/bind_source.py",
+      "sha256": "0954f5c24eb61c4f09c365efe6b3ab1fdb9f8342f86bad3e7654795464b53347",
+      "reviewed_lines_this_continuation": [
+        [
+          1,
+          59
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/NativeReadinessUITests.swift.in",
+      "sha256": "fa2dc7dbc97c576262ad14cd85b22f65aa908b1629ab1a205b22aa4873f5c0dc",
+      "reviewed_lines_this_continuation": [
+        [
+          1,
+          72
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08HostUITests.swift.in",
+      "sha256": "0156fdbb6210f1257c49eba9eee7fc7ac42fce2ad85870525131a7adf9ea99a9",
+      "reviewed_lines_this_continuation": [
+        [
+          1,
+          146
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_controls.py",
+      "sha256": "9c1948c6f5ce8ace176df6a9324d851004162e5296d1157a3648d50344e3ea8f",
+      "reviewed_lines_this_continuation": [
+        [
+          1,
+          262
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_l08_copy.py",
+      "sha256": "22092b2b03dd004c12d77c9c092b5e322a75e73d1a2a2da47da717de1f5a78ea",
+      "reviewed_lines_this_continuation": [
+        [
+          1,
+          150
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/l08_receipts.py",
+      "sha256": "43200492a5fae3cb31f89ecafe9985eee84b9c30b4549cd2933788dac056bfbd",
+      "reviewed_lines_this_continuation": [
+        [
+          1,
+          200
+        ],
+        [
+          318,
+          486
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/DSC01Probe.swift.in",
+      "sha256": "1c4b113ec8695d8da2115e4f386fdaf8820411879af6ff9492109b62c7770746",
+      "reviewed_lines_this_continuation": [
+        [
+          1,
+          115
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/IOSAppLaunchUITests.swift.in",
+      "sha256": "9bdfa70f43074569a8699dda01864496188562b117289c994ea4f4e8c844bf60",
+      "reviewed_lines_this_continuation": [
+        [
+          1,
+          125
+        ]
+      ],
+      "reviewer": "/root/native_fix_review"
+    }
+  ],
+  "prior_direct_review_rebound_without_claiming_new_reading": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08StorageProbe.kt.in",
+      "prior_reviewed_lines": [
+        1,
+        630
+      ],
+      "prior_sha256": "a1202e47e1b41feb7e5c558e4df9515704e27762e437778b6ae79c777bfce651",
+      "current_sha256": "a1202e47e1b41feb7e5c558e4df9515704e27762e437778b6ae79c777bfce651",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08StorageUITests.swift.in",
+      "prior_reviewed_lines": [
+        1,
+        111
+      ],
+      "prior_sha256": "2f0ce45e329efa15a8e28f681af0b201c4d503e59348a1ad507e2a2a8883e864",
+      "current_sha256": "2f0ce45e329efa15a8e28f681af0b201c4d503e59348a1ad507e2a2a8883e864",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08StorageLaunch.swift.in",
+      "prior_reviewed_lines": [
+        1,
+        71
+      ],
+      "prior_sha256": "679532441cf6c8fcf6ada88d6e94d0452d1ea3e3979fe0f981aa1935ba83947f",
+      "current_sha256": "679532441cf6c8fcf6ada88d6e94d0452d1ea3e3979fe0f981aa1935ba83947f",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08MafiaSnapshots.kt.in",
+      "prior_reviewed_lines": [
+        1,
+        190
+      ],
+      "prior_sha256": "7674ec0e0d5e5481e18e8e9c97c0f7299e73550f3c91c0ada60cdd743da8a5e3",
+      "current_sha256": "7674ec0e0d5e5481e18e8e9c97c0f7299e73550f3c91c0ada60cdd743da8a5e3",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08WhodunitSnapshots.kt.in",
+      "prior_reviewed_lines": [
+        1,
+        190
+      ],
+      "prior_sha256": "2440e1d032e35171127b68ee69c42a35ef933bcdc8cea30cc991cb7a02ade0fb",
+      "current_sha256": "2440e1d032e35171127b68ee69c42a35ef933bcdc8cea30cc991cb7a02ade0fb",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08UiSeam.kt.in",
+      "prior_reviewed_lines": [
+        1,
+        71
+      ],
+      "prior_sha256": "22d9e352ba6c4b8e161b2e69f1aae208a0c9a654ed85284ef4a34c2ea63399e4",
+      "current_sha256": "22d9e352ba6c4b8e161b2e69f1aae208a0c9a654ed85284ef4a34c2ea63399e4",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/l08_copy.py",
+      "prior_reviewed_lines": [
+        1,
+        166
+      ],
+      "prior_sha256": "c2bf28bf0efd9449d646c451d7b8e665000e8d11a3a6eea76de95e1fb4a55a5f",
+      "current_sha256": "c2bf28bf0efd9449d646c451d7b8e665000e8d11a3a6eea76de95e1fb4a55a5f",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/l08_receipts.py",
+      "prior_reviewed_lines": [
+        1,
+        486
+      ],
+      "prior_sha256": "43200492a5fae3cb31f89ecafe9985eee84b9c30b4549cd2933788dac056bfbd",
+      "current_sha256": "43200492a5fae3cb31f89ecafe9985eee84b9c30b4549cd2933788dac056bfbd",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/run_ios_readiness.py",
+      "prior_reviewed_lines": [
+        1,
+        1004
+      ],
+      "prior_sha256": "85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8",
+      "current_sha256": "85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/IOSAppLaunchUITests.swift.in",
+      "prior_reviewed_lines": [
+        1,
+        665
+      ],
+      "prior_sha256": "9bdfa70f43074569a8699dda01864496188562b117289c994ea4f4e8c844bf60",
+      "current_sha256": "9bdfa70f43074569a8699dda01864496188562b117289c994ea4f4e8c844bf60",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/DSC01Probe.swift.in",
+      "prior_reviewed_lines": [
+        1,
+        451
+      ],
+      "prior_sha256": "1c4b113ec8695d8da2115e4f386fdaf8820411879af6ff9492109b62c7770746",
+      "current_sha256": "1c4b113ec8695d8da2115e4f386fdaf8820411879af6ff9492109b62c7770746",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_l08_receipts.py",
+      "prior_reviewed_lines": [
+        1,
+        167
+      ],
+      "prior_sha256": "eb0fa17a95550b4b266afe9cae34e318004c7fa1ce32b097fc66a4107456dedc",
+      "current_sha256": "eb0fa17a95550b4b266afe9cae34e318004c7fa1ce32b097fc66a4107456dedc",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_l08_diagnostics.py",
+      "prior_reviewed_lines": [
+        1,
+        348
+      ],
+      "prior_sha256": "925be779c7b03f148995061f1e769290ec4fa014c2e7f4dbab202fd1b84d8d9c",
+      "current_sha256": "925be779c7b03f148995061f1e769290ec4fa014c2e7f4dbab202fd1b84d8d9c",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_l08_copy.py",
+      "prior_reviewed_lines": [
+        1,
+        150
+      ],
+      "prior_sha256": "22092b2b03dd004c12d77c9c092b5e322a75e73d1a2a2da47da717de1f5a78ea",
+      "current_sha256": "22092b2b03dd004c12d77c9c092b5e322a75e73d1a2a2da47da717de1f5a78ea",
+      "unchanged": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08_README.md",
+      "prior_reviewed_lines": [
+        1,
+        109
+      ],
+      "prior_sha256": "347df0634a63adb8757db03690b4456b774a7144d15c4daf37945de5ac0a749a",
+      "current_sha256": "347df0634a63adb8757db03690b4456b774a7144d15c4daf37945de5ac0a749a",
+      "unchanged": true
+    }
+  ],
+  "purpose": "Execute the previously unreachable real storage/recovery/game-controller matrix while retaining each unsuccessful NSFileProtectionComplete comparison as unsuccessful. No replacement, waiver, repair, or PASS for original strict L08.",
+  "not_authorized_by_this_document": [
+    "No production edits",
+    "No native/build execution",
+    "No simulator/device selection",
+    "No commit, push, merge or Store operation"
+  ],
+  "isolation": {
+    "new_control_directory": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-01",
+    "clone_rule": "Exclusively create the new directory and copy the current flat .py/.in/.md controls plus inherited-controls.json after hash verification. Do not overwrite any pre-existing path. Manifest every cloned byte. No symlinks, mutable live imports from original controls, archived fixture imports, or copied caches/build outputs.",
+    "root_depth_reason": "This direct campaign child has the same relative depth as scripts/verification/ios-readiness; owned_lane.py ROOT=Path(__file__).resolve().parents[3] and test_l08_copy.py HERE.parents[2] continue to resolve exactly to the repository. Keep ownership code unchanged; test the resolved root before any execution.",
+    "unchanged_originals": "Every scripts/verification/ios-readiness original, its strict Complete checks and original parser/tests remain byte-for-byte. Preserve native09/source09 failures, frozen02/native01 schema failure and frozen03 evidence. New companion cannot satisfy original verify_storage.",
+    "runtime_name": "Retain root-assigned fresh ios-readiness-NN allocation/evidence basename so existing exact owned-path and signing guards remain intact; receipt execution_kind must explicitly name the functional companion, with distinct control hash, source binding, scenario, operation schema and XCTest method.",
+    "new_scenario": "l08-storage-functional",
+    "new_boot_variable": "PARLOR_L08_STORAGE_FUNCTIONAL_BOOT",
+    "new_operation_file": "parlor-l08-storage-functional-{boot}-{action}.json",
+    "new_scenario_file": "parlor-dsc01-l08-storage-functional-result.json",
+    "new_xctest_prefix": "PARLOR_L08_STORAGE_FUNCTIONAL_BOOT ",
+    "new_xctest_method": "IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSWithL08FunctionalObservation()",
+    "session_ids": "Keep the existing l08-{fresh-run-token}-{alias} synthetic session shape. Fresh token/owned simulator prevent overlap; no snapshot migration or production ID change."
+  },
+  "exact_file_plan": [
+    {
+      "path": "L08StorageFunctionalProbe.kt.in",
+      "operation": "NEW copy of original L08StorageProbe.kt.in with minimal namespaced observation-only delta",
+      "changes": [
+        "Rename object to L08StorageFunctionalProbe; new scenario/boot variable. Keep shared requireContext helper unchanged so host probe still compiles. Replace generated storage probe path rather than compiling both definitions.",
+        "Preserve all actual bindings, reducers/game drivers, envelope comparisons, recovery, original Home/controller, Retry/Discard, legacy seed/tag-only corruption, terminal writer deletion, byte bounds/zeroization and cancellation.",
+        "Use a command-scoped bounded list of at most four Complete comparison rows. Append directory result immediately, then file result immediately, so a later failure cannot erase the earlier unsuccessful comparison. Clear list between commands and when scope finishes.",
+        "At all six metadata sites, retain existing path/type/existence, backup exclusions, required Foundation constants, bounded encrypted read/header checks as fatal. Replace only the two throw-on-false Complete equality checks with explicit comparison rows; still compare actual value to the original NSFileProtectionComplete constant. No setter, retry, repair or substituted read.",
+        "Add closed literal site identifier to each of the six callers. A returned missing/null/wrong value records comparison FAIL. Unexpected observer exception/cancellation remains fatal and retains the completed comparison prefix; do not catch the entire original command.",
+        "Success result has kind=l08-storage-functional, functional_status=PASS, functional_checks and complete_comparisons, not original status=PASS. Failure uses functional_status=FAIL plus closed stage/reason and any already-observed comparison prefix. No payload/name/seed/role/canonical-state hash or raw NSError text."
+      ]
+    },
+    {
+      "path": "L08StorageFunctionalLaunch.swift.in",
+      "operation": "NEW copy of L08StorageLaunch.swift.in",
+      "changes": [
+        "New scenario predicate/bridge/boot variable/file namespace and functional control/result identifiers; shared sampleL08Ui behavior remains identical.",
+        "Only strict bounded JSON receipts with loaded app/framework, loader environment, signing mode, exact run token and boot binding; exclusive write refuses stale output.",
+        "Allow a conservative bounded maximum of8192 bytes inner observation and24576 bytes outer envelope only if worst-case synthetic fixtures prove sufficient; do not raise original lane ceilings."
+      ]
+    },
+    {
+      "path": "L08StorageFunctionalUITests.swift.in",
+      "operation": "NEW copy of L08StorageUITests.swift.in",
+      "changes": [
+        "Same13 boots/20 commands and distinct process UUID proof. Same real Home, retry/recovery-show count2, Discard, foreground/no-alert and single activation semantics.",
+        "New functional action/result identities and result kind/functional_status assertions. Metadata comparisons must be present/closed/bound even when FAIL; no XCTAssert skip/xfail or continueAfterFailure change.",
+        "Emit distinct functional boot-log prefix. Keep l08TapExactPublicControl and l08WaitRecovery shared helper names/signatures for unchanged host tests."
+      ]
+    },
+    {
+      "path": "l08_functional_copy.py",
+      "operation": "NEW narrow copy adapter importing immutable cloned l08_copy",
+      "changes": [
+        "Copy L08_ADDITIONS map, remove only old generated L08StorageProbe.kt entry, add new generated L08StorageFunctionalProbe.kt entry; retain other eight additions and every production path permission.",
+        "Apply original instrument_l08_kotlin then exactly replace only newly inserted storage bridge with L08StorageFunctionalCommand calling the new object; missing/duplicate anchors remain fatal. Do not patch original production files.",
+        "Apply original instrument_probe_swift then exactly replace storage scenario/control names with functional ones; other observers unchanged.",
+        "Apply original instrument_ui_test then exactly replace storage invocation and original combined test method with distinct functional names. Keep every other test invocation, order, and continueAfterFailure=false."
+      ]
+    },
+    {
+      "path": "copied_sources.py",
+      "operation": "CLONE-ONLY one import redirection",
+      "changes": [
+        "Import L08_ADDITIONS/L08_ADDITIONAL_MODIFIED/instrument_l08_kotlin from l08_functional_copy. Keep source inventory, hash verification, exact changed-set enforcement, copy guards, and after-build inspection unchanged."
+      ]
+    },
+    {
+      "path": "l08_functional_receipts.py",
+      "operation": "NEW strict companion parser",
+      "changes": [
+        "Reuse unchanged original storage plan, generic exact context/image/schema helpers where semantically identical; do not change or add a permissive switch to original verify_storage.",
+        "Define closed new envelope/operation schemas. Duplicate keys, unexpected fields, integer Boolean impostors, missing or reordered observations, fake Complete comparisons, cross-scenario/token/boot/signing/image/source data fail.",
+        "Verify all20 actions and13 unique process boots, exact per-operation functional check set/all true, exact planned26 comparison rows, actual XCTest launch receipts and one-per-boot real loaded-image binding.",
+        "Add validate_preservable_functional_operation for bounded complete/failed observations before copying; retain only exact filenames in owned sandbox and exclusive new evidence destinations.",
+        "Add verify_storage_functional returning separate collection, functional, Complete-comparison, XCTest and provenance outcomes. Missing Complete key=FAIL, not unsupported/unavailable-policy waiver. Volume support cannot substitute for Complete. No original L08 PASS field.",
+        "Failure prefix validation must permit only a valid ordered prefix of planned rows, never a complete-matrix success; completed observations require every planned row and no extras."
+      ]
+    },
+    {
+      "path": "run_ios_readiness.py",
+      "operation": "CLONE-ONLY exact wiring and result-classification changes",
+      "changes": [
+        "New execution_kind and exact EXPECTED_TEST identifier; retain exactly four original production-container tests plus one distinctly named companion matrix. Do not mutate original strict verify_xctest.",
+        "Select new functional copy adapter and three new templates; collect distinct functional scenario/operation files. Continue collecting unchanged host/readiness/Settings/local/OS evidence.",
+        "Preserve original l08_receipts.py and preserve_l08_evidence for unchanged host evidence. Add new companion preservation call for functional files; no original strict result can be substituted.",
+        "Collect sanitized available observations and bind their real built/installed/loaded framework inventory before interpreting known Complete failures. Use a bounded partial-evidence provenance helper for available rows after a true XCTest/functional failure, without satisfying full-matrix gates.",
+        "Set functional, metadata, collection, XCTest and provenance outcomes separately; metadata FAIL must not throw before evaluating unrelated host/local/OS evidence, but must prevent global PASS. Use overall PARTIALLY_VERIFIED/nonzero2 when the functional companion genuinely executes but required Complete comparisons are unsuccessful; genuine malformed evidence, bad functional assertions, provenance/cleanup errors remain FAIL/nonzero1.",
+        "Always record strict_l08_gate=NOT_SATISFIED_BY_COMPANION; do not edit old native09 failure. No claim of encryption/lock/iCloud/physical LAN/Store proof.",
+        "Keep build commands, strict dependencies, exact owned temp/device paths, sign-mode guards, SecondaryFifoLedger custody, isolated Gradle stop calls, PID+start ownership and final removal logic byte-identical except status finalization required to preserve honest partial outcomes."
+      ]
+    },
+    {
+      "path": "test_l08_functional_receipts.py",
+      "operation": "NEW closed-schema/count/provenance negative controls",
+      "changes": [
+        "Synthetic complete13-boot/20-action/26-comparison matrix; all expected missing-key cases retain metadata FAIL while functional checks remain separately evaluated. Original strict verifier rejects every companion record.",
+        "Per-field wrong type/value, extra secret field, duplicate key, omission/reorder/duplicate/over-limit, same-boot restart, wrong token/scenario/image/version/signing/source, stale output, false functional checks and cancellation fail.",
+        "Missing/None/non-string/wrong protection enum, actual Boolean versus0/1, native error domain/code and impossible value/key combinations; never allow supported-volume metadata to stand in for Complete.",
+        "Native09 is an immutable original-lane failure witness only, not a converted companion success."
+      ]
+    },
+    {
+      "path": "test_l08_functional_copy.py",
+      "operation": "NEW copy/producer/source guard controls",
+      "changes": [
+        "All original control hashes preserved; exactly two cloned legacy files changed plus explicitly new files. New bridge/template/scenario/path registration and distinct XCTest discovery enforced.",
+        "Original six call sites all routed through namespaced observer; expected site plan and metadata count13/26 include nested dual seed before/after mutation and both legacy-load paths.",
+        "Prove unchanged original check bodies for path/type/backup/header/envelope/recovery/bounds/cancellation and absence/zeroization. Single-site mutations demonstrate guards reject removed assertions, fallback NotFound, direct terminal deletion or missing comparison site.",
+        "Exercise generated copied-source transformation with actual source bytes and no shipping fixture additions, no duplicate helper definitions, no unregistered mutations and stale/ambiguous anchors refused.",
+        "Shared snapshot game drivers, Host/UI seams, ownership/signing/cleanup files and original strict parser/tests remain exact hashes. Syntax/source controls are not Kotlin/Swift/runtime proof."
+      ]
+    },
+    {
+      "path": "test_l08_functional_runner.py",
+      "operation": "NEW runner classification/discovery/failure-preservation controls",
+      "changes": [
+        "Fake5-case XCTest tree accepts only new exact name plus four original cases, no skips/failures/extra tests/wrong device. Original runner rejects companion test ID.",
+        "Known metadata FAIL does not prevent bounded available provenance or independent subgates; incomplete collection/failed functional/XCTest/provenance cannot become PASS.",
+        "Simulate missing receipt, failed build, stale app/framework outputs, interrupted command/finalization and cleanup failures; preserve existing build-stop-normalize order and file-ownership controls.",
+        "Confirm imports have no side effects, cloned ROOT is exact repository, original controls remain unmodified, and no primary/secondary path ownership allowlist broadening."
+      ]
+    },
+    {
+      "path": "L08_FUNCTIONAL_README.md",
+      "operation": "NEW explicit scope/command/evidence guide",
+      "changes": [
+        "Describe exact copied-source provenance, functional versus Complete gates, original strict failure, one coordinated native lane, Simulator limitations and mandatory cleanup.",
+        "Document old strict controls included unchanged for preservation/regression and not as evidence that strict native L08 executed/passed."
+      ]
+    }
+  ],
+  "checkpoint_plan": [
+    {
+      "boots": [
+        1,
+        3,
+        5,
+        7
+      ],
+      "action": "save",
+      "sites": [
+        [
+          "save",
+          "boot alias"
+        ]
+      ],
+      "comparisons_per_action": 2
+    },
+    {
+      "boots": [
+        2,
+        4,
+        6,
+        8
+      ],
+      "action": "load",
+      "sites": [
+        [
+          "load",
+          "boot alias"
+        ]
+      ],
+      "comparisons_per_action": 2
+    },
+    {
+      "boots": [
+        9
+      ],
+      "action": "legacy-seed",
+      "sites": [
+        [
+          "dual-before-legacy-seed",
+          "dual"
+        ],
+        [
+          "dual-after-tag-damage",
+          "dual"
+        ]
+      ],
+      "comparisons_per_action": 4
+    },
+    {
+      "boots": [
+        10
+      ],
+      "action": "legacy-load",
+      "sites": [
+        [
+          "load",
+          "legacy"
+        ],
+        [
+          "legacy-load-dual",
+          "dual"
+        ]
+      ],
+      "comparisons_per_action": 4
+    },
+    {
+      "boots": [
+        12
+      ],
+      "action": "dual-preserved",
+      "sites": [
+        [
+          "retained-dual",
+          "dual"
+        ]
+      ],
+      "comparisons_per_action": 2
+    },
+    {
+      "boots": [
+        2,
+        4,
+        6,
+        8,
+        10,
+        11,
+        12,
+        13
+      ],
+      "action": "all other planned actions",
+      "sites": [],
+      "comparisons_per_action": 0
+    }
+  ],
+  "comparison_row_contract": {
+    "max_rows_per_command": 4,
+    "total_completed_rows": 26,
+    "ordered_targets": [
+      "directory",
+      "file"
+    ],
+    "allowed_fields": [
+      "ordinal",
+      "site",
+      "alias",
+      "target",
+      "attributes",
+      "comparison"
+    ],
+    "attributes": "Unchanged closed metadataRead shape with native-error domain enum and signed64 code; no raw paths or NSError descriptions. Diagnostic-only volume can be omitted from companion because it is not a Complete substitute.",
+    "comparison": "PASS iff original returned value == original NSFileProtectionComplete; otherwise FAIL. Host parser recomputes consistency from closed observed enum/shape. Required constants/path/backup/header remain fatal. Unexpected thrown getter leaves a retained valid prefix and functional FAIL, never guessed completed data."
+  },
+  "unchanged_functional_obligations": [
+    "Whodunit Classic/Elimination reducer-built Round1 checkpoint, bundled content identity/validation, original Home resume, attached authoritative controller through PostGame.",
+    "Mafia ON four effective same-target nights, OFF alternate/skip/pre-skip target with illegal adjacent repetition rejected; same serialized setting, Night5 save/recovery, actual attached controller to Town winner and terminal previous-protection clearing.",
+    "Healthy/malformed/dual-current+legacy isolation, fail-closed current precedence, legacy backup exclusion, actual Retry/Discard; no direct substitute for SerializedSnapshotWriter deletion.",
+    "Real Koin FileBackedSnapshotStore/IosSnapshotFileSystem/P2pKit type checks, actual protected files/authenticated format, DataError.NotFound exact rather than Unavailable.",
+    "All original host/Settings/local/OS fixtures remain scoped exactly as before; controlled adapter is not actual P2pKit LAN proof."
+  ],
+  "verification_sequence": [
+    "Await root-owned wire-valid Foundation native03 result and independent classification; no inference from invalid native01 integers.",
+    "Parent authorizes bounded companion implementation; create new exclusive clone and implement only stated controls.",
+    "Provide full delta/unchanged-manifest and authored negative controls to factory_review for independent source/safety validation.",
+    "Root runs original strict controls and companion controls serially using /usr/bin/python3 -B, compact result ledger, no fake runtime claim.",
+    "Fix review findings in new frozen revision if necessary. Independently bind exact current source/control manifest before any native command.",
+    "Root alone executes one fresh owned simulator app-host cycle; preserve every action/comparison, real XCTest discovery, Mach-O/source identity and compact failure logs.",
+    "Root stops isolated Gradle immediately after Xcode/Gradle, verifies/removes exact owned primary/secondary paths/DerivedData and publishes cleanup. Independent reviewer reconciles actual runtime outputs before local-functional PASS or partial verdict."
+  ],
+  "current_blockers": [
+    "No wire-valid fresh direct Foundation native03 output personally reopened yet. It may support a Simulator limitation classification, but is not app-sandbox/physical-storage evidence or a gate waiver.",
+    "Actual Kotlin/Swift compilation,13 restart/20 action execution and all26 comparisons remain NOT_RUN for this proposed lane.",
+    "Physical lock/backup/LAN/Store evidence unavailable to this plan; no entitlement or production storage policy change authorized."
+  ],
+  "cleanup": "Only this required additive plan created; no build/test/native workers, Simulator operations, process signals, generated outputs or deletions were started by this agent."
+}

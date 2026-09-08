@@ -1,0 +1,632 @@
+{
+  "schema": 1,
+  "created_at": "2026-09-07T03:27:20.162122+00:00",
+  "references": [
+    {
+      "id": "lima-vz-versioned",
+      "url": "https://raw.githubusercontent.com/lima-vm/lima/v2.1.4/website/content/en/docs/config/vmtype/vz.md",
+      "accessed_at": "2026-09-07T03:27:10.808278+00:00",
+      "applicability": "Lima v2.1.4 tag matches installed CLI.",
+      "http_status": 200,
+      "body_sha256": "8b9692965d47c3bf6caaace5628ef7ab8e9cb0a22211f756d198e7c35b4fda3e",
+      "excerpts": [
+        {
+          "line": 3,
+          "text": "weight: 2"
+        },
+        {
+          "line": 4,
+          "text": "---"
+        },
+        {
+          "line": 5,
+          "text": ""
+        },
+        {
+          "line": 6,
+          "text": "| \u26a1 Requirement | Lima >= 0.14, macOS >= 13.0 |"
+        },
+        {
+          "line": 7,
+          "text": "|-------------------|-----------------------------|"
+        },
+        {
+          "line": 8,
+          "text": ""
+        },
+        {
+          "line": 9,
+          "text": "\"vz\" option makes use of native virtualization support provided by macOS Virtualization.Framework."
+        },
+        {
+          "line": 10,
+          "text": ""
+        },
+        {
+          "line": 11,
+          "text": "\"vz\" has been the default driver for macOS hosts since Lima v1.0."
+        },
+        {
+          "line": 12,
+          "text": ""
+        },
+        {
+          "line": 13,
+          "text": "An example configuration (no need to be specified manually):"
+        },
+        {
+          "line": 14,
+          "text": "{{< tabpane text=true >}}"
+        },
+        {
+          "line": 15,
+          "text": "{{% tab header=\"CLI\" %}}"
+        },
+        {
+          "line": 16,
+          "text": "```bash"
+        },
+        {
+          "line": 17,
+          "text": "limactl start --vm-type=vz"
+        },
+        {
+          "line": 28,
+          "text": "{{% /tab %}}"
+        },
+        {
+          "line": 29,
+          "text": "{{< /tabpane >}}"
+        },
+        {
+          "line": 30,
+          "text": "### Caveats"
+        },
+        {
+          "line": 31,
+          "text": "- \"vz\" option is only supported on macOS 13 or above"
+        },
+        {
+          "line": 32,
+          "text": "- Virtualization.framework doesn't support running \"intel guest on arm\" and vice versa"
+        },
+        {
+          "line": 33,
+          "text": ""
+        },
+        {
+          "line": 34,
+          "text": "### Known Issues"
+        },
+        {
+          "line": 35,
+          "text": "- \"vz\" doesn't support `legacyBIOS: true` option, so guest machine like `centos-stream` and `oraclelinux-8` will not work on Intel Mac."
+        },
+        {
+          "line": 36,
+          "text": "- When running lima using \"vz\", `${LIMA_HOME}/<INSTANCE>/serial.log` will not contain kernel boot logs"
+        },
+        {
+          "line": 37,
+          "text": "- On Intel Mac with macOS prior to 13.5, Linux kernel v6.2 (used by Ubuntu 23.04, Fedora 38, etc.) is known to be unbootable on vz."
+        },
+        {
+          "line": 38,
+          "text": "  kernel v6.3 and later should boot, as long as it is booted via GRUB."
+        },
+        {
+          "line": 39,
+          "text": "  https://github.com/lima-vm/lima/issues/1577#issuecomment-1565625668"
+        },
+        {
+          "line": 40,
+          "text": "  The issue is fixed in macOS 13.5."
+        }
+      ]
+    },
+    {
+      "id": "adb-emulator-scanner",
+      "url": "https://android.googlesource.com/platform/packages/modules/adb/+/refs/heads/main/client/transport_emulator.cpp?format=TEXT",
+      "accessed_at": "2026-09-07T03:27:13.249566+00:00",
+      "applicability": "Official upstream ADB source; exact platform-tools 37.0.0 build source tag unavailable. Installed adb help independently advertises -L/private server and emulator-scan limit; runtime remains unexecuted.",
+      "http_status": 200,
+      "body_sha256": "ab1ce7de6539adf863524dd4fc51d6fa79cc611251091b42a2df1a136721940e",
+      "excerpts": [
+        {
+          "line": 52,
+          "text": "static int adb_local_transport_max_port = DEFAULT_ADB_LOCAL_TRANSPORT_PORT + 16 * 2 - 1;"
+        },
+        {
+          "line": 53,
+          "text": ""
+        },
+        {
+          "line": 54,
+          "text": "static void adb_local_transport_max_port_env_override() {"
+        },
+        {
+          "line": 55,
+          "text": "    const char* env_max_s = getenv(\"ADB_LOCAL_TRANSPORT_MAX_PORT\");"
+        },
+        {
+          "line": 56,
+          "text": "    if (env_max_s != nullptr) {"
+        },
+        {
+          "line": 57,
+          "text": "        size_t env_max;"
+        },
+        {
+          "line": 58,
+          "text": "        if (ParseUint(&env_max, env_max_s, nullptr) && env_max < 65536) {"
+        },
+        {
+          "line": 59,
+          "text": "            // < DEFAULT_ADB_LOCAL_TRANSPORT_PORT harmlessly mimics ADB_EMU=0"
+        },
+        {
+          "line": 60,
+          "text": "            adb_local_transport_max_port = env_max;"
+        },
+        {
+          "line": 61,
+          "text": "            D(\"transport: ADB_LOCAL_TRANSPORT_MAX_PORT read as %d\", adb_local_transport_max_port);"
+        },
+        {
+          "line": 62,
+          "text": "        } else {"
+        },
+        {
+          "line": 63,
+          "text": "            D(\"transport: ADB_LOCAL_TRANSPORT_MAX_PORT '%s' invalid or >= 65536, so ignored\","
+        },
+        {
+          "line": 64,
+          "text": "              env_max_s);"
+        },
+        {
+          "line": 65,
+          "text": "        }"
+        },
+        {
+          "line": 66,
+          "text": "    }"
+        },
+        {
+          "line": 67,
+          "text": "}"
+        },
+        {
+          "line": 68,
+          "text": ""
+        },
+        {
+          "line": 69,
+          "text": "static std::mutex& emulator_transports_lock = *new std::mutex();"
+        },
+        {
+          "line": 165,
+          "text": ""
+        },
+        {
+          "line": 166,
+          "text": "static void PollAllLocalPortsForEmulator() {"
+        },
+        {
+          "line": 167,
+          "text": "    // Try to connect to any number of running emulator instances."
+        },
+        {
+          "line": 168,
+          "text": "    for (int port = DEFAULT_ADB_LOCAL_TRANSPORT_PORT; port <= adb_local_transport_max_port;"
+        },
+        {
+          "line": 169,
+          "text": "         port += 2) {"
+        },
+        {
+          "line": 170,
+          "text": "        connect_emulator(port);  // Note, uses port and port-1, so '=max_port' is OK."
+        },
+        {
+          "line": 171,
+          "text": "    }"
+        },
+        {
+          "line": 172,
+          "text": "}"
+        },
+        {
+          "line": 173,
+          "text": ""
+        },
+        {
+          "line": 174,
+          "text": "// Retry the disconnected local port for 60 times, and sleep 1 second between two retries."
+        }
+      ]
+    },
+    {
+      "id": "adb-host-switches",
+      "url": "https://android.googlesource.com/platform/packages/modules/adb/+/refs/heads/main/client/main.cpp?format=TEXT",
+      "accessed_at": "2026-09-07T03:27:14.433850+00:00",
+      "applicability": "Official upstream ADB source; exact platform-tools 37.0.0 build source tag unavailable. Installed adb help independently advertises -L/private server and emulator-scan limit; runtime remains unexecuted.",
+      "http_status": 200,
+      "body_sha256": "eb16a204ebf5a837dcc9ce5bad92c7df1153a74fbd0fc3dee62f5ec4e7569b95",
+      "excerpts": [
+        {
+          "line": 139,
+          "text": "        init_mdns_transport_discovery();"
+        },
+        {
+          "line": 140,
+          "text": "    }"
+        },
+        {
+          "line": 141,
+          "text": ""
+        },
+        {
+          "line": 142,
+          "text": "    if (!getenv(\"ADB_USB\") || strcmp(getenv(\"ADB_USB\"), \"0\") != 0) {"
+        },
+        {
+          "line": 143,
+          "text": "        if (is_libusb_enabled()) {"
+        },
+        {
+          "line": 144,
+          "text": "            libusb::usb_init();"
+        },
+        {
+          "line": 145,
+          "text": "        } else {"
+        },
+        {
+          "line": 146,
+          "text": "            usb_init();"
+        },
+        {
+          "line": 147,
+          "text": "        }"
+        },
+        {
+          "line": 148,
+          "text": "    } else {"
+        },
+        {
+          "line": 149,
+          "text": "        adb_notify_device_scan_complete();"
+        },
+        {
+          "line": 150,
+          "text": "    }"
+        },
+        {
+          "line": 151,
+          "text": ""
+        },
+        {
+          "line": 152,
+          "text": "    if (!getenv(\"ADB_EMU\") || strcmp(getenv(\"ADB_EMU\"), \"0\") != 0) {"
+        },
+        {
+          "line": 153,
+          "text": "        init_emulator_scanner("
+        },
+        {
+          "line": 154,
+          "text": "                android::base::StringPrintf(\"tcp:%d\", DEFAULT_ADB_LOCAL_TRANSPORT_PORT));"
+        },
+        {
+          "line": 155,
+          "text": "    }"
+        },
+        {
+          "line": 156,
+          "text": ""
+        },
+        {
+          "line": 157,
+          "text": "    std::string error;"
+        },
+        {
+          "line": 158,
+          "text": ""
+        }
+      ]
+    },
+    {
+      "id": "adb-mdns-switch",
+      "url": "https://android.googlesource.com/platform/packages/modules/adb/+/refs/heads/main/client/mdns_utils.cpp?format=TEXT",
+      "accessed_at": "2026-09-07T03:27:15.205196+00:00",
+      "applicability": "Official upstream ADB source; exact platform-tools 37.0.0 build source tag unavailable. Installed adb help independently advertises -L/private server and emulator-scan limit; runtime remains unexecuted.",
+      "http_status": 200,
+      "body_sha256": "3831ea502579d72510f43d30b15f405c90bf01c369cb7cdd0afd5c0f19476c49",
+      "excerpts": [
+        {
+          "line": 75,
+          "text": "}"
+        },
+        {
+          "line": 76,
+          "text": ""
+        },
+        {
+          "line": 77,
+          "text": "bool is_enabled() {"
+        },
+        {
+          "line": 78,
+          "text": "    return !getenv(\"ADB_MDNS\") || strcmp(getenv(\"ADB_MDNS\"), \"0\") != 0;"
+        },
+        {
+          "line": 79,
+          "text": "}"
+        },
+        {
+          "line": 80,
+          "text": ""
+        },
+        {
+          "line": 81,
+          "text": "}  // namespace mdns"
+        }
+      ]
+    },
+    {
+      "id": "adb-client-socket",
+      "url": "https://android.googlesource.com/platform/packages/modules/adb/+/refs/heads/main/client/commandline.cpp?format=TEXT",
+      "accessed_at": "2026-09-07T03:27:16.217848+00:00",
+      "applicability": "Official upstream ADB source; exact platform-tools 37.0.0 build source tag unavailable. Installed adb help independently advertises -L/private server and emulator-scan limit; runtime remains unexecuted.",
+      "http_status": 200,
+      "body_sha256": "b3d72ecd57b00fc65827136fc2bc37cb260d4df15be6cd786f08db1e8da973ff",
+      "excerpts": [
+        {
+          "line": 96,
+          "text": "        \" -t ID                    use device with given transport id\\n\""
+        },
+        {
+          "line": 97,
+          "text": "        \" -H                       name of adb server host [default=localhost]\\n\""
+        },
+        {
+          "line": 98,
+          "text": "        \" -P                       port of adb server [default=5037]\\n\""
+        },
+        {
+          "line": 99,
+          "text": "        \" -L SOCKET                listen on given socket for adb server\""
+        },
+        {
+          "line": 100,
+          "text": "        \" [default=tcp:localhost:5037]\\n\""
+        },
+        {
+          "line": 101,
+          "text": "        \" --one-device SERIAL|USB  only allowed with 'start-server' or 'server nodaemon', server\""
+        },
+        {
+          "line": 102,
+          "text": "        \" will only connect to one USB device, specified by a serial number or USB device\""
+        },
+        {
+          "line": 103,
+          "text": "        \" address.\\n\""
+        },
+        {
+          "line": 104,
+          "text": "        \" --exit-on-write-error    exit if stdout is closed\\n\""
+        },
+        {
+          "line": 105,
+          "text": "        \"\\n\""
+        },
+        {
+          "line": 106,
+          "text": "        \"general commands:\\n\""
+        },
+        {
+          "line": 107,
+          "text": "        \" devices [-l]             list connected devices (-l for long output)\\n\""
+        },
+        {
+          "line": 1592,
+          "text": "                fprintf(stderr, \"adb: invalid reply fd \\\"%s\\\"\\n\", reply_fd_str);"
+        },
+        {
+          "line": 1593,
+          "text": "                return 1;"
+        },
+        {
+          "line": 1594,
+          "text": "            }"
+        },
+        {
+          "line": 1595,
+          "text": "        } else if (!strcmp(argv[0], \"--one-device\")) {"
+        },
+        {
+          "line": 1596,
+          "text": "            if (argc < 2) error_exit(\"--one-device requires an argument\");"
+        },
+        {
+          "line": 1597,
+          "text": "            one_device_str = argv[1];"
+        },
+        {
+          "line": 1598,
+          "text": "            --argc;"
+        },
+        {
+          "line": 1599,
+          "text": "            ++argv;"
+        },
+        {
+          "line": 1600,
+          "text": "        } else if (!strncmp(argv[0], \"-s\", 2)) {"
+        },
+        {
+          "line": 1601,
+          "text": "            if (isdigit(argv[0][2])) {"
+        },
+        {
+          "line": 1602,
+          "text": "                serial = argv[0] + 2;"
+        },
+        {
+          "line": 1664,
+          "text": "    }"
+        },
+        {
+          "line": 1665,
+          "text": ""
+        },
+        {
+          "line": 1666,
+          "text": "    // If -L, -H, or -P are specified, ignore environment variables."
+        },
+        {
+          "line": 1667,
+          "text": "    // Otherwise, prefer ADB_SERVER_SOCKET over ANDROID_ADB_SERVER_ADDRESS/PORT."
+        },
+        {
+          "line": 1668,
+          "text": "    if (!server_host_str && !server_port_str && !server_socket_str) {"
+        },
+        {
+          "line": 1669,
+          "text": "        server_socket_str = getenv(\"ADB_SERVER_SOCKET\");"
+        },
+        {
+          "line": 1670,
+          "text": "    }"
+        },
+        {
+          "line": 1671,
+          "text": ""
+        },
+        {
+          "line": 1672,
+          "text": "    if (!server_socket_str) {"
+        },
+        {
+          "line": 1673,
+          "text": "        // tcp:1234 and tcp:localhost:1234 are different with -a, so don't default to localhost"
+        },
+        {
+          "line": 1674,
+          "text": "        server_host_str = server_host_str ? server_host_str : getenv(\"ANDROID_ADB_SERVER_ADDRESS\");"
+        },
+        {
+          "line": 1675,
+          "text": ""
+        },
+        {
+          "line": 1676,
+          "text": "        int server_port = kDefaultServerPort;"
+        },
+        {
+          "line": 1677,
+          "text": "        server_port_str = server_port_str ? server_port_str : getenv(\"ANDROID_ADB_SERVER_PORT\");"
+        },
+        {
+          "line": 1678,
+          "text": "        if (server_port_str && strlen(server_port_str) > 0) {"
+        },
+        {
+          "line": 1679,
+          "text": "            if (!android::base::ParseInt(server_port_str, &server_port, 1, 65535)) {"
+        },
+        {
+          "line": 1680,
+          "text": "                error_exit("
+        },
+        {
+          "line": 1681,
+          "text": "                        \"$ANDROID_ADB_SERVER_PORT must be a positive number less than 65535: \""
+        },
+        {
+          "line": 1682,
+          "text": "                        \"got \\\"%s\\\"\","
+        },
+        {
+          "line": 1683,
+          "text": "                        server_port_str);"
+        },
+        {
+          "line": 1684,
+          "text": "            }"
+        },
+        {
+          "line": 1685,
+          "text": "        }"
+        },
+        {
+          "line": 1686,
+          "text": ""
+        },
+        {
+          "line": 1687,
+          "text": "        int rc;"
+        },
+        {
+          "line": 1701,
+          "text": "    bool server_start ="
+        },
+        {
+          "line": 1702,
+          "text": "            is_daemon || is_server || (argc > 0 && strcmp(argv[0], \"start-server\") == 0);"
+        },
+        {
+          "line": 1703,
+          "text": "    if (one_device_str && !server_start) {"
+        },
+        {
+          "line": 1704,
+          "text": "        error_exit(\"--one-device is only allowed when starting a server.\");"
+        },
+        {
+          "line": 1705,
+          "text": "    }"
+        },
+        {
+          "line": 1706,
+          "text": ""
+        },
+        {
+          "line": 1707,
+          "text": "    adb_set_one_device(one_device_str);"
+        },
+        {
+          "line": 1708,
+          "text": "    adb_set_socket_spec(server_socket_str);"
+        },
+        {
+          "line": 1709,
+          "text": ""
+        },
+        {
+          "line": 1710,
+          "text": "    // If none of -d, -e, or -s were specified, try $ANDROID_SERIAL."
+        }
+      ]
+    }
+  ],
+  "jdk_metadata_only_no_binary_download": [
+    {
+      "url": "https://api.adoptium.net/v3/assets/latest/21/hotspot?architecture=x64&image_type=jdk&os=mac&vendor=eclipse",
+      "accessed_at": "2026-09-07T03:27:17.944285+00:00",
+      "os": "mac",
+      "architecture": "x64",
+      "failure": "HTTP Error 403: Forbidden"
+    },
+    {
+      "url": "https://api.adoptium.net/v3/assets/latest/21/hotspot?architecture=aarch64&image_type=jdk&os=linux&vendor=eclipse",
+      "accessed_at": "2026-09-07T03:27:19.830121+00:00",
+      "os": "linux",
+      "architecture": "aarch64",
+      "failure": "HTTP Error 403: Forbidden"
+    }
+  ]
+}

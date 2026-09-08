@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "review_id": "ios-readiness03-source-control-independent-approval",
+  "created_at": "2026-09-07T10:18:04.626662+00:00",
+  "reviewer": "/root/native_fix_review",
+  "author_executor": "/root",
+  "disposition": "APPROVED FOR ONE EXPLICIT CREDENTIAL-FREE ADHOC OWNED-SIMULATOR READINESS03 CYCLE",
+  "approval_is_runtime_success": false,
+  "approval_is_store_signing_or_publication_authorization": false,
+  "exact_command": [
+    "/usr/bin/python3",
+    "-B",
+    "scripts/verification/ios-readiness/run_ios_readiness.py",
+    "ios-readiness-03",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-03.json",
+    "1603d906e652b686d01bc907596af4b83f8fd35d0a424abb036637f9cadcb013",
+    "--simulator-signing=adhoc"
+  ],
+  "source": {
+    "commit": "f5ea8045bd903c255041b198f54aca67e893612f",
+    "tree": "b109c8ec6ec579b9197f449b36bda2c39105a652",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "09b1e6be496baccb185b1dbe227e12a46de20c7c408e2deccac882c6c2b26cb2"
+  },
+  "source_binding": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-03.json",
+    "sha256": "e78b5f667b5f7842824f2a61e666bae2285f7b5b6cca36b97def8948c7529da7",
+    "schema_version": 3,
+    "binding_status": "REVIEW_REQUIRED_BOUND",
+    "freshly_rehashed_source_files": 727,
+    "copy_inputs": 670,
+    "full_bound_source_equals_current_reconstructed_git_inventory": true,
+    "copy_inventory_exactly_equals_allowed_bound_inputs": true,
+    "protected_material_read": false,
+    "audit_design_campaign_areas_excluded_from_shipping_source_identity_and_preserved": true
+  },
+  "controls": {
+    "manifest_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ios-readiness03-controls.json",
+    "manifest_sha256": "76be04e94de230606fe984f4290af44b21d539eebf365227cc8eb62566258248",
+    "control_sha256": "1603d906e652b686d01bc907596af4b83f8fd35d0a424abb036637f9cadcb013",
+    "file_count": 43,
+    "all_current_files_exactly_match": true,
+    "canonical_nonsymlink_inputs": true,
+    "delta_from_preserved_ios_readiness02_controls": [
+      {
+        "path": "scripts/verification/ios-readiness/NativeReadinessLaunch.swift.in",
+        "before": "f138563cb8f50a64f5b74304060671f3de991584c277606cbd0d42395b37d60a",
+        "after": "4bddc85fa3a28e1dcb4caaed7e32f8658c195e9c4ee93aeeecaab317fbcaf2bc"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/NativeReadinessUITests.swift.in",
+        "before": "7a35cfca3cbedd742c0b76b44c80e5b3662b4d88942ecbe25e21b68034fa9407",
+        "after": "fa2dc7dbc97c576262ad14cd85b22f65aa908b1629ab1a205b22aa4873f5c0dc"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/native_failure_receipts.py",
+        "before": null,
+        "after": "9376f5f7244dc297edf9bca964357a1148c1972a41b44fdfd60fd8c988a007d6"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/run_ios_readiness.py",
+        "before": "93359d7c34455617bc5b97c323c045ebac0e53b64f54e75691a4feda019a98db",
+        "after": "9bd997ec5836fe8da4e3afcdb3604eb10f180d3b55a63718c1ea9ba1f9893f2c"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_native_failure_receipts.py",
+        "before": null,
+        "after": "9d015aa4ce2cac5ac6e6aa770fcb0c0df00dd40435002529d807b744baa7c19b"
+      }
+    ],
+    "unreviewed_drift": [],
+    "binding_replacement_is_explicit": true
+  },
+  "prior_independent_diagnostic_review": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native-failure-diagnostic-independent-review-01.json",
+    "sha256": "98c2cd3d78186e7e91a2d7cdd072a04e80683493cb7931c404c8e881161087d3",
+    "five_current_changed_controls_equal_reviewed_hashes": true
+  },
+  "reopened_execution_paths": [
+    "owned_lane.py196-221 and copied_sources.py25-96: reconstructed source identity directly from fresh git inventory, streamed/read hashes and protected-path rules; all727 records equal bound current source, with670 exact copy inputs.",
+    "run_ios_readiness.py65-82,313-350,470-554: explicit source/control binding, unused exact evidence directory, fresh owned simulator allocation, isolated registry, source equality and preserved original outputs; no implicit refresh.",
+    "run_ios_readiness.py563-594 and copied_sources.py99-156: only previously reviewed observation transforms. Whodunit source delta alters peer-cover colors/visibility, not local canonical-session instrumentation anchors or game reducers.",
+    "simulator_signing.py33-99: explicit dash-only ad-hoc Debug/ARM64 simulator, .debug app identity, no Team/profile/keychain/custom entitlement or unexpected expanded identity permitted in copied phase.",
+    "test_controls.py25-195 and test_simulator_signing.py1-125: actual source-copy anchors, root preservation, explicit binding, import guard, strict mode/path receipts and credential-refusal assertions; these descriptors occurred in95-test log.",
+    "Diagnostic failure path remains the independently reviewed fixed-stage/numeric-metadata-only patch; accepted diagnostic_failure is still a failing XCTest/host gate, never storage success.",
+    "Current Whodunit peer-pause delta and all89 lines of new PeerPausedCoverContrastTest read for input relevance; no full unrelated application re-audit claimed by this binding approval."
+  ],
+  "root_pure_cycle": {
+    "receipt_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-controls-03/receipt.json",
+    "receipt_sha256": "4e1408341a1d9d9eb4e40bd85c9f7f8970254730fa149da257a951fcc1de82c8",
+    "log_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-controls-03/gradle.log",
+    "log_sha256": "d6ed6d8ce8adc63f9cb05733407ba9cd70cf33cedc58a959fc8e47953712c513",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "scripts/verification/ios-readiness",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "status": "PASS",
+    "exit_code": 0,
+    "test_methods_executed": 95,
+    "unique_descriptors": 95,
+    "actual_descriptors_equal_current_ast_signatures": true,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "foundation_encoder_subcases": 7,
+    "foundation_subcases_are_not_extra_test_methods": true,
+    "source_before_after_equal_binding": true,
+    "runner_changed_during_cycle": false,
+    "started_at": "2026-09-07T10:12:18.419770+00:00",
+    "finished_at": "2026-09-07T10:12:35.292497+00:00",
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-07T10:12:35.548423+00:00",
+    "stop_log_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-controls-03/stop.log",
+    "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "cleanup_completed_at": "2026-09-07T10:12:35.605375+00:00"
+  },
+  "blocking_comments": [],
+  "conditions_and_limits": [
+    "Root remains sole execution lane. Recheck source/control preflight; any changed bound input invalidates this approval.",
+    "Use only a newly created owned simulator, never a personal phone or existing emulator profile. Preserve originals and all earlier failure evidence.",
+    "Capture failures honestly, including new diagnostic stage/domain/code; failure-receipt-unavailable cannot establish a storage/crash root cause.",
+    "The prior ios-readiness02 failure remains intact. Pure95 success does not imply simulator runtime, healthy storage, real OS-language preference, physical LAN, Store readiness, or resolution of historical repeated launches.",
+    "Local observed Xcode26.5/17F42 with SDK/runtime26.5 is not Store-qualified26.3/17C529. No private signing material, Store identities, provisioning, publishing or capability/entitlement workaround is approved.",
+    "Maintain immediate copied-wrapper/outer/final Gradle stops, exact owned secondary-path cleanup, worker attestation, simulator deletion and temporary-copy/DerivedData cleanup on success, failure, timeout and interruption.",
+    "This review binds this instrumented matrix only; it is not approval or runtime evidence for the separate normal-source runner."
+  ],
+  "reviewer_actions": {
+    "tests_builds_native_probes_started": false,
+    "workers_started_or_stopped": false,
+    "source_or_shared_control_edits": false,
+    "write": "This new campaign-only review receipt",
+    "generated_build_outputs": []
+  }
+}

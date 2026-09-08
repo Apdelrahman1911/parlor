@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-06T15:47:47.160460+00:00",
+  "reviewer": "/root/release_fix_review",
+  "kind": "SUPPLEMENTAL_RAW_RESULT_CROSSCHECK_NOT_DUPLICATE_FULL_SOURCE_REVIEW",
+  "classification": "PASS_WITH_EXPLICIT_PLATFORM_SCOPE",
+  "cycle": "combined-native-alltests-02",
+  "raw_receipt_sha256": "2253a31979d575c1915e0445a9a1e1234abf963db9d49c98a628c386706c4fc0",
+  "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+  "diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+  "input_count": 669,
+  "source_before_after_equal_frozen": true,
+  "current_source_drift": [],
+  "current_control_drift": [],
+  "raw_xml": {
+    "suites": 398,
+    "counts_by_task": {
+      "desktopTest": {
+        "suites": 188,
+        "tests": 1243,
+        "passed": 1240,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 3
+      },
+      "iosSimulatorArm64Test": {
+        "suites": 70,
+        "tests": 426,
+        "passed": 426,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "testDebugUnitTest": {
+        "suites": 70,
+        "tests": 406,
+        "passed": 406,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "testReleaseUnitTest": {
+        "suites": 70,
+        "tests": 406,
+        "passed": 406,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    "tests": 2481,
+    "passed": 2478,
+    "skipped": 3,
+    "count_discrepancies": [],
+    "duplicate_descriptors": [],
+    "sorted_relative_path_sha256_manifest_hash": "ebdb786e0553eed458067f3c686f5539f331c90a5b40e9931f5b062e163c59ed",
+    "skips": [
+      {
+        "path": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+        "classname": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "name": "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]"
+      },
+      {
+        "path": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+        "classname": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "name": "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]"
+      },
+      {
+        "path": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+        "classname": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "name": "host_broadcast_reaches_every_peer()[desktop]"
+      }
+    ]
+  },
+  "raw_execution": {
+    "exit_code": 0,
+    "log_sha256": "2a646d4ef1aa57c8057b8263a02bc8bdb801ea04cec820ba735146d212d4c018",
+    "summary": "BUILD SUCCESSFUL in6m13s;861actionabletasks,857executed4up-to-date; actual XML matches reached runtime tasks. Root allTests and productionIosSimulatorRuntimeTests reached at1565-1566.",
+    "not_executed": [
+      "All13iosX64Test tasks host-disabled onarm64",
+      "Mafia and shared:engine iosSimulatorArm64Test SKIPPED(empty common/ios test inputs), Android JVM NO-SOURCE; game rule regressions execute Desktop",
+      "PhysicalAndroid/iOSLAN or Store/signing/signedrelease or Swiftapphost not exercised by this Gradlebatch"
+    ],
+    "skip_source": "P2pKitRoomTransportLoopbackTest.kt125-128/157-160/207-210 @Ignore requires physicalLAN; preserved, notclaimedPASS."
+  },
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stop_log": "No Gradle daemons are running.",
+    "delay_seconds": 0.336871,
+    "removed_output_paths": [
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build",
+      "build",
+      "composeApp/build",
+      "build-logic/convention/build"
+    ],
+    "current_removed_paths_still_present": [],
+    "receipt_remaining_outputs": [],
+    "receipt_cleanup_errors": [],
+    "receipt_owned_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "scope": "Root executedcleanup; this supplement independently checks exactremovedpaths andstopreceipt, not a freshsimulatorinspection. Full simulatorcontrol/provenance covered by prior independent records."
+  },
+  "prior_review": "reviews/independent-final-inputs-native-apple-rebind-03.json /root/factory_review reopened; exactcurrentcountsagree. This corrects my checkpoint suggestion that native02 remained unreviewed.",
+  "hygiene": "Read-only parsing/hashing only. No builds, tests, native apps, workers, dependency downloads, Git actions or source edits. Only this compact reviewer record written."
+}

@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root",
+  "original_finder": "/root/release_fix_review",
+  "at": "2026-09-07T08:39:11.532384+00:00",
+  "classification": "FALSE POSITIVE: missing separate full OFL file not established as a font licensing defect",
+  "sources": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/composeResources/font/inter.ttf",
+      "sha256": "29160a80ff49ddcab2c97711247e08b1fab27a484a329ce8b813d820dc559031",
+      "bytes": 876576,
+      "name_record_count": 67,
+      "notice_version_records": [
+        {
+          "name_id": 0,
+          "platform": 3,
+          "text": "Copyright 2016 The Inter Project Authors (https://github.com/rsms/inter)"
+        },
+        {
+          "name_id": 5,
+          "platform": 3,
+          "text": "Version 4.001;git-66647c0bb"
+        },
+        {
+          "name_id": 13,
+          "platform": 3,
+          "text": "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://openfontlicense.org"
+        },
+        {
+          "name_id": 14,
+          "platform": 3,
+          "text": "https://openfontlicense.org"
+        }
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/composeResources/font/jetbrains_mono.ttf",
+      "sha256": "48715a42ec242c21e9f02692891e147d022299a52e48d5e413e1a942193ffeda",
+      "bytes": 187208,
+      "name_record_count": 50,
+      "notice_version_records": [
+        {
+          "name_id": 0,
+          "platform": 3,
+          "text": "Copyright 2020 The JetBrains Mono Project Authors (https://github.com/JetBrains/JetBrainsMono)"
+        },
+        {
+          "name_id": 5,
+          "platform": 3,
+          "text": "Version 2.211"
+        },
+        {
+          "name_id": 13,
+          "platform": 3,
+          "text": "This Font Software is licensed under the SIL Open Font License, Version 1.1. This license is available with a FAQ at: https://scripts.sil.org/OFL"
+        },
+        {
+          "name_id": 14,
+          "platform": 3,
+          "text": "https://scripts.sil.org/OFL"
+        }
+      ]
+    }
+  ],
+  "reference": {
+    "url": "https://openfontlicense.org/ofl-faq/",
+    "source": "Independently parsed complete retained official page from original successful fetch",
+    "raw_sha256": "9861e5bf9a0bbd174ed148e3f87d465003d846742910427e4c348c4100b9be91",
+    "section": "1.10",
+    "excerpt": "1.10 Does the full OFL license text always need to accompany the font? The only situation in which an OFL font can be distributed without the text of the OFL (either in a separate file or in font metadata), is when a font is embedded in a document or bundled within a program. In the case of metadata included within a font, it is legally sufficient to include only a link to the text of the OFL on https://openfontlicense.org , but we strongly recommend against this. Most modern font formats include metadata fields that will accept the full OFL text, and full inclusion increases the likelihood that users will understand and properly apply the license.",
+    "attribution": "From the OFL FAQ (OFL-FAQ.txt), copyright (c) 2005-2023 SIL International. Used by permission. https://openfontlicense.org/OFL-FAQ"
+  },
+  "new_fetch": {
+    "result": "HTTP403",
+    "method": "System Python urllib GET",
+    "reinterpreted_as_pass": false
+  },
+  "reasoning": [
+    "Both actual font binaries retain copyright and OFL notice/link in name metadata.",
+    "Official FAQ directly permits program-bundled fonts with metadata link; actual OFL condition2 and sections1.3/1.4/1.11 considered as counter-evidence.",
+    "Actual production typography uses Res.font.inter and Res.font.jetbrains_mono; binaries are bundled unchanged rather than renamed/modified font derivatives.",
+    "Existing package receipts establish these exact font bytes for their own builds, not a future final artifact."
+  ],
+  "limits": [
+    "Not overall legal approval, third-party dependency/content/trademark rights approval or Store proof.",
+    "Final current-source artifact packaging and runtime accessibility remain separate."
+  ],
+  "cleanup": {
+    "persistent_processes_started": false,
+    "source_modified": false,
+    "temporary_files_created": false,
+    "retained": "One compact independent JSON receipt"
+  }
+}

@@ -1,0 +1,27 @@
+{"validator_before": "3cd516aae2f7d75f1683c419a7b08608abb68a3fa377b247a207774314c06b81"}
+{"official_validator_requested": "/Users/abdelrahman/.agents/skills/production-readiness-audit/scripts/validate_evidence_ledger.py", "official_validator_canonical": "/Users/abdelrahman/Projects/passvault/engineering-skills/skills/production-readiness-audit/scripts/validate_evidence_ledger.py"}
+{"controls_and_deliverables_before": {"/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/run_gradle_cycle.py": "d2d18c2311d59554db88be3f92e609ec5ca46fc8af4c79702836f9e4c130240f", "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/record_final_observation_v2.py": "f5dabf6f162f4b4e359e928a5b371a6f42e1e1420c1c357b738707fc1753533d", "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md": "a3359c488364141d326964a13427e558f5d7fc6e00f190d54effa9e805a34b8f", "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/final/issues-continued.json": "fcdf977fcdf9d1be7693142aab2152ae713ba9cfecc1ee02b1d1cfc832324c10", "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/final/gates-continued.json": "92f64cb19df9e802e996eb22ef4e1a3f6e3f02591f751f92c431fa0b90ea10a9", "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/final/continuation-evidence.json": "c8b8f844b7666e7a159c9c99dc93984310f336f9168dd91b231bc556bc343d2b", "/Users/abdelrahman/Projects/passvault/engineering-skills/skills/production-readiness-audit/scripts/validate_evidence_ledger.py": "81d72fc25f9e67ae00740019e52e3d51485dfab782775809c4ceb61776cf268e", "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/verify_continuation_deliverables_v2.py": "3cd516aae2f7d75f1683c419a7b08608abb68a3fa377b247a207774314c06b81"}}
+{"command": ["/usr/bin/python3", "-B", "/Users/abdelrahman/Projects/passvault/engineering-skills/skills/production-readiness-audit/scripts/validate_evidence_ledger.py", "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/final/gates-continued.json", "--root", "/Users/abdelrahman/Projects/parlor"], "exit_code": 0, "stdout": "{\n  \"artifact_count\": 4,\n  \"errors\": [],\n  \"gate_counts\": {\n    \"BLOCKED\": 15,\n    \"PASS\": 23\n  },\n  \"status\": \"PASS\",\n  \"verdict\": \"NOT_READY\"\n}\n", "stderr": ""}
+{"command": ["git", "diff", "--check"], "exit_code": 0, "stdout": "", "stderr": ""}
+{"command": ["git", "apply", "--check", "--reverse", "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/final/remediation.patch"], "exit_code": 0, "stdout": "", "stderr": ""}
+{
+  "status": "PASS",
+  "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+  "retained_evidence_references_checked": 188,
+  "issue_counts": {
+    "FIXED AND VERIFIED": 14,
+    "PARTIALLY VERIFIED": 1,
+    "BLOCKED": 1
+  },
+  "completion_percentage": 87.5,
+  "gate_counts": {
+    "PASS": 23,
+    "BLOCKED": 15
+  },
+  "pending_post_cleanup_observation_links": [
+    "final-observation.json"
+  ],
+  "scope": "Evidence/checkout consistency only; no new runtime/build claim"
+}
+{"controls_and_deliverables_after": {"/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/run_gradle_cycle.py": "d2d18c2311d59554db88be3f92e609ec5ca46fc8af4c79702836f9e4c130240f", "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/record_final_observation_v2.py": "f5dabf6f162f4b4e359e928a5b371a6f42e1e1420c1c357b738707fc1753533d", "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md": "a3359c488364141d326964a13427e558f5d7fc6e00f190d54effa9e805a34b8f", "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/final/issues-continued.json": "fcdf977fcdf9d1be7693142aab2152ae713ba9cfecc1ee02b1d1cfc832324c10", "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/final/gates-continued.json": "92f64cb19df9e802e996eb22ef4e1a3f6e3f02591f751f92c431fa0b90ea10a9", "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/final/continuation-evidence.json": "c8b8f844b7666e7a159c9c99dc93984310f336f9168dd91b231bc556bc343d2b", "/Users/abdelrahman/Projects/passvault/engineering-skills/skills/production-readiness-audit/scripts/validate_evidence_ledger.py": "81d72fc25f9e67ae00740019e52e3d51485dfab782775809c4ceb61776cf268e", "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-05-confirmed-fixes/verify_continuation_deliverables_v2.py": "3cd516aae2f7d75f1683c419a7b08608abb68a3fa377b247a207774314c06b81"}, "unchanged": true}
+{"validator_after": "3cd516aae2f7d75f1683c419a7b08608abb68a3fa377b247a207774314c06b81", "unchanged": true, "validation_exit_code": 0}

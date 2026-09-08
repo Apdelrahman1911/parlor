@@ -1,0 +1,115 @@
+{
+  "reviewer": "/root/release_fix_review",
+  "author_and_executor": "/root",
+  "reviewed_at": "2026-09-06T12:55:22.206915+00:00",
+  "classification": "PASS \u2014 Apple framework linkage/type-aware analysis only; zero runtime tests",
+  "baseline": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e"
+  },
+  "input_count": 669,
+  "inputs_independently_rehashed": true,
+  "input_drift": [],
+  "before_after_equal": true,
+  "freeze02_equal": true,
+  "evidence_directory": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02",
+  "evidence_sha256": {
+    "artifact-receipts.json": "879deeaab05de7e596dd4f25cdede06788ee4abdca4171359bf4fe41ed4daa45",
+    "artifacts/composeApp/build/bin/iosArm64/releaseFramework/ComposeApp.framework/Info.plist": "63062e5cf7dfaec7b571199ba49329077afced9f1adbe52f262b27354fd251db",
+    "artifacts/composeApp/build/bin/iosSimulatorArm64/releaseFramework/ComposeApp.framework/Info.plist": "07c9f1efc03121023e533670716e9bbf1e3803739d0792b14c7f085fd021da09",
+    "artifacts/composeApp/build/bin/iosX64/releaseFramework/ComposeApp.framework/Info.plist": "07c9f1efc03121023e533670716e9bbf1e3803739d0792b14c7f085fd021da09",
+    "gradle.log": "29b2daf1f1c7005d56e82f2be779c586fe063eb79d7f8e4ee6814ac880be406f",
+    "receipt.json": "dd75d054341870316ff21a8106e245e5859c83a347399aa59afc57d0eea68d16",
+    "reports/composeApp/build/reports/detekt/detektMetadataIosMain.xml": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+    "reports/shared/design-system/build/reports/detekt/detektMetadataIosMain.xml": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+    "reports/shared/networking/build/reports/detekt/detektMetadataIosMain.xml": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+    "reports/shared/transport-p2p/build/reports/detekt/detektMetadataIosMain.xml": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+    "stop.log": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+    "test-receipts.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+  },
+  "source_task_wiring_review": [
+    {
+      "file": "/Users/abdelrahman/Projects/parlor/build.gradle.kts",
+      "lines": [
+        [
+          1,
+          199
+        ]
+      ],
+      "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b"
+    },
+    {
+      "file": "/Users/abdelrahman/Projects/parlor/composeApp/build.gradle.kts",
+      "lines": [
+        [
+          185,
+          222
+        ]
+      ],
+      "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5"
+    }
+  ],
+  "results": {
+    "gradle_exit": 0,
+    "raw_log_success": "BUILD SUCCESSFUL in 10m 35s; 147 actionable tasks:143 executed,4 up-to-date",
+    "linked_release_frameworks": [
+      "iosArm64",
+      "iosSimulatorArm64",
+      "iosX64"
+    ],
+    "empty_detekt_reports": [
+      "composeApp",
+      "shared/design-system",
+      "shared/networking",
+      "shared/transport-p2p"
+    ],
+    "runtime_tests_executed": 0,
+    "raw_test_receipts": [],
+    "remaining_type_aware_leaf_tasks": "NO-SOURCE; not represented as actual assertions/tests",
+    "source_bound_framework_receipts": [
+      {
+        "path": "composeApp/build/bin/iosX64/releaseFramework/ComposeApp.framework/ComposeApp",
+        "bytes": 53558320,
+        "sha256": "91a0d6ea8b8b5babb64f12518b13216be0366b21ea84ea3f830b51d453f11de9",
+        "file": "/Users/abdelrahman/Projects/parlor/composeApp/build/bin/iosX64/releaseFramework/ComposeApp.framework/ComposeApp: Mach-O 64-bit dynamically linked shared library x86_64"
+      },
+      {
+        "path": "composeApp/build/bin/iosSimulatorArm64/releaseFramework/ComposeApp.framework/ComposeApp",
+        "bytes": 52265976,
+        "sha256": "bf86618842cb65349ad55141c87e5da7db8e79651da4c2e1b93f3c4323993919",
+        "file": "/Users/abdelrahman/Projects/parlor/composeApp/build/bin/iosSimulatorArm64/releaseFramework/ComposeApp.framework/ComposeApp: Mach-O 64-bit dynamically linked shared library arm64"
+      },
+      {
+        "path": "composeApp/build/bin/iosArm64/releaseFramework/ComposeApp.framework/ComposeApp",
+        "bytes": 52067904,
+        "sha256": "7be53cb3cfabd585f86ae480f74f240a3238031435f0f5c6df06e5420d4a224c",
+        "file": "/Users/abdelrahman/Projects/parlor/composeApp/build/bin/iosArm64/releaseFramework/ComposeApp.framework/ComposeApp: Mach-O 64-bit dynamically linked shared library arm64"
+      }
+    ]
+  },
+  "warnings_and_limits": [
+    "Gradle8.13 future deprecation notice for Kotlin2.5; actual pinned Kotlin2.4.10 unchanged.",
+    "android.experimental.lint.version9.1.1 warning remains visible.",
+    "iosX64Test cannot execute on macos-aarch64; no tests requested by this gate.",
+    "Swift app wrapper, Swift XCTest container tests, app-host UI runtime, simulator execution, physical iOS/LAN, signing/Store evidence not provided by this gate.",
+    "Framework binary hashes/file identities are executor compact receipts retained before cleanup; independent reviewer inspected retained plists/raw tasks, not removed binary bytes.",
+    "Framework minimum OS15 does not replace app deployment target16; this result is framework linkage, not app packaging or Store validation."
+  ],
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stop_log": "No Gradle daemons are running.",
+    "build_finish_at": "2026-09-06T12:48:25.852915+00:00",
+    "stopped_at": "2026-09-06T12:48:26.192973+00:00",
+    "cleanup_completed_at": "2026-09-06T12:48:26.659160+00:00",
+    "reported_remaining_outputs": [],
+    "reported_remaining_workers": [],
+    "errors": [],
+    "all_removed_paths_rechecked_absent": true,
+    "scratch_rechecked_absent": true,
+    "reviewer_build_or_process_actions": "None; root owns lane and cleanup."
+  },
+  "conclusion": "Accept combined-apple-02 gate PASS for current669-source freeze. Do not close DS-C01 runtime or claim new Swift container runtime from this evidence."
+}

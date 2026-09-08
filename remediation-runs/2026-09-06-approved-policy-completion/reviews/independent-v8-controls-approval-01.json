@@ -1,0 +1,508 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "recorded_at": "2026-09-06T18:44:19.585344+00:00",
+  "classification": "APPROVED_FOR_ROOT_FOCUSED_CONTROL_TEST_CYCLE_ONLY",
+  "native_execution_approved": false,
+  "native_approval_requirement": "Root must run all130 focused control descriptors and preserve successful raw execution/cleanup/before-after54control and669source bindings. Independent outcome review required before nativeGO.",
+  "source": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+    "diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "independently_rehashed_source_inputs": 669,
+    "source_drift": []
+  },
+  "controls": {
+    "author_manifest_path": "native/dsc01_apphost_v8/author-frozen-control-manifest-01.json",
+    "author_manifest_sha256": "baa9f7be7211d6a0d8ad90a6c35fdbadaecd524b5097dc7500c65e460816ff7e",
+    "control_sha256": "c9e1dc146972a38b063962998b54aabed8f76524c92d8d2dcfbb1c0b31266ef2",
+    "control_count": 54,
+    "unique_paths": 54,
+    "control_drift": [],
+    "all_consumed_v6_refs": 12,
+    "all_consumed_v7_refs": 17,
+    "delta_path": "native/dsc01_apphost_v8/v7-to-v8-controls.diff",
+    "delta_sha256": "1c3ce23da09ea7f2d2d616f4109332e6518619a47ab4815bc59c4aa0502e837f",
+    "entire_delta_reviewed_line_ranges": [
+      [
+        1,
+        1259
+      ]
+    ],
+    "exact_delta_independently_reconstructed": true,
+    "files": [
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/run_dsc01_apphost_cycle.py",
+        "sha256": "818afddb3e7f38522418e358556061b96c390e471b1c219a857e5bf92e1a2e26"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/run_gradle_cycle.py",
+        "sha256": "d2d18c2311d59554db88be3f92e609ec5ca46fc8af4c79702836f9e4c130240f"
+      },
+      {
+        "path": "audit-runs/2026-09-05-source-audit/run_android_managed_cycle.py",
+        "sha256": "b34ad4662ac906bff0a2f4e8ebe25c0757229098361e8e34c29b7c06681730c0"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/secondary_fifo.py",
+        "sha256": "080622194e19ef5d3ffb561e134ab8cf91e3e3ccef1e29197f59781154a7ffcc"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/test_secondary_fifo.py",
+        "sha256": "2d685ebcbef9930f43f1f644c5ed6fc3b5a5c5d07d975cc218a9165273bfb826"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/test_harness_contract.py",
+        "sha256": "8fbd9bfafdb7e82693158937194c3b6130287eab68453136981b513e3488b67b"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/DSC01Probe.swift.in",
+        "sha256": "b20b07d53feb3fd7d5aebeb8a71a5742957d9ddab8eaf6bf981736318c3cfa94"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/IOSAppLaunchUITests.swift.in",
+        "sha256": "82471590bf434cb0b174f6ba44f0d8c0b377e4fee3c4eb0dfe39bbfaa21946e5"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/DSC01CatalogSelection.swift.in",
+        "sha256": "2649fb97fe27e74539dfd9867f6677c6a390e722129f8e2434231f44b1d91465"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/test_catalog_contract.py",
+        "sha256": "91087081e10e7a4f6f65ab442df71c60a5e802cb3e491899ab15f3ebb42848ae"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/DSC01PublicDiagnostics.swift.in",
+        "sha256": "629e781107e9f54ebfd1419babb6496006bcf939f06144ba6cd23cc97e58aacd"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/DSC01MafiaStartSelection.swift.in",
+        "sha256": "50aad088497c862ff962dc5b1a569a6285f99ce761bf710d4fe8f38e3b698753"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/DSC01OSPrerequisite.swift.in",
+        "sha256": "3a0061e352923bea9f2c11514330f6eca5f46baa501ec1cc7cda24ee3fd05c11"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/v8_receipts.py",
+        "sha256": "1f50af52780c446ce4868385723e18743e201477c25abbeb9d91946bfb8ce150"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/test_v8_contract.py",
+        "sha256": "f7f2ee9937feaccd7e4c829b03e75859564941330f3a8948e94a6216bde4ed25"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/copied-kotlin-phase.sh.in",
+        "sha256": "1a8a5ee2c87fb4a4d8294ac3d5e2f057baaf9bd1c5a74b04564586b5f1b4baf8"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/source-bindings.json",
+        "sha256": "5d7203d79ff8ab61e63407423567a0874ef8f872b60cafb262f3f8e3a5718c48"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/copied_sources.py",
+        "sha256": "a33fee7e8ac9cae3d80de0c9d906b252cbc0cc939ff2b670fcdd62eb349a2221"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/bind_source.py",
+        "sha256": "13d987a7d3e3f93bf885cd26a09614dc72cfd2bef735953d7ed7f5118c58ad7d"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/DSC01ComposeObservation.kt.in",
+        "sha256": "e54503b0d39a1c1055a5334dd835ccad30a96a887ff62560f22202b7231c266c"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/DSC01InvocationBridge.kt.in",
+        "sha256": "fc27547c977ed48d55c2254ed6779dc22fcd64f6cc214c8f4121b9f3e110a330"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/DSC01UIKitObservation.kt.in",
+        "sha256": "83b35d069e738f59b79c44d11569c3a9a3a64b4427a9cb7e7d46c12b60f81e80"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/DSC01NativeObservation.swift.in",
+        "sha256": "f806c5fa6533f9114ad9bf33fdc6fc4647086b1fb2daf4fe09ba93cf6029ee94"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/probe_validation.py",
+        "sha256": "7763f04799e85d0b73249fd142bfef27a6ecf4e5960ae1a348058cd664f9c4d6"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/test_copy_observation_contract.py",
+        "sha256": "f222dee21eb097d5dd93305757ef031769ca91edfff1484e49f3d6aea59bbfc4"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/secondary_fifo.py",
+        "sha256": "080622194e19ef5d3ffb561e134ab8cf91e3e3ccef1e29197f59781154a7ffcc"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/test_secondary_fifo.py",
+        "sha256": "2d685ebcbef9930f43f1f644c5ed6fc3b5a5c5d07d975cc218a9165273bfb826"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/copied_sources.py",
+        "sha256": "a33fee7e8ac9cae3d80de0c9d906b252cbc0cc939ff2b670fcdd62eb349a2221"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/bind_source.py",
+        "sha256": "13d987a7d3e3f93bf885cd26a09614dc72cfd2bef735953d7ed7f5118c58ad7d"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/DSC01ComposeObservation.kt.in",
+        "sha256": "e54503b0d39a1c1055a5334dd835ccad30a96a887ff62560f22202b7231c266c"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/DSC01InvocationBridge.kt.in",
+        "sha256": "fc27547c977ed48d55c2254ed6779dc22fcd64f6cc214c8f4121b9f3e110a330"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/DSC01UIKitObservation.kt.in",
+        "sha256": "83b35d069e738f59b79c44d11569c3a9a3a64b4427a9cb7e7d46c12b60f81e80"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/DSC01NativeObservation.swift.in",
+        "sha256": "f806c5fa6533f9114ad9bf33fdc6fc4647086b1fb2daf4fe09ba93cf6029ee94"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/probe_validation.py",
+        "sha256": "7763f04799e85d0b73249fd142bfef27a6ecf4e5960ae1a348058cd664f9c4d6"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/copied-kotlin-phase.sh.in",
+        "sha256": "1a8a5ee2c87fb4a4d8294ac3d5e2f057baaf9bd1c5a74b04564586b5f1b4baf8"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/run_dsc01_apphost_cycle.py",
+        "sha256": "9facbf591d378a665e933b632d83cb50b9e41a2bf300983cd991473f41ee0d54"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/IOSAppLaunchUITests.swift.in",
+        "sha256": "0df2ec21abe845bbe1f6c231f91f076814d04c1de575c2164a029a578003479d"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/secondary_fifo.py",
+        "sha256": "080622194e19ef5d3ffb561e134ab8cf91e3e3ccef1e29197f59781154a7ffcc"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/test_secondary_fifo.py",
+        "sha256": "2d685ebcbef9930f43f1f644c5ed6fc3b5a5c5d07d975cc218a9165273bfb826"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/copied_sources.py",
+        "sha256": "a33fee7e8ac9cae3d80de0c9d906b252cbc0cc939ff2b670fcdd62eb349a2221"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/bind_source.py",
+        "sha256": "13d987a7d3e3f93bf885cd26a09614dc72cfd2bef735953d7ed7f5118c58ad7d"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/DSC01ComposeObservation.kt.in",
+        "sha256": "e54503b0d39a1c1055a5334dd835ccad30a96a887ff62560f22202b7231c266c"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/DSC01InvocationBridge.kt.in",
+        "sha256": "fc27547c977ed48d55c2254ed6779dc22fcd64f6cc214c8f4121b9f3e110a330"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/DSC01UIKitObservation.kt.in",
+        "sha256": "83b35d069e738f59b79c44d11569c3a9a3a64b4427a9cb7e7d46c12b60f81e80"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/DSC01NativeObservation.swift.in",
+        "sha256": "f806c5fa6533f9114ad9bf33fdc6fc4647086b1fb2daf4fe09ba93cf6029ee94"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/probe_validation.py",
+        "sha256": "7763f04799e85d0b73249fd142bfef27a6ecf4e5960ae1a348058cd664f9c4d6"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/copied-kotlin-phase.sh.in",
+        "sha256": "1a8a5ee2c87fb4a4d8294ac3d5e2f057baaf9bd1c5a74b04564586b5f1b4baf8"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/run_dsc01_apphost_cycle.py",
+        "sha256": "0586ad0a12c57041c72959c8ddb8d915a723c7cf633ae06f6b7aeb49a939ee30"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/IOSAppLaunchUITests.swift.in",
+        "sha256": "79c477c3e2123e7f28d024a7fa5f2cc4fbccb14cfbfb800e616414e55f11bfd8"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/DSC01CatalogSelection.swift.in",
+        "sha256": "2649fb97fe27e74539dfd9867f6677c6a390e722129f8e2434231f44b1d91465"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/DSC01Probe.swift.in",
+        "sha256": "b20b07d53feb3fd7d5aebeb8a71a5742957d9ddab8eaf6bf981736318c3cfa94"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/test_copy_observation_contract.py",
+        "sha256": "f222dee21eb097d5dd93305757ef031769ca91edfff1484e49f3d6aea59bbfc4"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/test_harness_contract.py",
+        "sha256": "8fbd9bfafdb7e82693158937194c3b6130287eab68453136981b513e3488b67b"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/test_catalog_contract.py",
+        "sha256": "074862c448afbfe400355ceb0de335a5dd741a5f59bd3354947f40bdff405992"
+      }
+    ]
+  },
+  "reviewed_executable_ranges": [
+    {
+      "file": "run_dsc01_apphost_cycle.py",
+      "ranges": [
+        [
+          1,
+          804
+        ]
+      ],
+      "method": "CompletecurrentfileandentireV7delta reopened;ASTcomparisononlycontrol_files/mainchange;10oldtop-levelhelper/classesidentical"
+    },
+    {
+      "file": "IOSAppLaunchUITests.swift.in",
+      "ranges": "EveryV7-to-V8changedlineandcallers;independentreversalofauthorizedcalls/namedwaitblockexactlyrestorespreviousreviewedV7bytes",
+      "method": "Alloriginalsettings/restart/canonicalphase/identity/lifecycle/language/orientation/OSassertionsretained"
+    },
+    {
+      "file": "test_catalog_contract.py",
+      "ranges": "V7-to-V8completechangedsection107-122andunchangedoriginalcontrols",
+      "method": "OnlytwoexactnamedwaitsnormalizedbeforeoldOSmethodbyteequality"
+    },
+    {
+      "file": "DSC01PublicDiagnostics.swift.in",
+      "ranges": [
+        [
+          1,
+          35
+        ]
+      ]
+    },
+    {
+      "file": "DSC01MafiaStartSelection.swift.in",
+      "ranges": [
+        [
+          1,
+          236
+        ]
+      ]
+    },
+    {
+      "file": "DSC01OSPrerequisite.swift.in",
+      "ranges": [
+        [
+          1,
+          276
+        ]
+      ]
+    },
+    {
+      "file": "v8_receipts.py",
+      "ranges": [
+        [
+          1,
+          153
+        ]
+      ]
+    },
+    {
+      "file": "test_v8_contract.py",
+      "ranges": [
+        [
+          1,
+          292
+        ]
+      ]
+    }
+  ],
+  "copy_binding": {
+    "sha256": "5d7203d79ff8ab61e63407423567a0874ef8f872b60cafb262f3f8e3a5718c48",
+    "independently_rehashed_inputs": 613,
+    "same613inputs_as_v7": true,
+    "only_binding_change": "created_at",
+    "root_receipt_path": "evidence/dsc01-v8-binding-01/receipt.json",
+    "root_receipt_sha256": "ace71dfb52159f9c0ff69fffdee3c55d2054b8823ea9a8addd8c55cd2271a6cf",
+    "root_receipt_status": "PASS",
+    "exit_code": 0,
+    "stop_exit_code": 0,
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "source_changed_during_cycle": false
+  },
+  "independent_findings": [
+    {
+      "id": "V8-CONTROL-01",
+      "classification": "PRE_EXECUTION_EVIDENCE_WEAKNESS_RESOLVED",
+      "original_draft_sha256": "814df2caf5411806807a4fdbca4b887c757f7765523e86218ab69edc4b54ce55",
+      "concern": "GlobalArabictextandunderlyingEnglish/navcouldallowpresentedlanguagepickerresulttomasqueradeasfinalpreferredlist. Notanapplicationdefectclaim.",
+      "resolution": "Finalactualhelper185-194and263-270nowrequirescurrenthittablenav/English,noalert/keyboard/search,visibleenabledAddLanguagesuccessor,andactualArabiccellgeometricallyafterEnglishbeforeAddLanguage. Parser134-147revalidatesflags/rawrowgeometry;newnegativefixtures160-167rejectoverlaidpickerstates."
+    }
+  ],
+  "semantic_review": {
+    "mafia_start": "Oneactualpublicbuttonactivationoutside14bounded6samplewindows;uniqueenabledhittablefinitegeometry,measuredviewport/overlay,conservative48ptphysicaledgebands,48ptminimumclippedextent/12ptinterior,0.5ptdynamicpoint/framecheck;actualcanonicalSetupthenRoleAssignmentandStartabsence,commandOrdinal0beforecheckpoint;nofallbackcallback/reducer/route",
+    "sampling_and_diagnostics": "Existing250msnonblockinginterval;movinggeometryreobserved;readinessscrollboundedto13,actionneverretried;publicmetadataonlyboundedto96rows/196608bytes;namedoriginalsixattemptobservationtimeoutsdonotchangeoldpredicates",
+    "os_prerequisite": "OnlyDEBUGsimulator,exactenvironmentUUID+ownedfreshnameguard,afterbothcompletegamechecks;publicSettingsGeneralLanguageRegionAddLanguage,exactknownrowlabelsanduniqueclassselection,Arabicsearchonce,knownEnglishprimaryalertactiononce;unknown/ambiguousstatesnamedBLOCKED;ownPreferencesappdeferredtermination",
+    "original_oracles": "OriginalfiveXCTestdescriptors,4productionUIKitfixtures,originalprobe/native/canonicalsettings/game/runtimecontrollers/613copiedinputsunchanged. All12windows/72passivesamplespergameandactualforeground/backgroundassertionsretained. OSprerequisitecannotreplaceoriginalper-appOSselection/AR-System/restartverification.",
+    "cleanup": "Oldfinalizerbyte-identical. Onebuildlock;newtemp-onlycopy;originaloutputsblocked/preserved;PID+startownership;isolatedGradlestopimmediatelyafterXcode;ownedfreshsimulatorshutdown/delete;secondaryFIFOattestation;cachelinksunlinkonly;allstatusesremainfail-closed.",
+    "privacy": "Nonewproductionobservation/publicdatafieldsbeyondallowlistedscenario/surface/publicphaseorpublicUIgeometry. No playernames/seeds/roles/private state appended. No settings/rule/session/transport/nav source changes.",
+    "research": "IndependentAppleSupport109358imageandtextsupportpublicroute;WWDC403doesnotguaranteeexacttwo-languageper-app-rowavailabilityoniOS26.5. opensettingsURLpublicapp-specificonly."
+  },
+  "test_inventory": {
+    "execution_status": "NOT_RUN_BY_REVIEWER",
+    "expected_descriptors": 130,
+    "files": {
+      "test_catalog_contract.py": [
+        "CatalogControlTest.test_synthetic_receipt_is_only_a_parser_check",
+        "CatalogControlTest.test_missing_swift_contract_or_game_cannot_pass",
+        "CatalogControlTest.test_repeated_activation_or_missing_successor_cannot_pass",
+        "CatalogControlTest.test_incomplete_train_unknown_game_and_oversized_row_fail",
+        "CatalogControlTest.test_only_catalog_entry_call_changes_original_matrix_and_geometry_checks_execute",
+        "CatalogControlTest.test_physical_activation_is_outside_all_readiness_retries",
+        "CatalogControlTest.test_public_metadata_bounds_and_measured_exclusions_are_explicit",
+        "CatalogControlTest.test_old_native_matrix_and_cleanup_controls_remain_identical",
+        "CatalogControlTest.test_os_prefix_queries_are_diagnostics_only_not_action_fallbacks",
+        "CatalogControlTest.test_added_xctest_helper_and_contract_are_hashed_build_copy_inputs",
+        "CatalogControlTest.test_every_consumed_v6_reference_is_bound_by_full_path_and_bytes",
+        "CatalogControlTest.test_each_v6_reference_affects_control_identity_without_mutating_files"
+      ],
+      "test_copy_observation_contract.py": [
+        "DirectObservationReceiptTest.test_valid_synthetic_settings_direction_receipt_is_only_a_schema_check",
+        "DirectObservationReceiptTest.test_correct_native_direction_does_not_replace_direct_compose_observation",
+        "DirectObservationReceiptTest.test_both_actual_game_phase_schemas_are_exercised_without_runtime_claim",
+        "DirectObservationReceiptTest.test_equal_value_cannot_hide_a_replaced_controller_or_flow_or_state_reference",
+        "DirectObservationReceiptTest.test_a_disposed_session_cannot_be_rebased_to_a_passing_checkpoint",
+        "DirectObservationReceiptTest.test_root_controller_count_and_locale_do_not_prove_session_retention",
+        "DirectObservationReceiptTest.test_process_recreation_is_not_same_process_continuity",
+        "DirectObservationReceiptTest.test_a_language_command_must_have_its_own_lifecycle_witness",
+        "DirectObservationReceiptTest.test_explicit_language_cannot_pass_when_locale_and_direction_both_stay_stale",
+        "DirectObservationReceiptTest.test_system_cannot_accept_a_plausible_but_replaced_os_preference",
+        "DirectObservationReceiptTest.test_private_or_unknown_data_is_rejected",
+        "DirectObservationReceiptTest.test_kotlin_observation_cannot_run_before_original_app_initialization",
+        "DirectObservationReceiptTest.test_failed_and_cancelled_synthetic_commands_are_not_success",
+        "DirectObservationReceiptTest.test_initial_language_must_use_actual_settings_with_zero_synthetic_commands",
+        "DirectObservationReceiptTest.test_first_post_foreground_mismatch_cannot_be_erased_by_good_passive_windows",
+        "DirectObservationReceiptTest.test_any_early_middle_or_second_window_divergence_fails_despite_good_final_sample",
+        "DirectObservationReceiptTest.test_passive_windows_require_all_six_samples_and_original_order",
+        "DirectObservationReceiptTest.test_every_passive_sample_requires_own_lifecycle_and_canonical_reference",
+        "DirectObservationReceiptTest.test_window_only_schema_is_not_accepted_in_settings_or_nonwindow_events",
+        "DirectObservationReceiptTest.test_six_full_public_snapshot_rows_fit_the_existing_accessibility_budget",
+        "DirectObservationReceiptTest.test_complete_raw_geometric_receipts_fit_the_retained_file_budget",
+        "DirectObservationReceiptTest.test_distinct_outer_direction_is_not_mistaken_for_compose_native_direction",
+        "DirectObservationReceiptTest.test_actual_native_child_outer_view_window_or_parent_replacement_is_rejected",
+        "DirectObservationReceiptTest.test_matching_but_inset_child_and_parent_do_not_prove_full_window_geometry",
+        "DirectObservationReceiptTest.test_every_raw_geometry_field_is_independently_checked",
+        "DirectObservationReceiptTest.test_zero_safe_areas_cannot_false_green_even_when_all_three_match",
+        "DirectObservationReceiptTest.test_oversized_negative_nan_and_bool_geometry_is_rejected",
+        "DirectObservationReceiptTest.test_rotations_must_cover_both_actual_directions_and_not_fake_orientation",
+        "DirectObservationReceiptTest.test_geometry_window_must_not_add_a_background_cycle",
+        "DirectObservationReceiptTest.test_native_observer_cannot_rebase_after_disposal_or_call_before_main",
+        "DirectObservationReceiptTest.test_missing_os_language_ui_is_blocked_never_pass_or_not_applicable",
+        "DirectObservationReceiptTest.test_os_owned_preference_requires_restoration_and_restart",
+        "DirectObservationReceiptTest.test_os_gate_requires_an_accepted_public_settings_url_invocation",
+        "CopyBoundaryContractTest.test_exact_compose_controller_is_captured_from_local_not_a_child_type_guess",
+        "CopyBoundaryContractTest.test_observation_never_loads_or_reconfigures_a_native_view",
+        "CopyBoundaryContractTest.test_both_en_ar_geometries_use_actual_orientation_then_a_complete_passive_window",
+        "CopyBoundaryContractTest.test_native_source_additions_and_explicit_swift_outer_are_closed_manifest_inputs",
+        "CopyBoundaryContractTest.test_local_checkpoint_uses_real_settings_then_home_before_synthetic_language_calls",
+        "CopyBoundaryContractTest.test_foreground_collects_both_windows_before_any_direction_assertion",
+        "CopyBoundaryContractTest.test_passive_samples_are_durable_nonblocking_and_do_not_publish_between_samples",
+        "CopyBoundaryContractTest.test_protected_traversal_hidden_generated_and_nonbuild_inputs_are_excluded",
+        "CopyBoundaryContractTest.test_all_actual_source_anchors_apply_only_to_owned_copies",
+        "CopyBoundaryContractTest.test_missing_or_duplicate_anchor_is_not_a_dynamic_fallback",
+        "CopyBoundaryContractTest.test_copy_refuses_unbound_manifest_and_nonempty_destination",
+        "CopyBoundaryContractTest.test_original_build_outputs_never_enter_copy_only_cleanup_set",
+        "CopyBoundaryContractTest.test_final_copy_attestation_rejects_input_drift_but_not_owned_outputs",
+        "CopyBoundaryContractTest.test_final_copy_attestation_rejects_new_inputs_and_source_symlinks",
+        "CopyBoundaryContractTest.test_after_build_identity_precedes_owned_copy_deletion_and_gates_pass",
+        "CopyBoundaryContractTest.test_public_setup_selectors_are_source_whitelisted_and_bounded",
+        "CopyBoundaryContractTest.test_name_entry_uses_real_ime_next_done_without_fling_or_backing_state_bypass",
+        "CopyBoundaryContractTest.test_original_name_fields_still_own_next_and_final_done",
+        "CopyBoundaryContractTest.test_actual_os_api_used_not_private_settings_urls_or_global_defaults"
+      ],
+      "test_harness_contract.py": [
+        "ReceiptContractTest.test_complete_synthetic_schema_is_accepted_not_runtime_evidence",
+        "ReceiptContractTest.test_missing_no_disposal_precondition_is_rejected",
+        "ReceiptContractTest.test_changed_boot_identity_cannot_impersonate_restart",
+        "ReceiptContractTest.test_unknown_data_is_not_exported_as_trusted_observation",
+        "ReceiptContractTest.test_missing_system_restoration_or_wrong_native_direction_fails",
+        "ReceiptContractTest.test_test_summary_with_skip_cannot_pass",
+        "ReceiptContractTest.test_exact_five_test_receipt_is_required_not_just_the_app_matrix",
+        "ReceiptContractTest.test_production_container_test_names_signatures_and_actual_project_wiring_are_bound",
+        "RuntimeStatusContractTest.test_executed_failed_xctest_summary_cannot_remain_not_run",
+        "RuntimeStatusContractTest.test_preflight_failure_is_still_not_run",
+        "RuntimeStatusContractTest.test_later_evidence_failure_cannot_leave_pass",
+        "RuntimeStatusContractTest.test_running_is_persisted_before_the_guarded_xcode_call",
+        "SelectorSourceContractTest.test_exact_tab_selector_matches_reviewed_pinned_merge_and_actual_resources",
+        "SelectorSourceContractTest.test_games_return_uses_original_resources_and_the_same_actual_tab_bar",
+        "SelectorSourceContractTest.test_diagnostics_are_exact_whitelisted_bounded_and_never_a_fallback_tap",
+        "CopiedPhaseContractTest.test_failed_build_with_stale_output_stops_and_never_normalizes",
+        "CopiedPhaseContractTest.test_failed_directory_change_never_builds_or_normalizes",
+        "CopiedPhaseContractTest.test_failed_stop_cannot_normalize_or_look_green",
+        "CopiedPhaseContractTest.test_normalization_failure_propagates_after_immediate_stop",
+        "CopiedPhaseContractTest.test_successful_phase_stops_before_normalizing"
+      ],
+      "test_secondary_fifo.py": [
+        "SecondaryFifoSafetyTest.test_attested_pair_removed_only_after_workers_stop",
+        "SecondaryFifoSafetyTest.test_unowned_child_cannot_attest_from_name_alone",
+        "SecondaryFifoSafetyTest.test_pid_reuse_during_observation_rejected",
+        "SecondaryFifoSafetyTest.test_pid_reuse_during_cleanup_preserves_files",
+        "SecondaryFifoSafetyTest.test_stale_preexisting_fifo_is_not_owned",
+        "SecondaryFifoSafetyTest.test_process_uid_mismatch_is_not_owned",
+        "SecondaryFifoSafetyTest.test_inode_uid_mismatch_is_not_owned",
+        "SecondaryFifoSafetyTest.test_preexisting_parent_birthtime_rejects_new_fifo",
+        "SecondaryFifoSafetyTest.test_holder_query_error_never_becomes_empty_holder_success",
+        "SecondaryFifoSafetyTest.test_symlink_fifo_not_followed_or_deleted",
+        "SecondaryFifoSafetyTest.test_symlink_parent_not_followed",
+        "SecondaryFifoSafetyTest.test_replaced_inode_rejected",
+        "SecondaryFifoSafetyTest.test_unknown_directory_contents_preserve_all",
+        "SecondaryFifoSafetyTest.test_unknown_root_contents_preserve_all",
+        "SecondaryFifoSafetyTest.test_file_holder_prevents_any_unlink",
+        "SecondaryFifoSafetyTest.test_timeout_or_cancellation_cleanup_uses_same_attestation",
+        "SecondaryFifoSafetyTest.test_missing_unattested_then_late_created_fifo_blocks_cleanup",
+        "SecondaryFifoSafetyTest.test_unknown_external_argument_is_rejected",
+        "SecondaryFifoSafetyTest.test_missing_or_duplicate_flags_rejected",
+        "SecondaryFifoSafetyTest.test_fully_attested_same_identity_and_pair_avoids_redundant_uid_query",
+        "SecondaryFifoSafetyTest.test_initial_uid_query_failure_never_attests_or_deletes_paths",
+        "SecondaryFifoSafetyTest.test_partial_record_or_pending_claim_cannot_use_cached_uid",
+        "SecondaryFifoSafetyTest.test_current_new_pair_cannot_hide_behind_members_old_argv",
+        "SecondaryFifoSafetyTest.test_changed_child_or_parent_start_cannot_use_attested_pair",
+        "SecondaryFifoSafetyTest.test_cached_pair_still_rechecks_changed_inode",
+        "SecondaryFifoSafetyTest.test_cached_pair_still_rechecks_inode_uid_and_symlink",
+        "SecondaryFifoSafetyTest.test_new_pair_argv_change_during_uid_attestation_is_rejected"
+      ],
+      "test_v8_contract.py": [
+        "V8ReceiptTest.test_complete_synthetic_receipts_only_exercise_parsers",
+        "V8ReceiptTest.test_start_requires_executed_geometry_contract",
+        "V8ReceiptTest.test_start_activation_is_not_repeatable_or_an_incomplete_window",
+        "V8ReceiptTest.test_start_setup_and_canonical_successor_are_both_mandatory",
+        "V8ReceiptTest.test_start_disabled_hidden_occluded_and_nonfinite_fail",
+        "V8ReceiptTest.test_start_last_window_and_dynamic_coordinate_drift_fail",
+        "V8ReceiptTest.test_public_diagnostic_bounds_are_strict",
+        "V8ReceiptTest.test_os_precondition_never_passes_from_missing_unknown_or_blocked_step",
+        "V8ReceiptTest.test_os_prerequisite_requires_owned_profile_and_english_primary_not_arabic_primary",
+        "V8ReceiptTest.test_os_step_activation_cannot_repeat_or_disappear",
+        "V8ReceiptTest.test_arabic_picker_result_cannot_masquerade_as_exposed_preferred_list",
+        "V8SourceControlTest.test_start_keeps_one_activation_outside_readiness_and_proves_canonical_successor",
+        "V8SourceControlTest.test_complete_original_matrix_changes_only_the_authorized_calls_and_wait_diagnostics",
+        "V8SourceControlTest.test_original_app_observers_catalog_cleanup_and_oracle_controls_remain_byte_identical",
+        "V8SourceControlTest.test_every_observation_predicate_is_named_without_logging_preferences_or_private_state",
+        "V8SourceControlTest.test_os_prerequisite_is_supported_ui_only_fresh_owned_and_after_both_complete_games",
+        "V8SourceControlTest.test_new_controls_are_bound_and_appended_to_only_the_copied_xctest",
+        "V8SourceControlTest.test_every_consumed_v7_reference_is_bound_by_full_path_and_bytes",
+        "V8SourceControlTest.test_each_v7_reference_changes_identity_without_changing_any_file"
+      ]
+    },
+    "limits": "Pythonparser/source/mocktestsarenotSwiftcompilationorruntimeproof. PrintedgeometrypassedtrueonlycountswithactualpassingXCTestassertionresults."
+  },
+  "remaining_limits": [
+    "ActualSwiftcompilationandpublicStart/OSUIexecutionnotyetperformedwithV8.",
+    "FutureXCUICoordinatesampledoesnotattestphysicaleventlocationorcallbackdelivery;canonicalsuccessorrequired.",
+    "LegitimateOSper-applanguagechangeprocessrelaunchmustnotbeconfusedwithsameprocessgame-retentionfailure.",
+    "CurrentXcode26.5/17F42/iOS26.5arenotStore-qualified26.3;nosigning/physicalLAN/Storeorfullgameclaims.",
+    "ExistingartifactreceiptstillhasheslauncherandComposeframeworkbutnotParlor.debug.dylib;retainedsource/copy/runtimeproofnotcompleteartifactcryptographicprovenance."
+  ],
+  "safety": "Reviewerreadsource/AST/hashes/rawrootbindingonlyandwrotethiscompactrecord.No tests/builds/apps/simulators/processes/sourceeditsstarted;no reviewerworkerorbuildartifactcleanupneeded."
+}

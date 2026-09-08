@@ -1,0 +1,124 @@
+{
+  "reviewed_at_utc": "2026-09-06T06:15:45.606588+00:00",
+  "reviewer": "/root/factory_review",
+  "run_owner": "/root",
+  "cycle": "story-recovery-red-02",
+  "source_before_manifest_sha256": "0a6e8bdb0057d9cde7da4a06616349c2f5aafd60a043772f5975a83826942c29",
+  "source_after_manifest_sha256": "0a6e8bdb0057d9cde7da4a06616349c2f5aafd60a043772f5975a83826942c29",
+  "source_changed_during_cycle": false,
+  "cleanup_errors": [],
+  "reports": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-red-02/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryChronologyTest.xml",
+      "sha256": "40b113ce9a155e36875b892df3294b8007af4036c1aa9d0cca7fd5d5bcec011f",
+      "suite": {
+        "name": "com.parlor.games.whodunit.content.TestingStoryChronologyTest",
+        "tests": "5",
+        "skipped": "0",
+        "failures": "5",
+        "errors": "0",
+        "timestamp": "2026-09-06T06:03:02.428Z",
+        "time": "0.201"
+      },
+      "tests": [
+        {
+          "name": "nadimsShortCellarWaitMatchesTheFinalAccountWithoutChangingHisLie()[desktop]",
+          "failure": "org.opentest4j.AssertionFailedError: Expected value to be true.",
+          "skipped": false
+        },
+        {
+          "name": "jamesLightsOneCigarAt915WhileHis910AlibiRemainsFalse()[desktop]",
+          "failure": "org.opentest4j.AssertionFailedError: expected: <9:15 p.m.> but was: <9:00 p.m.>",
+          "skipped": false
+        },
+        {
+          "name": "correctionsBumpOnlyTheFourTestingCaseVersions()[desktop]",
+          "failure": "org.opentest4j.AssertionFailedError: last-dinner ==> expected: <1.0.1> but was: <1.0.0>",
+          "skipped": false
+        },
+        {
+          "name": "laylaHasOne905OutageAcrossIntroEvidenceAndWitnesses()[desktop]",
+          "failure": "org.opentest4j.AssertionFailedError: Expected value to be true.",
+          "skipped": false
+        },
+        {
+          "name": "karims940PoisoningPrecedesHisCorroborated1015RecordsAlibi()[desktop]",
+          "failure": "org.opentest4j.AssertionFailedError: expected: <10:15 مساءً> but was: <10:00 مساءً>",
+          "skipped": false
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-red-02/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryCompatibilityTest.xml",
+      "sha256": "6f212dedc6e6166038a742c93b0b36d952722dc510ad7977310909b0dfe8f3f9",
+      "suite": {
+        "name": "com.parlor.games.whodunit.content.TestingStoryCompatibilityTest",
+        "tests": "3",
+        "skipped": "0",
+        "failures": "3",
+        "errors": "0",
+        "timestamp": "2026-09-06T06:03:02.632Z",
+        "time": "0.102"
+      },
+      "tests": [
+        {
+          "name": "correctedStoriesDoNotReuseAnyOriginalCanonicalContentDigest()[desktop]",
+          "failure": "org.opentest4j.AssertionFailedError: expected: <[]> but was: <[last-dinner, layla-halabi, jasmine-ring, khan-el-khalili]>",
+          "skipped": false
+        },
+        {
+          "name": "currentSaveRoundTripsButOldOrCrossedIdentityIsRetainedAndRejected()[desktop]",
+          "failure": "org.opentest4j.AssertionFailedError: expected: <Failure(error=CorruptedData)> but was: <Success(data=kotlin.Unit)>",
+          "skipped": false
+        },
+        {
+          "name": "lanOffersMatchOnlyTheExactLoadedRevisionForAllCorrectedCasesAndModes()[desktop]",
+          "failure": "org.opentest4j.AssertionFailedError: Expected value to be false.",
+          "skipped": false
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-red-02/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryGameTraceTest.xml",
+      "sha256": "5be3aca1412a235e513077b8401de53049c7780c46d69fe2868ac64977628d05",
+      "suite": {
+        "name": "com.parlor.games.whodunit.content.TestingStoryGameTraceTest",
+        "tests": "1",
+        "skipped": "0",
+        "failures": "0",
+        "errors": "0",
+        "timestamp": "2026-09-06T06:03:02.734Z",
+        "time": "1.559"
+      },
+      "tests": [
+        {
+          "name": "everyCorrectedCaseKillerAndModeCompletesDeterministicallyAndRoundTrips()[desktop]",
+          "failure": null,
+          "skipped": false
+        }
+      ]
+    }
+  ],
+  "interpretation": "9 authored story tests actually executed; chronology5 and compatibility3 intentionally FAIL; all48 strict6-seat/killer/mode traces repeated twice PASS. Four old Kotlin canonical digests are proven equal in actual failing reused-list assertion. UI fixture failures in this cycle are separate and not claimed as defect witnesses. No author Gradle/tool workers started.",
+  "command": [
+    "./gradlew",
+    ":game-modes:whodunit:desktopTest",
+    "--tests",
+    "*TestingStory*Test*",
+    "--tests",
+    "*WhodunitRecoveryInteractionTest*",
+    "--no-daemon",
+    "--no-parallel",
+    "--max-workers=1",
+    "--no-configuration-cache",
+    "--dependency-verification=strict",
+    "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=story-recovery-red-02",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-Pparlor.android.signing.storeFile=",
+    "-Pparlor.android.signing.storePassword=",
+    "-Pparlor.android.signing.keyAlias=",
+    "-Pparlor.android.signing.keyPassword="
+  ],
+  "exit_code": 1,
+  "stop_exit_code": 0
+}

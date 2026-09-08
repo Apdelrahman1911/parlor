@@ -1,0 +1,158 @@
+{
+  "reviewer": "/root/native_fix_review",
+  "author": "/root",
+  "reviewed_at": "2026-09-05T22:01:19.738043+00:00",
+  "issue": "DS-C01 source-contract follow-up",
+  "conclusion": "APPROVED — reviewed scope and actual focused verification; DS-C01 remains PARTIALLY VERIFIED",
+  "review_source": [
+    {
+      "path": "composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt",
+      "sha256": "00e0d9c8af2d59562ae1a68cc514382f6e017b0c63613ac43810ad407a9d4ba6",
+      "matches_review_and_before_after": true
+    },
+    {
+      "path": "composeApp/build.gradle.kts",
+      "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+      "matches_review_and_before_after": true
+    },
+    {
+      "path": "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+      "sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098",
+      "matches_review_and_before_after": true
+    },
+    {
+      "path": "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+      "sha256": "959ab1a8cb955e484c806c8ce5af65ca841a20cfcd9b1f205443a1cfe768da20",
+      "matches_review_and_before_after": true
+    }
+  ],
+  "source_review_ref": "DS-C01-source-contract-review-03.json",
+  "receipt": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/locale-source-contract-green-01/receipt.json",
+    "sha256": "ad2e08caea2cc9009a33532d9158842edb5ff436ad827f7008b7d8465c54fc95",
+    "command": [
+      "./gradlew",
+      ":composeApp:desktopTest",
+      "--tests",
+      "*ProductionUiAccessibilityContractTest*",
+      "-I",
+      "remediation-runs/2026-09-05-confirmed-fixes/root/verify-locale-contract-inputs.init.gradle",
+      "--no-daemon",
+      "--no-parallel",
+      "--max-workers=1",
+      "--no-configuration-cache",
+      "--dependency-verification=strict",
+      "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=locale-source-contract-green-01",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-Pparlor.android.signing.storeFile=",
+      "-Pparlor.android.signing.storePassword=",
+      "-Pparlor.android.signing.keyAlias=",
+      "-Pparlor.android.signing.keyPassword="
+    ],
+    "status": "PASS",
+    "exit_code": 0,
+    "source_changed_during_cycle": false
+  },
+  "raw_xml": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/locale-source-contract-green-01/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.ProductionUiAccessibilityContractTest.xml",
+    "sha256": "2b80f06056bd7359e34cd0f7db4d4dd3fc322f242d9d14989fbc412407cfccf6",
+    "counts": {
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "cases": [
+      {
+        "name": "controls_use_vector_icons_instead_of_font_dependent_text_glyphs()[desktop]",
+        "pass": true
+      },
+      {
+        "name": "game_catalog_renders_only_registered_shipping_games()[desktop]",
+        "pass": true
+      },
+      {
+        "name": "shell_done_actions_dismiss_the_software_keyboard()[desktop]",
+        "pass": true
+      },
+      {
+        "name": "passive_waiting_surfaces_do_not_publish_no_op_click_actions()[desktop]",
+        "pass": true
+      },
+      {
+        "name": "localized_format_resources_use_the_platform_formatter()[desktop]",
+        "pass": true
+      },
+      {
+        "name": "fullscreen_text_surfaces_keep_actions_reachable_with_large_text()[desktop]",
+        "pass": true
+      },
+      {
+        "name": "mafia_target_rows_expose_radio_selection_and_revalidate_stale_selection()[desktop]",
+        "pass": true
+      },
+      {
+        "name": "wax_seal_exposes_a_one_shot_button_action_beside_pointer_hold()[desktop]",
+        "pass": true
+      },
+      {
+        "name": "fullscreen_recovery_and_confirmation_states_hide_or_replace_interactive_content()[desktop]",
+        "pass": true
+      },
+      {
+        "name": "every_custom_click_or_selection_surface_declares_an_accessibility_role()[desktop]",
+        "pass": true
+      },
+      {
+        "name": "recovery_surfaces_are_announced_and_continuous_indicators_are_motion_aware()[desktop]",
+        "pass": true
+      },
+      {
+        "name": "nullable_language_override_and_platform_motion_preference_reach_the_app_shell()[desktop]",
+        "pass": true
+      },
+      {
+        "name": "platform_locale_overrides_are_commit_scoped_and_do_not_mutate_shared_resources()[desktop]",
+        "pass": true
+      }
+    ]
+  },
+  "input_assertion": {
+    "control_path": "remediation-runs/2026-09-05-confirmed-fixes/root/verify-locale-contract-inputs-control.json",
+    "control_sha256": "4d600a60dbe22be05a6e2b1bd218e3ffd876b5859a056412abbc9f4ce55eb05b",
+    "init_path": "remediation-runs/2026-09-05-confirmed-fixes/root/verify-locale-contract-inputs.init.gradle",
+    "init_sha256": "934a77557a13da3b949c972ebf65215b7c4212988204317c2cd33c1e995b2d7e",
+    "reviewed_lines": [
+      [
+        1,
+        22
+      ]
+    ],
+    "actual_registered_inputs": [
+      "shared/design-system/src/androidMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.android.kt",
+      "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/AppLanguage.kt",
+      "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.kt",
+      "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/ProvideAppLanguage.kt",
+      "shared/design-system/src/desktopMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.desktop.kt",
+      "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+      "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt"
+    ],
+    "interpretation": "doFirst reads Test.inputs; it does not add missing files, modify source, disable tests, or bypass failures. Actual seven paths were printed only after presence checks. This proves declaration, not an executed later source-mutation/UP-TO-DATE experiment."
+  },
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-05T21:55:32.945942+00:00",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "cleanup_completed_at": "2026-09-05T21:55:33.237554+00:00"
+  },
+  "limits": [
+    "Source-structural test not native behavior; prior native11 owner tests and limitations remain authoritative.",
+    "combined-production-01 remains historical FAIL; refreshed combined-production-02 is root-owned and pending, not passed by this focused test.",
+    "No reviewer build/test/native worker or generated build output created."
+  ]
+}

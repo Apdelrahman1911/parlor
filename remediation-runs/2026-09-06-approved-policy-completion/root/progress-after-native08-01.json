@@ -1,0 +1,44 @@
+{
+  "recorded_at": "2026-09-06T22:59:21.925363+00:00",
+  "recorder": "/root",
+  "scope": "Historical progress after completed native08, before V11 implementation or execution",
+  "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+  "authorized_repairs": 16,
+  "implemented": 16,
+  "independently_verified": 15,
+  "percentage_independently_verified": 93.75,
+  "ds_c01_status": "PARTIALLY VERIFIED",
+  "native08": {
+    "xcode_exit": 0,
+    "runner_exit": 2,
+    "xctest_passed": 5,
+    "xctest_skipped": 0,
+    "settings_gate": "PASS",
+    "both_local_game_gates": "PASS",
+    "os_settings_gate": "BLOCKED",
+    "cleanup": "PASS"
+  },
+  "query_semantics_clarification": "The matching(identifier: Settings) API returned one navigation-bar match while label IN Settings returned zero. Apple defines matching(identifier:) over identifier, title, label, value or placeholderValue; this is not proof that the raw identifier property equals Settings. Which property matched remains unobserved in08. Earlier conversational shorthand navigation identifier referred to that query, not a captured raw attribute. No app defect or OS feature absence established.",
+  "next_work": "Independent-reviewed exact known-value predicate/provenance correction in copy-only V11; require a genuine full OS selection/Arabic/System/restart result before adopting16/16. No production edit authorized by this record.",
+  "evidence": [
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-08/receipt.json",
+      "sha256": "12f35c635d496917898e3314282702e488d3010b94b85d3e54da484d2714119c"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-dsc01-apphost08-outcome-01.json",
+      "sha256": "d9e405dd12aece08b175619567b95637e238825cffb6c6892fa89fea8455df00"
+    },
+    {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-v11-exact-identifier-research-02.json",
+      "sha256": "ee19e160e055ca4aa4d75b153ae1b744d252aead063003b361917227db8f3104"
+    }
+  ],
+  "not_claimed": [
+    "all project issues fixed",
+    "GitHub closure",
+    "whole-project review completion",
+    "Store readiness",
+    "physical-device proof"
+  ]
+}

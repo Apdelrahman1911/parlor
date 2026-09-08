@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "purpose": "Copy-only native controls: provenance and exact status/context semantics; no production defect or runtime success inferred",
+  "references": [
+    {
+      "label": "keychain missing entitlement",
+      "url": "https://developer.apple.com/tutorials/data/documentation/security/errsecmissingentitlement.json",
+      "accessed_at": "2026-09-07T03:35:51.243073+00:00",
+      "http_status": 200,
+      "response_bytes": 15413,
+      "response_sha256": "a09771e4effdb7a2743eccdf2c3b95dd9ded4794e74bbc3dd2ef3ba06bd36410",
+      "authoritative_text": "A required entitlement is missing.\nThe \n method returns this error when you specify an access group to which your app doesn\u2019t belong:\nTo avoid the error, either use your app\u2019s default access group by omitting the \n key in the add attributes, or make sure that the value associated with the key matches one of your app\u2019s access groups. These access groups come from your app\u2019s \n, its app identifier, and its \n, in that order, as described in \n.\nYou can check the access group string by setting a breakpoint on the \n call and using the debugger to print the query dictionary. Look for the \n item:\nIf after setting the access group key correctly you still receive the \n error, check to make sure the entitlements in your built app match your expectations. Build your app for a hardware target\u2014not the Simulator app\u2014and use Xcode to locate the app bundle on disk:\nThen get a list of the app\u2019s entitlements. Run the codesign command-line utility shown in the following example, substituting the Xcode-provided path to your app, like the one highlighted in the preceding illustration.\nInspect the codesign output to determine the groups to which your app actually belongs. The following collectively define your app\u2019s access groups:\nAny of the strings in the array associated with the \n key.\nThe string corresponding to the \n key (or the \n key in macOS).\nAny of the strings in the array associated with the \n key."
+    },
+    {
+      "label": "keychain absent item",
+      "url": "https://developer.apple.com/tutorials/data/documentation/security/errsecitemnotfound.json",
+      "accessed_at": "2026-09-07T03:35:52.765456+00:00",
+      "http_status": 200,
+      "response_bytes": 7107,
+      "response_sha256": "a2db6e50bdc426446682b1d3084871a97af00626def4ab6aff3cc5a1459a832d",
+      "authoritative_text": "The item cannot be found."
+    },
+    {
+      "label": "keychain access group",
+      "url": "https://developer.apple.com/tutorials/data/documentation/security/ksecattraccessgroup.json",
+      "accessed_at": "2026-09-07T03:35:53.770432+00:00",
+      "http_status": 200,
+      "response_bytes": 21634,
+      "response_sha256": "1c8ed38f2a55f039773cdbb32d9e145b911bcd5f45d5350a5c33bc2ca6cc13b7",
+      "authoritative_text": "A key with a value that\u2019s a string indicating the access group the item is in.\nThe corresponding value is of type \n and indicates the item\u2019s one and only access group.\nFor an app to access a keychain item, one of the groups to which the app belongs must be the item\u2019s group. The list of an app\u2019s access groups consists of the following string identifiers, in this order:\nThe strings in the app\u2019s \nThe app ID string\nThe strings in the \nTwo or more apps that are in the same access group can share keychain items. For more details, see \n.\nSpecify which access group a keychain item belongs to when you create it by setting the \n attribute in the query you send to the \n method. Naming a group that\u2019s not among the creating app\u2019s access groups\u2014including the empty string, which is always an invalid group\u2014generates an error. If you don\u2019t explicitly set a group, keychain services defaults to the app\u2019s first access group, which is either the first keychain access group, or the app ID when the app has no keychain groups. In the latter case, the item is only accessible to the app creating the item, since no other app can be in that group.\nBy default, the \n, \n, and \n methods search all the app\u2019s access groups. Add the \n attribute to the query to limit the search to a particular group.\n\n \nThis attribute applies to macOS keychain items only if you also set a value of \n for the \n key, the \n key, or both."
+    },
+    {
+      "label": "Debug dylib",
+      "url": "https://developer.apple.com/tutorials/data/documentation/xcode/understanding-the-debug-dynamic-library.json",
+      "accessed_at": "2026-09-07T03:35:56.373592+00:00",
+      "status": "UNRESOLVED",
+      "error_type": "HTTPError"
+    },
+    {
+      "label": "withContext version1.11.0",
+      "url": "https://raw.githubusercontent.com/Kotlin/kotlinx.coroutines/1.11.0/kotlinx-coroutines-core/common/src/Builders.common.kt",
+      "accessed_at": "2026-09-07T03:36:00.791169+00:00",
+      "http_status": 200,
+      "response_bytes": 27606,
+      "response_sha256": "ae85de350787c1a6ab6e8247378919d4628b7c078a946f74a34135312ae16afd",
+      "applicable_source_ranges": [
+        {
+          "start": 70,
+          "end": 99,
+          "text": " *   (as is the case with [GlobalScope] or malformed scopes),\n *   the exception cannot be propagated and is handled as the [CoroutineExceptionHandler] documentation describes.\n * - The lifecycle of the [CoroutineScope] passed as the receiver to the [block]\n *   will not end until the [block] completes (or gets cancelled before ever having a chance to run).\n * - If the [block] throws a [CancellationException], the coroutine is considered cancelled,\n *   cancelling all its children in turn, but the parent does not get notified.\n *\n * ### Overriding the parent job\n *\n * Passing a [Job] in the [context] argument breaks structured concurrency and is not a supported pattern.\n * It does not throw an exception only for backward compatibility reasons, as a lot of code was written this way.\n * Always structure your coroutines so that the lifecycle of the child coroutine is\n * contained in the lifecycle of the [CoroutineScope] it is launched in.\n *\n * To help with migrating to structured concurrency, the specific behavior of passing a [Job] in the [context] argument\n * is described here.\n * **Do not rely on this behavior in new code.**\n *\n * If [context] contains a [Job] element, it will be the *parent* of the new coroutine,\n * and the lifecycle of the new coroutine will not be tied to the [CoroutineScope] at all.\n *\n * In specific terms:\n *\n * - If the [CoroutineScope] is cancelled, the new coroutine will not be affected.\n * - If the new coroutine fails with an exception, it will not cancel the [CoroutineScope].\n *   Instead, the exception will be propagated to the [Job] passed in the [context] argument.\n *   If that [Job] is a [SupervisorJob], the exception will be unhandled,\n *   and will be propagated as the [CoroutineExceptionHandler] documentation describes.\n *   If that [Job] is not a [SupervisorJob], it will be cancelled with the exception the coroutine failed with.\n * - The [CoroutineScope] may complete without waiting for the new coroutine to finish."
+        },
+        {
+          "start": 115,
+          "end": 188,
+          "text": " *\n * A coroutine created with [launch] does not return a result, and if it fails with an exception,\n * there is no reliable way to learn about that exception in general.\n * [async] is a better choice if the result of the coroutine needs to be accessed from another coroutine.\n *\n * ## Differences from [async]\n *\n * [launch] is similar to [async] whose block returns a [Unit] value.\n *\n * The only difference is the handling of failures that cannot be propagated to the parent:\n * for an [async] coroutine, a [CoroutineExceptionHandler] will not be invoked in that scenario.\n * Instead, the user of [async] must call [Deferred.await] to get the result of the coroutine,\n * which will be the exception the coroutine failed with.\n *\n * ## Pitfalls\n *\n * ### [CancellationException] silently stopping computations\n *\n * ```\n * val deferred = GlobalScope.async {\n *     awaitCancellation()\n * }\n * deferred.cancel()\n * coroutineScope {\n *     val job = launch {\n *         val result = deferred.await()\n *         println(\"Got $result\")\n *     }\n *     job.join()\n *     println(\"Am I still not cancelled? $isActive\")\n * }\n * ```\n *\n * will output\n *\n * ```\n * Am I still not cancelled? true\n * ```\n *\n * This may be surprising, because the `launch`ed coroutine failed with an exception,\n * but the parent still was not cancelled.\n *\n * The reason for this is that any [CancellationException] thrown in the coroutine is treated as a signal to cancel\n * the coroutine, but not the parent.\n * In this scenario, this is unlikely to be the desired behavior:\n * this was a failure and not a cancellation and should be propagated to the parent.\n *\n * This is a legacy behavior that cannot be changed in a backward-compatible way.\n * Use [ensureActive] and [isActive] to distinguish between cancellation and failure:\n *\n * ```\n * launch {\n *     try {\n *         val result = deferred.await()\n *     } catch (e: CancellationException) {\n *         if (isActive) {\n *             // we were not cancelled, this is a failure\n *             println(\"`deferred` was cancelled\")\n *             throw IllegalStateException(\"deferred was cancelled\", e)\n *         } else {\n *             println(\"I was cancelled\")\n *             // throw again to finish the coroutine\n *             ensureActive()\n *         }\n *     }\n * }\n * ```\n *\n * In simpler scenarios, this form can be used:\n *\n * ```\n * launch {\n *     try {\n *         // operation that may throw its own CancellationException"
+        }
+      ]
+    }
+  ]
+}

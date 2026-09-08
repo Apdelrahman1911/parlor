@@ -1,0 +1,232 @@
+{
+  "schema_version": 1,
+  "review_id": "android-cli20-preferences-independent-review-01",
+  "reviewer": "/root/factory_review",
+  "author": "/root",
+  "reviewed_at": "2026-09-07T12:08:53.113175+00:00",
+  "disposition": "APPROVED_SCOPED_ROOT_AUTHORED_PREFERENCE_DELTA_AND_39_CONTROL_EVIDENCE; EMULATOR_RUNTIME_NOT_YET_EXECUTED_FOR_THIS_DELTA",
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "2250007173bbf9ca7c441f1c46802d84c1b478ba",
+    "tree": "b506da5b778a3220f81e07674dcd85d381c49cb6",
+    "tracked_status": ""
+  },
+  "scope": [
+    "Root-authored deprecated Android preference environment removal, strengthened synthetic assertion, exact CLI20 library test, bound discovery driver.",
+    "Complete authentic emulator-package adapter was authored by this reviewer and reviewed/applied separately by root; that package implementation is NOT independently approved here.",
+    "Existing SDK/root/native process owner approval remains scoped to prior dossiers; current runtime binding is explicitly recorded."
+  ],
+  "root_cause": {
+    "classification": "CONFIRMED_TEST_INFRASTRUCTURE_DEFECT_CORRECTED",
+    "path": "owned_arm64_smoke_sdk.py:400-408 creates ANDROID_USER_HOME=owned/android-user and ANDROID_SDK_HOME=owned/home; CLI20 maps legacy parent to owned/home/.android and refuses conflicting preference locations. createAvdIniFile subsequently refuses null sdkHandler.getAndroidFolder with a misleading SDK-installation error.",
+    "original_evidence": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-runtime-04",
+    "original_result": "AVD create failed before emulator start; tests=[]; complete447-entry authentic image+emulator clone and tiny real CoW probe succeeded. This was not an application failure or an absent-emulator-package claim.",
+    "correction": "cli20_invocation removes ANDROID_SDK_HOME and ANDROID_PREFS_ROOT together with inherited Java options from a copied child environment; preserves actual owned ANDROID_USER_HOME and existing owned SDK/home/tmp/AVD paths.",
+    "counter_evidence": [
+      "Only stripping SDK_HOME would leave inherited PREFS_ROOT conflicts; both are stripped and tested.",
+      "Emulator/run commands receive commands.env reassigned to corrected child environment at caller line434.",
+      "Passed original env remains unchanged. No installed SDK/preference mutation is performed by the Java preference test.",
+      "No duplicate or replacement app setting; only campaign test infrastructure is affected."
+    ]
+  },
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/owned_sdk_image.py",
+      "sha256": "82490e1769445cbb1f4e95ab41007dcc47473a243f78224c1042e2743f8b47a0",
+      "line_count": 269,
+      "reviewed_line_ranges": [
+        [
+          1,
+          100
+        ],
+        [
+          219,
+          269
+        ]
+      ],
+      "scope": "Root-authored lines44,246-252 plus complete delta versus separately reviewed emulator-package draft; no self-approval of package implementation"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/test_owned_sdk_image.py",
+      "sha256": "84a0fa54f97ec618e343d3c9b7ceb59b4a84a64ee00e8600ed808c993890a6ca",
+      "line_count": 449,
+      "reviewed_line_ranges": [
+        [
+          198,
+          234
+        ]
+      ],
+      "scope": "Root-authored preference-filter assertions plus exact delta"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/test_cli20_preferences.py",
+      "sha256": "36ded50377132ede0e0450d992d3857332e90351a231ce8d0f152ef543f83ba3",
+      "line_count": 82,
+      "reviewed_line_ranges": [
+        [
+          1,
+          82
+        ]
+      ],
+      "scope": "Complete"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/run_integration_controls.py",
+      "sha256": "1eeca535474ac9916f2796d8c1333cce70491e7c81f530648312dce2dddaebed",
+      "line_count": 66,
+      "reviewed_line_ranges": [
+        [
+          1,
+          66
+        ]
+      ],
+      "scope": "Complete"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/owned_arm64_smoke_sdk.py",
+      "sha256": "3a425d8dafac853ac3f8c189a68e4951eb1874e79c57f458825d1145d0289991",
+      "line_count": 576,
+      "reviewed_line_ranges": [
+        [
+          1,
+          130
+        ],
+        [
+          365,
+          456
+        ]
+      ],
+      "scope": "Applicable caller/env ownership and unchanged native-clone proof"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/android-cli20-locations-bytecode-01.txt",
+      "sha256": "7078b14829577d6bb17ff6769c633e7c025b0bd3e5d17c82f859bcace2fe44a1",
+      "line_count": 423,
+      "reviewed_line_ranges": [
+        [
+          1,
+          95
+        ],
+        [
+          200,
+          348
+        ]
+      ],
+      "scope": "Exact-library getPrefsLocation and computeAndroidFolder"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/android-cli20-pathlocator-bytecode-01.txt",
+      "sha256": "1b17e1b8adeb9057b7f24b830fc3b83cbfade15215320c54473f4e2214993989",
+      "line_count": 763,
+      "reviewed_line_ranges": [
+        [
+          1,
+          280
+        ],
+        [
+          390,
+          500
+        ]
+      ],
+      "scope": "singlePathOf rejection and legacy .android mapping"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/android-cli20-avdmanager-bytecode-02.txt",
+      "sha256": "8722f2867cdc00306b88a51dfce6a68561048582538c5144b7f4d0748d01e55c",
+      "line_count": 4034,
+      "reviewed_line_ranges": [
+        [
+          2180,
+          2380
+        ]
+      ],
+      "scope": "createAvdIniFile null preference guard"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/android-cli20-sdkhandler-bytecode-01.txt",
+      "sha256": "24b555e378fa8555d4251a2ebf7c357c6dfce101cd81277ae918103d383f14ae",
+      "line_count": 900,
+      "reviewed_line_ranges": [
+        [
+          90,
+          100
+        ]
+      ],
+      "scope": "getAndroidFolder getter"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/android-cli20-sdkhandler-companion-bytecode-01.txt",
+      "sha256": "b1ccae432edf0cd4254611b37daa09b172e824c5ae72178f27a15d5a82300fbd",
+      "line_count": 456,
+      "reviewed_line_ranges": [
+        [
+          1,
+          80
+        ]
+      ],
+      "scope": "getInstance delegation"
+    }
+  ],
+  "verification": {
+    "evidence_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-cli-preferences-controls-01",
+    "receipt_sha256": "c65ae1fb7640ccfd722619f4b9e298fc9d90842b030614d35a38eb0dae857c75",
+    "log_sha256": "1a002f8bd1ddf6002ed126f9a225780fb59eba88a2514ee6833ce50534c4b9f5",
+    "tests": 39,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "actual_raw_methods_match_ast_declared_discovered": true,
+    "eight_control_before_after_current_bytes_match": true,
+    "actual_library_test": "One of39 methods executes three fresh Java21 source-file/library processes: original conflicting environment throws expected AndroidLocationsException; corrected environment resolves exact owned folder; inherited deprecated pair is removed and resolves same owned folder. Assertion errors are not swallowed. unittest subtest failures would fail the enclosing run.",
+    "library_pins": {
+      "avdmanager-classpath.jar": "ffc2689864e3d6186b62a35dbed1f4bb128253d789dcbef4d8f647a31a03c996",
+      "tools.common.jar": "367a6391abb542772628bf67c1ec20ba5bd5282e3004f4db397d932ae8d6a672"
+    },
+    "library_pins_independently_rehashed": true,
+    "source_manifest_sha256_during_test": "d81dc9a981eef474acf5f698ebb08bf7796faa69be34104dffa55ad98a23d814",
+    "source_changed_during_test": false,
+    "no_reviewer_execution": "Only static Python parsing/hashing and source/evidence reads; no control module imports, Java, tests, simulator, native probe, or Gradle executed."
+  },
+  "runtime_approval": {
+    "controls": [
+      {
+        "path": "owned_arm64_smoke_sdk.py",
+        "sha256": "3a425d8dafac853ac3f8c189a68e4951eb1874e79c57f458825d1145d0289991"
+      },
+      {
+        "path": "darwin_owned_processes.py",
+        "sha256": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378"
+      },
+      {
+        "path": "avd-sdk-root-01/owned_sdk_image.py",
+        "sha256": "82490e1769445cbb1f4e95ab41007dcc47473a243f78224c1042e2743f8b47a0"
+      }
+    ],
+    "approved_control_sha256": "19870b9e06bf54fd0721910646aaf9c904e5a2c6404e3debbf4a321c36d08e5d",
+    "conditions": [
+      "Parent alone owns lane and authorizes execution.",
+      "Rebind current production/copy source and existing disposable artifacts without implying the current control tests are emulator runtime.",
+      "Keep original SDK metadata unchanged and preserve original user data/profiles.",
+      "Record actual AVD/emulator/three-test results and complete ownership-based cleanup on all exits."
+    ]
+  },
+  "cleanup": {
+    "outer_exit_code": 0,
+    "gradle_stop_exit_code": 0,
+    "stop_log": "No Gradle daemons are running.",
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "completed_at": "2026-09-07T11:52:07.888203+00:00",
+    "reviewer_owned_outputs": "Only this compact review report; no build outputs, scratch, or workers created."
+  },
+  "limitations": [
+    "39 includes synthetic controls and one real CLI20 preference-library method, not39 Android tests. No emulator/runtime05 outcome is claimed.",
+    "Class-path metadata/library fingerprints are exact for installed CLI20; this does not certify all future SDK/tool versions.",
+    "Control test source/folder pins make this a host-specific campaign utility, not a portable shipping test.",
+    "No claim of physical LAN, user-phone execution, Store signing/readiness, or original historical launch-crash root cause."
+  ]
+}

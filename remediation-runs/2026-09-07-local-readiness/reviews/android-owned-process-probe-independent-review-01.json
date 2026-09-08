@@ -1,0 +1,90 @@
+{
+  "created_at": "2026-09-07T05:23:21.942547+00:00",
+  "reviewer": "/root/factory_review",
+  "probe_author": "/root",
+  "control_author": "/root/release_fix_review",
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "head": "875d849e0079452557374690b14e42c546ba2c06",
+    "tree": "3be52230c713999cfa182755e69578ff6fd67797",
+    "scope": "Exact file hashes below, not a clean-tree claim; audit campaign is excluded evidence."
+  },
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/probe_android_owned_processes.py",
+      "sha256": "c28d355945c358b135e690fa6ba9be664fcc7f6d07ff5550ae32d7c9a5cb89b7",
+      "lines": 111,
+      "reviewed_ranges": [
+        [
+          1,
+          111
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py",
+      "sha256": "595797cbc8d3fe88dd5967ffa80e5140a0826f189590bac8663497369f3774b5",
+      "lines": 354,
+      "reviewed_ranges": [
+        [
+          1,
+          354
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/test_darwin_owned_processes.py",
+      "sha256": "411b249ae39bbc35ecf802eebb4c131b883d3aa67b842a21f787a2967fc45788",
+      "lines": 269,
+      "reviewed_ranges": [
+        [
+          1,
+          269
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    }
+  ],
+  "conclusion": "APPROVED FOR ROOT-OWNED BOUNDED CHILD PROBE ONLY; broader emulator execution is blocked on the separately recorded list-error edge until repaired/reviewed.",
+  "proof": [
+    "Backend/ABI/self-task token capability initialized before any fixture spawn. Three static fixtures spawn no build/server/emulator and naturally exit after approximately 12/12.2 seconds (parent of detached child sleeps 2 seconds); scheduling delays are not a hard real-time guarantee.",
+    "Only task-created waitable direct children grant group enumeration: waitid(P_PID,WNOHANG|WEXITED|WNOWAIT) before each scan; reaping/revocation ends the grant. Known descendants use stable PID/UID/start tuples and refreshed kernel audit tokens. No numeric signal or killpg fallback exists.",
+    "Actual xnu-12377.61.12 source establishes task_name_for_pid same-user eligibility (subject to MAC policy), TASK_AUDIT_TOKEN on a name port, signal API errno return and kernel PID-generation/reference binding. Read failures fail instead of authorizing numeric fallback.",
+    "Probe requires ordinary owner observation, post-exec /bin/sleep observation, and a detached nonowner-PGID child observation before stopping. Each scenario requires retired/reaped owner and no observed surviving owned workers.",
+    "Updated SIGINT/SIGTERM handlers only set cancellation flags, installed before spawn. Cancellation cannot split Popen/registration or interrupt finalization; next controlled check fails, final receipt cannot be PASS after observed cancellation.",
+    "Any failure preserves FAIL. Finally performs shutdown and receipts; failed probe waits until last-spawn+16 seconds, retries cleanup without changing failure into pass. No unrelated workers/files are targeted."
+  ],
+  "counter_evidence_and_limits": [
+    "37 synthetic tests are not actual Darwin execution. I read all 16 native-control tests and root actual37-test log/receipt; sibling21-test implementation was reviewed by root, not claimed as my source coverage.",
+    "The new real probe cannot prove all detached descendants in arbitrary third-party process trees were observed, nor any app/network behavior.",
+    "DarwinBackend._list currently treats native wrapper zero+errno as empty: exact libproc.c45-58 returns0 for syscall failure and wrapper76-96 preserves0; broader worker enumeration must reject this. Probe expected-observation assertions and short fixture self-exit fail safely, but this is not broad-runner approval.",
+    "Uncatchable SIGKILL, interpreter/native crashes, or severe scheduling suspension cannot be made reliable by Python finally; bounded fixture code reduces retained-worker risk but no such interruption was executed here.",
+    "Execution must use /usr/bin/python3 -B without optimization (-O/PYTHONOPTIMIZE), since probe uses Python assertions."
+  ],
+  "requested_probe_correction": {
+    "original": "No SIGTERM handler, so cancellation could bypass evidence/finalization.",
+    "current": "Source corrected111-line probe reread in full; no-raise flags and final failure check address it."
+  },
+  "separate_candidate": {
+    "id": "CONTROL-DARWIN-LIST-ERRNO",
+    "status": "SOURCE-PROVEN CANDIDATE REPORTED TO ROOT; FIX/INDEPENDENT CONFIRMATION PENDING",
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py",
+    "lines": [
+      156,
+      164
+    ],
+    "recommendation": "After resetting errno and calling wrapper, reject count==0 with nonzero errno in addition to negative count. Cover error0+EPERM, empty0+errno0, ordinary counts, ceiling; re-freeze and rerun root synthetic suite."
+  },
+  "research": "reviews/darwin-probe-authoritative-references-01.json",
+  "test_evidence": {
+    "path": "evidence/android-controls-01",
+    "actual_result": "37tests; exit0; OK; no native signal/emulator/Gradle",
+    "independently_read": [
+      "tests.log",
+      "receipt.json"
+    ]
+  },
+  "cleanup": "Reviewer executed only finite source/header reads and authoritative source retrieval. No build/native/app/test/server workers or generated build outputs started by reviewer; Python -B used. Required compact research/review retained."
+}

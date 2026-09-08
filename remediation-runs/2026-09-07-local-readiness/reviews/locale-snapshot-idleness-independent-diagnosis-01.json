@@ -1,0 +1,274 @@
+{
+  "id": "locale-snapshot-idleness-independent-diagnosis-01",
+  "recorded_at": "2026-09-07T18:03:16.720124+00:00",
+  "reviewer": "/root/release_fix_review",
+  "implementation_author": "/root",
+  "classification": "TEST/EVIDENCE GAP with source-proven unsafe idleness assumption; not a newly confirmed production locale defect",
+  "disposition": "HOLD acceptance of the two-write-only patch. The two explicit selection writes are corrected, but an equivalent internal-effect notification race and an unchanged sibling custom test remain. Recommend public ComposeUiTest scene idleness for both.",
+  "source_files": [
+    {
+      "role": "provider_test",
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/localization/ProvideAppLanguageDesktopTest.kt",
+      "sha256": "52760930cfcb9ed6708e097ffae795bbca5e65c95e096654425429366e6262a1",
+      "reviewed_lines": [
+        [
+          1,
+          119
+        ]
+      ]
+    },
+    {
+      "role": "sibling_test",
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/RtlFormattingTest.kt",
+      "sha256": "7046798c0cc27587046452d09b6fb3a3741583ef3d02206fd8c2521f7634c3a4",
+      "reviewed_lines": [
+        [
+          1,
+          178
+        ]
+      ]
+    },
+    {
+      "role": "platform_provider",
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/desktopMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.desktop.kt",
+      "sha256": "e0a776351f34c0c8b6bfaa76c840c331ac6b226f75cca3d10ad7144e1c6afbbf",
+      "reviewed_lines": [
+        [
+          1,
+          44
+        ]
+      ]
+    },
+    {
+      "role": "common_provider",
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/ProvideAppLanguage.kt",
+      "sha256": "b4f4286459fe923ebaa3e156f4a9995232ce40ad32ae9bc43f73a929da77dc18",
+      "reviewed_lines": [
+        [
+          1,
+          62
+        ]
+      ]
+    },
+    {
+      "role": "language",
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/AppLanguage.kt",
+      "sha256": "fe6a1f254f55403d010bba741b80d05824b238f668f6d6951b31a308eb8353f0",
+      "reviewed_lines": [
+        [
+          1,
+          38
+        ]
+      ]
+    },
+    {
+      "role": "provider_contract",
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.kt",
+      "sha256": "9fe9742ea7225d76795a1731bab0e38c60af8b1b8760fc7d7158024d7437794f",
+      "reviewed_lines": [
+        [
+          1,
+          21
+        ]
+      ]
+    }
+  ],
+  "reviewed_dependency_ranges": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/linux-ui-resource-research-01/runtime-commonMain_androidx_compose_runtime_snapshots_Snapshot.kt",
+      "sha256": "52d93a07ef3212393761feac837ff3fb5028f5a483f7d65b601980e5bdb2930b",
+      "reviewed_lines": [
+        [
+          287,
+          312
+        ],
+        [
+          395,
+          480
+        ],
+        [
+          623,
+          696
+        ],
+        [
+          800,
+          1005
+        ],
+        [
+          1551,
+          1579
+        ],
+        [
+          1678,
+          1743
+        ],
+        [
+          2000,
+          2037
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/linux-ui-resource-research-01/runtime-commonMain_androidx_compose_runtime_Recomposer.kt",
+      "sha256": "d2ec57aaa8504979593e165fd2d6acf612c3b71c8c842927c43abdc9354a7363",
+      "reviewed_lines": [
+        [
+          520,
+          785
+        ],
+        [
+          825,
+          850
+        ],
+        [
+          1103,
+          1114
+        ],
+        [
+          1134,
+          1168
+        ],
+        [
+          1386,
+          1411
+        ],
+        [
+          1569,
+          1608
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/linux-ui-resource-research-01/runtime-commonMain_androidx_compose_runtime_Effects.kt",
+      "sha256": "3523b052dbdcc8cf591907267771833e485e6b28c14883b8ef0fb2dc221a0f7a",
+      "reviewed_lines": [
+        [
+          73,
+          96
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/linux-ui-resource-research-01/ui-test-skikoMain_androidx_compose_ui_test_ComposeUiTest.skiko.kt",
+      "sha256": "4e1386cc56271860e21e035b3fb50fd3e587ecea17206b7490fb50dc1fb20f8a",
+      "reviewed_lines": [
+        [
+          70,
+          103
+        ],
+        [
+          110,
+          455
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/linux-ui-resource-research-01/ui-skikoMain_androidx_compose_ui_scene_BaseComposeScene.skiko.kt",
+      "sha256": "dd114d562019f8d3b7cae2000c60cf74e9ac84132938cbaeb63728cb76220129",
+      "reviewed_lines": [
+        [
+          60,
+          321
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/linux-ui-resource-research-01/ui-skikoMain_androidx_compose_ui_platform_GlobalSnapshotManager.skiko.kt",
+      "sha256": "2cf21619975bebf2a31ef1a0846c2804fd0138b11cb3b0001900971ee4bd58ce",
+      "reviewed_lines": [
+        [
+          1,
+          58
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/linux-ui-resource-research-01/ui-desktopMain_androidx_compose_ui_platform_GlobalSnapshotManager.desktop.kt",
+      "sha256": "e4f8ffbf14eb426f56e445bb27265fdc126e7069086a470341ad0acf1c81c658",
+      "reviewed_lines": [
+        [
+          1,
+          22
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/linux-ui-resource-research-01/resources-blockingMain_org_jetbrains_compose_resources_ResourceState.blocking.kt",
+      "sha256": "77fef9fd97778de74f8d4daad171de5339c5635306dd15a504c4e66a9acf5c43",
+      "reviewed_lines": [
+        [
+          1,
+          66
+        ]
+      ]
+    }
+  ],
+  "actual_pins": {
+    "compose_ui_test": "org.jetbrains.compose.ui:ui-test-desktop:1.10.3",
+    "compose_ui": "org.jetbrains.compose.ui:ui-desktop:1.10.3",
+    "compose_resources": "org.jetbrains.compose.components:components-resources-desktop:1.10.3",
+    "compose_runtime": "androidx.compose.runtime:runtime-desktop:1.10.5 (CMP runtime1.10.3 delegation)"
+  },
+  "evidence": {
+    "original_linux": "reviews/ci-run-34143924756-evidence/failing-junit-01; original ProvideAppLanguageDesktopTest failed Arabic -> System expected Leave but retained Arabic (assertion line89). Raw failure does not establish an exact thread interleaving.",
+    "partial_patch_execution": "evidence/linux-ui-fixtures-green-01 ran the provider test once, passed in0.005 seconds. This pass is real but not proof that the independent residual race is removed.",
+    "two_write_patch_sha256": "52760930cfcb9ed6708e097ffae795bbca5e65c95e096654425429366e6262a1",
+    "sibling_sha256": "7046798c0cc27587046452d09b6fb3a3741583ef3d02206fd8c2521f7634c3a4"
+  },
+  "reachable_primary_race": [
+    "A previous real Compose UI fixture initializes the JVM-wide GlobalSnapshotManager (BaseComposeScene125–127), which retains an external UI dispatcher consumer (GlobalSnapshotManager40–53). Custom UnitApplier/Recomposer fixture does not own/drain that dispatcher.",
+    "A test global selectedLanguage write wakes the notifier. advanceGlobalSnapshot2006–2025 captures and clears modified global state under lock, then invokes observers outside that lock. A scheduling interruption can occur between capture and invocation.",
+    "Meanwhile the test calls sendApplyNotifications687–689; global changes are already consumed so it does not join in-flight callbacks. Its coroutine-test runCurrent then has no queued recomposition, allowing a stale immediate assertion.",
+    "RegisterApplyObserver1144–1163 only queues recomposition after it receives the callback. Later callback delivery updates the app normally. This is a test synchronization path, not evidence of permanently stale production state."
+  ],
+  "what_the_two_write_patch_fixes": [
+    "withMutableSnapshot452–466 creates an isolated mutable snapshot and invokes apply().check() before returning.",
+    "MutableSnapshot.apply816–905 invokes the apply observers synchronously for its modified records before returning Success. Its isolation does not merge global write observers (GlobalSnapshot1551–1574).",
+    "Therefore the replacement synchronously notifies the custom recomposer about both explicit selectedLanguage writes; that correction is not itself rejected."
+  ],
+  "remaining_internal_effect_path": [
+    "Desktop PlatformAppLocale21–27 writes appliedLanguageTag from DisposableEffect, after setting/restoring the JVM default. This is distinct from the test selectedLanguage field.",
+    "Recomposer applies changes715–717 inside TransparentObserverMutableSnapshot825–850. That transparent snapshot introduces observers, not isolation: Snapshot1678–1743 forwards modified records to the global parent. DisposableEffectImpl84–85 runs its body onRemembered.",
+    "The resulting global appliedLanguageTag write can be captured by the external notifier before the custom recomposer's notifyObjectsInitialized764. That API advances the global snapshot again (Snapshot1577–1579) but does not wait for a notification already captured by another thread.",
+    "Raw runCurrent, Recomposer.hasPendingWork1573–1583 and Recomposer.awaitIdle1606–1607 do not check Snapshot.isApplyObserverNotificationPending. The second recompose that updates activeTag/resources can still arrive after the test asserts.",
+    "No deterministic runtime witness for this residual interleaving was executed by the reviewer. The reachability proof is from the pinned implementation; do not describe a locally observed intermittent failure that was not run."
+  ],
+  "sibling_path": "RtlFormattingTest80–141 uses the same custom recomposer;122–125 mutates JVM locale and global selection then sendApplyNotifications/runCurrent. It has the primary selection-write race even without PlatformAppLocale. A focused correction should cover it too.",
+  "counter_evidence": [
+    "Desktop resource loading is synchronous remember/runBlocking in resources ResourceState.blocking.kt1–66; this is not evidence of asynchronous resource I/O lag.",
+    "LocalLayoutDirection is a static composition local, so do not assume child skipping alone proves a production stale-resource defect.",
+    "Recomposer does flush global changes via notifyObjectsInitialized; the defect hypothesis accounts for it and only concerns already-in-flight observer delivery.",
+    "Public Skiko test API explicitly checks the in-flight notification counter; a custom sleep/retry/assertion weakening or production state mutation is unnecessary."
+  ],
+  "recommended_minimal_correction": [
+    "Use the real public ComposeUiTest scene for both resource tests; do not construct an independent UnitApplier/Recomposer/ImmediateFrameClock. Keep mainClock.autoAdvance=true.",
+    "Perform test-owned Locale and selectedLanguage writes together on runOnIdle/UI thread, then invoke waitForIdle or the next runOnIdle before assertions. runOnIdle waits before its callback, not after (382–385). Never call blocking waitForIdle from inside the UI-thread callback.",
+    "isIdle336–350 checks pending measure/layout, global pending snapshot changes, Snapshot.isApplyObserverNotificationPending, scene invalidations and registered idle resources. The autoAdvance=false branch intentionally bypasses snapshot/recomposer idle342–344 and is unsuitable here.",
+    "Assert initial loading through an ordered SideEffect observation ledger (first Loading before any Content; loading observation has empty content/no remembered content state). Public setContent automatically waits off the UI thread410–422, so observing only the final phase would weaken initial-order coverage.",
+    "Retain real English/Arabic/System strings and matching direction, exact JVM System restoration, a stable remembered object, zero intermediate disposals, and exact one final disposal. Do not key-remount content to force resource reload.",
+    "Use a small actual framebuffer and explicit60-second test deadline if selecting runSkikoComposeUiTest; its default timeout is infinite. Keep assertion reads on the UI-thread/idle barrier.",
+    "Restore the original process Locale in an unconditional outer finally; do not put restoration after a potentially failing assertion or disposal step. Allow the public scene owner to close/cancel its own runtime.",
+    "Root should implement; reviewer supplies source reasoning only, not concrete patch code. Then independently review the resulting complete diff and the actual discovered executed test IDs, including sibling and surrounding suite order."
+  ],
+  "research_refs": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/linux-ui-resource-research-01/receipt.json",
+      "sha256": "6cad0a7f8b93973eae96b87aa7d56646bc69d4c8b7ecea17dd1ddcbb84704eb5"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/linux-ui-resource-research-01/receipt-supplement-02.json",
+      "sha256": "22b39d5b9ed912db37d84f4b6446704b3ebeb13089df28ae4ecc4b3fe7ecca18"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/linux-ui-resource-research-01/receipt-supplement-03.json",
+      "sha256": "269f9a73c2a8c6c522f7c7f0c2d5f6b3352d84367aed5a613c742ff1058bdb02"
+    }
+  ],
+  "verification_plan": [
+    "Focused provider + RtlFormatting tests plus relevant desktop source Detekt.",
+    "Run with preceding real Compose UI fixtures or whole relevant modules to initialize the persistent global manager and expose the original cross-fixture dependency.",
+    "Fresh Linux CI run after local evidence; local macOS Desktop pass is not Linux-hosted proof.",
+    "Optionally retain an isolated deliberately delayed apply-observer witness if a deterministic regression mechanism is desired, but it must own any thread/latches, never block an existing UI notifier, and must not enter shipping source."
+  ],
+  "cleanup": "This reviewer performed reads, hashes, XML/source inspection and additive reports only. No build, test, app, native-worker, simulator, cleanup or Git mutation was started; no root-lane process was touched."
+}

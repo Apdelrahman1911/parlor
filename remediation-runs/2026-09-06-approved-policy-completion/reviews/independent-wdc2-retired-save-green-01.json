@@ -1,0 +1,425 @@
+{
+  "at": "2026-09-06T12:13:10.805308+00:00",
+  "reviewer": "/root/release_fix_review",
+  "author": "/root",
+  "finding": "WD-C2 non-destructive pre-release recovery follow-through",
+  "conclusion": "APPROVED — focused correction and regression execution verified; repository combined-current-tree verification still required",
+  "basis": [
+    "Latest AUTHORIZATION.md explicitly forbids automatic save deletion, including retired internal Solo records. This changes earlier intended cleanup policy; not mislabeled a newly introduced chronology regression.",
+    "Prior independent-wdc2-owner-retention-policy-01.json and independent-wdc2-remediation-focused-01.json remain intact; this record resolves the requested retained-Solo follow-through."
+  ],
+  "source_review": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "sha256": "726d948937f757496807bab91381abcb9d050240695fb63dbdbdc21181cb9334",
+      "reviewed_ranges": [
+        [
+          204,
+          487
+        ],
+        [
+          599,
+          663
+        ]
+      ],
+      "scope": "Complete modified loader/entry/recovery paths and all associated branches reopened; rest previously reviewed, no blanket new full-file claim."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitResumeReconstructionTest.kt",
+      "sha256": "e2ef51a27dd6ba794ff5241326d7f3e1c49e88a730c872bde7cd6bdde1623b09",
+      "reviewed_ranges": [
+        [
+          295,
+          460
+        ]
+      ],
+      "scope": "Full changed retention/cancellation tests and sibling metadata validation; other unchanged tests independently reviewed previously."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitRecoveryInteractionTest.kt",
+      "sha256": "ce78251562131202f41648b26ef897034fd712c59f9cbb5d0af5207a3c47aa57",
+      "reviewed_ranges": [
+        [
+          1,
+          295
+        ]
+      ],
+      "scope": "All six test signatures, actual Compose flow, synthetic repository/store, assertions, cleanup."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/engine/src/commonMain/kotlin/com/parlor/engine/snapshot/SnapshotCodec.kt",
+      "sha256": "010c2df47f3803d60a80a428e459e052c715d3eb29a55444f1eeeff7c28ebad1",
+      "reviewed_ranges": [
+        [
+          1,
+          69
+        ]
+      ],
+      "scope": "GameSnapshot equality compares payload contents, all envelope metadata."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/InMemorySnapshotStore.kt",
+      "sha256": "4100417b69e545bfa8f8e1f77795480072ba5324f60b77c62c6403f419361239",
+      "reviewed_ranges": [
+        [
+          1,
+          46
+        ]
+      ],
+      "scope": "UI synthetic backing behavior and ownership"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+      "sha256": "e2ca0be28fd2f0eafee1a55022653190cf30a8c6da620dc3dfe56f361e0da27f",
+      "reviewed_ranges": [
+        [
+          1,
+          214
+        ]
+      ],
+      "scope": "Real envelope codec/serialized store boundary used with synthetic filesystem; cancellation and deletion contract"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/WhodunitPlayModePolicy.kt",
+      "sha256": "5c9b2e3d524b46ab441684bf1b0e85965d2e12f1fa0a938a4595cd84d1d7465a",
+      "reviewed_ranges": [
+        [
+          1,
+          16
+        ]
+      ],
+      "scope": "Pass-and-play remains only supported local entry"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/PRE_RELEASE_COMPATIBILITY.md",
+      "sha256": "32ae112de9fd761636191c3308faf28fa5a3a8f3fd694064bbeaf3f2ffe69060",
+      "reviewed_ranges": [
+        [
+          1,
+          59
+        ]
+      ],
+      "scope": "Retired modes explicitly retained; no migration"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/WHODUNIT_TEST_CONTENT.md",
+      "sha256": "19a2ca3a4cba3d60117f76897c7fc0d1cc55f97beb5002aead43fdc020b12756",
+      "reviewed_ranges": [
+        [
+          1,
+          86
+        ]
+      ],
+      "scope": "Scoped chronology, current content compatibility and honest editorial limits"
+    }
+  ],
+  "reachable_proof": [
+    "SnapshotStore.load returns envelope; session/game/engine guards first; nonnull unsupported mode including Solo returns CorruptedData before content/payload decoding. There is no delete/save in loadResumedSession after this change.",
+    "WhodunitGameFlow failure branch shows RecoveryErrorScreen; Retry reruns load, Back only exits, remount reuses preserved record. delete(id) occurs only in explicit discard callback. Active SessionDrivenFlow and its autosave are not constructed on this rejected path.",
+    "No duplicate Solo setting or migration; existing nonnull != PassAndPlay guard now handles Solo. Game rules, host reducer ownership, protocol4.2 and snapshot formats unchanged."
+  ],
+  "red": {
+    "receipt": "remediation-runs/2026-09-06-approved-policy-completion/evidence/wd-retired-save-red-01/receipt.json",
+    "receipt_sha256": "629f655f710519c4381a475d157e0b72b5b974e46a85811808964e80f369187a",
+    "source_manifest_sha256": "eee3392d48f040b3a91e06e9b8724aad96471627b2d95e1b564eb02ab7f0a6f0",
+    "diff_sha256": "f671b2c7c4df264d911f4e86c6c0d3ea73288a7c546e712ea918e49d5b6e908f",
+    "exit_code": 1,
+    "raw_xml": [
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/wd-retired-save-red-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest.xml",
+        "sha256": "df90fc8557e6ac20d3f4bc7d8b036265cc1a4e3f786618389f524e6a4e7c241b",
+        "suite": "com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest",
+        "tests": 11,
+        "failures": 1,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          {
+            "name": "resume_accepts_supportedBareVersionsAndCurrentVersionedPayload()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "resume_propagates_load_cancellation_without_deleting_a_retired_snapshot()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "resume_preserves_a_retired_solo_snapshot_without_rewriting_private_state()[desktop]",
+            "classification": "FAIL"
+          },
+          {
+            "name": "resume_rejects_partial_or_malformed_content_identity_metadata()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "resume_rejects_unknown_play_mode_metadata_instead_of_changing_ceremony()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "resumed_controller_state_equals_saved_state_and_advances_correctly()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "resume_rejects_another_game_before_decoding_its_payload()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "deleting_snapshot_removes_it_from_listUnfinished()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "loaded_case_boundary_requires_exact_identity_and_content_compatible_state()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "corrupt_snapshot_payload_does_not_blow_up_decoder()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "resume_rejects_a_future_engine_version_before_decoding_its_payload()[desktop]",
+            "classification": "PASS"
+          }
+        ]
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/wd-retired-save-red-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest.xml",
+        "sha256": "1beb92e5ed4d7d53a3955afa999f270fa8104dbfc837c3573d667188c3de271d",
+        "suite": "com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest",
+        "tests": 6,
+        "failures": 2,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          {
+            "name": "englishRetiredSoloSaveIsKeptUntilExplicitDiscard()[desktop]",
+            "classification": "FAIL"
+          },
+          {
+            "name": "arabicRetiredSoloSaveIsKeptUntilExplicitDiscard()[desktop]",
+            "classification": "FAIL"
+          },
+          {
+            "name": "arabicIncompatibleSaveIsExplainedAndKeptUntilExplicitDiscard()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "englishIncompatibleSaveIsExplainedAndKeptUntilExplicitDiscard()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "englishIdentityLessSaveIsKeptUntilExplicitDiscard()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "arabicIdentityLessSaveIsKeptUntilExplicitDiscard()[desktop]",
+            "classification": "PASS"
+          }
+        ]
+      }
+    ],
+    "interpretation": "17 tests:14pass/3fail/0skip. Exact expected CorruptedData vs actual NotFound. Both new UI variants fail at Fixture.prepare loader precheck, before Compose rendering; not misreported as rendered-UI red evidence. Cancellation and previous four UI cases pass."
+  },
+  "green": {
+    "receipt": "remediation-runs/2026-09-06-approved-policy-completion/evidence/wd-retired-save-green-01/receipt.json",
+    "receipt_sha256": "24af7b7ae67f13f597ccdfa29eb353456bf21dcb6a57acf29aa8650a069216be",
+    "source_manifest_sha256": "eae905fe193e4d6578f4616d8fdf6846b312492725b3a6a8b2b380e8f6f3553a",
+    "diff_sha256": "1e1cdc430bad016a46ef3c7c5ec76584b32b2a1052544a7c945a35491e109b2a",
+    "exit_code": 0,
+    "raw_xml": [
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/wd-retired-save-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryChronologyTest.xml",
+        "sha256": "d21e0ad3fe342e5ef4fdc342221656919fbf0a9e8305bbcaf233ff67c29fec2e",
+        "suite": "com.parlor.games.whodunit.content.TestingStoryChronologyTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          {
+            "name": "nadimsShortCellarWaitMatchesTheFinalAccountWithoutChangingHisLie()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "jamesLightsOneCigarAt915WhileHis910AlibiRemainsFalse()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "correctionsBumpOnlyTheFourTestingCaseVersions()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "laylaHasOne905OutageAcrossIntroEvidenceAndWitnesses()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "karims940PoisoningPrecedesHisCorroborated1015RecordsAlibi()[desktop]",
+            "classification": "PASS"
+          }
+        ]
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/wd-retired-save-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryCompatibilityTest.xml",
+        "sha256": "061011a04212f8077c68438ab612c5d89cecb171fc45670d9888e25903ad913c",
+        "suite": "com.parlor.games.whodunit.content.TestingStoryCompatibilityTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          {
+            "name": "correctedStoriesDoNotReuseAnyOriginalCanonicalContentDigest()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "currentSaveRoundTripsButOldOrCrossedIdentityIsRetainedAndRejected()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "identityLessPreClueSavesCannotSilentlyBindToInstalledStoryProse()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "lanOffersMatchOnlyTheExactLoadedRevisionForAllCorrectedCasesAndModes()[desktop]",
+            "classification": "PASS"
+          }
+        ]
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/wd-retired-save-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryGameTraceTest.xml",
+        "sha256": "724547efb6aed545afc0a3fe864ef98a1ea50b8f1688dd34f859a5e778defa3b",
+        "suite": "com.parlor.games.whodunit.content.TestingStoryGameTraceTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          {
+            "name": "everyCorrectedCaseKillerAndModeCompletesDeterministicallyAndRoundTrips()[desktop]",
+            "classification": "PASS"
+          }
+        ]
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/wd-retired-save-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest.xml",
+        "sha256": "d909ebe3ea166dd70d7947f43d62a5bce69b5ebb20b9eb85b46f5d307cf176f4",
+        "suite": "com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest",
+        "tests": 11,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          {
+            "name": "resume_accepts_supportedBareVersionsAndCurrentVersionedPayload()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "resume_propagates_load_cancellation_without_deleting_a_retired_snapshot()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "resume_preserves_a_retired_solo_snapshot_without_rewriting_private_state()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "resume_rejects_partial_or_malformed_content_identity_metadata()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "resume_rejects_unknown_play_mode_metadata_instead_of_changing_ceremony()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "resumed_controller_state_equals_saved_state_and_advances_correctly()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "resume_rejects_another_game_before_decoding_its_payload()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "deleting_snapshot_removes_it_from_listUnfinished()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "loaded_case_boundary_requires_exact_identity_and_content_compatible_state()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "corrupt_snapshot_payload_does_not_blow_up_decoder()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "resume_rejects_a_future_engine_version_before_decoding_its_payload()[desktop]",
+            "classification": "PASS"
+          }
+        ]
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/wd-retired-save-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest.xml",
+        "sha256": "ca2c7588d99553700da11ff1e31f1fd63efe5646d3060ddd2519839559337713",
+        "suite": "com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "cases": [
+          {
+            "name": "englishRetiredSoloSaveIsKeptUntilExplicitDiscard()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "arabicRetiredSoloSaveIsKeptUntilExplicitDiscard()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "arabicIncompatibleSaveIsExplainedAndKeptUntilExplicitDiscard()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "englishIncompatibleSaveIsExplainedAndKeptUntilExplicitDiscard()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "englishIdentityLessSaveIsKeptUntilExplicitDiscard()[desktop]",
+            "classification": "PASS"
+          },
+          {
+            "name": "arabicIdentityLessSaveIsKeptUntilExplicitDiscard()[desktop]",
+            "classification": "PASS"
+          }
+        ]
+      }
+    ],
+    "interpretation": "27/27 pass,0skip:11 reconstruction,6 real EN/AR recovery variants,10 chronology/content/complete-game descriptors. Green UI executes Retry, Back/remount and selected-only explicit delete at320x640 with1.3textscale. Actual story combinations remain described by original test bodies, not inflated testcase count."
+  },
+  "red_green_binding": {
+    "changed_inputs": [
+      "docs/PRE_RELEASE_COMPATIBILITY.md",
+      "docs/WHODUNIT_TEST_CONTENT.md",
+      "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt"
+    ],
+    "regression_test_bytes_unchanged": true,
+    "all_green_whodunit_inputs_still_match_at_review": true,
+    "source_before_after_stable": true
+  },
+  "counter_evidence": [
+    "Solo remains unsupported, rather than being normalized into pass-and-play. Existing explicit discard/list removal behavior remains tested.",
+    "Malformed payload does not need to decode to preserve a retired record. Current cancellation test hits load and proves propagation/zero deletes; obsolete delete-cancellation test was not simply removed.",
+    "Fixture uses synthetic records and InMemory filesystem, not platform durability, authentic encryption or physical-device runtime evidence.",
+    "Snapshot equality includes payload contents. Store counters prove no save/delete requests by flow before explicit discard; no claim that this UI fixture inspects ciphertext file bytes."
+  ],
+  "cleanup": {
+    "red_stop_exit": 0,
+    "green_stop_exit": 0,
+    "red_remaining_outputs": [],
+    "green_remaining_outputs": [],
+    "red_remaining_owned_workers": [],
+    "green_remaining_owned_workers": [],
+    "red_errors": [],
+    "green_errors": [],
+    "method": "Receipts, stop.log, end-of-Gradle logs inspected; no reviewer build/process action. Other root-owned ongoing cycles are not affected."
+  },
+  "remaining": [
+    "Combined final-tree checks including source-fingerprinting transport suite after docs/newnative changes.",
+    "Editorial, legal, physicalLAN/accessibility and native platform durability evidence remain separate."
+  ]
+}

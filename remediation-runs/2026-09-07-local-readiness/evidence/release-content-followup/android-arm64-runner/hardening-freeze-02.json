@@ -1,0 +1,92 @@
+{
+  "author": "/root/release_fix_review",
+  "frozen_at": "2026-09-07T05:25:34.770326+00:00",
+  "version": 2,
+  "prior_freeze": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/hardening-freeze.json",
+    "sha256": "0e44f1a86a93379af20b79404903def101b3a1c9e28fe0fdb4672293471b509f",
+    "preserved_unmodified": true
+  },
+  "reason": "Factory independent review found exact-XNU libproc zero+errno failure was incorrectly treated as empty; only excluded campaign controls modified.",
+  "reference": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/darwin-probe-authoritative-references-01.json",
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/README.md",
+      "sha256": "6b3161a3458cb44b8da51430e31cd40619318b6204940566bec77cdee05e7d74",
+      "lines": 106,
+      "parsed_test_methods": 0
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/adb-direct-shutdown-source-research.json",
+      "sha256": "552d94c7a98e5c479dfa61d6b27442afac95f04e6c347134c2cd1b23f69c4719",
+      "lines": 19,
+      "parsed_test_methods": 0
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/adb-smart-socket-documentation.json",
+      "sha256": "21b927fa13f8a1e607a620c1c447fbbefc63da6f6d1357cfe9128f52e21fc992",
+      "lines": 28,
+      "parsed_test_methods": 0
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin-audit-token-source-research.json",
+      "sha256": "a02e5df420f6194b62b73d0ade6c63054385fd8c1f99516d94bcbe2bf1c731d1",
+      "lines": 85,
+      "parsed_test_methods": 0
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin-list-source-research.json",
+      "sha256": "8d42ca136956520de1cfb11ffcd111370ff764e30818a17f6431a7c159db72b2",
+      "lines": 17,
+      "parsed_test_methods": 0
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin-task-name-source-research.json",
+      "sha256": "f7e31fa76432b1eb4318991ef235d75f9290f9deb6fba14eb88bb136eacb934c",
+      "lines": 18,
+      "parsed_test_methods": 0
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py",
+      "sha256": "148a71180b6768858f47d7cf5607104169898dafdee48ecbf41937cd46e71a1d",
+      "lines": 357,
+      "parsed_test_methods": 0
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/owned_arm64_smoke.py",
+      "sha256": "38ea4c0000a2c426f8475b4616e77ee0d8bb25bb424dc7516348c2095cd08b48",
+      "lines": 473,
+      "parsed_test_methods": 0
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/test_darwin_owned_processes.py",
+      "sha256": "30e28929a5305fbef65c855d56e5e2c16d9fc2c5b30c1c7e3bc5f0ef5350f9c9",
+      "lines": 333,
+      "parsed_test_methods": 20
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/test_owned_arm64_smoke.py",
+      "sha256": "404e2fa8f88f140cb5a1d40395e8422bcc35b8714dbe6020e60cef8ca7f4b29a",
+      "lines": 258,
+      "parsed_test_methods": 21
+    }
+  ],
+  "status": "DRAFT \u2014 ROOT + FACTORY INDEPENDENT REVIEW AND EXECUTION REQUIRED; NEW TESTS NOT RUN BY AUTHOR",
+  "synthetic_test_count": 41,
+  "synthetic_command": [
+    "/usr/bin/python3",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "validation_performed": "Python ast.parse only; not test execution.",
+  "production_changes": false,
+  "gradle_or_native_workers_started_by_author": false,
+  "native_runtime_caveat": "Native API actual execution and short-lived detached helper coverage are not yet proven. Do not execute emulator before review, pure tests, and root-owned native child probes."
+}

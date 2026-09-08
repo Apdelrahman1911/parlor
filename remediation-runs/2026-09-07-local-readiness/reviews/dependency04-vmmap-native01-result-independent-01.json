@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "at": "2026-09-08T06:01:58.709728+00:00",
+  "reviewer": "/root/release_fix_review",
+  "classification": "DEPENDENCY_SYNTHETIC_CONTROLS_PASS; VMMAP_FIXED_CHILD_COMMAND_PASS_ONLY; BOTH_CLEANUP_PASS",
+  "prior_independent_schema_review": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-consumer03-schema-fixture-independent-01.json",
+    "sha256": "4c70e0415934796ca776ec153017c5bd4b2a010247af79f47d4a9aca1bf39b93"
+  },
+  "dependency_controls": {
+    "receipt": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-consumer-controls-04/receipt.json",
+      "sha256": "53cbefb51d0f9903c894fb150ddf93642e0139ebfe47f7a4cde7a0cb5d74ff2e"
+    },
+    "raw_log": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-consumer-controls-04/gradle.log",
+      "sha256": "903b4ebe5b26a4c38f5e158c840f00a679e164cad9ae28f0f7eff1594acd9acd"
+    },
+    "detailed_control_receipt": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-consumer-controls-04/schema-consumer-controls.json",
+      "sha256": "228db4de743bdb3d74eef3a7848304e977bf35d7887a205db0078d00f551cb35"
+    },
+    "tests": 16,
+    "passed": 16,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "actual_unique_ids_equal_AST_and_discovery": true,
+    "actual_ids": [
+      "test_candidate_consumer.CandidateConsumerTests.test_binding_hash_unknown_fields_and_executing_consumer_are_required",
+      "test_candidate_consumer.CandidateConsumerTests.test_bound_renderer_and_notice_edits_fail_before_execution",
+      "test_candidate_consumer.CandidateConsumerTests.test_candidate_identity_and_wrong_cycle_commands_do_not_pass",
+      "test_candidate_consumer.CandidateConsumerTests.test_complete_synthetic_candidate_uses_real_bound_apis_and_offline_schema",
+      "test_candidate_consumer.CandidateConsumerTests.test_final_recheck_catches_late_file_and_directory_changes",
+      "test_candidate_consumer.CandidateConsumerTests.test_import_has_no_evidence_reads_writes_network_or_commands",
+      "test_candidate_consumer.CandidateConsumerTests.test_main_failure_is_nonzero_sanitized_and_never_overwrites_evidence",
+      "test_candidate_consumer.CandidateConsumerTests.test_metadata_tamper_timestamp_and_extra_files_are_not_declared_success",
+      "test_candidate_consumer.CandidateConsumerTests.test_missing_extra_graph_and_completion_bytes_fail_closed",
+      "test_candidate_consumer.CandidateConsumerTests.test_missing_optional_format_checker_is_not_silent_schema_success",
+      "test_candidate_consumer.CandidateConsumerTests.test_receipt_rehash_does_not_waive_failures_cleanup_or_source_drift",
+      "test_candidate_consumer.CandidateConsumerTests.test_recording_checker_preserves_registered_library_rejection",
+      "test_candidate_consumer.CandidateConsumerTests.test_schema_integrity_and_actual_official_validation_remain_required",
+      "test_candidate_consumer.CandidateConsumerTests.test_strict_pins_and_variants_survive_consistent_evidence_rehash",
+      "test_candidate_consumer.CandidateConsumerTests.test_symlink_traversal_duplicate_json_and_size_controls",
+      "test_candidate_consumer.CandidateConsumerTests.test_wrong_sbom_edges_and_notice_bytes_cannot_pass"
+    ],
+    "negative_cases_reconciled": [
+      "Integer0 rejected by actual official schema; string0 rejected by unchanged exactBOM comparison; SPDX tamper rejected by pinned input hash (same existing method now PASS).",
+      "Missing optional iri-reference checker rejected; registered checker rejects malformed actual URI.",
+      "Bound source/consumer/renderer/notice mutations, clean receipt/command/identity drift, graph/completion/artifact/variant tamper, metadata and output safety cases all actual PASS."
+    ],
+    "versions": {
+      "jsonschema": "4.25.1",
+      "referencing": "0.36.2",
+      "rfc3987-syntax": "1.1.0",
+      "lark": "1.2.2"
+    },
+    "before_after_control_hashes_equal_current": true,
+    "driver_sha256": "78222a79d0d19cdce28077506ce1fd74481cc419fdf9dce9e9e5b6fd8840336f",
+    "optional_packages": [
+      {
+        "distribution": "rfc3987-syntax",
+        "version": "1.1.0",
+        "sha256": "6c3d97604e4c5ce9f714898e05401a0445a641cfa276432b0a648c80856f6a3f",
+        "compressed_bytes": 8046,
+        "uncompressed_bytes": 18424,
+        "members": 9
+      },
+      {
+        "distribution": "lark",
+        "version": "1.2.2",
+        "sha256": "c2276486b02f0f1b90be155f2c8ba4a8e194d42775786db622faccd652d8e80c",
+        "compressed_bytes": 111036,
+        "uncompressed_bytes": 350066,
+        "members": 46
+      }
+    ],
+    "ephemeral_parser_cleanup": true,
+    "scope_limit": "Synthetic fixtures, not final-candidate exports or legal/package approval."
+  },
+  "vmmap_fixed_child": {
+    "receipt": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/vmmap-capability-native-01/receipt.json",
+      "sha256": "6d63822667cdc3f0ca91d2a805d4b480622f77c79269c3bb7939788669eaeb45"
+    },
+    "compact_result": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/vmmap-capability-native-01/gradle.log",
+      "sha256": "5e4e10d2a247a724cd1b7c5066ff1d42a26fda9bad85bfa639481b51fcba8119"
+    },
+    "probe_control_hash": "5ea462242f6f9660c23365b8ec7a6348c69397d55336e3a7d3dc041ae6e67b96",
+    "command": [
+      "/usr/bin/vmmap",
+      "-w",
+      "96735"
+    ],
+    "sleep_pid": 96735,
+    "exit_code": 0,
+    "captured_bytes": 45575,
+    "captured_sha256": "a5981d9442efc200e839f1f6a01b7b6f66b995731aec1e4b6cfdd6fc9f3b9fa6",
+    "raw_output_removed": true,
+    "mapper_cleanup": {
+      "exit_code": 0,
+      "pid": 96737,
+      "reaped": true,
+      "started": true
+    },
+    "sleep_cleanup": {
+      "exit_code": -15,
+      "pid": 96735,
+      "reaped": true,
+      "started": true
+    },
+    "controls_unchanged": true,
+    "proves_app_provenance": false,
+    "mapping_identity_validated": false,
+    "claim": "Exactly the root-created /bin/sleep child command returned0. Does not establish ability to inspect Parlor/Simulator, mapped image identity, app provenance, or reason for prior app-targeted exit255.",
+    "independence_limit": "Reviewer authored this probe; this is bounded result reconciliation, not a substitute for root independent source/fix approval."
+  },
+  "source_identity": {
+    "commit": "8b9e3b0cdfdab82e7cff3ad8135d0eae9a0b8ca3",
+    "tree": "c1e92b5e00ab64a293c4d7f9c9b5e2b85887be88",
+    "source_rows": 800,
+    "manifest_sha256": "c4d3387a95ff1a4462071147afe92411f5a08ee8b10f78852a59494c8d3e4420",
+    "both_cycles_before_after_equal": true,
+    "both_outer_runner_hashes_equal_current": true
+  },
+  "cleanup": {
+    "both_gradle_stop_exit": 0,
+    "both_stop_logs": "No Gradle daemons are running.",
+    "both_remaining_workers_outputs_errors_empty": true,
+    "exact_lstat_absent_paths": [
+      "/Users/abdelrahman/Projects/parlor/shared/core/build",
+      "/Users/abdelrahman/Projects/parlor/shared/networking/build",
+      "/Users/abdelrahman/Projects/parlor/shared/content/build",
+      "/Users/abdelrahman/Projects/parlor/shared/storage/build",
+      "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/build",
+      "/Users/abdelrahman/Projects/parlor/shared/networking-testing/build",
+      "/Users/abdelrahman/Projects/parlor/shared/engine/build",
+      "/Users/abdelrahman/Projects/parlor/shared/design-system/build",
+      "/Users/abdelrahman/Projects/parlor/shared/engine-testing/build",
+      "/Users/abdelrahman/Projects/parlor/shared/session/build",
+      "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/build",
+      "/Users/abdelrahman/Projects/parlor/game-modes/mafia/build",
+      "/Users/abdelrahman/Projects/parlor/build",
+      "/Users/abdelrahman/Projects/parlor/composeApp/build",
+      "/Users/abdelrahman/Projects/parlor/build-logic/build",
+      "/Users/abdelrahman/Projects/parlor/build-logic/convention/build",
+      "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-consumer-controls-04/scratch",
+      "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-consumer-controls-04/scratch/pycache",
+      "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/vmmap-capability-native-01/scratch",
+      "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/vmmap-capability-native-01/scratch/pycache"
+    ],
+    "process_verification_limit": "No reviewer OS process probe; task-family cleanup supported by actual probe/outer receipts."
+  },
+  "preserved_failures": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-consumer-controls-03/receipt.json",
+      "sha256": "18c25e73cb009e63c3428647a3303a6f9e9ec66c4adf63a1f086def70bc68772"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/vmmap-capability-controls-01/receipt.json",
+      "sha256": "dcc790b45398f51856658682c02ad3e10168d54a33e09b0603c98f4b97898b80"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-13/receipt.json",
+      "sha256": "721c991fec4dc3073cfa11e1a6f2ee1196deea35f54b1aaa3fc03bd48f7c0a2f"
+    }
+  ],
+  "remaining": "Final-candidate dependency export/render/consumer held until root sourcefreeze; app image provenance and vmmap255 cause remain unresolved. No Store, app-runtime or physical-device claim.",
+  "reviewer_activity": "Stdlib read/JSON/AST/hash/exact-owned-path lstat only; no builds/tests/native/network/process/Git, no background workers or scratch. This additive resultrecord is the only deliverable created."
+}

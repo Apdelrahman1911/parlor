@@ -1,0 +1,67 @@
+test_constraints_are_not_misrepresented_as_runtime_dependency_edges (test_dependency_inventory.DependencyInventoryTest) ... ok
+test_coordinates_cannot_escape_metadata_repository (test_dependency_inventory.DependencyInventoryTest) ... ok
+test_cycle_and_excessive_inheritance_fail_closed (test_dependency_inventory.DependencyInventoryTest) ... ok
+test_direct_pom_license_identity_and_parent_are_explicit (test_dependency_inventory.DependencyInventoryTest) ... ok
+test_evidence_write_errors_are_not_misclassified_as_missing_network_metadata (test_dependency_inventory.DependencyInventoryTest) ... ok
+test_gradle_exporter_never_adds_repositories_or_weakens_verification (test_dependency_inventory.DependencyInventoryTest) ... ok
+test_graph_receipt_binds_success_source_and_exact_consumed_bytes (test_dependency_inventory.DependencyInventoryTest) ... ok
+test_graph_rejects_unverified_duplicate_dangling_and_forged_inputs (test_dependency_inventory.DependencyInventoryTest) ... ok
+test_missing_license_is_reported_as_unresolved_never_a_default (test_dependency_inventory.DependencyInventoryTest) ... ok
+test_network_read_failures_remain_unresolved_without_losing_the_inventory (test_dependency_inventory.DependencyInventoryTest) ... test_parent_license_is_fetched_bound_and_attributed (test_dependency_inventory.DependencyInventoryTest) ... ok
+test_pom_inherited_group_and_version_do_not_erase_identity (test_dependency_inventory.DependencyInventoryTest) ... ok
+test_redirect_handler_refuses_before_following_another_origin (test_dependency_inventory.DependencyInventoryTest) ... ok
+test_resolved_graph_and_cyclonedx_keep_edges_bytes_and_declared_status (test_dependency_inventory.DependencyInventoryTest) ... ok
+test_unsafe_or_unresolved_pom_metadata_is_not_accepted (test_dependency_inventory.DependencyInventoryTest) ... ok
+
+======================================================================
+ERROR: test_network_read_failures_remain_unresolved_without_losing_the_inventory (test_dependency_inventory.DependencyInventoryTest) (error='timeout')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_dependency_inventory.py", line 129, in test_network_read_failures_remain_unresolved_without_losing_the_inventory
+    result = evidence.get("org.example:library:1.0")
+  File "/Users/abdelrahman/Projects/parlor/scripts/verification/dependency_inventory.py", line 146, in get
+    data = response.read(MAX_POM_BYTES + 1)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 1093, in __call__
+    return self._mock_call(*args, **kwargs)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 1097, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 1152, in _execute_mock_call
+    raise effect
+socket.timeout: read timed out
+
+======================================================================
+ERROR: test_network_read_failures_remain_unresolved_without_losing_the_inventory (test_dependency_inventory.DependencyInventoryTest) (error='IncompleteRead')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_dependency_inventory.py", line 129, in test_network_read_failures_remain_unresolved_without_losing_the_inventory
+    result = evidence.get("org.example:library:1.0")
+  File "/Users/abdelrahman/Projects/parlor/scripts/verification/dependency_inventory.py", line 146, in get
+    data = response.read(MAX_POM_BYTES + 1)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 1093, in __call__
+    return self._mock_call(*args, **kwargs)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 1097, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 1152, in _execute_mock_call
+    raise effect
+http.client.IncompleteRead: IncompleteRead(7 bytes read, 100 more expected)
+
+======================================================================
+ERROR: test_network_read_failures_remain_unresolved_without_losing_the_inventory (test_dependency_inventory.DependencyInventoryTest) (error='ConnectionResetError')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_dependency_inventory.py", line 129, in test_network_read_failures_remain_unresolved_without_losing_the_inventory
+    result = evidence.get("org.example:library:1.0")
+  File "/Users/abdelrahman/Projects/parlor/scripts/verification/dependency_inventory.py", line 146, in get
+    data = response.read(MAX_POM_BYTES + 1)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 1093, in __call__
+    return self._mock_call(*args, **kwargs)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 1097, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/unittest/mock.py", line 1152, in _execute_mock_call
+    raise effect
+ConnectionResetError: reset
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.010s
+
+FAILED (errors=3)

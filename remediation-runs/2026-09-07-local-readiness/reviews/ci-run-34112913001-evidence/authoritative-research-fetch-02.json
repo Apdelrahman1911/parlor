@@ -1,0 +1,119 @@
+{
+  "at": "2026-09-07T11:09:01.254775+00:00",
+  "requests": [
+    {
+      "label": "lint-checks-32.1.1-sources",
+      "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-checks/32.1.1/lint-checks-32.1.1-sources.jar",
+      "at": "2026-09-07T11:08:48.753243+00:00",
+      "status": 200,
+      "sha256": "864943a1c096806b77b1719d2016866b1f5baea8bdac405cd43d5f6ba76f71fa",
+      "bytes": 1416938,
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/official-lint-32.1.1-GradleDetector.kt.txt",
+      "source_entry": "com/android/tools/lint/checks/GradleDetector.kt",
+      "source_sha256": "f6ba40e072159212c3348d8fdb38029c4d77ef761d220e55ea2f0a467e571270",
+      "source_lines": 4620,
+      "relevant_locations": [
+        [
+          929,
+          "val message = \"A newer version of `$propertyName` than $version is available: $HIGHEST_KNOWN_STABLE_ANDROID_API\""
+        ],
+        [
+          2438,
+          "append(\"A newer version of \")"
+        ],
+        [
+          2525,
+          "val latestVersion = sdkIndex.getLatestVersion(groupId, artifactId) ?: return null"
+        ],
+        [
+          2612,
+          "val message = \"A newer version of Gradle than $currentVersion is available: $newVersion\""
+        ],
+        [
+          3731,
+          "fun getLatestVersionFromRemoteRepo("
+        ]
+      ]
+    },
+    {
+      "label": "kotlin-compose-marker",
+      "url": "https://plugins.gradle.org/m2/org/jetbrains/kotlin/plugin/compose/org.jetbrains.kotlin.plugin.compose.gradle.plugin/maven-metadata.xml",
+      "at": "2026-09-07T11:08:51.854074+00:00",
+      "status": 200,
+      "sha256": "a7a3775b08ec283bace0a4f24b59d562cd0d66c582143858ce0ffad6e1396a72",
+      "bytes": 2683,
+      "metadata": {
+        "latest": "2.4.20",
+        "release": "2.4.20",
+        "lastUpdated": "20260907101154"
+      },
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/kotlin-compose-marker.xml"
+    },
+    {
+      "label": "kotlin-serialization-marker",
+      "url": "https://plugins.gradle.org/m2/org/jetbrains/kotlin/plugin/serialization/org.jetbrains.kotlin.plugin.serialization.gradle.plugin/maven-metadata.xml",
+      "at": "2026-09-07T11:08:54.193903+00:00",
+      "status": 200,
+      "sha256": "9dc6469ea8780d5086d5ffc3d1dcdaba6696767c0f8b6d38d74555028f150e1c",
+      "bytes": 4958,
+      "metadata": {
+        "latest": "2.4.20",
+        "release": "2.4.20",
+        "lastUpdated": "20260907101306"
+      },
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/kotlin-serialization-marker.xml"
+    },
+    {
+      "label": "kotlin-release-2.4.20",
+      "argv": [
+        "gh",
+        "api",
+        "repos/JetBrains/kotlin/releases/tags/v2.4.20"
+      ],
+      "at": "2026-09-07T11:08:57.675114+00:00",
+      "exit_code": 0,
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/kotlin-release-2.4.20.json",
+      "sha256": "8f3b244b2c695b2f653575671d3220fe0be9fca7ab92b8456e96fd94ddf07856",
+      "result_count": null
+    },
+    {
+      "label": "kotlin-gradle-reviewed-advisories",
+      "argv": [
+        "gh",
+        "api",
+        "advisories?ecosystem=maven&affects=org.jetbrains.kotlin%3Akotlin-gradle-plugin%402.4.10&type=reviewed&per_page=100"
+      ],
+      "at": "2026-09-07T11:08:58.751527+00:00",
+      "exit_code": 0,
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/kotlin-gradle-reviewed-advisories.json",
+      "sha256": "341bcfd01c6bc1b9e22b9f753d37332018e35b6f71655dc8b8fff6ab799fae65",
+      "result_count": 1
+    },
+    {
+      "label": "kotlin-stdlib-reviewed-advisories",
+      "argv": [
+        "gh",
+        "api",
+        "advisories?ecosystem=maven&affects=org.jetbrains.kotlin%3Akotlin-stdlib%402.4.10&type=reviewed&per_page=100"
+      ],
+      "at": "2026-09-07T11:08:59.654029+00:00",
+      "exit_code": 0,
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/kotlin-stdlib-reviewed-advisories.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "result_count": 0
+    },
+    {
+      "label": "git-windows-installer-commit",
+      "argv": [
+        "gh",
+        "api",
+        "repos/git-for-windows/build-extra/commits?path=installer/install.iss&until=2026-08-24T00%3A00%3A00Z&per_page=1"
+      ],
+      "at": "2026-09-07T11:09:01.254237+00:00",
+      "exit_code": 0,
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/git-windows-installer-commit.json",
+      "sha256": "38ddc29ff2eb0650cc20d034c958269608607c54e891046ec07d5e11b0c94a9a",
+      "result_count": 1
+    }
+  ]
+}

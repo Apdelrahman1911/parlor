@@ -1,0 +1,109 @@
+{
+  "researcher": "/root/native_fix_review",
+  "accessed_at": "2026-09-07T05:02:51.620521+00:00",
+  "local_authoritative_sources": [
+    {
+      "path": "/Applications/Xcode.app/Contents/version.plist",
+      "sha256": "14fe47aa50107e5eebb39f6e93acb96c2c81dc39ed9bd51ad1edbcc71488b91f",
+      "claim": "Installed Xcode version26.5 /17F42, not Store-qualified26.3.",
+      "observed": {
+        "CFBundleShortVersionString": "26.5",
+        "ProductBuildVersion": "17F42"
+      }
+    },
+    {
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Info.plist",
+      "sha256": "4b64d32661e0355d0e3321633c03d2ca536739b94ff365bde949022aa24dea59",
+      "claim": "Platform defaults alone differ from SDK defaults; not merged settings.",
+      "observed": {
+        "DEPLOYMENT_TARGET_SETTING_NAME": "IPHONEOS_DEPLOYMENT_TARGET",
+        "DEBUG_INFORMATION_FORMAT": "dwarf-with-dsym",
+        "DEFAULT_COMPILER": "com.apple.compilers.llvm.clang.1_0",
+        "OBJC_ABI_VERSION": "2",
+        "AD_HOC_CODE_SIGNING_ALLOWED": "NO",
+        "TARGETED_DEVICE_FAMILY": "1",
+        "GCC_WARN_64_TO_32_BIT_CONVERSION[arch=*64]": "YES",
+        "CODE_SIGNING_ALLOWED": "NO",
+        "COMPRESS_PNG_FILES": "YES",
+        "PLIST_FILE_OUTPUT_FORMAT": "binary",
+        "STRINGS_FILE_OUTPUT_ENCODING": "binary",
+        "ARCHS": "$(ARCHS_STANDARD)",
+        "SDKROOT": "iphonesimulator",
+        "INFOPLIST_OUTPUT_FORMAT": "binary",
+        "CODE_SIGN_CONTEXT_CLASS": "XCiPhoneSimulatorCodeSignContext",
+        "GCC_OBJC_LEGACY_DISPATCH": "YES"
+      }
+    },
+    {
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/SDKSettings.json",
+      "sha256": "038a8a5fb9ac4ba60db102748ed117bf674cf64545cce8092eec0c6c44048adc",
+      "claim": "Simulator SDK26.5 defaults include CODE_SIGN_IDENTITY dash, AD_HOC_CODE_SIGNING_ALLOWED YES, CODE_SIGNING_REQUIRED YES, ENTITLEMENTS_REQUIRED YES and ENTITLEMENTS_DESTINATION __entitlements.",
+      "observed": {
+        "AD_HOC_CODE_SIGNING_ALLOWED": "YES",
+        "CODE_SIGN_IDENTITY": "-",
+        "CODE_SIGNING_ALLOWED": null,
+        "CODE_SIGNING_REQUIRED": "YES",
+        "ENTITLEMENTS_REQUIRED": "YES",
+        "ENTITLEMENTS_DESTINATION": "__entitlements",
+        "CODE_SIGN_ENTITLEMENTS": ""
+      }
+    },
+    {
+      "path": "/Applications/Xcode.app/Contents/SharedFrameworks/XCBuild.framework/Versions/A/PlugIns/XCBBuildService.bundle/Contents/PlugIns/XCBSpecifications.ideplugin/Contents/Resources/Embedded-Simulator.xcspec",
+      "sha256": "4e1eabad3ee62995bfbebec304fedec08a7a5e8a46704b253d5db3f9845afdc3",
+      "claim": "Installed build specification links LD_ENTITLEMENTS_SECTION(_DER) into __TEXT,__entitlements/__ents_der; codesign display alone cannot be assumed to represent these sections.",
+      "line_range": [
+        46,
+        75
+      ],
+      "excerpt": "        Options = (\n            {\n                Name = \"LD_ENTITLEMENTS_SECTION\";\n                Type = String;\n                DefaultValue = \"\";\n                IsInputDependency = YES;\n                CommandLineArgs = {\n                    \"\" = ();\n                    \"<<otherwise>>\" = ( \"-Xlinker\", \"-sectcreate\", \"-Xlinker\", \"__TEXT\", \"-Xlinker\", \"__entitlements\", \"-Xlinker\", \"$(value)\" );\n                };\n            },\n            {\n                Name = \"LD_ENTITLEMENTS_SECTION_DER\";\n                Type = String;\n                DefaultValue = \"\";\n                IsInputDependency = YES;\n                CommandLineArgs = {\n                    \"\" = ();\n                    \"<<otherwise>>\" = ( \"-Xlinker\", \"-sectcreate\", \"-Xlinker\", \"__TEXT\", \"-Xlinker\", \"__ents_der\", \"-Xlinker\", \"$(value)\" );\n                };\n            },\n        );\n    },\n)"
+    },
+    {
+      "path": "/usr/share/man/man1/codesign.1",
+      "sha256": "c7295369c65a83bd44603a10e27a1c5176c8268af1aeea9828b067b9271a28c2",
+      "claim": "codesign dash ad-hoc uses no identity; this documents local synthetic mode, not healthy iOS Keychain or Store authorization.",
+      "line_range": [
+        585,
+        590
+      ],
+      "excerpt": "If\n.Ar identity\nis the single letter \"-\" (dash), \\fBad-hoc signing\\fR is performed.\nAd-hoc signing does not use an identity at all, and identifies exactly one instance\nof code. Significant restrictions apply to the use of ad-hoc signed code; consult\ndocumentation before using this."
+    },
+    {
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/Frameworks/Security.framework/Headers/SecBase.h",
+      "sha256": "89fb27ba55c7139c7d3ca15054aa92380f897b6c95e36013efb740c8beb018c4",
+      "claim": "Installed SDK states -34018 required entitlement absent; -25300 item not found. Neither status names missing entitlement nor proves a cause outside exact invocation.",
+      "line_range": [
+        335,
+        354
+      ],
+      "excerpt": "    errSecUserCanceled                       = -128,    /* User canceled the operation. */\n    errSecBadReq                             = -909,    /* Bad parameter or invalid state for operation. */\n\n    errSecInternalComponent                  = -2070,\n    errSecCoreFoundationUnknown              = -4960,\n\n    errSecMissingEntitlement                 = -34018,    /* A required entitlement isn't present. */\n    errSecRestrictedAPI                      = -34020,    /* Client is restricted and is not permitted to perform this operation. */\n\n    errSecNotAvailable                       = -25291,    /* No keychain is available. You may need to restart your computer. */\n    errSecReadOnly                           = -25292,    /* This keychain cannot be modified. */\n    errSecAuthFailed                         = -25293,    /* The user name or passphrase you entered is not correct. */\n    errSecNoSuchKeychain                     = -25294,    /* The specified keychain could not be found. */\n    errSecInvalidKeychain                    = -25295,    /* The specified keychain is not a valid keychain file. */\n    errSecDuplicateKeychain                  = -25296,    /* A keychain with the same name already exists. */\n    errSecDuplicateCallback                  = -25297,    /* The specified callback function is already installed. */\n    errSecInvalidCallback                    = -25298,    /* The specified callback function is not valid. */\n    errSecDuplicateItem                      = -25299,    /* The specified item already exists in the keychain. */\n    errSecItemNotFound                       = -25300,    /* The specified item could not be found in the keychain. */\n    errSecBufferTooSmall                     = -25301,    /* There is not enough memory available to use the specified item. */"
+    }
+  ],
+  "online_authoritative_sources": [
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/security/sharing-access-to-keychain-items-among-a-collection-of-apps.json",
+      "accessed_at": "2026-09-07T05:02:44.589775+00:00",
+      "http_status": 200,
+      "body_sha256": "24b1964cff5e2a1e54102758cb7b9d23626b736826a68f294c365b1e4326a98a",
+      "title": "Sharing access to keychain items among a collection of apps",
+      "authoritative_text": "Overview\nIf you develop a family of apps, all of which rely on the same password or cryptographic key, you can use access groups to securely share that password or key among those apps. For example, you can share credentials, so that logging into one of your apps automatically grants the user access to all of your apps. This kind of sharing doesn\u2019t require interaction with or permission from the user, but limits sharing to apps that are delivered by a single development team.\nAn access group is a logical collection of apps tagged with a particular group name string. Any app in a given group can share keychain items with all the other apps in the same group. You can add an app to any number of groups, but the app is always part of at least one group that contains only itself. That is, an app can always store and retrieve private keychain items, regardless of whether it also participates in any other groups. Keychain items, on the other hand, are always part of exactly one group.\n\n \nThis form of keychain item sharing applies to all iOS keychain items, and to macOS keychain items when you query with the \n key, set the item\u2019s \n attribute, or both.\nSet your app\u2019s access groups\nYou control the groups that your app belongs to by manipulating its entitlements. In particular, an app belongs to all the groups named in a virtual array of strings that the system forms for each app as the concatenation of the following items, evaluated in this order:\nThe optional \n holds an array of strings, each of which names an access group.\nKeychain access groups\nXcode automatically adds the \napplication-identifier\n entitlement (or the \ncom.apple.application-identifier\n entitlement in macOS) to every app during code signing, formed as the team identifier (team ID) plus the bundle identifier (bundle ID).\nApplication identifier\nWhen you collect related apps in an application group using the \n, they share access to a group container, and gain the ability to message each other in certain ways. You can use app group names as keychain access group names, without adding them to the Keychain access groups entitlement.\nApplication groups\nXcode handles the application identifier (app ID) for you when you set the bundle ID. You set the others by manipulating capabilities in Xcode.\nEstablish your app\u2019s private access group\nWhen you create a new app you assign it a bundle ID, typically using reverse DNS notation, with a string like \ncom.example.AppOne\n. When code signing your app, Xcode automatically prefixes the bundle ID with your team ID \u2014 the unique character sequence issued by Apple to each development team \u2014 and stores the combined string as the app ID. The system recognizes this app ID as the name of your app\u2019s default keychain access group by including it in your access group array:\nBecause app IDs are unique across all apps, and because the app ID is stored in an entitlement protected by code signing, no other app can use it, therefore no other app is in this group. Any keychain items stored with this access group are private to App One. Similarly, if you have a second app with a bundle ID of \ncom.example.AppTwo\n, it automatically belongs to its own group:\nAs a result, by default, each app\u2019s keychain items remains isolated from all other apps, although you can add another app signed by the same Apple Developer team to the app\u2019s default keychain access group, using the \n.\nAdd apps to one or more keychain access groups\nWhen you want two apps to be able to share keychain items, you can add both to the same keychain access group. Do this by enabling the Keychain Sharing capability in Xcode for each app, and adding a common string to the list of keychain groups in each case. Typically, you use the same kind of reverse DNS naming for a keychain group that you use for a bundle ID, so you might choose \ncom.example.SharedItems\n:\nAs with forming the app ID from the bundle ID, Xcode automatically prefixes keychain groups with your team ID. This ensures that your groups are specific to your development team. When you enable the capability for App One as shown above, its logical list of app groups becomes:\nIf you also add the same keychain group to App Two, its logical list of app groups becomes:\nIn effect, the two apps gain a region of overlap to share items.\nNotice that the distinct areas represented by the app IDs are still present, allowing each app to continue to access its own, private items. But both apps now also belong to the shared items group, enabling them to share keychain items. In this way, you can add an app to as many different groups as you like.\nUse app groups to expand sharing of keychain and non-keychain data\nWhen your app belongs to an app group, it can share certain kinds of non-keychain data with other apps in the same group. For example, you can use the \n method to create a new \n instance that shares the preferences you set among all the apps in the app group. Like keychain access groups, you enable app groups with a capability in Xcode.\nStarting in iOS 8, when an app belongs to an app group, it can also use this mechanism to share keychain items. In this example, add App One to the \ngroup.com.example.AppSuite\n app group:\nApp One\u2019s list of access groups expands to include the app group:\nThis allows it to share keychain items with any app in the App Suite group (distinct from any sharing it\u2019s already doing with apps in the shared items keychain access group).\nXcode doesn\u2019t prepend the app group with the team identifier. Instead, it guards against the reuse of app group names across teams when you try to add an app group to a provisioning profile.\nKnow the difference between app groups and keychain access groups\nApp groups and keychain access groups aren\u2019t mutually exclusive\u2014you can use both in the same app\u2014but they do differ in several important ways that may help you decide which to use for a given situation.\nFirst, as described above, using an app group enables additional data sharing beyond keychain items. You might want this extra sharing, or might already be using an app group for this purpose, and thus not need to add keychain access groups. On the other hand, you might not want to enable this additional sharing at all, and prefer keychain access groups instead.\nSecond, order matters. The system considers the first item in the list of access groups to be the app\u2019s default access group. This is the access group that keychain services assumes if you don\u2019t otherwise specify one when adding keychain items. An app group can\u2019t ever be the default, because the app ID is always present and appears earlier in the list. However, a keychain access group can be the default, because it appears before the app ID. In particular, the first keychain access group, if any, that you specify in the corresponding capability becomes the app\u2019s default access group. If you don\u2019t specify any keychain access groups, then the app ID is the default.\nSet a keychain item\u2019s access group\nUnlike apps, which can belong to many access groups, keychain items belong to a single group, identified by the \n attribute. From the item\u2019s point of view, the world is a collection of disjoint groups, and the item belongs to exactly one of them.\nWhen you create a new item with the \n method, you can specify a group in the add attributes using the \n key. For example, you can create a new generic password item in the Shared Items group defined above:\nUse any of the groups to which your app belongs. If you try to use an access group to which your app doesn\u2019t belong, the operation fails and returns the \n status. This includes attempts to \u201cprime\u201d an entry using a zero-length string as the value for the \n key, because the empty string represents an invalid group.\nIf you don\u2019t specify any access group when adding an item, keychain services applies your app\u2019s default access group, which is the first group named in the concatenated list of groups described in \n.\nWhen you search for keychain items with the \n method, you can likewise specify an access group in the search query to limit your search to a particular access group:\nIf you specify a group to which your app doesn\u2019t belong, no items match and the query returns the \n status. If you don\u2019t specify an access group in the query, the search matches any of your app\u2019s groups."
+    },
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/security/errsecmissingentitlement.json",
+      "accessed_at": "2026-09-07T05:02:47.814393+00:00",
+      "http_status": 200,
+      "body_sha256": "a09771e4effdb7a2743eccdf2c3b95dd9ded4794e74bbc3dd2ef3ba06bd36410",
+      "title": "errSecMissingEntitlement",
+      "authoritative_text": "var\n \nerrSecMissingEntitlement\n: \nOSStatus\n { \nget\n }\nOverview\nThe \n method returns this error when you specify an access group to which your app doesn\u2019t belong:\nTo avoid the error, either use your app\u2019s default access group by omitting the \n key in the add attributes, or make sure that the value associated with the key matches one of your app\u2019s access groups. These access groups come from your app\u2019s \n, its app identifier, and its \n, in that order, as described in \n.\nYou can check the access group string by setting a breakpoint on the \n call and using the debugger to print the query dictionary. Look for the \nagrp\n item:\nIf after setting the access group key correctly you still receive the \nerrSecMissingEntitlement\n error, check to make sure the entitlements in your built app match your expectations. Build your app for a hardware target\u2014not the Simulator app\u2014and use Xcode to locate the app bundle on disk:\nThen get a list of the app\u2019s entitlements. Run the codesign command-line utility shown in the following example, substituting the Xcode-provided path to your app, like the one highlighted in the preceding illustration.\nInspect the codesign output to determine the groups to which your app actually belongs. The following collectively define your app\u2019s access groups:\nAny of the strings in the array associated with the \nkeychain-access-groups\n key.\nThe string corresponding to the \napplication-identifier\n key (or the \ncom.apple.application-identifier\n key in macOS).\nAny of the strings in the array associated with the \ncom.apple.security.application-groups\n key."
+    },
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/security/ksecattraccessgroup.json",
+      "accessed_at": "2026-09-07T05:02:49.209137+00:00",
+      "http_status": 200,
+      "body_sha256": "1c8ed38f2a55f039773cdbb32d9e145b911bcd5f45d5350a5c33bc2ca6cc13b7",
+      "title": "kSecAttrAccessGroup",
+      "authoritative_text": "let\n \nkSecAttrAccessGroup\n: \nCFString\nDiscussion\nThe corresponding value is of type \n and indicates the item\u2019s one and only access group.\nFor an app to access a keychain item, one of the groups to which the app belongs must be the item\u2019s group. The list of an app\u2019s access groups consists of the following string identifiers, in this order:\nThe strings in the app\u2019s \nThe app ID string\nThe strings in the \nTwo or more apps that are in the same access group can share keychain items. For more details, see \n.\nSpecify which access group a keychain item belongs to when you create it by setting the \n attribute in the query you send to the \n method. Naming a group that\u2019s not among the creating app\u2019s access groups\u2014including the empty string, which is always an invalid group\u2014generates an error. If you don\u2019t explicitly set a group, keychain services defaults to the app\u2019s first access group, which is either the first keychain access group, or the app ID when the app has no keychain groups. In the latter case, the item is only accessible to the app creating the item, since no other app can be in that group.\nBy default, the \n, \n, and \n methods search all the app\u2019s access groups. Add the \n attribute to the query to limit the search to a particular group.\n\n \nThis attribute applies to macOS keychain items only if you also set a value of \ntrue\n for the \n key, the \n key, or both."
+    }
+  ],
+  "applicability": "Research only. No code-signing, build, device, certificate, entitlement mutation, application identity change or private-data read performed. Local synthetic ad-hoc identity availability does not establish Keychain success. Need actual current-build section metadata/numeric statuses before diagnosis; if testing normal simulator defaults later, review and bind that distinct invocation first."
+}

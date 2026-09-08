@@ -1,0 +1,1125 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-07T18:11:58.512281+00:00",
+  "reviewer": "/root/factory_review",
+  "original_author": "/root/native_fix_review",
+  "classification": "ACCEPTED_FOR_REVIEWED_PROMOTION_AND_ROOT_COORDINATED_NATIVE_EXECUTION_NOT_A_RUNTIME_PASS",
+  "scope": "Bounded independent review of new L08 storage/started-host controls, current promotion-02 and directly reachable production/control contracts. This is not an exhaustive application audit or proof of native execution.",
+  "baseline": {
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "head": "d453f80586ae76d37fba953731758e20f5c4bd67",
+    "tree": "43a7c924d5cbe5f2783d0456350755cab8e579b2",
+    "tracked_dirty_status": [
+      " M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/RtlFormattingTest.kt",
+      " M shared/design-system/src/desktopTest/kotlin/com/parlor/designsystem/localization/ProvideAppLanguageDesktopTest.kt"
+    ],
+    "tracked_diff_sha256": "af7c6336a6281f7b300c306c883e2970a2b3567aa35cee11ff3c311285757993",
+    "scope_identity_note": "Root advanced the canonical branch during static review. All 23 frozen production/control source-reference hashes still match; unrelated source/test changes are not approved by this bounded report."
+  },
+  "draft_binding": {
+    "freeze_sha256": "0ee14204318a2a7fdff22ad57f29d73b91f9800758fcb1f5074ef2aba1ad4e6c",
+    "manifest_sha256": "e425f29c8518b41ba7603b20e59930ba3963b95c32fdacbba65e06182c2986f4",
+    "all_27_file_hashes_bytes_lines_match": true,
+    "all_23_source_reference_hashes_match_current_checkout": true,
+    "promotion_patch": "promotion-02.patch",
+    "promotion_sha256": "8839b7f348296abef501bc7616c061e6f2183daec0936189f49a44313561c843",
+    "promotion_inputs_sha256": "b4e39b46a51678783e7dcd2b7d0ad04d8fe92144f2f59b14121a5e95b7daea39",
+    "addendum_sha256": "e7d65f32eb89793a8f72d4ad298f6c31c40729fec691f353613d24412251bafc",
+    "authoring_record_correction": "Read addendum: l08_copy was imported during draft generation; author did not execute test modules, native compilation or runtime. Superseded promotion.patch is not approved."
+  },
+  "coverage": {
+    "draft_files": [
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/ControlledStartRoom.kt.in",
+        "sha256": "147692e570bcc0e8c191a6373c61fd4f636c62891b604fdc1c5fee52990861f0",
+        "lines": 188,
+        "reviewed_ranges": [
+          [
+            1,
+            188
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/InMemoryRoomBus.kt.in",
+        "sha256": "695af1d049de439eeb081edf1d2698af677343d18097215db366023f8bc1c275",
+        "lines": 203,
+        "reviewed_ranges": [
+          [
+            1,
+            203
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08HostLaunch.swift.in",
+        "sha256": "debfe4c2cee191443bb3a2f480b61ae075d181fc4bca139e2ed77c57870fffc3",
+        "lines": 65,
+        "reviewed_ranges": [
+          [
+            1,
+            65
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08HostProbe.kt.in",
+        "sha256": "62dfce06e71cf84f9e80c710f02a1fcb54308104af583d3d9d3033cf41b4bd79",
+        "lines": 440,
+        "reviewed_ranges": [
+          [
+            1,
+            440
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08HostUITests.swift.in",
+        "sha256": "0156fdbb6210f1257c49eba9eee7fc7ac42fce2ad85870525131a7adf9ea99a9",
+        "lines": 146,
+        "reviewed_ranges": [
+          [
+            1,
+            146
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08MafiaHost.kt.in",
+        "sha256": "24f21ff212ff3b871b0a70483d552b3f108f654116212700d2b6ccd3c507b885",
+        "lines": 144,
+        "reviewed_ranges": [
+          [
+            1,
+            144
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08MafiaSnapshots.kt.in",
+        "sha256": "7674ec0e0d5e5481e18e8e9c97c0f7299e73550f3c91c0ada60cdd743da8a5e3",
+        "lines": 190,
+        "reviewed_ranges": [
+          [
+            1,
+            190
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08StorageLaunch.swift.in",
+        "sha256": "679532441cf6c8fcf6ada88d6e94d0452d1ea3e3979fe0f981aa1935ba83947f",
+        "lines": 71,
+        "reviewed_ranges": [
+          [
+            1,
+            71
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08StorageProbe.kt.in",
+        "sha256": "f6eaa5f087b483b34ec6d2e335ec3cbc054fd5f52d22c3c3574c17ca79bce151",
+        "lines": 466,
+        "reviewed_ranges": [
+          [
+            1,
+            466
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08StorageUITests.swift.in",
+        "sha256": "2f0ce45e329efa15a8e28f681af0b201c4d503e59348a1ad507e2a2a8883e864",
+        "lines": 111,
+        "reviewed_ranges": [
+          [
+            1,
+            111
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08UiSeam.kt.in",
+        "sha256": "22d9e352ba6c4b8e161b2e69f1aae208a0c9a654ed85284ef4a34c2ea63399e4",
+        "lines": 71,
+        "reviewed_ranges": [
+          [
+            1,
+            71
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08WhodunitHost.kt.in",
+        "sha256": "a4f9031fd0bbe0ab6be4a8378ddd26632cc9d519d010d4d3009e9d7092045a7f",
+        "lines": 94,
+        "reviewed_ranges": [
+          [
+            1,
+            94
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08WhodunitSnapshots.kt.in",
+        "sha256": "2440e1d032e35171127b68ee69c42a35ef933bcdc8cea30cc991cb7a02ade0fb",
+        "lines": 190,
+        "reviewed_ranges": [
+          [
+            1,
+            190
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08_README.md",
+        "sha256": "9dc26f6b437edd24d896745e6def3ea9cbb84e54513911b82f215d3178a6ce4a",
+        "lines": 106,
+        "reviewed_ranges": [
+          [
+            1,
+            106
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/README.md",
+        "sha256": "34e736a718bda5cc10377ffc1434edcb2a81de6b28124ad664da67e8d921cb6c",
+        "lines": 71,
+        "reviewed_ranges": [
+          [
+            1,
+            71
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/l08_copy.py",
+        "sha256": "c2bf28bf0efd9449d646c451d7b8e665000e8d11a3a6eea76de95e1fb4a55a5f",
+        "lines": 166,
+        "reviewed_ranges": [
+          [
+            1,
+            166
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/l08_receipts.py",
+        "sha256": "8d28d8d8fc0b1a5b4fef874c53e277fa388c8fa175a0dfd0b23d2e56850889b3",
+        "lines": 411,
+        "reviewed_ranges": [
+          [
+            1,
+            411
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/make_promotion_patch.py",
+        "sha256": "0a66c439d37ed4ae956e433dad13c3161fad2add0b77606778f8ab9ee6d3677f",
+        "lines": 116,
+        "reviewed_ranges": [
+          [
+            1,
+            116
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/promotion-02.patch",
+        "sha256": "8839b7f348296abef501bc7616c061e6f2183daec0936189f49a44313561c843",
+        "lines": 196,
+        "reviewed_ranges": [
+          [
+            1,
+            196
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/promotion-inputs-02.json",
+        "sha256": "b4e39b46a51678783e7dcd2b7d0ad04d8fe92144f2f59b14121a5e95b7daea39",
+        "lines": 20,
+        "reviewed_ranges": [
+          [
+            1,
+            20
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/promotion-inputs.json",
+        "sha256": "3f0b4a24d47ec350d6b9bea16f90a297f700832a2c1ac55d74e37adb0196e261",
+        "lines": 20,
+        "reviewed_ranges": [],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "SUPERSEDED_PRESERVED_HASH_CHECK_ONLY"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/promotion.patch",
+        "sha256": "0d0d5efeb1e86afa129ca461945848fa3505abddc11642d5fc230b25a25cdebf",
+        "lines": 196,
+        "reviewed_ranges": [],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "SUPERSEDED_PRESERVED_HASH_CHECK_ONLY"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/research-koin-4-0-0-order.json",
+        "sha256": "251f79f99f23b79046ef06ae01726f26017805ddf79a479db14c6b63f8758bd3",
+        "lines": 641,
+        "reviewed_ranges": [
+          [
+            1,
+            641
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/research-koin-4-0-0.json",
+        "sha256": "cd5b060e676a73dd641e9d34a16561c69d1d675b02299b5ac27d38c794a19a58",
+        "lines": 218,
+        "reviewed_ranges": [
+          [
+            1,
+            218
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/test_l08_copy.py",
+        "sha256": "22092b2b03dd004c12d77c9c092b5e322a75e73d1a2a2da47da717de1f5a78ea",
+        "lines": 150,
+        "reviewed_ranges": [
+          [
+            1,
+            150
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/test_l08_host_receipts.py",
+        "sha256": "a3a6f6c0a6363fbfaa5fff887652cbab9cf17513d03c0bf7eba5029b3babfd4d",
+        "lines": 177,
+        "reviewed_ranges": [
+          [
+            1,
+            177
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/test_l08_receipts.py",
+        "sha256": "eb0fa17a95550b4b266afe9cae34e318004c7fa1ce32b097fc66a4107456dedc",
+        "lines": 167,
+        "reviewed_ranges": [
+          [
+            1,
+            167
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "relevance": "isolated verification draft; never production source",
+        "disposition": "FULL_TEXT_REVIEWED"
+      }
+    ],
+    "live_callers": [
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/AGENTS.md",
+        "sha256": "1e8cbc4f414819f47908e1a3be9f717792a0401fb4fb35b7272c053c00e2f609",
+        "reviewed_ranges": [
+          [
+            1,
+            112
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/copied_sources.py",
+        "sha256": "5597d1e4b6a123a1c23bd82c66e30fdd86cb00cf85c831d6c6f281e023cbd752",
+        "reviewed_ranges": [
+          [
+            1,
+            229
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/run_ios_readiness.py",
+        "sha256": "9bd997ec5836fe8da4e3afcdb3604eb10f180d3b55a63718c1ea9ba1f9893f2c",
+        "reviewed_ranges": [
+          [
+            1,
+            977
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/DSC01Probe.swift.in",
+        "sha256": "1c4b113ec8695d8da2115e4f386fdaf8820411879af6ff9492109b62c7770746",
+        "reviewed_ranges": [
+          [
+            1,
+            451
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/probe_validation.py",
+        "sha256": "134bb3affe45711ec3f74d7091ec59b7f859ca4f5fa04df1d895ce3250fd3aa2",
+        "reviewed_ranges": [
+          [
+            1,
+            348
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/artifact_inventory.py",
+        "sha256": "485196bd7dcebccaa5ad552896c7e2da781fbf6fa6fff6ef2ab350ecc9360124",
+        "reviewed_ranges": [
+          [
+            1,
+            234
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/DSC01NativeObservation.swift.in",
+        "sha256": "f806c5fa6533f9114ad9bf33fdc6fc4647086b1fb2daf4fe09ba93cf6029ee94",
+        "reviewed_ranges": [
+          [
+            1,
+            97
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/NativeReadinessLaunch.swift.in",
+        "sha256": "df8f0cce3f45bedbfea47df3ca0b2e56c6a777383395fc170f0f07b83f8d143a",
+        "reviewed_ranges": [
+          [
+            1,
+            340
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+        "sha256": "c77abd03ddcae230b4752d888b16c3d74231d89c967624c31129d176a5ed20ce",
+        "reviewed_ranges": [
+          [
+            1,
+            56
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/di/AppModule.kt",
+        "sha256": "b449781eb52418300504344c1af978ef7cb41e4e1f35f8d50faa4b8662bbdb76",
+        "reviewed_ranges": [
+          [
+            1,
+            74
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/lifecycle/AppLifecycleCoordinator.kt",
+        "sha256": "9872f507bc2d719516249b40e50ba46262366ea7afae5e8b8b28448cce620932",
+        "reviewed_ranges": [
+          [
+            1,
+            144
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/iOSApp.swift",
+        "sha256": "01d47afe5d13eb9ec48d9e8987c7920e72f2fefa5b06ec525087025caa809386",
+        "reviewed_ranges": [
+          [
+            1,
+            10
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/ContentView.swift",
+        "sha256": "5881b354ccc45340100356fbf37480e94efdcc2e8fe823f0bb6b5b60f8ccaa87",
+        "reviewed_ranges": [
+          [
+            1,
+            62
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/App.kt",
+        "sha256": "622b679a2ef023fab17bf6c8ed8eb38c1fbc2b76a391f5f9a8298d59da9dda59",
+        "reviewed_ranges": [
+          [
+            1,
+            338
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt",
+        "sha256": "ae11eb3dd97c28520205237b95c28766ccd6ce8dd0e005f82a0d63866323e152",
+        "reviewed_ranges": [
+          [
+            1,
+            555
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeRecoveryAvailability.kt",
+        "sha256": "4c8a962fba7ec8334cc8f4dfe0a75f221b201178481ae115d85ae391647fbb2a",
+        "reviewed_ranges": [
+          [
+            1,
+            146
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/LocalResumeFailureScreen.kt",
+        "sha256": "0e76227cfb46ad37e17892fa4bd698e21c9f45e0e00021dc257d38891a2b3447",
+        "reviewed_ranges": [
+          [
+            1,
+            103
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/LocalResumeRouter.kt",
+        "sha256": "bb45b775fa4f8444bf6d00aa240b66ab78dd0066ba88dcf037f758cdd86ea0b1",
+        "reviewed_ranges": [
+          [
+            1,
+            163
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+        "sha256": "4b98a283b3d92bcfbbdeaa699a8c3e552b38440b90874795273a8edb0dada3dd",
+        "reviewed_ranges": [
+          [
+            1,
+            529
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaRetainedMultiplayerRuntime.kt",
+        "sha256": "cb196e3457759dbb0766b02d342d3698f6e90512d674d70e34a76f8516ff0543",
+        "reviewed_ranges": [
+          [
+            1,
+            172
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitRetainedMultiplayerRuntime.kt",
+        "sha256": "4cca409cc9f8703295b0e75259f3e0dec382a012271dcd86696cfef480797148",
+        "reviewed_ranges": [
+          [
+            1,
+            189
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDeviceHostFlow.kt",
+        "sha256": "9bc03d15725da5ace2e5b4c4e79947b516a8e04cce8fbc2e203edde2da9194a1",
+        "reviewed_ranges": [
+          [
+            1,
+            297
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostProgression.kt",
+        "sha256": "9538d49edcd035815e08f5f48bfdcafad61f29d64ffac63b0bdba61f45671df6",
+        "reviewed_ranges": [
+          [
+            1,
+            81
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/SerializedSnapshotWriter.kt",
+        "sha256": "3ac601fe9facc504315f67a21821bf43bd746afbdd2a5509b915c642be7ee10d",
+        "reviewed_ranges": [
+          [
+            1,
+            157
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "FULL_TEXT_REVIEWED"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+        "sha256": "73f75eb87e2636e5e616c9bbade054fd0f44ed8bcd9ad158b930eba99fd8aa14",
+        "reviewed_ranges": [
+          [
+            756,
+            958
+          ],
+          [
+            985,
+            1195
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "RELEVANT_CALLER_RANGES_REVIEWED_NOT_WHOLE_FILE"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaGameFlow.kt",
+        "sha256": "8f250d62f8afb48e407c30e5382eb4758bc4ad53dee5168af8e3452ad3e840f6",
+        "reviewed_ranges": [
+          [
+            217,
+            354
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "RELEVANT_CALLER_RANGES_REVIEWED_NOT_WHOLE_FILE"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+        "sha256": "09de10c3735f1afeb7b36550dca57c4e9fd190d985faf6ff0eae8c0b8d21a784",
+        "reviewed_ranges": [
+          [
+            1,
+            305
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "RELEVANT_CALLER_RANGES_REVIEWED_NOT_WHOLE_FILE"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+        "sha256": "eeb3395e84e467ef1e23cc5a8e7f6d6ae5bad76225c8931f004039db7d634dc6",
+        "reviewed_ranges": [
+          [
+            98,
+            291
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "RELEVANT_CALLER_RANGES_REVIEWED_NOT_WHOLE_FILE"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+        "sha256": "1371eb747579362548f3962a520c2c3f3c2f6225ef551bad93e3e690e08a1fe6",
+        "reviewed_ranges": [
+          [
+            220,
+            289
+          ],
+          [
+            551,
+            611
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "RELEVANT_CALLER_RANGES_REVIEWED_NOT_WHOLE_FILE"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostRoomBridge.kt",
+        "sha256": "f7cd9b5941749e7e29f694ef84e221529ea80ee7f883419a32fc4b82c243438e",
+        "reviewed_ranges": [
+          [
+            75,
+            246
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "RELEVANT_CALLER_RANGES_REVIEWED_NOT_WHOLE_FILE"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/reducer/WhodunitReducer.kt",
+        "sha256": "40db7e4fab766f77d893c7001e57e3395fd50112399937d39be44632ff6456c0",
+        "reviewed_ranges": [
+          [
+            89,
+            142
+          ],
+          [
+            1072,
+            1141
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "RELEVANT_CALLER_RANGES_REVIEWED_NOT_WHOLE_FILE"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostRoomBridge.kt",
+        "sha256": "e501318600500abc60e4bef8ed2706fb8b4955dc8c21ac75a8c06e7e2709ff45",
+        "reviewed_ranges": [
+          [
+            109,
+            159
+          ],
+          [
+            183,
+            214
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "RELEVANT_CALLER_RANGES_REVIEWED_NOT_WHOLE_FILE"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/AuthoritativeSessionCoordinator.kt",
+        "sha256": "968eae9b5a83bc507e173bfd82e6ec0cffa6b6191de86c73d7b401221fe09114",
+        "reviewed_ranges": [
+          [
+            393,
+            428
+          ],
+          [
+            494,
+            548
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "RELEVANT_CALLER_RANGES_REVIEWED_NOT_WHOLE_FILE"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/ProcessMultiplayerSessionOwner.kt",
+        "sha256": "daba67ff9106b54f73eff57635bd36547674df5f5b861177932687498296320c",
+        "reviewed_ranges": [
+          [
+            185,
+            403
+          ],
+          [
+            423,
+            465
+          ],
+          [
+            551,
+            565
+          ],
+          [
+            740,
+            849
+          ],
+          [
+            857,
+            970
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "RELEVANT_CALLER_RANGES_REVIEWED_NOT_WHOLE_FILE"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/IOSAppLaunchUITests.swift.in",
+        "sha256": "9bdfa70f43074569a8699dda01864496188562b117289c994ea4f4e8c844bf60",
+        "reviewed_ranges": [
+          [
+            1,
+            220
+          ],
+          [
+            255,
+            470
+          ],
+          [
+            503,
+            620
+          ]
+        ],
+        "reviewer": "/root/factory_review",
+        "disposition": "RELEVANT_CALLER_RANGES_REVIEWED_NOT_WHOLE_FILE"
+      }
+    ],
+    "prior_storage_full_source_review": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/stc1-recognized-current-retention-fix-independent-01.json",
+    "coverage_limit": "Only listed ranges are claimed; reading author research is recorded as dossier inspection, not this reviewer independently fetching authoritative pages."
+  },
+  "path_review": [
+    {
+      "path": "Storage save/cold-load/actual Home resume/terminal cleanup",
+      "conclusion": "Original FileBackedSnapshotStore + IosSnapshotFileSystem + original recovery routing and actual resumed PartyAwareSession/controller are exercised. Expected envelope is independently reducer-built per exact synthetic ID. The harness does not substitute a resumed session or directly delete completed-game saves. Actual canonical SerializedSnapshotWriter must delete at terminal state. Legal action-driver continuation is not a full UI game proof."
+    },
+    {
+      "path": "Mafia ON/OFF storage variants",
+      "conclusion": "ON expects four effective protections of the same living target, beyond a two-night limit. OFF witnesses adjacent rejection without consuming choice and [A,B,null,B] effective history. Original reducer/codec/recovery are used; no serialized setting migration, game-rule patch or projection change is introduced."
+    },
+    {
+      "path": "Legacy migration/corrupt isolation",
+      "conclusion": "Healthy legacy, malformed neighbor and recognized damaged protected+valid legacy pair are independently token-scoped. Real protected encryption roundtrip precedes MAC-byte-only tamper; failed current decryption must not fall back or destroy retained plaintext. Exact original Home Retry/Discard is counted; after restart all seven IDs must be strictly NotFound, not unavailable. Native filesystem metadata does not prove physical backup/lock durability."
+    },
+    {
+      "path": "Started retained host",
+      "conclusion": "Production process owner and game runtimes/bridges are retained across synthetic real-store EN/AR/System setters, UIKit lifecycle cycles and presentation remount. Original Mafia setup switch and ConfigureAndStart callback choose ON/OFF. Synthetic ControlledStartRoom peers exercise start offer/commit and direct projections, not real P2pKit discovery/rejoin. Original authoritative queue rejects Suspended/Resuming commands; Active restoration is explicitly synthetic. Write-once runtime/controller/flow/canonical/private comparisons plus finalLeave cleanup are checked."
+    },
+    {
+      "path": "Source and artifact identity",
+      "conclusion": "Closed copy-only transformations refuse missing/ambiguous/duplicate anchors. Additional helper/fixture files never enter the production checkout. Each process is bound through existing exact installed/built inventories and observed framework origin/hash/UUID; per-process inventory subsets cannot hide an extra union row. Current production graph, protocol, snapshot format and settings remain unchanged."
+    },
+    {
+      "path": "Evidence/failure behavior",
+      "conclusion": "All expected operation identities, ordered boots/actions, invariant booleans and native XCTest launch rows are required. Missing/failed steps cannot be converted to success. Host observations bind the same boot and actual native event order. Closed operation receipts reject unknown fields before retention. Global runtime PASS additionally requires both L08 subgates, original matrix, successful XCTest/Xcode and cleanup."
+    }
+  ],
+  "control_execution": {
+    "executor": "/root, not independent reviewer",
+    "receipt_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-draft-controls-01/receipt.json",
+    "receipt_sha256": "9a40f99ce4b2e3ca462772d22750ed167b0514f59b0a96503505630592e55e4d",
+    "raw_log_sha256": "7d4566966da94e546661783287db6e984f5ef26c0425b3b0511c687777ec4fa6",
+    "command": [
+      "/usr/bin/env",
+      "PYTHONPATH=remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01:scripts/verification/ios-readiness",
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01",
+      "-p",
+      "test_l08_*.py",
+      "-v"
+    ],
+    "started_at": "2026-09-07T17:52:15.351298+00:00",
+    "finished_at": "2026-09-07T17:52:21.706114+00:00",
+    "exit_code": 0,
+    "independently_parsed_executed_tests": 34,
+    "test_names": [
+      {
+        "name": "test_actual_resume_navigation_and_original_lifecycle_calls_remain",
+        "class": "test_l08_copy.L08CopyContractTests"
+      },
+      {
+        "name": "test_copy_transforms_refuse_symlinked_roots_and_inputs",
+        "class": "test_l08_copy.L08CopyContractTests"
+      },
+      {
+        "name": "test_every_actual_source_anchor_transforms_without_changing_repository_bytes",
+        "class": "test_l08_copy.L08CopyContractTests"
+      },
+      {
+        "name": "test_mafia_settings_observation_preserves_original_updates_and_start",
+        "class": "test_l08_copy.L08CopyContractTests"
+      },
+      {
+        "name": "test_missing_ambiguous_unknown_and_repeated_anchors_fail_closed",
+        "class": "test_l08_copy.L08CopyContractTests"
+      },
+      {
+        "name": "test_new_parser_sources_are_python_syntax_not_runtime_evidence",
+        "class": "test_l08_copy.L08CopyContractTests"
+      },
+      {
+        "name": "test_old_and_l08_transforms_compose_in_only_an_owned_temporary_copy",
+        "class": "test_l08_copy.L08CopyContractTests"
+      },
+      {
+        "name": "test_registry_is_closed_and_verbatim_fixtures_match_current_source",
+        "class": "test_l08_copy.L08CopyContractTests"
+      },
+      {
+        "name": "test_swift_observers_are_additive_and_old_discovery_is_unchanged",
+        "class": "test_l08_copy.L08CopyContractTests"
+      },
+      {
+        "name": "test_actual_native_compose_preferences_and_system_owner_must_all_agree",
+        "class": "test_l08_host_receipts.HostReceiptTests"
+      },
+      {
+        "name": "test_actual_uikit_callbacks_cannot_be_replaced_by_synthetic_counts",
+        "class": "test_l08_host_receipts.HostReceiptTests"
+      },
+      {
+        "name": "test_all_runtime_counters_and_worker_errors_are_verified",
+        "class": "test_l08_host_receipts.HostReceiptTests"
+      },
+      {
+        "name": "test_artifact_mismatch_is_not_swallowed",
+        "class": "test_l08_host_receipts.HostReceiptTests"
+      },
+      {
+        "name": "test_complete_parser_fixture_requires_three_independent_native_artifact_bindings",
+        "class": "test_l08_host_receipts.HostReceiptTests"
+      },
+      {
+        "name": "test_each_process_gets_only_its_observed_framework_plus_exact_embedded_inventory",
+        "class": "test_l08_host_receipts.HostReceiptTests"
+      },
+      {
+        "name": "test_every_source_invariant_false_missing_unknown_or_nonboolean_is_rejected",
+        "class": "test_l08_host_receipts.HostReceiptTests"
+      },
+      {
+        "name": "test_missing_extra_failed_or_reordered_operations_cannot_pass",
+        "class": "test_l08_host_receipts.HostReceiptTests"
+      },
+      {
+        "name": "test_native_observation_must_be_unique_correct_order_and_same_boot",
+        "class": "test_l08_host_receipts.HostReceiptTests"
+      },
+      {
+        "name": "test_source_identity_scopes_and_secret_fields_are_closed",
+        "class": "test_l08_host_receipts.HostReceiptTests"
+      },
+      {
+        "name": "test_unobserved_missing_or_duplicate_framework_rows_fail_before_filtering",
+        "class": "test_l08_host_receipts.HostReceiptTests"
+      },
+      {
+        "name": "test_xctest_missing_duplicate_different_boot_or_failure_cannot_pass",
+        "class": "test_l08_host_receipts.HostReceiptTests"
+      },
+      {
+        "name": "test_actual_artifact_binding_failure_is_not_swallowed",
+        "class": "test_l08_receipts.L08ReceiptTests"
+      },
+      {
+        "name": "test_both_success_and_closed_failure_observations_are_sanitized_before_preservation",
+        "class": "test_l08_receipts.L08ReceiptTests"
+      },
+      {
+        "name": "test_closed_failure_preservation_is_exclusive_and_missing_steps_stay_missing",
+        "class": "test_l08_receipts.L08ReceiptTests"
+      },
+      {
+        "name": "test_complete_parser_fixture_demands_thirteen_independent_real_artifact_binding_calls",
+        "class": "test_l08_receipts.L08ReceiptTests"
+      },
+      {
+        "name": "test_completed_scenario_and_unique_boots_are_required",
+        "class": "test_l08_receipts.L08ReceiptTests"
+      },
+      {
+        "name": "test_context_strictness_and_secret_fields",
+        "class": "test_l08_receipts.L08ReceiptTests"
+      },
+      {
+        "name": "test_every_individual_invariant_false_missing_unknown_or_nonboolean_is_rejected",
+        "class": "test_l08_receipts.L08ReceiptTests"
+      },
+      {
+        "name": "test_failed_boundary_record_and_failed_or_missing_xctest_are_rejected",
+        "class": "test_l08_receipts.L08ReceiptTests"
+      },
+      {
+        "name": "test_missing_or_extra_operation_cannot_pass",
+        "class": "test_l08_receipts.L08ReceiptTests"
+      },
+      {
+        "name": "test_reordered_operations_and_wrong_process_cannot_pass",
+        "class": "test_l08_receipts.L08ReceiptTests"
+      },
+      {
+        "name": "test_result_name_inventory_is_closed_unique_and_matches_twenty_operations",
+        "class": "test_l08_receipts.L08ReceiptTests"
+      },
+      {
+        "name": "test_result_reader_bounds_duplicate_fields_and_symlink",
+        "class": "test_l08_receipts.L08ReceiptTests"
+      },
+      {
+        "name": "test_unknown_sensitive_fields_never_reach_durable_evidence",
+        "class": "test_l08_receipts.L08ReceiptTests"
+      }
+    ],
+    "skipped": 0,
+    "failures": 0,
+    "source_manifest_before_after_equal": true,
+    "source_manifest_entries": 779,
+    "limit": "34 Python draft-control tests only. Empty Gradle XML test-receipts are expected for this Python cycle. These results do not prove Swift/Kotlin compilation or simulator application execution; run full adopted controls and fresh full source binding before native cycle."
+  },
+  "nonblocking_precision_notes": [
+    {
+      "id": "L08-DOC-01",
+      "classification": "DOCUMENTATION_PRECISION",
+      "location": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/L08_README.md:71-75",
+      "detail": "The before-copy unknown-field guarantee is for operation receipts. Promotion-02 retains generic DSC01 scenario reports with the existing bounded raw-copy loop before common schema validation. Source producer DSC01Report/Observation and composition observer remain fixed public-only schema; no actual secret emission was found. Clarify wording to unknown operation-receipt fields, rather than imply every scenario file is validated before raw retention. Not a blocker to a controlled native run."
+    }
+  ],
+  "rejected_candidates": [
+    {
+      "candidate": "Earlier local-game saves necessarily interfere with L08 Home selector",
+      "classification": "FALSE_POSITIVE",
+      "evidence": "l08_copy.py160-166 inserts L08 immediately after original readiness and before original local-game flows. Bootstrap readiness fixtures are separate; the suspected preceding local game saves do not exist at that point. Boot10 has three deliberate records; actual Home scroll/hittability still requires execution."
+    },
+    {
+      "candidate": "Doctor switch tagged row cannot activate original switch",
+      "classification": "FALSE_POSITIVE",
+      "evidence": "MafiaSetupScreen495-528 row uses toggleable(Role.Switch), while its visual Switch callback is null. Copy adds tag without replacing original callback; row tap is intended activation."
+    },
+    {
+      "candidate": "Whodunit background Pause necessarily invalidates canonical-reference retention",
+      "classification": "FALSE_POSITIVE",
+      "evidence": "Fixture stays PublicIntro. Original WhodunitReducer1072-1141 returns unchanged outside Round; the bridge pause does not alter this captured state."
+    },
+    {
+      "candidate": "Repeated automatic and explicit Mafia resolution can silently skip required terminal path",
+      "classification": "NOT_A_CONFIRMED_DEFECT",
+      "evidence": "Original local router auto-actions may race legal fixture submissions, but original reducer no-ops duplicates and fixture validates restored canonical identity/value and exact terminal winner/delete. No false-green path established."
+    }
+  ],
+  "execution_uncertainties": [
+    "Kotlin/Swift signatures and source-copy compilation have not run for L08.",
+    "Exact native tag reachability/hittability, Home list viewport position for deliberate multi-record boots, and host switch/Start geometry need real XCTest execution; absent targets must fail, never be called application crashes.",
+    "Asynchronous initial Home inventory during legacy seeding and original UI automatic progression scheduling are guarded by assertions but native scheduling has not run.",
+    "Increased 16-cold-boot/62-operation matrix must fit existing overall timeout; insufficient budget is not evidence of application failure.",
+    "No native storage/host result has yet been produced. Physical LAN/rejoin, physical lock/backups, power-loss, accessibility, full UI games, real signing/Store and historical crash causes remain unverified."
+  ],
+  "next_actions": [
+    "Root may adopt promotion-02 plus its listed frozen helper/template/test files; optionally make the noted narrow documentation clarification.",
+    "Run adopted full Python controls through the single owned lane, bind exact current dirty/untracked source plus all new controls, obtain independent exact binding approval, then run fresh owned simulator matrix.",
+    "After execution inspect actual XCTest discovery/results, every operation receipt, original matrix, exact source/artifact identities and cleanup. Failed controls/native signatures/selectors require diagnosis without weakening checks."
+  ],
+  "cleanup_and_preservation": {
+    "reviewer_gradle_or_xcode_tasks_started": 0,
+    "reviewer_test_or_native_processes_started": 0,
+    "reviewer_build_outputs_created": 0,
+    "reviewer_background_workers_remaining": 0,
+    "reviewer_git_writes": false,
+    "reviewer_production_or_draft_changes": false,
+    "reviewer_output_scope": "This new review deliverable only",
+    "parent_cycle_stop_exit_code": 0,
+    "parent_cycle_stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+    "parent_cycle_cleanup_completed_at": "2026-09-07T17:52:22.167428+00:00",
+    "parent_cycle_cleanup_errors": [],
+    "parent_cycle_remaining_outputs": [],
+    "parent_cycle_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "reason_no_reviewer_stop": "No reviewer build/process lane exists; stopping the active root lane or unrelated processes is prohibited. Root alone owns build/cleanup."
+  }
+}

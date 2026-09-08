@@ -1,0 +1,318 @@
+{
+  "schema": 1,
+  "reviewed_at": "2026-09-07T10:40:01.219023+00:00",
+  "reviewer": "/root/factory_review",
+  "author": "/root (derived integration and FD correction); /root/release_content_review (adapter)",
+  "scope": "Independent review of derived owned ARM64 SDK runner and actual source-bound synthetic22 controls. This is not emulator, Linux GMD, physical-device, application-runtime, or Store evidence.",
+  "decision": "APPROVED FOR ONE ROOT-COORDINATED FRESH OWNED ARM64 ATTEMPT; SOURCE + SYNTHETIC CONTROLS ONLY",
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "f5ea8045bd903c255041b198f54aca67e893612f",
+    "tree": "b109c8ec6ec579b9197f449b36bda2c39105a652",
+    "tracked_status": "",
+    "status": "?? AGENTS.md\n?? audit-runs/\n?? design/\n?? docs/PARLOR_PROJECT_HANDOFF.md\n?? project-code-audit/\n?? remediation-runs/\n?? scripts/verification/",
+    "source_manifest_sha256": "09b1e6be496baccb185b1dbe227e12a46de20c7c408e2deccac882c6c2b26cb2",
+    "source_records_rehashed": 727,
+    "current_source_hash_mismatches": []
+  },
+  "prior_adapter_review": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/android-owned-sdk-image-independent-source-review-01.json",
+    "sha256": "6aa24ec0a36a43fb3b150d316047f57ae89cf88a8333c28a28304bc932e5c2f8",
+    "relationship": "Carries complete adapter/test/API/classpath review; actual integration and source-bound controls reviewed here. Hypothetical shared-runner invalidation warning is superseded: a separate derived file was created; original hash remains unchanged."
+  },
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/owned_arm64_smoke_sdk.py",
+      "sha256": "bf6a07f759aef88746caac02609dfa6f2d72bb2052de8f46b53c6a73311aa6c8",
+      "type": "campaign-only control/test/diff; not shipping",
+      "line_count": 575,
+      "reviewed_line_ranges": [
+        [
+          1,
+          575
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "Complete original473 lines and complete delta previously read; current derived575 lines reopened in bounded ranges during this review."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/owned_arm64_smoke.py",
+      "sha256": "38ea4c0000a2c426f8475b4616e77ee0d8bb25bb424dc7516348c2095cd08b48",
+      "type": "campaign-only control/test/diff; not shipping",
+      "line_count": 473,
+      "reviewed_line_ranges": [
+        [
+          1,
+          473
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "All473 lines read in prior adapter review; current exact hash retained, complete original-to-derived diff independently compared."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/owned_sdk_image.py",
+      "sha256": "4f181d5c9455c43f4d7f51fca1d127c645cb6d55a7c64827ebf4d610b70f8e81",
+      "type": "campaign-only control/test/diff; not shipping",
+      "line_count": 210,
+      "reviewed_line_ranges": [
+        [
+          1,
+          210
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "Complete210 lines in prior adapter review and reread during final integration attestation."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/test_owned_sdk_image.py",
+      "sha256": "e95c142cf4e1f6c491e1716420b36012c63197669386ec241844dc76b8fd4093",
+      "type": "campaign-only control/test/diff; not shipping",
+      "line_count": 216,
+      "reviewed_line_ranges": [
+        [
+          1,
+          216
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "Complete216 lines in prior adapter review; current exact hash equals that review and actual22 before/after brackets."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/test_root_integration.py",
+      "sha256": "ddecb2e127210fe46b2eb1313413ab5b2029b454df5e0ba04c4535d7de0fb406",
+      "type": "campaign-only control/test/diff; not shipping",
+      "line_count": 153,
+      "reviewed_line_ranges": [
+        [
+          1,
+          153
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "Complete153 lines read, including two real descriptor-closure regressions and midclone owned finalizer."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/run_integration_controls.py",
+      "sha256": "d9dd18311152b87ad55d5bcb704773224a8d6d4da893de93984b907838614815",
+      "type": "campaign-only control/test/diff; not shipping",
+      "line_count": 65,
+      "reviewed_line_ranges": [
+        [
+          1,
+          65
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "Complete65 lines read; static AST/import/source bracketing compared with raw runtime records."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/root-integration-01.diff",
+      "sha256": "258c762fcbaa4463a475883a2a995d1469d4ab950b5f8d38235bc4d26109def8",
+      "type": "campaign-only control/test/diff; not shipping",
+      "line_count": 172,
+      "reviewed_line_ranges": [
+        [
+          1,
+          172
+        ]
+      ],
+      "reviewer": "/root/factory_review",
+      "method": "Complete172-line delta read and byte-exact difflib comparison to current original and derived runner."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py",
+      "sha256": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378",
+      "type": "unchanged imported campaign-only native ownership dependency",
+      "reviewed_line_ranges": [],
+      "reviewer": "/root/factory_review",
+      "method": "Byte identity and import binding only in this supplement; earlier ownership review records remain separate. No new line-by-line claim."
+    }
+  ],
+  "runtime_approval": {
+    "files": [
+      {
+        "path": "owned_arm64_smoke_sdk.py",
+        "sha256": "bf6a07f759aef88746caac02609dfa6f2d72bb2052de8f46b53c6a73311aa6c8"
+      },
+      {
+        "path": "darwin_owned_processes.py",
+        "sha256": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378"
+      },
+      {
+        "path": "avd-sdk-root-01/owned_sdk_image.py",
+        "sha256": "4f181d5c9455c43f4d7f51fca1d127c645cb6d55a7c64827ebf4d610b70f8e81"
+      }
+    ],
+    "sha256": "a4c8d3cb35247b15301c5d03b444239c2289624cb7b765689269612718d55e1c",
+    "hash_serialization": "sha256(json.dumps(rows, sort_keys=True).encode()) with default separators, in the listed order",
+    "caller_argument": "--approved-control-sha256 a4c8d3cb35247b15301c5d03b444239c2289624cb7b765689269612718d55e1c",
+    "unreviewed_control_drift": "Fail before actions for an initial mismatch and fail overall for final mismatch; refresh independent review before changing this approval."
+  },
+  "exact_control_bracket": {
+    "current_files": {
+      "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/run_integration_controls.py": "d9dd18311152b87ad55d5bcb704773224a8d6d4da893de93984b907838614815",
+      "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/owned_sdk_image.py": "4f181d5c9455c43f4d7f51fca1d127c645cb6d55a7c64827ebf4d610b70f8e81",
+      "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/test_owned_sdk_image.py": "e95c142cf4e1f6c491e1716420b36012c63197669386ec241844dc76b8fd4093",
+      "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/test_root_integration.py": "ddecb2e127210fe46b2eb1313413ab5b2029b454df5e0ba04c4535d7de0fb406",
+      "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/owned_arm64_smoke_sdk.py": "bf6a07f759aef88746caac02609dfa6f2d72bb2052de8f46b53c6a73311aa6c8",
+      "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/owned_arm64_smoke.py": "38ea4c0000a2c426f8475b4616e77ee0d8bb25bb424dc7516348c2095cd08b48",
+      "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py": "2f2ad2a5d68cea999709a4c3c3e384cd9e6767258ad34aed4181ee2118962378"
+    },
+    "before_equals_after_equals_current": true,
+    "five_import_paths_are_in_bracket": true,
+    "import_paths": {
+      "test_root_integration": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/test_root_integration.py",
+      "test_owned_sdk_image": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/test_owned_sdk_image.py",
+      "owned_sdk_image": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/owned_sdk_image.py",
+      "owned_arm64_smoke_sdk": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/owned_arm64_smoke_sdk.py",
+      "darwin_owned_processes": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py"
+    },
+    "source_before_equals_after": true,
+    "runner_before_equals_after": true
+  },
+  "diff": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/root-integration-01.diff",
+    "sha256": "258c762fcbaa4463a475883a2a995d1469d4ab950b5f8d38235bc4d26109def8",
+    "byte_exact_original_to_current": true,
+    "original_shared_runner_unchanged": true,
+    "historical_pre_fd_delta": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/root-integration-before-fd-review.diff",
+      "sha256": "6a20c510a0e3392c1f587bc7232682b5dce0ae3caba1cfbf8843cef23b4c17f5",
+      "disposition": "Root reconstructed exact pre-correction delta after review. Independently reconstructed and compared; historical source proof only, not a contemporaneous RED execution receipt."
+    }
+  },
+  "review_findings": [
+    {
+      "id": "SDK-INTEGRATION-FD-01",
+      "classification": "CONFIRMED CAMPAIGN-RUNNER DEFECT; CORRECTED AND SYNTHETICALLY VERIFIED",
+      "finder": "/root/factory_review",
+      "fix_author": "/root",
+      "independent_fix_reviewer": "/root/factory_review",
+      "original_proof": "native_clone_probe acquired source_fd then opened parent_fd before entering try. A reachable second-open EMFILE/EACCES leaves source_fd outside any finalizer. This is complete deterministic source proof; no pre-fix executed RED is claimed.",
+      "current_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/owned_arm64_smoke_sdk.py",
+      "current_lines": [
+        76,
+        84
+      ],
+      "correction": "Nested try/finally encloses second open and clone; acquired source closes if parent open fails, and both descriptors close if clone fails.",
+      "regressions": [
+        "test_root_integration.RootIntegrationTests.test_native_probe_closes_both_descriptors_if_clone_fails",
+        "test_root_integration.RootIntegrationTests.test_native_probe_closes_source_if_directory_open_fails"
+      ],
+      "regression_proof": "Both source-bound tests executed in root actual22. They acquire actual owned FDs, inject second-open EMFILE or clone ENOTSUP, then require fstat EBADF and finally remove the attested owned test root. No native APFS call is made in these tests.",
+      "counter_evidence": "The adapter already used an input-file context around parent open and was not affected. Source failure occurs before worker registration; no unrelated process needs termination.",
+      "conclusion": "Root cause addressed without fallback copies, source mutation, new SDK side effects or application changes."
+    }
+  ],
+  "integration_conclusions": [
+    "Derived runner preserves original shared runner and three exact instrumentation descriptors; public installed adb/emulator paths, isolated ADB socket/home/AVD, token-bound worker ownership and finally order remain.",
+    "Clone and tiny CoW probe are inside existing owned-root try/finally. Adapter cancellation reads existing CANCELLED; controls/metadata errors cannot become a PASS.",
+    "Direct Java argv binds isolated owned SDK via toolsdir; six inherited JVM option/classpath environment keys removed. Generated image path is rejected unless exactly selected owned relative image; emulator receives explicit owned -sysdir.",
+    "Global .knownPackages/package.xml/source.properties existence, inode and bounded hashes observed before, after CLI and finally. This is not a guarantee against another process concurrently changing global metadata; detected change fails the run.",
+    "Tests compare actual source binding and parsed source IDs; no skipped or undiscovered test is credited. Structural AST call-wiring test is not native integration proof.",
+    "The before/after seven-file bracket makes controls-02 stronger than earlier controls-01 receipts, which lacked tested-file byte brackets. Earlier successes are not substituted for current identity."
+  ],
+  "execution": {
+    "executor": "/root only",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/run_integration_controls.py"
+    ],
+    "started_at": "2026-09-07T10:32:11.746321+00:00",
+    "finished_at": "2026-09-07T10:32:12.115121+00:00",
+    "exit_code": 0,
+    "tests": 22,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "raw_ok_descriptors": [
+      "test_owned_sdk_image.SdkRootTests.test_cancel_and_owner_loss_fail_without_changing_installed_sdk",
+      "test_owned_sdk_image.SdkRootTests.test_clone_records_all_files_with_equal_bytes_and_distinct_inodes",
+      "test_owned_sdk_image.SdkRootTests.test_error_propagates_without_copy_fallback_or_source_cleanup",
+      "test_owned_sdk_image.SdkRootTests.test_existing_owned_sdk_is_never_reused",
+      "test_owned_sdk_image.SdkRootTests.test_explicit_java_sdk_and_environment_are_not_shell_parsed",
+      "test_owned_sdk_image.SdkRootTests.test_incorrect_clone_bytes_fail",
+      "test_owned_sdk_image.SdkRootTests.test_low_disk_fails_before_destination_creation",
+      "test_owned_sdk_image.SdkRootTests.test_metadata_drift_and_missing_metadata_fail_closed",
+      "test_owned_sdk_image.SdkRootTests.test_missing_metadata_fails_instead_of_accepting_partial_tree",
+      "test_owned_sdk_image.SdkRootTests.test_native_abi_is_exact_and_error_has_no_fallback",
+      "test_owned_sdk_image.SdkRootTests.test_source_mutation_during_clone_fails",
+      "test_owned_sdk_image.SdkRootTests.test_special_file_and_unbounded_inventory_are_rejected",
+      "test_owned_sdk_image.SdkRootTests.test_symlinks_and_hardlinks_in_source_are_rejected_before_clone",
+      "test_owned_sdk_image.SdkRootTests.test_unexpected_config_paths_rejected_not_rewritten",
+      "test_root_integration.RootIntegrationTests.test_binding_includes_derived_runner_adapter_and_native_owner",
+      "test_root_integration.RootIntegrationTests.test_checkpoint_preserves_cancellation_without_starting_commands",
+      "test_root_integration.RootIntegrationTests.test_metadata_observation_is_read_only_and_records_absence_and_change",
+      "test_root_integration.RootIntegrationTests.test_mid_clone_cancellation_preserves_source_and_owned_finalizer_removes_partial_copy",
+      "test_root_integration.RootIntegrationTests.test_native_probe_closes_both_descriptors_if_clone_fails",
+      "test_root_integration.RootIntegrationTests.test_native_probe_closes_source_if_directory_open_fails",
+      "test_root_integration.RootIntegrationTests.test_preserved_shared_runner_stays_exactly_bound",
+      "test_root_integration.RootIntegrationTests.test_same_method_matrix_and_owned_shutdown_remain_in_actual_run"
+    ],
+    "ids_equal_current_ast_declared_and_discovered": true,
+    "evidence": [
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-sdk-integration-controls-02/receipt.json",
+        "sha256": "b733127780a19c37e32890623df55d9bdbcc01904e55fc07795397018cf76d31"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-sdk-integration-controls-02/gradle.log",
+        "sha256": "6968eadce4c042943c11ea4758a37cf1c73d425cbd1d1aba4d132bfa7288c6f9"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-sdk-integration-controls-02/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-sdk-integration-controls-02/test-receipts.json",
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/android-sdk-integration-controls-02/artifact-receipts.json",
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      }
+    ],
+    "empty_gradle_xml_and_artifact_ledgers": "Expected for this Python-only synthetic cycle; actual execution is established by raw unittest output and driver brackets, not XML placeholders."
+  },
+  "execution_cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-07T10:32:12.421316+00:00",
+    "stop_log": "No Gradle daemons are running.",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "removed_outputs": [],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "cleanup_completed_at": "2026-09-07T10:32:12.476509+00:00",
+    "basis": "Inspected root cycle receipt + stop log. Reviewer did not stop processes or perform independent cleanup during another lane task."
+  },
+  "required_conditions_before_native_attempt": [
+    "Parent exclusively owns Gradle/Xcode/emulator lane and must finish other cycle cleanup first.",
+    "Bind retained app/test APK hashes to their original build/source receipts. Caller-provided current commit and artifact hashes alone do not prove origin. No Store keys or Store operation.",
+    "Record/recheck actual installed CLI classpath/JAR hashes and JDK executable/native tool versions/identity. JDK release metadata and CLI source.properties alone are version labels, not complete executable-byte attestation.",
+    "Tiny real CoW probe, full image/CLI execution and emulator remain unexecuted by this review; any unsupported clone/CLI/runtime result is failure or blocked evidence, never PASS.",
+    "Use only fresh owned AVD/SDK/profile; preserve existing SDKs, profiles and connected devices. No real SDK scanner, broad cleanup, or global daemon kill.",
+    "Any control/source/global-metadata drift must remain explicit failure. If cleanup ledger is nonempty the runner deliberately retains owned root; root must record and perform separately attested targeted cleanup after investigation, not claim it cleaned.",
+    "Keep required APKs until native verification is complete; remove only owned outputs and stop owned workers in every exit path. No native-launch approval is shared with concurrent agents."
+  ],
+  "limits": [
+    "8GiB free-space preflight is headroom, not reservation; ENOSPC still possible and must cleanly fail.",
+    "Owned0700 root assumes no malicious concurrent same-UID filesystem mutation. Path-based nested opens and repeated ownership attestations are not a whole-tree atomic sandbox.",
+    "No new production fixes, game/protocol behavior, physical LAN success or Store-readiness verdict follow from this campaign-runner approval."
+  ],
+  "reviewer_actions": {
+    "source_or_control_edits": false,
+    "git_writes": false,
+    "tests_builds_native_actions_started": false,
+    "background_workers_started": false,
+    "other_tasks_cleanup_or_process_control": false,
+    "outputs_created": [
+      "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/android-owned-sdk-integration-independent-review-02.json"
+    ],
+    "cleanup": "Only static Python parsing/hashing and short read commands; no build/runtime outputs, pycache or persistent reviewer workers. Required review JSON retained."
+  }
+}

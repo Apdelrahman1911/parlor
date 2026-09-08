@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "author": "/root",
+  "recorded_at": "2026-09-07T15:33:59.201944+00:00",
+  "decision": "APPROVED_STATIC_VERBATIM_CHECKOUT_GUARD_PENDING_ROOT_FIXTURE_EXECUTION",
+  "commit": "5d9f5f4c81ff51ee70922c876eefb91c6e669d56",
+  "scope": "Two-linepath-scoped.gitattributes plus35-lineisolatedGitfixture; no policy/productioncode/Storechanges.",
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/.gitattributes",
+      "sha256": "d4ae92699b76e3c8e4353a9abbf42f1707c87533e26e3635ebeb488d34ffbe9f",
+      "reviewed_line_ranges": [
+        [
+          1,
+          2
+        ]
+      ],
+      "reviewer": "/root/release_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_notice_git_bytes.py",
+      "sha256": "8b16890d574150a00b55083607a744124ddfe15ce4a55bfc9377a7629fd575ee",
+      "reviewed_line_ranges": [
+        [
+          1,
+          35
+        ]
+      ],
+      "reviewer": "/root/release_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/validate_release_system.sh",
+      "sha256": "ce52c9c08edecba968337d6de42c90895badec127c7029a5afc16737d3b8864a",
+      "reviewed_line_ranges": [
+        [
+          1,
+          104
+        ]
+      ],
+      "reviewer": "/root/release_fix_review"
+    }
+  ],
+  "reasoning": [
+    "Onlylegalresourceflatfilesusetext:unset; ordinaryKotlin/otherresourcesunchanged. Allplannedflatlegalmanifestandnoticefilesretainexactupstreambytesonindexandcheckout. Noexistingtracked.gitattributes atHEAD.",
+    "Fixtureusesrealgit init/add/show/checkout-index/check-attr, notmockedGit. core.autocrlf=true makesmissingattribute normalizeCRLFtoLFinindex, soassertionwillcatchwrongpolicybeforecheckout.",
+    "OriginalCRLFbytesarecomparedbothinGitindexandfreshcheckout, andlegalunset/ordinaryunspecifiedattributesareasserted. Noassertionswereweakened.",
+    "EveryGIT_* inheritedenvironmentvariableisremoved; system/globalconfigareexplicitlydisabled; fixturehasfreshTemporaryDirectoryandonlyitsownsyntheticfileisunlinked. Noauthorname/emailneededbecausefixturedoesnotcommit.",
+    "scripts/release/validate_release_system.sh26 usesunittestdiscovertest_*.py, sonewtestfileisregisteredwithoutmanualselector. Actualrootrunstillrequired."
+  ],
+  "research": [
+    {
+      "url": "https://git-scm.com/docs/gitattributes",
+      "accessed_at": "2026-09-07T15:33:59.209649+00:00",
+      "result": "HTTP403; notusedasproof; noprivatedatawastransmitted."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/git/git/v2.50.1/Documentation/gitattributes.adoc",
+      "accessed_at": "2026-09-07T15:33:59.209656+00:00",
+      "sha256": "701dfca386fc865b01187d868f2c6e6542c8258439262c783b5cd6738d78b3a5",
+      "bytes": 50492,
+      "claim": "Unsettingthetextattributeona pathtellsGitnottoattemptanyend-of-lineconversionuponcheckinorcheckout; ifunspecifiedGitusescore.autocrlf.",
+      "applicability": "OfficialGitsourceatagv2.50.1; locallyinstalled2.50.1(AppleGit-155). TargetWindowsconversionissimulatedbycore.autocrlf=true fixture, notclaimedWindowsrunnerexecution."
+    }
+  ],
+  "blocking_findings": [],
+  "pending": [
+    "Exact-sourcefocusedrootfixtureexecution/cleanupreceipt.",
+    "Actualnativelegalresourcesnotyetavailabletobindfullnoticehashmanifest; realAndroid/iOSpackagednoticesstillNOT_RUN.",
+    "WindowsCIhostexecutionremainsseparategate; localGitconversionfixturedoesnotclaimWindowsbuild/runtime."
+  ],
+  "preservation_and_cleanup": "Revieweronlyreadsource/Gitmetadataandboundedpublicofficialdocumentation; allprocessesexited. No build,test,worker,sourceorGitmutation. ThisnewJSONonly;originalevidenceintact."
+}

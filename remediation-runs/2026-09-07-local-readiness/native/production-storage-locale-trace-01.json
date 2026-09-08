@@ -1,0 +1,928 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-09-07T05:44:02.354914+00:00",
+  "reviewer": "/root/native_fix_review",
+  "purpose": "Read-only source-first reopening for interpreting a future root-owned native readiness run. Not a defect-fix or runtime-pass receipt.",
+  "source_baseline": {
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "head": "875d849e0079452557374690b14e42c546ba2c06",
+    "head_tree": "3be52230c713999cfa182755e69578ff6fd67797",
+    "dirty_checkout": true,
+    "identity_scope": "Each reviewed file is SHA-256 bound below. HEAD/tree alone do not describe root-owned working-tree edits or untracked evidence."
+  },
+  "coverage": {
+    "complete_text_files": 35,
+    "bounded_partial_files": 2,
+    "reviewed_lines": 4672,
+    "ledger": [
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/App.kt",
+        "sha256": "622b679a2ef023fab17bf6c8ed8eb38c1fbc2b76a391f5f9a8298d59da9dda59",
+        "file_type": ".kt",
+        "relevance": "production-common-shell",
+        "lines": 338,
+        "reviewed_line_ranges": [
+          [
+            1,
+            338
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P1",
+          "P2",
+          "P3"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/di/AppModule.kt",
+        "sha256": "b449781eb52418300504344c1af978ef7cb41e4e1f35f8d50faa4b8662bbdb76",
+        "file_type": ".kt",
+        "relevance": "production-composition",
+        "lines": 74,
+        "reviewed_line_ranges": [
+          [
+            1,
+            74
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P1",
+          "P2",
+          "P3",
+          "P4"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/di/StorageModule.kt",
+        "sha256": "9734dde8f751d0e5792577692c322051aa0adc7f45ed0fa6ac5961cf9295e87c",
+        "file_type": ".kt",
+        "relevance": "production-composition",
+        "lines": 23,
+        "reviewed_line_ranges": [
+          [
+            1,
+            23
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P2"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/lifecycle/AppLifecycleCoordinator.kt",
+        "sha256": "9872f507bc2d719516249b40e50ba46262366ea7afae5e8b8b28448cce620932",
+        "file_type": ".kt",
+        "relevance": "production-common",
+        "lines": 144,
+        "reviewed_line_ranges": [
+          [
+            1,
+            144
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P4"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/p2p/P2pBootstrap.kt",
+        "sha256": "b2a8fb0db69c617ca45b5491a9fbf4485dff9b2ffa651715670f6e3e74299da0",
+        "file_type": ".kt",
+        "relevance": "production-composition",
+        "lines": 13,
+        "reviewed_line_ranges": [
+          [
+            1,
+            13
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P1",
+          "P4"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeRecoveryAvailability.kt",
+        "sha256": "4c8a962fba7ec8334cc8f4dfe0a75f221b201178481ae115d85ae391647fbb2a",
+        "file_type": ".kt",
+        "relevance": "production-common",
+        "lines": 146,
+        "reviewed_line_ranges": [
+          [
+            1,
+            146
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P1",
+          "P2"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/settings/SettingsMutationDispatcher.kt",
+        "sha256": "915149f63b117f3516c749070abea6c538942c2d61c2b9c7224f3551aad45ce5",
+        "file_type": ".kt",
+        "relevance": "production-common",
+        "lines": 29,
+        "reviewed_line_ranges": [
+          [
+            1,
+            29
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P3"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/settings/SettingsScreen.kt",
+        "sha256": "f97da085d85ed5fe01ac9f4725580ea2f86e399dcd330f532d9babc1925535c5",
+        "file_type": ".kt",
+        "relevance": "production-common-ui",
+        "lines": 325,
+        "reviewed_line_ranges": [
+          [
+            1,
+            325
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P3"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/storage/PlatformStorage.kt",
+        "sha256": "1f56d8b7adca7d5148445ec9e8f69d2f9a74f253d4c425cc2abd00a84594b690",
+        "file_type": ".kt",
+        "relevance": "production-common",
+        "lines": 41,
+        "reviewed_line_ranges": [
+          [
+            1,
+            41
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P2"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/storage/SnapshotProtectionPolicy.kt",
+        "sha256": "e234a34809bfe8dc4dd3345b33dce10c98f311fa02cc5c6a963b613bffb11d2d",
+        "file_type": ".kt",
+        "relevance": "production-common",
+        "lines": 35,
+        "reviewed_line_ranges": [
+          [
+            1,
+            35
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P2"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+        "sha256": "c77abd03ddcae230b4752d888b16c3d74231d89c967624c31129d176a5ed20ce",
+        "file_type": ".kt",
+        "relevance": "production-ios-entry",
+        "lines": 56,
+        "reviewed_line_ranges": [
+          [
+            1,
+            56
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P4"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSecureKeyValueBacking.kt",
+        "sha256": "4bce714c161a892ecd66fff662561d925db7e045af8cacf28e5b698c887015c7",
+        "file_type": ".kt",
+        "relevance": "production-ios",
+        "lines": 262,
+        "reviewed_line_ranges": [
+          [
+            1,
+            262
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P1"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSettingsKeyValueBacking.kt",
+        "sha256": "c8162e6713905b66d10aa8bc7e284d18f6815a2ae1754ba836c7241382014a10",
+        "file_type": ".kt",
+        "relevance": "production-ios",
+        "lines": 40,
+        "reviewed_line_ranges": [
+          [
+            1,
+            40
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P3"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+        "sha256": "8a99e60647c3d9f137ca8783e636b37798d06f4883df3609bf6cd2a0568bdf48",
+        "file_type": ".kt",
+        "relevance": "production-ios",
+        "lines": 500,
+        "reviewed_line_ranges": [
+          [
+            1,
+            500
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P2"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotKeychain.kt",
+        "sha256": "511aff877a27eb3f42ce4891203a830ba8879781de405e2248c3873f5f381a5e",
+        "file_type": ".kt",
+        "relevance": "production-ios",
+        "lines": 205,
+        "reviewed_line_ranges": [
+          [
+            1,
+            205
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P2"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/PlatformStorage.ios.kt",
+        "sha256": "cb69b6de029bf7d9f84dbc5bf19139150906a29d64cf29a60994259ca657a0c0",
+        "file_type": ".kt",
+        "relevance": "production-ios-composition",
+        "lines": 19,
+        "reviewed_line_ranges": [
+          [
+            1,
+            19
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P1",
+          "P2",
+          "P3"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosLegacySnapshotBackupTest.kt",
+        "sha256": "5d5cf8beedcddd77b3d99d3842f02f472da221f0bbcdc35c6212e3f5d56d0351",
+        "file_type": ".kt",
+        "relevance": "ios-test-only",
+        "lines": 222,
+        "reviewed_line_ranges": [
+          [
+            1,
+            222
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P2"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosStorageSafetyTest.kt",
+        "sha256": "2ecae719e0cbbdaefa412ede46656f59b63777087c8b653e215053359b42218b",
+        "file_type": ".kt",
+        "relevance": "ios-test-only",
+        "lines": 195,
+        "reviewed_line_ranges": [
+          [
+            1,
+            195
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P2"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/iosApp/Configuration/Config.xcconfig",
+        "sha256": "102b93364c12cb6d9055fcb88acdb5ab15bc1a3724bdc350799539bc09d9c0df",
+        "file_type": ".xcconfig",
+        "relevance": "public-ios-configuration-template",
+        "lines": 19,
+        "reviewed_line_ranges": [
+          [
+            1,
+            19
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P4"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp.xcodeproj/project.pbxproj",
+        "sha256": "625103b4676a017beb4619c61b705efc84c2be47b71603bddd840c1d3856ea9d",
+        "file_type": ".pbxproj",
+        "relevance": "ios-build-test-configuration",
+        "lines": 539,
+        "reviewed_line_ranges": [
+          [
+            230,
+            258
+          ],
+          [
+            408,
+            506
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P4"
+        ],
+        "disposition": "BOUNDED_REOPEN_ONLY",
+        "uncertainty": "All other line ranges are excluded from this incremental receipt; no whole-file reread claimed."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp.xcodeproj/xcshareddata/xcschemes/iosApp.xcscheme",
+        "sha256": "b883fb73d15c7cf4faf868d2cdc8c2fb921c7ffe3606893733b1f89a33747312",
+        "file_type": ".xcscheme",
+        "relevance": "ios-build-test-configuration",
+        "lines": 103,
+        "reviewed_line_ranges": [
+          [
+            1,
+            103
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P4"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/ComposeContainerViewController.swift",
+        "sha256": "9bdeeaf67a569f4016bc5359ae865b6df9eeaa2a9f6ee36e01041bf79000a903",
+        "file_type": ".swift",
+        "relevance": "production-ios-wrapper",
+        "lines": 48,
+        "reviewed_line_ranges": [
+          [
+            1,
+            48
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P3",
+          "P4"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/ContentView.swift",
+        "sha256": "5881b354ccc45340100356fbf37480e94efdcc2e8fe823f0bb6b5b60f8ccaa87",
+        "file_type": ".swift",
+        "relevance": "production-ios-wrapper",
+        "lines": 62,
+        "reviewed_line_ranges": [
+          [
+            1,
+            62
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P3",
+          "P4"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/Info.plist",
+        "sha256": "db09f2c4a3cc378f4bb24b6de29653283c90227795a27f64370c9da87ef0d0a5",
+        "file_type": ".plist",
+        "relevance": "production-ios-configuration",
+        "lines": 61,
+        "reviewed_line_ranges": [
+          [
+            1,
+            61
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P3",
+          "P4"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp/iOSApp.swift",
+        "sha256": "01d47afe5d13eb9ec48d9e8987c7920e72f2fefa5b06ec525087025caa809386",
+        "file_type": ".swift",
+        "relevance": "production-ios-entry",
+        "lines": 10,
+        "reviewed_line_ranges": [
+          [
+            1,
+            10
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P4"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/AppLanguage.kt",
+        "sha256": "fe6a1f254f55403d010bba741b80d05824b238f668f6d6951b31a308eb8353f0",
+        "file_type": ".kt",
+        "relevance": "production-common",
+        "lines": 38,
+        "reviewed_line_ranges": [
+          [
+            1,
+            38
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P3"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.kt",
+        "sha256": "9fe9742ea7225d76795a1731bab0e38c60af8b1b8760fc7d7158024d7437794f",
+        "file_type": ".kt",
+        "relevance": "production-common",
+        "lines": 21,
+        "reviewed_line_ranges": [
+          [
+            1,
+            21
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P3"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/ProvideAppLanguage.kt",
+        "sha256": "b4f4286459fe923ebaa3e156f4a9995232ce40ad32ae9bc43f73a929da77dc18",
+        "file_type": ".kt",
+        "relevance": "production-common",
+        "lines": 62,
+        "reviewed_line_ranges": [
+          [
+            1,
+            62
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P3"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+        "sha256": "959ab1a8cb955e484c806c8ce5af65ca841a20cfcd9b1f205443a1cfe768da20",
+        "file_type": ".kt",
+        "relevance": "production-ios",
+        "lines": 61,
+        "reviewed_line_ranges": [
+          [
+            1,
+            61
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P3"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+        "sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098",
+        "file_type": ".kt",
+        "relevance": "production-ios",
+        "lines": 83,
+        "reviewed_line_ranges": [
+          [
+            1,
+            83
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P3"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosTest/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwnerTest.kt",
+        "sha256": "dbf610cd2fe07dd690b994c70434c863a96833305d5fc47c0e0c9d95072acf7e",
+        "file_type": ".kt",
+        "relevance": "ios-test-only",
+        "lines": 142,
+        "reviewed_line_ranges": [
+          [
+            1,
+            142
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P3"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/secure/PlatformKeyedSecureStorage.kt",
+        "sha256": "5be752e2b849fcd708916e625a0faf06daa1c4497a2ce430f7700f935788e768",
+        "file_type": ".kt",
+        "relevance": "production-common",
+        "lines": 83,
+        "reviewed_line_ranges": [
+          [
+            1,
+            83
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P1"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/settings/PersistentSettingsStore.kt",
+        "sha256": "179e00506a2f3c7083d9f9231aa683e8bb73220a807ef6f1f5b04bb5496dac10",
+        "file_type": ".kt",
+        "relevance": "production-common",
+        "lines": 110,
+        "reviewed_line_ranges": [
+          [
+            1,
+            110
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P3"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+        "sha256": "e2ca0be28fd2f0eafee1a55022653190cf30a8c6da620dc3dfe56f361e0da27f",
+        "file_type": ".kt",
+        "relevance": "production-common",
+        "lines": 246,
+        "reviewed_line_ranges": [
+          [
+            1,
+            246
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P2"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+        "sha256": "a5e2536e41c81c54b58ec27da135ea9046969db9cb80084e2a0da3b15ddde7c7",
+        "file_type": ".kt",
+        "relevance": "production-common",
+        "lines": 4811,
+        "reviewed_line_ranges": [
+          [
+            95,
+            245
+          ],
+          [
+            609,
+            706
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P1",
+          "P4"
+        ],
+        "disposition": "BOUNDED_REOPEN_ONLY",
+        "uncertainty": "All other line ranges are excluded from this incremental receipt; no whole-file reread claimed."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/ResumableCredentialStore.kt",
+        "sha256": "f89db2c37f98ca92911bd90092c703b437803c310f86805a287fb45f5a8f8cb6",
+        "file_type": ".kt",
+        "relevance": "production-common",
+        "lines": 408,
+        "reviewed_line_ranges": [
+          [
+            1,
+            408
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P1"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/iosMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.ios.kt",
+        "sha256": "bea599aa4d6dd9820477f2cbee57c213a9988da33e51eada0eb061d25fd77753",
+        "file_type": ".kt",
+        "relevance": "production-ios-composition",
+        "lines": 71,
+        "reviewed_line_ranges": [
+          [
+            1,
+            71
+          ]
+        ],
+        "reviewer": "/root/native_fix_review",
+        "cross_file_paths": [
+          "P1",
+          "P4"
+        ],
+        "disposition": "COMPLETE_TEXT_READ_SOURCE_TRACED",
+        "uncertainty": "Native/runtime behavior not established by this source-reading receipt."
+      }
+    ]
+  },
+  "source_paths": [
+    {
+      "id": "P1",
+      "title": "Actual credential-storage query and Home warning",
+      "call_chain": [
+        "App.kt:73-75,120-142",
+        "HomeRecoveryAvailability.kt:88-102",
+        "P2pKitRoomTransport.kt:175,626-656",
+        "ResumableCredentialStore.kt:146-152,318-340",
+        "PlatformKeyedSecureStorage.kt:32-40",
+        "IosSecureKeyValueBacking.kt:74-112"
+      ],
+      "observations": [
+        "Ios platformStorageModule binds a singleton real IosSecureKeyValueBacking through PlatformKeyedSecureStorage; P2pTransportModule consumes that SecureStorage binding.",
+        "Home starts local and multiplayer probes concurrently. The multiplayer lookup does not require opening a physical room first.",
+        "SecItemCopyMatching errSecItemNotFound alone yields null; errSecSuccess requires correctly typed and bounded CFData; every other status throws a generic non-secret error. CF ownership is released in finally.",
+        "PlatformKeyedSecureStorage preserves CancellationException and maps other exceptions to secure_storage_io. Credential store maps that to Unavailable; RoomTransport maps it to NetError.SecureStorageUnavailable. Home sets hasUnavailableSource rather than treating it as a healthy empty store.",
+        "Credential queries bind generic-password class, service/account, synchronizable=false; read asks for data/limit-one. No explicit access-group key is supplied.",
+        "Put tries update, adds only on not-found, and retries update once after duplicate-add. Max backing bytes=16384; max serialized credential record=8192. Serialized transactions retain active and pending generations."
+      ],
+      "limitations": [
+        "An unavailable warning is not evidence of an app exception or crash.",
+        "Production errors intentionally omit numeric OSStatus. A future instrumented invocation can supply its own bounded attributed status only.",
+        "This read-only receipt does not establish the error from the historical original Home invocation or diagnose the reported first-four-launch crashes."
+      ]
+    },
+    {
+      "id": "P2",
+      "title": "Separate local snapshot protection and migration",
+      "call_chain": [
+        "HomeRecoveryAvailability.kt:48-85,94",
+        "FileBackedSnapshotStore.kt:89-105,118-140",
+        "IosSnapshotFileSystem.kt:128-228,256-330,362-418",
+        "IosSnapshotKeychain.kt:61-108,110-164"
+      ],
+      "observations": [
+        "Snapshot encryption/MAC keys use a different service/account and code path from rejoin credentials. Exactly 64 random bytes split into independent AES-256 and HMAC-SHA256 keys.",
+        "Snapshot key first-create handles duplicate add by re-reading the durable winner; candidate keys are zeroed. Decrypt authenticates header, filename, IV and ciphertext before decrypting.",
+        "Files are atomically installed under Application Support with complete Data Protection and backup exclusion; reads are bounded at maximum+1. Plaintext max=8MiB.",
+        "Legacy Documents directory is excluded before list/read. Malformed or failed migration records remain addressable and last copies are retained; protected-record precedence is not bypassed. Exclusion failures propagate outside best-effort per-record migration.",
+        "Snapshot list on a fresh empty store need not invoke SnapshotKeychain. Exceptions are kept distinct from NotFound; raw platform errors do not enter UI state."
+      ],
+      "limitations": [
+        "Credential OSStatus traces cannot be attributed to snapshot Keychain operations. Snapshot numeric attribution remains false in native controls.",
+        "Synthetic .native-readiness filename can test I/O boundaries but is not an ordinary session snapshot filename or complete game-resume proof.",
+        "Simulator filesystem attributes do not prove hardware lock/unlock, backup, or authenticated signed-release behavior."
+      ]
+    },
+    {
+      "id": "P3",
+      "title": "Language setting ownership through restart and stable composition",
+      "call_chain": [
+        "SettingsScreen.kt:77-90,107-132",
+        "SettingsMutationDispatcher.kt:16-29",
+        "PersistentSettingsStore.kt:35-61",
+        "IosSettingsKeyValueBacking.kt:15-40",
+        "App.kt:62-84,97-118,308-313",
+        "ProvideAppLanguage.kt:44-62",
+        "LocalAppLocale.ios.kt:27-83",
+        "IosLanguageOverrideOwner.kt:16-55",
+        "ContentView.swift:54-62",
+        "ComposeContainerViewController.swift:19-33"
+      ],
+      "observations": [
+        "Settings mutations use app-owned scope; per-setting update writes to backing before flow emission, serialized by one mutex. A platform write accepted by NSUserDefaults is not a durable flush.",
+        "Locale owner reads the application persistent domain, never promotes resolved fallback. It records prior state before installation, and restores only when the current value exactly matches the installed value. Unowned/external preferences remain authoritative.",
+        "System releases the previous owned value even after process death; an already-identical OS preference is not claimed or later removed. Malformed ownership cannot install malformed previous arrays.",
+        "Composition boundary is not keyed by locale. AppScope, navigator and retained state are not intentionally recreated by language changes. Native semantic direction is refreshed only on actual direction changes; SwiftUI update retains same container and child."
+      ],
+      "limitations": [
+        "NSUserDefaults commits in-process immediately and to disk asynchronously. The source does not promise a cross-process transaction or crash-proof durability across every interruption.",
+        "Synthetic suite tests cannot prove actual OS per-app language representation. Native matrix must exercise an OS-created PRESENT Arabic preference (with global English), English override, System, and restart. ABSENT does not count as PRESENT.",
+        "Actual iOS gesture correctness and real OS persistence require runtime evidence. No iOS tests were launched by this reviewer in this cycle."
+      ]
+    },
+    {
+      "id": "P4",
+      "title": "iOS entry, lifecycle and applicable configuration",
+      "call_chain": [
+        "iOSApp.swift:3-10",
+        "ContentView.swift:14-62",
+        "MainViewController.kt:18-56",
+        "AppModule.kt:33-74",
+        "P2pBootstrap.kt:13",
+        "P2pTransportModule.ios.kt:50-71",
+        "AppLifecycleCoordinator.kt:44-69,116-144",
+        "P2pKitRoomTransport.kt:180-231",
+        "project.pbxproj:235-255,408-506"
+      ],
+      "observations": [
+        "Compose entry and SwiftUI lifecycle bridges call guarded Koin initialization, with UI-thread ownership assumed by platform callbacks. No new crash diagnosis follows from this guard.",
+        "Inactive immediately privacy-covers/hides accessibility but does not background transport. Actual background maps to transport event; common policy deduplicates and commits before effects.",
+        "Debug app bundle ID uses .debug, while Release uses canonical BUNDLE_ID. Existing collision/publication safeguards were not altered.",
+        "Xcode shell phase set -e covers cd and Gradle failures; normalization follows successful embedding. This receipt does not rerun stale-output regression tests.",
+        "All future launches must bind built and installed complete native image inventory, including Debug dylib, to approved source/control hashes."
+      ],
+      "limitations": [
+        "Eight process-cold launches of one installed instrumented build are not eight reinstall/rebuild experiments or proof of historical-crash cause.",
+        "dyld evidence is only bounded non-atomic sampling.",
+        "No physical LAN, signed Store candidate, real entitlements, locked-device behavior or actual Store operations were performed."
+      ]
+    }
+  ],
+  "test_source_review": [
+    {
+      "path": "composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosStorageSafetyTest.kt",
+      "test_annotations": 6,
+      "execution_this_receipt": "NOT_RUN",
+      "scope": "bounded native reads, empty CFData/CommonCrypto, protected-versus-legacy precedence"
+    },
+    {
+      "path": "composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosLegacySnapshotBackupTest.kt",
+      "test_annotations": 8,
+      "execution_this_receipt": "NOT_RUN",
+      "scope": "retention, malformed/oversized records, strict exclusion, retry, and UUID-owned temporary fixtures; no live Keychain dependency"
+    },
+    {
+      "path": "shared/design-system/src/iosTest/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwnerTest.kt",
+      "test_annotations": 11,
+      "execution_this_receipt": "NOT_RUN",
+      "scope": "synthetic NSUserDefaults suites, no user preferences; restart modeled by new owner instance, not process launch"
+    }
+  ],
+  "research": [
+    "native/research-controls-05.json",
+    "native/research-controls-04.json"
+  ],
+  "research_cautions": [
+    "Apple errSecMissingEntitlement guidance explicitly asks for hardware-target entitlements, not Simulator, when diagnosing device entitlements. Simulator observations are scoped to the invoked unsigned configuration.",
+    "Installed SDK/platform raw defaults are not merged target build settings. Actual linker/generated sections and codesign metadata are distinct observations.",
+    "DocC excerpt extraction omitted inline reference titles; URLs and full-document hashes identify authoritative originals; missing symbols are not quoted from memory."
+  ],
+  "gate_dispositions": [
+    {
+      "gate": "Production storage/locale/lifecycle bounded source reopening",
+      "status": "PASS",
+      "basis": "Only reading/tracing scope described in this receipt; not execution correctness."
+    },
+    {
+      "gate": "Current native app-host readiness execution",
+      "status": "BLOCKED",
+      "basis": "Root-owned execution and independent execution-hash approval pending when this receipt was created."
+    },
+    {
+      "gate": "IOS-R1 root-cause classification",
+      "status": "BLOCKED",
+      "basis": "Evidence gap; no independently established application defect or historical error attribution."
+    },
+    {
+      "gate": "Historical first-four-launch crash diagnosis",
+      "status": "BLOCKED",
+      "basis": "No historical exception/OS termination or process-aligned crash receipt establishes a cause."
+    },
+    {
+      "gate": "Physical-device secure storage/LAN/Store readiness",
+      "status": "BLOCKED",
+      "basis": "No physical device or Store authorization/evidence in this source-only pass."
+    }
+  ],
+  "protected_exclusions": [
+    "Private signing material and credentials",
+    "Real player data, normal credential records and user snapshot contents",
+    "Unrelated user preferences and existing simulator profiles",
+    "Private Store/account infrastructure"
+  ],
+  "cleanup": {
+    "builds_tests_launched_this_receipt": false,
+    "task_owned_workers_started": false,
+    "gradle_invoked": false,
+    "root_lane_left_undisturbed": true,
+    "source_or_live_control_edits": false,
+    "temporary_outputs_created": false,
+    "retained_deliverables": [
+      "this compact JSON source evidence"
+    ]
+  },
+  "next_checkpoint": [
+    "Await root06 receipt/cleanup and frozen source-binding hash.",
+    "Independently inspect native runtime receipts only after root-owned execution.",
+    "Do not treat trace-delivery success as storage success or warning as crash.",
+    "Record exact OSStatus attribution, PRESENT/ABSENT locale state, built/installed image identities, eight cold-launch outcomes, and final cleanup before changing gate classifications."
+  ]
+}

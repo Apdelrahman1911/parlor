@@ -1,0 +1,23 @@
+{
+  "recorded_at": "2026-09-05T13:14:46.549268+00:00",
+  "command": [
+    "xcrun",
+    "llvm-objdump",
+    "--macho",
+    "--arch=arm64",
+    "--disassemble",
+    "--dis-symname",
+    "__Z15network_connectRKNSt3__112basic_stringIcNS_11char_traitsIcEENS_9allocatorIcEEEEiiiPS5_",
+    "/Users/abdelrahman/Library/Android/sdk/platform-tools/adb"
+  ],
+  "exit_code": 0,
+  "stderr": "",
+  "binary_sha256": "9fdf861259dc807937b13afdd5f053c7fda9f3b7726933fe0e0f45130ecb8dc7",
+  "binary_execution": false,
+  "method": "Read-only disassembly of unnamed sockaddr constructors identified by function-pointer targets from network_loopback_server",
+  "address_range": [
+    "0x1000d5eb8",
+    "0x1000d5f10"
+  ],
+  "disassembly": "1000d5eb8:\t88 03 80 52\tmov\tw8, #0x1c\n1000d5ebc:\t28 00 00 b9\tstr\tw8, [x1]\n1000d5ec0:\tc8 03 80 52\tmov\tw8, #0x1e\n1000d5ec4:\t08 04 00 39\tstrb\tw8, [x0, #0x1]\n1000d5ec8:\tc8 32 00 f0\tadrp\tx8, 1627 ; 0x100730000\n1000d5ecc:\t08 4d 40 f9\tldr\tx8, [x8, #0x98] ; literal pool symbol address: _in6addr_loopback\n1000d5ed0:\t00 01 c0 3d\tldr\tq0, [x8]\n1000d5ed4:\t00 80 80 3c\tstur\tq0, [x0, #0x8]\n1000d5ed8:\t48 08 c0 5a\trev\tw8, w2\n1000d5edc:\t08 7d 10 53\tlsr\tw8, w8, #16\n1000d5ee0:\t08 04 00 79\tstrh\tw8, [x0, #0x2]\n1000d5ee4:\tc0 03 5f d6\tret\n1000d5ee8:\t08 02 80 52\tmov\tw8, #0x10\n1000d5eec:\t28 00 00 b9\tstr\tw8, [x1]\n1000d5ef0:\t48 00 80 52\tmov\tw8, #0x2\n1000d5ef4:\t08 04 00 39\tstrb\tw8, [x0, #0x1]\n1000d5ef8:\te8 0f 80 52\tmov\tw8, #0x7f\n1000d5efc:\t08 20 a0 72\tmovk\tw8, #0x100, lsl #16\n1000d5f00:\t08 04 00 b9\tstr\tw8, [x0, #0x4]\n1000d5f04:\t48 08 c0 5a\trev\tw8, w2\n1000d5f08:\t08 7d 10 53\tlsr\tw8, w8, #16\n1000d5f0c:\t08 04 00 79\tstrh\tw8, [x0, #0x2]\n1000d5f10:\tc0 03 5f d6\tret"
+}

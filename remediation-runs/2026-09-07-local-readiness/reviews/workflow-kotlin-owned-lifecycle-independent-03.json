@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-07T17:09:26.933335+00:00",
+  "author": "/root",
+  "independent_reviewer": "/root/release_fix_review",
+  "classification": "APPROVED: SCOPED KOTLIN CONTRACT REPAIR WITH EXECUTED DESKTOP TEST AND ANALYSIS EVIDENCE",
+  "supersedes": "Missing-import blocker only in workflow-and-package-timeout-independent-02.json. Coordinator approval in that report remains unchanged.",
+  "source": {
+    "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/ProductionVerificationWorkflowContractTest.kt",
+    "sha256": "f827b3bba6f51581e874206e95431e1c3a843db2706649e7f5c6f95610a637d1",
+    "reviewed_line_ranges": [
+      [
+        1,
+        690
+      ]
+    ],
+    "method": "Previously read complete689-line frozen8c20907b; reopened imports1-12, helper510-537 and tail683-690; byte hashing after removing exactly import kotlin.test.assertEquals\\n recovers8c20907b, proving only the reviewed import was added."
+  },
+  "evidence_identity_note": "While the prior02 report was being constructed, root added the import. Its coverage[0] therefore captured newf827b3bb with range1-689, while its explicit blocker correctly named old8c20907b. This additive supplement resolves that capture timing, maps the complete source to690 lines and verifies the corrected version. Prior report remains intact.",
+  "reproduction": "workflow-kotlin-owned-lifecycle-02 compilation failed with old missing import; its final receipt2c88193bbea70c1c0d7130972b0bbc08250ab3152dba0580dd2f2ccee4096624 records stop0/clean outputs/source stable. No mid-cycle patch was made.",
+  "executed_gate": {
+    "cycle": "workflow-kotlin-owned-lifecycle-03",
+    "receipt_sha256": "c4e5153360ebf8c5e150ca1899dda472df63be0aff661a8283f2702c8b10bd9c",
+    "junit_sha256": "a8b218fd5557bb5d7c53c15fcf685ac3357bd771b0c0a11c804e8aae6ca820a3",
+    "gradle_log_sha256": "23a6a0c6f0edb447230fb7153afecb6a8957f6cbd3dccf723ea102ee0cb73be1",
+    "command": "./gradlew :shared:transport-p2p:desktopTest --tests *ProductionVerificationWorkflowContractTest* :shared:transport-p2p:detekt :shared:transport-p2p:detektDesktopTest; strict verification, no-daemon/no-parallel/max-workers1/no configuration cache",
+    "result": "9 discovered/executed JUnit tests, 0 failures/errors/skips; specifically includes corrected Apple workflow test. Both detekt and detektDesktopTest XML have0 issue nodes and task log records execution. Analysis reports are not two additional tests.",
+    "source_manifest_sha256": "933db86c8f4d553575ae68bfa80589b6fe3e2d532186363acb4ecaca9d9a47c2",
+    "whole_tracked_diff_sha256": "da8cd9cd7b31382bf8327834c71c6ff3e78c1260421dabfa7b4863cd4c08842c",
+    "source_changed_during_cycle": false,
+    "runner_changed_during_cycle": false,
+    "cleanup": "stop0; stop log says no Gradle daemons are running; no owned build/artifact workers, retained outputs, remaining outputs or cleanup errors."
+  },
+  "scope_limits": "Approval is the three reviewed file corrections plus associated focused evidence, not Git authorization, an aggregate productionCheck pass, actual slow-network download/AAB validation, Linux execution or native iOS XCTest evidence.",
+  "reviewer_actions": "Read/hash/source comparison/XML and compact receipt inspection only; wrote this additive supplement. No builds, native execution, cleanup/process signals, source edits or Git mutations."
+}

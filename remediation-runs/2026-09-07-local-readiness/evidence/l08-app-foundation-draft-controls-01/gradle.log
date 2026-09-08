@@ -1,0 +1,63 @@
+test_copy_adapter_adds_only_two_files_and_three_exact_changes (test_app_foundation.OwnedCopyControls) ... ERROR
+test_foreign_source_root_and_preexisting_adapter_are_never_overwritten (test_app_foundation.OwnedCopyControls) ... ok
+test_hardlinked_inherited_source_fails_before_copy_mutation (test_app_foundation.OwnedCopyControls) ... FAIL
+test_malformed_compile_hash_or_device_root_cannot_write_copy (test_app_foundation.OwnedCopyControls) ... ok
+test_owned_receipt_rejects_symlink_hardlink_oversize_and_traversal (test_app_foundation.OwnedCopyControls) ... ok
+test_partial_available_receipts_preserved_before_later_abort_without_overwrite (test_app_foundation.OwnedCopyControls) ... ok
+test_removed_synthetic_root_claim_is_checked_before_preserving (test_app_foundation.OwnedCopyControls) ... ok
+test_source_custody_hash_drift_and_extra_inputs_fail_before_any_addition (test_app_foundation.OwnedCopyControls) ... ok
+test_claims_context_runtime_and_unknown_fields_are_strict (test_app_foundation.SchemaControls) ... ok
+test_closed_delivery_failure_never_becomes_native_observation (test_app_foundation.SchemaControls) ... ok
+test_cross_control_source_token_image_or_install_fails_binding (test_app_foundation.SchemaControls) ... ok
+test_duplicate_nonfinite_malformed_and_oversized_json_is_rejected (test_app_foundation.SchemaControls) ... ok
+test_every_boolean_field_rejects_numeric_zero_and_one (test_app_foundation.SchemaControls) ... ok
+test_false_operations_errors_and_exceptions_remain_observed (test_app_foundation.SchemaControls) ... ok
+test_first_health_cross_check_never_substitutes_a_different_boot_or_process (test_app_foundation.SchemaControls) ... ok
+test_full_native_dicts_paths_payloads_and_error_descriptions_cannot_enter_receipt (test_app_foundation.SchemaControls) ... ok
+test_inner_cleanup_failure_cannot_be_collection_validated (test_app_foundation.SchemaControls) ... ok
+test_missing_complete_metadata_never_satisfies_l08 (test_app_foundation.SchemaControls) ... ok
+test_missing_duplicate_wrong_architecture_or_digest_uuid_inventory_rejected (test_app_foundation.SchemaControls) ... ok
+test_partial_error_receipt_is_preservable_not_collection_success (test_app_foundation.SchemaControls) ... ok
+test_rows_are_complete_unique_ordered_and_cannot_query_directory_url_class (test_app_foundation.SchemaControls) ... ok
+test_unavailable_image_preserves_closed_error_rows_without_collection_success (test_app_foundation.SchemaControls) ... ok
+test_wrong_debug_identity_and_conflicting_native_aliases_fail_binding (test_app_foundation.SchemaControls) ... ok
+test_xctest_receipt_must_execute_once_with_exact_primitive_types (test_app_foundation.SchemaControls) ... ok
+test_bridge_wires_only_app_debug_and_preserves_original_project_sections (test_app_foundation.SourceControls) ... ok
+test_control03_operation_query_and_image_helpers_remain_exact (test_app_foundation.SourceControls) ... ok
+test_hooks_preserve_existing_loop_method_and_one_activation_counts (test_app_foundation.SourceControls) ... ok
+test_native_cleanup_static_guards_reject_individual_policy_mutations (test_app_foundation.SourceControls) ... ok
+test_native_closed_reason_schema_covers_every_guard_without_raw_messages (test_app_foundation.SourceControls) ... ok
+test_native_guard_no_process_global_override_or_production_storage_api (test_app_foundation.SourceControls) ... ok
+
+======================================================================
+ERROR: test_copy_adapter_adds_only_two_files_and_three_exact_changes (test_app_foundation.OwnedCopyControls)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py", line 393, in test_copy_adapter_adds_only_two_files_and_three_exact_changes
+    result, proof = self.apply(item)
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py", line 389, in apply
+    return adaptor.apply_owned_adapter(root, before, custody, context, 'c' * 64, 'adhoc', device_set)
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py", line 179, in apply_owned_adapter
+    root, entries = _copy_paths(copy_root, before, custody)
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py", line 134, in _copy_paths
+    require(root.name == 'copy' and TEMP.fullmatch(temporary.name) is not None and
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py", line 34, in require
+    raise RuntimeError('App Foundation: ' + code)
+RuntimeError: App Foundation: owned-copy-root
+
+======================================================================
+FAIL: test_hardlinked_inherited_source_fails_before_copy_mutation (test_app_foundation.OwnedCopyControls)
+----------------------------------------------------------------------
+RuntimeError: App Foundation: owned-copy-root
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py", line 421, in test_hardlinked_inherited_source_fails_before_copy_mutation
+    with self.assertRaisesRegex(RuntimeError, 'inherited-copy-changed'): self.apply(item)
+AssertionError: "inherited-copy-changed" does not match "App Foundation: owned-copy-root"
+
+----------------------------------------------------------------------
+Ran 30 tests in 1.720s
+
+FAILED (failures=1, errors=1)

@@ -1,0 +1,539 @@
+// Copy-only direct Objective-C app-container diagnostic, NEVER shipped.
+// Eight operation/eight observation sequence inherited from frozen native control03.
+#import <Foundation/Foundation.h>
+#import <TargetConditionals.h>
+#import <objc/runtime.h>
+#include <mach-o/dyld.h>
+#include <mach-o/loader.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <errno.h>
+#include <limits.h>
+#include <stdlib.h>
+#include <string.h>
+#include <fcntl.h>
+#include <dlfcn.h>
+#include <stdatomic.h>
+#import "L08AppFoundationBridge.h"
+
+#define L08_TEMPLATE_SHA256 __L08_TEMPLATE_SHA256__
+#define L08_CONTEXT_SHA256 __L08_CONTEXT_SHA256__
+#define L08_CONTROLS_SHA256 __L08_CONTROLS_SHA256__
+#define L08_DEVICE_SET __L08_DEVICE_SET__
+#define L08_SIGNING_MODE __L08_SIGNING_MODE__
+
+#if !defined(DEBUG) || !DEBUG || !TARGET_OS_SIMULATOR || !TARGET_OS_IOS || !defined(__arm64__)
+#error This diagnostic requires an arm64 iOS Simulator target, never host macOS.
+#endif
+
+static NSMutableArray<NSDictionary *> *rows;
+static NSString *root;
+static dev_t rootDevice;
+static ino_t rootInode;
+static dev_t directoryDevice;
+static ino_t directoryInode;
+static BOOL directoryPinned;
+static mode_t directoryMode;
+static struct stat fileIdentities[3];
+static BOOL filePinned[3];
+static NSString *containerPath;
+static NSString *libraryPath;
+static NSString *supportPath;
+static NSString *fixtureName;
+static NSString *appBundlePath;
+static struct stat containerIdentity;
+static struct stat libraryIdentity;
+static struct stat supportIdentity;
+static int supportDescriptor = -1;
+static BOOL parentsPinned;
+static BOOL rootCreated;
+static BOOL rootPinned;
+static BOOL rootRemoved;
+static BOOL descriptorCloseFailed;
+static atomic_flag invocationUsed = ATOMIC_FLAG_INIT;
+
+static void attestAppParents(void);
+
+static void requireControl(BOOL condition, NSString *closedReason) {
+    if (!condition) @throw [NSException exceptionWithName:@"ControlBoundary"
+                                                reason:closedReason userInfo:nil];
+}
+
+static NSDictionary *nativeError(NSError *error) {
+    return @{@"present": (error != nil ? @YES : @NO), @"domain": error == nil ? @"none" :
+        ([error.domain isEqual:NSCocoaErrorDomain] ? @"cocoa" :
+         ([error.domain isEqual:NSPOSIXErrorDomain] ? @"posix" : @"other")),
+        @"code": error == nil ? @0 : @(error.code)};
+}
+
+static void operation(NSString *identifier, BOOL (^body)(NSError **)) {
+    requireControl(rows.count < 32, @"row-limit");
+    @try {
+        NSError *error = nil;
+        BOOL result = body(&error);
+        [rows addObject:@{@"id": identifier, @"kind": @"operation",
+            @"returned": @YES, @"result": @(result), @"exception": @"none",
+            @"native_error": nativeError(error)}];
+    } @catch (NSException *exception) {
+        if ([exception.name isEqual:@"ControlBoundary"]) @throw;
+        [rows addObject:@{@"id": identifier, @"kind": @"operation",
+            @"returned": @NO, @"result": @NO, @"exception": @"objc-exception",
+            @"native_error": nativeError(nil)}];
+    }
+}
+
+static NSString *protectionName(id value, BOOL urlKey) {
+    if (value == [NSNull null]) return @"null";
+    if (![value isKindOfClass:[NSString class]]) return @"non-string";
+    if ([value isEqual:(urlKey ? NSURLFileProtectionComplete : NSFileProtectionComplete)]) return @"complete";
+    if ([value isEqual:(urlKey ? NSURLFileProtectionNone : NSFileProtectionNone)]) return @"none";
+    if ([value isEqual:(urlKey ? NSURLFileProtectionCompleteUnlessOpen : NSFileProtectionCompleteUnlessOpen)]) return @"unless-open";
+    if ([value isEqual:(urlKey ? NSURLFileProtectionCompleteUntilFirstUserAuthentication : NSFileProtectionCompleteUntilFirstUserAuthentication)]) return @"until-first-authentication";
+    if (@available(iOS 17.0, *)) {
+        if ([value isEqual:(urlKey ? NSURLFileProtectionCompleteWhenUserInactive : NSFileProtectionCompleteWhenUserInactive)]) return @"when-user-inactive";
+    }
+    return @"other-string";
+}
+
+static NSDictionary *query(NSString *path, NSString *kind) {
+    @try {
+        NSError *error = nil;
+        NSString *key = [kind isEqual:@"fm"] ? NSFileProtectionKey :
+            ([kind isEqual:@"url"] ? NSURLFileProtectionKey :
+             ([kind isEqual:@"backup"] ? NSURLIsExcludedFromBackupKey : NSURLVolumeSupportsFileProtectionKey));
+        NSDictionary *values = [kind isEqual:@"fm"] ?
+            [[NSFileManager defaultManager] attributesOfItemAtPath:path error:&error] :
+            [[NSURL fileURLWithPath:path] resourceValuesForKeys:@[key] error:&error];
+        id value = values[key];
+        NSString *summary = values == nil ? @"unavailable" : value == nil ? @"missing" :
+            (([kind isEqual:@"volume"] || [kind isEqual:@"backup"]) ? ([value isKindOfClass:[NSNumber class]] ?
+                ([kind isEqual:@"backup"] ? ([value boolValue] ? @"excluded" : @"included") :
+                 ([value boolValue] ? @"supported" : @"unsupported")) : @"non-number") :
+                protectionName(value, [kind isEqual:@"url"]));
+        return @{@"returned": @YES, @"dictionary_present": (values != nil ? @YES : @NO),
+            @"key_present": (value != nil ? @YES : @NO), @"value": summary,
+            @"exception": @"none", @"native_error": nativeError(error)};
+    } @catch (__unused NSException *exception) {
+        return @{@"returned": @NO, @"dictionary_present": @NO,
+            @"key_present": @NO, @"value": @"unobserved",
+            @"exception": @"objc-exception", @"native_error": nativeError(nil)};
+    }
+}
+
+static void attestRoot(void) {
+    attestAppParents();
+    requireControl(rootPinned, @"root-not-pinned");
+    struct stat value;
+    requireControl(lstat(root.fileSystemRepresentation, &value) == 0 &&
+        S_ISDIR(value.st_mode) && value.st_uid == getuid() &&
+        value.st_dev == rootDevice && value.st_ino == rootInode &&
+        (value.st_mode & 0777) == 0700, @"root-identity");
+}
+
+// No enumeration, arbitrary names, symlinks, parent components, or fallback roots.
+static NSString *ownedPath(NSString *leaf, BOOL directory, BOOL mustBeAbsent) {
+    attestRoot();
+    requireControl([@[@"created", @"created/atomic.bin", @"created/direct.bin",
+                      @"created/set.bin"] containsObject:leaf], @"unknown-leaf");
+    if (![leaf isEqual:@"created"]) {
+        struct stat parent;
+        NSString *parentPath = [root stringByAppendingPathComponent:@"created"];
+        requireControl(directoryPinned && lstat(parentPath.fileSystemRepresentation, &parent) == 0 &&
+            S_ISDIR(parent.st_mode) && parent.st_uid == getuid() &&
+            parent.st_dev == directoryDevice && parent.st_ino == directoryInode &&
+            (parent.st_mode & 0777) == directoryMode,
+            @"parent-identity");
+    }
+    NSString *path = [root stringByAppendingPathComponent:leaf];
+    struct stat value;
+    int result = lstat(path.fileSystemRepresentation, &value);
+    if (result != 0) {
+        requireControl(errno == ENOENT, @"entry-stat");
+    } else {
+        requireControl(!mustBeAbsent && value.st_uid == getuid() && value.st_dev == rootDevice &&
+            (directory ? S_ISDIR(value.st_mode) : S_ISREG(value.st_mode)) &&
+            (directory || (value.st_nlink == 1 && value.st_size >= 0 && value.st_size <= 256)),
+            @"entry-identity");
+        if (directory && directoryPinned) {
+            requireControl(value.st_dev == directoryDevice && value.st_ino == directoryInode,
+                @"directory-identity");
+        }
+        if (!directory) {
+            NSUInteger index = [@[@"created/atomic.bin", @"created/direct.bin", @"created/set.bin"] indexOfObject:leaf];
+            requireControl(index < 3, @"file-index");
+            if (filePinned[index]) {
+                requireControl(value.st_dev == fileIdentities[index].st_dev &&
+                    value.st_ino == fileIdentities[index].st_ino, @"file-identity");
+            } else {
+                fileIdentities[index] = value; filePinned[index] = YES;
+            }
+        }
+    }
+    return path;
+}
+
+static void observe(NSString *identifier, NSString *leaf, BOOL directory) {
+    NSString *path = ownedPath(leaf, directory, NO);
+    NSMutableDictionary *row = [@{@"id": identifier, @"kind": @"observation",
+        @"fm": query(path, @"fm"), @"volume": query(path, @"volume"),
+        @"backup": query(path, @"backup")} mutableCopy];
+    // NSURL.h scopes NSURLFileProtectionKey to regular files, not directories.
+    if (!directory) row[@"url"] = query(path, @"url");
+    requireControl(rows.count < 32, @"row-limit");
+    [rows addObject:row];
+}
+
+static NSDictionary *imageIdentity(const struct mach_header *raw) {
+    if (raw == NULL || raw->magic != MH_MAGIC_64) return @{@"status": @"unavailable"};
+    const struct mach_header_64 *header = (const struct mach_header_64 *)raw;
+    if (header->ncmds > 4096 || header->sizeofcmds > 1024 * 1024) return @{@"status": @"unavailable"};
+    const uint8_t *start = (const uint8_t *)(header + 1);
+    size_t offset = 0;
+    NSString *uuid = nil;
+    uint32_t platform = 0;
+    for (uint32_t index = 0; index < header->ncmds; index++) {
+        if (offset + sizeof(struct load_command) > header->sizeofcmds) return @{@"status": @"unavailable"};
+        const struct load_command *command = (const struct load_command *)(start + offset);
+        if (command->cmdsize < sizeof(*command) || command->cmdsize > header->sizeofcmds - offset) return @{@"status": @"unavailable"};
+        if (command->cmd == LC_UUID && command->cmdsize >= sizeof(struct uuid_command)) {
+            if (uuid != nil) return @{@"status": @"unavailable"};
+            uuid = [[[NSUUID alloc] initWithUUIDBytes:((const struct uuid_command *)command)->uuid] UUIDString];
+        }
+        if (command->cmd == LC_BUILD_VERSION && command->cmdsize >= sizeof(struct build_version_command)) {
+            platform = ((const struct build_version_command *)command)->platform;
+        }
+        offset += command->cmdsize;
+    }
+    return uuid == nil ? @{@"status": @"unavailable"} :
+        @{@"status": @"observed", @"uuid": uuid.lowercaseString, @"platform": @(platform)};
+}
+
+static NSDictionary *foundationIdentity(void) {
+    const char *classPath = class_getImageName([NSFileManager class]);
+    if (classPath == NULL || _dyld_image_count() > 4096) return @{@"status": @"unavailable"};
+    for (uint32_t index = 0; index < _dyld_image_count(); index++) {
+        const char *path = _dyld_get_image_name(index);
+        if (path != NULL && strcmp(path, classPath) == 0) return imageIdentity(_dyld_get_image_header(index));
+    }
+    return @{@"status": @"unavailable"};
+}
+
+static void collect(void) {
+    NSFileManager *files = [NSFileManager defaultManager];
+    NSString *directory = ownedPath(@"created", YES, YES);
+    operation(@"directory-create", ^BOOL(NSError **error) {
+        return [files createDirectoryAtPath:directory withIntermediateDirectories:YES
+            attributes:@{NSFileProtectionKey: NSFileProtectionComplete} error:error];
+    });
+    struct stat created;
+    requireControl(lstat(directory.fileSystemRepresentation, &created) == 0 &&
+        S_ISDIR(created.st_mode) && created.st_uid == getuid() &&
+        created.st_dev == rootDevice, @"created-directory-identity");
+    directoryDevice = created.st_dev; directoryInode = created.st_ino;
+    directoryMode = created.st_mode & 0777; directoryPinned = YES;
+    observe(@"directory-after-create", @"created", YES);
+    operation(@"directory-backup", ^BOOL(NSError **error) {
+        return [[NSURL fileURLWithPath:ownedPath(@"created", YES, NO) isDirectory:YES]
+            setResourceValue:@YES forKey:NSURLIsExcludedFromBackupKey error:error];
+    });
+    observe(@"directory-after-backup", @"created", YES);
+    const char payload[] = "PUBLIC SYNTHETIC FOUNDATION CONTROL ONLY";
+    NSData *data = [NSData dataWithBytes:payload length:sizeof(payload) - 1];
+    NSString *atomic = ownedPath(@"created/atomic.bin", NO, YES);
+    operation(@"atomic-write", ^BOOL(NSError **error) {
+        return [data writeToFile:atomic options:(NSDataWritingAtomic | NSDataWritingFileProtectionComplete) error:error];
+    });
+    observe(@"atomic-after-write", @"created/atomic.bin", NO);
+    operation(@"atomic-backup", ^BOOL(NSError **error) {
+        return [[NSURL fileURLWithPath:ownedPath(@"created/atomic.bin", NO, NO)]
+            setResourceValue:@YES forKey:NSURLIsExcludedFromBackupKey error:error];
+    });
+    observe(@"atomic-after-backup", @"created/atomic.bin", NO);
+    // Explicit directory setter is deliberately AFTER the production-like
+    // create -> backup -> atomic Complete write -> backup observations.
+    operation(@"directory-set", ^BOOL(NSError **error) {
+        return [files setAttributes:@{NSFileProtectionKey: NSFileProtectionComplete}
+            ofItemAtPath:ownedPath(@"created", YES, NO) error:error];
+    });
+    observe(@"directory-after-set", @"created", YES);
+    NSString *direct = ownedPath(@"created/direct.bin", NO, YES);
+    operation(@"direct-write", ^BOOL(NSError **error) {
+        return [data writeToFile:direct options:NSDataWritingFileProtectionComplete error:error];
+    });
+    observe(@"direct-after-write", @"created/direct.bin", NO);
+    NSString *set = ownedPath(@"created/set.bin", NO, YES);
+    operation(@"default-write", ^BOOL(NSError **error) {
+        return [data writeToFile:set options:NSDataWritingAtomic error:error];
+    });
+    observe(@"file-before-set", @"created/set.bin", NO);
+    operation(@"file-set", ^BOOL(NSError **error) {
+        return [files setAttributes:@{NSFileProtectionKey: NSFileProtectionComplete}
+            ofItemAtPath:ownedPath(@"created/set.bin", NO, NO) error:error];
+    });
+    observe(@"file-after-set", @"created/set.bin", NO);
+}
+
+static NSString *canonicalDirectory(NSString *supplied, struct stat *identity) {
+    requireControl(supplied != nil && [supplied hasPrefix:@"/"] &&
+        [supplied lengthOfBytesUsingEncoding:NSUTF8StringEncoding] <= 4096, @"directory-path");
+    char canonical[PATH_MAX];
+    requireControl(realpath(supplied.fileSystemRepresentation, canonical) != NULL, @"directory-canonical");
+    NSString *path = [NSString stringWithUTF8String:canonical];
+    requireControl(path != nil && lstat(path.fileSystemRepresentation, identity) == 0 &&
+        S_ISDIR(identity->st_mode) && identity->st_uid == getuid(), @"directory-owner");
+    return path;
+}
+
+static void attestDirectory(NSString *path, const struct stat *expected) {
+    struct stat value;
+    requireControl(path != nil && lstat(path.fileSystemRepresentation, &value) == 0 &&
+        S_ISDIR(value.st_mode) && value.st_uid == getuid() &&
+        value.st_dev == expected->st_dev && value.st_ino == expected->st_ino,
+        @"app-parent-identity");
+}
+
+static void attestAppParents(void) {
+    requireControl(parentsPinned && supportDescriptor >= 0, @"app-parents-not-pinned");
+    attestDirectory(containerPath, &containerIdentity);
+    attestDirectory(libraryPath, &libraryIdentity);
+    attestDirectory(supportPath, &supportIdentity);
+    struct stat opened;
+    requireControl(fstat(supportDescriptor, &opened) == 0 &&
+        S_ISDIR(opened.st_mode) && opened.st_uid == getuid() &&
+        opened.st_dev == supportIdentity.st_dev && opened.st_ino == supportIdentity.st_ino,
+        @"app-parent-descriptor");
+}
+
+static void prepareContainer(NSString *device) {
+    containerPath = canonicalDirectory(NSHomeDirectory(), &containerIdentity);
+    NSString *prefix = [@L08_DEVICE_SET stringByAppendingFormat:@"/%@/data/Containers/Data/Application/", device];
+    requireControl([containerPath hasPrefix:prefix], @"app-container-prefix");
+    NSString *containerID = [containerPath substringFromIndex:prefix.length];
+    requireControl(containerID.length == 36 && [[NSUUID alloc] initWithUUIDString:containerID] != nil,
+        @"app-container-id");
+    struct stat bundle;
+    appBundlePath = canonicalDirectory([NSBundle mainBundle].bundlePath, &bundle);
+    NSString *bundlePrefix = [@L08_DEVICE_SET stringByAppendingFormat:@"/%@/data/Containers/Bundle/Application/", device];
+    requireControl([appBundlePath hasPrefix:bundlePrefix], @"app-bundle-prefix");
+    NSString *relative = [appBundlePath substringFromIndex:bundlePrefix.length];
+    NSArray<NSString *> *components = [relative componentsSeparatedByString:@"/"];
+    requireControl(components.count == 2 && [components[1] isEqual:@"Parlor.app"] &&
+        [components[0] length] == 36 && [[NSUUID alloc] initWithUUIDString:components[0]] != nil,
+        @"app-bundle-id");
+    libraryPath = canonicalDirectory([containerPath stringByAppendingPathComponent:@"Library"], &libraryIdentity);
+    requireControl([libraryPath isEqual:[containerPath stringByAppendingPathComponent:@"Library"]] &&
+        libraryIdentity.st_dev == containerIdentity.st_dev, @"app-library-path");
+    NSError *error = nil;
+    NSURL *support = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory
+        inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:&error];
+    requireControl(support != nil && error == nil, @"application-support-unavailable");
+    supportPath = canonicalDirectory(support.path, &supportIdentity);
+    requireControl([supportPath isEqual:[libraryPath stringByAppendingPathComponent:@"Application Support"]] &&
+        supportIdentity.st_dev == containerIdentity.st_dev, @"application-support-path");
+    supportDescriptor = open(supportPath.fileSystemRepresentation, O_RDONLY | O_DIRECTORY | O_NOFOLLOW);
+    requireControl(supportDescriptor >= 0, @"application-support-open");
+    parentsPinned = YES;
+    attestAppParents();
+}
+
+static void allocateFixture(NSString *token, NSString *boot) {
+    attestAppParents();
+    fixtureName = [NSString stringWithFormat:@"ParlorFoundationControl-%@-%@", token.lowercaseString, boot.lowercaseString];
+    root = [supportPath stringByAppendingPathComponent:fixtureName];
+    // mkdirat exclusively creates this exact leaf. EEXIST never grants ownership.
+    requireControl(mkdirat(supportDescriptor, fixtureName.fileSystemRepresentation, 0700) == 0,
+        @"fixture-exclusive-create");
+    rootCreated = YES;
+    struct stat value;
+    requireControl(fstatat(supportDescriptor, fixtureName.fileSystemRepresentation, &value, AT_SYMLINK_NOFOLLOW) == 0 &&
+        S_ISDIR(value.st_mode) && value.st_uid == getuid() && value.st_dev == supportIdentity.st_dev &&
+        (value.st_mode & 0777) == 0700, @"fixture-created-identity");
+    rootDevice = value.st_dev; rootInode = value.st_ino; rootPinned = YES;
+    attestRoot();
+}
+
+static NSDictionary *fixtureImage(void) {
+    Dl_info info;
+    if (dladdr((const void *)&ParlorL08AppFoundationObserve, &info) == 0 ||
+        info.dli_fname == NULL || info.dli_fbase == NULL) return @{@"status": @"unavailable"};
+    char canonical[PATH_MAX];
+    if (realpath(info.dli_fname, canonical) == NULL) return @{@"status": @"unavailable"};
+    NSString *path = [NSString stringWithUTF8String:canonical];
+    NSString *relative = nil;
+    for (NSString *leaf in @[@"Parlor", @"Parlor.debug.dylib"]) {
+        if ([path isEqual:[appBundlePath stringByAppendingPathComponent:leaf]]) relative = leaf;
+    }
+    if (relative == nil) return @{@"status": @"unavailable"};
+    NSMutableDictionary *result = [imageIdentity(info.dli_fbase) mutableCopy];
+    if ([result[@"status"] isEqual:@"observed"]) result[@"app_relative"] = relative;
+    return result;
+}
+
+static NSString *canonicalImagePath(const char *path) {
+    if (path == NULL || path[0] != '/' || strnlen(path, PATH_MAX) >= PATH_MAX) return nil;
+    char canonical[PATH_MAX];
+    if (realpath(path, canonical) == NULL) return nil;
+    return [NSString stringWithUTF8String:canonical];
+}
+
+static NSDictionary *mainImage(void) {
+    NSString *supplied = [NSBundle mainBundle].executablePath;
+    NSString *executable = canonicalImagePath(supplied.fileSystemRepresentation);
+    requireControl(executable != nil, @"main-executable-unavailable");
+    requireControl([executable isEqual:[appBundlePath stringByAppendingPathComponent:@"Parlor"]],
+        @"main-executable-path");
+    // dyld enumeration is not thread-safe. Never infer that image zero is the
+    // app; require one exact canonical match and recheck the selected identity.
+    uint32_t count = _dyld_image_count();
+    requireControl(count > 0 && count <= 4096, @"main-image-count");
+    uint32_t selectedIndex = count;
+    const struct mach_header *selected = NULL;
+    for (uint32_t index = 0; index < count; index++) {
+        if (![canonicalImagePath(_dyld_get_image_name(index)) isEqual:executable]) continue;
+        requireControl(selected == NULL, @"main-image-ambiguous");
+        selected = _dyld_get_image_header(index);
+        requireControl(selected != NULL, @"main-image-header");
+        selectedIndex = index;
+    }
+    requireControl(selected != NULL, @"main-image-missing");
+    requireControl(_dyld_image_count() == count && _dyld_get_image_header(selectedIndex) == selected &&
+        [canonicalImagePath(_dyld_get_image_name(selectedIndex)) isEqual:executable], @"main-image-changed");
+    Dl_info info;
+    requireControl(dladdr(selected, &info) != 0 && info.dli_fbase == selected &&
+        [canonicalImagePath(info.dli_fname) isEqual:executable], @"main-image-address");
+    NSDictionary *identity = imageIdentity(selected);
+    requireControl(_dyld_image_count() == count && _dyld_get_image_header(selectedIndex) == selected &&
+        [canonicalImagePath(_dyld_get_image_name(selectedIndex)) isEqual:executable], @"main-image-changed");
+    return identity; // Bracketed checks are not an atomic loader reservation.
+}
+
+static void cleanupFixture(void) {
+    if (!rootCreated) return;
+    attestRoot();
+    int rootFD = open(root.fileSystemRepresentation, O_RDONLY | O_DIRECTORY | O_NOFOLLOW);
+    requireControl(rootFD >= 0, @"cleanup-root-open");
+    int childFD = -1;
+    @try {
+        struct stat value;
+        requireControl(fstat(rootFD, &value) == 0 && S_ISDIR(value.st_mode) &&
+            value.st_uid == getuid() && value.st_dev == rootDevice && value.st_ino == rootInode,
+            @"cleanup-root-descriptor");
+        int present = fstatat(rootFD, "created", &value, AT_SYMLINK_NOFOLLOW);
+        if (present != 0) {
+            requireControl(errno == ENOENT && !directoryPinned, @"cleanup-directory-missing");
+        } else {
+            requireControl(directoryPinned && S_ISDIR(value.st_mode) && value.st_uid == getuid() &&
+                value.st_dev == directoryDevice && value.st_ino == directoryInode &&
+                (value.st_mode & 0777) == directoryMode, @"cleanup-directory-identity");
+            childFD = openat(rootFD, "created", O_RDONLY | O_DIRECTORY | O_NOFOLLOW);
+            requireControl(childFD >= 0 && fstat(childFD, &value) == 0 &&
+                value.st_dev == directoryDevice && value.st_ino == directoryInode,
+                @"cleanup-directory-descriptor");
+            const char *leaves[] = {"atomic.bin", "direct.bin", "set.bin"};
+            for (NSUInteger index = 0; index < 3; index++) {
+                if (fstatat(childFD, leaves[index], &value, AT_SYMLINK_NOFOLLOW) != 0) {
+                    requireControl(errno == ENOENT && !filePinned[index], @"cleanup-file-missing");
+                    continue;
+                }
+                requireControl(filePinned[index] && S_ISREG(value.st_mode) && value.st_uid == getuid() &&
+                    value.st_dev == fileIdentities[index].st_dev && value.st_ino == fileIdentities[index].st_ino &&
+                    value.st_nlink == 1 && value.st_size >= 0 && value.st_size <= 256,
+                    @"cleanup-file-identity");
+                requireControl(unlinkat(childFD, leaves[index], 0) == 0, @"cleanup-file-remove");
+            }
+            requireControl(fstatat(rootFD, "created", &value, AT_SYMLINK_NOFOLLOW) == 0 &&
+                value.st_dev == directoryDevice && value.st_ino == directoryInode,
+                @"cleanup-directory-replaced");
+            // Unknown extra children make rmdir fail; never recursively adopt them.
+            requireControl(unlinkat(rootFD, "created", AT_REMOVEDIR) == 0, @"cleanup-directory-remove");
+        }
+        attestRoot();
+        requireControl(unlinkat(supportDescriptor, fixtureName.fileSystemRepresentation, AT_REMOVEDIR) == 0,
+            @"cleanup-root-remove");
+        requireControl(fstatat(supportDescriptor, fixtureName.fileSystemRepresentation, &value, AT_SYMLINK_NOFOLLOW) != 0 &&
+            errno == ENOENT, @"cleanup-root-remains");
+        rootRemoved = YES;
+    } @finally {
+        if (childFD >= 0 && close(childFD) != 0) descriptorCloseFailed = YES;
+        if (close(rootFD) != 0) descriptorCloseFailed = YES;
+    }
+}
+
+NSData *ParlorL08AppFoundationObserve(NSString *processBoot) {
+    // A repeated/concurrent entry cannot reset mutable observer state or clean another invocation.
+    if (atomic_flag_test_and_set_explicit(&invocationUsed, memory_order_relaxed)) return nil;
+    @autoreleasepool {
+        NSDictionary *environment = [NSProcessInfo processInfo].environment;
+        NSString *token = environment[@"PARLOR_DSC01_RUN_TOKEN"];
+        NSString *device = environment[@"SIMULATOR_UDID"];
+        if (token.length != 36 || [[NSUUID alloc] initWithUUIDString:token] == nil ||
+            processBoot.length != 36 || [[NSUUID alloc] initWithUUIDString:processBoot] == nil ||
+            device.length != 36 || [[NSUUID alloc] initWithUUIDString:device] == nil) return nil;
+        rows = [NSMutableArray array];
+        NSMutableDictionary *receipt = [@{@"schema_version": @1, @"kind": @"l08-app-foundation",
+            @"run_token": token, @"process_boot": processBoot, @"process_id": @(getpid()),
+            @"simulator_udid": device, @"scenario": @"readiness", @"boot_ordinal": @1,
+            @"fixture_template_sha256": @L08_TEMPLATE_SHA256, @"context_sha256": @L08_CONTEXT_SHA256,
+            @"controls_sha256": @L08_CONTROLS_SHA256, @"signing_mode": @L08_SIGNING_MODE,
+            @"simulator_only": @YES, @"app_container": @NO, @"hardware_protection_verified": @NO,
+            @"l08_requirements_waived": @NO, @"container": @{@"status": @"unavailable"},
+            @"main_image": @{@"status": @"unavailable"}, @"fixture_image": @{@"status": @"unavailable"},
+            @"foundation_image": @{@"status": @"unavailable"}, @"runtime_version": @[], @"rows": rows} mutableCopy];
+        @try {
+            requireControl(![NSThread isMainThread], @"native-on-main");
+            requireControl([[NSBundle mainBundle].bundleIdentifier isEqual:@"com.parlor.app.debug"], @"debug-app-identity");
+            requireControl([device isEqual:environment[@"PARLOR_DSC01_EXPECTED_UDID"]], @"simulator-identity");
+            requireControl([environment[@"PARLOR_DSC01_SCENARIO"] isEqual:@"readiness"] &&
+                [environment[@"PARLOR_DSC01_FIXTURE"] isEqual:@"existing"] &&
+                [environment[@"PARLOR_READINESS_BOOT"] isEqual:@"1"], @"first-readiness-context");
+            NSOperatingSystemVersion version = [NSProcessInfo processInfo].operatingSystemVersion;
+            receipt[@"runtime_version"] = @[@(version.majorVersion), @(version.minorVersion), @(version.patchVersion)];
+            requireControl(version.majorVersion == 26 && version.minorVersion == 5 && version.patchVersion == 0,
+                @"runtime-version");
+            prepareContainer(device);
+            receipt[@"app_container"] = @YES;
+            receipt[@"container"] = @{@"status": @"observed", @"id": containerPath.lastPathComponent,
+                @"device": @(containerIdentity.st_dev), @"inode": @(containerIdentity.st_ino), @"uid": @(getuid())};
+            receipt[@"main_image"] = mainImage();
+            receipt[@"fixture_image"] = fixtureImage();
+            receipt[@"foundation_image"] = foundationIdentity();
+            allocateFixture(token, processBoot);
+            collect();
+            // Retain all observations as a closed CONTROL_ERROR if image identity
+            // is unavailable, rather than emitting an unpreservable complete record.
+            for (NSString *field in @[@"main_image", @"fixture_image", @"foundation_image"]) {
+                requireControl([receipt[field][@"status"] isEqual:@"observed"] &&
+                    [receipt[field][@"platform"] isEqual:@7], @"image-context-unavailable");
+            }
+            receipt[@"status"] = @"OBSERVATIONS_COMPLETE";
+        } @catch (NSException *exception) {
+            receipt[@"status"] = @"CONTROL_ERROR";
+            receipt[@"reason"] = [exception.name isEqual:@"ControlBoundary"] ? exception.reason : @"objc-exception";
+        } @finally {
+            NSString *cleanup = @"NOT_CREATED";
+            NSString *reason = @"none";
+            @try {
+                cleanupFixture();
+                if (rootCreated) cleanup = @"REMOVED";
+            } @catch (NSException *exception) {
+                cleanup = @"FAILED";
+                reason = [exception.name isEqual:@"ControlBoundary"] ? exception.reason : @"objc-exception";
+            } @finally {
+                if (supportDescriptor >= 0) {
+                    if (close(supportDescriptor) != 0) descriptorCloseFailed = YES;
+                    supportDescriptor = -1;
+                }
+            }
+            if (descriptorCloseFailed) {
+                cleanup = @"FAILED";
+                reason = @"cleanup-descriptor-close";
+            }
+            receipt[@"fixture_cleanup"] = @{@"status": cleanup, @"created": @(rootCreated),
+                @"root_pinned": @(rootPinned), @"directory_pinned": @(directoryPinned),
+                @"root_removed": @(rootRemoved), @"reason": reason};
+        }
+        NSError *error = nil;
+        NSData *encoded = [NSJSONSerialization dataWithJSONObject:receipt options:NSJSONWritingSortedKeys error:&error];
+        return encoded != nil && error == nil && encoded.length <= 32768 ? encoded : nil;
+    }
+}

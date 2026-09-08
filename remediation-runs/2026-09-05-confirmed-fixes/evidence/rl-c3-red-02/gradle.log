@@ -1,0 +1,63 @@
+test_already_present_candidate_is_validated_and_edit_is_deleted (test_google_promotion_edit.GooglePromotionEditTest) ... ok
+test_commit_failure_is_not_blindly_retried (test_google_promotion_edit.GooglePromotionEditTest) ... ok
+test_external_change_after_reads_invalidates_mutation_without_retry (test_google_promotion_edit.GooglePromotionEditTest) ... FAIL
+test_missing_configured_destination_is_rejected (test_google_promotion_edit.GooglePromotionEditTest) ... ok
+test_read_validation_and_commit_use_the_same_edit_snapshot (test_google_promotion_edit.GooglePromotionEditTest) ... FAIL
+test_staged_destination_in_mutation_snapshot_is_not_completed (test_google_promotion_edit.GooglePromotionEditTest) ... ok
+test_unavailable_or_unfinished_source_in_mutation_snapshot_is_rejected (test_google_promotion_edit.GooglePromotionEditTest) ... ok
+test_validation_failure_deletes_uncommitted_edit_without_retry (test_google_promotion_edit.GooglePromotionEditTest) ... ok
+test_wrong_bundle_digest_in_mutation_snapshot_is_rejected (test_google_promotion_edit.GooglePromotionEditTest) ... ok
+
+======================================================================
+FAIL: test_external_change_after_reads_invalidates_mutation_without_retry (test_google_promotion_edit.GooglePromotionEditTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_google_promotion_edit.py", line 136, in test_external_change_after_reads_invalidates_mutation_without_retry
+    self.promote()
+AssertionError: ReleaseError not raised
+
+======================================================================
+FAIL: test_read_validation_and_commit_use_the_same_edit_snapshot (test_google_promotion_edit.GooglePromotionEditTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_google_promotion_edit.py", line 118, in test_read_validation_and_commit_use_the_same_edit_snapshot
+    self.assertEqual(self.client.trace[:6], [
+AssertionError: Lists differ: [('INSERT', 'edit-1', ''), ('GET', 'edit-1', 'tracks'), ('G[113 chars]on')] != [('INSERT', 'edit-2', ''), ('GET', 'edit-2', 'tracks'), ('G[123 chars]it')]
+
+First differing element 0:
+('INSERT', 'edit-1', '')
+('INSERT', 'edit-2', '')
+
+- [('INSERT', 'edit-1', ''),
+?                   ^
+
++ [('INSERT', 'edit-2', ''),
+?                   ^
+
+-  ('GET', 'edit-1', 'tracks'),
+?                ^
+
++  ('GET', 'edit-2', 'tracks'),
+?                ^
+
+-  ('GET', 'edit-1', 'bundles'),
+?                ^
+
++  ('GET', 'edit-2', 'bundles'),
+?                ^
+
+-  ('DELETE', 'edit-1', ''),
+-  ('INSERT', 'edit-2', ''),
+-  ('PUT', 'edit-2', 'tracks/production')]
+?                                        ^
+
++  ('PUT', 'edit-2', 'tracks/production'),
+?                                        ^
+
++  ('POST', 'edit-2', 'validate'),
++  ('POST', 'edit-2', 'commit')]
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.017s
+
+FAILED (failures=2)

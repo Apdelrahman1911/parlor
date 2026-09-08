@@ -1,0 +1,48 @@
+{
+  "reviewer": "/root/factory_review",
+  "author": "/root",
+  "reviewed_at": "2026-09-07T05:02:36.122476+00:00",
+  "conclusion": "SOURCE DIFF APPROVED FOR FOCUS05 RERUN",
+  "base_head": "b4f0ece464aa44819044dd78d2f2fd137d88c91d",
+  "scoped_diff_sha256": "ce5d7bec0722aaada1530a86ead0060834d3a05752193177599a25ce5e5baa80",
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitLocalLeaveTimerTest.kt",
+      "sha256": "2124dafc4168ff0712e9ff93f3a8368d6cc5ab483b252d8114dc77c9a33c1c9e",
+      "reviewed_ranges": [
+        [
+          1,
+          251
+        ]
+      ],
+      "test_methods": 6
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLeaveTimerTest.kt",
+      "sha256": "99d188364e681983f5fd4c31d192d80c6fde9731a57d62d5de6e0c8fe897da6a",
+      "reviewed_ranges": [
+        [
+          1,
+          275
+        ]
+      ],
+      "test_methods": 4
+    }
+  ],
+  "reasoning": [
+    "Complete current251-line local and275-line host test files and full git diff independently reopened. Only assertNotNull import/wrappers replace unsafe !!; long assertions wrapped. No test removed, skipped, silenced or converted to non-Unit return.",
+    "Every original null failure remains a failure (clear assertion rather than NullPointerException); expected/actual timer values, IDs, pause flags, private/host state preservation, terminal scope cancellation and lifecycle checks retain their original meaning. No timing, scheduler, UI selector, fixture or production change.",
+    "Focused04 raw XML independently shows actual6local+4host tests passed before cleanup. Raw DetektDesktopTest.xml independently has18 local nullable calls and1 host Job nullable call (19 warnings/weighted failures), so overall04 correctly FAIL, not all green. Current diff removes those root causes without suppression or config weakening.",
+    "No new game rule, protocol/version/snapshot schema/private projection change. Existing local/host Classic/Elimination, save-failure pause, final-second expiry and retained-host lifecycle coverage remains intact."
+  ],
+  "prior_evidence": {
+    "cycle": "evidence/focused-story-followup-04",
+    "selected_timer_tests": 10,
+    "failures": 0,
+    "skips": 0,
+    "overall_cycle": "FAIL: DetektDesktopTest19 findings",
+    "cleanup": "stop_exit_code0; remaining_outputs[]; remaining_owned_workers[]; cleanup_errors[]; unchanged source during cycle"
+  },
+  "required_next": "Root focus05 must rerun timer tests and Detekt/DetektDesktopTest on listed hashes. This source approval is not an unexecuted runtime PASS.",
+  "safety": "Only read-only source/diff/XML and this evidence write; no builds/tests or source edits by reviewer. Root owns build lane and cleanup."
+}

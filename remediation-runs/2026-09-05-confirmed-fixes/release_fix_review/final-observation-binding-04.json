@@ -1,0 +1,1293 @@
+{
+  "reviewer": "/root/release_fix_review",
+  "observed_at": "2026-09-06T02:28:07.524509+00:00",
+  "scope": "Read-only independent actual-observation source/reference/cleanup reconciliation; no builds/tests/process cleanup",
+  "observer": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/observe_final_result_04b.py",
+    "sha256": "b52df11799aee40229b4fa91e5942193fb2e8ac8a4b1057ebe0508d1969ee524"
+  },
+  "observation": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/final/final-observation.json",
+    "sha256": "1dc184c09e6b5ee74387844cb1fd7273acc327684a96e812f499c0e7af566119"
+  },
+  "finalization": {
+    "path": "remediation-runs/2026-09-05-confirmed-fixes/final/FINALIZATION.md",
+    "sha256": "991056ced3962cc893b5b10f48622944a1db55699d1e641861814ba3d8e495bf"
+  },
+  "source_reobservation": {
+    "reviewer": "/root/release_fix_review",
+    "observed_at": "2026-09-06T02:28:07.455847+00:00",
+    "scope": "Read-only evidence/checkout/path observations; no new build or runtime test, no cleanup or process signaling",
+    "observer_sha256": "6cc9c8f81dd838920b66143db1065af47a24bb2a58dd63cb4f3cafb4c01cce1e",
+    "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+    "source_count": 658,
+    "tracked_diff_sha256": "60b555c0dd323a086e959ffbc5aa3fd7c6629ae1d0ad016021572e7ae272e4dd",
+    "complete_patch_sha256": "305b8f3db676a79ddc98faf72e08d4269596528cdc30cafbbf4c6811312f03f9",
+    "baseline_files": 1618,
+    "unchanged_original_files": 1584,
+    "modified_original_files": [
+      "composeApp/build.gradle.kts",
+      "composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt",
+      "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "docs/MAFIA_RULES.md",
+      "docs/PRODUCTION_ARCHITECTURE.md",
+      "docs/RELEASE_AUTOMATION.md",
+      "game-modes/mafia/build.gradle.kts",
+      "game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml",
+      "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotRecovery.kt",
+      "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+      "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+      "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreen.kt",
+      "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+      "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitStateValidator.kt",
+      "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt",
+      "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/domain/WhodunitRulesInvariantTest.kt",
+      "iosApp/iosApp.xcodeproj/project.pbxproj",
+      "scripts/release/store_api.py",
+      "scripts/release/tests/test_store_api.py",
+      "scripts/release/validate_android_artifact.sh",
+      "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/HostDisconnectedOverlay.kt",
+      "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorButton.kt",
+      "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt",
+      "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ReconnectingOverlay.kt",
+      "shared/design-system/src/commonTest/kotlin/com/parlor/designsystem/components/ParlorToastStateTest.kt",
+      "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+      "shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/SessionStartHandshake.kt",
+      "shared/transport-p2p/src/androidMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.android.kt",
+      "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/AppLifecycleRoomCoordinator.kt",
+      "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+      "shared/transport-p2p/src/desktopMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.desktop.kt",
+      "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt",
+      "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+      "shared/transport-p2p/src/iosMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.ios.kt"
+    ],
+    "preserved_preexisting_untracked_count": 990,
+    "preexisting_untracked_changed": [],
+    "new_source_count": 28,
+    "refs_stash_index_preserved": true,
+    "reference_occurrences": 353,
+    "distinct_reference_count": 188,
+    "old_milestone_count": 11,
+    "issue_counts": {
+      "FIXED AND VERIFIED": 14,
+      "PARTIALLY VERIFIED": 1,
+      "BLOCKED": 1
+    },
+    "gate_counts": {
+      "PASS": 23,
+      "BLOCKED": 15
+    },
+    "continuation_cycles": [
+      {
+        "cycle": "dsc01-apphost-01",
+        "status_now": "FAIL",
+        "receipt": {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/receipt.json",
+          "sha256": "33b7d8a4ee78dd34903aa4b3131fabc0df578b4148deafe30b818dff7885e89c"
+        },
+        "materialization_was_running": false
+      },
+      {
+        "cycle": "dsc01-apphost-02",
+        "status_now": "PASS",
+        "receipt": {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/receipt.json",
+          "sha256": "7ce472e0296c985d152d02c0dbdf6b6979830c12906c7653291c5237bf5ac660"
+        },
+        "materialization_was_running": false
+      },
+      {
+        "cycle": "dsc01-harness-contracts-01",
+        "status_now": "PASS",
+        "receipt": {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-harness-contracts-01/receipt.json",
+          "sha256": "e754b3a6b475f154d27216a100d753b7271f50a6a32926459d561adbe7301c92"
+        },
+        "materialization_was_running": false
+      },
+      {
+        "cycle": "dsc01-harness-contracts-02",
+        "status_now": "PASS",
+        "receipt": {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-harness-contracts-02/receipt.json",
+          "sha256": "b80456d15f4fa6f428050c25b6fca57f1ee3751ebd7f51c9d97fc0cbdd608bc9"
+        },
+        "materialization_was_running": false
+      },
+      {
+        "cycle": "final-continuation-assembly-01",
+        "status_now": "PASS",
+        "receipt": {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-continuation-assembly-01/receipt.json",
+          "sha256": "0930eddafde6d39f41158cb082a96e9ffd029ba8113bfd3d8ecd244c7b642bfa"
+        },
+        "materialization_was_running": true
+      },
+      {
+        "cycle": "final-evidence-assembly-01",
+        "status_now": "PASS",
+        "receipt": {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-evidence-assembly-01/receipt.json",
+          "sha256": "f25af494e43e733f4eaffb258cc31d3f3742575552f7988205ec128c084be2d7"
+        },
+        "materialization_was_running": false
+      },
+      {
+        "cycle": "final-indexes-01",
+        "status_now": "PASS",
+        "receipt": {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-indexes-01/receipt.json",
+          "sha256": "79ba6f7c43c4ff62970a62b8722a282c26fe2a56eacaab053958ccc5d00e032c"
+        },
+        "materialization_was_running": false
+      },
+      {
+        "cycle": "final-ledger-validation-01",
+        "status_now": "PASS",
+        "receipt": {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-ledger-validation-01/receipt.json",
+          "sha256": "144805e1bd47ba7aa812e4c831a665d6aff9abf8aa91f3928665bb47a213c482"
+        },
+        "materialization_was_running": false
+      },
+      {
+        "cycle": "final-observation-contracts-01",
+        "status_now": "PASS",
+        "receipt": {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-01/receipt.json",
+          "sha256": "d0e8ad7b8be4aab7c42c014c4cbf68778cd3807e2e2fbdf7d9fb102c6160a3f7"
+        },
+        "materialization_was_running": false
+      },
+      {
+        "cycle": "final-observation-contracts-02",
+        "status_now": "PASS",
+        "receipt": {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-02/receipt.json",
+          "sha256": "3b5059cf1aead0a41a86033cb64a5a047692d5db67b9933fa9a072c06e144d71"
+        },
+        "materialization_was_running": false
+      },
+      {
+        "cycle": "final-observation-contracts-03",
+        "status_now": "PASS",
+        "receipt": {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-03/receipt.json",
+          "sha256": "9949837ab9e54e3ecc044ef47727b6db4c2337003f450470bd644e8ec6c39fb0"
+        },
+        "materialization_was_running": false
+      }
+    ],
+    "apphost": [
+      {
+        "cycle": "dsc01-apphost-01",
+        "copy_binding": {
+          "manifest": {
+            "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/copied-wrapper-manifest.json",
+            "sha256": "9d82683d207cc6006f040f4caf4a514cbcd0117f006f9045d76e737e315ce26d"
+          },
+          "diff": {
+            "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/copied-wrapper.diff",
+            "sha256": "6f6fdb0075d7571765e82d741259c375d87cd4725e1f2e7bdf71632e19eb3680"
+          },
+          "original_count": 18,
+          "unchanged_copies": 14,
+          "reconstructed_copies": {
+            "iosApp/iosApp/iOSApp.swift": "ebb934f340c8a7c05b75fdc9f9ebc41cea4238571db860321219424fe8651fd5",
+            "iosApp/iosApp/ContentView.swift": "5341113b7894fab1ca0aa199deaa040fc0c328242ea97dfd9b21915d01c473d9",
+            "iosApp/iosAppUITests/IOSAppLaunchUITests.swift": "4a198288c8deda3c66821370e171859876591f3ee6bf0ff47dd70abb0d02b4e4",
+            "iosApp/iosApp.xcodeproj/project.pbxproj": "fe64a8f9172917e39413eaa0953d85c4257f5045226f6182e6837e23043157dd"
+          }
+        },
+        "control_sha256": "82c4efd11d4c9885423066e6318967321c5dc1a7c3afe550cae42c3ff1cdb375",
+        "receipt": {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/receipt.json",
+          "sha256": "33b7d8a4ee78dd34903aa4b3131fabc0df578b4148deafe30b818dff7885e89c"
+        },
+        "owned_pid_count": 71,
+        "targeted_ps_exit": 1,
+        "same_pid_new_start_not_owned": [],
+        "matching_task_processes": [],
+        "owned_paths_checked": [
+          "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-dsc01-apphost-01-fjwb30zo",
+          "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-88445/IB/B80B37CD-55C7-4F43-980B-951FCD6F91E8.RemoteToHost",
+          "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-88445/IB/B80B37CD-55C7-4F43-980B-951FCD6F91E8.HostToRemote",
+          "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-88445/IB",
+          "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-88445"
+        ],
+        "remaining_owned_paths": []
+      },
+      {
+        "cycle": "dsc01-apphost-02",
+        "copy_binding": {
+          "manifest": {
+            "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/copied-wrapper-manifest.json",
+            "sha256": "35792f7e6cdc474f74e7d850645b1324833f5c6a6d6b520449128cc30680ecb1"
+          },
+          "diff": {
+            "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/copied-wrapper.diff",
+            "sha256": "f981a345443bf3ca13273fe94a5d15880c4b978b5a0e71abc87a115dff4da547"
+          },
+          "original_count": 18,
+          "unchanged_copies": 14,
+          "reconstructed_copies": {
+            "iosApp/iosApp/iOSApp.swift": "ebb934f340c8a7c05b75fdc9f9ebc41cea4238571db860321219424fe8651fd5",
+            "iosApp/iosApp/ContentView.swift": "5341113b7894fab1ca0aa199deaa040fc0c328242ea97dfd9b21915d01c473d9",
+            "iosApp/iosAppUITests/IOSAppLaunchUITests.swift": "2751f2eff71c6f5ece7d9b98c54b1a72832aa10f7225328c58a04818b2a52c3a",
+            "iosApp/iosApp.xcodeproj/project.pbxproj": "5c4e01ca237a4fdec5f4294a26e4c5914d7546af3f2132b683af1a79065e71d4"
+          }
+        },
+        "control_sha256": "5eed8a6fb73960bcf352c8792a4961fa58bee6b52a41861bce5af449aa8dca0f",
+        "receipt": {
+          "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/receipt.json",
+          "sha256": "7ce472e0296c985d152d02c0dbdf6b6979830c12906c7653291c5237bf5ac660"
+        },
+        "owned_pid_count": 54,
+        "targeted_ps_exit": 1,
+        "same_pid_new_start_not_owned": [],
+        "matching_task_processes": [],
+        "owned_paths_checked": [
+          "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-dsc01-apphost-02-meqticu6",
+          "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-1042/IB/7F106FDE-4660-49E8-8E03-7ABE964E26B0.RemoteToHost",
+          "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-1042/IB/7F106FDE-4660-49E8-8E03-7ABE964E26B0.HostToRemote",
+          "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-1042/IB",
+          "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-1042"
+        ],
+        "remaining_owned_paths": []
+      }
+    ],
+    "new_final_deliverables": [
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md",
+        "sha256": "a3359c488364141d326964a13427e558f5d7fc6e00f190d54effa9e805a34b8f"
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/issues-continued.json",
+        "sha256": "fcdf977fcdf9d1be7693142aab2152ae713ba9cfecc1ee02b1d1cfc832324c10"
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/gates-continued.json",
+        "sha256": "92f64cb19df9e802e996eb22ef4e1a3f6e3f02591f751f92c431fa0b90ea10a9"
+      },
+      {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/continuation-evidence.json",
+        "sha256": "c8b8f844b7666e7a159c9c99dc93984310f336f9168dd91b231bc556bc343d2b"
+      }
+    ],
+    "pending_final_observation_exists": true
+  },
+  "reference_occurrences": 107,
+  "distinct_reference_count": 107,
+  "final_deliverables_bound": 16,
+  "markdown_links": [
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/FINALIZATION.md",
+      "target": "REPORT-CONTINUATION.md",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md",
+        "sha256": "a3359c488364141d326964a13427e558f5d7fc6e00f190d54effa9e805a34b8f"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/FINALIZATION.md",
+      "target": "../evidence/final-continuation-validation-02/receipt.json",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-continuation-validation-02/receipt.json",
+        "sha256": "c8284f9df6375484509fbcd1a4296ee6037ace1fece39327dd26601ae88ef1a5"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/FINALIZATION.md",
+      "target": "source-identity.json",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/source-identity.json",
+        "sha256": "e710c5705cf066033d8e16747c04fe5e9a9383fb4dfc7f73e2fdc38af0206830"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/FINALIZATION.md",
+      "target": "diff-identity.json",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/diff-identity.json",
+        "sha256": "612514fb26e2ae85671925ca54f18a86a6b4837878fc99311d2b635be74c15b7"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/FINALIZATION.md",
+      "target": "../release_fix_review/final-report-continuation-review-03.md",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/final-report-continuation-review-03.md",
+        "sha256": "cc6d166849651f9cba22af4b93b6247ddcfd5990123ed05736ed66263b15fba6"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/FINALIZATION.md",
+      "target": "../release_fix_review/final-report-continuation-review-03.json",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/final-report-continuation-review-03.json",
+        "sha256": "43866cabd6e8c1ee6b3cd4f972af573946e59dd7fe7b2fc80284648c4435dcb4"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/FINALIZATION.md",
+      "target": "../evidence/final-continuation-validation-01/receipt.json",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-continuation-validation-01/receipt.json",
+        "sha256": "7d145f9e7400c1f2a3b8fa5e2a934ab8f45af3c86336453c41916abc06eff40f"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/FINALIZATION.md",
+      "target": "final-observation.json",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/final-observation.json",
+        "sha256": "1dc184c09e6b5ee74387844cb1fd7273acc327684a96e812f499c0e7af566119"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/FINALIZATION.md",
+      "target": "REPORT-CONTINUATION.md#6-what-is-still-needed",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md",
+        "sha256": "a3359c488364141d326964a13427e558f5d7fc6e00f190d54effa9e805a34b8f"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md",
+      "target": "REPORT.md",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT.md",
+        "sha256": "00f5b6bf3af925de480ad86ab84bf8a25bcc55273af8eaff710600214fc25584"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md",
+      "target": "issues-continued.json",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/issues-continued.json",
+        "sha256": "fcdf977fcdf9d1be7693142aab2152ae713ba9cfecc1ee02b1d1cfc832324c10"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md",
+      "target": "issue-source-map.json",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/issue-source-map.json",
+        "sha256": "f73cfb1b1bbb9c1683e006b880f554a3551de98033f27c2891fccba94f432038"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md",
+      "target": "diff-identity.json",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/diff-identity.json",
+        "sha256": "612514fb26e2ae85671925ca54f18a86a6b4837878fc99311d2b635be74c15b7"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md",
+      "target": "cycle-history.json",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/cycle-history.json",
+        "sha256": "6332e391f95ec36db0bc81e5f845f50c6d7615022089a5db1bb63706e0aaf15a"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md",
+      "target": "source-identity.json",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/source-identity.json",
+        "sha256": "e710c5705cf066033d8e16747c04fe5e9a9383fb4dfc7f73e2fdc38af0206830"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md",
+      "target": "diff-identity.json",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/diff-identity.json",
+        "sha256": "612514fb26e2ae85671925ca54f18a86a6b4837878fc99311d2b635be74c15b7"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md",
+      "target": "remediation.patch",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/remediation.patch",
+        "sha256": "305b8f3db676a79ddc98faf72e08d4269596528cdc30cafbbf4c6811312f03f9"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md",
+      "target": "../whodunit/WD-C2-blocked.md",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/WD-C2-blocked.md",
+        "sha256": "5e70e73ec73e946b92abb10e1189ef5549b4f37ee1cccbf8b0d24cb5ea2c1bb1"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md",
+      "target": "preservation.json",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/preservation.json",
+        "sha256": "7fc27c70f677510788c6a47bd33561ebc2b7b62c1957ffeea395f497d9871ba4"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md",
+      "target": "issues-continued.json",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/issues-continued.json",
+        "sha256": "fcdf977fcdf9d1be7693142aab2152ae713ba9cfecc1ee02b1d1cfc832324c10"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md",
+      "target": "gates-continued.json",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/gates-continued.json",
+        "sha256": "92f64cb19df9e802e996eb22ef4e1a3f6e3f02591f751f92c431fa0b90ea10a9"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md",
+      "target": "verification-summary.json",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/verification-summary.json",
+        "sha256": "4d549bf6bc4f2807a7a1d8783824e969861e92c686a86795733c0ea1211acba6"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md",
+      "target": "cycle-history.json",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/cycle-history.json",
+        "sha256": "6332e391f95ec36db0bc81e5f845f50c6d7615022089a5db1bb63706e0aaf15a"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md",
+      "target": "diff-identity.json",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/diff-identity.json",
+        "sha256": "612514fb26e2ae85671925ca54f18a86a6b4837878fc99311d2b635be74c15b7"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md",
+      "target": "final-observation.json",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/final-observation.json",
+        "sha256": "1dc184c09e6b5ee74387844cb1fd7273acc327684a96e812f499c0e7af566119"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md",
+      "target": "review-and-research-index.json",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/review-and-research-index.json",
+        "sha256": "74e412840577d5864e1b68e48271681be3e0fb55c585cc625b5ead40faea6e99"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md",
+      "target": "continuation-evidence.json",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/continuation-evidence.json",
+        "sha256": "c8b8f844b7666e7a159c9c99dc93984310f336f9168dd91b231bc556bc343d2b"
+      }
+    },
+    {
+      "from": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT-CONTINUATION.md",
+      "target": "final-observation.json",
+      "file": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/final/final-observation.json",
+        "sha256": "1dc184c09e6b5ee74387844cb1fd7273acc327684a96e812f499c0e7af566119"
+      }
+    }
+  ],
+  "cycle_count": 49,
+  "command_result_counts": {
+    "PASS": 31,
+    "FAIL": 18
+  },
+  "cycle_dispositions": [
+    {
+      "cycle": "combined-apple-01",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-apple-01/receipt.json",
+        "sha256": "41dd813e36c349daefb5f45237b70e85571d4238e1be0e9ef1e363b7afd6f82c"
+      }
+    },
+    {
+      "cycle": "combined-production-01",
+      "test_or_command_status": "FAIL",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-01/receipt.json",
+        "sha256": "c31513337d13649489920c1c2dfc604b76ca8f8121df1a3d9581516ae82d4509"
+      }
+    },
+    {
+      "cycle": "combined-production-02",
+      "test_or_command_status": "FAIL",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-02/receipt.json",
+        "sha256": "449e46f258aae6a13a3543a9a4fe30b9bcf3848870675a042b2a567c436e8bbb"
+      }
+    },
+    {
+      "cycle": "combined-production-03",
+      "test_or_command_status": "FAIL",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-03/receipt.json",
+        "sha256": "e8d122edb2506dbe5a9b4100656c319ab561dcb434752f8c7a08d51c784b552c"
+      }
+    },
+    {
+      "cycle": "combined-production-04",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/receipt.json",
+        "sha256": "4f8374afedbc3fec40353f0a95556766eaf8fa393daf1f8d307104e05694b9f4"
+      }
+    },
+    {
+      "cycle": "design-toast-cover-01",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-01/receipt.json",
+        "sha256": "30544f878300dfde4218b282cc9cf0d92ab87249bb6489f8bd942e850aa85a5e"
+      }
+    },
+    {
+      "cycle": "design-toast-cover-02",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/receipt.json",
+        "sha256": "1623724c52d9c7dcc3eb6e5279b4d350c584a32a3dc514ddffb5397665ee847a"
+      }
+    },
+    {
+      "cycle": "design-whodunit-desktop-01",
+      "test_or_command_status": "FAIL",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/receipt.json",
+        "sha256": "6ec583de55d5b45847ece8177a5c09124958c078d795db5abe2a4d2b13055aae"
+      }
+    },
+    {
+      "cycle": "dsc01-apphost-01",
+      "test_or_command_status": "FAIL",
+      "cleanup_conclusion": "PASS",
+      "schema": "dsc01-apphost",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/receipt.json",
+        "sha256": "33b7d8a4ee78dd34903aa4b3131fabc0df578b4148deafe30b818dff7885e89c"
+      }
+    },
+    {
+      "cycle": "dsc01-apphost-02",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "dsc01-apphost",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/receipt.json",
+        "sha256": "7ce472e0296c985d152d02c0dbdf6b6979830c12906c7653291c5237bf5ac660"
+      }
+    },
+    {
+      "cycle": "dsc01-harness-contracts-01",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-harness-contracts-01/receipt.json",
+        "sha256": "e754b3a6b475f154d27216a100d753b7271f50a6a32926459d561adbe7301c92"
+      }
+    },
+    {
+      "cycle": "dsc01-harness-contracts-02",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-harness-contracts-02/receipt.json",
+        "sha256": "b80456d15f4fa6f428050c25b6fca57f1ee3751ebd7f51c9d97fc0cbdd608bc9"
+      }
+    },
+    {
+      "cycle": "final-continuation-assembly-01",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-continuation-assembly-01/receipt.json",
+        "sha256": "0930eddafde6d39f41158cb082a96e9ffd029ba8113bfd3d8ecd244c7b642bfa"
+      }
+    },
+    {
+      "cycle": "final-continuation-validation-01",
+      "test_or_command_status": "FAIL",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-continuation-validation-01/receipt.json",
+        "sha256": "7d145f9e7400c1f2a3b8fa5e2a934ab8f45af3c86336453c41916abc06eff40f"
+      }
+    },
+    {
+      "cycle": "final-continuation-validation-02",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-continuation-validation-02/receipt.json",
+        "sha256": "c8284f9df6375484509fbcd1a4296ee6037ace1fece39327dd26601ae88ef1a5"
+      }
+    },
+    {
+      "cycle": "final-evidence-assembly-01",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-evidence-assembly-01/receipt.json",
+        "sha256": "f25af494e43e733f4eaffb258cc31d3f3742575552f7988205ec128c084be2d7"
+      }
+    },
+    {
+      "cycle": "final-indexes-01",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-indexes-01/receipt.json",
+        "sha256": "79ba6f7c43c4ff62970a62b8722a282c26fe2a56eacaab053958ccc5d00e032c"
+      }
+    },
+    {
+      "cycle": "final-ledger-validation-01",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-ledger-validation-01/receipt.json",
+        "sha256": "144805e1bd47ba7aa812e4c831a665d6aff9abf8aa91f3928665bb47a213c482"
+      }
+    },
+    {
+      "cycle": "final-observation-contracts-01",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-01/receipt.json",
+        "sha256": "d0e8ad7b8be4aab7c42c014c4cbf68778cd3807e2e2fbdf7d9fb102c6160a3f7"
+      }
+    },
+    {
+      "cycle": "final-observation-contracts-02",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-02/receipt.json",
+        "sha256": "3b5059cf1aead0a41a86033cb64a5a047692d5db67b9933fa9a072c06e144d71"
+      }
+    },
+    {
+      "cycle": "final-observation-contracts-03",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-03/receipt.json",
+        "sha256": "9949837ab9e54e3ecc044ef47727b6db4c2337003f450470bd644e8ec6c39fb0"
+      }
+    },
+    {
+      "cycle": "final-resource-checks-01",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-resource-checks-01/receipt.json",
+        "sha256": "42d363bcc04f84e49deac1d608f81cb92a70b97fbf51c3b9dc41c353d183f731"
+      }
+    },
+    {
+      "cycle": "foundation-transport-green",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/foundation-transport-green/receipt.json",
+        "sha256": "f2b412ec493dbaf36b00e95480e4b152a32326fb4811ac41a26b94cdd1ba6992"
+      }
+    },
+    {
+      "cycle": "games-session-desktop-01",
+      "test_or_command_status": "FAIL",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-01/receipt.json",
+        "sha256": "0e8e6a3d7471e10b80a77a34697f7f27b347c86c066d1b52f9e9896ff128b4e0"
+      }
+    },
+    {
+      "cycle": "games-session-desktop-02",
+      "test_or_command_status": "FAIL",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-02/receipt.json",
+        "sha256": "5e845371c19e0c25b730d580f62b09a31f673b087665a93020f1881a76c9adf5"
+      }
+    },
+    {
+      "cycle": "games-session-desktop-03",
+      "test_or_command_status": "FAIL",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/receipt.json",
+        "sha256": "b7dd7cbcd744cc9ba75cb01a53ac747b875f9467c96ebcbc9c6659595fa11ae5"
+      }
+    },
+    {
+      "cycle": "ios-b1-green",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/ios-b1-green/receipt.json",
+        "sha256": "66088528454ff016f3c7ac6bb6ec5241ed07889e63b377ffdde43fabaf23745d"
+      }
+    },
+    {
+      "cycle": "ios-b1-phase-green",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/ios-b1-phase-green/receipt.json",
+        "sha256": "06726b151d585a80f8df7c1ff67b7238dd1d3df39fb5437aab2e6bf43258c045"
+      }
+    },
+    {
+      "cycle": "ios-b1-red",
+      "test_or_command_status": "FAIL",
+      "cleanup_conclusion": "PASS_WITH_HISTORICAL_LIMIT",
+      "schema": "legacy-shell-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/ios-b1-red/receipt.json",
+        "sha256": "1a1c0d0f2d68cf0f4be5b93033918fdae373c7ca1cd07c8686e680b3d77a5772"
+      }
+    },
+    {
+      "cycle": "locale-source-contract-green-01",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/locale-source-contract-green-01/receipt.json",
+        "sha256": "ad2e08caea2cc9009a33532d9158842edb5ff436ad827f7008b7d8465c54fc95"
+      }
+    },
+    {
+      "cycle": "mafia-type-aware-green-01",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/mafia-type-aware-green-01/receipt.json",
+        "sha256": "284534c7f6e5b73c16c329c80bdb3ac9803cef0cf0bf4c8c96b9cb22abfa81bd"
+      }
+    },
+    {
+      "cycle": "native-alltests-01",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/receipt.json",
+        "sha256": "fae1ca61e3eb2854c2d21fae7a79c747cf5093d451a99fe957ec091fcc7043eb"
+      }
+    },
+    {
+      "cycle": "native-storage-language-01",
+      "test_or_command_status": "FAIL",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-storage-language-01/receipt.json",
+        "sha256": "7b3afd96138795f98a5f3fa2ac341ab0e517147d0cfa093116e2b922347b562d"
+      }
+    },
+    {
+      "cycle": "native-storage-language-02",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-storage-language-02/receipt.json",
+        "sha256": "3708df669d6ec74a668b701eca5dcfca97cafbe6e6262d65712cc3d0630ab331"
+      }
+    },
+    {
+      "cycle": "native-wrapper-safety-01",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-wrapper-safety-01/receipt.json",
+        "sha256": "7b73230fd303d4b02e6bd9eafff8ff9897d4ec1b0792efd327ef42fe5597d7cb"
+      }
+    },
+    {
+      "cycle": "release-system-green-01",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/release-system-green-01/receipt.json",
+        "sha256": "5b330259a8ae0c0bed366bc7131f356bd3c4363030b93917a712a70559c84139"
+      }
+    },
+    {
+      "cycle": "rl-c1-green",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c1-green/receipt.json",
+        "sha256": "d6890d31fb004bb56ad11542c082b3201130b5e6cb586c2df6639ae41bd70adb"
+      }
+    },
+    {
+      "cycle": "rl-c1-red",
+      "test_or_command_status": "FAIL",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c1-red/receipt.json",
+        "sha256": "9c28f83ea3934710bae4e9e7dbb861be93625c60d7645a0a6672dca13f91f41c"
+      }
+    },
+    {
+      "cycle": "rl-c2-green-01",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c2-green-01/receipt.json",
+        "sha256": "321e471ed49bcb176c03505ca05089bf198abba897532cfade9881c3970bc69b"
+      }
+    },
+    {
+      "cycle": "rl-c2-green-02",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c2-green-02/receipt.json",
+        "sha256": "cbd27e89676f8ea5bdd575ab45462b7861e5bf3e11ca1929dba42871f7515979"
+      }
+    },
+    {
+      "cycle": "rl-c2-red",
+      "test_or_command_status": "FAIL",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c2-red/receipt.json",
+        "sha256": "00a2741dfff4aeedf827a7983834ad2d50ea5e8d3ff61f943ecb9f40c575dc1f"
+      }
+    },
+    {
+      "cycle": "rl-c3-green",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c3-green/receipt.json",
+        "sha256": "14ddb8cfe944b0e1b61a4129cfdfee66596c33c3e96887f498d37a29fe89ca17"
+      }
+    },
+    {
+      "cycle": "rl-c3-red",
+      "test_or_command_status": "FAIL",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c3-red/receipt.json",
+        "sha256": "640f37c234fc95f80bbee4302367d5a29a4d3a1194977149368c73b7e9b7f071"
+      }
+    },
+    {
+      "cycle": "rl-c3-red-02",
+      "test_or_command_status": "FAIL",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c3-red-02/receipt.json",
+        "sha256": "f0ad03ec518d3d83ec1459258348ad390665d610ad4cf7b636af66d42362fc0a"
+      }
+    },
+    {
+      "cycle": "root-t3-red",
+      "test_or_command_status": "FAIL",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/root-t3-red/receipt.json",
+        "sha256": "e92746b003e83a0099cd09a511295cc94a620276e96a4504591eafe2f3e48e37"
+      }
+    },
+    {
+      "cycle": "sn-c2-factory-green-01",
+      "test_or_command_status": "FAIL",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/sn-c2-factory-green-01/receipt.json",
+        "sha256": "e05ed0279180af13c09c2a4b3cdf4108f9360460c2918ca70af949332046f161"
+      }
+    },
+    {
+      "cycle": "test-type-aware-green-02",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/test-type-aware-green-02/receipt.json",
+        "sha256": "3653b225944d313205d98993092048111c972fb1fc3736e59f34f324f93e0dbf"
+      }
+    },
+    {
+      "cycle": "transport-static-green-02",
+      "test_or_command_status": "PASS",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/receipt.json",
+        "sha256": "df1dde732388bad7cbb37ffe6294eea973fca7dfc7b4a30d49a9a4d338cf1ff4"
+      }
+    },
+    {
+      "cycle": "whodunit-type-aware-01",
+      "test_or_command_status": "FAIL",
+      "cleanup_conclusion": "PASS",
+      "schema": "gradle-cycle",
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/whodunit-type-aware-01/receipt.json",
+        "sha256": "0f05529c9d4be46c104f6f8d8a64af2d467c869535e0ff020b32aaf912928e89"
+      }
+    }
+  ],
+  "stop_evidence": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-apple-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-02/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-03/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-04/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-toast-cover-02/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/design-whodunit-desktop-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/stop-xcode-immediate.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/stop-final.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/embedded-gradle-stop.txt",
+      "sha256": "fb55a963c8d30249ea6b8be68a62b5921facefdc7823c16ad139fea885be972f"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/stop-xcode-immediate.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/stop-final.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/embedded-gradle-stop.txt",
+      "sha256": "fb55a963c8d30249ea6b8be68a62b5921facefdc7823c16ad139fea885be972f"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-harness-contracts-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-harness-contracts-02/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-continuation-assembly-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-continuation-validation-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-continuation-validation-02/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-evidence-assembly-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-indexes-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-ledger-validation-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-02/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-03/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-resource-checks-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/foundation-transport-green/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-02/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/ios-b1-green/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/ios-b1-phase-green/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/ios-b1-red/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/locale-source-contract-green-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/mafia-type-aware-green-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-storage-language-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-storage-language-02/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-wrapper-safety-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/release-system-green-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c1-green/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c1-red/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c2-green-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c2-green-02/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c2-red/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c3-green/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c3-red/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/rl-c3-red-02/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/root-t3-red/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/sn-c2-factory-green-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/test-type-aware-green-02/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/transport-static-green-02/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/whodunit-type-aware-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    }
+  ],
+  "native_child_receipts": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-alltests-01/simulator/receipt.json",
+      "sha256": "c3725a106b41ebed08792c296ec85c82e5439cd01910ad2ace58bf6d95310975"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-storage-language-01/simulator/receipt.json",
+      "sha256": "5febcc8ee0efa402ec479e3bfa412629db9430d0680f7304d1e360ae21e7705f"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/native-storage-language-02/simulator/receipt.json",
+      "sha256": "fdb74ac1395a51b0d9b34cb9ea4aacccdf62b709dd36b518aa8fe22a0129ea91"
+    }
+  ],
+  "owned_devices": [
+    {
+      "cycle": "dsc01-apphost-01",
+      "uuid": "5E8DF832-0068-4422-9E19-D46E6994A3C1",
+      "source": "apphost receipt",
+      "current_directory_absent": true
+    },
+    {
+      "cycle": "dsc01-apphost-02",
+      "uuid": "3BBEF9FC-BF55-48B9-9985-58725B8087B9",
+      "source": "apphost receipt",
+      "current_directory_absent": true
+    },
+    {
+      "cycle": "native-alltests-01",
+      "uuid": "7F62342A-458F-43BC-9E8A-A843D0314033",
+      "source": "owned simulator child receipt",
+      "current_directory_absent": true
+    },
+    {
+      "cycle": "native-storage-language-01",
+      "uuid": "124CC16C-87B4-4C2A-9401-3DBDB4088FDB",
+      "source": "owned simulator child receipt",
+      "current_directory_absent": true
+    },
+    {
+      "cycle": "native-storage-language-02",
+      "uuid": "97F2B485-389F-426C-9CC2-E3F7D3569B7D",
+      "source": "owned simulator child receipt",
+      "current_directory_absent": true
+    }
+  ],
+  "generated_paths_checked": [
+    "shared/core/build",
+    "shared/networking/build",
+    "shared/content/build",
+    "shared/storage/build",
+    "shared/transport-p2p/build",
+    "shared/networking-testing/build",
+    "shared/engine/build",
+    "shared/design-system/build",
+    "shared/engine-testing/build",
+    "shared/session/build",
+    "game-modes/whodunit/build",
+    "game-modes/mafia/build",
+    "build",
+    "composeApp/build",
+    "build-logic/build",
+    "build-logic/convention/build",
+    "iosApp/build"
+  ],
+  "remaining_outputs": [],
+  "scratch_remaining": [],
+  "process_query_exit": 0,
+  "build_workers": [],
+  "owned_uuid_workers": [],
+  "current_disk_free_bytes": 20768866304,
+  "historical_limit": "ios-b1-red lacks historical PID/start/command attestation. Its empty old scan is not converted into worker-absence evidence.",
+  "native_inventory_limit": "Native-runner inventory logs are deliberately removed after parsing to avoid retaining unrelated personal simulator names (owned_ios_simulator.py49-59). Pre-existing-profile preservation is supported by executed pinned helper and compact receipt, not an independent reparse of deleted inventories. No user inventory was regenerated.",
+  "reviewer_reader_diagnostic": "An exploratory metadata query expected removed inventory-before.log and exited1 after reading stop logs. Actual helper source explains intentional privacy deletion; no build/output was created and no success claimed for that query."
+}

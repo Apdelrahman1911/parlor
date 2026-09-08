@@ -1,0 +1,67 @@
+--- immutable-v9/IOSAppLaunchUITests.swift.in
++++ temporary-v10/IOSAppLaunchUITests.swift.in
+@@ -397,40 +397,35 @@
+     }
+ 
+     @MainActor private func investigateActualOSPerAppLanguage(_ app: XCUIApplication) throws {
++        try verifyOSInteractionDecisionContract()
+         try startScenario(app, name: "os")
+         _ = try syntheticLanguage(app, language: "system")
+         app.buttons["parlor-dsc01-open-os"].tap()
+         let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
++        let osDiagnostics = DSC01OSAppDiagnostics()
+         defer { settings.terminate() }
+         XCTAssertTrue(settings.wait(for: .runningForeground, timeout: 20),
+                       "Supported UIApplication.openSettingsURLString must open actual Settings")
+-        // Actual shipped plist declares en/ar. A fresh OS may not expose the
+-        // language row until it has multiple preferred languages configured.
+-        // Do not rewrite global AppleLanguages or invent unsupported URLs.
+-        let languageRow = settings.descendants(matching: .any)
+-            .matching(NSPredicate(format: "label == %@", "Language"))
+-        if !languageRow.firstMatch.waitForExistence(timeout: 15) {
++        // URL acceptance is not proof of the app-specific pane. Only observed
++        // public Settings > Apps > Parlor routing may establish that context.
++        guard try establishOSAppPane(settings, diagnostics: osDiagnostics),
++              try activateOSRow(settings, control: .language, pane: .parlor,
++                                diagnostics: osDiagnostics, allowScroll: false) else {
+             recordOSSelectorDiagnostics(settings)
+             app.activate(); XCTAssertTrue(app.wait(for: .runningForeground, timeout: 20))
+-            app.buttons["parlor-dsc01-os-no-row"].tap()
+-            app.buttons["parlor-dsc01-complete"].tap()
++            try finishOSInvestigation(app, status: "language-control-unavailable", diagnostics: osDiagnostics)
+             XCTAssertEqual(try observe(app)["osDisposition"] as? String, "language-control-unavailable")
+-            return // Explicit BLOCKED gate, never marked OS-language PASS by the runner.
+-        }
+-        XCTAssertLessThan(languageRow.count, 16)
+-        try XCTUnwrap(languageRow.allElementsBoundByIndex.first(where: { $0.isHittable })).tap()
+-        let english = settings.descendants(matching: .any)
+-            .matching(NSPredicate(format: "label == %@", "English"))
+-        if !english.firstMatch.waitForExistence(timeout: 15) {
++            return // Explicit BLOCKED; an unobserved pane is not an absent OS feature.
++        }
++        guard try awaitOSPane(settings, allowed: [.language], diagnostics: osDiagnostics, stage: "english"),
++              try activateOSRow(settings, control: .english, pane: .language,
++                                diagnostics: osDiagnostics, allowScroll: false) else {
+             recordOSSelectorDiagnostics(settings)
+             app.activate(); XCTAssertTrue(app.wait(for: .runningForeground, timeout: 20))
+-            app.buttons["parlor-dsc01-os-no-selection"].tap()
+-            app.buttons["parlor-dsc01-complete"].tap()
++            try finishOSInvestigation(app, status: "selection-unavailable", diagnostics: osDiagnostics)
+             XCTAssertEqual(try observe(app)["osDisposition"] as? String, "selection-unavailable")
+             return
+         }
+-        XCTAssertLessThan(english.count, 16)
+-        try XCTUnwrap(english.allElementsBoundByIndex.first(where: { $0.isHittable })).tap()
+         XCTAssertFalse(settings.alerts.firstMatch.exists, "Do not dismiss unknown OS alerts")
+         app.launchEnvironment["PARLOR_DSC01_FIXTURE"] = "continue"
+         app.activate(); XCTAssertTrue(app.wait(for: .runningForeground, timeout: 30))
+@@ -461,8 +456,7 @@
+         let restarted = try observe(app)
+         XCTAssertNotEqual(try string(restarted, "boot"), beforeBoot)
+         try assertSystem(restarted, expected: "en", previous: actualOSPreferences)
+-        app.buttons["parlor-dsc01-os-verified"].tap()
+-        app.buttons["parlor-dsc01-complete"].tap()
++        try finishOSInvestigation(app, status: "verified-english", diagnostics: osDiagnostics)
+         XCTAssertEqual(try observe(app)["osDisposition"] as? String, "verified-english")
+     }
+ 

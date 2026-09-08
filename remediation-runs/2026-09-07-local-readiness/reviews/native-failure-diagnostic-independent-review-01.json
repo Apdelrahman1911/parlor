@@ -1,0 +1,162 @@
+{
+  "schema_version": 1,
+  "review_id": "native-failure-diagnostic-independent-review-01",
+  "reviewed_at": "2026-09-07T09:51:49.215102+00:00",
+  "reviewer": "/root/native_fix_review",
+  "author": "/root",
+  "disposition": "APPROVED FOR CONTROLLED OWNED-SIMULATOR DIAGNOSTIC EXECUTION; NO NATIVE-RUNTIME PASS CLAIM",
+  "baseline": {
+    "commit": "0264b6bb6ae312b943d7ce8b8a026c5cd6a7e0c1",
+    "tree": "3aa3f48efd1b56fad64d2df6667c6b9bee4804c6",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "0fc76c372e59ec048c013039eaa5f1e6d6cd9d6be2365288ddcc8996b8e53608"
+  },
+  "current_tracked_status": " M game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt\n",
+  "files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/NativeReadinessLaunch.swift.in",
+      "sha256": "4bddc85fa3a28e1dcb4caaed7e32f8658c195e9c4ee93aeeecaab317fbcaf2bc",
+      "original_sha256": "f138563cb8f50a64f5b74304060671f3de991584c277606cbd0d42395b37d60a",
+      "reviewed_line_ranges": [
+        [
+          1,
+          267
+        ]
+      ],
+      "review_scope": "Complete new/current text and complete delta"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/NativeReadinessUITests.swift.in",
+      "sha256": "fa2dc7dbc97c576262ad14cd85b22f65aa908b1629ab1a205b22aa4873f5c0dc",
+      "original_sha256": "7a35cfca3cbedd742c0b76b44c80e5b3662b4d88942ecbe25e21b68034fa9407",
+      "reviewed_line_ranges": [
+        [
+          1,
+          72
+        ]
+      ],
+      "review_scope": "Complete new/current text and complete delta"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/run_ios_readiness.py",
+      "sha256": "9bd997ec5836fe8da4e3afcdb3604eb10f180d3b55a63718c1ea9ba1f9893f2c",
+      "original_sha256": "93359d7c34455617bc5b97c323c045ebac0e53b64f54e75691a4feda019a98db",
+      "reviewed_line_ranges": [
+        [
+          1,
+          83
+        ],
+        [
+          530,
+          810
+        ],
+        [
+          850,
+          977
+        ]
+      ],
+      "review_scope": "Complete delta plus listed reachability/finalization context; not a new full 977-line runner review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/native_failure_receipts.py",
+      "sha256": "9376f5f7244dc297edf9bca964357a1148c1972a41b44fdfd60fd8c988a007d6",
+      "original_sha256": null,
+      "reviewed_line_ranges": [
+        [
+          1,
+          72
+        ]
+      ],
+      "review_scope": "Complete new/current text and complete delta"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/test_native_failure_receipts.py",
+      "sha256": "9d015aa4ce2cac5ac6e6aa770fcb0c0df00dd40435002529d807b744baa7c19b",
+      "original_sha256": null,
+      "reviewed_line_ranges": [
+        [
+          1,
+          137
+        ]
+      ],
+      "review_scope": "Complete new/current text and complete delta"
+    }
+  ],
+  "complete_delta_sha256": "c1e435d36987c1547331f48b62fa55747a4072ded7f239f36a69198b158da080",
+  "originals": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native-failure-diagnostic-01",
+  "controls_modified_by_reviewer": false,
+  "paths_checked": [
+    "Copied ContentView appends reviewed Swift at run_ios_readiness.py563-577; XCTest template is appended at584-594; approved control hashing includes new py files65-82.",
+    "DSC01Probe.prepare binds fresh owned simulator/run token and persists before_main; fixtureError389 uses the allowlisted DSC01SyntheticHarness/code1.",
+    "XCTest actual scenario calls native readiness before proceeding; one native-start call per new boot; NativeReadinessProbe Kotlin uses actual Koin-bound stores, bounded results and single-start cancellation-owned scope.",
+    "Swift69-115 marks throwing stage, separately retains a bounded failure and never fabricates success. New writer does not replace an existing success/failure record.",
+    "Host extraction667-708 binds fresh owned device/container, bounded readiness context and exact per-ordinal file, validating exact schema/types/stage/domain/code before exclusive evidence write.",
+    "XCTest26-29 explicitly fails on diagnostic_failure; runner768-769 rejects diagnostic failures before success verification. Existing storage classification947-954 remains intact.",
+    "Existing immediate/final Gradle stops, owned-simulator shutdown/delete, secondary FIFO cleanup and output cleanup unchanged by the full delta."
+  ],
+  "conclusions": [
+    "Fixed bounded stage and allowlisted numeric NSError metadata are diagnostic information only; no description/userInfo/raw path/environment/observation is retained in failure JSON.",
+    "Unknown domain and out-of-Int32 errors redact codes; UUIDs, mode, ordinal and maximum1024bytes are checked. Known domain mapping agrees with reachable error constructors.",
+    "Failure reader checks exact keys and strict integer-vs-bool types, duplicate keys, no final symlink, regular bounded file, opened device/inode/UID and stable size/mtime.",
+    "Changing the success writer from atomic to withoutOverwriting removes a check/write replacement window in this one-attempt owned fixture. Partial/failed writes remain failed evidence, not repaired data.",
+    "The seven actual Python methods execute meaningful negative assertions and one compiles/runs the exact extracted Foundation encoder. Its seven Foundation subcases are not seven additional discovered tests."
+  ],
+  "blocking_comments": [],
+  "limits": [
+    "New diagnostic code has not yet executed inside an iOS simulator app. Host Foundation tests do not verify Swift/Compose linkage, app lifecycle, iOS filesystem behavior or storage health.",
+    "If encoding/writing the secondary failure receipt itself fails, failure-receipt-unavailable remains a failure sentinel. Stage/root cause may remain unobservable; never infer a Keychain/storage/application diagnosis from that sentinel.",
+    "Failure context checks membership in an observed before_main boot set rather than chronological ordinal-to-boot bijection. This cannot green a run because every accepted diagnostic failure still aborts.",
+    "Reader parent-directory trust is supplied by the exact fresh owned-device caller; it is not an arbitrary hostile-filesystem sandbox.",
+    "Existing ios-readiness-02 failed native JSON decoding after four unit XTests passed. Its preserved result does not establish a crash or exact underlying failure.",
+    "New controls invalidate older approved control hashes; bind/freeze reviewed controls and current source explicitly before the next native run.",
+    "Current root-owned Whodunit contrast edits are outside this control review and were not modified by reviewer."
+  ],
+  "evidence": {
+    "receipt": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native-failure-controls-01/receipt.json",
+    "receipt_sha256": "c6c46f8172bef7204b5903becfe801390d5f68dbfe567896ee575d7549d5afc9",
+    "test_log": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/native-failure-controls-01/gradle.log",
+    "test_log_sha256": "9ee4545fd400af35e97c2bf09efa50304014878c1e013904a258c27ea2e39a72",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "scripts/verification/ios-readiness",
+      "-p",
+      "test_native_failure_receipts.py",
+      "-v"
+    ],
+    "status": "PASS",
+    "exit_code": 0,
+    "executed_python_methods": 7,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "foundation_encoder_subcases": 7,
+    "source_manifest_before_sha256": "0fc76c372e59ec048c013039eaa5f1e6d6cd9d6be2365288ddcc8996b8e53608",
+    "source_manifest_after_sha256": "0fc76c372e59ec048c013039eaa5f1e6d6cd9d6be2365288ddcc8996b8e53608",
+    "source_changed_during_cycle": false,
+    "runner_changed_during_cycle": false,
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-07T09:38:52.351219+00:00",
+    "remaining_outputs": [],
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "cleanup_errors": [],
+    "cleanup_completed_at": "2026-09-07T09:38:52.410107+00:00"
+  },
+  "reviewer_execution_and_cleanup": {
+    "builds_tests_native_probes_started": false,
+    "workers_started": false,
+    "processes_stopped": false,
+    "generated_build_outputs": [],
+    "application_or_shared_control_edits": [],
+    "writes": "This campaign review receipt only; original evidence preserved"
+  }
+}

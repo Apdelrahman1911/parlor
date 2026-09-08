@@ -1,0 +1,1104 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-06T12:55:00.415517+00:00",
+  "reviewer": "/root/factory_review",
+  "classification": "APPROVED current-input reconciliation — scoped15/16 repair evidence maintained; DS-C01 runtime verification pending. NOT final campaign completion or Store readiness.",
+  "additive_to": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-final-inputs-preservation-all16-rebind-02.json",
+    "sha256": "cef9b9f4498519e87ec215b80db67ad8d18d38191c80e2fb047d977b356b508e"
+  },
+  "source_freeze": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/source-freeze-02.json",
+    "sha256": "7b471f8561a728f4e429d957460f368ecb432aa83833c0f97d26c9ba819e70a4"
+  },
+  "source": {
+    "branch": "main",
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e"
+  },
+  "source_inputs_rehashed": 669,
+  "source_drift": [],
+  "native_alltests02": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/receipt.json",
+      "sha256": "2253a31979d575c1915e0445a9a1e1234abf963db9d49c98a628c386706c4fc0"
+    },
+    "command": [
+      "./gradlew",
+      "allTests",
+      "productionIosSimulatorRuntimeTests",
+      "--no-build-cache",
+      "--continue",
+      "--no-daemon",
+      "--no-parallel",
+      "--max-workers=1",
+      "--no-configuration-cache",
+      "--dependency-verification=strict",
+      "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=combined-native-alltests-02",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-Pparlor.android.signing.storeFile=",
+      "-Pparlor.android.signing.storePassword=",
+      "-Pparlor.android.signing.keyAlias=",
+      "-Pparlor.android.signing.keyPassword=",
+      "-I",
+      "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/owned_ios_simulator.init.gradle"
+    ],
+    "status": "PASS",
+    "exit_code": 0,
+    "started_at": "2026-09-06T12:25:01.901660+00:00",
+    "finished_at": "2026-09-06T12:31:42.432206+00:00",
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+    "diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "source_changed_during_cycle": false,
+    "runner_changed_during_cycle": false,
+    "log": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/gradle.log",
+      "sha256": "2a646d4ef1aa57c8057b8263a02bc8bdb801ea04cec820ba735146d212d4c018"
+    },
+    "cleanup": {
+      "stop_exit_code": 0,
+      "stop_log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "stopped_at": "2026-09-06T12:31:42.769077+00:00",
+      "removed_outputs": [
+        "shared/core/build",
+        "shared/networking/build",
+        "shared/content/build",
+        "shared/storage/build",
+        "shared/transport-p2p/build",
+        "shared/networking-testing/build",
+        "shared/engine/build",
+        "shared/design-system/build",
+        "shared/engine-testing/build",
+        "shared/session/build",
+        "game-modes/whodunit/build",
+        "game-modes/mafia/build",
+        "build",
+        "composeApp/build",
+        "build-logic/convention/build"
+      ],
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "cleanup_errors": [],
+      "completed_at": "2026-09-06T12:31:49.479924+00:00"
+    },
+    "xml_suite_count": 398,
+    "counts": {
+      "tests": 2481,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 3
+    },
+    "passed_execution_instances": 2478,
+    "counts_by_task": {
+      "desktopTest": {
+        "tests": 1243,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 3
+      },
+      "iosSimulatorArm64Test": {
+        "tests": 426,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "testDebugUnitTest": {
+        "tests": 406,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "testReleaseUnitTest": {
+        "tests": 406,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    "counts_by_module": {
+      "composeApp": {
+        "tests": 332,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "game-modes/mafia": {
+        "tests": 269,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "game-modes/whodunit": {
+        "tests": 354,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "shared/content": {
+        "tests": 96,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "shared/core": {
+        "tests": 48,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "shared/design-system": {
+        "tests": 96,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "shared/engine": {
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "shared/engine-testing": {
+        "tests": 24,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "shared/networking": {
+        "tests": 136,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "shared/networking-testing": {
+        "tests": 16,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "shared/session": {
+        "tests": 571,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "shared/storage": {
+        "tests": 124,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "shared/transport-p2p": {
+        "tests": 411,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 3
+      }
+    },
+    "xml_manifest_sha256": "3e94c2bc5228c634d81543ad05987a773ae99199344ad8ed0aba93ed67f5ad95",
+    "xml_attribute_discrepancies": [],
+    "duplicate_descriptors_per_module_task": [],
+    "known_test_skips": [
+      {
+        "module": "shared/transport-p2p",
+        "task": "desktopTest",
+        "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "method": "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]"
+      },
+      {
+        "module": "shared/transport-p2p",
+        "task": "desktopTest",
+        "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "method": "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]"
+      },
+      {
+        "module": "shared/transport-p2p",
+        "task": "desktopTest",
+        "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "method": "host_broadcast_reaches_every_peer()[desktop]"
+      }
+    ],
+    "selected_raw_regressions": [
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.ProductionUiAccessibilityContractTest.xml",
+        "sha256": "a744676ef686061855360c8dcf73c937eb81877e0cedb6a0668ac6c60b29f93d",
+        "suite": "com.parlor.app.ProductionUiAccessibilityContractTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 13,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.IosLegacySnapshotBackupTest.xml",
+        "sha256": "00fbd040d6aca458274912e067b53b032c5a9a7c3f754447c6dd9364cf4fb744",
+        "suite": "com.parlor.app.storage.IosLegacySnapshotBackupTest",
+        "task": "iosSimulatorArm64Test",
+        "counts": {
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.IosStorageSafetyTest.xml",
+        "sha256": "cc47b4626d954047530912059e2555c69992f6ca70b8c9e86a477ac0e0fdf96d",
+        "suite": "com.parlor.app.storage.IosStorageSafetyTest",
+        "task": "iosSimulatorArm64Test",
+        "counts": {
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.MafiaDoctorRulesTest.xml",
+        "sha256": "ae6e15981d8ec35cdb671e29c7626ff3ab51cd268fa3111467c8af3a89ce94c4",
+        "suite": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaDoctorLanTest.xml",
+        "sha256": "489dc590a5f26df3c06d5f8bfe1a7ab296171007380e90fce7fd466de55ddaab",
+        "suite": "com.parlor.games.mafia.multidevice.MafiaDoctorLanTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest.xml",
+        "sha256": "3368ae1808996eed9ed4577e04ad6a1e953dff1755cbc58850a414378d05373b",
+        "suite": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 15,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLanguageContinuityTest.xml",
+        "sha256": "4b6a1da1cd81d200a4980b15cfe0fd10e271ab37838de98a7800a8b98cee09f1",
+        "suite": "com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLanguageContinuityTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest.xml",
+        "sha256": "a5adcf0b9a58f9750b2184563f80c3660e7cedbf3cd7b2c62e6ee56ea884f32d",
+        "suite": "com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest.xml",
+        "sha256": "c83fea0da70d80ae8bdb64d4e6ec5dac0e41d240b6eadf68f2214047714bb190",
+        "suite": "com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest.xml",
+        "sha256": "0a8dc156ecdfc4f98ba58ba5349e81156d69d575fca97b693aa38c03221702cc",
+        "suite": "com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryChronologyTest.xml",
+        "sha256": "a57a5900ed4dd6b1f50e39a60d5bf3076dcff53e8b3efedb8e4fe4713d436c05",
+        "suite": "com.parlor.games.whodunit.content.TestingStoryChronologyTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryCompatibilityTest.xml",
+        "sha256": "da2e1c45c028345aa2a221ed3b11950cdf53d338b6a9ec24e2b2909820b1cafe",
+        "suite": "com.parlor.games.whodunit.content.TestingStoryCompatibilityTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryGameTraceTest.xml",
+        "sha256": "b7cbc214eca5a8b8f621f00eeaec8ed516a073c7678a94137cce95dada80b744",
+        "suite": "com.parlor.games.whodunit.content.TestingStoryGameTraceTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest.xml",
+        "sha256": "89131b0a4b5ffe641545a4fa71d4e4d725e458e1afbb009427d72aa5e9a5baea",
+        "suite": "com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest.xml",
+        "sha256": "74c8c5bceb3714e515893d31741de6dc140b461f0f9ff69645bb7da266908ec6",
+        "suite": "com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest.xml",
+        "sha256": "4c49f783bc3894e8898e2a6d9d12b002efdf3581e9a9123ea70f9f740d32d9e9",
+        "suite": "com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest.xml",
+        "sha256": "84973eda15caecd3d2d40ad0492aa70844730538b383460f0d12ec8f256e8f47",
+        "suite": "com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLanguageContinuityTest.xml",
+        "sha256": "49291acd078c208b51413b5f8a937bd82fe8768c4e85c5ccb5dbc220111e13a1",
+        "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLanguageContinuityTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastConcurrencyTest.xml",
+        "sha256": "3864cc6cce7baed62e43e44dc80e106f1cfd112189e9506dea3ac7298ea71e96",
+        "suite": "com.parlor.designsystem.components.ParlorToastConcurrencyTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastLifetimeTest.xml",
+        "sha256": "0d63dc17d2946fec090b06255360550c9bc8aa751cd03c099802c640ed5266cb",
+        "suite": "com.parlor.designsystem.components.ParlorToastLifetimeTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+        "sha256": "7554ea5dc8929fa885fbe3f3dc5e07ebf3c166676c4c577fe01ac6abcfa5edc8",
+        "suite": "com.parlor.designsystem.components.ParlorToastStateTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ReconnectingOverlayFocusTest.xml",
+        "sha256": "2b79434a2e84792bc49fbeec97a1bf735147dfbd768b7bd6cf91a8f79320d815",
+        "suite": "com.parlor.designsystem.components.ReconnectingOverlayFocusTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.RecoveryActionContrastTest.xml",
+        "sha256": "dd27424d5f3ef464efe278305054d986a571f2e9174db0e66932f0caf999780e",
+        "suite": "com.parlor.designsystem.components.RecoveryActionContrastTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+        "sha256": "10aa3a37ad4b71d454811dcabfb157dd8e389f3bff2aee4a70c57ed6b74ca945",
+        "suite": "com.parlor.designsystem.components.ParlorToastStateTest",
+        "task": "iosSimulatorArm64Test",
+        "counts": {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest.xml",
+        "sha256": "5f691d4fd56b4090d94127fa4ef99936a76a5a70118692362859c1152b3d7b29",
+        "suite": "com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest",
+        "task": "iosSimulatorArm64Test",
+        "counts": {
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/design-system/build/test-results/testDebugUnitTest/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+        "sha256": "d9dcf8ab71416da8525d05590f20de43a4c151e1bd087e0b593e94b56585e591",
+        "suite": "com.parlor.designsystem.components.ParlorToastStateTest",
+        "task": "testDebugUnitTest",
+        "counts": {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/design-system/build/test-results/testReleaseUnitTest/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+        "sha256": "769d1f7b34a53d21fc65d25af356bc0dfa5b180b6ae9dfb601ccf2b403511af8",
+        "suite": "com.parlor.designsystem.components.ParlorToastStateTest",
+        "task": "testReleaseUnitTest",
+        "counts": {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+        "sha256": "cf0f4064919f2922d5808c201da34bc4a6ff7c04305e33cc4032cc718b902600",
+        "suite": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+        "sha256": "bc30ecdd0b1fe97cd1640c484e996555252db9567c146eefbfed81bf1454139c",
+        "suite": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+        "task": "iosSimulatorArm64Test",
+        "counts": {
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/session/build/test-results/testDebugUnitTest/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+        "sha256": "c90b4450a9c1a318640a20feaca5067fceec244edf681f8c7d8ea3e3e41cb100",
+        "suite": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+        "task": "testDebugUnitTest",
+        "counts": {
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/session/build/test-results/testReleaseUnitTest/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+        "sha256": "92ca97a592f4a10789868beff0d15358ddb1c2657d220027f6ddca585eaa2609",
+        "suite": "com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+        "task": "testReleaseUnitTest",
+        "counts": {
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+        "sha256": "a06b72457e240a1c80977db5d3207e13a13a098e03c050c8262831a99dc0fda5",
+        "suite": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.HostOpeningCancellationTest.xml",
+        "sha256": "fc4f57c24ecfaa539d3727e920dd664d1436a67345d661e664c6c90e52c7ce29",
+        "suite": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+        "sha256": "72af7e87521266d6808c3acb27f85b75307557308424b412e9a32374e2ddece6",
+        "suite": "com.parlor.transport.p2p.JupiterDiscoveryContractTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitCreationTest.xml",
+        "sha256": "eba89f9bd84586ded54bc098fcbc3e7b2b68bc5bcbb7724c756f05b68edbcb1e",
+        "suite": "com.parlor.transport.p2p.P2pKitCreationTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.xml",
+        "sha256": "35c25678356bc7890d8a09996082ed10412a62dabcf2519fe49ecb08e957b072",
+        "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 130,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+        "sha256": "212da25bed24ff3d16f352d7d8dbff5caeee3ad199ddc44b46bad61d7708fb77",
+        "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 3
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.PeerOpeningCancellationTest.xml",
+        "sha256": "9cd4eef4210f8358c6c30edd818d359de503e44918f65b2d998de4dccae132a8",
+        "suite": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+        "task": "desktopTest",
+        "counts": {
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+        "sha256": "9dacbfd4bff661bc38c542db5770ebb4fdcdead6d289233a4969709fd399146d",
+        "suite": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+        "task": "iosSimulatorArm64Test",
+        "counts": {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/transport-p2p/build/test-results/testDebugUnitTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+        "sha256": "1283573ab6c41ee64025c578e039c0bd81927f4c69ece7562d617c6e08bfca7c",
+        "suite": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+        "task": "testDebugUnitTest",
+        "counts": {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/reports/shared/transport-p2p/build/test-results/testReleaseUnitTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+        "sha256": "5476114490b8e491e3a6ee9a47dafd5cfb73efc88744c049c8ac39c96d0cb12b",
+        "suite": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+        "task": "testReleaseUnitTest",
+        "counts": {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      }
+    ],
+    "task_omissions": [
+      {
+        "tasks": "13 iosX64Test tasks",
+        "status": "BLOCKED on macos-aarch64; explicitly host-disabled by pinned KGP",
+        "evidence": "gradle.log23-24 and42-54; not counted as passing native tests."
+      },
+      {
+        "tasks": [
+          ":game-modes:mafia:iosSimulatorArm64Test",
+          ":shared:engine:iosSimulatorArm64Test"
+        ],
+        "status": "NO APPLICABLE NATIVE TEST SOURCE; unexecuted",
+        "evidence": "Actual src inventory: Mafia33 Kotlin desktopTest files only; shared engine3 Kotlin desktopTest files only. No commonTest/iosTest source directories. Logs987/995-996 and1321/1327-1328 show compile/link NO-SOURCE then test SKIPPED. Existing Desktop tests executed; this is not native Mafia engine verification."
+      }
+    ],
+    "simulator": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/simulator/receipt.json",
+        "sha256": "36613f9831cd8f51f3aa8b14dbd106a1d448f541008f8d84b96ce737d31a2528"
+      },
+      "owned_uuid": "CA73F7D1-D816-4236-848F-06B08980AC12",
+      "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-5",
+      "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+      "all_command_exit_codes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "owned_device_absent": true,
+      "preexisting_devices_preserved": true,
+      "remaining_owned_uuid_processes": [],
+      "cleanup_errors": [],
+      "inventory_privacy": "Transient full-inventory logs removed by runner after parsing; only exact owned UUID/name preserved. No user device erased/selected."
+    },
+    "runner_controls": {
+      "manifest": [
+        [
+          "remediation-runs/2026-09-06-approved-policy-completion/run_gradle_cycle.py",
+          "d2d18c2311d59554db88be3f92e609ec5ca46fc8af4c79702836f9e4c130240f"
+        ],
+        [
+          "remediation-runs/2026-09-06-approved-policy-completion/owned_ios_simulator.py",
+          "184684f4cdba8733217a124b53552e4f73f234618e82ade9d8ead566fb748712"
+        ],
+        [
+          "remediation-runs/2026-09-06-approved-policy-completion/owned_ios_simulator.init.gradle",
+          "e857bd0d8fbc18199ee1fbaef7e01ae325785397b5e23f82186462f9a33c3b34"
+        ]
+      ],
+      "manifest_sha256": "dfaff4486e4c343c1c68f3aff81c6e1bfeaf692280c3ff40547f6f19ee1d8012"
+    },
+    "reviewed_control_lines": [
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/run_gradle_cycle.py",
+        "sha256": "d2d18c2311d59554db88be3f92e609ec5ca46fc8af4c79702836f9e4c130240f",
+        "reviewed_ranges": [
+          [
+            1,
+            283
+          ]
+        ]
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/owned_ios_simulator.py",
+        "sha256": "184684f4cdba8733217a124b53552e4f73f234618e82ade9d8ead566fb748712",
+        "reviewed_ranges": [
+          [
+            1,
+            137
+          ]
+        ]
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/owned_ios_simulator.init.gradle",
+        "sha256": "e857bd0d8fbc18199ee1fbaef7e01ae325785397b5e23f82186462f9a33c3b34",
+        "reviewed_ranges": [
+          [
+            1,
+            68
+          ]
+        ]
+      }
+    ],
+    "limits": "426 actual arm64 simulator Kotlin tests, not a native SwiftUI/Compose app-host result. Repeated common cases on JVM/Android/Native are execution instances, not unique defect counts. Physical P2pKit tests remain ignored."
+  },
+  "apple02": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02/receipt.json",
+      "sha256": "dd75d054341870316ff21a8106e245e5859c83a347399aa59afc57d0eea68d16"
+    },
+    "command": [
+      "./gradlew",
+      "productionAppleCheck",
+      "--no-build-cache",
+      "--continue",
+      "--no-daemon",
+      "--no-parallel",
+      "--max-workers=1",
+      "--no-configuration-cache",
+      "--dependency-verification=strict",
+      "-Dorg.gradle.jvmargs=-Xmx6g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=combined-apple-02",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-Pparlor.android.signing.storeFile=",
+      "-Pparlor.android.signing.storePassword=",
+      "-Pparlor.android.signing.keyAlias=",
+      "-Pparlor.android.signing.keyPassword="
+    ],
+    "status": "PASS",
+    "exit_code": 0,
+    "started_at": "2026-09-06T12:37:49.330467+00:00",
+    "finished_at": "2026-09-06T12:48:25.852915+00:00",
+    "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+    "diff_sha256": "148fb4583d8fa8341b3cbc48a7fc0bc7564bf4df5c27e9d80e32c6bfdc57b784",
+    "source_changed_during_cycle": false,
+    "runner_changed_during_cycle": false,
+    "log": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02/gradle.log",
+      "sha256": "29b2daf1f1c7005d56e82f2be779c586fe063eb79d7f8e4ee6814ac880be406f"
+    },
+    "cleanup": {
+      "stop_exit_code": 0,
+      "stop_log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "stopped_at": "2026-09-06T12:48:26.192973+00:00",
+      "removed_outputs": [
+        "shared/core/build",
+        "shared/networking/build",
+        "shared/content/build",
+        "shared/storage/build",
+        "shared/transport-p2p/build",
+        "shared/networking-testing/build",
+        "shared/engine/build",
+        "shared/design-system/build",
+        "shared/engine-testing/build",
+        "shared/session/build",
+        "game-modes/whodunit/build",
+        "game-modes/mafia/build",
+        "build",
+        "composeApp/build",
+        "build-logic/convention/build"
+      ],
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "cleanup_errors": [],
+      "completed_at": "2026-09-06T12:48:26.659160+00:00"
+    },
+    "runtime_test_suites": 0,
+    "framework_artifact_receipt": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02/artifact-receipts.json",
+      "sha256": "879deeaab05de7e596dd4f25cdede06788ee4abdca4171359bf4fe41ed4daa45"
+    },
+    "frameworks": [
+      {
+        "path": "composeApp/build/bin/iosX64/releaseFramework/ComposeApp.framework/ComposeApp",
+        "bytes": 53558320,
+        "sha256": "91a0d6ea8b8b5babb64f12518b13216be0366b21ea84ea3f830b51d453f11de9",
+        "file": "/Users/abdelrahman/Projects/parlor/composeApp/build/bin/iosX64/releaseFramework/ComposeApp.framework/ComposeApp: Mach-O 64-bit dynamically linked shared library x86_64"
+      },
+      {
+        "path": "composeApp/build/bin/iosSimulatorArm64/releaseFramework/ComposeApp.framework/ComposeApp",
+        "bytes": 52265976,
+        "sha256": "bf86618842cb65349ad55141c87e5da7db8e79651da4c2e1b93f3c4323993919",
+        "file": "/Users/abdelrahman/Projects/parlor/composeApp/build/bin/iosSimulatorArm64/releaseFramework/ComposeApp.framework/ComposeApp: Mach-O 64-bit dynamically linked shared library arm64"
+      },
+      {
+        "path": "composeApp/build/bin/iosArm64/releaseFramework/ComposeApp.framework/ComposeApp",
+        "bytes": 52067904,
+        "sha256": "7be53cb3cfabd585f86ae480f74f240a3238031435f0f5c6df06e5420d4a224c",
+        "file": "/Users/abdelrahman/Projects/parlor/composeApp/build/bin/iosArm64/releaseFramework/ComposeApp.framework/ComposeApp: Mach-O 64-bit dynamically linked shared library arm64"
+      }
+    ],
+    "detekt_reports": [
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02/reports/shared/networking/build/reports/detekt/detektMetadataIosMain.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02/reports/shared/transport-p2p/build/reports/detekt/detektMetadataIosMain.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02/reports/shared/design-system/build/reports/detekt/detektMetadataIosMain.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+      },
+      {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02/reports/composeApp/build/reports/detekt/detektMetadataIosMain.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+      }
+    ],
+    "detekt_error_nodes": 0,
+    "limits": "Three framework release links and4 actual iosMain metadata Detekt reports only. These Gradle tasks do not compile/run new Swift wrapper XCTest or launch the shipping SwiftUI app. X86_64 linkage is not X86_64 runtime testing."
+  },
+  "all16_status": [
+    {
+      "id": "ST-C1",
+      "status": "FIXED AND VERIFIED",
+      "original_independent_reviewer": "native_fix_review",
+      "current_source_evidence": "Preserved rebind02 issue-specific hashes and independent review chain; current manifest all669files rehashed unchanged."
+    },
+    {
+      "id": "SN-C1",
+      "status": "FIXED AND VERIFIED",
+      "original_independent_reviewer": "root",
+      "current_source_evidence": "Preserved rebind02 issue-specific hashes and independent review chain; current manifest all669files rehashed unchanged."
+    },
+    {
+      "id": "SN-C2",
+      "status": "FIXED AND VERIFIED",
+      "original_independent_reviewer": "factory_review",
+      "current_source_evidence": "Preserved rebind02 issue-specific hashes and independent review chain; current manifest all669files rehashed unchanged."
+    },
+    {
+      "id": "WD-C1",
+      "status": "FIXED AND VERIFIED",
+      "original_independent_reviewer": "root",
+      "current_source_evidence": "Preserved rebind02 issue-specific hashes and independent review chain; current manifest all669files rehashed unchanged."
+    },
+    {
+      "id": "IOS-B1",
+      "status": "FIXED AND VERIFIED",
+      "original_independent_reviewer": "session_cont",
+      "current_source_evidence": "Preserved rebind02 issue-specific hashes and independent review chain; current manifest all669files rehashed unchanged."
+    },
+    {
+      "id": "ROOT-T3",
+      "status": "FIXED AND VERIFIED",
+      "original_independent_reviewer": "session_cont",
+      "current_source_evidence": "Preserved rebind02 issue-specific hashes and independent review chain; current manifest all669files rehashed unchanged."
+    },
+    {
+      "id": "MF-C1",
+      "status": "FIXED AND VERIFIED",
+      "original_independent_reviewer": "whodunit_cont",
+      "current_source_evidence": "Preserved rebind02 issue-specific hashes and independent review chain; current manifest all669files rehashed unchanged."
+    },
+    {
+      "id": "WD-C3",
+      "status": "FIXED AND VERIFIED",
+      "original_independent_reviewer": "root",
+      "current_source_evidence": "Preserved rebind02 issue-specific hashes and independent review chain; current manifest all669files rehashed unchanged."
+    },
+    {
+      "id": "M-C03",
+      "status": "FIXED AND VERIFIED",
+      "original_independent_reviewer": "whodunit_cont",
+      "current_source_evidence": "Preserved rebind02 issue-specific hashes and independent review chain; current manifest all669files rehashed unchanged."
+    },
+    {
+      "id": "DS-C01",
+      "status": "PARTIALLY VERIFIED",
+      "original_independent_reviewer": "native_fix_review (source fix); factory_review (actual app-host result)",
+      "current_source_evidence": "Preserved rebind02 issue-specific hashes and independent review chain; current manifest all669files rehashed unchanged."
+    },
+    {
+      "id": "DS-C02",
+      "status": "FIXED AND VERIFIED",
+      "original_independent_reviewer": "whodunit_cont",
+      "current_source_evidence": "Preserved rebind02 issue-specific hashes and independent review chain; current manifest all669files rehashed unchanged."
+    },
+    {
+      "id": "DS-C03",
+      "status": "FIXED AND VERIFIED",
+      "original_independent_reviewer": "whodunit_cont",
+      "current_source_evidence": "Preserved rebind02 issue-specific hashes and independent review chain; current manifest all669files rehashed unchanged."
+    },
+    {
+      "id": "WD-C2",
+      "status": "FIXED AND VERIFIED",
+      "original_independent_reviewer": "/root/release_fix_review",
+      "current_source_evidence": "Preserved rebind02 issue-specific hashes and independent review chain; current manifest all669files rehashed unchanged."
+    },
+    {
+      "id": "RL-C1",
+      "status": "FIXED AND VERIFIED",
+      "original_independent_reviewer": "mafia_cont + release_fix_review",
+      "current_source_evidence": "Preserved rebind02 issue-specific hashes and independent review chain; current manifest all669files rehashed unchanged."
+    },
+    {
+      "id": "RL-C2",
+      "status": "FIXED AND VERIFIED",
+      "original_independent_reviewer": "release_fix_review",
+      "current_source_evidence": "Preserved rebind02 issue-specific hashes and independent review chain; current manifest all669files rehashed unchanged."
+    },
+    {
+      "id": "RL-C3",
+      "status": "FIXED AND VERIFIED",
+      "original_independent_reviewer": "mafia_cont + release_fix_review",
+      "current_source_evidence": "Preserved rebind02 issue-specific hashes and independent review chain; current manifest all669files rehashed unchanged."
+    }
+  ],
+  "percentage": {
+    "denominator": "16 authorized independently confirmed defects, local repair verification only",
+    "fixed_and_verified": 15,
+    "partially_verified": 1,
+    "percent_fixed_and_verified": 93.75,
+    "not_a_percentage_of": "whole source audit completion, all platform scenarios, physical LAN evidence or Store readiness"
+  },
+  "updates_to_prior_checkpoint": [
+    "Nativealltests02 now supplies current-freeze execution for prior native evidence: ST-C1 8backup+6storage; DS-C01 11ownership primitives; SN-C1 9deadline and SN-C2 3registration tests. Same relevant test/source bytes, fresh raw results parsed.",
+    "Current allTests aggregate now2481descriptors:1243Desktop/426iOSarm64/406AndroidDebug/406AndroidRelease,2478PASS+3physicalskips. Current production04 uses1395descriptors/1392PASS+3skips plus172Python release tests; do not add these overlapping cycle totals into a unique-test count.",
+    "Apple02 nowPASS: three release-framework links and4 iosMain metadata Detekt reports with0errors; no runtime XML. New Swift wrapper/test target still requires V6Xcode compilation/runtime evidence.",
+    "All16 repair statuses unchanged: WD-C2 fully verified within testing-content authorization, DS-C01 partially verified. Do not restore obsolete retiredSolo auto-delete qualifier or treat old apphost03 red witness as passing."
+  ],
+  "preservation_after_apple02": {
+    "baseline": {
+      "path": "remediation-runs/2026-09-06-approved-policy-completion/baseline.json",
+      "sha256": "ed49f68cf2f6d583e28f461428b56afb8cdfbdba619858cc8d541117e3b147df"
+    },
+    "baseline_file_count": 2180,
+    "byte_identical": 2167,
+    "changed_authorized_paths_same_as_rebind02": [
+      "docs/PRODUCTION_ARCHITECTURE.md",
+      "game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+      "game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+      "game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+      "game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+      "game-modes/whodunit/src/commonMain/composeResources/values-ar/strings.xml",
+      "game-modes/whodunit/src/commonMain/composeResources/values/strings.xml",
+      "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/WhodunitContentIdentityTest.kt",
+      "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitCaseBindingTest.kt",
+      "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitResumeReconstructionTest.kt",
+      "iosApp/iosApp.xcodeproj/project.pbxproj",
+      "iosApp/iosApp/ContentView.swift"
+    ],
+    "missing": [],
+    "refs_same": true,
+    "stash_list_same": true,
+    "index_diff_same": true,
+    "source_diff_matches_freeze": true,
+    "important": "Original audit/remediation/design/AGENTS files unchanged; subsequent root V6 outputs are task-needed and must not be deleted by reviewers."
+  },
+  "toolchain": {
+    "java_home": {
+      "exit_code": 0,
+      "stdout": "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home",
+      "stderr": ""
+    },
+    "xcode": {
+      "exit_code": 0,
+      "stdout": "Xcode 26.5\nBuild version 17F42",
+      "stderr": ""
+    },
+    "simulator_sdk": {
+      "exit_code": 0,
+      "stdout": "26.5",
+      "stderr": ""
+    },
+    "host": {
+      "exit_code": 0,
+      "stdout": "ProductName:\t\tmacOS\nProductVersion:\t\t26.2\nBuildVersion:\t\t25C56",
+      "stderr": ""
+    }
+  },
+  "toolchain_limit": "Actual local Xcode26.5/17F42 +iOS26.5 simulator are not the repository Store-qualified Xcode26.3/17C529 pin. No signed Store candidate, Store credentials, submission or promotion is claimed.",
+  "remaining": [
+    "Fresh V6 Swift XCTest discovery/containment and real app-host Settings/OS preference/background direction parity across both games, with independent review.",
+    "Final root post-V6 source/process/output/working-tree comparison; preserve task-owned evidence, no history integration authorization.",
+    "Previously identified external physicalLAN/signing/Store/accessibility/content-rights gates, identity collision and publication-disablement safeguards.",
+    "IOS-R1 evidence gap and WD-C4 modal-timer product decision remain unresolved, outside the16 confirmed repair count."
+  ],
+  "reviewer_actions": {
+    "source_edits": 0,
+    "builds_tests_apps_simulators_started": 0,
+    "background_workers_started": 0,
+    "build_outputs_created": 0,
+    "cleanup": "Only read-only -B Python/XML/hash/Git inspection. All foreground commands completed; this JSON is required evidence. Root alone ran/stopped/cleaned cycles; no unowned processes affected."
+  }
+}

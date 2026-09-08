@@ -1,0 +1,272 @@
+{
+  "reviewer": "/root/native_fix_review",
+  "author": "Root-applied CI portability/triage drafts; root authored accepted-inventory input/assertion delta",
+  "reviewed_at": "2026-09-07T12:03:56.026165+00:00",
+  "classification": "PASS — independent source and actual focused-results review; not release readiness or commit/push authorization",
+  "repository": "/Users/abdelrahman/Projects/parlor",
+  "baseline": {
+    "commit": "f5ea8045bd903c255041b198f54aca67e893612f",
+    "tree": "b109c8ec6ec579b9197f449b36bda2c39105a652",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "M composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt\n M config/android-lint-accepted-warnings.txt\n M docs/ANDROID_LINT_TRIAGE.md\n M shared/transport-p2p/build.gradle.kts\n M shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/AndroidReleaseLintContractTest.kt"
+  },
+  "approved_diff": {
+    "command": "git diff --no-ext-diff",
+    "sha256": "09d3bae1eaedd8e9755eae5e7688e31200635da871ef60a14748a4e130131415",
+    "bytes": 15743,
+    "scope": [
+      "composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt",
+      "config/android-lint-accepted-warnings.txt",
+      "docs/ANDROID_LINT_TRIAGE.md",
+      "shared/transport-p2p/build.gradle.kts",
+      "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/AndroidReleaseLintContractTest.kt"
+    ]
+  },
+  "approved_files": [
+    {
+      "path": "composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt",
+      "sha256": "830f077ec2f61747339310051f609d4f95fa79979a5da543620358b72742db31"
+    },
+    {
+      "path": "config/android-lint-accepted-warnings.txt",
+      "sha256": "4fe091a88dc1cec1849c0076790fa5db25608cf16ff094a30441ac99a84277d7"
+    },
+    {
+      "path": "docs/ANDROID_LINT_TRIAGE.md",
+      "sha256": "cc5ccc1396aa806f2b2f21dfd71095e82a847c352f02170daec9ae0b65fd1ac8"
+    },
+    {
+      "path": "shared/transport-p2p/build.gradle.kts",
+      "sha256": "6ce2fd726bd41031a5b26d0d30f8ee8f693b4dc942da90bdc48b40fbf040c3b7"
+    },
+    {
+      "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/AndroidReleaseLintContractTest.kt",
+      "sha256": "ebcb71cc9433aca72a87046224227c29a992bc193096a86289a831167e2032b9"
+    }
+  ],
+  "source_proof": {
+    "task_input": "shared/transport-p2p/build.gradle.kts:35-99 registers the exact accepted inventory at line52 in desktopTest inputs.files with the existing repositoryContractFiles name and relative path sensitivity. Thus inventory edits participate in Gradle input fingerprints; root/app lint verifier independently retains its own input registration at composeApp/build.gradle.kts:349-435.",
+    "assertion": "AndroidReleaseLintContractTest.kt:43-111 reads and validates the exact35-row advisory inventory and now asserts the task-input declaration at lines56-59. This is a structural guard, not an executed Gradle TestKit cache-mutation experiment.",
+    "sibling_paths": "Full current transport test1-338 and build1-100 reopened. Root staticAnalysis registration72-75,151-158 and full wrapper1-292 reopened. Existing lint exact-multiset parser/canonicalization349-435 unchanged. Current Windows diff and locale caller/effect/reader reopened; other hunks reviewed against earlier full source dossier.",
+    "windows": "Only CRLF pairs normalize at source-reader boundary; literal escaped characters, tabs and lone CR remain unchanged. Existing multiline iOS locale ownership assertions retained; new block-bodied test is actually discovered.",
+    "lint_security": "Exactly3 previously unaccepted Kotlin2.4.10 plugin advisory rows added; no analyzer/dependency/pin/metadata changes. No-KAPT build/metadata guard includes nested .kt and .kts convention sources and has positive/negative owned fixture. Vulnerable KGP cache reader is not patched; documented current configured-path nonreachability is scoped, not a general security waiver.",
+    "no_application_effect": "No shipping Kotlin/Swift/resources/game rules/protocol/save formats/navigation/app identities/publication enablement changed by this five-file diff."
+  },
+  "prior_reviews": [
+    "reviews/native-ci-drafts-independent-source-review-01.json",
+    "reviews/native-ci-draft-public-source-crosscheck-01.json",
+    "reviews/native-ci-portability-advisory-green01-independent-results-01.json"
+  ],
+  "execution": {
+    "command": [
+      "./gradlew",
+      ":composeApp:desktopTest",
+      "--tests",
+      "*ProductionUiAccessibilityContractTest*",
+      ":shared:transport-p2p:desktopTest",
+      "--tests",
+      "*AndroidReleaseLintContractTest*",
+      "staticAnalysis",
+      "--rerun-tasks",
+      "--no-build-cache",
+      "--no-daemon",
+      "--no-parallel",
+      "--max-workers=1",
+      "--no-configuration-cache",
+      "--dependency-verification=strict",
+      "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=ci-portability-input-green-02",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-Pparlor.android.signing.storeFile=",
+      "-Pparlor.android.signing.storePassword=",
+      "-Pparlor.android.signing.keyAlias=",
+      "-Pparlor.android.signing.keyPassword="
+    ],
+    "started_at": "2026-09-07T11:54:33.195706+00:00",
+    "finished_at": "2026-09-07T11:55:14.937728+00:00",
+    "exit_code": 0,
+    "source_manifest_entries": 729,
+    "source_manifest_sha256": "d3a952947d7451fde5d1679f9be21aef044ee58da507a8d9ef076ef338640054",
+    "before_after_identical": true,
+    "current_all729_hashes_match": true,
+    "raw_junit": "22 actual tests =14 compose +8 transport;0 failures,0 errors,0 skips. Independently compared every source @Test name to raw XML descriptor set; exact equality for both classes.",
+    "static_analysis": "14 retained Detekt XML reports contain0 findings:13 application/library modules+build-logic convention. Root staticAnalysis and each actual task executed; parent-only game-modes/shared detekt report NO-SOURCE.95actionable tasks,95executed. Plain staticAnalysis is not the separate type-aware aggregate.",
+    "lint_previous_cycle": "green02 did NOT run lintRelease. green01 actually ran lintRelease+verifier with35exact accepted advisories and0errors on unchanged app/verifier/inventory/docs bytes. The two latest bytes changes are desktopTest input/assertion only.",
+    "reports": [
+      {
+        "path": "evidence/ci-portability-input-green-02/reports/build-logic/convention/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "root": "checkstyle",
+        "checkstyle_findings": 0
+      },
+      {
+        "path": "evidence/ci-portability-input-green-02/reports/composeApp/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "root": "checkstyle",
+        "checkstyle_findings": 0
+      },
+      {
+        "path": "evidence/ci-portability-input-green-02/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.ProductionUiAccessibilityContractTest.xml",
+        "sha256": "cb6c634d92e68727283747e3416b4abe64f2e7b81694aa304fd2a8aa2517365c",
+        "root": "testsuite",
+        "name": "com.parlor.app.ProductionUiAccessibilityContractTest",
+        "tests": "14",
+        "skipped": "0",
+        "failures": "0",
+        "errors": "0",
+        "executed_names": [
+          "controls_use_vector_icons_instead_of_font_dependent_text_glyphs()[desktop]",
+          "game_catalog_renders_only_registered_shipping_games()[desktop]",
+          "shell_done_actions_dismiss_the_software_keyboard()[desktop]",
+          "passive_waiting_surfaces_do_not_publish_no_op_click_actions()[desktop]",
+          "localized_format_resources_use_the_platform_formatter()[desktop]",
+          "fullscreen_text_surfaces_keep_actions_reachable_with_large_text()[desktop]",
+          "mafia_target_rows_expose_radio_selection_and_revalidate_stale_selection()[desktop]",
+          "wax_seal_exposes_a_one_shot_button_action_beside_pointer_hold()[desktop]",
+          "fullscreen_recovery_and_confirmation_states_hide_or_replace_interactive_content()[desktop]",
+          "every_custom_click_or_selection_surface_declares_an_accessibility_role()[desktop]",
+          "recovery_surfaces_are_announced_and_continuous_indicators_are_motion_aware()[desktop]",
+          "source_contract_text_normalizes_only_crlf_line_endings()[desktop]",
+          "nullable_language_override_and_platform_motion_preference_reach_the_app_shell()[desktop]",
+          "platform_locale_overrides_are_commit_scoped_and_do_not_mutate_shared_resources()[desktop]"
+        ],
+        "children_failures_or_skips": 0
+      },
+      {
+        "path": "evidence/ci-portability-input-green-02/reports/game-modes/mafia/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "root": "checkstyle",
+        "checkstyle_findings": 0
+      },
+      {
+        "path": "evidence/ci-portability-input-green-02/reports/game-modes/whodunit/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "root": "checkstyle",
+        "checkstyle_findings": 0
+      },
+      {
+        "path": "evidence/ci-portability-input-green-02/reports/shared/content/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "root": "checkstyle",
+        "checkstyle_findings": 0
+      },
+      {
+        "path": "evidence/ci-portability-input-green-02/reports/shared/core/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "root": "checkstyle",
+        "checkstyle_findings": 0
+      },
+      {
+        "path": "evidence/ci-portability-input-green-02/reports/shared/design-system/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "root": "checkstyle",
+        "checkstyle_findings": 0
+      },
+      {
+        "path": "evidence/ci-portability-input-green-02/reports/shared/engine/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "root": "checkstyle",
+        "checkstyle_findings": 0
+      },
+      {
+        "path": "evidence/ci-portability-input-green-02/reports/shared/engine-testing/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "root": "checkstyle",
+        "checkstyle_findings": 0
+      },
+      {
+        "path": "evidence/ci-portability-input-green-02/reports/shared/networking/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "root": "checkstyle",
+        "checkstyle_findings": 0
+      },
+      {
+        "path": "evidence/ci-portability-input-green-02/reports/shared/networking-testing/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "root": "checkstyle",
+        "checkstyle_findings": 0
+      },
+      {
+        "path": "evidence/ci-portability-input-green-02/reports/shared/session/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "root": "checkstyle",
+        "checkstyle_findings": 0
+      },
+      {
+        "path": "evidence/ci-portability-input-green-02/reports/shared/storage/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "root": "checkstyle",
+        "checkstyle_findings": 0
+      },
+      {
+        "path": "evidence/ci-portability-input-green-02/reports/shared/transport-p2p/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "root": "checkstyle",
+        "checkstyle_findings": 0
+      },
+      {
+        "path": "evidence/ci-portability-input-green-02/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidReleaseLintContractTest.xml",
+        "sha256": "53ab146115b556531ade43e166fb0a2441ecdc4f2e46b55e4f2f9f5b63fe7251",
+        "root": "testsuite",
+        "name": "com.parlor.transport.p2p.AndroidReleaseLintContractTest",
+        "tests": "8",
+        "skipped": "0",
+        "failures": "0",
+        "errors": "0",
+        "executed_names": [
+          "launcher_is_adaptive_on_every_supported_android_version()[desktop]",
+          "kotlin_advisory_triage_requires_the_build_to_remain_without_kapt()[desktop]",
+          "all_shipping_strings_are_reachable_and_locales_have_identical_keys()[desktop]",
+          "production_gate_executes_the_triaged_release_lint_verifier()[desktop]",
+          "compact_interactive_affordances_enforce_accessible_semantics_and_touch_targets()[desktop]",
+          "kotlin_metadata_analyzers_are_explicitly_pinned_and_enforced()[desktop]",
+          "convention_source_guard_includes_nested_precompiled_kotlin_scripts()[desktop]",
+          "unsupported_play_modes_are_described_truthfully()[desktop]"
+        ],
+        "children_failures_or_skips": 0
+      }
+    ],
+    "receipt_sha256": "2a705c85f4c0c40975f801b9ba1af97af0376fb23c831fd3f6381ee8c8f59b38",
+    "gradle_log_sha256": "31dfe1e9274254f4c3d4ef706c1cc5a09e27dbd278cd572a4c4ef0b7f24e8bc9"
+  },
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-07T11:55:15.214662+00:00",
+    "stop_log": "No Gradle daemons are running.",
+    "removed_outputs": [
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build",
+      "build",
+      "composeApp/build",
+      "build-logic/convention/build"
+    ],
+    "remaining_outputs": [],
+    "retained_outputs": [],
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "cleanup_errors": [],
+    "completed_at": "2026-09-07T11:55:15.547647+00:00",
+    "current_removed_paths_absent": true,
+    "scratch_absent": true,
+    "method": "Wrapper stops first, collects compact XML/evidence, deletes exact task-owned dirs and scratch. No global caches/user source removed; no cleanup Gradle task started, so second stop not needed.",
+    "reviewer_activity": "Read-only source/evidence inspection and this isolated report only; no build/test/native/simulator/process termination executed by reviewer; no reviewer background workers or build outputs."
+  },
+  "remaining_limits": [
+    "Actual Windows-host and Linux CI reruns not established by these macOS focused cycles.",
+    "No app/device/runtime/LAN/Store/signing claim follows from these structural test and plain static-analysis results.",
+    "No-KAPT guard is a conservative declared-source tripwire, not a sandbox against deliberately obfuscated/injected external build code.",
+    "Normal iOS source04 binding is stale after these changes; require fresh source inventory/binding and independent execution approval.",
+    "Source review provides technical approval only. Existing authorization restrictions on Git/release operations remain independent."
+  ]
+}

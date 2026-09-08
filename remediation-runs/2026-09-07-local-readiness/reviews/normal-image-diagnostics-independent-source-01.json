@@ -1,0 +1,231 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "author": "/root/native_fix_review",
+  "reviewed_at": "2026-09-08T04:05:00.921351+00:00",
+  "classification": "INDEPENDENT SOURCE REVIEW APPROVES ROOT-OWNED PURE CONTROL EXECUTION ONLY",
+  "review_status": "No blocking defect found in this diagnostic-only diff; runtime/test results NOT RUN by reviewer. No canonical adoption, native-run, Git, signing or Store approval.",
+  "frozen_author_submission": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-image-diagnostics-frozen-01.json",
+    "sha256": "12215c9f09a2ba94b8c5154ecd91a9cddf76ec2f6a1f5b0366adcdaf2d07b791"
+  },
+  "independently_reconstructed_full_diff": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-image-diagnostics-frozen-01.diff",
+    "sha256": "870c72e6486bdec03899ad0a9b83024f1b26a0b1f860de98ac9bba66e88a06ed",
+    "byte_identical_to_fresh_current_canonical_vs_draft_diff": true,
+    "lines": 1142
+  },
+  "scope": {
+    "source_commit": "484f82c3bcc273c0014a946376c1ee9fc7de8d83",
+    "source_tree": "548625b4a49bef5df8db723c1e59a4edd5676ddc",
+    "tracked_status_at_review": "",
+    "draft_files": 15,
+    "unchanged_canonical_clones": 9,
+    "modified_clones": [
+      "README.md",
+      "run_control_tests.py",
+      "run_normal_ios_launch.py"
+    ],
+    "new_files": [
+      "external_image_diagnostics.py",
+      "test_image_diagnostic_orchestration.py",
+      "test_image_diagnostics.py"
+    ],
+    "all12canonical_controls_match_preclone_hashes": true,
+    "all15draft_rows_match_frozen_hashes": true,
+    "strict_parser_sha256": "95c9f53c93a6d1ecf727d632741ec3f27133a09c94947b184e9e1dd89aa5cab7",
+    "all66nonlocal_controls_identical_to_source10_approved_normal_controls": true,
+    "unbound_control_count": 81,
+    "unbound_control_sha256": "038db00ff458433b76da0eed837e6864f8d58a421851ad43017e62816bc0c52c",
+    "not_an_app_source_binding": true
+  },
+  "source_review": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-image-diagnostics-draft-01/external_image_diagnostics.py",
+      "sha256": "53d3729d2aa85053078be6335144cea558a096e1ee116af1f84da543e46d6738",
+      "reviewed_lines": [
+        [
+          1,
+          202
+        ]
+      ],
+      "method": "Complete new source read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-image-diagnostics-draft-01/test_image_diagnostics.py",
+      "sha256": "80f4ca531634bcb377d29803e58f5a99522e74e10402ce8221448b9d3ef3ab2c",
+      "reviewed_lines": [
+        [
+          1,
+          328
+        ]
+      ],
+      "method": "Complete new source and every assertion/mutation read"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-image-diagnostics-draft-01/test_image_diagnostic_orchestration.py",
+      "sha256": "133fbc769d331581d7ad6e1154d5d1c6bf35bf9a853e28fc56bafa25049e5a8d",
+      "reviewed_lines": [
+        [
+          1,
+          355
+        ]
+      ],
+      "method": "Complete new source; mocks/call counts/lifetime ordinals/finalizers traced"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-image-diagnostics-draft-01/README.md",
+      "sha256": "0641b36fe8e5989295eee0b57a238214f38065fdc35222306ec50f6a9363d26b",
+      "reviewed_lines": [
+        [
+          1,
+          225
+        ]
+      ],
+      "method": "Complete prose read against source"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-image-diagnostics-draft-01/run_control_tests.py",
+      "sha256": "2270fde48cad1be099a1bd8fbfd136314309522dd7a4fd9196c14b8dc024e240",
+      "reviewed_lines": [
+        [
+          1,
+          65
+        ]
+      ],
+      "method": "Complete canonical65 plus exact one-line count diff; all163 AST signatures independently reconciled"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-image-diagnostics-draft-01/run_normal_ios_launch.py",
+      "sha256": "24b1b618381423ff4c6da70c90c215b6cc2c418a154ca32374aebf14a780efad",
+      "reviewed_lines": [
+        [
+          477,
+          636
+        ]
+      ],
+      "method": "Complete current import/diff/modified/new methods read; complete canonical1-712 reopened and all remaining Lane methods independently AST-identical"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-image-diagnostics-draft-01/external_image_provenance.py",
+      "sha256": "95c9f53c93a6d1ecf727d632741ec3f27133a09c94947b184e9e1dd89aa5cab7",
+      "reviewed_lines": [
+        [
+          1,
+          275
+        ]
+      ],
+      "method": "Complete canonical source reopened; current draft byte-identical"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-image-diagnostics-draft-01/test_header_diagnostics.py",
+      "sha256": "e2d835d4c7919c1448eebc51079d5f0673e71b3a1a8998ed97b616325e5bd06a",
+      "reviewed_lines": [
+        [
+          1,
+          104
+        ]
+      ],
+      "method": "Complete canonical assertions reread; clone byte-identical"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-image-diagnostics-draft-01/test_normal_launch_controls.py",
+      "sha256": "af5c912dbc9655468d5d428b18f5a7c16d7b0f2fa421e14cf559ee674eaceb76",
+      "reviewed_lines": [
+        [
+          1,
+          833
+        ]
+      ],
+      "method": "Complete canonical assertions reread; clone byte-identical"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-image-diagnostics-draft-01/test_owned_tool_paths.py",
+      "sha256": "f310d2af99449e4d8570dcc2eba8db4f1cb99c44574eeb1bfc32e447bcff6b58",
+      "reviewed_lines": [
+        [
+          1,
+          256
+        ]
+      ],
+      "method": "Complete current fixtures/alias/driver guards reread"
+    }
+  ],
+  "cross_path_conclusions": [
+    {
+      "path": "observe_external_images503-523 -> parse_external_observation550-569 -> collect_external_failure_diagnostics571-586",
+      "conclusion": "Successful sample command, exact post-command unchanged_target, bounded regular nonsymlink output precede inner parser catch. Only RuntimeError rejection gains image diagnostics; caller KeyboardInterrupt and command failure do not enter optional sibling. Primary parser object is reraised; diagnostic exception type only and cancellation flags remain separate."
+    },
+    {
+      "path": "external_image_diagnostics32-83,128-202",
+      "conclusion": "Validates exact bound inventory and opt-in existingpolicy without creating an alias. Same sorted artifactkeys govern index references/inventoryhash. Only protected basenames, exactbound forms, or boundforms contained in malformed rows yield candidate metadata. Knowncomponent relationships are comparisons, not ownership. Unknowncomponents hashed; unknownUUIDs/rawpaths/stacks/symbols never emitted."
+    },
+    {
+      "path": "external_image_diagnostics86-125,154-193",
+      "conclusion": "UUID equality is against existing inventory only; no rawUUID emitted. Sample table markers must be exactlyone or diagnostic explicitly unscanned. Vmmap alternate __TEXT_EXEC and unknown literal __TEXT prefixes receive closed diagnosticlabels, never become accepted binderformats. Optional interval comparisons require exact suppliedsuccessful-sample inventory; no selected data constructed on failure."
+    },
+    {
+      "path": "external_image_diagnostics16-24,139-143,161-176,194-202",
+      "conclusion": "16MiBinput,65536lines,8192bytes/line,32candidates,4096pathbytes,128components,64relations/component,2048relations/path,256KiBserializedoutput. Everyappendchecked; missing/oversized/unknown remains diagnosticinsufficiency, never acceptance. No filesystem/account/process APIs called by pure collector."
+    },
+    {
+      "path": "observe_failure_only_vmmap588-634",
+      "conclusion": "After root-authorized drafting of one optional command, prior diagnosticinterruption returns immediately. Fresh unchanged_target before command and attempted unchanged_target afterward even when commandthrows; bounded45s/16MiBrequire unchanged. Command/lifetime/collectionfaults separately typed and never substitute success for original samplefailure. No bind_vmmap call, retry, selectedimage authority or provenancePASS in this branch."
+    },
+    {
+      "path": "Normal success path524-542, original parser/binder194-275, finalizeroriginal615-688",
+      "conclusion": "Acceptance parser file byteidentical; success still requires bothoriginalparsers, filehash/size/UUID/path/address checks, exactsignals/cleanup/notice/copy/source/control gates. Successfulpath only adds sample_lifetime boolean; diagnostics not invoked. Original ownedrawfile finally and full resourcefinalizer retained unchanged."
+    }
+  ],
+  "counter_evidence_and_tests": {
+    "declared_methods_by_file": {
+      "test_header_diagnostics.py": 8,
+      "test_image_diagnostic_orchestration.py": 18,
+      "test_image_diagnostics.py": 25,
+      "test_normal_launch_controls.py": 78,
+      "test_owned_tool_paths.py": 21,
+      "test_xcode26_repetitions.py": 13
+    },
+    "declared_total": 163,
+    "new_total": 43,
+    "existing_assertions_removed": 0,
+    "all_methods_unique_and_zero_required_arguments_except_self": true,
+    "read_assertions": "Exact/unbound/USER paths; foreignaccount/container/copy; malformedUUID/address/rows; duplicate raw+alias and tables; unknown symbols/stack privacy; intervalbounds includingexclusive2**64; contextualinventories; budgets/relationship amplification; nonmutation/noqueries; commandfailure/timeout/interruption; lifetimeexit/reuse/exec; diagnosticwriter failure; originalexception identity; finalizer reachability; successoutput equality; mutationkills forprovenance flag/plaintext/original reraise.",
+    "native_mock_boundary": "New orchestration calls real Python control methods with syntheticownedfiles/Record and mockedrequire/backend/sleep/accountcontext; subprocessPopen/run are forbidden by assertion. Full app/native/Gradle/signing functions are not invoked by newtests. Not simulator evidence.",
+    "discovery_controls": "run_control_tests163 count is independently consistent with AST; actual unittest discovery/execution/importpath receipt remains required. Canonical120 unchangedtests inherited, new25purecollector+18orchestration.",
+    "runtime_not_yet_executed": true
+  },
+  "approved_next_command": [
+    "/usr/bin/python3",
+    "-B",
+    "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-image-diagnostics-draft-01/run_control_tests.py"
+  ],
+  "root_execution_conditions": [
+    "Run only through one coordinated root evidence/cleanup wrapper with no conflictingGradle/Xcode lane; exact81-control hash must still match before/after.",
+    "Capture actual163 unique verbose successes, declared/discovered/executed counts, failures/errors/skips0, actualmodulepaths all bound to draft or exact reviewedsharedsupport; syntheticfixturemessages are not tests.",
+    "If any control fails, retain originalfailedreceipt and return forauthor correction plus independent rereview. Do not lowercount/skiptests/relaxparser.",
+    "Immediately rootGradlestop as required by outerlane, preserve compactlogs then remove only new taskowned scratch/build outputs and verify workers; reviewer starts none.",
+    "No nativeexecution/adoption yet. After greencontrols and independentpostrun reconciliation, canonicaladoption must be exact reviewed scopedfiles and newcanonicaltestreceipt. Nativeonly after freshfrozenapplication source/binding/controlapproval and rootresourcepreflight."
+  ],
+  "evidence_limits": [
+    "Native11 failure and its unretained row remain unchanged. Synthetic fixtures cannot identify actualredaction/foreignpath/UUID or establisha newalias.",
+    "Diagnostic scansare incompletebydesign outside protected appcandidates; errors/truncation/ambiguousformats stay explicit. No absence-of-unrelated-images claim.",
+    "Failure-onlyboolean lifetime assertions refer to alreadyretained exactlauncheridentity under sourcebound unchanged_target checks; no atomic numericPID reservation or mappedpage hash is added.",
+    "Existing finalizer and rawfileunlink error semantics are unchanged; this review does not strengthen their pre-existing guarantees or claim everypossiblecleanup fault preserves a primary Pythonexception. Any cleanupfailure must remain separately reported.",
+    "NoWhodunit/Mafia/protocol/save/UI/signing/codebehavior touched. NoIOS-R1,FollowSystem/L08,native12selector,physicaldevices,Store/legal or historicalcrashcause determination."
+  ],
+  "static_check_receipt": {
+    "kind": "STDLIB_READ_ONLY_SOURCE_JSON_AST_HASH_COMPARISON_NOT_PROJECT_TEST",
+    "initial_attempt": "Exit1 SyntaxError from reviewer using reserved local variable name nonlocal before anystatementexecuted; no output/file change.",
+    "corrected_attempt": "Exit0; reconstructed entire74068byte diff exactly,15draft hashes/12canonical hashes,163ASTsignatures,81controlhash and66unchanged sharedcontrols; read-onlyGittrackedclean verified.",
+    "repository_python_import_or_execution": false
+  },
+  "hygiene": {
+    "new_additive_review_json_only": true,
+    "reviewer_builds_tests_native_probes_workers": 0,
+    "source_or_canonical_files_modified": false,
+    "Git_mutations": false,
+    "process_queries_or_signals": false,
+    "filesystem_deletions": false
+  }
+}

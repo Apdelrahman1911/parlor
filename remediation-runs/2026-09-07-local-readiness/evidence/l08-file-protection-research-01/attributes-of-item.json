@@ -1,0 +1,509 @@
+{
+  "abstract": [
+    {
+      "text": "Returns the attributes of the item at a given path.",
+      "type": "text"
+    }
+  ],
+  "accessed_at_utc": "2026-09-07T20:24:54.880657+00:00",
+  "bytes": 42511,
+  "canonical_url": "doc://com.apple.foundation/documentation/Foundation/FileManager/attributesOfItem(atPath:)",
+  "final_url": "https://developer.apple.com/tutorials/data/documentation/foundation/filemanager/attributesofitem(atpath:).json",
+  "name": "attributes-of-item",
+  "platforms": [
+    {
+      "beta": false,
+      "deprecated": false,
+      "introducedAt": "2.0",
+      "name": "iOS",
+      "unavailable": false
+    },
+    {
+      "beta": false,
+      "deprecated": false,
+      "introducedAt": "2.0",
+      "name": "iPadOS",
+      "unavailable": false
+    },
+    {
+      "beta": false,
+      "deprecated": false,
+      "introducedAt": "13.1",
+      "name": "Mac Catalyst",
+      "unavailable": false
+    },
+    {
+      "beta": false,
+      "deprecated": false,
+      "introducedAt": "10.5",
+      "name": "macOS",
+      "unavailable": false
+    },
+    {
+      "beta": false,
+      "deprecated": false,
+      "introducedAt": "9.0",
+      "name": "tvOS",
+      "unavailable": false
+    },
+    {
+      "beta": false,
+      "deprecated": false,
+      "introducedAt": "1.0",
+      "name": "visionOS",
+      "unavailable": false
+    },
+    {
+      "beta": false,
+      "deprecated": false,
+      "introducedAt": "2.0",
+      "name": "watchOS",
+      "unavailable": false
+    }
+  ],
+  "primaryContentSections": [
+    {
+      "declarations": [
+        {
+          "languages": [
+            "swift"
+          ],
+          "platforms": [
+            "iOS",
+            "iPadOS",
+            "Mac Catalyst",
+            "macOS",
+            "tvOS",
+            "visionOS",
+            "watchOS"
+          ],
+          "tokens": [
+            {
+              "kind": "keyword",
+              "text": "func"
+            },
+            {
+              "kind": "text",
+              "text": " "
+            },
+            {
+              "kind": "identifier",
+              "text": "attributesOfItem"
+            },
+            {
+              "kind": "text",
+              "text": "("
+            },
+            {
+              "kind": "externalParam",
+              "text": "atPath"
+            },
+            {
+              "kind": "text",
+              "text": " "
+            },
+            {
+              "kind": "internalParam",
+              "text": "path"
+            },
+            {
+              "kind": "text",
+              "text": ": "
+            },
+            {
+              "identifier": "doc://com.apple.documentation/documentation/Swift/String",
+              "kind": "typeIdentifier",
+              "preciseIdentifier": "s:SS",
+              "text": "String"
+            },
+            {
+              "kind": "text",
+              "text": ") "
+            },
+            {
+              "kind": "keyword",
+              "text": "throws"
+            },
+            {
+              "kind": "text",
+              "text": " -> ["
+            },
+            {
+              "identifier": "doc://com.apple.foundation/documentation/Foundation/FileAttributeKey",
+              "kind": "typeIdentifier",
+              "preciseIdentifier": "c:@T@NSFileAttributeKey",
+              "text": "FileAttributeKey"
+            },
+            {
+              "kind": "text",
+              "text": " : "
+            },
+            {
+              "kind": "keyword",
+              "text": "Any"
+            },
+            {
+              "kind": "text",
+              "text": "]"
+            }
+          ]
+        }
+      ],
+      "kind": "declarations"
+    },
+    {
+      "kind": "parameters",
+      "parameters": [
+        {
+          "content": [
+            {
+              "inlineContent": [
+                {
+                  "text": "The path of a file or directory.",
+                  "type": "text"
+                }
+              ],
+              "type": "paragraph"
+            }
+          ],
+          "name": "path"
+        }
+      ]
+    },
+    {
+      "content": [
+        {
+          "anchor": "return-value",
+          "level": 2,
+          "text": "Return Value",
+          "type": "heading"
+        },
+        {
+          "inlineContent": [
+            {
+              "text": "A dictionary object that describes the attributes (file, directory, symlink, and so on) of the file specified by ",
+              "type": "text"
+            },
+            {
+              "code": "path",
+              "type": "codeVoice"
+            },
+            {
+              "text": " (or ",
+              "type": "text"
+            },
+            {
+              "code": "nil",
+              "type": "codeVoice"
+            },
+            {
+              "text": " if an error occurred in Objective-C). The keys in the dictionary are described in ",
+              "type": "text"
+            },
+            {
+              "code": "File Attribute Keys",
+              "type": "codeVoice"
+            },
+            {
+              "text": ".",
+              "type": "text"
+            }
+          ],
+          "type": "paragraph"
+        }
+      ],
+      "kind": "content"
+    },
+    {
+      "content": [
+        {
+          "anchor": "Discussion",
+          "level": 2,
+          "text": "Discussion",
+          "type": "heading"
+        },
+        {
+          "inlineContent": [
+            {
+              "text": "If the item at the path is a symbolic link\u2014that is, the value of the ",
+              "type": "text"
+            },
+            {
+              "identifier": "doc://com.apple.foundation/documentation/Foundation/FileAttributeKey/type",
+              "isActive": true,
+              "type": "reference"
+            },
+            {
+              "text": " key in the attributes dictionary is ",
+              "type": "text"
+            },
+            {
+              "identifier": "doc://com.apple.foundation/documentation/Foundation/FileAttributeType/typeSymbolicLink",
+              "isActive": true,
+              "type": "reference"
+            },
+            {
+              "text": "\u2014you can use the ",
+              "type": "text"
+            },
+            {
+              "identifier": "doc://com.apple.foundation/documentation/Foundation/FileManager/destinationOfSymbolicLink(atPath:)",
+              "isActive": true,
+              "type": "reference"
+            },
+            {
+              "text": " method to retrieve the path of the item pointed to by the link. You can also use the ",
+              "type": "text"
+            },
+            {
+              "identifier": "doc://com.apple.foundation/documentation/Foundation/NSString/resolvingSymlinksInPath",
+              "isActive": true,
+              "type": "reference"
+            },
+            {
+              "text": " method of ",
+              "type": "text"
+            },
+            {
+              "identifier": "doc://com.apple.foundation/documentation/Foundation/NSString",
+              "isActive": true,
+              "type": "reference"
+            },
+            {
+              "text": " to resolve links in the path before retrieving the item\u2019s attributes.",
+              "type": "text"
+            }
+          ],
+          "type": "paragraph"
+        },
+        {
+          "inlineContent": [
+            {
+              "text": "As a convenience, ",
+              "type": "text"
+            },
+            {
+              "identifier": "doc://com.apple.foundation/documentation/Foundation/NSDictionary",
+              "isActive": true,
+              "type": "reference"
+            },
+            {
+              "text": " provides a set of methods (declared as a category on ",
+              "type": "text"
+            },
+            {
+              "identifier": "doc://com.apple.foundation/documentation/Foundation/NSDictionary",
+              "isActive": true,
+              "type": "reference"
+            },
+            {
+              "text": ") for quickly and efficiently obtaining attribute information from the returned dictionary: ",
+              "type": "text"
+            },
+            {
+              "identifier": "doc://com.apple.foundation/documentation/Foundation/NSDictionary/fileGroupOwnerAccountName()",
+              "isActive": true,
+              "type": "reference"
+            },
+            {
+              "text": ", ",
+              "type": "text"
+            },
+            {
+              "identifier": "doc://com.apple.foundation/documentation/Foundation/NSDictionary/fileModificationDate()",
+              "isActive": true,
+              "type": "reference"
+            },
+            {
+              "text": ", ",
+              "type": "text"
+            },
+            {
+              "identifier": "doc://com.apple.foundation/documentation/Foundation/NSDictionary/fileOwnerAccountName()",
+              "isActive": true,
+              "type": "reference"
+            },
+            {
+              "text": ", ",
+              "type": "text"
+            },
+            {
+              "identifier": "doc://com.apple.foundation/documentation/Foundation/NSDictionary/filePosixPermissions()",
+              "isActive": true,
+              "type": "reference"
+            },
+            {
+              "text": ", ",
+              "type": "text"
+            },
+            {
+              "identifier": "doc://com.apple.foundation/documentation/Foundation/NSDictionary/fileSize()",
+              "isActive": true,
+              "type": "reference"
+            },
+            {
+              "text": ", ",
+              "type": "text"
+            },
+            {
+              "identifier": "doc://com.apple.foundation/documentation/Foundation/NSDictionary/fileSystemFileNumber()",
+              "isActive": true,
+              "type": "reference"
+            },
+            {
+              "text": ", ",
+              "type": "text"
+            },
+            {
+              "identifier": "doc://com.apple.foundation/documentation/Foundation/NSDictionary/fileSystemNumber()",
+              "isActive": true,
+              "type": "reference"
+            },
+            {
+              "text": ", and ",
+              "type": "text"
+            },
+            {
+              "identifier": "doc://com.apple.foundation/documentation/Foundation/NSDictionary/fileType()",
+              "isActive": true,
+              "type": "reference"
+            },
+            {
+              "text": ".",
+              "type": "text"
+            }
+          ],
+          "type": "paragraph"
+        },
+        {
+          "anchor": "Discussion",
+          "level": 3,
+          "text": "Discussion",
+          "type": "heading"
+        },
+        {
+          "content": [
+            {
+              "inlineContent": [
+                {
+                  "text": "",
+                  "type": "text"
+                },
+                {
+                  "text": " ",
+                  "type": "text"
+                },
+                {
+                  "text": "In Swift, this method returns a nonoptional result and is marked with the ",
+                  "type": "text"
+                },
+                {
+                  "code": "throws",
+                  "type": "codeVoice"
+                },
+                {
+                  "text": " keyword to indicate that it throws an error in cases of failure.",
+                  "type": "text"
+                }
+              ],
+              "type": "paragraph"
+            },
+            {
+              "inlineContent": [
+                {
+                  "text": "You call this method in a ",
+                  "type": "text"
+                },
+                {
+                  "code": "try",
+                  "type": "codeVoice"
+                },
+                {
+                  "text": " expression and handle any errors in the ",
+                  "type": "text"
+                },
+                {
+                  "code": "catch",
+                  "type": "codeVoice"
+                },
+                {
+                  "text": " clauses of a ",
+                  "type": "text"
+                },
+                {
+                  "code": "do",
+                  "type": "codeVoice"
+                },
+                {
+                  "text": " statement, as described in ",
+                  "type": "text"
+                },
+                {
+                  "identifier": "https://docs.swift.org/swift-book/LanguageGuide/ErrorHandling.html",
+                  "isActive": true,
+                  "type": "reference"
+                },
+                {
+                  "text": " in ",
+                  "type": "text"
+                },
+                {
+                  "identifier": "https://docs.swift.org/swift-book/",
+                  "isActive": true,
+                  "type": "reference"
+                },
+                {
+                  "text": " and ",
+                  "type": "text"
+                },
+                {
+                  "code": "About Imported Cocoa Error Parameters",
+                  "type": "codeVoice"
+                },
+                {
+                  "text": ".",
+                  "type": "text"
+                }
+              ],
+              "type": "paragraph"
+            }
+          ],
+          "name": "Handling Errors in Swift",
+          "style": "note",
+          "type": "aside"
+        }
+      ],
+      "kind": "content"
+    }
+  ],
+  "references": {
+    "https://docs.swift.org/swift-book/": {
+      "identifier": "https://docs.swift.org/swift-book/",
+      "title": "The Swift Programming Language",
+      "titleInlineContent": [
+        {
+          "text": "The Swift Programming Language",
+          "type": "text"
+        }
+      ],
+      "type": "link",
+      "url": "https://docs.swift.org/swift-book/"
+    },
+    "https://docs.swift.org/swift-book/LanguageGuide/ErrorHandling.html": {
+      "identifier": "https://docs.swift.org/swift-book/LanguageGuide/ErrorHandling.html",
+      "title": "Error Handling",
+      "titleInlineContent": [
+        {
+          "text": "Error Handling",
+          "type": "text"
+        }
+      ],
+      "type": "link",
+      "url": "https://docs.swift.org/swift-book/LanguageGuide/ErrorHandling.html"
+    }
+  },
+  "request_url": "https://developer.apple.com/tutorials/data/documentation/foundation/filemanager/attributesofitem(atpath:).json",
+  "response_sha256": "2d8922680215616a6164c07594b24793b8c1f4b18132b044eeec5fb280c8782e",
+  "status": 200,
+  "title": "attributesOfItem(atPath:)"
+}

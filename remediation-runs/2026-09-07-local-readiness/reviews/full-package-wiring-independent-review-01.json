@@ -1,0 +1,551 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-07T16:34:06.129404+00:00",
+  "reviewer": "/root/release_fix_review",
+  "author": "/root",
+  "decision": "APPROVED_SCOPED_STATIC_WIRING_GIT_BYTE_FOLLOWUP_AND_CURRENT_CONTROL_EXECUTION",
+  "scope": "Latest root-authored full-package workflow/coordinator wiring, lightweight driver safety, narrow verbatim-license Git attributes/test/doc followup, and independently checked execution receipts. Actual mobile packages/native runtime/qualifiedCI/Store validation are NOT approved by this record.",
+  "source_baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "head": "5d9f5f4c81ff51ee70922c876eefb91c6e669d56",
+    "tree": "3fbc4908ae41fab311e5e936e3ec8913199da7ad",
+    "dirty": true,
+    "identity_warning": "Exact current file hashes and per-cycle source/diff manifests apply; HEAD alone does not identify staged/untracked edits."
+  },
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/.github/workflows/production-verification.yml",
+      "sha256": "f823182501d7a28dd20d117781b59dd46bc5103baef5b016316a5a672a18258f",
+      "bytes": 30979,
+      "lines": 669,
+      "reviewed_line_ranges": [
+        [
+          1,
+          177
+        ],
+        [
+          541,
+          669
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/workflow_contract.py",
+      "sha256": "8907e1abd5e06812ebe2674bb175056bfb6b27423bbc9819d02404450e1141ca",
+      "bytes": 37820,
+      "lines": 745,
+      "reviewed_line_ranges": [
+        [
+          1,
+          238
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_workflow_contract.py",
+      "sha256": "b2e5f6af1a37f86e5e47c3c69e7a31afb1b4090034c202a39c7bfc3a93f3e219",
+      "bytes": 26390,
+      "lines": 515,
+      "reviewed_line_ranges": [
+        [
+          1,
+          130
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "sha256": "679d95edf4b12e7a0ea8f167d92e0cbb011672e34973250f38ba32c955d40b6d",
+      "bytes": 20939,
+      "lines": 342,
+      "reviewed_line_ranges": [
+        [
+          1,
+          342
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/test_aab_package_inspection_02.py",
+      "sha256": "28afd0b61324c2278983b60db6b0150581b62f8783aa15fbfc570872f2944b59",
+      "bytes": 12939,
+      "lines": 234,
+      "reviewed_line_ranges": [
+        [
+          1,
+          234
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/test_build_lane_group_retirement.py",
+      "sha256": "6933afa3dca7e1fa89886500806491ca09d27d499d9b94dd8c92158102509878",
+      "bytes": 2715,
+      "lines": 56,
+      "reviewed_line_ranges": [
+        [
+          1,
+          56
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/run_package_controls_01.py",
+      "sha256": "3dfd0d545ba93b042361686f71958e750af69f2cec2452b41b08fa0d96a4ce7b",
+      "bytes": 3230,
+      "lines": 66,
+      "reviewed_line_ranges": [
+        [
+          1,
+          66
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/.gitattributes",
+      "sha256": "9eee3771dab6fab5d1a5021d098f1971badaeb46eb0da9678af699821096818b",
+      "bytes": 516,
+      "lines": 6,
+      "reviewed_line_ranges": [
+        [
+          1,
+          6
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_notice_git_bytes.py",
+      "sha256": "a1a4196e301f7a310efd4ce4a6f92b2be16cefeafa5b5feabe409200d74f6ba6",
+      "bytes": 4856,
+      "lines": 77,
+      "reviewed_line_ranges": [
+        [
+          1,
+          77
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/THIRD_PARTY_NOTICES.md",
+      "sha256": "1454e8637c405cb4fb64415d70c9d86fc574e42cca7922bcc94f89c34c8ccc86",
+      "bytes": 6894,
+      "lines": 112,
+      "reviewed_line_ranges": [
+        [
+          1,
+          112
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/validate_release_system.sh",
+      "sha256": "ce52c9c08edecba968337d6de42c90895badec127c7029a5afc16737d3b8864a",
+      "bytes": 3673,
+      "lines": 104,
+      "reviewed_line_ranges": [
+        [
+          1,
+          104
+        ]
+      ]
+    }
+  ],
+  "method": "Read latest full three-file workflow diff and changed containing functions/steps, full342line coordinator,234line15-method package controls,56line5-method group controls,66line driver,6line attrs and77line actual Git fixture. Reopened inspector CLI contracts and source/test process boundaries. Read raw logs and compared emitted IDs to AST; did not merely trust aggregate counts. Listed ranges are scoped coverage, not a claim that every untouched repository line was reviewed anew.",
+  "findings": [],
+  "verified_contracts": [
+    {
+      "location": ".github/workflows/production-verification.yml:111-168",
+      "reasoning": "Single generated unsigned AAB is hashed; source-bound notice and complete-package gates inspect that path under set-euo-pipefail. Download is HTTPS/size/time/retry bounded and inspector verifies policy tool digest before Java. Fresh mktemp tools are removed on EXIT; always-upload includes reports and AAB before attested output cleanup. No signing or publishing enabled."
+    },
+    {
+      "location": ".github/workflows/production-verification.yml:575-660",
+      "reasoning": "Unsigned arm64 Release Xcode build remains pipefail-protected. Notice check follows successful current build and identity/version checks. Complete iOS package inspection requires successful build plus immediate always finalizer, uses current Git workspace, precedes always upload, and does not substitute an archived stop receipt. Artifact inspection is metadata/package evidence only."
+    },
+    {
+      "location": "scripts/release/workflow_contract.py:93-98,179-207; tests:98-126",
+      "reasoning": "Exactly one named step required. Notice invocations, package/source/tool/report paths and cleanup token enforced; iOS build/finalizer success guard and finalizer<inspection<upload ordering checked. Mutation tests execute. Static shape contract is not a general YAML/Bash parser."
+    },
+    {
+      "location": "run_gradle_cycle.py:50-75,157-211,277-329",
+      "reasoning": "Postspawn grant/clock initialization enters cancellation cleanup. Group grant retires after wait; observed descendants retain PID/start ownership. Explicit notice package PASS plus full inspector artifact digest must match AAB hash. Required reports/artifacts survive capture failure. Second owned-worker sweep after package readers prevents deletion while readers survive. Stop failure/source or runner drift/cleanup failures cannot PASS."
+    },
+    {
+      "location": ".gitattributes:1-6; test_notice_git_bytes.py:13-77; docs/THIRD_PARTY_NOTICES.md:54-62",
+      "reasoning": "All legal resource bytes remain -text; only exact SLF4J/WebP-COPYING paths exempt upstream CRLF/final blank lines. No blanket whitespace disable. Real fresh Git fixtures with core.autocrlf=true demonstrate index+checkout byte preservation, unchanged upstream cached-diff acceptance, and rejected injected ordinary trailing spaces in both licenses and Kotlin. Fixture isolates GIT_* and global/system config; all writes/deletions are temp-repo-owned."
+    }
+  ],
+  "notice_bytes_unchanged_and_pinned": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/composeResources/files/legal/SLF4J-2.0.16-LICENSE.txt",
+      "sha256": "4e7f90c86ab51278228bce153122f1d8df30149d13ce9ef524c8444a84c32dcc",
+      "bytes": 1178,
+      "lines": 24
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/composeResources/files/legal/WebP-COPYING.txt",
+      "sha256": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf",
+      "bytes": 1496,
+      "lines": 30
+    }
+  ],
+  "driver_safety": {
+    "discovery": "Exact nonempty unique AST/unittest ID comparison; failures/errors/skips/test-source changes reject. Current tests have no skip/expectedFailure/custom load_tests bypass.66line version also prints its SHA before execution and rejects driver changes after.",
+    "side_effects": "No Gradle/app/native-platform execution in the control driver. Some fixtures invoke short-lived Python CLI/timeout/output controls and Git in fresh TemporaryDirectories; Java/SDK/Xcode/platform probes and coordinator Gradle/Popen/signalling are mocked. These are lightweight controls, not entirely process-free or native evidence.",
+    "ownership": "Coordinator fixtures patch ROOT/OUT/output enumeration/identities/processes/invoke; real deletions touch only new fixture temp dirs. Read-only inspector correctness is owned by separate factory review; this reviewer does not self-approve their authored iOS inspector.",
+    "self_hash_followup": "Initial142/143 batches used62line driver4d6ce188eacc85e3032cf2fc6eade6fc2a2e30ccfb547bc6240fa7cbc84d7dcc. Independent factory requested explicit driver attestation; bound-02 uses66line3dfd0d54... and records driver_unchanged=true. Old receipts preserved unchanged."
+  },
+  "execution": {
+    "executor": "/root",
+    "reviewer_started_tests": false,
+    "cycles": [
+      {
+        "cycle": "package-controls-01",
+        "receipt": {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/package-controls-01/receipt.json",
+          "sha256": "f34fbd02a158b72a9dfa68aae6ab4a5074389bbbdf48368e51467335210dbc2f",
+          "bytes": 290594,
+          "lines": 6303
+        },
+        "log": {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/package-controls-01/gradle.log",
+          "sha256": "ebc8d9a69c05b7d4acef01f7b4711215e080c139ce56a407148e1414b7aeda0b",
+          "bytes": 80320,
+          "lines": 237
+        },
+        "stop_log": {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/package-controls-01/stop.log",
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+          "bytes": 31,
+          "lines": 1
+        },
+        "command": [
+          "/bin/bash",
+          "-c",
+          "set -e; /usr/bin/python3 -B remediation-runs/2026-09-07-local-readiness/reviews/run_package_controls_01.py; /usr/bin/python3 -B remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py; /usr/bin/python3 -B scripts/verification/third_party_notices.py --root . --json"
+        ],
+        "started_at": "2026-09-07T16:17:01.116981+00:00",
+        "finished_at": "2026-09-07T16:17:04.222194+00:00",
+        "source_manifest_sha256": "942de79662510ba3159e65b0252d9c127f62e42bc5f488c42e4d342e3a2fbf1b",
+        "diff_sha256": "ef191e8b07bef502f6ca6eab8d1ac88a99c5b7261accadd14e16b7fbcd936ddb",
+        "source_unchanged": true,
+        "coordinator_before_after_equal": true,
+        "cleanup": {
+          "exit_code": 0,
+          "stop_exit_code": 0,
+          "stopped_at": "2026-09-07T16:17:04.672436+00:00",
+          "workers": {
+            "terminated_owned_workers": [],
+            "remaining_owned_workers": []
+          },
+          "artifact_workers": {
+            "terminated_owned_workers": [],
+            "remaining_owned_workers": []
+          },
+          "remaining_outputs": [],
+          "retained_outputs": [],
+          "cleanup_errors": [],
+          "cleanup_completed_at": "2026-09-07T16:17:04.784326+00:00",
+          "deferred_signals": []
+        },
+        "scratch_absent_at_review": true
+      },
+      {
+        "cycle": "release-system-package-controls-01",
+        "receipt": {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-system-package-controls-01/receipt.json",
+          "sha256": "2240ab20c6d63632b6f3f6b3be3bf22d0205e9498842391d04748579697f4b99",
+          "bytes": 296700,
+          "lines": 6303
+        },
+        "log": {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-system-package-controls-01/gradle.log",
+          "sha256": "f48bacd7ae1ddedcf2710daae5e0d910299bec42c1e46e590f9e722186df32d7",
+          "bytes": 115488,
+          "lines": 585
+        },
+        "stop_log": {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-system-package-controls-01/stop.log",
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+          "bytes": 31,
+          "lines": 1
+        },
+        "command": [
+          "/bin/bash",
+          "-c",
+          "set -e; /usr/bin/python3 -B remediation-runs/2026-09-07-local-readiness/reviews/run_package_controls_01.py; /usr/bin/python3 -B remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py; /bin/bash scripts/release/validate_release_system.sh"
+        ],
+        "started_at": "2026-09-07T16:23:54.807635+00:00",
+        "finished_at": "2026-09-07T16:25:18.509908+00:00",
+        "source_manifest_sha256": "fbe71edc05220102285ab690c3adaaf653633e33840381963fa2cfb6d4643699",
+        "diff_sha256": "c0e9ee1b06ede030f287f74770ff0955bdf69dba7a7fab3a8fe50da584cb06da",
+        "source_unchanged": true,
+        "coordinator_before_after_equal": true,
+        "cleanup": {
+          "exit_code": 0,
+          "stop_exit_code": 0,
+          "stopped_at": "2026-09-07T16:25:18.798858+00:00",
+          "workers": {
+            "terminated_owned_workers": [],
+            "remaining_owned_workers": []
+          },
+          "artifact_workers": {
+            "terminated_owned_workers": [],
+            "remaining_owned_workers": []
+          },
+          "remaining_outputs": [],
+          "retained_outputs": [],
+          "cleanup_errors": [],
+          "cleanup_completed_at": "2026-09-07T16:25:18.917461+00:00",
+          "deferred_signals": []
+        },
+        "scratch_absent_at_review": true
+      },
+      {
+        "cycle": "package-controls-bound-02",
+        "receipt": {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/package-controls-bound-02/receipt.json",
+          "sha256": "0d20926db69360a5ea5c7afe05ef1d1c5793b628eab05efa7f2fd8e252c9ad85",
+          "bytes": 296493,
+          "lines": 6303
+        },
+        "log": {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/package-controls-bound-02/gradle.log",
+          "sha256": "fb35d2b1e20cddc2f7a821f98f916e0a3587633d4008e4e99c5d51c3143902d5",
+          "bytes": 33793,
+          "lines": 152
+        },
+        "stop_log": {
+          "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/package-controls-bound-02/stop.log",
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+          "bytes": 31,
+          "lines": 1
+        },
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "remediation-runs/2026-09-07-local-readiness/reviews/run_package_controls_01.py"
+        ],
+        "started_at": "2026-09-07T16:28:28.232248+00:00",
+        "finished_at": "2026-09-07T16:28:31.022205+00:00",
+        "source_manifest_sha256": "fbe71edc05220102285ab690c3adaaf653633e33840381963fa2cfb6d4643699",
+        "diff_sha256": "1e83f6e7f3eb7e52effeda42f6e72ffc2d7733fb3e44058290bea482417f2884",
+        "source_unchanged": true,
+        "coordinator_before_after_equal": true,
+        "cleanup": {
+          "exit_code": 0,
+          "stop_exit_code": 0,
+          "stopped_at": "2026-09-07T16:28:31.292211+00:00",
+          "workers": {
+            "terminated_owned_workers": [],
+            "remaining_owned_workers": []
+          },
+          "artifact_workers": {
+            "terminated_owned_workers": [],
+            "remaining_owned_workers": []
+          },
+          "remaining_outputs": [],
+          "retained_outputs": [],
+          "cleanup_errors": [],
+          "cleanup_completed_at": "2026-09-07T16:28:31.409719+00:00",
+          "deferred_signals": []
+        },
+        "scratch_absent_at_review": true
+      }
+    ],
+    "current_package_controls": {
+      "declared_discovered_executed": 143,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "test_source_and_driver_unchanged": true,
+      "per_suite": [
+        {
+          "path": "scripts/release/tests/test_third_party_notices.py",
+          "sha256": "0a395e8b064dea6ec229509026abfd5ec7c7f5a5a23969f606e461100f42eed3",
+          "declared_discovered_executed_count": 32,
+          "all_exact_ids_in_hashed_log_once_with_ok": true
+        },
+        {
+          "path": "scripts/release/tests/test_notice_git_bytes.py",
+          "sha256": "a1a4196e301f7a310efd4ce4a6f92b2be16cefeafa5b5feabe409200d74f6ba6",
+          "declared_discovered_executed_count": 2,
+          "all_exact_ids_in_hashed_log_once_with_ok": true
+        },
+        {
+          "path": "scripts/release/tests/test_android_release_artifacts.py",
+          "sha256": "f8b9a707ef2a023fce7fa1a2cd658a0820042af4e28aae647d91567d80004963",
+          "declared_discovered_executed_count": 17,
+          "all_exact_ids_in_hashed_log_once_with_ok": true
+        },
+        {
+          "path": "scripts/release/tests/test_ios_release_artifacts.py",
+          "sha256": "e5239b6587b963d009a2a477de6d6e1e36bac5c03e144059c92657527ec3e1c6",
+          "declared_discovered_executed_count": 29,
+          "all_exact_ids_in_hashed_log_once_with_ok": true
+        },
+        {
+          "path": "scripts/release/tests/test_workflow_contract.py",
+          "sha256": "b2e5f6af1a37f86e5e47c3c69e7a31afb1b4090034c202a39c7bfc3a93f3e219",
+          "declared_discovered_executed_count": 43,
+          "all_exact_ids_in_hashed_log_once_with_ok": true
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/test_aab_package_inspection_02.py",
+          "sha256": "28afd0b61324c2278983b60db6b0150581b62f8783aa15fbfc570872f2944b59",
+          "declared_discovered_executed_count": 15,
+          "all_exact_ids_in_hashed_log_once_with_ok": true
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/test_build_lane_group_retirement.py",
+          "sha256": "6933afa3dca7e1fa89886500806491ca09d27d499d9b94dd8c92158102509878",
+          "declared_discovered_executed_count": 5,
+          "all_exact_ids_in_hashed_log_once_with_ok": true
+        }
+      ]
+    },
+    "full_release_validator": {
+      "declared_and_actual_unique_ids": 334,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "AST_ID_set_equals_executed_ID_set": true,
+      "actual_log_lines": [
+        238,
+        576
+      ],
+      "per_file": [
+        {
+          "path": "scripts/release/tests/test_android_artifact_size.py",
+          "sha256": "1bdf6fe45be629ed8ea6d435727e88d87644319257127732b61a529f1ce1a0b1",
+          "declared_executed_count": 7
+        },
+        {
+          "path": "scripts/release/tests/test_android_release_artifacts.py",
+          "sha256": "f8b9a707ef2a023fce7fa1a2cd658a0820042af4e28aae647d91567d80004963",
+          "declared_executed_count": 17
+        },
+        {
+          "path": "scripts/release/tests/test_android_upload_signature.py",
+          "sha256": "fd9723397cd3ae4336371cd6fdd93164d225919d1ed615d5fd48f75055b3eade",
+          "declared_executed_count": 21
+        },
+        {
+          "path": "scripts/release/tests/test_apple_ci_hygiene.py",
+          "sha256": "28ad6d083da0088087b2196ff1c102e19944e190d9d4484facd511b1d4063be1",
+          "declared_executed_count": 37
+        },
+        {
+          "path": "scripts/release/tests/test_ci_verification_hygiene.py",
+          "sha256": "3fc6f1d4a15152bcca6d86d77bcbc782b3936c6c47336a3ff7b3067d3790e4c8",
+          "declared_executed_count": 22
+        },
+        {
+          "path": "scripts/release/tests/test_dependency_inventory.py",
+          "sha256": "a3c454f08af038a59381360a1290a470d2b04e3ad4201fa1ca63bc96d01f1b91",
+          "declared_executed_count": 15
+        },
+        {
+          "path": "scripts/release/tests/test_google_promotion_edit.py",
+          "sha256": "b6ed5e950782ef5581f86cabd7a263937da52d3dfcf7c84cc45df5bcc2d147db",
+          "declared_executed_count": 9
+        },
+        {
+          "path": "scripts/release/tests/test_ios_release_artifacts.py",
+          "sha256": "e5239b6587b963d009a2a477de6d6e1e36bac5c03e144059c92657527ec3e1c6",
+          "declared_executed_count": 29
+        },
+        {
+          "path": "scripts/release/tests/test_normalize_embedded_apple_framework.py",
+          "sha256": "f05aebef486c23bc9bf28fe4eafdf17bbb3789d8c807cb69c7ec10de6aedecc9",
+          "declared_executed_count": 3
+        },
+        {
+          "path": "scripts/release/tests/test_notice_git_bytes.py",
+          "sha256": "a1a4196e301f7a310efd4ce4a6f92b2be16cefeafa5b5feabe409200d74f6ba6",
+          "declared_executed_count": 2
+        },
+        {
+          "path": "scripts/release/tests/test_release_documentation.py",
+          "sha256": "414579949e9668da6971d41dd4ef7434271fd17b8af4547b0009162ea5c83046",
+          "declared_executed_count": 1
+        },
+        {
+          "path": "scripts/release/tests/test_release_tool.py",
+          "sha256": "89a2f83994e461184706e9c2ec50d13bffabc622f615793802a6f7e040f9c140",
+          "declared_executed_count": 36
+        },
+        {
+          "path": "scripts/release/tests/test_review_inventory.py",
+          "sha256": "841961fda25e9d4455c3178a3beab93f713e41667592538fcaef0621af74b78c",
+          "declared_executed_count": 4
+        },
+        {
+          "path": "scripts/release/tests/test_store_api.py",
+          "sha256": "18d49c5deb8cc5383b5a9888f7f14f21884bbbfeb577348412f1930f4972a1d1",
+          "declared_executed_count": 51
+        },
+        {
+          "path": "scripts/release/tests/test_third_party_notices.py",
+          "sha256": "0a395e8b064dea6ec229509026abfd5ec7c7f5a5a23969f606e461100f42eed3",
+          "declared_executed_count": 32
+        },
+        {
+          "path": "scripts/release/tests/test_workflow_contract.py",
+          "sha256": "b2e5f6af1a37f86e5e47c3c69e7a31afb1b4090034c202a39c7bfc3a93f3e219",
+          "declared_executed_count": 43
+        },
+        {
+          "path": "scripts/release/tests/test_xcode_framework_phase.py",
+          "sha256": "3033307b0a029d87ab9c8c14d3b3b4d3a0d4db9d183012d6da58fb1e8b5c4a73",
+          "declared_executed_count": 5
+        }
+      ],
+      "other_gates": "Actual fail-closed validator ran Python syntax compilation, workflow contract, mechanical792-row inventory freshness, digest-checked ShellCheck0.11.0 and actionlint1.7.12. Script exit0 is required after both analyzers; output shows each pinned archive digest OK. Tool downloads/pycache remained in cycle scratch and were removed.",
+      "scope_limit": "Execution review is not a new line-by-line correctness review of every old release test. No real Store request: log states validation-only for both AppStoreConnect and GooglePlay. Mechanical792-row freshness expressly does not attest source review."
+    },
+    "normal_ios_controls": "78 actual control methods ran0failure/error/skip in the combined lane. Their detailed correctness review belongs to the native reviewer; no application launch occurred here.",
+    "benign_output": "Git fixtures emit an autocrlf warning or temporary unrelated-branch message before their next-line ok. Both were inspected; neither is a failure or skip.",
+    "non_additive_counts": "143focused +334release overlap substantially. They are separate executions, not477 unique tests. bound-02 repeats143; do not inflate unique coverage."
+  },
+  "references": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/git-whitespace-public-reference-01.json",
+      "sha256": "e699e72ffa188ddc3de46a7dae40db04200b785a883f4b5a7219371b9708e477",
+      "bytes": 735,
+      "lines": 9
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/git-core-whitespace-public-reference-01.json",
+      "sha256": "3ac701050f3e4ec2e2b75ce5c5e679d2dfa323f73370e1a7dbee8fca13ec64b6",
+      "bytes": 616,
+      "lines": 12
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/android-release-artifacts-independent-static-review-01.json",
+      "sha256": "2298c84f0c16636d0c33abf7cc747f75fe168e2e4b3e7242b0342a549fdf472e",
+      "bytes": 9635,
+      "lines": 176
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/ios-release-artifacts-independent-static-review-01.json",
+      "sha256": "5c579a03ad093c355c29f45feb1fee2e334e149c2ce06bbf6e032a008070f6df",
+      "bytes": 12521,
+      "lines": 217
+    }
+  ],
+  "counter_evidence_and_remaining_gates": [
+    "Actual fresh unsigned AAB and complete iOS Release app package receipts remain pending. Synthetic metadata cannot prove real SDK/native output shape or final asset embedding.",
+    "Accepted inspector report-size limits are post-write acceptance checks, not streaming disk caps. Fixed tools and deadlines remain important.",
+    "Local coordinator dexdump path targets current macOS lane; Linux workflow uses pinned ANDROID_HOME.",
+    "Package inspector cannot infer freshness from bytes alone. Caller build/source/finalization evidence is required; qualifiedCI execution remains separate.",
+    "Known application-identity collision, publication disablement, external Store/signing/legal approval, physical devices/LAN and human accessibility checks remain unchanged.",
+    "Current Git fixture proves local Git with autocrlf enabled, not execution on an actual Windows runner."
+  ],
+  "preservation": {
+    "writes": "This additive report plus two compact public-reference records. No workflow/coordinator/application edits, Git mutation, credential access, native build/test execution or artifact deletion by reviewer during this scoped review. Prior authorized iOS inspector authorship is separately independently reviewed.",
+    "original_receipts_unchanged": true,
+    "private_data_read_or_sent": false,
+    "reviewer_build_workers_left": false,
+    "completed_read_helpers_only": true
+  }
+}

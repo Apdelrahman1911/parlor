@@ -1,0 +1,205 @@
+--- remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-01/L08StorageFunctionalUITests.swift.in
++++ remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in
+@@ -86,15 +86,68 @@
+ 
+     @MainActor private func l08TapExactPublicControl(_ app: XCUIApplication, identifier: String) throws {
+         XCTAssertTrue(identifier.hasPrefix("l08-"))
++        let homeAliases = ["wc", "we", "mon", "moff", "legacy", "damaged", "dual"]
++        let isHome = homeAliases.contains { identifier == "l08-home-" + $0 }
+         let query = app.descendants(matching: .any).matching(identifier: identifier)
++        if isHome {
++            let lists = app.descendants(matching: .any).matching(identifier: "l08-home-list")
++            XCTAssertTrue(lists.firstMatch.waitForExistence(timeout: 15))
++            XCTAssertEqual(lists.count, 1)
++            let list = lists.firstMatch
++            // A LazyColumn may not compose an offscreen tile at all. Inspect
++            // only its exact identity, then use real bounded list gestures.
++            for attempt in 0..<8 {
++                XCTAssertLessThanOrEqual(query.count, 1)
++                let target = query.firstMatch
++                try l08PublicControlObservation(app, identifier: identifier, attempt: attempt)
++                if target.exists && target.isEnabled && target.isHittable { break }
++                XCTAssertTrue(list.exists && list.isEnabled && list.isHittable)
++                list.swipeUp() // No coordinates, alternate selector, or direct application callback.
++            }
++        }
+         XCTAssertTrue(query.firstMatch.waitForExistence(timeout: 15))
+         XCTAssertEqual(query.count, 1)
+         let target = query.firstMatch
+         let ready = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+             target.exists && target.isEnabled && target.isHittable
+         }, object: nil)
+-        XCTAssertEqual(XCTWaiter.wait(for: [ready], timeout: 15), .completed)
++        let result = XCTWaiter.wait(for: [ready], timeout: 15)
++        // Retain the individual predicates and public geometry before an
++        // assertion can stop the XCTest; never retain labels or private state.
++        try l08PublicControlObservation(app, identifier: identifier, attempt: 8)
++        XCTAssertEqual(result, .completed)
+         target.tap() // No alternate selector, coordinate fallback, or repeat activation.
++    }
++
++    @MainActor private func l08PublicControlObservation(_ app: XCUIApplication,
++                                                       identifier: String, attempt: Int) throws {
++        let allowed = ["l08-home-wc", "l08-home-we", "l08-home-mon", "l08-home-moff",
++                       "l08-home-legacy", "l08-home-damaged", "l08-home-dual"]
++        guard allowed.contains(identifier) else { return }
++        XCTAssertTrue((0...8).contains(attempt))
++        func observation(_ key: String) -> [String: Any] {
++            let nodes = app.descendants(matching: .any).matching(identifier: key)
++            let count = nodes.count
++            var row: [String: Any] = ["count": count]
++            if count == 1 {
++                let node = nodes.firstMatch
++                row["exists"] = node.exists
++                row["enabled"] = node.isEnabled
++                row["hittable"] = node.isHittable
++                let frame = node.frame
++                if [frame.minX, frame.minY, frame.width, frame.height].allSatisfy({ $0.isFinite }) {
++                    row["frame"] = ["x": frame.minX, "y": frame.minY,
++                                    "width": frame.width, "height": frame.height]
++                }
++            }
++            return row
++        }
++        let row: [String: Any] = ["schema_version": 1, "identifier": identifier, "attempt": attempt,
++            "target": observation(identifier), "list": observation("l08-home-list"),
++            "overlay": observation("parlor-dsc01-overlay"), "proves_recovery": false]
++        let data = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
++        XCTAssertLessThanOrEqual(data.count, 2048)
++        print("PARLOR_L08_PUBLIC_CONTROL " + String(decoding: data, as: UTF8.self))
+     }
+ 
+     @MainActor private func l08WaitRecovery(_ app: XCUIApplication, shows: Int) throws {
+--- remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-01/L08_FUNCTIONAL_README.md
++++ remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08_FUNCTIONAL_README.md
+@@ -1,4 +1,24 @@
+ # L08 Storage Functional Companion
++
++## Companion 02: public Home scrolling
++
++The immutable native12 run of companion01 failed at boot10: the exact legacy
++Home tile existed uniquely, but its enabled/hittable readiness wait timed out.
++Its migration/load observation passed; this does not establish a broken app
++recovery path. The old driver never scrolled. With two damaged neighbors, the
++production Home shows a recovery warning and three ordered tiles, not the
++single-tile layout exercised earlier. No individual predicates or geometry were
++retained, so the precise reason for that earlier readiness failure is unknown.
++
++This revision adds only a copy-only tag to the real Home LazyColumn, up to eight
++real upward swipes on that exact list for the seven closed synthetic tile IDs,
++and bounded public presence/geometry diagnostics. A unique, enabled, hittable
++tile is still required before one and only one actual Resume tap. It adds no
++coordinate fallback, alternate selector, programmatic navigation or recovery
++shortcut. Ordinary fixture buttons and Retry/Discard keep their existing strict
++activation path. Storage, metadata, phase, image and cleanup checks are unchanged.
++
++This revision requires fresh tests and native evidence; native12 remains FAIL.
+ 
+ ## Scope and evidence boundaries
+ 
+--- remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-01/l08_functional_copy.py
++++ remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_functional_copy.py
+@@ -25,6 +25,12 @@
+     com.parlor.app.readiness.L08StorageFunctionalProbe.command(action, onJson)
+ }''')
+     path.write_text(text)
++    # A metadata-only tag on the actual scroll container, never a substitute
++    # Home, programmatic scroll, changed ordering, or callback invocation.
++    home = Path(copy_root).absolute() / strict.HOME
++    home.write_text(strict.once(home.read_text(), '''        LazyColumn(
++            modifier = Modifier.fillMaxSize(),''', '''        LazyColumn(
++            modifier = Modifier.fillMaxSize().testTag("l08-home-list"),'''))
+ 
+ 
+ def instrument_probe_swift(text):
+--- remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-01/test_l08_functional_copy.py
++++ remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py
+@@ -33,6 +33,40 @@
+     start = text.index(first)
+     end = len(text) if last is None else text.index(last, start)
+     return text[start:end]
++
++
++def assert_public_control_contract(text):
++    tap = section(text, '    @MainActor private func l08TapExactPublicControl(',
++                  '    @MainActor private func l08PublicControlObservation(')
++    require(tap.count('target.tap()') == 1 and tap.count('.tap()') == 1,
++            'Exactly one public activation is required')
++    require(tap.count('list.swipeUp()') == 1 and 'for attempt in 0..<8 {' in tap,
++            'The only scroll must be bounded and belong to the tagged list')
++    require('let isHome = homeAliases.contains { identifier == "l08-home-" + $0 }' in tap and
++            'if isHome {' in tap and 'matching(identifier: "l08-home-list")' in tap,
++            'Scroll eligibility and destination must use exact identities')
++    require(tap.count('XCTAssertEqual(lists.count, 1)') == 1 and
++            tap.count('XCTAssertEqual(query.count, 1)') == 1 and
++            tap.count('XCTAssertLessThanOrEqual(query.count, 1)') == 1,
++            'Ambiguous list or target identities must fail')
++    require(tap.count('target.exists && target.isEnabled && target.isHittable') == 2 and
++            'XCTAssertTrue(list.exists && list.isEnabled && list.isHittable)' in tap,
++            'No activation or gesture may bypass required state checks')
++    assertion = tap.index('XCTAssertEqual(result, .completed)')
++    require(tap.index('try l08PublicControlObservation(app, identifier: identifier, attempt: 8)') < assertion <
++            tap.index('target.tap()'), 'Observe failures before asserting; tap only after readiness succeeds')
++    require(not any(forbidden in tap for forbidden in
++                    ('coordinate(', 'onResume(', 'homeTapped(', 'performClick(', 'forceTap(', 'try?', 'catch {')),
++            'No coordinates, callbacks or swallowed failures')
++    observation = section(text, '    @MainActor private func l08PublicControlObservation(',
++                          '    @MainActor private func l08WaitRecovery(')
++    require('guard allowed.contains(identifier) else { return }' in observation and
++            'XCTAssertTrue((0...8).contains(attempt))' in observation and
++            'XCTAssertLessThanOrEqual(data.count, 2048)' in observation,
++            'Diagnostic output is bounded to a closed public alias list')
++    require('"proves_recovery": false' in observation and
++            not any(field in observation for field in ('.label', '.value', '.debugDescription', '.screenshot()')),
++            'Presence/geometry cannot claim recovery or disclose UI content')
+ 
+ 
+ def assert_probe_contract(candidate, original):
+@@ -97,6 +131,47 @@
+ 
+ 
+ class L08FunctionalCopyTests(unittest.TestCase):
++    def test_home_list_tag_preserves_every_other_production_character(self):
++        original = (ROOT / strict.HOME).read_text()
++        expected = strict.transform(strict.HOME, original)
++        with tempfile.TemporaryDirectory(prefix='parlor-functional-scroll-copy-') as raw:
++            owned = Path(raw).resolve()
++            for path in copies.MODIFIED_KOTLIN:
++                target = owned / path; target.parent.mkdir(parents=True, exist_ok=True)
++                target.write_bytes((ROOT / path).read_bytes())
++            copies.instrument_kotlin(owned)
++            home = (owned / strict.HOME).read_text()
++            self.assertEqual(home.count('.testTag("l08-home-list")'), 1)
++            self.assertEqual(home.replace('.testTag("l08-home-list")', ''), expected)
++        self.assertFalse(owned.exists())
++        self.assertEqual((ROOT / strict.HOME).read_text(), original)
++
++    def test_home_scrolling_and_diagnostics_preserve_strict_public_activation(self):
++        assert_public_control_contract((HERE / 'L08StorageFunctionalUITests.swift.in').read_text())
++
++    def test_scroll_contract_rejects_bypass_ambiguity_unbounded_or_private_diagnostics(self):
++        text = (HERE / 'L08StorageFunctionalUITests.swift.in').read_text()
++        mutations = [
++            ('target.tap() // No alternate selector', 'target.tap(); target.tap() // No alternate selector'),
++            ('for attempt in 0..<8 {', 'for attempt in 0..<100 {'),
++            ('list.swipeUp()', 'app.swipeUp()'),
++            ('matching(identifier: "l08-home-list")', 'matching(identifier: "other-list")'),
++            ('XCTAssertEqual(lists.count, 1)', 'XCTAssertGreaterThan(lists.count, 0)'),
++            ('XCTAssertEqual(query.count, 1)', 'XCTAssertGreaterThan(query.count, 0)'),
++            ('XCTAssertLessThanOrEqual(query.count, 1)', 'XCTAssertTrue(true)'),
++            ('target.exists && target.isEnabled && target.isHittable', 'target.exists'),
++            ('XCTAssertTrue(list.exists && list.isEnabled && list.isHittable)', 'XCTAssertTrue(true)'),
++            ('XCTAssertEqual(result, .completed)', 'XCTAssertTrue(true)'),
++            ('target.tap() // No alternate selector', 'onResume(); target.tap() // No alternate selector'),
++            ('"proves_recovery": false', '"proves_recovery": true'),
++            ('XCTAssertLessThanOrEqual(data.count, 2048)', 'XCTAssertTrue(true)'),
++            ('row["exists"] = node.exists', 'row["exists"] = node.label'),
++        ]
++        for before, after in mutations:
++            self.assertIn(before, text)
++            with self.subTest(mutation=before), self.assertRaises((RuntimeError, ValueError)):
++                assert_public_control_contract(text.replace(before, after, 1))
++
+     def test_all_original_controls_and_exact_clone_allowlist_are_preserved(self):
+         self.assertEqual(sha(CLONE_MANIFEST), CLONE_MANIFEST_SHA256)
+         manifest = json.loads(CLONE_MANIFEST.read_text())

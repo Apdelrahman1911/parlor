@@ -1,0 +1,51 @@
+@file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class, kotlin.experimental.ExperimentalNativeApi::class)
+
+package com.parlor.designsystem.auditcopy
+
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import kotlin.native.ref.WeakReference
+import platform.Foundation.NSThread
+import platform.UIKit.UIViewController
+
+/** Copy-only observation of the actual LocalUIViewController reference.
+ * No controller lookup by runtime class, child order, private API or guessed type.
+ * Weak references do not keep a removed controller/composition alive. The Swift
+ * observer captures the first actual identity and never rebases on replacement.
+ */
+object DSC01CopyOnlyUIKitObservation {
+    private var current: WeakReference<UIViewController>? = null
+    var attachmentCount: Int = 0
+        private set
+    var disposalCount: Int = 0
+        private set
+
+    fun attach(controller: UIViewController) {
+        check(NSThread.isMainThread)
+        check(current?.get() == null)
+        attachmentCount += 1
+        check(attachmentCount <= 16)
+        current = WeakReference(controller)
+    }
+
+    fun detach(controller: UIViewController) {
+        check(NSThread.isMainThread)
+        check(current?.get() === controller)
+        current = null
+        disposalCount += 1
+        check(disposalCount <= 16)
+    }
+
+    fun actualController(): UIViewController? {
+        check(NSThread.isMainThread)
+        return current?.get()
+    }
+}
+
+@Composable
+fun DSC01ObserveActualUIKitController(controller: UIViewController) {
+    DisposableEffect(controller) {
+        DSC01CopyOnlyUIKitObservation.attach(controller)
+        onDispose { DSC01CopyOnlyUIKitObservation.detach(controller) }
+    }
+}

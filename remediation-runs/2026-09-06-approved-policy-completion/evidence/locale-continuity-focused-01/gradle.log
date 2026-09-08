@@ -1,0 +1,421 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+Type-safe project accessors is an incubating feature.
+> Task :build-logic:convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :build-logic:convention:compileKotlin
+> Task :build-logic:convention:compileJava NO-SOURCE
+> Task :build-logic:convention:pluginDescriptors
+> Task :build-logic:convention:processResources
+> Task :build-logic:convention:classes
+> Task :build-logic:convention:jar
+
+> Configure project :composeApp
+WARNING: The option setting 'android.experimental.lint.version=9.1.1' is experimental.
+w: [33m[1m⚠️ Deprecated Gradle Version[0m[0m
+The used Gradle version (Gradle 8.13) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+
+This warning can be suppressed in 'gradle.properties':
+    kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+[32m[1mSolution:[0m[0m
+[32m[3mPlease update the Gradle version to at least Gradle 8.14.4.[0m[0m
+
+w: [33m[1m⚠️ Native task 'iosX64Test' is disabled[0m[0m
+Task 'iosX64Test' for target 'ios_x64' cannot run on the current host (macos-aarch64).
+Reason: architecture mismatch - target requires X64, current host is ARM64
+[32m[1mSolution:[0m[0m
+[32m[3mTo suppress this warning, add 'kotlin.native.ignoreDisabledTargets=true' to gradle.properties.[0m[0m
+
+AUDIT_SIMULATOR_BOUND :composeApp:iosSimulatorArm64Test device=24422BBD-832F-44B7-B99C-E17BE660D43B standalone=false
+
+> Task :composeApp:kmpPartiallyResolvedDependenciesChecker
+> Task :composeApp:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :composeApp:downloadKotlinNativeDistribution
+> Task :composeApp:convertXmlValueResourcesForAppleMain NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForAppleMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForAppleMain NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForAppleMain NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForCommonMain
+> Task :composeApp:copyNonXmlValueResourcesForCommonMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForCommonMain UP-TO-DATE
+> Task :composeApp:generateResourceAccessorsForCommonMain
+> Task :composeApp:convertXmlValueResourcesForIosMain NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForIosMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForIosMain NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForIosMain NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForIosSimulatorArm64Main NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForIosSimulatorArm64Main NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForIosSimulatorArm64Main NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForIosSimulatorArm64Main NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForNativeMain NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForNativeMain NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForNativeMain NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForNativeMain NO-SOURCE
+> Task :composeApp:generateActualResourceCollectorsForIosSimulatorArm64Main
+> Task :composeApp:generateComposeResClass
+> Task :composeApp:generateExpectResourceCollectorsForCommonMain
+> Task :composeApp:generateParlorVersion
+> Task :game-modes:mafia:kmpPartiallyResolvedDependenciesChecker
+> Task :game-modes:mafia:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :game-modes:mafia:downloadKotlinNativeDistribution
+> Task :game-modes:mafia:convertXmlValueResourcesForAppleMain NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForAppleMain NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForAppleMain NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForAppleMain NO-SOURCE
+> Task :game-modes:mafia:convertXmlValueResourcesForCommonMain
+> Task :game-modes:mafia:copyNonXmlValueResourcesForCommonMain NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForCommonMain UP-TO-DATE
+> Task :game-modes:mafia:generateResourceAccessorsForCommonMain
+> Task :game-modes:mafia:convertXmlValueResourcesForIosMain NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForIosMain NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForIosMain NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForIosMain NO-SOURCE
+> Task :game-modes:mafia:convertXmlValueResourcesForIosSimulatorArm64Main NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForIosSimulatorArm64Main NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForIosSimulatorArm64Main NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForIosSimulatorArm64Main NO-SOURCE
+> Task :game-modes:mafia:convertXmlValueResourcesForNativeMain NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForNativeMain NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForNativeMain NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForNativeMain NO-SOURCE
+> Task :game-modes:mafia:generateActualResourceCollectorsForIosSimulatorArm64Main
+> Task :game-modes:mafia:generateComposeResClass
+> Task :game-modes:mafia:generateExpectResourceCollectorsForCommonMain
+> Task :shared:content:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:content:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:content:downloadKotlinNativeDistribution
+> Task :shared:core:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:core:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:core:downloadKotlinNativeDistribution
+> Task :shared:core:compileKotlinIosSimulatorArm64
+> Task :shared:core:exportCrossCompilationMetadataForIosSimulatorArm64ApiElements
+> Task :shared:engine:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:engine:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:engine:downloadKotlinNativeDistribution
+> Task :shared:engine:compileKotlinIosSimulatorArm64
+> Task :shared:engine:exportCrossCompilationMetadataForIosSimulatorArm64ApiElements
+> Task :shared:content:compileKotlinIosSimulatorArm64
+> Task :shared:content:exportCrossCompilationMetadataForIosSimulatorArm64ApiElements
+> Task :shared:design-system:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:design-system:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:design-system:downloadKotlinNativeDistribution
+> Task :shared:design-system:convertXmlValueResourcesForAppleMain NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForAppleMain NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForAppleMain NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForAppleMain NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForCommonMain
+> Task :shared:design-system:copyNonXmlValueResourcesForCommonMain
+> Task :shared:design-system:prepareComposeResourcesTaskForCommonMain UP-TO-DATE
+> Task :shared:design-system:generateResourceAccessorsForCommonMain
+> Task :shared:design-system:convertXmlValueResourcesForIosMain NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForIosMain NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForIosMain NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForIosMain NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForIosSimulatorArm64Main NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForIosSimulatorArm64Main NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForIosSimulatorArm64Main NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForIosSimulatorArm64Main NO-SOURCE
+> Task :shared:design-system:convertXmlValueResourcesForNativeMain NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForNativeMain NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForNativeMain NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForNativeMain NO-SOURCE
+> Task :shared:design-system:generateActualResourceCollectorsForIosSimulatorArm64Main
+> Task :shared:design-system:generateComposeResClass
+> Task :shared:design-system:generateExpectResourceCollectorsForCommonMain
+> Task :shared:design-system:compileKotlinIosSimulatorArm64
+> Task :shared:design-system:exportCrossCompilationMetadataForIosSimulatorArm64ApiElements
+> Task :shared:networking:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:networking:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:networking:downloadKotlinNativeDistribution
+> Task :shared:networking:compileKotlinIosSimulatorArm64
+> Task :shared:networking:exportCrossCompilationMetadataForIosSimulatorArm64ApiElements
+> Task :shared:session:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:session:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:session:downloadKotlinNativeDistribution
+> Task :shared:session:compileKotlinIosSimulatorArm64
+> Task :shared:session:exportCrossCompilationMetadataForIosSimulatorArm64ApiElements
+> Task :shared:storage:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:storage:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:storage:downloadKotlinNativeDistribution
+> Task :shared:storage:compileKotlinIosSimulatorArm64
+> Task :shared:storage:exportCrossCompilationMetadataForIosSimulatorArm64ApiElements
+> Task :game-modes:mafia:compileKotlinIosSimulatorArm64
+> Task :game-modes:mafia:exportCrossCompilationMetadataForIosSimulatorArm64ApiElements
+> Task :game-modes:whodunit:kmpPartiallyResolvedDependenciesChecker
+> Task :game-modes:whodunit:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :game-modes:whodunit:downloadKotlinNativeDistribution
+> Task :game-modes:whodunit:convertXmlValueResourcesForAppleMain NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForAppleMain NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForAppleMain NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForAppleMain NO-SOURCE
+> Task :game-modes:whodunit:convertXmlValueResourcesForCommonMain
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForCommonMain
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForCommonMain UP-TO-DATE
+> Task :game-modes:whodunit:generateResourceAccessorsForCommonMain
+> Task :game-modes:whodunit:convertXmlValueResourcesForIosMain NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForIosMain NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForIosMain NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForIosMain NO-SOURCE
+> Task :game-modes:whodunit:convertXmlValueResourcesForIosSimulatorArm64Main NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForIosSimulatorArm64Main NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForIosSimulatorArm64Main NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForIosSimulatorArm64Main NO-SOURCE
+> Task :game-modes:whodunit:convertXmlValueResourcesForNativeMain NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForNativeMain NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForNativeMain NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForNativeMain NO-SOURCE
+> Task :game-modes:whodunit:generateActualResourceCollectorsForIosSimulatorArm64Main
+> Task :game-modes:whodunit:generateComposeResClass
+> Task :game-modes:whodunit:generateExpectResourceCollectorsForCommonMain
+> Task :game-modes:whodunit:compileKotlinIosSimulatorArm64
+> Task :game-modes:whodunit:exportCrossCompilationMetadataForIosSimulatorArm64ApiElements
+> Task :shared:transport-p2p:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:transport-p2p:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:transport-p2p:downloadKotlinNativeDistribution
+> Task :shared:transport-p2p:compileKotlinIosSimulatorArm64
+> Task :shared:transport-p2p:exportCrossCompilationMetadataForIosSimulatorArm64ApiElements
+
+> Task :composeApp:compileKotlinIosSimulatorArm64 FAILED
+e: file:///Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/ComposeContainerViewController.kt:20:9 Unresolved reference 'addChildViewController'.
+e: file:///Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/ComposeContainerViewController.kt:32:27 Unresolved reference 'didMoveToParentViewController'.
+e: file:///Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/ComposeContainerViewController.kt:35:5 'childViewControllerForStatusBarStyle' overrides nothing.
+e: file:///Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/ComposeContainerViewController.kt:37:5 'childViewControllerForStatusBarHidden' overrides nothing.
+e: file:///Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/ComposeContainerViewController.kt:39:5 'childViewControllerForHomeIndicatorAutoHidden' overrides nothing.
+e: file:///Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/ComposeContainerViewController.kt:41:5 'childViewControllerForScreenEdgesDeferringSystemGestures' overrides nothing.
+e: file:///Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/ComposeContainerViewController.kt:43:5 'supportedInterfaceOrientations' overrides nothing.
+e: file:///Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/ComposeContainerViewController.kt:44:27 Unresolved reference 'supportedInterfaceOrientations'.
+e: file:///Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/ComposeContainerViewController.kt:46:5 'preferredInterfaceOrientationForPresentation' overrides nothing.
+e: file:///Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/ComposeContainerViewController.kt:47:27 Unresolved reference 'preferredInterfaceOrientationForPresentation'.
+e: file:///Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/ComposeContainerViewController.kt:49:5 'shouldAutorotate' overrides nothing.
+e: file:///Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/ComposeContainerViewController.kt:49:66 Unresolved reference 'shouldAutorotate'.
+
+> Task :composeApp:convertXmlValueResourcesForAppleTest NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForAppleTest NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForAppleTest NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForAppleTest NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForCommonTest NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForCommonTest NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForIosSimulatorArm64Test NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForIosSimulatorArm64Test NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForIosSimulatorArm64Test NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForIosSimulatorArm64Test NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForIosTest NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForIosTest NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForIosTest NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForIosTest NO-SOURCE
+> Task :composeApp:convertXmlValueResourcesForNativeTest NO-SOURCE
+> Task :composeApp:copyNonXmlValueResourcesForNativeTest NO-SOURCE
+> Task :composeApp:prepareComposeResourcesTaskForNativeTest NO-SOURCE
+> Task :composeApp:generateResourceAccessorsForNativeTest NO-SOURCE
+> Task :game-modes:mafia:assembleIosSimulatorArm64MainResources
+> Task :game-modes:mafia:iosSimulatorArm64CopyHierarchicalMultiplatformResources
+> Task :game-modes:mafia:iosSimulatorArm64ZipMultiplatformResourcesForPublication
+> Task :game-modes:whodunit:assembleIosSimulatorArm64MainResources
+> Task :game-modes:whodunit:iosSimulatorArm64CopyHierarchicalMultiplatformResources
+> Task :game-modes:whodunit:iosSimulatorArm64ZipMultiplatformResourcesForPublication
+> Task :shared:design-system:assembleIosSimulatorArm64MainResources
+> Task :shared:design-system:iosSimulatorArm64CopyHierarchicalMultiplatformResources
+> Task :shared:design-system:iosSimulatorArm64ZipMultiplatformResourcesForPublication
+> Task :composeApp:iosSimulatorArm64ResolveResourcesFromDependencies
+> Task :composeApp:assembleIosSimulatorArm64MainResources
+> Task :composeApp:iosSimulatorArm64ResolveSelfResourcesCopyHierarchicalMultiplatformResources
+> Task :composeApp:iosSimulatorArm64AggregateResources
+> Task :composeApp:iosSimulatorArm64ProcessResources
+> Task :shared:engine-testing:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:engine-testing:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:engine-testing:downloadKotlinNativeDistribution
+> Task :shared:engine-testing:compileKotlinIosSimulatorArm64
+> Task :shared:engine-testing:exportCrossCompilationMetadataForIosSimulatorArm64ApiElements
+> Task :composeApp:computeLocalPackageDependencyInputFiles
+> Task :composeApp:generateSyntheticLinkageSwiftPMImportProjectForCinteropsAndLdDump SKIPPED
+> Task :composeApp:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :game-modes:mafia:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :game-modes:whodunit:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:content:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:core:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:design-system:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:engine:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:engine-testing:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:networking:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:networking-testing:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:session:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:storage:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :shared:transport-p2p:serializeSwiftPMDependenciesMetadataForLockFiles
+> Task :composeApp:generateUmbrellaPackageIdentifierBasedResolutionForDefault SKIPPED
+> Task :composeApp:fetchUmbrellaPackageIdentifierForDefault SKIPPED
+> Task :composeApp:syncPersistedPackageResolvedToSynthetic SKIPPED
+> Task :composeApp:fetchSyntheticImportProjectPackages SKIPPED
+> Task :composeApp:convertSyntheticImportProjectIntoDefFileIphonesimulator
+> Task :composeApp:assembleIosSimulatorArm64TestResources
+> Task :composeApp:copyTestComposeResourcesForIosSimulatorArm64
+> Task :game-modes:whodunit:convertXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForDesktopMain NO-SOURCE
+> Task :game-modes:whodunit:generateActualResourceCollectorsForDesktopMain
+> Task :shared:core:compileKotlinDesktop
+> Task :shared:core:compileDesktopMainJava NO-SOURCE
+> Task :shared:core:desktopProcessResources NO-SOURCE
+> Task :shared:core:processDesktopMainResources SKIPPED
+> Task :shared:core:desktopMainClasses
+> Task :shared:core:desktopJar
+> Task :shared:engine:compileKotlinDesktop
+> Task :shared:engine:compileDesktopMainJava NO-SOURCE
+> Task :shared:engine:desktopProcessResources NO-SOURCE
+> Task :shared:engine:processDesktopMainResources SKIPPED
+> Task :shared:engine:desktopMainClasses
+> Task :shared:engine:desktopJar
+> Task :shared:content:compileKotlinDesktop
+> Task :shared:content:compileDesktopMainJava NO-SOURCE
+> Task :shared:content:desktopProcessResources NO-SOURCE
+> Task :shared:content:processDesktopMainResources SKIPPED
+> Task :shared:content:desktopMainClasses
+> Task :shared:content:desktopJar
+> Task :shared:design-system:convertXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :shared:design-system:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :shared:design-system:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+> Task :shared:design-system:generateResourceAccessorsForDesktopMain NO-SOURCE
+> Task :shared:design-system:generateActualResourceCollectorsForDesktopMain
+> Task :shared:design-system:compileKotlinDesktop
+> Task :shared:design-system:compileDesktopMainJava NO-SOURCE
+> Task :shared:design-system:assembleDesktopMainResources
+> Task :shared:design-system:desktopProcessResources
+> Task :shared:design-system:processDesktopMainResources SKIPPED
+> Task :shared:design-system:desktopMainClasses
+> Task :shared:design-system:desktopJar
+> Task :shared:networking:compileKotlinDesktop
+> Task :shared:networking:compileDesktopMainJava NO-SOURCE
+> Task :shared:networking:desktopProcessResources NO-SOURCE
+> Task :shared:networking:processDesktopMainResources SKIPPED
+> Task :shared:networking:desktopMainClasses
+> Task :shared:networking:desktopJar
+> Task :shared:session:compileKotlinDesktop
+> Task :shared:session:compileDesktopMainJava NO-SOURCE
+> Task :shared:session:desktopProcessResources NO-SOURCE
+> Task :shared:session:processDesktopMainResources SKIPPED
+> Task :shared:session:desktopMainClasses
+> Task :shared:session:desktopJar
+> Task :shared:storage:compileKotlinDesktop
+> Task :shared:storage:compileDesktopMainJava NO-SOURCE
+> Task :shared:storage:desktopProcessResources NO-SOURCE
+> Task :shared:storage:processDesktopMainResources SKIPPED
+> Task :shared:storage:desktopMainClasses
+> Task :shared:storage:desktopJar
+> Task :game-modes:whodunit:compileKotlinDesktop
+> Task :game-modes:whodunit:compileDesktopMainJava NO-SOURCE
+> Task :game-modes:whodunit:assembleDesktopMainResources
+> Task :game-modes:whodunit:desktopProcessResources
+> Task :game-modes:whodunit:processDesktopMainResources SKIPPED
+> Task :game-modes:whodunit:desktopMainClasses
+> Task :game-modes:whodunit:desktopJar
+> Task :game-modes:whodunit:convertXmlValueResourcesForCommonTest NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForCommonTest NO-SOURCE
+> Task :game-modes:whodunit:convertXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :game-modes:whodunit:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :game-modes:whodunit:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+> Task :game-modes:whodunit:generateResourceAccessorsForDesktopTest NO-SOURCE
+> Task :shared:networking-testing:kmpPartiallyResolvedDependenciesChecker
+> Task :shared:networking-testing:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :shared:networking-testing:compileKotlinDesktop
+> Task :shared:networking-testing:compileDesktopMainJava NO-SOURCE
+> Task :shared:networking-testing:desktopProcessResources NO-SOURCE
+> Task :shared:networking-testing:processDesktopMainResources SKIPPED
+> Task :shared:networking-testing:desktopMainClasses
+> Task :shared:networking-testing:desktopJar
+
+> Task :game-modes:whodunit:compileTestKotlinDesktop FAILED
+e: file:///Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLanguageContinuityTest.kt:139:27 Argument type mismatch: actual type is 'Int', but 'String?' was expected.
+e: file:///Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLanguageContinuityTest.kt:158:27 Argument type mismatch: actual type is 'Int', but 'String?' was expected.
+e: file:///Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLanguageContinuityTest.kt:194:31 Argument type mismatch: actual type is 'Int', but 'String?' was expected.
+e: file:///Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLanguageContinuityTest.kt:209:27 Argument type mismatch: actual type is 'Int', but 'String?' was expected.
+e: file:///Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLanguageContinuityTest.kt:211:27 Argument type mismatch: actual type is 'Int', but 'String?' was expected.
+e: file:///Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitHostLanguageContinuityTest.kt:229:35 Argument type mismatch: actual type is 'Int', but 'String?' was expected.
+
+> Task :game-modes:whodunit:assembleDesktopTestResources
+> Task :game-modes:whodunit:desktopTestProcessResources
+> Task :game-modes:whodunit:processDesktopTestResources SKIPPED
+> Task :game-modes:mafia:convertXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForDesktopMain NO-SOURCE
+> Task :game-modes:mafia:generateActualResourceCollectorsForDesktopMain
+> Task :game-modes:mafia:compileKotlinDesktop
+> Task :game-modes:mafia:compileDesktopMainJava NO-SOURCE
+> Task :game-modes:mafia:assembleDesktopMainResources
+> Task :game-modes:mafia:desktopProcessResources
+> Task :game-modes:mafia:processDesktopMainResources SKIPPED
+> Task :game-modes:mafia:desktopMainClasses
+> Task :game-modes:mafia:desktopJar
+> Task :game-modes:mafia:convertXmlValueResourcesForCommonTest NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForCommonTest NO-SOURCE
+> Task :game-modes:mafia:convertXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :game-modes:mafia:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+> Task :game-modes:mafia:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+> Task :game-modes:mafia:generateResourceAccessorsForDesktopTest NO-SOURCE
+
+> Task :game-modes:mafia:compileTestKotlinDesktop FAILED
+e: file:///Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostLanguageContinuityTest.kt:142:27 Argument type mismatch: actual type is 'Int', but 'String?' was expected.
+e: file:///Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostLanguageContinuityTest.kt:160:27 Argument type mismatch: actual type is 'Int', but 'String?' was expected.
+e: file:///Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostLanguageContinuityTest.kt:175:27 Argument type mismatch: actual type is 'Int', but 'String?' was expected.
+e: file:///Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostLanguageContinuityTest.kt:210:31 Argument type mismatch: actual type is 'Int', but 'String?' was expected.
+e: file:///Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostLanguageContinuityTest.kt:225:27 Argument type mismatch: actual type is 'Int', but 'String?' was expected.
+e: file:///Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostLanguageContinuityTest.kt:227:27 Argument type mismatch: actual type is 'Int', but 'String?' was expected.
+e: file:///Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaHostLanguageContinuityTest.kt:243:35 Argument type mismatch: actual type is 'Int', but 'String?' was expected.
+
+> Task :game-modes:mafia:assembleDesktopTestResources
+> Task :game-modes:mafia:desktopTestProcessResources
+> Task :game-modes:mafia:processDesktopTestResources SKIPPED
+
+[Incubating] Problems report is available at: file:///Users/abdelrahman/Projects/parlor/build/reports/problems/problems-report.html
+
+FAILURE: Build completed with 3 failures.
+
+1: Task failed with an exception.
+-----------
+* What went wrong:
+Execution failed for task ':composeApp:compileKotlinIosSimulatorArm64'.
+> Compilation finished with errors
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+==============================================================================
+
+2: Task failed with an exception.
+-----------
+* What went wrong:
+Execution failed for task ':game-modes:whodunit:compileTestKotlinDesktop'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.btapi.BuildToolsApiCompilationWork
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+==============================================================================
+
+3: Task failed with an exception.
+-----------
+* What went wrong:
+Execution failed for task ':game-modes:mafia:compileTestKotlinDesktop'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.btapi.BuildToolsApiCompilationWork
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+==============================================================================
+
+BUILD FAILED in 1m 5s
+145 actionable tasks: 141 executed, 4 up-to-date

@@ -1,0 +1,98 @@
+{
+  "reviewer": "/root/native_fix_review",
+  "reviewed_at": "2026-09-05T21:39:36.540770+00:00",
+  "base_commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+  "author_separation": "Reviewer did not author source or documentation changes.",
+  "scope": "Final reread of changed ST-C1/DS-C01 native contract and MF-C1 Doctor documentation, closing documentation-review-01 precision comments only.",
+  "reviews": [
+    {
+      "path": "docs/PRODUCTION_ARCHITECTURE.md",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/PRODUCTION_ARCHITECTURE.md",
+      "sha256": "1d795dfd86c3620f6359f9398f162470bfa441ef35127d30148b34879b3e1808",
+      "line_count": 284,
+      "reviewed_final_ranges": [
+        [
+          251,
+          256
+        ],
+        [
+          268,
+          276
+        ]
+      ],
+      "reviewed_final_text": [
+        {
+          "range": [
+            251,
+            256
+          ],
+          "text": "On iOS, legacy `Documents/snapshots` is marked excluded from backup before\nlisting or migrating it; failure to set or verify that flag is surfaced, not\ntreated as an empty store. Failed legacy migrations retain their bytes for\nRetry/Discard rather than deleting the last recoverable copy. The exclusion\nflag is an OS backup policy request, not proof of a completed backup/restore\ntest. Current authenticated records retain precedence over legacy copies."
+        },
+        {
+          "range": [
+            268,
+            276
+          ],
+          "text": "On iOS, explicit in-app language overrides carry Parlor-owned provenance in the\napplication preferences domain. Follow System releases only a matching owned\n`AppleLanguages` value and restores its previous application-domain value or\nabsence, not a resolved global fallback. Unmarked legacy values and differing\nexternal OS preference values are preserved; an identical external write cannot\nbe distinguished by value comparison. The marker is persisted for reconciliation\nafter restart, but UserDefaults still provides no per-write durability or\ncross-process transaction guarantee. Language switching does not recreate active\nsessions."
+        }
+      ],
+      "classification": "APPROVED — SCOPED DOCUMENTATION",
+      "reasoning": "ST backup policy and DS owner/provenance limitations match production source. Prior value OR absence, preservation limited to differing external values, explicit identical-write ambiguity, and persisted-for-reconciliation wording resolve the prior documentation precision comments."
+    },
+    {
+      "path": "docs/MAFIA_RULES.md",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/MAFIA_RULES.md",
+      "sha256": "4051a05d1c3bd769329178be3a2191be20617f792f18fd0328ab105c2ec29d95",
+      "line_count": 209,
+      "reviewed_final_ranges": [
+        [
+          34,
+          48
+        ],
+        [
+          194,
+          201
+        ]
+      ],
+      "reviewed_final_text": [
+        {
+          "range": [
+            34,
+            48
+          ],
+          "text": "By default, the Doctor cannot self-protect or protect the same player on\nconsecutive nights; the Detective cannot inspect themself; a player cannot vote\nfor themself; and Mafia cannot target Mafia. Each option can be changed only\nwhere represented by a validated setup setting. Even when Mafia-on-Mafia\ntargeting is enabled, a Mafia player cannot target themself.\n\nThe organizer (local) or host (LAN) sets\n`doctorCanProtectSamePlayerConsecutively` in setup; its default remains OFF.\nON allows the same eligible living target for three or more consecutive nights,\nwithout a fixed streak limit. OFF rejects the previous resolved night's\neffective protection target. An explicit skipped night resolves to no protection,\nso that target becomes legal on the next night if still living and otherwise\neligible. Self-protection is a separate option. Neither option changes\none-submission-per-night or permits resurrection,\nand settings cannot change once the game starts."
+        },
+        {
+          "range": [
+            194,
+            201
+          ],
+          "text": "Saved canonical state retains the chosen Doctor settings. Outside PostGame, the\nDoctor's private previous-protection value must match the latest retained\nresolved-night record, including null after a skip or a night without an active\nDoctor. Validation checks this even with repeat protection ON, after the Doctor\ndies, and when old history entries have been capped. PostGame intentionally\nclears private night state. Peers receive their own private value and public\nsettings, never the host-only history; local recovery and LAN rejoin do not\nsilently change these rules."
+        }
+      ],
+      "classification": "APPROVED — SCOPED DOCUMENTATION",
+      "reasoning": "Existing default OFF, unbounded eligible ON streaks, independent self option, one submission per night, skip resets only consecutive restriction, immutable started settings, settings-aware canonical recovery and own-private-only peer projection match reviewed source. Target remains living and otherwise eligible after skip."
+    }
+  ],
+  "prior_record_capture_note": "Root applied corrections between this reviewer reading the original prose and serializing documentation-review-01. Consequently review-01 document hashes already reflect corrected files while its recommendations describe prior prose. This record explicitly reopens and approves the final exact text, hashes and line ranges; previous evidence is retained unchanged.",
+  "non_documentation_review_source_hashes_unchanged_since_review01": true,
+  "code_statuses_unchanged": {
+    "ST-C1": "FIXED AND VERIFIED for the scoped failed-legacy-migration exclusion defect; not backup/restore/device proof",
+    "DS-C01": "PARTIALLY VERIFIED; legacy unmarked provenance and identical external-write ambiguity remain explicit",
+    "MF-C1": "This doc review is source consistency proof, not replacement for the separate Mafia fix/test dossier"
+  },
+  "remaining_limits": [
+    "No additional build, test, simulator, physical device, real backup/restore, app-kill/relaunch, Store, or signing verification is claimed.",
+    "Apple backup-exclusion guidance is not an absolute guarantee that an item cannot appear in a backup or restored device.",
+    "No full-project or full-document review approval is implied beyond the recorded ranges."
+  ],
+  "reviewer_hygiene": {
+    "production_edits": false,
+    "documentation_edits": false,
+    "git_mutations": false,
+    "builds_or_tests_started": false,
+    "background_workers_started": false,
+    "generated_build_artifacts": [],
+    "cleanup": "Only compact review deliverables created in assigned evidence directory. No worker/output cleanup required from this reviewer; shared root-owned lane untouched."
+  }
+}

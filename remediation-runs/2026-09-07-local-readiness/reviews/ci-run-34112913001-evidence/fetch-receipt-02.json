@@ -1,0 +1,57 @@
+{
+  "scope": "Read-only existing completed-job success logs and run status; no artifacts retrieved or workflows invoked",
+  "at": "2026-09-07T11:30:57.145474+00:00",
+  "reviewer": "/root/release_fix_review",
+  "run_id": 34112913001,
+  "expected_head_sha": "f5ea8045bd903c255041b198f54aca67e893612f",
+  "jobs": [
+    {
+      "job_id": 101713007548,
+      "label": "linux-arm64",
+      "argv": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/jobs/101713007548/logs",
+        "--method",
+        "GET"
+      ],
+      "started_at": "2026-09-07T11:31:00.506432+00:00",
+      "finished_at": "2026-09-07T11:31:04.215565+00:00",
+      "exit_code": 0,
+      "stderr": "",
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/linux-arm64-sanitized.log",
+      "sha256": "5fbe43c3b1e6bc9b0645c0cac21024846ace5cd7eebb053290898d803d4b32e5",
+      "bytes": 67828,
+      "lines": 825
+    },
+    {
+      "job_id": 101713007446,
+      "label": "macos-x64",
+      "argv": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/jobs/101713007446/logs",
+        "--method",
+        "GET"
+      ],
+      "started_at": "2026-09-07T11:31:04.220807+00:00",
+      "finished_at": "2026-09-07T11:31:08.401300+00:00",
+      "exit_code": 0,
+      "stderr": "",
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/macos-x64-sanitized.log",
+      "sha256": "631284cbc1ad36b1614da22b05ee942d340552575865b52cf6332d60dce0e1ae",
+      "bytes": 50871,
+      "lines": 592
+    }
+  ],
+  "raw_logs_retained": false,
+  "status_snapshot": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34112913001-evidence/run-status-observation-02.json",
+  "status_snapshot_sha256": "33a4d0135ed78aed632928b2a1f422b2ebf533c289e7d4f0ffff4726cd56fa50",
+  "sanitization": [
+    "ANSI escape removal",
+    "GitHub credential/bearer/Authorization masking",
+    "credential URL userinfo masking",
+    "password/token/secret/private-key assignment masking",
+    "standard CI workspace/home path normalization"
+  ]
+}

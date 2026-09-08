@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/native_fix_review",
+  "claims": [
+    {
+      "topic": "UIKit containment",
+      "url": "https://developer.apple.com/tutorials/data/documentation/uikit/implementing-a-container-view-controller.json",
+      "accessed_at": "2026-09-06T12:05:23.469065+00:00",
+      "status": "UNRESOLVED",
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "topic": "Read-only loaded view",
+      "url": "https://developer.apple.com/tutorials/data/documentation/uikit/uiviewcontroller/viewifloaded.json",
+      "accessed_at": "2026-09-06T12:05:28.536418+00:00",
+      "status": 200,
+      "body_sha256": "93e9e32e4dd6bf0431679e5bcfc1ae0214c589ac506edb856c46659413084b8e",
+      "bytes": 17889,
+      "title": "viewIfLoaded",
+      "text": [
+        "The view controller\u2019s view, or ",
+        " if the view isn\u2019t yet loaded.",
+        "If the view controller\u2019s view has already been loaded, this property contains that view. If the view has not yet been loaded, this property is set to ",
+        "."
+      ]
+    },
+    {
+      "topic": "Safe-area insets",
+      "url": "https://developer.apple.com/tutorials/data/documentation/uikit/uiview/safeareainsets.json",
+      "accessed_at": "2026-09-06T12:05:29.074075+00:00",
+      "status": 200,
+      "body_sha256": "ad93f715e5758e081159c0e1c88da4bb8c6a1e5bbbe3a11cb8c8a77885d23740",
+      "bytes": 17125,
+      "title": "safeAreaInsets",
+      "text": [
+        "The insets that you use to determine the safe area for this view.",
+        "The safe area of a view reflects the area not covered by navigation bars, tab bars, toolbars, and other ancestors that obscure a view controller\u2019s view. (In tvOS, the safe area reflects the area not covered by the screen\u2019s bezel.) You obtain the safe area for a view by applying the insets in this property to the view\u2019s bounds rectangle. If the view is not currently installed in a view hierarchy, or is not yet visible onscreen, the edge insets in this property are ",
+        ".",
+        "For the view controller\u2019s root view, the insets account for the status bar, other visible bars, and any additional insets that you specified using the ",
+        " property of your view controller. For other views in the view hierarchy, the insets reflect only the portion of the view that is covered. For example, if a view is entirely within the safe area of its superview, the edge insets in this property are ",
+        ".",
+        "You might use this property at runtime to adjust the position of your view\u2019s content programmatically."
+      ]
+    },
+    {
+      "topic": "Window identity",
+      "url": "https://developer.apple.com/tutorials/data/documentation/uikit/uiview/window.json",
+      "accessed_at": "2026-09-06T12:05:30.257903+00:00",
+      "status": 200,
+      "body_sha256": "1aca581f39d2dac3b60d3987d75521df231648abb1602d150636d40586432051",
+      "bytes": 23419,
+      "title": "window",
+      "text": [
+        "The receiver\u2019s window object, or ",
+        " if it has none.",
+        "This property is ",
+        " if the view has not yet been added to a window."
+      ]
+    },
+    {
+      "topic": "UI automation orientation",
+      "url": "https://developer.apple.com/tutorials/data/documentation/xctest/xcuidevice/orientation.json",
+      "accessed_at": "2026-09-06T12:05:31.736657+00:00",
+      "status": "UNRESOLVED",
+      "error": "HTTPError: HTTP Error 404: Not Found"
+    },
+    {
+      "topic": "Kotlin native weak reference",
+      "url": "https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.native.ref/-weak-reference/",
+      "accessed_at": "2026-09-06T12:05:33.810141+00:00",
+      "status": 200,
+      "body_sha256": "3b1c4c6520abd2b95568a1c87cda241fc9cfaec55eafcce1e9c0d5d0e8530fbd",
+      "bytes": 50722,
+      "extracted_excerpt": "WeakReference | Core API \u2013 Kotlin Programming Language Kotlin --> --> --> --> var pathToRoot = \"../../../\"; document.documentElement.classList.replace(\"no-js\",\"js\"); const storage = localStorage.getItem(\"dokka-dark-mode\") if (storage == null) { const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches if (osDarkSchemePreferred === true) { document.getElementsByTagName(\"html\")[0].classList.add(\"theme-dark\") } } else { const savedDarkMode = JSON.parse(storage) if(savedDarkMode === true) { document.getElementsByTagName(\"html\")[0].classList.add(\"theme-dark\") } } Solutions Multiplatform Server-side Data science Android Case studies Docs Language guide Multiplatform development API APIs overview Standard library (stdlib) Test library (kotlin.test) Coroutines (kotlinx.coroutines) Serialization (kotlinx.serialization) Kotlin I/O library (kotlinx-io) Date and time (kotlinx-datetime) JVM Metadata (kotlin-metadata-jvm) Kotlin Gradle plugins Ktor Compose Multiplatform Material3 Community Teach Play Playground Koans Kotlin libraries Toggle table of contents 2.4 Select version 2.4 2.3 2.2 2.1 2.0 1.9 1.8 1.7 1.6 1.5 1.4 1.3 1.2 1.1 1.0 Native Platform filter Native Switch theme Search in API Kotlin libraries kotlin-stdlib / kotlin.native.ref / WeakReference Weak Reference Native @ ExperimentalNativeApi class WeakReference &lt; T : Any &gt; ( source ) Class WeakReference encapsulates weak reference to an object, which could be used to either retrieve a strong reference to an object, or return null, if object was already destroyed by the memory manager. Since Kotlin 1.3 Members Constructors Weak Reference Link copied to clipboard Native constructor ( referred : T ) Creates a weak reference object pointing to an object. Weak reference doesn't prevent removing object, and is nullified once object is collected. Properties value Link copied to clipboard Native val value : T ? Returns either reference to an object or null, if it was collected. Since Kotlin 1.3 Functions clear Link copied to clipboard Native fun clear ( ) Clears reference to an object. Since Kotlin 1.3 get Link copied to clipboard Native fun get ( ) : T ? Returns either reference to an object or null, if it was collected. Since Kotlin 1.3 Thanks for your feedback! Was this page helpful? Yes No Stay in touch: Contributing to Kotlin Releases Press Kit Security Blog Issue Tracker Brand assets Careers Kotlin Merch Opt-Out Kotlin\u2122 is&nbsp;protected under the Kotlin&nbsp;Foundation and licensed under the Apache 2&nbsp;license . Supported and developed by&nbsp; JetBrains (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src= 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5P98'); How can we improve? Enter your name and email address if you would like to receive a&nbsp;follow-up message or&nbsp; contact our support . By submitting this form, I agree that JetBrains s.r.o. (\"JetBrains\") may use my name, email address, phone number, and country of residence to provide support. I agree that JetBrains may process said data using third-party services for this purpose in accordance with the JetBrains Privacy Policy . Send feedback"
+    }
+  ],
+  "applicability": "Public APIs available in the installed iOS 26.5 Simulator SDK; app deployment target16. WeakReference applicable to Kotlin/Native2.4.10 as a non-owning audit-only reference; production state not replaced.",
+  "limitations": "API documentation does not prove any private SwiftUI setter or physical-device behavior."
+}

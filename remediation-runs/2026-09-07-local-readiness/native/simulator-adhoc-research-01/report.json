@@ -1,0 +1,283 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/native_fix_review",
+  "created_at": "2026-09-07T07:28:40.280583+00:00",
+  "assignment": "Read-only proposal for copy-owned credential-free iOS simulator ad-hoc comparison; not an implemented or executed fix.",
+  "scope": "No production/harness/source-freeze edits; original evidence preserved; root owns execution. IOS-R1 remains TEST/EVIDENCE GAP.",
+  "current_head": "1f809b87c15a4deb079809bc14718a58cf0fe451",
+  "applied_skill": "native-release-signing-and-packaging; production-readiness-audit",
+  "source_review": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/Configuration/Config.xcconfig",
+      "sha256": "102b93364c12cb6d9055fcb88acdb5ab15bc1a3724bdc350799539bc09d9c0df",
+      "reviewed_ranges": "complete"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/iosApp/iosApp.xcodeproj/project.pbxproj",
+      "sha256": "625103b4676a017beb4619c61b705efc84c2be47b71603bddd840c1d3856ea9d",
+      "reviewed_ranges": [
+        [
+          228,
+          278
+        ],
+        [
+          298,
+          510
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/normalize_embedded_apple_framework.sh",
+      "sha256": "22f0decf09f3aced46cbbd01824acdd242bbf7253e8fc51dc53d973c679c3da8",
+      "reviewed_ranges": [
+        [
+          1,
+          49
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/run_ios_readiness.py",
+      "sha256": "464719dd100ca8d941126a2113611650e8febde8889abd2a97e9dbdb22dffb20",
+      "reviewed_ranges": [
+        [
+          474,
+          548
+        ],
+        [
+          604,
+          692
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/simulator_entitlements.py",
+      "sha256": "57bee1eeb1fdd58bb6fef10545a37e1b0afae09be7107c2c6710f788905450f3",
+      "reviewed_ranges": [
+        [
+          1,
+          95
+        ],
+        [
+          225,
+          261
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/copied-kotlin-phase.sh.in",
+      "sha256": "1a8a5ee2c87fb4a4d8294ac3d5e2f057baaf9bd1c5a74b04564586b5f1b4baf8",
+      "reviewed_ranges": [
+        [
+          1,
+          42
+        ]
+      ]
+    }
+  ],
+  "original_observations": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-01/owned-app-signature-display.log",
+      "sha256": "41e7ac802087c8f315325cef6954b00c90f8ce320e2873c7430cba5a6d90e6b0",
+      "review": "complete"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-01/generated-app-entitlements.json",
+      "sha256": "4e76940d3f82dd012996c9f4b7cb7536dc1d174be327e6471fc2b0aefa8a21de",
+      "review": "complete"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-01/built-app-linker-entitlements.json",
+      "sha256": "682a0c37f3df081eaaa17080dc03a01c65144e6187561f9d039e5e1fd4997d97",
+      "review": "complete"
+    }
+  ],
+  "installed_public_toolchain_metadata": [
+    {
+      "path": "/Applications/Xcode.app/Contents/SharedFrameworks/XCBuild.framework/Versions/A/PlugIns/XCBBuildService.bundle/Contents/PlugIns/XCBSpecifications.ideplugin/Contents/Resources/CoreBuildSystem.xcspec",
+      "sha256": "27e04bb75a2e77b8d97e3abb76bc140d90740577dbf372891365814258c06250",
+      "reviewed_ranges": [
+        [
+          2111,
+          2182
+        ]
+      ],
+      "retained_excerpt": "remediation-runs/2026-09-07-local-readiness/native/simulator-adhoc-research-01/references/CoreBuildSystem.xcspec.excerpts.txt",
+      "excerpt_sha256": "ad936d9341bc688cacdc2aae7604e9843c09081fc5403eb5cf413dd42e83db6f"
+    },
+    {
+      "path": "/Applications/Xcode.app/Contents/SharedFrameworks/XCBuild.framework/Versions/A/PlugIns/XCBBuildService.bundle/Contents/PlugIns/XCBSpecifications.ideplugin/Contents/Resources/DarwinProductTypes.xcspec",
+      "sha256": "f0aefd24eb09830eb4f9a7d7b87bcc650cefe4f37de717e3fea2a3f032bca7bf",
+      "reviewed_ranges": [
+        [
+          1,
+          184
+        ]
+      ],
+      "retained_excerpt": "remediation-runs/2026-09-07-local-readiness/native/simulator-adhoc-research-01/references/DarwinProductTypes.xcspec.excerpts.txt",
+      "excerpt_sha256": "b63024a881374d8968ba4bf17343a58de7efb2ccd63393e367a9eb67ec3e5e34"
+    },
+    {
+      "path": "/Applications/Xcode.app/Contents/SharedFrameworks/XCBuild.framework/Versions/A/PlugIns/XCBBuildService.bundle/Contents/PlugIns/XCBSpecifications.ideplugin/Contents/Resources/CodeSign.xcspec",
+      "sha256": "5714230b0645715c7ec3ed4059d91438fbc2471a6ae9571143ffb3c9d6faa53b",
+      "reviewed_ranges": [
+        [
+          1,
+          107
+        ]
+      ],
+      "retained_excerpt": "remediation-runs/2026-09-07-local-readiness/native/simulator-adhoc-research-01/references/CodeSign.xcspec.excerpts.txt",
+      "excerpt_sha256": "23a4abfb7718a9bfa8a7e87340b25178f5e564f55dc680b22a4d1ed0a5e3d174"
+    },
+    {
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Info.plist",
+      "sha256": "4b64d32661e0355d0e3321633c03d2ca536739b94ff365bde949022aa24dea59",
+      "reviewed_ranges": "complete structured metadata",
+      "retained": "remediation-runs/2026-09-07-local-readiness/native/simulator-adhoc-research-01/references/Info.plist.gz",
+      "retained_sha256": "cedbcbca9d56c398086f0616f1bc8f5d0f9bc741d410a1f85f31f063e97fab85"
+    },
+    {
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/SDKSettings.json",
+      "sha256": "038a8a5fb9ac4ba60db102748ed117bf674cf64545cce8092eec0c6c44048adc",
+      "reviewed_ranges": "complete structured metadata",
+      "retained": "remediation-runs/2026-09-07-local-readiness/native/simulator-adhoc-research-01/references/SDKSettings.json.gz",
+      "retained_sha256": "f6d6783b40e16b753e7b02cb81ac0b97e66b014fd85ea7f0e4d9b77186072063"
+    },
+    {
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/Entitlements.plist",
+      "sha256": "e6d870d7bcbd2890498a10aea8d5a1b0999fa190390dd135762185b336b495b2",
+      "reviewed_ranges": "complete structured metadata",
+      "retained": "remediation-runs/2026-09-07-local-readiness/native/simulator-adhoc-research-01/references/Entitlements.plist.gz",
+      "retained_sha256": "76061a72faf1453da24728b028f90bc492d285a0cca85745cdf949bf5fad1264"
+    }
+  ],
+  "KGP": {
+    "version": "2.4.10-gradle813",
+    "source_archive": "/Users/abdelrahman/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin/2.4.10/687bc5c96eeca0e5cfc2c4176e57f8ea7a7cac9f/kotlin-gradle-plugin-2.4.10-gradle813-sources.jar",
+    "sha256": "70e277a44fbcf4d58444bb8b1459cb80686380537aa7414b80745a71607b36bb",
+    "sha1": "687bc5c96eeca0e5cfc2c4176e57f8ea7a7cac9f",
+    "public_Maven_sha1": "687bc5c96eeca0e5cfc2c4176e57f8ea7a7cac9f",
+    "source_entries": [
+      {
+        "entry": "org/jetbrains/kotlin/gradle/plugin/mpp/apple/XcodeEnvironment.kt",
+        "sha256": "d79510797c77fb84962cc3c2948219f6c1c9eef7fd9ac7ddde90422f992c3182",
+        "reviewed_ranges": [
+          [
+            1,
+            97
+          ]
+        ],
+        "retained": "remediation-runs/2026-09-07-local-readiness/native/simulator-adhoc-research-01/references/XcodeEnvironment.kt.gz",
+        "retained_sha256": "2fd21e8d2c4dd0068d488e497e09ae6128dde89f7dfe5af76bb5a8f259a1dd82"
+      },
+      {
+        "entry": "org/jetbrains/kotlin/gradle/targets/native/SetupEmbedAndSignAppleFrameworkTaskSideEffect.kt",
+        "sha256": "b16a8f52a3637b7225db29e0aeb840747a66c7d2aaa06504ca1122251314952e",
+        "reviewed_ranges": [
+          [
+            1,
+            20
+          ]
+        ],
+        "retained": "remediation-runs/2026-09-07-local-readiness/native/simulator-adhoc-research-01/references/SetupEmbedAndSignAppleFrameworkTaskSideEffect.kt.gz",
+        "retained_sha256": "00a364301ff65238014f248c9dfe0869003dc947d8b06705600ea575cf8e8f54"
+      },
+      {
+        "entry": "org/jetbrains/kotlin/gradle/plugin/mpp/apple/AppleXcodeTasks.kt",
+        "sha256": "443c56f4ed9e9e6c36c5bab55e0a565aed303ca4faca8b3f8aa82f0513433207",
+        "reviewed_ranges": [
+          [
+            1,
+            60
+          ],
+          [
+            244,
+            419
+          ],
+          [
+            516,
+            566
+          ],
+          [
+            592,
+            650
+          ]
+        ],
+        "retained": "remediation-runs/2026-09-07-local-readiness/native/simulator-adhoc-research-01/references/AppleXcodeTasks.kt.gz",
+        "retained_sha256": "76afd4a08a0c0a8a5d5669996bd51f912adc4513d172e6ce4707be74f5e931a3"
+      }
+    ]
+  },
+  "findings": [
+    "Existing iOS cycle01 explicitly disables signing in env and CLI. Both app xcent candidates were absent; all four inventoried images lacked __entitlements/__ents_der; displayed launcher was linker-ad-hoc, Info.plist not bound, no resource seal. These observations do not diagnose historical user launch failures or prove a production entitlement defect.",
+    "Installed26.5SDK supplies application-identifier and default keychain-access-groups via SDK Entitlements.plist. App product defaults allow signing; raw simulator platform and SDK defaults differ, so raw defaults are not merged effective settings.",
+    "Installed CODE_SIGN_INJECT_BASE_ENTITLEMENTS defaultsYES. Apple official build-setting docs describe separate platform BaseEntitlements.plist injection. This setting must not be conflated with proof that SDK Entitlements.plist or effective keychain groups were generated.",
+    "Official Swift Build commit a155d53d5044ac6f442b318b93f550ed2ac38481 Provisioning.swift1–80 explicitly returns ad-hoc identity for simulator and selects SDK Entitlements.plist when required and no custom file; ProvisioningTaskInputs1–108 separates signed versus simulated entitlements. This is authoritative upstream counter-evidence to archived Simulator-unsigned prose, not byte-proven exact installed26.5 implementation.",
+    "Exact KGP2.4.10 XcodeEnvironment.sign reads nullable EXPANDED_CODE_SIGN_IDENTITY; empty is not absent. AppleXcodeTasks406–412 codesigns only embedded copied framework executable. Original build/bin or xcode-frameworks image hashes may therefore differ after signing while LC_UUID matches. Never treat UUID equality as cryptographic equality.",
+    "Normalizer only canonicalizes framework directory casing and verifies executable presence; no byte/plist changes. It must still run only after successful embed."
+  ],
+  "recommended_explicit_mode": {
+    "status": "PROPOSAL; not executed; factory/root independently review implementation before run",
+    "applicable_only": "Current-task copied wrapper, Debug configuration, iphonesimulator exact SDK, owned fresh simulator UUID and owned DerivedData; never iphoneos/Release/archive/export/upload or physical device.",
+    "matching_env_and_cli": {
+      "CODE_SIGNING_ALLOWED": "YES",
+      "CODE_SIGNING_REQUIRED": "YES",
+      "CODE_SIGN_IDENTITY": "-",
+      "CODE_SIGN_STYLE": "Manual",
+      "DEVELOPMENT_TEAM": "",
+      "PROVISIONING_PROFILE": "",
+      "PROVISIONING_PROFILE_SPECIFIER": "",
+      "CODE_SIGN_ENTITLEMENTS": "",
+      "OTHER_CODE_SIGN_FLAGS": ""
+    },
+    "no_manual_entitlements": "Keep SDK defaults for base injection, ENTITLEMENTS_REQUIRED, ENTITLEMENTS_DESTINATION and debug dylib layout. Do not force ENTITLEMENTS_ALLOWED=YES, manufacture TeamID/group/prefix, add a production entitlements file or weaken Keychain errors.",
+    "credential_boundary": "No -allowProvisioningUpdates or device registration; strict allowlist env; no real identity, keychain enumeration, credential path, profile, account/team, Store IDs or publishing. Keep exact known Debug ID; fail unexpected identity/profile values rather than fallback.",
+    "phase_boundary": "Require actual phase EXPANDED_CODE_SIGN_IDENTITY exactly dash in ad-hoc mode before Gradle (and no actual profile/team). Do not set blank or silently overwrite an unexpected Xcode value. Keep unsigned mode isolated with its original absent identity contract.",
+    "evidence_requirements": [
+      "Capture allowlisted effective target settings including platform, SDK, configuration, bundle ID, required/allowed/ad-hoc/sign style/base entitlements and expanded identity; reject unintended targets or real profiles without reading private profile material.",
+      "Capture generated signed and simulated xcent shape plus bounded XML/__ents_der inventory of launcher/debug dylib/embedded framework/preview; capture final outer and nested signatures and bundle identity. Do not infer healthy storage from metadata.",
+      "Require actual current production synthetic Keychain add/read/update/delete and snapshot save/load/remove outcomes; distinguish operation failures/normal expected item-not-found from successful persistence. Reboot/relaunch path must reach intended screens and receipts.",
+      "Keep exact per-launch dyld path, in-memory UUID, root-owned on-disk SHA/UUID provenance. If XCTest loads different generated source image, identify that exact product separately; never claim installed bytes were loaded from UUID-only equality.",
+      "Retain original unsigned failure receipts; compare modes without changing application source/adding fallbackstorage or hiding errors. Archive compact native XCTest+parser receipts; execute only one build lane with immediate stop/precisecleanup on success/failure."
+    ],
+    "open_runtime_questions": [
+      "Will selected Xcode26.5 effective simulator context generate expected base keychain group with no team/profile? Source suggests yes but build/runtime decides.",
+      "Which image provides simulated entitlement metadata under ENABLE_DEBUG_DYLIB=YES? Inspect stub and dylib without changing architecture.",
+      "Do actual healthy-storage operations succeed after normal Xcode ad-hoc metadata? If not, record independent failure evidence; do not add production entitlements speculatively.",
+      "Exact Store-qualified Xcode26.3/17C529 is unavailable. This26.5 experiment cannot satisfy qualified release/signing/physical-device gates."
+    ]
+  },
+  "research_receipts": [
+    "fetch-receipts.json",
+    "fetch-receipts-02.json",
+    "fetch-receipts-03.json"
+  ],
+  "reviewed_upstream_ranges": {
+    "Provisioning.swift": [
+      [
+        1,
+        80
+      ]
+    ],
+    "ProvisioningTaskInputs.swift": [
+      [
+        1,
+        108
+      ]
+    ],
+    "CodeSign.swift": [
+      [
+        1,
+        200
+      ]
+    ]
+  },
+  "cleanup": {
+    "build_or_test_or_signing_commands_started": false,
+    "simulators_created_or_started": false,
+    "production_changes": false,
+    "private_material_read": false,
+    "bounded_public_fetch_workers": "completed; no remaining owned worker",
+    "retained": "Only compact official docs/source excerpts and proposal. No build outputs or scratch directories created. Root build lane not stopped by reviewer."
+  }
+}

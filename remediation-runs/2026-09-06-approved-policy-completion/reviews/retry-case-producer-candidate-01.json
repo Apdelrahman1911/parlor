@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "recorded_at": "2026-09-06T08:45:44.732408+00:00",
+  "candidate_id": "WD-REVIEW-RETRY-CONTENT-KEY",
+  "finder": "/root/factory_review",
+  "independent_reviewers": [
+    "/root",
+    "/root/release_fix_review"
+  ],
+  "classification": "TEST/EVIDENCE GAP; NOT A CONFIRMED SHIPPING DEFECT OR CURRENT WD-C2 REGRESSION",
+  "source_version": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+  "source": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+  "lines": [
+    247,
+    288
+  ],
+  "candidate": "caseResult producer does not include recoveryAttempt key, relying on intermediate resumeResult=null. Rapid null→equal Success may conflate before recomposition, so case producer need not execute again.",
+  "semantics_proof": "Pinned runtime1.10.5 ProduceState154–174 explicitly allows observers to see only latest rapid state and restarts LaunchedEffect only for changed keys. Existing official source artifact re-opened, no new network claim.",
+  "counter_evidence": [
+    "Both producer blocks already byte-identical in baseline HEAD3625d0663ba6eb51338cbd5f9dc45f859ec18846; current patch does not change keys/retry.",
+    "Production ContentModule59–79 binds OfflineRemoteCaseDataSource and empty InMemoryCachedCaseDataSource plus fixed bundled source. No production mutable cache updater or remote content enabled.",
+    "DefaultCaseRepository67–98 has deterministic cache/remote/bundle validation; bundled immutable envelope cache in BundledWhodunitCases47–64. An equal successful decoded snapshot sees equal current content, so previous deterministic identity failure cannot become success within process.",
+    "Changing snapshot Success value or Failure→Success changes case producer key. Transient snapshot I/O recovery therefore is not the same-key scenario.",
+    "Actual malformed/missing bundle exceptions propagate rather than becoming a transient recovery-screen repository Failure; do not invent recoverable remote behavior.",
+    "New UI tests prove snapshot reread and preservation, not changed content fetch. A mutable fakeCaseRepo failure→success test would not establish current shipping reachability."
+  ],
+  "independent_reasoning": "Root and separate release reviewer reopened/considered immutable source and agreed not to count as application defect; preserve as test-contract limitation if production content becomes mutable.",
+  "recommended_action": "No scoped production repair. If adding remote/mutable content in a future authorized change, explicitly key the load attempt and add real boundary retry tests. Do not relax content identity or fabricate a backend.",
+  "reproduction": "Not run; source examination only. No complete reachable shipping defect proof established.",
+  "references": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/DS-C02-androidx-ProduceState.kt.txt",
+      "sha256": "5d81254019a8138c9ba27268538b64b98435b7b967dd997ecccb9945b286bb96"
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/di/ContentModule.kt",
+      "sha256": "86321739a143ff494b8ff42c19d728119b81163eb572afaeed6a89da52a62635"
+    },
+    {
+      "path": "shared/content/src/commonMain/kotlin/com/parlor/content/repository/DefaultCaseRepository.kt",
+      "sha256": "d843210ffdd8007b6cb961221f59a2b07231a6eec30a9cf2bc9c47f001383737"
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/content/BundledWhodunitCases.kt",
+      "sha256": "d7ba053400675b427415419785febd6179bf791b1f9bcdaf16c342dd058dce06"
+    }
+  ],
+  "hygiene": "Read-only source inspection; no tests/builds/source changes."
+}

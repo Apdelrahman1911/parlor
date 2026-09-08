@@ -1,0 +1,68 @@
+// Appended to the copied XCTest, after the inherited source-bound helpers.
+extension IOSAppLaunchUITests {
+    @MainActor private func verifyActualNativeReadiness(_ app: XCUIApplication) throws {
+        var boots = Set<String>()
+        for ordinal in 1...8 {
+            app.launchEnvironment["PARLOR_READINESS_BOOT"] = String(ordinal)
+            try startScenario(app, name: "readiness")
+            let first = try observe(app)
+            let boot = try string(first, "boot")
+            XCTAssertTrue(boots.insert(boot).inserted, "Each cold launch must be a new process")
+            XCTAssertEqual(first["scenario"] as? String, "readiness")
+            try assertNative(first)
+            let run = app.buttons["parlor-native-readiness-run"]
+            XCTAssertTrue(run.waitForExistence(timeout: 10) && run.isEnabled && run.isHittable)
+            run.tap() // One attempt: never turn an environment failure into a successful retry.
+            let state = app.staticTexts["parlor-native-readiness-state"]
+            XCTAssertTrue(state.waitForExistence(timeout: 10))
+            let completed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+                guard let value = state.value as? String else { return false }
+                return value != "pending" && value != "running"
+            }, object: nil)
+            XCTAssertEqual(XCTWaiter.wait(for: [completed], timeout: 30), .completed)
+            let data = try XCTUnwrap((state.value as? String)?.data(using: .utf8))
+            XCTAssertLessThanOrEqual(data.count, 49152)
+            let report = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
+            XCTAssertEqual(report["schema_version"] as? Int, 2)
+            let signingMode = try string(report, "signing_mode")
+            XCTAssertTrue(["disabled", "adhoc"].contains(signingMode))
+            XCTAssertEqual(report["boot_ordinal"] as? Int, ordinal)
+            XCTAssertEqual(report["process_boot"] as? String, boot)
+            let result = try dictionary(report, "observation")
+            XCTAssertEqual(result["harness_status"] as? String, "observation_complete")
+            // Deliberately NOT an assertion that storage is healthy. The strict
+            // host verifier separately classifies actual Keychain/filesystem
+            // outcomes. Diagnostic delivery cannot green an unavailable store.
+            let images = try XCTUnwrap(report["loaded_app_images"] as? [String])
+            XCTAssertTrue(images.contains("Parlor"))
+            let framework = try dictionary(report, "loaded_compose_framework")
+            var samples = [[String: Any]]()
+            let began = ProcessInfo.processInfo.systemUptime
+            for sample in 1...6 {
+                if sample > 1 {
+                    let interval = XCTestExpectation(description: "Owned current-build launch stability interval")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) { interval.fulfill() }
+                    XCTAssertEqual(XCTWaiter.wait(for: [interval], timeout: 10), .completed)
+                }
+                XCTAssertEqual(app.state, .runningForeground)
+                XCTAssertFalse(app.alerts.firstMatch.exists)
+                let value = try observe(app)
+                XCTAssertEqual(try string(value, "boot"), boot)
+                try assertNative(value)
+                samples.append(["ordinal": sample,
+                    "elapsed_milliseconds": Int((ProcessInfo.processInfo.systemUptime - began) * 1000),
+                    "observation_sequence": try XCTUnwrap(value["sequence"] as? Int)])
+            }
+            let row: [String: Any] = ["schema_version": 2, "boot_ordinal": ordinal,
+                "signing_mode": signingMode, "process_boot": boot, "run_token": try string(report, "run_token"),
+                "loaded_app_images": images, "loaded_compose_framework": framework, "samples": samples,
+                "app_foreground": true, "native_alert_present": false, "probe_activations": 1]
+            let encoded = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
+            XCTAssertLessThanOrEqual(encoded.count, 8192)
+            print("PARLOR_NATIVE_COLD_LAUNCH " + String(decoding: encoded, as: UTF8.self))
+        }
+        app.buttons["parlor-dsc01-complete"].tap()
+        XCTAssertEqual(try observe(app)["completed"] as? Bool, true)
+        app.launchEnvironment.removeValue(forKey: "PARLOR_READINESS_BOOT")
+    }
+}

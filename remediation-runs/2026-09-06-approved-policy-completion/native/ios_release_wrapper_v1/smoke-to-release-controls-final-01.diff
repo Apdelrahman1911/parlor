@@ -1,0 +1,793 @@
+--- smoke/run_ios_wrapper_smoke_cycle.py
++++ release/run_ios_release_wrapper_cycle.py
+@@ -1,10 +1,9 @@
+ #!/usr/bin/env python3
+-"""Source-identical application/test wrapper smoke; root's sole build lane.
+-
+-All application and test bytes come unchanged from an explicitly frozen manifest.
+-Only the copied Xcode Gradle phase changes to preserve immediate isolated stops.
+-No observers, synthetic language invocation, private data reads or new UI tests.
+-Root executes only after independent review. This smoke is not the DS-C01 matrix.
++"""Source-identical unsigned Swift Release wrapper build; root's sole lane.
++
++Only the copied Gradle phase changes for immediate isolated stops. No simulator
++creation, install, runtime test, signing, archive, export or Store operation.
++Root executes only after independent review; compilation is not runtime proof.
+ """
+ import datetime
+ import difflib
+@@ -13,7 +12,6 @@
+ import json
+ import os
+ from pathlib import Path
+-import plistlib
+ import re
+ import shlex
+ import shutil
+@@ -35,16 +33,10 @@
+ from run_android_managed_cycle import Ownership, snapshot_processes, lsof_pids, digest, write_json
+ from secondary_fifo import SecondaryFifoLedger
+ from copied_sources import create_source_copy, inspect_copied_inputs_after_build
++from release_artifacts import inspect_release_artifacts, require_completed_build
+ 
+ FIXTURE = HERE
+-APP_ID = 'com.parlor.app.debug'
+-EXPECTED_TEST = 'IOSAppLaunchUITests/testColdLaunchRendersComposeHomeWithoutUnexpectedAlert()'
+-EXPECTED_TESTS = {EXPECTED_TEST} | {'ComposeContainerViewControllerTests/' + name + '()' for name in (
+-    'testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView',
+-    'testChildUsesFullBoundsAcrossSizesAndOpposingSemanticDirections',
+-    'testSystemDecorationAndOrientationPoliciesStillBelongToTheChild',
+-    'testDefaultAppearanceForwardingReachesTheSameChildExactlyOnce',
+-)}
++APP_ID = 'com.parlor.app'
+ 
+ 
+ def normalized_identity():
+@@ -53,11 +45,13 @@
+ 
+ def control_files():
+     return [Path(__file__).resolve(), RUN / 'run_gradle_cycle.py',
+-            ROOT / 'audit-runs/2026-09-05-source-audit/run_android_managed_cycle.py',
+-            HERE.parent / 'dsc01_apphost_v6/run_dsc01_apphost_cycle.py'] + [
++            ROOT / 'audit-runs/2026-09-05-source-audit/run_android_managed_cycle.py'] + [
+         HERE / name for name in ('secondary_fifo.py', 'test_secondary_fifo.py',
+         'copied-kotlin-phase.sh.in', 'source-bindings.json', 'copied_sources.py',
+-        'bind_source.py', 'test_smoke_contract.py')]
++        'bind_source.py', 'release_artifacts.py', 'test_release_wrapper_contract.py')] + [
++        HERE.parent / 'ios_wrapper_smoke_v1' / name for name in (
++        'run_ios_wrapper_smoke_cycle.py', 'secondary_fifo.py', 'test_secondary_fifo.py',
++        'copied-kotlin-phase.sh.in', 'source-bindings.json', 'copied_sources.py', 'bind_source.py')]
+ 
+ 
+ def control_manifest():
+@@ -113,7 +107,7 @@
+                 raise KeyboardInterrupt('deferred signal ' + str(sig))
+ 
+ 
+-def inspect_smoke_manifest(copy_root, bindings):
++def inspect_wrapper_manifest(copy_root, bindings):
+     """Exactly one build-phase edit; every application/test input stays identical."""
+     if any(path.is_symlink() for path in copy_root.rglob('*')):
+         raise RuntimeError('No symbolic links are permitted in the source-only build copy')
+@@ -128,39 +122,13 @@
+             changed.add(entry['path'])
+         result.append(dict(path=entry['path'], original_sha256=entry['sha256'], copied_sha256=current))
+     if changed != {phase_project}:
+-        raise RuntimeError('Smoke permits only the reviewed copied Gradle phase edit')
++        raise RuntimeError('Wrapper permits only the reviewed copied Gradle phase edit')
+     actual = {str(path.relative_to(copy_root)) for path in copy_root.rglob('*') if path.is_file()}
+     if actual != {entry['path'] for entry in result}:
+-        raise RuntimeError('Unregistered source additions/removals in the smoke copy')
++        raise RuntimeError('Unregistered source additions/removals in the Release wrapper copy')
+     return result
+ 
+ 
+-def verify_xctest(summary, tests, uuid):
+-    expected = dict(result='Passed', totalTestCount=5, passedTests=5,
+-                    failedTests=0, skippedTests=0, expectedFailures=0)
+-    if any(summary.get(key) != value for key, value in expected.items()) or summary.get('testFailures'):
+-        raise RuntimeError('Actual XCTest summary is not exactly five successful, unskipped tests')
+-    configurations = summary.get('devicesAndConfigurations', [])
+-    devices = tests.get('devices', [])
+-    if (len(configurations) != 1 or len(devices) != 1 or
+-            any(device.get('deviceId') != uuid or device.get('architecture') != 'arm64' or
+-                device.get('platform') != 'iOS Simulator'
+-                for device in [configurations[0].get('device', {}), devices[0]])):
+-        raise RuntimeError('XCTest did not run exclusively on the owned ARM64 simulator')
+-    cases = []
+-
+-    def visit(nodes):
+-        for node in nodes:
+-            if node.get('nodeType') == 'Test Case':
+-                cases.append(node)
+-            visit(node.get('children', []))
+-
+-    visit(tests.get('testNodes', []))
+-    if (len(cases) != 5 or {case.get('nodeIdentifier') for case in cases} != EXPECTED_TESTS or
+-            any(case.get('result') != 'Passed' for case in cases)):
+-        raise RuntimeError('Every exact production-container XCTest and original cold-launch test must pass')
+-    return dict(method=EXPECTED_TEST, methods=sorted(EXPECTED_TESTS), result='Passed', total=5,
+-                skipped=0, failures=0, device_uuid=uuid)
+ 
+ 
+ class AppHostOwnership(Ownership):
+@@ -204,8 +172,8 @@
+ 
+ 
+ def main():
+-    if len(sys.argv) != 3 or not re.fullmatch(r'ios-wrapper-smoke-[0-9]{2}', sys.argv[1]):
+-        raise SystemExit('Usage: run_ios_wrapper_smoke_cycle.py ios-wrapper-smoke-NN INDEPENDENTLY_REVIEWED_CONTROL_SHA256')
++    if len(sys.argv) != 3 or not re.fullmatch(r'ios-wrapper-release-[0-9]{2}', sys.argv[1]):
++        raise SystemExit('Usage: run_ios_release_wrapper_cycle.py ios-wrapper-release-NN INDEPENDENTLY_REVIEWED_CONTROL_SHA256')
+     NAME = sys.argv[1]
+     approved = sys.argv[2]
+     if not re.fullmatch('[a-f0-9]{64}', approved) or approved != control_hash():
+@@ -215,10 +183,10 @@
+         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+         dest.mkdir(parents=True, exist_ok=False)
+         receipt = dict(cycle=NAME, started_at=now(), status='RUNNING',
+-                       execution_kind='manifest-owned-copy-unsigned-ios-source-identical-wrapper-smoke', commands=[],
+-                       runtime_evidence_status='NOT_RUN', cleanup_status='BLOCKED',
+-                       scope='One unchanged cold-launch/home-brand/no-alert/foreground UI test plus four unchanged production-container UIKit tests. No Kotlin/Swift application or test instrumentation; copied Gradle stop phase only. Not language ownership, active-session retention, Settings, physical LAN, full-game, signed-release or Store proof.', approved_control_sha256=approved)
+-        temp, owner, env, uuid = None, None, None, None
++                       execution_kind='manifest-owned-copy-unsigned-ios-source-identical-release-wrapper-build', commands=[],
++                       build_evidence_status='NOT_RUN', cleanup_status='BLOCKED',
++                       scope='Source-identical Swift Release wrapper compilation and all shipped native/resource inventory only. No simulator/device creation, installation, runtime, signing, archive/export or Store proof; canonical collision identity is build-only.', approved_control_sha256=approved)
++        temp, owner, env = None, None, None
+         # This iteration compiles only inside temp/copy. Original-repository
+         # outputs are never task-owned and must never be deleted by this run.
+         original_outputs = owned_outputs() + [ROOT / 'iosApp/build']
+@@ -275,68 +243,6 @@
+             if code:
+                 raise RuntimeError('Required isolated Gradle stop failed')
+ 
+-        def own_simulator_metadata(label):
+-            # Device names/UUIDs are non-player metadata, but retain ONLY our
+-            # unique name. Never log unrelated simulator metadata or containers.
+-            args = ['xcrun', 'simctl', 'list', 'devices', '-j']
+-            entry = dict(command=args, started_at=now(), log=label + '.json',
+-                         retention='Only exact synthetic owned-name matches retained')
+-            receipt['commands'].append(entry); save()
+-            child = None
+-            try:
+-                with defer_parent_signals():
+-                    child = subprocess.Popen(args, cwd=ROOT, env=env, stdout=subprocess.PIPE,
+-                                             stderr=subprocess.PIPE, start_new_session=True)
+-                    owner.register(child, 'command')
+-                stdout, stderr = child.communicate(timeout=45)
+-                entry['exit_code'] = child.returncode
+-                if child.returncode or stderr.strip() or len(stdout) > 2 * 1024 * 1024:
+-                    raise RuntimeError('Cannot verify own simulator metadata; raw unrelated data not retained')
+-                parsed = json.loads(stdout)
+-                matches = [dict(udid=d['udid'], name=d['name'], state=d['state'], runtime=runtime)
+-                           for runtime, rows in parsed['devices'].items() for d in rows
+-                           if d.get('name') == receipt['owned_device_name']]
+-                if len(matches) > 1:
+-                    raise RuntimeError('Ambiguous synthetic simulator identity; no deletion authorized')
+-                if matches and not re.fullmatch(r'[A-Fa-f0-9]{8}(?:-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12}', matches[0]['udid']):
+-                    raise RuntimeError('Unexpected synthetic simulator UUID')
+-                if matches and uuid is not None and matches[0]['udid'] != uuid:
+-                    raise RuntimeError('Synthetic simulator identity changed')
+-                write_json(dest / (label + '.json'), dict(matches=matches))
+-                return matches[0] if matches else None
+-            except BaseException:
+-                if child is not None:
+-                    owner.stop(lambda item: item['role'] == 'command')
+-                raise
+-            finally:
+-                entry['finished_at'] = now(); save()
+-
+-        def shutdown_owned_device():
+-            info = own_simulator_metadata('owned-device-before-shutdown')
+-            if info is None or info['state'] == 'Shutdown':
+-                receipt['shutdown_disposition'] = 'already_absent' if info is None else 'already_shutdown'
+-                return
+-            code = command(['xcrun', 'simctl', 'shutdown', uuid], 'shutdown.log')
+-            receipt['shutdown_exit_code'] = code
+-            after = own_simulator_metadata('owned-device-after-shutdown')
+-            if code != 0 or after is None or after['state'] != 'Shutdown':
+-                raise RuntimeError('Owned simulator shutdown did not complete successfully')
+-
+-        def delete_owned_device():
+-            info = own_simulator_metadata('owned-device-before-delete')
+-            if info is not None:
+-                if info['state'] != 'Shutdown':
+-                    raise RuntimeError('Refuse deletion before owned simulator is shut down')
+-                code = command(['xcrun', 'simctl', 'delete', uuid], 'delete.log')
+-                receipt['delete_exit_code'] = code
+-                if code != 0:
+-                    raise RuntimeError('Owned simulator deletion command failed')
+-            after = own_simulator_metadata('owned-device-after-delete')
+-            path = Path.home() / 'Library/Developer/CoreSimulator/Devices' / uuid
+-            receipt['owned_device_absent'] = after is None and not path.exists() and not path.is_symlink()
+-            if not receipt['owned_device_absent']:
+-                raise RuntimeError('Owned simulator metadata or directory remains')
+-
+         try:
+             save()  # Durable incomplete receipt before any allocation/native work.
+             receipt['source_before'] = normalized_identity()
+@@ -357,7 +263,6 @@
+             # already exist, so the finalizer still owns the allocation.
+             temp = temp.resolve()
+             receipt['owned_temporary_directory'] = str(temp)
+-            receipt['owned_device_name'] = 'Parlor-Audit-' + temp.name
+             save()
+             owner = AppHostOwnership(baseline, temp, outputs, dest)
+             owner.launch_logs += [dest / n for n in ('framework.log', 'xcodebuild.log')]
+@@ -378,7 +283,7 @@
+             env.update(PATH=java + '/bin:/usr/bin:/bin:/usr/sbin:/sbin', JAVA_HOME=java,
+                        LANG='en_US.UTF-8', LC_ALL='C', GRADLE_USER_HOME=str(temp / 'gradle-home'),
+                        TMPDIR=str(temp / 'tmp') + '/', PYTHONDONTWRITEBYTECODE='1',
+-                       CONFIGURATION='Debug',
++                       CONFIGURATION='Release',
+                        CODE_SIGNING_ALLOWED='NO', CODE_SIGNING_REQUIRED='NO', CODE_SIGN_IDENTITY='',
+                        DEVELOPMENT_TEAM='')
+             # KGP2.4.10 treats even an empty EXPANDED_CODE_SIGN_IDENTITY as an
+@@ -397,6 +302,9 @@
+                 raise RuntimeError('Known public SDK installation absent; never copy private local.properties')
+             env['ANDROID_HOME'] = str(android_sdk)
+             env['ANDROID_SDK_ROOT'] = str(android_sdk)
++            if command(['xcodebuild', '-version'], 'xcode-version.log'):
++                raise RuntimeError('Xcode version unavailable')
++            receipt['xcode_version'] = (dest / 'xcode-version.log').read_text().strip()
+             if command(['xcrun', '--sdk', 'iphonesimulator', '--show-sdk-version'], 'sdk-version.log'):
+                 raise RuntimeError('SDK version unavailable')
+             sdk_version = (dest / 'sdk-version.log').read_text().strip()
+@@ -408,7 +316,7 @@
+             if receipt['source_before'] != bindings['source_identity']:
+                 raise RuntimeError('Dirty/untracked source differs from independently reviewed fixture binding')
+             if bindings['repository'] != str(ROOT) or bindings['schema_version'] != 3:
+-                raise RuntimeError('Unexpected source-identical smoke source binding')
++                raise RuntimeError('Unexpected source-identical Release source binding')
+             for entry in bindings['copy_only']:
+                 p = ROOT / entry['path']
+                 if p.is_symlink() or p.resolve() != p.absolute() or digest(p) != entry['sha256']:
+@@ -445,80 +353,66 @@
+                 (temp / 'copy' / path).read_text().splitlines(True),
+                 fromfile='original/' + path, tofile='audit-copy/' + path)) for path in changes)
+             (dest / 'copied-source.diff').write_text(diff)
+-            copied_source_manifest = inspect_smoke_manifest(temp / 'copy', manifest)
++            copied_source_manifest = inspect_wrapper_manifest(temp / 'copy', manifest)
+             write_json(dest / 'copied-source-manifest.json', copied_source_manifest)
+             receipt['copied_source_diff_sha256'] = digest(dest / 'copied-source.diff')
+             receipt['copied_source_manifest_sha256'] = digest(dest / 'copied-source-manifest.json')
+             receipt['copy_only_build_root'] = str(temp / 'copy')
+-            receipt['simulator_creation_attempted'] = True; save()
+-            if command(['xcrun', 'simctl', 'create', receipt['owned_device_name'],
+-                        'com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro',
+-                        'com.apple.CoreSimulator.SimRuntime.iOS-26-5'], 'create.log'):
+-                raise RuntimeError('New simulator creation failed')
+-            uuid = (dest / 'create.log').read_text().strip()
+-            if not re.fullmatch(r'[A-Fa-f0-9]{8}(?:-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12}', uuid):
+-                uuid = None; raise RuntimeError('Simulator ownership UUID not available')
+-            receipt['owned_uuid'] = uuid; save()
+-            if command(['xcrun', 'simctl', 'boot', uuid], 'boot.log') or command(['xcrun', 'simctl', 'bootstatus', uuid, '-b'], 'bootstatus.log', 300):
+-                raise RuntimeError('Owned simulator boot failed')
+-            results = temp / 'Results.xcresult'
+             gradle_attempted = True
+-            receipt['temporary_artifact_retention_reason'] = 'Only current-cycle framework outputs needed during copied Swift link/runtime; remove after result extraction.'
+-            receipt['runtime_evidence_status'] = 'RUNNING'
+-            receipt['runtime_attempted_at'] = now()
++            receipt['temporary_artifact_retention_reason'] = 'Current-cycle Release framework/app retained only through source-bound artifact inspection; remove afterward.'
++            receipt['build_evidence_status'] = 'RUNNING'
++            receipt['build_attempted_at'] = now()
+             save()
+             try:
+                 xcode = command(['xcodebuild', '-project', project.parent, '-scheme', 'iosApp',
+-                    '-configuration', 'Debug', '-sdk', 'iphonesimulator', '-destination', 'id=' + uuid,
+-                    '-derivedDataPath', temp / 'DerivedData', '-resultBundlePath', results,
+-                    '-parallel-testing-enabled', 'NO', '-maximum-concurrent-test-simulator-destinations', '1',
+-                    '-disable-concurrent-destination-testing', '-jobs', '1', '-test-timeouts-enabled', 'YES',
+-                    '-default-test-execution-time-allowance', '720', '-maximum-test-execution-time-allowance', '900',
++                    '-configuration', 'Release', '-sdk', 'iphonesimulator',
++                    '-destination', 'generic/platform=iOS Simulator',
++                    '-derivedDataPath', temp / 'DerivedData', '-jobs', '1',
++                    'ARCHS=arm64', 'ONLY_ACTIVE_ARCH=YES',
+                     'CODE_SIGNING_ALLOWED=NO', 'CODE_SIGNING_REQUIRED=NO', 'CODE_SIGN_IDENTITY=', 'DEVELOPMENT_TEAM=',
+-                    'ONLY_ACTIVE_ARCH=YES', 'COMPILER_INDEX_STORE_ENABLE=NO',
+-                    *['-only-testing:iosAppUITests/' + method[:-2] for method in sorted(EXPECTED_TESTS)],
+-                    'test'], 'xcodebuild.log', 2100)
++                    'COMPILER_INDEX_STORE_ENABLE=NO', 'build'], 'xcodebuild.log', 2100)
+                 receipt['xcodebuild_exit_code'] = xcode
+             finally:
+                 stop_gradle('stop-xcode-immediate')
+-            if results.exists():
+-                receipt['xcresult_extraction_exit_codes'] = {}
+-                for view in ('summary', 'tests'):
+-                    receipt['xcresult_extraction_exit_codes'][view] = command(
+-                        ['xcrun', 'xcresulttool', 'get', 'test-results', view, '--path', results],
+-                        'xcresult-' + view + '.json')
+-                # No screenshot/debug-description or application-data export:
+-                # retain only structured XCTest and artifact/source identities.
+-            app = temp / 'DerivedData/Build/Products/Debug-iphonesimulator/Parlor.app'
+-            if app.is_dir():
+-                info = plistlib.loads((app / 'Info.plist').read_bytes())
+-                receipt['app_identity'] = {k: info.get(k) for k in ('CFBundleIdentifier', 'CFBundleVersion', 'CFBundleShortVersionString', 'MinimumOSVersion')}
+-                receipt['artifacts'] = [dict(path=str(p.relative_to(app)), bytes=p.stat().st_size, sha256=digest(p))
+-                    for p in [app / 'Parlor', app / 'Frameworks/ComposeApp.framework/ComposeApp'] if p.is_file()]
+-            if receipt.get('app_identity', {}).get('CFBundleIdentifier') != APP_ID or len(receipt.get('artifacts', [])) != 2:
+-                raise RuntimeError('No exact Debug application/framework artifact identity captured')
+-            if not results.exists() or receipt.get('xcresult_extraction_exit_codes') != {'summary': 0, 'tests': 0}:
+-                raise RuntimeError('No complete actual XCTest result extraction')
+-            receipt['xctest'] = verify_xctest(
+-                json.loads((dest / 'xcresult-summary.json').read_text()),
+-                json.loads((dest / 'xcresult-tests.json').read_text()), uuid)
+             embedded_stop = dest / 'embedded-gradle-stop.txt'
+-            if not embedded_stop.is_file() or embedded_stop.read_text() != 'build_exit=0\nstop_exit=0\n':
+-                raise RuntimeError('No successful immediate stop receipt from copied nested Gradle phase')
++            require_completed_build(xcode, embedded_stop.read_text() if embedded_stop.is_file() else None)
+             receipt['embedded_gradle_stop_status'] = 'PASS'
+-            receipt['smoke_qualification'] = 'Uninstrumented application and unchanged original tests; copied build phase only'
++            app = temp / 'DerivedData/Build/Products/Release-iphonesimulator/Parlor.app'
++            probe_index = 0
++            def binary_probe(path):
++                nonlocal probe_index
++                probe_index += 1
++                logs = {}
++                for kind, args in (
++                    ('file', ['file', '-b', path]),
++                    ('archs', ['xcrun', 'lipo', '-archs', path]),
++                    ('build', ['xcrun', 'vtool', '-show-build', path])):
++                    filename = 'native-' + str(probe_index).zfill(3) + '-' + kind + '.log'
++                    if command(args, filename):
++                        raise RuntimeError('Could not inspect shipped native binary: ' + kind)
++                    logs[kind] = (dest / filename).read_text()
++                    if len(logs[kind].encode()) > 65536:
++                        raise RuntimeError('Native metadata exceeds bounded inspection output')
++                return logs
++            inspection = inspect_release_artifacts(app, temp / 'copy', binary_probe,
++                [entry['path'] for entry in bindings['copy_only']])
++            write_json(dest / 'release-artifact-inventory.json', inspection)
++            receipt['artifact_inventory_sha256'] = digest(dest / 'release-artifact-inventory.json')
++            receipt['artifact_inspection_status'] = 'PASS'
++            receipt['build_configuration'] = 'Release'
++            receipt['build_platform'] = 'iOS Simulator'
++            receipt['architectures'] = ['arm64']
++            receipt['app_identity'] = inspection['app_identity']
++            receipt['artifacts'] = inspection['native_binaries']
++            receipt['release_compile_qualification'] = 'Unsigned generic arm64 simulator build-only; no test or device execution, no Store/signing qualification.'
+             if owner.secondary_errors:
+                 raise RuntimeError('Apple secondary-path attestation incomplete; inspect exact ledger, never claim cleanup success')
+-            receipt['runtime_evidence_status'] = 'PASS' if (
+-                xcode == 0 and receipt.get('xctest', {}).get('result') == 'Passed' and
+-                receipt.get('embedded_gradle_stop_status') == 'PASS') else 'FAIL'
+-            if receipt['runtime_evidence_status'] != 'PASS':
+-                raise RuntimeError('No complete source-identical wrapper smoke; inspect retained evidence, not an inferred application failure')
++            receipt['build_evidence_status'] = 'PASS'
+         except BaseException as error:
+-            # Failed validation after an attempted runtime is not an unexecuted
++            # Failed validation after an attempted build is not an unexecuted
+             # check. This records an evidence failure, not an application defect.
+-            if receipt['runtime_evidence_status'] != 'NOT_RUN':
+-                receipt['runtime_evidence_status'] = 'FAIL'
++            if receipt['build_evidence_status'] != 'NOT_RUN':
++                receipt['build_evidence_status'] = 'FAIL'
+             receipt['error'] = dict(type=type(error).__name__, message=str(error)[:800])
+         finally:
+             deferred = []
+@@ -530,25 +424,6 @@
+             try:
+                 if gradle_attempted and owner is not None:
+                     stage('final-isolated-gradle-stop', lambda: stop_gradle('stop-final'))
+-                # Recover a successfully printed UUID even if interrupted between command/assignment.
+-                if uuid is None and (dest / 'create.log').exists():
+-                    value = (dest / 'create.log').read_text().strip()
+-                    if re.fullmatch(r'[A-Fa-f0-9]{8}(?:-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12}', value):
+-                        uuid = value; receipt['owned_uuid'] = uuid
+-                # A killed/interrupted create may register the unique device
+-                # before printing its UUID. Query only that synthetic name and
+-                # retain no metadata belonging to other simulator owners.
+-                if uuid is None and receipt.get('simulator_creation_attempted'):
+-                    recovered = stage('recover-owned-simulator-identity',
+-                                      lambda: own_simulator_metadata('owned-device-recovery'))
+-                    if isinstance(recovered, dict):
+-                        uuid = recovered['udid']; receipt['owned_uuid'] = uuid
+-                if uuid is not None:
+-                    # The unchanged launch test does not add teardown code.
+-                    # Shutting down this exact owned simulator stops its app even
+-                    # after failure; no unowned app/process is affected.
+-                    stage('shutdown-owned-simulator-and-app', shutdown_owned_device)
+-                    stage('delete-owned-simulator', delete_owned_device)
+                 if owner is not None:
+                     stage('stop-owned-command-workers', owner.stop)
+                     receipt['secondary_cleanup'] = stage('cleanup-attested-secondary-fifos', owner.secondary.cleanup)
+@@ -598,12 +473,12 @@
+                 receipt.update(removed_outputs=removed, remaining_outputs=[str(p.relative_to(ROOT)) for p in outputs if p.exists() or p.is_symlink()],
+                     temporary_directory_removed=temp is None or (not temp.exists() and not temp.is_symlink()), cleanup_completed_at=now(),
+                     source_after=stage('read-final-source-identity', normalized_identity), cleanup_errors=errors, deferred_signals=deferred,
+-                    cleanup_method='Immediate isolated Gradle stops; owned simulator shutdown/delete; PID/start attestation; exact attested external FIFOs and empty parents; exact generated outputs and temporary copy/DerivedData removal; cache symlinks unlinked only.')
++                    cleanup_method='Immediate isolated Gradle stops; PID/start attestation; exact attested external FIFOs and empty parents; temporary copy/DerivedData removal; cache symlinks unlinked only; no simulator created.')
+                 receipt['controls_after_sha256'] = control_hash()
+                 receipt['controls_unchanged'] = receipt['controls_after_sha256'] == approved
+                 receipt['source_unchanged'] = receipt.get('source_after') is not None and receipt.get('source_after') == receipt.get('source_before')
+                 receipt['cleanup_status'] = 'PASS' if safe and not errors and not receipt['remaining_outputs'] and receipt['temporary_directory_removed'] else 'FAIL'
+-                receipt['status'] = 'PASS' if receipt.get('runtime_evidence_status') == 'PASS' and not receipt.get('error') and receipt['cleanup_status'] == 'PASS' and receipt['source_unchanged'] and receipt['controls_unchanged'] and receipt['copied_sources_unchanged'] else 'FAIL'
++                receipt['status'] = 'PASS' if receipt.get('build_evidence_status') == 'PASS' and not receipt.get('error') and receipt['cleanup_status'] == 'PASS' and receipt['source_unchanged'] and receipt['controls_unchanged'] and receipt['copied_sources_unchanged'] else 'FAIL'
+                 receipt['unexpected_original_outputs_preserved'] = [str(p.relative_to(ROOT)) for p in original_outputs
+                                                                     if p.exists() or p.is_symlink()]
+                 if receipt['unexpected_original_outputs_preserved']:
+--- smoke/release_artifacts.py
++++ release/release_artifacts.py
+@@ -0,0 +1,163 @@
++"""Source-bound unsigned wrapper artifact inspection; no runtime/signing claim.
++
++Only the root runner supplies native-tool callbacks after a successful build.
++Every shipped regular file is streamed into a compact hash inventory. Native
++headers discover all Mach-O files, including unexpected debug/helper dylibs.
++"""
++import hashlib
++import os
++from pathlib import Path
++import plistlib
++import re
++import stat
++
++
++MACHO_MAGICS = {bytes.fromhex(value) for value in (
++    'feedface', 'cefaedfe', 'feedfacf', 'cffaedfe', 'cafebabe', 'bebafeca', 'cafebabf', 'bfbafeca')}
++MAX_FILES = 8192
++MAX_TOTAL_BYTES = 2 * 1024 * 1024 * 1024
++MAX_PLIST_BYTES = 1024 * 1024
++REQUIRED_NATIVE = {'Parlor', 'Frameworks/ComposeApp.framework/ComposeApp'}
++
++
++def digest(path):
++    value = hashlib.sha256()
++    with path.open('rb') as stream:
++        for block in iter(lambda: stream.read(1024 * 1024), b''):
++            value.update(block)
++    return value.hexdigest()
++
++
++def require_completed_build(xcode_exit, embedded_stop):
++    # Never let stale existing binaries turn an unsuccessful build into success.
++    if type(xcode_exit) is not int or xcode_exit != 0:
++        raise RuntimeError('Release Xcode build did not succeed; artifact existence is not proof')
++    if embedded_stop != 'build_exit=0\nstop_exit=0\n':
++        raise RuntimeError('No successful immediate nested Gradle build/stop receipt')
++
++
++def read_plist(path):
++    if not path.is_file() or path.is_symlink() or path.stat().st_size > MAX_PLIST_BYTES:
++        raise RuntimeError('Missing/unsafe/oversized public plist input')
++    value = plistlib.loads(path.read_bytes())
++    if not isinstance(value, dict):
++        raise RuntimeError('Public plist must be a dictionary')
++    return value
++
++
++def versions(source):
++    text = (source / 'config/parlor-version.xcconfig').read_text()
++    result = {}
++    for name in ('PARLOR_VERSION_NAME', 'PARLOR_BUILD_NUMBER'):
++        values = re.findall(r'^' + name + r'\s*=\s*(\S+)\s*$', text, re.MULTILINE)
++        if len(values) != 1:
++            raise RuntimeError('Version must come from one source xcconfig assignment')
++        result[name] = values[0]
++    return result
++
++
++def version_tuple(value):
++    result = tuple(int(part) for part in value.split('.'))
++    return result + (0,) * (3 - len(result))
++
++
++def verify_native_probe(relative, probe):
++    if set(probe) != {'file', 'archs', 'build'} or any(not isinstance(v, str) or len(v.encode()) > 65536 for v in probe.values()):
++        raise RuntimeError('Native inspection must include bounded file/lipo/vtool outputs')
++    if 'Mach-O' not in probe['file'] or probe['archs'].split() != ['arm64']:
++        raise RuntimeError('Every shipped native binary must be an arm64 Mach-O')
++    platforms = re.findall(r'^\s*platform\s+(\S+)\s*$', probe['build'], re.MULTILINE)
++    minimum = re.findall(r'^\s*minos\s+([0-9]+(?:\.[0-9]+){1,2})\s*$', probe['build'], re.MULTILINE)
++    if (not platforms or any(platform != 'IOSSIMULATOR' for platform in platforms) or
++            not minimum or len(platforms) != len(minimum) or any(version_tuple(v) > (16, 0, 0) for v in minimum)):
++        raise RuntimeError('Native code is not iOS Simulator-compatible at the app deployment floor')
++    if relative == 'Parlor' and 'executable' not in probe['file']:
++        raise RuntimeError('Main app artifact is not executable Mach-O code')
++    return dict(architectures=['arm64'], platforms=platforms, minimum_os_versions=sorted(set(minimum)),
++                file_description=probe['file'].strip(), evidence_kind='native-file-lipo-vtool-metadata-only')
++
++
++def inspect_release_artifacts(app, source, binary_probe, source_paths):
++    app, source = Path(app), Path(source)
++    if not app.is_dir() or app.is_symlink() or app.resolve() != app.absolute():
++        raise RuntimeError('Expected a fresh exact owned Release app directory')
++    entries, native = [], []
++    total = 0
++    visited = 0
++    for path in app.rglob('*'):
++        visited += 1
++        if visited > MAX_FILES * 2:
++            raise RuntimeError('Artifact directory-entry bound exceeded')
++        if path.is_symlink():
++            raise RuntimeError('Refuse artifact inspection through a generated symlink')
++        if path.is_dir():
++            if path.suffix == '.appex':
++                raise RuntimeError('Unreviewed app extension is outside the wrapper contract')
++            continue
++        info = path.stat()
++        if not stat.S_ISREG(info.st_mode) or len(entries) >= MAX_FILES:
++            raise RuntimeError('Unexpected artifact type or file-count bound exceeded')
++        total += info.st_size
++        if total > MAX_TOTAL_BYTES:
++            raise RuntimeError('Release app exceeds bounded inspection size')
++        relative = str(path.relative_to(app))
++        entry = dict(path=relative, bytes=info.st_size, sha256=digest(path), executable=bool(info.st_mode & 0o111))
++        with path.open('rb') as stream:
++            magic = stream.read(4)
++        if magic in MACHO_MAGICS:
++            if len(native) >= 64:
++                raise RuntimeError('Native artifact-count inspection bound exceeded')
++            entry['kind'] = 'mach-o'
++            metadata = verify_native_probe(relative, binary_probe(path))
++            native.append(dict(entry, **metadata))
++        else:
++            entry['kind'] = 'resource-or-metadata'
++            if relative in REQUIRED_NATIVE or path.suffix in ('.dylib', '.so') or entry['executable']:
++                raise RuntimeError('Executable/native-named artifact lacks a recognized Mach-O header')
++        entries.append(entry)
++    entries.sort(key=lambda row: row['path'])
++    native.sort(key=lambda row: row['path'])
++    if not REQUIRED_NATIVE <= {row['path'] for row in native}:
++        raise RuntimeError('Both main executable and exact embedded ComposeApp framework are required')
++    if not os.access(app / 'Parlor', os.X_OK):
++        raise RuntimeError('Main app executable mode is missing')
++    expected_version = versions(source)
++    info = read_plist(app / 'Info.plist')
++    expected = dict(CFBundleIdentifier='com.parlor.app', CFBundleExecutable='Parlor',
++        CFBundleShortVersionString=expected_version['PARLOR_VERSION_NAME'], CFBundleVersion=expected_version['PARLOR_BUILD_NUMBER'],
++        MinimumOSVersion='16.0', CFBundleSupportedPlatforms=['iPhoneSimulator'], DTPlatformName='iphonesimulator',
++        CFBundleLocalizations=['en', 'ar'])
++    if any(info.get(key) != value for key, value in expected.items()):
++        raise RuntimeError('Release app plist identity/version/platform/deployment/localizations do not match source')
++    source_info = read_plist(source / 'iosApp/iosApp/Info.plist')
++    for key in ('NSBonjourServices', 'NSLocalNetworkUsageDescription'):
++        if info.get(key) != source_info.get(key):
++            raise RuntimeError('Release plist network/privacy declaration differs from source')
++    source_privacy = source / 'iosApp/iosApp/PrivacyInfo.xcprivacy'
++    if read_plist(app / 'PrivacyInfo.xcprivacy') != read_plist(source_privacy):
++        raise RuntimeError('Shipped privacy manifest differs structurally from bound source')
++    if any(Path(row['path']).name == 'embedded.mobileprovision' for row in entries):
++        raise RuntimeError('Unsigned simulator wrapper unexpectedly contains a provisioning profile')
++    by_name = {}
++    for row in entries:
++        by_name.setdefault(Path(row['path']).name, []).append(row)
++    raw_sources = sorted(source / name for name in source_paths if
++        (name.startswith('game-modes/whodunit/src/commonMain/composeResources/files/cases/') and name.endswith('.json')) or
++        ('/src/commonMain/composeResources/' in name and Path(name).suffix in ('.ttf', '.otf')))
++    # Fonts and authored cases ship as raw Compose resources. Compiled resources
++    # such as Assets.car/cvr are still fully hash-inventoried, not misrepresented
++    # as byte-identical source PNG/XML files.
++    if not raw_sources:
++        raise RuntimeError('Expected shipping raw case/font inputs are absent from source binding')
++    resource_matches = []
++    for path in raw_sources:
++        matched = [row['path'] for row in by_name.get(path.name, []) if row['sha256'] == digest(path)]
++        if not matched:
++            raise RuntimeError('Bound raw case/font resource absent or changed in Release app: ' + path.name)
++        resource_matches.append(dict(source_path=str(path.relative_to(source)), source_sha256=digest(path), artifact_paths=matched))
++    return dict(schema_version=1, status='PASS', execution_kind='unsigned-simulator-release-artifact-inspection',
++        app_identity={key: info.get(key) for key in expected}, native_binaries=native,
++        files=entries, file_count=len(entries), total_bytes=total,
++        source_privacy_sha256=digest(source_privacy), shipped_privacy_sha256=digest(app / 'PrivacyInfo.xcprivacy'),
++        privacy_structurally_matches_source=True, raw_resource_matches=resource_matches,
++        limitation='Unsigned compiler/artifact evidence only. Every Mach-O inventoried, including unexpected debug dylibs. No runtime, signature integrity, physical-device or Store qualification.')
+--- smoke/test_release_wrapper_contract.py
++++ release/test_release_wrapper_contract.py
+@@ -0,0 +1,205 @@
++"""Pure disposable fixtures/source contracts; no Gradle/native tool/app execution."""
++import ast
++import hashlib
++import importlib.util
++import json
++from pathlib import Path
++import plistlib
++import sys
++import tempfile
++import unittest
++from unittest import mock
++
++HERE = Path(__file__).resolve().parent
++SMOKE = HERE.parent / 'ios_wrapper_smoke_v1'
++sys.path.insert(0, str(HERE))
++spec = importlib.util.spec_from_file_location('ios_release_wrapper_controls', HERE / 'run_ios_release_wrapper_cycle.py')
++runner = importlib.util.module_from_spec(spec)
++spec.loader.exec_module(runner)
++import release_artifacts as artifacts
++
++
++class ReleaseArtifactContractTest(unittest.TestCase):
++    def setUp(self):
++        self.temporary = tempfile.TemporaryDirectory(prefix='parlor-release-wrapper-control-')
++        self.addCleanup(self.temporary.cleanup)
++        self.root = Path(self.temporary.name).resolve()
++        self.app = self.root / 'Parlor.app'; self.app.mkdir()
++        self.source = self.root / 'source'; self.source.mkdir()
++        self.source_paths = []
++        self.probed = []
++        self.info = dict(CFBundleIdentifier='com.parlor.app', CFBundleExecutable='Parlor',
++            CFBundleShortVersionString='1.0.0', CFBundleVersion='1', MinimumOSVersion='16.0',
++            CFBundleSupportedPlatforms=['iPhoneSimulator'], DTPlatformName='iphonesimulator',
++            CFBundleLocalizations=['en', 'ar'], NSBonjourServices=['_p2pkit2._tcp'],
++            NSLocalNetworkUsageDescription='Synthetic declared local network use')
++        self.write(self.app, 'Info.plist', plistlib.dumps(self.info))
++        self.write(self.source, 'iosApp/iosApp/Info.plist', plistlib.dumps(self.info))
++        privacy = plistlib.dumps(dict(NSPrivacyTracking=False, NSPrivacyCollectedDataTypes=[]))
++        self.write(self.app, 'PrivacyInfo.xcprivacy', privacy)
++        self.write(self.source, 'iosApp/iosApp/PrivacyInfo.xcprivacy', privacy)
++        self.write(self.source, 'config/parlor-version.xcconfig', b'PARLOR_VERSION_NAME = 1.0.0\nPARLOR_BUILD_NUMBER = 1\n')
++        case = 'game-modes/whodunit/src/commonMain/composeResources/files/cases/synthetic.json'
++        self.write(self.source, case, b'{"synthetic":true}\n'); self.source_paths.append(case)
++        self.write(self.app, 'compose-resources/files/cases/synthetic.json', b'{"synthetic":true}\n')
++        for relative in sorted(artifacts.REQUIRED_NATIVE): self.native(relative)
++
++    def write(self, root, name, contents):
++        path = root / name; path.parent.mkdir(parents=True, exist_ok=True); path.write_bytes(contents)
++        return path
++
++    def native(self, name):
++        path = self.write(self.app, name, bytes.fromhex('cffaedfe') + b'synthetic header: not executable machine code')
++        path.chmod(0o755)
++
++    def probe(self, path):
++        self.probed.append(str(path.relative_to(self.app)))
++        return dict(file='Mach-O 64-bit executable arm64\n', archs='arm64\n',
++                    build='Load command 1\n platform IOSSIMULATOR\n minos 15.0\n sdk 26.5\n')
++
++    def inspect(self):
++        return artifacts.inspect_release_artifacts(self.app, self.source, self.probe, self.source_paths)
++
++    def test_all_native_files_including_unexpected_debug_dylib_are_inspected(self):
++        self.native('Parlor.debug.dylib')
++        result = self.inspect()
++        self.assertEqual(set(self.probed), artifacts.REQUIRED_NATIVE | {'Parlor.debug.dylib'})
++        self.assertEqual(3, len(result['native_binaries']))
++        self.assertEqual('PASS', result['status'])
++        self.assertTrue(result['privacy_structurally_matches_source'])
++        self.assertEqual(1, len(result['raw_resource_matches']))
++        self.assertIn('No runtime', result['limitation'])
++        self.assertEqual(len(list(p for p in self.app.rglob('*') if p.is_file())), result['file_count'])
++        self.assertTrue(all(len(entry['sha256']) == 64 for entry in result['files']))
++
++    def test_failed_xcode_or_nested_gradle_stop_cannot_pass_with_stale_app(self):
++        self.assertTrue((self.app / 'Parlor').exists())
++        for code in (1, 65, -15, None, False):
++            with self.assertRaises(RuntimeError): artifacts.require_completed_build(code, 'build_exit=0\nstop_exit=0\n')
++        for receipt in (None, '', 'build_exit=1\nstop_exit=0\n', 'build_exit=0\nstop_exit=1\n',
++                        'build_exit=0\nstop_exit=0\nextra\n'):
++            with self.assertRaises(RuntimeError): artifacts.require_completed_build(0, receipt)
++        artifacts.require_completed_build(0, 'build_exit=0\nstop_exit=0\n')
++
++    def test_wrong_identity_version_deployment_platform_and_localization_fail(self):
++        for key, value in (('CFBundleIdentifier', 'com.parlor.app.debug'), ('CFBundleVersion', '2'),
++                           ('CFBundleShortVersionString', '1.0'), ('MinimumOSVersion', '15.0'),
++                           ('CFBundleExecutable', 'Other'), ('CFBundleSupportedPlatforms', ['iPhoneOS']),
++                           ('DTPlatformName', 'iphoneos'), ('CFBundleLocalizations', ['en']),
++                           ('NSBonjourServices', ['_unknown._tcp'])):
++            changed = dict(self.info); changed[key] = value
++            self.write(self.app, 'Info.plist', plistlib.dumps(changed))
++            with self.subTest(key=key), self.assertRaises(RuntimeError): self.inspect()
++        self.write(self.app, 'Info.plist', plistlib.dumps(self.info))
++
++    def test_framework_floor_is_not_incorrectly_forced_to_app_floor(self):
++        result = self.inspect()
++        self.assertEqual(['15.0'], result['native_binaries'][0]['minimum_os_versions'])
++        self.assertEqual('16.0', result['app_identity']['MinimumOSVersion'])
++
++    def test_wrong_native_architecture_platform_floor_or_missing_metadata_fails(self):
++        original = self.probe(self.app / 'Parlor')
++        for key, value in (('file', 'data'), ('archs', 'x86_64'), ('archs', 'arm64 x86_64'),
++                           ('build', 'platform IOS\n minos 16.0\n'), ('build', 'platform IOSSIMULATOR\n minos 17.0\n'),
++                           ('build', 'platform IOSSIMULATOR\n'), ('build', 'minos 16.0\n')):
++            changed = dict(original); changed[key] = value
++            with self.subTest(key=key, value=value), self.assertRaises(RuntimeError):
++                artifacts.verify_native_probe('Parlor', changed)
++        changed = dict(original); changed['extra'] = 'unexpected'
++        with self.assertRaises(RuntimeError): artifacts.verify_native_probe('Parlor', changed)
++
++    def test_missing_or_unrecognized_expected_native_fails(self):
++        path = self.app / 'Parlor'; path.unlink()
++        with self.assertRaises(RuntimeError): self.inspect()
++        self.write(self.app, 'Parlor', b'not executable'); (self.app / 'Parlor').chmod(0o755)
++        with self.assertRaises(RuntimeError): self.inspect()
++
++    def test_source_privacy_and_raw_content_are_bound(self):
++        self.write(self.app, 'PrivacyInfo.xcprivacy', plistlib.dumps(dict(NSPrivacyTracking=True)))
++        with self.assertRaises(RuntimeError): self.inspect()
++        self.write(self.app, 'PrivacyInfo.xcprivacy', (self.source / 'iosApp/iosApp/PrivacyInfo.xcprivacy').read_bytes())
++        self.write(self.app, 'compose-resources/files/cases/synthetic.json', b'{"changed":true}\n')
++        with self.assertRaises(RuntimeError): self.inspect()
++
++    def test_missing_raw_source_and_duplicate_version_assignment_fail(self):
++        with self.assertRaises(RuntimeError): artifacts.inspect_release_artifacts(self.app, self.source, self.probe, [])
++        path = self.source / 'config/parlor-version.xcconfig'
++        path.write_text(path.read_text() + 'PARLOR_BUILD_NUMBER = 1\n')
++        with self.assertRaises(RuntimeError): self.inspect()
++
++    def test_generated_symlink_or_provisioning_profile_fails_closed(self):
++        (self.app / 'alias').symlink_to(self.app / 'Info.plist')
++        with self.assertRaises(RuntimeError): self.inspect()
++        (self.app / 'alias').unlink()
++        self.write(self.app, 'embedded.mobileprovision', b'synthetic forbidden profile fixture')
++        with self.assertRaises(RuntimeError): self.inspect()
++
++    def test_inventory_bounds_are_enforced_without_large_allocation(self):
++        with mock.patch.object(artifacts, 'MAX_FILES', 1), self.assertRaises(RuntimeError): self.inspect()
++        with mock.patch.object(artifacts, 'MAX_TOTAL_BYTES', 1), self.assertRaises(RuntimeError): self.inspect()
++        with mock.patch.object(artifacts, 'MAX_PLIST_BYTES', 1), self.assertRaises(RuntimeError): self.inspect()
++
++
++class ReleaseWrapperSourceContractTest(unittest.TestCase):
++    def test_release_command_is_build_only_generic_arm64_unsigned(self):
++        source = (HERE / 'run_ios_release_wrapper_cycle.py').read_text()
++        tree = ast.parse(source)
++        commands = [node.args[0] for node in ast.walk(tree) if isinstance(node, ast.Call) and
++                    isinstance(node.func, ast.Name) and node.func.id == 'command' and node.args and isinstance(node.args[0], ast.List)]
++        builds = [node for node in commands if any(isinstance(item, ast.Constant) and item.value == 'build' for item in node.elts)]
++        self.assertEqual(1, len(builds))
++        values = [node.value for node in builds[0].elts if isinstance(node, ast.Constant)]
++        for needed in ('xcodebuild', 'Release', 'iphonesimulator', 'generic/platform=iOS Simulator',
++                       'ARCHS=arm64', 'ONLY_ACTIVE_ARCH=YES', 'CODE_SIGNING_ALLOWED=NO', 'CODE_SIGNING_REQUIRED=NO'):
++            self.assertIn(needed, values)
++        self.assertEqual('build', values[-1])
++        for forbidden in ('simctl', 'get_app_container', 'xcresulttool', '-only-testing:',
++                          '-exportArchive', '-archivePath', '-allowProvisioningUpdates', 'verify_xctest(', 'instrument_kotlin('):
++            self.assertNotIn(forbidden, source)
++        self.assertIn("CONFIGURATION='Release'", source)
++        self.assertIn("runtime", source)  # Explicit limitation, not a runtime gate.
++        self.assertNotIn("runtime_evidence_status='PASS'", source)
++
++    def test_build_failure_gate_precedes_artifact_inspection_and_immediate_stop_is_finally_owned(self):
++        source = (HERE / 'run_ios_release_wrapper_cycle.py').read_text()
++        self.assertIn("            finally:\n                stop_gradle('stop-xcode-immediate')", source)
++        self.assertLess(source.index('require_completed_build(xcode,'), source.index('inspection = inspect_release_artifacts('))
++        self.assertIn("receipt['artifact_inspection_status'] = 'PASS'", source)
++        self.assertIn("receipt.get('build_evidence_status') == 'PASS'", source)
++
++    def test_phase_copy_input_and_source_binding_helpers_are_unchanged(self):
++        for name in ('secondary_fifo.py', 'test_secondary_fifo.py', 'copied-kotlin-phase.sh.in', 'copied_sources.py', 'bind_source.py'):
++            self.assertEqual((SMOKE / name).read_bytes(), (HERE / name).read_bytes(), name)
++        self.assertEqual(json.loads((SMOKE / 'source-bindings.json').read_text())['source_identity'],
++                         json.loads((HERE / 'source-bindings.json').read_text())['source_identity'])
++        marker = 'def inspect_smoke_manifest('
++        old = (SMOKE / 'run_ios_wrapper_smoke_cycle.py').read_text()
++        old = old[old.index(marker):old.index('\n\ndef verify_xctest(')]
++        new = (HERE / 'run_ios_release_wrapper_cycle.py').read_text()
++        new = new[new.index('def inspect_wrapper_manifest('):new.index('\n\nclass AppHostOwnership')]
++        expected = old.replace('inspect_smoke_manifest', 'inspect_wrapper_manifest').replace('Smoke permits only', 'Wrapper permits only').replace('the smoke copy', 'the Release wrapper copy')
++        self.assertEqual(expected.strip(), new.strip())
++
++    def test_owned_worker_fifo_signal_and_file_cleanup_declarations_are_unchanged(self):
++        def declarations(path):
++            return {node.name: ast.dump(node, include_attributes=False) for node in ast.walk(ast.parse(path.read_text()))
++                    if isinstance(node, (ast.FunctionDef, ast.ClassDef)) and node.name != 'main'}
++        old, new = declarations(SMOKE / 'run_ios_wrapper_smoke_cycle.py'), declarations(HERE / 'run_ios_release_wrapper_cycle.py')
++        for name in ('AppHostOwnership', 'defer_parent_signals', 'process_uid', 'normalized_identity',
++                     'save', 'stage', 'command', 'stop_gradle', 'verify_workers', 'verify_copied_inputs', 'remove', 'remove_temp'):
++            with self.subTest(name=name): self.assertEqual(old[name], new[name])
++
++    def test_all_consumed_old_controls_are_explicitly_hashed(self):
++        expected = {'run_ios_wrapper_smoke_cycle.py', 'secondary_fifo.py', 'test_secondary_fifo.py',
++                    'copied-kotlin-phase.sh.in', 'source-bindings.json', 'copied_sources.py', 'bind_source.py'}
++        controls = runner.control_files()
++        self.assertEqual(len(controls), len(set(controls)))
++        self.assertEqual(expected, {path.name for path in controls if path.parent == SMOKE})
++        manifest = {row['path']: row['sha256'] for row in runner.control_manifest()}
++        for name in expected:
++            path = SMOKE / name
++            self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), manifest[str(path.relative_to(runner.ROOT))])
++
++
++if __name__ == '__main__':
++    unittest.main()
+--- smoke/source-bindings.json
++++ release/source-bindings.json
+@@ -2,7 +2,7 @@
+   "schema_version": 3,
+   "binding_status": "REVIEW_REQUIRED_BOUND",
+   "repository": "/Users/abdelrahman/Projects/parlor",
+-  "created_at": "2026-09-06T13:01:43.798318+00:00",
++  "created_at": "2026-09-06T20:47:57.676352+00:00",
+   "source_identity": {
+     "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+     "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",

@@ -1,0 +1,342 @@
+{
+  "reviewer": "/root/release_fix_review",
+  "reported_by": "/root",
+  "reviewed_utc": "2026-09-06T07:48:33.642385+00:00",
+  "classification": "TEST/EVIDENCE GAP \u2014 variable remote-update advisory inventory for identical frozen source",
+  "conclusion": "Both original productionCheck cycles genuinely failed verifyReleaseLintWarnings. The raw warning sets differ despite identical frozen source, tool pins, gate and accepted inventory. This does not establish a regression in repaired application logic. Do not reinterpret either cycle as PASS or disable/relax the gate. Exact runtime reason for the differing omissions remains UNCONFIRMED.",
+  "source_review": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/build.gradle.kts",
+      "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+      "lines": [
+        [
+          345,
+          436
+        ]
+      ],
+      "claim": "Exact sorted multiset gate, canonicalizes equivalent catalog-update detector IDs and available-version suffix only; missing warnings also fail."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/config/android-lint-accepted-warnings.txt",
+      "sha256": "e196948d55ae455b7d59a4532b9a8f680e109daef5a704b555d1b903afb9ecbd",
+      "lines": [
+        [
+          1,
+          39
+        ]
+      ],
+      "claim": "32 accepted exact advisories including all three independently observed omissions."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/gradle/libs.versions.toml",
+      "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "lines": [
+        [
+          1,
+          106
+        ]
+      ],
+      "claim": "Ktor3.0.3, detekt1.23.7, no pin changes."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/gradle/wrapper/gradle-wrapper.properties",
+      "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2",
+      "lines": [
+        [
+          1,
+          8
+        ]
+      ],
+      "claim": "Wrapper remains8.13."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/gradle.properties",
+      "sha256": "2df8685921ad2c6eead097a6d9994bbcc93dbc5cbdeb0bce8911ffa4e83162ce",
+      "lines": [
+        [
+          1,
+          29
+        ]
+      ],
+      "claim": "Analyzer pin android.experimental.lint.version=9.1.1."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/content/build.gradle.kts",
+      "sha256": "f956862a089a95ba41f4de714e95d1ac44a23d80994c323ba61a1c0c28d34939",
+      "lines": [
+        [
+          1,
+          24
+        ]
+      ],
+      "claim": "MockEngine dependency is commonTest only; missing warning does not imply removed shipping dependency."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/di/ContentModule.kt",
+      "sha256": "86321739a143ff494b8ff42c19d728119b81163eb572afaeed6a89da52a62635",
+      "lines": [
+        [
+          1,
+          87
+        ]
+      ],
+      "claim": "Actual production DI uses OfflineRemoteCaseDataSource, not MockEngine."
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/ANDROID_LINT_TRIAGE.md",
+      "sha256": "425d39b620add895c1f8f43c502b2012dd0f5f5a57688a9d9f937f4d923ee209",
+      "lines": [
+        [
+          1,
+          82
+        ]
+      ],
+      "claim": "Prose documents exact gate; not evidence that external advisory availability is deterministic."
+    }
+  ],
+  "cycles": [
+    {
+      "cycle": "combined-production-01",
+      "receipt": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-01/receipt.json",
+      "receipt_sha256": "bdcf9e7128e84df8d2d63f17804a11e8f78780c5669a2c3d0dba72afd33d617f",
+      "report_sha256": "3edf9ed9a4bbe151b0fa04c638b53beb0f51348dc301a43929c4da0b61bdb828",
+      "report_tool": "lint 9.1.1",
+      "log_sha256": "54b81104189f155b8a4f9adefa6df7d2a84d1dbebfc8647ac6eabad373c1e127",
+      "command": [
+        "./gradlew",
+        "productionCheck",
+        "--no-build-cache",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=combined-production-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "exit_code": 1,
+      "started_at": "2026-09-06T06:50:56.479289+00:00",
+      "finished_at": "2026-09-06T06:56:02.004856+00:00",
+      "status": "FAIL",
+      "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+      "diff_sha256": "38326880d1f9332618d193f73d49cebc6de063dd26c7e87a8711be9a04a5a430",
+      "source_file_count": 664,
+      "current_rehashed_source_drift": [],
+      "actual_count": 31,
+      "expected_count": 32,
+      "unexpected": [],
+      "missing": [
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.ktor:ktor-client-mock than 3.0.3"
+      ],
+      "canonical_inventory": [
+        "AndroidGradlePluginVersion|gradle/libs.versions.toml|A newer version of com.android.application than 8.13.2",
+        "AndroidGradlePluginVersion|gradle/libs.versions.toml|A newer version of com.android.library than 8.13.2",
+        "AndroidGradlePluginVersion|gradle/libs.versions.toml|A newer version of com.android.tools.build:gradle than 8.13.2",
+        "AndroidGradlePluginVersion|gradle/wrapper/gradle-wrapper.properties|A newer version of Gradle than 8.13",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of androidx.activity:activity-compose than 1.9.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of androidx.navigation3:navigation3-runtime than 1.0.0",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of app.cash.turbine:turbine than 1.2.0",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of com.lemonappdev:konsist than 0.16.1",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.gitlab.arturbosch.detekt than 1.23.7",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.gitlab.arturbosch.detekt:detekt-gradle-plugin than 1.23.7",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.insert-koin:koin-android than 4.0.0",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.insert-koin:koin-compose than 4.0.0",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.insert-koin:koin-compose-viewmodel than 4.0.0",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.insert-koin:koin-core than 4.0.0",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.insert-koin:koin-test than 4.0.0",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.ktor:ktor-client-content-negotiation than 3.0.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.ktor:ktor-client-core than 3.0.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.ktor:ktor-serialization-kotlinx-json than 3.0.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.androidx.navigation3:navigation3-ui than 1.0.0-alpha06",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose than 1.10.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.components:components-resources than 1.10.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.components:components-ui-tooling-preview than 1.10.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.foundation:foundation than 1.10.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.material3:material3 than 1.9.0-beta03",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.runtime:runtime than 1.10.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.ui:ui than 1.10.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.ui:ui-test than 1.10.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose:compose-gradle-plugin than 1.10.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.kotlinx:kotlinx-datetime than 0.7.1",
+        "GradleDependency|gradle.properties|Newer version of lint available",
+        "OldTargetApi|composeApp/build.gradle.kts|Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the `android.os.Build.VERSION_CODES` javadoc for details."
+      ],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-06T06:56:02.327192+00:00",
+        "remaining_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "cleanup_errors": [],
+        "cleanup_completed_at": "2026-09-06T06:56:03.444305+00:00"
+      }
+    },
+    {
+      "cycle": "combined-production-02",
+      "receipt": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-02/receipt.json",
+      "receipt_sha256": "fc5f914ddfa6937d069192a87d1ac8baf19c260a0f75774e51c80a574816d0a2",
+      "report_sha256": "4fdb514d5c7f007c7a496b7f822f9375aff9bd53e2f72b9b7a54d4e9fa9b146b",
+      "report_tool": "lint 9.1.1",
+      "log_sha256": "7784d1fef6058a2bc3261454d8d5dfcfe201584f6fa7696f09ffc245aa197ede",
+      "command": [
+        "./gradlew",
+        "productionCheck",
+        "--no-build-cache",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=combined-production-02",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "exit_code": 1,
+      "started_at": "2026-09-06T07:26:35.575211+00:00",
+      "finished_at": "2026-09-06T07:30:46.729623+00:00",
+      "status": "FAIL",
+      "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+      "diff_sha256": "38326880d1f9332618d193f73d49cebc6de063dd26c7e87a8711be9a04a5a430",
+      "source_file_count": 664,
+      "current_rehashed_source_drift": [],
+      "actual_count": 30,
+      "expected_count": 32,
+      "unexpected": [],
+      "missing": [
+        "AndroidGradlePluginVersion|gradle/wrapper/gradle-wrapper.properties|A newer version of Gradle than 8.13",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.gitlab.arturbosch.detekt than 1.23.7"
+      ],
+      "canonical_inventory": [
+        "AndroidGradlePluginVersion|gradle/libs.versions.toml|A newer version of com.android.application than 8.13.2",
+        "AndroidGradlePluginVersion|gradle/libs.versions.toml|A newer version of com.android.library than 8.13.2",
+        "AndroidGradlePluginVersion|gradle/libs.versions.toml|A newer version of com.android.tools.build:gradle than 8.13.2",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of androidx.activity:activity-compose than 1.9.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of androidx.navigation3:navigation3-runtime than 1.0.0",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of app.cash.turbine:turbine than 1.2.0",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of com.lemonappdev:konsist than 0.16.1",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.gitlab.arturbosch.detekt:detekt-gradle-plugin than 1.23.7",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.insert-koin:koin-android than 4.0.0",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.insert-koin:koin-compose than 4.0.0",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.insert-koin:koin-compose-viewmodel than 4.0.0",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.insert-koin:koin-core than 4.0.0",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.insert-koin:koin-test than 4.0.0",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.ktor:ktor-client-content-negotiation than 3.0.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.ktor:ktor-client-core than 3.0.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.ktor:ktor-client-mock than 3.0.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.ktor:ktor-serialization-kotlinx-json than 3.0.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.androidx.navigation3:navigation3-ui than 1.0.0-alpha06",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose than 1.10.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.components:components-resources than 1.10.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.components:components-ui-tooling-preview than 1.10.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.foundation:foundation than 1.10.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.material3:material3 than 1.9.0-beta03",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.runtime:runtime than 1.10.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.ui:ui than 1.10.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.ui:ui-test than 1.10.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose:compose-gradle-plugin than 1.10.3",
+        "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.kotlinx:kotlinx-datetime than 0.7.1",
+        "GradleDependency|gradle.properties|Newer version of lint available",
+        "OldTargetApi|composeApp/build.gradle.kts|Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the `android.os.Build.VERSION_CODES` javadoc for details."
+      ],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-06T07:30:47.007086+00:00",
+        "remaining_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "cleanup_errors": [],
+        "cleanup_completed_at": "2026-09-06T07:30:48.203846+00:00"
+      }
+    }
+  ],
+  "authoritative_research": {
+    "receipt": "reviews/lint-inventory-research-01/receipt.json",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-checks/32.1.1/lint-checks-32.1.1-sources.jar",
+    "access_date": "2026-09-06",
+    "source_path": "reviews/lint-inventory-research-01/GradleDetector.kt",
+    "source_sha256": "f6ba40e072159212c3348d8fdb38029c4d77ef761d220e55ea2f0a467e571270",
+    "inspected_ranges": [
+      [
+        1245,
+        1447
+      ],
+      [
+        2511,
+        2616
+      ],
+      [
+        2956,
+        2974
+      ],
+      [
+        3750,
+        3909
+      ],
+      [
+        3978,
+        4131
+      ]
+    ],
+    "applicability": "Raw reports self-identify lint9.1.1; installed lint-checks32.1.1 binary SHA4bf382af26feffb5b06b4ed7506ab296bd8b6aa392634fcac129073d6ec0f0c4 matches strict verification metadata. Official source archive for that exact artifact inspected.",
+    "claims": [
+      {
+        "lines": [
+          1355,
+          1425
+        ],
+        "claim": "Dependency update detector queries remote Maven then cache/google/sdk-index fallbacks, reports only if a newerVersion is available."
+      },
+      {
+        "lines": [
+          2591,
+          2615
+        ],
+        "claim": "Gradle wrapper advisory returns without reporting when getGradleVersion suggested value is absent."
+      },
+      {
+        "lines": [
+          3764,
+          3775
+        ],
+        "claim": "Gradle-version lookup also depends on Maven metadata."
+      },
+      {
+        "lines": [
+          3807,
+          3851
+        ],
+        "claim": "Remote cache path catches IOException into empty successful resource and suppresses its error callback; non-cache path returns null on IOException. Thus absence of an advisory need not produce a build error or diagnostic network stack trace."
+      },
+      {
+        "lines": [
+          4014,
+          4054
+        ],
+        "claim": "Plugin markers consult plugins.gradle.org; Gradle uses repo.gradle.org; regular artifacts use repo1.maven.org."
+      }
+    ],
+    "limitation": "These source paths establish dependency on external/cache lookup and possible silent omission. They do NOT identify which branch/network/cache outcome occurred in either actual build. Official source archive retained only as extracted relevant file, no dependency cache edits."
+  },
+  "counter_evidence": [
+    "First-cycle missing ktor-client-mock advisory is present in second-cycle raw report. First-cycle present Gradle and detekt marker advisories are absent in second-cycle. Current source664 inputs independently rehashed with zero drift.",
+    "No unexpected warnings in either cycle; individual lintRelease task completed; gate is the explicit failed task.",
+    "Successful Maven Central metadata fetch outside a Gradle run proves availability at that later request only, not what lint saw during the failed run.",
+    "MockEngine is intentionally test-only; changing or removing it does not follow from this warning omission.",
+    "Existing exact gate intentionally flags both new and missing warnings, so fail-closed behavior itself is not claimed as an unauthorized seventeenth app defect."
+  ],
+  "recommendation": "Retain both FAIL receipts. Keep gate/pins/metadata unchanged in scoped16 repairs. Use --continue only to execute independent downstream tasks while leaving final aggregate FAIL if inventory fails. Separately investigate source-bound reproducible advisory collection/network-cache diagnostics before changing strict gate policy; do not blanket ignore missing advisories or fabricate an inventory.",
+  "runtime_cause": "UNCONFIRMED \u2014 no per-request lint network/cache trace retained",
+  "remaining": "Unchanged third combined cycle pending; native DS-C01 verification pending. This review is not whole-project readiness.",
+  "review_actions": "Read-only source/evidence inspection plus official-source HTTP download and review-evidence writes only. No Gradle, Xcode, app, simulator, worker termination, source edit, Git mutation or Store action executed by reviewer. Downloaded archive held in memory, no binary output retained."
+}

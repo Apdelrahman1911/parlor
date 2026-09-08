@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "at": "2026-09-08T06:42:54.515931+00:00",
+  "reviewer": "/root/release_fix_review",
+  "author": "/root",
+  "classification": "APPROVED_SCOPED_ADAPTER_SOURCE_FOR_LATER_FROZEN_CANDIDATE_EXECUTION",
+  "scope": "Complete90-line adapter, existing helper import/owned ephemeral context, consumer import/main/receipt contract and outer command/finalization routing. No executed candidate or new test result.",
+  "inputs": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/run_candidate_input_01.py",
+      "sha256": "2a306819fb41b1883139fb42355d493f02e1d93a687f54d06f43ffbb758afa60",
+      "lines": 90
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/run_schema_consumer_controls_01.py",
+      "sha256": "78222a79d0d19cdce28077506ce1fd74481cc419fdf9dce9e9e5b6fd8840336f",
+      "lines": 187
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/candidate_consumer.py",
+      "sha256": "eb6e2baaac22739b4652bc63c6b57a24374ee57fb81d4711b981b872e8ac1c7f",
+      "lines": 416
+    }
+  ],
+  "surrounding_contracts": {
+    "helper_read": "run_schema_consumer_controls_01.py1-131;187-line source unchanged from separately reviewed/executed controls04",
+    "consumer_read": "candidate_consumer.py130-269,387-416 reopened;416-line source unchanged from independently reviewed16/16controls",
+    "outer_lane": "run_gradle_cycle.py230-344 reopened; SHA2565c0e546c819c28762cbc6b355ec2717737fc53f96712af591a27add878579d7a"
+  },
+  "source_proof": [
+    {
+      "boundary": "Root and output ownership",
+      "locations": "adapter18-24,38-48; outer lane235-255",
+      "result": "ROOT resolves to repository. Requires the outer-owned C/evidence/CYCLE/scratch/tmp canonical path; output/report are direct children of that cycle. Existing files and symlinks refused; exclusive writes are retained. This path shape is not stand-alone authorization: execute only via outer lock/ownership lane."
+    },
+    {
+      "boundary": "Import and checker ordering",
+      "locations": "adapter27-34,55-60; helper1-40,69-130; consumer1-34,183-207",
+      "result": "Exact helper and consumer hashes checked before file-location import. Their imports define functions/classes/constants only, not main/test/export/build/Store execution. Neither eagerly imports jsonschema, so optional_checkers runs before the consumer creates its real format checker. No replacement schema or receipt parsing logic added."
+    },
+    {
+      "boundary": "CLI and consumer status",
+      "locations": "adapter38-39,61-71; consumer387-412",
+      "result": "Exactly binding-relative-path plus lowercase64hex digest accepted; root/output supplied internally. Consumer enforces binding/source/export/render/schemas/strict-pins/no-fixtures independently and writes scoped0 or failure1 receipt. Adapter records its returned exit; nonzero does not become success."
+    },
+    {
+      "boundary": "Cancellation and failure",
+      "locations": "adapter60-90; helper123-130; outer lane277-335",
+      "result": "Exception/SystemExit/KeyboardInterrupt during orchestration becomes nonzero1 with a sanitized error type. Context-manager exit attempts owned parser cleanup on consumer failure/cancellation; missing cleanup success or changed controls forces nonzero. Failure writing the final receipt still propagates nonzero to the outer lane. Repeated interruption may prevent an adapter receipt, but does not bypass the outer owned stop/scratch finalizer or permit whole-cycle PASS."
+    },
+    {
+      "boundary": "Prerequisites and network scope",
+      "locations": "helper34-40,78-122",
+      "result": "Reuses the reviewed two public immutable wheel origins, exact size/hash/ZIP bounds, owned ephemeral extraction, pinned installed jsonschema/referencing and actual imported-parser path checks. No global pip/cache change; no new source upload/network target. Consumer itself stays offline."
+    },
+    {
+      "boundary": "Control and resource binding",
+      "locations": "adapter49-51,57,63-68; outer lane288-331",
+      "result": "Records adapter/helper/consumer identities; checks fixed consumer+test pins before/after, helper/consumer bytes after completion, and mandatory ephemeral cleanup. Outer wrapper provides immediate Gradle stop, owned process checks and exact scratch/build finalization. Root must separately bind/recheck the adapter control because the generic lane runner manifest includes the lane, not every command script."
+    }
+  ],
+  "execution_template": [
+    "/usr/bin/python3",
+    "-B",
+    "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+    "FRESH_CANDIDATE_CONSUMER_CYCLE",
+    "--command",
+    "/usr/bin/python3",
+    "-B",
+    "remediation-runs/2026-09-07-local-readiness/reviews/run_candidate_input_01.py",
+    "FRESH_REPOSITORY_RELATIVE_BINDING",
+    "REVIEWED_BINDING_SHA256"
+  ],
+  "conditions": [
+    "Do not execute while normal15 or any other heavyweight/root lane is active. Finish final source freeze/export/render and independently review their exact new binding first.",
+    "Pin this adapter2a306819\u2026, helper78222a79\u2026, consumereb6e2baa\u2026, and unchanged test fixture92eef687\u2026 in root execution evidence before/after. No edits during the candidate cycle.",
+    "Accept only the conjunction of candidate-input-verification scopedPASS/exit0, candidate-prerequisites scopedPASS/consumer_exit_code0/no error, and outer receiptPASS/exit0/stop0/source equality/complete cleanup. Do not credit an inner success file if later checker cleanup, signal, hash check or finalization fails.",
+    "Keep the original controls04 evidence as16 actually executed synthetic tests. This source review does not add tests or claim that new candidate graphs/SBOMs were executed."
+  ],
+  "nonblocking_consistency_note": "A signal after the final status assignment can leave an inner status label alongside a failure/error. Outer exit remains nonzero. Read the complete coupled receipts as above; never use status text alone as acceptance.",
+  "test_decision": "No additional standalone test requested for this thin adapter: direct call/return/context/finally source proof is complete and reused consumer/checker paths retain their actual16-control evidence. Actual frozen-candidate execution remains mandatory.",
+  "reviewer_hygiene": "No module imports/execution, tests/builds/native/network/CI/Git/process-control, global installs or deletions. Only read/hash/AST and this new compact report; normal15 resources untouched."
+}

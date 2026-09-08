@@ -1,0 +1,28 @@
+{
+  "at": "2026-09-06T23:57:23.293563+00:00",
+  "clarifies": "continuation-start-observation-07.json",
+  "reason": "Observation07 used raw show-ref bytes and a custom stash format. Independent exact stripped default show-ref/stash-list comparisons equal the canonical baseline. Prior06 hash serialization is not established by this comparison; do not infer changed refs or stashes from differently encoded hashes.",
+  "checks": {
+    "refs": {
+      "command": [
+        "git",
+        "show-ref"
+      ],
+      "encoding": "UTF-8 of stripped stdout",
+      "sha256": "180495798b5ad4dd63204fa9d95f306440f4cb61e15607ff492c42825a609007",
+      "matches_prior_hash": false,
+      "matches_baseline": true
+    },
+    "stashes": {
+      "command": [
+        "git",
+        "stash",
+        "list"
+      ],
+      "encoding": "UTF-8 of stripped stdout",
+      "sha256": "ca7d3dff9247e248a72ccc87c6e1931cceb7e943f5d6cdec7054388f7706d3ac",
+      "matches_prior_hash": false,
+      "matches_baseline": true
+    }
+  }
+}

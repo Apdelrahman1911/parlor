@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-06T11:39:13.251099+00:00",
+  "reviewer": "/root/release_fix_review",
+  "requester": "/root",
+  "issue": "WD-C2 unpublished-content compatibility completion",
+  "classification": "LATEST OWNER NON-DESTRUCTIVE POLICY APPLIES TO RETIRED SOLO RECORDS; APPROVE MINIMAL SCOPED CORRECTION SUBJECT TO RED/REVIEW/VERIFICATION",
+  "authorization_record": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/AUTHORIZATION.md",
+    "sha256": "75e8cb210880b34ff5531f0f55801f9a469f05d777adb76671efaaeb08ff9f00",
+    "exact_policy": "Old internal test saves need no backward migration. Version corrected content appropriately and update associated metadata, identities, fixtures and tests. Keep strict content/version matching for save recovery and LAN admission. Report incompatibility and offer explicit discard/restart. Never silently rewrite or automatically delete a save, or weaken identity validation.",
+    "interpretation_limit": "Owner-decision record provided by root; not proof of application behavior. No retired-mode exception is stated."
+  },
+  "prior_proposal": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/reviews/wdc2-preservation-documentation-qualifier-proposal-01.md",
+    "sha256": "73cce4fb9b9e3e72049d1ea66e5d674d7979f6dd408b1f48f479a7cd0adcf800",
+    "disposition": "Retain immutable as prior narrower-doc alternative, superseded by this assessment of the latest explicit owner policy. Do not hide original source behavior or claim it was a new chronological regression."
+  },
+  "reopened_source": [
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "ranges": "209-467,597-670",
+      "proof": "Authentic envelope/session/game/version guards precede persistedPlayMode. Solo metadata currently invokes store.delete at437-441 before decode; nonnullunknown/nonPassAndPlay next guard already returnsCorruptedData. Loadfailure routes explicitRecoveryErrorScreen, not sessioncreate. Explicitdiscard is the sole intendeddelete callback."
+    },
+    {
+      "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitResumeReconstructionTest.kt",
+      "ranges": "260-445",
+      "proof": "Existing tests333-357 intentionally assert old retiredSolo automaticdelete;359-387 cancellationtest targets that obsolete operation. They must change for new explicitpolicy, not be cited as proof theoldbehavior meetsnewpolicy."
+    },
+    {
+      "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitRecoveryInteractionTest.kt",
+      "ranges": "1-230",
+      "proof": "Existing4actualComposeEN/AR tests exercise incompatible/identitylesssupportedP&P retention throughRetry/Back/remount and singleexplicitdiscard with unrelatedsavestillkept. Extend unsupportedSolofixture, not weakenretentionassertions."
+    },
+    {
+      "path": "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/WhodunitPlayModePolicy.kt",
+      "ranges": "complete",
+      "proof": "Solo is unsupportedshippingmode; deletingoldrecord is not necessary to enforce thisentryguard."
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/LocalResumeRouter.kt",
+      "ranges": "1-145",
+      "proof": "Genericrouting authenticatesgame/sessionenvelope and returnsWhodunitresume; readerror doesnotautoDelete. Explicitdiscard retainsgeneration/cancellationownership."
+    },
+    {
+      "path": "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaGameFlow.kt",
+      "ranges": "105-170",
+      "proof": "Mafialoaderror similarlypreservesdata and offers explicitdiscard. No Mafiarule/session change necessary."
+    },
+    {
+      "path": "shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+      "ranges": "1-183",
+      "proof": "Load/list are nondeleting, explicitdelete only; loadCancellationException propagates and dataerroridentityremains intact."
+    }
+  ],
+  "recommended_smallest_change": [
+    "Remove only the retiredSolo delete-on-read branch and nowunusedSolo metadata constant. Existing nonnull!=PassAndPlay guard will reject Solo without decoding or changingthepayload.",
+    "Return existingCorruptedData recovery category (currentlyEN/AR incompatibility/damage explanation and explicitRetry/Back/Discard); do not turnunsupportedSolo into aplayablePassAndPlay game.",
+    "Update obsolete ResumedSessionplayMode KDoc anddocument that retiredinternalSolo is retainedbutcannotresume. No qualifierworkaround that exempts automaticdeletion fromownerpolicy.",
+    "Preserve current save/protocol/gameformat, strictidentity/version rules, terminalgamepolicy, explicitdeletebehavior and allrelateduserchanges. Do not add oldsave migration."
+  ],
+  "required_regressions": [
+    "Red oldSolo-load regression on prepatchsource: assertfailureCorruptedData AND deletes0/saves0, sameenvelope+exactpayload, recordstilllisted; use undecodablelegacybytes so no normalization allowed and retain sourceproof that rejection precedesdecode.",
+    "SupportedPassAndPlay currentidentity stillresumes; old/missing/mismatchedidentity andotherunknownmodes remainrejected withnorewrite/deletion. Existingcontentcompatibility suites shouldstaystrict.",
+    "ActualRecoveryUi EN/AR forunsupportedSolo: explanationstatesrecordkept, Retry andBack/remountpreserveit, explicitDiscard deletesonlyselectedrecordonce while unrelatedrecordpersists.",
+    "Replace obsolete cancellation-during-autoDelete assertion with meaningfulloadcancellation/explicitoperation coverage; do not swallowCancellationException or createauselessmigrationseam.",
+    "Run focusedred/green plusaffectedcombinedWhodunit/transportdocumentationchecks atnewsourceidentity. Preserve originalredproof and oldapprovalrecords."
+  ],
+  "status": "No source change/test run authored by reviewer. Root controls implementation and buildlane. Historical retiredSolo deletion was intended beforelatestpolicy; this is nowpolicyalignment insideWD-C2 completion, not an inflatednewauditdefect count.",
+  "preservation": "Only this evidencefile written; priorproposal/receipts/userworkremainunchanged."
+}

@@ -1,0 +1,383 @@
+--- remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v10/DSC01OSAppSettings.swift.in
++++ remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v11/DSC01OSAppSettings.swift.in
+@@ -56,6 +56,24 @@
+     }
+ }
+ 
++// These five public attributes are exactly those documented for
++// XCUIElementQuery.matching(identifier:). A broad match does not identify which
++// individual attribute matched; record only known literal/property provenance.
++private let dsc01OSIdentifyingProperties = ["identifier", "title", "label", "value", "placeholderValue"]
++
++private func dsc01OSPaneNamePredicate(_ titles: [String]) -> NSPredicate {
++    NSCompoundPredicate(orPredicateWithSubpredicates: dsc01OSIdentifyingProperties.map {
++        NSPredicate(format: "%K IN %@", $0, titles)
++    })
++}
++
++private func dsc01OSKnownPropertyMatches(_ attributes: [String: Any], titles: [String]) -> [[String: String]] {
++    dsc01OSIdentifyingProperties.compactMap { property in
++        guard let value = attributes[property] as? String, titles.contains(value) else { return nil }
++        return ["property": property, "knownLiteral": value]
++    }
++}
++
+ private func dsc01OSFrame(_ fields: [String: Any], _ key: String) -> CGRect? {
+     guard let value = fields[key] as? [String: Any], value["present"] as? Bool == true,
+           value["validFiniteRectangle"] as? Bool == true,
+@@ -67,7 +85,7 @@
+ private func dsc01OSPaneEligible(_ fields: [String: Any]) -> Bool {
+     guard fields["foreground"] as? Bool == true, fields["alertCountCapped16"] as? Int == 0,
+           fields["keyboardPresent"] as? Bool == false, fields["paneCountCapped16"] as? Int == 1,
+-          fields["paneHittable"] as? Bool == true,
++          fields["paneHittable"] as? Bool == true, fields["paneIdentityMatchesKnown"] as? Bool == true,
+           let viewport = dsc01OSFrame(fields, "viewport"), let pane = dsc01OSFrame(fields, "paneFrame") else { return false }
+     return viewport.contains(pane)
+ }
+@@ -91,11 +109,21 @@
+ extension IOSAppLaunchUITests {
+     @MainActor private func osPaneMetadata(_ app: XCUIApplication, pane: DSC01OSPane) -> [String: Any] {
+         let query = pane == .audit ? app.staticTexts.matching(identifier: "parlor-dsc01-state") :
+-            app.navigationBars.matching(NSPredicate(format: "label IN %@", pane.titles))
++            app.navigationBars.matching(dsc01OSPaneNamePredicate(pane.titles))
+         let count = query.count
+         let item = count == 1 ? query.firstMatch : nil
++        let knownMatches: [[String: String]]
++        if pane != .audit, let item {
++            knownMatches = dsc01OSKnownPropertyMatches([
++                "identifier": item.identifier, "title": item.title, "label": item.label,
++                "value": item.value as? String ?? "", "placeholderValue": item.placeholderValue ?? ""
++            ], titles: pane.titles)
++        } else { knownMatches = [] }
+         let knownTitles = ["Settings", "Apps", "Parlor", "بارلور", "Language", "Preferred Language", "General", "Language & Region"]
+         return ["pane": pane.rawValue, "foreground": app.state == .runningForeground,
++            "paneSelectorMethod": pane == .audit ? "unchanged-audit-control" : "known-public-identifying-properties-union",
++            "paneKnownPropertyMatches": knownMatches,
++            "paneIdentityMatchesKnown": pane == .audit ? count == 1 : !knownMatches.isEmpty,
+             "viewport": dsc01CatalogRectFields(app.frame), "alertCountCapped16": min(app.alerts.count, 16),
+             "keyboardPresent": app.keyboards.firstMatch.exists,
+             "paneCountCapped16": min(count, 16), "paneHittable": item?.isHittable ?? false,
+@@ -298,7 +326,7 @@
+     }
+ 
+     @MainActor private func verifyOSInteractionDecisionContract() throws {
+-        let good: [String: Any] = ["foreground": true, "alertCountCapped16": 0, "keyboardPresent": false,
++        let good: [String: Any] = ["foreground": true, "alertCountCapped16": 0, "keyboardPresent": false, "paneIdentityMatchesKnown": true,
+             "paneCountCapped16": 1, "paneHittable": true, "paneFrame": dsc01CatalogRectFields(CGRect(x: 0, y: 44, width: 402, height: 54)),
+             "viewport": dsc01CatalogRectFields(CGRect(x: 0, y: 0, width: 402, height: 874)),
+             "targetCountCapped16": 1, "targetHittable": true, "targetEnabled": true,
+@@ -331,5 +359,42 @@
+         XCTAssertFalse(dsc01OSStableTrain([frame(0), frame(0.2), frame(0.4)], final: frame(2)), "Final re-query cannot drift")
+         XCTAssertFalse(dsc01OSStableTrain([frame(0), frame(0)], final: frame(0)), "All three samples are mandatory")
+         print("DSC01_OS_INTERACTION_DECISION_CONTRACT {\"schemaVersion\":1,\"cases\":24,\"passed\":true}")
+-    }
+-}
++        try verifyOSPaneIdentityDecisionContract(good: good)
++    }
++
++    @MainActor private func verifyOSPaneIdentityDecisionContract(good: [String: Any]) throws {
++        var cases: [([String: Any], [String], Bool)] = dsc01OSIdentifyingProperties.map {
++            ([$0: "Settings"], ["Settings"], true)
++        }
++        cases += [
++            (["label": "General"], ["Settings"], false),
++            (["label": "Settings"], ["Apps"], false),
++            (["value": true], ["Settings"], false),
++            (["label": "", "title": "Settings"], ["Settings"], true),
++            (["label": "بارلور"], ["Parlor", "بارلور"], true),
++            (["title": "Preferred Language"], ["Language", "Preferred Language"], true),
++            ([:], ["Settings"], false)
++        ]
++        XCTAssertEqual(cases.count, 12)
++        for (index, item) in cases.enumerated() {
++            XCTAssertEqual(dsc01OSPaneNamePredicate(item.1).evaluate(with: item.0), item.2, "Public pane predicate case \(index)")
++            XCTAssertEqual(!dsc01OSKnownPropertyMatches(item.0, titles: item.1).isEmpty, item.2, "Known property provenance case \(index)")
++        }
++        // Synthetic title-only fixture demonstrates the old predicate's blind
++        // spot without claiming which actual property matched in apphost08.
++        XCTAssertFalse(NSPredicate(format: "label IN %@", ["Settings"]).evaluate(with: cases[8].0))
++        let sameElement: [String: Any] = ["title": "Parlor", "label": "بارلور", "value": "synthetic-unlisted"]
++        let union = dsc01OSPaneNamePredicate(["Parlor", "بارلور"])
++        XCTAssertEqual([sameElement].filter { union.evaluate(with: $0) }.count, 1)
++        XCTAssertEqual(dsc01OSKnownPropertyMatches(sameElement, titles: ["Parlor", "بارلور"]),
++                       [["property": "title", "knownLiteral": "Parlor"], ["property": "label", "knownLiteral": "بارلور"]])
++        XCTAssertEqual([sameElement, sameElement].filter { union.evaluate(with: $0) }.count, 2)
++        var ambiguous = good; ambiguous["paneCountCapped16"] = 2
++        XCTAssertFalse(dsc01OSPaneEligible(ambiguous), "Different matching elements remain ambiguous")
++        var missing = good; missing.removeValue(forKey: "paneIdentityMatchesKnown")
++        XCTAssertFalse(dsc01OSPaneEligible(missing), "A diagnostic count cannot replace fresh identity provenance")
++        var stale = good; stale["paneIdentityMatchesKnown"] = false
++        XCTAssertFalse(dsc01OSPaneEligible(stale), "A stale query/property mismatch must fail closed")
++        print("DSC01_OS_PANE_IDENTITY_DECISION_CONTRACT {\"schemaVersion\":1,\"attributeCases\":12,\"unionCases\":2,\"identityGuardCases\":2,\"passed\":true}")
++    }
++}
+--- remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v10/run_dsc01_apphost_cycle.py
++++ remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v11/run_dsc01_apphost_cycle.py
+@@ -40,6 +40,7 @@
+ from v9_receipts import verify_v9_receipts
+ from v10_receipts import verify_v10_receipts
+ from v10_sources import render_v10_ui, render_v10_probe
++from v11_receipts import verify_v11_receipts
+ 
+ FIXTURE = HERE
+ APP_ID = 'com.parlor.app.debug'
+@@ -64,6 +65,7 @@
+         'DSC01PublicDiagnostics.swift.in', 'DSC01MafiaStartSelection.swift.in', 'DSC01OSPrerequisite.swift.in',
+         'v8_receipts.py', 'test_v8_contract.py', 'v9_receipts.py', 'test_v9_contract.py',
+         'v10_sources.py', 'DSC01OSAppSettings.swift.in', 'v10_receipts.py', 'test_v10_contract.py',
++        'v11_receipts.py', 'test_v11_contract.py',
+         'copied-kotlin-phase.sh.in', 'source-bindings.json', 'copied_sources.py', 'bind_source.py',
+         'DSC01ComposeObservation.kt.in', 'DSC01InvocationBridge.kt.in', 'DSC01UIKitObservation.kt.in',
+         'DSC01NativeObservation.swift.in', 'probe_validation.py',
+@@ -100,7 +102,17 @@
+         'DSC01PublicDiagnostics.swift.in', 'DSC01MafiaStartSelection.swift.in', 'DSC01OSPrerequisite.swift.in',
+         'v8_receipts.py', 'test_v8_contract.py', 'v9_receipts.py', 'test_v9_contract.py', 'copied-kotlin-phase.sh.in',
+         'copied_sources.py', 'bind_source.py', 'DSC01ComposeObservation.kt.in', 'DSC01InvocationBridge.kt.in',
+-        'DSC01UIKitObservation.kt.in', 'DSC01NativeObservation.swift.in', 'probe_validation.py', 'test_copy_observation_contract.py')]
++        'DSC01UIKitObservation.kt.in', 'DSC01NativeObservation.swift.in', 'probe_validation.py', 'test_copy_observation_contract.py')] + [
++        # Only pane-query source and wiring differ from these executed V10
++        # references. Preserve every prior test and exact cleanup finalizer.
++        HERE.parent / 'dsc01_apphost_v10' / name for name in (
++        'run_dsc01_apphost_cycle.py', 'secondary_fifo.py', 'test_secondary_fifo.py', 'test_harness_contract.py',
++        'DSC01Probe.swift.in', 'IOSAppLaunchUITests.swift.in', 'DSC01CatalogSelection.swift.in', 'test_catalog_contract.py',
++        'DSC01PublicDiagnostics.swift.in', 'DSC01MafiaStartSelection.swift.in', 'DSC01OSPrerequisite.swift.in',
++        'v8_receipts.py', 'test_v8_contract.py', 'v9_receipts.py', 'test_v9_contract.py', 'copied-kotlin-phase.sh.in',
++        'copied_sources.py', 'bind_source.py', 'DSC01ComposeObservation.kt.in', 'DSC01InvocationBridge.kt.in',
++        'DSC01UIKitObservation.kt.in', 'DSC01NativeObservation.swift.in', 'probe_validation.py', 'test_copy_observation_contract.py',
++        'v10_sources.py', 'DSC01OSAppSettings.swift.in', 'v10_receipts.py', 'test_v10_contract.py')]
+ 
+ 
+ def control_manifest():
+@@ -701,6 +713,7 @@
+             receipt['dsc01_matrix'] = verify_probe(reports, verify_legacy_settings_probe)
+             receipt['v10_os_interaction_proof'] = verify_v10_receipts(
+                 (dest / 'xcodebuild.log').read_text(), reports['os'], receipt['dsc01_matrix']['os_settings_gate'])
++            receipt['v11_pane_identity_proof'] = verify_v11_receipts((dest / 'xcodebuild.log').read_text())
+             receipt['probe_harness_status'] = 'observation_complete'
+             receipt['os_settings_gate'] = receipt['dsc01_matrix']['os_settings_gate']
+             if owner.secondary_errors:
+--- /dev/null
++++ remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v11/test_v11_contract.py
+@@ -0,0 +1,153 @@
++"""Synthetic receipt/source controls. Root alone executes; not native proof."""
++import copy
++import hashlib
++import json
++from pathlib import Path
++import unittest
++
++import probe_validation
++import run_dsc01_apphost_cycle as runner
++import v10_receipts
++import v11_receipts
++from test_v10_contract import V9_REFERENCES, encoded, fixture, pick, reordinal
++
++HERE = Path(__file__).resolve().parent
++V10 = HERE.parent / 'dsc01_apphost_v10'
++V10_REFERENCES = V9_REFERENCES + ('v10_sources.py', 'DSC01OSAppSettings.swift.in', 'v10_receipts.py', 'test_v10_contract.py')
++
++
++def enriched(start='settings', blocked=None, property_name='title'):
++    rows, report = fixture(start, blocked)
++    for row in rows:
++        fields = row['fields']
++        selected = [fields] if 'pane' in fields else fields.get('knownPanes', fields.get('visibleMarkerRows', []))
++        for pane in selected:
++            audit = pane['pane'] == 'audit'
++            pane.update(paneSelectorMethod='unchanged-audit-control' if audit else 'known-public-identifying-properties-union',
++                        paneKnownPropertyMatches=[] if audit else [dict(property=property_name, knownLiteral=v11_receipts.TITLES[pane['pane']][0])],
++                        paneIdentityMatchesKnown=True)
++    return rows, report
++
++
++def log_with_contract(rows, contract=None):
++    return encoded(rows) + '\nDSC01_OS_PANE_IDENTITY_DECISION_CONTRACT ' + json.dumps(v11_receipts.CONTRACT if contract is None else contract)
++
++
++class V11PaneIdentityContractTest(unittest.TestCase):
++    def verify(self, rows, report):
++        log = log_with_contract(rows)
++        original = v10_receipts.verify_v10_receipts(log, report, probe_validation.verify_os(report))
++        additional = v11_receipts.verify_v11_receipts(log)
++        return original, additional
++
++    def test_every_old_control_except_targeted_helper_and_wiring_is_byte_identical(self):
++        for name in V10_REFERENCES:
++            if name not in {'run_dsc01_apphost_cycle.py', 'DSC01OSAppSettings.swift.in'}:
++                self.assertEqual((V10 / name).read_bytes(), (HERE / name).read_bytes(), name)
++        old = (V10 / 'run_dsc01_apphost_cycle.py').read_text(); new = Path(runner.__file__).read_text()
++        marker = '        finally:\n            deferred = []'
++        self.assertEqual(old[old.index(marker):], new[new.index(marker):])
++        old = (V10 / 'DSC01OSAppSettings.swift.in').read_text(); new = (HERE / 'DSC01OSAppSettings.swift.in').read_text()
++        start = '    @MainActor private func osRowObservation('
++        end = '    @MainActor private func verifyOSInteractionDecisionContract('
++        self.assertEqual(old[old.index(start):old.index(end)], new[new.index(start):new.index(end)])
++
++    def test_exact_public_predicate_and_allowlisted_provenance_are_executed_in_original_matrix(self):
++        source = (HERE / 'DSC01OSAppSettings.swift.in').read_text()
++        self.assertIn('private let dsc01OSIdentifyingProperties = ["identifier", "title", "label", "value", "placeholderValue"]', source)
++        self.assertIn('NSPredicate(format: "%K IN %@", $0, titles)', source)
++        self.assertIn('app.navigationBars.matching(dsc01OSPaneNamePredicate(pane.titles))', source)
++        self.assertIn('guard let value = attributes[property] as? String, titles.contains(value)', source)
++        self.assertIn('fields["paneIdentityMatchesKnown"] as? Bool == true', source)
++        self.assertIn('try verifyOSPaneIdentityDecisionContract(good: good)', source)
++        self.assertIn('XCTAssertEqual(cases.count, 12)', source)
++        self.assertIn('XCTAssertFalse(NSPredicate(format: "label IN %@", ["Settings"]).evaluate(with: cases[8].0))', source)
++        for forbidden in ('BEGINSWITH', 'CONTAINS', 'identifiers IN', 'debugDescription', '.coordinate(', 'typeText(', 'UserDefaults'):
++            self.assertNotIn(forbidden, source)
++
++    def test_each_documented_property_can_provide_bounded_provenance_not_os_authority(self):
++        for property_name in v11_receipts.PROPERTIES:
++            rows, report = enriched(property_name=property_name)
++            original, additional = self.verify(rows, report)
++            self.assertEqual('PASS', original['status'])
++            self.assertEqual('PASS', additional['status'])
++            self.assertFalse(additional['actual_os_selection_claim'])
++            with self.assertRaises(RuntimeError):
++                v10_receipts.verify_v10_receipts(log_with_contract(rows), report, dict(status='BLOCKED'))
++
++    def test_missing_unknown_duplicate_wrong_pane_and_bool_provenance_fail(self):
++        for mode in ('missing', 'unknown-property', 'unknown-literal', 'wrong-pane', 'duplicate', 'method', 'bool'):
++            rows, report = enriched(); fields = pick(rows, 'language', 'before-activation')['fields']
++            matches = fields['paneKnownPropertyMatches']
++            if mode == 'missing': fields.pop('paneKnownPropertyMatches')
++            elif mode == 'unknown-property': matches[0]['property'] = 'private-identifier-key'
++            elif mode == 'unknown-literal': matches[0]['knownLiteral'] = 'unrelated-synthetic-name'
++            elif mode == 'wrong-pane': matches[0]['knownLiteral'] = 'Settings'
++            elif mode == 'duplicate': matches.append(copy.deepcopy(matches[0]))
++            elif mode == 'method': fields['paneSelectorMethod'] = 'diagnostic-count-transplant'
++            else: fields['paneIdentityMatchesKnown'] = 1
++            with self.subTest(mode=mode), self.assertRaises(RuntimeError): self.verify(rows, report)
++
++    def test_aliases_on_one_element_do_not_double_count_but_two_elements_remain_ambiguous(self):
++        rows, report = enriched()
++        fields = pick(rows, 'appPane', 'PASS')['fields']
++        fields['paneKnownPropertyMatches'] = [dict(property='title', knownLiteral='Parlor'), dict(property='label', knownLiteral='بارلور')]
++        self.assertEqual(1, fields['paneCountCapped16'])
++        self.assertEqual('PASS', self.verify(rows, report)[1]['status'])
++        fields['paneCountCapped16'] = 2
++        with self.assertRaises(RuntimeError): v11_receipts.verify_v11_receipts(log_with_contract(rows))
++        with self.assertRaises(RuntimeError): self.verify(rows, report)
++
++    def test_successful_actions_need_actual_known_provenance_including_stable_samples(self):
++        for stage, status in (('initialPane', 'PASS'), ('language', 'before-activation'), ('language', 'observe')):
++            rows, report = enriched(); fields = pick(rows, stage, status)['fields']
++            fields.update(paneKnownPropertyMatches=[], paneIdentityMatchesKnown=False)
++            # Valid old geometry is intentionally retained: only the new
++            # provenance guard should reject this otherwise plausible receipt.
++            self.assertEqual('PASS', v10_receipts.verify_v10_receipts(log_with_contract(rows), report, probe_validation.verify_os(report))['status'])
++            with self.assertRaises(RuntimeError): v11_receipts.verify_v11_receipts(log_with_contract(rows))
++
++    def test_fresh_names_never_override_hidden_offscreen_ambiguous_or_stale_guards(self):
++        for key, value in (('paneHittable', False), ('foreground', False), ('keyboardPresent', True),
++                           ('paneCountCapped16', 2), ('targetHittable', False)):
++            rows, report = enriched(); pick(rows, 'language', 'before-activation')['fields'][key] = value
++            with self.subTest(key=key), self.assertRaises(RuntimeError): self.verify(rows, report)
++        rows, report = enriched(); pick(rows, 'language', 'before-activation')['fields']['paneFrame']['rectangle'][0] = -500
++        with self.assertRaises(RuntimeError): self.verify(rows, report)
++
++    def test_absent_os_pane_stays_blocked_and_missing_contract_never_becomes_green(self):
++        rows, report = enriched(None, 'language-control-unavailable')
++        template = enriched()[0][0]['fields']
++        panes = []
++        for name in ('settings', 'apps', 'parlor'):
++            pane = copy.deepcopy(template)
++            pane.update(pane=name, paneCountCapped16=0, paneHittable=False, paneFrame=dict(present=False),
++                        paneKnownPropertyMatches=[], paneIdentityMatchesKnown=False,
++                        knownNavigationTitles=[dict(knownTitle='Settings', countCapped16=1)])
++            panes.append(pane)
++        rows.insert(0, dict(schemaVersion=1, ordinal=0, stage='initialPane', status='observe',
++                            fields=dict(attempt=1, eligiblePaneCount=0, knownPanes=panes)))
++        reordinal(rows)
++        original, additional = self.verify(rows, report)
++        self.assertEqual('BLOCKED', original['status']); self.assertFalse(additional['actual_os_selection_claim'])
++        self.assertEqual(0, additional['known_public_pane_observations'])
++        for log in (encoded(rows), log_with_contract(rows, dict(v11_receipts.CONTRACT, schemaVersion=True)),
++                    log_with_contract(rows, dict(v11_receipts.CONTRACT, attributeCases=11))):
++            with self.assertRaises(RuntimeError): v11_receipts.verify_v11_receipts(log)
++
++    def test_additional_gate_is_after_original_gates_and_all_consumed_inputs_are_bound(self):
++        source = Path(runner.__file__).read_text()
++        self.assertLess(source.index("receipt['dsc01_matrix'] = verify_probe"), source.index("receipt['v10_os_interaction_proof'] = verify_v10_receipts"))
++        self.assertLess(source.index("receipt['v10_os_interaction_proof'] = verify_v10_receipts"), source.index("receipt['v11_pane_identity_proof'] = verify_v11_receipts"))
++        controls = runner.control_files()
++        self.assertEqual(len(controls), len(set(controls)))
++        self.assertEqual({V10 / name for name in V10_REFERENCES}, {path for path in controls if path.parent == V10})
++        for name in ('v11_receipts.py', 'test_v11_contract.py'):
++            self.assertIn(HERE / name, controls)
++        manifest = {entry['path']: entry['sha256'] for entry in runner.control_manifest()}
++        for path in controls:
++            self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), manifest[str(path.relative_to(runner.ROOT))])
++
++
++if __name__ == '__main__':
++    unittest.main()
+--- /dev/null
++++ remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v11/v11_receipts.py
+@@ -0,0 +1,66 @@
++"""Additional bounded pane-query provenance, never an OS-selection oracle."""
++import v8_receipts
++
++PROPERTIES = ('identifier', 'title', 'label', 'value', 'placeholderValue')
++TITLES = {'settings': ('Settings',), 'apps': ('Apps',), 'parlor': ('Parlor', 'بارلور'),
++          'language': ('Language', 'Preferred Language'), 'audit': ()}
++CONTRACT = dict(schemaVersion=1, attributeCases=12, unionCases=2, identityGuardCases=2, passed=True)
++
++
++def require(condition, message):
++    if not condition:
++        raise RuntimeError(message)
++
++
++def inspect_pane(fields):
++    require(isinstance(fields, dict) and isinstance(fields.get('pane'), str) and fields['pane'] in TITLES, 'Unknown pane provenance')
++    pane = fields['pane']
++    require(fields.get('paneSelectorMethod') == ('unchanged-audit-control' if pane == 'audit' else
++            'known-public-identifying-properties-union'), 'Missing or unreviewed pane query method')
++    matches = fields.get('paneKnownPropertyMatches')
++    require(isinstance(matches, list) and len(matches) <= len(PROPERTIES), 'Unbounded or missing known-property provenance')
++    properties = []
++    for item in matches:
++        require(isinstance(item, dict) and set(item) == {'property', 'knownLiteral'} and
++                item['property'] in PROPERTIES and item['knownLiteral'] in TITLES[pane],
++                'Unknown property, literal or wrong-pane provenance')
++        properties.append(item['property'])
++    require(properties == [name for name in PROPERTIES if name in properties], 'Duplicate or reordered property provenance')
++    count = fields.get('paneCountCapped16')
++    require(type(count) is int and 0 <= count <= 16, 'Invalid actual pane union count')
++    require(count == 1 or not matches, 'Ambiguous/missing elements cannot report selected-element provenance')
++    known = fields.get('paneIdentityMatchesKnown')
++    require(type(known) is bool and known == (count == 1 if pane == 'audit' else bool(matches)),
++            'Fresh identity guard and observed known-property provenance disagree')
++    # Geometric/foreground/one-action/original app assertions are additionally
++    # mandatory in the unchanged V10/XCTest gates. This flag alone is not PASS.
++    return pane != 'audit' and known
++
++
++def verify_v11_receipts(log):
++    contracts = v8_receipts.records(log, 'DSC01_OS_PANE_IDENTITY_DECISION_CONTRACT ',
++        maximum=1, row_bytes=256, total_bytes=256)
++    require(contracts == [CONTRACT] and all(type(contracts[0][key]) is type(value) for key, value in CONTRACT.items()),
++            'Executed public pane identity contract missing or invalid')
++    rows = v8_receipts.records(log, 'DSC01_OS_APP_INTERACTION ', maximum=128, row_bytes=8192, total_bytes=262144)
++    require(rows, 'Actual pane observations missing')
++    observed = known = 0
++    for row in rows:
++        fields = row.get('fields')
++        require(isinstance(fields, dict), 'Malformed pane observation envelope')
++        selected = [fields] if 'pane' in fields else fields.get('knownPanes', fields.get('visibleMarkerRows', []))
++        require(isinstance(selected, list) and len(selected) <= 3, 'Unexpected pane observation collection')
++        for pane in selected:
++            known += int(inspect_pane(pane)); observed += 1
++            if row.get('status') in {'PASS', 'before-activation'}:
++                require(pane['paneIdentityMatchesKnown'], 'A successful stage lacks fresh known pane provenance')
++        if row.get('status') == 'before-activation':
++            samples = [sample for sample in rows if sample['ordinal'] < row['ordinal'] and
++                       sample.get('stage') == row.get('stage') and sample.get('status') == 'observe' and
++                       sample.get('fields', {}).get('control') == fields.get('control')][-3:]
++            require(len(samples) == 3 and all(sample['fields'].get('paneIdentityMatchesKnown') is True for sample in samples),
++                    'A successful action reused identity-ineligible stable samples')
++    require(observed, 'No actual public/audit pane provenance inspected')
++    return dict(status='PASS', observed_panes=observed, known_public_pane_observations=known,
++                scope='Additional query provenance only; unchanged V10, XCTest and original probe gates remain mandatory.',
++                actual_os_selection_claim=False)

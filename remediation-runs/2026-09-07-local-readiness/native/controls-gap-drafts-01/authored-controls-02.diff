@@ -1,0 +1,1751 @@
+--- a/scripts/verification/ios-readiness/DSC01Probe.swift.in
++++ b/scripts/verification/ios-readiness/DSC01Probe.swift.in
+@@ -87,7 +87,7 @@
+               ["settings", "whodunit", "mafia", "os", "readiness"].contains(requestedScenario),
+               !ProcessInfo.processInfo.arguments.contains("-AppleLanguages"),
+               !ProcessInfo.processInfo.arguments.contains("-AppleLocale") else {
+-            fatalError("DSC01 requires explicitly owned unsigned Debug simulator context")
++            fatalError("DSC01 requires explicitly owned Debug simulator context")
+         }
+         fixture = selected
+         scenario = requestedScenario
+--- a/scripts/verification/ios-readiness/NativeReadinessLaunch.swift.in
++++ b/scripts/verification/ios-readiness/NativeReadinessLaunch.swift.in
+@@ -1,5 +1,10 @@
+ // Copy-only app-host entry. No direct SecItem query and no second DI graph.
+ import MachO
++import CryptoKit
++
++private let nativeReadinessSigningMode = __PARLOR_NATIVE_SIGNING_MODE__
++private let nativeReadinessTaskRoot = __PARLOR_NATIVE_TASK_ROOT__
++private let nativeReadinessProductRoot = __PARLOR_NATIVE_PRODUCT_ROOT__
+ 
+ extension DSC01Probe {
+     // V12's synthetic prior-language fixture intentionally writes this one
+@@ -11,6 +16,9 @@
+         let bytes = try FileManager.default.attributesOfItem(atPath: url.path)[.size] as? NSNumber
+         guard let bytes, (1...262144).contains(bytes.intValue),
+               !FileManager.default.fileExists(atPath: resultURL.path) else { throw fixtureError() }
++        let cleanupURL = FileManager.default.temporaryDirectory.appendingPathComponent(
++            "parlor-native-synthetic-seed-cleanup.json")
++        guard !FileManager.default.fileExists(atPath: cleanupURL.path) else { throw fixtureError() }
+         let settings = try JSONDecoder().decode(DSC01Report.self, from: Data(contentsOf: url))
+         let completions = settings.observations.filter { $0.phase == "complete" }
+         guard settings.schemaVersion == 6, settings.runToken == token, settings.scenario == "settings", settings.completed,
+@@ -36,11 +44,16 @@
+         UserDefaults.standard.removeObject(forKey: "AppleLanguages")
+         let restored = try preferences()
+         guard restored.setting == "system", !restored.hasAppOverride, !restored.ownerPresent else { throw fixtureError() }
+-        let record: [String: Any] = ["schema_version": 1, "run_token": token,
++        let record: [String: Any] = ["schema_version": 2, "run_token": token, "process_boot": boot,
+             "original_present": false, "synthetic_previous": ["ar-EG", "en"], "restored_present": false,
+             "source": "completed-token-bound-owned-settings-fixture-only"]
+-        print("PARLOR_NATIVE_SYNTHETIC_SEED_CLEANUP " + String(decoding:
+-            try JSONSerialization.data(withJSONObject: record, options: [.sortedKeys]), as: UTF8.self))
++        let encoded = try JSONSerialization.data(withJSONObject: record, options: [.sortedKeys])
++        guard encoded.count <= 1024 else { throw fixtureError() }
++        // App stdout is not an XCTest stdout transport. Preserve an exclusive,
++        // token/boot-bound result in this owned sandbox for host extraction.
++        // Foundation forbids combining .withoutOverwriting with .atomic.
++        // Partial/interrupted records fail closed; no prior record is replaced.
++        try encoded.write(to: cleanupURL, options: [.withoutOverwriting])
+     }
+ 
+     func startNativeReadiness() {
+@@ -59,10 +72,13 @@
+                           let observed = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                         throw self.fixtureError()
+                     }
+-                    let report: [String: Any] = ["schema_version": 1, "boot_ordinal": ordinal,
++                    let images = try nativeReadinessLoadedImages()
++                    let report: [String: Any] = ["schema_version": 2, "boot_ordinal": ordinal,
++                        "signing_mode": nativeReadinessSigningMode,
+                         "process_boot": self.boot, "process_id": ProcessInfo.processInfo.processIdentifier,
+                         "run_token": ProcessInfo.processInfo.environment["PARLOR_DSC01_RUN_TOKEN"] ?? "",
+-                        "loaded_app_images": try nativeReadinessLoadedAppImages(), "observation": observed]
++                        "loaded_app_images": images.app, "loaded_compose_framework": images.framework,
++                        "loader_environment": try nativeReadinessLoaderEnvironment(), "observation": observed]
+                     let encoded = try JSONSerialization.data(withJSONObject: report, options: [.sortedKeys])
+                     guard encoded.count <= 49152 else { throw self.fixtureError() }
+                     let url = FileManager.default.temporaryDirectory.appendingPathComponent(
+@@ -78,27 +94,127 @@
+     }
+ }
+ 
+-private func nativeReadinessLoadedAppImages() throws -> [String] {
+-    let root = Bundle.main.bundleURL.resolvingSymlinksInPath().path + "/"
++private func nativeReadinessImageError(_ code: Int) -> NSError {
++    NSError(domain: "NativeReadinessOwnedImage", code: code)
++}
++
++private func nativeReadinessRelative(_ path: String, root: String) throws -> String? {
++    guard path.hasPrefix(root + "/") else { return nil }
++    let relative = String(path.dropFirst(root.count + 1))
++    guard !relative.isEmpty, relative.utf8.count <= 512,
++          !relative.split(separator: "/", omittingEmptySubsequences: false).contains(where: {
++              $0.isEmpty || $0 == "." || $0 == ".."
++          }), !relative.unicodeScalars.contains(where: { $0.value < 32 || $0.value == 127 || $0.value == 92 }) else {
++        throw nativeReadinessImageError(1)
++    }
++    return relative
++}
++
++private func nativeReadinessFrameworkUUID(_ index: UInt32) throws -> String {
++    guard let header = _dyld_get_image_header(index), header.pointee.magic == MH_MAGIC_64 else {
++        throw nativeReadinessImageError(2)
++    }
++    let raw = UnsafeRawPointer(header)
++    let loaded = raw.load(as: mach_header_64.self)
++    let headerBytes = MemoryLayout<mach_header_64>.size
++    guard loaded.filetype == MH_DYLIB, loaded.cputype == CPU_TYPE_ARM64,
++          loaded.ncmds > 0, loaded.ncmds <= 4096, loaded.sizeofcmds <= 4 * 1024 * 1024,
++          loaded.ncmds <= loaded.sizeofcmds / 8 else { throw nativeReadinessImageError(3) }
++    var cursor = headerBytes
++    let end = headerBytes + Int(loaded.sizeofcmds)
++    var observed: String?
++    for _ in 0..<loaded.ncmds {
++        guard cursor + MemoryLayout<load_command>.size <= end else { throw nativeReadinessImageError(4) }
++        let command = raw.advanced(by: cursor).load(as: load_command.self)
++        let length = Int(command.cmdsize)
++        guard length >= 8, length % 8 == 0, cursor + length <= end else { throw nativeReadinessImageError(5) }
++        if command.cmd == LC_UUID {
++            guard observed == nil, length == MemoryLayout<uuid_command>.size else { throw nativeReadinessImageError(6) }
++            observed = UUID(uuid: raw.advanced(by: cursor).load(as: uuid_command.self).uuid).uuidString.lowercased()
++        }
++        cursor += length
++    }
++    guard cursor == end, let observed else { throw nativeReadinessImageError(7) }
++    return observed
++}
++
++private func nativeReadinessLoadedImages() throws -> (app: [String], framework: [String: Any]) {
++    let appRoot = Bundle.main.bundleURL.resolvingSymlinksInPath().path
+     let count = _dyld_image_count()
+-    guard count > 0, count <= 4096 else { throw NSError(domain: "NativeReadinessImageLimit", code: 1) }
++    guard count > 0, count <= 4096 else { throw nativeReadinessImageError(8) }
+     var result = [String]()
++    var framework: [String: Any]?
+     for index in 0..<count {
+         guard let pointer = _dyld_get_image_name(index) else { continue }
+         let raw = String(cString: pointer)
+-        guard raw.utf8.count <= 4096 else { throw NSError(domain: "NativeReadinessImageLimit", code: 2) }
+-        let path = URL(fileURLWithPath: raw).resolvingSymlinksInPath().path
+-        guard path.hasPrefix(root) else { continue } // Never retain system or another app's paths.
+-        let relative = String(path.dropFirst(root.count))
+-        guard !relative.isEmpty, relative.utf8.count <= 512,
+-              !relative.split(separator: "/").contains(".."), result.count < 128 else {
+-            throw NSError(domain: "NativeReadinessImageLimit", code: 3)
+-        }
+-        result.append(relative)
+-    }
+-    guard let executable = Bundle.main.executableURL?.lastPathComponent,
+-          result.contains(executable), Set(result).count == result.count else {
+-        throw NSError(domain: "NativeReadinessMainImageMissing", code: 1)
+-    }
+-    return result.sorted()
+-}
++        guard raw.utf8.count <= 4096 else { throw nativeReadinessImageError(9) }
++        let url = URL(fileURLWithPath: raw).resolvingSymlinksInPath()
++        let appRelative = try nativeReadinessRelative(url.path, root: appRoot)
++        if let appRelative {
++            guard result.count < 128 else { throw nativeReadinessImageError(10) }
++            result.append(appRelative)
++        }
++        guard url.lastPathComponent == "ComposeApp" else { continue }
++        guard framework == nil, url.deletingLastPathComponent().lastPathComponent.lowercased() == "composeapp.framework" else {
++            throw nativeReadinessImageError(11)
++        }
++        let origin: String
++        let path: String
++        if let appRelative {
++            guard appRelative == "Frameworks/ComposeApp.framework/ComposeApp" else { throw nativeReadinessImageError(12) }
++            origin = "installed-app-bundle"; path = appRelative
++        } else if let owned = try nativeReadinessRelative(url.path, root: nativeReadinessProductRoot) {
++            origin = "owned-copy-build"; path = owned
++        } else {
++            // Do not retain unknown/unowned paths and do not substitute the
++            // embedded image for a different library that actually executed.
++            throw nativeReadinessImageError(13)
++        }
++        let fingerprint = try nativeReadinessFrameworkFingerprint(url)
++        framework = ["origin": origin, "path": path, "image_uuid": try nativeReadinessFrameworkUUID(index),
++                     "file_bytes": fingerprint.bytes, "file_sha256": fingerprint.sha256]
++    }
++    guard let executable = Bundle.main.executableURL?.lastPathComponent, result.contains(executable),
++          Set(result).count == result.count, let framework else { throw nativeReadinessImageError(14) }
++    return (result.sorted(), framework)
++}
++
++private func nativeReadinessFrameworkFingerprint(_ url: URL) throws -> (bytes: Int, sha256: String) {
++    // Only called after exact app/task-owned framework origin validation. Read
++    // in bounded chunks; never inspect credentials, data files or other images.
++    let handle = try FileHandle(forReadingFrom: url)
++    defer { try? handle.close() }
++    var digest = CryptoKit.SHA256()
++    var bytes = 0
++    while let data = try handle.read(upToCount: 1024 * 1024), !data.isEmpty {
++        bytes += data.count
++        guard bytes <= 512 * 1024 * 1024 else { throw nativeReadinessImageError(18) }
++        digest.update(data: data)
++    }
++    guard bytes > 0 else { throw nativeReadinessImageError(19) }
++    return (bytes, digest.finalize().map { String(format: "%02x", $0) }.joined())
++}
++
++private func nativeReadinessLoaderEnvironment() throws -> [String: Any] {
++    var result = [String: Any]()
++    for key in ["DYLD_FRAMEWORK_PATH", "DYLD_LIBRARY_PATH", "DYLD_FALLBACK_FRAMEWORK_PATH", "DYLD_FALLBACK_LIBRARY_PATH"] {
++        let raw = ProcessInfo.processInfo.environment[key]
++        guard (raw?.utf8.count ?? 0) <= 16384 else { throw nativeReadinessImageError(15) }
++        let entries = raw?.split(separator: ":", omittingEmptySubsequences: false).map(String.init) ?? []
++        guard entries.count <= 32 else { throw nativeReadinessImageError(16) }
++        var owned = [String]()
++        var redacted = 0
++        for entry in entries {
++            guard entry.utf8.count <= 4096 else { throw nativeReadinessImageError(17) }
++            if entry.hasPrefix("/") {
++                let path = URL(fileURLWithPath: entry).resolvingSymlinksInPath().path
++                if let relative = try nativeReadinessRelative(path, root: nativeReadinessTaskRoot) {
++                    owned.append(relative); continue
++                }
++            }
++            redacted += 1 // No unrelated user/system path or raw environment is retained.
++        }
++        result[key] = ["present": raw != nil, "task_owned_paths": owned, "redacted_entry_count": redacted]
++    }
++    return result
++}
+--- a/scripts/verification/ios-readiness/NativeReadinessProbe.kt.in
++++ b/scripts/verification/ios-readiness/NativeReadinessProbe.kt.in
+@@ -178,8 +178,8 @@
+         }
+         first.fill(0); second.fill(0)
+         return buildJsonObject {
+-            put("schema_version", 1)
+-            put("kind", "actual_koin_signing_disabled_simulator")
++            put("schema_version", 2)
++            put("kind", "actual_koin_simulator")
+             put("harness_status", "observation_complete")
+             put("boot_ordinal", boot)
+             put("run_token", token)
+@@ -187,7 +187,7 @@
+             put("credential_numeric_status_is_exact_invocation", true)
+             put("initial_home_numeric_attribution", false)
+             put("snapshot_numeric_attribution", false)
+-            put("physical_or_signed_evidence", false)
++            put("physical_or_store_evidence", false)
+         }
+     }
+ 
+@@ -252,7 +252,7 @@
+     }
+ 
+     private fun failure(reason: String, boot: Int, steps: List<JsonObject>) = buildJsonObject {
+-        put("schema_version", 1)
++        put("schema_version", 2)
+         put("harness_status", "aborted")
+         put("failure_category", reason)
+         put("boot_ordinal", boot)
+--- a/scripts/verification/ios-readiness/NativeReadinessUITests.swift.in
++++ b/scripts/verification/ios-readiness/NativeReadinessUITests.swift.in
+@@ -23,6 +23,9 @@
+             let data = try XCTUnwrap((state.value as? String)?.data(using: .utf8))
+             XCTAssertLessThanOrEqual(data.count, 49152)
+             let report = try XCTUnwrap(JSONSerialization.jsonObject(with: data) as? [String: Any])
++            XCTAssertEqual(report["schema_version"] as? Int, 2)
++            let signingMode = try string(report, "signing_mode")
++            XCTAssertTrue(["disabled", "adhoc"].contains(signingMode))
+             XCTAssertEqual(report["boot_ordinal"] as? Int, ordinal)
+             XCTAssertEqual(report["process_boot"] as? String, boot)
+             let result = try dictionary(report, "observation")
+@@ -32,6 +35,7 @@
+             // outcomes. Diagnostic delivery cannot green an unavailable store.
+             let images = try XCTUnwrap(report["loaded_app_images"] as? [String])
+             XCTAssertTrue(images.contains("Parlor"))
++            let framework = try dictionary(report, "loaded_compose_framework")
+             var samples = [[String: Any]]()
+             let began = ProcessInfo.processInfo.systemUptime
+             for sample in 1...6 {
+@@ -49,9 +53,9 @@
+                     "elapsed_milliseconds": Int((ProcessInfo.processInfo.systemUptime - began) * 1000),
+                     "observation_sequence": try XCTUnwrap(value["sequence"] as? Int)])
+             }
+-            let row: [String: Any] = ["schema_version": 1, "boot_ordinal": ordinal,
+-                "process_boot": boot, "run_token": try string(report, "run_token"),
+-                "loaded_app_images": images, "samples": samples,
++            let row: [String: Any] = ["schema_version": 2, "boot_ordinal": ordinal,
++                "signing_mode": signingMode, "process_boot": boot, "run_token": try string(report, "run_token"),
++                "loaded_app_images": images, "loaded_compose_framework": framework, "samples": samples,
+                 "app_foreground": true, "native_alert_present": false, "probe_activations": 1]
+             let encoded = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
+             XCTAssertLessThanOrEqual(encoded.count, 8192)
+--- a/scripts/verification/ios-readiness/README.md
++++ b/scripts/verification/ios-readiness/README.md
+@@ -2,8 +2,10 @@
+ 
+ These non-shipping controls build an explicitly bound **temporary source copy**
+ on one newly created, task-owned iPhone 17 Pro / iOS 26.5 simulator. The root
+-coordinator owns the only Gradle/Xcode lane. Nothing here authorizes signing,
+-Store operations, personal-device use, repository changes, or publication.
++coordinator owns the only Gradle/Xcode lane. The default disables signing. An
++explicit, independently reviewed option enables **credential-free simulator
++ad-hoc comparison only**. Nothing here authorizes Store signing/operations,
++personal-device use, production changes, or publication.
+ 
+ ## What runs
+ 
+@@ -40,14 +42,28 @@
+    Arabic while English remains the system's primary language. The probe
+    captures actual before-App presence and ordered value; real in-app English,
+    System, and restart must preserve it exactly. ABSENT is reported honestly
+-   and does **not** complete the separate PRESENT-coverage goal.
++   and does **not** complete the separate PRESENT-coverage goal. The synthetic
++   seed's cleanup is an exclusive, bounded, app-written JSON receipt in the
++   owned container, bound to the current token, first readiness boot, completed
++   earlier synthetic fixture and original/post-cleanup absence. App stdout is
++   not accepted as a substitute for durable attestation.
+ 5. **Full native provenance.** Every bundle file is checked for Mach-O magic;
+    built and installed image inventories must be identical. This includes the
+    launch stub, `Parlor.debug.dylib`, and `ComposeApp.framework/ComposeApp`.
+-   Actual app-emitted dyld paths bind the observed app images to those hashes.
++   App-emitted dyld paths bind observed bundle images to those hashes. The
++   executing `ComposeApp` is observed separately: its memory `LC_UUID`, bounded
++   streaming file SHA256/size and exact app-bundle **or copied KMP build-product**
++   origin must match independently read owned artifacts. XCTest may load a
++   product outside the installed bundle; it is never relabeled as installed.
++   Only exact Debug ARM64 KGP product locations inside the task-owned build
++   root are readable. Selected loader-variable metadata retains task-relative
++   paths and redacted other-entry counts, not arbitrary environment values.
++   External and embedded SHA256 equality is reported explicitly; KGP can sign
++   the embedded copy without signing its source product, and an equal UUID
++   does not establish equal bytes. No unknown outside image can be substituted.
+    Enumeration is a bounded, non-atomic sample, not evidence of every image
+-   ever loaded or of absent concurrent image loads/unloads.
+-   `dwarfdump` UUID/architecture results and read-only owned-app `codesign`
++   ever loaded, absent concurrent loads/unloads, or a hash of mapped pages.
++   `dwarfdump` UUID/architecture results and read-only outer/nested `codesign`
+    metadata supplement the inventory. `CODE_SIGNING_ALLOWED=NO` describes the
+    build configuration; it does not by itself establish the bytes' signature
+    form or explain a Keychain result.
+@@ -58,6 +74,29 @@
+    absent and oversized records remain explicit, not inferred storage success.
+    Installed Xcode/platform/SDK defaults and actual shared invocation overrides
+    are recorded separately; they are not a query of merged target settings.
++   A separate exclusive receipt records the actual copied app shell phase's
++   allowlisted effective context before Gradle. Unexpected identity/profile,
++   custom entitlements, SDK, architecture or ownership aborts the phase.
++
++## Explicit simulator signing modes
++
++Without an option, `disabled` preserves the prior four signing overrides and
++requires **absent**, not empty, `EXPANDED_CODE_SIGN_IDENTITY` in the actual
++Xcode phase. KGP 2.4.10 treats an empty present value as a signing instruction.
++
++The optional `--simulator-signing=adhoc` uses the same fresh owned Debug ARM64
++simulator workflow with identity `-`, Manual style and no team/profile/custom
++entitlements or signing flags. It requires Xcode's actual expanded identity
++to be exactly `-` before Gradle; it never overwrites an unexpected identity.
++No keychain enumeration, credential import, device registration, provisioning
++update, archive/export or Store command is added. SDK entitlement defaults are
++observed, not forced. Actual outer/nested signature checks must succeed in
++this mode, independently of the storage outcomes.
++
++Mode is bound through runner, actual-phase receipt, generated copy source,
++each boot and XCTest row. Original disabled-run receipts are not reinterpreted.
++Any Keychain or snapshot failure remains visible; ad-hoc flags and successful
++codesign checks alone cannot establish healthy storage or explain past crashes.
+ 
+ ## Prerequisites and explicit binding
+ 
+@@ -100,6 +139,10 @@
+ ```sh
+ /usr/bin/python3 -B "$CONTROL/run_ios_readiness.py" ios-readiness-01 \
+   remediation-runs/CAMPAIGN/ios-readiness-source-01.json REVIEWED_CONTROL_SHA
++# Explicit separately approved simulator-only comparison (new cycle directory):
++/usr/bin/python3 -B "$CONTROL/run_ios_readiness.py" ios-readiness-02 \
++  remediation-runs/CAMPAIGN/ios-readiness-source-01.json REVIEWED_CONTROL_SHA \
++  --simulator-signing=adhoc
+ ```
+ 
+ Bindings/cycle directories are never overwritten or refreshed implicitly.
+@@ -135,7 +178,7 @@
+ 
+ Review first: `run_ios_readiness.py`, `owned_lane.py`, `secondary_fifo.py`,
+ `copied_sources.py`, `instrument_storage.py`, `NativeReadiness*`,
+-`artifact_inventory.py`, and the receipt parsers. Original evidence is immutable;
++`artifact_inventory.py`, `simulator_signing.py`, and the receipt parsers. Original evidence is immutable;
+ the runner writes only to its new campaign cycle directory and owned temporary
+ allocation. The final receipt compares original inputs before/after and copied
+ inputs after workers stop. Cleanup failures must be resolved, never relabeled.
+--- a/scripts/verification/ios-readiness/artifact_inventory.py
++++ b/scripts/verification/ios-readiness/artifact_inventory.py
+@@ -1,6 +1,8 @@
+ """Inventory every Mach-O in this owned app bundle, not just its launch stub."""
+ import hashlib
++import json
+ from pathlib import Path, PurePosixPath
++from simulator_signing import signing_overrides
+ import plistlib
+ import re
+ 
+@@ -38,7 +40,7 @@
+         raise RuntimeError('Missing, symlinked or oversized bundle metadata')
+     info = plistlib.loads(info_path.read_bytes())
+     if info.get('CFBundleIdentifier') != 'com.parlor.app.debug':
+-        raise RuntimeError('Unsigned Debug identity differs from source-bound expectation')
++        raise RuntimeError('Debug identity differs from source-bound expectation')
+     executable = info.get('CFBundleExecutable')
+     if not safe_relative(executable) or '/' in executable:
+         raise RuntimeError('Invalid bundle executable')
+@@ -78,11 +80,114 @@
+         images=rows, required_images=sorted(required), symbolic_links=links)
+ 
+ 
+-def bind_loaded_images(built, installed, runs):
++FRAMEWORK_PATH = 'Frameworks/ComposeApp.framework/ComposeApp'
++LOADER_KEYS = {'DYLD_FRAMEWORK_PATH', 'DYLD_LIBRARY_PATH', 'DYLD_FALLBACK_FRAMEWORK_PATH', 'DYLD_FALLBACK_LIBRARY_PATH'}
++UUID = re.compile(r'[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}')
++SHA256 = re.compile(r'[a-f0-9]{64}')
++
++
++def render_owned_native_launch(template, temporary, mode='disabled'):
++    signing_overrides(mode)
++    root = Path(temporary)
++    if (not root.is_absolute() or str(root.resolve()) != str(root) or not str(root).isascii() or
++            not re.fullmatch(r'parlor-audit-ios-readiness-[0-9]{2}-[A-Za-z0-9_-]{1,64}', root.name)):
++        raise RuntimeError('Native origin observer requires the exact owned canonical readiness allocation')
++    for token, value in (('__PARLOR_NATIVE_TASK_ROOT__', root),
++                         ('__PARLOR_NATIVE_PRODUCT_ROOT__', root / 'copy/composeApp/build'),
++                         ('__PARLOR_NATIVE_SIGNING_MODE__', mode)):
++        if template.count(token) != 1:
++            raise RuntimeError('Missing/ambiguous exact native origin source anchor')
++        template = template.replace(token, json.dumps(str(value)))
++    return template
++
++
++def owned_framework_relative(path, sdk=None):
++    if not safe_relative(path): return False
++    parts = PurePosixPath(path).parts
++    if len(parts) != 5 or parts[-2].lower() != 'composeapp.framework' or parts[-1] != 'ComposeApp': return False
++    if parts[:3] == ('bin', 'iosSimulatorArm64', 'debugFramework'): return True
++    return (parts[:2] == ('xcode-frameworks', 'Debug') and
++            re.fullmatch(r'iphonesimulator[0-9]+(?:\.[0-9]+)*', parts[2]) is not None and
++            (sdk is None or parts[2] == sdk))
++
++
++def validate_framework_observation(value):
++    if (not isinstance(value, dict) or set(value) != {'origin', 'path', 'image_uuid', 'file_bytes', 'file_sha256'} or
++            value['origin'] not in ('installed-app-bundle', 'owned-copy-build') or
++            not isinstance(value['image_uuid'], str) or UUID.fullmatch(value['image_uuid']) is None or
++            not isinstance(value['file_sha256'], str) or SHA256.fullmatch(value['file_sha256']) is None or
++            type(value['file_bytes']) is not int or not 1 <= value['file_bytes'] <= 512 * 1024 * 1024 or
++            (value['path'] != FRAMEWORK_PATH if value['origin'] == 'installed-app-bundle' else
++             not owned_framework_relative(value['path']))):
++        raise RuntimeError('Missing, unsafe or unbounded actual framework origin/fingerprint/UUID')
++    return value
++
++
++def validate_loader_environment(value):
++    if not isinstance(value, dict) or set(value) != LOADER_KEYS:
++        raise RuntimeError('Missing exact bounded loader-environment observation')
++    for row in value.values():
++        if (not isinstance(row, dict) or set(row) != {'present', 'task_owned_paths', 'redacted_entry_count'} or
++                type(row['present']) is not bool or not isinstance(row['task_owned_paths'], list) or
++                not all(safe_relative(path) for path in row['task_owned_paths']) or
++                type(row['redacted_entry_count']) is not int or row['redacted_entry_count'] < 0 or
++                len(row['task_owned_paths']) + row['redacted_entry_count'] > 32 or
++                (row['present'] != (len(row['task_owned_paths']) + row['redacted_entry_count'] > 0))):
++            raise RuntimeError('Unsafe loader-environment metadata or unrelated path disclosure')
++    return value
++
++
++def inventory_owned_framework(owned_build_root, value, sdk):
++    validate_framework_observation(value)
++    root = Path(owned_build_root).absolute()
++    if (value['origin'] != 'owned-copy-build' or not owned_framework_relative(value['path'], sdk) or
++            root.is_symlink() or root.resolve(strict=True) != root or not root.is_dir()):
++        raise RuntimeError('Framework origin does not belong to this exact copied build root/SDK')
++    path = root / value['path']
++    # The app records a symlink-resolved path. Refuse path changes after runtime
++    # instead of following a newly substituted link into another task or data.
++    if path.is_symlink() or path.resolve(strict=True) != path or not path.is_file():
++        raise RuntimeError('Actual framework product changed path or escaped the owned build')
++    size = path.stat().st_size
++    if not 1 <= size <= 512 * 1024 * 1024:
++        raise RuntimeError('Owned framework product exceeds the bounded fingerprint budget')
++    with path.open('rb') as stream:
++        if stream.read(4) not in MAGICS:
++            raise RuntimeError('Observed owned framework product is not Mach-O')
++    fingerprint = digest(path)
++    if size != value['file_bytes'] or fingerprint != value['file_sha256']:
++        raise RuntimeError('Actual runtime framework fingerprint differs from the owned build product')
++    return dict(origin=value['origin'], path=value['path'], bytes=size, sha256=fingerprint)
++
++
++def bind_loaded_images(built, installed, runs, framework_inventories):
+     if built != installed:
+         raise RuntimeError('Installed binary inventory differs from the exact built app bundle')
++    if not isinstance(runs, list) or not 1 <= len(runs) <= 8:
++        raise RuntimeError('Executed-image binding requires actual bounded boot observations')
++    if not isinstance(framework_inventories, list) or not 1 <= len(framework_inventories) <= 9:
++        raise RuntimeError('Missing/unbounded framework artifact inventories')
+     by_path = {row['resolved_path']: row for row in built['images']}
+     required = {row['resolved_path'] for row in built['images'] if row['path'] in built['required_images']}
++    if FRAMEWORK_PATH not in required: raise RuntimeError('Embedded framework inventory is missing')
++    required.remove(FRAMEWORK_PATH)
++    inventories = {}
++    for row in framework_inventories:
++        if (not isinstance(row, dict) or set(row) != {'origin', 'path', 'bytes', 'sha256', 'architectures'} or
++                not isinstance(row['architectures'], list) or len(row['architectures']) != 1 or
++                not isinstance(row['architectures'][0], dict) or set(row['architectures'][0]) != {'architecture', 'uuid'} or
++                row['architectures'][0]['architecture'] != 'arm64'):
++            raise RuntimeError('Missing exact owned ARM64 framework artifact/UUID inventory')
++        validate_framework_observation(dict(origin=row['origin'], path=row['path'], file_bytes=row['bytes'],
++            file_sha256=row['sha256'], image_uuid=row['architectures'][0]['uuid']))
++        key = (row['origin'], row['path'])
++        if key in inventories: raise RuntimeError('Duplicate framework artifact provenance')
++        inventories[key] = row
++    embedded_key = ('installed-app-bundle', FRAMEWORK_PATH)
++    embedded = inventories.get(embedded_key)
++    if embedded is None or any(embedded[key] != by_path[FRAMEWORK_PATH][key] for key in ('bytes', 'sha256')):
++        raise RuntimeError('Embedded framework UUID receipt is not bound to its exact built/installed bytes')
++    used = {embedded_key}
+     bound = []
+     for run in runs:
+         images = run.get('loaded_app_images')
+@@ -90,11 +195,24 @@
+                 images != sorted(set(images)) or not all(safe_relative(value) for value in images)):
+             raise RuntimeError('Missing, duplicated, unsafe or unbounded actual loaded-image list')
+         if not required <= set(images) or not set(images) <= set(by_path):
+-            raise RuntimeError('A required executed image is missing or lacks installed/built hash binding')
++            raise RuntimeError('A required executed app image is missing or lacks installed/built hash binding')
++        framework = validate_framework_observation(run.get('loaded_compose_framework'))
++        environment = validate_loader_environment(run.get('loader_environment'))
++        key = (framework['origin'], framework['path'])
++        artifact = inventories.get(key)
++        if (artifact is None or framework['file_sha256'] != artifact['sha256'] or framework['file_bytes'] != artifact['bytes'] or
++                framework['image_uuid'] != artifact['architectures'][0]['uuid'] or
++                framework['image_uuid'] != embedded['architectures'][0]['uuid'] or
++                (FRAMEWORK_PATH in images) != (framework['origin'] == 'installed-app-bundle')):
++            raise RuntimeError('Actual framework image lacks exact runtime/owned-product hash and UUID binding')
++        used.add(key)
+         bound.append(dict(boot_ordinal=run['boot_ordinal'], process_boot=run['process_boot'],
+-                          loaded_images=[{key: by_path[path][key] for key in ('path', 'bytes', 'sha256')} for path in images]))
+-    return dict(status='PASS', method='Actual app dyld paths bound to identical installed and built Mach-O inventories',
+-                runs=bound, limitation='Observed app-image paths at one bounded, non-atomic dyld enumeration per boot; not every past/concurrent image. Signing-disabled instrumented Debug simulator only; not Store-signature or system-library attestation')
++            loaded_images=[{key: by_path[path][key] for key in ('path', 'bytes', 'sha256')} for path in images],
++            loaded_compose_framework=dict(**framework, same_bytes_as_embedded=artifact['sha256'] == embedded['sha256'],
++                                          embedded_sha256=embedded['sha256']), loader_environment=environment))
++    if set(inventories) != used: raise RuntimeError('Unobserved or extra framework product inventory')
++    return dict(status='PASS', method='Actual bundle dyld paths plus framework memory UUID and runtime file SHA256 bound to exact owned artifact inventories',
++        runs=bound, limitation='One non-atomic dyld observation per boot. An external owned build product is identified separately, never relabeled as installed. Equal UUIDs do not prove equal bytes; same_bytes_as_embedded reports that distinction. Runtime file fingerprint is not a hash of every mapped memory page or Store-signature evidence.')
+ 
+ 
+ def parse_dwarfdump_uuids(output, path):
+--- a/scripts/verification/ios-readiness/copied-kotlin-phase.sh.in
++++ b/scripts/verification/ios-readiness/copied-kotlin-phase.sh.in
+@@ -30,6 +30,9 @@
+ trap finish EXIT
+ trap 'exit 130' INT
+ trap 'exit 143' TERM
++/usr/bin/python3 -B "__PARLOR_SOURCE_ROOT__/scripts/verification/ios-readiness/simulator_signing.py" \
++  "__PARLOR_SIGNING_MODE__" "__PARLOR_SIMULATOR_SDK__" "__PARLOR_SOURCE_ROOT__" \
++  "__PARLOR_SIGNING_RECEIPT__" || exit $?
+ ./gradlew --no-daemon :composeApp:embedAndSignAppleFrameworkForXcode \
+   --dependency-verification=strict --console=plain --no-configuration-cache \
+   --no-parallel --max-workers=1 --no-build-cache
+--- a/scripts/verification/ios-readiness/copied_sources.py
++++ b/scripts/verification/ios-readiness/copied_sources.py
+@@ -78,7 +78,8 @@
+     for required in (*BUILD_ROOTS, *MODIFIED_KOTLIN, 'gradle/wrapper/gradle-wrapper.jar',
+                      'gradle/verification-metadata.xml', 'iosApp/iosApp/Info.plist',
+                      'iosApp/iosApp/ComposeContainerViewController.swift',
+-                     'iosApp/iosAppUITests/ComposeContainerViewControllerTests.swift'):
++                     'iosApp/iosAppUITests/ComposeContainerViewControllerTests.swift',
++                     'scripts/verification/ios-readiness/simulator_signing.py'):
+         if required not in selected:
+             raise RuntimeError('A required actual build input is absent from the frozen source manifest')
+     for entry in entries:
+--- a/scripts/verification/ios-readiness/native_readiness_receipts.py
++++ b/scripts/verification/ios-readiness/native_readiness_receipts.py
+@@ -1,39 +1,45 @@
+ """Separate diagnostic delivery from actual storage health; never false-green."""
+ import json
+ import re
++from pathlib import Path
+ 
+ import probe_validation as legacy
+-from artifact_inventory import safe_relative
++from artifact_inventory import safe_relative, validate_framework_observation, validate_loader_environment
+ from prerequisite_receipts import records
++from simulator_signing import signing_overrides
+ 
+ TOKEN = re.compile(r'[A-Fa-f0-9]{8}(?:-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12}')
+ require = legacy.require
+ NATIVE_OPERATIONS = {'credential-read', 'credential-update', 'credential-add', 'credential-retry', 'credential-delete'}
+ 
+ 
+-def verify_boot_result(value, ordinal, token):
++def verify_boot_result(value, ordinal, token, mode='disabled'):
++    signing_overrides(mode)
+     require(isinstance(value, dict) and set(value) == {
+-        'schema_version', 'boot_ordinal', 'process_boot', 'process_id', 'run_token', 'loaded_app_images', 'observation'},
++        'schema_version', 'boot_ordinal', 'process_boot', 'process_id', 'run_token', 'loaded_app_images',
++        'loaded_compose_framework', 'loader_environment', 'signing_mode', 'observation'},
+         'Wrong app-host boot-result schema')
+-    require(type(value['schema_version']) is int and value['schema_version'] == 1 and
++    require(value['signing_mode'] == mode and type(value['schema_version']) is int and value['schema_version'] == 2 and
+             type(value['boot_ordinal']) is int and value['boot_ordinal'] == ordinal and value['run_token'] == token and
+             isinstance(value['process_boot'], str) and TOKEN.fullmatch(value['process_boot']) and
+             type(value['process_id']) is int and 0 < value['process_id'] < 2**31, 'Wrong boot/context binding')
+     images = value['loaded_app_images']
+     require(isinstance(images, list) and 1 <= len(images) <= 128 and all(safe_relative(path) for path in images) and
+             images == sorted(set(images)), 'Missing/unsafe/duplicated native image names')
++    validate_framework_observation(value['loaded_compose_framework'])
++    validate_loader_environment(value['loader_environment'])
+     observation = value['observation']
+     require(isinstance(observation, dict) and set(observation) == {
+         'schema_version', 'kind', 'harness_status', 'boot_ordinal', 'run_token', 'steps',
+         'credential_numeric_status_is_exact_invocation', 'initial_home_numeric_attribution',
+-        'snapshot_numeric_attribution', 'physical_or_signed_evidence'}, 'Wrong production-observation schema')
+-    require(type(observation['schema_version']) is int and observation['schema_version'] == 1 and
+-            observation['kind'] == 'actual_koin_signing_disabled_simulator' and
++        'snapshot_numeric_attribution', 'physical_or_store_evidence'}, 'Wrong production-observation schema')
++    require(type(observation['schema_version']) is int and observation['schema_version'] == 2 and
++            observation['kind'] == 'actual_koin_simulator' and
+             observation['harness_status'] == 'observation_complete' and type(observation['boot_ordinal']) is int and
+             observation['boot_ordinal'] == ordinal and
+             observation['run_token'] == token and observation['credential_numeric_status_is_exact_invocation'] is True and
+             all(observation[key] is False for key in ('initial_home_numeric_attribution', 'snapshot_numeric_attribution',
+-                                                      'physical_or_signed_evidence')), 'Wrong attribution or incomplete observation')
++                                                      'physical_or_store_evidence')), 'Wrong attribution or incomplete observation')
+     plan = ['home-rerun', 'credential-read', 'snapshot-read'] + (
+         ['credential-write', 'snapshot-write'] if ordinal in (1, 2) else
+         ['credential-remove', 'snapshot-remove'] if ordinal == 3 else [])
+@@ -155,7 +161,62 @@
+                 storage_boots=boots)
+ 
+ 
+-def verify_native_readiness(results, scenario, settings, log):
++def read_synthetic_seed_cleanup(path):
++    path = Path(path)
++    require(not path.is_symlink() and path.is_file(), 'Missing durable synthetic-seed cleanup receipt')
++    with path.open('rb') as stream:
++        raw = stream.read(1025)
++    require(0 < len(raw) <= 1024, 'Unbounded/truncated synthetic-seed cleanup receipt')
++    def unique(pairs):
++        value = {}
++        for key, item in pairs:
++            require(key not in value, 'Duplicate synthetic-seed cleanup field')
++            value[key] = item
++        return value
++    try:
++        value = json.loads(raw, object_pairs_hook=unique)
++    except (UnicodeError, ValueError) as error:
++        raise RuntimeError('Malformed synthetic-seed cleanup receipt') from error
++    require(isinstance(value, dict), 'Synthetic-seed cleanup receipt is not an object')
++    return value
++
++
++def verify_synthetic_seed_cleanup(cleanup, settings, first_start):
++    expected = dict(schema_version=2, run_token=settings['runToken'], process_boot=first_start['boot'],
++                    original_present=False, synthetic_previous=['ar-EG', 'en'], restored_present=False,
++                    source='completed-token-bound-owned-settings-fixture-only')
++    require(isinstance(cleanup, dict) and cleanup == expected and
++            type(cleanup['schema_version']) is int and cleanup['original_present'] is False and
++            cleanup['restored_present'] is False, 'Missing/wrong-context attested synthetic seed cleanup')
++    rows, _ = legacy.common(settings, 'settings')
++    events = [row for row, _ in rows]
++    first, last = events[0], events[-1]
++    completion = next(row for row in events if row['phase'] == 'complete')
++    require(all(type(row['ordinal']) is int and type(row['controllerCreations']) is int for row in events),
++            'Synthetic seed source must retain actual integer counters')
++    require(first['phase'] == 'before_main' and first['fixture'] == 'fresh' and
++            first['preferences']['setting'] == 'system' and first['preferences']['ownerPresent'] is False and
++            first['preferences']['hasAppOverride'] is False and first['preferences']['appLanguages'] == [],
++            'Cleanup cannot erase a pre-existing app-domain language preference')
++    require(last['preferences']['setting'] == 'system' and last['preferences']['ownerPresent'] is False and
++            last['preferences']['appLanguages'] == ['ar-EG', 'en'] and last['preferences']['hasAppOverride'] is True and
++            completion['preferences'] == last['preferences'] and completion['boot'] == last['boot'] and
++            last['boot'] != first_start['boot'], 'Completed synthetic seed/current cleanup process not bound')
++    require(all(row['phase'] == 'sample' and row['preferences'] == completion['preferences'] and
++                row['boot'] == completion['boot'] for row in events if row['ordinal'] > completion['ordinal']),
++            'Settings changed after synthetic seed completion')
++    require(any(row['phase'] == 'before_main' and row['fixture'] == 'previous-ar' and
++                row['ordinal'] < completion['ordinal'] and row['preferences']['appLanguages'] == ['ar-EG', 'en'] and
++                row['preferences']['ownerPresent'] is False for row in events),
++            'Synthetic cleanup has no attested earlier task-owned seed')
++    require(first_start['preferences']['setting'] == 'system' and
++            first_start['preferences']['ownerPresent'] is False and
++            first_start['preferences']['hasAppOverride'] is False and first_start['preferences']['appLanguages'] == [],
++            'Actual post-cleanup before-App preferences did not restore original absence')
++
++
++def verify_native_readiness(results, scenario, settings, log, cleanup, mode='disabled'):
++    signing_overrides(mode)
+     token = settings.get('runToken')
+     require(isinstance(token, str) and TOKEN.fullmatch(token), 'Missing source-matrix run token')
+     require(isinstance(results, list) and len(results) == 8, 'All eight cold launches require separate durable results')
+@@ -166,21 +227,19 @@
+     require(len(starts) == 8 and all(event['fixture'] == 'existing' for event in starts), 'Expected eight explicit cold starts')
+     require(all(event['preferences']['setting'] == 'system' and not event['preferences']['ownerPresent'] and
+                 not event['preferences']['hasAppOverride'] for event in starts), 'Synthetic language fixture was not returned to its original absence')
+-    cleanup = records(log, 'PARLOR_NATIVE_SYNTHETIC_SEED_CLEANUP ', maximum=1, row_bytes=1024, total_bytes=1024)
+-    require(cleanup == [dict(schema_version=1, run_token=token, original_present=False,
+-                            synthetic_previous=['ar-EG', 'en'], restored_present=False,
+-                            source='completed-token-bound-owned-settings-fixture-only')], 'Missing attested synthetic seed cleanup')
++    verify_synthetic_seed_cleanup(cleanup, settings, starts[0])
+     launch_rows = records(log, 'PARLOR_NATIVE_COLD_LAUNCH ', maximum=8, row_bytes=8192, total_bytes=65536)
+     require(len(launch_rows) == 8, 'All cold-launch stability trains must execute')
+     outcomes = []
+     for ordinal, (result, launch, start) in enumerate(zip(results, launch_rows, starts), 1):
+-        outcomes.append(verify_boot_result(result, ordinal, token))
++        outcomes.append(verify_boot_result(result, ordinal, token, mode))
+         require(set(launch) == {'schema_version', 'boot_ordinal', 'process_boot', 'run_token', 'loaded_app_images',
+-                              'samples', 'app_foreground', 'native_alert_present', 'probe_activations'} and
+-                type(launch['schema_version']) is int and launch['schema_version'] == 1 and
++                              'samples', 'app_foreground', 'native_alert_present', 'probe_activations', 'loaded_compose_framework', 'signing_mode'} and
++                launch['signing_mode'] == mode and type(launch['schema_version']) is int and launch['schema_version'] == 2 and
+                 type(launch['boot_ordinal']) is int and launch['boot_ordinal'] == ordinal and
+                 launch['process_boot'] == result['process_boot'] == start['boot'] and launch['run_token'] == token and
+-                launch['loaded_app_images'] == result['loaded_app_images'] and launch['app_foreground'] is True and
++                launch['loaded_app_images'] == result['loaded_app_images'] and
++                launch['loaded_compose_framework'] == result['loaded_compose_framework'] and launch['app_foreground'] is True and
+                 launch['native_alert_present'] is False and type(launch['probe_activations']) is int and
+                 launch['probe_activations'] == 1, 'Launch and durable actual-app receipts disagree')
+         samples = launch['samples']
+@@ -201,7 +260,7 @@
+                 'Each cold-launch train must span at least ten measured seconds')
+     require(len({value['process_boot'] for value in results}) == 8, 'One process cannot impersonate eight launches')
+     health = classify_storage_health(outcomes, results)
+-    return dict(diagnostic_delivery='PASS', current_build_cold_launch='PASS', cold_launches=8,
++    return dict(diagnostic_delivery='PASS', current_build_cold_launch='PASS', cold_launches=8, signing_mode=mode,
+                 stability_samples=48, minimum_observation_span_per_launch_seconds=10,
+                 exact_rerun_credential_attribution='PASS', **health, original_first_four_launch_failures_cause='UNRESOLVED',
+-                claims='Current instrumented signing-disabled Debug simulator only; not physical LAN, healthy signed Keychain, complete save/resume, Store, or prior-launch root-cause proof')
++                claims='Current instrumented Debug simulator in the explicitly recorded signing mode only; not physical LAN, healthy Store-signed Keychain, complete save/resume, Store, or prior-launch root-cause proof')
+--- a/scripts/verification/ios-readiness/run_ios_readiness.py
++++ b/scripts/verification/ios-readiness/run_ios_readiness.py
+@@ -34,8 +34,12 @@
+ from public_interaction_receipts import verify_public_interaction_receipts
+ from os_action_receipts import verify_os_action_receipts
+ from os_pane_receipts import verify_os_pane_receipts
+-from artifact_inventory import inventory_bundle, bind_loaded_images, parse_dwarfdump_uuids
+-from native_readiness_receipts import verify_native_readiness
++from artifact_inventory import (inventory_bundle, bind_loaded_images, parse_dwarfdump_uuids,
++                                inventory_owned_framework, validate_framework_observation,
++                                render_owned_native_launch, FRAMEWORK_PATH)
++from native_readiness_receipts import verify_native_readiness, read_synthetic_seed_cleanup
++from simulator_signing import (selected_mode, signing_overrides, render_owned_kotlin_phase,
++                               read_phase_receipt, RECEIPT_NAME as PHASE_RECEIPT_NAME)
+ from simulator_entitlements import (inspect_bundle_entitlements, inspect_generated_app_entitlements,
+                                     inspect_sdk_signing_defaults)
+ 
+@@ -322,8 +326,9 @@
+         BINDING = checked_binding_path(sys.argv[2])
+         print(json.dumps(dict(control_sha256=control_hash(), files=control_manifest()), indent=2))
+         return 0  # Read-only; never allocates a simulator or build workspace.
+-    if len(sys.argv) != 4 or not re.fullmatch(r'ios-readiness-[0-9]{2}', sys.argv[1]):
+-        raise SystemExit('Usage: run_ios_readiness.py ios-readiness-NN CAMPAIGN_SOURCE_BINDING_JSON INDEPENDENTLY_REVIEWED_CONTROL_SHA256')
++    if len(sys.argv) not in (4, 5) or not re.fullmatch(r'ios-readiness-[0-9]{2}', sys.argv[1]):
++        raise SystemExit('Usage: run_ios_readiness.py ios-readiness-NN CAMPAIGN_SOURCE_BINDING_JSON INDEPENDENTLY_REVIEWED_CONTROL_SHA256 [--simulator-signing=adhoc]')
++    mode = selected_mode(sys.argv[4:])
+     NAME = sys.argv[1]
+     BINDING = checked_binding_path(sys.argv[2])
+     OUT = BINDING.parent
+@@ -338,7 +343,7 @@
+         dest.parent.mkdir(exist_ok=True)
+         dest.mkdir(exist_ok=False)
+         receipt = dict(cycle=NAME, started_at=now(), status='RUNNING',
+-                       execution_kind='manifest-owned-copy-signing-disabled-ios-local-readiness-matrix', commands=[],
++                       execution_kind='manifest-owned-copy-ios-local-readiness-matrix', signing_mode=mode, commands=[],
+                        runtime_evidence_status='NOT_RUN', cleanup_status='BLOCKED',
+                        scope='Four actual production-container UIKit tests; actual Settings/restart; direct Compose and actual LocalUIViewController direction; stable outer/child/window identities and full-bounds safe-area geometry in EN/AR portrait/landscape; local Whodunit/Mafia controller/flow/value continuity under synthetic real-store language setters and actual background/foreground; actual OS Arabic per-app preference; eight current-build cold launches; exact rerun credential OSStatus and synthetic storage durability; complete embedded Mach-O inventory and observed loaded-image binding. No physical LAN, full-game, signed-release, Store or leak-free claim.', approved_control_sha256=approved)
+         temp, owner, env, uuid = None, None, None, None
+@@ -501,13 +506,16 @@
+             env.update(PATH=java + '/bin:/usr/bin:/bin:/usr/sbin:/sbin', JAVA_HOME=java,
+                        LANG='en_US.UTF-8', LC_ALL='C', GRADLE_USER_HOME=str(temp / 'gradle-home'),
+                        TMPDIR=str(temp / 'tmp') + '/', PYTHONDONTWRITEBYTECODE='1',
+-                       CONFIGURATION='Debug',
+-                       CODE_SIGNING_ALLOWED='NO', CODE_SIGNING_REQUIRED='NO', CODE_SIGN_IDENTITY='',
+-                       DEVELOPMENT_TEAM='')
++                       CONFIGURATION='Debug')
++            configured_signing = signing_overrides(mode)
++            env.update(configured_signing)
+             # KGP2.4.10 treats even an empty EXPANDED_CODE_SIGN_IDENTITY as an
+-            # instruction to call codesign. Absence, not a blank identity, is
+-            # required for this unsigned audit. No real/ad-hoc identity supplied.
+-            receipt['expanded_signing_identity_policy'] = 'omitted from whitelisted environment; unsigned simulator only'
++            # instruction to call codesign. The inherited field is omitted;
++            # the actual copied Xcode phase must observe absence when disabled,
++            # or exactly dash when explicit simulator ad-hoc mode was selected.
++            # Never overwrite an unexpected identity after Xcode supplies it.
++            receipt['expanded_signing_identity_policy'] = (
++                'required absent in actual phase' if mode == 'disabled' else 'required exact dash in actual phase; no credentials')
+             jvm = '-Xmx6g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Djava.io.tmpdir=' + str(temp / 'tmp')
+             opts = ['-Dorg.gradle.jvmargs=' + jvm, '-Dorg.gradle.parallel=false', '-Dorg.gradle.workers.max=1',
+                     '-Dorg.gradle.configuration-cache=false', '-Dorg.gradle.caching=false',
+@@ -530,11 +538,9 @@
+             if command(['xcode-select', '-p'], 'selected-developer.log') or command(
+                     ['xcrun', '--sdk', 'iphonesimulator', '--show-sdk-path'], 'selected-sdk-path.log'):
+                 raise RuntimeError('Cannot bind public installed SDK signing defaults')
+-            configured_signing = {key: env[key] for key in (
+-                'CODE_SIGNING_ALLOWED', 'CODE_SIGNING_REQUIRED', 'CODE_SIGN_IDENTITY', 'DEVELOPMENT_TEAM')}
+             receipt['signing_configuration_observations'] = inspect_sdk_signing_defaults(
+                 Path((dest / 'selected-developer.log').read_text().strip()),
+-                Path((dest / 'selected-sdk-path.log').read_text().strip()), configured_signing)
++                Path((dest / 'selected-sdk-path.log').read_text().strip()), configured_signing, mode)
+             signing_arguments = [key + '=' + value for key, value in configured_signing.items()]
+             bindings = json.loads(BINDING.read_text())
+             if receipt['source_before'] != bindings['source_identity']:
+@@ -567,7 +573,7 @@
+                 '        DSC01Probe.shared.attach(controller)\n        return controller')
+             content.write_text(original + '\n' + (FIXTURE / 'DSC01NativeObservation.swift.in').read_text() +
+                                '\n' + (FIXTURE / 'DSC01Probe.swift.in').read_text() + '\n' +
+-                               (FIXTURE / 'NativeReadinessLaunch.swift.in').read_text())
++                               render_owned_native_launch((FIXTURE / 'NativeReadinessLaunch.swift.in').read_text(), temp, mode))
+             entry = temp / 'copy/iosApp/iosApp/iOSApp.swift'
+             original = entry.read_text()
+             needle = 'struct iOSApp: App {'
+@@ -592,10 +598,8 @@
+                 raise RuntimeError('Unexpected framework search bindings')
+             # Existing relative search paths now correctly target this same
+             # manifest-owned copied graph; never link an original/stale framework.
+-            phase = (FIXTURE / 'copied-kotlin-phase.sh.in').read_text()
+-            phase = phase.replace('__PARLOR_SOURCE_ROOT__', str(temp / 'copy')).replace('__PARLOR_STOP_RECEIPT__', str(dest / 'embedded-gradle-stop.txt'))
+-            if '__PARLOR_' in phase:
+-                raise RuntimeError('Unresolved copied phase token')
++            phase = render_owned_kotlin_phase((FIXTURE / 'copied-kotlin-phase.sh.in').read_text(),
++                                              temp, dest, env['SDK_NAME'], mode)
+             pattern = r'(shellScript = )"(?:[^"\\]|\\.)*";'
+             candidates = list(re.finditer(pattern, pbx))
+             if len(candidates) != 1:
+@@ -638,7 +642,7 @@
+             save()
+             try:
+                 xcode = command(['xcodebuild', '-project', project.parent, '-scheme', 'iosApp',
+-                    '-configuration', 'Debug', '-sdk', 'iphonesimulator', '-destination', 'id=' + uuid,
++                    '-configuration', 'Debug', '-sdk', env['SDK_NAME'], '-destination', 'id=' + uuid,
+                     '-derivedDataPath', temp / 'DerivedData', '-resultBundlePath', results,
+                     '-parallel-testing-enabled', 'NO', '-maximum-concurrent-test-simulator-destinations', '1',
+                     '-disable-concurrent-destination-testing', '-jobs', '1', '-test-timeouts-enabled', 'YES',
+@@ -671,6 +675,16 @@
+                         if result.stat().st_size > 262144:
+                             raise RuntimeError('Oversized synthetic result; refuse to copy')
+                         shutil.copyfile(result, dest / ('probe-' + scenario + '-result.json'))
++                cleanup_result = container / 'tmp/parlor-native-synthetic-seed-cleanup.json'
++                if cleanup_result.is_symlink() or cleanup_result.resolve().parent != (container / 'tmp').resolve():
++                    raise RuntimeError('Unexpected task-owned synthetic cleanup result path')
++                if cleanup_result.is_file():
++                    with cleanup_result.open('rb') as source:
++                        cleanup_bytes = source.read(1025)
++                    if not 0 < len(cleanup_bytes) <= 1024:
++                        raise RuntimeError('Unbounded synthetic cleanup result; refuse to retain')
++                    with (dest / cleanup_result.name).open('xb') as output:
++                        output.write(cleanup_bytes)
+                 for ordinal in range(1, 9):
+                     result = container / ('tmp/parlor-native-readiness-boot-' + str(ordinal) + '.json')
+                     if result.is_symlink() or result.resolve().parent != (container / 'tmp').resolve():
+@@ -693,7 +707,7 @@
+                 receipt['artifacts'] = built_inventory['images']
+                 write_json(dest / 'built-app-linker-entitlements.json', inspect_bundle_entitlements(app, built_inventory, temp))
+                 receipt['built_app_linker_entitlements_sha256'] = digest(dest / 'built-app-linker-entitlements.json')
+-                uuids = []
++                uuids, signatures = [], []
+                 actual_images = {row['resolved_path']: row for row in built_inventory['images']}
+                 for index, (relative, image) in enumerate(sorted(actual_images.items())):
+                     path = app / relative
+@@ -704,17 +718,29 @@
+                         raise RuntimeError('Native binary changed during inventory')
+                     uuids.append(dict(path=relative, sha256=image['sha256'],
+                                       architectures=parse_dwarfdump_uuids((dest / filename).read_text(), path)))
++                    signature_log = 'native-signature-' + str(index).zfill(3) + '.log'
++                    verify_log = 'native-signature-verify-' + str(index).zfill(3) + '.log'
++                    signatures.append(dict(path=relative, sha256=image['sha256'],
++                        display_exit_code=command(['/usr/bin/codesign', '--display', '--verbose=4', path], signature_log),
++                        verify_exit_code=command(['/usr/bin/codesign', '--verify', '--strict', '--verbose=2', path], verify_log)))
++                    if any((dest / name).stat().st_size > 65536 for name in (signature_log, verify_log)):
++                        raise RuntimeError('Owned nested image signature metadata exceeded its inspection budget')
++                    if digest(path) != image['sha256']:
++                        raise RuntimeError('Owned image changed during read-only signature inspection')
+                 receipt['native_uuid_inventory'] = uuids
++                receipt['native_signature_inventory'] = signatures
+                 # Read-only public metadata of this owned Debug app. No key
+-                # imports, signing, identity changes, or Store operations.
+-                # Signing-disabled settings alone do not prove signature form.
++                # imports, manual signing, identity changes or Store operations.
++                # Neither selected mode alone proves actual signature integrity.
+                 receipt['public_signature_inspection'] = dict(
+                     display_exit_code=command(['/usr/bin/codesign', '--display', '--verbose=4', app],
+                                               'owned-app-signature-display.log'),
+                     entitlements_exit_code=command(['/usr/bin/codesign', '--display', '--entitlements', ':-', app],
+                                                    'owned-app-entitlements.log'),
++                    verify_exit_code=command(['/usr/bin/codesign', '--verify', '--strict', '--verbose=2', app],
++                                             'owned-app-signature-verify.log'),
+                     interpretation='Raw bounded owned-app metadata retained; no private credentials read and no entitlement modification. A nonzero display is not a storage diagnosis.')
+-                for filename in ('owned-app-signature-display.log', 'owned-app-entitlements.log'):
++                for filename in ('owned-app-signature-display.log', 'owned-app-entitlements.log', 'owned-app-signature-verify.log'):
+                     if (dest / filename).stat().st_size > 65536:
+                         raise RuntimeError('Owned app signature metadata exceeded its inspection budget')
+             if command(['xcrun', 'simctl', 'get_app_container', uuid, APP_ID, 'app'], 'owned-installed-app.log') == 0:
+@@ -737,6 +763,17 @@
+             if not embedded_stop.is_file() or embedded_stop.read_text() != 'build_exit=0\nstop_exit=0\n':
+                 raise RuntimeError('No successful immediate stop receipt from copied nested Gradle phase')
+             receipt['embedded_gradle_stop_status'] = 'PASS'
++            phase_receipt = read_phase_receipt(dest / PHASE_RECEIPT_NAME, mode, receipt['sdk_name'], temp / 'copy')
++            receipt['effective_simulator_app_phase'] = dict(status='PASS', mode=phase_receipt['mode'],
++                sha256=digest(dest / PHASE_RECEIPT_NAME), scope=phase_receipt['scope'])
++            if mode == 'adhoc':
++                if (any(row['display_exit_code'] != 0 or row['verify_exit_code'] != 0
++                        for row in receipt.get('native_signature_inventory', [])) or
++                        not receipt.get('native_signature_inventory') or
++                        any(receipt.get('public_signature_inspection', {}).get(key) != 0 for key in
++                            ('display_exit_code', 'entitlements_exit_code', 'verify_exit_code'))):
++                    raise RuntimeError('Explicit simulator ad-hoc artifact signature inspection failed; not Store or storage evidence')
++                receipt['simulator_adhoc_signature_verification'] = 'PASS; owned local artifacts only, not Store identity'
+             reports = {}
+             for scenario in ('settings', 'whodunit', 'mafia', 'os'):
+                 path = dest / ('probe-' + scenario + '-result.json')
+@@ -746,11 +783,38 @@
+             native_results = [json.loads((dest / ('parlor-native-readiness-boot-' + str(ordinal) + '.json')).read_text())
+                               for ordinal in range(1, 9)]
+             native_scenario = json.loads((dest / 'probe-readiness-result.json').read_text())
+-            receipt['native_readiness'] = verify_native_readiness(native_results, native_scenario,
+-                reports['settings'], (dest / 'xcodebuild.log').read_text())
+             if built_inventory is None or installed_inventory is None:
+                 raise RuntimeError('Complete built/installed native binary inventory is unavailable')
+-            receipt['executed_binary_binding'] = bind_loaded_images(built_inventory, installed_inventory, native_results)
++            embedded = next(row for row in built_inventory['images'] if row['resolved_path'] == FRAMEWORK_PATH)
++            embedded_uuid = next(row for row in receipt['native_uuid_inventory'] if row['path'] == FRAMEWORK_PATH)
++            framework_inventory = [dict(origin='installed-app-bundle', path=FRAMEWORK_PATH, bytes=embedded['bytes'],
++                                        sha256=embedded['sha256'], architectures=embedded_uuid['architectures'])]
++            observed_origins = {('installed-app-bundle', FRAMEWORK_PATH)}
++            for native in native_results:
++                observed = validate_framework_observation(native.get('loaded_compose_framework'))
++                origin = (observed['origin'], observed['path'])
++                if origin in observed_origins:
++                    continue
++                # Only an exact, symlink-resolved product inside this cycle's
++                # copied KMP output is readable. Nothing from DYLD's other paths
++                # or unrelated host/system libraries is inspected or retained.
++                owned_build = temp / 'copy/composeApp/build'
++                artifact = inventory_owned_framework(owned_build, observed, receipt['sdk_name'])
++                path = owned_build / observed['path']
++                filename = 'native-runtime-framework-' + str(len(framework_inventory)).zfill(3) + '.log'
++                if command(['xcrun', 'dwarfdump', '--uuid', path], filename) != 0 or digest(path) != artifact['sha256']:
++                    raise RuntimeError('Observed framework product changed or UUID inspection failed')
++                artifact['architectures'] = parse_dwarfdump_uuids((dest / filename).read_text(), path)
++                framework_inventory.append(artifact); observed_origins.add(origin)
++            write_json(dest / 'executed-framework-inventory.json', dict(schema_version=1, images=framework_inventory))
++            receipt['executed_framework_inventory_sha256'] = digest(dest / 'executed-framework-inventory.json')
++            cleanup_path = dest / 'parlor-native-synthetic-seed-cleanup.json'
++            cleanup_record = read_synthetic_seed_cleanup(cleanup_path)
++            receipt['synthetic_seed_cleanup_sha256'] = digest(cleanup_path)
++            receipt['native_readiness'] = verify_native_readiness(native_results, native_scenario,
++                reports['settings'], (dest / 'xcodebuild.log').read_text(), cleanup_record, mode)
++            receipt['executed_binary_binding'] = bind_loaded_images(
++                built_inventory, installed_inventory, native_results, framework_inventory)
+             receipt['dsc01_matrix'] = verify_probe(reports, verify_legacy_settings_probe, (dest / 'xcodebuild.log').read_text())
+             receipt['os_interaction_proof'] = verify_os_action_receipts(
+                 (dest / 'xcodebuild.log').read_text(), reports['os'], receipt['dsc01_matrix']['os_settings_gate'])
+--- a/scripts/verification/ios-readiness/simulator_entitlements.py
++++ b/scripts/verification/ios-readiness/simulator_entitlements.py
+@@ -12,6 +12,7 @@
+ import struct
+ 
+ from artifact_inventory import digest, safe_relative
++from simulator_signing import signing_overrides
+ 
+ MAX_PLIST_BYTES = 65536
+ MAX_COMMAND_BYTES = 4 * 1024 * 1024
+@@ -231,7 +232,7 @@
+     return dict(schema_version=1, files=rows, scope='Exact app-target generated xcent filenames only; unrelated targets and private signing material excluded. Unknown entitlement fields redacted.')
+ 
+ 
+-def inspect_sdk_signing_defaults(developer, sdk, configured):
++def inspect_sdk_signing_defaults(developer, sdk, configured, mode='disabled'):
+     """Public installed-toolchain metadata, not merged/effective target settings."""
+     developer = Path(developer).resolve(strict=True)
+     if developer.name != 'Developer' or developer.parent.name != 'Contents':
+@@ -254,8 +255,8 @@
+         if not all(value is None or isinstance(value, str) and len(value) <= 256 and '\n' not in value for value in values.values()):
+             raise RuntimeError('Unexpected public SDK metadata shape')
+         rows[kind] = dict(path=str(path), sha256=hashlib.sha256(raw).hexdigest(), values=values)
+-    if configured != dict(CODE_SIGNING_ALLOWED='NO', CODE_SIGNING_REQUIRED='NO', CODE_SIGN_IDENTITY='', DEVELOPMENT_TEAM=''):
++    if configured != signing_overrides(mode):
+         raise RuntimeError('Unexpected explicit signing invocation fields')
+     rows['explicit_environment_and_command_overrides'] = configured
+-    return dict(schema_version=1, observations=rows,
++    return dict(schema_version=2, mode=mode, observations=rows,
+                 scope='Installed Xcode/platform/SDK raw defaults and explicit matching runner overrides. Not queried merged effective target settings; do not infer signed entitlement state or healthy storage from flags.')
+--- /dev/null
++++ b/scripts/verification/ios-readiness/simulator_signing.py
+@@ -0,0 +1,190 @@
++"""Closed, credential-free simulator modes and actual copied-phase attestation.
++
++Never invoke signing, enumerate identities, read profiles or open a keychain.
++Only the runner may select the explicit ad-hoc comparison. This helper fails
++before copied Gradle execution if Xcode supplies an unintended signing context.
++"""
++import json
++import os
++from pathlib import Path
++import re
++import sys
++
++MODES = ('disabled', 'adhoc')
++SDK = re.compile(r'iphonesimulator[0-9]+(?:\.[0-9]+)*')
++OWNED_NAME = re.compile(r'parlor-audit-ios-readiness-[0-9]{2}-[A-Za-z0-9_-]{1,64}')
++RECEIPT_NAME = 'effective-simulator-app-phase.json'
++EMPTY_FIELDS = ('DEVELOPMENT_TEAM', 'PROVISIONING_PROFILE', 'PROVISIONING_PROFILE_SPECIFIER',
++                'EXPANDED_PROVISIONING_PROFILE', 'CODE_SIGN_ENTITLEMENTS', 'OTHER_CODE_SIGN_FLAGS',
++                'CODE_SIGN_KEYCHAIN')
++CONTEXT = dict(ACTION='build', ARCHS='arm64', CONFIGURATION='Debug', PLATFORM_NAME='iphonesimulator',
++               PRODUCT_BUNDLE_IDENTIFIER='com.parlor.app.debug', PRODUCT_NAME='Parlor', TARGET_NAME='iosApp',
++               FRAMEWORKS_FOLDER_PATH='Parlor.app/Frameworks', DEPLOYMENT_LOCATION='NO')
++OBSERVED_FLAGS = ('AD_HOC_CODE_SIGNING_ALLOWED', 'CODE_SIGN_INJECT_BASE_ENTITLEMENTS',
++                  'ENTITLEMENTS_REQUIRED', 'ENABLE_DEBUG_DYLIB')
++FIELDS = tuple(CONTEXT) + ('SDK_NAME', 'SRCROOT', 'PROJECT_DIR', 'TARGET_BUILD_DIR',
++    'CODE_SIGNING_ALLOWED', 'CODE_SIGNING_REQUIRED', 'CODE_SIGN_IDENTITY', 'CODE_SIGN_STYLE',
++    'EXPANDED_CODE_SIGN_IDENTITY', 'ENTITLEMENTS_DESTINATION') + EMPTY_FIELDS + OBSERVED_FLAGS
++SCOPE = ('Actual copied app-target shell-phase environment before Gradle; only allowlisted public '
++         'settings and canonical task-owned paths. Not signature validation, healthy storage, '
++         'physical-device, Store-signing or publication evidence.')
++
++
++def signing_overrides(mode='disabled'):
++    if mode not in MODES:
++        raise RuntimeError('Unknown explicit simulator signing mode')
++    if mode == 'disabled':
++        # Preserve the original disabled invocation, including nullable KGP
++        # expanded identity. An empty expanded identity is NOT absence.
++        return dict(CODE_SIGNING_ALLOWED='NO', CODE_SIGNING_REQUIRED='NO', CODE_SIGN_IDENTITY='', DEVELOPMENT_TEAM='')
++    return dict(CODE_SIGNING_ALLOWED='YES', CODE_SIGNING_REQUIRED='YES', CODE_SIGN_IDENTITY='-',
++                CODE_SIGN_STYLE='Manual', DEVELOPMENT_TEAM='', PROVISIONING_PROFILE='',
++                PROVISIONING_PROFILE_SPECIFIER='', CODE_SIGN_ENTITLEMENTS='', OTHER_CODE_SIGN_FLAGS='')
++
++
++def selected_mode(extra_arguments):
++    if not extra_arguments:
++        return 'disabled'
++    if extra_arguments == ['--simulator-signing=adhoc']:
++        return 'adhoc'
++    raise RuntimeError('Only the explicit simulator ad-hoc comparison option is supported')
++
++
++def owned_source(source):
++    source = Path(source).absolute()
++    if (source.name != 'copy' or not OWNED_NAME.fullmatch(source.parent.name) or
++            source.is_symlink() or source.resolve(strict=True) != source or not source.is_dir()):
++        raise RuntimeError('Signing context requires this canonical owned readiness source copy')
++    return source
++
++
++def observed_phase(mode, sdk, source, environment):
++    overrides = signing_overrides(mode)
++    source = owned_source(source)
++    if not isinstance(sdk, str) or SDK.fullmatch(sdk) is None:
++        raise RuntimeError('Signing context requires an exact simulator SDK')
++    # Never include supplied unexpected values in diagnostics or receipts.
++    if any(not isinstance(environment.get(key, ''), str) for key in FIELDS):
++        raise RuntimeError('Malformed allowlisted signing context')
++    if any(environment.get(key) != value for key, value in {**CONTEXT, 'SDK_NAME': sdk}.items()):
++        raise RuntimeError('Wrong target, architecture, SDK or Debug simulator context')
++    if any(environment.get(key, '') != value for key, value in overrides.items()):
++        raise RuntimeError('Actual signing flags differ from the selected explicit mode')
++    if any(environment.get(key, '') != '' for key in EMPTY_FIELDS):
++        raise RuntimeError('Credential, profile, custom entitlement or signing override is forbidden')
++    if mode == 'disabled':
++        if 'EXPANDED_CODE_SIGN_IDENTITY' in environment:
++            raise RuntimeError('Disabled mode requires absent expanded signing identity, not empty')
++        if environment.get('CODE_SIGN_STYLE') not in (None, '', 'Automatic', 'Manual'):
++            raise RuntimeError('Unexpected disabled signing style')
++    elif environment.get('EXPANDED_CODE_SIGN_IDENTITY') != '-':
++        raise RuntimeError('Ad-hoc simulator mode requires exact dash expanded identity')
++    for key in OBSERVED_FLAGS:
++        if environment.get(key) not in (None, '', 'YES', 'NO'):
++            raise RuntimeError('Unexpected public SDK signing flag')
++    if environment.get('ENTITLEMENTS_DESTINATION') not in (None, '', 'Signature', '__entitlements'):
++        raise RuntimeError('Unexpected public SDK entitlement destination')
++    paths = dict(SRCROOT=source / 'iosApp', PROJECT_DIR=source / 'iosApp',
++                 TARGET_BUILD_DIR=source.parent / 'DerivedData/Build/Products/Debug-iphonesimulator')
++    for key, expected in paths.items():
++        raw = environment.get(key, '')
++        if not raw.startswith('/') or len(raw.encode()) > 4096:
++            raise RuntimeError('Missing or unbounded owned phase path')
++        # /var and /private/var may identify the same task allocation. Never
++        # accept a path resolving to another copy, target or user's DerivedData.
++        if (not expected.is_dir() or expected.is_symlink() or expected.resolve(strict=True) != expected or
++                Path(raw).resolve(strict=True) != expected):
++            raise RuntimeError('App phase path differs from the explicit owned copy or product')
++    settings = {key: str(paths[key]) if key in paths else environment.get(key) for key in FIELDS}
++    return dict(schema_version=1, mode=mode, source_root=str(source), settings=settings, scope=SCOPE)
++
++
++def checked_receipt_path(path):
++    path = Path(path).absolute()
++    if (path.name != RECEIPT_NAME or path.is_symlink() or path.parent.is_symlink() or
++            path.parent.resolve(strict=True) != path.parent or not path.parent.is_dir()):
++        raise RuntimeError('Phase receipt must use the explicit canonical owned evidence destination')
++    return path
++
++
++def write_phase_receipt(path, value):
++    path = checked_receipt_path(path)
++    encoded = (json.dumps(value, sort_keys=True, separators=(',', ':')) + '\n').encode()
++    if len(encoded) > 8192:
++        raise RuntimeError('Phase receipt exceeds its bounded public metadata budget')
++    # Exclusive: a stale successful phase cannot attest a different execution.
++    with path.open('xb') as stream:
++        stream.write(encoded)
++        stream.flush()
++        os.fsync(stream.fileno())
++
++
++def read_phase_receipt(path, mode, sdk, source):
++    path = checked_receipt_path(path)
++    if not path.is_file():
++        raise RuntimeError('Actual effective app-phase receipt is missing')
++    with path.open('rb') as stream:
++        raw = stream.read(8193)
++    if not 0 < len(raw) <= 8192:
++        raise RuntimeError('Unbounded or truncated actual app-phase receipt')
++    def unique(pairs):
++        result = {}
++        for key, value in pairs:
++            if key in result:
++                raise RuntimeError('Duplicate app-phase receipt field')
++            result[key] = value
++        return result
++    try:
++        value = json.loads(raw, object_pairs_hook=unique)
++    except (ValueError, UnicodeError) as error:
++        raise RuntimeError('Malformed app-phase receipt') from error
++    if (not isinstance(value, dict) or set(value) != {'schema_version', 'mode', 'source_root', 'settings', 'scope'} or
++            type(value['schema_version']) is not int or value['schema_version'] != 1 or
++            not isinstance(value['settings'], dict) or set(value['settings']) != set(FIELDS)):
++        raise RuntimeError('Wrong app-phase receipt schema')
++    environment = {key: item for key, item in value['settings'].items() if item is not None}
++    if value != observed_phase(mode, sdk, source, environment):
++        raise RuntimeError('App-phase receipt differs from the exact executed task and signing mode')
++    return value
++
++
++def render_owned_kotlin_phase(template, temporary, destination, sdk, mode):
++    source = owned_source(Path(temporary) / 'copy')
++    signing_overrides(mode)
++    destination = Path(destination).absolute()
++    if (destination.is_symlink() or destination.resolve(strict=True) != destination or not destination.is_dir() or
++            destination.name != re.fullmatch(r'parlor-audit-(ios-readiness-[0-9]{2})-[A-Za-z0-9_-]{1,64}', source.parent.name)[1]):
++        raise RuntimeError('Copied phase receipt destination is not the exact owned readiness cycle')
++    if not isinstance(sdk, str) or SDK.fullmatch(sdk) is None:
++        raise RuntimeError('Copied phase SDK must be exact iphonesimulator version')
++    replacements = {'__PARLOR_SOURCE_ROOT__': str(source), '__PARLOR_STOP_RECEIPT__': str(destination / 'embedded-gradle-stop.txt'),
++                    '__PARLOR_SIGNING_MODE__': mode, '__PARLOR_SIMULATOR_SDK__': sdk,
++                    '__PARLOR_SIGNING_RECEIPT__': str(destination / RECEIPT_NAME)}
++    counts = {'__PARLOR_SOURCE_ROOT__': 4, '__PARLOR_STOP_RECEIPT__': 1, '__PARLOR_SIGNING_MODE__': 1,
++              '__PARLOR_SIMULATOR_SDK__': 1, '__PARLOR_SIGNING_RECEIPT__': 1}
++    for token, value in replacements.items():
++        if template.count(token) != counts[token] or not re.fullmatch(r'[A-Za-z0-9_./ -]+', value):
++            raise RuntimeError('Missing/ambiguous copied phase source anchor or unsafe literal')
++        template = template.replace(token, value)
++    if '__PARLOR_' in template:
++        raise RuntimeError('Unresolved copied phase token')
++    return template
++
++
++def main(arguments=None):
++    arguments = sys.argv[1:] if arguments is None else arguments
++    if len(arguments) != 4:
++        raise RuntimeError('Expected exact mode, simulator SDK, owned source copy and receipt destination')
++    mode, sdk, source, destination = arguments
++    value = observed_phase(mode, sdk, Path(source), os.environ)
++    write_phase_receipt(destination, value)
++    return 0
++
++
++if __name__ == '__main__':
++    try:
++        raise SystemExit(main())
++    except (RuntimeError, OSError, ValueError):
++        # Do not include supplied identity/profile/path values in error output.
++        print('Copied simulator signing-context attestation failed; no Gradle build authorized.', file=sys.stderr)
++        raise SystemExit(65)
+--- a/scripts/verification/ios-readiness/test_controls.py
++++ b/scripts/verification/ios-readiness/test_controls.py
+@@ -16,6 +16,7 @@
+ import bind_source
+ import copied_sources as copies
+ import instrument_storage
++import simulator_signing
+ from owned_lane import ROOT
+ 
+ HERE = Path(__file__).resolve().parent
+@@ -63,7 +64,8 @@
+         required = {*copies.BUILD_ROOTS, *copies.MODIFIED_KOTLIN, 'gradle/wrapper/gradle-wrapper.jar',
+                     'gradle/verification-metadata.xml', 'iosApp/iosApp/Info.plist',
+                     'iosApp/iosApp/ComposeContainerViewController.swift',
+-                    'iosApp/iosAppUITests/ComposeContainerViewControllerTests.swift'}
++                    'iosApp/iosAppUITests/ComposeContainerViewControllerTests.swift',
++                    'scripts/verification/ios-readiness/simulator_signing.py'}
+         with tempfile.TemporaryDirectory(prefix='parlor-native-copy-test-') as raw:
+             base = Path(raw).resolve(); source = base / 'source'; source.mkdir()
+             entries = []
+@@ -180,10 +182,20 @@
+ 
+ 
+ class CopiedPhaseTests(unittest.TestCase):
+-    def run_phase(self, build=0, stop=0, normalize=0, cd_missing=False):
++    def run_phase(self, build=0, stop=0, normalize=0, cd_missing=False, mode='disabled', changed=None, stale_phase=False):
+         with tempfile.TemporaryDirectory(prefix='parlor-native-phase-test-') as raw:
+-            root = Path(raw).resolve(); source = root / 'copy'; source.mkdir()
+-            calls = root / 'calls'; stop_receipt = root / 'stop.txt'
++            root = Path(raw).resolve(); temporary = root / 'parlor-audit-ios-readiness-99-fixture'
++            source = temporary / 'copy'; source.mkdir(parents=True)
++            (source / 'iosApp').mkdir()
++            products = temporary / 'DerivedData/Build/Products/Debug-iphonesimulator'
++            products.mkdir(parents=True)
++            evidence = root / 'evidence/ios-readiness-99'; evidence.mkdir(parents=True)
++            calls = root / 'calls'
++            stop_receipt = evidence / 'embedded-gradle-stop.txt'
++            signing_receipt = evidence / simulator_signing.RECEIPT_NAME
++            helper = source / 'scripts/verification/ios-readiness/simulator_signing.py'
++            helper.parent.mkdir(parents=True); shutil.copyfile(HERE / 'simulator_signing.py', helper)
++            if stale_phase: signing_receipt.write_text('pre-existing phase evidence must never authorize a later build')
+             wrapper = source / 'gradlew'
+             wrapper.write_text('#!/bin/sh\nif [ "$1" = "--stop" ]; then\n'
+                                f'  echo stop >> "{calls}"; exit {stop}\n'
+@@ -193,15 +205,25 @@
+             normalizer.parent.mkdir(parents=True)
+             normalizer.write_text(f'#!/bin/sh\necho normalize >> "{calls}"\nexit {normalize}\n')
+             normalizer.chmod(0o700)
+-            stale = root / 'Frameworks/ComposeApp.framework/stale'
++            stale = products / 'Parlor.app/Frameworks/ComposeApp.framework/stale'
+             stale.parent.mkdir(parents=True); stale.write_text('stale fake output must not green a failed build')
+-            selected = source / 'missing' if cd_missing else source
+-            script = (HERE / 'copied-kotlin-phase.sh.in').read_text().replace('__PARLOR_SOURCE_ROOT__', str(selected))
+-            script = script.replace('__PARLOR_STOP_RECEIPT__', str(stop_receipt))
++            script = simulator_signing.render_owned_kotlin_phase((HERE / 'copied-kotlin-phase.sh.in').read_text(),
++                temporary, evidence, 'iphonesimulator26.5', mode)
++            if cd_missing:
++                script = script.replace('cd "' + str(source) + '"', 'cd "' + str(source / 'missing') + '"')
+             phase = root / 'phase.sh'; phase.write_text(script)
++            environment = {**simulator_signing.CONTEXT, **simulator_signing.signing_overrides(mode),
++                'PATH': '/usr/bin:/bin', 'SDK_NAME': 'iphonesimulator26.5', 'CODE_SIGN_STYLE': 'Automatic' if mode == 'disabled' else 'Manual',
++                'SRCROOT': str(source / 'iosApp'), 'PROJECT_DIR': str(source / 'iosApp'), 'TARGET_BUILD_DIR': str(products)}
++            if mode == 'adhoc': environment['EXPANDED_CODE_SIGN_IDENTITY'] = '-'
++            environment.update({} if changed is None else changed)
+             result = subprocess.run(['/bin/sh', str(phase)], capture_output=True, text=True, timeout=10,
+-                                    env={'PATH': '/usr/bin:/bin', 'TARGET_BUILD_DIR': str(root), 'FRAMEWORKS_FOLDER_PATH': 'Frameworks'})
++                                    env=environment)
+             self.assertEqual(stale.read_text(), 'stale fake output must not green a failed build')
++            if stale_phase:
++                self.assertEqual(signing_receipt.read_text(), 'pre-existing phase evidence must never authorize a later build')
++            elif result.returncode == 0:
++                self.assertEqual(simulator_signing.read_phase_receipt(signing_receipt, mode, 'iphonesimulator26.5', source)['mode'], mode)
+             return result.returncode, calls.read_text().splitlines() if calls.exists() else [], \
+                 stop_receipt.read_text() if stop_receipt.exists() else None
+ 
+@@ -216,6 +238,25 @@
+     def test_success_requires_ordered_build_stop_normalize(self):
+         self.assertEqual(self.run_phase(), (0, ['build', 'stop', 'normalize'], 'build_exit=0\nstop_exit=0\n'))
+ 
++    def test_explicit_adhoc_retains_failure_stale_output_and_stop_semantics(self):
++        self.assertEqual(self.run_phase(mode='adhoc'), (0, ['build', 'stop', 'normalize'], 'build_exit=0\nstop_exit=0\n'))
++        self.assertEqual(self.run_phase(mode='adhoc', build=47), (47, ['build', 'stop'], 'build_exit=47\nstop_exit=0\n'))
++        self.assertEqual(self.run_phase(mode='adhoc', stop=48), (48, ['build', 'stop'], 'build_exit=0\nstop_exit=48\n'))
++        self.assertEqual(self.run_phase(mode='adhoc', normalize=49), (49, ['build', 'stop', 'normalize'], 'build_exit=0\nstop_exit=0\n'))
++
++    def test_preflight_refusal_stops_without_build_or_normalizing_stale_framework(self):
++        for mode, changed in (
++            ('disabled', {'EXPANDED_CODE_SIGN_IDENTITY': ''}),
++            ('disabled', {'EXPANDED_CODE_SIGN_IDENTITY': '-'}),
++            ('adhoc', {'EXPANDED_CODE_SIGN_IDENTITY': ''}),
++            ('adhoc', {'EXPANDED_CODE_SIGN_IDENTITY': 'not-authorized-synthetic-identity'}),
++            ('adhoc', {'PROVISIONING_PROFILE': 'not-authorized-synthetic-profile'}),
++            ('adhoc', {'PLATFORM_NAME': 'iphoneos'}),
++        ):
++            with self.subTest(mode=mode, changed=changed):
++                self.assertEqual(self.run_phase(mode=mode, changed=changed), (65, ['stop'], 'build_exit=65\nstop_exit=0\n'))
++        self.assertEqual(self.run_phase(stale_phase=True), (65, ['stop'], 'build_exit=65\nstop_exit=0\n'))
++
+ 
+ if __name__ == '__main__':
+     unittest.main()
+--- a/scripts/verification/ios-readiness/test_native_readiness.py
++++ b/scripts/verification/ios-readiness/test_native_readiness.py
+@@ -1,5 +1,6 @@
+ """Synthetic parser/ownership tests only; never native/device evidence."""
+ import copy
++import hashlib
+ import json
+ from pathlib import Path
+ import plistlib
+@@ -13,6 +14,24 @@
+ 
+ TOKEN = 'deadbeef-1234-5678-9000-000000000001'
+ IMAGES = ['Frameworks/ComposeApp.framework/ComposeApp', 'Parlor', 'Parlor.debug.dylib']
++
++PRODUCT_PATH = 'bin/iosSimulatorArm64/debugFramework/ComposeApp.framework/ComposeApp'
++
++
++def framework_observation(origin='installed-app-bundle', path=artifacts.FRAMEWORK_PATH, payload=None):
++    payload = bytes.fromhex('cffaedfe') + artifacts.FRAMEWORK_PATH.encode() if payload is None else payload
++    return dict(origin=origin, path=path, image_uuid=TOKEN, file_bytes=len(payload),
++                file_sha256=hashlib.sha256(payload).hexdigest())
++
++
++def framework_inventory(value=None):
++    value = framework_observation() if value is None else value
++    return dict(origin=value['origin'], path=value['path'], bytes=value['file_bytes'], sha256=value['file_sha256'],
++                architectures=[dict(architecture='arm64', uuid=value['image_uuid'])])
++
++
++def loader_environment():
++    return {key: dict(present=False, task_owned_paths=[], redacted_entry_count=0) for key in artifacts.LOADER_KEYS}
+ 
+ 
+ def preferences(language='en', previous=None, owned=False):
+@@ -51,7 +70,7 @@
+                                for index, (operation, status) in enumerate(events, 1)])
+ 
+ 
+-def boot_result(ordinal):
++def boot_result(ordinal, mode='disabled'):
+     home = native_step('home-rerun', 'home_observed', [('credential-read', -25300)])
+     home['outcome'].update(local='absent', multiplayer='absent', has_unavailable_source=False, original_home_invocation=False)
+     expected = 'matches' if ordinal in (2, 3) else 'absent'
+@@ -62,16 +81,17 @@
+         steps += [native_step('credential-write', 'ok', statuses), native_step('snapshot-write', 'ok')]
+     elif ordinal == 3:
+         steps += [native_step('credential-remove', 'ok', [('credential-delete', 0)]), native_step('snapshot-remove', 'ok')]
+-    return dict(schema_version=1, boot_ordinal=ordinal, process_boot=f'{ordinal:08x}-1234-5678-9000-000000000001',
++    return dict(schema_version=2, boot_ordinal=ordinal, process_boot=f'{ordinal:08x}-1234-5678-9000-000000000001',
+                 process_id=1000 + ordinal, run_token=TOKEN, loaded_app_images=IMAGES[:],
+-                observation=dict(schema_version=1, kind='actual_koin_signing_disabled_simulator', harness_status='observation_complete',
++                loaded_compose_framework=framework_observation(), loader_environment=loader_environment(), signing_mode=mode,
++                observation=dict(schema_version=2, kind='actual_koin_simulator', harness_status='observation_complete',
+                                  boot_ordinal=ordinal, run_token=TOKEN, steps=steps,
+                                  credential_numeric_status_is_exact_invocation=True, initial_home_numeric_attribution=False,
+-                                 snapshot_numeric_attribution=False, physical_or_signed_evidence=False))
+-
+-
+-def scenario_fixture():
+-    results = [boot_result(ordinal) for ordinal in range(1, 9)]
++                                 snapshot_numeric_attribution=False, physical_or_store_evidence=False))
++
++
++def scenario_fixture(mode='disabled'):
++    results = [boot_result(ordinal, mode) for ordinal in range(1, 9)]
+     report = dict(schemaVersion=6, runToken=TOKEN, scenario='readiness', completed=True, observations=[])
+     launches = []
+     for result in results:
+@@ -83,21 +103,34 @@
+             report['observations'].append(observation)
+             samples.append(dict(ordinal=ordinal, elapsed_milliseconds=(ordinal - 1) * 2000,
+                                 observation_sequence=observation['ordinal']))
+-        launches.append(dict(schema_version=1, boot_ordinal=result['boot_ordinal'], process_boot=boot,
+-                             run_token=TOKEN, loaded_app_images=IMAGES[:], samples=samples,
++        launches.append(dict(schema_version=2, signing_mode=mode, boot_ordinal=result['boot_ordinal'], process_boot=boot,
++                             run_token=TOKEN, loaded_app_images=IMAGES[:], loaded_compose_framework=framework_observation(), samples=samples,
+                              app_foreground=True, native_alert_present=False, probe_activations=1))
+     report['observations'].append(event(len(report['observations']) + 1, results[-1]['process_boot'], 'complete'))
+     return results, report, launches
+ 
+ 
+-def logs(launches, cleanup=True):
+-    rows = []
+-    if cleanup:
+-        rows.append('PARLOR_NATIVE_SYNTHETIC_SEED_CLEANUP ' + json.dumps(dict(
+-            schema_version=1, run_token=TOKEN, original_present=False, synthetic_previous=['ar-EG', 'en'],
+-            restored_present=False, source='completed-token-bound-owned-settings-fixture-only')))
+-    rows += ['PARLOR_NATIVE_COLD_LAUNCH ' + json.dumps(row) for row in launches]
+-    return '\n'.join(rows)
++def logs(launches):
++    return '\n'.join('PARLOR_NATIVE_COLD_LAUNCH ' + json.dumps(row) for row in launches)
++
++
++def settings_fixture():
++    # Minimal synthetic source for the cleanup parser, NOT the full Settings UI matrix.
++    first = event(1, 'eeeeeeee-1234-5678-9000-000000000001', 'before_main')
++    first['fixture'] = 'fresh'
++    previous = preferences('ar', previous=['ar-EG', 'en'])
++    seed = event(2, 'eeeeeeee-1234-5678-9000-000000000002', 'before_main', previous)
++    seed['fixture'] = 'previous-ar'
++    completed = event(3, seed['boot'], 'complete', previous)
++    completed['fixture'] = 'previous-ar'
++    return dict(schemaVersion=6, runToken=TOKEN, scenario='settings', completed=True,
++                observations=[first, seed, completed])
++
++
++def cleanup_fixture():
++    return dict(schema_version=2, run_token=TOKEN, process_boot=boot_result(1)['process_boot'], original_present=False,
++                synthetic_previous=['ar-EG', 'en'], restored_present=False,
++                source='completed-token-bound-owned-settings-fixture-only')
+ 
+ 
+ def step(result, name):
+@@ -105,11 +138,13 @@
+ 
+ 
+ class NativeReceiptTests(unittest.TestCase):
+-    def verify(self, results=None, scenario=None, launches=None, cleanup=True):
++    def verify(self, results=None, scenario=None, launches=None, cleanup=True, settings=None):
+         original_results, original_scenario, original_launches = scenario_fixture()
+         return receipts.verify_native_readiness(original_results if results is None else results,
+                                                original_scenario if scenario is None else scenario,
+-                                               dict(runToken=TOKEN), logs(original_launches if launches is None else launches, cleanup))
++                                               settings_fixture() if settings is None else settings,
++                                               logs(original_launches if launches is None else launches),
++                                               cleanup_fixture() if cleanup is True else None if cleanup is False else cleanup)
+ 
+     def test_complete_synthetic_eight_launch_matrix_is_parseable_not_runtime_proof(self):
+         result = self.verify()
+@@ -118,6 +153,22 @@
+         self.assertEqual(result['cold_launches'], 8)
+         self.assertEqual(result['stability_samples'], 48)
+         self.assertEqual(result['original_first_four_launch_failures_cause'], 'UNRESOLVED')
++
++    def test_explicit_mode_binds_every_boot_and_xctest_row_without_claiming_store_signing(self):
++        results, scenario, launches = scenario_fixture('adhoc')
++        actual = receipts.verify_native_readiness(results, scenario, settings_fixture(), logs(launches), cleanup_fixture(), 'adhoc')
++        self.assertEqual(actual['signing_mode'], 'adhoc')
++        self.assertEqual(actual['storage_health'], 'PASS')  # Synthetic successful outcomes, not actual native evidence.
++        with self.assertRaises(RuntimeError):
++            receipts.verify_native_readiness(results, scenario, settings_fixture(), logs(launches), cleanup_fixture())
++        results[3]['signing_mode'] = 'disabled'
++        with self.assertRaises(RuntimeError):
++            receipts.verify_native_readiness(results, scenario, settings_fixture(), logs(launches), cleanup_fixture(), 'adhoc')
++        results, scenario, launches = scenario_fixture('adhoc'); launches[-1]['signing_mode'] = 'disabled'
++        with self.assertRaises(RuntimeError):
++            receipts.verify_native_readiness(results, scenario, settings_fixture(), logs(launches), cleanup_fixture(), 'adhoc')
++        result = boot_result(1, 'adhoc'); result['observation']['physical_or_store_evidence'] = True
++        with self.assertRaises(RuntimeError): receipts.verify_boot_result(result, 1, TOKEN, 'adhoc')
+ 
+     def test_exact_native_missing_entitlement_is_not_healthy_storage_or_an_invented_root_cause(self):
+         results, scenario, launches = scenario_fixture()
+@@ -233,6 +284,56 @@
+             with self.assertRaises(RuntimeError): self.verify(results, report, launches)
+ 
+ 
++    def test_stdout_cleanup_claim_cannot_replace_a_durable_boot_bound_receipt(self):
++        results, scenario, launches = scenario_fixture()
++        forged_log = logs(launches) + '\nPARLOR_NATIVE_SYNTHETIC_SEED_CLEANUP ' + json.dumps(cleanup_fixture())
++        with self.assertRaisesRegex(RuntimeError, 'attested synthetic seed cleanup'):
++            receipts.verify_native_readiness(results, scenario, settings_fixture(), forged_log, None)
++
++    def test_cleanup_exact_context_original_absence_and_source_completion_are_required(self):
++        for field, value in [('schema_version', True), ('run_token', 'another-run'), ('process_boot', TOKEN),
++                             ('original_present', 0), ('restored_present', 0), ('synthetic_previous', ['ar']),
++                             ('source', 'inferred-from-start')]:
++            with self.subTest(field=field):
++                cleanup = cleanup_fixture(); cleanup[field] = value
++                with self.assertRaises(RuntimeError): self.verify(cleanup=cleanup)
++        settings = settings_fixture()
++        settings['observations'][0]['preferences'] = preferences('ar', previous=['ar-EG', 'en'])
++        with self.assertRaisesRegex(RuntimeError, 'pre-existing'): self.verify(settings=settings)
++        settings = settings_fixture(); settings['observations'][1]['fixture'] = 'existing'
++        with self.assertRaisesRegex(RuntimeError, 'earlier task-owned seed'): self.verify(settings=settings)
++        settings = settings_fixture(); settings['completed'] = False
++        with self.assertRaises(RuntimeError): self.verify(settings=settings)
++        settings = settings_fixture()
++        settings['observations'].append(event(4, settings['observations'][-1]['boot']))
++        with self.assertRaises(RuntimeError): self.verify(settings=settings)
++
++    def test_cleanup_reader_is_bounded_exclusive_path_safe_and_duplicate_key_strict(self):
++        with tempfile.TemporaryDirectory(prefix='parlor-cleanup-receipt-test-') as raw:
++            root = Path(raw).resolve(); path = root / 'cleanup.json'
++            path.write_text(json.dumps(cleanup_fixture()))
++            self.assertEqual(receipts.read_synthetic_seed_cleanup(path), cleanup_fixture())
++            for data in (b'', b'{', b'[]', b'x' * 1025, b'{"schema_version":2,"schema_version":2}', b'\xff'):
++                path.write_bytes(data)
++                with self.subTest(data=data[:64]), self.assertRaises(RuntimeError): receipts.read_synthetic_seed_cleanup(path)
++            target = root / 'other-synthetic.json'; target.write_text(json.dumps(cleanup_fixture()))
++            path.unlink(); path.symlink_to(target)
++            with self.assertRaises(RuntimeError): receipts.read_synthetic_seed_cleanup(path)
++            self.assertEqual(json.loads(target.read_text()), cleanup_fixture())
++
++    def test_boot_and_xctest_framework_observations_must_match(self):
++        results, scenario, launches = scenario_fixture()
++        launches[0]['loaded_compose_framework']['file_sha256'] = '0' * 64
++        with self.assertRaisesRegex(RuntimeError, 'receipts disagree'): self.verify(results, scenario, launches)
++        for change in (lambda result: result.pop('loaded_compose_framework'),
++                       lambda result: result['loaded_compose_framework'].update(path='/another-task/ComposeApp'),
++                       lambda result: result['loader_environment'].pop('DYLD_FRAMEWORK_PATH'),
++                       lambda result: result['loader_environment']['DYLD_FRAMEWORK_PATH'].update(
++                           present=True, task_owned_paths=['/private/unrelated'], redacted_entry_count=0)):
++            result = boot_result(1); change(result)
++            with self.assertRaises(RuntimeError): receipts.verify_boot_result(result, 1, TOKEN)
++
++
+ class NativeArtifactTests(unittest.TestCase):
+     def make_app(self, root, name='Built.app'):
+         app = root / name; app.mkdir()
+@@ -249,7 +350,7 @@
+         with tempfile.TemporaryDirectory(prefix='parlor-native-inventory-test-') as raw:
+             root = Path(raw).resolve(); built = self.make_app(root); installed = self.make_app(root, 'Installed.app')
+             a = artifacts.inventory_bundle(built); b = artifacts.inventory_bundle(installed)
+-            result = artifacts.bind_loaded_images(a, b, [boot_result(1)])
++            result = artifacts.bind_loaded_images(a, b, [boot_result(1)], [framework_inventory()])
+             self.assertEqual(result['status'], 'PASS')
+             self.assertEqual({row['path'] for row in result['runs'][0]['loaded_images']}, set(IMAGES))
+ 
+@@ -262,7 +363,7 @@
+                 run = boot_result(1)
+                 if mutation == 'unbound': run['loaded_app_images'] = sorted(IMAGES + ['NoSuch.dylib'])
+                 with self.assertRaises(RuntimeError):
+-                    artifacts.bind_loaded_images(artifacts.inventory_bundle(a), artifacts.inventory_bundle(b), [run])
++                    artifacts.bind_loaded_images(artifacts.inventory_bundle(a), artifacts.inventory_bundle(b), [run], [framework_inventory()])
+ 
+     def test_external_links_and_symlinked_metadata_are_refused(self):
+         for location in ('Info.plist', 'outside.dylib'):
+@@ -288,6 +389,99 @@
+         self.assertEqual(artifacts.parse_dwarfdump_uuids(text, path), [dict(architecture='arm64', uuid=TOKEN)])
+         for bad in ('', text * 2, text.replace('arm64', 'unknown'), text.replace('/owned/', '/not-owned/')):
+             with self.subTest(bad=bad), self.assertRaises(RuntimeError): artifacts.parse_dwarfdump_uuids(bad, path)
++
++
++    def test_external_framework_is_distinct_runtime_product_not_relabelled_as_installed(self):
++        with tempfile.TemporaryDirectory(prefix='parlor-native-inventory-test-') as raw:
++            root = Path(raw).resolve(); built = self.make_app(root); installed = self.make_app(root, 'Installed.app')
++            payload = bytes.fromhex('cffaedfe') + b'synthetic-build-product-before-embedded-signing'
++            external = framework_observation('owned-copy-build', PRODUCT_PATH, payload)
++            build_root = root / 'copy/composeApp/build'; path = build_root / PRODUCT_PATH
++            path.parent.mkdir(parents=True); path.write_bytes(payload)
++            actual = artifacts.inventory_owned_framework(build_root, external, 'iphonesimulator26.5')
++            self.assertEqual(actual['sha256'], external['file_sha256'])
++            run = boot_result(1); run['loaded_app_images'].remove(artifacts.FRAMEWORK_PATH)
++            run['loaded_compose_framework'] = external
++            run['loader_environment']['DYLD_FRAMEWORK_PATH'] = dict(present=True,
++                task_owned_paths=['copy/composeApp/build/xcode-frameworks/Debug/iphonesimulator26.5'], redacted_entry_count=1)
++            inventories = [framework_inventory(), framework_inventory(external)]
++            bound = artifacts.bind_loaded_images(artifacts.inventory_bundle(built), artifacts.inventory_bundle(installed), [run], inventories)
++            observed = bound['runs'][0]['loaded_compose_framework']
++            self.assertEqual(bound['status'], 'PASS')
++            self.assertEqual(observed['origin'], 'owned-copy-build')
++            self.assertEqual(observed['path'], PRODUCT_PATH)
++            self.assertFalse(observed['same_bytes_as_embedded'])
++            self.assertNotEqual(observed['file_sha256'], observed['embedded_sha256'])
++            self.assertEqual({image['path'] for image in bound['runs'][0]['loaded_images']}, {'Parlor', 'Parlor.debug.dylib'})
++
++    def test_external_runtime_hash_uuid_origin_and_each_boot_must_be_bound(self):
++        with tempfile.TemporaryDirectory(prefix='parlor-native-inventory-test-') as raw:
++            root = Path(raw).resolve(); built = self.make_app(root); installed = self.make_app(root, 'Installed.app')
++            a, b = artifacts.inventory_bundle(built), artifacts.inventory_bundle(installed)
++            external = framework_observation('owned-copy-build', PRODUCT_PATH)
++            run = boot_result(1); run['loaded_app_images'].remove(artifacts.FRAMEWORK_PATH)
++            run['loaded_compose_framework'] = external
++            expected = [framework_inventory(), framework_inventory(external)]
++            for change in (lambda value: value['loaded_compose_framework'].update(file_sha256='0' * 64),
++                           lambda value: value['loaded_compose_framework'].update(image_uuid='00000000-1234-5678-9000-000000000001'),
++                           lambda value: value['loaded_compose_framework'].update(file_bytes=True),
++                           lambda value: value['loaded_compose_framework'].update(origin='installed-app-bundle'),
++                           lambda value: value['loaded_app_images'].insert(0, artifacts.FRAMEWORK_PATH)):
++                broken = copy.deepcopy(run); change(broken)
++                with self.assertRaises(RuntimeError): artifacts.bind_loaded_images(a, b, [run, broken], expected)
++            for inventories in (expected[:1], expected[1:], expected + expected[:1]):
++                with self.assertRaises(RuntimeError): artifacts.bind_loaded_images(a, b, [run], inventories)
++
++    def test_external_product_path_sdk_symlink_bounds_and_observed_fingerprint_are_strict(self):
++        with tempfile.TemporaryDirectory(prefix='parlor-native-inventory-test-') as raw:
++            root = Path(raw).resolve(); build_root = root / 'copy/composeApp/build'
++            target = build_root / PRODUCT_PATH; target.parent.mkdir(parents=True)
++            payload = bytes.fromhex('cffaedfe') + artifacts.FRAMEWORK_PATH.encode(); target.write_bytes(payload)
++            value = framework_observation('owned-copy-build', PRODUCT_PATH)
++            self.assertEqual(artifacts.inventory_owned_framework(build_root, value, 'iphonesimulator26.5')['bytes'], len(payload))
++            target.write_bytes(payload + b'changed-after-runtime')
++            with self.assertRaisesRegex(RuntimeError, 'fingerprint'): artifacts.inventory_owned_framework(build_root, value, 'iphonesimulator26.5')
++            target.unlink(); unrelated = root / 'synthetic-other-task'; unrelated.write_bytes(payload); target.symlink_to(unrelated)
++            with self.assertRaises(RuntimeError): artifacts.inventory_owned_framework(build_root, value, 'iphonesimulator26.5')
++            self.assertEqual(unrelated.read_bytes(), payload)
++            for path in ('../outside/ComposeApp', '/outside/ComposeApp', 'bin/iosArm64/debugFramework/ComposeApp.framework/ComposeApp',
++                         'bin/iosSimulatorArm64/releaseFramework/ComposeApp.framework/ComposeApp'):
++                bad = dict(value, path=path)
++                with self.assertRaises(RuntimeError): artifacts.inventory_owned_framework(build_root, bad, 'iphonesimulator26.5')
++            wrong_sdk = dict(value, path='xcode-frameworks/Debug/iphonesimulator26.3/ComposeApp.framework/ComposeApp')
++            with self.assertRaises(RuntimeError): artifacts.inventory_owned_framework(build_root, wrong_sdk, 'iphonesimulator26.5')
++
++    def test_native_observer_uses_exact_owned_source_anchors_not_environment_inference(self):
++        source = Path(__file__).with_name('NativeReadinessLaunch.swift.in').read_text()
++        with tempfile.TemporaryDirectory(prefix='parlor-audit-ios-readiness-02-') as raw:
++            root = Path(raw).resolve()
++            rendered = artifacts.render_owned_native_launch(source, root)
++            self.assertIn('private let nativeReadinessSigningMode = "disabled"', rendered)
++            adhoc = artifacts.render_owned_native_launch(source, root, 'adhoc')
++            self.assertIn('private let nativeReadinessSigningMode = "adhoc"', adhoc)
++            with self.assertRaises(RuntimeError): artifacts.render_owned_native_launch(source, root, 'Store')
++            self.assertIn('private let nativeReadinessTaskRoot = ' + json.dumps(str(root)), rendered)
++            self.assertIn('private let nativeReadinessProductRoot = ' + json.dumps(str(root / 'copy/composeApp/build')), rendered)
++            self.assertNotIn('__PARLOR_NATIVE_', rendered)
++            self.assertIn('options: [.withoutOverwriting]', rendered)
++            self.assertNotIn('print("PARLOR_NATIVE_SYNTHETIC_SEED_CLEANUP', rendered)
++            for invalid in (source.replace('__PARLOR_NATIVE_TASK_ROOT__', '"/unbound"'),
++                            source + '__PARLOR_NATIVE_PRODUCT_ROOT__'):
++                with self.assertRaises(RuntimeError): artifacts.render_owned_native_launch(invalid, root)
++            with self.assertRaises(RuntimeError): artifacts.render_owned_native_launch(source, root / 'unbound-child')
++
++    def test_loader_environment_retains_only_bounded_task_relative_metadata(self):
++        value = loader_environment()
++        value['DYLD_FRAMEWORK_PATH'] = dict(present=True, task_owned_paths=['copy/composeApp/build'], redacted_entry_count=2)
++        self.assertEqual(artifacts.validate_loader_environment(value), value)
++        for row in (dict(present=True, task_owned_paths=['/outside'], redacted_entry_count=0),
++                    dict(present=True, task_owned_paths=['../outside'], redacted_entry_count=0),
++                    dict(present=False, task_owned_paths=['copy'], redacted_entry_count=0),
++                    dict(present=True, task_owned_paths=[], redacted_entry_count=True),
++                    dict(present=True, task_owned_paths=[], redacted_entry_count=33),
++                    dict(present=True, task_owned_paths=['x' * 513], redacted_entry_count=0)):
++            broken = loader_environment(); broken['DYLD_FRAMEWORK_PATH'] = row
++            with self.assertRaises(RuntimeError): artifacts.validate_loader_environment(broken)
+ 
+ 
+ class ExactJavaOwnershipTests(unittest.TestCase):
+--- a/scripts/verification/ios-readiness/test_simulator_entitlements.py
++++ b/scripts/verification/ios-readiness/test_simulator_entitlements.py
+@@ -11,6 +11,7 @@
+ 
+ from artifact_inventory import digest
+ import simulator_entitlements as subject
++from simulator_signing import signing_overrides
+ 
+ 
+ def thin(xml=None, der=None, wide=True, endian='<'):
+@@ -188,6 +189,11 @@
+             self.assertEqual(observed['observations']['platform_defaults']['values']['AD_HOC_CODE_SIGNING_ALLOWED'], 'NO')
+             self.assertEqual(observed['observations']['sdk_defaults']['values']['AD_HOC_CODE_SIGNING_ALLOWED'], 'YES')
+             self.assertIn('Not queried merged effective', observed['scope'])
++            adhoc = subject.inspect_sdk_signing_defaults(developer, sdk, signing_overrides('adhoc'), 'adhoc')
++            self.assertEqual(adhoc['mode'], 'adhoc')
++            self.assertEqual(adhoc['observations']['explicit_environment_and_command_overrides'], signing_overrides('adhoc'))
++            with self.assertRaises(RuntimeError): subject.inspect_sdk_signing_defaults(developer, sdk, signing_overrides('adhoc'))
++            with self.assertRaises(RuntimeError): subject.inspect_sdk_signing_defaults(developer, sdk, configured, 'adhoc')
+             with self.assertRaises(RuntimeError): subject.inspect_sdk_signing_defaults(developer, contents, configured)
+             with self.assertRaises(RuntimeError): subject.inspect_sdk_signing_defaults(developer, sdk, {**configured, 'DEVELOPMENT_TEAM': 'not-authorized'})
+ 
+--- /dev/null
++++ b/scripts/verification/ios-readiness/test_simulator_signing.py
+@@ -0,0 +1,125 @@
++"""Pure flags/path/receipt fixtures; no native signing or build executes."""
++import copy
++import json
++from pathlib import Path
++import tempfile
++import unittest
++
++import simulator_signing as subject
++
++
++def fixture(root, mode='disabled'):
++    temporary = root / 'parlor-audit-ios-readiness-99-fixture'
++    source = temporary / 'copy'; (source / 'iosApp').mkdir(parents=True, exist_ok=True)
++    products = temporary / 'DerivedData/Build/Products/Debug-iphonesimulator'; products.mkdir(parents=True, exist_ok=True)
++    environment = {**subject.CONTEXT, **subject.signing_overrides(mode),
++        'SDK_NAME': 'iphonesimulator26.5', 'CODE_SIGN_STYLE': 'Manual' if mode == 'adhoc' else 'Automatic',
++        'SRCROOT': str(source / 'iosApp'), 'PROJECT_DIR': str(source / 'iosApp'), 'TARGET_BUILD_DIR': str(products),
++        'AD_HOC_CODE_SIGNING_ALLOWED': 'YES', 'CODE_SIGN_INJECT_BASE_ENTITLEMENTS': 'YES',
++        'ENTITLEMENTS_REQUIRED': 'YES' if mode == 'adhoc' else 'NO', 'ENTITLEMENTS_DESTINATION': '__entitlements',
++        'ENABLE_DEBUG_DYLIB': 'YES'}
++    if mode == 'adhoc': environment['EXPANDED_CODE_SIGN_IDENTITY'] = '-'
++    return source, environment
++
++
++class ExplicitSimulatorSigningTests(unittest.TestCase):
++    def test_disabled_default_is_identical_and_adhoc_requires_exact_explicit_option(self):
++        self.assertEqual(subject.selected_mode([]), 'disabled')
++        self.assertEqual(subject.selected_mode(['--simulator-signing=adhoc']), 'adhoc')
++        self.assertEqual(subject.signing_overrides(), dict(CODE_SIGNING_ALLOWED='NO', CODE_SIGNING_REQUIRED='NO',
++            CODE_SIGN_IDENTITY='', DEVELOPMENT_TEAM=''))
++        self.assertEqual(subject.signing_overrides('adhoc'), dict(CODE_SIGNING_ALLOWED='YES', CODE_SIGNING_REQUIRED='YES',
++            CODE_SIGN_IDENTITY='-', CODE_SIGN_STYLE='Manual', DEVELOPMENT_TEAM='', PROVISIONING_PROFILE='',
++            PROVISIONING_PROFILE_SPECIFIER='', CODE_SIGN_ENTITLEMENTS='', OTHER_CODE_SIGN_FLAGS=''))
++        for option in (['adhoc'], ['--simulator-signing=automatic'], ['--simulator-signing=adhoc'] * 2,
++                       ['--simulator-signing=adhoc', '-allowProvisioningUpdates']):
++            with self.subTest(option=option), self.assertRaises(RuntimeError): subject.selected_mode(option)
++        with self.assertRaises(RuntimeError): subject.signing_overrides('automatic')
++
++    def test_effective_phase_records_only_owned_public_context_not_raw_environment(self):
++        with tempfile.TemporaryDirectory(prefix='parlor-signing-control-test-') as raw:
++            root = Path(raw).resolve()
++            for mode in subject.MODES:
++                source, environment = fixture(root, mode)
++                environment['UNRELATED_SYNTHETIC_SECRET'] = 'never-retain-this-sentinel'
++                observed = subject.observed_phase(mode, 'iphonesimulator26.5', source, environment)
++                self.assertEqual(observed['mode'], mode)
++                self.assertEqual(observed['settings']['EXPANDED_CODE_SIGN_IDENTITY'], '-' if mode == 'adhoc' else None)
++                self.assertEqual(observed['settings']['CODE_SIGN_INJECT_BASE_ENTITLEMENTS'], 'YES')
++                self.assertNotIn('never-retain-this-sentinel', json.dumps(observed))
++                self.assertEqual(set(observed['settings']), set(subject.FIELDS))
++
++    def test_unexpected_real_identity_profile_target_architecture_sdk_or_path_is_refused(self):
++        with tempfile.TemporaryDirectory(prefix='parlor-signing-control-test-') as raw:
++            for mode in subject.MODES:
++                source, environment = fixture(Path(raw).resolve(), mode)
++                changes = [('CONFIGURATION', 'Release'), ('PLATFORM_NAME', 'iphoneos'), ('ACTION', 'install'),
++                    ('ARCHS', 'x86_64'), ('PRODUCT_BUNDLE_IDENTIFIER', 'com.parlor.app'), ('TARGET_NAME', 'unrelated'),
++                    ('SDK_NAME', 'iphonesimulator26.3'), ('CODE_SIGNING_ALLOWED', 'NO' if mode == 'adhoc' else 'YES'),
++                    ('SRCROOT', str(source)), ('PROJECT_DIR', str(source)), ('TARGET_BUILD_DIR', str(source)),
++                    ('CODE_SIGN_IDENTITY', 'not-authorized-synthetic-identity'),
++                    ('EXPANDED_CODE_SIGN_IDENTITY', ''), ('EXPANDED_CODE_SIGN_IDENTITY', 'synthetic-not-authorized')]
++                changes += [(key, 'synthetic-not-authorized-never-read') for key in subject.EMPTY_FIELDS]
++                for key, value in changes:
++                    with self.subTest(mode=mode, key=key, value=value), self.assertRaises((RuntimeError, OSError)):
++                        subject.observed_phase(mode, 'iphonesimulator26.5', source, {**environment, key: value})
++                if mode == 'adhoc':
++                    del environment['EXPANDED_CODE_SIGN_IDENTITY']
++                    with self.assertRaises(RuntimeError): subject.observed_phase(mode, 'iphonesimulator26.5', source, environment)
++                for sdk in ('iphonesimulator', 'iphoneos26.5', 'iphonesimulator26.5/../iphoneos', ''):
++                    with self.subTest(sdk=sdk), self.assertRaises(RuntimeError): subject.observed_phase(mode, sdk, source, environment)
++
++    def test_empty_regular_fields_may_be_absent_but_disabled_expanded_identity_must_be_absent(self):
++        with tempfile.TemporaryDirectory(prefix='parlor-signing-control-test-') as raw:
++            source, environment = fixture(Path(raw).resolve())
++            for key in subject.EMPTY_FIELDS + ('CODE_SIGN_IDENTITY',): environment.pop(key, None)
++            observed = subject.observed_phase('disabled', 'iphonesimulator26.5', source, environment)
++            self.assertIsNone(observed['settings']['CODE_SIGN_IDENTITY'])
++            for expanded in ('', '-'):
++                with self.assertRaises(RuntimeError):
++                    subject.observed_phase('disabled', 'iphonesimulator26.5', source, {**environment, 'EXPANDED_CODE_SIGN_IDENTITY': expanded})
++
++    def test_exact_receipt_is_exclusive_bounded_mode_bound_and_not_replaceable_by_stale_evidence(self):
++        with tempfile.TemporaryDirectory(prefix='parlor-signing-control-test-') as raw:
++            root = Path(raw).resolve(); source, environment = fixture(root, 'adhoc')
++            value = subject.observed_phase('adhoc', 'iphonesimulator26.5', source, environment)
++            path = root / subject.RECEIPT_NAME
++            with self.assertRaises(RuntimeError): subject.read_phase_receipt(path, 'adhoc', 'iphonesimulator26.5', source)
++            subject.write_phase_receipt(path, value)
++            self.assertEqual(subject.read_phase_receipt(path, 'adhoc', 'iphonesimulator26.5', source), value)
++            prior = path.read_bytes()
++            with self.assertRaises(FileExistsError): subject.write_phase_receipt(path, value)
++            self.assertEqual(path.read_bytes(), prior)
++            with self.assertRaises(RuntimeError): subject.read_phase_receipt(path, 'disabled', 'iphonesimulator26.5', source)
++            for raw_value in (b'', b'x' * 8193, b'[]', b'{"mode":"adhoc","mode":"adhoc"}', b'\xff'):
++                path.write_bytes(raw_value)
++                with self.assertRaises(RuntimeError): subject.read_phase_receipt(path, 'adhoc', 'iphonesimulator26.5', source)
++            for key, field in [('schema_version', True), ('mode', 'disabled'), ('source_root', str(root)), ('scope', 'forged')]:
++                changed = copy.deepcopy(value); changed[key] = field; path.write_text(json.dumps(changed))
++                with self.assertRaises(RuntimeError): subject.read_phase_receipt(path, 'adhoc', 'iphonesimulator26.5', source)
++            outside = root / 'synthetic-existing.json'; outside.write_bytes(prior); path.unlink(); path.symlink_to(outside)
++            with self.assertRaises(RuntimeError): subject.read_phase_receipt(path, 'adhoc', 'iphonesimulator26.5', source)
++            with self.assertRaises(RuntimeError): subject.write_phase_receipt(path, value)
++            self.assertEqual(outside.read_bytes(), prior)
++
++    def test_renderer_checks_every_anchor_mode_cycle_destination_and_safe_literal(self):
++        template = Path(__file__).with_name('copied-kotlin-phase.sh.in').read_text()
++        with tempfile.TemporaryDirectory(prefix='parlor-signing-control-test-') as raw:
++            root = Path(raw).resolve(); source, _ = fixture(root)
++            destination = root / 'evidence/ios-readiness-99'; destination.mkdir(parents=True)
++            for mode in subject.MODES:
++                rendered = subject.render_owned_kotlin_phase(template, source.parent, destination, 'iphonesimulator26.5', mode)
++                self.assertNotIn('__PARLOR_', rendered)
++                self.assertIn('"' + mode + '" "iphonesimulator26.5"', rendered)
++                self.assertLess(rendered.index('simulator_signing.py'), rendered.index('./gradlew --no-daemon'))
++                for old in ('__PARLOR_SOURCE_ROOT__', '__PARLOR_STOP_RECEIPT__', '__PARLOR_SIGNING_MODE__',
++                            '__PARLOR_SIMULATOR_SDK__', '__PARLOR_SIGNING_RECEIPT__'):
++                    with self.assertRaises(RuntimeError):
++                        subject.render_owned_kotlin_phase(template.replace(old, 'stale'), source.parent, destination, 'iphonesimulator26.5', mode)
++            wrong = root / 'ios-readiness-98'; wrong.mkdir()
++            with self.assertRaises(RuntimeError): subject.render_owned_kotlin_phase(template, source.parent, wrong, 'iphonesimulator26.5', 'adhoc')
++            with self.assertRaises(RuntimeError): subject.render_owned_kotlin_phase(template, source.parent, destination, 'iphoneos26.5', 'adhoc')
++
++
++if __name__ == '__main__':
++    unittest.main()

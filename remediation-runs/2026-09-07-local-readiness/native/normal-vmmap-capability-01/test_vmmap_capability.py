@@ -1,0 +1,475 @@
+"""Pure controls: no real subprocess, native observation, file write, or signal."""
+import hashlib
+import json
+from pathlib import Path
+import signal
+import stat
+import subprocess
+from types import SimpleNamespace
+import unittest
+from unittest import mock
+
+import run_vmmap_capability as probe
+
+
+class PureCase(unittest.TestCase):
+    def setUp(self):
+        for target in ('subprocess.Popen', 'tempfile.mkstemp', 'os.kill', 'signal.signal'):
+            patcher = mock.patch(target, side_effect=AssertionError('Real side effect forbidden in pure controls'))
+            patcher.start()
+            self.addCleanup(patcher.stop)
+
+
+class DiagnosticTests(PureCase):
+    def test_known_error_vocabulary_and_owned_pid_retained(self):
+        result = probe.diagnostic(b'vmmap: could not obtain task port for process 42: permission denied\n', 42)
+        tokens = result['lines'][0]['tokens']
+        self.assertEqual(tokens, ['vmmap', 'could', 'not', 'obtain', 'task', 'port', 'for',
+                                  'process', 'OWNED_SLEEP_PID', 'permission', 'denied'])
+
+    def test_unknown_paths_addresses_names_and_codes_are_not_retained(self):
+        raw = b'/Users/synthetic-secret/report.bin 0x123456789abcdef0 OtherProcess [83] (0x5)'
+        encoded = json.dumps(probe.diagnostic(raw, 42))
+        for value in raw.decode().split():
+            self.assertNotIn(value, encoded)
+        self.assertIn(hashlib.sha256(raw.split()[0]).hexdigest(), encoded)
+
+    def test_invalid_utf8_and_controls_do_not_escape(self):
+        raw = b'vmmap\x00\x1b[31m secret\xff'
+        result = probe.diagnostic(raw, 42)
+        self.assertTrue(all(isinstance(item, dict) for item in result['lines'][0]['tokens']))
+        self.assertNotIn('secret', json.dumps(result))
+
+    def test_line_token_and_byte_bounds(self):
+        raw = ((b'unknown ' * 200) + b'\n') * 30
+        result = probe.diagnostic(raw, 42)
+        self.assertEqual(len(result['lines']), 16)
+        self.assertTrue(result['line_limit_reached'])
+        self.assertTrue(all(row['bounded'] and len(row['tokens']) == 64 for row in result['lines']))
+        self.assertLess(len(json.dumps(result)), 128 * 1024)
+
+    def test_whole_raw_digest_and_length_bound_even_hidden_tail(self):
+        raw = b'failure\n' * 20
+        result = probe.diagnostic(raw, None)
+        self.assertEqual(result['sha256'], hashlib.sha256(raw).hexdigest())
+        self.assertEqual(result['bytes'], len(raw))
+
+    def test_unknown_exit_cause_never_becomes_permission_denial(self):
+        result = probe.diagnostic(b'new-format-rejection\n', 42)
+        self.assertEqual(result['interpretation'], 'TOKEN_DIAGNOSTIC_ONLY_NO_INFERRED_FAILURE_CAUSE')
+        self.assertNotIn('permission', json.dumps(result))
+
+
+class CaptureTests(PureCase):
+    def capture(self, chunks, times=None, interrupted=False, wait_error=False):
+        mapper = mock.Mock(stdout=mock.Mock())
+        mapper.stdout.fileno.return_value = 9
+        mapper.wait.return_value = 0
+        if wait_error:
+            mapper.wait.side_effect = subprocess.TimeoutExpired('synthetic', 1)
+        signals = mock.Mock()
+        if interrupted:
+            signals.check.side_effect = probe.ProbeFailure('INTERRUPTED')
+        selector = mock.MagicMock()
+        selector.__enter__.return_value = selector
+        selector.select.return_value = [(None, None)]
+        with (mock.patch.object(probe.os, 'set_blocking'),
+              mock.patch.object(probe.selectors, 'DefaultSelector', return_value=selector),
+              mock.patch.object(probe.os, 'read', side_effect=chunks) as reads,
+              mock.patch.object(probe, 'write_all') as writes,
+              mock.patch.object(probe.time, 'monotonic', side_effect=times or [0] * 200)):
+            self.capture_reads, self.capture_writes = reads, writes
+            code = probe.capture(mapper, 8, 25, signals)
+        return code, reads, writes, mapper
+
+    def test_complete_output_is_captured_then_mapper_waited(self):
+        code, reads, writes, mapper = self.capture([b'abc', b''])
+        self.assertEqual(code, 0)
+        self.assertEqual(reads.call_count, 2)
+        writes.assert_called_once_with(8, b'abc')
+        mapper.wait.assert_called_once_with(timeout=25)
+
+    def test_output_overflow_rejected_without_writing_extra_byte(self):
+        with mock.patch.object(probe, 'LIMIT', 4):
+            with self.assertRaisesRegex(probe.ProbeFailure, 'VMMAP_OUTPUT_LIMIT'):
+                self.capture([b'12345'])
+        self.capture_reads.assert_called_once_with(9, 5)
+        self.capture_writes.assert_called_once_with(8, b'1234')
+
+    def test_exact_output_limit_accepts_eof(self):
+        with mock.patch.object(probe, 'LIMIT', 4):
+            code, reads, writes, _ = self.capture([b'1234', b''])
+        self.assertEqual(code, 0)
+        self.assertEqual(reads.call_args_list[-1], mock.call(9, 1))
+        writes.assert_called_once_with(8, b'1234')
+
+    def test_deadline_is_a_failure_not_retry(self):
+        with self.assertRaisesRegex(probe.ProbeFailure, 'VMMAP_TIMEOUT'):
+            self.capture([], times=[25])
+
+    def test_wait_after_pipe_eof_remains_deadline_bounded(self):
+        with self.assertRaisesRegex(probe.ProbeFailure, 'VMMAP_TIMEOUT'):
+            self.capture([b''], wait_error=True)
+
+    def test_interrupted_capture_stops_before_read(self):
+        with self.assertRaisesRegex(probe.ProbeFailure, 'INTERRUPTED'):
+            self.capture([], interrupted=True)
+
+    def test_nonblocking_race_does_not_lose_following_bytes(self):
+        code, reads, writes, _ = self.capture([BlockingIOError(), b'abc', b''])
+        self.assertEqual(code, 0)
+        self.assertEqual(reads.call_count, 3)
+        writes.assert_called_once_with(8, b'abc')
+
+
+def metadata(kind, inode=1, links=1, uid=501):
+    return SimpleNamespace(st_dev=10, st_ino=inode, st_uid=uid, st_mode=kind,
+                           st_nlink=links)
+
+
+class OwnershipTests(PureCase):
+    def test_only_canonical_outer_tmp_shape_is_accepted(self):
+        tmp = probe.EVIDENCE / 'normal-vmmap-synthetic-01/scratch/tmp'
+        with (mock.patch.object(Path, 'resolve', lambda p, **_: p),
+              mock.patch.object(Path, 'lstat', return_value=metadata(stat.S_IFDIR | 0o700)),
+              mock.patch.object(probe.os, 'getuid', return_value=501)):
+            self.assertEqual(probe.checked_tmp(str(tmp)), tmp)
+            for bad in ('', 'relative', '/tmp', str(tmp / 'other'), str(tmp).replace('/scratch/', '/bad/')):
+                with self.subTest(bad=bad), self.assertRaises(probe.ProbeFailure):
+                    probe.checked_tmp(bad)
+
+    def test_tmp_symlink_resolution_is_rejected(self):
+        tmp = probe.EVIDENCE / 'normal-vmmap-synthetic-01/scratch/tmp'
+        with mock.patch.object(Path, 'resolve', return_value=Path('/different')):
+            with self.assertRaisesRegex(probe.ProbeFailure, 'NOT_OUTER_CYCLE_TMPDIR'):
+                probe.checked_tmp(str(tmp))
+
+    def test_tmp_wrong_uid_or_writable_permissions_rejected(self):
+        tmp = probe.EVIDENCE / 'normal-vmmap-synthetic-01/scratch/tmp'
+        with (mock.patch.object(Path, 'resolve', lambda p, **_: p),
+              mock.patch.object(probe.os, 'getuid', return_value=501)):
+            for value in (metadata(stat.S_IFDIR | 0o777), metadata(stat.S_IFDIR | 0o700, uid=502)):
+                with mock.patch.object(Path, 'lstat', return_value=value):
+                    with self.assertRaisesRegex(probe.ProbeFailure, 'UNSAFE_TMPDIR_OWNER'):
+                        probe.checked_tmp(str(tmp))
+
+    def synthetic_output(self):
+        parent = metadata(stat.S_IFDIR | 0o700, 1)
+        with mock.patch.object(Path, 'lstat', return_value=parent):
+            output = probe.OwnedOutput(Path('/synthetic/owned/tmp'))
+        output.fd, output.name = 8, '/synthetic/owned/tmp/owned-sleep-vmmap-synthetic'
+        value = metadata(stat.S_IFREG | 0o600, 2)
+        output.identity = probe.file_identity(value)
+        return output, parent, value
+
+    def test_cleanup_unlinks_only_attested_file_and_closes_descriptor(self):
+        output, parent, value = self.synthetic_output()
+        with (mock.patch.object(Path, 'lstat', side_effect=[value, parent]),
+              mock.patch.object(probe.os, 'fstat', return_value=value),
+              mock.patch.object(probe.os, 'getuid', return_value=501),
+              mock.patch.object(probe.os, 'unlink') as unlink,
+              mock.patch.object(probe.os, 'close') as close):
+            output.cleanup()
+        unlink.assert_called_once_with(output.name)
+        close.assert_called_once_with(8)
+        self.assertIsNone(output.fd)
+
+    def test_changed_file_parent_and_hardlink_are_preserved(self):
+        for changed in ('file', 'parent', 'hardlink', 'symlink'):
+            output, parent, value = self.synthetic_output()
+            current = metadata(stat.S_IFREG | 0o600, 3 if changed == 'file' else 2,
+                               2 if changed == 'hardlink' else 1)
+            if changed == 'symlink':
+                current.st_mode = stat.S_IFLNK | 0o777
+            if changed == 'parent':
+                parent.st_ino = 9
+            with (self.subTest(changed=changed),
+                  mock.patch.object(Path, 'lstat', side_effect=[current, parent]),
+                  mock.patch.object(probe.os, 'fstat', return_value=value),
+                  mock.patch.object(probe.os, 'getuid', return_value=501),
+                  mock.patch.object(probe.os, 'unlink') as unlink,
+                  mock.patch.object(probe.os, 'close') as close):
+                with self.assertRaisesRegex(probe.ProbeFailure, 'RAW_FILE_OWNERSHIP_CHANGED'):
+                    output.cleanup()
+                unlink.assert_not_called()
+                close.assert_called_once_with(8)
+
+    def test_partial_descriptor_acquisition_can_be_cleaned(self):
+        output, parent, value = self.synthetic_output()
+        output.identity = None
+        with (mock.patch.object(Path, 'lstat', side_effect=[value, parent]),
+              mock.patch.object(probe.os, 'fstat', return_value=value),
+              mock.patch.object(probe.os, 'getuid', return_value=501),
+              mock.patch.object(probe.os, 'unlink') as unlink,
+              mock.patch.object(probe.os, 'close')):
+            output.cleanup()
+        unlink.assert_called_once_with(output.name)
+
+    def test_raw_read_is_bounded(self):
+        output, _, _ = self.synthetic_output()
+        with (mock.patch.object(probe, 'LIMIT', 4),
+              mock.patch.object(probe.os, 'lseek'),
+              mock.patch.object(probe.os, 'read', side_effect=[b'1234', b'x'])):
+            with self.assertRaisesRegex(probe.ProbeFailure, 'RAW_FILE_EXCEEDED_BOUND'):
+                output.read()
+
+    def test_partial_raw_write_and_zero_write(self):
+        with mock.patch.object(probe.os, 'write', side_effect=[1, 2]) as write:
+            probe.write_all(8, b'abc')
+        self.assertEqual(write.call_args_list, [mock.call(8, b'abc'), mock.call(8, b'bc')])
+        with mock.patch.object(probe.os, 'write', return_value=0):
+            with self.assertRaisesRegex(probe.ProbeFailure, 'RAW_WRITE_FAILED'):
+                probe.write_all(8, b'a')
+
+
+class FakeProcess:
+    def __init__(self, kind, events):
+        self.kind, self.events, self.returncode = kind, events, None
+        self.pid = 42 if kind == 'sleep' else 43
+        self.stdout = None if kind == 'sleep' else mock.Mock()
+        self.events.append((kind, 'spawn'))
+
+    def poll(self):
+        self.events.append((self.kind, 'poll'))
+        return self.returncode
+
+    def terminate(self):
+        self.events.append((self.kind, 'terminate'))
+        self.returncode = -15
+
+    def kill(self):
+        self.events.append((self.kind, 'kill'))
+        self.returncode = -9
+
+    def wait(self, timeout):
+        self.events.append((self.kind, 'wait', timeout))
+        self.returncode = self.returncode if self.returncode is not None else 0
+        return self.returncode
+
+
+class ProbeTests(PureCase):
+    def simulate(self, code=0, failure=None, signals=None, second_spawn_error=False,
+                 output_cleanup_error=False, mapper_cleanup_error=False,
+                 first_spawn_error=False, child_exit_before=False, child_exit_during=False):
+        events, processes = [], []
+        gate = mock.MagicMock(pending=list(signals or []))
+        gate.__enter__.return_value = gate
+        if gate.pending:
+            gate.check.side_effect = probe.ProbeFailure('INTERRUPTED')
+        output = mock.Mock(fd=8)
+        output.name = '/synthetic/owned/tmp/owned-sleep-vmmap-synthetic'
+        output.read.return_value = b'vmmap: operation not permitted\n'
+        if output_cleanup_error:
+            output.cleanup.side_effect = probe.ProbeFailure('RAW_FILE_OWNERSHIP_CHANGED')
+
+        def spawn(command, **kwargs):
+            if not processes and first_spawn_error:
+                raise OSError('synthetic secret must never be retained')
+            if len(processes) == 1 and second_spawn_error:
+                raise OSError('synthetic secret must never be retained')
+            child = FakeProcess('sleep' if not processes else 'mapper', events)
+            processes.append(child)
+            if len(processes) == 1 and child_exit_before:
+                child.returncode = 2
+            if len(processes) == 2 and mapper_cleanup_error:
+                child.wait = mock.Mock(side_effect=subprocess.TimeoutExpired('synthetic', 3))
+            return child
+
+        def capture(mapper, *_):
+            events.append(('capture', 'entered'))
+            if failure:
+                raise failure
+            mapper.returncode = code
+            mapper.wait(0)
+            if child_exit_during:
+                processes[0].returncode = 2
+            return code
+
+        with (mock.patch.object(probe, 'Signals', return_value=gate),
+              mock.patch.object(probe, 'OwnedOutput', return_value=output),
+              mock.patch.object(probe.subprocess, 'Popen', side_effect=spawn) as popen,
+              mock.patch.object(probe, 'capture', side_effect=capture)):
+            result, status = probe.run_probe(Path('/synthetic/owned/tmp'))
+        return result, status, events, processes, popen, output
+
+    def test_fixed_child_and_numeric_target_with_minimal_environment_only(self):
+        result, status, _, _, popen, _ = self.simulate()
+        self.assertEqual(status, 0)
+        self.assertEqual(popen.call_count, 2)
+        self.assertEqual(popen.call_args_list[0].args[0], ['/bin/sleep', '60'])
+        self.assertEqual(popen.call_args_list[1].args[0], ['/usr/bin/vmmap', '-w', '42'])
+        for call in popen.call_args_list:
+            self.assertEqual(call.kwargs['env'], {'PATH': '/usr/bin:/bin', 'LC_ALL': 'C'})
+            self.assertTrue(call.kwargs['close_fds'])
+            self.assertEqual(call.kwargs['stdin'], subprocess.DEVNULL)
+            self.assertNotIn('shell', call.kwargs)
+        self.assertFalse(result['proves_app_provenance'])
+        self.assertFalse(result['mapping_identity_validated'])
+        self.assertNotIn('failure_diagnostic', result)
+
+    def test_child_never_polled_or_reaped_during_mapper_lifetime(self):
+        _, _, events, _, _, _ = self.simulate()
+        start = events.index(('mapper', 'spawn'))
+        end = events.index(('mapper', 'wait', 0))
+        self.assertFalse(any(event[0] == 'sleep' for event in events[start:end]))
+        self.assertGreater(events.index(('sleep', 'terminate')), end)
+
+    def test_exit255_is_failure_and_diagnostic_not_inferred_provenance(self):
+        result, status, _, _, _, output = self.simulate(code=255)
+        self.assertEqual((status, result['vmmap_exit_code']), (1, 255))
+        self.assertEqual(result['status'], 'FAILED_OR_INTERRUPTED')
+        self.assertIn('failure_diagnostic', result)
+        self.assertTrue(result['raw_output_removed'])
+        output.cleanup.assert_called_once()
+
+    def test_capture_exception_retires_mapper_before_child(self):
+        result, status, events, _, popen, output = self.simulate(failure=probe.ProbeFailure('VMMAP_TIMEOUT'))
+        self.assertEqual(status, 1)
+        self.assertEqual(popen.call_count, 2)
+        self.assertLess(events.index(('mapper', 'terminate')), events.index(('sleep', 'terminate')))
+        self.assertIn('VMMAP_TIMEOUT', result['errors'])
+        self.assertTrue(result['mapper_cleanup']['reaped'])
+        self.assertTrue(result['sleep_cleanup']['reaped'])
+        output.cleanup.assert_called_once()
+
+    def test_spawn_exception_retires_existing_child_and_hides_exception_text(self):
+        result, status, events, _, popen, output = self.simulate(second_spawn_error=True)
+        self.assertEqual(status, 1)
+        self.assertEqual(popen.call_count, 2)
+        self.assertIn(('sleep', 'terminate'), events)
+        self.assertIn('OSError', result['errors'])
+        self.assertNotIn('synthetic secret', json.dumps(result))
+        output.cleanup.assert_called_once()
+
+    def test_pending_cancellation_never_becomes_success(self):
+        result, status, _, _, popen, output = self.simulate(signals=[signal.SIGTERM])
+        self.assertEqual(status, 128 + signal.SIGTERM)
+        self.assertEqual(result['signals'], [signal.SIGTERM])
+        self.assertEqual(result['status'], 'FAILED_OR_INTERRUPTED')
+        popen.assert_not_called()
+        output.cleanup.assert_called_once()
+
+    def test_failed_mapper_reap_defers_child_cleanup_to_outer_owner(self):
+        result, status, events, _, _, output = self.simulate(
+            failure=probe.ProbeFailure('VMMAP_TIMEOUT'), mapper_cleanup_error=True)
+        self.assertEqual(status, 1)
+        self.assertNotIn(('sleep', 'terminate'), events)
+        self.assertFalse(result['sleep_cleanup']['reaped'])
+        self.assertEqual(result['sleep_cleanup']['reason'], 'MAPPER_NOT_REAPED')
+        self.assertIn('SLEEP_RETAINED_UNREAPED', result['errors'])
+        output.cleanup.assert_called_once()
+
+    def test_cleanup_failure_is_explicit_and_not_success(self):
+        result, status, _, _, _, _ = self.simulate(output_cleanup_error=True)
+        self.assertEqual(status, 1)
+        self.assertFalse(result['raw_output_removed'])
+        self.assertEqual(result['retained_raw_basename'], 'owned-sleep-vmmap-synthetic')
+        self.assertNotIn('/synthetic/owned/tmp', json.dumps(result))
+
+    def test_first_spawn_failure_still_cleans_raw_file(self):
+        result, status, _, _, popen, output = self.simulate(first_spawn_error=True)
+        self.assertEqual(status, 1)
+        self.assertEqual(popen.call_count, 1)
+        self.assertEqual(result['sleep_cleanup'], {'started': False, 'reaped': True})
+        self.assertNotIn('synthetic secret', json.dumps(result))
+        output.cleanup.assert_called_once()
+
+    def test_dead_child_prevents_mapper_launch(self):
+        result, status, _, _, popen, _ = self.simulate(child_exit_before=True)
+        self.assertEqual(status, 1)
+        self.assertEqual(popen.call_count, 1)
+        self.assertIn('SLEEP_EXITED_BEFORE_VMMAP', result['errors'])
+        self.assertNotIn('command', result)
+
+    def test_child_death_during_capture_is_failure_after_mapper_reap(self):
+        result, status, events, _, _, _ = self.simulate(child_exit_during=True)
+        self.assertEqual(status, 1)
+        self.assertIn('SLEEP_EXITED_DURING_VMMAP', result['errors'])
+        mapper_done = events.index(('mapper', 'wait', 0))
+        child_polls = [i for i, event in enumerate(events) if event == ('sleep', 'poll')]
+        self.assertLess(child_polls[0], events.index(('mapper', 'spawn')))
+        self.assertGreater(child_polls[1], mapper_done)
+
+    def test_sigkill_fallback_is_limited_to_retained_process(self):
+        events = []
+        process = FakeProcess('mapper', events)
+        process.wait = mock.Mock(side_effect=[subprocess.TimeoutExpired('synthetic', 3), -9])
+        result = probe.retire(process)
+        self.assertEqual(events, [('mapper', 'spawn'), ('mapper', 'poll'),
+                                  ('mapper', 'terminate'), ('mapper', 'kill')])
+        self.assertEqual(process.wait.call_args_list, [mock.call(timeout=3), mock.call(timeout=3)])
+        self.assertTrue(result['reaped'])
+        process.stdout.close.assert_called_once()
+
+    def test_already_exited_process_is_reaped_without_signalling(self):
+        events = []
+        process = FakeProcess('sleep', events)
+        process.returncode = 0
+        result = probe.retire(process)
+        self.assertEqual(events, [('sleep', 'spawn'), ('sleep', 'poll'), ('sleep', 'wait', 0)])
+        self.assertEqual(result['exit_code'], 0)
+
+    def test_non_probe_exception_text_is_sanitized_but_still_fails(self):
+        result, status, _, _, _, _ = self.simulate(failure=RuntimeError('/secret/synthetic-account'))
+        self.assertEqual(status, 1)
+        self.assertIn('RuntimeError', result['errors'])
+        self.assertNotIn('synthetic-account', json.dumps(result))
+
+
+class GuardTests(PureCase):
+    def test_control_manifest_binds_exact_four_files(self):
+        value = probe.control_manifest()
+        self.assertEqual({row['path'] for row in value['files']}, probe.CONTROLS)
+        self.assertEqual(len(value['files']), 4)
+        encoded = json.dumps(value['files'], sort_keys=True, separators=(',', ':')).encode()
+        self.assertEqual(value['sha256'], hashlib.sha256(encoded).hexdigest())
+
+    def test_native_entry_requires_reviewed_hash_before_any_work(self):
+        with mock.patch.object(probe.sys, 'argv', ['probe', '0' * 64]), mock.patch.object(probe, 'run_probe') as run:
+            with self.assertRaisesRegex(probe.ProbeFailure, 'REVIEWED_CONTROL_HASH_REQUIRED'):
+                probe.main()
+        run.assert_not_called()
+
+    def test_nondefault_sigchld_and_extra_threads_refuse_allocation(self):
+        digest = probe.control_manifest()['sha256']
+        for threads, disposition in ((2, signal.SIG_DFL), (1, signal.SIG_IGN)):
+            with (mock.patch.object(probe.sys, 'argv', ['probe', digest]),
+                  mock.patch.object(probe.sys, 'platform', 'darwin'),
+                  mock.patch.object(probe.threading, 'active_count', return_value=threads),
+                  mock.patch.object(probe.signal, 'getsignal', return_value=disposition),
+                  mock.patch.object(probe, 'run_probe') as run):
+                with self.assertRaisesRegex(probe.ProbeFailure, 'DARWIN_SINGLE_OWNER_DEFAULT_SIGCHLD_REQUIRED'):
+                    probe.main()
+                run.assert_not_called()
+
+    def test_signal_deferral_is_bounded_and_cancellation_remains_visible(self):
+        gate = probe.Signals()
+        with (mock.patch.object(probe.signal, 'getsignal', return_value=signal.SIG_DFL),
+              mock.patch.object(probe.signal, 'signal') as setter):
+            with gate:
+                gate.receive(signal.SIGTERM, None)
+                gate.receive(signal.SIGTERM, None)
+                gate.receive(signal.SIGINT, None)
+                with self.assertRaisesRegex(probe.ProbeFailure, 'INTERRUPTED'):
+                    gate.check()
+            self.assertEqual(gate.pending, [signal.SIGTERM, signal.SIGINT])
+            self.assertEqual(setter.call_count, 4)
+
+    def test_control_drift_or_manifest_failure_preserves_receipt_but_fails(self):
+        manifest = {'sha256': '1' * 64, 'files': []}
+        for after in ({'sha256': '2' * 64}, probe.ProbeFailure('CONTROL_SET_CHANGED')):
+            report = {'errors': [], 'status': 'COMMAND_SUCCEEDED_NOT_APP_PROVENANCE'}
+            with (mock.patch.object(probe, 'control_manifest', side_effect=[manifest, after]),
+                  mock.patch.object(probe.sys, 'argv', ['probe', manifest['sha256']]),
+                  mock.patch.object(probe.sys, 'platform', 'darwin'),
+                  mock.patch.object(probe.threading, 'active_count', return_value=1),
+                  mock.patch.object(probe.signal, 'getsignal', return_value=signal.SIG_DFL),
+                  mock.patch.object(probe, 'checked_tmp', return_value=Path('/synthetic/owned/tmp')),
+                  mock.patch.object(probe, 'run_probe', return_value=(report, 0)),
+                  mock.patch('builtins.print') as printer):
+                self.assertEqual(probe.main(), 1)
+            retained = json.loads(printer.call_args.args[0])
+            self.assertFalse(retained['controls_unchanged'])
+            self.assertEqual(retained['status'], 'FAILED_OR_INTERRUPTED')
+            self.assertIn('CONTROL_DRIFT', retained['errors'])
+            self.assertEqual(retained['controls_before'], manifest)

@@ -1,0 +1,8 @@
+// Audit-only extra iosTest source; never applied to shipping or clean/stop invocations.
+gradle.projectsEvaluated { invocation ->
+    if (invocation.rootProject.projectDir.canonicalPath != '/Users/abdelrahman/Projects/parlor') return
+    def app = invocation.rootProject.project(':composeApp')
+    app.extensions.getByName('kotlin').sourceSets.getByName('iosTest').kotlin.srcDir(
+        '/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/reproducers/ios_storage'
+    )
+}

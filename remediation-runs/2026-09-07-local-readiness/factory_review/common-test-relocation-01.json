@@ -1,0 +1,36 @@
+{
+  "timestamp_utc": "2026-09-07T03:58:02.204733+00:00",
+  "reviewer": "/root/factory_review",
+  "head": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+  "scope": "Unchanged pure tests relocated to inherited commonTest so Apple test binaries can execute the existing Doctor rule/recovery assertions.",
+  "source_changes": false,
+  "dependency_changes": false,
+  "files": [
+    {
+      "from": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+      "to": "game-modes/mafia/src/commonTest/kotlin/com/parlor/games/mafia/domain/MafiaDoctorRulesTest.kt",
+      "sha256_before_and_after": "5fe2144436f87162e2d29bcbef6d57ac9b9cede6ab328b406b63cceebcdd501b",
+      "lines": 156,
+      "byte_identical": true
+    },
+    {
+      "from": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "to": "game-modes/mafia/src/commonTest/kotlin/com/parlor/games/mafia/snapshot/MafiaDoctorHistoryRecoveryTest.kt",
+      "sha256_before_and_after": "d1d830e0330d5a47f2011b9f87d025a5ce1e0bc2d3cb08be742ca1ff4403f743",
+      "lines": 383,
+      "byte_identical": true
+    },
+    {
+      "from": "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/testing/MafiaDoctorFixture.kt",
+      "to": "game-modes/mafia/src/commonTest/kotlin/com/parlor/games/mafia/testing/MafiaDoctorFixture.kt",
+      "sha256_before_and_after": "fa5a85db72638033569368062722fc1e1f97fcf1c3948e912c7954324e1e2ba7",
+      "lines": 120,
+      "byte_identical": true
+    }
+  ],
+  "execution": "NOT RUN \u2014 root owns coordinated build lane",
+  "limitations": [
+    "Does not establish physical LAN or native runtime success until those exact test descriptors execute.",
+    "JVM UI/architecture/physical suites remain in desktopTest unchanged."
+  ]
+}

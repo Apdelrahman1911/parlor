@@ -1,0 +1,24 @@
+--- remediation-runs/2026-09-07-local-readiness/reviews/run-gradle-cycle-before-notice-inspection-01.py	2026-09-07 18:19:51
++++ remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py	2026-09-07 18:19:51
+@@ -163,7 +163,20 @@
+             for block in iter(lambda:f.read(1024*1024),b''): digest.update(block)
+         with zipfile.ZipFile(p) as archive:
+             entries=[{'path':i.filename,'bytes':i.file_size,'compressed_bytes':i.compress_size,'crc32':i.CRC} for i in archive.infolist()]
+-        records.append({'path':str(p.relative_to(ROOT)),'bytes':p.stat().st_size,'sha256':digest.hexdigest(),'entries':entries})
++        notice_log=dest/'artifacts'/f'android-notices-{len(records) + 1}.json'
++        notice_log.parent.mkdir(parents=True,exist_ok=True)
++        with notice_log.open('xb') as stream:
++            notice_code=subprocess.run(['/usr/bin/python3','-B',str(ROOT/'scripts/verification/third_party_notices.py'),
++                                        '--root',str(ROOT),'--package',str(p),'--json'],
++                                       cwd=ROOT,stdout=stream,stderr=subprocess.STDOUT,timeout=60).returncode
++        if notice_code or notice_log.stat().st_size>1024*1024:
++            raise RuntimeError('Required actual AAB notice inspection failed; retain artifact and compact receipt')
++        notice=json.loads(notice_log.read_text())
++        if not isinstance(notice,dict) or notice.get('status')!='PASS' or not notice.get('package'):
++            raise RuntimeError('AAB notice inspection returned no successful package receipt')
++        records.append({'path':str(p.relative_to(ROOT)),'bytes':p.stat().st_size,'sha256':digest.hexdigest(),'entries':entries,
++                        'notice_receipt':str(notice_log.relative_to(dest)),
++                        'notice_receipt_sha256':hashlib.sha256(notice_log.read_bytes()).hexdigest()})
+     for p in (ROOT/'composeApp/build/intermediates/merged_manifests').glob('release/**/AndroidManifest.xml'):
+         target=dest/'artifacts'/p.relative_to(ROOT)
+         target.parent.mkdir(parents=True,exist_ok=True)

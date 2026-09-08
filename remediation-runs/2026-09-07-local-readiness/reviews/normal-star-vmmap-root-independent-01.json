@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root",
+  "author": "/root/native_fix_review",
+  "at": "2026-09-08T06:24:46.522586+00:00",
+  "classification": "APPROVED_FOR_FOCUSED_CONTROL_EXECUTION_NOT_NATIVE_PASS",
+  "baseline": "8b9e3b0cdfdab82e7cff3ad8135d0eae9a0b8ca3",
+  "freeze_sha256": "eb72d9fa33e7ab4ddc2de549d1084aeccaa60eb86f158240c47f9fbaa78f908d",
+  "diff_sha256": "22b3af244dff434b6dbb3845b6692758263d3db6f30b1dbc9d09dc53f45179a3",
+  "reviewed_inputs": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py",
+      "sha256": "6b5f72a5915f056912b4377d315d5331f0cbc25fd34b7800a839031e5d9efb9f",
+      "lines": 290
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_diagnostics.py",
+      "sha256": "bb7ab22243ffab9aef8404ae939ea67bd980aaf7d175bb3bc6b020f1c5312c67",
+      "lines": 237
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "sha256": "32a2eac1d972d7345ba89bcbc0af51b48f7ca1ce25a8d6df047ef163194936a3",
+      "lines": 827
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+      "sha256": "b8604c23a2d1254dc7650bf0ad853bd56fb614cea2f451ec6b46d2a2ee4a4662",
+      "lines": 65
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+      "sha256": "08678d02d8cfaa8a2db93070d812f7759c3f0961b5812d726267fa67061d0365",
+      "lines": 264
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_sample_literal_star.py",
+      "sha256": "e1cec3bb236fff0e518b153308e09cf850a865ee22e028201bcbe1d86346b814",
+      "lines": 118
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_vmmap_command_failure.py",
+      "sha256": "97114b22407d470f0f71ab05d1f5b7e53158db0e8787150b0170a3d678aaaa50",
+      "lines": 161
+    }
+  ],
+  "review_scope": "Complete seven-file patch; complete new tests and driver; modified parser/diagnostic functions plus surrounding alias inventory/header/sample/vmmap call paths; Lane command, run_xctest, artifact inventory and observation/finalization callers. Not a new whole-file re-audit of unchanged inherited runner code.",
+  "reasoning": [
+    "Exact finite sample-only aliases match retained native13 evidence; USER/exact headers and vmmap remain strict, origins/UUID/address/container/lifetime guards unchanged.",
+    "Closed bounded diagnostic reads only attested owned single-link file, refuses redirection and preserves nonzero exit; unknown bytes hashed, no raw paths/stacks or private fields retained.",
+    "14 additional controls preserve 163 original tests; discovery, no skips and before/after control hash required by driver.",
+    "Native14 full git-diff drift from these unrelated tooling edits is explicitly disclosed; original receipt remains FAIL and is not waived."
+  ],
+  "regression_expectation": "177 tests execute without failures, errors or skips; runner/source unchanged within cycle, immediate Gradle stop and precise scratch cleanup.",
+  "limits": [
+    "No new normal-app provenance success until actual native execution.",
+    "Not Store, physical-device or mapped-page byte proof."
+  ]
+}

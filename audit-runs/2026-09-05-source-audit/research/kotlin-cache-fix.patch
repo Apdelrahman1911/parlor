@@ -1,0 +1,347 @@
+From bf51df665b458fda7c3eaf436c4d88dc119d7ec6 Mon Sep 17 00:00:00 2001
+From: Ilmir Usmanov <ilmir.usmanov@jetbrains.com>
+Date: Wed, 3 Jun 2026 17:51:53 +0200
+Subject: [PATCH] KAPT: Deserialize only a handful of classes from KAPT
+ incremental cache
+
+Otherwise, the classes there can be poisoned and thus lead to
+vulnerabilities.
+ #KT-86604 Fixed
+---
+ .../jetbrains/kotlin/kapt/base/KaptContext.kt |   2 +-
+ .../kotlin/kapt/base/incremental/cache.kt     | 125 +++++++++++++++---
+ .../incremental/InheritedAnnotationTest.kt    |   2 +-
+ .../incremental/JavaClassCacheManagerTest.kt  |  59 ++++++++-
+ .../incremental/ReferencedContantsTest.kt     |   2 +-
+ .../TestComplexIncrementalAptCache.kt         |   2 +-
+ .../TestSimpleIncrementalAptCache.kt          |   2 +-
+ 7 files changed, 170 insertions(+), 24 deletions(-)
+
+diff --git a/plugins/kapt/kapt-base/src/org/jetbrains/kotlin/kapt/base/KaptContext.kt b/plugins/kapt/kapt-base/src/org/jetbrains/kotlin/kapt/base/KaptContext.kt
+index 56241fd99afba..b4d4aed611838 100644
+--- a/plugins/kapt/kapt-base/src/org/jetbrains/kotlin/kapt/base/KaptContext.kt
++++ b/plugins/kapt/kapt-base/src/org/jetbrains/kotlin/kapt/base/KaptContext.kt
+@@ -56,7 +56,7 @@ open class KaptContext(val options: KaptOptions, val withJdk: Boolean, val logge
+         KaptJavaCompiler.preRegister(context)
+ 
+         cacheManager = options.incrementalCache?.let {
+-            JavaClassCacheManager(it)
++            JavaClassCacheManager(it, logger)
+         }
+         if (options.flags[KaptFlag.INCREMENTAL_APT]) {
+             sourcesToReprocess = run {
+diff --git a/plugins/kapt/kapt-base/src/org/jetbrains/kotlin/kapt/base/incremental/cache.kt b/plugins/kapt/kapt-base/src/org/jetbrains/kotlin/kapt/base/incremental/cache.kt
+index 5d98019d36049..5b6ca7fa30ab6 100644
+--- a/plugins/kapt/kapt-base/src/org/jetbrains/kotlin/kapt/base/incremental/cache.kt
++++ b/plugins/kapt/kapt-base/src/org/jetbrains/kotlin/kapt/base/incremental/cache.kt
+@@ -5,10 +5,11 @@
+ 
+ package org.jetbrains.kotlin.kapt.base.incremental
+ 
++import org.jetbrains.kotlin.kapt.base.util.KaptLogger
+ import java.io.*
+ 
+-// TODO(gavra): switch away from Java serialization
+-class JavaClassCacheManager(val file: File) : Closeable {
++// TODO(gavra): switch away from Java serialization (KT-86712)
++class JavaClassCacheManager(val file: File, val logger: KaptLogger?) : Closeable {
+ 
+     private val javaCacheFile = file.resolve("java-cache.bin")
+     internal val javaCache = maybeGetJavaCacheFromFile()
+@@ -139,14 +140,7 @@ class JavaClassCacheManager(val file: File) : Closeable {
+     private fun maybeGetAptCacheFromFile(): IncrementalAptCache {
+ 
+         return if (aptCacheFile.exists()) {
+-            try {
+-                ObjectInputStream(BufferedInputStream(aptCacheFile.inputStream())).use {
+-                    it.readObject() as IncrementalAptCache
+-                }
+-            } catch (_: Throwable) {
+-                // cache corrupt
+-                IncrementalAptCache()
+-            }
++            readCacheFromFile(aptCacheFile, APT_CACHE_ALLOWED_CLASSES, IncrementalAptCache::class.java) ?: IncrementalAptCache()
+         } else {
+             IncrementalAptCache()
+         }
+@@ -154,18 +148,32 @@ class JavaClassCacheManager(val file: File) : Closeable {
+ 
+     private fun maybeGetJavaCacheFromFile(): JavaClassCache {
+         return if (javaCacheFile.exists()) {
+-            try {
+-                ObjectInputStream(BufferedInputStream(javaCacheFile.inputStream())).use {
+-                    it.readObject() as JavaClassCache
+-                }
+-            } catch (e: Throwable) {
+-                JavaClassCache()
+-            }
++            readCacheFromFile(javaCacheFile, JAVA_CACHE_ALLOWED_CLASSES, JavaClassCache::class.java) ?: JavaClassCache()
+         } else {
+             JavaClassCache()
+         }
+     }
+ 
++    private fun <T> readCacheFromFile(file: File, allowedClasses: Set<String>, expectedClass: Class<T>): T? {
++        try {
++            val cache = FilteringObjectInputStream(BufferedInputStream(file.inputStream()), allowedClasses).use {
++                it.readObject()
++            }
++            if (expectedClass.isInstance(cache)) {
++                return expectedClass.cast(cache)
++            } else {
++                logger?.warn("${expectedClass.name} is not supported in APT cache")
++                file.delete()
++                return null
++            }
++        } catch (_: Exception) {
++            logger?.warn("${expectedClass.name} is not supported in APT cache or the cache is corrupt")
++            // Cache is corrupt or was rejected by the class whitelist.
++            file.delete()
++            return null
++        }
++    }
++
+     override fun close() {
+         if (closed) return
+ 
+@@ -226,3 +234,86 @@ private fun countClassFilesUpToLimit(root: File, limit: Int): Int {
+ 
+     return cnt
+ }
++
++// Since java.io.ObjectInputFilter is Java 17 class, and KAPT still supports Java 8, we have to implement
++// our own version.
++private class FilteringObjectInputStream(
++    input: InputStream,
++    private val allowedClasses: Set<String>
++) : ObjectInputStream(input) {
++    override fun resolveClass(desc: ObjectStreamClass): Class<*> {
++        if (!isAllowedClass(desc.name)) {
++            throw InvalidClassException(desc.name, "Class is not allowed in KAPT incremental cache")
++        }
++        return super.resolveClass(desc)
++    }
++
++    override fun resolveProxyClass(interfaces: Array<out String>): Class<*> {
++        throw InvalidClassException(interfaces.joinToString(), "Proxy classes are not allowed in KAPT incremental cache")
++    }
++
++    private fun isAllowedClass(name: String): Boolean {
++        if (name in PRIMITIVE_TYPES || name in allowedClasses) {
++            return true
++        }
++
++        if (!name.startsWith("[")) {
++            return false
++        }
++
++        val componentType = getNonPrimitiveArrayComponentType(name) ?: return true
++        return isAllowedClass(componentType)
++    }
++}
++
++private fun getNonPrimitiveArrayComponentType(name: String): String? {
++    var componentName = name
++    while (componentName.startsWith("[")) {
++        componentName = componentName.drop(1)
++    }
++
++    if (componentName.length == 1) {
++        return null
++    }
++
++    return componentName.takeIf { it.startsWith("L") && it.endsWith(";") }?.let {
++        it.substring(1, it.length - 1)
++    }
++}
++
++private val PRIMITIVE_TYPES = setOf(
++    "boolean",
++    "byte",
++    "char",
++    "double",
++    "float",
++    "int",
++    "long",
++    "short",
++    "void"
++)
++
++private val JAVA_CACHE_ALLOWED_CLASSES = setOf(
++    "java.lang.Object",
++    "java.lang.String",
++    "java.net.URI",
++    "java.util.Collections\$SingletonSet",
++    "java.util.HashMap",
++    "java.util.HashSet",
++    "java.util.LinkedHashMap",
++    "java.util.LinkedHashSet",
++    JavaClassCache::class.java.name,
++    ClassFileStructure::class.java.name,
++    SourceFileStructure::class.java.name
++)
++
++private val APT_CACHE_ALLOWED_CLASSES = setOf(
++    "java.io.File",
++    "java.lang.Object",
++    "java.lang.String",
++    "java.util.HashMap",
++    "java.util.HashSet",
++    "java.util.LinkedHashMap",
++    "java.util.LinkedHashSet",
++    IncrementalAptCache::class.java.name
++)
+diff --git a/plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/InheritedAnnotationTest.kt b/plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/InheritedAnnotationTest.kt
+index 90a62fecb341b..5523caf83212c 100644
+--- a/plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/InheritedAnnotationTest.kt
++++ b/plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/InheritedAnnotationTest.kt
+@@ -28,7 +28,7 @@ class TestInheritedAnnotation {
+         @BeforeAll
+         fun setUp(@TempDir tmp: File) {
+             val classpathHistory = tmp.newFolder("classpathHistory")
+-            cache = JavaClassCacheManager(tmp.newCacheFolder())
++            cache = JavaClassCacheManager(tmp.newCacheFolder(), null)
+             generatedSources = tmp.newGeneratedSourcesFolder()
+             cache.close()
+             classpathHistory.resolve("0").createNewFile()
+diff --git a/plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/JavaClassCacheManagerTest.kt b/plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/JavaClassCacheManagerTest.kt
+index 2ba362a43533a..600e6782d0306 100644
+--- a/plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/JavaClassCacheManagerTest.kt
++++ b/plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/JavaClassCacheManagerTest.kt
+@@ -5,17 +5,22 @@
+ 
+ package org.jetbrains.kotlin.kapt.base.test.incremental
+ 
++import org.jetbrains.kotlin.kapt.base.incremental.ClassFileStructure
+ import org.jetbrains.kotlin.kapt.base.incremental.JavaClassCacheManager
+ import org.jetbrains.kotlin.kapt.base.incremental.SourceFileStructure
+ import org.jetbrains.kotlin.kapt.base.incremental.SourcesToReprocess
+ import org.jetbrains.kotlin.kapt.base.test.newCompiledSourcesFolder
+ import org.jetbrains.kotlin.kapt.base.test.newFolder
+ import org.junit.jupiter.api.Assertions.assertEquals
++import org.junit.jupiter.api.Assertions.assertFalse
+ import org.junit.jupiter.api.Assertions.assertTrue
+ import org.junit.jupiter.api.BeforeEach
+ import org.junit.jupiter.api.Test
+ import org.junit.jupiter.api.io.TempDir
+ import java.io.File
++import java.io.ObjectInputStream
++import java.io.ObjectOutputStream
++import java.io.Serializable
+ 
+ class JavaClassCacheManagerTest {
+     private lateinit var cache: JavaClassCacheManager
+@@ -26,7 +31,7 @@ class JavaClassCacheManagerTest {
+     fun setUp(@TempDir tmp: File) {
+         cacheDir = tmp.newFolder("cacheDir")
+         compiledSources = listOf(tmp.newCompiledSourcesFolder().also { it.resolve(TEST_PACKAGE_NAME).mkdir() })
+-        cache = JavaClassCacheManager(cacheDir)
++        cache = JavaClassCacheManager(cacheDir, null)
+     }
+ 
+ 
+@@ -38,6 +43,36 @@ class JavaClassCacheManagerTest {
+         assertTrue(cacheDir.resolve("apt-cache.bin").exists())
+     }
+ 
++    @Test
++    fun testRejectedJavaCacheDoesNotDeserializePayload() {
++        DeserializationProbe.wasDeserialized = false
++        writePoisonedObject(cacheDir.resolve("java-cache.bin"))
++
++        JavaClassCacheManager(cacheDir, null).close()
++
++        assertFalse(DeserializationProbe.wasDeserialized)
++    }
++
++    @Test
++    fun testRejectedAptCacheDoesNotDeserializePayload() {
++        DeserializationProbe.wasDeserialized = false
++        writePoisonedObject(cacheDir.resolve("apt-cache.bin"))
++
++        JavaClassCacheManager(cacheDir, null).close()
++
++        assertFalse(DeserializationProbe.wasDeserialized)
++    }
++
++    @Test
++    fun testJavaCacheCanDeserializeClassFileStructure() {
++        val generatedClass = File("Generated.class").absoluteFile
++        cache.javaCache.addSourceStructure(ClassFileStructure(generatedClass.toURI(), "test.Generated"))
++
++        prepareForIncremental()
++
++        assertEquals(setOf("test.Generated"), cache.javaCache.getTypesForFiles(listOf(generatedClass)))
++    }
++
+     @Test
+     fun testMentionedTypes() {
+         SourceFileStructure(File("Mentioned.java").toURI()).also {
+@@ -193,7 +228,27 @@ class JavaClassCacheManagerTest {
+ 
+     private fun prepareForIncremental() {
+         cache.close()
+-        cache = JavaClassCacheManager(cacheDir)
++        cache = JavaClassCacheManager(cacheDir, null)
++    }
++
++    private fun writePoisonedObject(file: File) {
++        file.parentFile.mkdirs()
++        ObjectOutputStream(file.outputStream()).use {
++            it.writeObject(DeserializationProbe())
++        }
++    }
++
++    private class DeserializationProbe : Serializable {
++        private fun readObject(input: ObjectInputStream) {
++            input.defaultReadObject()
++            wasDeserialized = true
++        }
++
++        companion object {
++            private const val serialVersionUID = 0L
++
++            var wasDeserialized = false
++        }
+     }
+ }
+ 
+diff --git a/plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/ReferencedContantsTest.kt b/plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/ReferencedContantsTest.kt
+index b3729ad34e847..2e4ff8a5c52d8 100644
+--- a/plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/ReferencedContantsTest.kt
++++ b/plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/ReferencedContantsTest.kt
+@@ -31,7 +31,7 @@ class ReferencedConstantsTest {
+             val compiledClasses = tmp.newFolder("compiledClasses")
+             compileSources(listOf(MY_TEST_DIR.resolve("CKlass.java")), compiledClasses)
+ 
+-            cache = JavaClassCacheManager(tmp.newCacheFolder())
++            cache = JavaClassCacheManager(tmp.newCacheFolder(), null)
+             generatedSources = tmp.newGeneratedSourcesFolder()
+             cache.close()
+             val processor = SimpleProcessor().toAggregating()
+diff --git a/plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/TestComplexIncrementalAptCache.kt b/plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/TestComplexIncrementalAptCache.kt
+index b5c01061a8182..b0f2d3c2ea027 100644
+--- a/plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/TestComplexIncrementalAptCache.kt
++++ b/plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/TestComplexIncrementalAptCache.kt
+@@ -27,7 +27,7 @@ class TestComplexIncrementalAptCache {
+         @JvmStatic
+         @BeforeAll
+         fun setUp(@TempDir tmp: File) {
+-            cache = JavaClassCacheManager(tmp.newCacheFolder())
++            cache = JavaClassCacheManager(tmp.newCacheFolder(), null)
+             generatedSources = tmp.newGeneratedSourcesFolder()
+             cache.close()
+             val processor = SimpleProcessor().toAggregating()
+diff --git a/plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/TestSimpleIncrementalAptCache.kt b/plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/TestSimpleIncrementalAptCache.kt
+index 4d60c0169f34e..2e3b295dd94d7 100644
+--- a/plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/TestSimpleIncrementalAptCache.kt
++++ b/plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/TestSimpleIncrementalAptCache.kt
+@@ -25,7 +25,7 @@ class TestSimpleIncrementalAptCache {
+ 
+     @BeforeEach
+     fun setUp(@TempDir tmp: File) {
+-        cache = JavaClassCacheManager(tmp.newCacheFolder())
++        cache = JavaClassCacheManager(tmp.newCacheFolder(), null)
+         generatedSources = tmp.newGeneratedSourcesFolder()
+         compiledSources = listOf(tmp.newCompiledSourcesFolder().also { it.resolve(TEST_PACKAGE_NAME).mkdir() })
+         cache.close()

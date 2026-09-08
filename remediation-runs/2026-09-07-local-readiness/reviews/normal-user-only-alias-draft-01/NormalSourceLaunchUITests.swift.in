@@ -1,0 +1,76 @@
+import Foundation
+import XCTest
+
+// Campaign-only draft. Substitute in the owned UI-test copy, never in the app target.
+// Execute this one method eight fixed times; do not enable retry-on-failure.
+final class IOSAppLaunchUITests: XCTestCase {
+    override func setUpWithError() throws {
+        continueAfterFailure = false
+    }
+
+    @MainActor
+    func testColdLaunchRendersComposeHomeWithoutUnexpectedAlert() throws {
+        let app = XCUIApplication()
+        // Preserve the checked-in test's English launch conditions. This is not Follow System evidence.
+        app.launchArguments += ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
+        XCTAssertFalse(
+            app.launchEnvironment.keys.contains { $0.hasPrefix("PARLOR_") },
+            "Normal-source launch observation must not use custom app fixture inputs",
+        )
+        let observationID = UUID().uuidString
+        try marker(["event": "begin", "observationID": observationID])
+        app.launch()
+
+        XCTAssertTrue(
+            app.wait(for: .runningForeground, timeout: 30),
+            "The Swift host should launch and remain in the foreground",
+        )
+        XCTAssertTrue(
+            app.staticTexts["parlor-home-brand"].waitForExistence(timeout: 30),
+            "The Kotlin Compose root should render the home screen",
+        )
+
+        let start = ProcessInfo.processInfo.systemUptime
+        for sample in 0...5 {
+            if sample > 0 {
+                XCTAssertFalse(
+                    app.alerts.firstMatch.waitForExistence(timeout: 2),
+                    "No alert should appear during the passive observation interval",
+                )
+            }
+            let foreground = app.state == .runningForeground
+            let homeExists = app.staticTexts["parlor-home-brand"].exists
+            let alertVisible = app.alerts.firstMatch.exists
+            XCTAssertTrue(foreground, "The app should remain in the foreground")
+            XCTAssertTrue(homeExists, "The Compose home should remain present")
+            XCTAssertFalse(alertVisible, "No alert should cover the home screen")
+            let elapsed = ProcessInfo.processInfo.systemUptime - start
+            if sample == 5 {
+                XCTAssertGreaterThanOrEqual(elapsed, 10, "Require ten actual post-home seconds")
+            }
+            try marker([
+                "event": "sample",
+                "observationID": observationID,
+                "sample": sample,
+                "elapsedSeconds": elapsed,
+                "foreground": foreground,
+                "homeExists": homeExists,
+                "alertVisible": alertVisible,
+            ])
+        }
+        let elapsed = ProcessInfo.processInfo.systemUptime - start
+        XCTAssertGreaterThanOrEqual(elapsed, 10, "Require ten actual post-home seconds")
+        try marker([
+            "event": "complete",
+            "observationID": observationID,
+            "elapsedSeconds": elapsed,
+        ])
+        // The next launch() terminates this instance per Apple's documented API contract.
+        // The outer owned-simulator finalizer also stops the app after any success/failure.
+    }
+
+    private func marker(_ fields: [String: Any]) throws {
+        let data = try JSONSerialization.data(withJSONObject: fields, options: [.sortedKeys])
+        print("PARLOR_NORMAL_SOURCE_LAUNCH " + String(decoding: data, as: UTF8.self))
+    }
+}

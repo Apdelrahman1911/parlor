@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://raw.githubusercontent.com/detekt/detekt/v1.23.7/gradle/libs.versions.toml",
+    "error": "list index out of range"
+  },
+  {
+    "url": "https://raw.githubusercontent.com/Kotlin/kotlinx.coroutines/1.11.0/kotlinx-coroutines-core/common/src/Builders.common.kt",
+    "accessed_at": "2026-09-07T05:36:14.364180+00:00",
+    "sha256": "ae85de350787c1a6ab6e8247378919d4628b7c078a946f74a34135312ae16afd",
+    "line_count": 599,
+    "excerpts": [
+      {
+        "from": 112,
+        "to": 174,
+        "text": "112:  * to run on its [ContinuationInterceptor] immediately.\n113:  * [Job.start] can be used to start the coroutine explicitly,\n114:  * and awaiting its completion using [Job.join] also causes the coroutine to start executing.\n115:  *\n116:  * A coroutine created with [launch] does not return a result, and if it fails with an exception,\n117:  * there is no reliable way to learn about that exception in general.\n118:  * [async] is a better choice if the result of the coroutine needs to be accessed from another coroutine.\n119:  *\n120:  * ## Differences from [async]\n121:  *\n122:  * [launch] is similar to [async] whose block returns a [Unit] value.\n123:  *\n124:  * The only difference is the handling of failures that cannot be propagated to the parent:\n125:  * for an [async] coroutine, a [CoroutineExceptionHandler] will not be invoked in that scenario.\n126:  * Instead, the user of [async] must call [Deferred.await] to get the result of the coroutine,\n127:  * which will be the exception the coroutine failed with.\n128:  *\n129:  * ## Pitfalls\n130:  *\n131:  * ### [CancellationException] silently stopping computations\n132:  *\n133:  * ```\n134:  * val deferred = GlobalScope.async {\n135:  *     awaitCancellation()\n136:  * }\n137:  * deferred.cancel()\n138:  * coroutineScope {\n139:  *     val job = launch {\n140:  *         val result = deferred.await()\n141:  *         println(\"Got $result\")\n142:  *     }\n143:  *     job.join()\n144:  *     println(\"Am I still not cancelled? $isActive\")\n145:  * }\n146:  * ```\n147:  *\n148:  * will output\n149:  *\n150:  * ```\n151:  * Am I still not cancelled? true\n152:  * ```\n153:  *\n154:  * This may be surprising, because the `launch`ed coroutine failed with an exception,\n155:  * but the parent still was not cancelled.\n156:  *\n157:  * The reason for this is that any [CancellationException] thrown in the coroutine is treated as a signal to cancel\n158:  * the coroutine, but not the parent.\n159:  * In this scenario, this is unlikely to be the desired behavior:\n160:  * this was a failure and not a cancellation and should be propagated to the parent.\n161:  *\n162:  * This is a legacy behavior that cannot be changed in a backward-compatible way.\n163:  * Use [ensureActive] and [isActive] to distinguish between cancellation and failure:\n164:  *\n165:  * ```\n166:  * launch {\n167:  *     try {\n168:  *         val result = deferred.await()\n169:  *     } catch (e: CancellationException) {\n170:  *         if (isActive) {\n171:  *             // we were not cancelled, this is a failure\n172:  *             println(\"`deferred` was cancelled\")\n173:  *             throw IllegalStateException(\"deferred was cancelled\", e)\n174:  *         } else {"
+      }
+    ]
+  },
+  {
+    "url": "https://raw.githubusercontent.com/detekt/detekt/v1.23.7/detekt-rules-coroutines/src/test/kotlin/io/gitlab/arturbosch/detekt/rules/coroutines/RedundantSuspendModifierSpec.kt",
+    "accessed_at": "2026-09-07T05:36:17.653835+00:00",
+    "sha256": "3e0f590151de9c69453acd4db5143aa239d5ee3f27649bab0801751e435bfa04",
+    "line_count": 142,
+    "excerpts": [
+      {
+        "from": 11,
+        "to": 33,
+        "text": "11: @KotlinCoreEnvironmentTest\n12: class RedundantSuspendModifierSpec(val env: KotlinCoreEnvironment) {\n13: \n14:     private val subject = RedundantSuspendModifier(Config.empty)\n15: \n16:     @Test\n17:     fun `reports when public function returns expression of platform type`() {\n18:         val code = \"\"\"\n19:             import kotlin.coroutines.Continuation\n20:             import kotlin.coroutines.resume\n21:             import kotlin.coroutines.suspendCoroutine\n22:             \n23:             suspend fun suspendCoroutine() = suspendCoroutine { continuation: Continuation<String> ->\n24:                 continuation.resume(\"string\")\n25:             }\n26:             \n27:             class RedundantSuspend {\n28:                 suspend fun redundantSuspend() {\n29:                     println(\"hello world\")\n30:                 }\n31:             }\n32:         \"\"\".trimIndent()\n33:         assertThat(subject.compileAndLintWithContext(env, code)).hasSize(1)"
+      },
+      {
+        "from": 22,
+        "to": 44,
+        "text": "22:             \n23:             suspend fun suspendCoroutine() = suspendCoroutine { continuation: Continuation<String> ->\n24:                 continuation.resume(\"string\")\n25:             }\n26:             \n27:             class RedundantSuspend {\n28:                 suspend fun redundantSuspend() {\n29:                     println(\"hello world\")\n30:                 }\n31:             }\n32:         \"\"\".trimIndent()\n33:         assertThat(subject.compileAndLintWithContext(env, code)).hasSize(1)\n34:     }\n35: \n36:     @Test\n37:     fun `does not report when private`() {\n38:         val code = \"\"\"\n39:             import kotlin.coroutines.Continuation\n40:             import kotlin.coroutines.resume\n41:             import kotlin.coroutines.suspendCoroutine\n42:             \n43:             suspend fun suspendCoroutine() = suspendCoroutine { continuation: Continuation<String> ->\n44:                 continuation.resume(\"string\")"
+      },
+      {
+        "from": 49,
+        "to": 71,
+        "text": "49:             }\n50:         \"\"\".trimIndent()\n51:         assertThat(subject.compileAndLintWithContext(env, code)).isEmpty()\n52:     }\n53: \n54:     @Test\n55:     fun `does not report when public function returns expression of platform type`() {\n56:         val code = \"\"\"\n57:             class RedundantClass {\n58:                 open suspend fun redundantSuspend() {\n59:                     println(\"hello world\")\n60:                 }\n61:             }\n62:         \"\"\".trimIndent()\n63:         assertThat(subject.compileAndLintWithContext(env, code)).isEmpty()\n64:     }\n65: \n66:     @Test\n67:     fun `does not report suspend function without body`() {\n68:         val code = \"\"\"\n69:             interface SuspendInterface {\n70:                 suspend fun empty()\n71:             }"
+      },
+      {
+        "from": 52,
+        "to": 74,
+        "text": "52:     }\n53: \n54:     @Test\n55:     fun `does not report when public function returns expression of platform type`() {\n56:         val code = \"\"\"\n57:             class RedundantClass {\n58:                 open suspend fun redundantSuspend() {\n59:                     println(\"hello world\")\n60:                 }\n61:             }\n62:         \"\"\".trimIndent()\n63:         assertThat(subject.compileAndLintWithContext(env, code)).isEmpty()\n64:     }\n65: \n66:     @Test\n67:     fun `does not report suspend function without body`() {\n68:         val code = \"\"\"\n69:             interface SuspendInterface {\n70:                 suspend fun empty()\n71:             }\n72:         \"\"\".trimIndent()\n73:         assertThat(subject.compileAndLintWithContext(env, code)).isEmpty()\n74:     }"
+      }
+    ]
+  }
+]

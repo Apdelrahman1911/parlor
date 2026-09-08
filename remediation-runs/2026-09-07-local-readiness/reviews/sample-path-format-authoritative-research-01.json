@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "kind": "bounded-authoritative-research-not-an-application-finding",
+  "researcher": "/root/native_fix_review",
+  "created_at_utc": "2026-09-07T22:50:57.013321+00:00",
+  "assignment": "Investigate installed macOS26.2 sample Path/Binary Images and vmmap -w without execution/attachment/probes/builds/source edits.",
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "b6e1947c62661631d0593038db7f64dbf25f720e",
+    "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978",
+    "context_source_hashes": [
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py",
+        "bytes": 11764,
+        "sha256": "ec19eb8c910f42c180ea17bae1af2fed259cb989174c61cf306a0324800200ef"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+        "bytes": 43948,
+        "sha256": "36276fb27423ca04c9fe41d033042c3ae25d5a512183b96b80230b4f58ad2e8d"
+      }
+    ],
+    "note": "Root-owned uncommitted source08 diagnostics already present; not changed here. Not a repository-wide source freeze."
+  },
+  "evidence": {
+    "static_inspection": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/sample-path-format-research-01/installed-tool-inspection.json",
+      "sha256": "79a1139794d57a86df9133db394cafe3a9cc963ff4c1c95fa1c2b6bdfeee0212",
+      "bytes": 6169
+    },
+    "authoritative_excerpts": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/sample-path-format-research-01/authoritative-excerpts.json",
+      "sha256": "30746187435fd2fdb6d1639599400401742c146006d3a48b0851fcd2b0bc3a62",
+      "bytes": 21699
+    },
+    "fetch_receipts": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/sample-path-format-research-01/fetches-02.json",
+        "bytes": 31470,
+        "sha256": "f601db3e2ba408aa7d3ee179942846067d85541b4f222743adc74aeba9dac69d"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/sample-path-format-research-01/fetches-03.json",
+        "bytes": 4542,
+        "sha256": "9ec52192290fea5a789e67542ed507e01f86ae16dfcc5b48092f1b73ed385c97"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/sample-path-format-research-01/fetches-04.json",
+        "bytes": 675,
+        "sha256": "cae36146d7cc4b0ad7dc24a9fccadfbfa8cf652829ec0680288c895f86de0690"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/sample-path-format-research-01/fetches.json",
+        "bytes": 4469,
+        "sha256": "170bc1474ab172ad9b914e746f6a63aea44fb4978dd5e458f407434e5c625f8d"
+      }
+    ],
+    "exact_release_manifest": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/sample-path-format-research-01/apple-oss-macos262-release.json",
+      "bytes": 10846,
+      "sha256": "89346a3959a2cc2a3cb5d935e3211e8fe288b9238ad150488560453270bf06ec",
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/distribution-macOS/412b1a8fa79a210830c8993e8b98755f90ff29ba/release.json",
+      "release": "macOS 26.2",
+      "projects_count": 171,
+      "searched_term_presence": {
+        "samplingtools": false,
+        "symbolication": false,
+        "vmmap": false,
+        "sample": false
+      }
+    },
+    "cleanup": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/sample-path-format-research-01/cleanup.json",
+      "sha256": "434feffa00b4108b44def0644e37ddb1a5cf331b88c1dd1e0da36ca583a70c4a",
+      "bytes": 1736
+    }
+  },
+  "conclusions": [
+    {
+      "id": "R1",
+      "classification": "DOCUMENTED",
+      "claim": "Installed sample manual says -fullPaths expands source-code paths for symbols with debug information. Current SamplingTools-64573.1.1 help literal agrees.",
+      "limit": "Not a documented executable-header/Binary Images unredaction option; undocumented side effects were not executed or ruled out."
+    },
+    {
+      "id": "R2",
+      "classification": "DOCUMENTED",
+      "claim": "Installed vmmap manual says -w/-wide prints wide output to show full paths of mapped files.",
+      "limit": "Distinct from sample -fullPaths. No documented promise here of raw privacy-unredacted header/components for every mapping; no vmmap invocation."
+    },
+    {
+      "id": "R3",
+      "classification": "DOCUMENTED_WITH_NARROW_APPLICABILITY",
+      "claim": "Apple crash-report documentation explicitly replaces user-identifiable macOS Path/Binary Images components with privacy placeholders; example /Users/USER/*/TouchCanvas.app/Contents/MacOS/TouchCanvas.",
+      "limit": "Crash reports are not sample/vmmap. Counter-evidence against assuming all Apple diagnostics expose raw paths, not proof of current CLI or native08 behavior."
+    },
+    {
+      "id": "R4",
+      "classification": "STATIC_OBSERVATION_ONLY",
+      "claim": "Installed sample and vmmap import VMUSanitizePath and private Symbolication/CoreSymbolication classes; sample includes VMUSampler/outputString/sampleBacktracesString selectors.",
+      "limit": "Imports/literals and incompletely decoded direct calls do not establish path sanitation location/policy. Static dependencies are not runtime loaded-framework evidence."
+    },
+    {
+      "id": "R5",
+      "classification": "SOURCE_UNRESOLVED",
+      "claim": "No exact formatter source located in bounded official search. macos-262 release manifest lists171 projects without SamplingTools/Symbolication/sample/vmmap; expected public repository endpoints returned404. Ancillary system_cmds/libmalloc/adv_cmds/developer_cmds tree searches did not locate the formatter.",
+      "limit": "Not proof that no source exists anywhere. Unrelated sample-named fixtures and zlog helpers do not substitute for installed formatter."
+    }
+  ],
+  "explicit_non_conclusions": [
+    "native08 sample exit0 plus failed exact header validation does not distinguish PID, Path, formatting, transformation or tool failure; original raw header unavailable. No root cause, redaction cause, app crash, stale-PID or platform defect is established.",
+    "Parent-supplied direct owned /bin/sleep exactheader PASS and copied-sleep exit255/noheaders are distinct observations, not rerun here and not proof of native08 cause.",
+    "No native09/native10 observation is interpreted. Their future failure-only diagnostics need exact source/artifact binding and independent review.",
+    "No undocumented flags, privacy changes, relaxed provenance checks, other-process attachment or app/private-data inspection occurred. No test/native/storage/physical/Store gate becomes PASS through this research.",
+    "This task is external-image-tool research, not L08 file-protection capability classification."
+  ],
+  "next_step": "Evaluate the already-reviewed failure-only header diagnostics from the next exact owned run. Preserve original checks. Only after an actual format transformation is observed consider an independently reviewed adjustment preserving kernel/lifetime, exact artifact, UUID and address binding; never accept a wildcard path solely from crash-report prose.",
+  "verification": {
+    "control_tests": "NOT RUN",
+    "native_execution": "NOT RUN",
+    "gradle_xcode": "NOT RUN",
+    "confirmed_application_defects_added": 0
+  },
+  "preservation": {
+    "source_edits_by_agent": false,
+    "staging_commits_pushes": false,
+    "source_or_other_task_outputs_deleted": false,
+    "task_workers_left": false,
+    "retained_evidence_bytes": 188157
+  }
+}

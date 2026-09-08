@@ -1,0 +1,20 @@
+{
+  "at": "2026-09-05T19:46:59.532995+00:00",
+  "author": "/root/whodunit_cont",
+  "authorization": "/root after games-session-desktop-03 cleanup",
+  "cycle": "games-session-desktop-03",
+  "status": "source correction only; no Whodunit tests ran in cycle03; root rerun required",
+  "cause": "Kotlin assertEquals type inference with List<AcknowledgeBriefing> expected and MutableList<WhodunitAction> actual",
+  "change": "Explicit listOf<WhodunitAction> type argument; exact complete action list equality assertion retained",
+  "path": "game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/PeerReadinessRemountTest.kt",
+  "line": 90,
+  "sha256": "e443c59bc953b1e35113ce26bf3a2638839cd44723e6a36c90c014b77f5cb6d3",
+  "lines": 370,
+  "assertions_removed_or_weakened": false,
+  "production_changes": false,
+  "builds_run_by_agent": false,
+  "source_check": {
+    "command": "git diff --check -- game-modes/whodunit",
+    "exit_code": 0
+  }
+}

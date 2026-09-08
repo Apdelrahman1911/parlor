@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.parlor.transport.p2p.JupiterDiscoveryContractTest" tests="1" skipped="0" failures="1" errors="0" timestamp="2026-09-05T18:35:36.471Z" hostname="192.168.1.11" time="0.066">
+  <properties/>
+  <testcase name="annotated_tests_including_disabled_tests_are_discoverable()[desktop]" classname="com.parlor.transport.p2p.JupiterDiscoveryContractTest" time="0.066">
+    <failure message="org.opentest4j.AssertionFailedError: Jupiter silently omits invalid @Test methods (including @Ignore):&#10;public final assertk.Assert&lt;com.parlor.core.result.Result$Success&lt;?&gt;&gt; com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.disconnect_during_acceptance_rolls_back_the_seat_without_a_ghost_member()&#10;public final assertk.Assert&lt;com.parlor.core.result.Result$Success&lt;?&gt;&gt; com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.cancellation_during_acceptance_propagates_after_rolling_back_the_seat()&#10;public final java.util.concurrent.CancellationException com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.host_send_propagates_coroutine_cancellation()&#10;public final java.util.concurrent.CancellationException com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.peer_send_propagates_coroutine_cancellation()&#10;public final assertk.Assert&lt;com.parlor.core.result.Result$Success&lt;?&gt;&gt; com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.wrong_room_does_not_end_search_before_a_late_correct_candidate_appears()&#10;public final assertk.Assert&lt;com.parlor.core.result.Result$Success&lt;?&gt;&gt; com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.admission_pending_opens_a_separate_host_approval_window()&#10;public final java.util.concurrent.CancellationException com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.kit_factory_cancellation_is_never_mapped_to_transport_failure()&#10;public final java.lang.AssertionError com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.fatal_send_and_cleanup_failures_are_never_converted_to_normal_results()&#10;public final assertk.Assert&lt;com.parlor.networking.protocol.HostMessage$SessionEnded&gt; com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.host_broadcast_reaches_every_peer()&#10;public final assertk.Assert&lt;com.parlor.networking.protocol.HostMessage$SessionEnded&gt; com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()" type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: Jupiter silently omits invalid @Test methods (including @Ignore):
+public final assertk.Assert&lt;com.parlor.core.result.Result$Success&lt;?&gt;&gt; com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.disconnect_during_acceptance_rolls_back_the_seat_without_a_ghost_member()
+public final assertk.Assert&lt;com.parlor.core.result.Result$Success&lt;?&gt;&gt; com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.cancellation_during_acceptance_propagates_after_rolling_back_the_seat()
+public final java.util.concurrent.CancellationException com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.host_send_propagates_coroutine_cancellation()
+public final java.util.concurrent.CancellationException com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.peer_send_propagates_coroutine_cancellation()
+public final assertk.Assert&lt;com.parlor.core.result.Result$Success&lt;?&gt;&gt; com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.wrong_room_does_not_end_search_before_a_late_correct_candidate_appears()
+public final assertk.Assert&lt;com.parlor.core.result.Result$Success&lt;?&gt;&gt; com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.admission_pending_opens_a_separate_host_approval_window()
+public final java.util.concurrent.CancellationException com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.kit_factory_cancellation_is_never_mapped_to_transport_failure()
+public final java.lang.AssertionError com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.fatal_send_and_cleanup_failures_are_never_converted_to_normal_results()
+public final assertk.Assert&lt;com.parlor.networking.protocol.HostMessage$SessionEnded&gt; com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.host_broadcast_reaches_every_peer()
+public final assertk.Assert&lt;com.parlor.networking.protocol.HostMessage$SessionEnded&gt; com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()
+	at app//org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:38)
+	at app//org.junit.jupiter.api.Assertions.fail(Assertions.java:138)
+	at app//kotlin.test.junit5.JUnit5Asserter.fail(JUnitSupport.kt:56)
+	at app//kotlin.test.Asserter.assertTrue(Assertions.kt:767)
+	at app//kotlin.test.junit5.JUnit5Asserter.assertTrue(JUnitSupport.kt:30)
+	at app//kotlin.test.Asserter.assertTrue(Assertions.kt:777)
+	at app//kotlin.test.junit5.JUnit5Asserter.assertTrue(JUnitSupport.kt:30)
+	at app//kotlin.test.AssertionsKt__AssertionsKt.assertTrue(Assertions.kt:44)
+	at app//kotlin.test.AssertionsKt.assertTrue(Unknown Source)
+	at app//com.parlor.transport.p2p.JupiterDiscoveryContractTest.annotated_tests_including_disabled_tests_are_discoverable(JupiterDiscoveryContractTest.kt:34)
+	at java.base@21.0.11/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base@21.0.11/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base@21.0.11/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,372 @@
+{
+  "at": "2026-09-05T19:59:25.118633+00:00",
+  "author_reviewer": "/root/mafia_cont",
+  "status": "MAFIA DESKTOP REGRESSION PASS + INDEPENDENT BOUNDED APPROVAL; combined/static/native gates pending root",
+  "source_manifest": "mafia/source-review-03-failure-followup.json",
+  "current_hashes_match_frozen": true,
+  "root_cycle_receipt": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/receipt.json",
+  "root_cycle_receipt_sha256": "b7dd7cbcd744cc9ba75cb01a53ac747b875f9467c96ebcbc9c6659595fa11ae5",
+  "overall_cycle": {
+    "status": "FAIL",
+    "exit_code": 1,
+    "command": [
+      "./gradlew",
+      ":game-modes:mafia:desktopTest",
+      ":game-modes:whodunit:desktopTest",
+      ":shared:session:desktopTest",
+      ":shared:transport-p2p:desktopTest",
+      "--continue",
+      "--no-daemon",
+      "--no-parallel",
+      "--max-workers=1",
+      "--no-configuration-cache",
+      "--dependency-verification=strict",
+      "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=games-session-desktop-03",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-Pparlor.android.signing.storeFile=",
+      "-Pparlor.android.signing.storePassword=",
+      "-Pparlor.android.signing.keyAlias=",
+      "-Pparlor.android.signing.keyPassword="
+    ],
+    "source_changed_during_cycle": false
+  },
+  "overall_cycle_limit": "Whodunit test compilation failed after complete Mafia suite; do not report the multi-module command or Whodunit as passing.",
+  "mafia_suites": 31,
+  "mafia_totals": {
+    "tests": 267,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "added_tests": 35,
+  "existing_tests": 232,
+  "suite_receipts": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.MafiaDoctorRulesTest.xml",
+      "sha256": "5f445dc1aa3cdcfdc985ed0c7bb757663dcc818ceb31141c4f48a17e0cc26769",
+      "suite": "com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.action.MafiaActionCodecTest.xml",
+      "sha256": "52bbb2adb2302dba5a54d36a698ac4b9c74ee06722de3cf0cb35e0930781e1bd",
+      "suite": "com.parlor.games.mafia.domain.action.MafiaActionCodecTest",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.projection.MafiaHostOnlyRedactionSentinelTest.xml",
+      "sha256": "92c2aa984d54905fad5c39d6b0792380ff9708b1b6df731b300d5fefdefbe6bc",
+      "suite": "com.parlor.games.mafia.domain.projection.MafiaHostOnlyRedactionSentinelTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.projection.MafiaProjectionPolicyTest.xml",
+      "sha256": "791e35b9ccb391d28e6bcff78e479f5867a66dd4ceb243e1c15a1b4c67b5d1ce",
+      "suite": "com.parlor.games.mafia.domain.projection.MafiaProjectionPolicyTest",
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.reducer.MafiaReducerEdgeCasesTest.xml",
+      "sha256": "fba94c9f6f196065c4f001c1fae5cee59eaade5de389c030b3e9d6a0cccd94bd",
+      "suite": "com.parlor.games.mafia.domain.reducer.MafiaReducerEdgeCasesTest",
+      "tests": 27,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.reducer.MafiaReducerTest.xml",
+      "sha256": "d4983ff083552d85b88e364e9854e9e24ab914552f3b4cd07fdfad4751aaea6a",
+      "suite": "com.parlor.games.mafia.domain.reducer.MafiaReducerTest",
+      "tests": 24,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.MafiaSessionRulesTest.xml",
+      "sha256": "535d8e3a5d0c9eee6bc3ef7432b352da85aedd7fe2dc38f167828afea701108a",
+      "suite": "com.parlor.games.mafia.domain.rules.MafiaSessionRulesTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.NightResolutionTest.xml",
+      "sha256": "270032a9b71ebb79b0f8a9a4c8431729db321eb090039b01fc58e99bb28e2e97",
+      "suite": "com.parlor.games.mafia.domain.rules.NightResolutionTest",
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.RoleAssignmentTest.xml",
+      "sha256": "4d9e2b697edbdf97fc219eabb92631f1a437a6a9bf6877d2908af0bd4ce29074",
+      "suite": "com.parlor.games.mafia.domain.rules.RoleAssignmentTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.VoteResolutionTest.xml",
+      "sha256": "089fb25f58cae58579c694f887a3df963d2ecf6c7073a924859dee71a7514359",
+      "suite": "com.parlor.games.mafia.domain.rules.VoteResolutionTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.rules.WinCheckTest.xml",
+      "sha256": "9d27d6d2b9f3e366818be20ec1dcf2aa922f5746b7f38a4ba326cafe63e4201d",
+      "suite": "com.parlor.games.mafia.domain.rules.WinCheckTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.settings.MafiaSettingsValidationTest.xml",
+      "sha256": "bc1b3f22aedfc422c79eea241fb0407dd5a270b0581cadcaa931923ab80e56b2",
+      "suite": "com.parlor.games.mafia.domain.settings.MafiaSettingsValidationTest",
+      "tests": 20,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.state.MafiaPeerSnapshotValidatorTest.xml",
+      "sha256": "765b8ab6b83f2c699d775e55fac59400a8bd2b25b7d76ced362e1678eaf39f5c",
+      "suite": "com.parlor.games.mafia.domain.state.MafiaPeerSnapshotValidatorTest",
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.flow.FullGameDriveTest.xml",
+      "sha256": "4cf930de8b8b490c2ff9c2e75224ab3a3616f74408f1617dedd070053ea6ba51",
+      "suite": "com.parlor.games.mafia.flow.FullGameDriveTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.flow.MafiaLocalSessionConfigTest.xml",
+      "sha256": "fedc5b8167ae915991e6d2206ae542355f2f5a444df2e091fccb0054141fcafd",
+      "suite": "com.parlor.games.mafia.flow.MafiaLocalSessionConfigTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaAuthoritativeLifecycleTest.xml",
+      "sha256": "699e1723a3d25938399d1dab00a6905ba106bf3608b8b62ba626990ef5442221",
+      "suite": "com.parlor.games.mafia.multidevice.MafiaAuthoritativeLifecycleTest",
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaDoctorLanTest.xml",
+      "sha256": "a719d214eb686a2dfadadbfd5caf9e30f291b65edd3f548d221b4636fa63c09e",
+      "suite": "com.parlor.games.mafia.multidevice.MafiaDoctorLanTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaMultiDeviceProgressionTest.xml",
+      "sha256": "daac94e58f475a31dca380904e302264701247693143ed6384061747150cfde5",
+      "suite": "com.parlor.games.mafia.multidevice.MafiaMultiDeviceProgressionTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaPeerActionAuthorityTest.xml",
+      "sha256": "565b1aac390090e518dd1863658a918ac1347de2a93fd71e541703b408c7d676",
+      "suite": "com.parlor.games.mafia.multidevice.MafiaPeerActionAuthorityTest",
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaPeerPrivateTargetGateTest.xml",
+      "sha256": "a9f4937d99223a68445be7b0805538f395093f35eded054ac6e6e02480551bc7",
+      "suite": "com.parlor.games.mafia.multidevice.MafiaPeerPrivateTargetGateTest",
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaProjectionLeakTest.xml",
+      "sha256": "14beeae2ab67c2bf2ac8b16b1f59b06c867bc31af2c8e9787d4cd95c2e5554de",
+      "suite": "com.parlor.games.mafia.multidevice.MafiaProjectionLeakTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest.xml",
+      "sha256": "e2be79ec9e5b5855e28174b3b795b16056bdec32851852caa9a8fd4c2d97a29e",
+      "suite": "com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaSnapshotCodecTest.xml",
+      "sha256": "2c5bc1a0ee06f1ec994702d9bcaf044b8a3ead6fda43528e52c4ab10e92912bc",
+      "suite": "com.parlor.games.mafia.snapshot.MafiaSnapshotCodecTest",
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaSnapshotRecoveryTest.xml",
+      "sha256": "9cf11197a076581b78eac553bdab05bcce622381231fa6e55bf3d3a4a62be30d",
+      "suite": "com.parlor.games.mafia.snapshot.MafiaSnapshotRecoveryTest",
+      "tests": 23,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.multidevice.MafiaNetworkErrorMessageKeyTest.xml",
+      "sha256": "a99627b24691a579bfd192527a0f608739783c41f989cdbd5ea6958866726d38",
+      "suite": "com.parlor.games.mafia.ui.flow.multidevice.MafiaNetworkErrorMessageKeyTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.passandplay.MafiaPassAndPlayNightQueueTest.xml",
+      "sha256": "059463a56451d36bf5d2e0f53d9ee63b1174058045ca6fd4f62816517bd969ce",
+      "suite": "com.parlor.games.mafia.ui.flow.passandplay.MafiaPassAndPlayNightQueueTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest.xml",
+      "sha256": "53d3d4d2927520297d26c07805953abf6215eb52b8a1d97afa6fc6c7cb704aa6",
+      "suite": "com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.night.TargetPickerSelectionTest.xml",
+      "sha256": "6ac99e7adebb887c9a7a6d7b49d08b25d84130ded76947ba9bd49a822ff4e9e7",
+      "suite": "com.parlor.games.mafia.ui.screens.night.TargetPickerSelectionTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest.xml",
+      "sha256": "6512c799cfcdf12d94af62319f3ef45036dcd855d7ef5372e6368948f40584ef",
+      "suite": "com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest",
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest.xml",
+      "sha256": "c5bc4063f6311e7ae9286bd27a1be0c433bfa3ed8d1fb31130e2aceefb1db8bc",
+      "suite": "com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/games-session-desktop-03/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupDraftTest.xml",
+      "sha256": "7698bb8ae709554a8075996aae6f26e9c02b9bade0c4190ee371711c29fbc7e6",
+      "suite": "com.parlor.games.mafia.ui.screens.setup.MafiaSetupDraftTest",
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "independent_approval": {
+    "reviewer": "/root/whodunit_cont",
+    "decision": "MF-C1/M-C01 approved; M-C03 final full-width Column approved",
+    "report": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MF-C1-M-C03-independent-review.md",
+    "report_sha256": "ae821d8d7b8f8480b5691e9f60c3dd657c80f756512c5e43ffb46f57cd6bdff9",
+    "ledger": "remediation-runs/2026-09-05-confirmed-fixes/whodunit/MF-C1-M-C03-independent-evidence.json",
+    "ledger_sha256": "08b7012c575315873f0822d3dbaa6bb46c205e1b71e71f3d7f59a3f3b172ae91"
+  },
+  "cleanup_from_root_receipt": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-05T19:42:04.204530+00:00",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "removed_outputs": [
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build",
+      "build",
+      "build-logic/convention/build"
+    ],
+    "remaining_outputs": [],
+    "cleanup_completed_at": "2026-09-05T19:42:04.581043+00:00",
+    "cleanup_errors": []
+  },
+  "unchanged_limits": [
+    "No physical Android/iOS rendering/a11y proof",
+    "In-memory LAN bypasses lobby/start and credentials; no radio/cold rejoin proof",
+    "No game rules/reducer/protocol/schema changes",
+    "No setup/tally sibling UI claim",
+    "No build/test executed by this subagent",
+    "No commit/integration/Store or issue changes performed"
+  ],
+  "continuation": [
+    "Keep Mafia frozen until root combined gate or requested scoped correction",
+    "Root applicable static and Android/Apple checks",
+    "Native/device/release external evidence remains separately classified"
+  ]
+}

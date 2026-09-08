@@ -1,0 +1,128 @@
+{
+  "at": "2026-09-08T02:11:00.426957+00:00",
+  "reviewer": "/root",
+  "receipt": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/receipt.json",
+    "sha256": "55b51c77c8f962d0d4e45fc2f18dac296ebf99d1e5d2224066993d0907000998"
+  },
+  "observations": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/observations.json",
+    "sha256": "e93b1e246467764f7aa3eecd53ef5ad5fc9451f2a7925e61cec6b2768e4386e3"
+  },
+  "source_after_matches": true,
+  "status": "COLLECTION_VALIDATED_NOT_L08_PASS",
+  "rows": [
+    {
+      "id": "directory-create",
+      "returned": true,
+      "result": true
+    },
+    {
+      "id": "directory-after-create",
+      "returned": null,
+      "result": null,
+      "fm": "missing",
+      "volume": "supported",
+      "backup": "included"
+    },
+    {
+      "id": "directory-backup",
+      "returned": true,
+      "result": true
+    },
+    {
+      "id": "directory-after-backup",
+      "returned": null,
+      "result": null,
+      "fm": "missing",
+      "volume": "supported",
+      "backup": "excluded"
+    },
+    {
+      "id": "atomic-write",
+      "returned": true,
+      "result": true
+    },
+    {
+      "id": "atomic-after-write",
+      "returned": null,
+      "result": null,
+      "fm": "missing",
+      "url": "until-first-authentication",
+      "volume": "supported",
+      "backup": "included"
+    },
+    {
+      "id": "atomic-backup",
+      "returned": true,
+      "result": true
+    },
+    {
+      "id": "atomic-after-backup",
+      "returned": null,
+      "result": null,
+      "fm": "missing",
+      "url": "until-first-authentication",
+      "volume": "supported",
+      "backup": "excluded"
+    },
+    {
+      "id": "directory-set",
+      "returned": true,
+      "result": true
+    },
+    {
+      "id": "directory-after-set",
+      "returned": null,
+      "result": null,
+      "fm": "missing",
+      "volume": "supported",
+      "backup": "excluded"
+    },
+    {
+      "id": "direct-write",
+      "returned": true,
+      "result": true
+    },
+    {
+      "id": "direct-after-write",
+      "returned": null,
+      "result": null,
+      "fm": "missing",
+      "url": "until-first-authentication",
+      "volume": "supported",
+      "backup": "included"
+    },
+    {
+      "id": "default-write",
+      "returned": true,
+      "result": true
+    },
+    {
+      "id": "file-before-set",
+      "returned": null,
+      "result": null,
+      "fm": "missing",
+      "url": "until-first-authentication",
+      "volume": "supported",
+      "backup": "included"
+    },
+    {
+      "id": "file-set",
+      "returned": true,
+      "result": true
+    },
+    {
+      "id": "file-after-set",
+      "returned": null,
+      "result": null,
+      "fm": "missing",
+      "url": "until-first-authentication",
+      "volume": "supported",
+      "backup": "included"
+    }
+  ],
+  "cleanup_status": "PASS",
+  "task_scratch_independently_lstat_absent": true,
+  "scope": "Wire-valid standalone Objective-C Foundation metadata observations on one fresh iOS26.5 Simulator. NSFileManager missing keys and file NSURL class nonmatching after explicit Complete requests persist outside Parlor/Kotlin; this comparison is not app-container equality, encryption/lock proof or strict L08 PASS. No production or entitlement change made."
+}

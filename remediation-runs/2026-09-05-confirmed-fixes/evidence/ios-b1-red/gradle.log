@@ -1,0 +1,26 @@
+test_failed_directory_change_cannot_build_from_previous_directory (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... FAIL
+test_failed_gradle_with_stale_framework_fails_without_normalizing (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... FAIL
+test_intentional_ide_override_still_skips_gradle_and_normalization (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... ok
+test_successful_embed_normalizes_case_only_framework_name (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... ok
+test_successful_gradle_still_rejects_missing_framework (test_xcode_framework_phase.XcodeFrameworkPhaseTest) ... ok
+
+======================================================================
+FAIL: test_failed_directory_change_cannot_build_from_previous_directory (test_xcode_framework_phase.XcodeFrameworkPhaseTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_xcode_framework_phase.py", line 77, in test_failed_directory_change_cannot_build_from_previous_directory
+    self.assertNotEqual(result.returncode, 0)
+AssertionError: 0 == 0
+
+======================================================================
+FAIL: test_failed_gradle_with_stale_framework_fails_without_normalizing (test_xcode_framework_phase.XcodeFrameworkPhaseTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_xcode_framework_phase.py", line 71, in test_failed_gradle_with_stale_framework_fails_without_normalizing
+    self.assertEqual(result.returncode, 42, result.stdout + result.stderr)
+AssertionError: 0 != 42 : 
+
+----------------------------------------------------------------------
+Ran 5 tests in 11.414s
+
+FAILED (failures=2)

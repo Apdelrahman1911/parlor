@@ -1,0 +1,175 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/release_fix_review",
+  "author": "/root",
+  "recorded_at": "2026-09-07T15:30:47.560771+00:00",
+  "decision": "APPROVED_STATIC_ROOT_NOTICE_WIRING_AND_DOCUMENTATION_PENDING_REAL_VERIFIER_AND_EXECUTED_CONTROLS",
+  "scope": "Root-authored CI/workflow contract, cycle coordinator notice collection, four synthetic controls, and stale dependency-documentation correction only. No final package-delivery or legal approval.",
+  "baseline": {
+    "commit": "5d9f5f4c81ff51ee70922c876eefb91c6e669d56",
+    "tree": "3fbc4908ae41fab311e5e936e3ec8913199da7ad",
+    "branch": "fix/local-readiness-2026-09-07",
+    "freeze": false,
+    "reason": "Native validator/resources and unrelated owned review work are concurrently in progress; approval binds the listed exact files, not an eventual whole tree."
+  },
+  "patches": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/notice-package-workflow-wiring-01.patch",
+      "sha256": "76b20edc1c8ae00fa39d68bcba6f1942dafd4e170abcd004a371494986fded25",
+      "reviewed_line_ranges": [
+        [
+          1,
+          61
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/run-gradle-cycle-notice-inspection-01.patch",
+      "sha256": "7ab600921e4b5813dc4737ccedcb583edc4bc2f6113ac177f40ee301cd57836d",
+      "reviewed_line_ranges": [
+        [
+          1,
+          24
+        ]
+      ]
+    }
+  ],
+  "workflow_patch_matches_current_scoped_git_diff": true,
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/.github/workflows/production-verification.yml",
+      "sha256": "eb6ac6fb35621d49bede96b7fc008d6d4ac364ff44e7bafc46700ea38ef94a81",
+      "lines": 652,
+      "reviewed_line_ranges_this_pass": [
+        [
+          1,
+          182
+        ],
+        [
+          515,
+          652
+        ]
+      ],
+      "reviewer": "/root/release_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/workflow_contract.py",
+      "sha256": "77072dd274b0468d25a9cfb1e81111b036130b61c29b6117eb3bc1759981301d",
+      "lines": 724,
+      "reviewed_line_ranges_this_pass": [
+        [
+          1,
+          220
+        ]
+      ],
+      "reviewer": "/root/release_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/release/tests/test_workflow_contract.py",
+      "sha256": "3c7e34165d1cfca28bc93b4096049fedefd92e92ffc9585b5c089cebf9d41c9f",
+      "lines": 496,
+      "reviewed_line_ranges_this_pass": [
+        [
+          98,
+          111
+        ]
+      ],
+      "reviewer": "/root/release_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/DEPENDENCY_REVIEW.md",
+      "sha256": "92f82c2b4b3c9d6f2da08100e223cd84bb84333d62533c71366a04a1fcf73572",
+      "lines": 93,
+      "reviewed_line_ranges_this_pass": [
+        [
+          1,
+          93
+        ]
+      ],
+      "reviewer": "/root/release_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/DEPENDENCY_INVENTORY.md",
+      "sha256": "ba13764bc6e544c9cf5803c5b9fbbe8262469fd9fe4474eaa6477be7e6876fb8",
+      "lines": 68,
+      "reviewed_line_ranges_this_pass": [
+        [
+          1,
+          68
+        ]
+      ],
+      "reviewer": "/root/release_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "sha256": "15976d75c765d411450baad6d1b42bcf78e68e1a743758f7503a658cdd8afc2a",
+      "lines": 304,
+      "reviewed_line_ranges_this_pass": [
+        [
+          1,
+          304
+        ]
+      ],
+      "reviewer": "/root/release_fix_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/test_aab_notice_inspection_01.py",
+      "sha256": "caf3524d73ed6d308a83175738801426e908f38b2650c806a84fbdbabf6bd4b7",
+      "lines": 66,
+      "reviewed_line_ranges_this_pass": [
+        [
+          1,
+          66
+        ]
+      ],
+      "reviewer": "/root/release_fix_review"
+    }
+  ],
+  "prior_surrounding_review": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/workflow-owned-simulator-contract-independent-review-01.json",
+    "sha256": "df123404690600ddf079e2caa688dcb43cc398f601f0220ae94e234ee7bb6bf5",
+    "scope": "Prior complete716-linecontract/485-linetest review and owned CI helper call paths; this pass reopens changed code and complete coordinator rather than substituting prior summary for source."
+  },
+  "source_reasoning": [
+    "Production-verification lines111-146 require one actual AAB, archive validity, expected manifest/DEX, and build-bound SHA before the new notice CLI; set-euo-pipefail makes a CLI nonzero fail its step. Always upload includes compact JSON plus unsigned AAB before attested cleanup.",
+    "Apple lines572-606 run unsigned Release simulator wrapper with pipefail, verify effective Info.plist/build version/binary, and pass that actual app path to notice CLI before always-run native/Gradle finalizer. This is not signed Store or physical-device verification.",
+    "Workflow contract179-186 uses unique named-step extraction rather than globally finding a notice token; exact required CLI commands must remain in the actual artifact inspection steps. New test independently removes each occurrence and expects rejection.",
+    "Coordinator157-179 runs exact --root/--package/--json CLI only for generated AABs after streaming their hash; exclusive receipt avoids silent overwrite; nonzero, oversized, malformed, non-PASS or missing package fails inspection.",
+    "Coordinator245-290 immediately stops Gradle and task-owned workers, then captures reports/package receipts. Any notice error is added to cleanup_errors; captured=false prevents destroying the only AAB/evidence and forces final FAIL. Successful compact receipt plus SHA is retained before exact owned-output cleanup.",
+    "Synchronous subprocess.run has a60-second deadline and no daemon/native/network activity is intended in verifier. Detailed resource bounds and child-process absence await actual source. One-MiB check is acceptance bound after write, not a streaming log cap.",
+    "Synthetic controls29-62 verify exact argv,60sdeadline, accepted receipt SHA, nonzero retained evidence, source-only PASS rejection and oversized rejection. These are coordinator boundary tests with mocked subprocess, not actual AAB package evidence.",
+    "Dependency doc64-93 correctly replaces obsolete absent-SBOM/license-report claims with historical resolved-input evidence while retaining final-artifact, embedded-native, own-code/content, custom/patent and owner/legal obligations. Existing publisher notices are not presumed absent."
+  ],
+  "documentation_evidence": {
+    "license_evidence": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-license-research-03/report/license-evidence.json",
+      "sha256": "df96db8b3c0a9e7140732cb78e20aeb8f8558e97c74fbfb26d6d99286f6b4271",
+      "declared_poms": 459,
+      "unresolved": 0,
+      "scope": "Current raw JSON re-opened;456 distinctgraphGAV/3inheritedparents previously independently walked in retained acceptance05."
+    },
+    "schema": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/dependency-sbom-schema-02/schema-validation.json",
+      "sha256": "513dcc7af3220e8d0582634530f4b93e8c5f9138e4741d2c345d928da6752374",
+      "verified_results": 4,
+      "errors": 0
+    },
+    "independent_research": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/dependency-sbom-research03-independent-acceptance-05.json",
+      "sha256": "12076beaaab98f9ba0ec3ecf82363f0b73aacdb5a255e60472d0ecc4cec34269"
+    }
+  },
+  "blocking_findings": [],
+  "pending": [
+    "Actual scripts/verification/third_party_notices.py did not yet exist on this review snapshot; root invocation cannot be called executable success before reading actual CLI/source/package schema.",
+    "Native author plans source-only package:null, package-success truthy object/statusPASS, boundedJSON, exitnonzero on failure, no network/extraction/writes. Plans are not implementation evidence.",
+    "New workflow/coordinator controls require exact-source root execution receipt and independently checked actual test descriptors/cleanup. No tests executed by reviewer.",
+    "Actual Android AAB and iOS app byte-for-byte delivery remain unexecuted until frozen source package builds/inspection. Prior inputgraph/legalresearch cannot close those gates.",
+    "Final frozen combined static/build/test/workflow verification is still required after all notice/resource/doc changes; earlier251-test validator PASS does not automatically apply."
+  ],
+  "cleanup": {
+    "reviewer_started_builds_workers_or_apps": false,
+    "source_git_or_prior_evidence_modified": false,
+    "new_outputs": "This additive compact JSON only; read/parse/hash subprocesses completed. No process stop, cache deletion, or generated outputs by reviewer."
+  }
+}

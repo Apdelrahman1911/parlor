@@ -1,0 +1,107 @@
+{
+  "started_at": "2026-09-07T05:36:17.536650+00:00",
+  "status": "PASS",
+  "scenarios": [
+    {
+      "name": "ordinary",
+      "status": "PASS",
+      "pid": 72017,
+      "attested_pids": [
+        72017
+      ],
+      "exit_code": -15
+    },
+    {
+      "name": "exec",
+      "status": "PASS",
+      "pid": 72031,
+      "attested_pids": [
+        72031
+      ],
+      "exit_code": -15
+    },
+    {
+      "name": "detached-child",
+      "status": "PASS",
+      "pid": 72050,
+      "attested_pids": [
+        72050,
+        72051
+      ],
+      "exit_code": -15
+    }
+  ],
+  "pid": 72011,
+  "probe_sha256": "c28d355945c358b135e690fa6ba9be664fcc7f6d07ff5550ae32d7c9a5cb89b7",
+  "control_sha256": "148a71180b6768858f47d7cf5607104169898dafdee48ecbf41937cd46e71a1d",
+  "cleanup_errors": [],
+  "remaining_owned_workers": [],
+  "signals": [
+    {
+      "pid": 72017,
+      "started": [
+        1788759377,
+        537110
+      ],
+      "command": "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python",
+      "signal": 15,
+      "generation": 628602,
+      "sent": true
+    },
+    {
+      "pid": 72031,
+      "started": [
+        1788759378,
+        877575
+      ],
+      "command": "/bin/sleep",
+      "signal": 15,
+      "generation": 628656,
+      "sent": true
+    },
+    {
+      "pid": 72050,
+      "started": [
+        1788759380,
+        221239
+      ],
+      "command": "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/Resources/Python.app/Contents/MacOS/Python",
+      "signal": 15,
+      "generation": 628679,
+      "sent": true
+    },
+    {
+      "pid": 72051,
+      "started": [
+        1788759380,
+        240744
+      ],
+      "command": "/bin/sleep",
+      "signal": 15,
+      "generation": 628681,
+      "sent": true
+    }
+  ],
+  "launches": [
+    {
+      "pid": 72017,
+      "label": "ordinary",
+      "retired": true,
+      "exit_code": -15
+    },
+    {
+      "pid": 72031,
+      "label": "exec",
+      "retired": true,
+      "exit_code": -15
+    },
+    {
+      "pid": 72050,
+      "label": "detached-child",
+      "retired": true,
+      "exit_code": -15
+    }
+  ],
+  "finished_at": "2026-09-07T05:36:21.531631+00:00",
+  "interrupts": []
+}

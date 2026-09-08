@@ -1,0 +1,561 @@
+{
+  "recorded_at": "2026-09-06T01:54:04.212658+00:00",
+  "scope": "Additive continuation of scoped 16-defect remediation, not a new exhaustive audit",
+  "source_manifest_sha256": "e59da533dbec2f02f6f2b460ce72e2a7337af1e44abfb0bc6d533304d4127ec7",
+  "source_changed": false,
+  "previous_deliverables_unchanged": {
+    "REPORT.md": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/REPORT.md",
+      "sha256": "00f5b6bf3af925de480ad86ab84bf8a25bcc55273af8eaff710600214fc25584"
+    },
+    "issues.json": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/issues.json",
+      "sha256": "026f41acf992a5d7d9feebd0e54c7966fc2f5b170d4a8204698ae1b557e0c317"
+    },
+    "gates.json": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/gates.json",
+      "sha256": "331bf4c43368d2533d7ed493517430615781a655b961e8db31233a8059c6cbe8"
+    },
+    "source-identity.json": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/source-identity.json",
+      "sha256": "e710c5705cf066033d8e16747c04fe5e9a9383fb4dfc7f73e2fdc38af0206830"
+    },
+    "diff-identity.json": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/diff-identity.json",
+      "sha256": "612514fb26e2ae85671925ca54f18a86a6b4837878fc99311d2b635be74c15b7"
+    },
+    "remediation.patch": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/remediation.patch",
+      "sha256": "305b8f3db676a79ddc98faf72e08d4269596528cdc30cafbbf4c6811312f03f9"
+    },
+    "preservation.json": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/preservation.json",
+      "sha256": "7fc27c70f677510788c6a47bd33561ebc2b7b62c1957ffeea395f497d9871ba4"
+    },
+    "verification-summary.json": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/verification-summary.json",
+      "sha256": "4d549bf6bc4f2807a7a1d8783824e969861e92c686a86795733c0ea1211acba6"
+    },
+    "cycle-history.json": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/cycle-history.json",
+      "sha256": "6332e391f95ec36db0bc81e5f845f50c6d7615022089a5db1bb63706e0aaf15a"
+    },
+    "issue-source-map.json": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/issue-source-map.json",
+      "sha256": "f73cfb1b1bbb9c1683e006b880f554a3551de98033f27c2891fccba94f432038"
+    },
+    "review-and-research-index.json": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/final/review-and-research-index.json",
+      "sha256": "74e412840577d5864e1b68e48271681be3e0fb55c585cc625b5ead40faea6e99"
+    }
+  },
+  "completion": {
+    "numerator": 14,
+    "denominator": 16,
+    "percentage": 87.5,
+    "counts": {
+      "FIXED AND VERIFIED": 14,
+      "PARTIALLY VERIFIED": 1,
+      "BLOCKED": 1
+    },
+    "not_a_readiness_or_github_closure_percentage": true
+  },
+  "new_cycle_records": [
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/receipt.json",
+        "sha256": "33b7d8a4ee78dd34903aa4b3131fabc0df578b4148deafe30b818dff7885e89c"
+      },
+      "cycle": "dsc01-apphost-01",
+      "cleanup_evaluation": {
+        "schema": "dsc01-apphost",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "FAIL",
+        "xcodebuild_exit_code": 65,
+        "runtime_evidence_status": "NOT_RUN",
+        "error": {
+          "type": "RuntimeError",
+          "message": "Actual XCTest summary is not exactly one successful, unskipped test"
+        },
+        "finished_at": "2026-09-06T01:01:09.423608+00:00",
+        "cleanup_completed_at": "2026-09-06T01:01:09.212331+00:00",
+        "cleanup_status": "PASS",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "gradle_stops": [
+          {
+            "label": "stop-xcode-immediate",
+            "exit_code": 0,
+            "at": "2026-09-06T01:01:00.860581+00:00"
+          },
+          {
+            "label": "stop-final",
+            "exit_code": 0,
+            "at": "2026-09-06T01:01:02.501872+00:00"
+          }
+        ],
+        "temporary_directory_removed": true,
+        "owned_device_absent": true,
+        "owned_processes_remaining": [],
+        "unknown_holders": [],
+        "secondary_cleanup": {
+          "status": "PASS",
+          "removed": [
+            "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-88445/IB/B80B37CD-55C7-4F43-980B-951FCD6F91E8.RemoteToHost",
+            "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-88445/IB/B80B37CD-55C7-4F43-980B-951FCD6F91E8.HostToRemote",
+            "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-88445/IB",
+            "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-88445"
+          ],
+          "remaining": []
+        },
+        "secondary_attestation_errors": []
+      },
+      "associated": [
+        {
+          "kind": "secondary-fifo-final-ledger",
+          "reference": {
+            "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-01/secondary-fifo-ownership-final.json",
+            "sha256": "d7bbfbdd5a8fdbd07e2fad2644b22392f5caf7c3ea50b438b8c4113dd330e01e"
+          }
+        }
+      ]
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/receipt.json",
+        "sha256": "7ce472e0296c985d152d02c0dbdf6b6979830c12906c7653291c5237bf5ac660"
+      },
+      "cycle": "dsc01-apphost-02",
+      "cleanup_evaluation": {
+        "schema": "dsc01-apphost",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "xcodebuild_exit_code": 0,
+        "runtime_evidence_status": "PASS",
+        "finished_at": "2026-09-06T01:37:36.009359+00:00",
+        "cleanup_completed_at": "2026-09-06T01:37:35.569226+00:00",
+        "cleanup_status": "PASS",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "gradle_stops": [
+          {
+            "label": "stop-xcode-immediate",
+            "exit_code": 0,
+            "at": "2026-09-06T01:37:28.226975+00:00"
+          },
+          {
+            "label": "stop-final",
+            "exit_code": 0,
+            "at": "2026-09-06T01:37:29.269205+00:00"
+          }
+        ],
+        "temporary_directory_removed": true,
+        "owned_device_absent": true,
+        "owned_processes_remaining": [],
+        "unknown_holders": [],
+        "secondary_cleanup": {
+          "status": "PASS",
+          "removed": [
+            "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-1042/IB/7F106FDE-4660-49E8-8E03-7ABE964E26B0.RemoteToHost",
+            "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-1042/IB/7F106FDE-4660-49E8-8E03-7ABE964E26B0.HostToRemote",
+            "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-1042/IB",
+            "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/ibtoold-1042"
+          ],
+          "remaining": []
+        },
+        "secondary_attestation_errors": []
+      },
+      "associated": [
+        {
+          "kind": "secondary-fifo-final-ledger",
+          "reference": {
+            "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/secondary-fifo-ownership-final.json",
+            "sha256": "ae78fe2125c0b699b9e7310b6bdccf3b82b839e323c79cf31fc2bf907798c139"
+          }
+        }
+      ]
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-harness-contracts-01/receipt.json",
+        "sha256": "e754b3a6b475f154d27216a100d753b7271f50a6a32926459d561adbe7301c92"
+      },
+      "cycle": "dsc01-harness-contracts-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-06T00:49:14.970499+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-06T00:49:15.510371+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-harness-contracts-02/receipt.json",
+        "sha256": "b80456d15f4fa6f428050c25b6fca57f1ee3751ebd7f51c9d97fc0cbdd608bc9"
+      },
+      "cycle": "dsc01-harness-contracts-02",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-06T01:29:40.903048+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-06T01:29:41.412463+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "cycle": "final-continuation-assembly-01",
+      "status_at_materialization": "RUNNING",
+      "final_receipt_locator": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-continuation-assembly-01/receipt.json",
+      "note": "Later final-observation.json binds its finished receipt."
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-evidence-assembly-01/receipt.json",
+        "sha256": "f25af494e43e733f4eaffb258cc31d3f3742575552f7988205ec128c084be2d7"
+      },
+      "cycle": "final-evidence-assembly-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-05T23:12:26.052879+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-05T23:12:26.387612+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-indexes-01/receipt.json",
+        "sha256": "79ba6f7c43c4ff62970a62b8722a282c26fe2a56eacaab053958ccc5d00e032c"
+      },
+      "cycle": "final-indexes-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-06T00:11:37.549169+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-06T00:11:38.047139+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-ledger-validation-01/receipt.json",
+        "sha256": "144805e1bd47ba7aa812e4c831a665d6aff9abf8aa91f3928665bb47a213c482"
+      },
+      "cycle": "final-ledger-validation-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-06T00:15:06.432757+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-06T00:15:06.939853+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-01/receipt.json",
+        "sha256": "d0e8ad7b8be4aab7c42c014c4cbf68778cd3807e2e2fbdf7d9fb102c6160a3f7"
+      },
+      "cycle": "final-observation-contracts-01",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-06T01:08:02.669474+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-06T01:08:03.049185+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-02/receipt.json",
+        "sha256": "3b5059cf1aead0a41a86033cb64a5a047692d5db67b9933fa9a072c06e144d71"
+      },
+      "cycle": "final-observation-contracts-02",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-06T01:16:31.217200+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-06T01:16:31.756977+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    },
+    {
+      "receipt": {
+        "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/final-observation-contracts-03/receipt.json",
+        "sha256": "9949837ab9e54e3ecc044ef47727b6db4c2337003f450470bd644e8ec6c39fb0"
+      },
+      "cycle": "final-observation-contracts-03",
+      "cleanup_evaluation": {
+        "schema": "gradle-cycle",
+        "status": "PASS",
+        "problems": [],
+        "historical_pid_evidence_complete": true,
+        "limitations": []
+      },
+      "recorded_fields": {
+        "status": "PASS",
+        "exit_code": 0,
+        "finished_at": "2026-09-06T01:20:52.322608+00:00",
+        "stop_exit_code": 0,
+        "cleanup_completed_at": "2026-09-06T01:20:52.642955+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        }
+      },
+      "associated": []
+    }
+  ],
+  "additional_independent_reviews_and_gap_dossiers": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/dsc01-harness-execution-review-01.json",
+      "sha256": "c0c715be64792673036e066e14af9cafd1d729ac6543fb5edf6d4d5558113c8e"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/dsc01-apphost-01-independent-result-review.json",
+      "sha256": "36f8c856b4031e3f383f8ad44b53bd5ede9d98b6baf950993759aca05c4260e5"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/dsc01-accessibility-independent-review-01.json",
+      "sha256": "ba85e247f393fc7906d12784b3a1ba508ad8039c0c9c5aee5b6755fbcdfb4333"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/dsc01-harness-v2-execution-review.json",
+      "sha256": "79b194049a4158a45cc448ab1dc9c6fccde9dfbcbd2481f1fb01806d5a88be74"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/dsc01-apphost-02-independent-result-review.json",
+      "sha256": "11137e5e68aa794a056c5c2d0eaaca5ea1843a609063a27245c25c5cbbed8795"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/final-observation-control-review-01.json",
+      "sha256": "e6c212f501934bfcfb91c2457e21b046f9026c44cec3128751181dc906fd931d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/final-observation-control-review-02.json",
+      "sha256": "afbf0563f174706c64a0a176f726e0317740b8273b760a470bbadcfab6826e8e"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/final-observation-control-approval-03.json",
+      "sha256": "ede00420af509fa54456f7dc9466d856e203f4256ece0a0d874c386c846c5465"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C01-remaining-gap-adjudication-01.json",
+      "sha256": "46ea243a81a10acdbc8abe73c99f22a98b5a30ac39f945cd9bd29ea3f54820ba"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C01-active-session-gap-addendum-01.json",
+      "sha256": "bb10ecf8ee9a0a84568b926c6538b0cad4ee04654161f1ac26f927edea4ce240"
+    }
+  ],
+  "additional_research_records": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/DS-C01-gap-research-01.json",
+      "sha256": "09c34c17d1aaddcd46d531f263c2db096bb9a914735374624ce31d3bebed4c59"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/dsc01-cmp-source-01/receipt.json",
+      "sha256": "b20a62980ecd81ba6f8d8a76ed77eb01cd4005872016892bf212f4fea05dc3c4"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/dsc01-accessibility-counterevidence-01/receipt.json",
+      "sha256": "cfd8b3bc62f7de107ba01c20f110a712cbd3493e0085cb75102dea72fa07646a"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01-accessibility-source-01/receipt.json",
+      "sha256": "409776d23f5317ba2d8703b30511027b1f2bd8170832d1339b01956afc4fa998"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01-accessibility-source-02/receipt.json",
+      "sha256": "52ca203c1679a4bc925714f7cf8bf586c4fcb3fcf1a23314c7a9184731396eb5"
+    }
+  ],
+  "evidence_controls": [
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost/author-receipt-01.json",
+      "sha256": "552b261d667bce9cf00dc55ec4ee532441610716491b46eaa4b688390472d5fe"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost_v2/author-receipt-01.json",
+      "sha256": "3cfc929bda90a9372392b6c3b81e0b0ed03eae2ad96adc7e63baa3f4df53dc9f"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/observation-controls-contracts-01/manifest.json",
+      "sha256": "606425c5267b1f68add49f688c800f1673734a26f33b5bf447fcbf0f4ccca4ab"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/record_final_observation.py",
+      "sha256": "d17a9578ac4ec325b78be2366cc724f4b40b13350ff93da0dd01e5d147f5607e"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/record_final_observation_v2.py",
+      "sha256": "f5dabf6f162f4b4e359e928a5b371a6f42e1e1420c1c357b738707fc1753533d"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/test_final_observation_v2.py",
+      "sha256": "745a6a52cac8084a3ed16d6d5bcba0d1f14e741e745a609875322c06bb9a98c3"
+    },
+    {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/assemble_continuation_evidence.py",
+      "sha256": "deef1d5962695790d987d03321a1fbd7d15a86df4eb4825d7b38eac56a745bf8"
+    }
+  ],
+  "runtime_result": {
+    "cycle": "dsc01-apphost-02",
+    "independent_review": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/dsc01-apphost-02-independent-result-review.json",
+      "sha256": "11137e5e68aa794a056c5c2d0eaaca5ea1843a609063a27245c25c5cbbed8795"
+    },
+    "receipt": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/evidence/dsc01-apphost-02/receipt.json",
+      "sha256": "7ce472e0296c985d152d02c0dbdf6b6979830c12906c7653291c5237bf5ac660"
+    },
+    "test_count": 1,
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "actual_process_boots": 4,
+    "probe_observations": 14
+  },
+  "preserved_failure": {
+    "cycle": "dsc01-apphost-01",
+    "actual_result": "FAIL_EXECUTED",
+    "classification": "TEST/HARNESS SELECTOR FAILURE; no application crash or original-defect conclusion",
+    "tests": 1,
+    "passed": 0,
+    "failed": 1,
+    "skipped": 0,
+    "note": "Immutable v1 runtime_evidence_status=NOT_RUN is incorrect bookkeeping. Raw XCTest executed and failed before language mutation. V2 repairs only the harness selector/status, preserving assertions.",
+    "independent_review": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/factory_review/dsc01-apphost-01-independent-result-review.json",
+      "sha256": "36f8c856b4031e3f383f8ad44b53bd5ede9d98b6baf950993759aca05c4260e5"
+    }
+  },
+  "historical_control_locator": {
+    "reason": "Exact pre-follow-up recorder/test bytes from contracts01 remain archived; old review hashes identify these historical versions, not current v2.",
+    "manifest": {
+      "path": "remediation-runs/2026-09-05-confirmed-fixes/observation-controls-contracts-01/manifest.json",
+      "sha256": "606425c5267b1f68add49f688c800f1673734a26f33b5bf447fcbf0f4ccca4ab"
+    }
+  },
+  "cleanup_note": "Final observation evaluates all finished modern receipts and owned simulator/FIFO cleanup. ios-b1-red retains an explicit missing historical PID-ledger limitation; no historical ownership is invented.",
+  "final_observation_locator": "remediation-runs/2026-09-05-confirmed-fixes/final/final-observation.json"
+}

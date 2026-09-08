@@ -1,0 +1,1127 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-06T17:17:27.906845+00:00",
+  "reviewer": "/root/factory_review",
+  "author": "/root",
+  "classification": "APPROVED_FOR_ROOT_EXECUTION_ON_BOUND_IMMUTABLE_CURRENT_RECEIPTS",
+  "script": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/root/collect_final_verification.py",
+    "sha256": "8f464438cced616ad0e716b874997fcc67932015d1d79680bcc14196ce7f253b"
+  },
+  "reviewed_source_ranges": [
+    [
+      1,
+      138
+    ]
+  ],
+  "source_freeze": {
+    "path": "remediation-runs/2026-09-06-approved-policy-completion/source-freeze-02.json",
+    "sha256": "7b471f8561a728f4e429d957460f368ecb432aa83833c0f97d26c9ba819e70a4"
+  },
+  "source_inputs_rehashed": 669,
+  "source_drift": [],
+  "source_scope": "Collector reports exact fullfreeze02 selectedreceipt identity. It does not itselfrecomputecurrent source; rootlane before/afteridentity and finalpreservation binding must remain. Current669inputs independently rehashed unchanged.",
+  "selected_gate_expectations": [
+    {
+      "cycle": "combined-desktop-static-04",
+      "receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/receipt.json",
+        "sha256": "74f68916fa8ad3ecee3eb4f4e03a68cfc93a839f40bf8bc2104fbbd1ab365a7f"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/gradle.log",
+        "sha256": "fec078b40d59aedbdc84a9fe697edd116a225983352d879361c0e043483ea36b"
+      },
+      "status": "PASS",
+      "source_before_after_equal_full_freeze02": true,
+      "expected_xml_suite_count": 188,
+      "raw_descriptor_counts": {
+        "tests": 1243,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 3
+      },
+      "passed_instances": 1240,
+      "by_task": {
+        "desktopTest": {
+          "tests": 1243,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 3
+        }
+      },
+      "skipped_descriptors": [
+        {
+          "module": "shared/transport-p2p",
+          "task": "desktopTest",
+          "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+          "name": "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]"
+        },
+        {
+          "module": "shared/transport-p2p",
+          "task": "desktopTest",
+          "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+          "name": "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]"
+        },
+        {
+          "module": "shared/transport-p2p",
+          "task": "desktopTest",
+          "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+          "name": "host_broadcast_reaches_every_peer()[desktop]"
+        }
+      ],
+      "xml_manifest_sha256": "cfb607ede47105362511bbf71e9155ccef0304c094c955b1b8a7c9ca54c69041",
+      "detekt": {
+        "report_count": 14,
+        "error_nodes": 0,
+        "reports": [
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/reports/build-logic/convention/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/reports/composeApp/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/reports/game-modes/mafia/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/reports/game-modes/whodunit/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/reports/shared/content/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/reports/shared/core/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/reports/shared/design-system/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/reports/shared/engine/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/reports/shared/engine-testing/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/reports/shared/networking/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/reports/shared/networking-testing/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/reports/shared/session/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/reports/shared/storage/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/reports/shared/transport-p2p/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          }
+        ]
+      },
+      "artifacts_receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/artifact-receipts.json",
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "artifact_count": 0,
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stop_log": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/stop.log",
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        },
+        "remaining_outputs": [],
+        "remaining_workers": [],
+        "errors": []
+      }
+    },
+    {
+      "cycle": "combined-production-04",
+      "receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/receipt.json",
+        "sha256": "ee8e31280b0f2d45b869b6b5fffa23dee89944ea52e36bd6027f33e48415a47a"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/gradle.log",
+        "sha256": "195ca59c870a0ed1d01332aa8bcdcf28dde2f7e04c689c326debe73dac0e193d"
+      },
+      "status": "PASS",
+      "source_before_after_equal_full_freeze02": true,
+      "expected_xml_suite_count": 222,
+      "raw_descriptor_counts": {
+        "tests": 1395,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 3
+      },
+      "passed_instances": 1392,
+      "by_task": {
+        "desktopTest": {
+          "tests": 1243,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 3
+        },
+        "testDebugUnitTest": {
+          "tests": 76,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "testReleaseUnitTest": {
+          "tests": 76,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      "skipped_descriptors": [
+        {
+          "module": "shared/transport-p2p",
+          "task": "desktopTest",
+          "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+          "name": "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]"
+        },
+        {
+          "module": "shared/transport-p2p",
+          "task": "desktopTest",
+          "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+          "name": "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]"
+        },
+        {
+          "module": "shared/transport-p2p",
+          "task": "desktopTest",
+          "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+          "name": "host_broadcast_reaches_every_peer()[desktop]"
+        }
+      ],
+      "xml_manifest_sha256": "44e4939efed4c5c095dc7a014f14591ae704c0582c39d14fd62f4921130c70dc",
+      "detekt": {
+        "report_count": 43,
+        "error_nodes": 0,
+        "reports": [
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/build-logic/convention/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/reports/detekt/detektAndroidRelease.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/reports/detekt/detektAndroidReleaseUnitTest.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/reports/detekt/detektDesktopMain.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/reports/detekt/detektDesktopTest.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/reports/detekt/detektMetadataCommonMain.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/reports/detekt/detektDesktopTest.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/mafia/build/reports/detekt/detektMetadataCommonMain.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/reports/detekt/detektDesktopTest.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/game-modes/whodunit/build/reports/detekt/detektMetadataCommonMain.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/content/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/content/build/reports/detekt/detektMetadataCommonMain.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/core/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/core/build/reports/detekt/detektMetadataCommonMain.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/design-system/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/design-system/build/reports/detekt/detektAndroidRelease.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/design-system/build/reports/detekt/detektDesktopMain.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/design-system/build/reports/detekt/detektDesktopTest.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/design-system/build/reports/detekt/detektMetadataCommonMain.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/engine/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/engine/build/reports/detekt/detektDesktopTest.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/engine/build/reports/detekt/detektMetadataCommonMain.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/engine-testing/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/engine-testing/build/reports/detekt/detektMetadataCommonMain.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/networking/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/networking/build/reports/detekt/detektAndroidRelease.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/networking/build/reports/detekt/detektDesktopMain.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/networking/build/reports/detekt/detektMetadataCommonMain.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/networking-testing/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/networking-testing/build/reports/detekt/detektMetadataCommonMain.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/session/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/session/build/reports/detekt/detektDesktopTest.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/session/build/reports/detekt/detektMetadataCommonMain.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/storage/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/storage/build/reports/detekt/detektMetadataCommonMain.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/reports/detekt/detekt.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/reports/detekt/detektAndroidRelease.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/reports/detekt/detektDesktopMain.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/reports/detekt/detektDesktopTest.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/shared/transport-p2p/build/reports/detekt/detektMetadataCommonMain.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          }
+        ]
+      },
+      "artifacts_receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/artifact-receipts.json",
+        "sha256": "e0741b994c1dd56ed3b9b5ef6a11ff2af024c4b745b9ee6533c108627374fdc4"
+      },
+      "artifact_count": 1,
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stop_log": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/stop.log",
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        },
+        "remaining_outputs": [],
+        "remaining_workers": [],
+        "errors": []
+      },
+      "release_python": {
+        "actual_verbose_methods": 172,
+        "inline_ok": 171,
+        "git_fixture_next_line_ok": 1,
+        "summary_and_ok_lines": [
+          1426,
+          1428
+        ],
+        "skipped": 0,
+        "failures": 0,
+        "note": "The isolatedGitfixture branch diagnostic is not a rootrepository operation."
+      },
+      "lint": {
+        "reports": [
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/reports/composeApp/build/reports/lint-results-release.xml",
+            "sha256": "c13b213c1bd45cd821a5e156b0aac6005dd76fec4dd4d5fc155142c4e1fe2b96"
+          }
+        ],
+        "warnings": 32,
+        "errors": 0,
+        "by_id": {
+          "OldTargetApi": 1,
+          "AndroidGradlePluginVersion": 4,
+          "GradleDependency": 3,
+          "NewerVersionAvailable": 24
+        }
+      }
+    },
+    {
+      "cycle": "combined-native-alltests-02",
+      "receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/receipt.json",
+        "sha256": "2253a31979d575c1915e0445a9a1e1234abf963db9d49c98a628c386706c4fc0"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/gradle.log",
+        "sha256": "2a646d4ef1aa57c8057b8263a02bc8bdb801ea04cec820ba735146d212d4c018"
+      },
+      "status": "PASS",
+      "source_before_after_equal_full_freeze02": true,
+      "expected_xml_suite_count": 398,
+      "raw_descriptor_counts": {
+        "tests": 2481,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 3
+      },
+      "passed_instances": 2478,
+      "by_task": {
+        "desktopTest": {
+          "tests": 1243,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 3
+        },
+        "iosSimulatorArm64Test": {
+          "tests": 426,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "testDebugUnitTest": {
+          "tests": 406,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "testReleaseUnitTest": {
+          "tests": 406,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      },
+      "skipped_descriptors": [
+        {
+          "module": "shared/transport-p2p",
+          "task": "desktopTest",
+          "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+          "name": "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]"
+        },
+        {
+          "module": "shared/transport-p2p",
+          "task": "desktopTest",
+          "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+          "name": "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]"
+        },
+        {
+          "module": "shared/transport-p2p",
+          "task": "desktopTest",
+          "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+          "name": "host_broadcast_reaches_every_peer()[desktop]"
+        }
+      ],
+      "xml_manifest_sha256": "3e94c2bc5228c634d81543ad05987a773ae99199344ad8ed0aba93ed67f5ad95",
+      "detekt": {
+        "report_count": 0,
+        "error_nodes": 0,
+        "reports": []
+      },
+      "artifacts_receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/artifact-receipts.json",
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "artifact_count": 0,
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stop_log": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/stop.log",
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        },
+        "remaining_outputs": [],
+        "remaining_workers": [],
+        "errors": []
+      },
+      "task_absence_qualification": {
+        "host_disabled_x64_runtime_tasks": [
+          ":composeApp:iosX64Test",
+          ":game-modes:mafia:iosX64Test",
+          ":game-modes:whodunit:iosX64Test",
+          ":shared:content:iosX64Test",
+          ":shared:core:iosX64Test",
+          ":shared:design-system:iosX64Test",
+          ":shared:engine:iosX64Test",
+          ":shared:engine-testing:iosX64Test",
+          ":shared:networking:iosX64Test",
+          ":shared:networking-testing:iosX64Test",
+          ":shared:session:iosX64Test",
+          ":shared:storage:iosX64Test",
+          ":shared:transport-p2p:iosX64Test"
+        ],
+        "mafia_engine_native_prerequisites_no_source": [
+          ":game-modes:mafia:compileTestKotlinIosSimulatorArm64",
+          ":game-modes:mafia:linkDebugTestIosSimulatorArm64",
+          ":shared:engine:compileTestKotlinIosSimulatorArm64",
+          ":shared:engine:linkDebugTestIosSimulatorArm64"
+        ],
+        "mafia_engine_native_runtime_tasks_skipped": [
+          ":game-modes:mafia:iosSimulatorArm64Test",
+          ":shared:engine:iosSimulatorArm64Test"
+        ],
+        "meaning": "These are not runtime PASS. Mafia tests are desktopTest; native linkedframeworks do not establish native game tests. Prior prose saying runtime-task NO-SOURCE is imprecise: actual runtime tasks SKIPPED, prerequisites NO-SOURCE."
+      }
+    },
+    {
+      "cycle": "combined-apple-02",
+      "receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02/receipt.json",
+        "sha256": "dd75d054341870316ff21a8106e245e5859c83a347399aa59afc57d0eea68d16"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02/gradle.log",
+        "sha256": "29b2daf1f1c7005d56e82f2be779c586fe063eb79d7f8e4ee6814ac880be406f"
+      },
+      "status": "PASS",
+      "source_before_after_equal_full_freeze02": true,
+      "expected_xml_suite_count": 0,
+      "raw_descriptor_counts": {
+        "tests": 0,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "passed_instances": 0,
+      "by_task": {},
+      "skipped_descriptors": [],
+      "xml_manifest_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "detekt": {
+        "report_count": 4,
+        "error_nodes": 0,
+        "reports": [
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02/reports/composeApp/build/reports/detekt/detektMetadataIosMain.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02/reports/shared/design-system/build/reports/detekt/detektMetadataIosMain.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02/reports/shared/networking/build/reports/detekt/detektMetadataIosMain.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          },
+          {
+            "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02/reports/shared/transport-p2p/build/reports/detekt/detektMetadataIosMain.xml",
+            "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b"
+          }
+        ]
+      },
+      "artifacts_receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02/artifact-receipts.json",
+        "sha256": "879deeaab05de7e596dd4f25cdede06788ee4abdca4171359bf4fe41ed4daa45"
+      },
+      "artifact_count": 3,
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stop_log": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02/stop.log",
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        },
+        "remaining_outputs": [],
+        "remaining_workers": [],
+        "errors": []
+      },
+      "scope": "3Compose releaseframework link receipts and4nativeDetekt reports;0runtimeXML. Actual Swift/native apphost evidence remains separate."
+    },
+    {
+      "cycle": "resources-and-diff-02",
+      "receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/resources-and-diff-02/receipt.json",
+        "sha256": "0973f253d65b3a77b445ddf6f4ac29faeb4e6965011fcbacc0264b61ff0b082d"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/resources-and-diff-02/gradle.log",
+        "sha256": "cd143696758da7f6356ea3824caaacfd073e5715c2d3ebd485f4104f754980de"
+      },
+      "status": "PASS",
+      "source_before_after_equal_full_freeze02": true,
+      "expected_xml_suite_count": 0,
+      "raw_descriptor_counts": {
+        "tests": 0,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "passed_instances": 0,
+      "by_task": {},
+      "skipped_descriptors": [],
+      "xml_manifest_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "detekt": {
+        "report_count": 0,
+        "error_nodes": 0,
+        "reports": []
+      },
+      "artifacts_receipt": {
+        "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/resources-and-diff-02/artifact-receipts.json",
+        "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "artifact_count": 0,
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stop_log": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/resources-and-diff-02/stop.log",
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        },
+        "remaining_outputs": [],
+        "remaining_workers": [],
+        "errors": []
+      },
+      "scope": "4resourceparity checks(139/16/324/269EN/ARnames),0allowlisted/errors,then gitdiff--check PASS.0JUnitXML intentional; no app/runtime or editorialcontent claim."
+    }
+  ],
+  "aggregation_review": [
+    "Counters sum descriptors percycle; module+task+classname+method tuple rejects duplicatedreports within sameexecutiontarget but permits legitimate differentplatform executions.",
+    "Header/testcase failure/error/skip counts agree in every selectedrawXML. ZeroXML is correct onlyfor Applelink andresourcechecks here, not proofanyruntime testsran.",
+    "Current188/222/398suite sets exactly matchrebind02/native03. Allhave0failures/errors and3knownphysicalskips; totalnumbers are overlappingexecutioninstances, not distincttests toadd.",
+    "Releasecompletion regex matches actualsingle172summary+OK; independently verifiedall172verbose methods, includingGitfixture one-lineinterleaving. No ignored/skipped releasefixture found.",
+    "Current32lintwarnings revalidated byactualXML:1OldTargetApi,4AndroidGradlePluginVersion,3GradleDependency,24NewerVersionAvailable. EarlierinventorygateFAIL retained; no warningpolicy modified.",
+    "Artifacts are existing receipts, not currentretained/signedbinaries: production04oneunsignedAAB, Apple02threeframeworks, noneotherwise. Collector doesnotupload/sign/rebuild.",
+    "Source and artifacts references mustbe combinedwith separateissue/nativeevidence. Selectedallpassgates are not a projectREADYverdict;15/16 remains with DS-C01partial."
+  ],
+  "history_schema_review": {
+    "completed_receipts": 35,
+    "status_counts": {
+      "PASS": 20,
+      "FAIL": 15
+    },
+    "cleanup_counts": {
+      "PASS": 34,
+      "FAIL": 1
+    },
+    "receipts": [
+      {
+        "cycle": "combined-apple-01",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-01/receipt.json",
+          "sha256": "63558a7a098971ce9ddfe577c65bcfee4375b1d76b267988a4f396b94b824e42"
+        },
+        "status": "PASS",
+        "cleanup_status": "PASS",
+        "exit_code": 0,
+        "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+        "source_changed": false
+      },
+      {
+        "cycle": "combined-apple-02",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-apple-02/receipt.json",
+          "sha256": "dd75d054341870316ff21a8106e245e5859c83a347399aa59afc57d0eea68d16"
+        },
+        "status": "PASS",
+        "cleanup_status": "PASS",
+        "exit_code": 0,
+        "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+        "source_changed": false
+      },
+      {
+        "cycle": "combined-desktop-static-04",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-desktop-static-04/receipt.json",
+          "sha256": "74f68916fa8ad3ecee3eb4f4e03a68cfc93a839f40bf8bc2104fbbd1ab365a7f"
+        },
+        "status": "PASS",
+        "cleanup_status": "PASS",
+        "exit_code": 0,
+        "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+        "source_changed": false
+      },
+      {
+        "cycle": "combined-native-alltests-01",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-01/receipt.json",
+          "sha256": "70652660de120710bdbb4cde2780332da9ede8b29f3b93d99b751d5cad12a9db"
+        },
+        "status": "PASS",
+        "cleanup_status": "PASS",
+        "exit_code": 0,
+        "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+        "source_changed": false
+      },
+      {
+        "cycle": "combined-native-alltests-02",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-native-alltests-02/receipt.json",
+          "sha256": "2253a31979d575c1915e0445a9a1e1234abf963db9d49c98a628c386706c4fc0"
+        },
+        "status": "PASS",
+        "cleanup_status": "PASS",
+        "exit_code": 0,
+        "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+        "source_changed": false
+      },
+      {
+        "cycle": "combined-production-01",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-01/receipt.json",
+          "sha256": "bdcf9e7128e84df8d2d63f17804a11e8f78780c5669a2c3d0dba72afd33d617f"
+        },
+        "status": "FAIL",
+        "cleanup_status": "PASS",
+        "exit_code": 1,
+        "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+        "source_changed": false
+      },
+      {
+        "cycle": "combined-production-02",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-02/receipt.json",
+          "sha256": "fc5f914ddfa6937d069192a87d1ac8baf19c260a0f75774e51c80a574816d0a2"
+        },
+        "status": "FAIL",
+        "cleanup_status": "PASS",
+        "exit_code": 1,
+        "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+        "source_changed": false
+      },
+      {
+        "cycle": "combined-production-03",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-03/receipt.json",
+          "sha256": "12d240d9db448e8ad008c59d77e1049d3847811897fe5726357847bc8504f073"
+        },
+        "status": "FAIL",
+        "cleanup_status": "PASS",
+        "exit_code": 1,
+        "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+        "source_changed": false
+      },
+      {
+        "cycle": "combined-production-04",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/combined-production-04/receipt.json",
+          "sha256": "ee8e31280b0f2d45b869b6b5fffa23dee89944ea52e36bd6027f33e48415a47a"
+        },
+        "status": "PASS",
+        "cleanup_status": "PASS",
+        "exit_code": 0,
+        "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+        "source_changed": false
+      },
+      {
+        "cycle": "dsc01-apphost-01",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-01/receipt.json",
+          "sha256": "ac4b9691556c92e2e7b18de02189f099ad0fa20d8e7ba26018a5c7a8ce151a7f"
+        },
+        "status": "FAIL",
+        "cleanup_status": "PASS",
+        "exit_code": 65,
+        "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+        "source_changed": false
+      },
+      {
+        "cycle": "dsc01-apphost-02",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-02/receipt.json",
+          "sha256": "c03616f76e91061c810debf7884b98d7b0bf02abcfd83cbcfa21c4ba8049e13e"
+        },
+        "status": "FAIL",
+        "cleanup_status": "FAIL",
+        "exit_code": 65,
+        "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+        "source_changed": false
+      },
+      {
+        "cycle": "dsc01-apphost-03",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-03/receipt.json",
+          "sha256": "53a8e3b6ded5a05457602b0aeaaf0bde38cebad97a74711119bff2a097db02d2"
+        },
+        "status": "FAIL",
+        "cleanup_status": "PASS",
+        "exit_code": 65,
+        "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+        "source_changed": false
+      },
+      {
+        "cycle": "dsc01-apphost-04",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-04/receipt.json",
+          "sha256": "0a16f241de2dc2769ec680ba6925108a6191771e2d9d10be611923eec15a4955"
+        },
+        "status": "FAIL",
+        "cleanup_status": "PASS",
+        "exit_code": 65,
+        "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+        "source_changed": false
+      },
+      {
+        "cycle": "dsc01-apphost-05",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/dsc01-apphost-05/receipt.json",
+          "sha256": "7003fc8092850e167a99277a3553b709870bb820d2976c01540b63020e50318e"
+        },
+        "status": "FAIL",
+        "cleanup_status": "PASS",
+        "exit_code": 65,
+        "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+        "source_changed": false
+      },
+      {
+        "cycle": "final-source-materialize-01",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/final-source-materialize-01/receipt.json",
+          "sha256": "bcdfc3712157df60197847a50b3a07c26f6de80acd00f3c0ceaf0a351f88bb51"
+        },
+        "status": "PASS",
+        "cleanup_status": "PASS",
+        "exit_code": 0,
+        "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+        "source_changed": false
+      },
+      {
+        "cycle": "host-continuity-focused-02",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/host-continuity-focused-02/receipt.json",
+          "sha256": "67d65f4c312e79bd903770a8518a8c2154ae93a6120ae773857146998ae6aea8"
+        },
+        "status": "PASS",
+        "cleanup_status": "PASS",
+        "exit_code": 0,
+        "source_manifest_sha256": "31fd9f9b73ef6118c3f295fa1734a365cce32db8a12f5f8afb1a003735bf5b9e",
+        "source_changed": false
+      },
+      {
+        "cycle": "ios-wrapper-smoke-01",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-01/receipt.json",
+          "sha256": "72c13301a3e9882d4742ed10f8801108a028201d4a40c5dd8f2050e69576bbe3"
+        },
+        "status": "PASS",
+        "cleanup_status": "PASS",
+        "exit_code": 0,
+        "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+        "source_changed": false
+      },
+      {
+        "cycle": "ios-wrapper-smoke-controls-01",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/ios-wrapper-smoke-controls-01/receipt.json",
+          "sha256": "320babddc67bc38ec268f0fe4314f8906594cf5111281f2096922453380b8043"
+        },
+        "status": "PASS",
+        "cleanup_status": "PASS",
+        "exit_code": 0,
+        "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+        "source_changed": false
+      },
+      {
+        "cycle": "legacy-identity-red-04",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/legacy-identity-red-04/receipt.json",
+          "sha256": "cdfb8cc7ba7d1a20452713693000f038c323b235ed42dea19be3a75646d42c0d"
+        },
+        "status": "FAIL",
+        "cleanup_status": "PASS",
+        "exit_code": 1,
+        "source_manifest_sha256": "0672b02d2e068d7426ea59bae44de087259b2c022d30e230ecb7cab8226d7f73",
+        "source_changed": false
+      },
+      {
+        "cycle": "locale-continuity-focused-01",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/locale-continuity-focused-01/receipt.json",
+          "sha256": "9aaf8fd5c0a6fe624e106d59c364a5678f99efefd2ce187ad1cf9bcbb0b2ea62"
+        },
+        "status": "FAIL",
+        "cleanup_status": "PASS",
+        "exit_code": 1,
+        "source_manifest_sha256": "7fc8f85b3c7fbf6094d3b5de95a9a4a33f45fefdac6198573540ce50c0094ebf",
+        "source_changed": false
+      },
+      {
+        "cycle": "native-controls-01",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-01/receipt.json",
+          "sha256": "b62405b0f115a0199329fb6bfb128cede2c3f84fc85fa6de96bc8707320ed4b9"
+        },
+        "status": "FAIL",
+        "cleanup_status": "PASS",
+        "exit_code": 1,
+        "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+        "source_changed": false
+      },
+      {
+        "cycle": "native-controls-02",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-02/receipt.json",
+          "sha256": "816dc2a81c93c9a1dc94fa4f8eb4fc8c2caef86288f061a19a3ad5c0db6413b0"
+        },
+        "status": "PASS",
+        "cleanup_status": "PASS",
+        "exit_code": 0,
+        "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+        "source_changed": false
+      },
+      {
+        "cycle": "native-controls-03",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-03/receipt.json",
+          "sha256": "d50fd441d37b9ef2e31c3d9a9dc7b42758b212276af8c037995b0e4927c24fd8"
+        },
+        "status": "PASS",
+        "cleanup_status": "PASS",
+        "exit_code": 0,
+        "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+        "source_changed": false
+      },
+      {
+        "cycle": "native-controls-04",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-04/receipt.json",
+          "sha256": "5473d3842753fe8ba8f98efb61bbf03934357947a813faff65f5ab0d4df014cf"
+        },
+        "status": "PASS",
+        "cleanup_status": "PASS",
+        "exit_code": 0,
+        "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+        "source_changed": false
+      },
+      {
+        "cycle": "native-controls-05",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-05/receipt.json",
+          "sha256": "200befae5256ee8944a475367ba091e750da95f406864a329c05175c75870f07"
+        },
+        "status": "PASS",
+        "cleanup_status": "PASS",
+        "exit_code": 0,
+        "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+        "source_changed": false
+      },
+      {
+        "cycle": "native-controls-06",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-06/receipt.json",
+          "sha256": "7274863d5d1fca1d63890a292b463fc654d38ebff6cad598ea8ca3b2d63195db"
+        },
+        "status": "PASS",
+        "cleanup_status": "PASS",
+        "exit_code": 0,
+        "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+        "source_changed": false
+      },
+      {
+        "cycle": "native-controls-07",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/native-controls-07/receipt.json",
+          "sha256": "47363b58309620663520ef42e7678bd7ddd07658f304cf12dd6086fbd560c311"
+        },
+        "status": "PASS",
+        "cleanup_status": "PASS",
+        "exit_code": 0,
+        "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+        "source_changed": false
+      },
+      {
+        "cycle": "recovery-red-03",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/recovery-red-03/receipt.json",
+          "sha256": "0b1e09612b5fbb9fa1428b610b6a26f052c6196e8fe01b36a3dc0d1ec02d3754"
+        },
+        "status": "FAIL",
+        "cleanup_status": "PASS",
+        "exit_code": 1,
+        "source_manifest_sha256": "7e852d13225413cd70469a9f7fa365defc42ac161f70a68785a10584b817a6e6",
+        "source_changed": false
+      },
+      {
+        "cycle": "resources-and-diff-01",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/resources-and-diff-01/receipt.json",
+          "sha256": "6ec29dc00aef2f4f8a30142b871e1597466082b9737e4078de0fe670f85e2d7a"
+        },
+        "status": "PASS",
+        "cleanup_status": "PASS",
+        "exit_code": 0,
+        "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+        "source_changed": false
+      },
+      {
+        "cycle": "resources-and-diff-02",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/resources-and-diff-02/receipt.json",
+          "sha256": "0973f253d65b3a77b445ddf6f4ac29faeb4e6965011fcbacc0264b61ff0b082d"
+        },
+        "status": "PASS",
+        "cleanup_status": "PASS",
+        "exit_code": 0,
+        "source_manifest_sha256": "9ac2be536979f2216b39c10a6d148125a12380987d4efd483bbcbaeb1733318e",
+        "source_changed": false
+      },
+      {
+        "cycle": "story-recovery-green-01",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/receipt.json",
+          "sha256": "d03323ea7d67567d5446526d5b8e5754c80d9f25e79a79eb068a6db733390950"
+        },
+        "status": "PASS",
+        "cleanup_status": "PASS",
+        "exit_code": 0,
+        "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+        "source_changed": false
+      },
+      {
+        "cycle": "story-recovery-red-01",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-red-01/receipt.json",
+          "sha256": "608ae97596a50140055734b961f4f4f394b6cbe40679238ab8e816030d8e7f2f"
+        },
+        "status": "FAIL",
+        "cleanup_status": "PASS",
+        "exit_code": 1,
+        "source_manifest_sha256": "a630ca6205d9d4fad81c24dadab4addb32591145bfe20d61922e1faf70b5ac52",
+        "source_changed": false
+      },
+      {
+        "cycle": "story-recovery-red-02",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-red-02/receipt.json",
+          "sha256": "0e7a0a130ba2bf1a003c9bd598ba4cda3482a693f7bf62bc90a0dcf17267d975"
+        },
+        "status": "FAIL",
+        "cleanup_status": "PASS",
+        "exit_code": 1,
+        "source_manifest_sha256": "0a6e8bdb0057d9cde7da4a06616349c2f5aafd60a043772f5975a83826942c29",
+        "source_changed": false
+      },
+      {
+        "cycle": "wd-retired-save-green-01",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/wd-retired-save-green-01/receipt.json",
+          "sha256": "24af7b7ae67f13f597ccdfa29eb353456bf21dcb6a57acf29aa8650a069216be"
+        },
+        "status": "PASS",
+        "cleanup_status": "PASS",
+        "exit_code": 0,
+        "source_manifest_sha256": "eae905fe193e4d6578f4616d8fdf6846b312492725b3a6a8b2b380e8f6f3553a",
+        "source_changed": false
+      },
+      {
+        "cycle": "wd-retired-save-red-01",
+        "receipt": {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/wd-retired-save-red-01/receipt.json",
+          "sha256": "629f655f710519c4381a475d157e0b72b5b974e46a85811808964e80f369187a"
+        },
+        "status": "FAIL",
+        "cleanup_status": "PASS",
+        "exit_code": 1,
+        "source_manifest_sha256": "eee3392d48f040b3a91e06e9b8724aad96471627b2d95e1b564eb02ab7f0a6f0",
+        "source_changed": false
+      }
+    ],
+    "native_apphost05": "ActualFAIL65,4UIKitpass+1matrixfail; linkednative/releasediagnosis required tostatecause. CollectorpreservesFAIL, not inferredappcrash.",
+    "original_cleanup_failure": "dsc01-apphost02cleanupFAIL must remain. Empty knownoutputs doesnotresolve its unattestedsecondaryworkerUID/path evidence. Any later targetedownershipdisposition is additiveseparateproof, not rewrite.",
+    "own_cycle": "run_gradle_cycle.py211publishes RUNNING beforeinvoking collector; collector106..112 recordsunfinishedwithout outcome. Finalrootobservation mustadd completedcollector andlatertaskcycles.",
+    "known_schema_check": "All35existingcomplete receipts haveactual requiredsource/worker/output/cleanupfields. No currentmissingfield default produced a falsePASS. Gradle andnative schemas differ andbothwere inspected."
+  },
+  "nonblocking_future_reuse_cautions": [
+    "test_totals returns zero forabsentXML andcombinedentry copiesreceiptPASS; therefore approvalbindsexactcurrentreportsets, not arbitraryfuture directories. If generic/reused, requireexpectednonzero/descriptorcounts pergate and rejectFAIL nodes evenwhenreceiptclaimsPASS.",
+    "Historyget-defaults would treatmissingworkersubkeys/outputlists orsource_unchanged evidence toooptimistically under a newschema. Allcurrentcompleteschemasverifiedpresent; unknownfuture schema shouldbeUNCONFIRMED/FAIL notsilentlyassumedclean.",
+    "Collector listsDetekt onlyvia gatecommand/log; finalreport/gates shouldexplicitlyciteactual14desktop/43production/4Applezeroerrorreports suppliedhere orpriorrebinds.",
+    "Finalsummary needs13hostdisabledx64runtime tasks andMaﬁa/sharedengine runtimeSKIPPED (NO-SOURCEprerequisites) explicitlyqualified; theynevercountPASS.",
+    "Exclusivewrites canleavefirstnewsummaryifsubsequenthistorycollectionfails; preservepartialreceipt anduseadditiverevision ratherthanoverwrite."
+  ],
+  "output_targets_before_execution": {
+    "verification-summary.json": false,
+    "cycle-history.json": false
+  },
+  "root_execution_conditions": [
+    "Runthrough singleownedlane whilefrozen; compare outputcounts/hashreferences tothisreceipt afterexecution.",
+    "Nohistory/source/Storeauthority change; finalcampaign/nativeDS stillpending."
+  ],
+  "reviewer_actions": "Complete138linecollectorsource read; relevant run_gradle_cycle initialreceipt/finalizer source read; existingrawJSON/XML/log parsing andhashesonly. Didnotimport/execute collector, run any build/test/app or changeproduction/previousreceipts/NEWfinal.",
+  "reviewer_hygiene": {
+    "builds_tests_native_workers_started": 0,
+    "outputs_to_clean": [],
+    "new_required_deliverable_only": "reviews/independent-final-verification-collector-review-01.json",
+    "other_tasks": "Didnotstoproot/otherworkers or deletecurrentbuilds/globalcaches."
+  }
+}

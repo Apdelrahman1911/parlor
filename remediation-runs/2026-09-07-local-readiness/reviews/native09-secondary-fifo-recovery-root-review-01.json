@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root",
+  "author": "/root/factory_review",
+  "reviewed_at": "2026-09-07T23:15:31.918160+00:00",
+  "files": {
+    "native09_secondary_fifo_recovery_01.py": "aaad39c1ff54639bd14212cd03439b5f0d285e2bac2347a18f97d344e3dc82f0",
+    "test_native09_secondary_fifo_recovery_01.py": "4d26eb413dbd6a2016a4981ed1719b7178741ca6ee54185b84295d3f2261faf3",
+    "native09-secondary-fifo-recovery-independent-proposal-01.json": "691caf73451570aae8cab30279ef84d180d15496d8d3fa39625593901855cc37"
+  },
+  "reviewed_ranges": {
+    "native09_secondary_fifo_recovery_01.py": [
+      [
+        1,
+        193
+      ]
+    ],
+    "test_native09_secondary_fifo_recovery_01.py": [
+      [
+        1,
+        174
+      ]
+    ],
+    "scripts/verification/ios-readiness/secondary_fifo.py": [
+      [
+        1,
+        205
+      ]
+    ],
+    "scripts/verification/ios-readiness/test_secondary_fifo.py": [
+      [
+        1,
+        249
+      ]
+    ]
+  },
+  "classification": "APPROVE SYNTHETIC TEST EXECUTION; EXACT ONE-SHOT RECOVERY CONDITIONAL ON ALL19 PASS AND LIVE GUARDED PREFLIGHT",
+  "reasoning": [
+    "Historical pair argv passed live child/parent identity and UID checks before any pending claim was recorded. Original parent and sibling inodes remain exact; pending inode is separately reconstructed, not falsely original-attested.",
+    "Only four literal frozen objects are removal targets; all original evidence hashes and plan hash checked. Exact known nonce/UID/type/creation metadata is stronger than a broad temp-directory guess.",
+    "Directory-fd no-follow walk, frozen ancestor identities, exact expected contents, old PID/reuse rejection and holder checks run before any unlink and repeat before each mutation. Only two zero-size single-link FIFOs may be unlinked; empty IB/root may be rmdir, never recursively deleted.",
+    "19 synthetic fixture tests isolate targets in TemporaryDirectory; query controls are mocked and import does not execute main or native commands. No physical devices, private data or signing operations.",
+    "Original runtime/cleanup FAIL must remain; supplemental recovery cannot establish storage protection or repair the general partial-pair attestation race.",
+    "Operational cleanup assumes a trusted same-UID user; it is not creator-PID forensic proof or immunity to hostile same-UID path races. No unknown content, pid, metadata or query error can be treated as success."
+  ],
+  "execution_pending": true,
+  "native10": "SUSPENDED until cleanup plus reviewed prevention/new source binding",
+  "source_changes": "none; only this additive review"
+}

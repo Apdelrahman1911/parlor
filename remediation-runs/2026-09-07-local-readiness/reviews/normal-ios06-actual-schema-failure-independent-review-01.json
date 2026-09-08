@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-07T19:30:46.479202+00:00",
+  "reviewer": "/root/factory_review",
+  "executor": "/root",
+  "classification": "TEST/EVIDENCE GAP \u2014 CONFIRMED HARNESS XCRESULT LAYOUT DEFECT; NOT AN APP LAUNCH FAILURE",
+  "cycle": "ios-readiness-06",
+  "source": {
+    "commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+    "tree": "c65463bdf1f3656f90dfe6e6dbe1d94b3c588dac",
+    "source_manifest_sha256": "ca2b99d237a921513a4c8d922666b9d8df838b8c2ac04064f7563e474204e711",
+    "control_sha256_at_execution": "b5c2301a14478cae584fffad7dcead94e7ba03d0f434b86f05d6a5e9b2bdc422",
+    "before_after_binding_equal": true,
+    "copied_inputs": 738,
+    "copied_input_hashes_unchanged": true,
+    "changed_copy_paths": [
+      "iosApp/iosApp.xcodeproj/project.pbxproj",
+      "iosApp/iosAppUITests/IOSAppLaunchUITests.swift"
+    ],
+    "application_source_transformations": 0,
+    "source_note": "Later parser work is a separate control identity; this actual failure remains bound to the old73-input manifest."
+  },
+  "evidence": {
+    "receipt.json": "ac9334d746ae297325a9518dfb1caddecd1e0fddc6192d595f388d14836eeede",
+    "xcresult-summary.json": "9815d6daa36caec3f5640070151ea779b8a220d82f795607271e77f5d2fd565f",
+    "xcresult-tests.json": "c71d89875ae7cc8b413b59fcceca55faafd1cbe907c1399a21a6fae8e7e65635",
+    "xcresult-test-details.json": "463e2f8a683c354a895f68e35484adfaeb6d027bf41641480f7ebe8296c17063",
+    "xcodebuild.log.gz": "c06082ac09f1014cf88b4daa7d578b742832804f47eba5d5e8fcd46d7ad2596e",
+    "input-manifest.json": "85aea990f5e965fdc066948dd80918499b967090d73e1189bc93077bc9787314",
+    "copied-source-manifest.json": "80d4bbc2fb0f494234d0d025fc948fa739bd70d8ad19828a6aab5ede5c911561",
+    "copied-inputs-after-build.json": "675284a63e127afd0f439b94f6c29b5ea1c8546128b36a0eb151f4ef25b187ae",
+    "embedded-gradle-stop.txt": "fb55a963c8d30249ea6b8be68a62b5921facefdc7823c16ad139fea885be972f",
+    "owned-device-after-delete.json": "755d442cf44919879856407fe199e916c770d206e3f6b050d6eb286b7af73782",
+    "secondary-fifo-final.json": "a94cb28609a55431885fd370840f197a868b8e3bebcab28bcc7eb8fb3aaf61ec"
+  },
+  "actual_execution": {
+    "xcodebuild_exit_code": 0,
+    "result": "TEST SUCCEEDED",
+    "test_methods": 1,
+    "method": "IOSAppLaunchUITests/testColdLaunchRendersComposeHomeWithoutUnexpectedAlert()",
+    "separate_xctest_starts": 8,
+    "separate_xctest_passes": 8,
+    "summary_passed_methods": 1,
+    "destination_passed_executions": 8,
+    "independently_crossbound_repetition_leaves": 8,
+    "ordered_repetition_ids": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8"
+    ],
+    "repetition_durations_seconds": [
+      15.986626982688904,
+      13.750082969665527,
+      13.755393981933594,
+      13.752013921737671,
+      13.788284063339233,
+      13.801622033119202,
+      13.736274003982544,
+      13.690840005874634
+    ],
+    "raw_marker_sequences": 8,
+    "unique_observation_ids": 8,
+    "samples": 48,
+    "last_sample_elapsed_seconds": [
+      10.414623166667297,
+      10.395930291662808,
+      10.387441416663933,
+      10.428924458334222,
+      10.429374291663407,
+      10.463765208332916,
+      10.393165625006077,
+      10.367741291658604
+    ],
+    "failures": 0,
+    "skips": 0,
+    "expected_failures": 0,
+    "scope": "Eight normal-source cold launch/production Home periodic checks. App terminated before each launch by actual XCTest; no claim of historical crash explanation, physical-device reliability, continuous liveness, or PID identity."
+  },
+  "confirmed_harness_root_cause": {
+    "original_source": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_launch_receipts.py",
+    "original_line_ranges": [
+      [
+        147,
+        171
+      ],
+      [
+        188,
+        191
+      ]
+    ],
+    "first_failure": "Original requires destination.passedTests == summary.passedTests, so actual8!=1 triggers Per-destination XCTest counts disagree.",
+    "second_guard_if_first_alone_relaxed": "executed_runs recognizes Test Case Run nodes only; actual details.testRuns has8 Repetition leaves and would return0.",
+    "source_level_reproducer": "Feed retained unchanged summary/tests/details for exact owned UUID into old verify_xctest. First comparison must throw; no execution needed to establish arithmetic/source reachability.",
+    "counter_evidence": "Apple schema0.1.0 separately defines both counts as integers and testRuns as array<TestNode>. It does not require equal aggregation levels or Test Case Run wrappers. Raw matching26.5 queries provide the exact accepted shape.",
+    "suggested_fix": "Narrow identified-leaf shape branch; exactly8 orderedIDs/names1..8, Passed, bounded durations, no nested children; crossbind to sole selected tree method/config/device; summarymethod1/destination8. Retain strict existing nested branch and reject mixed/unrecognized layouts. Never infer successful executions from markers alone."
+  },
+  "fixture_review": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/xcresult-26.5-repetitions.json.in",
+    "sha256": "c6ff15f91b5b3a240b4940e714950b8f8ce99661ed3887a83c2e2aa0f845463f",
+    "exact_recursive_sanitization_only": [
+      "summary/devicesAndConfigurations/0/device/deviceId",
+      "summary/devicesAndConfigurations/0/device/deviceName",
+      "tests/devices/0/deviceId",
+      "tests/devices/0/deviceName",
+      "details/devices/0/deviceId",
+      "details/devices/0/deviceName"
+    ],
+    "original_three_receipt_hashes_equal": true,
+    "not_new_runtime_evidence": true
+  },
+  "unfinished_gates": {
+    "overall_cycle": "FAIL retained permanently; parser correction cannot retrofit a passing cycle.",
+    "ninth_external_image_provenance": "NOT_RUN",
+    "built_installed_notice_package": "NOT_RUN",
+    "artifact_limitation": "Parser aborted before owned built/installed artifact/signature/notice inventory and independent external-image capture. Those are NOT RUN, not inferred PASS from native XCTest. Owned artifacts correctly cleaned.",
+    "next": "After independent fix/control tests and new exact binding, execute a fresh normal-source native cycle, complete ninth provenance/package stages, then review actual results/cleanup."
+  },
+  "research": {
+    "official_cli_schema_record": "native/normal-ios-launch-proposal-01/xcresult-schema-references-01.json",
+    "verified_decompressed_hashes": [
+      "b58076b9fd20285fba040974e56514ae6b5754cd28944939aa9eab6e636ddc59",
+      "18adcaa0c1bb43c466c0e0587816dbbe127c86e69e0f07fcde601ab7398d47da",
+      "fd41cd2862c44e50e3c70127e5bb3830ec0773d89263d767fa648c1d549db5da"
+    ],
+    "online_reference": "https://developer.apple.com/documentation/xcode-release-notes/xcode-26_5-release-notes",
+    "accessed_date": "2026-09-07",
+    "online_result": "HTTP200 DocC JSON; Testing section mentions iOS15 simulator fix only, not this JSON count/layout contract. Exact field applicability established by versioned official CLI schema and actual26.5 query outputs, not invented release-note wording.",
+    "unsuccessful_reference": "Guessed running-tests-multiple-times DocC URL returned404 and is not used as evidence."
+  },
+  "cleanup": {
+    "status": "PASS",
+    "embedded_gradle": "build_exit0/stop_exit0",
+    "gradle_stops": [
+      {
+        "label": "stop-xcode-immediate",
+        "exit_code": 0,
+        "at": "2026-09-07T19:11:23.668554+00:00"
+      },
+      {
+        "label": "stop-final",
+        "exit_code": 0,
+        "at": "2026-09-07T19:11:25.104418+00:00"
+      }
+    ],
+    "finalization_stages": [
+      {
+        "stage": "final-isolated-gradle-stop",
+        "status": "PASS",
+        "at": "2026-09-07T19:11:25.104425+00:00"
+      },
+      {
+        "stage": "shutdown-owned-simulator-and-app",
+        "status": "PASS",
+        "at": "2026-09-07T19:11:29.206935+00:00"
+      },
+      {
+        "stage": "delete-owned-simulator",
+        "status": "PASS",
+        "at": "2026-09-07T19:11:30.129900+00:00"
+      },
+      {
+        "stage": "stop-owned-command-workers",
+        "status": "PASS",
+        "at": "2026-09-07T19:11:30.397707+00:00"
+      },
+      {
+        "stage": "cleanup-attested-secondary-fifos",
+        "status": "PASS",
+        "at": "2026-09-07T19:11:30.629313+00:00"
+      },
+      {
+        "stage": "preserve-secondary-fifo-final-ledger",
+        "status": "PASS",
+        "at": "2026-09-07T19:11:30.629555+00:00"
+      },
+      {
+        "stage": "verify-workers-before-file-removal",
+        "status": "PASS",
+        "at": "2026-09-07T19:11:30.768102+00:00"
+      },
+      {
+        "stage": "verify-copied-inputs-after-workers-stop",
+        "status": "PASS",
+        "at": "2026-09-07T19:11:30.935567+00:00"
+      },
+      {
+        "stage": "compact-required-xcode-evidence",
+        "status": "PASS",
+        "at": "2026-09-07T19:11:30.939446+00:00"
+      },
+      {
+        "stage": "remove-exact-owned-copy-build-deriveddata-temp",
+        "status": "PASS",
+        "at": "2026-09-07T19:11:32.125819+00:00"
+      },
+      {
+        "stage": "read-final-source-identity",
+        "status": "PASS",
+        "at": "2026-09-07T19:11:32.702514+00:00"
+      },
+      {
+        "stage": "read-final-control-identity",
+        "status": "PASS",
+        "at": "2026-09-07T19:11:32.719340+00:00"
+      }
+    ],
+    "owned_simulator_absent": true,
+    "exact_temporary_path_absent": true,
+    "attested_secondary_removed_paths_absent": 4,
+    "remaining_owned_workers": [],
+    "unknown_holders": [],
+    "errors": [],
+    "source_controls_unchanged_during_cycle": true,
+    "reviewer_builds_native_runs_or_process_termination": 0
+  },
+  "independence": "Root authors parser repair; this reviewer did not author it. Repair approval remains separate after current exact tests/diff review. No reviewer production, control, Git or Store edits."
+}

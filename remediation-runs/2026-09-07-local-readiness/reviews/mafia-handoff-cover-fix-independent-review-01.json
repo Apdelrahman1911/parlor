@@ -1,0 +1,564 @@
+{
+  "schema_version": 1,
+  "id": "M-READINESS-COVER",
+  "verdict": "APPROVED — root cause fixed; current focused Desktop regression verified",
+  "reviewer": "/root/native_fix_review",
+  "fix_author": "/root",
+  "independence": "Reviewer originated candidate, but did not author or execute repair/tests. Root separately validated original candidate before authoring this fix. This is independent review of root-authored correction.",
+  "created_utc": "2026-09-07T12:57:15.996343+00:00",
+  "repository": "/Users/abdelrahman/Projects/parlor",
+  "checkout_commit_at_review": "cc1679788fa7dc0c5c1a106aebee6d9b50531d49",
+  "scope": "Only MafiaCover.kt + MafiaCoverContrastTest.kt; unrelated workflow/CI modifications explicitly not approved by this record. Not whole-tree freeze or authorization for Git/Store operations.",
+  "reviewed_change_sha256": "3304296b6d7941c4dec10681c33eb2e31eccfeeaf384a918310982b523c21d3e",
+  "change_identity_definition": "SHA256(git diff -- MafiaCover.kt + newline separator --- NEW TEST BYTES --- + complete test bytes). Source hashes independently bind exact approved files.",
+  "source_files": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/components/MafiaCover.kt",
+      "sha256": "73b9e3e5bbf79ff1cb002b9f1205da59e4711d16c71a8b8c6b6fb618a7518b42",
+      "reviewed_lines": [
+        [
+          1,
+          185
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/components/MafiaCoverContrastTest.kt",
+      "sha256": "6b063b9bc4e75626fcabd5330c6102d3a0329e35b57f2aa2c760d52b5e27444e",
+      "reviewed_lines": [
+        [
+          1,
+          113
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/EyebrowLabel.kt",
+      "sha256": "eff56d62676d935fbe541f3e0df8d8ed637b2d427c949d6cfcc5ca9dd8b84494",
+      "reviewed_lines": "full or contextual ranges recorded in source-proof/final affected-source ledger"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/theme/ParlorAccent.kt",
+      "sha256": "dc8145f4594dc0b10feb636de11b3e871f48d00081ff3c627f6da2b21f8b7428",
+      "reviewed_lines": "full or contextual ranges recorded in source-proof/final affected-source ledger"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/tokens/ParlorColors.kt",
+      "sha256": "99c60bb3b07cd6295c51adf7d9cf684bf5890d401395d323e1d7a4f11c6bb5e8",
+      "reviewed_lines": "full or contextual ranges recorded in source-proof/final affected-source ledger"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/tokens/ParlorTypography.kt",
+      "sha256": "eb442c5c7a41e34a4cf8e1c31466ef1a3e07e6582c3259d9a14c7942ee990f15",
+      "reviewed_lines": "full or contextual ranges recorded in source-proof/final affected-source ledger"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupToggleLayoutTest.kt",
+      "sha256": "36bdc52bb345999bd8a43187ac74a4f44e1c9aa618419e7088cfe0b09644be50",
+      "reviewed_lines": "full or contextual ranges recorded in source-proof/final affected-source ledger"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupStepperLayoutTest.kt",
+      "sha256": "306d7e76f6275440b9ceab2150b8e4cbcd8d6e8e47a7fe9ad3fcea45fad9d302",
+      "reviewed_lines": "full or contextual ranges recorded in source-proof/final affected-source ledger"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt",
+      "sha256": "27b4894a394bf06952bc1435324ab23acb5c7f38242b65df5feb01e8df16b777",
+      "reviewed_lines": "full or contextual ranges recorded in source-proof/final affected-source ledger"
+    }
+  ],
+  "original_proof": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/mafia-handoff-cover-independent-source-proof-01.json",
+    "sha256": "d36db45576f92d94dd1991fbad4d0c7976db37cfe8b23d073c78f5ec913b3e41"
+  },
+  "reasoning": [
+    "Old scene selected light Crimson B42F31 for meaningful 11sp handoff label on black cover (3.3916:1). New local Text explicitly uses coverScreenTextSecondary, identical B7B5B0 in both palettes (10.2499:1).",
+    "Same localized resource formatting, uppercase transformation, labelSmall typography, center alignment and confirmation callback retained. Shared ordinary-surface eyebrow and palettes unchanged.",
+    "fillMaxWidth gives this centered text the available cover column width; diagnostic probe demonstrated paragraph width272 vs measured label117/200/233. This review does not infer a glyph-loss/security defect solely from that overflow flag.",
+    "Cover remains opaque black, composes only public intended-player name and no private role/map. Game action, host authority, role reveal gate, credentials, snapshot and protocol formats unchanged.",
+    "Raw current tests render actual shipping component under Crimson; test visibility+GetTextLayoutResult color/overflow+bounds, measure real black backdrop, require no callback on presentation and exactly one explicit confirmation. EN/AR light/dark at1x/2x all execute."
+  ],
+  "execution_evidence": [
+    {
+      "cycle": "mafia-cover-contrast-red-01",
+      "receipt_sha256": "657aa9e577bd3a3711818eee46084e5a596957eee7b3dbaa97d8170db6e38820",
+      "command": [
+        "./gradlew",
+        ":game-modes:mafia:desktopTest",
+        "--tests",
+        "*MafiaCoverContrastTest*",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=mafia-cover-contrast-red-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "exit_code": 1,
+      "finished_at": "2026-09-07T12:40:41.823919+00:00",
+      "source_before_commit": "2250007173bbf9ca7c441f1c46802d84c1b478ba",
+      "source_stable": true,
+      "source_hash": "a8bf4211f86f855507edb8fed0cde28f2c9d24f2273c77e5e7c2c7aeae2ab6bb",
+      "test_hash": "af79e9c0b6e75521b2ee4fb21a66f5a4cf128d56198c768cc26be6be2ea7a90a",
+      "current_inputs_match": [
+        "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/EyebrowLabel.kt",
+        "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/theme/ParlorAccent.kt",
+        "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/tokens/ParlorColors.kt",
+        "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/tokens/ParlorTypography.kt",
+        "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupToggleLayoutTest.kt",
+        "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupStepperLayoutTest.kt",
+        "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt"
+      ],
+      "tests": [],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-07T12:40:42.100922+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "cleanup_completed_at": "2026-09-07T12:40:42.306911+00:00"
+      }
+    },
+    {
+      "cycle": "mafia-cover-contrast-red-02",
+      "receipt_sha256": "57f0073027aa1c96ddc490538fc54ad532fe7a724ff0e171fe7ee0019ae0d07e",
+      "command": [
+        "./gradlew",
+        ":game-modes:mafia:desktopTest",
+        "--tests",
+        "*MafiaCoverContrastTest*",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=mafia-cover-contrast-red-02",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "exit_code": 1,
+      "finished_at": "2026-09-07T12:42:02.571673+00:00",
+      "source_before_commit": "2250007173bbf9ca7c441f1c46802d84c1b478ba",
+      "source_stable": true,
+      "source_hash": "a8bf4211f86f855507edb8fed0cde28f2c9d24f2273c77e5e7c2c7aeae2ab6bb",
+      "test_hash": "8b9c81a66148434e0ee613530694e69368fdd4dbcd5f305d711c3265948ac71e",
+      "current_inputs_match": [
+        "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/EyebrowLabel.kt",
+        "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/theme/ParlorAccent.kt",
+        "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/tokens/ParlorColors.kt",
+        "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/tokens/ParlorTypography.kt",
+        "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupToggleLayoutTest.kt",
+        "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupStepperLayoutTest.kt",
+        "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt"
+      ],
+      "tests": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-cover-contrast-red-02/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.components.MafiaCoverContrastTest.xml",
+          "sha256": "3892e8a4cbf47ef7d7afa4511110fb3ec067b79865d5bec8a3c5e8d20b3f7bb6",
+          "suite": "com.parlor.games.mafia.ui.components.MafiaCoverContrastTest",
+          "tests": 8,
+          "failures": 7,
+          "errors": 0,
+          "skipped": 0,
+          "descriptors": [
+            "arabicDarkCover()[desktop]",
+            "arabicLightCover()[desktop]",
+            "arabicLightLargeText()[desktop]",
+            "englishDarkLargeText()[desktop]",
+            "englishLightLargeText()[desktop]",
+            "arabicDarkLargeText()[desktop]",
+            "englishLightCover()[desktop]",
+            "englishDarkCover()[desktop]"
+          ],
+          "failures_detail": [
+            {
+              "name": "arabicDarkCover()[desktop]",
+              "message": "org.opentest4j.AssertionFailedError: Handoff instruction must reflow at scale=1.0"
+            },
+            {
+              "name": "arabicLightCover()[desktop]",
+              "message": "org.opentest4j.AssertionFailedError: Arabic Light scale=1.0 handoff contrast 3.391616:1 < 4.5:1"
+            },
+            {
+              "name": "arabicLightLargeText()[desktop]",
+              "message": "org.opentest4j.AssertionFailedError: Arabic Light scale=2.0 handoff contrast 3.391616:1 < 4.5:1"
+            },
+            {
+              "name": "englishLightLargeText()[desktop]",
+              "message": "org.opentest4j.AssertionFailedError: English Light scale=2.0 handoff contrast 3.391616:1 < 4.5:1"
+            },
+            {
+              "name": "arabicDarkLargeText()[desktop]",
+              "message": "org.opentest4j.AssertionFailedError: Handoff instruction must reflow at scale=2.0"
+            },
+            {
+              "name": "englishLightCover()[desktop]",
+              "message": "org.opentest4j.AssertionFailedError: English Light scale=1.0 handoff contrast 3.391616:1 < 4.5:1"
+            },
+            {
+              "name": "englishDarkCover()[desktop]",
+              "message": "org.opentest4j.AssertionFailedError: Handoff instruction must reflow at scale=1.0"
+            }
+          ]
+        }
+      ],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-07T12:42:02.849788+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "cleanup_completed_at": "2026-09-07T12:42:03.070849+00:00"
+      }
+    },
+    {
+      "cycle": "mafia-cover-contrast-probe-01",
+      "receipt_sha256": "e937b6b6149ea767ca54e932a6740c705a006b5e654daac34e3111d8d2fdc11d",
+      "command": [
+        "./gradlew",
+        ":game-modes:mafia:desktopTest",
+        "--tests",
+        "*MafiaCoverContrastTest*",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=mafia-cover-contrast-probe-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "exit_code": 1,
+      "finished_at": "2026-09-07T12:46:30.848653+00:00",
+      "source_before_commit": "cc1679788fa7dc0c5c1a106aebee6d9b50531d49",
+      "source_stable": true,
+      "source_hash": "32f35293ca62f32bc91d3af74d1b83ef5ced5440d05aafd45b5fb9d36fe02c5c",
+      "test_hash": "6b063b9bc4e75626fcabd5330c6102d3a0329e35b57f2aa2c760d52b5e27444e",
+      "current_inputs_match": [
+        "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/components/MafiaCoverContrastTest.kt",
+        "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/EyebrowLabel.kt",
+        "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/theme/ParlorAccent.kt",
+        "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/tokens/ParlorColors.kt",
+        "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/tokens/ParlorTypography.kt",
+        "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupToggleLayoutTest.kt",
+        "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupStepperLayoutTest.kt",
+        "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt"
+      ],
+      "tests": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-cover-contrast-probe-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.components.MafiaCoverContrastTest.xml",
+          "sha256": "d223bd81b982fb4038bcf419a2bfad0b8cbc87376cf1512193cb1da0f418debf",
+          "suite": "com.parlor.games.mafia.ui.components.MafiaCoverContrastTest",
+          "tests": 8,
+          "failures": 6,
+          "errors": 0,
+          "skipped": 0,
+          "descriptors": [
+            "arabicDarkCover()[desktop]",
+            "arabicLightCover()[desktop]",
+            "arabicLightLargeText()[desktop]",
+            "englishDarkLargeText()[desktop]",
+            "englishLightLargeText()[desktop]",
+            "arabicDarkLargeText()[desktop]",
+            "englishLightCover()[desktop]",
+            "englishDarkCover()[desktop]"
+          ],
+          "failures_detail": [
+            {
+              "name": "arabicDarkCover()[desktop]",
+              "message": "org.opentest4j.AssertionFailedError: Handoff scale=1.0 size=117 x 14 paragraph=272.0x14.0 widthOverflow=true heightOverflow=false lines=1 constraints=Constraints(minWidth = 0, maxWidth = 272, minHeight = 0, maxHeight = Infinity)"
+            },
+            {
+              "name": "arabicLightCover()[desktop]",
+              "message": "org.opentest4j.AssertionFailedError: Handoff scale=1.0 size=117 x 14 paragraph=272.0x14.0 widthOverflow=true heightOverflow=false lines=1 constraints=Constraints(minWidth = 0, maxWidth = 272, minHeight = 0, maxHeight = Infinity)"
+            },
+            {
+              "name": "arabicLightLargeText()[desktop]",
+              "message": "org.opentest4j.AssertionFailedError: Handoff scale=2.0 size=233 x 29 paragraph=272.0x29.0 widthOverflow=true heightOverflow=false lines=1 constraints=Constraints(minWidth = 0, maxWidth = 272, minHeight = 0, maxHeight = Infinity)"
+            },
+            {
+              "name": "arabicDarkLargeText()[desktop]",
+              "message": "org.opentest4j.AssertionFailedError: Handoff scale=2.0 size=233 x 29 paragraph=272.0x29.0 widthOverflow=true heightOverflow=false lines=1 constraints=Constraints(minWidth = 0, maxWidth = 272, minHeight = 0, maxHeight = Infinity)"
+            },
+            {
+              "name": "englishLightCover()[desktop]",
+              "message": "org.opentest4j.AssertionFailedError: Handoff scale=1.0 size=200 x 13 paragraph=272.0x13.0 widthOverflow=true heightOverflow=false lines=1 constraints=Constraints(minWidth = 0, maxWidth = 272, minHeight = 0, maxHeight = Infinity)"
+            },
+            {
+              "name": "englishDarkCover()[desktop]",
+              "message": "org.opentest4j.AssertionFailedError: Handoff scale=1.0 size=200 x 13 paragraph=272.0x13.0 widthOverflow=true heightOverflow=false lines=1 constraints=Constraints(minWidth = 0, maxWidth = 272, minHeight = 0, maxHeight = Infinity)"
+            }
+          ]
+        }
+      ],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-07T12:46:31.122236+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "cleanup_completed_at": "2026-09-07T12:46:31.345482+00:00"
+      }
+    },
+    {
+      "cycle": "mafia-cover-contrast-green-01",
+      "receipt_sha256": "c73ade7c3990185d1003d0fcbb7d9f25aec62bf5e7929abbffa4112d212b590d",
+      "command": [
+        "./gradlew",
+        ":game-modes:mafia:desktopTest",
+        "--tests",
+        "*MafiaCoverContrastTest*",
+        "--tests",
+        "*PostGameScreenLayoutTest*",
+        "--tests",
+        "*MafiaSetup*LayoutTest*",
+        "staticAnalysis",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=mafia-cover-contrast-green-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "exit_code": 0,
+      "finished_at": "2026-09-07T12:49:50.280643+00:00",
+      "source_before_commit": "cc1679788fa7dc0c5c1a106aebee6d9b50531d49",
+      "source_stable": true,
+      "source_hash": "73b9e3e5bbf79ff1cb002b9f1205da59e4711d16c71a8b8c6b6fb618a7518b42",
+      "test_hash": "6b063b9bc4e75626fcabd5330c6102d3a0329e35b57f2aa2c760d52b5e27444e",
+      "current_inputs_match": [
+        "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/components/MafiaCover.kt",
+        "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/components/MafiaCoverContrastTest.kt",
+        "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/EyebrowLabel.kt",
+        "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/theme/ParlorAccent.kt",
+        "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/tokens/ParlorColors.kt",
+        "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/tokens/ParlorTypography.kt",
+        "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupToggleLayoutTest.kt",
+        "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupStepperLayoutTest.kt",
+        "game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreenLayoutTest.kt"
+      ],
+      "tests": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-cover-contrast-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupToggleLayoutTest.xml",
+          "sha256": "459e1482ed43b37868ed24e3062f0bc385bf775b4f4d547c7c733e51c6b93931",
+          "suite": "com.parlor.games.mafia.ui.screens.setup.MafiaSetupToggleLayoutTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "descriptors": [
+            "english_compact_toggle_keeps_room_for_its_switch()[desktop]",
+            "arabic_compact_large_text_toggle_keeps_room_for_its_switch()[desktop]",
+            "english_compact_large_text_toggle_keeps_room_for_its_switch()[desktop]",
+            "arabic_compact_toggle_keeps_room_for_its_switch()[desktop]"
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-cover-contrast-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupStepperLayoutTest.xml",
+          "sha256": "4090e58441520154e7ac215f607bec579a765eb386a92ac1b6cba17fba324a95",
+          "suite": "com.parlor.games.mafia.ui.screens.setup.MafiaSetupStepperLayoutTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "descriptors": [
+            "arabic_compact_stepper_controls_keep_their_full_size()[desktop]",
+            "english_compact_stepper_controls_keep_their_full_size()[desktop]",
+            "arabic_compact_large_text_stepper_controls_keep_their_full_size()[desktop]",
+            "english_compact_large_text_stepper_controls_keep_their_full_size()[desktop]"
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-cover-contrast-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest.xml",
+          "sha256": "32a1b32eb7f623e53fa343317492ccadf82a894f60a7251c21778f008626c616",
+          "suite": "com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "descriptors": [
+            "compact_arabic_long_name_does_not_consume_final_role_width()[desktop]",
+            "compact_english_long_name_does_not_consume_final_role_width()[desktop]",
+            "landscape_large_text_arabic_roles_remain_scrollable()[desktop]",
+            "compact_large_text_english_preserves_every_final_role()[desktop]",
+            "landscape_large_text_english_roles_remain_scrollable()[desktop]",
+            "compact_large_text_arabic_preserves_every_final_role()[desktop]"
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-cover-contrast-green-01/reports/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.components.MafiaCoverContrastTest.xml",
+          "sha256": "ed076c95e30c319d3700440b8a7cfe382ccd907834acdb594e09bbc57d96e031",
+          "suite": "com.parlor.games.mafia.ui.components.MafiaCoverContrastTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "descriptors": [
+            "arabicDarkCover()[desktop]",
+            "arabicLightCover()[desktop]",
+            "arabicLightLargeText()[desktop]",
+            "englishDarkLargeText()[desktop]",
+            "englishLightLargeText()[desktop]",
+            "arabicDarkLargeText()[desktop]",
+            "englishLightCover()[desktop]",
+            "englishDarkCover()[desktop]"
+          ]
+        }
+      ],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-07T12:49:50.555114+00:00",
+        "cleanup_errors": [],
+        "remaining_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "cleanup_completed_at": "2026-09-07T12:49:50.822398+00:00"
+      }
+    }
+  ],
+  "current_test_discovery": {
+    "declared_methods": [
+      "englishLightCover",
+      "arabicLightCover",
+      "englishDarkCover",
+      "arabicDarkCover",
+      "englishLightLargeText",
+      "arabicLightLargeText",
+      "englishDarkLargeText",
+      "arabicDarkLargeText"
+    ],
+    "actual_raw_descriptors": [
+      "arabicDarkCover()[desktop]",
+      "arabicLightCover()[desktop]",
+      "arabicLightLargeText()[desktop]",
+      "englishDarkLargeText()[desktop]",
+      "englishLightLargeText()[desktop]",
+      "arabicDarkLargeText()[desktop]",
+      "englishLightCover()[desktop]",
+      "englishDarkCover()[desktop]"
+    ],
+    "exact_match": true,
+    "tests": 8,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "green_combined_ui_tests": 22,
+  "static_analysis": {
+    "aggregate_exit_code": 0,
+    "detekt_reports": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-cover-contrast-green-01/reports/build-logic/convention/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-cover-contrast-green-01/reports/composeApp/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-cover-contrast-green-01/reports/game-modes/mafia/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-cover-contrast-green-01/reports/game-modes/whodunit/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-cover-contrast-green-01/reports/shared/content/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-cover-contrast-green-01/reports/shared/core/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-cover-contrast-green-01/reports/shared/design-system/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-cover-contrast-green-01/reports/shared/engine/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-cover-contrast-green-01/reports/shared/engine-testing/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-cover-contrast-green-01/reports/shared/networking/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-cover-contrast-green-01/reports/shared/networking-testing/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-cover-contrast-green-01/reports/shared/session/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-cover-contrast-green-01/reports/shared/storage/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-cover-contrast-green-01/reports/shared/transport-p2p/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "errors": 0
+      }
+    ],
+    "cache_limitation": "Raw Gradle log shows Mafia/composeApp/design-system/engine/networking-testing/transport-p2p Detekt executed; other source-bound Detekt reports reused FROM-CACHE, not claimed fresh all-module analyzer execution. desktopTest executed (not FROM-CACHE)."
+  },
+  "failed_cycle_classification": {
+    "red-01": "Compile failure in first test draft: unresolved DpRect.width. Zero application regression tests executed; not a defect witness.",
+    "red-02": "8 actual tests;4 light-theme contrast failures plus3 dark-theme layout diagnostics;7 totalfailures. Not all7 were contrast.",
+    "probe-01": "Exact current test bytes; color-only correction passes all contrast assertions;6 methods fail subsequent width overflow assertion. No green claim.",
+    "green-01": "8 cover +6 postgame +4 toggle +4 stepper =22 pass0fail0error0skip, staticAnalysis exit0."
+  },
+  "limitations": [
+    "Desktop common-composable execution is not Android/iOS native screenshot, physical accessibility, VoiceOver/TalkBack, or LAN evidence.",
+    "Typical synthetic Sarah/سارة names at320x640 and1x/2x are tested; not every name/font/viewport combination.",
+    "Ordinary eyebrow unchanged by diff; no new ordinary-eyebrow test executed in this cycle.",
+    "Does not approve unrelated candidate Mafia tally rows; that is separately investigated."
+  ],
+  "cleanup": "All four inspected cycle receipts stop0, source stable, no remaining outputs/owned workers/errors. Reviewer ran no build/test/native process and created only compact review/draft deliverables."
+}

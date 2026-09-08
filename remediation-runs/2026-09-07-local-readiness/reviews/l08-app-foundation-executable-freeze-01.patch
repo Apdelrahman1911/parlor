@@ -1,0 +1,1116 @@
+--- /dev/null
++++ remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/L08AppFoundation.m.in
+@@ -0,0 +1,501 @@
++// Copy-only direct Objective-C app-container diagnostic, NEVER shipped.
++// Eight operation/eight observation sequence inherited from frozen native control03.
++#import <Foundation/Foundation.h>
++#import <TargetConditionals.h>
++#import <objc/runtime.h>
++#include <mach-o/dyld.h>
++#include <mach-o/loader.h>
++#include <sys/stat.h>
++#include <unistd.h>
++#include <errno.h>
++#include <limits.h>
++#include <stdlib.h>
++#include <string.h>
++#include <fcntl.h>
++#include <dlfcn.h>
++#include <stdatomic.h>
++#import "L08AppFoundationBridge.h"
++
++#define L08_TEMPLATE_SHA256 __L08_TEMPLATE_SHA256__
++#define L08_CONTEXT_SHA256 __L08_CONTEXT_SHA256__
++#define L08_CONTROLS_SHA256 __L08_CONTROLS_SHA256__
++#define L08_DEVICE_SET __L08_DEVICE_SET__
++#define L08_SIGNING_MODE __L08_SIGNING_MODE__
++
++#if !defined(DEBUG) || !DEBUG || !TARGET_OS_SIMULATOR || !TARGET_OS_IOS || !defined(__arm64__)
++#error This diagnostic requires an arm64 iOS Simulator target, never host macOS.
++#endif
++
++static NSMutableArray<NSDictionary *> *rows;
++static NSString *root;
++static dev_t rootDevice;
++static ino_t rootInode;
++static dev_t directoryDevice;
++static ino_t directoryInode;
++static BOOL directoryPinned;
++static mode_t directoryMode;
++static struct stat fileIdentities[3];
++static BOOL filePinned[3];
++static NSString *containerPath;
++static NSString *libraryPath;
++static NSString *supportPath;
++static NSString *fixtureName;
++static NSString *appBundlePath;
++static struct stat containerIdentity;
++static struct stat libraryIdentity;
++static struct stat supportIdentity;
++static int supportDescriptor = -1;
++static BOOL parentsPinned;
++static BOOL rootCreated;
++static BOOL rootPinned;
++static BOOL rootRemoved;
++static BOOL descriptorCloseFailed;
++static atomic_flag invocationUsed = ATOMIC_FLAG_INIT;
++
++static void attestAppParents(void);
++
++static void requireControl(BOOL condition, NSString *closedReason) {
++    if (!condition) @throw [NSException exceptionWithName:@"ControlBoundary"
++                                                reason:closedReason userInfo:nil];
++}
++
++static NSDictionary *nativeError(NSError *error) {
++    return @{@"present": (error != nil ? @YES : @NO), @"domain": error == nil ? @"none" :
++        ([error.domain isEqual:NSCocoaErrorDomain] ? @"cocoa" :
++         ([error.domain isEqual:NSPOSIXErrorDomain] ? @"posix" : @"other")),
++        @"code": error == nil ? @0 : @(error.code)};
++}
++
++static void operation(NSString *identifier, BOOL (^body)(NSError **)) {
++    requireControl(rows.count < 32, @"row-limit");
++    @try {
++        NSError *error = nil;
++        BOOL result = body(&error);
++        [rows addObject:@{@"id": identifier, @"kind": @"operation",
++            @"returned": @YES, @"result": @(result), @"exception": @"none",
++            @"native_error": nativeError(error)}];
++    } @catch (NSException *exception) {
++        if ([exception.name isEqual:@"ControlBoundary"]) @throw;
++        [rows addObject:@{@"id": identifier, @"kind": @"operation",
++            @"returned": @NO, @"result": @NO, @"exception": @"objc-exception",
++            @"native_error": nativeError(nil)}];
++    }
++}
++
++static NSString *protectionName(id value, BOOL urlKey) {
++    if (value == [NSNull null]) return @"null";
++    if (![value isKindOfClass:[NSString class]]) return @"non-string";
++    if ([value isEqual:(urlKey ? NSURLFileProtectionComplete : NSFileProtectionComplete)]) return @"complete";
++    if ([value isEqual:(urlKey ? NSURLFileProtectionNone : NSFileProtectionNone)]) return @"none";
++    if ([value isEqual:(urlKey ? NSURLFileProtectionCompleteUnlessOpen : NSFileProtectionCompleteUnlessOpen)]) return @"unless-open";
++    if ([value isEqual:(urlKey ? NSURLFileProtectionCompleteUntilFirstUserAuthentication : NSFileProtectionCompleteUntilFirstUserAuthentication)]) return @"until-first-authentication";
++    if (@available(iOS 17.0, *)) {
++        if ([value isEqual:(urlKey ? NSURLFileProtectionCompleteWhenUserInactive : NSFileProtectionCompleteWhenUserInactive)]) return @"when-user-inactive";
++    }
++    return @"other-string";
++}
++
++static NSDictionary *query(NSString *path, NSString *kind) {
++    @try {
++        NSError *error = nil;
++        NSString *key = [kind isEqual:@"fm"] ? NSFileProtectionKey :
++            ([kind isEqual:@"url"] ? NSURLFileProtectionKey :
++             ([kind isEqual:@"backup"] ? NSURLIsExcludedFromBackupKey : NSURLVolumeSupportsFileProtectionKey));
++        NSDictionary *values = [kind isEqual:@"fm"] ?
++            [[NSFileManager defaultManager] attributesOfItemAtPath:path error:&error] :
++            [[NSURL fileURLWithPath:path] resourceValuesForKeys:@[key] error:&error];
++        id value = values[key];
++        NSString *summary = values == nil ? @"unavailable" : value == nil ? @"missing" :
++            (([kind isEqual:@"volume"] || [kind isEqual:@"backup"]) ? ([value isKindOfClass:[NSNumber class]] ?
++                ([kind isEqual:@"backup"] ? ([value boolValue] ? @"excluded" : @"included") :
++                 ([value boolValue] ? @"supported" : @"unsupported")) : @"non-number") :
++                protectionName(value, [kind isEqual:@"url"]));
++        return @{@"returned": @YES, @"dictionary_present": (values != nil ? @YES : @NO),
++            @"key_present": (value != nil ? @YES : @NO), @"value": summary,
++            @"exception": @"none", @"native_error": nativeError(error)};
++    } @catch (__unused NSException *exception) {
++        return @{@"returned": @NO, @"dictionary_present": @NO,
++            @"key_present": @NO, @"value": @"unobserved",
++            @"exception": @"objc-exception", @"native_error": nativeError(nil)};
++    }
++}
++
++static void attestRoot(void) {
++    attestAppParents();
++    requireControl(rootPinned, @"root-not-pinned");
++    struct stat value;
++    requireControl(lstat(root.fileSystemRepresentation, &value) == 0 &&
++        S_ISDIR(value.st_mode) && value.st_uid == getuid() &&
++        value.st_dev == rootDevice && value.st_ino == rootInode &&
++        (value.st_mode & 0777) == 0700, @"root-identity");
++}
++
++// No enumeration, arbitrary names, symlinks, parent components, or fallback roots.
++static NSString *ownedPath(NSString *leaf, BOOL directory, BOOL mustBeAbsent) {
++    attestRoot();
++    requireControl([@[@"created", @"created/atomic.bin", @"created/direct.bin",
++                      @"created/set.bin"] containsObject:leaf], @"unknown-leaf");
++    if (![leaf isEqual:@"created"]) {
++        struct stat parent;
++        NSString *parentPath = [root stringByAppendingPathComponent:@"created"];
++        requireControl(directoryPinned && lstat(parentPath.fileSystemRepresentation, &parent) == 0 &&
++            S_ISDIR(parent.st_mode) && parent.st_uid == getuid() &&
++            parent.st_dev == directoryDevice && parent.st_ino == directoryInode &&
++            (parent.st_mode & 0777) == directoryMode,
++            @"parent-identity");
++    }
++    NSString *path = [root stringByAppendingPathComponent:leaf];
++    struct stat value;
++    int result = lstat(path.fileSystemRepresentation, &value);
++    if (result != 0) {
++        requireControl(errno == ENOENT, @"entry-stat");
++    } else {
++        requireControl(!mustBeAbsent && value.st_uid == getuid() && value.st_dev == rootDevice &&
++            (directory ? S_ISDIR(value.st_mode) : S_ISREG(value.st_mode)) &&
++            (directory || (value.st_nlink == 1 && value.st_size >= 0 && value.st_size <= 256)),
++            @"entry-identity");
++        if (directory && directoryPinned) {
++            requireControl(value.st_dev == directoryDevice && value.st_ino == directoryInode,
++                @"directory-identity");
++        }
++        if (!directory) {
++            NSUInteger index = [@[@"created/atomic.bin", @"created/direct.bin", @"created/set.bin"] indexOfObject:leaf];
++            requireControl(index < 3, @"file-index");
++            if (filePinned[index]) {
++                requireControl(value.st_dev == fileIdentities[index].st_dev &&
++                    value.st_ino == fileIdentities[index].st_ino, @"file-identity");
++            } else {
++                fileIdentities[index] = value; filePinned[index] = YES;
++            }
++        }
++    }
++    return path;
++}
++
++static void observe(NSString *identifier, NSString *leaf, BOOL directory) {
++    NSString *path = ownedPath(leaf, directory, NO);
++    NSMutableDictionary *row = [@{@"id": identifier, @"kind": @"observation",
++        @"fm": query(path, @"fm"), @"volume": query(path, @"volume"),
++        @"backup": query(path, @"backup")} mutableCopy];
++    // NSURL.h scopes NSURLFileProtectionKey to regular files, not directories.
++    if (!directory) row[@"url"] = query(path, @"url");
++    requireControl(rows.count < 32, @"row-limit");
++    [rows addObject:row];
++}
++
++static NSDictionary *imageIdentity(const struct mach_header *raw) {
++    if (raw == NULL || raw->magic != MH_MAGIC_64) return @{@"status": @"unavailable"};
++    const struct mach_header_64 *header = (const struct mach_header_64 *)raw;
++    if (header->ncmds > 4096 || header->sizeofcmds > 1024 * 1024) return @{@"status": @"unavailable"};
++    const uint8_t *start = (const uint8_t *)(header + 1);
++    size_t offset = 0;
++    NSString *uuid = nil;
++    uint32_t platform = 0;
++    for (uint32_t index = 0; index < header->ncmds; index++) {
++        if (offset + sizeof(struct load_command) > header->sizeofcmds) return @{@"status": @"unavailable"};
++        const struct load_command *command = (const struct load_command *)(start + offset);
++        if (command->cmdsize < sizeof(*command) || command->cmdsize > header->sizeofcmds - offset) return @{@"status": @"unavailable"};
++        if (command->cmd == LC_UUID && command->cmdsize >= sizeof(struct uuid_command)) {
++            if (uuid != nil) return @{@"status": @"unavailable"};
++            uuid = [[[NSUUID alloc] initWithUUIDBytes:((const struct uuid_command *)command)->uuid] UUIDString];
++        }
++        if (command->cmd == LC_BUILD_VERSION && command->cmdsize >= sizeof(struct build_version_command)) {
++            platform = ((const struct build_version_command *)command)->platform;
++        }
++        offset += command->cmdsize;
++    }
++    return uuid == nil ? @{@"status": @"unavailable"} :
++        @{@"status": @"observed", @"uuid": uuid.lowercaseString, @"platform": @(platform)};
++}
++
++static NSDictionary *foundationIdentity(void) {
++    const char *classPath = class_getImageName([NSFileManager class]);
++    if (classPath == NULL || _dyld_image_count() > 4096) return @{@"status": @"unavailable"};
++    for (uint32_t index = 0; index < _dyld_image_count(); index++) {
++        const char *path = _dyld_get_image_name(index);
++        if (path != NULL && strcmp(path, classPath) == 0) return imageIdentity(_dyld_get_image_header(index));
++    }
++    return @{@"status": @"unavailable"};
++}
++
++static void collect(void) {
++    NSFileManager *files = [NSFileManager defaultManager];
++    NSString *directory = ownedPath(@"created", YES, YES);
++    operation(@"directory-create", ^BOOL(NSError **error) {
++        return [files createDirectoryAtPath:directory withIntermediateDirectories:YES
++            attributes:@{NSFileProtectionKey: NSFileProtectionComplete} error:error];
++    });
++    struct stat created;
++    requireControl(lstat(directory.fileSystemRepresentation, &created) == 0 &&
++        S_ISDIR(created.st_mode) && created.st_uid == getuid() &&
++        created.st_dev == rootDevice, @"created-directory-identity");
++    directoryDevice = created.st_dev; directoryInode = created.st_ino;
++    directoryMode = created.st_mode & 0777; directoryPinned = YES;
++    observe(@"directory-after-create", @"created", YES);
++    operation(@"directory-backup", ^BOOL(NSError **error) {
++        return [[NSURL fileURLWithPath:ownedPath(@"created", YES, NO) isDirectory:YES]
++            setResourceValue:@YES forKey:NSURLIsExcludedFromBackupKey error:error];
++    });
++    observe(@"directory-after-backup", @"created", YES);
++    const char payload[] = "PUBLIC SYNTHETIC FOUNDATION CONTROL ONLY";
++    NSData *data = [NSData dataWithBytes:payload length:sizeof(payload) - 1];
++    NSString *atomic = ownedPath(@"created/atomic.bin", NO, YES);
++    operation(@"atomic-write", ^BOOL(NSError **error) {
++        return [data writeToFile:atomic options:(NSDataWritingAtomic | NSDataWritingFileProtectionComplete) error:error];
++    });
++    observe(@"atomic-after-write", @"created/atomic.bin", NO);
++    operation(@"atomic-backup", ^BOOL(NSError **error) {
++        return [[NSURL fileURLWithPath:ownedPath(@"created/atomic.bin", NO, NO)]
++            setResourceValue:@YES forKey:NSURLIsExcludedFromBackupKey error:error];
++    });
++    observe(@"atomic-after-backup", @"created/atomic.bin", NO);
++    // Explicit directory setter is deliberately AFTER the production-like
++    // create -> backup -> atomic Complete write -> backup observations.
++    operation(@"directory-set", ^BOOL(NSError **error) {
++        return [files setAttributes:@{NSFileProtectionKey: NSFileProtectionComplete}
++            ofItemAtPath:ownedPath(@"created", YES, NO) error:error];
++    });
++    observe(@"directory-after-set", @"created", YES);
++    NSString *direct = ownedPath(@"created/direct.bin", NO, YES);
++    operation(@"direct-write", ^BOOL(NSError **error) {
++        return [data writeToFile:direct options:NSDataWritingFileProtectionComplete error:error];
++    });
++    observe(@"direct-after-write", @"created/direct.bin", NO);
++    NSString *set = ownedPath(@"created/set.bin", NO, YES);
++    operation(@"default-write", ^BOOL(NSError **error) {
++        return [data writeToFile:set options:NSDataWritingAtomic error:error];
++    });
++    observe(@"file-before-set", @"created/set.bin", NO);
++    operation(@"file-set", ^BOOL(NSError **error) {
++        return [files setAttributes:@{NSFileProtectionKey: NSFileProtectionComplete}
++            ofItemAtPath:ownedPath(@"created/set.bin", NO, NO) error:error];
++    });
++    observe(@"file-after-set", @"created/set.bin", NO);
++}
++
++static NSString *canonicalDirectory(NSString *supplied, struct stat *identity) {
++    requireControl(supplied != nil && [supplied hasPrefix:@"/"] &&
++        [supplied lengthOfBytesUsingEncoding:NSUTF8StringEncoding] <= 4096, @"directory-path");
++    char canonical[PATH_MAX];
++    requireControl(realpath(supplied.fileSystemRepresentation, canonical) != NULL, @"directory-canonical");
++    NSString *path = [NSString stringWithUTF8String:canonical];
++    requireControl(path != nil && lstat(path.fileSystemRepresentation, identity) == 0 &&
++        S_ISDIR(identity->st_mode) && identity->st_uid == getuid(), @"directory-owner");
++    return path;
++}
++
++static void attestDirectory(NSString *path, const struct stat *expected) {
++    struct stat value;
++    requireControl(path != nil && lstat(path.fileSystemRepresentation, &value) == 0 &&
++        S_ISDIR(value.st_mode) && value.st_uid == getuid() &&
++        value.st_dev == expected->st_dev && value.st_ino == expected->st_ino,
++        @"app-parent-identity");
++}
++
++static void attestAppParents(void) {
++    requireControl(parentsPinned && supportDescriptor >= 0, @"app-parents-not-pinned");
++    attestDirectory(containerPath, &containerIdentity);
++    attestDirectory(libraryPath, &libraryIdentity);
++    attestDirectory(supportPath, &supportIdentity);
++    struct stat opened;
++    requireControl(fstat(supportDescriptor, &opened) == 0 &&
++        S_ISDIR(opened.st_mode) && opened.st_uid == getuid() &&
++        opened.st_dev == supportIdentity.st_dev && opened.st_ino == supportIdentity.st_ino,
++        @"app-parent-descriptor");
++}
++
++static void prepareContainer(NSString *device) {
++    containerPath = canonicalDirectory(NSHomeDirectory(), &containerIdentity);
++    NSString *prefix = [@L08_DEVICE_SET stringByAppendingFormat:@"/%@/data/Containers/Data/Application/", device];
++    requireControl([containerPath hasPrefix:prefix], @"app-container-prefix");
++    NSString *containerID = [containerPath substringFromIndex:prefix.length];
++    requireControl(containerID.length == 36 && [[NSUUID alloc] initWithUUIDString:containerID] != nil,
++        @"app-container-id");
++    struct stat bundle;
++    appBundlePath = canonicalDirectory([NSBundle mainBundle].bundlePath, &bundle);
++    NSString *bundlePrefix = [@L08_DEVICE_SET stringByAppendingFormat:@"/%@/data/Containers/Bundle/Application/", device];
++    requireControl([appBundlePath hasPrefix:bundlePrefix], @"app-bundle-prefix");
++    NSString *relative = [appBundlePath substringFromIndex:bundlePrefix.length];
++    NSArray<NSString *> *components = [relative componentsSeparatedByString:@"/"];
++    requireControl(components.count == 2 && [components[1] isEqual:@"Parlor.app"] &&
++        [components[0] length] == 36 && [[NSUUID alloc] initWithUUIDString:components[0]] != nil,
++        @"app-bundle-id");
++    libraryPath = canonicalDirectory([containerPath stringByAppendingPathComponent:@"Library"], &libraryIdentity);
++    requireControl([libraryPath isEqual:[containerPath stringByAppendingPathComponent:@"Library"]] &&
++        libraryIdentity.st_dev == containerIdentity.st_dev, @"app-library-path");
++    NSError *error = nil;
++    NSURL *support = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory
++        inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:&error];
++    requireControl(support != nil && error == nil, @"application-support-unavailable");
++    supportPath = canonicalDirectory(support.path, &supportIdentity);
++    requireControl([supportPath isEqual:[libraryPath stringByAppendingPathComponent:@"Application Support"]] &&
++        supportIdentity.st_dev == containerIdentity.st_dev, @"application-support-path");
++    supportDescriptor = open(supportPath.fileSystemRepresentation, O_RDONLY | O_DIRECTORY | O_NOFOLLOW);
++    requireControl(supportDescriptor >= 0, @"application-support-open");
++    parentsPinned = YES;
++    attestAppParents();
++}
++
++static void allocateFixture(NSString *token, NSString *boot) {
++    attestAppParents();
++    fixtureName = [NSString stringWithFormat:@"ParlorFoundationControl-%@-%@", token.lowercaseString, boot.lowercaseString];
++    root = [supportPath stringByAppendingPathComponent:fixtureName];
++    // mkdirat exclusively creates this exact leaf. EEXIST never grants ownership.
++    requireControl(mkdirat(supportDescriptor, fixtureName.fileSystemRepresentation, 0700) == 0,
++        @"fixture-exclusive-create");
++    rootCreated = YES;
++    struct stat value;
++    requireControl(fstatat(supportDescriptor, fixtureName.fileSystemRepresentation, &value, AT_SYMLINK_NOFOLLOW) == 0 &&
++        S_ISDIR(value.st_mode) && value.st_uid == getuid() && value.st_dev == supportIdentity.st_dev &&
++        (value.st_mode & 0777) == 0700, @"fixture-created-identity");
++    rootDevice = value.st_dev; rootInode = value.st_ino; rootPinned = YES;
++    attestRoot();
++}
++
++static NSDictionary *fixtureImage(void) {
++    Dl_info info;
++    if (dladdr((const void *)&ParlorL08AppFoundationObserve, &info) == 0 ||
++        info.dli_fname == NULL || info.dli_fbase == NULL) return @{@"status": @"unavailable"};
++    char canonical[PATH_MAX];
++    if (realpath(info.dli_fname, canonical) == NULL) return @{@"status": @"unavailable"};
++    NSString *path = [NSString stringWithUTF8String:canonical];
++    NSString *relative = nil;
++    for (NSString *leaf in @[@"Parlor", @"Parlor.debug.dylib"]) {
++        if ([path isEqual:[appBundlePath stringByAppendingPathComponent:leaf]]) relative = leaf;
++    }
++    if (relative == nil) return @{@"status": @"unavailable"};
++    NSMutableDictionary *result = [imageIdentity(info.dli_fbase) mutableCopy];
++    if ([result[@"status"] isEqual:@"observed"]) result[@"app_relative"] = relative;
++    return result;
++}
++
++static void cleanupFixture(void) {
++    if (!rootCreated) return;
++    attestRoot();
++    int rootFD = open(root.fileSystemRepresentation, O_RDONLY | O_DIRECTORY | O_NOFOLLOW);
++    requireControl(rootFD >= 0, @"cleanup-root-open");
++    int childFD = -1;
++    @try {
++        struct stat value;
++        requireControl(fstat(rootFD, &value) == 0 && S_ISDIR(value.st_mode) &&
++            value.st_uid == getuid() && value.st_dev == rootDevice && value.st_ino == rootInode,
++            @"cleanup-root-descriptor");
++        int present = fstatat(rootFD, "created", &value, AT_SYMLINK_NOFOLLOW);
++        if (present != 0) {
++            requireControl(errno == ENOENT && !directoryPinned, @"cleanup-directory-missing");
++        } else {
++            requireControl(directoryPinned && S_ISDIR(value.st_mode) && value.st_uid == getuid() &&
++                value.st_dev == directoryDevice && value.st_ino == directoryInode &&
++                (value.st_mode & 0777) == directoryMode, @"cleanup-directory-identity");
++            childFD = openat(rootFD, "created", O_RDONLY | O_DIRECTORY | O_NOFOLLOW);
++            requireControl(childFD >= 0 && fstat(childFD, &value) == 0 &&
++                value.st_dev == directoryDevice && value.st_ino == directoryInode,
++                @"cleanup-directory-descriptor");
++            const char *leaves[] = {"atomic.bin", "direct.bin", "set.bin"};
++            for (NSUInteger index = 0; index < 3; index++) {
++                if (fstatat(childFD, leaves[index], &value, AT_SYMLINK_NOFOLLOW) != 0) {
++                    requireControl(errno == ENOENT && !filePinned[index], @"cleanup-file-missing");
++                    continue;
++                }
++                requireControl(filePinned[index] && S_ISREG(value.st_mode) && value.st_uid == getuid() &&
++                    value.st_dev == fileIdentities[index].st_dev && value.st_ino == fileIdentities[index].st_ino &&
++                    value.st_nlink == 1 && value.st_size >= 0 && value.st_size <= 256,
++                    @"cleanup-file-identity");
++                requireControl(unlinkat(childFD, leaves[index], 0) == 0, @"cleanup-file-remove");
++            }
++            requireControl(fstatat(rootFD, "created", &value, AT_SYMLINK_NOFOLLOW) == 0 &&
++                value.st_dev == directoryDevice && value.st_ino == directoryInode,
++                @"cleanup-directory-replaced");
++            // Unknown extra children make rmdir fail; never recursively adopt them.
++            requireControl(unlinkat(rootFD, "created", AT_REMOVEDIR) == 0, @"cleanup-directory-remove");
++        }
++        attestRoot();
++        requireControl(unlinkat(supportDescriptor, fixtureName.fileSystemRepresentation, AT_REMOVEDIR) == 0,
++            @"cleanup-root-remove");
++        requireControl(fstatat(supportDescriptor, fixtureName.fileSystemRepresentation, &value, AT_SYMLINK_NOFOLLOW) != 0 &&
++            errno == ENOENT, @"cleanup-root-remains");
++        rootRemoved = YES;
++    } @finally {
++        if (childFD >= 0 && close(childFD) != 0) descriptorCloseFailed = YES;
++        if (close(rootFD) != 0) descriptorCloseFailed = YES;
++    }
++}
++
++NSData *ParlorL08AppFoundationObserve(NSString *processBoot) {
++    // A repeated/concurrent entry cannot reset mutable observer state or clean another invocation.
++    if (atomic_flag_test_and_set_explicit(&invocationUsed, memory_order_relaxed)) return nil;
++    @autoreleasepool {
++        NSDictionary *environment = [NSProcessInfo processInfo].environment;
++        NSString *token = environment[@"PARLOR_DSC01_RUN_TOKEN"];
++        NSString *device = environment[@"SIMULATOR_UDID"];
++        if (token.length != 36 || [[NSUUID alloc] initWithUUIDString:token] == nil ||
++            processBoot.length != 36 || [[NSUUID alloc] initWithUUIDString:processBoot] == nil ||
++            device.length != 36 || [[NSUUID alloc] initWithUUIDString:device] == nil) return nil;
++        rows = [NSMutableArray array];
++        NSMutableDictionary *receipt = [@{@"schema_version": @1, @"kind": @"l08-app-foundation",
++            @"run_token": token, @"process_boot": processBoot, @"process_id": @(getpid()),
++            @"simulator_udid": device, @"scenario": @"readiness", @"boot_ordinal": @1,
++            @"fixture_template_sha256": @L08_TEMPLATE_SHA256, @"context_sha256": @L08_CONTEXT_SHA256,
++            @"controls_sha256": @L08_CONTROLS_SHA256, @"signing_mode": @L08_SIGNING_MODE,
++            @"simulator_only": @YES, @"app_container": @NO, @"hardware_protection_verified": @NO,
++            @"l08_requirements_waived": @NO, @"container": @{@"status": @"unavailable"},
++            @"main_image": @{@"status": @"unavailable"}, @"fixture_image": @{@"status": @"unavailable"},
++            @"foundation_image": @{@"status": @"unavailable"}, @"runtime_version": @[], @"rows": rows} mutableCopy];
++        @try {
++            requireControl(![NSThread isMainThread], @"native-on-main");
++            requireControl([[NSBundle mainBundle].bundleIdentifier isEqual:@"com.parlor.app.debug"], @"debug-app-identity");
++            requireControl([device isEqual:environment[@"PARLOR_DSC01_EXPECTED_UDID"]], @"simulator-identity");
++            requireControl([environment[@"PARLOR_DSC01_SCENARIO"] isEqual:@"readiness"] &&
++                [environment[@"PARLOR_DSC01_FIXTURE"] isEqual:@"existing"] &&
++                [environment[@"PARLOR_READINESS_BOOT"] isEqual:@"1"], @"first-readiness-context");
++            NSOperatingSystemVersion version = [NSProcessInfo processInfo].operatingSystemVersion;
++            receipt[@"runtime_version"] = @[@(version.majorVersion), @(version.minorVersion), @(version.patchVersion)];
++            requireControl(version.majorVersion == 26 && version.minorVersion == 5 && version.patchVersion == 0,
++                @"runtime-version");
++            prepareContainer(device);
++            receipt[@"app_container"] = @YES;
++            receipt[@"container"] = @{@"status": @"observed", @"id": containerPath.lastPathComponent,
++                @"device": @(containerIdentity.st_dev), @"inode": @(containerIdentity.st_ino), @"uid": @(getuid())};
++            receipt[@"main_image"] = imageIdentity(_dyld_get_image_header(0));
++            receipt[@"fixture_image"] = fixtureImage();
++            receipt[@"foundation_image"] = foundationIdentity();
++            allocateFixture(token, processBoot);
++            collect();
++            // Retain all observations as a closed CONTROL_ERROR if image identity
++            // is unavailable, rather than emitting an unpreservable complete record.
++            for (NSString *field in @[@"main_image", @"fixture_image", @"foundation_image"]) {
++                requireControl([receipt[field][@"status"] isEqual:@"observed"] &&
++                    [receipt[field][@"platform"] isEqual:@7], @"image-context-unavailable");
++            }
++            receipt[@"status"] = @"OBSERVATIONS_COMPLETE";
++        } @catch (NSException *exception) {
++            receipt[@"status"] = @"CONTROL_ERROR";
++            receipt[@"reason"] = [exception.name isEqual:@"ControlBoundary"] ? exception.reason : @"objc-exception";
++        } @finally {
++            NSString *cleanup = @"NOT_CREATED";
++            NSString *reason = @"none";
++            @try {
++                cleanupFixture();
++                if (rootCreated) cleanup = @"REMOVED";
++            } @catch (NSException *exception) {
++                cleanup = @"FAILED";
++                reason = [exception.name isEqual:@"ControlBoundary"] ? exception.reason : @"objc-exception";
++            } @finally {
++                if (supportDescriptor >= 0) {
++                    if (close(supportDescriptor) != 0) descriptorCloseFailed = YES;
++                    supportDescriptor = -1;
++                }
++            }
++            if (descriptorCloseFailed) {
++                cleanup = @"FAILED";
++                reason = @"cleanup-descriptor-close";
++            }
++            receipt[@"fixture_cleanup"] = @{@"status": cleanup, @"created": @(rootCreated),
++                @"root_pinned": @(rootPinned), @"directory_pinned": @(directoryPinned),
++                @"root_removed": @(rootRemoved), @"reason": reason};
++        }
++        NSError *error = nil;
++        NSData *encoded = [NSJSONSerialization dataWithJSONObject:receipt options:NSJSONWritingSortedKeys error:&error];
++        return encoded != nil && error == nil && encoded.length <= 32768 ? encoded : nil;
++    }
++}
+--- /dev/null
++++ remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/L08AppFoundationBridge.h.in
+@@ -0,0 +1,7 @@
++// Test-only bridge for the copied app Debug target, never an application API.
++#import <Foundation/Foundation.h>
++
++NS_ASSUME_NONNULL_BEGIN
++FOUNDATION_EXPORT NSData * _Nullable ParlorL08AppFoundationObserve(NSString *processBoot)
++    NS_SWIFT_NAME(parlorL08AppFoundationObserve(processBoot:));
++NS_ASSUME_NONNULL_END
+--- /dev/null
++++ remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/L08AppFoundationLaunch.swift.in
+@@ -0,0 +1,74 @@
++// Appended to the owned copied ContentView only. Direct ObjC, not Kotlin storage.
++extension DSC01Probe {
++    var isAppFoundationBoot: Bool {
++        scenario == "readiness" && ProcessInfo.processInfo.environment["PARLOR_READINESS_BOOT"] == "1"
++    }
++
++    func startAppFoundationObservation() {
++        precondition(Thread.isMainThread)
++        guard prepared, isAppFoundationBoot, appFoundationDisplay == "pending" else { return }
++        let environment = ProcessInfo.processInfo.environment
++        guard let token = environment["PARLOR_DSC01_RUN_TOKEN"], UUID(uuidString: token) != nil,
++              let device = environment["SIMULATOR_UDID"],
++              device == environment["PARLOR_DSC01_EXPECTED_UDID"] else {
++            appFoundationDisplay = "invalid-context"; return
++        }
++        let processBoot = boot
++        appFoundationDisplay = "running" // Main-thread one-shot guard; native also has an atomic entry guard.
++        DispatchQueue.global(qos: .utility).async { [weak self] in
++            // Native @finally cleans its synthetic sibling before returning.
++            // No global process alarm/umask, caller-owned store or preferences.
++            let bytes = parlorL08AppFoundationObserve(processBoot: processBoot)
++            DispatchQueue.main.async {
++                guard let self else { return }
++                var stage = "native-delivery"
++                do {
++                    guard let bytes, (1...32768).contains(bytes.count),
++                          let row = try JSONSerialization.jsonObject(with: bytes) as? [String: Any],
++                          row["kind"] as? String == "l08-app-foundation",
++                          row["run_token"] as? String == token,
++                          row["process_boot"] as? String == processBoot,
++                          row["simulator_udid"] as? String == device,
++                          row["process_id"] as? Int == Int(ProcessInfo.processInfo.processIdentifier) else {
++                        throw self.fixtureError()
++                    }
++                    stage = "receipt-write"
++                    let path = FileManager.default.temporaryDirectory.appendingPathComponent("parlor-l08-app-foundation.json")
++                    // Exclusive result, outside the synthetic sibling so cleanup cannot erase evidence.
++                    try bytes.write(to: path, options: [.withoutOverwriting])
++                    self.appFoundationDisplay = String(decoding: bytes, as: UTF8.self)
++                } catch {
++                    do {
++                        let failure: [String: Any] = ["schema_version": 1,
++                            "kind": "l08-app-foundation-delivery-failure", "stage": stage,
++                            "run_token": token, "process_boot": processBoot, "simulator_udid": device,
++                            "process_id": Int(ProcessInfo.processInfo.processIdentifier),
++                            "boot_ordinal": 1, "scenario": "readiness",
++                            "l08_requirements_waived": false, "hardware_protection_verified": false]
++                        let encoded = try JSONSerialization.data(withJSONObject: failure, options: [.sortedKeys])
++                        guard encoded.count <= 1024 else { throw self.fixtureError() }
++                        let path = FileManager.default.temporaryDirectory.appendingPathComponent(
++                            "parlor-l08-app-foundation-failure.json")
++                        try encoded.write(to: path, options: [.withoutOverwriting])
++                        self.appFoundationDisplay = String(decoding: encoded, as: UTF8.self)
++                    } catch {
++                        self.appFoundationDisplay = "failure-receipt-unavailable"
++                    }
++                }
++            }
++        }
++    }
++}
++
++private struct L08AppFoundationControls: View {
++    @ObservedObject var probe: DSC01Probe
++    var body: some View {
++        HStack(spacing: 8) {
++            Button("App Foundation observation") { probe.startAppFoundationObservation() }
++                .disabled(probe.appFoundationDisplay != "pending")
++                .accessibilityIdentifier("parlor-l08-app-foundation-run")
++            Text("App Foundation result").accessibilityIdentifier("parlor-l08-app-foundation-state")
++                .accessibilityValue(probe.appFoundationDisplay)
++        }
++    }
++}
+--- /dev/null
++++ remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/L08AppFoundationUITests.swift.in
+@@ -0,0 +1,49 @@
++// Called once on existing readiness boot1 BEFORE its original native health action.
++// No original boot/test/operation count or required storage assertion is changed.
++extension IOSAppLaunchUITests {
++    @MainActor private func verifyL08AppFoundation(_ app: XCUIApplication, boot: String) throws {
++        XCTAssertEqual(app.launchEnvironment["PARLOR_READINESS_BOOT"], "1")
++        XCTAssertEqual(app.launchEnvironment["PARLOR_DSC01_SCENARIO"], "readiness")
++        let control = app.buttons["parlor-l08-app-foundation-run"]
++        XCTAssertTrue(control.waitForExistence(timeout: 10) && control.isEnabled && control.isHittable)
++        control.tap() // Exactly one activation; no remount retry or repeated native call.
++        let state = app.staticTexts["parlor-l08-app-foundation-state"]
++        XCTAssertTrue(state.waitForExistence(timeout: 10))
++        let completed = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
++            guard let value = state.value as? String else { return false }
++            return value != "pending" && value != "running"
++        }, object: nil)
++        XCTAssertEqual(XCTWaiter.wait(for: [completed], timeout: 35), .completed)
++        let bytes = try XCTUnwrap((state.value as? String)?.data(using: .utf8))
++        XCTAssertLessThanOrEqual(bytes.count, 32768)
++        let value = try XCTUnwrap(JSONSerialization.jsonObject(with: bytes) as? [String: Any])
++        XCTAssertEqual(value["kind"] as? String, "l08-app-foundation")
++        XCTAssertEqual(value["status"] as? String, "OBSERVATIONS_COMPLETE")
++        XCTAssertEqual(value["run_token"] as? String, app.launchEnvironment["PARLOR_DSC01_RUN_TOKEN"])
++        XCTAssertEqual(value["simulator_udid"] as? String, app.launchEnvironment["PARLOR_DSC01_EXPECTED_UDID"])
++        XCTAssertEqual(value["process_boot"] as? String, boot)
++        XCTAssertEqual(value["boot_ordinal"] as? Int, 1)
++        XCTAssertEqual(value["app_container"] as? Bool, true)
++        XCTAssertEqual(value["simulator_only"] as? Bool, true)
++        XCTAssertEqual(value["hardware_protection_verified"] as? Bool, false)
++        XCTAssertEqual(value["l08_requirements_waived"] as? Bool, false)
++        XCTAssertEqual((try dictionary(value, "fixture_cleanup"))["status"] as? String, "REMOVED")
++        let rows = try XCTUnwrap(value["rows"] as? [[String: Any]])
++        XCTAssertEqual(rows.count, 16)
++        XCTAssertFalse(control.isEnabled)
++        XCTAssertEqual(app.state, .runningForeground)
++        XCTAssertFalse(app.alerts.firstMatch.exists)
++        // Metadata values/operation results are observations, NEVER strict L08 acceptance.
++        // The host independently validates every row, native identity and exact image UUID.
++        let receipt: [String: Any] = ["schema_version": 1, "kind": "l08-app-foundation-xctest",
++            "run_token": try string(value, "run_token"), "process_boot": boot,
++            "process_id": try XCTUnwrap(value["process_id"] as? Int),
++            "boot_ordinal": 1, "activations": 1, "foreground": true, "alert_present": false,
++            "fixture_template_sha256": try string(value, "fixture_template_sha256"),
++            "context_sha256": try string(value, "context_sha256"),
++            "controls_sha256": try string(value, "controls_sha256")]
++        let encoded = try JSONSerialization.data(withJSONObject: receipt, options: [.sortedKeys])
++        XCTAssertLessThanOrEqual(encoded.count, 1024)
++        print("PARLOR_L08_APP_FOUNDATION " + String(decoding: encoded, as: UTF8.self))
++    }
++}
+--- /dev/null
++++ remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py
+@@ -0,0 +1,203 @@
++"""Additive owned-copy hooks only. No CLI, builds, processes, device actions or deletion."""
++import hashlib
++import json
++import os
++from pathlib import Path, PurePosixPath
++import re
++import stat
++
++HERE = Path(__file__).resolve().parent
++ROOT = HERE.parents[3]
++CAMPAIGN = ROOT / 'remediation-runs/2026-09-07-local-readiness'
++COMPANION = CAMPAIGN / 'l08-storage-functional-companion-02'
++PROJECT = 'iosApp/iosApp.xcodeproj/project.pbxproj'
++CONTENT = 'iosApp/iosApp/ContentView.swift'
++TESTS = 'iosApp/iosAppUITests/IOSAppLaunchUITests.swift'
++NATIVE = 'iosApp/iosApp/L08AppFoundation.m'
++BRIDGE = 'iosApp/iosApp/L08AppFoundationBridge.h'
++ADDITIONS = {NATIVE: 'L08AppFoundation.m.in', BRIDGE: 'L08AppFoundationBridge.h.in'}
++MODIFIED = (PROJECT, CONTENT, TESTS)
++HASH = re.compile(r'[0-9a-f]{64}\Z')
++TEMP = re.compile(r'parlor-audit-ios-readiness-[0-9]{2}-[A-Za-z0-9_-]{1,64}\Z')
++PINS = {
++    'run_ios_readiness.py': '1af5e430a1589491406e5347f4d50941cc590b421a0c51694b505e82968b62e0',
++    'copied_sources.py': 'ba1dbbd9fabc23e43060663ff6051617f1fe3119979e60df7a1db3c13fe950d6',
++    'NativeReadinessUITests.swift.in': 'fa2dc7dbc97c576262ad14cd85b22f65aa908b1629ab1a205b22aa4873f5c0dc',
++    'NativeReadinessLaunch.swift.in': 'df8f0cce3f45bedbfea47df3ca0b2e56c6a777383395fc170f0f07b83f8d143a',
++    'DSC01Probe.swift.in': '1c4b113ec8695d8da2115e4f386fdaf8820411879af6ff9492109b62c7770746',
++    'l08_functional_copy.py': '417865a86daca8c09e1d650abc2d46b20920a128d95d2021ad365e38e7a207a4',
++}
++
++
++def require(condition, code):
++    if not condition:
++        raise RuntimeError('App Foundation: ' + code)
++
++
++def digest(path):
++    value = hashlib.sha256()
++    with Path(path).open('rb') as source:
++        for chunk in iter(lambda: source.read(1024 * 1024), b''):
++            value.update(chunk)
++    return value.hexdigest()
++
++
++def context_digest(identity):
++    require(isinstance(identity, dict) and isinstance(identity.get('source_manifest'), list), 'source-context-shape')
++    entries = identity['source_manifest']
++    require(1 <= len(entries) <= 50000 and all(isinstance(row, list) and len(row) == 2 and
++            isinstance(row[0], str) and isinstance(row[1], str) and HASH.fullmatch(row[1]) for row in entries),
++            'source-manifest-shape')
++    require(entries == sorted(entries) and len({row[0] for row in entries}) == len(entries) and
++            identity.get('source_manifest_sha256') == hashlib.sha256(
++                json.dumps(entries, separators=(',', ':')).encode()).hexdigest(), 'source-manifest-identity')
++    encoded = json.dumps(identity, sort_keys=True, separators=(',', ':'), ensure_ascii=True, allow_nan=False).encode()
++    require(len(encoded) <= 4 * 1024 * 1024, 'source-context-bound')
++    return hashlib.sha256(encoded).hexdigest()
++
++
++def once(text, old, new):
++    require(isinstance(text, str) and text.count(old) == 1, 'missing-or-ambiguous-copy-anchor')
++    return text.replace(old, new)
++
++
++def pin_dependencies():
++    result = []
++    for name, expected in PINS.items():
++        path = COMPANION / name
++        require(path.is_file() and not path.is_symlink() and path.resolve() == path and
++                digest(path) == expected, 'companion02-source-drift')
++        result.append(dict(path=str(path.relative_to(ROOT)), sha256=expected))
++    return result
++
++
++def transform_content(text, launch):
++    require('L08AppFoundation' not in text and 'appFoundationDisplay' not in text, 'repeated-content-adapter')
++    text = once(text, '    @Published private(set) var nativeReadinessDisplay = "pending"',
++                '    @Published private(set) var nativeReadinessDisplay = "pending"\n'
++                '    @Published private(set) var appFoundationDisplay = "pending"')
++    text = once(text, '            if probe.isReadinessScenario {',
++                '            if probe.isAppFoundationBoot { L08AppFoundationControls(probe: probe) }\n'
++                '            if probe.isReadinessScenario {')
++    return text + '\n' + launch
++
++
++def transform_tests(text, helper):
++    require('verifyL08AppFoundation' not in text, 'repeated-test-adapter')
++    anchor = '            let run = app.buttons["parlor-native-readiness-run"]'
++    require('func verifyActualNativeReadiness(_ app: XCUIApplication)' in text and
++            'for ordinal in 1...8 {' in text and
++            'app.launchEnvironment["PARLOR_READINESS_BOOT"] = String(ordinal)' in text,
++            'original-readiness-loop-drift')
++    return once(text, anchor,
++                '            if ordinal == 1 { try verifyL08AppFoundation(app, boot: boot) }\n' + anchor) + '\n' + helper
++
++
++def transform_project(text):
++    require('L08AppFoundation' not in text and 'SWIFT_OBJC_BRIDGING_HEADER' not in text and
++            'F08C01002C000001' not in text, 'existing-bridge-or-adapter')
++    text = once(text, '/* Begin PBXBuildFile section */', '''/* Begin PBXBuildFile section */
++		F08C01002C00000100000001 /* L08AppFoundation.m in Sources */ = {isa = PBXBuildFile; fileRef = F08C01002C00000100000002 /* L08AppFoundation.m */; settings = {COMPILER_FLAGS = "-Wall -Wextra -Werror"; }; };''')
++    text = once(text, '/* Begin PBXFileReference section */', '''/* Begin PBXFileReference section */
++		F08C01002C00000100000002 /* L08AppFoundation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = L08AppFoundation.m; sourceTree = "<group>"; };
++		F08C01002C00000100000003 /* L08AppFoundationBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = L08AppFoundationBridge.h; sourceTree = "<group>"; };''')
++    text = once(text, '\t\t\t\tAB1D03C62B0E0FA8002A1234 /* ContentView.swift */,',
++                '\t\t\t\tAB1D03C62B0E0FA8002A1234 /* ContentView.swift */,\n'
++                '\t\t\t\tF08C01002C00000100000002 /* L08AppFoundation.m */,\n'
++                '\t\t\t\tF08C01002C00000100000003 /* L08AppFoundationBridge.h */,')
++    text = once(text, '\t\t\t\tAB1D03C72B0E0FA8002A1234 /* ContentView.swift in Sources */,',
++                '\t\t\t\tAB1D03C72B0E0FA8002A1234 /* ContentView.swift in Sources */,\n'
++                '\t\t\t\tF08C01002C00000100000001 /* L08AppFoundation.m in Sources */,')
++    return once(text, '\t\t\t\tPRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_ID).debug";',
++                '\t\t\t\tPRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_ID).debug";\n'
++                '\t\t\t\tSWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/iosApp/L08AppFoundationBridge.h";')
++
++
++def render_native(template, context, controls, mode, device_set):
++    require(all(isinstance(value, str) and HASH.fullmatch(value) for value in (context, controls)), 'compile-hash-binding')
++    require(mode in {'disabled', 'adhoc'}, 'signing-mode')
++    path = Path(device_set)
++    require(path.is_absolute() and str(path).isascii() and
++            path == Path.home() / 'Library/Developer/CoreSimulator/Devices', 'expected-device-set')
++    require(path.is_dir() and not path.is_symlink() and path.resolve() == path, 'device-set-canonical')
++    template_hash = hashlib.sha256(template.encode()).hexdigest()
++    for key, value in (('TEMPLATE_SHA256', template_hash), ('CONTEXT_SHA256', context),
++                       ('CONTROLS_SHA256', controls), ('DEVICE_SET', str(path)), ('SIGNING_MODE', mode)):
++        template = once(template, '__L08_' + key + '__', json.dumps(value))
++    require('__L08_' not in template, 'unexpanded-native-token')
++    return template, template_hash
++
++
++def _copy_paths(copy_root, before, custody):
++    root = Path(copy_root).absolute()
++    temporary = root.parent
++    require(root.name == 'copy' and TEMP.fullmatch(temporary.name) is not None and
++            not temporary.is_relative_to(ROOT) and temporary.is_dir() and
++            not temporary.is_symlink() and temporary.resolve() == temporary and
++            root.is_dir() and not root.is_symlink() and root.resolve() == root, 'owned-copy-root')
++    info = temporary.lstat()
++    require(isinstance(custody, dict) and set(custody) == {'path', 'device', 'inode', 'uid'} and
++            custody == dict(path=str(temporary), device=info.st_dev, inode=info.st_ino, uid=info.st_uid) and
++            info.st_uid == os.getuid() and stat.S_IMODE(info.st_mode) == 0o700, 'allocated-copy-custody')
++    copied = root.lstat()
++    require(stat.S_ISDIR(copied.st_mode) and copied.st_uid == os.getuid() and
++            copied.st_dev == info.st_dev and stat.S_IMODE(copied.st_mode) == 0o700, 'copy-directory-custody')
++    require(isinstance(before, list) and 3 <= len(before) <= 50000, 'inherited-manifest-bound')
++    entries = {}
++    for row in before:
++        require(isinstance(row, dict) and set(row) == {'path', 'original_sha256', 'copied_sha256'}, 'inherited-row-shape')
++        relative = row['path']
++        require(isinstance(relative, str) and relative and str(PurePosixPath(relative)) == relative and
++                not PurePosixPath(relative).is_absolute() and
++                all(part not in ('.', '..') for part in PurePosixPath(relative).parts) and
++                relative not in entries and isinstance(row['copied_sha256'], str) and HASH.fullmatch(row['copied_sha256']),
++                'inherited-path-or-hash')
++        path = root / relative
++        require(path.is_file() and not path.is_symlink() and path.resolve() == path and
++                path.stat().st_uid == os.getuid() and path.stat().st_nlink == 1 and
++                digest(path) == row['copied_sha256'], 'inherited-copy-changed')
++        entries[relative] = row
++    observed = set()
++    for count, path in enumerate(root.rglob('*'), 1):
++        require(count <= 100000 and not path.is_symlink(), 'copy-inventory-bound-or-link')
++        if path.is_file():
++            observed.add(str(path.relative_to(root)))
++    require(observed == set(entries) and set(MODIFIED) <= observed, 'inherited-inventory-drift')
++    require(not set(ADDITIONS) & observed and all(not (root / name).exists() for name in ADDITIONS), 'existing-adapter-output')
++    return root, entries
++
++
++def apply_owned_adapter(copy_root, before, custody, source_identity, controls, mode, device_set):
++    """Root must pass its creation-attested custody and freshly reviewed control binding.
++
++    Call AFTER the inherited inspector, BEFORE writing copied-source.diff/manifest.
++    Returned manifest replaces only that local output list, not companion code.
++    All transformations are prepared before writes; interrupted partial copies are
++    never compiled and remain exclusively covered by root's unchanged finalizer.
++    """
++    dependencies = pin_dependencies()
++    root, entries = _copy_paths(copy_root, before, custody)
++    context = context_digest(source_identity)
++    rendered, template_hash = render_native((HERE / ADDITIONS[NATIVE]).read_text(), context, controls, mode, device_set)
++    originals = {name: (root / name).read_text() for name in MODIFIED}
++    modifications = {
++        PROJECT: transform_project(originals[PROJECT]),
++        CONTENT: transform_content(originals[CONTENT], (HERE / 'L08AppFoundationLaunch.swift.in').read_text()),
++        TESTS: transform_tests(originals[TESTS], (HERE / 'L08AppFoundationUITests.swift.in').read_text()),
++    }
++    additions = {NATIVE: rendered, BRIDGE: (HERE / ADDITIONS[BRIDGE]).read_text()}
++    for name, content in additions.items():
++        with (root / name).open('x') as target:
++            target.write(content)
++    for name, content in modifications.items():
++        require(digest(root / name) == entries[name]['copied_sha256'], 'copy-changed-before-write')
++        (root / name).write_text(content)
++    result = [{**row, 'copied_sha256': digest(root / row['path'])} for row in before]
++    result += [dict(path=name, original_sha256=None, copied_sha256=digest(root / name)) for name in additions]
++    unchanged = set(entries) - set(MODIFIED)
++    require(all(digest(root / name) == entries[name]['copied_sha256'] for name in unchanged), 'unrelated-copy-changed')
++    return result, dict(schema_version=1, kind='L08_APP_FOUNDATION_COPY_BINDING',
++        context_sha256=context, controls_sha256=controls, fixture_template_sha256=template_hash,
++        native_copy_sha256=digest(root / NATIVE), bridge_copy_sha256=digest(root / BRIDGE),
++        companion_dependencies=dependencies, modified_paths=list(MODIFIED), added_paths=sorted(additions),
++        mode=mode, execution='NOT_RUN', native_build='NOT_RUN', original_l08='UNCHANGED_NOT_SATISFIED')
+--- /dev/null
++++ remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_receipts.py
+@@ -0,0 +1,264 @@
++"""Bounded observation-only schema; no metadata waiver, native tool or process action."""
++import hashlib
++import importlib.util
++import json
++import os
++from pathlib import Path
++import re
++import stat
++
++HERE = Path(__file__).resolve().parent
++ROOT = HERE.parents[3]
++BASE = ROOT / 'remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/run_control.py'
++BASE_HASH = '58e8daf875eaf8061ed017e10cc8c8065eb49292866b6741227814282a1b8e9f'
++UUID = re.compile(r'[A-Fa-f0-9]{8}(?:-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12}\Z')
++HASH = re.compile(r'[0-9a-f]{64}\Z')
++RESULT_NAME = 'parlor-l08-app-foundation.json'
++FAILURE_NAME = 'parlor-l08-app-foundation-failure.json'
++PREFIX = 'PARLOR_L08_APP_FOUNDATION '
++REASONS = set('''app-bundle-id app-bundle-prefix app-container-id app-container-prefix app-library-path
++app-parent-descriptor app-parent-identity app-parents-not-pinned application-support-open
++application-support-path application-support-unavailable cleanup-directory-descriptor
++cleanup-directory-identity cleanup-directory-missing cleanup-directory-remove cleanup-directory-replaced
++cleanup-file-identity cleanup-file-missing cleanup-file-remove cleanup-root-descriptor cleanup-root-open
++cleanup-root-remains cleanup-root-remove cleanup-descriptor-close created-directory-identity debug-app-identity
++directory-canonical directory-identity directory-owner directory-path entry-identity entry-stat file-identity
++file-index first-readiness-context fixture-created-identity fixture-exclusive-create image-context-unavailable native-on-main
++parent-identity root-identity root-not-pinned row-limit runtime-version simulator-identity unknown-leaf
++objc-exception'''.split())
++
++
++def require(condition, code):
++    if not condition:
++        raise RuntimeError('App Foundation receipt: ' + code)
++
++
++def base_validator():
++    """Exact pre-reviewed CLI row validators only; its guarded main never executes."""
++    require(BASE.is_file() and not BASE.is_symlink() and BASE.resolve() == BASE, 'validator-path')
++    data = BASE.read_bytes()
++    require(len(data) <= 65536 and hashlib.sha256(data).hexdigest() == BASE_HASH, 'validator-source')
++    spec = importlib.util.spec_from_file_location('l08_control03_row_schema', BASE)
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    return module
++
++
++def _uuid(value):
++    return isinstance(value, str) and UUID.fullmatch(value) is not None
++
++
++def _integer(value, lower, upper):
++    return type(value) is int and lower <= value <= upper
++
++
++def _image(value, complete, code=False):
++    require(isinstance(value, dict), 'image-shape')
++    if value == {'status': 'unavailable'}:
++        require(not complete, 'missing-image')
++        return
++    require(set(value) == ({'status', 'uuid', 'platform', 'app_relative'} if code else {'status', 'uuid', 'platform'}) and
++            value['status'] == 'observed' and _uuid(value['uuid']) and
++            _integer(value['platform'], 0, 255), 'image-fields')
++    if code:
++        require(value['app_relative'] in {'Parlor', 'Parlor.debug.dylib'}, 'foreign-code-image')
++    if complete:
++        require(value['platform'] == 7, 'non-simulator-image')
++
++
++def _rows(value, complete, validator):
++    require(isinstance(value, list) and len(value) <= len(validator.ROW_KINDS) and
++            (not complete or len(value) == len(validator.ROW_KINDS)), 'row-count')
++    for row, (identifier, kind) in zip(value, validator.ROW_KINDS):
++        require(isinstance(row, dict) and row.get('id') == identifier, 'row-order')
++        if kind == 'operation':
++            require(set(row) == {'id', 'kind', 'returned', 'result', 'exception', 'native_error'} and
++                    row['kind'] == 'operation' and type(row['returned']) is bool and type(row['result']) is bool,
++                    'operation-fields')
++            validator.validate_error(row['native_error'])
++            require(row['exception'] == ('none' if row['returned'] else 'objc-exception') and
++                    (row['returned'] or (row['result'] is False and not row['native_error']['present'])),
++                    'operation-exception')
++        else:
++            require(set(row) == ({'id', 'kind', 'fm', 'volume', 'backup', 'url'} if kind == 'file' else
++                                {'id', 'kind', 'fm', 'volume', 'backup'}) and row['kind'] == 'observation', 'query-fields')
++            validator.validate_query(row['fm'])
++            validator.validate_query(row['volume'], volume=True)
++            validator.validate_query(row['backup'], backup=True)
++            if kind == 'file':
++                validator.validate_query(row['url'])
++
++
++def parse_record(raw):
++    validator = base_validator()
++    value = validator.decode_json(raw, 32768)
++    keys = {'schema_version', 'kind', 'run_token', 'process_boot', 'process_id', 'simulator_udid',
++            'scenario', 'boot_ordinal', 'fixture_template_sha256', 'context_sha256', 'controls_sha256',
++            'signing_mode', 'simulator_only', 'app_container', 'hardware_protection_verified',
++            'l08_requirements_waived', 'container', 'main_image', 'fixture_image', 'foundation_image',
++            'runtime_version', 'rows', 'status', 'fixture_cleanup'}
++    require(isinstance(value, dict) and value.get('status') in {'OBSERVATIONS_COMPLETE', 'CONTROL_ERROR'}, 'status')
++    complete = value['status'] == 'OBSERVATIONS_COMPLETE'
++    require(set(value) == (keys if complete else keys | {'reason'}), 'native-fields')
++    require(_integer(value['schema_version'], 1, 1) and value['kind'] == 'l08-app-foundation' and
++            value['scenario'] == 'readiness' and _integer(value['boot_ordinal'], 1, 1), 'native-kind-context')
++    require(all(_uuid(value[key]) for key in ('run_token', 'process_boot', 'simulator_udid')) and
++            _integer(value['process_id'], 2, 2**31 - 1), 'process-context')
++    require(all(isinstance(value[key], str) and HASH.fullmatch(value[key]) for key in (
++        'fixture_template_sha256', 'context_sha256', 'controls_sha256')), 'source-control-context')
++    require(value['signing_mode'] in {'disabled', 'adhoc'} and value['simulator_only'] is True and
++            type(value['app_container']) is bool and (not complete or value['app_container'] is True) and
++            value['hardware_protection_verified'] is False and value['l08_requirements_waived'] is False, 'claim-boundary')
++    if not complete:
++        require(isinstance(value['reason'], str) and value['reason'] in REASONS, 'unknown-native-reason')
++    runtime = value['runtime_version']
++    require(isinstance(runtime, list) and len(runtime) in (0, 3) and
++            all(_integer(part, 0, 1000) for part in runtime) and (not complete or runtime == [26, 5, 0]), 'runtime')
++    container = value['container']
++    if value['app_container']:
++        require(isinstance(container, dict) and set(container) == {'status', 'id', 'device', 'inode', 'uid'} and
++                container['status'] == 'observed' and _uuid(container['id']) and
++                _integer(container['device'], 0, 2**63 - 1) and _integer(container['inode'], 1, 2**64 - 1) and
++                _integer(container['uid'], 0, 2**32 - 1), 'container-fields')
++    else:
++        require(container == {'status': 'unavailable'}, 'unobserved-container')
++    for field in ('main_image', 'fixture_image', 'foundation_image'):
++        _image(value[field], complete, code=field == 'fixture_image')
++    _rows(value['rows'], complete, validator)
++    cleanup = value['fixture_cleanup']
++    require(isinstance(cleanup, dict) and set(cleanup) == {
++        'status', 'created', 'root_pinned', 'directory_pinned', 'root_removed', 'reason'} and
++        all(type(cleanup[key]) is bool for key in ('created', 'root_pinned', 'directory_pinned', 'root_removed')),
++        'cleanup-shape')
++    require(cleanup['status'] in {'REMOVED', 'NOT_CREATED', 'FAILED'} and
++            (not cleanup['root_pinned'] or cleanup['created']) and
++            (not cleanup['directory_pinned'] or cleanup['root_pinned']) and
++            (not cleanup['root_removed'] or cleanup['root_pinned']), 'cleanup-identity')
++    if cleanup['status'] == 'FAILED':
++        require(isinstance(cleanup['reason'], str) and cleanup['reason'] in REASONS, 'cleanup-reason')
++    else:
++        require(cleanup['reason'] == 'none' and
++                ((cleanup['created'] and cleanup['root_pinned'] and cleanup['root_removed']) if cleanup['status'] == 'REMOVED'
++                 else not any(cleanup[key] for key in ('created', 'root_pinned', 'directory_pinned', 'root_removed'))),
++                'cleanup-result')
++    return value
++
++
++def parse_delivery_failure(raw):
++    value = base_validator().decode_json(raw, 1024)
++    require(isinstance(value, dict) and set(value) == {'schema_version', 'kind', 'stage', 'run_token',
++        'process_boot', 'simulator_udid', 'process_id', 'boot_ordinal', 'scenario',
++        'l08_requirements_waived', 'hardware_protection_verified'}, 'delivery-failure-fields')
++    require(_integer(value['schema_version'], 1, 1) and value['kind'] == 'l08-app-foundation-delivery-failure' and
++            value['stage'] in {'native-delivery', 'receipt-write'} and
++            all(_uuid(value[key]) for key in ('run_token', 'process_boot', 'simulator_udid')) and
++            _integer(value['process_id'], 2, 2**31 - 1) and _integer(value['boot_ordinal'], 1, 1) and
++            value['scenario'] == 'readiness' and value['l08_requirements_waived'] is False and
++            value['hardware_protection_verified'] is False, 'delivery-failure-context')
++    return value
++
++
++def read_owned_receipt(path, parent, maximum):
++    """Only exact receipt names under a caller-attested owned container/tmp or evidence directory."""
++    path, parent = Path(path).absolute(), Path(parent).absolute()
++    require(path.name in {RESULT_NAME, FAILURE_NAME} and path.parent == parent and
++            not parent.is_symlink() and parent.resolve() == parent, 'receipt-parent')
++    before = path.lstat()
++    require(stat.S_ISREG(before.st_mode) and before.st_uid == os.getuid() and before.st_nlink == 1 and
++            0 < before.st_size <= maximum, 'receipt-file')
++    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
++    try:
++        opened = os.fstat(fd)
++        require((opened.st_dev, opened.st_ino, opened.st_size) == (before.st_dev, before.st_ino, before.st_size), 'receipt-replaced')
++        with os.fdopen(fd, 'rb', closefd=False) as stream:
++            raw = stream.read(maximum + 1)
++        after = os.fstat(fd)
++        require(0 < len(raw) <= maximum and after.st_size == opened.st_size == len(raw) and
++                after.st_mtime_ns == opened.st_mtime_ns, 'receipt-mutated')
++    finally:
++        os.close(fd)
++    return raw
++
++
++def preserve_available(container, evidence, expected_device, expected_token):
++    """Root calls immediately after exact get_app_container, even on later test failure.
++
++    No failed/missing record becomes successful. Source/image/XCTest validation is separate.
++    No fixture or source removal occurs here; outer owned-device finalization stays mandatory.
++    """
++    container, evidence = Path(container).absolute(), Path(evidence).absolute()
++    require(_uuid(expected_device) and _uuid(expected_token), 'preservation-context')
++    prefix = Path.home() / 'Library/Developer/CoreSimulator/Devices' / expected_device / 'data/Containers/Data/Application'
++    require(container.parent == prefix and _uuid(container.name) and container.is_dir() and
++            container.resolve() == container and evidence.is_dir() and evidence.resolve() == evidence, 'owned-container-evidence')
++    preserved = []
++    for name, maximum, parse in ((RESULT_NAME, 32768, parse_record), (FAILURE_NAME, 1024, parse_delivery_failure)):
++        path = container / 'tmp' / name
++        if not path.exists() and not path.is_symlink():
++            continue
++        raw = read_owned_receipt(path, path.parent, maximum)
++        value = parse(raw)
++        require(value['run_token'] == expected_token and value['simulator_udid'] == expected_device, 'preserved-cross-task-record')
++        if value.get('app_container'):
++            observed = value['container']
++            identity = container.lstat()
++            require(observed == dict(status='observed', id=container.name, device=identity.st_dev,
++                    inode=identity.st_ino, uid=identity.st_uid), 'container-inode-binding')
++            if value['fixture_cleanup']['root_removed']:
++                child = container / 'Library/Application Support' / (
++                    'ParlorFoundationControl-' + value['run_token'].lower() + '-' + value['process_boot'].lower())
++                require(not child.exists() and not child.is_symlink(), 'synthetic-root-still-present')
++        with (evidence / name).open('xb') as output:
++            output.write(raw)
++        preserved.append(name)
++    return preserved
++
++
++def bind_collection(value, binding, built, installed, uuid_inventory, xctest_log, expected_device, expected_token,
++                    first_health=None):
++    """Complete observation receipt, never an app/storage/release PASS. Inputs already preserved."""
++    value = parse_record(json.dumps(value, separators=(',', ':')).encode())
++    require(value['status'] == 'OBSERVATIONS_COMPLETE' and value['fixture_cleanup']['status'] == 'REMOVED', 'incomplete-native-control')
++    require(value['run_token'] == expected_token and value['simulator_udid'] == expected_device and
++            all(value[key] == binding[key] for key in ('fixture_template_sha256', 'context_sha256', 'controls_sha256')) and
++            value['signing_mode'] == binding['mode'], 'compiled-context-binding')
++    require(isinstance(built, dict) and built == installed and isinstance(built.get('images'), list) and
++            1 <= len(built['images']) <= 256 and isinstance(uuid_inventory, list) and 1 <= len(uuid_inventory) <= 256,
++            'built-installed-inventory')
++    require(isinstance(built.get('bundle_identity'), dict) and
++            built['bundle_identity'].get('CFBundleIdentifier') == 'com.parlor.app.debug' and
++            built['bundle_identity'].get('CFBundleExecutable') == 'Parlor', 'built-debug-identity')
++    require(all(isinstance(row, dict) and isinstance(row.get('resolved_path'), str) and
++                isinstance(row.get('sha256'), str) and HASH.fullmatch(row['sha256']) for row in built['images']) and
++            all(isinstance(row, dict) and set(row) == {'path', 'sha256', 'architectures'} and
++                isinstance(row['path'], str) and isinstance(row['sha256'], str) and HASH.fullmatch(row['sha256'])
++                for row in uuid_inventory), 'artifact-inventory-fields')
++    images = {row['resolved_path']: row for row in built['images']}
++    require(all(row['sha256'] == images[row['resolved_path']]['sha256'] for row in built['images']), 'conflicting-native-alias')
++    require(len({row['path'] for row in uuid_inventory}) == len(uuid_inventory), 'duplicate-uuid-inventory')
++    uuids = {row['path']: row for row in uuid_inventory}
++    for name, relative in (('main_image', 'Parlor'), ('fixture_image', value['fixture_image']['app_relative'])):
++        require(relative in images and relative in uuids, 'missing-native-image-binding')
++        require(uuids[relative]['sha256'] == images[relative]['sha256'] and
++                uuids[relative]['architectures'] == [dict(architecture='arm64', uuid=value[name]['uuid'].lower())],
++                'native-image-uuid-or-hash')
++    if first_health is not None:
++        require(first_health['boot_ordinal'] == 1 and all(first_health[key] == value[key] for key in (
++            'run_token', 'process_boot', 'process_id', 'signing_mode')), 'first-health-process-mismatch')
++    require(isinstance(xctest_log, str) and len(xctest_log.encode()) <= 64 * 1024 * 1024, 'xctest-log-bound')
++    executed = [base_validator().decode_json(line[len(PREFIX):].encode(), 1024)
++                for line in xctest_log.splitlines() if line.startswith(PREFIX)]
++    require(len(executed) == 1 and executed[0] == dict(schema_version=1, kind='l08-app-foundation-xctest',
++        run_token=value['run_token'], process_boot=value['process_boot'], process_id=value['process_id'],
++        boot_ordinal=1, activations=1, foreground=True, alert_present=False,
++        fixture_template_sha256=value['fixture_template_sha256'], context_sha256=value['context_sha256'],
++        controls_sha256=value['controls_sha256']), 'missing-or-mismatched-executed-xctest')
++    require(all(type(executed[0][key]) is int for key in ('schema_version', 'process_id', 'boot_ordinal', 'activations')) and
++            executed[0]['foreground'] is True and executed[0]['alert_present'] is False, 'xctest-primitive-types')
++    return dict(status='COLLECTION_VALIDATED_NOT_L08_PASS', operations=8, checkpoints=8,
++        app_container=True, foundation_uuid=value['foundation_image']['uuid'],
++        first_health_process_cross_checked=first_health is not None,
++        strict_l08='UNCHANGED_NOT_SATISFIED', physical_protection_verified=False,
++        limits='Direct app-container Foundation observations only. Metadata failure remains visible. '
++               'Main/code memory UUIDs bind to inventoried built/installed bytes, not a hash of every mapped memory page. '
++               'Foundation UUID is not public-source provenance or device enforcement proof.')

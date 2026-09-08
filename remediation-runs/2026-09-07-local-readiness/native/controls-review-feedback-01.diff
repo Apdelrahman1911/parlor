@@ -1,0 +1,201 @@
+--- freeze01/scripts/verification/ios-readiness/copied_sources.py
++++ freeze02/scripts/verification/ios-readiness/copied_sources.py
+@@ -3,6 +3,7 @@
+ import json
+ import os
+ from pathlib import Path, PurePosixPath
++import re
+ import shutil
+ from instrument_storage import PATH as CREDENTIALS, ADDITION as NATIVE_ADDITION, instrument_credentials
+ 
+@@ -25,6 +26,8 @@
+ BUILD_ROOTS = ('build.gradle.kts', 'settings.gradle.kts', 'gradle.properties', 'gradlew', 'gradlew.bat')
+ PROTECTED = ('.keystore', '.jks', '.p12', '.p8', '.pfx', '.mobileprovision', 'credentials.json',
+              'service-account', 'local.properties', '.pem', '/.git/', '/build/', '/.gradle/')
++OWNED_TEMP_NAME = r'parlor-audit-ios-readiness-[0-9]{2}-[A-Za-z0-9_-]{1,64}'
++SIMULATOR_NAME_TOKEN = '__PARLOR_EXPECTED_SIMULATOR_NAME__'
+ 
+ 
+ def sha256(path):
+@@ -46,6 +49,20 @@
+     if text.count(old) != 1:
+         raise RuntimeError('A reviewed exact copy-only source anchor is missing or ambiguous')
+     return text.replace(old, new)
++
++
++def owned_simulator_name(temporary):
++    """Bind the simulator to this exact allocated cycle, not a historic prefix."""
++    name = Path(temporary).name
++    if not re.fullmatch(OWNED_TEMP_NAME, name):
++        raise RuntimeError('Simulator name must derive from this owned readiness allocation')
++    return 'Parlor-Audit-' + name
++
++
++def render_owned_os_prerequisite(template, name):
++    if not isinstance(name, str) or not re.fullmatch('Parlor-Audit-' + OWNED_TEMP_NAME, name):
++        raise RuntimeError('Refuse an unbound/unsafe expected simulator name')
++    return replace_once(template, SIMULATOR_NAME_TOKEN, json.dumps(name))
+ 
+ 
+ def create_source_copy(root, destination, bindings):
+--- freeze01/scripts/verification/ios-readiness/DSC01OSPrerequisite.swift.in
++++ freeze02/scripts/verification/ios-readiness/DSC01OSPrerequisite.swift.in
+@@ -302,7 +302,9 @@
+         #if DEBUG && targetEnvironment(simulator)
+         let environment = ProcessInfo.processInfo.environment
+         let sameSimulator = environment["SIMULATOR_UDID"] == expectedSimulator && UUID(uuidString: expectedSimulator) != nil
+-        let ownedName = environment["SIMULATOR_DEVICE_NAME"]?.hasPrefix("Parlor-Audit-parlor-audit-dsc01-apphost-") == true
++        // The source-copy renderer binds the exact fresh allocation, not merely
++        // a prefix that could identify a different campaign's simulator.
++        let ownedName = environment["SIMULATOR_DEVICE_NAME"] == __PARLOR_EXPECTED_SIMULATOR_NAME__
+         let ownership: [String: Any] = ["sameExpectedSimulator": sameSimulator, "ownedSyntheticDeviceName": ownedName,
+             "debugSimulatorBuild": true]
+         guard sameSimulator, ownedName else { try osPrerequisiteBlock(.ownership, diagnostics: diagnostics, fields: ownership) }
+--- freeze01/scripts/verification/ios-readiness/run_ios_readiness.py
++++ freeze02/scripts/verification/ios-readiness/run_ios_readiness.py
+@@ -28,7 +28,8 @@
+ from owned_lane import ROOT, identity, owned_outputs, Ownership, snapshot_processes, lsof_pids, digest, write_json
+ from secondary_fifo import SecondaryFifoLedger
+ from copied_sources import (create_source_copy, instrument_kotlin, inspect_copied_manifest,
+-                            inspect_copied_inputs_after_build, MODIFIED_KOTLIN, ADDITIONS)
++                            inspect_copied_inputs_after_build, owned_simulator_name,
++                            render_owned_os_prerequisite, MODIFIED_KOTLIN, ADDITIONS)
+ from os_preference_receipts import verify_probe
+ from public_interaction_receipts import verify_public_interaction_receipts
+ from os_action_receipts import verify_os_action_receipts
+@@ -477,7 +478,7 @@
+             # already exist, so the finalizer still owns the allocation.
+             temp = temp.resolve()
+             receipt['owned_temporary_directory'] = str(temp)
+-            receipt['owned_device_name'] = 'Parlor-Audit-' + temp.name
++            receipt['owned_device_name'] = owned_simulator_name(temp)
+             save()
+             owner = AppHostOwnership(baseline, temp, outputs, dest)
+             owner.launch_logs += [dest / n for n in ('framework.log', 'xcodebuild.log')]
+@@ -567,7 +568,9 @@
+                                (FIXTURE / 'DSC01PublicDiagnostics.swift.in').read_text() + '\n' +
+                                (FIXTURE / 'DSC01CatalogSelection.swift.in').read_text() + '\n' +
+                                (FIXTURE / 'DSC01MafiaStartSelection.swift.in').read_text() + '\n' +
+-                               (FIXTURE / 'DSC01OSPrerequisite.swift.in').read_text() + '\n' +
++                               render_owned_os_prerequisite(
++                                   (FIXTURE / 'DSC01OSPrerequisite.swift.in').read_text(),
++                                   receipt['owned_device_name']) + '\n' +
+                                (FIXTURE / 'DSC01OSAppSettings.swift.in').read_text() + '\n' +
+                                (FIXTURE / 'DSC01OSPreferenceBaseline.swift.in').read_text() + '\n' +
+                                (FIXTURE / 'NativeReadinessUITests.swift.in').read_text())
+--- freeze01/scripts/verification/ios-readiness/test_controls.py
++++ freeze02/scripts/verification/ios-readiness/test_controls.py
+@@ -1,5 +1,6 @@
+ """Source-copy/runner tests. All shells use disposable fake wrappers, not Gradle."""
+ import contextlib
++import ast
+ import hashlib
+ import importlib
+ import io
+@@ -96,6 +97,46 @@
+             with self.subTest(path=path): self.assertFalse(copies.allowed_path(path))
+         self.assertTrue(copies.allowed_path('gradle/verification-metadata.xml'))
+ 
++    def test_exact_simulator_name_is_shared_by_constructor_renderer_and_native_guard(self):
++        template = (HERE / 'DSC01OSPrerequisite.swift.in').read_text()
++        name = copies.owned_simulator_name(Path('/synthetic/parlor-audit-ios-readiness-07-owned_test'))
++        self.assertEqual(name, 'Parlor-Audit-parlor-audit-ios-readiness-07-owned_test')
++        rendered = copies.render_owned_os_prerequisite(template, name)
++        expression = re.search(r'let ownedName = environment\["SIMULATOR_DEVICE_NAME"\] == ("[^"\n]+")', rendered)
++        self.assertIsNotNone(expression)
++        self.assertEqual(json.loads(expression[1]), name)
++        self.assertNotIn(copies.SIMULATOR_NAME_TOKEN, rendered)
++        self.assertNotIn('dsc01-apphost-', rendered)
++        self.assertIn('environment["SIMULATOR_UDID"] == expectedSimulator && UUID(uuidString: expectedSimulator) != nil', rendered)
++        self.assertIn('#if DEBUG && targetEnvironment(simulator)', rendered)
++        self.assertIn('guard sameSimulator, ownedName else', rendered)
++        runner = (HERE / 'run_ios_readiness.py').read_text()
++        tree = ast.parse(runner)
++        calls = [node for node in ast.walk(tree) if isinstance(node, ast.Call) and isinstance(node.func, ast.Name)]
++        constructors = [node for node in calls if node.func.id == 'owned_simulator_name']
++        renderers = [node for node in calls if node.func.id == 'render_owned_os_prerequisite']
++        self.assertEqual(len(constructors), 1)
++        self.assertEqual(ast.dump(constructors[0].args[0]), ast.dump(ast.parse('temp', mode='eval').body))
++        self.assertEqual(len(renderers), 1)
++        self.assertEqual(ast.dump(renderers[0].args[1]),
++                         ast.dump(ast.parse("receipt['owned_device_name']", mode='eval').body))
++        self.assertIn("receipt['owned_device_name'] = owned_simulator_name(temp)", runner)
++        self.assertIn("['xcrun', 'simctl', 'create', receipt['owned_device_name']", runner)
++        self.assertIn("if d.get('name') == receipt['owned_device_name']", runner)
++
++    def test_name_renderer_refuses_stale_ambiguous_or_unsafe_bindings(self):
++        template = (HERE / 'DSC01OSPrerequisite.swift.in').read_text()
++        name = copies.owned_simulator_name(Path('/synthetic/parlor-audit-ios-readiness-01-token'))
++        for basename in ('parlor-audit-dsc01-apphost-01-token', 'parlor-audit-ios-readiness-1-token',
++                         'user-phone', 'parlor-audit-ios-readiness-01-' + 'a' * 65):
++            with self.subTest(basename=basename), self.assertRaises(RuntimeError):
++                copies.owned_simulator_name(Path('/synthetic') / basename)
++        for unsafe in ('Parlor-Audit-parlor-audit-dsc01-apphost-01-token', name + '"', name + '\n', None):
++            with self.subTest(name=unsafe), self.assertRaises(RuntimeError):
++                copies.render_owned_os_prerequisite(template, unsafe)
++        for wrong in (template.replace(copies.SIMULATOR_NAME_TOKEN, '"stale"'), template + template):
++            with self.assertRaises(RuntimeError): copies.render_owned_os_prerequisite(wrong, name)
++
+ 
+ class BindingAndImportTests(unittest.TestCase):
+     def test_runner_import_is_read_only_and_no_longer_depends_on_archived_modules(self):
+--- freeze01/scripts/verification/ios-readiness/README.md
++++ freeze02/scripts/verification/ios-readiness/README.md
+@@ -57,6 +57,8 @@
+ Store-qualified Xcode 26.3 validation environment. No CocoaPods or repository
+ override is introduced. Stop any earlier task-owned build lane first; these
+ controls refuse pre-existing Gradle/Xcode workers and original build outputs.
++Destructive Settings fixtures require both the expected UUID and the exact
++cycle-owned simulator name embedded in the copied source, not just a prefix.
+ 
+ Run lightweight controls before any native execution:
+ 
+--- freeze01/scripts/verification/ios-readiness/inherited-controls.json
++++ freeze02/scripts/verification/ios-readiness/inherited-controls.json
+@@ -27,7 +27,7 @@
+       "path": "copied_sources.py",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/copied_sources.py",
+       "original_sha256": "a33fee7e8ac9cae3d80de0c9d906b252cbc0cc939ff2b670fcdd62eb349a2221",
+-      "current_sha256": "0812cc6164c677a160943625870b6bd620ee1a36604060b0376e532fb8b083bd",
++      "current_sha256": "69548443720fde323a069dfba1d038234cdb501208f6910ef428dc2cbcc99b6a",
+       "disposition": "MODIFIED_REQUIRES_FULL_REVIEW"
+     },
+     {
+@@ -83,8 +83,8 @@
+       "path": "DSC01OSPrerequisite.swift.in",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/DSC01OSPrerequisite.swift.in",
+       "original_sha256": "f32e6fb10aea909569461e97ac2a4bb9bcde0d8ef0d9b1ed2a5b431f80060404",
+-      "current_sha256": "f32e6fb10aea909569461e97ac2a4bb9bcde0d8ef0d9b1ed2a5b431f80060404",
+-      "disposition": "UNCHANGED_STARTING_BYTES"
++      "current_sha256": "f266cc919734bd840a6a6e9288088e9e437a67b2ed41d16c8a02337ad19627d8",
++      "disposition": "MODIFIED_REQUIRES_FULL_REVIEW"
+     },
+     {
+       "path": "DSC01PublicDiagnostics.swift.in",
+@@ -162,7 +162,7 @@
+       "path": "run_ios_readiness.py",
+       "inherited_from": "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/run_dsc01_apphost_cycle.py",
+       "original_sha256": "68d1d1ac98402c9c79a991f536983c0cd058bafdc152df9a31dfefb2a0b6790d",
+-      "current_sha256": "28dda1e5d833014cd515f104a4390d26507bfdd5fa7041e64076191b4f0beaf2",
++      "current_sha256": "8b30eadd1b3737ea6f5653511526028ba1ad01c5c71d08e3ef397bf65fd216d9",
+       "disposition": "MODIFIED_REQUIRES_FULL_REVIEW"
+     },
+     {
+@@ -182,7 +182,7 @@
+     },
+     {
+       "path": "README.md",
+-      "current_sha256": "f739167c856a226b6f11a3bc5cae8f07f854557e21eb3a62049b3a22fb5cae1a",
++      "current_sha256": "4528fb0879419a9030b1a22739a7ae50b69d7aeb2fcd5f682d61cf5d072dfac1",
+       "disposition": "NEW_SELF_CONTAINED_CONTROL_REQUIRES_FULL_REVIEW"
+     },
+     {
+@@ -212,7 +212,7 @@
+     },
+     {
+       "path": "test_controls.py",
+-      "current_sha256": "d40966cedd298355aa948fb79ec763568b01889409d22cff90a8eb9f5d046a99",
++      "current_sha256": "64b3f92b4d88d7022d966b47fd1b3dcba7064ec0dd5997e1b2c1bcbcd9260820",
+       "disposition": "NEW_SELF_CONTAINED_CONTROL_REQUIRES_FULL_REVIEW"
+     },
+     {

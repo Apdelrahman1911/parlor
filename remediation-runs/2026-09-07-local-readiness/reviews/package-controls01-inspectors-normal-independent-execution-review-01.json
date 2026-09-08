@@ -1,0 +1,342 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "recorded_at": "2026-09-07T16:29:03.522262+00:00",
+  "decision": "APPROVED_EXECUTED_NOTICE_ANDROID_IOS_AND_NORMAL_CONTROL_SUBSETS_NOT_NATIVE_RUNTIME",
+  "scope": "Bounded independent evidence review, not new execution. Subject assertions previously reviewed; all220 raw descriptors checked. Workflow43/coordinator15/group5 semantics remain assigned to release_fix_review.",
+  "source_baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "5d9f5f4c81ff51ee70922c876eefb91c6e669d56",
+    "tree": "3fbc4908ae41fab311e5e936e3ec8913199da7ad",
+    "diff_sha256": "ef191e8b07bef502f6ca6eab8d1ac88a99c5b7261accadd14e16b7fbcd936ddb",
+    "source_manifest_sha256": "942de79662510ba3159e65b0252d9c127f62e42bc5f488c42e4d342e3a2fbf1b"
+  },
+  "source_binding": {
+    "before_after_exact_equal": true,
+    "source_manifest_records": 779,
+    "manifest_digest_independently_recomputed": true,
+    "subject_files": [
+      {
+        "path": "scripts/verification/third_party_notices.py",
+        "sha256": "d5a9e8e0cafd9c2d0de9ecd8dfcb040053fa52d25d798abd9998e84ab6676bdf",
+        "matches_recorded_before_after": true
+      },
+      {
+        "path": "scripts/release/tests/test_third_party_notices.py",
+        "sha256": "0a395e8b064dea6ec229509026abfd5ec7c7f5a5a23969f606e461100f42eed3",
+        "matches_recorded_before_after": true
+      },
+      {
+        "path": "scripts/verification/android_release_artifacts.py",
+        "sha256": "55d6b3ddbe4877956c383225ea8bc8b203a2b023206be60eeac519b2555e98cb",
+        "matches_recorded_before_after": true
+      },
+      {
+        "path": "scripts/release/tests/test_android_release_artifacts.py",
+        "sha256": "f8b9a707ef2a023fce7fa1a2cd658a0820042af4e28aae647d91567d80004963",
+        "matches_recorded_before_after": true
+      },
+      {
+        "path": "scripts/verification/ios_release_artifacts.py",
+        "sha256": "e1b597f6513d18a1e35ea293e08a99d6ff7a3baefb383bb100f24988e5e83938",
+        "matches_recorded_before_after": true
+      },
+      {
+        "path": "scripts/release/tests/test_ios_release_artifacts.py",
+        "sha256": "e5239b6587b963d009a2a477de6d6e1e36bac5c03e144059c92657527ec3e1c6",
+        "matches_recorded_before_after": true
+      },
+      {
+        "path": "config/third-party-notices.json",
+        "sha256": "4b501223b3841017477a226515d3758bc60848fe00d579fac3152a81928d6406",
+        "matches_recorded_before_after": true
+      }
+    ],
+    "normal_control_records": 53,
+    "normal_imports": 22,
+    "normal_control_path_set_independently_reconstructed": true,
+    "normal_before_after_exact_equal": true,
+    "normal_post_execution_doc_delta": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+        "executed_sha256": "1e8e9cb396ef4d89e6de79d7c1ff1f4e551cb06c1467b6789d423f53945c9e63",
+        "current_sha256": "ea7c3f62b2468350dba20264a38afee8ac6041130078516f4364a0976c9f5752"
+      }
+    ]
+  },
+  "execution": {
+    "command": [
+      "/bin/bash",
+      "-c",
+      "set -e; /usr/bin/python3 -B remediation-runs/2026-09-07-local-readiness/reviews/run_package_controls_01.py; /usr/bin/python3 -B remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py; /usr/bin/python3 -B scripts/verification/third_party_notices.py --root . --json"
+    ],
+    "started_at": "2026-09-07T16:17:01.116981+00:00",
+    "finished_at": "2026-09-07T16:17:04.222194+00:00",
+    "exit_code": 0,
+    "package_control_tests": 142,
+    "normal_control_tests": 78,
+    "raw_unique_passing_descriptors": 220,
+    "errors": 0,
+    "failures": 0,
+    "skips": 0,
+    "descriptor_list_sha256": "9cd06caedca69171181782f859753b175e80b01557cdbc622a47470b4071aab2",
+    "subjects": [
+      {
+        "area": "Notice verifier",
+        "tests": 32
+      },
+      {
+        "area": "Git CRLF checkout fixture historical revision",
+        "tests": 1
+      },
+      {
+        "area": "Android inspector",
+        "tests": 17
+      },
+      {
+        "area": "iOS inspector",
+        "tests": 29
+      },
+      {
+        "area": "Normal-iOS runner pure controls",
+        "tests": 78
+      }
+    ],
+    "subject_total": 157,
+    "input_suites": [
+      {
+        "path": "scripts/release/tests/test_third_party_notices.py",
+        "executed_sha256": "0a395e8b064dea6ec229509026abfd5ec7c7f5a5a23969f606e461100f42eed3",
+        "executed_tests": 32,
+        "current_sha256": "0a395e8b064dea6ec229509026abfd5ec7c7f5a5a23969f606e461100f42eed3",
+        "current_matches_execution": true,
+        "raw_descriptors_exact": true,
+        "current_added_test_ids": []
+      },
+      {
+        "path": "scripts/release/tests/test_notice_git_bytes.py",
+        "executed_sha256": "8b16890d574150a00b55083607a744124ddfe15ce4a55bfc9377a7629fd575ee",
+        "executed_tests": 1,
+        "current_sha256": "a1a4196e301f7a310efd4ce4a6f92b2be16cefeafa5b5feabe409200d74f6ba6",
+        "current_matches_execution": false,
+        "raw_descriptors_exact": true,
+        "current_added_test_ids": [
+          "parlor_package_control_1.NoticeGitBytesTest.test_only_verbatim_upstream_line_endings_and_final_blanks_are_exempt"
+        ]
+      },
+      {
+        "path": "scripts/release/tests/test_android_release_artifacts.py",
+        "executed_sha256": "f8b9a707ef2a023fce7fa1a2cd658a0820042af4e28aae647d91567d80004963",
+        "executed_tests": 17,
+        "current_sha256": "f8b9a707ef2a023fce7fa1a2cd658a0820042af4e28aae647d91567d80004963",
+        "current_matches_execution": true,
+        "raw_descriptors_exact": true,
+        "current_added_test_ids": []
+      },
+      {
+        "path": "scripts/release/tests/test_ios_release_artifacts.py",
+        "executed_sha256": "e5239b6587b963d009a2a477de6d6e1e36bac5c03e144059c92657527ec3e1c6",
+        "executed_tests": 29,
+        "current_sha256": "e5239b6587b963d009a2a477de6d6e1e36bac5c03e144059c92657527ec3e1c6",
+        "current_matches_execution": true,
+        "raw_descriptors_exact": true,
+        "current_added_test_ids": []
+      },
+      {
+        "path": "scripts/release/tests/test_workflow_contract.py",
+        "executed_sha256": "b2e5f6af1a37f86e5e47c3c69e7a31afb1b4090034c202a39c7bfc3a93f3e219",
+        "executed_tests": 43,
+        "current_sha256": "b2e5f6af1a37f86e5e47c3c69e7a31afb1b4090034c202a39c7bfc3a93f3e219",
+        "current_matches_execution": true,
+        "raw_descriptors_exact": true,
+        "current_added_test_ids": []
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/test_aab_package_inspection_02.py",
+        "executed_sha256": "28afd0b61324c2278983b60db6b0150581b62f8783aa15fbfc570872f2944b59",
+        "executed_tests": 15,
+        "current_sha256": "28afd0b61324c2278983b60db6b0150581b62f8783aa15fbfc570872f2944b59",
+        "current_matches_execution": true,
+        "raw_descriptors_exact": true,
+        "current_added_test_ids": []
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/test_build_lane_group_retirement.py",
+        "executed_sha256": "6933afa3dca7e1fa89886500806491ca09d27d499d9b94dd8c92158102509878",
+        "executed_tests": 5,
+        "current_sha256": "6933afa3dca7e1fa89886500806491ca09d27d499d9b94dd8c92158102509878",
+        "current_matches_execution": true,
+        "raw_descriptors_exact": true,
+        "current_added_test_ids": []
+      }
+    ],
+    "warnings": [
+      {
+        "line": 34,
+        "scope": "Synthetic Git autocrlf fixture .gitattributes; following status is ok, not a notice-file byte warning."
+      }
+    ]
+  },
+  "normal_notice_regressions": [
+    {
+      "id": "test_normal_launch_controls.RunnerGuards.test_failed_notice_verifier_cannot_pass_package_gate",
+      "line": 198,
+      "status": "PASS"
+    },
+    {
+      "id": "test_normal_launch_controls.RunnerGuards.test_notices_check_built_and_installed_apps_using_frozen_copy",
+      "line": 205,
+      "status": "PASS"
+    },
+    {
+      "id": "test_normal_launch_controls.RunnerGuards.test_source_only_or_failed_notice_receipt_is_not_package_evidence",
+      "line": 213,
+      "status": "PASS"
+    },
+    {
+      "id": "test_normal_launch_controls.RunnerGuards.test_unexecuted_notice_verification_cannot_be_overall_pass",
+      "line": 215,
+      "status": "PASS"
+    }
+  ],
+  "actual_source_notice_check": {
+    "raw_log_line": 237,
+    "status": "PASS_SOURCE_ONLY",
+    "resource_count": 26,
+    "total_bytes": 99515,
+    "all_logged_source_file_hashes_and_lengths_independently_match_current_files": true,
+    "manifest_sha256": "4b501223b3841017477a226515d3758bc60848fe00d579fac3152a81928d6406",
+    "package": null,
+    "scope": "Separate real CLI invocation reads actual repository notice files and manifest. It did not inspect a built AAB or iOS app."
+  },
+  "execution_boundary_distinctions": [
+    "Notice ZIP/app fixtures exercise real filesystem/ZIP/resource comparison against synthetic package structures and actual legal source bytes; package presence in those fixtures is not actual app packaging evidence.",
+    "The historical Git checkout test executes actual disposable Git init/index/checkout-index with synthetic CRLF notice bytes; it is not a Windows runtime test. Fixture .gitattributes warning is expected under core.autocrlf=true; byte/assertion test passes.",
+    "Android integrated package tests inject bundletool/dexdump outputs; iOS native metadata commands are injected. Tiny Android Python subprocess failure/timeout/output-bound tests genuinely run, but no real SDK artifact tooling/app execution occurs.",
+    "Normal78 test methods use synthetic XCResult/marker/provenance/process/notice results. They do not represent eight actual XCTest launches, a ninth provenance launch, actual built/installed notice delivery or device LAN evidence.",
+    "Empty artifact-receipts.json and test-receipts.json are expected for this Python-only batch; unittest evidence is the raw gradle.log, not fabricated JUnit XML."
+  ],
+  "new_doc_review": {
+    "file": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+      "sha256": "ea7c3f62b2468350dba20264a38afee8ac6041130078516f4364a0976c9f5752",
+      "bytes": 8905,
+      "lines": 139,
+      "reviewed_line_ranges": [
+        [
+          1,
+          139
+        ]
+      ]
+    },
+    "conclusion": "APPROVED_DOCUMENTATION_ONLY",
+    "reason": "All139lines read. Correctly calls78tests synthetic, records actual01execution while requiring new exact source/control binding before real8+1. Clearly separates English/XCTest/public-tool limitations, built+installed26byte notice gate, localXcode26.5vsStore26.3, cleanup ownership and lack of legal/Store/device approval.",
+    "remaining": "README changed after execution; next combined normal run/fresh native source freeze must capture its current hash. This report does not claim current53control-byte manifest was executed unchanged."
+  },
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/run_package_controls_01.py",
+      "sha256": "3dfd0d545ba93b042361686f71958e750af69f2cec2452b41b08fa0d96a4ce7b",
+      "bytes": 3230,
+      "lines": 66,
+      "reviewed_line_ranges": [
+        [
+          1,
+          66
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+      "sha256": "5fd60d980954bdf23ef277196a557a74cd6736fb3338aee23a213e9072560fd3",
+      "bytes": 2836,
+      "lines": 65,
+      "reviewed_line_ranges": [
+        [
+          1,
+          65
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/package-controls-01/gradle.log",
+      "sha256": "ebc8d9a69c05b7d4acef01f7b4711215e080c139ce56a407148e1414b7aeda0b",
+      "bytes": 80320,
+      "lines": 237,
+      "reviewed_line_ranges": [
+        [
+          1,
+          237
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/package-controls-01/receipt.json",
+      "sha256": "f34fbd02a158b72a9dfa68aae6ab4a5074389bbbdf48368e51467335210dbc2f",
+      "bytes": 290594,
+      "lines": 6303,
+      "reviewed_line_ranges": [
+        [
+          1,
+          6303
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/package-controls-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31,
+      "lines": 1,
+      "reviewed_line_ranges": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/package-controls-01/artifact-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3,
+      "lines": 1,
+      "reviewed_line_ranges": [
+        [
+          1,
+          1
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/package-controls-01/test-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3,
+      "lines": 1,
+      "reviewed_line_ranges": [
+        [
+          1,
+          1
+        ]
+      ]
+    }
+  ],
+  "cleanup": {
+    "gradle_stop_exit": 0,
+    "stop_output": "No Gradle daemons are running.",
+    "stopped_at": "2026-09-07T16:17:04.672436+00:00",
+    "cleanup_completed_at": "2026-09-07T16:17:04.784326+00:00",
+    "reported_removed_outputs": [],
+    "reported_remaining_or_retained_outputs": [],
+    "reported_owned_workers_remaining": [],
+    "reported_artifact_workers_remaining": [],
+    "errors": [],
+    "cycle_scratch_absent_at_review": true,
+    "scope": "Receipt proves cycle01reported quiescence/cleanup; current other parent-owned cycles are not stopped or inspected as this task. No module outputs were generated by01. Reviewer itself started only completed read/hash/AST commands, no builds/apps/workers."
+  },
+  "limitations_and_followup": [
+    "Actual fresh source-bound AAB and unsigned iOS .app inventory/notice gates remain unexecuted here. Real8+1normal-iOS launch/provenance and signed/physical/Store/legal gates remain separate.",
+    "Root added a second Git-whitespace test and changed scoped .gitattributes after01; original1method byte-identity execution is preserved but does not verify new2method revision. Independent delta review and new execution belong to release_fix_review/root.",
+    "Package driver itself resides under excluded audit paths and01emits test input hashes, not its own historical hash. Current62line driver was independently read and hashed, and actual descriptors/test hashes match; do not characterize this as complete frozen historical driver-byte attestation. Normal driver does bind itself in its53control manifest.",
+    "One reviewer static current-hash assertion intentionally stopped upon concurrent post01Git-test change; this was a source-identity observation, not an application/test failure. Subsequent check separated historical execution from the newly added unexecuted method."
+  ],
+  "preservation": "Original01receipt/log/static approvals unchanged. This additive JSON report only; no repository application/config/test edits, commits, builds, native probes, process stops or cleanup against other tasks."
+}

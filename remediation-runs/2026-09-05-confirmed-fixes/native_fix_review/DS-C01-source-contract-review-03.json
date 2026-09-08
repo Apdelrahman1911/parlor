@@ -1,0 +1,82 @@
+{
+  "reviewer": "/root/native_fix_review",
+  "author": "/root",
+  "reviewed_at": "2026-09-05T21:59:50.396984+00:00",
+  "issue": "DS-C01 — verification-integration follow-up, not a seventeenth original defect",
+  "scope": "Independent correction review of stale source-shape assertion and missing non-JVM locale source inputs; no production behavior change.",
+  "decision": "APPROVED AT SOURCE LEVEL; refreshed focused/combined execution pending root lane",
+  "source_review": [
+    {
+      "path": "composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt",
+      "sha256": "00e0d9c8af2d59562ae1a68cc514382f6e017b0c63613ac43810ad407a9d4ba6",
+      "reviewed_line_ranges": [
+        [
+          1,
+          381
+        ]
+      ]
+    },
+    {
+      "path": "composeApp/build.gradle.kts",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/composeApp/build.gradle.kts",
+      "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+      "reviewed_line_ranges": [
+        [
+          1,
+          215
+        ]
+      ]
+    },
+    {
+      "path": "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+      "sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098",
+      "reviewed_line_ranges": [
+        [
+          1,
+          83
+        ]
+      ]
+    },
+    {
+      "path": "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+      "sha256": "959ab1a8cb955e484c806c8ce5af65ca841a20cfcd9b1f205443a1cfe768da20",
+      "reviewed_line_ranges": [
+        [
+          1,
+          61
+        ]
+      ]
+    }
+  ],
+  "original_failed_receipt": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-01/receipt.json",
+  "original_failed_xml": "remediation-runs/2026-09-05-confirmed-fixes/evidence/combined-production-01/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.ProductionUiAccessibilityContractTest.xml",
+  "original_execution": {
+    "suite_tests": 13,
+    "failures": 1,
+    "failed_method": "platform_locale_overrides_are_commit_scoped_and_do_not_mutate_shared_resources()[desktop]",
+    "failure_location": "ProductionUiAccessibilityContractTest.kt:215 before correction",
+    "cause": "Stale source shape expected inline userDefaults.setObject after DisposableEffect. Verified production now intentionally delegates to remembered effect-owned IosLanguageOverrideOwner. This failure does not demonstrate broken native preference behavior."
+  },
+  "reasoning": [
+    "New source assertion requires remembered owner and immediate apply within DisposableEffect(languageTag), release within onDispose, and disallows direct setObject calls in the adapter. It preserves the commit/dispose ownership invariant rather than removing the iOS assertion.",
+    "Owner source guard additionally checks application persistent-domain read, exact installed singleton equality and absence of resolved arrayForKey fallback. Eleven real Foundation owner tests remain the behavior evidence; textual matching is not equivalent runtime proof.",
+    "All existing Android/Desktop guards and every unrelated assertion remain unchanged. New file is still ordinary discovered @Test Unit body.",
+    "desktopTest is registered by the earlier jvm(\"desktop\") block. Declared fileTree rooted at shared/design-system/src includes current commonMain/androidMain/iosMain/desktopMain localization .kt files, including new iOS owner, with a distinct input property and relative path sensitivity. No plugin/dependency/native test/signing configuration changes.",
+    "This is narrow task-input invalidation for locale source contract, not an assertion that every repository source-reading test already has perfect incremental inputs."
+  ],
+  "limitations": [
+    "String structural tests are intentionally coupled to current source shape; they are not an AST/semantic proof or a real live locale UI test.",
+    "No incremental UP-TO-DATE/mutation/reexecution experiment or refreshed Gradle result run by reviewer. Root must supply actual task-input/execution receipt.",
+    "DS-C01 remains PARTIALLY VERIFIED due unmarked legacy provenance, same-value external writes and unavailable app-restart/physical UI matrix."
+  ],
+  "hygiene": {
+    "builds_or_tests_started": false,
+    "workers_started": false,
+    "production_or_test_edits": false,
+    "git_mutations": false,
+    "cleanup": "Only compact evidence written; no task-owned workers or generated build outputs; shared root lane untouched."
+  }
+}

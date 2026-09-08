@@ -1,0 +1,3354 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-09-06T06:52:30.739737+00:00",
+  "finding": "WD-C2",
+  "scope": "Independent second review of4story corrections plus newly authorized strict pre-release loaded-case identity/recovery explanation; not a new whole-project audit or Store approval.",
+  "authors": [
+    "/root/factory_review",
+    "/root"
+  ],
+  "independent_reviewer": "/root/release_fix_review",
+  "baseline_commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+  "baseline_tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+  "branch": "main",
+  "verified_diff_sha256": "38326880d1f9332618d193f73d49cebc6de063dd26c7e87a8711be9a04a5a430",
+  "verified_source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+  "source_manifest_entries": 664,
+  "current_source_drift": [],
+  "coverage": [
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+      "sha256": "f4c5ff253a82220f937328de09161d09110b05a98eb6bb012934a80f60a5b96d",
+      "line_count": 391,
+      "reviewed_line_ranges": [
+        [
+          1,
+          391
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "method": "Complete original resource read in baseline dossier; all current resource differences reopened, including methods, own factual timeline, separate false alibi, clue pools, and final reveal."
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+      "sha256": "a0db6acb459d69bf75a4c15a809b64d1b7cd5c21714dceaedc5973ba2d951826",
+      "line_count": 345,
+      "reviewed_line_ranges": [
+        [
+          1,
+          345
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "method": "Complete original resource read and all current differences reopened; cross-character outage/encounter/library sequence independently traced."
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+      "sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+      "line_count": 342,
+      "reviewed_line_ranges": [
+        [
+          1,
+          342
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "method": "Complete original resource read and all current differences reopened; factual entry/hiding/descent/attack clocks now consistent; false shop alibi unchanged."
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+      "sha256": "12167f59be005d880c3a4861e58cb9ec2f5ff94dbbda8ddfc02a2846e5df6fef",
+      "line_count": 348,
+      "reviewed_line_ranges": [
+        [
+          1,
+          348
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "method": "Complete original resource read and all current differences reopened; poison-to-records interval, Refaat corroboration and concealment intent checked."
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt",
+      "sha256": "9325933fab3a9547d14898319c4964e2d791af3bab8011eff68a68f768333c9b",
+      "line_count": 152,
+      "reviewed_line_ranges": [
+        [
+          1,
+          152
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "method": "Full source and assertions reopened; actual resource/validator inputs."
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt",
+      "sha256": "dfdd8aed4bc9f199fadfddf644bc321d1e293cafda2d201d2ec6055bac313fa9",
+      "line_count": 248,
+      "reviewed_line_ranges": [
+        [
+          1,
+          248
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "method": "Full source reopened; real codec/store with synthetic filesystem; absent/old/crossed/current identities and exact LAN offer matching, not physical LAN."
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryGameTraceTest.kt",
+      "sha256": "ca31ec98fc19aaeba3675e6d56135abec745d9307a471fc81543e57bd6f6c058",
+      "line_count": 157,
+      "reviewed_line_ranges": [
+        [
+          1,
+          157
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "method": "Full source reopened; real reducer actions, all48 combinations repeated; each action roundtrips codec and loaded-case validation."
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitRecoveryInteractionTest.kt",
+      "sha256": "6a6adb88b4de74294e9874d8a94c2b5fe977968a12c895f677114befecf605d2",
+      "line_count": 275,
+      "reviewed_line_ranges": [
+        [
+          1,
+          275
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "method": "Full source reopened; four actual Compose flow tests with real bundled repository and synthetic observed store; both locales, compact viewport/font1.3, Retry/Back/remount/discard."
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/WhodunitContentIdentityTest.kt",
+      "sha256": "c6f88217dc835c33f93e0af0de8a086c005056b13ae436441990c48f21b8f3a1",
+      "line_count": 83,
+      "reviewed_line_ranges": [
+        [
+          1,
+          83
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "method": "Existing full identity-test source reopened; changed fixed1.0.1 negative to nextpatch negative so assertion remains meaningful."
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitCaseBindingTest.kt",
+      "sha256": "528b7ab77dee6a1acbdf280bcfe58a641bc69e21c24cff77a795fe65af3e1754",
+      "line_count": 363,
+      "reviewed_line_ranges": [
+        [
+          1,
+          363
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "method": "All source covered by original/current passes. Positive current identity and deep forged-state checks retained, absent identity intentional new policy negative."
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/snapshot/WhodunitResumeReconstructionTest.kt",
+      "sha256": "8ba9e35b1f3f1c9cf819c5f46a3b0daf5a0f8d650916e5d90bca0346cd824cd9",
+      "line_count": 547,
+      "reviewed_line_ranges": [
+        [
+          275,
+          332
+        ],
+        [
+          425,
+          505
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "method": "Changed full diff and surrounding loader/launch tests reopened; bare decode not mistaken for launch permission; wrongcase still carries matching identity."
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+      "sha256": "b5b57dfe7675a0f85e299719f5161d9e50d75e6c0f1c25cfb72379e7b032ec36",
+      "line_count": 1432,
+      "reviewed_line_ranges": [
+        [
+          120,
+          496
+        ],
+        [
+          500,
+          730
+        ],
+        [
+          773,
+          970
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "method": "Changed full diff and callers/callees: decode; loadedcase gate before local controller; scoped recovery message; Retry/Back/Discard; canonical writer identity."
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/content/WhodunitContentIdentity.kt",
+      "sha256": "0ea49d8d310092e3445dc024ffca9ffb85341fcdb15e15df34a90410d7178c94",
+      "line_count": 95,
+      "reviewed_line_ranges": [
+        [
+          1,
+          95
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "method": "Complete unchanged identity implementation; full canonical envelope SHA256, signature excluded; exact version/digest matcher."
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitPeerSessionFlow.kt",
+      "sha256": "ecd9d044bce61c82a5c8e85f7d12ce499cc154396c2ad11162c20fcaf82a7ff0",
+      "line_count": 728,
+      "reviewed_line_ranges": [
+        [
+          605,
+          708
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "method": "Actual production start-handshake caller checks loaded envelope content identity before preparedCase/commit."
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/multiplayer/WhodunitRetainedMultiplayerRuntime.kt",
+      "sha256": "4cca409cc9f8703295b0e75259f3e0dec382a012271dcd86696cfef480797148",
+      "line_count": 189,
+      "reviewed_line_ranges": [
+        [
+          1,
+          189
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "method": "Complete actual host/peer runtime: host announces own loaded version/digest before reducer assignment; peer remains passive randomSeed0."
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+      "sha256": "e2ca0be28fd2f0eafee1a55022653190cf30a8c6da620dc3dfe56f361e0da27f",
+      "line_count": 246,
+      "reviewed_line_ranges": [
+        [
+          1,
+          246
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "method": "Complete actual store reopened; load failures do not delete/rewrite; explicit delete and error mapping."
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/values/strings.xml",
+      "sha256": "aea6aa1abb5cf4d68734de65fb21e1f71cdc520039dbe12e2c88cdad3c2865f9",
+      "line_count": 373,
+      "reviewed_line_ranges": [
+        [
+          310,
+          335
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "method": "New English recovery message and unchanged neighboring explicit action labels; complete changed diff reviewed."
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/values-ar/strings.xml",
+      "sha256": "4009a4813e51af96e49e5e6c71c66ed931a6436e92fee97e877ff6abe0122a10",
+      "line_count": 373,
+      "reviewed_line_ranges": [
+        [
+          310,
+          335
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "method": "New Arabic recovery message and unchanged neighboring explicit action labels; same meaning without placeholders."
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/PRE_RELEASE_COMPATIBILITY.md",
+      "sha256": "2f5d46b17ca70d89042b94357a413d244cbd6abc467aa570d02082bd9f883559",
+      "line_count": 56,
+      "reviewed_line_ranges": [
+        [
+          1,
+          56
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "method": "Whole current policy read; owner-approved pre-release support scope, preservation and no automatic migration."
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/WHODUNIT_TEST_CONTENT.md",
+      "sha256": "442715d8e015c5c433569039adf731b4e0b55e17919880ca2ea6051e7c969a53",
+      "line_count": 83,
+      "reviewed_line_ranges": [
+        [
+          1,
+          83
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "method": "Whole current content decisions read; all4story changes and no format/protocol/rules changes; explicit editorial limitations."
+    },
+    {
+      "absolute_path": "/Users/abdelrahman/Projects/parlor/docs/PRODUCTION_ARCHITECTURE.md",
+      "sha256": "fc6e46a4d3a2820f2645c30f2c92094050b8543481e2c11be7ed2b53eef46f3b",
+      "line_count": 295,
+      "reviewed_line_ranges": [
+        [
+          240,
+          295
+        ]
+      ],
+      "reviewer": "/root/release_fix_review",
+      "method": "Entire modified diff reopened; new strict content-binding and clean/current iOS language policy separated from prior corrections."
+    }
+  ],
+  "review_decision": "APPROVED_SOURCE_AND_FOCUSED_TESTS",
+  "original_root_causes": "Contradictory factual clocks/durations across actual selected dossiers/objective evidence/reveal. Separate authorized strict policy also closes identity-less pre-clue launch acceptance; old decode may still inspect without launch.",
+  "corrections": [
+    "All4story versions1.0.1, other3remain1.0.0. James return/lighting9:15 and final5-minute falsealibi comparison; single Layla outage9:05 with post-outage library arrival; Nadim10:50/11:00/11:10/11:12 not an hour; Karim9:40 poison35minutes before10:15 records, truthful-but-incomplete alibi preserved.",
+    "Require nonnull exact persisted story identity at loaded-case launch; no raw codec/serialized setting/protocol migration and no repair or deletion of incompatible saves.",
+    "Recovery-only EN/AR message explains incompatible/damaged retained save and explicit discard/new investigation; ordinary content-load errors remain scoped to original message."
+  ],
+  "counter_evidence": [
+    "Separate fakealibi fields can intentionally lie; no wholesale rewrite of innocent/guilty claims was performed. James and Nadim explicit fakealibis preserved. Karim literal was corrected because its existing authored instruction says the records interval is truthful; concealment instruction remains.",
+    "Broader engine counts do not imply bundles support more than6seats. These tests use actual6-seat envelopes.",
+    "Existing legacy raw codec success is inspection, not permission to bypass new strict loadedcase gate. Matchingidentity positive and forged-state deep tests still execute.",
+    "Compilation/synthetic filesystem/offer matcher do not establish device LAN, iOS storage protection, app restart, or signed release behavior."
+  ],
+  "runtime_interpretation": {
+    "red01": "Compilation failure only: five positional waitUntil(5000) calls encountered CMP1.10.3 String? overload. No tests ran; not an original-defect witness.",
+    "red02": "11tests executed. Chronology5+compatibility3 intended fails; all4original canonical Kotlin digests present in reused-list failure. GameTrace1PASS on oldcontent. Recovery2fail missing LocalParlorToastState provider: fixture error, not app defect.",
+    "red03": "Recovery2execute but required new explanation absent; expected timeout after provider correction. Complete existing UI source establishes message cause.",
+    "legacy04": "Actual identity-less pre-clue test reports all8case/mode launch successes before strictgate; now4compatibilitytests PASS.",
+    "green01": "Whodunit57suites323tests actually executed, nofail/noerror/noskip; includes14newmethods. sharedcontent5suites24tests restored FROM-CACHE, not fresh runtime.",
+    "combined": "NOT_RUN at dossier creation; root plans no-build-cache combined checks on same frozen source."
+  },
+  "cycles": [
+    {
+      "cycle": "story-recovery-red-01",
+      "receipt_sha256": "608ae97596a50140055734b961f4f4f394b6cbe40679238ab8e816030d8e7f2f",
+      "log_sha256": "a3cacdbfeb0996c51cb654b792a0da3c6b81129fdbf5b8675af2c0d5b932bc77",
+      "status": "FAIL",
+      "exit_code": 1,
+      "source_manifest_sha256": "a630ca6205d9d4fad81c24dadab4addb32591145bfe20d61922e1faf70b5ac52",
+      "source_changed": false,
+      "stop_exit": 0,
+      "remaining_outputs": [],
+      "cleanup_errors": [],
+      "remaining_workers": [],
+      "xml": []
+    },
+    {
+      "cycle": "story-recovery-red-02",
+      "receipt_sha256": "0e7a0a130ba2bf1a003c9bd598ba4cda3482a693f7bf62bc90a0dcf17267d975",
+      "log_sha256": "a9d5b3c5bac7b3eb405049a0413ad90324cfc3c0efdef4726faf76a9642b7df0",
+      "status": "FAIL",
+      "exit_code": 1,
+      "source_manifest_sha256": "0a6e8bdb0057d9cde7da4a06616349c2f5aafd60a043772f5975a83826942c29",
+      "source_changed": false,
+      "stop_exit": 0,
+      "remaining_outputs": [],
+      "cleanup_errors": [],
+      "remaining_workers": [],
+      "xml": [
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-red-02/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryChronologyTest.xml",
+          "sha256": "40b113ce9a155e36875b892df3294b8007af4036c1aa9d0cca7fd5d5bcec011f",
+          "suite": "com.parlor.games.whodunit.content.TestingStoryChronologyTest",
+          "tests": 5,
+          "failures": 5,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "nadimsShortCellarWaitMatchesTheFinalAccountWithoutChangingHisLie()[desktop]",
+              "skipped": false,
+              "failure": "org.opentest4j.AssertionFailedError: Expected value to be true.",
+              "error": null
+            },
+            {
+              "name": "jamesLightsOneCigarAt915WhileHis910AlibiRemainsFalse()[desktop]",
+              "skipped": false,
+              "failure": "org.opentest4j.AssertionFailedError: expected: <9:15 p.m.> but was: <9:00 p.m.>",
+              "error": null
+            },
+            {
+              "name": "correctionsBumpOnlyTheFourTestingCaseVersions()[desktop]",
+              "skipped": false,
+              "failure": "org.opentest4j.AssertionFailedError: last-dinner ==> expected: <1.0.1> but was: <1.0.0>",
+              "error": null
+            },
+            {
+              "name": "laylaHasOne905OutageAcrossIntroEvidenceAndWitnesses()[desktop]",
+              "skipped": false,
+              "failure": "org.opentest4j.AssertionFailedError: Expected value to be true.",
+              "error": null
+            },
+            {
+              "name": "karims940PoisoningPrecedesHisCorroborated1015RecordsAlibi()[desktop]",
+              "skipped": false,
+              "failure": "org.opentest4j.AssertionFailedError: expected: <10:15 مساءً> but was: <10:00 مساءً>",
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-red-02/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryCompatibilityTest.xml",
+          "sha256": "6f212dedc6e6166038a742c93b0b36d952722dc510ad7977310909b0dfe8f3f9",
+          "suite": "com.parlor.games.whodunit.content.TestingStoryCompatibilityTest",
+          "tests": 3,
+          "failures": 3,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "correctedStoriesDoNotReuseAnyOriginalCanonicalContentDigest()[desktop]",
+              "skipped": false,
+              "failure": "org.opentest4j.AssertionFailedError: expected: <[]> but was: <[last-dinner, layla-halabi, jasmine-ring, khan-el-khalili]>",
+              "error": null
+            },
+            {
+              "name": "currentSaveRoundTripsButOldOrCrossedIdentityIsRetainedAndRejected()[desktop]",
+              "skipped": false,
+              "failure": "org.opentest4j.AssertionFailedError: expected: <Failure(error=CorruptedData)> but was: <Success(data=kotlin.Unit)>",
+              "error": null
+            },
+            {
+              "name": "lanOffersMatchOnlyTheExactLoadedRevisionForAllCorrectedCasesAndModes()[desktop]",
+              "skipped": false,
+              "failure": "org.opentest4j.AssertionFailedError: Expected value to be false.",
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-red-02/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryGameTraceTest.xml",
+          "sha256": "5be3aca1412a235e513077b8401de53049c7780c46d69fe2868ac64977628d05",
+          "suite": "com.parlor.games.whodunit.content.TestingStoryGameTraceTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "everyCorrectedCaseKillerAndModeCompletesDeterministicallyAndRoundTrips()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-red-02/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest.xml",
+          "sha256": "da9aa52990e934170ac2fcd6c3ee36348c6540534022531c5c450edab4c34ad8",
+          "suite": "com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest",
+          "tests": 2,
+          "failures": 2,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "arabicIncompatibleSaveIsExplainedAndKeptUntilExplicitDiscard()[desktop]",
+              "skipped": false,
+              "failure": "java.lang.IllegalStateException: LocalParlorToastState not provided — wrap the App root with one.",
+              "error": null
+            },
+            {
+              "name": "englishIncompatibleSaveIsExplainedAndKeptUntilExplicitDiscard()[desktop]",
+              "skipped": false,
+              "failure": "java.lang.IllegalStateException: LocalParlorToastState not provided — wrap the App root with one.",
+              "error": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "cycle": "recovery-red-03",
+      "receipt_sha256": "0b1e09612b5fbb9fa1428b610b6a26f052c6196e8fe01b36a3dc0d1ec02d3754",
+      "log_sha256": "2093930c407417cd70d4b1474db5de0910f7ebdb5892b1cde34192ed43cdfea5",
+      "status": "FAIL",
+      "exit_code": 1,
+      "source_manifest_sha256": "7e852d13225413cd70469a9f7fa365defc42ac161f70a68785a10584b817a6e6",
+      "source_changed": false,
+      "stop_exit": 0,
+      "remaining_outputs": [],
+      "cleanup_errors": [],
+      "remaining_workers": [],
+      "xml": [
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/recovery-red-03/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest.xml",
+          "sha256": "e1dad1af47c45fd8ecae76294e3b889d77c44daeb390ebe4784ba3dc02db2b37",
+          "suite": "com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest",
+          "tests": 2,
+          "failures": 2,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "arabicIncompatibleSaveIsExplainedAndKeptUntilExplicitDiscard()[desktop]",
+              "skipped": false,
+              "failure": "androidx.compose.ui.test.ComposeTimeoutException: Condition still not satisfied after 5000 ms",
+              "error": null
+            },
+            {
+              "name": "englishIncompatibleSaveIsExplainedAndKeptUntilExplicitDiscard()[desktop]",
+              "skipped": false,
+              "failure": "androidx.compose.ui.test.ComposeTimeoutException: Condition still not satisfied after 5000 ms",
+              "error": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "cycle": "legacy-identity-red-04",
+      "receipt_sha256": "cdfb8cc7ba7d1a20452713693000f038c323b235ed42dea19be3a75646d42c0d",
+      "log_sha256": "89ebe39610c349ec9b1623ffafa2ecf7f12256e5808c21a30855f671e8021777",
+      "status": "FAIL",
+      "exit_code": 1,
+      "source_manifest_sha256": "0672b02d2e068d7426ea59bae44de087259b2c022d30e230ecb7cab8226d7f73",
+      "source_changed": false,
+      "stop_exit": 0,
+      "remaining_outputs": [],
+      "cleanup_errors": [],
+      "remaining_workers": [],
+      "xml": [
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/legacy-identity-red-04/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryCompatibilityTest.xml",
+          "sha256": "8674e7c4b2cc8d9eb98e09d668205ad5184cba5fa69577ad003be5ef638aee88",
+          "suite": "com.parlor.games.whodunit.content.TestingStoryCompatibilityTest",
+          "tests": 1,
+          "failures": 1,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "identityLessPreClueSavesCannotSilentlyBindToInstalledStoryProse()[desktop]",
+              "skipped": false,
+              "failure": "org.opentest4j.AssertionFailedError: expected: <[]> but was: <[last-dinner/classic-vote: Success(data=kotlin.Unit), last-dinner/elimination: Success(data=kotlin.Unit), layla-halabi/classic-vote: Success(data=kotlin.Unit), layla-halabi/elimination: Success(data=kotlin.Unit), jasmine-ring/classic-vote: Success(data=kotlin.Unit), jasmine-ring/elimination: Success(data=kotlin.Unit), khan-el-khalili/classic-vote: Success(data=kotlin.Unit), khan-el-khalili/elimination: Success(data=kotlin.Unit)]>",
+              "error": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "cycle": "story-recovery-green-01",
+      "receipt_sha256": "d03323ea7d67567d5446526d5b8e5754c80d9f25e79a79eb068a6db733390950",
+      "log_sha256": "2b99768edf162f52352e3d39d813e15cca7a9d0b711b5fce96e44ccda9f95b6c",
+      "status": "PASS",
+      "exit_code": 0,
+      "source_manifest_sha256": "de7573ed1f4e1a19969f3063e135d234cd57ec8764c4af784cf4b3eaff5ef9b4",
+      "source_changed": false,
+      "stop_exit": 0,
+      "remaining_outputs": [],
+      "cleanup_errors": [],
+      "remaining_workers": [],
+      "xml": [
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.WhodunitPlayModePolicyTest.xml",
+          "sha256": "8cad8d12cc92837f194543ed96cebce998f1fcc5504c6d24a8209e28ef470243",
+          "suite": "com.parlor.games.whodunit.WhodunitPlayModePolicyTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "only_pass_and_play_can_enter_the_local_game_flow()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.action.WhodunitActionCodecTest.xml",
+          "sha256": "1f20b5da72a4f72c395dc1083a09c918d0aa4deec2410826d0ead3397ac8c39a",
+          "suite": "com.parlor.games.whodunit.action.WhodunitActionCodecTest",
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "retiredRevealDuplicatesAreRejectedExplicitly()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "primitive_carrying_action_round_trips()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "encoded_payload_carries_discriminator_for_forward_compat()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "reveal_generation_is_required_and_must_be_positive()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "retired_readmit_action_is_rejected_explicitly()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "id_carrying_action_round_trips()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "malformedUtf8IsRejectedInsteadOfBeingReplacedInsideJsonStrings()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "oversizedActionIsRejectedBeforeDecode()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "singleton_data_object_round_trips()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "refuse_to_vote_round_trips()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "retired_structured_action_wire_payload_is_rejected_explicitly()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "everyShippingPrivateRevealActionRoundTripsItsAssignmentGeneration()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.authority.WhodunitActionAuthorityTest.xml",
+          "sha256": "e477a783d04216ecb872c89d4fff23531d98eaee57cb65f3d9b08c5ee7b9d8ea",
+          "suite": "com.parlor.games.whodunit.authority.WhodunitActionAuthorityTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "host_only_actions_pass_through_dropped_set_unaffected()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "host_only_actions_reject_peers()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "self_actor_reveal_lifecycle_only_named_player()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "dropped_player_does_not_block_other_actors()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "self_actor_voting_only_named_voter()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "dropped_player_self_actor_actions_are_rejected()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "self_actor_party_readiness_acks_only_named_player()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.ArabicCaseValidationTest.xml",
+          "sha256": "72b42a42223cb9dce72088d543fce11f337d0a5d6012d3f9dc082045d0bdfa63",
+          "suite": "com.parlor.games.whodunit.content.ArabicCaseValidationTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "layla_halabi_case_loads_validates_and_carries_arabic_content()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "original_arabic_cases_share_the_full_bundled_data_source_without_collisions()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "jasmine_ring_case_loads_validates_and_carries_arabic_content()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.BundledCaseLoadingTest.xml",
+          "sha256": "7c724e27df05a85e5d10fa90de2a5311d7c2de7b70f68f3ed0557856be837329",
+          "suite": "com.parlor.games.whodunit.content.BundledCaseLoadingTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "bundled_resource_loads_last_dinner_envelope()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "repository_returns_not_found_when_no_source_has_the_case()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "unknown_case_id_returns_null()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "repository_resolves_last_dinner_through_bundled_when_remote_returns_empty()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "repository_resolves_last_dinner_through_remote_mock_engine()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.CasePickerDiscoveryTest.xml",
+          "sha256": "e389a9c8e41c2651cfc98221c8937c81f5ab6a5451af4fdadaa954a335c79eb5",
+          "suite": "com.parlor.games.whodunit.content.CasePickerDiscoveryTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "repository_discards_a_corrupt_remote_manifest_and_uses_bundled_cases()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "production_catalog_exactly_matches_packaged_case_resources()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "registry_aware_summary_validation_rejects_impossible_mode_and_player_range()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "every_known_case_has_a_valid_envelope()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "repository_surfaces_every_known_case()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.ResReadBytesProbeTest.xml",
+          "sha256": "ddd47506d2b3f1904a7052781040d66ee434ad7f88d10a1b14f5a2a0e202c02e",
+          "suite": "com.parlor.games.whodunit.content.ResReadBytesProbeTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "reads_last_dinner_json()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryChronologyTest.xml",
+          "sha256": "9b852425e739b79c2bcddd35d28a535b67812fc1d2ac17a0e2e740ac0ee3caf3",
+          "suite": "com.parlor.games.whodunit.content.TestingStoryChronologyTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "nadimsShortCellarWaitMatchesTheFinalAccountWithoutChangingHisLie()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "jamesLightsOneCigarAt915WhileHis910AlibiRemainsFalse()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "correctionsBumpOnlyTheFourTestingCaseVersions()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "laylaHasOne905OutageAcrossIntroEvidenceAndWitnesses()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "karims940PoisoningPrecedesHisCorroborated1015RecordsAlibi()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryCompatibilityTest.xml",
+          "sha256": "f3340b3a7826aa637006e18cc15287731bf5c11af98dfc19cee8590f93265e42",
+          "suite": "com.parlor.games.whodunit.content.TestingStoryCompatibilityTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "correctedStoriesDoNotReuseAnyOriginalCanonicalContentDigest()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "currentSaveRoundTripsButOldOrCrossedIdentityIsRetainedAndRejected()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "identityLessPreClueSavesCannotSilentlyBindToInstalledStoryProse()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "lanOffersMatchOnlyTheExactLoadedRevisionForAllCorrectedCasesAndModes()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryGameTraceTest.xml",
+          "sha256": "ce88eea80c25e87453e06045eda38d0646049fae189ebc5886d299eb26ddaab4",
+          "suite": "com.parlor.games.whodunit.content.TestingStoryGameTraceTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "everyCorrectedCaseKillerAndModeCompletesDeterministicallyAndRoundTrips()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.WhodunitContentIdentityTest.xml",
+          "sha256": "3d484e26b9c0767d32987dcfd30ae12b2e44e5407749001d97aabc9bf6c301b4",
+          "suite": "com.parlor.games.whodunit.content.WhodunitContentIdentityTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "same_case_id_with_different_version_or_payload_is_rejected()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "canonical_digest_ignores_object_key_order_and_delivery_signature()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.WhodunitPayloadHardeningTest.xml",
+          "sha256": "89708dcad01f35decd232327f725984a6c725911abecd7ab5b421f648163ec86",
+          "suite": "com.parlor.games.whodunit.content.WhodunitPayloadHardeningTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "unsafeAuthoredTextAndTagsAreRejected()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "blankClueIdThatWouldCrashClueIdConstructionIsRejected()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "bundledSourceRejectsDuplicateIdsAndFilenameEnvelopeMismatch()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "blankNestedTimelineAndRevealTextAreRejected()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "everyBundledMysteryMatchesTheShippingLanguageModeAndRosterContract()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "contentIdsRejectTrailingAndConsecutiveHyphens()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "declaredModeMustHaveAPlayableCountAndModeEligibleFinalEvidence()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "bundledSourceFailsFastWhenDeclaredResourceIsMissing()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "roundDeclarationsTheReducerWouldIgnoreAreRejected()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "unboundedContentTextIsRejected()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.CluePolicyTest.xml",
+          "sha256": "c5e1a58d03a8380c2370aa717d67e2952bcbea0663d6826b6d4953b57dbce2c9",
+          "suite": "com.parlor.games.whodunit.domain.CluePolicyTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "admittedCaseNeverDrawsTheSameClueTwice()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "sameSeedProducesSameClueSequence()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "differentSeedsProduceAtLeastOneDifferentSequence()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "lastRoundAlwaysUsesFinalStrongWhenAvailable()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "exhaustedCluePoolsAreRejectedBeforeReducerUse()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.PartyReadinessTest.xml",
+          "sha256": "5b3bf8b49d747ef93e92ef5cc227fe0dba781ddf8c2485675d08cee917d68d97",
+          "suite": "com.parlor.games.whodunit.domain.PartyReadinessTest",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "active_roster_is_full_table_when_nobody_dropped()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "unknown_id_in_readiness_set_does_not_affect_completeness()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "is_complete_true_when_every_active_player_acknowledged()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "is_complete_ignores_dropped_players()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "is_complete_false_for_partial_set()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "active_roster_excludes_dropped_players()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "pending_returns_unacknowledged_players()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "is_complete_false_for_empty_set()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "ready_count_only_counts_active_roster()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.WhodunitReducerProductionGuardsTest.xml",
+          "sha256": "36cc3d75ff66edb24f3228466e6160a08265657da1592e1e79442f3c29d608ea",
+          "suite": "com.parlor.games.whodunit.domain.WhodunitReducerProductionGuardsTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "timer_expiry_progresses_instead_of_restarting_the_same_discussion()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "clue_and_timer_start_are_idempotent()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "eliminated_audience_disconnect_does_not_pause_or_end_the_case()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "tied_revote_keeps_all_voters_but_only_tied_suspects_are_candidates()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "session_pause_blocks_gameplay_but_allows_resume()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "lifecycle_commands_are_phase_gated()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "simultaneous_ballots_commit_only_in_canonical_voter_order()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "ballot_rejects_self_unknown_and_replayed_submissions_and_cannot_close_early()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.WhodunitRulesInvariantTest.xml",
+          "sha256": "76ccfc947f6f77bba0a909b20942c77d2562cfd1744be1e0991d6643e13bcc3f",
+          "suite": "com.parlor.games.whodunit.domain.WhodunitRulesInvariantTest",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "modelDrivePreservesInvariantsForEveryShippingModeAndSupportedCount()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "displayNamesMustBeCanonicalBoundedAndSafeAtTheDomainBoundary()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "defensiveFinalTwoFallbackDoesNotMakeAnActiveSnapshotValid()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "invalidCountModeIdentityAndSeatAreRejectedBeforeSessionStarts()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "everySupportedCountAndSeedProducesOneDeterministicKillerAndUniqueDossiers()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "exactDuplicateDisplayNamesAreRejectedAtTheAuthoritativeBoundary()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "seededKillerSelectionHasNoMaterialSeatBias()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "eliminationVoteOpensOnlyAfterACompletedDiscussion()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "privacyRerollChangesKillerAndEveryPreviouslyViewedDossier()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.WhodunitTerminalAndCluePolicyTest.xml",
+          "sha256": "cb7618f473397d851920727d8d1bda7ba05d05b22523807e3d0df318d37d35d2",
+          "suite": "com.parlor.games.whodunit.domain.WhodunitTerminalAndCluePolicyTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "eliminationAllAbstainCannotAdvanceBeyondFiniteInvestigation()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "modeRestrictedCluesAreNeverDrawnForAnotherMode()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "disconnectBeforeRoleAssignmentCancelsWithoutInventingAKiller()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "innocentEliminationOnFinalRoundCannotCreateAnUnauthoredRound()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "fivePlayerEliminationTreatsRoundThreeAsFinalEvidence()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "revealCannotFinishAroundADisconnectedPlayerRace()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.rules.WhodunitPolicyGoldenTest.xml",
+          "sha256": "642c1c4b36ad099877786d63e65ff06047f1c713e8a78afba4ef82226b93b11f",
+          "suite": "com.parlor.games.whodunit.domain.rules.WhodunitPolicyGoldenTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "roundResolutionPreservesExactNearestTieAndDefaultRules()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "clueSelectionHasStableCrossPlatformGoldenSequences()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.ContinueWithoutPlayerTest.xml",
+          "sha256": "395e055425e33d6e6e002aa08e059fdf45b6b84174a236d22cdf2b62deca103b",
+          "suite": "com.parlor.games.whodunit.flow.ContinueWithoutPlayerTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "grace_expiry_during_reveal_completes_terminal_flow_and_blocks_replay()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "grace_expiry_reveals_case_marks_missing_seat_and_never_shrinks_roster()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "first_grace_expiry_during_reveal_clears_every_concurrent_disconnect()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "post_game_disconnect_is_ignored_instead_of_creating_permanent_overlay_state()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "disconnect_freezes_round_timer_and_rejects_delayed_progress()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "duplicate_and_unknown_disconnect_events_are_idempotent()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "grace_expiry_action_is_rejected_without_a_current_disconnect()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "disconnect_blocks_progress_until_rejoin_and_explicit_resume()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.FullGameDriveTest.xml",
+          "sha256": "1b7ccfa9240ee8d538b566c66ac5ddbe3ddfd0448d2c20689a9c05d0e5d1c83d",
+          "suite": "com.parlor.games.whodunit.flow.FullGameDriveTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "elimination_innocent_voted_out_holds_on_announcement_until_acknowledged()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "replay_after_reveal_reseeds_and_returns_to_public_intro()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "classic_vote_innocent_accusation_yields_killer_wins_verdict()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "replay_always_assigns_a_new_killer()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "classic_vote_four_player_game_reaches_reveal_with_a_verdict()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "elimination_killer_voted_out_first_round_ends_game_immediately()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.IntroAndBriefingReadinessTest.xml",
+          "sha256": "18aef5da73b99eba4dd066a1c1d7c4b18035c51a15699ff329972b79f142b3e0",
+          "suite": "com.parlor.games.whodunit.flow.IntroAndBriefingReadinessTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "acknowledge_intro_for_unknown_player_id_is_a_noop()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "briefing_card_advances_pass_through_then_final_advance_is_gated_by_readiness()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "acknowledge_intro_outside_public_intro_is_a_noop()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "advance_from_intro_blocked_until_all_players_acknowledge()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.PartyFlowControllerTest.xml",
+          "sha256": "09fcf5168aaca3c059f6d126e09f967cc16f79a74a41db2a44b4ac12da6cad45",
+          "suite": "com.parlor.games.whodunit.flow.PartyFlowControllerTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "activeRoster_excludes_dropped_players()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "readinessFor_other_phases_returns_null()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "canAdvance_ignores_dropped_players_for_readiness()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "pendingFor_lists_only_active_unacked_players()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "canAdvance_false_when_some_active_players_have_not_acked()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "readyCountFor_counts_active_acked_players()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "canAdvance_true_when_all_active_players_have_acked()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.PauseRefuseLeaveTest.xml",
+          "sha256": "346aa3570a6de852004307c072a3d60cb40e1f904462c39385294dab6014f7ef",
+          "suite": "com.parlor.games.whodunit.flow.PauseRefuseLeaveTest",
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "elimination_refuse_to_vote_does_not_break_tie_then_revote_advances_round()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "end_now_deletes_snapshot_and_clears_listUnfinished()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "resume_clears_paused_and_unfreezes_timer()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "classic_majority_with_one_refuser_resolves_with_innocent_accused()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "timer_ticked_while_paused_is_a_no_op()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "classic_refuse_to_vote_with_tied_voters_creates_normal_tie()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "refuse_to_vote_emits_VoteRefused_and_tallies_like_abstain()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "resume_later_keeps_snapshot_in_listUnfinished()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "pause_sets_public_paused_and_freezes_discussion_timer()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "pause_state_survives_snapshot_round_trip()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.SimultaneousCharacterRevealTest.xml",
+          "sha256": "7d138c70391e9d504077c80f8a9bb5aafe301a30eb9a0caca9e29a38669a441c",
+          "suite": "com.parlor.games.whodunit.flow.SimultaneousCharacterRevealTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "canonicalCompletionCollectsEveryPlayersReadiness()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "delayed_reveal_commands_from_before_reroll_cannot_touch_the_new_dossier()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "canonicalRevealCompletionClosesAllPrivateExposureFlags()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "advance_from_character_reveal_blocked_until_every_active_player_confirms()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "reveal_completion_requires_an_authoritative_unlock_for_the_current_assignment()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "disconnect_during_character_reveal_pauses_and_expiry_ends_the_case()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.TickerAndRerollTest.xml",
+          "sha256": "f1f460a79d8851f40aa021ce197c72eabedb30ce669806d5568d0fce777dd579",
+          "suite": "com.parlor.games.whodunit.flow.TickerAndRerollTest",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "reroll_emits_PhaseEntered_for_character_reveal_only_and_does_not_announce_public_intro()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "reroll_changes_role_assignment_emits_RerolledAt_and_lands_in_character_reveal()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "pause_is_rejected_during_character_reveal_and_reroll_stays_interactive()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "ticker_freezes_while_session_paused_and_resumes_after_unpause()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "prematureTimerExpiredCannotSkipAnActiveDiscussion()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "ticker_submitsTimerExpiredAtTerminalEdgeAndClearsTimer()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "ticker_decrements_once_per_second()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "ticker_does_not_double_tick_when_two_loops_share_a_timer_id()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "ticker_stops_when_timer_id_changes()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.TiedRevoteTest.xml",
+          "sha256": "e445646d85a56cf1b6d352a30da8d3c79a1ae983e7e3558a9b191e3e2a5ccfb3",
+          "suite": "com.parlor.games.whodunit.flow.TiedRevoteTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "classic_first_tie_then_resolved_revote_resolves_normally()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "classic_two_consecutive_ties_yields_killer_wins_unresolved()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "elimination_two_consecutive_ties_advances_round_without_elimination()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "elimination_all_abstain_advances_round_without_elimination()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "elimination_revote_resolving_to_innocent_does_not_deadlock()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "classic_all_abstain_resolves_to_killer_wins()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "elimination_first_tie_then_resolved_revote_eliminates_killer_ending_game()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.WhodunitLocalSessionConfigTest.xml",
+          "sha256": "7149fdeb305342e040f0d5979fc5cbfa0bc6f42f43a77327cae9d2e6adeaf04a",
+          "suite": "com.parlor.games.whodunit.flow.WhodunitLocalSessionConfigTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "freshIdsUseIndependentEntropyRatherThanTheGameplaySeed()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "resumePreservesThePersistedIdWithoutConsumingFreshEntropy()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.layout.ResponsiveLayoutAuditTest.xml",
+          "sha256": "c39af885f88d368d512d9dcd3459503e2f1324ce41936156d5732ae8a68b5c10",
+          "suite": "com.parlor.games.whodunit.layout.ResponsiveLayoutAuditTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "every_screen_either_scrolls_or_is_explicitly_exempt()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.layout.TokenDisciplineTest.xml",
+          "sha256": "6b45fb9c18367cbca08112f7a7b83b6bcee6fa338ad3783f1cb90b21672ee7b9",
+          "suite": "com.parlor.games.whodunit.layout.TokenDisciplineTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "no_hardcoded_user_facing_strings_in_feature_composables()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "no_raw_color_or_hex_literals_in_feature_composables()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.HostLostTimeoutTest.xml",
+          "sha256": "0b1d4729ad935e0d41f5b2a2a473852bc639262eb2d044a4ade7000925a15725",
+          "suite": "com.parlor.games.whodunit.multidevice.HostLostTimeoutTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "transport_host_loss_that_outlives_grace_ends_peer_session()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "host_restore_within_grace_cancels_terminal_timeout()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "bridge_created_after_host_loss_starts_grace_from_durable_room_state()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.MultiDevicePartyPlayContractTest.xml",
+          "sha256": "08d6ad347e4431fff6b55e9f8311c191ba92e45a2fe02d017ca426ce6371f75d",
+          "suite": "com.parlor.games.whodunit.multidevice.MultiDevicePartyPlayContractTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "host_accepts_self_actor_from_correct_peer_and_rejects_host_only()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "disconnected_peer_is_recorded_as_dropped_when_grace_expiry_ends_case()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "full_party_flow_with_three_peers_converges_at_every_gate()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.PartyConnectionEventsTest.xml",
+          "sha256": "18b4aa0b2211481925bbd477cc9f854130c44307a589ee6d0e6dd5a9fa139cb5",
+          "suite": "com.parlor.games.whodunit.multidevice.PartyConnectionEventsTest",
+          "tests": 17,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "close_waits_for_room_event_collector_cleanup()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "suspended_room_rejects_host_gameplay_without_mutating_state()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "retained_peer_completes_rejoin_start_replay_without_a_second_lobby_collector()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "production_reconnect_waits_for_start_commit_ack_before_restoring_seat()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "failed_transport_retirement_keeps_the_player_disconnected_and_retryable()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "failed_reconnect_cannot_cancel_or_outlive_grace_expiry()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "app_lifecycle_never_resumes_a_player_owned_pause()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "start_is_version_stamped_and_host_leave_reaches_peer_before_close()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "host_can_continue_without_before_expiry_and_cancels_the_grace_job()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "terminate_waits_for_authenticated_terminal_delivery_before_returning()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "retired_structured_action_command_is_rejected_without_mutating_host_state()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "app_lifecycle_suspension_freezes_and_then_resumes_the_authoritative_game()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "production_topology_reconciliation_observes_disconnect_before_bridge_creation()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "eliminated_audience_disconnect_neither_pauses_nor_expires_the_case()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "peer_left_event_marks_player_disconnected()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "lifecycle_pause_resumes_after_active_precedes_final_peer_rejoin()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "peer_reconnected_event_clears_disconnected_and_triggers_snapshot_resend()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.PartyPlayPassAndPlayParityTest.xml",
+          "sha256": "b96dfa57a7b4c77ac1026d649b0a2403524bca6ad6c437a78015957d643daae7",
+          "suite": "com.parlor.games.whodunit.multidevice.PartyPlayPassAndPlayParityTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "party_play_host_reaches_same_terminal_state_as_pass_and_play()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.QueuedActionSafetyTest.xml",
+          "sha256": "73c3264319c0a0370cc6c880e58ab1be40a0278df3cc4df416dcf5c326cb1efb",
+          "suite": "com.parlor.games.whodunit.multidevice.QueuedActionSafetyTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "repeated_restore_queries_the_same_command_without_replaying_it()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "second_offline_intent_is_rejected_while_first_outcome_is_unknown()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.SelfOfflineTimeoutTest.xml",
+          "sha256": "16486167405e9a707edacb40c5149a7a1e5bfa05a7d37c8dbc1cfd1519b1d0b5",
+          "suite": "com.parlor.games.whodunit.multidevice.SelfOfflineTimeoutTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "send_failure_emits_self_offline_and_host_restore_emits_self_online()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.WhodunitMultiDeviceShapeTest.xml",
+          "sha256": "bc9fcd8c684b3a232865559d379f8de8c8497a4ce92a3926f5ab7c2d2bfddbd4",
+          "suite": "com.parlor.games.whodunit.multidevice.WhodunitMultiDeviceShapeTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "pause_state_propagates_to_peer_with_no_hostOnly_leak()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "peer_re_converges_after_an_extended_drop_window()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "host_peer_projections_match_through_a_real_whodunit_classic_game()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "two_peers_subscribed_to_broadcast_each_receive_every_undropped_snapshot()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "dropped_snapshot_does_not_corrupt_host_and_peer_re_converges()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "host_only_fields_are_redacted_at_every_reachable_phase()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.WhodunitPeerProjectionBoundaryTest.xml",
+          "sha256": "38cb37f0047b9b449775b8de538a8db6c4475d16c1522c65d527efbe778f2cc2",
+          "suite": "com.parlor.games.whodunit.multidevice.WhodunitPeerProjectionBoundaryTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "peer_rejects_privacy_safe_but_reducer_impossible_public_snapshot()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "peer_rejects_malformed_utf8_snapshot_without_replacing_last_good_state()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "peer_rejects_snapshot_whose_public_payload_contains_host_secrets()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "ownProjectionKeepsAssignmentEpochAndDossierFromTheSameRevision()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "peer_case_boundary_accepts_authored_round_and_rejects_forged_content_atomically()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "peer_redacts_an_accidentally_canonical_initial_placeholder()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "peer_rejects_a_structurally_valid_case_substitution_for_the_same_session()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.projection.VoteRedactionTest.xml",
+          "sha256": "7bd1f7e6c4ac5363c42345153001364d17e47a6065369b054d5fc4a2b011021d",
+          "suite": "com.parlor.games.whodunit.projection.VoteRedactionTest",
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "host_projection_does_not_redact_targets()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "tied_vote_passes_through_unchanged()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "empty_castSoFar_in_collecting_returns_same_instance()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "collecting_vote_redacts_targets_in_private_projection_too()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "collecting_vote_redacts_target_values_in_public_projection()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "resolved_vote_passes_through_unchanged()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitCaseBindingTest.xml",
+          "sha256": "85fd51b0460b91c59bfc15f475c5995e67c529b21117cf2970c5ac4d8cdd4307",
+          "suite": "com.parlor.games.whodunit.snapshot.WhodunitCaseBindingTest",
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "authoredFilteredDeflectionTargetsMustMatchExactly()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "recoveredTimerMustMatchAuthoredIdDurationAndRemainderPolicy()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "shippingCaseRejectsFourPlayersAndAcceptsAValidSixPlayerAssignment()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "validatedEnvelopeBindsCaseIdModeAndEffectivePlayerCount()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "reducerAcceptsOnlyTheExactAuthoredDiscussionDuration()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "drawnClueSetMustEqualTheReconstructedPrefixExactly()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "deterministicCluePrefixRejectsASeedMismatchAndNonFinalEvidenceInFinalRound()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "deterministicCluePrefixRejectsAnotherSeedChoiceAndWrongRoundCategory()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest.xml",
+          "sha256": "1402a8278f768d079a7393d1f414719878262ea27383cecb2f044fafa8595891",
+          "suite": "com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "everyOwnPrivatePeerBoundaryRejectsAReopenedFinalTwo()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "earlyEndWithAndWithoutDisclosureRemainRecoverable()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "currentDecoderRejectsCanonicalJsonThatReopensTheFinalTwo()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "aLegalLastRoundKillerEliminationStillAllowsTwoInnocentSurvivors()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "legalFinalTwoKillerVictoryStillRecoversThroughPostGameAndReplay()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "productionLocalResumeLoaderRejectsAnImpossibleTrustedPayload()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "currentEncoderRejectsEveryReopenedFinalTwoSubstate()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "bareLegacyPayloadCannotRepairAnImpossibleActiveFinalTwo()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "caseBoundRecoveryRejectsFinalTwoEvenWithTheCorrectContentIdentity()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitLegacySnapshotGoldenTest.xml",
+          "sha256": "1b878c100c6a8100c1b6410175c2761e05cab1b17d601ddc5b9f716dcb12f2c0",
+          "suite": "com.parlor.games.whodunit.snapshot.WhodunitLegacySnapshotGoldenTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "checkpoint8186f7dPayloadsRetainTheirGeneratedBytesAndMigrateDeterministically()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest.xml",
+          "sha256": "fd30ac416f03e22843017f626100ec6e30c7b13d045cc184b45c8fb1e1823840",
+          "suite": "com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest",
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "resume_accepts_supportedBareVersionsAndCurrentVersionedPayload()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "resume_deletes_a_retired_solo_snapshot_before_decoding_private_state()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "resume_propagates_cancellation_during_retired_snapshot_cleanup()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "resume_rejects_partial_or_malformed_content_identity_metadata()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "resume_rejects_unknown_play_mode_metadata_instead_of_changing_ceremony()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "resumed_controller_state_equals_saved_state_and_advances_correctly()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "resume_rejects_another_game_before_decoding_its_payload()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "deleting_snapshot_removes_it_from_listUnfinished()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "loaded_case_boundary_requires_exact_identity_and_content_compatible_state()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "corrupt_snapshot_payload_does_not_blow_up_decoder()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "resume_rejects_a_future_engine_version_before_decoding_its_payload()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitSnapshotRoundTripTest.xml",
+          "sha256": "b911620f95fda322bb5e1a48e0551e3ed6fcf33ad6eb3beaa2655673cc0d108e",
+          "suite": "com.parlor.games.whodunit.snapshot.WhodunitSnapshotRoundTripTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "mid_round_state_round_trips_through_file_backed_store()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "tied_revote_state_with_isSecondRound_round_trips_correctly()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "listUnfinished_reflects_saved_and_deleted_sessions()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "loading_unknown_session_returns_not_found()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitSnapshotValidationTest.xml",
+          "sha256": "d239879b6978abe20d5b349abe4bb5709743d2824abd317eed45e5791a481b85",
+          "suite": "com.parlor.games.whodunit.snapshot.WhodunitSnapshotValidationTest",
+          "tests": 46,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "retiredPrivateReviewFlagIsRejectedEvenDuringCharacterReveal()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "reducerGeneratedEliminationFinalTwoRoundTripsAndIsValidForPeerInstallation()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "syntacticallyValidSnapshotWithOverlappingVoteAndAbstentionIsRejected()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "currentWritesUseTheExplicitCanonicalSnapshotEnvelope()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "oversizedSnapshotIsRejectedBeforeJsonParsing()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "snapshotDecodeAcceptsStructurallyValidButCaseInconsistentClueUntilCaseBinding()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "exactDuplicateRosterNamesAreRejectedBySnapshotRecovery()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "classicFinalBallotMustUseTheExactCanonicalRosterAndCandidates()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "privateRevealFlagsCannotSurviveOutsideCharacterReveal()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "reservedEnvelopeKeysCannotFallBackToLegacyDecoding()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "eliminatedAudienceCannotBeRestoredAsGameplayDisconnected()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "revealedCluesMustBeOrderedAndWithinCurrentRound()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "simultaneousCharacterRevealRejectsLegacySequentialCursor()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "collectingVoteMustContainCanonicalBallotPrefix()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "viewedRoleCannotRetainPrivateRevealFlags()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "aLaterRoundCannotResumeWithoutItsContiguousPriorClues()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "assignmentGenerationMustMatchWhetherRolesExist()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "currentRoundCannotExceedModeMaximum()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "revoteCandidatesNeedAtLeastTwoAndCanonicalTableOrder()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "voteAndVerdictCannotBeAttachedToAnUnreachablePhaseOrKiller()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "peerFinalTwoProjectionRejectsAKnownKillerInTheEliminationHistory()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "loadedCaseBoundaryRejectsStaleCaseAndUnknownAssignedCharacter()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "legacyTieCountdownIsNormalizedToExplicitlyUntimedState()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "validAuthoritativeStateStillRoundTripsExactly()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "earlyTerminationClearsPhaseLocalStateBeforeItCanBePersisted()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "syntacticallyValidSnapshotWithDivergentRosterIsRejected()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "activeStateCannotContainAFormerlyDroppedCompatibilitySeat()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "currentSnapshotPreservesLaterAssignmentGeneration()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "loadedCaseBoundaryRejectsUnknownOrChangedClue()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "graceExpiryRevealRoundTripsAndIsValidForPeerInstallation()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "eliminationTerminalOutcomesRejectReducerImpossibleHistories()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "legacyAssignedSnapshotWithoutGenerationMigratesButExplicitZeroDoesNot()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "eliminationProgressCannotOutrunRoundsOrEliminateTheKillerBeforeTerminalVictory()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "currentEnvelopeNeverReceivesLegacyMissingFieldRepair()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "activeTimerRequiresCurrentRoundClue()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "syntacticallyValidSnapshotWithTwoKillersIsRejected()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "unassigned_terminal_state_accepts_only_the_exact_setup_disconnect_cancellation_shape()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "malformedUtf8IsRejectedBeforeJsonInterpretation()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "syntacticallyValidSnapshotWithIncompletePrivateMapIsRejected()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "phaseSpecificReadinessAndBriefingCursorCannotLeakIntoAnotherPhase()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "peerCaseBoundaryRejectsFinalFallbackWhilePreferredEvidenceIsAvailable()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "peerCaseBoundaryBindsClueHistoryToTheTerminalVerdictCharacter()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "callerJsonSettingsCannotMakeSnapshotDecodingPermissive()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "loadedCaseBoundaryAcceptsMatchingAssignedState()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "legacySnapshotReconstructsFilteredKillerTargetsFromHostAuthority()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "currentEnvelopeRejectsWrongKindUnknownSchemaAndUnknownFields()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.PrivacyConcernPolicyTest.xml",
+          "sha256": "82d8463d936ef0ff762c179a35d000c57a6b642e9e92fd5de396742255912bed",
+          "suite": "com.parlor.games.whodunit.ui.PrivacyConcernPolicyTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "host_can_offer_authoritative_reroll()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "peer_is_told_to_contact_host_instead_of_offering_reroll()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.RtlFormattingTest.xml",
+          "sha256": "2eeccd16359bd720d68dc32e58595ebeab5c710a9387b24abfa5350539a31770",
+          "suite": "com.parlor.games.whodunit.ui.RtlFormattingTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "affected_rendering_uses_resources_instead_of_raw_punctuation()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "localized_resources_render_english_and_arabic_output_with_matching_direction()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.WhodunitAccessibilitySemanticsTest.xml",
+          "sha256": "759bfa0f10290789558c3e2fcba919e9a6894a8509d992e865295bf7a159484b",
+          "suite": "com.parlor.games.whodunit.ui.WhodunitAccessibilitySemanticsTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "reveal_hides_each_stage_until_its_fade_completes()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "reduced_motion_exposes_complete_reveal_semantics_immediately()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "timer_exposes_one_coherent_normal_and_urgent_value()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "timer_announces_only_the_exact_ten_second_threshold()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "reveal_continue_is_enabled_only_after_the_final_fade_completes()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.WhodunitCasePickerScreenTest.xml",
+          "sha256": "08b07d260dc46abf77d632f204717bb96b1b2b72aec63b4135d3fa43e2ddbab9",
+          "suite": "com.parlor.games.whodunit.ui.WhodunitCasePickerScreenTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "language_filter_without_matching_cases_explains_the_empty_result()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.WhodunitNetErrorMessageKeyTest.xml",
+          "sha256": "1bdf4c4151358539e2dde1eebd5c32e51845eec40ffa66af63cd9d4ddacd9c10",
+          "suite": "com.parlor.games.whodunit.ui.WhodunitNetErrorMessageKeyTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "everyNetworkFailureKeepsItsActionableUiClassification()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.components.RevealCompletionGateTest.xml",
+          "sha256": "d635b48e7dbfcb72f01d4d6c435031f42268bfa88ee4c70d0f7df785bf70dd87",
+          "suite": "com.parlor.games.whodunit.ui.components.RevealCompletionGateTest",
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "completionCanBeClaimedExactlyOnceAcrossRepeatedGestureCallbacks()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.EliminationVoteOwnershipIntegrationTest.xml",
+          "sha256": "9459be7c202dcbe7fd5efc35749b8454dbdbc9edbe38647dfc59930189313451",
+          "suite": "com.parlor.games.whodunit.ui.flow.EliminationVoteOwnershipIntegrationTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "elimination_round_exposes_each_ballot_to_exactly_its_own_device()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "pass_and_play_still_sequences_every_ballot_on_the_shared_device()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest.xml",
+          "sha256": "b09bebfe04c08c7ddf31d7727d1e88b4e217f03eb09ebaaaa805d5498048b500",
+          "suite": "com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest",
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "introAcknowledgementDoesNotRepeatAfterCommandCoverRemount()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "freshIntroSnapshotWinsOverAStaleComposeProjection()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "replayInTheSameRenderedPhaseAcknowledgesTheNewGeneration()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "replayBeforeEffectDoesNotAcknowledgeTheStaleAssignmentGeneration()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "freshBriefingSnapshotWinsOverAStaleComposeProjection()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "acknowledgedBriefingSurvivesUiRecreationAndDisconnectPause()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "rejectionWithoutHostAcknowledgementDoesNotCreateOptimisticReadiness()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "briefingAcknowledgementDoesNotRepeatAfterCommandCoverRemount()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "phaseChangeBeforeEffectDoesNotSendThePreviousPhaseAcknowledgement()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "aReplacementControllerRechecksReadinessInTheSamePhase()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "unrelatedBriefingUpdatesDoNotResendWhileAuthorityHasNotResponded()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "acknowledgedIntroSurvivesUiRecreationAndDisconnectPause()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.VoteTurnPolicyTest.xml",
+          "sha256": "913d7743ee7d9d774ca7b0b363050bb865b50f293ef2d70754f9a7f0998843e0",
+          "suite": "com.parlor.games.whodunit.ui.flow.VoteTurnPolicyTest",
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "multi_device_peer_can_open_only_its_own_ballot()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "multi_device_host_can_open_only_the_hosts_own_ballot()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "pass_and_play_can_sequence_every_local_voter()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "only_authoritative_devices_close_a_completed_vote()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "unsupported_or_malformed_turns_fail_closed()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest.xml",
+          "sha256": "e26b655641771c547b501bb4323d5af874cbaf71ff2ded36823aebafc0e6f1bf",
+          "suite": "com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest",
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "arabicIncompatibleSaveIsExplainedAndKeptUntilExplicitDiscard()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "englishIncompatibleSaveIsExplainedAndKeptUntilExplicitDiscard()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "englishIdentityLessSaveIsKeptUntilExplicitDiscard()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "arabicIdentityLessSaveIsKeptUntilExplicitDiscard()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerSessionFlowPolicyTest.xml",
+          "sha256": "6d6477310ee4cb82553c9845823b4be38b3fd2453d6a622b7bfb88b718ed41d7",
+          "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerSessionFlowPolicyTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "failedLeaveDoesNotDisableConnectionRetry()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "checkpointInstallationFailureStillDisablesConnectionRetry()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.screens.setup.WhodunitCaseLanguageLabelTest.xml",
+          "sha256": "1e95b19a622f8ce00d54a05dca7e0128f90053d9d86506cc2d724f19ff797e32",
+          "suite": "com.parlor.games.whodunit.ui.screens.setup.WhodunitCaseLanguageLabelTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "anotherLanguageUsesTheFallbackClassification()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "englishAndArabicUseTheirPrimaryBcp47Subtag()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.screens.setup.WhodunitModeChoiceTest.xml",
+          "sha256": "628595b69ef4ae9885c9d9a8f127415020a4f9cfac6bc7bc7f77e00b4c25a543",
+          "suite": "com.parlor.games.whodunit.ui.screens.setup.WhodunitModeChoiceTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "unsupported_unknown_and_disjoint_modes_are_not_offered()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "selected_case_controls_visible_modes_and_effective_player_bounds()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/shared/content/build/test-results/desktopTest/TEST-com.parlor.content.datasource.OfflineRemoteCaseDataSourceTest.xml",
+          "sha256": "27181a01b588c76c7f0caa9bceaf77010b98bee8707e3ae21b5bd3698f343560",
+          "suite": "com.parlor.content.datasource.OfflineRemoteCaseDataSourceTest",
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "ktor_source_rejects_path_unsafe_ids_before_request()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "ktor_source_maps_non_success_status_before_deserializing_error_body()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "ktor_source_does_not_convert_fatal_errors_into_network_failures()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "ktor_source_rejects_malformed_utf8_before_json_interpretation()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "ktor_source_propagates_structured_cancellation()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "bundled_only_policy_reports_remote_as_unreachable()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "ktor_source_rejects_oversized_chunked_bodies_before_json_decode()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/shared/content/build/test-results/desktopTest/TEST-com.parlor.content.repository.DefaultCaseRepositoryTest.xml",
+          "sha256": "80c3b9e83b183d801177f1f9f3e61e6fb9c2be9a97619f8a4e6837cc17979810",
+          "suite": "com.parlor.content.repository.DefaultCaseRepositoryTest",
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "refresh_rejects_a_fetched_case_that_does_not_match_its_manifest_identity()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "refresh_rejects_game_invalid_payload_before_cache_warming()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "corrupt_remote_case_falls_back_to_a_valid_bundled_copy()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "corrupt_cached_case_is_invalidated_before_remote_fallback()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "valid_remote_case_is_cached_only_after_validation()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "remote_case_identity_must_match_the_requested_case_before_caching()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "invalid_remote_case_is_not_cached_before_typed_validation()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "refresh_does_not_cache_a_failed_envelope_shape()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "refresh_reports_an_advertised_case_that_cannot_be_fetched()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/shared/content/build/test-results/desktopTest/TEST-com.parlor.content.schema.IntRangePairSerializerTest.xml",
+          "sha256": "f20a0d876c608c429f7ac4015875b33703502f3e546bff20046ee59f53cb59b6",
+          "suite": "com.parlor.content.schema.IntRangePairSerializerTest",
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "correctedDescriptorPreservesTheExistingWireFormat()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "descriptorMatchesTheJsonArrayWireShape()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/shared/content/build/test-results/desktopTest/TEST-com.parlor.content.validation.CaseSummaryValidatorTest.xml",
+          "sha256": "9cf0811b3fdf6af5e4b901a1e349dcab6d82e4d226d9430fcc7f8b411c7f95e7",
+          "suite": "com.parlor.content.validation.CaseSummaryValidatorTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "shape_validation_rejects_path_traversal_and_duplicate_ids()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "shape_validation_rejects_control_and_format_characters_in_display_data()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "shape_validation_rejects_wrong_game_and_oversized_display_data()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        },
+        {
+          "path": "remediation-runs/2026-09-06-approved-policy-completion/evidence/story-recovery-green-01/reports/shared/content/build/test-results/desktopTest/TEST-com.parlor.content.validation.DefaultCaseValidatorBoundaryTest.xml",
+          "sha256": "99e8c7b86acea0341e475b849612e2c3ab14a3ec8711d8966e731fca175905ca",
+          "suite": "com.parlor.content.validation.DefaultCaseValidatorBoundaryTest",
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0,
+          "cases": [
+            {
+              "name": "unverified_delivery_signature_is_rejected_instead_of_being_treated_as_trusted()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "direct_envelope_validation_enforces_the_same_safe_shape_as_case_summaries()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            },
+            {
+              "name": "blank_untrusted_game_id_is_a_typed_failure_not_an_exception()[desktop]",
+              "skipped": false,
+              "failure": null,
+              "error": null
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "compatibility": {
+    "content_version": "Four testingcases1.0.0→1.0.1; strict digest changes naturally from prose/version.",
+    "save": "No save envelope/game codec schema changed; incompatible/missingidentity records retained until explicit discard; old internal migration intentionally unsupported by owner.",
+    "network": "Exact protocol4.2 unchanged; current loadedcontentversion/digest checks remain at actual host offer + peer preparation. No host secrets/seed/private projections added to payloads.",
+    "games": "No reducer/rule/assignment/clue-pool ordering/game-specific sharedmodule changes in this completion diff; Mafia source untouched by this WD patch."
+  },
+  "remaining_limits": [
+    "Combined current-source regression/static/platform gate results pending.",
+    "New recovery UI verified on Desktop Compose only; native/platform UI/a11y/physical LAN and Store/legal gates are separate.",
+    "Not final editorial approval. Independent library/alibi sibling candidates retained as editorial-intent uncertainty, not new confirmed defects."
+  ],
+  "rejected_or_unconfirmed": [
+    {
+      "candidate": "LastDinner Daniel8:15–8:40 reconciliation vs8:30toast",
+      "classification": "FALSE POSITIVE ON CURRENT EVIDENCE",
+      "reason": "8:30is explicit only in other mutually exclusive killer timelines; common intro has no8:30clock."
+    },
+    {
+      "candidate": "LastDinner Daniel/Vivienne overlapping alone-library alibis",
+      "classification": "UNCONFIRMED — EDITORIAL INTENT",
+      "reason": "Co-renderable claims, but shipping briefing permits players to lie; not authority to silently rewrite additional accounts."
+    },
+    {
+      "candidate": "Layla Souadkitchen/Ranaparlor overlapping alibis",
+      "classification": "UNCONFIRMED — EDITORIAL INTENT",
+      "reason": "Co-renderable claims need editorialintent; no extra correction/findingcount without confirmation."
+    }
+  ],
+  "hygiene": {
+    "reviewer_built_or_executed_tests": false,
+    "reviewer_started_background_workers": false,
+    "reviewer_edited_production_test_config": false,
+    "reviewer_git_mutations": false,
+    "evidence_only_written_to": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-06-approved-policy-completion/reviews/independent-wdc2-remediation-focused-01.json",
+    "root_cycle_cleanup_reviewed": true,
+    "retained_needed_reports": "All preserved compact rawXML/log/receipt files left intact."
+  },
+  "review_finished_at_utc": "2026-09-06T06:56:00.421793+00:00"
+}

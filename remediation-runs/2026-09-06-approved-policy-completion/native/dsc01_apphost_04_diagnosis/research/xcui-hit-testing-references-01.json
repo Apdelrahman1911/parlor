@@ -1,0 +1,810 @@
+[
+  {
+    "name": "xcui-ishittable",
+    "url": "https://developer.apple.com/tutorials/data/documentation/xcuiautomation/xcuielement/ishittable.json",
+    "accessed_at": "2026-09-06T14:54:35.408362+00:00",
+    "http_status": 200,
+    "sha256": "a425383b2660acbb1529b1653dc46b691fb266e1c33d2379b4396ffeb27fe6f1",
+    "metadata": {
+      "externalID": "c:objc(cs)XCUIElement(py)hittable",
+      "fragments": [
+        {
+          "kind": "keyword",
+          "text": "var"
+        },
+        {
+          "kind": "text",
+          "text": " "
+        },
+        {
+          "kind": "identifier",
+          "text": "isHittable"
+        },
+        {
+          "kind": "text",
+          "text": ": "
+        },
+        {
+          "kind": "typeIdentifier",
+          "preciseIdentifier": "s:Sb",
+          "text": "Bool"
+        }
+      ],
+      "modules": [
+        {
+          "name": "XCUIAutomation"
+        }
+      ],
+      "navigatorTitle": [
+        {
+          "kind": "identifier",
+          "text": "hittable"
+        }
+      ],
+      "platforms": [
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "iOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "iPadOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "Mac Catalyst",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "macOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "tvOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "visionOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "watchOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "introducedAt": "16.3",
+          "name": "Xcode",
+          "unavailable": false
+        }
+      ],
+      "role": "symbol",
+      "roleHeading": "Instance Property",
+      "symbolKind": "property",
+      "title": "isHittable"
+    },
+    "abstract": [
+      {
+        "text": "Determines if the system can compute a hit point for the element.",
+        "type": "text"
+      }
+    ],
+    "primaryContentSections": [
+      {
+        "declarations": [
+          {
+            "languages": [
+              "swift"
+            ],
+            "platforms": [
+              "iOS",
+              "iPadOS",
+              "Mac Catalyst",
+              "macOS",
+              "tvOS",
+              "visionOS",
+              "watchOS"
+            ],
+            "tokens": [
+              {
+                "kind": "keyword",
+                "text": "var"
+              },
+              {
+                "kind": "text",
+                "text": " "
+              },
+              {
+                "kind": "identifier",
+                "text": "isHittable"
+              },
+              {
+                "kind": "text",
+                "text": ": "
+              },
+              {
+                "identifier": "doc://com.apple.documentation/documentation/Swift/Bool",
+                "kind": "typeIdentifier",
+                "preciseIdentifier": "s:Sb",
+                "text": "Bool"
+              },
+              {
+                "kind": "text",
+                "text": " { "
+              },
+              {
+                "kind": "keyword",
+                "text": "get"
+              },
+              {
+                "kind": "text",
+                "text": " }"
+              }
+            ]
+          }
+        ],
+        "kind": "declarations"
+      },
+      {
+        "content": [
+          {
+            "anchor": "Discussion",
+            "level": 2,
+            "text": "Discussion",
+            "type": "heading"
+          },
+          {
+            "inlineContent": [
+              {
+                "identifier": "doc://com.apple.xcuiautomation/documentation/XCUIAutomation/XCUIElement/isHittable",
+                "isActive": true,
+                "type": "reference"
+              },
+              {
+                "text": " returns ",
+                "type": "text"
+              },
+              {
+                "identifier": "doc://com.apple.documentation/documentation/Swift/true",
+                "isActive": true,
+                "type": "reference"
+              },
+              {
+                "text": " if the element exists and can be clicked, tapped, or pressed at its current location. It returns ",
+                "type": "text"
+              },
+              {
+                "identifier": "doc://com.apple.documentation/documentation/Swift/false",
+                "isActive": true,
+                "type": "reference"
+              },
+              {
+                "text": " if the element doesn’t exist, is offscreen, or is covered by another element.",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          },
+          {
+            "content": [
+              {
+                "inlineContent": [
+                  {
+                    "text": "",
+                    "type": "text"
+                  },
+                  {
+                    "text": " ",
+                    "type": "text"
+                  },
+                  {
+                    "identifier": "doc://com.apple.xcuiautomation/documentation/XCUIAutomation/XCUIElement/isHittable",
+                    "isActive": true,
+                    "type": "reference"
+                  },
+                  {
+                    "text": " only returns ",
+                    "type": "text"
+                  },
+                  {
+                    "identifier": "doc://com.apple.documentation/documentation/Swift/true",
+                    "isActive": true,
+                    "type": "reference"
+                  },
+                  {
+                    "text": " if the element is already visible and hittable onscreen. It returns ",
+                    "type": "text"
+                  },
+                  {
+                    "identifier": "doc://com.apple.documentation/documentation/Swift/false",
+                    "isActive": true,
+                    "type": "reference"
+                  },
+                  {
+                    "text": " for an offscreen element in a scrollable view, even if the element can be scrolled into a hittable position by calling ",
+                    "type": "text"
+                  },
+                  {
+                    "identifier": "doc://com.apple.xcuiautomation/documentation/XCUIAutomation/XCUIElement/click()",
+                    "isActive": true,
+                    "type": "reference"
+                  },
+                  {
+                    "text": ", ",
+                    "type": "text"
+                  },
+                  {
+                    "identifier": "doc://com.apple.xcuiautomation/documentation/XCUIAutomation/XCUIElement/tap()",
+                    "isActive": true,
+                    "type": "reference"
+                  },
+                  {
+                    "text": ", or another hit-point-related interaction method.",
+                    "type": "text"
+                  }
+                ],
+                "type": "paragraph"
+              }
+            ],
+            "name": "Note",
+            "style": "note",
+            "type": "aside"
+          }
+        ],
+        "kind": "content"
+      }
+    ]
+  },
+  {
+    "name": "xcui-tap",
+    "url": "https://developer.apple.com/tutorials/data/documentation/xcuiautomation/xcuielement/tap().json",
+    "accessed_at": "2026-09-06T14:54:39.039785+00:00",
+    "http_status": 200,
+    "sha256": "bc49772beb3e08c609840c26ab831bde35cfbce7d3aa8bae316cdfa24e74a88a",
+    "metadata": {
+      "extendedModule": "XCUIAutomation",
+      "externalID": "c:objc(cs)XCUIElement(im)tap",
+      "fragments": [
+        {
+          "kind": "keyword",
+          "text": "func"
+        },
+        {
+          "kind": "text",
+          "text": " "
+        },
+        {
+          "kind": "identifier",
+          "text": "tap"
+        },
+        {
+          "kind": "text",
+          "text": "()"
+        }
+      ],
+      "modules": [
+        {
+          "name": "XCUIAutomation"
+        }
+      ],
+      "navigatorTitle": [
+        {
+          "kind": "text",
+          "text": "- "
+        },
+        {
+          "kind": "identifier",
+          "text": "tap"
+        }
+      ],
+      "platforms": [
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "iOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "iPadOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "Mac Catalyst",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "macOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "visionOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "watchOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "introducedAt": "16.3",
+          "name": "Xcode",
+          "unavailable": false
+        }
+      ],
+      "role": "symbol",
+      "roleHeading": "Instance Method",
+      "symbolKind": "method",
+      "title": "tap()"
+    },
+    "abstract": [
+      {
+        "text": "Sends a tap event to a hittable point the system computes for the element.",
+        "type": "text"
+      }
+    ],
+    "primaryContentSections": [
+      {
+        "declarations": [
+          {
+            "languages": [
+              "swift"
+            ],
+            "platforms": [
+              "iOS",
+              "iPadOS",
+              "Mac Catalyst",
+              "macOS",
+              "visionOS",
+              "watchOS"
+            ],
+            "tokens": [
+              {
+                "kind": "keyword",
+                "text": "func"
+              },
+              {
+                "kind": "text",
+                "text": " "
+              },
+              {
+                "kind": "identifier",
+                "text": "tap"
+              },
+              {
+                "kind": "text",
+                "text": "()"
+              }
+            ]
+          }
+        ],
+        "kind": "declarations"
+      },
+      {
+        "content": [
+          {
+            "anchor": "Discussion",
+            "level": 2,
+            "text": "Discussion",
+            "type": "heading"
+          },
+          {
+            "inlineContent": [
+              {
+                "text": "If the element exists within a scrollable view but is offscreen, the framework attempts to scroll the element onscreen before performing the tap.",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          }
+        ],
+        "kind": "content"
+      }
+    ]
+  },
+  {
+    "name": "xcui-coordinate",
+    "url": "https://developer.apple.com/tutorials/data/documentation/xcuiautomation/xcuielement/coordinate(withnormalizedoffset:).json",
+    "accessed_at": "2026-09-06T14:54:40.509716+00:00",
+    "http_status": 200,
+    "sha256": "ad58fe0535e41aa088285b262277e1613298156b7094e54fb376bcbbca4926a2",
+    "metadata": {
+      "externalID": "c:objc(cs)XCUIElement(im)coordinateWithNormalizedOffset:",
+      "fragments": [
+        {
+          "kind": "keyword",
+          "text": "func"
+        },
+        {
+          "kind": "text",
+          "text": " "
+        },
+        {
+          "kind": "identifier",
+          "text": "coordinate"
+        },
+        {
+          "kind": "text",
+          "text": "("
+        },
+        {
+          "kind": "externalParam",
+          "text": "withNormalizedOffset"
+        },
+        {
+          "kind": "text",
+          "text": ": "
+        },
+        {
+          "kind": "typeIdentifier",
+          "preciseIdentifier": "c:@S@CGVector",
+          "text": "CGVector"
+        },
+        {
+          "kind": "text",
+          "text": ") -> "
+        },
+        {
+          "kind": "typeIdentifier",
+          "preciseIdentifier": "c:objc(cs)XCUICoordinate",
+          "text": "XCUICoordinate"
+        }
+      ],
+      "modules": [
+        {
+          "name": "XCUIAutomation"
+        }
+      ],
+      "navigatorTitle": [
+        {
+          "kind": "text",
+          "text": "- "
+        },
+        {
+          "kind": "identifier",
+          "text": "coordinateWithNormalizedOffset:"
+        }
+      ],
+      "platforms": [
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "iOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "iPadOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "Mac Catalyst",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "macOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "visionOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "watchOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "introducedAt": "16.3",
+          "name": "Xcode",
+          "unavailable": false
+        }
+      ],
+      "role": "symbol",
+      "roleHeading": "Instance Method",
+      "symbolKind": "method",
+      "title": "coordinate(withNormalizedOffset:)"
+    },
+    "abstract": [
+      {
+        "text": "Creates and returns a new coordinate with a normalized offset.",
+        "type": "text"
+      }
+    ],
+    "primaryContentSections": [
+      {
+        "declarations": [
+          {
+            "languages": [
+              "swift"
+            ],
+            "platforms": [
+              "iOS",
+              "iPadOS",
+              "Mac Catalyst",
+              "macOS",
+              "visionOS",
+              "watchOS"
+            ],
+            "tokens": [
+              {
+                "kind": "keyword",
+                "text": "func"
+              },
+              {
+                "kind": "text",
+                "text": " "
+              },
+              {
+                "kind": "identifier",
+                "text": "coordinate"
+              },
+              {
+                "kind": "text",
+                "text": "("
+              },
+              {
+                "kind": "externalParam",
+                "text": "withNormalizedOffset"
+              },
+              {
+                "kind": "text",
+                "text": " "
+              },
+              {
+                "kind": "internalParam",
+                "text": "normalizedOffset"
+              },
+              {
+                "kind": "text",
+                "text": ": "
+              },
+              {
+                "identifier": "doc://com.apple.documentation/documentation/CoreFoundation/CGVector",
+                "kind": "typeIdentifier",
+                "preciseIdentifier": "c:@S@CGVector",
+                "text": "CGVector"
+              },
+              {
+                "kind": "text",
+                "text": ") -> "
+              },
+              {
+                "identifier": "doc://com.apple.xcuiautomation/documentation/XCUIAutomation/XCUICoordinate",
+                "kind": "typeIdentifier",
+                "preciseIdentifier": "c:objc(cs)XCUICoordinate",
+                "text": "XCUICoordinate"
+              }
+            ]
+          }
+        ],
+        "kind": "declarations"
+      },
+      {
+        "content": [
+          {
+            "anchor": "Discussion",
+            "level": 2,
+            "text": "Discussion",
+            "type": "heading"
+          },
+          {
+            "inlineContent": [
+              {
+                "text": "The coordinate’s screen point is computed by adding ",
+                "type": "text"
+              },
+              {
+                "code": "normalizedOffset",
+                "type": "codeVoice"
+              },
+              {
+                "text": " multiplied by the size of the element’s frame to the origin of the element’s frame.",
+                "type": "text"
+              }
+            ],
+            "type": "paragraph"
+          }
+        ],
+        "kind": "content"
+      }
+    ]
+  },
+  {
+    "name": "xcui-frame",
+    "url": "https://developer.apple.com/tutorials/data/documentation/xcuiautomation/xcuielementattributes/frame.json",
+    "accessed_at": "2026-09-06T14:54:42.379461+00:00",
+    "http_status": 200,
+    "sha256": "339a16886726159e7ada4605dfb859f5881b7163d5bfeb3f8ce55a559c8ac3ec",
+    "metadata": {
+      "externalID": "c:objc(pl)XCUIElementAttributes(py)frame",
+      "fragments": [
+        {
+          "kind": "keyword",
+          "text": "var"
+        },
+        {
+          "kind": "text",
+          "text": " "
+        },
+        {
+          "kind": "identifier",
+          "text": "frame"
+        },
+        {
+          "kind": "text",
+          "text": ": "
+        },
+        {
+          "kind": "typeIdentifier",
+          "preciseIdentifier": "c:@S@CGRect",
+          "text": "CGRect"
+        }
+      ],
+      "modules": [
+        {
+          "name": "XCUIAutomation"
+        }
+      ],
+      "navigatorTitle": [
+        {
+          "kind": "identifier",
+          "text": "frame"
+        }
+      ],
+      "platforms": [
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "iOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "iPadOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "Mac Catalyst",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "macOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "tvOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "visionOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "name": "watchOS",
+          "unavailable": false
+        },
+        {
+          "beta": false,
+          "deprecated": false,
+          "introducedAt": "16.3",
+          "name": "Xcode",
+          "unavailable": false
+        }
+      ],
+      "required": true,
+      "role": "symbol",
+      "roleHeading": "Instance Property",
+      "symbolKind": "property",
+      "title": "frame"
+    },
+    "abstract": [
+      {
+        "text": "The frame of the element in the screen’s coordinate space.",
+        "type": "text"
+      }
+    ],
+    "primaryContentSections": [
+      {
+        "declarations": [
+          {
+            "languages": [
+              "swift"
+            ],
+            "platforms": [
+              "iOS",
+              "iPadOS",
+              "Mac Catalyst",
+              "macOS",
+              "tvOS",
+              "visionOS",
+              "watchOS"
+            ],
+            "tokens": [
+              {
+                "kind": "keyword",
+                "text": "var"
+              },
+              {
+                "kind": "text",
+                "text": " "
+              },
+              {
+                "kind": "identifier",
+                "text": "frame"
+              },
+              {
+                "kind": "text",
+                "text": ": "
+              },
+              {
+                "identifier": "doc://com.apple.documentation/documentation/CoreFoundation/CGRect",
+                "kind": "typeIdentifier",
+                "preciseIdentifier": "c:@S@CGRect",
+                "text": "CGRect"
+              },
+              {
+                "kind": "text",
+                "text": " { "
+              },
+              {
+                "kind": "keyword",
+                "text": "get"
+              },
+              {
+                "kind": "text",
+                "text": " }"
+              }
+            ]
+          }
+        ],
+        "kind": "declarations"
+      }
+    ]
+  }
+]

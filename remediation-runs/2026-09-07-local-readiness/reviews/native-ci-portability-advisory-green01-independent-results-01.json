@@ -1,0 +1,450 @@
+{
+  "schema_version": 1,
+  "review_id": "native-ci-portability-advisory-green01-independent-results-01",
+  "reviewer": "/root/native_fix_review",
+  "reviewed_at": "2026-09-07T11:54:11.314338+00:00",
+  "disposition": "PASS: EXACT LOCAL FOCUSED REGRESSIONS/DISCOVERY AND STRICT LINT GATE IN THIS COMPLETED CYCLE; WINDOWS HOST JOB REMAINS UNEXECUTED HERE",
+  "supplements": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/native-ci-drafts-independent-source-review-01.json",
+    "sha256": "6b0af0b0602c12be656cd78d54f84170d09d090ad9a65ab11a5778243c715d06"
+  },
+  "source_identity": {
+    "commit": "f5ea8045bd903c255041b198f54aca67e893612f",
+    "tree": "b109c8ec6ec579b9197f449b36bda2c39105a652",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "M composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt\n M config/android-lint-accepted-warnings.txt\n M docs/ANDROID_LINT_TRIAGE.md\n M shared/transport-p2p/build.gradle.kts\n M shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/AndroidReleaseLintContractTest.kt",
+    "diff_sha256": "b559c093872bbe766f699c65c5c21f3eaf0ba29ac2a41ed41f2f47a9c12f3f14",
+    "source_manifest_sha256": "d81dc9a981eef474acf5f698ebb08bf7796faa69be34104dffa55ad98a23d814"
+  },
+  "source_binding_validation": {
+    "source_records": 729,
+    "manifest_hash_recomputed": "d81dc9a981eef474acf5f698ebb08bf7796faa69be34104dffa55ad98a23d814",
+    "before_equals_after": true,
+    "full_applied_five_file_diff_matches_source_review": true
+  },
+  "execution": {
+    "receipt": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ci-portability-advisory-green-01/receipt.json",
+      "sha256": "528b67a90496d1d5cd37db6856892aa4a761efb0e5b63f4faf901101d8619fbe"
+    },
+    "command": [
+      "./gradlew",
+      ":composeApp:desktopTest",
+      "--tests",
+      "*ProductionUiAccessibilityContractTest*",
+      ":shared:transport-p2p:desktopTest",
+      "--tests",
+      "*AndroidReleaseLintContractTest*",
+      ":composeApp:verifyReleaseLintWarnings",
+      "--rerun-tasks",
+      "--no-build-cache",
+      "--no-daemon",
+      "--no-parallel",
+      "--max-workers=1",
+      "--no-configuration-cache",
+      "--dependency-verification=strict",
+      "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=ci-portability-advisory-green-01",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-Pparlor.android.signing.storeFile=",
+      "-Pparlor.android.signing.storePassword=",
+      "-Pparlor.android.signing.keyAlias=",
+      "-Pparlor.android.signing.keyPassword="
+    ],
+    "started_at": "2026-09-07T11:44:24.079770+00:00",
+    "finished_at": "2026-09-07T11:46:49.045416+00:00",
+    "exit_code": 0,
+    "raw_log": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ci-portability-advisory-green-01/gradle.log",
+      "sha256": "6a672f401347c29725335ae31eccc3a07b832c6a1f8bac63df895d58b155862e"
+    },
+    "executed_task_lines": [
+      "> Task :composeApp:desktopTest",
+      "> Task :shared:transport-p2p:desktopTest",
+      "> Task :composeApp:lintRelease",
+      "> Task :composeApp:verifyReleaseLintWarnings",
+      "BUILD SUCCESSFUL in 2m 24s",
+      "526 actionable tasks: 526 executed"
+    ],
+    "tests": 22,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "actual_task_and_test_skips_distinction": "KGP configuration/resource NO-SOURCE/SKIPPED entries are not test-case skips; both selected suites executed all declared methods. Other test suites were deliberately not selected and are not claimed PASS."
+  },
+  "suites": [
+    {
+      "xml": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ci-portability-advisory-green-01/reports/composeApp/build/test-results/desktopTest/TEST-com.parlor.app.ProductionUiAccessibilityContractTest.xml",
+        "sha256": "9f069ea97e1113e008dee02c11707a5d73362804ad42cf8ccf4c164649656b32"
+      },
+      "class_name": "com.parlor.app.ProductionUiAccessibilityContractTest",
+      "tests": 14,
+      "errors": 0,
+      "failures": 0,
+      "skips": 0,
+      "source": {
+        "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/desktopTest/kotlin/com/parlor/app/ProductionUiAccessibilityContractTest.kt",
+        "sha256": "830f077ec2f61747339310051f609d4f95fa79979a5da543620358b72742db31"
+      },
+      "executed_source_sha256": "830f077ec2f61747339310051f609d4f95fa79979a5da543620358b72742db31",
+      "current_source_matches_executed": true,
+      "declared_ids": [
+        "controls_use_vector_icons_instead_of_font_dependent_text_glyphs",
+        "every_custom_click_or_selection_surface_declares_an_accessibility_role",
+        "fullscreen_recovery_and_confirmation_states_hide_or_replace_interactive_content",
+        "fullscreen_text_surfaces_keep_actions_reachable_with_large_text",
+        "game_catalog_renders_only_registered_shipping_games",
+        "localized_format_resources_use_the_platform_formatter",
+        "mafia_target_rows_expose_radio_selection_and_revalidate_stale_selection",
+        "nullable_language_override_and_platform_motion_preference_reach_the_app_shell",
+        "passive_waiting_surfaces_do_not_publish_no_op_click_actions",
+        "platform_locale_overrides_are_commit_scoped_and_do_not_mutate_shared_resources",
+        "recovery_surfaces_are_announced_and_continuous_indicators_are_motion_aware",
+        "shell_done_actions_dismiss_the_software_keyboard",
+        "source_contract_text_normalizes_only_crlf_line_endings",
+        "wax_seal_exposes_a_one_shot_button_action_beside_pointer_hold"
+      ],
+      "executed_ids": [
+        "controls_use_vector_icons_instead_of_font_dependent_text_glyphs",
+        "every_custom_click_or_selection_surface_declares_an_accessibility_role",
+        "fullscreen_recovery_and_confirmation_states_hide_or_replace_interactive_content",
+        "fullscreen_text_surfaces_keep_actions_reachable_with_large_text",
+        "game_catalog_renders_only_registered_shipping_games",
+        "localized_format_resources_use_the_platform_formatter",
+        "mafia_target_rows_expose_radio_selection_and_revalidate_stale_selection",
+        "nullable_language_override_and_platform_motion_preference_reach_the_app_shell",
+        "passive_waiting_surfaces_do_not_publish_no_op_click_actions",
+        "platform_locale_overrides_are_commit_scoped_and_do_not_mutate_shared_resources",
+        "recovery_surfaces_are_announced_and_continuous_indicators_are_motion_aware",
+        "shell_done_actions_dismiss_the_software_keyboard",
+        "source_contract_text_normalizes_only_crlf_line_endings",
+        "wax_seal_exposes_a_one_shot_button_action_beside_pointer_hold"
+      ],
+      "all_declared_methods_actually_executed": true,
+      "reported_timestamp": "2026-09-07T11:45:04.218Z",
+      "scope": "Local desktop JVM source contracts/synthetic fixtures, not the Windows job or app/UI/device execution"
+    },
+    {
+      "xml": {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ci-portability-advisory-green-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidReleaseLintContractTest.xml",
+        "sha256": "8040efa6016a463859e2a45ce1b9d5737dbd0a749ad497b196dd5389fb23f6c4"
+      },
+      "class_name": "com.parlor.transport.p2p.AndroidReleaseLintContractTest",
+      "tests": 8,
+      "errors": 0,
+      "failures": 0,
+      "skips": 0,
+      "source": {
+        "path": "/Users/abdelrahman/Projects/parlor/shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/AndroidReleaseLintContractTest.kt",
+        "sha256": "65de8f54c89ff24fb21e563c216c94408d53fbd036892ff7e090ce1dcbe50fc1"
+      },
+      "executed_source_sha256": "65de8f54c89ff24fb21e563c216c94408d53fbd036892ff7e090ce1dcbe50fc1",
+      "current_source_matches_executed": true,
+      "declared_ids": [
+        "all_shipping_strings_are_reachable_and_locales_have_identical_keys",
+        "compact_interactive_affordances_enforce_accessible_semantics_and_touch_targets",
+        "convention_source_guard_includes_nested_precompiled_kotlin_scripts",
+        "kotlin_advisory_triage_requires_the_build_to_remain_without_kapt",
+        "kotlin_metadata_analyzers_are_explicitly_pinned_and_enforced",
+        "launcher_is_adaptive_on_every_supported_android_version",
+        "production_gate_executes_the_triaged_release_lint_verifier",
+        "unsupported_play_modes_are_described_truthfully"
+      ],
+      "executed_ids": [
+        "all_shipping_strings_are_reachable_and_locales_have_identical_keys",
+        "compact_interactive_affordances_enforce_accessible_semantics_and_touch_targets",
+        "convention_source_guard_includes_nested_precompiled_kotlin_scripts",
+        "kotlin_advisory_triage_requires_the_build_to_remain_without_kapt",
+        "kotlin_metadata_analyzers_are_explicitly_pinned_and_enforced",
+        "launcher_is_adaptive_on_every_supported_android_version",
+        "production_gate_executes_the_triaged_release_lint_verifier",
+        "unsupported_play_modes_are_described_truthfully"
+      ],
+      "all_declared_methods_actually_executed": true,
+      "reported_timestamp": "2026-09-07T11:45:07.050Z",
+      "scope": "Local desktop JVM source contracts/synthetic fixtures, not the Windows job or app/UI/device execution"
+    }
+  ],
+  "lint": {
+    "xml": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ci-portability-advisory-green-01/reports/composeApp/build/reports/lint-results-release.xml",
+      "sha256": "038dba7968fd3468bc430f56bae80d0b4b57604f331633827ec5395de3e80624"
+    },
+    "analyzer": "lint 9.1.1",
+    "issues": 35,
+    "severity_counts": {
+      "Warning": 35
+    },
+    "canonical_counts": {
+      "OldTargetApi": 1,
+      "AndroidGradlePluginVersion": 4,
+      "GradleDependency": 1,
+      "DependencyUpdate": 29
+    },
+    "accepted": {
+      "path": "/Users/abdelrahman/Projects/parlor/config/android-lint-accepted-warnings.txt",
+      "sha256": "4fe091a88dc1cec1849c0076790fa5db25608cf16ff094a30441ac99a84277d7"
+    },
+    "exact_multiset_equal": true,
+    "rows": [
+      {
+        "canonical": "OldTargetApi|composeApp/build.gradle.kts|Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the `android.os.Build.VERSION_CODES` javadoc for details.",
+        "severity": "Warning",
+        "line": "229",
+        "original_id": "OldTargetApi"
+      },
+      {
+        "canonical": "AndroidGradlePluginVersion|gradle/wrapper/gradle-wrapper.properties|A newer version of Gradle than 8.13",
+        "severity": "Warning",
+        "line": "4",
+        "original_id": "AndroidGradlePluginVersion"
+      },
+      {
+        "canonical": "AndroidGradlePluginVersion|gradle/libs.versions.toml|A newer version of com.android.application than 8.13.2",
+        "severity": "Warning",
+        "line": "22",
+        "original_id": "AndroidGradlePluginVersion"
+      },
+      {
+        "canonical": "AndroidGradlePluginVersion|gradle/libs.versions.toml|A newer version of com.android.library than 8.13.2",
+        "severity": "Warning",
+        "line": "22",
+        "original_id": "AndroidGradlePluginVersion"
+      },
+      {
+        "canonical": "AndroidGradlePluginVersion|gradle/libs.versions.toml|A newer version of com.android.tools.build:gradle than 8.13.2",
+        "severity": "Warning",
+        "line": "22",
+        "original_id": "AndroidGradlePluginVersion"
+      },
+      {
+        "canonical": "GradleDependency|gradle.properties|Newer version of lint available",
+        "severity": "Warning",
+        "line": "21",
+        "original_id": "GradleDependency"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of androidx.navigation3:navigation3-runtime than 1.0.0",
+        "severity": "Warning",
+        "line": "18",
+        "original_id": "GradleDependency"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of androidx.activity:activity-compose than 1.9.3",
+        "severity": "Warning",
+        "line": "45",
+        "original_id": "GradleDependency"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.kotlin.multiplatform than 2.4.10",
+        "severity": "Warning",
+        "line": "8",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.kotlin.plugin.compose than 2.4.10",
+        "severity": "Warning",
+        "line": "8",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.kotlin.plugin.serialization than 2.4.10",
+        "severity": "Warning",
+        "line": "8",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.kotlinx:kotlinx-datetime than 0.7.1",
+        "severity": "Warning",
+        "line": "11",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose than 1.10.3",
+        "severity": "Warning",
+        "line": "14",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.components:components-resources than 1.10.3",
+        "severity": "Warning",
+        "line": "14",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.components:components-ui-tooling-preview than 1.10.3",
+        "severity": "Warning",
+        "line": "14",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.foundation:foundation than 1.10.3",
+        "severity": "Warning",
+        "line": "14",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.runtime:runtime than 1.10.3",
+        "severity": "Warning",
+        "line": "14",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.ui:ui than 1.10.3",
+        "severity": "Warning",
+        "line": "14",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.ui:ui-test than 1.10.3",
+        "severity": "Warning",
+        "line": "14",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose:compose-gradle-plugin than 1.10.3",
+        "severity": "Warning",
+        "line": "14",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.compose.material3:material3 than 1.9.0-beta03",
+        "severity": "Warning",
+        "line": "15",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of org.jetbrains.androidx.navigation3:navigation3-ui than 1.0.0-alpha06",
+        "severity": "Warning",
+        "line": "19",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.insert-koin:koin-android than 4.0.0",
+        "severity": "Warning",
+        "line": "28",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.insert-koin:koin-compose than 4.0.0",
+        "severity": "Warning",
+        "line": "28",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.insert-koin:koin-compose-viewmodel than 4.0.0",
+        "severity": "Warning",
+        "line": "28",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.insert-koin:koin-core than 4.0.0",
+        "severity": "Warning",
+        "line": "28",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.insert-koin:koin-test than 4.0.0",
+        "severity": "Warning",
+        "line": "28",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.ktor:ktor-client-content-negotiation than 3.0.3",
+        "severity": "Warning",
+        "line": "31",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.ktor:ktor-client-core than 3.0.3",
+        "severity": "Warning",
+        "line": "31",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.ktor:ktor-client-mock than 3.0.3",
+        "severity": "Warning",
+        "line": "31",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.ktor:ktor-serialization-kotlinx-json than 3.0.3",
+        "severity": "Warning",
+        "line": "31",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of com.lemonappdev:konsist than 0.16.1",
+        "severity": "Warning",
+        "line": "35",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.gitlab.arturbosch.detekt than 1.23.7",
+        "severity": "Warning",
+        "line": "36",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of io.gitlab.arturbosch.detekt:detekt-gradle-plugin than 1.23.7",
+        "severity": "Warning",
+        "line": "36",
+        "original_id": "NewerVersionAvailable"
+      },
+      {
+        "canonical": "DependencyUpdate|gradle/libs.versions.toml|A newer version of app.cash.turbine:turbine than 1.2.0",
+        "severity": "Warning",
+        "line": "39",
+        "original_id": "NewerVersionAvailable"
+      }
+    ],
+    "scope": "Actual local lintRelease/verifier, not an Android device launch or Linux CI rerun. Advisory risk decision remains narrowly no-KAPT configured path."
+  },
+  "cycle_cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-07T11:46:49.330628+00:00",
+    "stop_log": {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ci-portability-advisory-green-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    "stop_log_content": "No Gradle daemons are running.",
+    "removed_outputs": [
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "game-modes/mafia/build",
+      "build",
+      "composeApp/build",
+      "build-logic/convention/build"
+    ],
+    "remaining_outputs": [],
+    "retained_outputs": [],
+    "remaining_owned_workers": [],
+    "cleanup_errors": [],
+    "completed_at": "2026-09-07T11:46:50.133909+00:00",
+    "source_unchanged": true,
+    "runner_identity_before_equals_after": true,
+    "scope": "Completed cycle evidence and reviewed finalization logic. Reviewer does not terminate/interfere with subsequent root cycles."
+  },
+  "conclusions": {
+    "windows_crlf": "Independent source review plus executed new LF/CRLF preservation fixture and original locale assertion confirm the narrow source-test correction locally. Exactly14/14 declared methods actually ran; no skipped/disabled substitute. Real Windows rerun remains required for host claim.",
+    "linux_triage": "At bound current pins, actual local35-warning report matches exact accepted multiset; proposed three Kotlin rows appeared. Narrow security applicability independently rechecked.",
+    "no_kapt_v2": "Both added guard/owned nested.precompiled.gradle.kts fixture methods actually ran and passed. Source finally cleanup is not bypassed. This is no-KAPT source-contract evidence, not a KAPT vulnerability fix.",
+    "next_change": "Parent plans root-authored explicit accepted-inventory task input/contract assertion. That will require new diff review and relevant rerun; current8-test source hash cannot be borrowed for its new bytes.",
+    "history_authority": "This review supplies technical evidence only; it does not create authorization to commit/push/merge/publish."
+  },
+  "reviewer_actions": {
+    "tests_builds_native_processes_started": false,
+    "production_control_or_git_edits": false,
+    "output": "This compact additive report only",
+    "workers_or_build_outputs_created": false
+  }
+}

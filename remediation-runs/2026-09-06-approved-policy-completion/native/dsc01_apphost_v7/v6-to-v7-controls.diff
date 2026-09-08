@@ -1,0 +1,545 @@
+--- v6/DSC01CatalogSelection.swift.in
++++ v7/DSC01CatalogSelection.swift.in
+@@ -0,0 +1,280 @@
++// Appended only to the copied XCTest source. No application callbacks, routes,
++// state setters or private UIKit/Compose implementation details are invoked.
++private struct DSC01CatalogHitPlan {
++    let visibleInterior: CGRect
++    let point: CGPoint
++    let normalizedOffset: CGVector
++
++    static func make(target: CGRect, viewport: CGRect, overlay: CGRect,
++                     tabs: [CGRect]) -> DSC01CatalogHitPlan? {
++        guard dsc01CatalogFinite(target), dsc01CatalogFinite(viewport),
++              dsc01CatalogFinite(overlay), tabs.count == 2,
++              tabs.allSatisfy(dsc01CatalogFinite),
++              viewport.contains(overlay), tabs.allSatisfy({ viewport.contains($0) }) else { return nil }
++        // Conservative margins around MEASURED public controls. They change no
++        // app layout and do not guess the device's system-bar or card position.
++        let top = max(viewport.minY, overlay.maxY) + 8
++        let bottom = min(viewport.maxY, tabs.map(\.minY).min()!) - 24
++        guard bottom > top, viewport.width > 16 else { return nil }
++        let usable = CGRect(x: viewport.minX + 8, y: top,
++                            width: viewport.width - 16, height: bottom - top)
++        let clipped = target.intersection(usable)
++        guard dsc01CatalogFinite(clipped), clipped.width >= 48, clipped.height >= 48 else { return nil }
++        let interior = clipped.insetBy(dx: 12, dy: 12)
++        let point = CGPoint(x: interior.midX, y: interior.midY)
++        let offset = CGVector(dx: (point.x - target.minX) / target.width,
++                              dy: (point.y - target.minY) / target.height)
++        guard target.contains(point), usable.contains(point),
++              offset.dx > 0, offset.dx < 1, offset.dy > 0, offset.dy < 1 else { return nil }
++        return DSC01CatalogHitPlan(visibleInterior: interior, point: point, normalizedOffset: offset)
++    }
++}
++
++private func dsc01CatalogFinite(_ rect: CGRect) -> Bool {
++    !rect.isNull && !rect.isInfinite && rect.size.width > 0 && rect.size.height > 0 &&
++        [rect.origin.x, rect.origin.y, rect.width, rect.height].allSatisfy { $0.isFinite && abs($0) <= 16384 }
++}
++
++private func dsc01CatalogNear(_ first: CGRect, _ second: CGRect) -> Bool {
++    dsc01CatalogFinite(first) && dsc01CatalogFinite(second) &&
++        zip([first.origin.x, first.origin.y, first.width, first.height],
++            [second.origin.x, second.origin.y, second.width, second.height])
++            .allSatisfy { abs($0.0 - $0.1) <= 0.5 }
++}
++
++private func dsc01CatalogStable(_ frames: [CGRect]) -> Bool {
++    guard frames.count == 6, let first = frames.first else { return false }
++    return frames.allSatisfy { dsc01CatalogNear(first, $0) }
++}
++
++private func dsc01CatalogRectFields(_ frame: CGRect?) -> [String: Any] {
++    guard let frame else { return ["present": false] }
++    guard dsc01CatalogFinite(frame) else { return ["present": true, "validFiniteRectangle": false] }
++    return ["present": true, "validFiniteRectangle": true,
++            "rectangle": [frame.origin.x, frame.origin.y, frame.width, frame.height]]
++}
++
++private struct DSC01CatalogSample {
++    let targetCount: Int
++    let target: CGRect?
++    let hittable: Bool
++    let enabled: Bool
++    let viewport: CGRect
++    let overlayCount: Int
++    let overlay: CGRect?
++    let tabCounts: [Int]
++    let tabs: [CGRect]
++    let successorCount: Int
++    let foreground: Bool
++    let alertPresent: Bool
++    let keyboardPresent: Bool
++
++    var isCatalog: Bool {
++        foreground && !alertPresent && !keyboardPresent && overlayCount == 1 &&
++            tabCounts == [1, 1] && tabs.count == 2 && successorCount == 0 && targetCount <= 1
++    }
++    var plan: DSC01CatalogHitPlan? {
++        guard isCatalog, targetCount == 1, hittable, enabled,
++              let target, let overlay else { return nil }
++        return DSC01CatalogHitPlan.make(target: target, viewport: viewport, overlay: overlay, tabs: tabs)
++    }
++    var fields: [String: Any] {
++        ["targetCountCapped16": min(targetCount, 16), "target": dsc01CatalogRectFields(target),
++         "hittable": hittable, "enabled": enabled, "viewport": dsc01CatalogRectFields(viewport),
++         "overlayCountCapped16": min(overlayCount, 16), "overlay": dsc01CatalogRectFields(overlay),
++         "tabCountsCapped16": tabCounts.map { min($0, 16) }, "tabs": tabs.map { dsc01CatalogRectFields($0) },
++         "successorCountCapped16": min(successorCount, 16), "foreground": foreground,
++         "alertPresent": alertPresent, "keyboardPresent": keyboardPresent]
++    }
++    func geometryNear(_ other: DSC01CatalogSample) -> Bool {
++        guard let target, let otherTarget = other.target, let overlay, let otherOverlay = other.overlay,
++              tabs.count == 2, other.tabs.count == 2 else { return false }
++        return dsc01CatalogNear(target, otherTarget) && dsc01CatalogNear(viewport, other.viewport) &&
++            dsc01CatalogNear(overlay, otherOverlay) &&
++            zip(tabs, other.tabs).allSatisfy { dsc01CatalogNear($0.0, $0.1) }
++    }
++}
++
++@MainActor private final class DSC01CatalogDiagnostics {
++    private let game: String
++    private let start = ProcessInfo.processInfo.systemUptime
++    private var ordinal = 0
++    private var totalBytes = 0
++    init(game: String) { self.game = game }
++
++    func append(kind: String, fields: [String: Any]) throws {
++        guard ["whodunit", "mafia"].contains(game),
++              ["search", "before-activation", "after-activation", "successor", "failed"].contains(kind),
++              ordinal < 96 else { throw NSError(domain: "DSC01CatalogDiagnosticBudget", code: 1) }
++        ordinal += 1
++        let row: [String: Any] = ["schemaVersion": 1, "game": game, "ordinal": ordinal, "kind": kind,
++            "elapsedMilliseconds": Int((ProcessInfo.processInfo.systemUptime - start) * 1000), "fields": fields]
++        let encoded = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
++        totalBytes += encoded.count
++        guard encoded.count <= 4096, totalBytes <= 196608,
++              let text = String(data: encoded, encoding: .utf8) else {
++            throw NSError(domain: "DSC01CatalogDiagnosticBudget", code: 2)
++        }
++        print("DSC01_CATALOG_METADATA " + text)
++    }
++}
++
++extension IOSAppLaunchUITests {
++    @MainActor private func catalogPublicSample(_ app: XCUIApplication, prefix: String) -> DSC01CatalogSample {
++        let query = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", prefix))
++        let count = query.count
++        let target = count == 1 ? query.firstMatch : nil
++        let overlayQuery = app.descendants(matching: .any).matching(identifier: "parlor-dsc01-overlay")
++        let overlayCount = overlayQuery.count
++        let tabs = ["Open the game library., GAMES", "Open settings., SETTINGS"].map { label in
++            app.descendants(matching: .any).matching(NSPredicate(format: "label == %@", label))
++        }
++        let tabCounts = tabs.map(\.count)
++        let successor = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@",
++            "Start a pass-and-play session on this device."))
++        return DSC01CatalogSample(targetCount: count, target: target?.frame,
++            hittable: target?.isHittable ?? false, enabled: target?.isEnabled ?? false, viewport: app.frame,
++            overlayCount: overlayCount, overlay: overlayCount == 1 ? overlayQuery.firstMatch.frame : nil,
++            tabCounts: tabCounts, tabs: zip(tabs, tabCounts).compactMap { $0.1 == 1 ? $0.0.firstMatch.frame : nil },
++            successorCount: successor.count, foreground: app.state == .runningForeground,
++            alertPresent: app.alerts.firstMatch.exists, keyboardPresent: app.keyboards.firstMatch.exists)
++    }
++
++    @MainActor private func catalogSamplingInterval() throws {
++        // No Thread.sleep, touch-to-stop gesture, callback invocation or app
++        // mutation. This lets UIKit/Compose settle while the test runloop works.
++        let interval = XCTestExpectation(description: "Fixed catalog readiness observation interval")
++        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { interval.fulfill() }
++        guard XCTWaiter.wait(for: [interval], timeout: 3) == .completed else {
++            XCTFail("Catalog observation interval did not complete")
++            throw NSError(domain: "DSC01CatalogObservation", code: 1)
++        }
++    }
++
++    @MainActor private func catalogReadySample(_ app: XCUIApplication, prefix: String,
++        diagnostics: DSC01CatalogDiagnostics) throws -> DSC01CatalogSample {
++        // Fourteen bounded windows; every window has all six samples. A moving
++        // target causes another observation window, not a speculative tap. A
++        // stable offscreen target permits one original upward scroll. There is
++        // no activation or automatic retry of an action anywhere in this loop.
++        for window in 1...14 {
++            var samples: [DSC01CatalogSample] = []
++            for index in 1...6 {
++                if index > 1 { try catalogSamplingInterval() }
++                let sample = catalogPublicSample(app, prefix: prefix)
++                samples.append(sample)
++                var fields = sample.fields
++                fields["window"] = window; fields["index"] = index
++                try diagnostics.append(kind: "search", fields: fields)
++            }
++            guard samples.allSatisfy(\.isCatalog), let first = samples.first, let last = samples.last else {
++                throw NSError(domain: "DSC01CatalogUnexpectedPublicSurface", code: 1)
++            }
++            let targetFrames = samples.compactMap(\.target)
++            let stable = dsc01CatalogStable(targetFrames) && samples.allSatisfy { $0.geometryNear(first) }
++            if stable && samples.allSatisfy({ $0.plan != nil }) { return last }
++            let inaccessibleZeroFrame = samples.allSatisfy {
++                !$0.hittable && ($0.target == nil || $0.target == CGRect.zero)
++            }
++            if targetFrames.isEmpty || stable || inaccessibleZeroFrame {
++                if window < 14 { app.swipeUp(velocity: .slow) }
++            }
++        }
++        throw NSError(domain: "DSC01CatalogStableTargetUnavailable", code: 1)
++    }
++
++    @MainActor private func openActualCatalogGame(_ app: XCUIApplication, game: String) throws {
++        guard ["whodunit", "mafia"].contains(game) else {
++            throw NSError(domain: "DSC01CatalogUnknownGame", code: 1)
++        }
++        let prefix = game == "whodunit" ? "Open Whodunit and pick how you want to play." : "Open the Mafia game."
++        let diagnostics = DSC01CatalogDiagnostics(game: game)
++        do {
++            let ready = try catalogReadySample(app, prefix: prefix, diagnostics: diagnostics)
++            let current = catalogPublicSample(app, prefix: prefix)
++            guard current.geometryNear(ready), let plan = current.plan else {
++                throw NSError(domain: "DSC01CatalogMovedBeforeActivation", code: 1)
++            }
++            let query = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@", prefix))
++            guard query.count == 1 else { throw NSError(domain: "DSC01CatalogAmbiguousTarget", code: 1) }
++            let target = query.firstMatch
++            let activationFrame = target.frame
++            guard let sampledFrame = current.target, dsc01CatalogNear(activationFrame, sampledFrame),
++                  target.isHittable, target.isEnabled else {
++                throw NSError(domain: "DSC01CatalogMovedBeforeActivation", code: 2)
++            }
++            let coordinate = target.coordinate(withNormalizedOffset: plan.normalizedOffset)
++            let point = coordinate.screenPoint
++            var before = current.fields
++            before["normalizedPoint"] = [plan.normalizedOffset.dx, plan.normalizedOffset.dy]
++            before["plannedPoint"] = [plan.point.x, plan.point.y]
++            before["actualCoordinatePoint"] = point.x.isFinite && point.y.isFinite ? [point.x, point.y] : []
++            before["visibleInterior"] = dsc01CatalogRectFields(plan.visibleInterior)
++            before["activationTargetFrame"] = dsc01CatalogRectFields(activationFrame)
++            try diagnostics.append(kind: "before-activation", fields: before)
++            guard point.x.isFinite, point.y.isFinite, abs(point.x - plan.point.x) <= 0.5,
++                  abs(point.y - plan.point.y) <= 0.5 else {
++                throw NSError(domain: "DSC01CatalogCoordinateMoved", code: 1)
++            }
++            coordinate.tap() // Exactly one physical activation, tied to the real selected card.
++            try diagnostics.append(kind: "after-activation", fields: catalogPublicSample(app, prefix: prefix).fields)
++            let successor = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
++                let state = self.catalogPublicSample(app, prefix: prefix)
++                return state.foreground && !state.alertPresent && state.targetCount == 0 &&
++                    state.tabCounts == [0, 0] && state.successorCount == 1
++            }, object: nil)
++            let outcome = XCTWaiter.wait(for: [successor], timeout: 15)
++            let final = catalogPublicSample(app, prefix: prefix)
++            try diagnostics.append(kind: "successor", fields: final.fields)
++            guard outcome == .completed, final.foreground, !final.alertPresent,
++                  final.targetCount == 0, final.tabCounts == [0, 0], final.successorCount == 1 else {
++                throw NSError(domain: "DSC01CatalogSuccessorNotObserved", code: 1)
++            }
++        } catch {
++            // Only known PUBLIC catalog/setup metadata; no broad hierarchy,
++            // actual label/value dump, screenshot, private phase or fallback.
++            try diagnostics.append(kind: "failed", fields: catalogPublicSample(app, prefix: prefix).fields)
++            XCTFail("One-activation catalog entry did not prove the actual topology picker: " + game)
++            throw error
++        }
++    }
++
++    @MainActor private func verifyCatalogGeometryContract() throws {
++        let viewport = CGRect(x: 0, y: 0, width: 402, height: 874)
++        let overlay = CGRect(x: 4, y: 72, width: 394, height: 64)
++        let tabs = [CGRect(x: 24, y: 770, width: 171, height: 62), CGRect(x: 207, y: 770, width: 171, height: 62)]
++        let valid = CGRect(x: 24, y: 220, width: 354, height: 360)
++        func plan(_ rect: CGRect) -> DSC01CatalogHitPlan? {
++            DSC01CatalogHitPlan.make(target: rect, viewport: viewport, overlay: overlay, tabs: tabs)
++        }
++        let cases: [(String, CGRect, Bool)] = [
++            ("visible", valid, true),
++            ("partial-below", CGRect(x: 24, y: 640, width: 354, height: 360), true),
++            ("crosses-overlay", CGRect(x: 24, y: 110, width: 354, height: 360), true),
++            ("overlay-only", CGRect(x: 24, y: 78, width: 354, height: 48), false),
++            ("bottom-tabs-only", CGRect(x: 24, y: 775, width: 354, height: 62), false),
++            ("offscreen", CGRect(x: 24, y: 1000, width: 354, height: 360), false),
++            ("tiny-sliver", CGRect(x: 24, y: 728, width: 354, height: 360), false),
++            ("zero", .zero, false),
++            ("negative-size", CGRect(x: 24, y: 220, width: -354, height: 360), false),
++            ("nonfinite", CGRect(x: CGFloat.nan, y: 220, width: 354, height: 360), false),
++        ]
++        for (name, target, accepted) in cases {
++            let result = plan(target)
++            XCTAssertEqual(result != nil, accepted, "Pure catalog hit geometry: " + name)
++            if let result {
++                XCTAssertTrue(target.contains(result.point))
++                XCTAssertFalse(overlay.contains(result.point))
++                XCTAssertTrue(tabs.allSatisfy { !($0.contains(result.point)) })
++                XCTAssertEqual(target.minX + target.width * result.normalizedOffset.dx, result.point.x, accuracy: 0.0001)
++                XCTAssertEqual(target.minY + target.height * result.normalizedOffset.dy, result.point.y, accuracy: 0.0001)
++            }
++        }
++        XCTAssertTrue(dsc01CatalogStable(Array(repeating: valid, count: 6)))
++        var moving = Array(repeating: valid, count: 6); moving[3].origin.y += 1
++        XCTAssertFalse(dsc01CatalogStable(moving))
++        XCTAssertFalse(dsc01CatalogStable(Array(repeating: valid, count: 5)))
++        XCTAssertNil(DSC01CatalogHitPlan.make(target: valid, viewport: viewport, overlay: overlay, tabs: []))
++        print("DSC01_CATALOG_GEOMETRY_CONTRACT {\"schemaVersion\":1,\"cases\":14,\"passed\":true}")
++    }
++}
+--- v6/DSC01Probe.swift.in
++++ v7/DSC01Probe.swift.in
+@@ -409,6 +409,8 @@
+             }
+         }
+         .font(.system(size: 9)).padding(4).background(Color.black).foregroundColor(.white)
++        .accessibilityElement(children: .contain)
++        .accessibilityIdentifier("parlor-dsc01-overlay")
+     }
+ }
+ #else
+--- v6/IOSAppLaunchUITests.swift.in
++++ v7/IOSAppLaunchUITests.swift.in
+@@ -6,6 +6,7 @@
+ 
+     @MainActor
+     func testDSC01ActualSettingsLocalSessionsAndOSInvestigation() throws {
++        try verifyCatalogGeometryContract()
+         let app = XCUIApplication()
+         let token = UUID().uuidString
+         let simulator = try XCTUnwrap(ProcessInfo.processInfo.environment["SIMULATOR_UDID"])
+@@ -138,8 +139,7 @@
+         try assertOwned(selectedEnglish, explicit: "en", previous: systemPreferences)
+         XCTAssertEqual(try dictionary(selectedEnglish, "composition")["commandOrdinal"] as? Int, 0)
+         try openGames(app, language: "en")
+-        try tapPublicSetupPrefix(app, prefix: game == "whodunit"
+-            ? "Open Whodunit and pick how you want to play." : "Open the Mafia game.")
++        try openActualCatalogGame(app, game: game)
+         try tapPublicSetupPrefix(app, prefix: "Start a pass-and-play session on this device.")
+         if game == "whodunit" {
+             try tapPublicSetupPrefix(app, prefix: "Continue with ")
+@@ -476,7 +476,20 @@
+             return ["knownLabel": label, "countCappedAt32": min(count, 32),
+                     "hittableAmongAtMost4": elements.filter { $0.isHittable }.count]
+         }
+-        if let data = try? JSONSerialization.data(withJSONObject: ["schemaVersion": 1, "observations": rows]),
++        // Diagnostic metadata ONLY, not guessed selector alternatives. OS UI
++        // may merge a public Language label with its current value. A missing
++        // exact match is still BLOCKED; never tap these prefix-query results.
++        let prefixes = ["Language", "Preferred Language", "English", "Arabic", "العربية"]
++        let prefixRows: [[String: Any]] = prefixes.map { prefix in
++            let query = settings.descendants(matching: .any).matching(NSPredicate(format: "label BEGINSWITH %@", prefix))
++            let count = query.count
++            let elements = count < 32 ? Array(query.allElementsBoundByIndex.prefix(4)) : []
++            return ["knownPrefix": prefix, "countCappedAt32": min(count, 32),
++                    "hittableAmongAtMost4": elements.filter { $0.isHittable }.count,
++                    "framesAtMost4": elements.map { dsc01CatalogRectFields($0.frame) }]
++        }
++        if let data = try? JSONSerialization.data(withJSONObject: ["schemaVersion": 1, "observations": rows,
++                                                                  "diagnosticOnlyKnownPrefixes": prefixRows]),
+            data.count <= 8192, let text = String(data: data, encoding: .utf8) {
+             print("DSC01_OS_SELECTOR_DIAGNOSTICS " + text)
+         }
+--- v6/run_dsc01_apphost_cycle.py
++++ v7/run_dsc01_apphost_cycle.py
+@@ -57,7 +57,7 @@
+     return [Path(__file__).resolve(), RUN / 'run_gradle_cycle.py',
+             ROOT / 'audit-runs/2026-09-05-source-audit/run_android_managed_cycle.py'] + [
+         HERE / name for name in ('secondary_fifo.py', 'test_secondary_fifo.py', 'test_harness_contract.py',
+-        'DSC01Probe.swift.in', 'IOSAppLaunchUITests.swift.in',
++        'DSC01Probe.swift.in', 'IOSAppLaunchUITests.swift.in', 'DSC01CatalogSelection.swift.in', 'test_catalog_contract.py',
+         'copied-kotlin-phase.sh.in', 'source-bindings.json', 'copied_sources.py', 'bind_source.py',
+         'DSC01ComposeObservation.kt.in', 'DSC01InvocationBridge.kt.in', 'DSC01UIKitObservation.kt.in',
+         'DSC01NativeObservation.swift.in', 'probe_validation.py',
+@@ -88,6 +88,55 @@
+ 
+ def now():
+     return datetime.datetime.now(datetime.timezone.utc).isoformat()
++
++
++def verify_catalog_receipts(log):
++    """Require the executed Swift contract and both one-activation route receipts.
++
++    Numeric safe-hit assertions execute in the same actual XCTest helper; the
++    full bounded numeric rows remain in xcodebuild.log for independent review.
++    Synthetic unit inputs below exercise this parser, not app runtime behavior.
++    """
++    contract_prefix = 'DSC01_CATALOG_GEOMETRY_CONTRACT '
++    row_prefix = 'DSC01_CATALOG_METADATA '
++    contracts = [json.loads(line[len(contract_prefix):]) for line in log.splitlines()
++                 if line.startswith(contract_prefix)]
++    if contracts != [dict(schemaVersion=1, cases=14, passed=True)]:
++        raise RuntimeError('Actual Swift catalog geometry contract receipt missing/ambiguous')
++    rows = []
++    for line in log.splitlines():
++        if line.startswith(row_prefix):
++            encoded = line[len(row_prefix):]
++            if len(encoded.encode()) > 4096 or len(rows) >= 192:
++                raise RuntimeError('Catalog diagnostic bounds exceeded')
++            row = json.loads(encoded)
++            if (set(row) != {'schemaVersion', 'game', 'ordinal', 'kind', 'elapsedMilliseconds', 'fields'} or
++                    row['schemaVersion'] != 1 or row['game'] not in ('whodunit', 'mafia')):
++                raise RuntimeError('Unknown catalog diagnostic envelope')
++            rows.append(row)
++    result = {}
++    for game in ('whodunit', 'mafia'):
++        selected = [row for row in rows if row['game'] == game]
++        if not 9 <= len(selected) <= 96 or [row['ordinal'] for row in selected] != list(range(1, len(selected) + 1)):
++            raise RuntimeError('Missing/bounded catalog diagnostic sequence: ' + game)
++        search = selected[:-3]
++        if (len(search) % 6 or not 6 <= len(search) <= 84 or any(row['kind'] != 'search' for row in search) or
++                [row['kind'] for row in selected[-3:]] != ['before-activation', 'after-activation', 'successor']):
++            raise RuntimeError('Catalog activation must occur once after full readiness windows')
++        for index, row in enumerate(search):
++            if (row['fields'].get('window'), row['fields'].get('index')) != (index // 6 + 1, index % 6 + 1):
++                raise RuntimeError('Catalog readiness train is incomplete or reordered')
++        final = selected[-1]['fields']
++        if (final.get('targetCountCapped16') != 0 or final.get('tabCountsCapped16') != [0, 0] or
++                final.get('successorCountCapped16') != 1 or final.get('foreground') is not True or
++                final.get('alertPresent') is not False):
++            raise RuntimeError('Actual catalog disappearance and topology-picker successor not proven')
++        result[game] = dict(rows=len(selected), search_windows=len(search) // 6,
++                            physical_activations=1, actual_successor_observed=True)
++    if [row['game'] for row in rows] != ['whodunit'] * result['whodunit']['rows'] + ['mafia'] * result['mafia']['rows']:
++        raise RuntimeError('Catalog scenarios are interleaved or reordered')
++    return dict(swift_geometry_contract_cases=14, actual_catalog_entries=2, games=result,
++                limitation='Stable observed geometry is not a claim that all scroll physics are directly observed.')
+ 
+ 
+ @contextmanager
+@@ -495,7 +544,8 @@
+                 raise RuntimeError('Unexpected original Swift App entry')
+             entry.write_text(original.replace(needle, needle + '\n    init() { DSC01Probe.shared.prepare() }'))
+             ui_test = temp / 'copy/iosApp/iosAppUITests/IOSAppLaunchUITests.swift'
+-            ui_test.write_text((FIXTURE / 'IOSAppLaunchUITests.swift.in').read_text())
++            ui_test.write_text((FIXTURE / 'IOSAppLaunchUITests.swift.in').read_text() + '\n' +
++                               (FIXTURE / 'DSC01CatalogSelection.swift.in').read_text())
+             project = temp / 'copy/iosApp/iosApp.xcodeproj/project.pbxproj'
+             pbx = project.read_text()
+             old_search = '$(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)'
+@@ -593,6 +643,7 @@
+             receipt['xctest'] = verify_xctest(
+                 json.loads((dest / 'xcresult-summary.json').read_text()),
+                 json.loads((dest / 'xcresult-tests.json').read_text()), uuid)
++            receipt['catalog_entry_proof'] = verify_catalog_receipts((dest / 'xcodebuild.log').read_text())
+             embedded_stop = dest / 'embedded-gradle-stop.txt'
+             if not embedded_stop.is_file() or embedded_stop.read_text() != 'build_exit=0\nstop_exit=0\n':
+                 raise RuntimeError('No successful immediate stop receipt from copied nested Gradle phase')
+--- v6/test_catalog_contract.py
++++ v7/test_catalog_contract.py
+@@ -0,0 +1,121 @@
++"""Pure control/receipt checks; never compile Swift, run Gradle, or launch an app."""
++import json
++from pathlib import Path
++import unittest
++
++import run_dsc01_apphost_cycle as runner
++
++
++HERE = Path(__file__).resolve().parent
++
++
++def synthetic_receipt():
++    lines = ['DSC01_CATALOG_GEOMETRY_CONTRACT ' + json.dumps(dict(schemaVersion=1, cases=14, passed=True))]
++    for game in ('whodunit', 'mafia'):
++        for index, kind in enumerate(['search'] * 6 + ['before-activation', 'after-activation', 'successor'], 1):
++            fields = dict(window=1, index=index) if kind == 'search' else {}
++            if kind == 'successor':
++                fields.update(targetCountCapped16=0, tabCountsCapped16=[0, 0], successorCountCapped16=1,
++                              foreground=True, alertPresent=False)
++            lines.append('DSC01_CATALOG_METADATA ' + json.dumps(dict(schemaVersion=1, game=game, ordinal=index,
++                kind=kind, elapsedMilliseconds=index * 250, fields=fields)))
++    return '\n'.join(lines)
++
++
++class CatalogControlTest(unittest.TestCase):
++    def test_synthetic_receipt_is_only_a_parser_check(self):
++        result = runner.verify_catalog_receipts(synthetic_receipt())
++        self.assertEqual(2, result['actual_catalog_entries'])
++        self.assertEqual(14, result['swift_geometry_contract_cases'])
++
++    def test_missing_swift_contract_or_game_cannot_pass(self):
++        lines = synthetic_receipt().splitlines()
++        for changed in (lines[1:], lines[:10], [lines[0]] + lines):
++            with self.assertRaises(RuntimeError): runner.verify_catalog_receipts('\n'.join(changed))
++
++    def test_repeated_activation_or_missing_successor_cannot_pass(self):
++        good = synthetic_receipt()
++        for changed in (good.replace('"kind": "search"', '"kind": "before-activation"', 1),
++                        good.replace('"successorCountCapped16": 1', '"successorCountCapped16": 0'),
++                        good.replace('"tabCountsCapped16": [0, 0]', '"tabCountsCapped16": [1, 1]'),
++                        good.replace('"kind": "successor"', '"kind": "failed"')):
++            with self.assertRaises(RuntimeError): runner.verify_catalog_receipts(changed)
++
++    def test_incomplete_train_unknown_game_and_oversized_row_fail(self):
++        good = synthetic_receipt()
++        lines = good.splitlines(); del lines[2]
++        for changed in ('\n'.join(lines), good.replace('"game": "mafia"', '"game": "unknown"'),
++                        good + '\nDSC01_CATALOG_METADATA ' + ' ' * 4097):
++            with self.assertRaises(RuntimeError): runner.verify_catalog_receipts(changed)
++
++    def test_only_catalog_entry_call_changes_original_matrix_and_geometry_checks_execute(self):
++        source = (HERE / 'IOSAppLaunchUITests.swift.in').read_text()
++        self.assertEqual(1, source.count('try verifyCatalogGeometryContract()'))
++        self.assertLess(source.index('try verifyCatalogGeometryContract()'), source.index('try launch(app, fixture: "fresh")'))
++        self.assertEqual(1, source.count('try openActualCatalogGame(app, game: game)'))
++        self.assertIn('try tapPublicSetupPrefix(app, prefix: "Start a pass-and-play session on this device.")', source)
++        self.assertEqual(1, source.count('func testDSC01ActualSettingsLocalSessionsAndOSInvestigation()'))
++        self.assertEqual(5, len(runner.EXPECTED_TESTS))
++
++    def test_physical_activation_is_outside_all_readiness_retries(self):
++        source = (HERE / 'DSC01CatalogSelection.swift.in').read_text()
++        ready = source[source.index('private func catalogReadySample('):source.index('private func openActualCatalogGame(')]
++        self.assertNotIn('.tap()', ready)
++        self.assertIn('for window in 1...14', ready)
++        self.assertIn('for index in 1...6', ready)
++        self.assertEqual(1, source.count('coordinate.tap()'))
++        self.assertNotIn('target.tap()', source)
++        self.assertIn('dsc01CatalogNear(activationFrame, sampledFrame)', source)
++        self.assertIn('abs(point.x - plan.point.x) <= 0.5', source)
++        self.assertIn('final.tabCounts == [0, 0], final.successorCount == 1', source)
++
++    def test_public_metadata_bounds_and_measured_exclusions_are_explicit(self):
++        source = (HERE / 'DSC01CatalogSelection.swift.in').read_text()
++        for needed in ('ordinal < 96', 'encoded.count <= 4096', 'totalBytes <= 196608',
++                       'overlay.maxY', 'tabs.map(\\.minY)', 'target.intersection(usable)',
++                       'rect.size.width > 0', 'rect.size.height > 0', 'frames.count == 6'):
++            self.assertIn(needed, source)
++        for forbidden in ('Thread.sleep(', 'usleep(', '.debugDescription', '.screenshot()', 'MainViewControllerKt',
++                          'UserDefaults', 'openGame(', 'sendAction(', 'performSelector(', '.label', '.value'):
++            self.assertNotIn(forbidden, source)
++        overlay = (HERE / 'DSC01Probe.swift.in').read_text()
++        self.assertIn('.accessibilityIdentifier("parlor-dsc01-overlay")', overlay)
++
++    def test_old_native_matrix_and_cleanup_controls_remain_identical(self):
++        v6 = HERE.parent / 'dsc01_apphost_v6'
++        for name in ('secondary_fifo.py', 'test_secondary_fifo.py', 'copied_sources.py', 'bind_source.py',
++                     'DSC01ComposeObservation.kt.in', 'DSC01InvocationBridge.kt.in', 'DSC01UIKitObservation.kt.in',
++                     'DSC01NativeObservation.swift.in', 'probe_validation.py', 'copied-kotlin-phase.sh.in'):
++            self.assertEqual((v6 / name).read_bytes(), (HERE / name).read_bytes(), name)
++        old = (v6 / 'run_dsc01_apphost_cycle.py').read_text()
++        new = (HERE / 'run_dsc01_apphost_cycle.py').read_text()
++        marker = '        finally:\n            deferred = []'
++        self.assertEqual(old[old.index(marker):], new[new.index(marker):])
++
++    def test_os_prefix_queries_are_diagnostics_only_not_action_fallbacks(self):
++        source = (HERE / 'IOSAppLaunchUITests.swift.in').read_text()
++        begin = source.index('private func recordOSSelectorDiagnostics(')
++        end = source.index('private func optionalDictionary(', begin)
++        diagnostic = source[begin:end]
++        self.assertIn('diagnosticOnlyKnownPrefixes', diagnostic)
++        self.assertIn('prefix(4)', diagnostic)
++        self.assertNotIn('.tap()', diagnostic)
++        self.assertNotIn('.label', diagnostic)
++        self.assertNotIn('.value', diagnostic)
++        v6 = (HERE.parent / 'dsc01_apphost_v6/IOSAppLaunchUITests.swift.in').read_text()
++        start_marker = '    @MainActor private func investigateActualOSPerAppLanguage('
++        stop_marker = '    @MainActor private func recordOSSelectorDiagnostics('
++        self.assertEqual(v6[v6.index(start_marker):v6.index(stop_marker)],
++                         source[source.index(start_marker):source.index(stop_marker)])
++
++    def test_added_xctest_helper_and_contract_are_hashed_build_copy_inputs(self):
++        controls = {path.name for path in runner.control_files()}
++        self.assertIn('DSC01CatalogSelection.swift.in', controls)
++        self.assertIn('test_catalog_contract.py', controls)
++        source = Path(runner.__file__).read_text()
++        self.assertIn("(FIXTURE / 'DSC01CatalogSelection.swift.in').read_text()", source)
++        self.assertIn("receipt['catalog_entry_proof'] = verify_catalog_receipts", source)
++
++
++if __name__ == '__main__':
++    unittest.main()

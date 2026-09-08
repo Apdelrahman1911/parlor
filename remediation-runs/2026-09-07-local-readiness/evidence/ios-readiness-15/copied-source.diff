@@ -1,0 +1,95 @@
+--- original/iosApp/iosApp.xcodeproj/project.pbxproj
++++ normal-source-copy/iosApp/iosApp.xcodeproj/project.pbxproj
+@@ -250,7 +250,7 @@
+ 			);
+ 			runOnlyForDeploymentPostprocessing = 0;
+ 			shellPath = /bin/sh;
+-			shellScript = "set -e\ncd \"$SRCROOT/..\"\nif [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\n./gradlew --no-daemon :composeApp:embedAndSignAppleFrameworkForXcode --dependency-verification=strict --console=plain\nscripts/release/normalize_embedded_apple_framework.sh \"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}\" ComposeApp\n";
++			shellScript = "#!/bin/sh\n# Temporary copied-wrapper phase only. Current production phase is source-bound.\n# Preserve failed cd/build/normalization exit status; stop this isolated daemon\n# registry immediately after embedding, including interruption/error paths.\nset -u\ncd \"/private/tmp/parlor-audit-ios-readiness-15-8le2t_vg/copy\" || exit 1\nstop_recorded=0\nbuild_status=125\nstop_status=125\nstop_and_record() {\n  ./gradlew --stop\n  stop_status=$?\n  printf 'build_exit=%s\\nstop_exit=%s\\n' \"$build_status\" \"$stop_status\" > \"/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-15/embedded-gradle-stop.txt\"\n  record_status=$?\n  stop_recorded=1\n  if [ \"$record_status\" -ne 0 ]; then return \"$record_status\"; fi\n  return \"$stop_status\"\n}\nfinish() {\n  exit_status=$?\n  trap - EXIT INT TERM\n  if [ \"$stop_recorded\" -eq 0 ]; then\n    build_status=$exit_status\n    stop_and_record\n    late_stop=$?\n    if [ \"$exit_status\" -eq 0 ]; then exit_status=$late_stop; fi\n  fi\n  exit \"$exit_status\"\n}\ntrap finish EXIT\ntrap 'exit 130' INT\ntrap 'exit 143' TERM\n/usr/bin/python3 -B \"/private/tmp/parlor-audit-ios-readiness-15-8le2t_vg/copy/scripts/verification/ios-readiness/simulator_signing.py\" \\\n  \"adhoc\" \"iphonesimulator26.5\" \"/private/tmp/parlor-audit-ios-readiness-15-8le2t_vg/copy\" \\\n  \"/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-15/effective-simulator-app-phase.json\" || exit $?\n./gradlew --no-daemon :composeApp:embedAndSignAppleFrameworkForXcode \\\n  --dependency-verification=strict --console=plain --no-configuration-cache \\\n  --no-parallel --max-workers=1 --no-build-cache\nbuild_status=$?\nstop_and_record\nrecorded_stop_status=$?\nif [ \"$build_status\" -ne 0 ]; then exit \"$build_status\"; fi\nif [ \"$recorded_stop_status\" -ne 0 ]; then exit \"$recorded_stop_status\"; fi\n\"/private/tmp/parlor-audit-ios-readiness-15-8le2t_vg/copy/scripts/release/normalize_embedded_apple_framework.sh\" \\\n  \"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}\" ComposeApp\n";
+ 		};
+ /* End PBXShellScriptBuildPhase section */
+ 
+--- original/iosApp/iosAppUITests/IOSAppLaunchUITests.swift
++++ normal-source-copy/iosApp/iosAppUITests/IOSAppLaunchUITests.swift
+@@ -1,5 +1,8 @@
++import Foundation
+ import XCTest
+ 
++// Campaign-only draft. Substitute in the owned UI-test copy, never in the app target.
++// Execute this one method eight fixed times; do not enable retry-on-failure.
+ final class IOSAppLaunchUITests: XCTestCase {
+     override func setUpWithError() throws {
+         continueAfterFailure = false
+@@ -8,7 +11,14 @@
+     @MainActor
+     func testColdLaunchRendersComposeHomeWithoutUnexpectedAlert() throws {
+         let app = XCUIApplication()
++        // Preserve the checked-in test's English launch conditions. This is not Follow System evidence.
+         app.launchArguments += ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
++        XCTAssertFalse(
++            app.launchEnvironment.keys.contains { $0.hasPrefix("PARLOR_") },
++            "Normal-source launch observation must not use custom app fixture inputs",
++        )
++        let observationID = UUID().uuidString
++        try marker(["event": "begin", "observationID": observationID])
+         app.launch()
+ 
+         XCTAssertTrue(
+@@ -19,14 +29,48 @@
+             app.staticTexts["parlor-home-brand"].waitForExistence(timeout: 30),
+             "The Kotlin Compose root should render the home screen",
+         )
+-        XCTAssertFalse(
+-            app.alerts.firstMatch.waitForExistence(timeout: 2),
+-            "No alert should appear during the simulator cold-start observation window",
+-        )
+-        XCTAssertEqual(
+-            app.state,
+-            .runningForeground,
+-            "The Swift host should remain in the foreground after Compose renders",
+-        )
++
++        let start = ProcessInfo.processInfo.systemUptime
++        for sample in 0...5 {
++            if sample > 0 {
++                XCTAssertFalse(
++                    app.alerts.firstMatch.waitForExistence(timeout: 2),
++                    "No alert should appear during the passive observation interval",
++                )
++            }
++            let foreground = app.state == .runningForeground
++            let homeExists = app.staticTexts["parlor-home-brand"].exists
++            let alertVisible = app.alerts.firstMatch.exists
++            XCTAssertTrue(foreground, "The app should remain in the foreground")
++            XCTAssertTrue(homeExists, "The Compose home should remain present")
++            XCTAssertFalse(alertVisible, "No alert should cover the home screen")
++            let elapsed = ProcessInfo.processInfo.systemUptime - start
++            if sample == 5 {
++                XCTAssertGreaterThanOrEqual(elapsed, 10, "Require ten actual post-home seconds")
++            }
++            try marker([
++                "event": "sample",
++                "observationID": observationID,
++                "sample": sample,
++                "elapsedSeconds": elapsed,
++                "foreground": foreground,
++                "homeExists": homeExists,
++                "alertVisible": alertVisible,
++            ])
++        }
++        let elapsed = ProcessInfo.processInfo.systemUptime - start
++        XCTAssertGreaterThanOrEqual(elapsed, 10, "Require ten actual post-home seconds")
++        try marker([
++            "event": "complete",
++            "observationID": observationID,
++            "elapsedSeconds": elapsed,
++        ])
++        // The next launch() terminates this instance per Apple's documented API contract.
++        // The outer owned-simulator finalizer also stops the app after any success/failure.
++    }
++
++    private func marker(_ fields: [String: Any]) throws {
++        let data = try JSONSerialization.data(withJSONObject: fields, options: [.sortedKeys])
++        print("PARLOR_NORMAL_SOURCE_LAUNCH " + String(decoding: data, as: UTF8.self))
+     }
+ }

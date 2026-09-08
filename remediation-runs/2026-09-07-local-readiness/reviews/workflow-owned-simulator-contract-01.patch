@@ -1,0 +1,137 @@
+diff --git a/scripts/release/tests/test_workflow_contract.py b/scripts/release/tests/test_workflow_contract.py
+index 0f9696a..64690c1 100644
+--- a/scripts/release/tests/test_workflow_contract.py
++++ b/scripts/release/tests/test_workflow_contract.py
+@@ -41,6 +41,60 @@ class WorkflowContractTest(unittest.TestCase):
+         with self.assertRaisesRegex(RuntimeError, "app-launch test"):
+             workflow_contract.verify_validation(broken)
+ 
++    def test_ios_app_launch_requires_owned_simulator_and_nonparallel_execution(self) -> None:
++        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(
++            encoding="utf-8"
++        )
++        mutations = (
++            ("create-simulator apple-ui", "list devices available --json"),
++            ("-parallel-testing-enabled NO", "-parallel-testing-enabled YES"),
++            ("-maximum-concurrent-test-simulator-destinations 1", "-maximum-concurrent-test-simulator-destinations 2"),
++            ("test ! -e build/ci-evidence/ios-ui-tests.xcresult", "true"),
++            ("-derivedDataPath build/xcode-derived-data", "-derivedDataPath /tmp/unowned"),
++        )
++        for original, replacement in mutations:
++            with self.subTest(original=original):
++                self.assertIn(original, workflow)
++                with self.assertRaisesRegex(RuntimeError, "owned iOS app-launch"):
++                    workflow_contract.verify_validation(workflow.replace(original, replacement, 1))
++
++    def test_ios_app_launch_requires_its_own_preparation_and_finalization(self) -> None:
++        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(
++            encoding="utf-8"
++        )
++        for original, replacement in (
++            ("prepare apple-ui", "prepare apple-wrapper"),
++            ("finish apple-ui", "finish apple-wrapper"),
++            ("id: apple_ui_prepare", "id: another_prepare"),
++            ("steps.apple_ui_prepare.outcome", "steps.apple_wrapper_prepare.outcome"),
++            ("steps.apple_ui_run.outcome", "steps.apple_wrapper_run.outcome"),
++        ):
++            with self.subTest(original=original):
++                with self.assertRaisesRegex(RuntimeError, "owned iOS app-launch"):
++                    workflow_contract.verify_validation(workflow.replace(original, replacement, 1))
++        finish = workflow_contract.validation_step(
++            workflow, "Stop Gradle after apple-ui and retire owned Apple resources"
++        )
++        for condition in ("if: success()", "if: failure()", "# if removed"):
++            with self.subTest(condition=condition):
++                broken = workflow.replace(finish, finish.replace("if: always()", condition), 1)
++                with self.assertRaisesRegex(RuntimeError, "finalizer must always run"):
++                    workflow_contract.verify_validation(broken)
++
++    def test_ios_app_launch_cannot_delay_finalization_or_claim_ownership_after_launch(self) -> None:
++        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(
++            encoding="utf-8"
++        )
++        finish_marker = "      - name: Stop Gradle after apple-ui and retire owned Apple resources\n"
++        delayed = workflow.replace(finish_marker, "      - name: Another build\n        run: ./gradlew build\n\n" + finish_marker, 1)
++        with self.assertRaisesRegex(RuntimeError, "immediately after app-launch"):
++            workflow_contract.verify_validation(delayed)
++        prepare_name = "Claim apple-ui native resource ownership"
++        prepare = f"      - name: {prepare_name}\n" + workflow_contract.validation_step(workflow, prepare_name)
++        misplaced = workflow.replace(prepare, "", 1).replace(finish_marker, prepare + "\n" + finish_marker, 1)
++        with self.assertRaisesRegex(RuntimeError, "ownership before launch"):
++            workflow_contract.verify_validation(misplaced)
++
+     def test_mobile_release_kit_android_signing_fallbacks_remain_bounded(self) -> None:
+         gradle = (workflow_contract.ROOT / "composeApp/build.gradle.kts").read_text(
+             encoding="utf-8"
+diff --git a/scripts/release/workflow_contract.py b/scripts/release/workflow_contract.py
+index a9b72a2..af230a9 100755
+--- a/scripts/release/workflow_contract.py
++++ b/scripts/release/workflow_contract.py
+@@ -90,6 +90,51 @@ def verify_android_runtime_smoke(name: str, text: str) -> None:
+             fail(f"{name}: release managed-device smoke gate is missing {token!r}")
+ 
+ 
++def validation_step(text: str, name: str) -> str:
++    """Read one named step in the checked-in, statically reviewed workflow shape."""
++    marker = f"\n      - name: {name}\n"
++    if text.count(marker) != 1:
++        fail(f"validation workflow requires exactly one step {name!r}")
++    return text.split(marker, 1)[1].split("\n      - ", 1)[0]
++
++
++def verify_owned_ios_app_launch(text: str) -> None:
++    prepare_name = "Claim apple-ui native resource ownership"
++    launch_name = "Launch Swift host and Compose root on iOS Simulator"
++    finish_name = "Stop Gradle after apple-ui and retire owned Apple resources"
++    prepare = validation_step(text, prepare_name)
++    launch = validation_step(text, launch_name)
++    finish = validation_step(text, finish_name)
++    helper = "/usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene"
++    for block, required in (
++        (prepare, ("        id: apple_ui_prepare\n", f"        run: {helper} prepare apple-ui\n")),
++        (launch, (
++            "        id: apple_ui_run\n",
++            '          simulator_udid="$(' + helper + ' create-simulator apple-ui)"\n',
++            "          test ! -e build/ci-evidence/ios-ui-tests.xcresult\n",
++            "-parallel-testing-enabled NO",
++            "-maximum-concurrent-test-simulator-destinations 1",
++            "-derivedDataPath build/xcode-derived-data",
++        )),
++        (finish, (
++            "        id: apple_ui_finish\n",
++            "          PARLOR_APPLE_PREPARE_OUTCOME: ${{ steps.apple_ui_prepare.outcome }}\n",
++            "          PARLOR_APPLE_RUN_OUTCOME: ${{ steps.apple_ui_run.outcome }}\n",
++            f"        run: {helper} finish apple-ui\n",
++        )),
++    ):
++        for token in required:
++            if token not in block:
++                fail(f"validation workflow owned iOS app-launch lifecycle lacks {token!r}")
++    if re.findall(r"(?m)^        if: (.*)$", finish) != ["always()"]:
++        fail("validation workflow owned iOS app-launch finalizer must always run")
++    if text.index(f"- name: {prepare_name}\n") >= text.index(f"- name: {launch_name}\n"):
++        fail("validation workflow must claim iOS app-launch ownership before launch")
++    next_step = text.split(f"\n      - name: {launch_name}\n", 1)[1].split("\n      - ", 1)[1]
++    if not next_step.startswith(f"name: {finish_name}\n"):
++        fail("validation workflow must finalize owned iOS resources immediately after app-launch")
++
++
+ def verify_validation(text: str) -> None:
+     if "secrets." in text:
+         fail("main/PR validation workflow must not reference secrets")
+@@ -119,7 +164,6 @@ def verify_validation(text: str) -> None:
+         fail("validation workflow does not run the iOS app-launch UI test")
+     app_launch_step = text.split(app_launch_marker, 1)[1].split(swift_release_marker, 1)[0]
+     required_app_launch_contract = (
+-        "xcrun simctl list devices available --json",
+         "-project iosApp/iosApp.xcodeproj",
+         "-scheme iosApp",
+         "-configuration Debug",
+@@ -131,6 +175,7 @@ def verify_validation(text: str) -> None:
+     for token in required_app_launch_contract:
+         if token not in app_launch_step:
+             fail(f"validation workflow iOS app-launch test lacks {token!r}")
++    verify_owned_ios_app_launch(text)
+     if '$1 ~ /PRODUCT_BUNDLE_IDENTIFIER$/' in text:
+         fail("validation workflow can confuse the Mac Catalyst derivation flag with the Bundle ID")
+     if text.count('key == "PRODUCT_BUNDLE_IDENTIFIER"') != 2:

@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/factory_review",
+  "author": "/root",
+  "recorded_at": "2026-09-07T15:24:52.160724+00:00",
+  "decision": "APPROVED_STATIC_NOTICE_PACKAGE_WIRING_PENDING_SOURCE05_VERIFIER_REVIEW_AND_EXECUTION",
+  "patch": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/normal-ios-notice-package-wiring-01.patch",
+    "sha256": "cc4cc4b638052b02290751949ad6831ad222d9f856574144cbac7c340980b6be",
+    "lines": 140,
+    "reviewed_line_ranges": [
+      [
+        1,
+        140
+      ]
+    ],
+    "reviewer": "/root/factory_review"
+  },
+  "observed_commit": "5d9f5f4c81ff51ee70922c876eefb91c6e669d56",
+  "exact_diff_matches_current_patch": true,
+  "reasoning": [
+    "run_normal_ios_launch.py398-414 rejects redirected built app; installed app must be canonical beneath exact owned simulator and native inventory must equal built inventory before notice invocations.",
+    "prepare256-319 compares full dirty/untracked binding, makes source-only copy and inventories it; copied_sources.py25-45 includes scripts/config/Compose resource files; post-worker input verification549-554 rejects changes. New verifier script therefore must be in fresh source05 copy inventory.",
+    "verify_notice_packages380-396 runs explicit /usr/bin/python3 -B copied verifier with --root copy --package each actual app --json; unique xb output command paths,120-second default deadline and1MiB budget inherited from command161-195. require202-204 refuses nonzero result.",
+    "read_json rejects duplicate/nonfinite/oversized malformed data; method requires PASS plus nonempty package before recording exact receipt hash. Detailed contract correctness depends on source-bound verifier implementation, not arbitrary self-asserted untrusted JSON.",
+    "notice_package_status begins NOT_RUN; method changes it only after both success receipts; main run catches failures and cleanup still executes; final overall conjunction619-624 requires this status plus runtime/provenance/source/control/copy/cleanup integrity.",
+    "No added app instrumentation, source rewriting, Settings navigation, network, credential or publishing action. Only verification subprocess and compact package receipts introduced."
+  ],
+  "static_test_discovery": {
+    "method": "Fresh Python AST parse only; no repository module imported or tests executed",
+    "declared_unique": 78,
+    "old_declared_unique": 74,
+    "declared_driver_count": 78,
+    "added_ids": [
+      "test_normal_launch_controls.RunnerGuards.test_failed_notice_verifier_cannot_pass_package_gate",
+      "test_normal_launch_controls.RunnerGuards.test_notices_check_built_and_installed_apps_using_frozen_copy",
+      "test_normal_launch_controls.RunnerGuards.test_source_only_or_failed_notice_receipt_is_not_package_evidence",
+      "test_normal_launch_controls.RunnerGuards.test_unexecuted_notice_verification_cannot_be_overall_pass"
+    ],
+    "removed_ids": []
+  },
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "sha256": "5b69fc6d6c1efbdd61e049057c57f3eddb1d11e1f804bb8ec8debc7e9aba42c8",
+      "lines": 677,
+      "reviewed_line_ranges": [
+        [
+          1,
+          677
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+      "sha256": "5fd60d980954bdf23ef277196a557a74cd6736fb3338aee23a213e9072560fd3",
+      "lines": 65,
+      "reviewed_line_ranges": [
+        [
+          1,
+          65
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+      "sha256": "af5c912dbc9655468d5d428b18f5a7c16d7b0f2fa421e14cf559ee674eaceb76",
+      "lines": 833,
+      "reviewed_line_ranges": [
+        [
+          451,
+          833
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_source_copy.py",
+      "sha256": "5920d07a43c64eb7193a1c1d03aea93948bfa21597591ee13d79073666ed54d2",
+      "lines": 51,
+      "reviewed_line_ranges": [
+        [
+          1,
+          51
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_launch_receipts.py",
+      "sha256": "7753fccfbda4678289d889f58c5c3b4454e954eec0dbee7d8b654780f55d42f5",
+      "lines": 203,
+      "reviewed_line_ranges": [
+        [
+          1,
+          94
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+      "sha256": "1e8e9cb396ef4d89e6de79d7c1ff1f4e551cb06c1467b6789d423f53945c9e63",
+      "lines": 135,
+      "reviewed_line_ranges": [
+        [
+          1,
+          135
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/CONTROL_STATUS.json",
+      "sha256": "d357ac82c079acb0e5fac6d0a7668efd287fdba070d225df7e5e049d3fb404cb",
+      "lines": 25,
+      "reviewed_line_ranges": [
+        [
+          1,
+          25
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/bind_source.py",
+      "sha256": "0954f5c24eb61c4f09c365efe6b3ab1fdb9f8342f86bad3e7654795464b53347",
+      "lines": 59,
+      "reviewed_line_ranges": [
+        [
+          1,
+          59
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/copied_sources.py",
+      "sha256": "5597d1e4b6a123a1c23bd82c66e30fdd86cb00cf85c831d6c6f281e023cbd752",
+      "lines": 229,
+      "reviewed_line_ranges": [
+        [
+          1,
+          229
+        ]
+      ],
+      "reviewer": "/root/factory_review"
+    }
+  ],
+  "execution_status": {
+    "new78_test_suite": "NOT_RUN_BY_REVIEWER_REQUIRES_PARENT_RECEIPT",
+    "actual_source_and_package_validator": "PENDING_ACTUAL_SOURCE_REVIEW",
+    "actual_built_installed_ios_notice_delivery": "NOT_RUN",
+    "normal_eight_plus_one_ios_runtime": "NOT_RUN",
+    "fresh_source05_combined_control_binding": "PENDING"
+  },
+  "nonblocking_observations": [
+    "Compact console result omits notice_package_status although durable receipt records and enforces it.",
+    "README and CONTROL_STATUS contain historical74/preparation claims by deliberate source-preserving adoption. They are not evidence for new78-byte control revision; add new execution receipt rather than borrowing old PASS."
+  ],
+  "cleanup": {
+    "reviewer_started_builds_workers_or_apps": false,
+    "source_or_git_writes": false,
+    "new_files": "This additive independent review JSON only; static subprocesses all finished; no deletions or process stops."
+  }
+}

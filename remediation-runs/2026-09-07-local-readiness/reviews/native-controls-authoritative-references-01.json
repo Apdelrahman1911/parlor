@@ -1,0 +1,46 @@
+{
+  "reviewer": "/root/factory_review",
+  "accessed_at": "2026-09-07T04:41:21.987256+00:00",
+  "references": [
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/xcode/build-settings-reference.json",
+      "status": 200,
+      "response_sha256": "f757789b2c9c82cf20926e0d570ffc7560260b713016759572824e3d01512339",
+      "matches": [
+        {
+          "key": "code",
+          "value": "ENABLE_DEBUG_DYLIB"
+        },
+        {
+          "key": "text",
+          "value": "If enabled, debug builds of app and app extension targets on supported platforms and SDKs will be built with the main binary code in a separate \u201cNAME.debug.dylib\u201d. A stub executor that loads the dylib will be the main binary. Enabling this setting is required for the previews execution engine and other modern development features to work. You can disable this setting if your target is not compatible."
+        }
+      ],
+      "applicability": "Installed Xcode26.5/17F42 Debug app layout; confirms actual main code can live in NAME.debug.dylib and a main-executable stub loads it. This is why hashing only the stub would be inadequate. Native inventory must include every built/installed Mach-O, including debug dylib and Compose framework. No Store-qualified-toolchain claim."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/apple-oss-distributions/dyld/main/include/mach-o/dyld.h",
+      "status": 200,
+      "response_sha256": "7aff76984e97a5313c44ad818920aea7d42b3a40f72bb7091b2e9ea82d0ac7e3",
+      "claim": "_dyld_image_count and _dyld_get_image_name enumerate loaded images; declarations support iOS2.0+, but iteration is not thread-safe against concurrent image load/unload.",
+      "pinned_local_corroboration": {
+        "xcode": "26.5 / 17F42",
+        "file": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/usr/include/mach-o/dyld.h",
+        "sha256": "7c8583f2b4edcfcde7da60ffe02c75974ec87f885fecc4e8d40761fe0b553a80",
+        "range": [
+          51,
+          63
+        ],
+        "text": "/*\n * The following functions allow you to iterate through all loaded images.  \n * This is not a thread safe operation.  Another thread can add or remove\n * an image during the iteration.  \n *\n * Many uses of these routines can be replace by a call to dladdr() which \n * will return the mach_header and name of an image, given an address in \n * the image. dladdr() is thread safe.\n */\nextern uint32_t                    _dyld_image_count(void)                              __API_AVAILABLE(macos(10.1), ios(2.0));\nextern const struct mach_header*   _dyld_get_image_header(uint32_t image_index)         __API_AVAILABLE(macos(10.1), ios(2.0));\nextern intptr_t                    _dyld_get_image_vmaddr_slide(uint32_t image_index)   __API_AVAILABLE(macos(10.1), ios(2.0));\nextern const char*                 _dyld_get_image_name(uint32_t image_index)           __API_AVAILABLE(macos(10.1), ios(2.0));"
+      },
+      "application_to_controls": "Bounded main-thread sample binds required observed app images to built/installed inventories; it is not an exhaustive record of all dynamic images ever loaded or a proof of concurrency absence. Missing/duplicate/unbound/changed required images fail the gate. Runtime crashes remain distinct from application assertions."
+    }
+  ],
+  "failed_lead": {
+    "url": "https://developer.apple.com/tutorials/data/documentation/xcode/understanding-the-executable-binary-layout-of-a-bundle.json",
+    "status": 404,
+    "evidence": false
+  },
+  "privacy": "Only public official documentation URLs requested; no repository source, secrets, or player data sent.",
+  "cleanup": "Short synchronous URL retrieval and Xcode version/header inspection only. No builds, simulators, servers, background workers, bytecode, or generated build artifacts."
+}

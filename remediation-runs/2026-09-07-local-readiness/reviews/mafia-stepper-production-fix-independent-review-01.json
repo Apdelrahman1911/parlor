@@ -1,0 +1,262 @@
+{
+  "schema_version": 1,
+  "at": "2026-09-07T09:05:25.035473+00:00",
+  "reviewer": "/root/factory_review",
+  "production_author": "/root",
+  "test_author": "/root/factory_review",
+  "test_independent_review": "Root states complete test/oracle review; another agent reviews source+test as a unit. This report does not independently approve its own test.",
+  "conclusion": "PRODUCTION FIX REVIEW PASS; no blocking source regression found. Separate source+test-unit independent review still required.",
+  "source": {
+    "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+    "sha256": "4b98a283b3d92bcfbbdeaa699a8c3e552b38440b90874795273a8edb0dada3dd",
+    "reviewed_lines": [
+      [
+        1,
+        529
+      ]
+    ]
+  },
+  "test": {
+    "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/desktopTest/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupStepperLayoutTest.kt",
+    "sha256": "306d7e76f6275440b9ceab2150b8e4cbcd8d6e8e47a7fe9ad3fcea45fad9d302"
+  },
+  "sources_reopened": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupDraft.kt",
+      "sha256": "e91e3e9d17bab4f725117c83e42096b5e9086809108a933ab5e48df4b9fb7a16",
+      "lines": [
+        [
+          1,
+          66
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/settings/MafiaSettings.kt",
+      "sha256": "beaa58c17c44a8ff552e52e838171deedf17f8dadd76258caaef8dd2b5a336f5",
+      "lines": [
+        [
+          1,
+          133
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+      "sha256": "1371eb747579362548f3962a520c2c3f3c2f6225ef551bad93e3e690e08a1fe6",
+      "lines": [
+        [
+          138,
+          159
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+      "sha256": "09de10c3735f1afeb7b36550dca57c4e9fd190d985faf6ff0eae8c0b8d21a784",
+      "lines": [
+        [
+          199,
+          230
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorIconButton.kt",
+      "sha256": "35e5724d173936cff5d12e197b09f79ddc88e15430d47806cc1bc0edd487dcd3",
+      "lines": [
+        [
+          1,
+          94
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorCard.kt",
+      "sha256": "e764e6c7e09dc72464ad3eb14b41328a609a7d47475941054fb7af292f7a9d51",
+      "lines": [
+        [
+          1,
+          55
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/ProvideAppLanguage.kt",
+      "sha256": "b4f4286459fe923ebaa3e156f4a9995232ce40ad32ae9bc43f73a929da77dc18",
+      "lines": [
+        [
+          1,
+          62
+        ]
+      ]
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/localization/AppLanguage.kt",
+      "sha256": "fe6a1f254f55403d010bba741b80d05824b238f668f6d6951b31a308eb8353f0",
+      "lines": [
+        [
+          1,
+          38
+        ]
+      ]
+    }
+  ],
+  "evidence": {
+    "mafia-stepper-layout-red-02": {
+      "receipt_path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-red-02/receipt.json",
+      "receipt_sha256": "b8cb8d687e539342067cffd8c6a854e783590bc3b1634704377616fb8e55f5c2",
+      "xml_sha256": "e49ed2c95683101c1c4f4c7e838ccf69ac80c4b678a397cc2912033e3830d422",
+      "log_sha256": "1005dd1a1c3bf0210e254cde351b6f1ba92ce98d85b8199200c38bc2a7e3b158",
+      "counts": {
+        "tests": 4,
+        "failures": 4,
+        "errors": 0,
+        "skipped": 0
+      },
+      "suites": 1,
+      "command": [
+        "./gradlew",
+        ":game-modes:mafia:desktopTest",
+        "--tests",
+        "*MafiaSetupStepperLayoutTest",
+        "--no-build-cache",
+        "--rerun-tasks",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=mafia-stepper-layout-red-02",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "status": "FAIL",
+      "source": {
+        "commit": "a224c513059cec8c2c626aac11d8b5c917098a00",
+        "tree": "17ea62fe703474b770723abaea330e0dd97fd909",
+        "branch": "fix/local-readiness-2026-09-07",
+        "tracked_status": "",
+        "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_manifest_sha256": "cc017e7a38a7324423b9edf046adc5607e5a1e405eef9ea7d31b824e98bb586d"
+      },
+      "cleanup": {
+        "stop_exit_code": 0,
+        "remaining_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "cleanup_errors": []
+      },
+      "source_drift": false,
+      "runner_drift": false
+    },
+    "mafia-stepper-layout-green-01": {
+      "receipt_path": "remediation-runs/2026-09-07-local-readiness/evidence/mafia-stepper-layout-green-01/receipt.json",
+      "receipt_sha256": "d63aa86dfd6f9efa25e230804db7594acdef778479e0a8b9b4d1330300a73e41",
+      "xml_sha256": "3f45b9175910a6c97bd3777ce51497914d1a65efd8a7c605f4f3f9e710b270b3",
+      "log_sha256": "aa6be8279517d4db68cb0870db80034c4877730d39bf94a1d1ef8923b36168cc",
+      "counts": {
+        "tests": 277,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "suites": 34,
+      "command": [
+        "./gradlew",
+        ":game-modes:mafia:desktopTest",
+        ":game-modes:mafia:detekt",
+        "--no-build-cache",
+        "--rerun-tasks",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=mafia-stepper-layout-green-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "status": "PASS",
+      "source": {
+        "commit": "a224c513059cec8c2c626aac11d8b5c917098a00",
+        "tree": "17ea62fe703474b770723abaea330e0dd97fd909",
+        "branch": "fix/local-readiness-2026-09-07",
+        "tracked_status": "M game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+        "diff_sha256": "88c8f1417462b6554708f936f60f613815b44eed209200403aa428775689ced4",
+        "source_manifest_sha256": "b7c043a8767254d959dab5f0e2c5a9000a6d1f2e09913e1f7d4d8eef9417f1b4"
+      },
+      "cleanup": {
+        "stop_exit_code": 0,
+        "remaining_outputs": [],
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "cleanup_errors": []
+      },
+      "source_drift": false,
+      "runner_drift": false
+    }
+  },
+  "reasoning": [
+    "RED02 has four actual layout assertion failures, no selector exceptions. English1x increment widths19/41/0px; Arabic1x MaxRevotes7/0px. Additional English/Arabic2x width losses. All raw heights remain48px. RED01 selector/clipped-height limitations are not reused as valid proof.",
+    "Diff is only FlowRow import, outer Row->FlowRow, vertical8dp spacing and itemVerticalAlignment. Pinned1.10.3 FlowRow measures each unweighted child against full-row constraints before wrapping: controls remain one144dp group rather than shrinking after the label.",
+    "Layout remains side-by-side SpaceBetween where content fits; otherwise controls wrap below with8dp gap. Existing vertical scrolling and unlimited maxLines remain. No font-scale cap, ellipsis or smaller targets.",
+    "RTL inspected in FlowLineMeasurePolicy: cross-axis Ltr for horizontal layout does not override main-axis arrangement, which receives actual layoutDirection. Four real EN/AR layout cases passed.",
+    "All four stepper callers share correction. Child controls, localized names, Role.Button, click owners, enabled guards, civilian remainder, draft settings, Start validation and ConfigureAndStart callback are unchanged. Local organizer and LAN host use same screen; peers remain WaitingScreen.",
+    "Read-only Civilian/count sibling was reopened; it has no144dp button group. No equivalent failure established in reviewed compact1x/2x scope; no claim all untested fonts are safe. Unchanged sibling was not silently marked repaired.",
+    "No domain, seed, host authority, session, protocol, private projection, navigation, save or rejoin mutation. Only two layout items per four bounded rows; no new coroutine/effect/subscription or unbounded work.",
+    "GREEN277tests/34suites includes4stepper+4priorToggle layout cases and existing Doctor/rules/history/LAN-fixture tests. DesktopTest and Detekt actually executed. No native/physical-LAN inference."
+  ],
+  "reference": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/mafia-stepper-flow-source-01/FlowLayout.kt",
+    "sha256": "e1440b1e53c4d846d9621abe8052ad41cfebf099dfa664d434a29f5130354544",
+    "receipt_sha256": "9997613e014ffedd18b1b4d1cbf36749e51cccdf11f45dfda60d0306b8ebaea5",
+    "read_ranges": [
+      [
+        1,
+        246
+      ],
+      [
+        431,
+        496
+      ],
+      [
+        552,
+        771
+      ],
+      [
+        1203,
+        1477
+      ],
+      [
+        1507,
+        1584
+      ]
+    ],
+    "version": "foundation-layout-desktop1.10.3 MavenCentral exact source, independently reopened"
+  },
+  "limitations": [
+    "I authored the regression; independent test approval belongs to root/other validator, not this report.",
+    "Fixture uses320x640dp,1x/2x font and six-player initial settings. It does not enumerate all widths/counts/maxOSa11y sizes or click every stepper boundary.",
+    "Physical VoiceOver/TalkBack, mobile font fallback, real LAN and Store evidence are not supplied by these JVM tests.",
+    "No project-wide readiness or absence-of-other-defects claim."
+  ],
+  "compatibility": "No game/protocol/content/save versions changed. Doctor repeat-protection setting/default unchanged.",
+  "cleanup": {
+    "reviewer_started_builds_or_workers": false,
+    "reviewer_created_build_outputs": false,
+    "root_green_cleanup_verified": true,
+    "original_evidence_modified": false,
+    "git_diff_check_exit": 0
+  }
+}

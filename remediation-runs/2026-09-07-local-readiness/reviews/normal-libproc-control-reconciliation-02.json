@@ -1,0 +1,189 @@
+{
+  "schema_version": 1,
+  "at": "2026-09-08T08:01:40.836794+00:00",
+  "reviewer": "/root/release_fix_review",
+  "author_of_controls": "/root",
+  "status": "INDEPENDENTLY_RECONCILED_CONTROL_PASS_ONLY",
+  "scope": "Read retained raw receipts/logs and source; no test/build/native execution or Git operation by reviewer",
+  "source_identity_from_root_receipts": {
+    "commit": "8b9e3b0cdfdab82e7cff3ad8135d0eae9a0b8ca3",
+    "tree": "c1e92b5e00ab64a293c4d7f9c9b5e2b85887be88",
+    "branch": "fix/local-readiness-2026-09-07",
+    "diff_sha256": "8cb8c599d1c9a2755bc6d631300d428a799d1fd04b517f637af82dcb2e9578e7",
+    "tracked_status": "M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_diagnostics.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+    "source_manifest_sha256": "c4d3387a95ff1a4462071147afe92411f5a08ee8b10f78852a59494c8d3e4420"
+  },
+  "cycles": [
+    {
+      "cycle": "normal-libproc-controls-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-libproc-controls-01/receipt.json",
+        "bytes": 297167,
+        "sha256": "ec7599bd2c1e73fb48db664edf85189d0fc1b4b628bc2431b7d2d28d32d3fa25"
+      },
+      "raw_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-libproc-controls-01/gradle.log",
+        "bytes": 96541,
+        "sha256": "48bd252289ba3355598d6772e4933d3e49592925183c5a6528c3c217cb55a7a6"
+      },
+      "stop_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-libproc-controls-01/stop.log",
+        "bytes": 31,
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "started_at": "2026-09-08T07:43:11.202767+00:00",
+      "finished_at": "2026-09-08T07:43:12.796379+00:00",
+      "stopped_at": "2026-09-08T07:43:13.323122+00:00",
+      "cleanup_completed_at": "2026-09-08T07:43:13.453521+00:00",
+      "before_after_identity_equal": true,
+      "source_files_rehashed": 800,
+      "source_manifest_sha256": "c4d3387a95ff1a4462071147afe92411f5a08ee8b10f78852a59494c8d3e4420",
+      "current_source_mismatches": [],
+      "current_runner_mismatches": [],
+      "cleanup_receipt": "No output/worker/error/retention arrays populated; owned scratch absent on independent metadata check",
+      "scratch_absent": true
+    },
+    {
+      "cycle": "normal-libproc-validation-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-libproc-validation-01/receipt.json",
+        "bytes": 300538,
+        "sha256": "819e5daa3c1308d72daca722ff4f0b9cf3b342a21454ad5794a650f7d16e66dd"
+      },
+      "raw_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-libproc-validation-01/gradle.log",
+        "bytes": 3241,
+        "sha256": "7ce3412759db9f8ed2c58876d0c6a9942fab9d8a1a75e4d179bbca3cc559cf9a"
+      },
+      "stop_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-libproc-validation-01/stop.log",
+        "bytes": 31,
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "started_at": "2026-09-08T07:44:42.310327+00:00",
+      "finished_at": "2026-09-08T07:44:47.086389+00:00",
+      "stopped_at": "2026-09-08T07:44:47.553116+00:00",
+      "cleanup_completed_at": "2026-09-08T07:44:47.675926+00:00",
+      "before_after_identity_equal": true,
+      "source_files_rehashed": 800,
+      "source_manifest_sha256": "c4d3387a95ff1a4462071147afe92411f5a08ee8b10f78852a59494c8d3e4420",
+      "current_source_mismatches": [],
+      "current_runner_mismatches": [],
+      "cleanup_receipt": "No output/worker/error/retention arrays populated; owned scratch absent on independent metadata check",
+      "scratch_absent": true
+    }
+  ],
+  "control_reconciliation": {
+    "actual_unittest_results": 187,
+    "result": "all ok",
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "raw_ids_equal_declared_discovered_and_fresh_ast": true,
+    "duplicate_ids": 0,
+    "control_manifest_files": 86,
+    "before_after_control_manifest_equal": true,
+    "current_control_hash_mismatches": [],
+    "actual_imports": 34,
+    "unbound_actual_imports": [],
+    "six_adopted_files_equal_independently_approved_freeze03": true,
+    "empty_artifact_and_test_receipt_arrays": "This command is a Python unittest suite, not Gradle/JUnit. Actual individual test evidence is gradle.log; empty generic XML/artifact receipts are not test-discovery failure."
+  },
+  "mutation_witness": {
+    "status": "EXPECTED_MUTATION_DETECTED",
+    "tests": 1,
+    "expected_failures": 1,
+    "errors": 0,
+    "skips": 0,
+    "proof": "Raw log and full command show exactly one AST-selected postflight if removed from an isolated in-memory copy of Lane.observe_kernel_regions. Original method restored. Existing last-query mutation test fails at test_kernel_image_regions.py:181 because expected RuntimeError/ValueError was not raised. Not counted as an application test or repaired-suite failure.",
+    "source_locations": [
+      "native/normal-ios-launch-proposal-01/run_normal_ios_launch.py:527-542",
+      "native/normal-ios-launch-proposal-01/test_kernel_image_regions.py:161-184"
+    ]
+  },
+  "compiler_smoke": {
+    "status": "PASS",
+    "command": [
+      "xcrun",
+      "--sdk",
+      "macosx",
+      "clang",
+      "-x",
+      "c",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-arch",
+      "arm64",
+      "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_region.c.in",
+      "-lproc",
+      "-o",
+      "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/normal-libproc-validation-01/scratch/tmp/kernel-image-region"
+    ],
+    "compiler_exit_code": 0,
+    "compiler_output_empty": true,
+    "compiled_helper_sha256": "3e7aeb78c9cd86827287e492feca89f8d8ef8ba70345e0b9f7b911251abc02a0",
+    "invalid_argument_invocations": 5,
+    "invalid_argument_result": "Each exits 1 with exact closed invalid-request JSON and no stderr; full enclosing command checks it.",
+    "not_established": "Every smoke exits at C lines 34-38 before proc_pidinfo line 49. This is NOT successful kernel API execution, return-structure-size/permission proof, app image provenance, simulator runtime or physical-device evidence."
+  },
+  "limitations": [
+    "No actual Parlor libproc image-provenance run has occurred in these cycles; NOT_RUN remains explicit.",
+    "Current receipt source commit/tree include dirty controls and exclude campaign evidence from the 800-file application manifest; the separate 86-file control manifest binds those executed controls. A future delivered commit needs its own source binding.",
+    "Previous native15 normal/vmmap lane remains overall FAIL (runtime PASS/provenance FAIL/cleanup PASS). Native16 is the separate app-foundation/L08 composition lane, overall FAIL/runtime FAIL/cleanup PASS. Neither is superseded by control tests or compilation.",
+    "No new process probe was run; process shutdown evidence is the root-owned receipts plus independently checked absence of exact owned scratch paths.",
+    "This receipt approves only the meaning of these retained results, not final repository readiness, Store readiness, release authorization or a new native run."
+  ],
+  "review_references": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/independent-review-03.json",
+      "bytes": 6203,
+      "sha256": "a13eb3f7ca9d77af2bc5ff28a5283b1d3abaa71eca0a225065da29438fd84ece"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/freeze-03.json",
+      "bytes": 1883,
+      "sha256": "da6246f2076f40cc1ae5f3a128064730383b1b6dc322007ea1057a6beb83cc33"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/changes-03.patch",
+      "bytes": 35239,
+      "sha256": "9a98cc8ceb37ba4dbe1f339f838eb989d51bb4bc7c538cc01535cac0f170c299"
+    }
+  ],
+  "reviewer_cleanup": "Only short-lived /usr/bin/python3 -B stdlib reads, AST/JSON/hash analysis, and this additive evidence. No build/test/native/Store/Git commands, repository imports, background workers, caches or temporary build outputs created.",
+  "supersedes": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/normal-libproc-control-reconciliation-01.json",
+    "sha256": "e6802f662482fa8dbe20e6f29d06ed29ebcab94c91b5a61c9b91890cba8bd0bf",
+    "bytes": 8732
+  },
+  "correction": "Reopened exact ios-readiness receipts: native15 is the failed vmmap/provenance lane; native16 is the separate failed app-foundation/L08 composition lane. The previous review transposed their labels in one limitations sentence; all control-reconciliation results remain unchanged.",
+  "prior_native_receipt_classifications": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-15/receipt.json",
+      "sha256": "7b4235bc8d869db573ffbdf65a246be7d25ac1ebefb81b7affe01ffd97818c50",
+      "bytes": 378246,
+      "execution_kind": "normal-source-fixed-eight-plus-separate-public-tool-provenance",
+      "status": "FAIL",
+      "runtime_evidence_status": "PASS",
+      "provenance_status": "FAIL",
+      "cleanup_status": "PASS"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/receipt.json",
+      "sha256": "56094f40132dd9beaeda52fdc737c61c242e897e0356b2722c4b50ad75bbf576",
+      "bytes": 450903,
+      "execution_kind": "manifest-owned-copy-ios-l08-app-foundation-composition",
+      "status": "FAIL",
+      "runtime_evidence_status": "FAIL",
+      "cleanup_status": "PASS"
+    }
+  ]
+}

@@ -1,0 +1,666 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-07T21:09:31.138375+00:00",
+  "kind": "READ_ONLY_NATIVE07_CLASSIFICATION_PREPARATION",
+  "author": "/root/native_fix_review",
+  "independence": "This author wrote the L08 fixture and diagnostic patch. This is technical preparation/counter-evidence, NOT independent approval of those changes or native execution; /root/factory_review owns independent classification.",
+  "source_identity": {
+    "repository": "/Users/abdelrahman/Projects/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "b6e1947c62661631d0593038db7f64dbf25f720e",
+    "tree": "f03ad1b302d951d0ca9811b1efab2751a8be6978",
+    "tracked_status": "",
+    "binding_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/ios-readiness-source-07.json",
+    "binding_sha256": "7a78b016f762dc22fe27beeda9f12b1a1cdac8f8417c2c560b5b67785f350a4c",
+    "source_manifest_sha256": "4be6d9cbd07c891b60356921be1828c4c8f44501c979e435105494d261c65ffa",
+    "all_reported_sources_match_binding07": true
+  },
+  "scope": "Reopen actual snapshot/keychain/store/DI, current L08 storage probe and bridge, legal fixtures, iOS tests, strict receipt paths, and relevant production callers before classifying a new runtime observation. No source changes or execution.",
+  "coverage": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "sha256": "c2852fafb293a693be830171f4674947289fafb07f8ecdbafa5c0aaae6d1bf8b",
+      "lines": 500,
+      "reviewed_line_ranges": [
+        [
+          1,
+          500
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "production iOS filesystem, crypto, migration and metadata enforcement",
+      "disposition": "SOURCE_READ_COMPLETE_FOR_THIS_CLASSIFICATION_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotKeychain.kt",
+      "sha256": "511aff877a27eb3f42ce4891203a830ba8879781de405e2248c3873f5f381a5e",
+      "lines": 205,
+      "reviewed_line_ranges": [
+        [
+          1,
+          205
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "production iOS snapshot key ownership and Keychain errors",
+      "disposition": "SOURCE_READ_COMPLETE_FOR_THIS_CLASSIFICATION_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt",
+      "sha256": "e2ca0be28fd2f0eafee1a55022653190cf30a8c6da620dc3dfe56f361e0da27f",
+      "lines": 246,
+      "reviewed_line_ranges": [
+        [
+          1,
+          246
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "production common store, JSON codec and error translation",
+      "disposition": "SOURCE_READ_COMPLETE_FOR_THIS_CLASSIFICATION_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/storage/SnapshotProtectionPolicy.kt",
+      "sha256": "e234a34809bfe8dc4dd3345b33dce10c98f311fa02cc5c6a963b613bffb11d2d",
+      "lines": 35,
+      "reviewed_line_ranges": [
+        [
+          1,
+          35
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "production bounded plaintext policy",
+      "disposition": "SOURCE_READ_COMPLETE_FOR_THIS_CLASSIFICATION_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/storage/PlatformStorage.kt",
+      "sha256": "1f56d8b7adca7d5148445ec9e8f69d2f9a74f253d4c425cc2abd00a84594b690",
+      "lines": 41,
+      "reviewed_line_ranges": [
+        [
+          1,
+          41
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "production per-record migration orchestration",
+      "disposition": "SOURCE_READ_COMPLETE_FOR_THIS_CLASSIFICATION_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/storage/PlatformStorage.ios.kt",
+      "sha256": "cb69b6de029bf7d9f84dbc5bf19139150906a29d64cf29a60994259ca657a0c0",
+      "lines": 19,
+      "reviewed_line_ranges": [
+        [
+          1,
+          19
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "production iOS DI actual",
+      "disposition": "SOURCE_READ_COMPLETE_FOR_THIS_CLASSIFICATION_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/di/StorageModule.kt",
+      "sha256": "9734dde8f751d0e5792577692c322051aa0adc7f45ed0fa6ac5961cf9295e87c",
+      "lines": 23,
+      "reviewed_line_ranges": [
+        [
+          1,
+          23
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "production singleton store DI",
+      "disposition": "SOURCE_READ_COMPLETE_FOR_THIS_CLASSIFICATION_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/di/AppModule.kt",
+      "sha256": "b449781eb52418300504344c1af978ef7cb41e4e1f35f8d50faa4b8662bbdb76",
+      "lines": 74,
+      "reviewed_line_ranges": [
+        [
+          1,
+          74
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "production strict Json and composition root",
+      "disposition": "SOURCE_READ_COMPLETE_FOR_THIS_CLASSIFICATION_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosMain/kotlin/com/parlor/app/MainViewController.kt",
+      "sha256": "c77abd03ddcae230b4752d888b16c3d74231d89c967624c31129d176a5ed20ce",
+      "lines": 56,
+      "reviewed_line_ranges": [
+        [
+          1,
+          56
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "production iOS entry and Koin wiring",
+      "disposition": "SOURCE_READ_COMPLETE_FOR_THIS_CLASSIFICATION_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeRecoveryAvailability.kt",
+      "sha256": "4c8a962fba7ec8334cc8f4dfe0a75f221b201178481ae115d85ae391647fbb2a",
+      "lines": 146,
+      "reviewed_line_ranges": [
+        [
+          1,
+          146
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "production bounded inventory and unavailable-source projection",
+      "disposition": "SOURCE_READ_COMPLETE_FOR_THIS_CLASSIFICATION_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/commonMain/kotlin/com/parlor/app/LocalResumeRouter.kt",
+      "sha256": "bb45b775fa4f8444bf6d00aa240b66ab78dd0066ba88dcf037f758cdd86ea0b1",
+      "lines": 163,
+      "reviewed_line_ranges": [
+        [
+          1,
+          163
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "production explicit resume/retry/discard and stale-request handling",
+      "disposition": "SOURCE_READ_COMPLETE_FOR_THIS_CLASSIFICATION_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/engine/src/commonMain/kotlin/com/parlor/engine/snapshot/SnapshotCodec.kt",
+      "sha256": "010c2df47f3803d60a80a428e459e052c715d3eb29a55444f1eeeff7c28ebad1",
+      "lines": 64,
+      "reviewed_line_ranges": [
+        [
+          1,
+          64
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "production envelope serialization and value equality",
+      "disposition": "SOURCE_READ_COMPLETE_FOR_THIS_CLASSIFICATION_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosStorageSafetyTest.kt",
+      "sha256": "84b6701e1adc272d2b822ca509e5c66bc8162143d78802c1d8c9732445e62cca",
+      "lines": 196,
+      "reviewed_line_ranges": [
+        [
+          1,
+          196
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "test-only native crypto, bounds and synthetic recovery",
+      "disposition": "SOURCE_READ_COMPLETE_FOR_THIS_CLASSIFICATION_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosLegacySnapshotBackupTest.kt",
+      "sha256": "a730f7fe3063e6fb2802cef76d68c7a19b6f35afe82ffc642852bad386adf3f2",
+      "lines": 397,
+      "reviewed_line_ranges": [
+        [
+          1,
+          397
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "test-only native backup exclusion and synthetic-key retention",
+      "disposition": "SOURCE_READ_COMPLETE_FOR_THIS_CLASSIFICATION_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/shared/storage/src/commonTest/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStoreTest.kt",
+      "sha256": "7b157f5b206efa20571fa3c10d5c625ea79454f68a3a3a246031e971bda76e43",
+      "lines": 335,
+      "reviewed_line_ranges": [
+        [
+          1,
+          335
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "test-only common store and in-memory filesystem",
+      "disposition": "SOURCE_READ_COMPLETE_FOR_THIS_CLASSIFICATION_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08StorageProbe.kt.in",
+      "sha256": "28f4158cc701f1355a9320da1edd9a6d7825cf76828b2b0472ea194611750b75",
+      "lines": 499,
+      "reviewed_line_ranges": [
+        [
+          1,
+          499
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "copy-only diagnostic producer, native store invocation and metadata observers",
+      "disposition": "SOURCE_READ_COMPLETE_FOR_THIS_CLASSIFICATION_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08StorageLaunch.swift.in",
+      "sha256": "679532441cf6c8fcf6ada88d6e94d0452d1ea3e3979fe0f981aa1935ba83947f",
+      "lines": 71,
+      "reviewed_line_ranges": [
+        [
+          1,
+          71
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "copy-only Swift bridge and durable bounded receipt",
+      "disposition": "SOURCE_READ_COMPLETE_FOR_THIS_CLASSIFICATION_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08StorageUITests.swift.in",
+      "sha256": "2f0ce45e329efa15a8e28f681af0b201c4d503e59348a1ad507e2a2a8883e864",
+      "lines": 111,
+      "reviewed_line_ranges": [
+        [
+          1,
+          111
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "copy-only XCTest actual Home/Retry/Discard and thirteen cold boots",
+      "disposition": "SOURCE_READ_COMPLETE_FOR_THIS_CLASSIFICATION_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08WhodunitSnapshots.kt.in",
+      "sha256": "2440e1d032e35171127b68ee69c42a35ef933bcdc8cea30cc991cb7a02ade0fb",
+      "lines": 190,
+      "reviewed_line_ranges": [
+        [
+          1,
+          190
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "copy-only legal deterministic Whodunit checkpoint and resumed controller driver",
+      "disposition": "SOURCE_READ_COMPLETE_FOR_THIS_CLASSIFICATION_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08MafiaSnapshots.kt.in",
+      "sha256": "7674ec0e0d5e5481e18e8e9c97c0f7299e73550f3c91c0ada60cdd743da8a5e3",
+      "lines": 190,
+      "reviewed_line_ranges": [
+        [
+          1,
+          190
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "copy-only legal deterministic Mafia ON/OFF checkpoint and resumed controller driver",
+      "disposition": "SOURCE_READ_COMPLETE_FOR_THIS_CLASSIFICATION_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08UiSeam.kt.in",
+      "sha256": "22d9e352ba6c4b8e161b2e69f1aae208a0c9a654ed85284ef4a34c2ea63399e4",
+      "lines": 71,
+      "reviewed_line_ranges": [
+        [
+          1,
+          71
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "copy-only exact UI control identity and observation",
+      "disposition": "SOURCE_READ_COMPLETE_FOR_THIS_CLASSIFICATION_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/l08_copy.py",
+      "sha256": "c2bf28bf0efd9449d646c451d7b8e665000e8d11a3a6eea76de95e1fb4a55a5f",
+      "lines": 166,
+      "reviewed_line_ranges": [
+        [
+          1,
+          166
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "verification-only source transformation allowlist",
+      "disposition": "SOURCE_READ_COMPLETE_FOR_THIS_CLASSIFICATION_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/instrument_storage.py",
+      "sha256": "51348e3985e6872283182a728d8a91808714d69ad0197c978298678366cb4d88",
+      "lines": 42,
+      "reviewed_line_ranges": [
+        [
+          1,
+          42
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "verification-only credential observation, not snapshot replacement",
+      "disposition": "SOURCE_READ_COMPLETE_FOR_THIS_CLASSIFICATION_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/copied_sources.py",
+      "sha256": "d52f4f7904d1481fee00796a1c0775ee3512934639dac45fee44704fa9b74e62",
+      "lines": 231,
+      "reviewed_line_ranges": [
+        [
+          1,
+          231
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "verification-only exact input copying, permitted transformations and after-build drift checks",
+      "disposition": "SOURCE_READ_COMPLETE_FOR_THIS_CLASSIFICATION_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/L08HostProbe.kt.in",
+      "sha256": "62dfce06e71cf84f9e80c710f02a1fcb54308104af583d3d9d3033cf41b4bd79",
+      "lines": 440,
+      "reviewed_line_ranges": [
+        [
+          1,
+          135
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "copy-only DI guard: l08-storage does not receive l08-host transport override; remainder outside this preparation",
+      "disposition": "PARTIAL_SOURCE_READ_EXPLICIT_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/scripts/verification/ios-readiness/l08_receipts.py",
+      "sha256": "3cab6914886db081ba883629242d33a262158c0106e8658bc7b777387826f867",
+      "lines": 422,
+      "reviewed_line_ranges": [
+        [
+          1,
+          202
+        ],
+        [
+          367,
+          422
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "strict storage PASS/failure-preservation parser; host acceptance and earlier copy wrapper remain outside this preparation",
+      "disposition": "PARTIAL_SOURCE_READ_EXPLICIT_SCOPE",
+      "matches_binding07": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/composeApp/build.gradle.kts",
+      "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+      "lines": 627,
+      "reviewed_line_ranges": [
+        [
+          104,
+          198
+        ]
+      ],
+      "reviewer": "/root/native_fix_review",
+      "relevance": "iOS framework targets, module dependencies and test source-set separation; not complete build review",
+      "disposition": "PARTIAL_SOURCE_READ_EXPLICIT_SCOPE",
+      "matches_binding07": true
+    }
+  ],
+  "native07_status": "No native07 receipt was inspected in this preparation. Root owns the only build/native lane. Await final sanitized raw operation, source/artifact binding and cleanup before any execution classification.",
+  "native05_preserved": {
+    "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-05/parlor-l08-storage-1-save.json",
+    "sha256": "38220611dc288e18c35a95715d7a81d41f851f35916e6771aa6cb67e24b85863",
+    "observation": {
+      "action": "save",
+      "boot_ordinal": 1,
+      "reason": "fixture_or_boundary_failure",
+      "run_token": "047C7A9B-C100-4836-9F30-30DAE0CE8983",
+      "schema_version": 1,
+      "stage": "real-store-save",
+      "status": "FAIL"
+    },
+    "framework": {
+      "file_bytes": 83987720,
+      "file_sha256": "b393b2b8433473cb9143d6c6a605f49c1926a5433f187ddf2f6a02995b778b38",
+      "image_uuid": "3b73c6cf-9db6-3777-a8bd-9de7ed76ed15",
+      "origin": "owned-copy-build",
+      "path": "xcode-frameworks/Debug/iphonesimulator26.5/ComposeApp.framework/ComposeApp"
+    },
+    "classification": "UNCONFIRMED — old broad real-store-save stage covered save, load, equality and metadata. This record remains FAIL; no unique app/platform/fixture root cause established."
+  },
+  "production_boundary_proofs": [
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/di/AppModule.kt:49-54,67-74; StorageModule.kt:16-23; PlatformStorage.ios.kt:13-19; MainViewController.kt:18-32",
+      "proof": "Original iOS entry starts real allModules; strict Json(ignoreUnknownKeys=false,isLenient=false,encodeDefaults=true); singleton FileBackedSnapshotStore uses singleton IosSnapshotFileSystem. L08 storage checks the runtime types, not substituted in-memory bindings."
+    },
+    {
+      "path": "shared/storage/src/commonMain/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStore.kt:59-149,170-201,232-246",
+      "proof": "Mutex around all operations; serializer work on Default; filesystem owns its IO context. SerializationException and SnapshotProtectionException => CorruptedData, other Exception => IoError(snapshot_io). Cancellation rethrows; fatal Errors are not caught. Strict UTF8; metadata reads only session/game fields; bounded safe path component."
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt:76-108,128-228,362-417",
+      "proof": "Application Support/Parlor/snapshots is created with Complete attributes and directory backup exclusion. Atomic encrypted writes request Complete and verify file exclusion. Every legacy access excludes legacy directory before migration/corrupt handling; current encrypted data has precedence. Retained legacy is deleted only after current decrypt or successfully installed migration, or explicit delete; cancellation/failure retains it."
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/storage/PlatformStorage.kt:26-40; IosSnapshotFileSystem.kt:152-171",
+      "proof": "Corrupt-record migration exceptions remain discoverable for Retry/Discard; CancellationException rethrows. Legacy backup exclusion runs outside per-record failure isolation, so unavailable protection is not silently accepted as a healthy empty inventory."
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt:256-330",
+      "proof": "Encryption calls keychain.loadOrCreate before inner catch; Keychain IllegalStateException there maps to store IO, not necessarily CorruptedData. Decrypt wraps most key-read failures as SnapshotProtectionException so CorruptedData is not a unique authentication diagnostic. Header/name/IV/ciphertext are HMAC-bound, checked before AES plaintext publication. Exact v1/IV16 and ciphertext alignment guards; key arrays wiped."
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotKeychain.kt:61-108,110-186",
+      "proof": "NotFound alone returns null; success requires nonnull exact CFData64. Other status throws sanitized failure. Creation uses random64, accepts duplicate only to reread durable winner, never replaces an existing key, wipes candidate and releases CF ownership. Generic password, fixed app alias, non-synchronizing, AfterFirstUnlockThisDeviceOnly."
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt:133-140,394,425-474; SnapshotProtectionPolicy.kt:5,26-35",
+      "proof": "8 MiB plaintext cap, protected cap+1024, bounded maximum+1 native read with finally-close; successful decrypted oversize buffer wiped before rejection; empty AES input passes null pointer. L08 observer has a smaller synthetic-only read ceiling."
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeRecoveryAvailability.kt:48-85,110-146; LocalResumeRouter.kt:43-163",
+      "proof": "Home retains per-record unreadable tiles with warning and propagates source failure; max8 inspected entries(+1 overflow). Router validates session identity and registered game. Failures route to explicit Retry/Discard; no automatic deletion. Generation and originating route gate stale asynchronous callbacks."
+    }
+  ],
+  "diagnostic_stage_map": [
+    {
+      "stages": [
+        "context",
+        "actual-bindings"
+      ],
+      "source": "L08StorageProbe.kt.in:88-148,346-401; L08HostProbe.kt.in:96-110",
+      "meaning": "Command/environment/ordinal, actual Koin types and exact owned-container paths are checked before a fixture action. A failure does not establish a game-save defect."
+    },
+    {
+      "stages": [
+        "initial-absence"
+      ],
+      "source": "L08StorageProbe.kt.in:151-152,310-314",
+      "meaning": "All seven owned aliases must independently return NotFound and be physically absent. Unavailable/corrupt is intentionally not treated as empty; subtype is not emitted in the closed failure record."
+    },
+    {
+      "stages": [
+        "reachable-checkpoint",
+        "restart-envelope"
+      ],
+      "source": "L08StorageProbe.kt.in:153-155,176-177,195-198,288-293; game fixtures",
+      "meaning": "Reducer-built legal deterministic game state, game codec and expected envelope. Failure here precedes the following store read/write and cannot by itself be attributed to Foundation/Keychain."
+    },
+    {
+      "stages": [
+        "real-store-save"
+      ],
+      "source": "L08StorageProbe.kt.in:157-158,179-180; FileBackedSnapshotStore.kt:59-70",
+      "meaning": "Current diagnostic source now covers only actual store.save and Success assertion. The closed FAIL receipt does not distinguish a returned DataError from another caught Exception. Native05 used an older broader stage; do not retrofit this narrowed meaning onto that old receipt."
+    },
+    {
+      "stages": [
+        "real-store-load"
+      ],
+      "source": "L08StorageProbe.kt.in:295-298; FileBackedSnapshotStore.kt:73-86",
+      "meaning": "Actual store.load and Success assertion only. Failure may be NotFound, authentication/decode corruption, sanitized IO, or another caught exception; no status detail is emitted."
+    },
+    {
+      "stages": [
+        "loaded-envelope-equality"
+      ],
+      "source": "L08StorageProbe.kt.in:300-302; SnapshotCodec.kt:32-42",
+      "meaning": "Full GameSnapshot value equality including payload.contentEquals, not ByteArray identity. Payload is wiped in finally. On restart expected state is independently rebuilt; equality failure needs codec/determinism/state-source isolation."
+    },
+    {
+      "stages": [
+        "metadata-path",
+        "metadata-existence"
+      ],
+      "source": "L08StorageProbe.kt.in:355-401,464-468",
+      "meaning": "Exact canonical owned paths, directory/regular-file type, and file existence. Observer does not create or repair the protected path."
+    },
+    {
+      "stages": [
+        "metadata-directory-backup",
+        "metadata-file-backup"
+      ],
+      "source": "L08StorageProbe.kt.in:469-472,490-494; IosSnapshotFileSystem.kt:401-417",
+      "meaning": "Fresh NSURL resource dictionary, NSNumber and boolValue readback. Observer passes a null error pointer; production setter separately checks NSError and readback. Failure may be getter/type/value; never assert actual physical backup behavior from metadata alone."
+    },
+    {
+      "stages": [
+        "metadata-protection-constants"
+      ],
+      "source": "L08StorageProbe.kt.in:473-475",
+      "meaning": "Both NSFileProtectionKey and NSFileProtectionComplete must be nonnull. This is distinct from directory/file readback."
+    },
+    {
+      "stages": [
+        "metadata-directory-protection",
+        "metadata-file-protection"
+      ],
+      "source": "L08StorageProbe.kt.in:476-479",
+      "meaning": "attributesOfItemAtPath(..., null)?.get(key) == Complete. Each assertion still conflates nil dictionary/error, absent key and different value. A FAIL identifies the exact failed assertion, not the OS capability or production root cause. No getter repair/retry is made."
+    },
+    {
+      "stages": [
+        "metadata-encrypted-read",
+        "metadata-encrypted-header"
+      ],
+      "source": "L08StorageProbe.kt.in:480-486",
+      "meaning": "Bounded ciphertext read at 256 KiB+128 then PARSNAP prefix check. The header alone is not authentication proof. Earlier store load is a separate actual decrypt/codec check. No measured evidence here establishes an oversized fixture."
+    },
+    {
+      "stages": [
+        "production-recovery",
+        "legacy-neighbor-isolation",
+        "retained-corrupt-neighbor",
+        "dual-copy-retained-after-restart"
+      ],
+      "source": "L08StorageProbe.kt.in:199-228,246-269",
+      "meaning": "Actual game-owned recovery, registered Home destination, authenticated inventory, corrupt-neighbor isolation and retained dual-copy identity. Resolve each concrete assertion before classification; expected CorruptedData is a successful negative witness, not a repaired valid save."
+    },
+    {
+      "stages": [
+        "owned-legacy-seed"
+      ],
+      "source": "L08StorageProbe.kt.in:162-187,403-451",
+      "meaning": "Only explicit token-owned synthetic seeding creates the legacy directory. Dual-copy setup uses a second legal envelope and mutates one verified HMAC byte in-place; never reads real user saves or repairs production metadata."
+    },
+    {
+      "stages": [
+        "actual-home-controller",
+        "actual-terminal-writer-delete",
+        "explicit-retry-discard",
+        "final-restart-absence"
+      ],
+      "source": "L08StorageProbe.kt.in:229-282,316-328; L08StorageUITests.swift.in:3-111; L08UiSeam.kt.in",
+      "meaning": "Actual public Home/Retry/Discard taps and attached production controller/writer, bounded waits, explicit terminal deletion and next-process absence. Driver actions are synthetic; not a complete UI game playthrough or abrupt-power-loss proof."
+    },
+    {
+      "stages": [
+        "protected-metadata"
+      ],
+      "source": "L08StorageProbe.kt.in:204-205,464-488",
+      "meaning": "Enclosing stage retained for compatibility. Nested stages restore the enclosing stage only on success, never in finally, so they cannot conceal their own failure."
+    }
+  ],
+  "callback_and_parser_limits": [
+    "L08 command uses 60s withTimeout; cancellation gets closed reason cancelled and is rethrown; any other caught Exception gets fixture_or_boundary_failure. Observer state and payload are released; only its own scope is cancelled (probe88-130).",
+    "Swift callback dispatches to Main and writes only a new bounded4096-byte observation/16384-byte enclosing receipt with loaded-image/provenance data. Existing receipt path or bridge/provenance/encoding error becomes bounded-receipt-failed, not a store result (L08StorageLaunch.swift.in:15-39).",
+    "Swift XCTest verifies exact planned action, boot, token, PASS, no alert and foreground; public controls require exactly one hittable target, no fallback selector/coordinate/retry (L08StorageUITests.swift.in:54-111).",
+    "FAIL preservation has an immutable27-stage storage allowlist and exact fields, distinct from verify_storage exact PASS schema. A preserved FAIL or successful parser fixture is never a runtime PASS (l08_receipts.py:35-46,114-185,374-422).",
+    "Copy inventory permits explicit observer additions/transforms only. Snapshot implementation and store DI are copied unchanged. Host-only controlled transport override is disabled unless exact l08-host scenario; l08-storage keeps real P2pKit type (copied_sources.py; l08_copy.py; L08HostProbe.kt.in:96-110)."
+  ],
+  "tests_read_not_executed": [
+    {
+      "path": "composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosStorageSafetyTest.kt",
+      "coverage": "bounded reads, empty CFData/CCCrypt, damaged current/missing synthetic-key retention",
+      "limits": "Not real snapshot Keychain creation/durability; helpers create directory with attrs=null (169-179); no Complete metadata readback assertions."
+    },
+    {
+      "path": "composeApp/src/iosTest/kotlin/com/parlor/app/storage/IosLegacySnapshotBackupTest.kt",
+      "coverage": "actual Foundation exclusion, malformed/oversize retention, current precedence, known synthetic CBC/HMAC, cancellation, explicit Discard, stale legacy deletion after successful decrypt",
+      "limits": "Known injected key; helpers create dirs attrs=null (268-294); no real snapshot Keychain/save write path or Complete metadata assertions. Presence of test helpers does not show they ran inside native05/native07 app container."
+    },
+    {
+      "path": "shared/storage/src/commonTest/kotlin/com/parlor/storage/snapshot/FileBackedSnapshotStoreTest.kt",
+      "coverage": "serializer value equality, strict UTF8, errors, mutex/cancellation, metadata/dispatchers, safe filenames",
+      "limits": "In-memory copied byte arrays, not Foundation/Keychain/physical backup evidence."
+    },
+    {
+      "path": "scripts/verification/ios-readiness/L08MafiaSnapshots.kt.in",
+      "coverage": "source plan ON4 consecutive protections, OFF alternation/reject adjacent repeat/explicit skip/reuse pre-skip target, canonical private/history checks, Night5 checkpoint, original resumed controller terminal Town and private cleanup",
+      "limits": "Not executed by this reviewer. Source plan is not a runtime result; fixture Doctor self-heal is disabled and cannot independently prove all self-protection cases."
+    },
+    {
+      "path": "scripts/verification/ios-readiness/L08WhodunitSnapshots.kt.in",
+      "coverage": "source plan Classic/Elimination legal role/briefing/reveal/clue checkpoint, game/content identity, resumed controller to PostGame via legal explicit progression",
+      "limits": "Not executed by this reviewer. Explicit AdvanceFromDiscussion is not elapsed-wall-clock timer proof; synthetic canonical driver is not a full screen-by-screen playthrough."
+    }
+  ],
+  "counter_evidence_and_unresolved": [
+    "GameSnapshot implements payload.contentEquals; raw ByteArray reference-equality explanation is rejected by executable source.",
+    "Native05 raw snapshot filesystem write/read/delete observations are separate from its full GameSnapshot/metadata L08 result. Do not replace one with the other or attribute another invocation’s native status to this command.",
+    "No measured fixture size in this preparation demonstrates that the 256 KiB+128 observer ceiling was exceeded.",
+    "Production requests Complete protection but does not read it back; current diagnostic assertion is intentionally observational and does not repair it. NSFileManager nil/error/missing value discrimination would require separately approved bounded diagnostics if this stage fails.",
+    "Inspected official SDK/public docs neither guarantee nor forbid Complete metadata readback on this selected26.5 Simulator. Apple-silicon Mac Data Protection counter-evidence prevents the unsupported inference that Mac hosting alone proves no protection support.",
+    "Physical lock/passcode/class-key/backup durability, actual LAN and Store remain external/unverified even if all copied Debug simulator assertions later pass."
+  ],
+  "research_reference": {
+    "json_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-file-protection-platform-research-01.json",
+    "sha256": "087a72daf3d5ad468b7022737714b8d2a4d817efb013b1909e7c8c60d56de61c",
+    "scope": "Previously collected authoritative public references and selected local26.5 SDK declarations; consult primary URLs/receipts, not prose alone. No new network requests this continuation."
+  },
+  "next_classification_requirements": [
+    "Wait for final root-owned native07 cycle, compact sanitized receipt(s), exact source/copied-input/artifact SHA+UUID, executed XCTest outcomes, and cleanup results.",
+    "Resolve the exact current stage and all preceding successful checks from that producer version. Preserve FAIL unchanged; do not reuse native05 as newly localized evidence.",
+    "For ambiguous metadata or store-category failure, identify what is observable and what remains unknown. Propose only bounded read-only primitive diagnostics; do not read key bytes, plaintext states, arbitrary paths, or mutate entitlements/protection settings to manufacture a pass.",
+    "Independent reviewer factory_review must reopen the applicable path and decide app defect vs fixture defect vs platform/evidence gap. Fixture author cannot approve own result."
+  ],
+  "worktree_and_cleanup": {
+    "production_changes": false,
+    "source_test_or_runner_changes": false,
+    "commits_pushes_native_operations": false,
+    "report_created_exclusively": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native07-classification-preparation-01.json",
+    "processes_started": "Only short-lived read-only shell/Python source/metadata commands; all exec calls completed. No Gradle/Xcode/app/test/simulator/network workers started.",
+    "cleanup": "No task-owned generated build outputs exist from this preparation. No Gradle stop/process kill was run against root’s active shared lane; user work/global caches/other evidence were untouched."
+  }
+}

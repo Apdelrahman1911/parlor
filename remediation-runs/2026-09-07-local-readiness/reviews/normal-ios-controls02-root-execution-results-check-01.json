@@ -1,0 +1,161 @@
+{
+  "reviewer": "/root/native_fix_review",
+  "executor": "/root",
+  "checked_at": "2026-09-07T12:08:03.075820+00:00",
+  "disposition": "ACTUAL ROOT EXECUTION RESULTS VERIFIED:74 pure controls passed; NOT self-approval of authored normal runner/tests and NOT native execution approval",
+  "independence_boundary": "Reviewer authored normal runner/test controls. The root execution, raw result/source hashes and outer wrapper cleanup are checked here; separate nonauthor factory/root review of control implementation and fresh source05 binding still required before native execution.",
+  "repository": "/Users/abdelrahman/Projects/parlor",
+  "baseline": {
+    "commit": "2250007173bbf9ca7c441f1c46802d84c1b478ba",
+    "tree": "b506da5b778a3220f81e07674dcd85d381c49cb6",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "d3a952947d7451fde5d1679f9be21aef044ee58da507a8d9ef076ef338640054"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "-B",
+    "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py"
+  ],
+  "exit_code": 0,
+  "started_at": "2026-09-07T12:05:22.265022+00:00",
+  "finished_at": "2026-09-07T12:05:22.759347+00:00",
+  "actual_counts": {
+    "tests": 74,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0
+  },
+  "discovery": {
+    "static_AST_declared": 74,
+    "raw_unique_ok_descriptors": 74,
+    "all_source_declared_discovered_raw_ids_equal": true,
+    "executed_ids": [
+      "test_normal_launch_controls.CopiedSourceTests.test_ambiguous_or_wrong_shell_phase_is_rejected",
+      "test_normal_launch_controls.CopiedSourceTests.test_app_instrumentation_is_rejected",
+      "test_normal_launch_controls.CopiedSourceTests.test_kotlin_instrumentation_is_rejected",
+      "test_normal_launch_controls.CopiedSourceTests.test_missing_input_and_redirected_input_are_rejected",
+      "test_normal_launch_controls.CopiedSourceTests.test_only_ui_test_and_owned_phase_may_change",
+      "test_normal_launch_controls.CopiedSourceTests.test_unregistered_addition_is_rejected",
+      "test_normal_launch_controls.ExternalProvenanceTests.test_copied_framework_uuid_must_match_embedded_but_signing_bytes_remain_distinct",
+      "test_normal_launch_controls.ExternalProvenanceTests.test_disappearance_reuse_and_token_change_fail",
+      "test_normal_launch_controls.ExternalProvenanceTests.test_duplicate_framework_or_image_fails",
+      "test_normal_launch_controls.ExternalProvenanceTests.test_exact_new_target_attestation",
+      "test_normal_launch_controls.ExternalProvenanceTests.test_exact_public_launch_pid_is_required",
+      "test_normal_launch_controls.ExternalProvenanceTests.test_known_build_framework_remains_distinct_from_installed",
+      "test_normal_launch_controls.ExternalProvenanceTests.test_missing_binary_images_is_not_disk_provenance",
+      "test_normal_launch_controls.ExternalProvenanceTests.test_tool_images_and_addresses_bind_only_allowed_artifacts",
+      "test_normal_launch_controls.ExternalProvenanceTests.test_unbound_compose_framework_cannot_be_silently_ignored",
+      "test_normal_launch_controls.ExternalProvenanceTests.test_vmmap_mapping_cannot_exceed_sample_image_range",
+      "test_normal_launch_controls.ExternalProvenanceTests.test_vmmap_must_map_same_load_address",
+      "test_normal_launch_controls.ExternalProvenanceTests.test_vmmap_without_all_text_mappings_fails",
+      "test_normal_launch_controls.ExternalProvenanceTests.test_wrong_executable_uid_old_lifetime_or_preexisting_pid_fails",
+      "test_normal_launch_controls.ExternalProvenanceTests.test_wrong_runtime_uuid_fails",
+      "test_normal_launch_controls.ExternalProvenanceTests.test_wrong_tool_pid_or_executable_fails",
+      "test_normal_launch_controls.MarkerTests.test_boolean_duration_is_not_a_number",
+      "test_normal_launch_controls.MarkerTests.test_clock_regression_fails",
+      "test_normal_launch_controls.MarkerTests.test_complete_cannot_move_back_before_last_sample",
+      "test_normal_launch_controls.MarkerTests.test_duplicate_json_keys_fail",
+      "test_normal_launch_controls.MarkerTests.test_duplicate_lifetime_fails",
+      "test_normal_launch_controls.MarkerTests.test_eight_complete_trains_are_48_samples_not_48_tests",
+      "test_normal_launch_controls.MarkerTests.test_failing_foreground_home_alert_observations_fail",
+      "test_normal_launch_controls.MarkerTests.test_final_sample_must_itself_reach_ten_seconds",
+      "test_normal_launch_controls.MarkerTests.test_interleaved_trains_fail",
+      "test_normal_launch_controls.MarkerTests.test_ninth_attempt_fails_even_if_it_is_incomplete",
+      "test_normal_launch_controls.MarkerTests.test_nonfinite_json_fails",
+      "test_normal_launch_controls.MarkerTests.test_out_of_order_or_repeated_sample_fails",
+      "test_normal_launch_controls.MarkerTests.test_seven_launches_fail",
+      "test_normal_launch_controls.MarkerTests.test_unrecognized_marker_field_fails",
+      "test_normal_launch_controls.RunnerGuards.test_adhoc_is_explicit_and_does_not_inherit_a_real_identity",
+      "test_normal_launch_controls.RunnerGuards.test_allocation_canonicalizes_parent_before_mkdtemp_and_retains_exact_identity",
+      "test_normal_launch_controls.RunnerGuards.test_allocation_receipt_failure_does_not_strand_owned_directory",
+      "test_normal_launch_controls.RunnerGuards.test_cache_link_cleanup_does_not_remove_dependency_cache",
+      "test_normal_launch_controls.RunnerGuards.test_changed_cache_link_preserves_allocation",
+      "test_normal_launch_controls.RunnerGuards.test_control_drift_invalidates_overall_result",
+      "test_normal_launch_controls.RunnerGuards.test_deferred_interrupt_after_mkdtemp_keeps_finalizer_ownership",
+      "test_normal_launch_controls.RunnerGuards.test_environment_drops_probes_loader_credentials_and_foreign_gradle_options",
+      "test_normal_launch_controls.RunnerGuards.test_existing_allocation_cannot_be_replaced",
+      "test_normal_launch_controls.RunnerGuards.test_failed_gradle_stop_does_not_skip_device_workers_and_file_cleanup",
+      "test_normal_launch_controls.RunnerGuards.test_failed_observation_releases_watch_before_final_shutdown",
+      "test_normal_launch_controls.RunnerGuards.test_failed_xcode_attempt_immediately_stops_gradle",
+      "test_normal_launch_controls.RunnerGuards.test_finalization_removes_only_exact_task_allocation",
+      "test_normal_launch_controls.RunnerGuards.test_fixed_test_arguments_have_no_retry_or_parallel_escape",
+      "test_normal_launch_controls.RunnerGuards.test_interrupted_xcode_attempt_immediately_stops_gradle",
+      "test_normal_launch_controls.RunnerGuards.test_mkdtemp_failure_has_no_allocation_or_cleanup_target",
+      "test_normal_launch_controls.RunnerGuards.test_oversized_watch_file_is_rejected",
+      "test_normal_launch_controls.RunnerGuards.test_owned_name_failure_retains_preowner_cleanup_identity",
+      "test_normal_launch_controls.RunnerGuards.test_owner_constructor_failure_retains_preworker_cleanup_identity",
+      "test_normal_launch_controls.RunnerGuards.test_preexisting_original_output_is_preserved_not_deleted",
+      "test_normal_launch_controls.RunnerGuards.test_replaced_allocation_inode_refuses_removal",
+      "test_normal_launch_controls.RunnerGuards.test_secondary_path_attestation_failure_is_not_cleanup_success",
+      "test_normal_launch_controls.RunnerGuards.test_source_drift_invalidates_overall_result",
+      "test_normal_launch_controls.RunnerGuards.test_timed_out_xcode_attempt_immediately_stops_gradle",
+      "test_normal_launch_controls.RunnerGuards.test_unknown_holders_preserve_allocation_and_fail_cleanup",
+      "test_normal_launch_controls.XCTestTests.test_actual_runs_not_aggregate_method_count_establish_eight",
+      "test_normal_launch_controls.XCTestTests.test_additional_test_case_cannot_hide_in_summary",
+      "test_normal_launch_controls.XCTestTests.test_aggregate_skip_even_with_passed_case_nodes_fails",
+      "test_normal_launch_controls.XCTestTests.test_aggregate_without_actual_runs_fails",
+      "test_normal_launch_controls.XCTestTests.test_any_skip_failure_expected_failure_or_unknown_fails",
+      "test_normal_launch_controls.XCTestTests.test_boolean_count_fails",
+      "test_normal_launch_controls.XCTestTests.test_duplicate_run_hierarchy_fails",
+      "test_normal_launch_controls.XCTestTests.test_nested_actual_runs_cannot_inflate_count",
+      "test_normal_launch_controls.XCTestTests.test_repeated_leaf_names_beneath_distinct_repetitions_are_valid",
+      "test_normal_launch_controls.XCTestTests.test_seventh_or_ninth_actual_run_fails",
+      "test_normal_launch_controls.XCTestTests.test_too_short_actual_run_fails_even_with_good_markers",
+      "test_normal_launch_controls.XCTestTests.test_unknown_result_structure_fails_closed",
+      "test_normal_launch_controls.XCTestTests.test_wrong_device_architecture_platform_and_configuration_fail",
+      "test_normal_launch_controls.XCTestTests.test_wrong_selected_method_fails"
+    ]
+  },
+  "control_binding": {
+    "files": 53,
+    "sha256": "c02273fb10444c78bfd47fe3b2e41d4ae983305ca9401ebf079402f3f60217ce",
+    "before_after_identical": true,
+    "all_current_hashes_match": true,
+    "imported_local_controls": 22,
+    "all_imported_local_paths_bound": true,
+    "driver_sha256": "5d7e15e530750b9b3626a482afd138c2560b3fef506a29a3c987653a3a1a15b9"
+  },
+  "application_source": {
+    "entries": 729,
+    "before_after_identical": true,
+    "all_current_hashes_match_at_check": true
+  },
+  "evidence": [
+    {
+      "path": "evidence/normal-ios-controls-02/receipt.json",
+      "sha256": "ca0fdb1ef27644f3215f116b5c5dfbec1b20dae25cb3b2efe8eb8293ef7ca7c6"
+    },
+    {
+      "path": "evidence/normal-ios-controls-02/gradle.log",
+      "sha256": "4051b7d89bc155d4bcaa6595e3369f9f33747f91476f4da14b63a4dc7e1a471f"
+    },
+    {
+      "path": "evidence/normal-ios-controls-02/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    }
+  ],
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-07T12:05:23.090341+00:00",
+    "stop_log": "No Gradle daemons are running.",
+    "completed_at": "2026-09-07T12:05:23.156136+00:00",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "generated_outputs": [],
+    "remaining_outputs": [],
+    "retained_outputs": [],
+    "errors": [],
+    "scratch_absent": true,
+    "wrapper_unchanged": true
+  },
+  "limitations": [
+    "Synthetic parser/control/filesystem tests only: no Swift compilation, no app execution, no actual sample/vmmap or simulator/tool-format proof.",
+    "53-control base unchanged; source03/source04 approvals are historical and cannot authorize current dirty/untracked identity after CI changes.",
+    "Prior factory full-source approval of unchanged normal runner is reviews/normal-source-ios-launch-independent-review-01.json. New NativeReadiness path-control delta independently reviewed by root; no own-author approval claimed here."
+  ],
+  "reviewer_cleanup": "Only this task-specific report created. No build/test/native/simulator/process/worker started by reviewer; no temporary build outputs to delete."
+}

@@ -1,0 +1,802 @@
+{
+  "cycle": "iosr1-apphost-01",
+  "started_at": "2026-09-05T13:56:56.789775+00:00",
+  "status": "FAIL",
+  "execution_kind": "source-aware-unsigned-ios-apphost-diagnostic",
+  "commands": [
+    {
+      "command": [
+        "xcrun",
+        "--sdk",
+        "iphonesimulator",
+        "--show-sdk-version"
+      ],
+      "started_at": "2026-09-05T13:56:56.842894+00:00",
+      "log": "sdk-version.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T13:56:56.859887+00:00"
+    },
+    {
+      "command": [
+        "./gradlew",
+        ":composeApp:linkDebugFrameworkIosSimulatorArm64",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-build-cache",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "--console=plain",
+        "-I",
+        "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/reproducers/iosr1_apphost.init.gradle"
+      ],
+      "started_at": "2026-09-05T13:56:56.867830+00:00",
+      "log": "framework.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T13:58:16.795008+00:00"
+    },
+    {
+      "command": [
+        "./gradlew",
+        "--stop"
+      ],
+      "started_at": "2026-09-05T13:58:16.795896+00:00",
+      "log": "stop-framework-immediate.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T13:58:17.097999+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "create",
+        "Parlor-Audit-parlor-audit-iosr1-apphost-01-9p7mxa6a",
+        "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+        "com.apple.CoreSimulator.SimRuntime.iOS-26-5"
+      ],
+      "started_at": "2026-09-05T13:58:17.108292+00:00",
+      "log": "create.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T13:58:17.685399+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "boot",
+        "4929DE7C-346D-4143-95B3-D200F9B7ACA3"
+      ],
+      "started_at": "2026-09-05T13:58:17.688178+00:00",
+      "log": "boot.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T13:58:18.287118+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "bootstatus",
+        "4929DE7C-346D-4143-95B3-D200F9B7ACA3",
+        "-b"
+      ],
+      "started_at": "2026-09-05T13:58:18.289064+00:00",
+      "log": "bootstatus.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T13:58:40.531097+00:00"
+    },
+    {
+      "command": [
+        "xcodebuild",
+        "-project",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/copy/iosApp/iosApp.xcodeproj",
+        "-scheme",
+        "iosApp",
+        "-configuration",
+        "Debug",
+        "-sdk",
+        "iphonesimulator",
+        "-destination",
+        "id=4929DE7C-346D-4143-95B3-D200F9B7ACA3",
+        "-derivedDataPath",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/DerivedData",
+        "-resultBundlePath",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/Results.xcresult",
+        "-parallel-testing-enabled",
+        "NO",
+        "-maximum-concurrent-test-simulator-destinations",
+        "1",
+        "-disable-concurrent-destination-testing",
+        "-jobs",
+        "1",
+        "-test-timeouts-enabled",
+        "YES",
+        "-default-test-execution-time-allowance",
+        "90",
+        "-maximum-test-execution-time-allowance",
+        "180",
+        "CODE_SIGNING_ALLOWED=NO",
+        "CODE_SIGNING_REQUIRED=NO",
+        "CODE_SIGN_IDENTITY=",
+        "DEVELOPMENT_TEAM=",
+        "ONLY_ACTIVE_ARCH=YES",
+        "COMPILER_INDEX_STORE_ENABLE=NO",
+        "test"
+      ],
+      "started_at": "2026-09-05T13:58:40.532007+00:00",
+      "log": "xcodebuild.log",
+      "exit_code": 65,
+      "finished_at": "2026-09-05T13:59:11.089510+00:00"
+    },
+    {
+      "command": [
+        "./gradlew",
+        "--stop"
+      ],
+      "started_at": "2026-09-05T13:59:11.090236+00:00",
+      "log": "stop-xcode-immediate.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T13:59:11.695696+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "xcresulttool",
+        "get",
+        "test-results",
+        "summary",
+        "--path",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/Results.xcresult"
+      ],
+      "started_at": "2026-09-05T13:59:11.696382+00:00",
+      "log": "xcresult-summary.json",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T13:59:12.010256+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "xcresulttool",
+        "get",
+        "test-results",
+        "tests",
+        "--path",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/Results.xcresult"
+      ],
+      "started_at": "2026-09-05T13:59:12.012433+00:00",
+      "log": "xcresult-tests.json",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T13:59:12.062783+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "xcresulttool",
+        "export",
+        "attachments",
+        "--path",
+        "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/Results.xcresult",
+        "--output-path",
+        "/Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/evidence/iosr1-apphost-01/attachments"
+      ],
+      "started_at": "2026-09-05T13:59:12.063274+00:00",
+      "log": "attachments.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T13:59:12.092557+00:00"
+    },
+    {
+      "command": [
+        "./gradlew",
+        "--stop"
+      ],
+      "started_at": "2026-09-05T13:59:12.094082+00:00",
+      "log": "stop-final.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T13:59:12.406599+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "list",
+        "devices",
+        "-j"
+      ],
+      "started_at": "2026-09-05T13:59:12.407202+00:00",
+      "log": "owned-device-before-shutdown.json",
+      "retention": "Only exact synthetic owned-name matches retained",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T13:59:12.632310+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "shutdown",
+        "4929DE7C-346D-4143-95B3-D200F9B7ACA3"
+      ],
+      "started_at": "2026-09-05T13:59:12.632786+00:00",
+      "log": "shutdown.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T13:59:16.074820+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "list",
+        "devices",
+        "-j"
+      ],
+      "started_at": "2026-09-05T13:59:16.078304+00:00",
+      "log": "owned-device-after-shutdown.json",
+      "retention": "Only exact synthetic owned-name matches retained",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T13:59:16.201246+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "list",
+        "devices",
+        "-j"
+      ],
+      "started_at": "2026-09-05T13:59:16.201639+00:00",
+      "log": "owned-device-before-delete.json",
+      "retention": "Only exact synthetic owned-name matches retained",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T13:59:16.279144+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "delete",
+        "4929DE7C-346D-4143-95B3-D200F9B7ACA3"
+      ],
+      "started_at": "2026-09-05T13:59:16.279551+00:00",
+      "log": "delete.log",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T13:59:16.576535+00:00"
+    },
+    {
+      "command": [
+        "xcrun",
+        "simctl",
+        "list",
+        "devices",
+        "-j"
+      ],
+      "started_at": "2026-09-05T13:59:16.579955+00:00",
+      "log": "owned-device-after-delete.json",
+      "retention": "Only exact synthetic owned-name matches retained",
+      "exit_code": 0,
+      "finished_at": "2026-09-05T13:59:16.713837+00:00"
+    }
+  ],
+  "runtime_evidence_status": "NOT_RUN",
+  "cleanup_status": "PASS",
+  "scope": "Original production Koin/store/loader rerun in augmented copied wrapper on a fresh owned simulator; no Store/device proof.",
+  "source_before": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "tracked_status": ""
+  },
+  "allocated_temporary_path": "/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a",
+  "owned_temporary_directory": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a",
+  "owned_device_name": "Parlor-Audit-parlor-audit-iosr1-apphost-01-9p7mxa6a",
+  "shared_cache_links": [
+    {
+      "link": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/gradle-home/caches",
+      "target": "/Users/abdelrahman/.gradle/caches"
+    },
+    {
+      "link": "/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/gradle-home/wrapper",
+      "target": "/Users/abdelrahman/.gradle/wrapper"
+    }
+  ],
+  "sdk_name": "iphonesimulator26.5",
+  "framework_exit_code": 0,
+  "gradle_stops": [
+    {
+      "label": "stop-framework-immediate",
+      "exit_code": 0,
+      "at": "2026-09-05T13:58:17.098532+00:00"
+    },
+    {
+      "label": "stop-xcode-immediate",
+      "exit_code": 0,
+      "at": "2026-09-05T13:59:11.696359+00:00"
+    },
+    {
+      "label": "stop-final",
+      "exit_code": 0,
+      "at": "2026-09-05T13:59:12.407192+00:00"
+    }
+  ],
+  "temporary_artifact_retention_reason": "Current-cycle framework/header/compiler outputs required by copied Swift link/runtime; clean after that verification.",
+  "header_sha256": "47bf42c606417baf1e7fddac4138c01874448df0079f815a349b2b707163774e",
+  "simulator_creation_attempted": true,
+  "owned_uuid": "4929DE7C-346D-4143-95B3-D200F9B7ACA3",
+  "xcodebuild_exit_code": 65,
+  "error": {
+    "type": "RuntimeError",
+    "message": "Actual XCTest summary is not exactly one successful, unskipped test"
+  },
+  "finalization_stages": [
+    {
+      "stage": "final-isolated-gradle-stop",
+      "status": "PASS",
+      "at": "2026-09-05T13:59:12.407197+00:00"
+    },
+    {
+      "stage": "shutdown-owned-simulator-and-app",
+      "status": "PASS",
+      "at": "2026-09-05T13:59:16.201634+00:00"
+    },
+    {
+      "stage": "delete-owned-simulator",
+      "status": "PASS",
+      "at": "2026-09-05T13:59:16.714584+00:00"
+    },
+    {
+      "stage": "stop-owned-command-workers",
+      "status": "PASS",
+      "at": "2026-09-05T13:59:17.306613+00:00"
+    },
+    {
+      "stage": "verify-workers-before-file-removal",
+      "status": "PASS",
+      "at": "2026-09-05T13:59:18.068359+00:00"
+    },
+    {
+      "stage": "remove-shared/core/build",
+      "status": "PASS",
+      "at": "2026-09-05T13:59:18.085746+00:00"
+    },
+    {
+      "stage": "remove-shared/networking/build",
+      "status": "PASS",
+      "at": "2026-09-05T13:59:18.091964+00:00"
+    },
+    {
+      "stage": "remove-shared/content/build",
+      "status": "PASS",
+      "at": "2026-09-05T13:59:18.098086+00:00"
+    },
+    {
+      "stage": "remove-shared/storage/build",
+      "status": "PASS",
+      "at": "2026-09-05T13:59:18.122856+00:00"
+    },
+    {
+      "stage": "remove-shared/transport-p2p/build",
+      "status": "PASS",
+      "at": "2026-09-05T13:59:18.128943+00:00"
+    },
+    {
+      "stage": "remove-shared/networking-testing/build",
+      "status": "PASS",
+      "at": "2026-09-05T13:59:18.129246+00:00"
+    },
+    {
+      "stage": "remove-shared/engine/build",
+      "status": "PASS",
+      "at": "2026-09-05T13:59:18.134969+00:00"
+    },
+    {
+      "stage": "remove-shared/design-system/build",
+      "status": "PASS",
+      "at": "2026-09-05T13:59:18.152433+00:00"
+    },
+    {
+      "stage": "remove-shared/engine-testing/build",
+      "status": "PASS",
+      "at": "2026-09-05T13:59:18.152660+00:00"
+    },
+    {
+      "stage": "remove-shared/session/build",
+      "status": "PASS",
+      "at": "2026-09-05T13:59:18.156690+00:00"
+    },
+    {
+      "stage": "remove-game-modes/whodunit/build",
+      "status": "PASS",
+      "at": "2026-09-05T13:59:18.198839+00:00"
+    },
+    {
+      "stage": "remove-game-modes/mafia/build",
+      "status": "PASS",
+      "at": "2026-09-05T13:59:18.218312+00:00"
+    },
+    {
+      "stage": "remove-build",
+      "status": "PASS",
+      "at": "2026-09-05T13:59:18.218633+00:00"
+    },
+    {
+      "stage": "remove-composeApp/build",
+      "status": "PASS",
+      "at": "2026-09-05T13:59:18.417558+00:00"
+    },
+    {
+      "stage": "remove-build-logic/build",
+      "status": "PASS",
+      "at": "2026-09-05T13:59:18.417586+00:00"
+    },
+    {
+      "stage": "remove-build-logic/convention/build",
+      "status": "PASS",
+      "at": "2026-09-05T13:59:18.421231+00:00"
+    },
+    {
+      "stage": "remove-iosApp/build",
+      "status": "PASS",
+      "at": "2026-09-05T13:59:18.421249+00:00"
+    },
+    {
+      "stage": "remove-owned-copy-derived-data-home-temp",
+      "status": "PASS",
+      "at": "2026-09-05T13:59:18.569562+00:00"
+    },
+    {
+      "stage": "read-final-source-identity",
+      "status": "PASS",
+      "at": "2026-09-05T13:59:18.610939+00:00"
+    }
+  ],
+  "shutdown_exit_code": 0,
+  "delete_exit_code": 0,
+  "owned_device_absent": true,
+  "ownership_observed": [
+    {
+      "pid": 56945,
+      "ppid": 56938,
+      "pgid": 56945,
+      "start": "Sat Sep 5 16:56:56 2026",
+      "command": "(xcrun)",
+      "role": "command",
+      "proof": "Popen PID observed immediately after owned launch"
+    },
+    {
+      "pid": 56947,
+      "ppid": 56938,
+      "pgid": 56947,
+      "start": "Sat Sep 5 16:56:56 2026",
+      "command": "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/bin/java -Xmx64m -Xms64m -Dorg.gradle.jvmargs=-Xmx6g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Djava.io.tmpdir=/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/tmp -Dorg.gradle.parallel=false -Dorg.gradle.workers.max=1 -Dorg.gradle.configuration-cache=false -Dorg.gradle.caching=false -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process -Dorg.gradle.project.parlor.android.signing.storeFile= -Dorg.gradle.project.parlor.android.signing.storePassword= -Dorg.gradle.project.parlor.android.signing.keyAlias= -Dorg.gradle.project.parlor.android.signing.keyPassword= -Dorg.gradle.appname=gradlew -classpath /Users/abdelrahman/Projects/parlor/gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain :composeApp:linkDebugFrameworkIosSimulatorArm64 --no-daemon --no-parallel --max-workers=1 --no-build-cache --no-configuration-cache --dependency-verification=strict --console=plain -I /Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/reproducers/iosr1_apphost.init.gradle",
+      "role": "command",
+      "proof": "Identity recovered from still-live owned Popen child"
+    },
+    {
+      "pid": 56978,
+      "ppid": 56947,
+      "pgid": 56947,
+      "start": "Sat Sep 5 16:56:57 2026",
+      "command": "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/bin/java --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-opens=java.base/java.nio.charset=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.xml/javax.xml.namespace=ALL-UNNAMED -XX:+UseParallelGC -Xmx6g -Dfile.encoding=UTF-8 -Djava.io.tmpdir=/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/tmp -Duser.country=EG -Duser.language=en -Duser.variant -cp /private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/gradle-home/wrapper/dists/gradle-8.13-bin/5xuhj0ry160q40clulazy9h7d/gradle-8.13/lib/gradle-daemon-main-8.13.jar -javaagent:/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/gradle-home/wrapper/dists/gradle-8.13-bin/5xuhj0ry160q40clulazy9h7d/gradle-8.13/lib/agents/gradle-instrumentation-agent-8.13.jar org.gradle.launcher.daemon.bootstrap.GradleDaemon 8.13",
+      "role": "command",
+      "proof": "Observed child/group of identity-checked task process"
+    },
+    {
+      "pid": 57368,
+      "ppid": 56978,
+      "pgid": 56978,
+      "start": "Sat Sep 5 16:57:51 2026",
+      "command": "/Users/abdelrahman/.konan/dependencies/llvm-21-aarch64-macos-essentials-97/bin/clang -B/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin -fno-stack-protector -target arm64-apple-ios15.0-simulator -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk -fPIC /private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/tmp/protocols10611303865436897681.m -O2 -emit-llvm -c -o /private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/tmp/protocols2697760577457949682.bc",
+      "role": "command",
+      "proof": "Observed child/group of identity-checked task process"
+    },
+    {
+      "pid": 57371,
+      "ppid": 56978,
+      "pgid": 56978,
+      "start": "Sat Sep 5 16:57:51 2026",
+      "command": "/Users/abdelrahman/.konan/dependencies/llvm-21-aarch64-macos-essentials-97/bin/clang -B/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin -fno-stack-protector -target arm64-apple-ios15.0-simulator -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk -fPIC -fobjc-arc -O2 -fexceptions /private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/tmp/cstubs1761823374695360800.m -emit-llvm -c -o /private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/tmp/cstubs5030240453898421044.bc",
+      "role": "command",
+      "proof": "Observed child/group of identity-checked task process"
+    },
+    {
+      "pid": 57392,
+      "ppid": 56978,
+      "pgid": 56978,
+      "start": "Sat Sep 5 16:57:54 2026",
+      "command": "/Users/abdelrahman/.konan/dependencies/llvm-21-aarch64-macos-essentials-97/bin/clang++ -cc1 -emit-obj -disable-llvm-passes -x ir -triple arm64-apple-ios15.0-simulator -O0 -mllvm -fast-isel=false -mllvm -global-isel=false /private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/tmp/konan_temp14390519491672340459/out.bc -o /private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/tmp/konan_temp14390519491672340459/ComposeApp.framework.o",
+      "role": "command",
+      "proof": "Observed child/group of identity-checked task process"
+    },
+    {
+      "pid": 57480,
+      "ppid": 56978,
+      "pgid": 56978,
+      "start": "Sat Sep 5 16:58:14 2026",
+      "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld -demangle -dynamic -arch arm64 -platform_version ios-simulator 15.0.0 26.4 -syslibroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk -o /Users/abdelrahman/Projects/parlor/composeApp/build/bin/iosSimulatorArm64/debugFramework/ComposeApp.framework/ComposeApp /private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/tmp/konan_temp14390519491672340459/ComposeApp.framework.o -dylib -lSystem -lc++ -lobjc -framework Foundation -framework UIKit /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/21.0.0/lib/darwin//libclang_rt.iossim.a -filelist /private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/tmp/konan_temp14390519491672340459/libraries -ldl -lresolv -framework CoreFoundation -ldl -lz -lbz2 -lcompression -late -framework CoreFoundation -framework Security -framework Foundation -framework CoreGraphics -framework Metal -framework QuartzCore -framework UIKit -framework UIKit -framework Metal -framework CoreGraphics -framework CoreText -framework UIKit -lobjc -L/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphonesimulator/ -framework Network -framework Network -dead_strip -install_name @rpath/ComposeApp.framework/ComposeApp -rpath @executable_path/Frameworks -rpath @loader_path/Frameworks",
+      "role": "command",
+      "proof": "Observed child/group of identity-checked task process"
+    },
+    {
+      "pid": 57482,
+      "ppid": 56978,
+      "pgid": 56978,
+      "start": "Sat Sep 5 16:58:15 2026",
+      "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/dsymutil /Users/abdelrahman/Projects/parlor/composeApp/build/bin/iosSimulatorArm64/debugFramework/ComposeApp.framework/ComposeApp -o /Users/abdelrahman/Projects/parlor/composeApp/build/bin/iosSimulatorArm64/debugFramework/ComposeApp.framework.dSYM",
+      "role": "command",
+      "proof": "Observed child/group of identity-checked task process"
+    },
+    {
+      "pid": 57489,
+      "ppid": 56938,
+      "pgid": 57489,
+      "start": "Sat Sep 5 16:58:16 2026",
+      "command": "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/bin/java -Xmx64m -Xms64m -Dorg.gradle.jvmargs=-Xmx6g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Djava.io.tmpdir=/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/tmp -Dorg.gradle.parallel=false -Dorg.gradle.workers.max=1 -Dorg.gradle.configuration-cache=false -Dorg.gradle.caching=false -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process -Dorg.gradle.project.parlor.android.signing.storeFile= -Dorg.gradle.project.parlor.android.signing.storePassword= -Dorg.gradle.project.parlor.android.signing.keyAlias= -Dorg.gradle.project.parlor.android.signing.keyPassword= -Dorg.gradle.appname=gradlew -classpath /Users/abdelrahman/Projects/parlor/gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain --stop",
+      "role": "command",
+      "proof": "Identity recovered from still-live owned Popen child"
+    },
+    {
+      "pid": 57511,
+      "ppid": 56938,
+      "pgid": 57511,
+      "start": "Sat Sep 5 16:58:17 2026",
+      "command": "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl create Parlor-Audit-parlor-audit-iosr1-apphost-01-9p7mxa6a com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro com.apple.CoreSimulator.SimRuntime.iOS-26-5",
+      "role": "command",
+      "proof": "Identity recovered from still-live owned Popen child"
+    },
+    {
+      "pid": 57530,
+      "ppid": 56938,
+      "pgid": 57530,
+      "start": "Sat Sep 5 16:58:17 2026",
+      "command": "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl boot 4929DE7C-346D-4143-95B3-D200F9B7ACA3",
+      "role": "command",
+      "proof": "Identity recovered from still-live owned Popen child"
+    },
+    {
+      "pid": 57546,
+      "ppid": 56938,
+      "pgid": 57546,
+      "start": "Sat Sep 5 16:58:18 2026",
+      "command": "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl bootstatus 4929DE7C-346D-4143-95B3-D200F9B7ACA3 -b",
+      "role": "command",
+      "proof": "Identity recovered from still-live owned Popen child"
+    },
+    {
+      "pid": 57941,
+      "ppid": 56938,
+      "pgid": 57941,
+      "start": "Sat Sep 5 16:58:40 2026",
+      "command": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild -project /private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/copy/iosApp/iosApp.xcodeproj -scheme iosApp -configuration Debug -sdk iphonesimulator -destination id=4929DE7C-346D-4143-95B3-D200F9B7ACA3 -derivedDataPath /private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/DerivedData -resultBundlePath /private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/Results.xcresult -parallel-testing-enabled NO -maximum-concurrent-test-simulator-destinations 1 -disable-concurrent-destination-testing -jobs 1 -test-timeouts-enabled YES -default-test-execution-time-allowance 90 -maximum-test-execution-time-allowance 180 CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY= DEVELOPMENT_TEAM= ONLY_ACTIVE_ARCH=YES COMPILER_INDEX_STORE_ENABLE=NO test",
+      "role": "command",
+      "proof": "Identity recovered from still-live owned Popen child"
+    },
+    {
+      "pid": 58007,
+      "ppid": 57941,
+      "pgid": 58007,
+      "start": "Sat Sep 5 16:58:44 2026",
+      "command": "/Applications/Xcode.app/Contents/SharedFrameworks/SwiftBuild.framework/Versions/A/PlugIns/SWBBuildService.bundle/Contents/MacOS/SWBBuildService",
+      "role": "command",
+      "proof": "Observed child/group of identity-checked task process"
+    },
+    {
+      "pid": 58019,
+      "ppid": 58007,
+      "pgid": 58019,
+      "start": "Sat Sep 5 16:58:45 2026",
+      "command": "/Applications/Xcode.app/Contents/Developer/usr/bin/actool --print-asset-tag-combinations --output-format xml1 /var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/copy/iosApp/iosApp/Assets.xcassets",
+      "role": "command",
+      "proof": "Observed child/group of identity-checked task process"
+    },
+    {
+      "pid": 58020,
+      "ppid": 58007,
+      "pgid": 58020,
+      "start": "Sat Sep 5 16:58:45 2026",
+      "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-driver --driver-mode=swiftc -Xfrontend -new-driver-path -Xfrontend /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-driver --version",
+      "role": "command",
+      "proof": "Observed child/group of identity-checked task process"
+    },
+    {
+      "pid": 58021,
+      "ppid": 58019,
+      "pgid": 58021,
+      "start": "Sat Sep 5 16:58:45 2026",
+      "command": "/Applications/Xcode.app/Contents/Developer/usr/bin/ibtoold --sending-client-environment",
+      "role": "command",
+      "proof": "Observed child/group of identity-checked task process"
+    },
+    {
+      "pid": 58059,
+      "ppid": 58007,
+      "pgid": 58059,
+      "start": "Sat Sep 5 16:58:47 2026",
+      "command": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang-stat-cache /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk -o /var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/DerivedData/SDKStatCaches.noindex/iphonesimulator26.5-23F73-6cfe768891a92b912361537c460fe42b.sdkstatcache",
+      "role": "command",
+      "proof": "Observed child/group of identity-checked task process"
+    },
+    {
+      "pid": 58069,
+      "ppid": 58007,
+      "pgid": 58069,
+      "start": "Sat Sep 5 16:58:48 2026",
+      "command": "/bin/sh /var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/DerivedData/Build/Intermediates.noindex/iosApp.build/Debug-iphonesimulator/iosApp.build/Script-F7AC9D762B0E10F7008B8A48.sh",
+      "role": "command",
+      "proof": "Observed child/group of identity-checked task process"
+    },
+    {
+      "pid": 58115,
+      "ppid": 58069,
+      "pgid": 58069,
+      "start": "Sat Sep 5 16:58:51 2026",
+      "command": "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/bin/java -Xmx64m -Xms64m -Dorg.gradle.jvmargs=-Xmx6g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Djava.io.tmpdir=/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/tmp -Dorg.gradle.parallel=false -Dorg.gradle.workers.max=1 -Dorg.gradle.configuration-cache=false -Dorg.gradle.caching=false -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process -Dorg.gradle.project.parlor.android.signing.storeFile= -Dorg.gradle.project.parlor.android.signing.storePassword= -Dorg.gradle.project.parlor.android.signing.keyAlias= -Dorg.gradle.project.parlor.android.signing.keyPassword= -Dorg.gradle.appname=gradlew -classpath /Users/abdelrahman/Projects/parlor/gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain --no-daemon :composeApp:embedAndSignAppleFrameworkForXcode --dependency-verification=strict --console=plain --no-configuration-cache --no-parallel --max-workers=1 --no-build-cache -I /Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/reproducers/iosr1_apphost.init.gradle",
+      "role": "command",
+      "proof": "Observed child/group of identity-checked task process"
+    },
+    {
+      "pid": 58142,
+      "ppid": 58115,
+      "pgid": 58069,
+      "start": "Sat Sep 5 16:58:53 2026",
+      "command": "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/bin/java --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-opens=java.base/java.nio.charset=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.xml/javax.xml.namespace=ALL-UNNAMED -XX:+UseParallelGC -Xmx6g -Dfile.encoding=UTF-8 -Djava.io.tmpdir=/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/tmp -Duser.country=EG -Duser.language=en -Duser.variant -cp /private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/gradle-home/wrapper/dists/gradle-8.13-bin/5xuhj0ry160q40clulazy9h7d/gradle-8.13/lib/gradle-daemon-main-8.13.jar -javaagent:/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/gradle-home/wrapper/dists/gradle-8.13-bin/5xuhj0ry160q40clulazy9h7d/gradle-8.13/lib/agents/gradle-instrumentation-agent-8.13.jar org.gradle.launcher.daemon.bootstrap.GradleDaemon 8.13",
+      "role": "command",
+      "proof": "Observed child/group of identity-checked task process"
+    },
+    {
+      "pid": 58195,
+      "ppid": 58142,
+      "pgid": 58142,
+      "start": "Sat Sep 5 16:59:00 2026",
+      "command": "/opt/homebrew/Cellar/openjdk@17/17.0.17/libexec/openjdk.jdk/Contents/Home/bin/java -Xmx32m -Xms32m -cp . JavaProbe",
+      "role": "command",
+      "proof": "Observed child/group of identity-checked task process"
+    },
+    {
+      "pid": 58236,
+      "ppid": 58142,
+      "pgid": 58142,
+      "start": "Sat Sep 5 16:59:09 2026",
+      "command": "cp -R /Users/abdelrahman/Projects/parlor/composeApp/build/bin/iosSimulatorArm64/debugFramework/ComposeApp.framework.dSYM /Users/abdelrahman/Projects/parlor/composeApp/build/xcode-frameworks/Debug/iphonesimulator26.5/ComposeApp.framework.dSYM",
+      "role": "command",
+      "proof": "Observed child/group of identity-checked task process"
+    },
+    {
+      "pid": 58261,
+      "ppid": 58069,
+      "pgid": 58069,
+      "start": "Sat Sep 5 16:59:10 2026",
+      "command": "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/bin/java -Xmx64m -Xms64m -Dorg.gradle.jvmargs=-Xmx6g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Djava.io.tmpdir=/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/tmp -Dorg.gradle.parallel=false -Dorg.gradle.workers.max=1 -Dorg.gradle.configuration-cache=false -Dorg.gradle.caching=false -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process -Dorg.gradle.project.parlor.android.signing.storeFile= -Dorg.gradle.project.parlor.android.signing.storePassword= -Dorg.gradle.project.parlor.android.signing.keyAlias= -Dorg.gradle.project.parlor.android.signing.keyPassword= -Dorg.gradle.appname=gradlew -classpath /Users/abdelrahman/Projects/parlor/gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain --stop",
+      "role": "command",
+      "proof": "Observed child/group of identity-checked task process"
+    },
+    {
+      "pid": 58284,
+      "ppid": 56938,
+      "pgid": 58284,
+      "start": "Sat Sep 5 16:59:11 2026",
+      "command": "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/bin/java -Xmx64m -Xms64m -Dorg.gradle.jvmargs=-Xmx6g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Djava.io.tmpdir=/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/tmp -Dorg.gradle.parallel=false -Dorg.gradle.workers.max=1 -Dorg.gradle.configuration-cache=false -Dorg.gradle.caching=false -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process -Dorg.gradle.project.parlor.android.signing.storeFile= -Dorg.gradle.project.parlor.android.signing.storePassword= -Dorg.gradle.project.parlor.android.signing.keyAlias= -Dorg.gradle.project.parlor.android.signing.keyPassword= -Dorg.gradle.appname=gradlew -classpath /Users/abdelrahman/Projects/parlor/gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain --stop",
+      "role": "command",
+      "proof": "Identity recovered from still-live owned Popen child"
+    },
+    {
+      "pid": 58323,
+      "ppid": 56938,
+      "pgid": 58323,
+      "start": "Sat Sep 5 16:59:11 2026",
+      "command": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcresulttool get test-results summary --path /private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/Results.xcresult",
+      "role": "command",
+      "proof": "Identity recovered from still-live owned Popen child"
+    },
+    {
+      "pid": 58326,
+      "ppid": 56938,
+      "pgid": 58326,
+      "start": "Sat Sep 5 16:59:12 2026",
+      "command": "(xcrun)",
+      "role": "command",
+      "proof": "Popen PID observed immediately after owned launch"
+    },
+    {
+      "pid": 58328,
+      "ppid": 56938,
+      "pgid": 58328,
+      "start": "Sat Sep 5 16:59:12 2026",
+      "command": "/Applications/Xcode.app/Contents/Developer/usr/bin/xcresulttool export attachments --path /private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/Results.xcresult --output-path /Users/abdelrahman/Projects/parlor/audit-runs/2026-09-05-source-audit/evidence/iosr1-apphost-01/attachments",
+      "role": "command",
+      "proof": "Popen PID observed immediately after owned launch"
+    },
+    {
+      "pid": 58330,
+      "ppid": 56938,
+      "pgid": 58330,
+      "start": "Sat Sep 5 16:59:12 2026",
+      "command": "/opt/homebrew/Cellar/openjdk@21/21.0.11/libexec/openjdk.jdk/Contents/Home/bin/java -Xmx64m -Xms64m -Dorg.gradle.jvmargs=-Xmx6g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Djava.io.tmpdir=/private/var/folders/6m/vxwlbjsn7vs6h80_98w6x7p40000gn/T/parlor-audit-iosr1-apphost-01-9p7mxa6a/tmp -Dorg.gradle.parallel=false -Dorg.gradle.workers.max=1 -Dorg.gradle.configuration-cache=false -Dorg.gradle.caching=false -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process -Dorg.gradle.project.parlor.android.signing.storeFile= -Dorg.gradle.project.parlor.android.signing.storePassword= -Dorg.gradle.project.parlor.android.signing.keyAlias= -Dorg.gradle.project.parlor.android.signing.keyPassword= -Dorg.gradle.appname=gradlew -classpath /Users/abdelrahman/Projects/parlor/gradle/wrapper/gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain --stop",
+      "role": "command",
+      "proof": "Identity recovered from still-live owned Popen child"
+    },
+    {
+      "pid": 58354,
+      "ppid": 56938,
+      "pgid": 58354,
+      "start": "Sat Sep 5 16:59:12 2026",
+      "command": "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl list devices -j",
+      "role": "command",
+      "proof": "Popen PID observed immediately after owned launch"
+    },
+    {
+      "pid": 58358,
+      "ppid": 56938,
+      "pgid": 58358,
+      "start": "Sat Sep 5 16:59:12 2026",
+      "command": "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl shutdown 4929DE7C-346D-4143-95B3-D200F9B7ACA3",
+      "role": "command",
+      "proof": "Identity recovered from still-live owned Popen child"
+    },
+    {
+      "pid": 58373,
+      "ppid": 56938,
+      "pgid": 58373,
+      "start": "Sat Sep 5 16:59:16 2026",
+      "command": "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl list devices -j",
+      "role": "command",
+      "proof": "Popen PID observed immediately after owned launch"
+    },
+    {
+      "pid": 58377,
+      "ppid": 56938,
+      "pgid": 58377,
+      "start": "Sat Sep 5 16:59:16 2026",
+      "command": "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl list devices -j",
+      "role": "command",
+      "proof": "Popen PID observed immediately after owned launch"
+    },
+    {
+      "pid": 58381,
+      "ppid": 56938,
+      "pgid": 58381,
+      "start": "Sat Sep 5 16:59:16 2026",
+      "command": "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl delete 4929DE7C-346D-4143-95B3-D200F9B7ACA3",
+      "role": "command",
+      "proof": "Identity recovered from still-live owned Popen child"
+    },
+    {
+      "pid": 58386,
+      "ppid": 56938,
+      "pgid": 58386,
+      "start": "Sat Sep 5 16:59:16 2026",
+      "command": "/Library/Developer/PrivateFrameworks/CoreSimulator.framework/Versions/A/Resources/bin/simctl list devices -j",
+      "role": "command",
+      "proof": "Popen PID observed immediately after owned launch"
+    }
+  ],
+  "owned_processes_remaining": [],
+  "unknown_holders": [],
+  "removed_outputs": [
+    "shared/core/build",
+    "shared/networking/build",
+    "shared/content/build",
+    "shared/storage/build",
+    "shared/transport-p2p/build",
+    "shared/networking-testing/build",
+    "shared/engine/build",
+    "shared/design-system/build",
+    "shared/engine-testing/build",
+    "shared/session/build",
+    "game-modes/whodunit/build",
+    "game-modes/mafia/build",
+    "build",
+    "composeApp/build",
+    "build-logic/convention/build"
+  ],
+  "remaining_outputs": [],
+  "temporary_directory_removed": true,
+  "cleanup_completed_at": "2026-09-05T13:59:18.569651+00:00",
+  "source_after": {
+    "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+    "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",
+    "branch": "main",
+    "tracked_status": ""
+  },
+  "cleanup_errors": [],
+  "deferred_signals": [],
+  "cleanup_method": "Immediate isolated Gradle stops; owned simulator shutdown/delete; PID/start attestation; exact generated outputs and temporary copy/DerivedData removal; cache symlinks unlinked only.",
+  "source_unchanged": true,
+  "finished_at": "2026-09-05T13:59:18.610967+00:00"
+}

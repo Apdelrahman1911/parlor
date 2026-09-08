@@ -1,0 +1,1259 @@
+--- executed-v7/run_dsc01_apphost_cycle.py
++++ v8/run_dsc01_apphost_cycle.py
+@@ -37,6 +37,7 @@
+ from copied_sources import (create_source_copy, instrument_kotlin, inspect_copied_manifest,
+                             inspect_copied_inputs_after_build, MODIFIED_KOTLIN, ADDITIONS)
+ from probe_validation import verify_probe
++from v8_receipts import verify_v8_receipts
+ 
+ FIXTURE = HERE
+ APP_ID = 'com.parlor.app.debug'
+@@ -58,6 +59,8 @@
+             ROOT / 'audit-runs/2026-09-05-source-audit/run_android_managed_cycle.py'] + [
+         HERE / name for name in ('secondary_fifo.py', 'test_secondary_fifo.py', 'test_harness_contract.py',
+         'DSC01Probe.swift.in', 'IOSAppLaunchUITests.swift.in', 'DSC01CatalogSelection.swift.in', 'test_catalog_contract.py',
++        'DSC01PublicDiagnostics.swift.in', 'DSC01MafiaStartSelection.swift.in', 'DSC01OSPrerequisite.swift.in',
++        'v8_receipts.py', 'test_v8_contract.py',
+         'copied-kotlin-phase.sh.in', 'source-bindings.json', 'copied_sources.py', 'bind_source.py',
+         'DSC01ComposeObservation.kt.in', 'DSC01InvocationBridge.kt.in', 'DSC01UIKitObservation.kt.in',
+         'DSC01NativeObservation.swift.in', 'probe_validation.py',
+@@ -68,7 +71,15 @@
+         'secondary_fifo.py', 'test_secondary_fifo.py', 'copied_sources.py', 'bind_source.py',
+         'DSC01ComposeObservation.kt.in', 'DSC01InvocationBridge.kt.in', 'DSC01UIKitObservation.kt.in',
+         'DSC01NativeObservation.swift.in', 'probe_validation.py', 'copied-kotlin-phase.sh.in',
+-        'run_dsc01_apphost_cycle.py', 'IOSAppLaunchUITests.swift.in')]
++        'run_dsc01_apphost_cycle.py', 'IOSAppLaunchUITests.swift.in')] + [
++        # V8 source contracts independently compare all these executed V7 bytes.
++        # Every consumed reference is bound by full path, including old tests.
++        HERE.parent / 'dsc01_apphost_v7' / name for name in (
++        'secondary_fifo.py', 'test_secondary_fifo.py', 'copied_sources.py', 'bind_source.py',
++        'DSC01ComposeObservation.kt.in', 'DSC01InvocationBridge.kt.in', 'DSC01UIKitObservation.kt.in',
++        'DSC01NativeObservation.swift.in', 'probe_validation.py', 'copied-kotlin-phase.sh.in',
++        'run_dsc01_apphost_cycle.py', 'IOSAppLaunchUITests.swift.in', 'DSC01CatalogSelection.swift.in',
++        'DSC01Probe.swift.in', 'test_copy_observation_contract.py', 'test_harness_contract.py', 'test_catalog_contract.py')]
+ 
+ 
+ def control_manifest():
+@@ -552,7 +563,10 @@
+             entry.write_text(original.replace(needle, needle + '\n    init() { DSC01Probe.shared.prepare() }'))
+             ui_test = temp / 'copy/iosApp/iosAppUITests/IOSAppLaunchUITests.swift'
+             ui_test.write_text((FIXTURE / 'IOSAppLaunchUITests.swift.in').read_text() + '\n' +
+-                               (FIXTURE / 'DSC01CatalogSelection.swift.in').read_text())
++                               (FIXTURE / 'DSC01PublicDiagnostics.swift.in').read_text() + '\n' +
++                               (FIXTURE / 'DSC01CatalogSelection.swift.in').read_text() + '\n' +
++                               (FIXTURE / 'DSC01MafiaStartSelection.swift.in').read_text() + '\n' +
++                               (FIXTURE / 'DSC01OSPrerequisite.swift.in').read_text())
+             project = temp / 'copy/iosApp/iosApp.xcodeproj/project.pbxproj'
+             pbx = project.read_text()
+             old_search = '$(SRCROOT)/../composeApp/build/xcode-frameworks/$(CONFIGURATION)/$(SDK_NAME)'
+@@ -651,6 +665,7 @@
+                 json.loads((dest / 'xcresult-summary.json').read_text()),
+                 json.loads((dest / 'xcresult-tests.json').read_text()), uuid)
+             receipt['catalog_entry_proof'] = verify_catalog_receipts((dest / 'xcodebuild.log').read_text())
++            receipt['v8_public_interaction_proof'] = verify_v8_receipts((dest / 'xcodebuild.log').read_text())
+             embedded_stop = dest / 'embedded-gradle-stop.txt'
+             if not embedded_stop.is_file() or embedded_stop.read_text() != 'build_exit=0\nstop_exit=0\n':
+                 raise RuntimeError('No successful immediate stop receipt from copied nested Gradle phase')
+--- executed-v7/IOSAppLaunchUITests.swift.in
++++ v8/IOSAppLaunchUITests.swift.in
+@@ -7,6 +7,7 @@
+     @MainActor
+     func testDSC01ActualSettingsLocalSessionsAndOSInvestigation() throws {
+         try verifyCatalogGeometryContract()
++        try verifyMafiaStartGeometryContract()
+         let app = XCUIApplication()
+         let token = UUID().uuidString
+         let simulator = try XCTUnwrap(ProcessInfo.processInfo.environment["SIMULATOR_UDID"])
+@@ -30,7 +31,7 @@
+             try openSettings(app, language: currentLanguage)
+             try tap(app, label: explicit == "ar" ? "العربية" : "English")
+             try assertSettingsStrings(app, language: explicit)
+-            let installed = try observeEventually(app) { snapshot in
++            let installed = try observeEventually(app, predicateName: .settingsExplicitOwner) { snapshot in
+                 let value = try self.dictionary(snapshot, "now")
+                 return value["setting"] as? String == explicit && value["ownerInstalled"] as? String == explicit
+             }
+@@ -51,7 +52,7 @@
+             try openSettings(app, language: explicit)
+             try tap(app, label: explicit == "ar" ? "لغة النظام" : "System language")
+             try assertSettingsStrings(app, language: fallback)
+-            let system = try observeEventually(app) { snapshot in
++            let system = try observeEventually(app, predicateName: .settingsSystemRelease) { snapshot in
+                 let value = try self.dictionary(snapshot, "now")
+                 return value["setting"] as? String == "system" && value["ownerPresent"] as? Bool == false
+             }
+@@ -67,7 +68,7 @@
+         try openSettings(app, language: "ar")
+         try tap(app, label: "English")
+         try assertSettingsStrings(app, language: "en")
+-        let english = try observeEventually(app) { snapshot in
++        let english = try observeEventually(app, predicateName: .previousEnglishOwner) { snapshot in
+             try self.dictionary(snapshot, "now")["ownerInstalled"] as? String == "en"
+         }
+         try assertOwned(english, explicit: "en", previous: ["ar-EG", "en"])
+@@ -83,7 +84,7 @@
+         try openSettings(app, language: "en")
+         try tap(app, label: "System language")
+         try assertSettingsStrings(app, language: "ar")
+-        let restored = try observeEventually(app) { snapshot in
++        let restored = try observeEventually(app, predicateName: .previousSystemRestore) { snapshot in
+             let value = try self.dictionary(snapshot, "now")
+             return value["setting"] as? String == "system" && value["ownerPresent"] as? Bool == false
+         }
+@@ -97,6 +98,7 @@
+         // SettingsStore, while all game entry/setup interactions remain real UI.
+         try verifyActualLocalGame(app, game: "whodunit")
+         try verifyActualLocalGame(app, game: "mafia")
++        try prepareActualOSMultilingualPrerequisite(app, expectedSimulator: simulator)
+         try investigateActualOSPerAppLanguage(app)
+     }
+ 
+@@ -113,7 +115,7 @@
+         let before = try observe(app)
+         let ordinal = try XCTUnwrap(try dictionary(before, "composition")["commandOrdinal"] as? Int)
+         app.buttons["parlor-dsc01-synthetic-" + language].tap()
+-        return try observeEventually(app) { snapshot in
++        return try observeEventually(app, predicateName: .syntheticStoreApplied) { snapshot in
+             let composition = try self.dictionary(snapshot, "composition")
+             return composition["commandOrdinal"] as? Int == ordinal + 1 &&
+                    composition["commandLanguage"] as? String == language &&
+@@ -152,10 +154,10 @@
+         try tapPublicSetupPrefix(app, prefix: game == "whodunit"
+             ? "Confirm player names and continue to the case intro." : "Continue to settings")
+         if game == "mafia" {
+-            try tapPublicSetupPrefix(app, prefix: "Start the Mafia game with these settings")
++            try startActualMafiaOnce(app)
+         }
+         let phase = game == "whodunit" ? "public-intro" : "role-assignment"
+-        _ = try observeEventually(app) { snapshot in
++        _ = try observeEventually(app, predicateName: .localInitialPublicPhase) { snapshot in
+             let value = try self.dictionary(snapshot, "composition")
+             return value["surface"] as? String == game + "-local" &&
+                    value["publicPhase"] as? String == phase &&
+@@ -177,7 +179,7 @@
+         for language in ["ar", "en", "system"] {
+             _ = try syntheticLanguage(app, language: language)
+             let expectedLanguage = language == "system" ? systemLanguage : language
+-            let ready = try observeEventually(app) { snapshot in
++            let ready = try observeEventually(app, predicateName: .localLanguageDirection) { snapshot in
+                 let resolved = try self.string(try self.dictionary(snapshot, "now"), "preferredLanguage")
+                 let composition = try self.dictionary(snapshot, "composition")
+                 return resolved == expectedLanguage &&
+@@ -215,7 +217,7 @@
+         XCTAssertTrue(app.wait(for: .runningBackground, timeout: 15))
+         app.activate()
+         XCTAssertTrue(app.wait(for: .runningForeground, timeout: 15))
+-        let resumed = try observeEventually(app) { snapshot in
++        let resumed = try observeEventually(app, predicateName: .foregroundCounters) { snapshot in
+             let value = try self.dictionary(snapshot, "composition")
+             return (value["backgroundSinceCapture"] as? Int ?? -1) > backgrounds &&
+                    (value["foregroundSinceCapture"] as? Int ?? -1) > foregrounds
+@@ -432,7 +434,7 @@
+         XCTAssertFalse(settings.alerts.firstMatch.exists, "Do not dismiss unknown OS alerts")
+         app.launchEnvironment["PARLOR_DSC01_FIXTURE"] = "continue"
+         app.activate(); XCTAssertTrue(app.wait(for: .runningForeground, timeout: 30))
+-        let afterOS = try observeEventually(app) { snapshot in
++        let afterOS = try observeEventually(app, predicateName: .afterOSSystemEnglish) { snapshot in
+             let preferences = try self.dictionary(snapshot, "now")
+             return preferences["setting"] as? String == "system" &&
+                    preferences["ownerPresent"] as? Bool == false &&
+@@ -444,7 +446,7 @@
+         try openSettings(app, language: "en")
+         try tap(app, label: "العربية")
+         try assertSettingsStrings(app, language: "ar")
+-        let explicit = try observeEventually(app) { snapshot in
++        let explicit = try observeEventually(app, predicateName: .afterOSExplicitArabic) { snapshot in
+             try self.dictionary(snapshot, "now")["ownerInstalled"] as? String == "ar"
+         }
+         try assertOwned(explicit, explicit: "ar", previous: actualOSPreferences)
+@@ -520,7 +522,7 @@
+         // The same original ParlorBottomTabBar merges Games description/text.
+         try tap(app, label: language == "ar" ? "افتح مكتبة الألعاب., الألعاب" : "Open the game library., GAMES")
+         XCTAssertTrue(app.staticTexts["parlor-home-brand"].waitForExistence(timeout: 15))
+-        _ = try observeEventually(app) { snapshot in
++        _ = try observeEventually(app, predicateName: .gamesSettingsUnmounted) { snapshot in
+             try self.dictionary(snapshot, "composition")["settingsMounted"] as? Bool == false
+         }
+     }
+@@ -531,7 +533,7 @@
+         XCTAssertTrue(query.firstMatch.waitForExistence(timeout: 15), "Actual localized Compose language section missing")
+         XCTAssertTrue(app.descendants(matching: .any).matching(NSPredicate(format: "label == %@",
+                       language == "ar" ? "لغة النظام" : "System language")).firstMatch.exists)
+-        let direct = try observeEventually(app) { snapshot in
++        let direct = try observeEventually(app, predicateName: .actualSettingsDirection) { snapshot in
+             let composition = try self.dictionary(snapshot, "composition")
+             return composition["settingsMounted"] as? Bool == true &&
+                    composition["settingsDirection"] as? String == (language == "ar" ? "rtl" : "ltr")
+@@ -603,14 +605,26 @@
+     }
+ 
+     @MainActor private func observeEventually(_ app: XCUIApplication,
+-                                              predicate: ([String: Any]) throws -> Bool) throws -> [String: Any] {
+-        // Bounded read-only observation refresh, never retries an app setting mutation.
+-        for _ in 0..<6 {
+-            let snapshot = try observe(app)
+-            if try predicate(snapshot) { return snapshot }
+-        }
+-        XCTFail("Actual settings/owner never reached required state after bounded observations")
+-        throw NSError(domain: "DSC01ObservationTimeout", code: 1)
++        predicateName: DSC01ObservationPredicate,
++        predicate: ([String: Any]) throws -> Bool) throws -> [String: Any] {
++        // Same six read-only refreshes and predicates. Names/allowlisted public
++        // context are diagnostics only; never retry an app action or a setting.
++        var publicContexts: [[String: Any]] = []
++        do {
++            for attempt in 1...6 {
++                let snapshot = try observe(app)
++                var context = dsc01PublicContext(snapshot)
++                context["attempt"] = attempt
++                publicContexts.append(context)
++                if try predicate(snapshot) { return snapshot }
++            }
++        } catch {
++            recordObservationFailure(predicateName, reason: "observer-or-predicate-error", contexts: publicContexts)
++            throw error
++        }
++        recordObservationFailure(predicateName, reason: "six-observations-without-match", contexts: publicContexts)
++        XCTFail("Bounded public observation failed: " + predicateName.rawValue)
++        throw NSError(domain: "DSC01ObservationTimeout." + predicateName.rawValue, code: 1)
+     }
+ 
+     private func assertOwned(_ snapshot: [String: Any], explicit: String, previous: [String]) throws {
+--- executed-v7/test_catalog_contract.py
++++ v8/test_catalog_contract.py
+@@ -107,8 +107,15 @@
+         v6 = (HERE.parent / 'dsc01_apphost_v6/IOSAppLaunchUITests.swift.in').read_text()
+         start_marker = '    @MainActor private func investigateActualOSPerAppLanguage('
+         stop_marker = '    @MainActor private func recordOSSelectorDiagnostics('
+-        self.assertEqual(v6[v6.index(start_marker):v6.index(stop_marker)],
+-                         source[source.index(start_marker):source.index(stop_marker)])
++        original = v6[v6.index(start_marker):v6.index(stop_marker)]
++        current = source[source.index(start_marker):source.index(stop_marker)]
++        # V8 adds names to exactly these two waits; no OS action, predicate,
++        # assertion, blocked classification or restart proof may change.
++        for name in ('afterOSSystemEnglish', 'afterOSExplicitArabic'):
++            named = 'observeEventually(app, predicateName: .' + name + ')'
++            self.assertEqual(1, current.count(named))
++            current = current.replace(named, 'observeEventually(app)')
++        self.assertEqual(original, current)
+ 
+     def test_added_xctest_helper_and_contract_are_hashed_build_copy_inputs(self):
+         controls = {path.name for path in runner.control_files()}
+--- /dev/null
++++ v8/DSC01PublicDiagnostics.swift.in
+@@ -0,0 +1,35 @@
++// Appended to the copied XCTest source only. These names identify the unchanged
++// observation predicates; no preference values or private game state are logged.
++private enum DSC01ObservationPredicate: String {
++    case settingsExplicitOwner, settingsSystemRelease
++    case previousEnglishOwner, previousSystemRestore, syntheticStoreApplied
++    case localInitialPublicPhase, localLanguageDirection, foregroundCounters
++    case afterOSSystemEnglish, afterOSExplicitArabic
++    case gamesSettingsUnmounted, actualSettingsDirection
++    case mafiaSetupPublic, mafiaStartSuccessor
++}
++
++private func dsc01PublicContext(_ snapshot: [String: Any]) -> [String: Any] {
++    let composition = snapshot["composition"] as? [String: Any] ?? [:]
++    func known(_ value: Any?, _ allowed: [String]) -> String {
++        guard let text = value as? String, allowed.contains(text) else { return "not-allowlisted" }
++        return text
++    }
++    return ["scenario": known(snapshot["scenario"], ["settings", "whodunit", "mafia", "os"]),
++            "surface": known(composition["surface"], ["none", "whodunit-local", "mafia-local"]),
++            "publicPhase": known(composition["publicPhase"], ["none", "setup", "public-intro", "role-assignment"])]
++}
++
++extension IOSAppLaunchUITests {
++    private func recordObservationFailure(_ predicate: DSC01ObservationPredicate,
++        reason: String, contexts: [[String: Any]]) {
++        guard ["observer-or-predicate-error", "six-observations-without-match"].contains(reason),
++              contexts.count <= 6 else { return }
++        let row: [String: Any] = ["schemaVersion": 1, "predicate": predicate.rawValue,
++            "reason": reason, "observations": contexts]
++        if let encoded = try? JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]),
++           encoded.count <= 4096, let text = String(data: encoded, encoding: .utf8) {
++            print("DSC01_PUBLIC_OBSERVATION_FAILURE " + text)
++        }
++    }
++}
+--- /dev/null
++++ v8/DSC01MafiaStartSelection.swift.in
+@@ -0,0 +1,236 @@
++// Copied XCTest only. This can touch the existing PUBLIC Start button once.
++// No callback, settings setter, reducer, private role screen or route is invoked.
++private struct DSC01MafiaStartHitPlan {
++    let visibleInterior: CGRect
++    let point: CGPoint
++    let normalizedOffset: CGVector
++
++    static func make(target: CGRect, viewport: CGRect, overlay: CGRect) -> DSC01MafiaStartHitPlan? {
++        guard dsc01CatalogFinite(target), dsc01CatalogFinite(viewport), dsc01CatalogFinite(overlay),
++              viewport.contains(overlay), viewport.width > 16 else { return nil }
++        // The overlay is measured. The 48pt physical-edge bands are deliberately
++        // conservative HIT-SAFETY MARGINS, not purported measured system insets.
++        // Neither application layout nor the original raw safe-area oracle changes.
++        let top = max(viewport.minY + 48, overlay.maxY + 8)
++        let bottom = viewport.maxY - 48
++        guard bottom > top else { return nil }
++        let usable = CGRect(x: viewport.minX + 8, y: top, width: viewport.width - 16, height: bottom - top)
++        let clipped = target.intersection(usable)
++        guard dsc01CatalogFinite(clipped), clipped.width >= 48, clipped.height >= 48 else { return nil }
++        let interior = clipped.insetBy(dx: 12, dy: 12)
++        let point = CGPoint(x: interior.midX, y: interior.midY)
++        let offset = CGVector(dx: (point.x - target.minX) / target.width,
++                              dy: (point.y - target.minY) / target.height)
++        guard target.contains(point), usable.contains(point),
++              offset.dx > 0, offset.dx < 1, offset.dy > 0, offset.dy < 1 else { return nil }
++        return DSC01MafiaStartHitPlan(visibleInterior: interior, point: point, normalizedOffset: offset)
++    }
++}
++
++private struct DSC01MafiaStartSample {
++    let targetCount: Int
++    let target: CGRect?
++    let hittable: Bool
++    let enabled: Bool
++    let viewport: CGRect
++    let overlayCount: Int
++    let overlay: CGRect?
++    let foreground: Bool
++    let alertPresent: Bool
++    let keyboardPresent: Bool
++
++    var isExpectedEnvironment: Bool {
++        foreground && !alertPresent && !keyboardPresent && overlayCount == 1 && targetCount <= 1
++    }
++    var plan: DSC01MafiaStartHitPlan? {
++        guard isExpectedEnvironment, targetCount == 1, hittable, enabled,
++              let target, let overlay else { return nil }
++        return DSC01MafiaStartHitPlan.make(target: target, viewport: viewport, overlay: overlay)
++    }
++    var fields: [String: Any] {
++        ["targetCountCapped16": min(targetCount, 16), "target": dsc01CatalogRectFields(target),
++         "hittable": hittable, "enabled": enabled, "viewport": dsc01CatalogRectFields(viewport),
++         "overlayCountCapped16": min(overlayCount, 16), "overlay": dsc01CatalogRectFields(overlay),
++         "foreground": foreground, "alertPresent": alertPresent, "keyboardPresent": keyboardPresent]
++    }
++    func geometryNear(_ other: DSC01MafiaStartSample) -> Bool {
++        guard let target, let otherTarget = other.target, let overlay, let otherOverlay = other.overlay else { return false }
++        return dsc01CatalogNear(target, otherTarget) && dsc01CatalogNear(viewport, other.viewport) &&
++            dsc01CatalogNear(overlay, otherOverlay)
++    }
++}
++
++@MainActor private final class DSC01MafiaStartDiagnostics {
++    private let start = ProcessInfo.processInfo.systemUptime
++    private var ordinal = 0
++    private var totalBytes = 0
++
++    func append(kind: String, fields: [String: Any]) throws {
++        guard ["setup", "search", "before-activation", "after-activation", "successor", "failed"].contains(kind),
++              ordinal < 96 else { throw NSError(domain: "DSC01MafiaStartDiagnosticBudget", code: 1) }
++        ordinal += 1
++        let row: [String: Any] = ["schemaVersion": 1, "ordinal": ordinal, "kind": kind,
++            "elapsedMilliseconds": Int((ProcessInfo.processInfo.systemUptime - start) * 1000), "fields": fields]
++        let encoded = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
++        totalBytes += encoded.count
++        guard encoded.count <= 4096, totalBytes <= 196608,
++              let text = String(data: encoded, encoding: .utf8) else {
++            throw NSError(domain: "DSC01MafiaStartDiagnosticBudget", code: 2)
++        }
++        print("DSC01_MAFIA_START_METADATA " + text)
++    }
++}
++
++extension IOSAppLaunchUITests {
++    @MainActor private func mafiaStartPublicSample(_ app: XCUIApplication) -> DSC01MafiaStartSample {
++        // This exact source-whitelisted prefix selects a real Role.Button.
++        let query = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@",
++            "Start the Mafia game with these settings"))
++        let count = query.count
++        let target = count == 1 ? query.firstMatch : nil
++        let overlays = app.descendants(matching: .any).matching(identifier: "parlor-dsc01-overlay")
++        let overlayCount = overlays.count
++        return DSC01MafiaStartSample(targetCount: count, target: target?.frame,
++            hittable: target?.isHittable ?? false, enabled: target?.isEnabled ?? false, viewport: app.frame,
++            overlayCount: overlayCount, overlay: overlayCount == 1 ? overlays.firstMatch.frame : nil,
++            foreground: app.state == .runningForeground, alertPresent: app.alerts.firstMatch.exists,
++            keyboardPresent: app.keyboards.firstMatch.exists)
++    }
++
++    @MainActor private func mafiaStartReadySample(_ app: XCUIApplication,
++        diagnostics: DSC01MafiaStartDiagnostics) throws -> DSC01MafiaStartSample {
++        for window in 1...14 {
++            var samples: [DSC01MafiaStartSample] = []
++            for index in 1...6 {
++                if index > 1 { try catalogSamplingInterval() }
++                let sample = mafiaStartPublicSample(app)
++                samples.append(sample)
++                var fields = sample.fields
++                fields["window"] = window; fields["index"] = index
++                try diagnostics.append(kind: "search", fields: fields)
++            }
++            guard samples.allSatisfy(\.isExpectedEnvironment), let first = samples.first, let last = samples.last else {
++                throw NSError(domain: "DSC01MafiaStartUnexpectedPublicSurface", code: 1)
++            }
++            let targetFrames = samples.compactMap(\.target)
++            let stable = dsc01CatalogStable(targetFrames) && samples.allSatisfy { $0.geometryNear(first) }
++            if stable && samples.allSatisfy({ $0.plan != nil }) { return last }
++            if stable && samples.allSatisfy({ $0.targetCount == 1 && !$0.enabled }) {
++                throw NSError(domain: "DSC01MafiaStartDisabled", code: 1)
++            }
++            let inaccessibleZeroFrame = samples.allSatisfy {
++                !$0.hittable && ($0.target == nil || $0.target == CGRect.zero)
++            }
++            // No action activation occurs in these bounded readiness loops.
++            // Moving geometry is reobserved; inaccessible settled content may scroll.
++            if targetFrames.isEmpty || stable || inaccessibleZeroFrame {
++                if window < 14 { app.swipeUp(velocity: .slow) }
++            }
++        }
++        throw NSError(domain: "DSC01MafiaStartStableTargetUnavailable", code: 1)
++    }
++
++    @MainActor private func startActualMafiaOnce(_ app: XCUIApplication) throws {
++        let diagnostics = DSC01MafiaStartDiagnostics()
++        do {
++            let setup = try observeEventually(app, predicateName: .mafiaSetupPublic) { snapshot in
++                let value = try self.dictionary(snapshot, "composition")
++                return snapshot["scenario"] as? String == "mafia" &&
++                    value["surface"] as? String == "mafia-local" && value["publicPhase"] as? String == "setup" &&
++                    value["gameDirection"] as? String == "ltr" && value["checkpointCaptured"] as? Bool == false &&
++                    value["commandOrdinal"] as? Int == 0
++            }
++            try diagnostics.append(kind: "setup", fields: dsc01PublicContext(setup))
++            let ready = try mafiaStartReadySample(app, diagnostics: diagnostics)
++            let current = mafiaStartPublicSample(app)
++            guard current.geometryNear(ready), let plan = current.plan else {
++                throw NSError(domain: "DSC01MafiaStartMovedBeforeActivation", code: 1)
++            }
++            let query = app.buttons.matching(NSPredicate(format: "label BEGINSWITH %@",
++                "Start the Mafia game with these settings"))
++            guard query.count == 1 else { throw NSError(domain: "DSC01MafiaStartAmbiguousTarget", code: 1) }
++            let target = query.firstMatch
++            let activationFrame = target.frame
++            guard let sampledFrame = current.target, dsc01CatalogNear(activationFrame, sampledFrame),
++                  target.isHittable, target.isEnabled else {
++                throw NSError(domain: "DSC01MafiaStartMovedBeforeActivation", code: 2)
++            }
++            let coordinate = target.coordinate(withNormalizedOffset: plan.normalizedOffset)
++            let point = coordinate.screenPoint
++            var before = current.fields
++            before["normalizedPoint"] = [plan.normalizedOffset.dx, plan.normalizedOffset.dy]
++            before["plannedPoint"] = [plan.point.x, plan.point.y]
++            // XCUICoordinate.screenPoint is dynamic; this is a sample, not an
++            // attestation of the later OS event location or callback delivery.
++            before["sampledCoordinatePoint"] = point.x.isFinite && point.y.isFinite ? [point.x, point.y] : []
++            before["visibleInterior"] = dsc01CatalogRectFields(plan.visibleInterior)
++            before["activationTargetFrame"] = dsc01CatalogRectFields(activationFrame)
++            try diagnostics.append(kind: "before-activation", fields: before)
++            guard point.x.isFinite, point.y.isFinite, abs(point.x - plan.point.x) <= 0.5,
++                  abs(point.y - plan.point.y) <= 0.5 else {
++                throw NSError(domain: "DSC01MafiaStartCoordinateMoved", code: 1)
++            }
++            coordinate.tap() // Exactly one Start activation, outside all retry loops.
++            try diagnostics.append(kind: "after-activation", fields: mafiaStartPublicSample(app).fields)
++            let successor = try observeEventually(app, predicateName: .mafiaStartSuccessor) { snapshot in
++                let value = try self.dictionary(snapshot, "composition")
++                let target = self.mafiaStartPublicSample(app)
++                return snapshot["scenario"] as? String == "mafia" &&
++                    value["surface"] as? String == "mafia-local" && value["publicPhase"] as? String == "role-assignment" &&
++                    value["gameDirection"] as? String == "ltr" && value["checkpointCaptured"] as? Bool == false &&
++                    value["commandOrdinal"] as? Int == 0 && target.targetCount == 0 && target.foreground &&
++                    !target.alertPresent && !target.keyboardPresent
++            }
++            let final = mafiaStartPublicSample(app)
++            var fields = final.fields
++            fields["publicContext"] = dsc01PublicContext(successor)
++            fields["gameDirection"] = try dictionary(successor, "composition")["gameDirection"]
++            try diagnostics.append(kind: "successor", fields: fields)
++            guard final.targetCount == 0, final.foreground, !final.alertPresent, !final.keyboardPresent else {
++                throw NSError(domain: "DSC01MafiaStartSuccessorChanged", code: 1)
++            }
++        } catch {
++            try diagnostics.append(kind: "failed", fields: mafiaStartPublicSample(app).fields)
++            XCTFail("Mafia Start phase failed: one activation must prove canonical role-assignment and Start absence")
++            throw error
++        }
++    }
++
++    @MainActor private func verifyMafiaStartGeometryContract() throws {
++        let viewport = CGRect(x: 0, y: 0, width: 402, height: 874)
++        let overlay = CGRect(x: 68, y: 134, width: 265, height: 49)
++        let valid = CGRect(x: 24, y: 720, width: 354, height: 52)
++        let cases: [(String, CGRect, Bool)] = [
++            ("visible", valid, true),
++            ("safe-bottom", CGRect(x: 24, y: 772, width: 354, height: 52), true),
++            ("partial-bottom-enough", CGRect(x: 24, y: 760, width: 354, height: 80), true),
++            ("crosses-overlay-enough", CGRect(x: 24, y: 170, width: 354, height: 80), true),
++            ("overlay-only", CGRect(x: 24, y: 136, width: 354, height: 44), false),
++            ("top-edge-only", CGRect(x: 24, y: 0, width: 354, height: 44), false),
++            ("bottom-edge-only", CGRect(x: 24, y: 827, width: 354, height: 44), false),
++            ("offscreen", CGRect(x: 24, y: 1000, width: 354, height: 52), false),
++            ("tiny-bottom-sliver", CGRect(x: 24, y: 800, width: 354, height: 52), false),
++            ("too-narrow", CGRect(x: 24, y: 720, width: 47, height: 52), false),
++            ("zero", .zero, false),
++            ("negative-size", CGRect(x: 24, y: 720, width: -354, height: 52), false),
++            ("nonfinite", CGRect(x: CGFloat.nan, y: 720, width: 354, height: 52), false),
++        ]
++        for (name, target, accepted) in cases {
++            let result = DSC01MafiaStartHitPlan.make(target: target, viewport: viewport, overlay: overlay)
++            XCTAssertEqual(result != nil, accepted, "Pure Mafia Start hit geometry: " + name)
++            if let result {
++                XCTAssertTrue(target.contains(result.point))
++                XCTAssertFalse(overlay.contains(result.point))
++                XCTAssertGreaterThan(result.point.y, viewport.minY + 48)
++                XCTAssertLessThan(result.point.y, viewport.maxY - 48)
++                XCTAssertEqual(target.minX + target.width * result.normalizedOffset.dx, result.point.x, accuracy: 0.0001)
++                XCTAssertEqual(target.minY + target.height * result.normalizedOffset.dy, result.point.y, accuracy: 0.0001)
++            }
++        }
++        XCTAssertTrue(dsc01CatalogStable(Array(repeating: valid, count: 6)))
++        var moving = Array(repeating: valid, count: 6); moving[3].origin.y += 1
++        XCTAssertFalse(dsc01CatalogStable(moving))
++        XCTAssertFalse(dsc01CatalogStable(Array(repeating: valid, count: 5)))
++        print("DSC01_MAFIA_START_GEOMETRY_CONTRACT {\"schemaVersion\":1,\"cases\":16,\"passed\":true}")
++    }
++}
+--- /dev/null
++++ v8/DSC01OSPrerequisite.swift.in
+@@ -0,0 +1,276 @@
++// Copied XCTest only. Public Apple Support109358 flow on the exact NEW runner-
++// owned simulator: Settings > General > Language & Region > Add Language.
++// This is a bounded experiment, not a documented guarantee that any particular
++// iOS26.5 Settings selector/per-app language row must exist after two languages.
++private enum DSC01OSPrerequisiteStage: String {
++    case ownership, settingsRoot, general, languageRegion, initialEnglishPrimary
++    case addLanguage, searchArabic, selectArabic, retainEnglishPrimary, finalPreferredLanguages
++}
++
++private enum DSC01OSPrerequisiteControl: String {
++    case general, languageRegion, addLanguage, arabic
++
++    var labels: [String] {
++        switch self {
++        case .general: return ["General"]
++        case .languageRegion: return ["Language & Region"]
++        case .addLanguage: return ["Add Language…", "Add Language...", "Add Language"]
++        case .arabic: return ["Arabic", "العربية", "Arabic, العربية", "العربية, Arabic"]
++        }
++    }
++}
++
++@MainActor private final class DSC01OSPrerequisiteDiagnostics {
++    private var ordinal = 0
++    private var bytes = 0
++
++    func append(stage: DSC01OSPrerequisiteStage, status: String, fields: [String: Any]) throws {
++        guard ["observe", "before-activation", "after-activation", "PASS", "BLOCKED"].contains(status),
++              ordinal < 96 else { throw NSError(domain: "DSC01OSPrerequisiteDiagnosticBudget", code: 1) }
++        ordinal += 1
++        let row: [String: Any] = ["schemaVersion": 1, "ordinal": ordinal, "stage": stage.rawValue,
++            "status": status, "fields": fields]
++        let encoded = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
++        bytes += encoded.count
++        guard encoded.count <= 8192, bytes <= 196608,
++              let text = String(data: encoded, encoding: .utf8) else {
++            throw NSError(domain: "DSC01OSPrerequisiteDiagnosticBudget", code: 2)
++        }
++        print("DSC01_OS_PREREQUISITE " + text)
++    }
++}
++
++extension IOSAppLaunchUITests {
++    @MainActor private func osPrerequisiteQueries(_ settings: XCUIApplication,
++        control: DSC01OSPrerequisiteControl) -> [(String, XCUIElementQuery)] {
++        let predicate = NSPredicate(format: "label IN %@", control.labels)
++        // Exact whitelisted semantic row only. UITableView and SwiftUI can
++        // expose the same PUBLIC row as a cell/button/text. A unique cell is
++        // preferred, then a unique button, then a unique exact visible text.
++        // An ambiguous nonempty class fails; it never falls through to another.
++        return [("cell-containing-known-text", settings.cells.containing(predicate)),
++                ("known-button", settings.buttons.matching(predicate)),
++                ("known-text", settings.staticTexts.matching(predicate))]
++    }
++
++    @MainActor private func osPrerequisiteMetadata(_ settings: XCUIApplication,
++        control: DSC01OSPrerequisiteControl? = nil) -> [String: Any] {
++        var value: [String: Any] = ["foreground": settings.state == .runningForeground,
++            "viewport": dsc01CatalogRectFields(settings.frame),
++            "alertCountCapped16": min(settings.alerts.count, 16),
++            "keyboardPresent": settings.keyboards.firstMatch.exists]
++        let titles = ["Settings", "General", "Language & Region", "Add Language", "iPhone Language"]
++        value["knownNavigationTitles"] = titles.map { title -> [String: Any] in
++            ["knownTitle": title, "countCapped16": min(settings.navigationBars.matching(identifier: title).count, 16)]
++        }
++        if let control {
++            value["knownControl"] = control.rawValue
++            value["selectorClasses"] = osPrerequisiteQueries(settings, control: control).map { kind, query in
++                let count = query.count
++                let samples = count < 16 ? Array(query.allElementsBoundByIndex.prefix(2)) : []
++                return ["kind": kind, "countCapped16": min(count, 16), "atMostTwo": samples.map { item in
++                    ["hittable": item.isHittable, "enabled": item.isEnabled, "frame": dsc01CatalogRectFields(item.frame)]
++                }] as [String: Any]
++            }
++        }
++        return value
++    }
++
++    @MainActor private func osPrerequisiteBlock(_ stage: DSC01OSPrerequisiteStage,
++        diagnostics: DSC01OSPrerequisiteDiagnostics, fields: [String: Any]) throws -> Never {
++        try diagnostics.append(stage: stage, status: "BLOCKED", fields: fields)
++        XCTFail("Actual OS multilingual prerequisite BLOCKED at public stage: " + stage.rawValue)
++        throw NSError(domain: "DSC01OSPrerequisiteBlocked." + stage.rawValue, code: 1)
++    }
++
++    @MainActor private func osPrerequisiteTitle(_ settings: XCUIApplication, title: String,
++        stage: DSC01OSPrerequisiteStage, diagnostics: DSC01OSPrerequisiteDiagnostics) throws {
++        try diagnostics.append(stage: stage, status: "observe", fields: osPrerequisiteMetadata(settings))
++        let query = settings.navigationBars.matching(identifier: title)
++        let appeared = query.firstMatch.waitForExistence(timeout: 15)
++        let fields = osPrerequisiteMetadata(settings)
++        guard appeared, query.count == 1, settings.state == .runningForeground, settings.alerts.count == 0 else {
++            try osPrerequisiteBlock(stage, diagnostics: diagnostics, fields: fields)
++        }
++        try diagnostics.append(stage: stage, status: "PASS", fields: fields)
++    }
++
++    @MainActor private func osPrerequisiteTapRow(_ settings: XCUIApplication,
++        control: DSC01OSPrerequisiteControl, stage: DSC01OSPrerequisiteStage,
++        diagnostics: DSC01OSPrerequisiteDiagnostics, allowScroll: Bool = true) throws {
++        var selected: XCUIElement?
++        for attempt in 1...6 {
++            var fields = osPrerequisiteMetadata(settings, control: control)
++            fields["attempt"] = attempt
++            try diagnostics.append(stage: stage, status: "observe", fields: fields)
++            guard settings.state == .runningForeground, settings.alerts.count == 0 else {
++                try osPrerequisiteBlock(stage, diagnostics: diagnostics, fields: fields)
++            }
++            for (_, query) in osPrerequisiteQueries(settings, control: control) {
++                let count = query.count
++                if count == 0 { continue }
++                guard count == 1 else { try osPrerequisiteBlock(stage, diagnostics: diagnostics, fields: fields) }
++                let target = query.firstMatch
++                if target.isHittable && target.isEnabled && dsc01CatalogFinite(target.frame) {
++                    selected = target
++                }
++                break
++            }
++            if selected != nil { break }
++            if attempt < 6 {
++                if allowScroll && !settings.keyboards.firstMatch.exists { settings.swipeUp(velocity: .slow) }
++                try catalogSamplingInterval()
++            }
++        }
++        guard let selected else {
++            try osPrerequisiteBlock(stage, diagnostics: diagnostics, fields: osPrerequisiteMetadata(settings, control: control))
++        }
++        // One activation of this semantic OS step, never retried on missing successor.
++        try diagnostics.append(stage: stage, status: "before-activation",
++            fields: osPrerequisiteMetadata(settings, control: control))
++        guard selected.isHittable, selected.isEnabled, settings.state == .runningForeground,
++              settings.alerts.count == 0 else {
++            try osPrerequisiteBlock(stage, diagnostics: diagnostics, fields: osPrerequisiteMetadata(settings, control: control))
++        }
++        selected.tap()
++        try diagnostics.append(stage: stage, status: "after-activation",
++            fields: osPrerequisiteMetadata(settings, control: control))
++    }
++
++    @MainActor private func osPreferredLanguagesMetadata(_ settings: XCUIApplication) -> [String: Any] {
++        let englishCells = settings.cells.containing(NSPredicate(format: "label == %@", "English"))
++            .containing(NSPredicate(format: "label == %@", "iPhone Language"))
++        let mergedEnglish = settings.descendants(matching: .any)
++            .matching(NSPredicate(format: "label == %@", "English, iPhone Language"))
++        let arabicCells = settings.cells.containing(NSPredicate(format: "label IN %@", ["Arabic", "العربية"]))
++        let arabicTexts = settings.staticTexts.matching(NSPredicate(format: "label IN %@", ["Arabic", "العربية"]))
++        let titles = settings.navigationBars.matching(identifier: "Language & Region")
++        let english = englishCells.count == 1 ? englishCells.firstMatch :
++            (mergedEnglish.count == 1 ? mergedEnglish.firstMatch : nil)
++        let arabic = arabicCells.count == 1 ? arabicCells.firstMatch : nil
++        var addLanguage: XCUIElement?
++        for (_, query) in osPrerequisiteQueries(settings, control: .addLanguage) {
++            let count = query.count
++            if count == 0 { continue }
++            if count == 1 { addLanguage = query.firstMatch }
++            break
++        }
++        let englishFrame = english?.frame
++        let arabicFrame = arabic?.frame
++        let addFrame = addLanguage?.frame
++        var orderedPreferredRows = false
++        if let englishFrame, let arabicFrame, let addFrame,
++           [englishFrame, arabicFrame, addFrame].allSatisfy(dsc01CatalogFinite) {
++            orderedPreferredRows = englishFrame.maxY <= arabicFrame.minY + 1 && arabicFrame.maxY <= addFrame.minY + 1
++        }
++        var fields = osPrerequisiteMetadata(settings, control: .addLanguage)
++        fields["englishPrimaryCellCountCapped16"] = min(englishCells.count, 16)
++        fields["mergedEnglishPrimaryCountCapped16"] = min(mergedEnglish.count, 16)
++        fields["arabicCellCountCapped16"] = min(arabicCells.count, 16)
++        fields["arabicTextCountCapped16"] = min(arabicTexts.count, 16)
++        fields["englishPrimaryObserved"] = englishCells.count == 1 || mergedEnglish.count == 1
++        fields["arabicObserved"] = arabicCells.count == 1 || (1...2).contains(arabicTexts.count)
++        fields["languageRegionTitleObserved"] = titles.count == 1
++        fields["languageRegionTitleHittable"] = titles.count == 1 && titles.firstMatch.isHittable
++        fields["searchFieldCountCapped16"] = min(settings.searchFields.count, 16)
++        fields["englishPrimaryHittable"] = english?.isHittable ?? false
++        fields["addLanguageSuccessorHittableEnabled"] = (addLanguage?.isHittable ?? false) && (addLanguage?.isEnabled ?? false)
++        fields["arabicPreferredRowObserved"] = arabic != nil && (arabic?.isHittable ?? false) && orderedPreferredRows
++        fields["englishPrimaryFrame"] = dsc01CatalogRectFields(englishFrame)
++        fields["arabicPreferredRowFrame"] = dsc01CatalogRectFields(arabicFrame)
++        fields["addLanguageSuccessorFrame"] = dsc01CatalogRectFields(addFrame)
++        return fields
++    }
++
++    private func osPreferredListIsUncovered(_ observed: [String: Any]) -> Bool {
++        // A presented picker can leave underlying labels in the AX tree. The
++        // actual preferred list must be exposed, ordered and interactable after
++        // English-primary selection; a global Arabic search result is not proof.
++        observed["foreground"] as? Bool == true && observed["alertCountCapped16"] as? Int == 0 &&
++            observed["keyboardPresent"] as? Bool == false && observed["searchFieldCountCapped16"] as? Int == 0 &&
++            ["languageRegionTitleObserved", "languageRegionTitleHittable", "englishPrimaryObserved",
++             "englishPrimaryHittable", "arabicObserved", "arabicPreferredRowObserved", "addLanguageSuccessorHittableEnabled"]
++            .allSatisfy { observed[$0] as? Bool == true }
++    }
++
++    @MainActor private func prepareActualOSMultilingualPrerequisite(_ app: XCUIApplication,
++        expectedSimulator: String) throws {
++        let diagnostics = DSC01OSPrerequisiteDiagnostics()
++        #if DEBUG && targetEnvironment(simulator)
++        let environment = ProcessInfo.processInfo.environment
++        let sameSimulator = environment["SIMULATOR_UDID"] == expectedSimulator && UUID(uuidString: expectedSimulator) != nil
++        let ownedName = environment["SIMULATOR_DEVICE_NAME"]?.hasPrefix("Parlor-Audit-parlor-audit-dsc01-apphost-") == true
++        let ownership: [String: Any] = ["sameExpectedSimulator": sameSimulator, "ownedSyntheticDeviceName": ownedName,
++            "debugSimulatorBuild": true]
++        guard sameSimulator, ownedName else { try osPrerequisiteBlock(.ownership, diagnostics: diagnostics, fields: ownership) }
++        try diagnostics.append(stage: .ownership, status: "PASS", fields: ownership)
++        #else
++        try osPrerequisiteBlock(.ownership, diagnostics: diagnostics, fields: ["debugSimulatorBuild": false])
++        #endif
++        // Both complete local-game receipts precede this. Do not mutate a user
++        // phone/profile, another task's simulator, or a retained active session.
++        app.terminate()
++        guard app.wait(for: .notRunning, timeout: 15) else {
++            try osPrerequisiteBlock(.ownership, diagnostics: diagnostics, fields: ["testAppTerminated": false])
++        }
++        let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
++        settings.launchArguments = [] // Never inject AppleLanguages/AppleLocale.
++        defer { settings.terminate() }
++        settings.launch()
++        try osPrerequisiteTitle(settings, title: "Settings", stage: .settingsRoot, diagnostics: diagnostics)
++        try osPrerequisiteTapRow(settings, control: .general, stage: .general, diagnostics: diagnostics)
++        try osPrerequisiteTitle(settings, title: "General", stage: .general, diagnostics: diagnostics)
++        try osPrerequisiteTapRow(settings, control: .languageRegion, stage: .languageRegion, diagnostics: diagnostics)
++        try osPrerequisiteTitle(settings, title: "Language & Region", stage: .languageRegion, diagnostics: diagnostics)
++        let initial = osPreferredLanguagesMetadata(settings)
++        try diagnostics.append(stage: .initialEnglishPrimary, status: "observe", fields: initial)
++        guard initial["englishPrimaryObserved"] as? Bool == true, initial["arabicObserved"] as? Bool == false else {
++            try osPrerequisiteBlock(.initialEnglishPrimary, diagnostics: diagnostics, fields: initial)
++        }
++        try diagnostics.append(stage: .initialEnglishPrimary, status: "PASS", fields: initial)
++        try osPrerequisiteTapRow(settings, control: .addLanguage, stage: .addLanguage, diagnostics: diagnostics)
++        try diagnostics.append(stage: .searchArabic, status: "observe", fields: osPrerequisiteMetadata(settings, control: .arabic))
++        let search = settings.searchFields
++        guard search.firstMatch.waitForExistence(timeout: 15), search.count == 1,
++              search.firstMatch.isHittable, search.firstMatch.isEnabled, settings.alerts.count == 0 else {
++            try osPrerequisiteBlock(.searchArabic, diagnostics: diagnostics, fields: osPrerequisiteMetadata(settings, control: .arabic))
++        }
++        try diagnostics.append(stage: .searchArabic, status: "before-activation",
++            fields: ["uniqueSearchField": true, "frame": dsc01CatalogRectFields(search.firstMatch.frame)])
++        search.firstMatch.tap()
++        search.firstMatch.typeText("Arabic") // Real public Settings search, once; no backing preference write.
++        try diagnostics.append(stage: .searchArabic, status: "after-activation", fields: osPrerequisiteMetadata(settings, control: .arabic))
++        try osPrerequisiteTapRow(settings, control: .arabic, stage: .selectArabic, diagnostics: diagnostics, allowScroll: false)
++        try diagnostics.append(stage: .retainEnglishPrimary, status: "observe", fields: osPrerequisiteMetadata(settings))
++        let alert = settings.alerts
++        guard alert.firstMatch.waitForExistence(timeout: 15), alert.count == 1 else {
++            try osPrerequisiteBlock(.retainEnglishPrimary, diagnostics: diagnostics, fields: osPrerequisiteMetadata(settings))
++        }
++        // These exact English-primary action labels are bounded candidate UI
++        // selectors, not a claim that Apple guarantees them on every version.
++        // No generic OK/Continue/Cancel or unknown alert is ever dismissed.
++        let keepEnglish = alert.firstMatch.buttons.matching(NSPredicate(format: "label IN %@", ["Use English", "Keep English"]))
++        var keepFields = osPrerequisiteMetadata(settings)
++        keepFields["englishPrimaryChoiceCountCapped16"] = min(keepEnglish.count, 16)
++        keepFields["alertButtonCountCapped16"] = min(alert.firstMatch.buttons.count, 16)
++        try diagnostics.append(stage: .retainEnglishPrimary, status: "before-activation", fields: keepFields)
++        guard keepEnglish.count == 1, (1...4).contains(alert.firstMatch.buttons.count),
++              keepEnglish.firstMatch.isHittable, keepEnglish.firstMatch.isEnabled else {
++            try osPrerequisiteBlock(.retainEnglishPrimary, diagnostics: diagnostics, fields: keepFields)
++        }
++        keepEnglish.firstMatch.tap() // Exactly once; final actual preferred list must prove the result.
++        try diagnostics.append(stage: .retainEnglishPrimary, status: "after-activation", fields: osPrerequisiteMetadata(settings))
++        let settled = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
++            let observed = self.osPreferredLanguagesMetadata(settings)
++            return self.osPreferredListIsUncovered(observed)
++        }, object: nil)
++        let outcome = XCTWaiter.wait(for: [settled], timeout: 20)
++        let final = osPreferredLanguagesMetadata(settings)
++        guard outcome == .completed, osPreferredListIsUncovered(final) else {
++            try osPrerequisiteBlock(.finalPreferredLanguages, diagnostics: diagnostics, fields: final)
++        }
++        try diagnostics.append(stage: .finalPreferredLanguages, status: "PASS", fields: final)
++        // This only establishes the actual global UI prerequisite. The original
++        // per-app Settings selection/AR→System/restart proof runs independently.
++    }
++}
+--- /dev/null
++++ v8/v8_receipts.py
+@@ -0,0 +1,153 @@
++"""V8 bounded receipt checks. Synthetic inputs test parsers, never prove runtime.
++
++The caller must ALSO require the unchanged exact-five-XCTest and original probe
++validators. A printed geometry-contract receipt alone is not a passing XCTest.
++"""
++import json
++import math
++
++
++def records(log, prefix, *, maximum, row_bytes, total_bytes):
++    rows = []
++    size = 0
++    for line in log.splitlines():
++        if not line.startswith(prefix):
++            continue
++        text = line[len(prefix):]
++        length = len(text.encode())
++        size += length
++        if length > row_bytes or size > total_bytes or len(rows) >= maximum:
++            raise RuntimeError('V8 public diagnostic bounds exceeded: ' + prefix)
++        value = json.loads(text)
++        if not isinstance(value, dict):
++            raise RuntimeError('V8 public diagnostic must be an object: ' + prefix)
++        rows.append(value)
++    return rows
++
++
++def rectangle(value):
++    if (not isinstance(value, dict) or value.get('present') is not True or
++            value.get('validFiniteRectangle') is not True):
++        raise RuntimeError('Start requires a measured valid finite rectangle')
++    coordinates = value.get('rectangle')
++    if (not isinstance(coordinates, list) or len(coordinates) != 4 or
++            any(type(v) not in (int, float) or not math.isfinite(v) or abs(v) > 16384 for v in coordinates) or
++            coordinates[2] <= 0 or coordinates[3] <= 0):
++        raise RuntimeError('Start rectangle shape or numeric bounds invalid')
++    return coordinates
++
++
++def near(first, second):
++    return all(abs(a - b) <= 0.5 for a, b in zip(first, second))
++
++
++def verify_start(log):
++    contract = records(log, 'DSC01_MAFIA_START_GEOMETRY_CONTRACT ', maximum=1, row_bytes=256, total_bytes=256)
++    if contract != [dict(schemaVersion=1, cases=16, passed=True)]:
++        raise RuntimeError('Actual Swift Mafia Start geometry contract missing')
++    rows = records(log, 'DSC01_MAFIA_START_METADATA ', maximum=96, row_bytes=4096, total_bytes=196608)
++    if not 10 <= len(rows) <= 96:
++        raise RuntimeError('Incomplete Mafia Start receipt sequence')
++    previous_time = -1
++    for ordinal, row in enumerate(rows, 1):
++        if (set(row) != {'schemaVersion', 'ordinal', 'kind', 'elapsedMilliseconds', 'fields'} or
++                row['schemaVersion'] != 1 or type(row['ordinal']) is not int or row['ordinal'] != ordinal or
++                type(row['elapsedMilliseconds']) is not int or row['elapsedMilliseconds'] < previous_time or
++                not isinstance(row['fields'], dict)):
++            raise RuntimeError('Malformed or reordered Mafia Start envelope')
++        previous_time = row['elapsedMilliseconds']
++    if (rows[0]['kind'] != 'setup' or rows[0]['fields'] !=
++            dict(scenario='mafia', surface='mafia-local', publicPhase='setup')):
++        raise RuntimeError('Actual canonical public Setup prerequisite missing')
++    search = rows[1:-3]
++    if (not 6 <= len(search) <= 84 or len(search) % 6 or any(row['kind'] != 'search' for row in search) or
++            [row['kind'] for row in rows[-3:]] != ['before-activation', 'after-activation', 'successor']):
++        raise RuntimeError('Start activation must occur once after complete readiness windows')
++    for index, row in enumerate(search):
++        if (row['fields'].get('window'), row['fields'].get('index')) != (index // 6 + 1, index % 6 + 1):
++            raise RuntimeError('Start readiness window is partial/reordered')
++    before = rows[-3]['fields']
++    required = dict(targetCountCapped16=1, overlayCountCapped16=1, hittable=True, enabled=True,
++                    foreground=True, alertPresent=False, keyboardPresent=False)
++    for sample in [row['fields'] for row in search[-6:]] + [before]:
++        if any(type(sample.get(k)) is not type(v) or sample.get(k) != v for k, v in required.items()):
++            raise RuntimeError('Start activation lacks stable enabled/hittable foreground prerequisite')
++        for key in ('target', 'viewport', 'overlay'):
++            if not near(rectangle(sample.get(key)), rectangle(before.get(key))):
++                raise RuntimeError('Start target/app/overlay moved within final observation window')
++    target = rectangle(before.get('target'))
++    viewport = rectangle(before.get('viewport'))
++    overlay = rectangle(before.get('overlay'))
++    if not near(target, rectangle(before.get('activationTargetFrame'))):
++        raise RuntimeError('Start activation frame drift')
++    for key in ('normalizedPoint', 'plannedPoint', 'sampledCoordinatePoint'):
++        point = before.get(key)
++        if (not isinstance(point, list) or len(point) != 2 or
++                any(type(v) not in (int, float) or not math.isfinite(v) for v in point)):
++            raise RuntimeError('Start coordinate observation absent/nonfinite')
++    nx, ny = before['normalizedPoint']
++    x, y = before['plannedPoint']
++    if (not 0 < nx < 1 or not 0 < ny < 1 or
++            not near([target[0] + nx * target[2], target[1] + ny * target[3]], [x, y]) or
++            not near(before['sampledCoordinatePoint'], [x, y]) or
++            not viewport[0] + 8 < x < viewport[0] + viewport[2] - 8 or
++            not max(viewport[1] + 48, overlay[1] + overlay[3] + 8) < y < viewport[1] + viewport[3] - 48):
++        raise RuntimeError('Start coordinate does not match safe measured target-relative point')
++    interior = rectangle(before.get('visibleInterior'))
++    if not interior[0] <= x <= interior[0] + interior[2] or not interior[1] <= y <= interior[1] + interior[3]:
++        raise RuntimeError('Start planned point is outside the retained visible interior')
++    final = rows[-1]['fields']
++    if (final.get('targetCountCapped16') != 0 or final.get('foreground') is not True or
++            final.get('alertPresent') is not False or final.get('keyboardPresent') is not False or
++            final.get('gameDirection') != 'ltr' or final.get('publicContext') !=
++            dict(scenario='mafia', surface='mafia-local', publicPhase='role-assignment')):
++        raise RuntimeError('Canonical RoleAssignment and public Start disappearance not proven')
++    return dict(swift_geometry_contract_cases=16, search_windows=len(search) // 6,
++                physical_start_activations=1, canonical_role_assignment_observed=True,
++                limitation='Coordinate receipt is a sample, not attested OS event location/callback delivery.')
++
++
++def verify_os_prerequisite(log):
++    rows = records(log, 'DSC01_OS_PREREQUISITE ', maximum=96, row_bytes=8192, total_bytes=196608)
++    stages = {'ownership', 'settingsRoot', 'general', 'languageRegion', 'initialEnglishPrimary',
++              'addLanguage', 'searchArabic', 'selectArabic', 'retainEnglishPrimary', 'finalPreferredLanguages'}
++    if not rows:
++        raise RuntimeError('Actual OS multilingual prerequisite not executed')
++    for ordinal, row in enumerate(rows, 1):
++        if (set(row) != {'schemaVersion', 'ordinal', 'stage', 'status', 'fields'} or row['schemaVersion'] != 1 or
++                type(row['ordinal']) is not int or row['ordinal'] != ordinal or row['stage'] not in stages or
++                row['status'] not in {'observe', 'before-activation', 'after-activation', 'PASS'} or
++                not isinstance(row['fields'], dict)):
++            raise RuntimeError('OS prerequisite blocked/malformed/reordered; no inferred OS success')
++    ownership = rows[0]
++    if (ownership['stage'], ownership['status'], ownership['fields']) != ('ownership', 'PASS',
++            dict(sameExpectedSimulator=True, ownedSyntheticDeviceName=True, debugSimulatorBuild=True)):
++        raise RuntimeError('Missing fresh simulator ownership precondition')
++    for stage in ('general', 'languageRegion', 'addLanguage', 'searchArabic', 'selectArabic', 'retainEnglishPrimary'):
++        actions = [row['status'] for row in rows if row['stage'] == stage and row['status'].endswith('activation')]
++        if actions != ['before-activation', 'after-activation']:
++            raise RuntimeError('OS semantic step missing or activated repeatedly: ' + stage)
++    initial = [row for row in rows if row['stage'] == 'initialEnglishPrimary' and row['status'] == 'PASS']
++    if (len(initial) != 1 or initial[0]['fields'].get('englishPrimaryObserved') is not True or
++            initial[0]['fields'].get('arabicObserved') is not False):
++        raise RuntimeError('Fresh English-primary/no-Arabic baseline not observed')
++    final = rows[-1]
++    if (final['stage'] != 'finalPreferredLanguages' or final['status'] != 'PASS' or
++            any(final['fields'].get(k) is not True for k in
++                ('englishPrimaryObserved', 'arabicObserved', 'languageRegionTitleObserved', 'foreground',
++                 'languageRegionTitleHittable', 'englishPrimaryHittable', 'arabicPreferredRowObserved',
++                 'addLanguageSuccessorHittableEnabled')) or final['fields'].get('keyboardPresent') is not False or
++            final['fields'].get('searchFieldCountCapped16') != 0 or final['fields'].get('alertCountCapped16') != 0):
++        raise RuntimeError('Actual English-primary + Arabic preferred list not proven')
++    english = rectangle(final['fields'].get('englishPrimaryFrame'))
++    arabic = rectangle(final['fields'].get('arabicPreferredRowFrame'))
++    add = rectangle(final['fields'].get('addLanguageSuccessorFrame'))
++    if english[1] + english[3] > arabic[1] + 1 or arabic[1] + arabic[3] > add[1] + 1:
++        raise RuntimeError('Arabic must be in actual ordered preferred list, not an overlaid picker result')
++    return dict(status='PASS', actual_settings_actions=True, english_remains_primary=True,
++                arabic_added=True, rows=len(rows),
++                limitation='Prerequisite only. Original per-app Settings/AR-System/restart probe remains mandatory.')
++
++
++def verify_v8_receipts(log):
++    return dict(mafia_start=verify_start(log), os_multilingual_prerequisite=verify_os_prerequisite(log))
+--- /dev/null
++++ v8/test_v8_contract.py
+@@ -0,0 +1,292 @@
++"""Synthetic parser/source-control tests, not simulator or application evidence."""
++import copy
++import hashlib
++import json
++from pathlib import Path
++import unittest
++from unittest import mock
++
++import run_dsc01_apphost_cycle as runner
++import v8_receipts
++
++
++HERE = Path(__file__).resolve().parent
++V7 = HERE.parent / 'dsc01_apphost_v7'
++V7_REFERENCES = (
++    'secondary_fifo.py', 'test_secondary_fifo.py', 'copied_sources.py', 'bind_source.py',
++    'DSC01ComposeObservation.kt.in', 'DSC01InvocationBridge.kt.in', 'DSC01UIKitObservation.kt.in',
++    'DSC01NativeObservation.swift.in', 'probe_validation.py', 'copied-kotlin-phase.sh.in',
++    'run_dsc01_apphost_cycle.py', 'IOSAppLaunchUITests.swift.in', 'DSC01CatalogSelection.swift.in',
++    'DSC01Probe.swift.in', 'test_copy_observation_contract.py', 'test_harness_contract.py', 'test_catalog_contract.py',
++)
++PREDICATE_NAMES = (
++    'settingsExplicitOwner', 'settingsSystemRelease', 'previousEnglishOwner', 'previousSystemRestore',
++    'syntheticStoreApplied', 'localInitialPublicPhase', 'localLanguageDirection', 'foregroundCounters',
++    'afterOSSystemEnglish', 'afterOSExplicitArabic', 'gamesSettingsUnmounted', 'actualSettingsDirection',
++)
++
++
++def rect(x, y, w, h):
++    return dict(present=True, validFiniteRectangle=True, rectangle=[x, y, w, h])
++
++
++def synthetic_start_rows():
++    fields = dict(targetCountCapped16=1, target=rect(24, 720, 354, 52), enabled=True, hittable=True,
++        viewport=rect(0, 0, 402, 874), overlayCountCapped16=1, overlay=rect(68, 134, 265, 49),
++        foreground=True, alertPresent=False, keyboardPresent=False)
++    raw = [('setup', dict(scenario='mafia', surface='mafia-local', publicPhase='setup'))]
++    raw += [('search', dict(fields, window=1, index=i)) for i in range(1, 7)]
++    raw += [('before-activation', dict(fields, normalizedPoint=[0.5, 0.5], plannedPoint=[201, 746],
++                sampledCoordinatePoint=[201, 746], visibleInterior=rect(36, 732, 330, 28),
++                activationTargetFrame=rect(24, 720, 354, 52))), ('after-activation', fields),
++            ('successor', dict(targetCountCapped16=0, foreground=True, alertPresent=False, keyboardPresent=False,
++                gameDirection='ltr', publicContext=dict(scenario='mafia', surface='mafia-local', publicPhase='role-assignment')))]
++    return [dict(schemaVersion=1, ordinal=i, kind=kind, elapsedMilliseconds=i * 250, fields=copy.deepcopy(value))
++            for i, (kind, value) in enumerate(raw, 1)]
++
++
++def start_log(rows=None, contract=True):
++    rows = synthetic_start_rows() if rows is None else rows
++    lines = ['DSC01_MAFIA_START_METADATA ' + json.dumps(row) for row in rows]
++    if contract:
++        lines.insert(0, 'DSC01_MAFIA_START_GEOMETRY_CONTRACT ' + json.dumps(dict(schemaVersion=1, cases=16, passed=True)))
++    return '\n'.join(lines)
++
++
++def synthetic_os_rows():
++    raw = [('ownership', 'PASS', dict(sameExpectedSimulator=True, ownedSyntheticDeviceName=True, debugSimulatorBuild=True))]
++    raw += [('settingsRoot', 'PASS', {})]
++    for stage in ('general', 'languageRegion'):
++        raw += [(stage, 'before-activation', {}), (stage, 'after-activation', {}), (stage, 'PASS', {})]
++    raw += [('initialEnglishPrimary', 'PASS', dict(englishPrimaryObserved=True, arabicObserved=False))]
++    for stage in ('addLanguage', 'searchArabic', 'selectArabic', 'retainEnglishPrimary'):
++        raw += [(stage, 'before-activation', {}), (stage, 'after-activation', {})]
++    raw += [('finalPreferredLanguages', 'PASS', dict(englishPrimaryObserved=True, arabicObserved=True,
++        languageRegionTitleObserved=True, foreground=True, alertCountCapped16=0, keyboardPresent=False,
++        languageRegionTitleHittable=True, englishPrimaryHittable=True, arabicPreferredRowObserved=True,
++        addLanguageSuccessorHittableEnabled=True, searchFieldCountCapped16=0,
++        englishPrimaryFrame=rect(20, 240, 362, 56), arabicPreferredRowFrame=rect(20, 296, 362, 56),
++        addLanguageSuccessorFrame=rect(20, 352, 362, 52)))]
++    return [dict(schemaVersion=1, ordinal=i, stage=stage, status=status, fields=fields)
++            for i, (stage, status, fields) in enumerate(raw, 1)]
++
++
++def os_log(rows=None):
++    return '\n'.join('DSC01_OS_PREREQUISITE ' + json.dumps(row)
++                     for row in (synthetic_os_rows() if rows is None else rows))
++
++
++class V8ReceiptTest(unittest.TestCase):
++    def test_complete_synthetic_receipts_only_exercise_parsers(self):
++        result = v8_receipts.verify_v8_receipts(start_log() + '\n' + os_log())
++        self.assertEqual(1, result['mafia_start']['physical_start_activations'])
++        self.assertTrue(result['os_multilingual_prerequisite']['english_remains_primary'])
++        self.assertIn('Original per-app', result['os_multilingual_prerequisite']['limitation'])
++
++    def test_start_requires_executed_geometry_contract(self):
++        for log in (start_log(contract=False), start_log().replace('"cases": 16', '"cases": 14'),
++                    start_log() + '\n' + start_log().splitlines()[0]):
++            with self.assertRaises(RuntimeError): v8_receipts.verify_start(log)
++
++    def test_start_activation_is_not_repeatable_or_an_incomplete_window(self):
++        for change in ('repeat', 'partial', 'failed', 'out-of-order'):
++            rows = synthetic_start_rows()
++            if change == 'repeat': rows[2]['kind'] = 'before-activation'
++            if change == 'partial': rows.pop(2)
++            if change == 'failed': rows[-1]['kind'] = 'failed'
++            if change == 'out-of-order': rows[2]['fields']['index'] = 6
++            with self.subTest(change=change), self.assertRaises(RuntimeError):
++                v8_receipts.verify_start(start_log(rows))
++
++    def test_start_setup_and_canonical_successor_are_both_mandatory(self):
++        for location, key, value in ((0, 'publicPhase', 'role-assignment'), (-1, 'publicPhase', 'setup'),
++                                     (-1, 'surface', 'whodunit-local'), (-1, 'scenario', 'os')):
++            rows = synthetic_start_rows()
++            target = rows[location]['fields'] if location == 0 else rows[location]['fields']['publicContext']
++            target[key] = value
++            with self.assertRaises(RuntimeError): v8_receipts.verify_start(start_log(rows))
++        for key, value in (('targetCountCapped16', 1), ('gameDirection', 'rtl'),
++                           ('foreground', False), ('alertPresent', True), ('keyboardPresent', True)):
++            rows = synthetic_start_rows(); rows[-1]['fields'][key] = value
++            with self.assertRaises(RuntimeError): v8_receipts.verify_start(start_log(rows))
++
++    def test_start_disabled_hidden_occluded_and_nonfinite_fail(self):
++        for key, value in (('enabled', False), ('hittable', False), ('foreground', False),
++                           ('alertPresent', True), ('keyboardPresent', True), ('targetCountCapped16', 2)):
++            rows = synthetic_start_rows(); rows[-3]['fields'][key] = value
++            with self.assertRaises(RuntimeError): v8_receipts.verify_start(start_log(rows))
++        for field in ('target', 'viewport', 'overlay', 'activationTargetFrame', 'visibleInterior'):
++            rows = synthetic_start_rows(); rows[-3]['fields'][field]['rectangle'][0] = float('nan')
++            with self.assertRaises(RuntimeError): v8_receipts.verify_start(start_log(rows))
++
++    def test_start_last_window_and_dynamic_coordinate_drift_fail(self):
++        rows = synthetic_start_rows(); rows[3]['fields']['target']['rectangle'][1] += 1
++        with self.assertRaises(RuntimeError): v8_receipts.verify_start(start_log(rows))
++        for field in ('sampledCoordinatePoint', 'plannedPoint', 'normalizedPoint'):
++            rows = synthetic_start_rows(); rows[-3]['fields'][field][1] += 50
++            with self.assertRaises(RuntimeError): v8_receipts.verify_start(start_log(rows))
++
++    def test_public_diagnostic_bounds_are_strict(self):
++        for prefix, parser in (('DSC01_MAFIA_START_METADATA ', v8_receipts.verify_start),
++                                ('DSC01_OS_PREREQUISITE ', v8_receipts.verify_os_prerequisite)):
++            with self.assertRaises(RuntimeError): parser(start_log() + '\n' + prefix + ' ' * 8193)
++
++    def test_os_precondition_never_passes_from_missing_unknown_or_blocked_step(self):
++        with self.assertRaises(RuntimeError): v8_receipts.verify_os_prerequisite('')
++        for stage in ('ownership', 'initialEnglishPrimary', 'selectArabic', 'finalPreferredLanguages'):
++            rows = synthetic_os_rows()
++            next(row for row in rows if row['stage'] == stage)['status'] = 'BLOCKED'
++            with self.assertRaises(RuntimeError): v8_receipts.verify_os_prerequisite(os_log(rows))
++        rows = synthetic_os_rows(); rows[4]['stage'] = 'unknown'
++        with self.assertRaises(RuntimeError): v8_receipts.verify_os_prerequisite(os_log(rows))
++
++    def test_os_prerequisite_requires_owned_profile_and_english_primary_not_arabic_primary(self):
++        for key in ('sameExpectedSimulator', 'ownedSyntheticDeviceName', 'debugSimulatorBuild'):
++            rows = synthetic_os_rows(); rows[0]['fields'][key] = False
++            with self.assertRaises(RuntimeError): v8_receipts.verify_os_prerequisite(os_log(rows))
++        for key in ('englishPrimaryObserved', 'arabicObserved', 'languageRegionTitleObserved', 'foreground'):
++            rows = synthetic_os_rows(); rows[-1]['fields'][key] = False
++            with self.assertRaises(RuntimeError): v8_receipts.verify_os_prerequisite(os_log(rows))
++        rows = synthetic_os_rows(); rows[-1]['fields']['alertCountCapped16'] = 1
++        with self.assertRaises(RuntimeError): v8_receipts.verify_os_prerequisite(os_log(rows))
++
++    def test_os_step_activation_cannot_repeat_or_disappear(self):
++        for stage in ('general', 'languageRegion', 'addLanguage', 'searchArabic', 'selectArabic', 'retainEnglishPrimary'):
++            rows = synthetic_os_rows()
++            row = next(row for row in rows if row['stage'] == stage and row['status'] == 'after-activation')
++            row['status'] = 'before-activation'
++            with self.assertRaises(RuntimeError): v8_receipts.verify_os_prerequisite(os_log(rows))
++
++    def test_arabic_picker_result_cannot_masquerade_as_exposed_preferred_list(self):
++        for key, value in (('keyboardPresent', True), ('searchFieldCountCapped16', 1),
++                           ('languageRegionTitleHittable', False), ('englishPrimaryHittable', False),
++                           ('arabicPreferredRowObserved', False), ('addLanguageSuccessorHittableEnabled', False)):
++            rows = synthetic_os_rows(); rows[-1]['fields'][key] = value
++            with self.assertRaises(RuntimeError): v8_receipts.verify_os_prerequisite(os_log(rows))
++        rows = synthetic_os_rows(); rows[-1]['fields']['arabicPreferredRowFrame']['rectangle'][1] = 600
++        with self.assertRaises(RuntimeError): v8_receipts.verify_os_prerequisite(os_log(rows))
++
++
++class V8SourceControlTest(unittest.TestCase):
++    def test_start_keeps_one_activation_outside_readiness_and_proves_canonical_successor(self):
++        source = (HERE / 'DSC01MafiaStartSelection.swift.in').read_text()
++        ready = source[source.index('private func mafiaStartReadySample('):source.index('private func startActualMafiaOnce(')]
++        self.assertNotIn('.tap()', ready)
++        for text in ('for window in 1...14', 'for index in 1...6', 'if index > 1 { try catalogSamplingInterval() }'):
++            self.assertIn(text, ready)
++        self.assertEqual(1, source.count('coordinate.tap()'))
++        self.assertNotIn('target.tap()', source)
++        for text in ('dsc01CatalogNear(activationFrame, sampledFrame)', 'target.isHittable, target.isEnabled',
++                     'abs(point.x - plan.point.x) <= 0.5', 'predicateName: .mafiaSetupPublic',
++                     'predicateName: .mafiaStartSuccessor', 'value["publicPhase"] as? String == "role-assignment"',
++                     'value["commandOrdinal"] as? Int == 0', 'target.targetCount == 0', 'viewport.maxY - 48',
++                     'overlay.maxY + 8', 'ordinal < 96', 'encoded.count <= 4096', 'totalBytes <= 196608'):
++            self.assertIn(text, source)
++        for forbidden in ('Thread.sleep(', '.debugDescription', '.screenshot()', 'UserDefaults',
++                          'MainViewControllerKt', 'session.submit(', 'sendAction(', 'ConfigureAndStart(', '.label', '.value'):
++            self.assertNotIn(forbidden, source)
++
++    def test_complete_original_matrix_changes_only_the_authorized_calls_and_wait_diagnostics(self):
++        old = (V7 / 'IOSAppLaunchUITests.swift.in').read_text()
++        new = (HERE / 'IOSAppLaunchUITests.swift.in').read_text()
++        for call in ('        try verifyMafiaStartGeometryContract()\n',
++                     '        try prepareActualOSMultilingualPrerequisite(app, expectedSimulator: simulator)\n'):
++            self.assertEqual(1, new.count(call)); new = new.replace(call, '')
++        self.assertEqual(1, new.count('try startActualMafiaOnce(app)'))
++        new = new.replace('try startActualMafiaOnce(app)',
++                          'try tapPublicSetupPrefix(app, prefix: "Start the Mafia game with these settings")')
++        for name in PREDICATE_NAMES:
++            named = 'observeEventually(app, predicateName: .' + name + ')'
++            self.assertEqual(1, new.count(named)); new = new.replace(named, 'observeEventually(app)')
++        begin = '    @MainActor private func observeEventually('
++        end = '    private func assertOwned('
++        original_wait = old[old.index(begin):old.index(end)]
++        current_wait = new[new.index(begin):new.index(end)]
++        for needed in ('for attempt in 1...6', 'let snapshot = try observe(app)',
++                       'if try predicate(snapshot) { return snapshot }', 'dsc01PublicContext(snapshot)',
++                       'recordObservationFailure(predicateName', 'throw error', 'predicateName.rawValue'):
++            self.assertIn(needed, current_wait)
++        new = new.replace(current_wait, original_wait)
++        self.assertEqual(old, new, 'No original oracle/predicate/action/timeout change may be hidden elsewhere')
++
++    def test_original_app_observers_catalog_cleanup_and_oracle_controls_remain_byte_identical(self):
++        changed = {'run_dsc01_apphost_cycle.py', 'IOSAppLaunchUITests.swift.in', 'test_catalog_contract.py'}
++        for name in V7_REFERENCES:
++            if name not in changed:
++                self.assertEqual((V7 / name).read_bytes(), (HERE / name).read_bytes(), name)
++        marker = '        finally:\n            deferred = []'
++        original = (V7 / 'run_dsc01_apphost_cycle.py').read_text()
++        current = (HERE / 'run_dsc01_apphost_cycle.py').read_text()
++        self.assertEqual(original[original.index(marker):], current[current.index(marker):])
++
++    def test_every_observation_predicate_is_named_without_logging_preferences_or_private_state(self):
++        source = (HERE / 'IOSAppLaunchUITests.swift.in').read_text()
++        self.assertNotIn('observeEventually(app) {', source)
++        public = (HERE / 'DSC01PublicDiagnostics.swift.in').read_text()
++        for name in PREDICATE_NAMES + ('mafiaSetupPublic', 'mafiaStartSuccessor'):
++            self.assertIn(name, public)
++        for needed in ('contexts.count <= 6', 'encoded.count <= 4096', 'not-allowlisted',
++                       '"scenario"', '"surface"', '"publicPhase"'):
++            self.assertIn(needed, public)
++        for forbidden in ('["now"]', '["preferences"]', 'randomSeed', 'fullRoleMap', '.debugDescription', '.screenshot()'):
++            self.assertNotIn(forbidden, public)
++
++    def test_os_prerequisite_is_supported_ui_only_fresh_owned_and_after_both_complete_games(self):
++        source = (HERE / 'DSC01OSPrerequisite.swift.in').read_text()
++        for required in ('#if DEBUG && targetEnvironment(simulator)', 'environment["SIMULATOR_UDID"] == expectedSimulator',
++                         'environment["SIMULATOR_DEVICE_NAME"]?.hasPrefix("Parlor-Audit-parlor-audit-dsc01-apphost-")',
++                         'XCUIApplication(bundleIdentifier: "com.apple.Preferences")', 'settings.launchArguments = []',
++                         'defer { settings.terminate() }', 'settings.launch()', 'for attempt in 1...6',
++                         'search.firstMatch.typeText("Arabic")', '["Use English", "Keep English"]',
++                         '"English, iPhone Language"', 'osPrerequisiteBlock(', 'DSC01OSPrerequisiteBlocked.',
++                         'osPreferredListIsUncovered(final)', '"arabicPreferredRowObserved"',
++                         'englishFrame.maxY <= arabicFrame.minY + 1', 'arabicFrame.maxY <= addFrame.minY + 1',
++                         'observed["searchFieldCountCapped16"] as? Int == 0',
++                         'count == 1 else', 'ordinal < 96', 'encoded.count <= 8192', 'bytes <= 196608'):
++            self.assertIn(required, source)
++        for forbidden in ('UserDefaults', 'App-Prefs:', 'prefs:root', 'simctl', 'defaults write',
++                          'setObject(', 'removePersistentDomain', '.debugDescription', '.screenshot()',
++                          'performSelector(', 'Thread.sleep(', 'syntheticLanguage(', '"Use Arabic"'):
++            self.assertNotIn(forbidden, source)
++        matrix = (HERE / 'IOSAppLaunchUITests.swift.in').read_text()
++        self.assertLess(matrix.index('try verifyActualLocalGame(app, game: "mafia")'),
++                        matrix.index('try prepareActualOSMultilingualPrerequisite(app, expectedSimulator: simulator)'))
++        self.assertLess(matrix.index('try prepareActualOSMultilingualPrerequisite(app, expectedSimulator: simulator)'),
++                        matrix.index('try investigateActualOSPerAppLanguage(app)'))
++
++    def test_new_controls_are_bound_and_appended_to_only_the_copied_xctest(self):
++        controls = set(runner.control_files())
++        source = Path(runner.__file__).read_text()
++        for name in ('DSC01PublicDiagnostics.swift.in', 'DSC01MafiaStartSelection.swift.in',
++                     'DSC01OSPrerequisite.swift.in', 'v8_receipts.py', 'test_v8_contract.py'):
++            self.assertIn(HERE / name, controls)
++            if name.endswith('.swift.in'): self.assertIn("(FIXTURE / '" + name + "').read_text()", source)
++        self.assertIn("receipt['v8_public_interaction_proof'] = verify_v8_receipts", source)
++        self.assertLess(source.index("receipt['xctest'] = verify_xctest"),
++                        source.index("receipt['v8_public_interaction_proof'] = verify_v8_receipts"))
++        self.assertIn("receipt['dsc01_matrix'] = verify_probe", source)
++
++    def test_every_consumed_v7_reference_is_bound_by_full_path_and_bytes(self):
++        controls = runner.control_files()
++        self.assertEqual(len(controls), len(set(controls)))
++        self.assertEqual({V7 / name for name in V7_REFERENCES}, {p for p in controls if p.parent == V7})
++        manifest = {row['path']: row['sha256'] for row in runner.control_manifest()}
++        for name in V7_REFERENCES:
++            path = V7 / name
++            self.assertIn(HERE / name, controls)
++            self.assertEqual(hashlib.sha256(path.read_bytes()).hexdigest(), manifest[str(path.relative_to(runner.ROOT))])
++
++    def test_each_v7_reference_changes_identity_without_changing_any_file(self):
++        original = runner.digest
++        before = runner.control_hash()
++        for name in V7_REFERENCES:
++            reference = V7 / name
++            def changed_digest(path):
++                value = original(path)
++                return ('1' if value[0] == '0' else '0') + value[1:] if path == reference else value
++            with self.subTest(reference=name), mock.patch.object(runner, 'digest', side_effect=changed_digest):
++                self.assertNotEqual(before, runner.control_hash())
++
++
++if __name__ == '__main__':
++    unittest.main()
+--- executed-v7/source-bindings.json
++++ v8/source-bindings.json
+@@ -2,7 +2,7 @@
+   "schema_version": 3,
+   "binding_status": "REVIEW_REQUIRED_BOUND",
+   "repository": "/Users/abdelrahman/Projects/parlor",
+-  "created_at": "2026-09-06T15:46:48.152363+00:00",
++  "created_at": "2026-09-06T18:26:37.968934+00:00",
+   "source_identity": {
+     "commit": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+     "tree": "db7f3d2afe73a13628296daee2cce71165eebc8d",

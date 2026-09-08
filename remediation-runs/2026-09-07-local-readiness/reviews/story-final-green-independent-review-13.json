@@ -1,0 +1,1253 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/native_fix_review",
+  "fix_author": "/root",
+  "created_at": "2026-09-07T07:56:47.210810+00:00",
+  "conclusion": "APPROVED: six reviewed story/doc/test changes have independently verified focused+combined JVM GREEN evidence and exact20-record shipping-canonicalizer evidence. Scope does not approve unrelated changes, Git operations or release/device readiness.",
+  "source_scope": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/docs/WHODUNIT_TEST_CONTENT.md",
+      "sha256": "e10fc5f4d8d5024c5a9f1fcf51d1bf30a9a1fda410843ed51e42d66186cd5a33",
+      "lines": 135,
+      "matches_frozen_source_and_independent_review": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+      "sha256": "ff529b1a329d226e8745cf86a848ae16fbd798e6ef413c2b55694d92c3e32720",
+      "lines": 342,
+      "matches_frozen_source_and_independent_review": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json",
+      "sha256": "53f9b8089509b2540beea6effbe898b2e98c1da49dd7b3421433b0bad306135c",
+      "lines": 348,
+      "matches_frozen_source_and_independent_review": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryRemainingChronologyTest.kt",
+      "sha256": "d767fcb31ff85e3d90a36f686a72b69eeda6ef57113f9fb943c5b557674c3566",
+      "lines": 84,
+      "matches_frozen_source_and_independent_review": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt",
+      "sha256": "13f75cdb5e546242706b26fd4896eb0b778942b956532d52f239662457f45231",
+      "lines": 160,
+      "matches_frozen_source_and_independent_review": true
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt",
+      "sha256": "a5d75b8dbdc6de73906be77cc15225e503583643172642da32197377fca8af6c",
+      "lines": 296,
+      "matches_frozen_source_and_independent_review": true
+    }
+  ],
+  "tested_baseline": {
+    "commit": "1f809b87c15a4deb079809bc14718a58cf0fe451",
+    "tree": "6f6912d8612f71e07d2c338d860e906333ce8aad",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "M docs/RELEASE_AUTOMATION.md\n M docs/WHODUNIT_TEST_CONTENT.md\n M docs/review/README.md\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json\n M game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json\n M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryChronologyTest.kt\n M game-modes/whodunit/src/desktopTest/kotlin/com/parlor/games/whodunit/content/TestingStoryCompatibilityTest.kt\n M scripts/generate_review_inventory.py\n M scripts/release/tests/test_review_inventory.py\n M shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/DesktopDependencyVerificationContractTest.kt\n M shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitMavenProvenanceContractTest.kt",
+    "diff_sha256": "0a0431d5bbadb9304f7115efbec2b603db5e10b9a87e8c124fdca19e6f9c863b",
+    "source_manifest_sha256": "8c44bb4ed296e6aa13d1295d0276d98d7c8b91dac4ee8209bb0934d3bb2ad060"
+  },
+  "review_time_head": "b05ef21c924e71328b0fabf0970fd56273b2db13",
+  "head_change_note": "Root separately committed existing MT/DOC changes after this run; approval binds exact6 story hashes, the frozen dirty-source manifest, and unchanged controls, not review-time HEAD alone.",
+  "prior_source_reviews": [
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/story-final-editorial-independent-review-12.json",
+      "sha256": "9b87c8f03375f9be21adf5a80317d5b0a259700e21d13aef3cf625490996827e"
+    },
+    {
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/story-final-editorial-independent-supplement-12.json",
+      "sha256": "3fed3ebcaa4c0b5330b8d6c3ae7354ca8638398c2784bbafd525656eaf90726e"
+    }
+  ],
+  "verification": {
+    "gate": "JVM runtime regressions and two Detekt tasks",
+    "status": "PASS",
+    "suites": 65,
+    "descriptors": 379,
+    "duplicates": 0,
+    "tests": {
+      "tests": 379,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "by_module": {
+      "whodunit": 356,
+      "transport-p2p": 23
+    },
+    "focused_methods": {
+      "com.parlor.games.whodunit.content.TestingStoryCompatibilityTest": [
+        "correctedStoriesDoNotReuseAnyRecordedEarlierCanonicalContentDigest()[desktop]",
+        "currentSaveRoundTripsButOldOrCrossedIdentityIsRetainedAndRejected()[desktop]",
+        "identityLessPreClueSavesCannotSilentlyBindToInstalledStoryProse()[desktop]",
+        "lanOffersMatchOnlyTheExactLoadedRevisionForAllCorrectedCasesAndModes()[desktop]"
+      ],
+      "com.parlor.games.whodunit.content.TestingStoryRemainingChronologyTest": [
+        "guiltyCaptainsDiscoveryAndTwoMinuteHesitationMatchPublicFactsAndCamera()[desktop]",
+        "walidsKnowledgeMatchesTheSameLastWeekWillWithoutInventingAnEarlierRevision()[desktop]",
+        "nadimsCurrentClosureMatchesTheRegisterWithoutRewritingHisFalseCigaretteAlibi()[desktop]"
+      ],
+      "com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest": [
+        "eliminationConfirmationTimeIsExcludedAndStayRestartsOnlyOneTicker()[desktop]",
+        "stayDoesNotReleaseAnExistingPerTimerPause()[desktop]",
+        "lastSecondCannotExpireBehindConfirmationButExpiresAfterStay()[desktop]",
+        "failedSaveKeepsTimeFrozenAndSuccessfulSaveResumesWithoutCatchingUp()[desktop]",
+        "stayDoesNotReleaseAnExistingSessionPause()[desktop]",
+        "classicConfirmationTimeIsExcludedAndStayRestartsOnlyOneTicker()[desktop]"
+      ],
+      "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest": [
+        "classicHostConfirmationExcludesTimeAndConfirmedLeaveStopsTicker()[desktop]",
+        "lifecycleResumeBehindConfirmationDoesNotRestartHiddenDiscussion()[desktop]",
+        "eliminationHostConfirmationExcludesTimeAndConfirmedLeaveStopsTicker()[desktop]",
+        "stayAndLifecycleResumeDoNotReleaseManualPause()[desktop]"
+      ]
+    },
+    "counts_note": "3 final chronology +4 compatibility +10 LeaveTimer are subsets of356 Whodunit, not additional tests.23 transport tests are18 metadata +2 provenance +3 dependency contracts. No physicalP2pKit tests were selected or unignored.",
+    "xml_count_vs_declared_and_receipts": "all65 identical; timestamps and suite durations inside fresh cycle",
+    "gradle": {
+      "exit": 0,
+      "strict": true,
+      "rerun_tasks": true,
+      "no_build_cache": true,
+      "single_lane": true,
+      "actionable_executed": 60
+    },
+    "detekt": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "status": "PASS",
+        "findings": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/shared/transport-p2p/build/reports/detekt/detekt.xml",
+        "sha256": "f491e274f0d208f81c3edbc7c1097c30db590a3822fcf579468ac814d9ccc62b",
+        "status": "PASS",
+        "findings": 0
+      }
+    ],
+    "raw_suite_evidence": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.WhodunitPlayModePolicyTest.xml",
+        "sha256": "4a498737e145e4547e11474f1b802ec6d78935363b00baebe2c0843331839bec",
+        "suite": "com.parlor.games.whodunit.WhodunitPlayModePolicyTest",
+        "counts": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:54.697Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.action.WhodunitActionCodecTest.xml",
+        "sha256": "52df437f7ebe2f13b78e0f84a16160093cfc254bbf9cd3ab3801c4f1ec8bb74b",
+        "suite": "com.parlor.games.whodunit.action.WhodunitActionCodecTest",
+        "counts": {
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:54.707Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.authority.WhodunitActionAuthorityTest.xml",
+        "sha256": "1b9f4756ba1138cbc004665beceb6945e6ada0ab2e343438ce472b225dd9cbca",
+        "suite": "com.parlor.games.whodunit.authority.WhodunitActionAuthorityTest",
+        "counts": {
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:54.764Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.ArabicCaseValidationTest.xml",
+        "sha256": "32213f222e84931a585dc4ef01a8edc3548e586e5ed3e0e7fa4f4d8a4db56a31",
+        "suite": "com.parlor.games.whodunit.content.ArabicCaseValidationTest",
+        "counts": {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:54.773Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.BundledCaseLoadingTest.xml",
+        "sha256": "882f5e37b307d827ca17aac53b827549f9afe31bbf2df0c6613c6e2be7e24b01",
+        "suite": "com.parlor.games.whodunit.content.BundledCaseLoadingTest",
+        "counts": {
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:54.987Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.CasePickerDiscoveryTest.xml",
+        "sha256": "08830ccd37a775d5eb4de955f5044c317c75be48af2cbecf0fa1f7cda6159936",
+        "suite": "com.parlor.games.whodunit.content.CasePickerDiscoveryTest",
+        "counts": {
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:55.021Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.ResReadBytesProbeTest.xml",
+        "sha256": "06cd9e6bdbc43b465aae9ce30d90f32709d57219578fc1c5686314c9404c9bcd",
+        "suite": "com.parlor.games.whodunit.content.ResReadBytesProbeTest",
+        "counts": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:55.041Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryChronologyTest.xml",
+        "sha256": "3b82aa9ea6874c1f1d3fd736c50f3b23aa86c35ba7842ad4a413d030597149d7",
+        "suite": "com.parlor.games.whodunit.content.TestingStoryChronologyTest",
+        "counts": {
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:55.042Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryCompatibilityTest.xml",
+        "sha256": "1205b9f93c3c85e456452855782a3f926a79b67ad7696ac35fb1dbdb03e5fb53",
+        "suite": "com.parlor.games.whodunit.content.TestingStoryCompatibilityTest",
+        "counts": {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:55.074Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryFollowupChronologyTest.xml",
+        "sha256": "e3da682e8cdf3b1c929d09d5b40990aa20f6c946347aab40812e10bb97a55cfb",
+        "suite": "com.parlor.games.whodunit.content.TestingStoryFollowupChronologyTest",
+        "counts": {
+          "tests": 13,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:55.368Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryGameTraceTest.xml",
+        "sha256": "b8a1d40c695b0989c93722aef46ed4cb60048d717cca3cdcf857870f0600d2f3",
+        "suite": "com.parlor.games.whodunit.content.TestingStoryGameTraceTest",
+        "counts": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:55.390Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryRemainingChronologyTest.xml",
+        "sha256": "2245a3f7d886d9193ea7e78fb94757cb5f71528b3e20d06715d5e123830bddb6",
+        "suite": "com.parlor.games.whodunit.content.TestingStoryRemainingChronologyTest",
+        "counts": {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:57.494Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.WhodunitContentIdentityTest.xml",
+        "sha256": "76f087d08313d4bf65d0d079cfa5a7704e71ec50051691be8e4ebae9e2180a11",
+        "suite": "com.parlor.games.whodunit.content.WhodunitContentIdentityTest",
+        "counts": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:57.499Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.WhodunitPayloadHardeningTest.xml",
+        "sha256": "b548970e3662f088dfaddf60b700b6648138187272ed5cbab080effa853bc923",
+        "suite": "com.parlor.games.whodunit.content.WhodunitPayloadHardeningTest",
+        "counts": {
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:57.502Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.CluePolicyTest.xml",
+        "sha256": "213fe72c60f927b6b5f92893b63442d72e5bae4e273a90387274db8e8a9dbf05",
+        "suite": "com.parlor.games.whodunit.domain.CluePolicyTest",
+        "counts": {
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:57.526Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.PartyReadinessTest.xml",
+        "sha256": "ed32bcf6f6918f77603004d0cdc6bd0487a976c91eafadd038d860c2e767de2d",
+        "suite": "com.parlor.games.whodunit.domain.PartyReadinessTest",
+        "counts": {
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:57.650Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.WhodunitReducerProductionGuardsTest.xml",
+        "sha256": "d82fd529aadbf660d97e315b53842181e33796203efc2a57a1135191c514a6d3",
+        "suite": "com.parlor.games.whodunit.domain.WhodunitReducerProductionGuardsTest",
+        "counts": {
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:57.653Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.WhodunitRulesInvariantTest.xml",
+        "sha256": "79a438d49fc93a16ee9e1bf0b63ccc8895d99f7ff66900486c15bb9823ce2ebf",
+        "suite": "com.parlor.games.whodunit.domain.WhodunitRulesInvariantTest",
+        "counts": {
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:57.664Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.WhodunitTerminalAndCluePolicyTest.xml",
+        "sha256": "51d55d84045fe531b16e80ec963ffccde68d3c4a30b67bbd130908b25485490c",
+        "suite": "com.parlor.games.whodunit.domain.WhodunitTerminalAndCluePolicyTest",
+        "counts": {
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:59.466Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.domain.rules.WhodunitPolicyGoldenTest.xml",
+        "sha256": "d96d71e76b146ba0789c66a7768da345ae5ceb3c624229c8ee8d250a2dbbb9a6",
+        "suite": "com.parlor.games.whodunit.domain.rules.WhodunitPolicyGoldenTest",
+        "counts": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:59.499Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.ContinueWithoutPlayerTest.xml",
+        "sha256": "67e8184779d9942d408089ab2fa291253b4593958e5e24284a9d8a97476bb70d",
+        "suite": "com.parlor.games.whodunit.flow.ContinueWithoutPlayerTest",
+        "counts": {
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:59.501Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.FullGameDriveTest.xml",
+        "sha256": "f43e253253c79f6b3a7f9133f9c8aae92019222e4c2b35d839759e18fbce8a4f",
+        "suite": "com.parlor.games.whodunit.flow.FullGameDriveTest",
+        "counts": {
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:59.540Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.IntroAndBriefingReadinessTest.xml",
+        "sha256": "a7a798fe1d41b730231e042f4b78bedb3b041614f1b4d80dad65bd50bc062a68",
+        "suite": "com.parlor.games.whodunit.flow.IntroAndBriefingReadinessTest",
+        "counts": {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:59.605Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.PartyFlowControllerTest.xml",
+        "sha256": "aadb9feb4a861f7aa0f15517cdfd90380ce824c8abcf45fab4c440f237fc7ba1",
+        "suite": "com.parlor.games.whodunit.flow.PartyFlowControllerTest",
+        "counts": {
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:59.615Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.PauseRefuseLeaveTest.xml",
+        "sha256": "ab884a6500a2555a9c8cf56824c4cb01e972cba44f2c3b3cb6778c4f1143589e",
+        "suite": "com.parlor.games.whodunit.flow.PauseRefuseLeaveTest",
+        "counts": {
+          "tests": 10,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:59.617Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.SimultaneousCharacterRevealTest.xml",
+        "sha256": "0380c9791bebd38a1252864f801ffa8db13296ef14f77b930ae587e4fa0edf23",
+        "suite": "com.parlor.games.whodunit.flow.SimultaneousCharacterRevealTest",
+        "counts": {
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:59.648Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.TickerAndRerollTest.xml",
+        "sha256": "0fdefd68a3404dc43056842ffbfdd81c50b0bdcd3d5fd93a0f4d99647865d7ab",
+        "suite": "com.parlor.games.whodunit.flow.TickerAndRerollTest",
+        "counts": {
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:59.661Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.TiedRevoteTest.xml",
+        "sha256": "d8271cc659302afb1fc7243af8cdb13cae5e75c9c51fa88d80d32c030b4defd0",
+        "suite": "com.parlor.games.whodunit.flow.TiedRevoteTest",
+        "counts": {
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:59.690Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.flow.WhodunitLocalSessionConfigTest.xml",
+        "sha256": "eaaf81a7f67f8b32f459c987880eb4e2c33e3a4814daf3ae237a066f495ccb22",
+        "suite": "com.parlor.games.whodunit.flow.WhodunitLocalSessionConfigTest",
+        "counts": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:59.713Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.layout.ResponsiveLayoutAuditTest.xml",
+        "sha256": "0b970450dfba65515dbbf3cc3a4cab3b95aba491fb05fdd3c58f967fc9f4be3a",
+        "suite": "com.parlor.games.whodunit.layout.ResponsiveLayoutAuditTest",
+        "counts": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:59.714Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.layout.TokenDisciplineTest.xml",
+        "sha256": "6bff7924075dd11fb584b699b948f2adcbf38d4e065aadfee2b199b1b5ecf410",
+        "suite": "com.parlor.games.whodunit.layout.TokenDisciplineTest",
+        "counts": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:59.731Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.HostLostTimeoutTest.xml",
+        "sha256": "ed0fad86c9b2cb99dcedc1a951e590ed8f2818fb5d8930ca7d72e2d4fc3ec172",
+        "suite": "com.parlor.games.whodunit.multidevice.HostLostTimeoutTest",
+        "counts": {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:59.780Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.MultiDevicePartyPlayContractTest.xml",
+        "sha256": "877d79c96ccd1d31feffa4b9bc41215556e4f4cea881bbaf924bbcefff5dd078",
+        "suite": "com.parlor.games.whodunit.multidevice.MultiDevicePartyPlayContractTest",
+        "counts": {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:59.797Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.PartyConnectionEventsTest.xml",
+        "sha256": "568faac255d646be449b1928cb7627f9f81de16d0b1cff4cc3217dc1e04bcc01",
+        "suite": "com.parlor.games.whodunit.multidevice.PartyConnectionEventsTest",
+        "counts": {
+          "tests": 17,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:59.849Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.PartyPlayPassAndPlayParityTest.xml",
+        "sha256": "c763d555adc7c5444d92c85eceebb96d6e0028136ad4345345a03cde1de9808c",
+        "suite": "com.parlor.games.whodunit.multidevice.PartyPlayPassAndPlayParityTest",
+        "counts": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:59.924Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.QueuedActionSafetyTest.xml",
+        "sha256": "ee59eab3dcb2e9b5f935339a4d9aeb028c7f661b321931e4019e18bf487abbcd",
+        "suite": "com.parlor.games.whodunit.multidevice.QueuedActionSafetyTest",
+        "counts": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:59.929Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.SelfOfflineTimeoutTest.xml",
+        "sha256": "9ef63e251d5f56731e564b84de098a6509319b30158748b4dc26a684e9598273",
+        "suite": "com.parlor.games.whodunit.multidevice.SelfOfflineTimeoutTest",
+        "counts": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:59.935Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.WhodunitMultiDeviceShapeTest.xml",
+        "sha256": "e4466125faed73cd7ef5be941c32ae701dd69cf72d0781b3230f656368d8a322",
+        "suite": "com.parlor.games.whodunit.multidevice.WhodunitMultiDeviceShapeTest",
+        "counts": {
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:59.938Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.multidevice.WhodunitPeerProjectionBoundaryTest.xml",
+        "sha256": "20a12caed4bdb4a1a7a8074bd6af1219129eb4cdad71783fa41aacaa2ad7341f",
+        "suite": "com.parlor.games.whodunit.multidevice.WhodunitPeerProjectionBoundaryTest",
+        "counts": {
+          "tests": 7,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:59.969Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.projection.VoteRedactionTest.xml",
+        "sha256": "5020658aa3e0c58c686ddd0cb1c459f4c8aa8f43789fbd9584c399cecaa82bd8",
+        "suite": "com.parlor.games.whodunit.projection.VoteRedactionTest",
+        "counts": {
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:59.981Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitCaseBindingTest.xml",
+        "sha256": "3fd4dfaf5ce001ee945d9c7cc99803dfbd30e6df79b59ca3f362b219a15e382c",
+        "suite": "com.parlor.games.whodunit.snapshot.WhodunitCaseBindingTest",
+        "counts": {
+          "tests": 8,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:43:59.983Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest.xml",
+        "sha256": "548f49e7830d1cdb69597145e6b5d373c41d85e3a4d818f83ff5d177c003cda5",
+        "suite": "com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest",
+        "counts": {
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:44:00.005Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitLegacySnapshotGoldenTest.xml",
+        "sha256": "73016cda575b73daaaf322cae00ae114ef4a23dd2b964b0afb27059236aaafd9",
+        "suite": "com.parlor.games.whodunit.snapshot.WhodunitLegacySnapshotGoldenTest",
+        "counts": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:44:00.037Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest.xml",
+        "sha256": "845c29b2acf04805892b61dac0fcff55f801b376c612ec538e9cd65590290701",
+        "suite": "com.parlor.games.whodunit.snapshot.WhodunitResumeReconstructionTest",
+        "counts": {
+          "tests": 11,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:44:00.040Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitSnapshotRoundTripTest.xml",
+        "sha256": "6e17735236b584ac664c08cf4c9f8332a5e6b3fa113e97df1615074256360dde",
+        "suite": "com.parlor.games.whodunit.snapshot.WhodunitSnapshotRoundTripTest",
+        "counts": {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:44:00.065Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitSnapshotValidationTest.xml",
+        "sha256": "4d57f33ad96828808f944c0eb2c0e9019de5a0d067f24f2088e3e18b8b0cfcb7",
+        "suite": "com.parlor.games.whodunit.snapshot.WhodunitSnapshotValidationTest",
+        "counts": {
+          "tests": 46,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:44:00.080Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.PrivacyConcernPolicyTest.xml",
+        "sha256": "074dace7d034fb8484f2eaa2f67dc6167cbbf5ad497f7054611e5ace577c103e",
+        "suite": "com.parlor.games.whodunit.ui.PrivacyConcernPolicyTest",
+        "counts": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:44:00.116Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.RtlFormattingTest.xml",
+        "sha256": "14dcaecaf346f11b7f916ee43fc587eb42e1354da4b1a8369dd0db6bd45ff724",
+        "suite": "com.parlor.games.whodunit.ui.RtlFormattingTest",
+        "counts": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:44:00.117Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.WhodunitAccessibilitySemanticsTest.xml",
+        "sha256": "0afe52baac338045afe81f81649a438193ccd86731d2c248bae46fbf0815c2f9",
+        "suite": "com.parlor.games.whodunit.ui.WhodunitAccessibilitySemanticsTest",
+        "counts": {
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:44:00.182Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.WhodunitCasePickerScreenTest.xml",
+        "sha256": "9031c69c0911b5d043027a24c9bca183ce7a277e91f8b13654756442b27922f2",
+        "suite": "com.parlor.games.whodunit.ui.WhodunitCasePickerScreenTest",
+        "counts": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:44:00.981Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.WhodunitNetErrorMessageKeyTest.xml",
+        "sha256": "49304af97de83c46e8e51481d5be12b26c6fa6706eabf7b3240ecf923d40e6e0",
+        "suite": "com.parlor.games.whodunit.ui.WhodunitNetErrorMessageKeyTest",
+        "counts": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:44:01.132Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.components.RevealCompletionGateTest.xml",
+        "sha256": "f890cfb0a5e25862c2938520a33f5f7649d31198261bf0d12d7d72690bb2ce7b",
+        "suite": "com.parlor.games.whodunit.ui.components.RevealCompletionGateTest",
+        "counts": {
+          "tests": 1,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:44:01.134Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.EliminationVoteOwnershipIntegrationTest.xml",
+        "sha256": "87459d50035606f99227f8ee0b5476c5c96cf17602851369a750c42ff32cdcba",
+        "suite": "com.parlor.games.whodunit.ui.flow.EliminationVoteOwnershipIntegrationTest",
+        "counts": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:44:01.136Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest.xml",
+        "sha256": "cd1eaf56253e58644f30ef038728679b2516f2ffbed8091469049caa65dc7662",
+        "suite": "com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest",
+        "counts": {
+          "tests": 12,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:44:01.140Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.VoteTurnPolicyTest.xml",
+        "sha256": "43481b0e0380cd656b5c8b47af9d63c7e12d4bd4b00c9da5cf6dd3c8dad737ff",
+        "suite": "com.parlor.games.whodunit.ui.flow.VoteTurnPolicyTest",
+        "counts": {
+          "tests": 5,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:44:01.440Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest.xml",
+        "sha256": "b1a900f9fdc91af620d3b1bcfd8384507955cd93a70bbc6ee58f18adf9889373",
+        "suite": "com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+        "counts": {
+          "tests": 6,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:44:01.443Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest.xml",
+        "sha256": "36d6b688300ae3357a98fe9109dd40df6c660609b9f7361d3c6ebeb1416ddaed",
+        "suite": "com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest",
+        "counts": {
+          "tests": 9,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:44:21.720Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLanguageContinuityTest.xml",
+        "sha256": "34fa937fcb59c69a7e7beda0de42892b31bcb9968779e1ddee9b9517766a6156",
+        "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLanguageContinuityTest",
+        "counts": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:44:22.029Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest.xml",
+        "sha256": "c8d05b4c61c5e43f8fb9756b7ff99a260a2cc7f96e2766525a96ce655d636330",
+        "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+        "counts": {
+          "tests": 4,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:44:22.146Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerSessionFlowPolicyTest.xml",
+        "sha256": "33a3c4f6b9b54e0f230cd0cac2a3abac4e2541d3ea9129df54cea41ef02b2455",
+        "suite": "com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitPeerSessionFlowPolicyTest",
+        "counts": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:44:48.852Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.screens.setup.WhodunitCaseLanguageLabelTest.xml",
+        "sha256": "adb2a26e0fb3488c1323f800d32aab792848d4f57eb0a1708d0dfd17e1d024b9",
+        "suite": "com.parlor.games.whodunit.ui.screens.setup.WhodunitCaseLanguageLabelTest",
+        "counts": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:44:48.853Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.screens.setup.WhodunitModeChoiceTest.xml",
+        "sha256": "ce3912c77190c8d4d58ae212813ed079d3422c2926f57d883e3a1d5f6f300402",
+        "suite": "com.parlor.games.whodunit.ui.screens.setup.WhodunitModeChoiceTest",
+        "counts": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:44:48.853Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DesktopDependencyVerificationContractTest.xml",
+        "sha256": "94fb59d077ecd21aa780bb5919a761102205ac9cdd319d366c99609db33be55e",
+        "suite": "com.parlor.transport.p2p.DesktopDependencyVerificationContractTest",
+        "counts": {
+          "tests": 3,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:44:55.336Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitMavenProvenanceContractTest.xml",
+        "sha256": "60e467ff78199c880eefe31c3a49f4373a42ac54394ee8756cdffcc8e61bed56",
+        "suite": "com.parlor.transport.p2p.P2pKitMavenProvenanceContractTest",
+        "counts": {
+          "tests": 2,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:44:55.461Z"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/story-final-metadata-green-13/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.VerificationMetadataAssertionsTest.xml",
+        "sha256": "ccd2ea7e5b45c670843f92491eca2932fcb58cedaf9592ffe1979345bdc176d2",
+        "suite": "com.parlor.transport.p2p.VerificationMetadataAssertionsTest",
+        "counts": {
+          "tests": 18,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "timestamp": "2026-09-07T07:44:55.476Z"
+      }
+    ]
+  },
+  "canonical_runtime": {
+    "status": "PASS",
+    "java_exit": 0,
+    "method": "Root-owned Java21 source launcher called actual compiled CaseEnvelope.serializer and WhodunitContentIdentityKt.contentIdentity; reviewer independently matched all13 historical git-show bytes and7 current source bytes/versions/fixturepins. No Python canonical reimplementation used as proof.",
+    "records": [
+      {
+        "revision": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+        "case": "jasmine-ring",
+        "byte_sha256": "d1397ac1e0dc3669d3e5ff5e147aabf88647bc6726621cb7239392eb4e4cd9ca",
+        "version": "1.0.0",
+        "shipping_canonical_digest": "5cd26321aecef56a82afb56ec61f8ebad77329de39f413cb59b26de766d0d714",
+        "git_or_current_bytes_verified": true
+      },
+      {
+        "revision": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+        "case": "khan-el-khalili",
+        "byte_sha256": "b1b1d73cedc751f321c51f1e1523b74e57d515d408a7760add328c73c8dcc5e4",
+        "version": "1.0.0",
+        "shipping_canonical_digest": "0e690e0129c9b76fb772952b4e888e59e81610597b9294c52e8f656144393b9c",
+        "git_or_current_bytes_verified": true
+      },
+      {
+        "revision": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+        "case": "last-dinner",
+        "byte_sha256": "c36b20ed19f94b7eea5809f7c2f1ef38be1f97ac6e2598a8a5de0233ee9e89af",
+        "version": "1.0.0",
+        "shipping_canonical_digest": "a8593bdab776bb5dc1723b6fb562f37009aa2e02ddd11fc7e848284916452f26",
+        "git_or_current_bytes_verified": true
+      },
+      {
+        "revision": "3625d0663ba6eb51338cbd5f9dc45f859ec18846",
+        "case": "layla-halabi",
+        "byte_sha256": "954752e02c72ab8b4ac8fe7b03598857252c539ba07d1f781683be3b42c07d1d",
+        "version": "1.0.0",
+        "shipping_canonical_digest": "b98ca82b8cc2334e4f241f6bcefad96c7846f15096f3a043c4126911404345a5",
+        "git_or_current_bytes_verified": true
+      },
+      {
+        "revision": "1f809b87c15a4deb079809bc14718a58cf0fe451",
+        "case": "iskenderia-corniche",
+        "byte_sha256": "529cabfad2c076d23f1fb3ca3585cbc5f2aac3ec86f2b16550ffd730b923db1a",
+        "version": "1.0.1",
+        "shipping_canonical_digest": "e27cddb6fb9b6bf035ce6cd9fcb8000dbcb589ae0333cda5c7d7ac83598fb2f7",
+        "git_or_current_bytes_verified": true
+      },
+      {
+        "revision": "1f809b87c15a4deb079809bc14718a58cf0fe451",
+        "case": "jasmine-ring",
+        "byte_sha256": "ec3fda631a22dc34a1ecb756d13d81b0e2fc25ada67c0eeba72e002b9adc4559",
+        "version": "1.0.2",
+        "shipping_canonical_digest": "f03f94cc92f2f0c2388eab34e45857cb7dcfca2dd86f2aced5ff23d9292017cf",
+        "git_or_current_bytes_verified": true
+      },
+      {
+        "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "case": "iskenderia-corniche",
+        "byte_sha256": "3d9c96255b2097cc8b9417030cc8cff70e95571c66e64b031c4f247779eafaa2",
+        "version": "1.0.0",
+        "shipping_canonical_digest": "b492eddff0ccfdc3142a60ff2ee6da22566cbb39ab8717c2219e8875ac66733d",
+        "git_or_current_bytes_verified": true
+      },
+      {
+        "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "case": "jasmine-ring",
+        "byte_sha256": "a33966e792ce1727991150659e03e79b5ae418cef457252a8b4f71009832af7b",
+        "version": "1.0.1",
+        "shipping_canonical_digest": "d0aab1123c08f7fb919f00f7ecc8eeb9e1ed2d5daf03df169ea90489c63199c7",
+        "git_or_current_bytes_verified": true
+      },
+      {
+        "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "case": "khan-el-khalili",
+        "byte_sha256": "12167f59be005d880c3a4861e58cb9ec2f5ff94dbbda8ddfc02a2846e5df6fef",
+        "version": "1.0.1",
+        "shipping_canonical_digest": "c9979500738d7b15812b286300714db1943824aa44c29656dc6bebea72e979a0",
+        "git_or_current_bytes_verified": true
+      },
+      {
+        "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "case": "last-dinner",
+        "byte_sha256": "f4c5ff253a82220f937328de09161d09110b05a98eb6bb012934a80f60a5b96d",
+        "version": "1.0.1",
+        "shipping_canonical_digest": "f3b71cc74aaee28dcf7845b750ca773229047388a391ba9294be89efab173a05",
+        "git_or_current_bytes_verified": true
+      },
+      {
+        "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "case": "layla-halabi",
+        "byte_sha256": "a0db6acb459d69bf75a4c15a809b64d1b7cd5c21714dceaedc5973ba2d951826",
+        "version": "1.0.1",
+        "shipping_canonical_digest": "953d5b1dae0aa26b9901e0e044f279b94fd64d4a6d8a66371a9c6577672a3cfc",
+        "git_or_current_bytes_verified": true
+      },
+      {
+        "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "case": "saidi-inheritance",
+        "byte_sha256": "eef41fcf78cd6c066d40ef1d0abaab0dbef7d06f9227f6b1012684b4b0c2ed56",
+        "version": "1.0.0",
+        "shipping_canonical_digest": "5d333bfb59ebf49586f5ca15a26ba55206b6d8aa9de505ca8c3e4738ffebf8b6",
+        "git_or_current_bytes_verified": true
+      },
+      {
+        "revision": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "case": "zamalek-ramadan",
+        "byte_sha256": "6b28832bcf860fae8e30c0207bf8a30060ae075d111d0e6a5c9f18a54162f1b7",
+        "version": "1.0.0",
+        "shipping_canonical_digest": "b3fa57ea89c675bc3c5185a64adcbf0a99b4d640d6dff6fa206b58ed2c070d91",
+        "git_or_current_bytes_verified": true
+      },
+      {
+        "revision": "current",
+        "case": "iskenderia-corniche",
+        "byte_sha256": "53f9b8089509b2540beea6effbe898b2e98c1da49dd7b3421433b0bad306135c",
+        "version": "1.0.2",
+        "shipping_canonical_digest": "c93d5081c70060e6f7b4341d5620dba6ad2c351b08d391f73802d5831577b9ac",
+        "git_or_current_bytes_verified": true
+      },
+      {
+        "revision": "current",
+        "case": "jasmine-ring",
+        "byte_sha256": "ff529b1a329d226e8745cf86a848ae16fbd798e6ef413c2b55694d92c3e32720",
+        "version": "1.0.3",
+        "shipping_canonical_digest": "f9d41858a22163816748b4ec791fbef2e2c6e671f9b2e6e5d83cffe64dd1775a",
+        "git_or_current_bytes_verified": true
+      },
+      {
+        "revision": "current",
+        "case": "khan-el-khalili",
+        "byte_sha256": "c940dd9fe230f996999ec359e688550c974f93e733e7d8ee64d93894c9271f6b",
+        "version": "1.0.2",
+        "shipping_canonical_digest": "45ddc38ee07935f762175adcffe70c10c163abc4238edaadbd6711f3d7ab8b25",
+        "git_or_current_bytes_verified": true
+      },
+      {
+        "revision": "current",
+        "case": "last-dinner",
+        "byte_sha256": "28f5695ad9188fcba9177147fa898cb827f1a8472aa554bb495310a7fa01d9eb",
+        "version": "1.0.2",
+        "shipping_canonical_digest": "69e5001cbd49f18c4240d10936d0eb8e75c3020e3df9f21c0f34b9735f0b58ab",
+        "git_or_current_bytes_verified": true
+      },
+      {
+        "revision": "current",
+        "case": "layla-halabi",
+        "byte_sha256": "83cf702d60d6dfb285c158c2032eaf9bbf4c57a84bd0e619bd42ae565bf1544e",
+        "version": "1.0.2",
+        "shipping_canonical_digest": "a8f57a9a11bb94e1af39e212c5c7f212c5f1ad39d9a76b1b4570368af3fb05c6",
+        "git_or_current_bytes_verified": true
+      },
+      {
+        "revision": "current",
+        "case": "saidi-inheritance",
+        "byte_sha256": "89c547e21d1eece8b4ae75ce7a36279d62747250cc1d53b6fcbc439f4b27d6da",
+        "version": "1.0.1",
+        "shipping_canonical_digest": "6551e02121f0e27bb0ff70ee24769fd97586dfa5afcaa4e1fd5f066aa6cfd72a",
+        "git_or_current_bytes_verified": true
+      },
+      {
+        "revision": "current",
+        "case": "zamalek-ramadan",
+        "byte_sha256": "098a19c4bef18e643e2fcbdc06bd9c498adc57c8594d45a5602bf61291d75158",
+        "version": "1.0.1",
+        "shipping_canonical_digest": "82b596a460787ea11cdd20c1f6cd74d4b5e7393188e389fa2e2e93c13f31e3c7",
+        "git_or_current_bytes_verified": true
+      }
+    ],
+    "classpath_sha256": "f1d9e3679e4b849347d548bb773edb7d80e5404e385568e6ecd91ff9d8cff88d",
+    "classpath_state_sha256": "bc455b7fcb552033a213e283c7fd9aeeca5963960b0f39c86f259694720818e8",
+    "classpath_entries": 115,
+    "missing_entries": "Only two independently source-empty NO-SOURCE Java outputs; all required Kotlin/resource dirs attested present.",
+    "controls": [
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-final-identity-helper/run_with_identity.py",
+        "sha256": "82a00ab3768c6be4be5e476d4aede206059827af5d3d9a189845448d40a83670"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-final-identity-helper/capture-runtime-classpath.init.gradle",
+        "sha256": "6fc59f266231486563a10dac6613d1da3862f9f3f869f4dce5a7835604a464a9"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-final-identity-helper/VerifyContentIdentity.java",
+        "sha256": "6dde0b87fc7b2fdf214f14fd60c4048d5d6cb4c1ab87584d785822b4b5ce069f"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-final-identity-helper/classpath_validation.py",
+        "sha256": "2f8a730d1f3a7259bc76e43f5d5de142dd4739f374cfcea6c34f4c73ab8bcfb7"
+      },
+      {
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-final-identity-helper/test_classpath_validation.py",
+        "sha256": "4be8910b306e7c6545afe49ed18b7d5808229b4abd18d015cb9e87a3e8324eae"
+      }
+    ],
+    "controls_unchanged": true
+  },
+  "regression_reasoning": [
+    "Original3 assertion failures retained at story-final-choices-red-12; GREEN executes strengthened84line test, not retroactively attributed to old75line witness.",
+    "Retired13 identity pins include both newly retired resource versions;4 compatibility methods actually executed and preserve old bytes, exact version+digest matching, identityless-save fail-closed behavior, both modes and syntheticstore boundary.",
+    "All6source hashes equal prior independent review and before/after run manifest. FullWhodunit suite356 executed despite transport-only --tests selectors; both Detekt reports contain0findings."
+  ],
+  "compatibility": {
+    "jasmine-ring": "1.0.2 ->1.0.3",
+    "iskenderia-corniche": "1.0.1 ->1.0.2",
+    "old_saves": "Older content identity remains retained/rejected, never silently rebound or deleted. No automatic prose/save migration.",
+    "unchanged": "schema1, app minimum1.0.0, gameversion1, protocol4.2, hostauthority, privateprojection, sampling/order and Mafia unchanged by sixpath scope."
+  },
+  "limitations": [
+    "JVM deterministic/synthetic filesystem and protocol match predicates are not physicalLAN, iOS durability, accessibility, signedrelease or Store evidence.",
+    "Arabic changes are owner-authorized pre-release testing editorial choices, not proof of original author intent or contentrights approval.",
+    "Build log retains analyzer experimental, Kotlin futureGradle deprecation and host-incompatible iosX64 warning; selectedJVM tests have0skips, but unselectedApple checks are not claimedPASS.",
+    "65suite execution recorded here is not independent line-by-line approval of every unrelated existing test. Source/testvalidity scope is the previous sixpath reviews and supporting callers."
+  ],
+  "cleanup": {
+    "status": "PASS for GREEN13 recorded ownership cycle",
+    "immediate_gradle_stop_exit": 0,
+    "outer_stop_exit": 0,
+    "source_and_runner_unchanged": true,
+    "removed_outputs": [
+      "shared/core/build",
+      "shared/networking/build",
+      "shared/content/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/networking-testing/build",
+      "shared/engine/build",
+      "shared/design-system/build",
+      "shared/session/build",
+      "game-modes/whodunit/build",
+      "build",
+      "build-logic/convention/build"
+    ],
+    "recorded_remaining_outputs": [],
+    "recorded_remaining_owned_workers": [],
+    "cycle_scratch_absent": true,
+    "canonical_input_scratch_absent": true,
+    "outputs_at_review": [
+      {
+        "path": "shared/core/build",
+        "exists_at_review": false
+      },
+      {
+        "path": "shared/networking/build",
+        "exists_at_review": false
+      },
+      {
+        "path": "shared/content/build",
+        "exists_at_review": false
+      },
+      {
+        "path": "shared/storage/build",
+        "exists_at_review": false
+      },
+      {
+        "path": "shared/transport-p2p/build",
+        "exists_at_review": false
+      },
+      {
+        "path": "shared/networking-testing/build",
+        "exists_at_review": false
+      },
+      {
+        "path": "shared/engine/build",
+        "exists_at_review": false
+      },
+      {
+        "path": "shared/design-system/build",
+        "exists_at_review": false
+      },
+      {
+        "path": "shared/session/build",
+        "exists_at_review": false
+      },
+      {
+        "path": "game-modes/whodunit/build",
+        "exists_at_review": false
+      },
+      {
+        "path": "build",
+        "exists_at_review": false
+      },
+      {
+        "path": "build-logic/convention/build",
+        "exists_at_review": false
+      }
+    ],
+    "new_build_outputs_note": "Any later root-owned cycle outputs are not GREEN13 residue and must not be removed by this reviewer.",
+    "reviewer_builds_workers_started": false,
+    "reviewer_production_or_control_edits": false
+  },
+  "evidence_files": {
+    "receipt.json": {
+      "sha256": "865fd465a95936d12aa30431e453f85796b0ceedf33cffb15c790775698d1928",
+      "bytes": 271768
+    },
+    "artifact-receipts.json": {
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    "test-receipts.json": {
+      "sha256": "fe62506df2c2ad2f165c80457626334ac227911b42b36f1656a4bff70e03251a",
+      "bytes": 111619
+    },
+    "gradle.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "stop.log": {
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    "identity/identity-receipt.json": {
+      "sha256": "093ef3ba1bfc73e417c867606bbe2f1019c4ae094b174e70cff63f7e41812316",
+      "bytes": 33574
+    },
+    "identity/canonical-identities.tsv": {
+      "sha256": "dbc2618422b3d74b19a6b3fb0e9f27409691fd8f9454afd4b6a9badbe8410549",
+      "bytes": 3612
+    },
+    "identity/input-manifest.tsv": {
+      "sha256": "03156360bd884a8c732ae919218ad50164ec9bec7a8023946e7e1141945e8a51",
+      "bytes": 7203
+    },
+    "identity/desktop-test-classpath.txt": {
+      "sha256": "f1d9e3679e4b849347d548bb773edb7d80e5404e385568e6ecd91ff9d8cff88d",
+      "bytes": 18688
+    },
+    "identity/desktop-test-classpath.txt.state.json": {
+      "sha256": "bc455b7fcb552033a213e283c7fd9aeeca5963960b0f39c86f259694720818e8",
+      "bytes": 49740
+    },
+    "identity/focused-gradle.log": {
+      "sha256": "162b8410c3379691d5d7b344404b6329622fda607f810ad250a055efff3e3ed2",
+      "bytes": 9430
+    },
+    "identity/immediate-gradle-stop.log": {
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    }
+  }
+}

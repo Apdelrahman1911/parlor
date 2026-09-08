@@ -1,0 +1,29 @@
+--- a/remediation-runs/2026-09-06-approved-policy-completion/root/REPORT-DRAFT.md
++++ b/remediation-runs/2026-09-06-approved-policy-completion/root/REPORT-DRAFT.md
+@@ -92,6 +92,8 @@
+ 
+ Verification includes 11 actual Foundation ownership tests, 13 Desktop structural contracts, four actual host-composable continuity cases, four UIKit container tests and an uninstrumented Swift/Compose cold-launch smoke test. Host tests use real retained runtimes and gated start handshakes with controlled transport; they do not establish physical LAN behavior.
+ 
++The instrumented native matrix distinguishes **actual Settings-screen interactions** from **copy-only invocations of the real injected SettingsStore**. Local-game entry and setup use the public UI. Once a game is active, continuity checks change language through the latter mechanism, because active game routes do not expose Settings; these are not Settings-screen taps. In-app Settings choices and actual iOS per-app language selection are separate scenarios whose outcomes require their own evidence.
++
+ <!-- FINAL_NATIVE_RESULT -->
+ 
+ The original native direction failure, missed catalog successor and later Mafia Start wait are retained as distinct failed outcomes. No source establishes the historical user's “first four launches crash” explanation. A test selector failure, a source-proved native-direction regression, an Xcode failure and an OS termination are not interchangeable diagnoses.
+@@ -114,12 +116,15 @@
+ 
+ All **32 accepted lint warnings remain visible**. Earlier production-01/02/03 failures against the accepted-warning inventory remain failed receipts; the independently reviewed current inventory passes without suppressing warnings. Historical witnesses, compile failures, selector failures and cleanup-attestation failures remain in [cycle-history.json](cycle-history.json).
+ 
+-The unsigned AAB was **8,803,044 bytes**, SHA-256 `f30780bf995741a372646dd9c6a27705cb4eb0368c1d5a4de7197386d3a61473`, with 354 archive entries. Framework/plist and AAB metadata receipts were retained before deleting large outputs. None is a signed/approved Store candidate. The smoke receipt hashes the launcher and Compose framework, but not `Parlor.debug.dylib`; it is not a complete binary inventory.
++The unsigned AAB was **8,803,044 bytes**, SHA-256 `f30780bf995741a372646dd9c6a27705cb4eb0368c1d5a4de7197386d3a61473`, with 354 archive entries. Framework/plist and AAB metadata receipts were retained before deleting large outputs. None is a signed/approved Store candidate.
++
++The **Debug artifact inventories—both smoke and instrumented app-host—omit `Parlor.debug.dylib`**: they capture only the launcher executable and Compose framework. Copied-source manifests/diffs and compile/runtime receipts identify the source exercised, but are **not a complete cryptographic inventory of every executed Debug binary**. The separately inspected Release app belongs to a different build and does not fill this Debug provenance gap.
+ 
+ ## Remaining work — not concealed by scoped completion
+ 
+ - **WD-C4:** owner decision still needed on whether Leave-confirmation time counts toward a Whodunit discussion. No timer-policy change was invented.
+-- **IOS-R1:** remains a storage/Keychain **test-evidence gap**, not a new entitlement fix or permission to return empty storage on failure.
++- **IOS-R1:** remains a **locally investigable app-host storage/Keychain evidence gap**, outside the 16 repairs—not a confirmed defect or a physical-device-only blocker. Use an explicitly owned app-host investigation to establish healthy Keychain-backed migration/recovery before attributing a new defect. Do not hide storage errors, return empty stores on failure or add entitlements blindly. Real backup/restore remains a separate physical-device gate.
++- **Physical P2pKit fixture readiness:** the three ignored tests retain historical admission/approval assumptions. Independently align and review their fixtures against the current protocol before relying on real-device results; do not merely remove `@Ignore`. Then execute controlled two-/three-device host/peer, permission-denial/rejoin, radio and lifecycle checks. In-memory tests are not physical LAN evidence.
+ - Actual physical Android/iOS LAN, Local Network denial/recovery, app-switcher behavior, real backup/restore, native gestures/VoiceOver/TalkBack/large text and sustained lifecycle/performance validation remain separate gates.
+ - Installed **Xcode 26.5 / 17F42** is not Store-qualified **26.3 / 17C529**. Qualified signed archives, real certificate/Store verification and authorized external owner actions remain unavailable.
+ - Android managed-device runtime requires the applicable Linux/KVM/x86_64 environment; Desktop/unit tests on this Apple Silicon host do not replace it. Linux-shaped shell fixtures are not a Linux signed-release pipeline run.

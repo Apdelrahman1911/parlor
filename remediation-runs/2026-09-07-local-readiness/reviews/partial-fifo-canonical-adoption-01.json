@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "author": "/root/factory_review",
+  "independent_reviewers": [
+    "/root",
+    "/root/release_fix_review"
+  ],
+  "at": "2026-09-08T00:12:37.655738+00:00",
+  "action": "ADOPT EXACT TWO REVIEWED DRAFT FILES",
+  "root_review": "Complete old205lines and full47-line source delta plus all12 new tests read; current live identity/proof-state guards, staged persistence and post-metadata checks retain fail-closed cleanup. No late pending-file adoption; all27 original tests and cleanup/path bodies preserved.",
+  "files": [
+    {
+      "path": "scripts/verification/ios-readiness/secondary_fifo.py",
+      "before_sha256": "080622194e19ef5d3ffb561e134ab8cf91e3e3ccef1e29197f59781154a7ffcc",
+      "after_sha256": "170586ec941b02866acfa4b8e54aa3dd0842dbc7bc9c4b50410bca4b1149440a"
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_secondary_fifo.py",
+      "before_sha256": "2d685ebcbef9930f43f1f644c5ed6fc3b5a5c5d07d975cc218a9165273bfb826",
+      "after_sha256": "02b82b6662b735316fe303f6ba7d7affb203090374cacadd8c67909a174ff99e"
+    }
+  ],
+  "actual_control_results": {
+    "red_canonical": "One test ERROR at redundant UID callback, expected defect witness",
+    "draft_green": {
+      "tests": 39,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "stop_exit_code": 0,
+      "cleanup_errors": []
+    }
+  },
+  "review_sha256": "84308f1d14ee8a731c246daba6d8bde7da37c81b67a9fefd10f27b8a1570fa92",
+  "green_receipt_sha256": "15874b140012a9a838e8dc2c1a47cb245d61ab096c772dc425e1370b07358749",
+  "limitations": [
+    "Not a guarantee that polling sees every short-lived worker.",
+    "Original native09 failure is immutable; new source binding/control verification required before another native run."
+  ],
+  "pending": "Rerun full canonical controls + normal runner controls; independent execution reconciliation before focused commit."
+}

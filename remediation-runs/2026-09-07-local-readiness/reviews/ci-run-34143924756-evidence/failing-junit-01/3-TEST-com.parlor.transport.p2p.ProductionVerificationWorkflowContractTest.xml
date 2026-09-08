@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest" tests="9" skipped="0" failures="1" errors="0" timestamp="2026-09-07T16:46:05.287Z" hostname="runnervmejwal" time="1.138">
+  <properties/>
+  <testcase name="clean_ci_can_resolve_required_artifacts_with_strict_dependency_verification()[desktop]" classname="com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest" time="0.01"/>
+  <testcase name="every_version_catalog_alias_has_a_real_build_consumer()[desktop]" classname="com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest" time="1.061"/>
+  <testcase name="one_version_source_drives_android_desktop_ios_and_runtime_compatibility()[desktop]" classname="com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest" time="0.001"/>
+  <testcase name="apple_job_runs_kotlin_and_app_launch_tests_all_link_targets_and_unsigned_swift_release()[desktop]" classname="com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest" time="0.023">
+    <failure message="org.opentest4j.AssertionFailedError: Apple CI must launch the real app through XCTest: xcrun simctl list devices available --json. Expected the char sequence to contain the substring.&#10;CharSequence &lt;&#10;        id: apple_ui_run&#10;        shell: bash&#10;        run: |&#10;          set -euo pipefail&#10;          # Never run settings/destructive fixtures in an existing simulator profile.&#10;          simulator_udid=&quot;$(/usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene create-simulator apple-ui)&quot;&#10;          test ! -e build/ci-evidence/ios-ui-tests.xcresult&#10;          xcodebuild \&#10;            -project iosApp/iosApp.xcodeproj \&#10;            -scheme iosApp \&#10;            -configuration Debug \&#10;            -sdk iphonesimulator \&#10;            -destination &quot;platform=iOS Simulator,id=$simulator_udid&quot; \&#10;            -parallel-testing-enabled NO \&#10;            -maximum-concurrent-test-simulator-destinations 1 \&#10;            -destination-timeout 120 \&#10;            -derivedDataPath build/xcode-derived-data \&#10;            -resultBundlePath build/ci-evidence/ios-ui-tests.xcresult \&#10;            test | tee build/ci-evidence/xcode-ui-test.log&#10;&#10;      - name: Stop Gradle after apple-ui and retire owned Apple resources&#10;        id: apple_ui_finish&#10;        if: always()&#10;        env:&#10;          PARLOR_APPLE_PREPARE_OUTCOME: ${{ steps.apple_ui_prepare.outcome }}&#10;          PARLOR_APPLE_RUN_OUTCOME: ${{ steps.apple_ui_run.outcome }}&#10;        shell: bash&#10;        run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene finish apple-ui&#10;&#10;      - name: Claim apple-wrapper native resource ownership&#10;        id: apple_wrapper_prepare&#10;        shell: bash&#10;        run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene prepare apple-wrapper&#10;&#10;      &gt;, substring &lt;xcrun simctl list devices available --json&gt;, ignoreCase &lt;false&gt;." type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: Apple CI must launch the real app through XCTest: xcrun simctl list devices available --json. Expected the char sequence to contain the substring.
+CharSequence &lt;
+        id: apple_ui_run
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Never run settings/destructive fixtures in an existing simulator profile.
+          simulator_udid=&quot;$(/usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene create-simulator apple-ui)&quot;
+          test ! -e build/ci-evidence/ios-ui-tests.xcresult
+          xcodebuild \
+            -project iosApp/iosApp.xcodeproj \
+            -scheme iosApp \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination &quot;platform=iOS Simulator,id=$simulator_udid&quot; \
+            -parallel-testing-enabled NO \
+            -maximum-concurrent-test-simulator-destinations 1 \
+            -destination-timeout 120 \
+            -derivedDataPath build/xcode-derived-data \
+            -resultBundlePath build/ci-evidence/ios-ui-tests.xcresult \
+            test | tee build/ci-evidence/xcode-ui-test.log
+
+      - name: Stop Gradle after apple-ui and retire owned Apple resources
+        id: apple_ui_finish
+        if: always()
+        env:
+          PARLOR_APPLE_PREPARE_OUTCOME: ${{ steps.apple_ui_prepare.outcome }}
+          PARLOR_APPLE_RUN_OUTCOME: ${{ steps.apple_ui_run.outcome }}
+        shell: bash
+        run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene finish apple-ui
+
+      - name: Claim apple-wrapper native resource ownership
+        id: apple_wrapper_prepare
+        shell: bash
+        run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene prepare apple-wrapper
+
+      &gt;, substring &lt;xcrun simctl list devices available --json&gt;, ignoreCase &lt;false&gt;.
+	at app//org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:38)
+	at app//org.junit.jupiter.api.Assertions.fail(Assertions.java:138)
+	at app//kotlin.test.junit5.JUnit5Asserter.fail(JUnitSupport.kt:56)
+	at app//kotlin.test.Asserter.assertTrue(Assertions.kt:767)
+	at app//kotlin.test.junit5.JUnit5Asserter.assertTrue(JUnitSupport.kt:30)
+	at app//kotlin.test.AssertionsKt__AssertionsKt.assertContains(Assertions.kt:344)
+	at app//kotlin.test.AssertionsKt.assertContains(Unknown Source)
+	at app//kotlin.test.AssertionsKt__AssertionsKt.assertContains$default(Assertions.kt:343)
+	at app//kotlin.test.AssertionsKt.assertContains$default(Unknown Source)
+	at app//com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.apple_job_runs_kotlin_and_app_launch_tests_all_link_targets_and_unsigned_swift_release(ProductionVerificationWorkflowContractTest.kt:401)
+	at java.base@21.0.12.1/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base@21.0.12.1/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base@21.0.12.1/java.util.ArrayList.forEach(ArrayList.java:1596)
+</failure>
+  </testcase>
+  <testcase name="linux_job_enforces_tests_analysis_android_release_and_artifact_inspection()[desktop]" classname="com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest" time="0.001"/>
+  <testcase name="xcode_resource_artifacts_are_covered_by_strict_dependency_verification()[desktop]" classname="com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest" time="0.016"/>
+  <testcase name="repository_contract_inputs_invalidate_cached_results_when_ci_or_build_gates_change()[desktop]" classname="com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest" time="0.005"/>
+  <testcase name="third_party_actions_are_pinned_to_reviewed_immutable_commits()[desktop]" classname="com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest" time="0.001"/>
+  <testcase name="supported_desktop_hosts_execute_real_host_selected_gradle_graphs()[desktop]" classname="com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest" time="0.009"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
