@@ -371,6 +371,64 @@ def preserve_l08_evidence(container, evidence):
     return preserved
 
 
+PROTECTION_ATTRIBUTE_VALUES = frozenset({
+    'null', 'complete', 'none', 'unless-open', 'until-first-authentication',
+    'when-user-inactive', 'other-string', 'non-string',
+})
+PROTECTION_VOLUME_VALUES = frozenset({'supported', 'unsupported', 'non-number'})
+
+
+def _validate_protection_read(reading, volume=False):
+    require(isinstance(reading, dict) and set(reading) == {
+        'query', 'dictionary_present', 'key_present', 'value', 'native_error'},
+        'Unexpected protection getter observation')
+    require(isinstance(reading['query'], str) and
+            reading['query'] in ({'returned', 'observer-exception', 'constant-unavailable'} if volume else
+                                 {'returned', 'observer-exception'}) and
+            type(reading['dictionary_present']) is bool and type(reading['key_present']) is bool and
+            isinstance(reading['value'], str), 'Unknown/non-primitive protection getter result')
+    error = reading['native_error']
+    require(isinstance(error, dict) and set(error) == {'present', 'domain', 'code'} and
+            type(error['present']) is bool and isinstance(error['domain'], str) and
+            type(error['code']) is int and -(2 ** 63) <= error['code'] < 2 ** 63,
+            'Unsafe native protection error metadata')
+    if reading['query'] != 'returned':
+        require(reading['dictionary_present'] is False and reading['key_present'] is False and
+                reading['value'] == 'unobserved' and error == {'present': False, 'domain': 'unobserved', 'code': 0},
+                'Unknown getter must not invent native values')
+        return
+    require((error['present'] is True and error['domain'] in {'cocoa', 'posix', 'other'}) or
+            error == {'present': False, 'domain': 'none', 'code': 0}, 'Unbounded native error domain')
+    if reading['dictionary_present'] is False:
+        require(reading['key_present'] is False and reading['value'] == 'unavailable',
+                'Nil dictionary cannot contain a protection key')
+    elif reading['key_present'] is False:
+        require(reading['value'] == 'missing', 'Absent protection key cannot have a value')
+    else:
+        require(reading['value'] in (PROTECTION_VOLUME_VALUES if volume else PROTECTION_ATTRIBUTE_VALUES),
+                'Raw/unknown protection values must not enter evidence')
+
+
+def validate_protection_metadata(metadata, stage):
+    require(isinstance(metadata, dict) and set(metadata) == {'schema_version', 'failed_target', 'directory', 'file'} and
+            type(metadata['schema_version']) is int and metadata['schema_version'] == 1 and
+            isinstance(metadata['failed_target'], str) and metadata['failed_target'] in {'directory', 'file'} and
+            stage == 'metadata-' + metadata['failed_target'] + '-protection',
+            'Protection metadata must describe the exact failed getter')
+    roles = {'directory': 'required-failed', 'file': 'diagnostic-only'} if metadata['failed_target'] == 'directory' else {
+        'directory': 'required-passed', 'file': 'required-failed'}
+    for target, role in roles.items():
+        item = metadata[target]
+        require(isinstance(item, dict) and set(item) == {'role', 'attributes', 'volume'} and item['role'] == role,
+                'Additional sibling read must not masquerade as a reached/passed assertion')
+        _validate_protection_read(item['attributes'])
+        _validate_protection_read(item['volume'], volume=True)
+        if role != 'diagnostic-only':
+            require(item['attributes']['query'] == 'returned', 'Primary assertion requires its actual getter result')
+            require((item['attributes']['value'] == 'complete') == (role == 'required-passed'),
+                    'Protection assertion and value observation disagree')
+
+
 def validate_preservable_operation(record, scenario):
     """Reject unknown fields before durable copying, including failure receipts.
 
@@ -398,11 +456,17 @@ def validate_preservable_operation(record, scenario):
             value.get('run_token') == token and type(value.get('boot_ordinal')) is int and
             value['boot_ordinal'] == boot and value.get('action') == action, 'L08 observation context disagrees')
     if value.get('status') == 'FAIL':
-        require(set(value) == {'schema_version', 'status', 'run_token', 'boot_ordinal', 'action', 'stage', 'reason'} and
+        fields = {'schema_version', 'status', 'run_token', 'boot_ordinal', 'action', 'stage', 'reason'}
+        require((set(value) == fields or set(value) == fields | {'protection_metadata'}) and
                 isinstance(value['reason'], str) and value['reason'] in {'cancelled', 'fixture_or_boundary_failure'} and
                 isinstance(value['stage'], str) and
                 value['stage'] in (STORAGE_FAILURE_STAGES if scenario == 'l08-storage' else {'context', *HOST_PLAN}),
                 'Unknown failure metadata must not enter retained evidence')
+        if 'protection_metadata' in value:
+            require(scenario == 'l08-storage' and value['reason'] == 'fixture_or_boundary_failure' and
+                    value['stage'] in {'metadata-directory-protection', 'metadata-file-protection'},
+                    'Protection observations are failure-only storage diagnostics')
+            validate_protection_metadata(value['protection_metadata'], value['stage'])
         return
     keys = {'schema_version', 'status', 'run_token', 'boot_ordinal', 'command_ordinal', 'action',
             'checks', 'physical_or_store_evidence'} | ({'variant', 'host'} if scenario == 'l08-host' else set())

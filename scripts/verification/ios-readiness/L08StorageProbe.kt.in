@@ -24,6 +24,11 @@ import com.parlor.storage.snapshot.SnapshotFileSystem
 import com.parlor.storage.snapshot.SnapshotStore
 import com.parlor.transport.p2p.P2pKitRoomTransport
 import kotlinx.cinterop.ByteVar
+import kotlinx.cinterop.ObjCObjectVar
+import kotlinx.cinterop.alloc
+import kotlinx.cinterop.cValue
+import kotlinx.cinterop.ptr
+import kotlinx.cinterop.value
 import kotlinx.cinterop.addressOf
 import kotlinx.cinterop.allocArray
 import kotlinx.cinterop.memScoped
@@ -45,10 +50,18 @@ import org.koin.mp.KoinPlatform
 import platform.Foundation.NSApplicationSupportDirectory
 import platform.Foundation.NSBundle
 import platform.Foundation.NSData
+import platform.Foundation.NSError
+import platform.Foundation.NSCocoaErrorDomain
+import platform.Foundation.NSPOSIXErrorDomain
+import platform.Foundation.NSOperatingSystemVersion
 import platform.Foundation.NSDocumentDirectory
 import platform.Foundation.NSFileHandle
 import platform.Foundation.NSFileManager
 import platform.Foundation.NSFileProtectionComplete
+import platform.Foundation.NSFileProtectionNone
+import platform.Foundation.NSFileProtectionCompleteUnlessOpen
+import platform.Foundation.NSFileProtectionCompleteUntilFirstUserAuthentication
+import platform.Foundation.NSFileProtectionCompleteWhenUserInactive
 import platform.Foundation.NSFileProtectionKey
 import platform.Foundation.NSFileType
 import platform.Foundation.NSFileTypeDirectory
@@ -58,6 +71,7 @@ import platform.Foundation.NSNumber
 import platform.Foundation.NSProcessInfo
 import platform.Foundation.NSURL
 import platform.Foundation.NSURLIsExcludedFromBackupKey
+import platform.Foundation.NSURLVolumeSupportsFileProtectionKey
 import platform.Foundation.NSUserDomainMask
 import platform.Foundation.closeFile
 import platform.Foundation.create
@@ -74,6 +88,7 @@ object L08StorageProbe {
     private var commandIndex = 0
     private var expected: GameSnapshot? = null
     private var stage = "context"
+    private var protectionDiagnostic: JsonObject? = null
     private val aliases = listOf("wc", "we", "mon", "moff", "legacy", "damaged", "dual")
     private val plans = mapOf(
         1 to listOf("save"), 2 to listOf("load", "continue"),
@@ -90,6 +105,7 @@ object L08StorageProbe {
         active = true
         scope.launch {
             stage = "context" // A new command must not inherit the previous command's stage.
+            protectionDiagnostic = null
             var token = ""
             var boot = 0
             var finished = false
@@ -122,6 +138,7 @@ object L08StorageProbe {
                 if (finished) {
                     expected?.payload?.fill(0)
                     expected = null
+                    protectionDiagnostic = null
                     L08WhodunitSnapshots.release()
                     L08MafiaSnapshots.release()
                     scope.cancel() // Own observer scope only. UI/session scopes retain their actual owner.
@@ -137,7 +154,7 @@ object L08StorageProbe {
         val filesystem = koin.get<SnapshotFileSystem>()
         check(store is FileBackedSnapshotStore && filesystem is IosSnapshotFileSystem)
         check(koin.get<RoomTransport>() is P2pKitRoomTransport)
-        val paths = OwnedSnapshotPaths(token, ::enterStage)
+        val paths = OwnedSnapshotPaths(token, ::enterStage, ::recordProtectionDiagnostic)
         val alias = when (boot) {
             in 1..8 -> aliases[(boot - 1) / 2]
             9, 10 -> "legacy"
@@ -336,10 +353,19 @@ object L08StorageProbe {
         return previous
     }
 
+    private fun recordProtectionDiagnostic(value: JsonObject) {
+        check(protectionDiagnostic == null)
+        check(stage == "metadata-directory-protection" || stage == "metadata-file-protection")
+        protectionDiagnostic = value // Closed metadata only; never paths, bytes, or NSError descriptions.
+    }
+
     private fun checks(vararg names: String) = buildJsonObject { names.forEach { put(it, true) } }
     private fun failed(token: String, boot: Int, action: String, reason: String) = buildJsonObject {
         put("schema_version", 1); put("status", "FAIL"); put("run_token", token)
         put("boot_ordinal", boot); put("action", action); put("stage", stage); put("reason", reason)
+        if (reason == "fixture_or_boundary_failure") {
+            protectionDiagnostic?.let { put("protection_metadata", it) }
+        }
     }.toString()
 }
 
@@ -356,6 +382,7 @@ internal fun requireContext(token: String, scenario: String) {
 private class OwnedSnapshotPaths(
     private val token: String,
     private val enterStage: (String) -> String,
+    private val recordProtectionDiagnostic: (JsonObject) -> Unit,
 ) {
     private val files = NSFileManager.defaultManager
     private val home = canonical(NSHomeDirectory())
@@ -474,9 +501,13 @@ private class OwnedSnapshotPaths(
         val key = checkNotNull(NSFileProtectionKey)
         val protection = checkNotNull(NSFileProtectionComplete)
         enterStage("metadata-directory-protection")
-        check(files.attributesOfItemAtPath(protected, null)?.get(key) == protection)
+        val directory = protectionAttributes(protected, key, protection)
+        if (!directory.complete) protectionFailure("directory", path, key, protection, directory)
+        check(directory.complete)
         enterStage("metadata-file-protection")
-        check(files.attributesOfItemAtPath(path, null)?.get(key) == protection)
+        val file = protectionAttributes(path, key, protection)
+        if (!file.complete) protectionFailure("file", path, key, protection, directory, file)
+        check(file.complete)
         // Ciphertext header only; never retain or report any stored payload bytes.
         enterStage("metadata-encrypted-read")
         val bytes = readBoundedSnapshotBytes(path, 256 * 1024 + 128)
@@ -487,6 +518,106 @@ private class OwnedSnapshotPaths(
         // Do not restore in finally: a failure must retain the exact failed boundary.
         enterStage(previous)
     }
+    private class ProtectionRead(val complete: Boolean, val observation: JsonObject)
+
+    // Exactly one original getter per required check; the equality itself is unchanged.
+    private fun protectionAttributes(path: String, key: String, protection: String): ProtectionRead = memScoped {
+        val error = alloc<ObjCObjectVar<NSError?>>()
+        error.value = null
+        val values = files.attributesOfItemAtPath(path, error.ptr)
+        val value = values?.get(key)
+        ProtectionRead(value == protection, metadataRead(values != null, values?.containsKey(key) == true,
+            when {
+                values == null -> "unavailable"
+                !values.containsKey(key) -> "missing"
+                else -> protectionValue(value)
+            }, error.value))
+    }
+
+    private fun protectionValue(value: Any?): String = when {
+        value == null -> "null"
+        value == NSFileProtectionComplete -> "complete"
+        value == NSFileProtectionNone -> "none"
+        value == NSFileProtectionCompleteUnlessOpen -> "unless-open"
+        value == NSFileProtectionCompleteUntilFirstUserAuthentication -> "until-first-authentication"
+        // The fifth public enum is iOS17+; do not touch its symbol on iOS16.
+        NSProcessInfo.processInfo.isOperatingSystemAtLeastVersion(cValue<NSOperatingSystemVersion> {
+            majorVersion = 17; minorVersion = 0; patchVersion = 0
+        }) && value == NSFileProtectionCompleteWhenUserInactive -> "when-user-inactive"
+        value is String -> "other-string"
+        else -> "non-string"
+    }
+
+    private fun protectionFailure(target: String, path: String, key: String, protection: String,
+                                  directory: ProtectionRead, file: ProtectionRead? = null) {
+        // On directory failure, the original file assertion has NOT run. Only
+        // its already-attested exact regular-file path is sampled diagnostically.
+        val fileObservation = file?.observation ?: additionalFileObservation(path, key, protection)
+        recordProtectionDiagnostic(buildJsonObject {
+            put("schema_version", 1)
+            put("failed_target", target)
+            put("directory", buildJsonObject {
+                put("role", if (target == "directory") "required-failed" else "required-passed")
+                put("attributes", directory.observation)
+                put("volume", volumeProtection(protected))
+            })
+            put("file", buildJsonObject {
+                put("role", if (target == "file") "required-failed" else "diagnostic-only")
+                put("attributes", fileObservation)
+                put("volume", volumeProtection(path))
+            })
+        })
+    }
+
+    private fun additionalFileObservation(path: String, key: String, protection: String): JsonObject = try {
+        protectionAttributes(path, key, protection).observation
+    } catch (cancelled: CancellationException) {
+        throw cancelled
+    } catch (_: Exception) {
+        unknownMetadata("observer-exception") // Never replace the original failed directory check.
+    }
+
+    private fun volumeProtection(path: String): JsonObject = try {
+        val key = NSURLVolumeSupportsFileProtectionKey
+        if (key == null) unknownMetadata("constant-unavailable") else memScoped {
+            val error = alloc<ObjCObjectVar<NSError?>>()
+            error.value = null
+            // SDK NSURL.h: a volume key may be read from any filesystem URL.
+            // A fresh URL avoids using a value cached by a previous observation.
+            val values = NSURL.fileURLWithPath(path).resourceValuesForKeys(listOf(key), error.ptr)
+            val value = values?.get(key)
+            metadataRead(values != null, values?.containsKey(key) == true, when {
+                values == null -> "unavailable"
+                !values.containsKey(key) -> "missing"
+                value is NSNumber -> if (value.boolValue) "supported" else "unsupported"
+                else -> "non-number"
+            }, error.value)
+        }
+    } catch (cancelled: CancellationException) {
+        throw cancelled
+    } catch (_: Exception) {
+        unknownMetadata("observer-exception")
+    }
+
+    private fun metadataRead(dictionary: Boolean, key: Boolean, value: String, error: NSError?) = buildJsonObject {
+        put("query", "returned"); put("dictionary_present", dictionary); put("key_present", key); put("value", value)
+        put("native_error", buildJsonObject {
+            put("present", error != null)
+            put("domain", when (error?.domain) {
+                null -> "none"
+                NSCocoaErrorDomain -> "cocoa"
+                NSPOSIXErrorDomain -> "posix"
+                else -> "other"
+            })
+            put("code", error?.code ?: 0L)
+        })
+    }
+
+    private fun unknownMetadata(query: String) = buildJsonObject {
+        put("query", query); put("dictionary_present", false); put("key_present", false); put("value", "unobserved")
+        put("native_error", buildJsonObject { put("present", false); put("domain", "unobserved"); put("code", 0L) })
+    }
+
     private fun excluded(path: String): Boolean {
         val key = checkNotNull(NSURLIsExcludedFromBackupKey)
         val values = checkNotNull(NSURL.fileURLWithPath(path).resourceValuesForKeys(listOf(key), null))

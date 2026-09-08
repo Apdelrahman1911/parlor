@@ -38,6 +38,25 @@ def failure_record(scenario='l08-storage', stage='real-store-save', reason='fixt
     return record
 
 
+def protection_read(value='missing', dictionary=True, key=False, query='returned', error=None):
+    return dict(query=query, dictionary_present=dictionary, key_present=key, value=value,
+                native_error=error if error is not None else dict(present=False, domain='none', code=0))
+
+
+def protection_failure(target='directory'):
+    result = failure_record(stage='metadata-' + target + '-protection')
+    complete = protection_read('complete', key=True)
+    volume = protection_read('supported', key=True)
+    result['observation']['protection_metadata'] = dict(schema_version=1, failed_target=target,
+        directory=dict(role='required-failed' if target == 'directory' else 'required-passed',
+            attributes=protection_read() if target == 'directory' else copy.deepcopy(complete),
+            volume=copy.deepcopy(volume)),
+        file=dict(role='diagnostic-only' if target == 'directory' else 'required-failed',
+            attributes=copy.deepcopy(complete) if target == 'directory' else protection_read(),
+            volume=copy.deepcopy(volume)))
+    return result
+
+
 class L08DiagnosticsTests(unittest.TestCase):
     def test_every_emitted_stage_is_a_closed_literal_with_no_silent_schema_drift(self):
         source = (HERE / 'L08StorageProbe.kt.in').read_text()
@@ -107,8 +126,8 @@ class L08DiagnosticsTests(unittest.TestCase):
             'val path = file(protected, alias)', 'check(files.fileExistsAtPath(path))',
             'check(excluded(protected))', 'check(excluded(path))',
             'val key = checkNotNull(NSFileProtectionKey)',
-            'check(files.attributesOfItemAtPath(protected, null)?.get(key) == protection)',
-            'check(files.attributesOfItemAtPath(path, null)?.get(key) == protection)',
+            'check(directory.complete)',
+            'check(file.complete)',
             'val bytes = readBoundedSnapshotBytes(path, 256 * 1024 + 128)',
             'check(bytes.take(7).toByteArray().contentEquals("PARSNAP".encodeToByteArray()))',
         )
@@ -126,7 +145,7 @@ class L08DiagnosticsTests(unittest.TestCase):
         self.assertNotIn('setResourceValue', helper)
         self.assertNotIn('createFileAtPath', helper)
         self.assertNotIn('createDirectoryAtPath', helper)
-        self.assertIn('val paths = OwnedSnapshotPaths(token, ::enterStage)', source)
+        self.assertIn('val paths = OwnedSnapshotPaths(token, ::enterStage, ::recordProtectionDiagnostic)', source)
 
     def test_nested_metadata_stage_restores_only_after_all_checks_and_zeroization(self):
         source = (HERE / 'L08StorageProbe.kt.in').read_text()
@@ -146,6 +165,184 @@ class L08DiagnosticsTests(unittest.TestCase):
         self.assertIn('throw cancelled', cancelled)
         self.assertIn('expected?.payload?.fill(0)', command)
         self.assertIn('scope.cancel()', command)
+
+
+    def test_closed_metadata_distinguishes_nil_error_missing_and_public_protection_classes(self):
+        observations = [
+            protection_read('unavailable', dictionary=False),
+            protection_read('unavailable', dictionary=False, error=dict(present=True, domain='cocoa', code=260)),
+            protection_read(),
+        ] + [protection_read(value, key=True) for value in sorted(receipts.PROTECTION_ATTRIBUTE_VALUES - {'complete'})]
+        for target in ('directory', 'file'):
+            for observation in observations:
+                with self.subTest(target=target, observation=observation):
+                    record = protection_failure(target)
+                    record['observation']['protection_metadata'][target]['attributes'] = observation
+                    before = copy.deepcopy(record)
+                    receipts.validate_preservable_operation(record, 'l08-storage')
+                    self.assertEqual(record, before)
+                    self.assertEqual(record['observation']['status'], 'FAIL')
+
+    def test_additional_file_getter_is_explicitly_diagnostic_only_and_can_remain_unknown(self):
+        record = protection_failure()
+        metadata = record['observation']['protection_metadata']
+        self.assertEqual(metadata['file']['role'], 'diagnostic-only')
+        metadata['file']['attributes'] = protection_read('unobserved', dictionary=False,
+            query='observer-exception', error=dict(present=False, domain='unobserved', code=0))
+        receipts.validate_preservable_operation(record, 'l08-storage')
+        metadata['file']['role'] = 'required-passed'
+        with self.assertRaises(RuntimeError): receipts.validate_preservable_operation(record, 'l08-storage')
+
+    def test_volume_unavailable_supported_unsupported_and_error_remain_observations(self):
+        readings = [protection_read('supported', key=True), protection_read('unsupported', key=True),
+                    protection_read('non-number', key=True), protection_read(),
+                    protection_read('unavailable', dictionary=False),
+                    protection_read('unavailable', dictionary=False, error=dict(present=True, domain='posix', code=13))]
+        readings += [protection_read('unobserved', dictionary=False, query=query,
+            error=dict(present=False, domain='unobserved', code=0)) for query in ('constant-unavailable', 'observer-exception')]
+        for reading in readings:
+            for target in ('directory', 'file'):
+                with self.subTest(reading=reading, target=target):
+                    record = protection_failure()
+                    record['observation']['protection_metadata'][target]['volume'] = reading
+                    receipts.validate_preservable_operation(record, 'l08-storage')
+                    self.assertEqual(record['observation']['status'], 'FAIL')
+
+    @mock.patch.object(receipts, 'bind_loaded_images')
+    def test_supported_volume_and_complete_diagnostic_sibling_never_satisfy_the_storage_gate(self, _binding):
+        for target in ('directory', 'file'):
+            rows, scenario, log = matrix()
+            rows[0] = protection_failure(target)
+            with self.assertRaises(RuntimeError):
+                receipts.verify_storage(rows, scenario, TOKEN, log, 'disabled', {}, {}, [framework_inventory()])
+        record = matrix()[0][0]
+        record['observation']['protection_metadata'] = protection_failure()['observation']['protection_metadata']
+        with self.assertRaises(RuntimeError): receipts.validate_preservable_operation(record, 'l08-storage')
+
+    def test_metadata_is_rejected_on_host_cancellation_and_other_storage_stages(self):
+        value = protection_failure()['observation']['protection_metadata']
+        candidates = [('l08-host', failure_record('l08-host', 'context')),
+                      ('l08-storage', failure_record(stage='metadata-directory-protection', reason='cancelled'))]
+        candidates += [('l08-storage', failure_record(stage=stage)) for stage in
+                       sorted(receipts.STORAGE_FAILURE_STAGES - {'metadata-directory-protection', 'metadata-file-protection'})]
+        for scenario, record in candidates:
+            with self.subTest(scenario=scenario, stage=record['observation']['stage']):
+                record['observation']['protection_metadata'] = copy.deepcopy(value)
+                with self.assertRaises(RuntimeError): receipts.validate_preservable_operation(record, scenario)
+
+    def test_metadata_identity_roles_and_required_comparison_cannot_disagree(self):
+        changes = [
+            lambda item: item.update(schema_version=True),
+            lambda item: item.update(failed_target='file'),
+            lambda item: item.update(failed_target='/private/path'),
+            lambda item: item['directory'].update(role='diagnostic-only'),
+            lambda item: item['file'].update(role='required-passed'),
+            lambda item: item['directory'].update(attributes=protection_read('complete', key=True)),
+            lambda item: item['directory'].update(attributes=protection_read('unobserved', dictionary=False,
+                query='observer-exception', error=dict(present=False, domain='unobserved', code=0))),
+        ]
+        for change in changes:
+            record = protection_failure()
+            change(record['observation']['protection_metadata'])
+            with self.assertRaises(RuntimeError): receipts.validate_preservable_operation(record, 'l08-storage')
+        record = protection_failure('file')
+        record['observation']['protection_metadata']['directory']['attributes'] = protection_read()
+        with self.assertRaises(RuntimeError): receipts.validate_preservable_operation(record, 'l08-storage')
+
+    def test_nested_unknown_fields_and_raw_native_values_never_enter_evidence(self):
+        for field in ('path', 'message', 'description', 'userInfo', 'private_state', 'payload', 'seed', 'raw_value'):
+            for keys in ((), ('directory',), ('file', 'attributes'), ('directory', 'volume'),
+                         ('file', 'volume', 'native_error')):
+                record = protection_failure()
+                item = record['observation']['protection_metadata']
+                for key in keys: item = item[key]
+                item[field] = 'SYNTHETIC_REJECTION_ONLY'
+                with self.subTest(field=field, keys=keys), self.assertRaises(RuntimeError):
+                    receipts.validate_preservable_operation(record, 'l08-storage')
+        changes = [('query', value) for value in (True, None, [], {}, 'raw_native_exception')]
+        changes += [('value', value) for value in (True, None, {}, [], '/private/synthetic/path')]
+        changes += [(field, value) for field in ('dictionary_present', 'key_present') for value in (0, 1, None, 'true')]
+        for field, value in changes:
+            record = protection_failure()
+            record['observation']['protection_metadata']['directory']['attributes'][field] = value
+            with self.subTest(field=field, value=value), self.assertRaises(RuntimeError):
+                receipts.validate_preservable_operation(record, 'l08-storage')
+
+    def test_native_error_values_are_closed_bounded_and_do_not_coerce_booleans(self):
+        for code in (-(2 ** 63), -1, 0, 1, 2 ** 63 - 1):
+            for domain in ('cocoa', 'posix', 'other'):
+                record = protection_failure()
+                record['observation']['protection_metadata']['directory']['attributes']['native_error'] = dict(
+                    present=True, domain=domain, code=code)
+                receipts.validate_preservable_operation(record, 'l08-storage')
+        cases = [('code', value) for value in (True, False, -(2 ** 63) - 1, 2 ** 63, 1.0, None, '13')]
+        cases += [('domain', value) for value in (True, None, [], {}, 'raw_exception_domain')]
+        cases += [('present', value) for value in (0, 1, None, 'false')]
+        for field, value in cases:
+            record = protection_failure()
+            record['observation']['protection_metadata']['directory']['attributes']['native_error'][field] = value
+            with self.subTest(field=field, value=value), self.assertRaises(RuntimeError):
+                receipts.validate_preservable_operation(record, 'l08-storage')
+
+    def test_missing_or_unknown_read_cannot_claim_an_observed_value(self):
+        changes = [dict(dictionary_present=False, key_present=True), dict(dictionary_present=False, value='none'),
+                   dict(value='none'), dict(query='observer-exception'), dict(query='constant-unavailable')]
+        for change in changes:
+            record = protection_failure()
+            record['observation']['protection_metadata']['directory']['attributes'].update(change)
+            with self.subTest(change=change), self.assertRaises(RuntimeError):
+                receipts.validate_preservable_operation(record, 'l08-storage')
+
+    def test_producer_keeps_required_getter_order_equality_and_failure_only_scope(self):
+        source = (HERE / 'L08StorageProbe.kt.in').read_text()
+        metadata = source.split('fun protectedMetadata(alias: String) {', 1)[1].split('private class ProtectionRead', 1)[0]
+        ordered = ('enterStage("metadata-directory-protection")',
+                   'val directory = protectionAttributes(protected, key, protection)',
+                   'if (!directory.complete) protectionFailure("directory", path, key, protection, directory)',
+                   'check(directory.complete)', 'enterStage("metadata-file-protection")',
+                   'val file = protectionAttributes(path, key, protection)',
+                   'if (!file.complete) protectionFailure("file", path, key, protection, directory, file)',
+                   'check(file.complete)', 'enterStage("metadata-encrypted-read")')
+        positions = [metadata.index(value) for value in ordered]
+        self.assertEqual(positions, sorted(positions))
+        reader = source.split('private fun protectionAttributes(', 1)[1].split('private fun protectionValue(', 1)[0]
+        self.assertEqual(reader.count('files.attributesOfItemAtPath(path, error.ptr)'), 1)
+        self.assertIn('val value = values?.get(key)', reader)
+        self.assertIn('ProtectionRead(value == protection,', reader)
+        self.assertIn('error.value = null', reader)
+        failed = source.split('private fun failed(', 1)[1].split('internal fun requireContext(', 1)[0]
+        self.assertIn('if (reason == "fixture_or_boundary_failure")', failed)
+        self.assertIn('protectionDiagnostic?.let { put("protection_metadata", it) }', failed)
+        self.assertEqual(source.count('protectionDiagnostic = null'), 2)
+
+    def test_extra_queries_are_read_only_bounded_and_failure_unknown_does_not_become_success(self):
+        source = (HERE / 'L08StorageProbe.kt.in').read_text()
+        helpers = source.split('private fun protectionFailure(', 1)[1].split('private fun excluded(', 1)[0]
+        self.assertIn('file?.observation ?: additionalFileObservation(path, key, protection)', helpers)
+        self.assertIn('"diagnostic-only"', helpers)
+        self.assertIn('volumeProtection(protected)', helpers)
+        self.assertIn('volumeProtection(path)', helpers)
+        self.assertEqual(helpers.count('resourceValuesForKeys(listOf(key), error.ptr)'), 1)
+        self.assertIn('NSURL.fileURLWithPath(path)', helpers)
+        self.assertIn('val key = NSURLVolumeSupportsFileProtectionKey', helpers)
+        self.assertIn('value is NSNumber -> if (value.boolValue) "supported" else "unsupported"', helpers)
+        self.assertEqual(helpers.count('catch (cancelled: CancellationException)'), 2)
+        self.assertEqual(helpers.count('throw cancelled'), 2)
+        self.assertEqual(helpers.count('unknownMetadata("observer-exception")'), 2)
+        self.assertIn('unknownMetadata("constant-unavailable")', helpers)
+        for forbidden in ('localizedDescription', 'userInfo', 'put("path"', 'setResourceValue',
+                          'setAttributes', 'createFile', 'createDirectory', 'removeItem',
+                          'readBoundedSnapshotBytes', 'while (', 'repeat(', 'enterStage('):
+            self.assertNotIn(forbidden, helpers)
+
+    def test_newer_public_enum_is_runtime_guarded_and_arbitrary_strings_stay_redacted(self):
+        source = (HERE / 'L08StorageProbe.kt.in').read_text()
+        classify = source.split('private fun protectionValue(', 1)[1].split('private fun protectionFailure(', 1)[0]
+        self.assertIn('isOperatingSystemAtLeastVersion(cValue<NSOperatingSystemVersion>', classify)
+        self.assertIn('majorVersion = 17; minorVersion = 0; patchVersion = 0', classify)
+        self.assertIn('}) && value == NSFileProtectionCompleteWhenUserInactive', classify)
+        self.assertIn('value is String -> "other-string"', classify)
+        self.assertNotIn('value.toString()', classify)
 
 
 if __name__ == '__main__': unittest.main()
