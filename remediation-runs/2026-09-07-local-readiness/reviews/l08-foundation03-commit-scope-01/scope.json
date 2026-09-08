@@ -1,0 +1,1344 @@
+{
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "aecaa1bb07f560d7550951ec90c9bce038b77d23",
+    "tracked_status": "M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+    "tree": "adf87af6858a0b53adcbc406da9974c57f2e4408"
+  },
+  "cleanup": {
+    "control36_cleanup": "Stop0, owned scratch absent, no remaining workers/build outputs/errors; existing independent receipts retained.",
+    "native01_and_native02_exact_scratch_absence_rechecked": true,
+    "only_new_files": [
+      "remediation-runs/2026-09-07-local-readiness/reviews/l08-foundation03-commit-scope-01/execution-status.md",
+      "remediation-runs/2026-09-07-local-readiness/reviews/l08-foundation03-commit-scope-01/scope.json"
+    ],
+    "protection_gate": "L08 remains failed/unresolved; no assertion or production protection policy is waived.",
+    "reviewer_deleted_files_or_signalled_processes": false,
+    "reviewer_git_mutations": false,
+    "reviewer_started_builds_native_processes_or_background_workers": false
+  },
+  "decision": "SAFE_FOCUSED_SCOPE_FOR_ROOT_REVIEW_NOT_A_GIT_MUTATION_OR_PUBLICATION_AUTHORIZATION",
+  "exact_total_file_count_including_this_scope": 157,
+  "exclusions": [
+    "All application, shared/game modules, resources, Gradle metadata/configuration, signing/Store workflows and identities.",
+    "All build directories, compiled native image/config/cache, DerivedData, simulator profiles and global caches.",
+    "Normal-launch controls/provenance and any unfinished L08 functional companion or broader campaign changes.",
+    "Prior draft01/02 source trees and prior unreviewed/obsolete proposal variants; preserve them locally, do not delete.",
+    "Original app-host native09/10 material and other audit/design/user work; none rewritten or silently added.",
+    "All material not explicitly listed, even if in one of the selected directories."
+  ],
+  "executable_dependency_closure": {
+    "current_definition": "reviews/l08-native-foundation-control-03/* (the six exact files listed, not a wildcard staging instruction)",
+    "historical_prose_links": "Older draft01/02 manifests/sources, earlier safety reviews, original app-host09 and downloaded research responses remain preserved local audit material. They are context references, not runtime dependencies or a reason to include those broad trees in this focused commit. Current exact reviewed source, correction patch, actual red/green wire receipts and current research are included.",
+    "mandatory_fixture": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/native-observations.stdout",
+      "required_by": "test_control.py158-175; missing/changed input fails the actual regression.",
+      "sha256": "ff5dd1d002b4d2d63a86eb54f6504766a806bb70b3ac3368251f8ef8db3e1811"
+    },
+    "runner_import": "test_control.py17-20 imports adjacent run_control.py; it does not import prior frozen01/02 sources.",
+    "tracked_existing_shared_lane": "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py is already tracked and unchanged; do not restage unrelated edits."
+  },
+  "files": [
+    {
+      "bytes": 106,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/adhoc-fixture-sign.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "36f7108e3cd3720ce83ca416030a661ea748d65f6faa64e5633bc9d1850b2b78",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/adhoc-fixture-sign.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/baseline-branch.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 31,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/baseline-branch.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "1c1c717d880304c7c17517f6d21c918e2d035438b7c843525b049a2f050c4692",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/baseline-commit.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 41,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/baseline-commit.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e69951e2220554f4ccb485ab89fb5a9042e64e0b8468805f571f6b6607eca5aa",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/baseline-tracked-status.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 597,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/baseline-tracked-status.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "7f5f3382d0769a33940c6358ba3ad31641a4bd8fb42708cfff168ef6e5282ff8",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/baseline-tree.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 41,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/baseline-tree.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "b17d058b05ec186508d99d0e5577ea81de171ac26d7733935004502e924ecb6f",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/boot-status.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 5302,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/boot-status.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "85d3ab177879646a9ee446cb34d19395db876be110dc4320040002d3b02d1f1f",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/boot.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/boot.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/booted-identity.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 797,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/booted-identity.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "1ed9cbd81043fcbca9498c23d4073b002baf5f7e551315f14ff873fa7571661e",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/cleanup-device-identity.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 797,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/cleanup-device-identity.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "57e7a8f06bd0e718856aba967f8f67bcfcbd47382e5f991dc8906e4ab0d0f2ff",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/compile.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/compile.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/coresimulator-plist.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 733,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/coresimulator-plist.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "bf7084a8204882386b961415fae9f78b7b348751fa1d9711c3d906bc6be1c73b",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/create.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 37,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/create.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "40374505401d44c13ebb7542e48a537c5aedf1c6185ef21805dcb355f380f250",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/created-identity.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 718,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/created-identity.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "a84fa782be9a98a538867b282fac240ece548198b45670c2e0e3560eb2dca98a",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/delete.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/delete.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/deleted-identity.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 147,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/deleted-identity.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "0c8dc472862c0b8ca70aea04c9d395f002b03735d71469ad44057d35910e34cf",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/device-types.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 61947,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/device-types.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "70376c78091566520db3fa3b1b868e122223a65056b552f1db9ae50753d7dd20",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/empty-device-set.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 147,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/empty-device-set.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "0c8dc472862c0b8ca70aea04c9d395f002b03735d71469ad44057d35910e34cf",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/fixture-signature-check.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/fixture-signature-check.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/gradle-baseline.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/gradle-baseline.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/image-uuid.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 127,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/image-uuid.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "05efa9388304b5bd8abcaf8d3502bbdf55fe390e148b1c7975103c9b9906e8ad",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 161,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/jdk-version.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "30b5b10762a8ff64f7513be4354be86724a53322c3d52106cf2587d90570bb32",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/jdk-version.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/native-observations.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 6718,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/native-observations.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "ff5dd1d002b4d2d63a86eb54f6504766a806bb70b3ac3368251f8ef8db3e1811",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 19545,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/receipt.json",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "3774d5829a19f3de62f831c652b3e8c3f78b518dea36910858ab56f6e4e0c2ab",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/runtimes.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 41059,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/runtimes.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "2dd72e3b584018fab8714ec0c39693a1abfb611f345d28b7962784f6ef539de8",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/scratch-holders.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/scratch-holders.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/shutdown-identity.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 799,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/shutdown-identity.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "db2d154a4ab35c86cdad47219391a317651dc177e573e780940dc44ef164c660",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/shutdown.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/shutdown.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/stop-after-compile-preflight.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/stop-after-compile-preflight.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/stop-after-compile-verified.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/stop-after-compile-verified.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/stop-after-compile.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 31,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/stop-after-compile.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/stop-final-preflight.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/stop-final-preflight.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/stop-final-verified.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/stop-final-verified.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/stop-final.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 31,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/stop-final.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/xcode-plist.stderr",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 179,
+      "category": "immutable_failed_native01_witness",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/xcode-plist.stdout",
+      "purpose": "Original failure/source/command/cleanup evidence; native-observations.stdout is also a mandatory executable test fixture.",
+      "sha256": "73d48e17eea41bd1ed439d80bbff0cbb87ab5c423807ed473115701617de969f",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 106,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/adhoc-fixture-sign.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "47b8251176f8b250be4575ffd73039904e8e5fb2b4b2acb69e387b75738eb55e",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/adhoc-fixture-sign.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/baseline-branch.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 31,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/baseline-branch.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "1c1c717d880304c7c17517f6d21c918e2d035438b7c843525b049a2f050c4692",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/baseline-commit.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 41,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/baseline-commit.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "532f601a40c467a7193a09332b5b1048c30b2abca9d0fdaf9d03ca064153544c",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/baseline-tracked-status.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/baseline-tracked-status.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/baseline-tree.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 41,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/baseline-tree.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "578713962c4250f245a735c060b1f5e1298e2b3f3ec44d7ee1e660dfc0e9e04c",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/boot-status.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 5575,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/boot-status.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "7e0b35a19a6dfce82f350aea272f05bc301f205992054a2fc6bffc021eb8995c",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/boot.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/boot.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/booted-identity.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 797,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/booted-identity.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "1cb8bb2493614303867c166778bb02f8b119cf6277c25e1bcb52a9bacc612f48",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/cleanup-device-identity.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 797,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/cleanup-device-identity.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "9902a2f1b42f55f7cdf3f46d40a859bb11cdedba2f403c782598f5e8743213ee",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/compile.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/compile.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/coresimulator-plist.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 733,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/coresimulator-plist.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "bf7084a8204882386b961415fae9f78b7b348751fa1d9711c3d906bc6be1c73b",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/create.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 37,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/create.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "70307fe6eac902ecd6b855b0192312ae46e4f3f0dd5b90ab1b6121cbbcc0b157",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/created-identity.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 718,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/created-identity.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3c83d9a6b5970e9f9f77af1700954157d5cbf2ac55f93ad198a834a1c1a6d51",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/delete.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/delete.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/deleted-identity.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 147,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/deleted-identity.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "0c8dc472862c0b8ca70aea04c9d395f002b03735d71469ad44057d35910e34cf",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/device-types.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 61947,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/device-types.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "70376c78091566520db3fa3b1b868e122223a65056b552f1db9ae50753d7dd20",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/empty-device-set.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 147,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/empty-device-set.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "0c8dc472862c0b8ca70aea04c9d395f002b03735d71469ad44057d35910e34cf",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/fixture-signature-check.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/fixture-signature-check.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/gradle-baseline.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/gradle-baseline.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/image-uuid.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 127,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/image-uuid.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "38c7d1953f79e7c5a5ee020989817f4ee71f58518c6cbab25e259674f485b4ab",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 161,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/jdk-version.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "30b5b10762a8ff64f7513be4354be86724a53322c3d52106cf2587d90570bb32",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/jdk-version.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/native-observations.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 7047,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/native-observations.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "7a250d962336621fed327a1173f22f3c08bf9aa16db22861cb69a257881bf417",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 11611,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/observations.json",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e93b1e246467764f7aa3eecd53ef5ad5fc9451f2a7925e61cec6b2768e4386e3",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 18928,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/receipt.json",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "55b51c77c8f962d0d4e45fc2f18dac296ebf99d1e5d2224066993d0907000998",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/runtimes.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 41059,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/runtimes.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "ca58f434619a31a6961b784325b1edb19adcee42532e3211e45d401851e3fc5a",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/scratch-holders.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/scratch-holders.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/shutdown-identity.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 799,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/shutdown-identity.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "8ff28a72e1e65f8deb79cc45062482ad07a0a91af8fc50d08c8be03fe58e80f6",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/shutdown.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/shutdown.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/stop-after-compile-preflight.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/stop-after-compile-preflight.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/stop-after-compile-verified.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/stop-after-compile-verified.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/stop-after-compile.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 31,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/stop-after-compile.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/stop-final-preflight.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/stop-final-preflight.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/stop-final-verified.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/stop-final-verified.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/stop-final.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 31,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/stop-final.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 0,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/xcode-plist.stderr",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 179,
+      "category": "actual_frozen03_native02_collection",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-02/xcode-plist.stdout",
+      "purpose": "Fresh actual strict-wire collection/source/command/cleanup evidence; collection only, never L08 PASS.",
+      "sha256": "73d48e17eea41bd1ed439d80bbff0cbb87ab5c423807ed473115701617de969f",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 3,
+      "category": "actual36_synthetic_controls",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation36-controls-01/artifact-receipts.json",
+      "purpose": "Root-executed36 descriptors, exact source binding and cleanup. Empty XML/artifact indexes truthfully indicate no compiled/native artifact in this suite.",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 3505,
+      "category": "actual36_synthetic_controls",
+      "ignored_by": {
+        "file": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation36-controls-01/gradle.log",
+      "purpose": "Root-executed36 descriptors, exact source binding and cleanup. Empty XML/artifact indexes truthfully indicate no compiled/native artifact in this suite.",
+      "sha256": "e4aeb54cd48da60690cd07bfa743aa5d28f7addd0a1db6188859572a202fd6ec",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 296173,
+      "category": "actual36_synthetic_controls",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation36-controls-01/receipt.json",
+      "purpose": "Root-executed36 descriptors, exact source binding and cleanup. Empty XML/artifact indexes truthfully indicate no compiled/native artifact in this suite.",
+      "sha256": "069d922fb043fc29619d4c17364a582209d2d8361267de02b1ae6cf463286043",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 31,
+      "category": "actual36_synthetic_controls",
+      "ignored_by": {
+        "file": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation36-controls-01/stop.log",
+      "purpose": "Root-executed36 descriptors, exact source binding and cleanup. Empty XML/artifact indexes truthfully indicate no compiled/native artifact in this suite.",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 3,
+      "category": "actual36_synthetic_controls",
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation36-controls-01/test-receipts.json",
+      "purpose": "Root-executed36 descriptors, exact source binding and cleanup. Empty XML/artifact indexes truthfully indicate no compiled/native artifact in this suite.",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 20452,
+      "category": "current_review_research_and_binding",
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-foundation-native01-independent-classification-01.json",
+      "purpose": "Original failure, exact correction, independent source/execution/cleanup review, public authoritative research or focused before/after binding.",
+      "sha256": "fe45a0709a10a05ef91ea0dad8a524bd8e64400814d33b097bd8ab3794323811",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 45169,
+      "category": "current_review_research_and_binding",
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-foundation-native02-independent-reconciliation-01.json",
+      "purpose": "Original failure, exact correction, independent source/execution/cleanup review, public authoritative research or focused before/after binding.",
+      "sha256": "ff9709ebb381b3a239dafe7dc048fcf0ae9061ab689904dd7833b149695f0c98",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 12793,
+      "category": "current_review_research_and_binding",
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-foundation-wire-types-research-01.json",
+      "purpose": "Original failure, exact correction, independent source/execution/cleanup review, public authoritative research or focused before/after binding.",
+      "sha256": "3988ff3ab3cb2b26fd5ffa200e6a8ba8004324de4777ad9b73938e4bbfd7b6ed",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 2713,
+      "category": "additive_execution_note",
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-foundation03-commit-scope-01/execution-status.md",
+      "purpose": "Current status supplements frozen draft-time text without altering it.",
+      "sha256": "fd87c949e891f622657f57e0c2938438f190eebb2b542ed9b3999b91e9d18d9c",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 777,
+      "category": "current_review_research_and_binding",
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-foundation36-source-binding-after-01.json",
+      "purpose": "Original failure, exact correction, independent source/execution/cleanup review, public authoritative research or focused before/after binding.",
+      "sha256": "17b3d864b40365a620b8de4decb9c2b13428075595bd125fd23925e67bbb1136",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 668,
+      "category": "current_review_research_and_binding",
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-foundation36-source-binding-before-01.json",
+      "purpose": "Original failure, exact correction, independent source/execution/cleanup review, public authoritative research or focused before/after binding.",
+      "sha256": "76e3c70e80dca58de434c6d6178bc2180b986d77b0fd1839119800497acb50a6",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 15988,
+      "category": "frozen03_source",
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/FoundationProtectionControl.m",
+      "purpose": "Reviewed current diagnostic definition/test/manifest or required public tool metadata; immutable bytes.",
+      "sha256": "a6b025d7b77c3b1b1de57b93869d0beff6b4cc9e365eb5672ffd2be9d52013f2",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 11855,
+      "category": "frozen03_source",
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/README.md",
+      "purpose": "Reviewed current diagnostic definition/test/manifest or required public tool metadata; immutable bytes.",
+      "sha256": "3478b82d33b918f78342e21bc93cddbfe2c12d917b634574f91e74f8de50ab53",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 822,
+      "category": "frozen03_source",
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/manifest.json",
+      "purpose": "Reviewed current diagnostic definition/test/manifest or required public tool metadata; immutable bytes.",
+      "sha256": "9efdb9f7918b75c0c4315fa4ecf208ece85ba4b37a8c66bb6d35cab8612c2f3b",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 6264,
+      "category": "frozen03_source",
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/public-tool-evidence.json",
+      "purpose": "Reviewed current diagnostic definition/test/manifest or required public tool metadata; immutable bytes.",
+      "sha256": "8a5cad552acfb337a3172282c15bfade6dd36fd99f39f1afc02a94cc4c5f1bb2",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 37730,
+      "category": "frozen03_source",
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/run_control.py",
+      "purpose": "Reviewed current diagnostic definition/test/manifest or required public tool metadata; immutable bytes.",
+      "sha256": "58e8daf875eaf8061ed017e10cc8c8065eb49292866b6741227814282a1b8e9f",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 29749,
+      "category": "frozen03_source",
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/test_control.py",
+      "purpose": "Reviewed current diagnostic definition/test/manifest or required public tool metadata; immutable bytes.",
+      "sha256": "b1eb86d303e3a3d5f886cc800d917ccefc0f78a61c25d686c92f6cd899fb5f43",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 7670,
+      "category": "current_review_research_and_binding",
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control02-to03.patch",
+      "purpose": "Original failure, exact correction, independent source/execution/cleanup review, public authoritative research or focused before/after binding.",
+      "sha256": "6c8f06e404a5ca3a7393498a3b15895c307ddefdc4e942b7ed5c7ee09f9c6df8",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 14940,
+      "category": "current_review_research_and_binding",
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control03-independent-review-01.json",
+      "purpose": "Original failure, exact correction, independent source/execution/cleanup review, public authoritative research or focused before/after binding.",
+      "sha256": "72e7e7d1e9c376704982d766b427d4fd10c5b78928d2a75d266bcfb6483dbd89",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 12098,
+      "category": "current_review_research_and_binding",
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control03-native-approval-01.json",
+      "purpose": "Original failure, exact correction, independent source/execution/cleanup review, public authoritative research or focused before/after binding.",
+      "sha256": "47240106caf99ca5f56c121a876e65fed9ad0e269e2c9f73a0b0c58a7a5ccf0f",
+      "tracked_at_scope_creation": false
+    },
+    {
+      "bytes": 25104,
+      "category": "current_review_research_and_binding",
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-native09-file-protection-research-01.json",
+      "purpose": "Original failure, exact correction, independent source/execution/cleanup review, public authoritative research or focused before/after binding.",
+      "sha256": "3ac244c094fdbc4a57804d3824bb3c4a443a983c4296c0e83145cba73c43c389",
+      "tracked_at_scope_creation": false
+    }
+  ],
+  "git_handling_for_root": {
+    "do_not_add_directory_wildcards_or_all": true,
+    "exact_allowlist_only": true,
+    "hash_check_before_staging": "Recompute every listed SHA256 and ensure set of staged paths equals this list plus scope.json. Stop on drift; preserve all unrelated changes.",
+    "ignored_evidence_requires_explicit_force_add_if_authorized": {
+      "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation36-controls-01/gradle.log": {
+        "file": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation36-controls-01/stop.log": {
+        "file": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    "no_rebuild_needed_for_this_scope_only": "No source/test/manifest bytes changed after36/native02 verification; only an additive evidence status/scope note. Do not claim a new current-SHA CI or L08 test from this note.",
+    "review_required": "Root should reopen the complete staged diff/paths; this scope is an independent safety recommendation, not a substitute for user Git authorization."
+  },
+  "hash_bound_file_count_excluding_self": 156,
+  "payload_bytes_excluding_this_scope": 835688,
+  "purpose": "Preserve the tested/reviewed frozen03 local Foundation diagnostic, actual native01 regression fixture, focused36 evidence, fresh native02 collection evidence and current review/research. No shipping application or production policy change.",
+  "recorded_at": "2026-09-08T02:25:03.100020+00:00",
+  "reviewer": "/root/factory_review",
+  "sanitization_review": {
+    "method": [
+      "Reopened current complete native/runner/test source, patch, README/public-tool metadata and research; current hashes match independent review.",
+      "Reconciled every selected native command stream length/hash; complete control receipt, observation schemas and bounded synthetic operation/error enums inspected.",
+      "Structured public runtime/device catalogs inspected: only installed SDK/runtime/type metadata and standard system roots; no app-container/player/account content.",
+      "Focused36 receipt contains source paths/hashes and fixed command/policy/cleanup metadata, not source contents or signing credentials. Actual log contains36 unittest descriptors only; XML/artifact indexes are empty arrays.",
+      "Selected independent reviews/bindings contain previously inspected source hashes, public references and synthetic receipts. Additional private-key/auth-token pattern scan across all selected text found no matches; this scan supplements, not replaces, semantic review."
+    ],
+    "permitted_identifiers": "Repository/tool paths, recorded synthetic Simulator UUIDs/inodes and correlation tokens are evidence identities, not player/rejoin credentials. The controls use a fixed public payload; private signing, Keychain values, real player state and user profiles are not selected.",
+    "result": "NO_PROTECTED_MATERIAL_FOUND_IN_SELECTED_FILES; no original bytes altered",
+    "scope_does_not_claim": "No independent full application audit percentage or physical/Store readiness is inferred from these files."
+  },
+  "schema_version": 1,
+  "scope_document": {
+    "include_as_additive_deliverable": true,
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-foundation03-commit-scope-01/scope.json",
+    "self_hash": "Delivered separately with this document; not embedded because a file cannot contain its own final SHA256."
+  },
+  "sorted_path_sha256_pair_list_sha256": "83ea99bebf77d0adb906d104883d6883a816179648b1245a76577bade905be0e"
+}

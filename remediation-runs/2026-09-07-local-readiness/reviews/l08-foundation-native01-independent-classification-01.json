@@ -1,0 +1,486 @@
+{
+  "cleanup_reconciliation": {
+    "cleanup_errors": [],
+    "compile_and_final_gradle_stop": "Both recorded exit0 with No Gradle daemons are running; preflight and postflight pgrep each exit1 with empty stdout/stderr. Reviewer read receipts/logs; no reviewer live process query.",
+    "exact_absence": [
+      {
+        "disposition": "ABSENT",
+        "method": "exact os.lstat only; no directory scan/deletion/native query",
+        "path": "/private/tmp/parlor-foundation-control-_s76dmyo"
+      },
+      {
+        "disposition": "ABSENT",
+        "method": "exact os.lstat only; no directory scan/deletion/native query",
+        "path": "/private/tmp/parlor-foundation-control-_s76dmyo/devices"
+      }
+    ],
+    "limits": "No broad /tmp, CoreSimulator default-set, personal log-directory or unrelated-process inspection. Cleanup conclusion is exact recorded scratch/device plus stop evidence, not a claim that every system-service file is absent.",
+    "owned_device": "Same unique token-named iOS26.5 device transitions Booted to Shutdown; shutdown/delete exit0; final list has both runtime arrays empty.",
+    "owned_scratch": "Exact lsof -nP -t +w +D scratch exits1, stdout/stderr0; runner records scratch_removed true; exact absent now. No holder warning ignored.",
+    "receipt_status": "PASS",
+    "recorded_devices_identity": [
+      16777232,
+      86060359,
+      501
+    ],
+    "recorded_scratch_identity": [
+      16777232,
+      86060358,
+      501
+    ]
+  },
+  "execution_evidence": {
+    "all66_command_stream_lengths_match_receipt": true,
+    "attribution": {
+      "device_uuid": "53BA124E-5DA8-491F-8157-211CA6CCC857",
+      "foundation_image": {
+        "platform": 7,
+        "status": "observed",
+        "uuid": "2cc9fce0-08f9-3a0d-8a2f-6db229462de5"
+      },
+      "main_image": {
+        "platform": 7,
+        "status": "observed",
+        "uuid": "1095c417-c4ec-3f71-b258-d4da02b2255e"
+      },
+      "native_image": {
+        "config_sha256": "b68329c961ca0b52a56ca4f5f3a31015d260bb67f36c5dc7b957d7e021dd8d97",
+        "sha256": "165b16c1a1fe6015fd61b191b92426ceb47fa94f71faa09fe4096dcaea277e74",
+        "source_sha256": "403432717c00b518d81a109415ad4c20c85a7307f733dfb6d53900c8cd327ff0",
+        "uuid": "1095c417-c4ec-3f71-b258-d4da02b2255e"
+      },
+      "pid_observed_not_adopted": 99968,
+      "run_token": "565c48a1cf244bafaf506fcff4263453"
+    },
+    "commands": [
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "xcode-plist"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "coresimulator-plist"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "jdk-version"
+      },
+      {
+        "error": null,
+        "exit_code": 1,
+        "label": "gradle-baseline"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "baseline-commit"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "baseline-tree"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "baseline-branch"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "baseline-tracked-status"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "runtimes"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "device-types"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "empty-device-set"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "create"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "created-identity"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "compile"
+      },
+      {
+        "error": null,
+        "exit_code": 1,
+        "label": "stop-after-compile-preflight"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "stop-after-compile"
+      },
+      {
+        "error": null,
+        "exit_code": 1,
+        "label": "stop-after-compile-verified"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "adhoc-fixture-sign"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "fixture-signature-check"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "image-uuid"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "boot"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "boot-status"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "booted-identity"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "native-observations"
+      },
+      {
+        "error": null,
+        "exit_code": 1,
+        "label": "stop-final-preflight"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "stop-final"
+      },
+      {
+        "error": null,
+        "exit_code": 1,
+        "label": "stop-final-verified"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "cleanup-device-identity"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "shutdown"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "shutdown-identity"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "delete"
+      },
+      {
+        "error": null,
+        "exit_code": 0,
+        "label": "deleted-identity"
+      },
+      {
+        "error": null,
+        "exit_code": 1,
+        "label": "scratch-holders"
+      }
+    ],
+    "commands_count": 33,
+    "raw_observation_limit": "This is an iOS Simulator CLI fixture outside the app container; neither hardware protection nor app encryption/recovery, app runtime, physical devices, Store or L08 validation.",
+    "recorded_finished_at": "2026-09-08T01:29:24.408139+00:00",
+    "recorded_started_at": "2026-09-08T01:28:44.065436+00:00"
+  },
+  "independent_classification": {
+    "class": "CONFIRMED DEFECT",
+    "counter_evidence": [
+      "Compile with -Wall/-Wextra/-Werror returned0, synthetic33 controls passed, ad-hoc fixture signing and strict verification returned0, native command returned0. None imply wire-schema correctness.",
+      "OBSERVATIONS_COMPLETE is the producer collection marker, not independent validation. Python rejects it and outer receipt correctly remains failed.",
+      "Missing FileManager keys / URL class observations are preserved exploratory data; this wire failure prevents promoting the run to COLLECTION_VALIDATED_NOT_L08_PASS."
+    ],
+    "independent_validator": "/root/factory_review",
+    "l08_status": "UNCHANGED_FAILED_UNRESOLVED",
+    "native_control_status": "CONTROL_FAILED",
+    "original_author": "/root/native_fix_review",
+    "original_finder": "/root",
+    "remediation_recommendation": "Explicitly serialize the three presence expressions as JSON Booleans in producer; keep parser strict, add exact-wire regression, independently review frozen03 and execute fresh controls/native run. Do not edit this failed receipt or coerce int into bool.",
+    "reported_error": "native-error-types",
+    "reproduction": "The archived raw native-observations.stdout (not a manufactured fixture) has first rows[0].native_error.present equal to integer 0. Standard json decoding with no coercion reproduces the type distinction. All95 presence fields are ints; eight operation result and returned fields are actual Booleans. Reviewer did not execute the native producer or repository validator.",
+    "root_cause": [
+      {
+        "explanation": "Comparisons boxed using @(error != nil), @(values != nil), @(value != nil) produced NSNumber integers in the actual Objective-C executable. JSON carries 0/1 instead of false/true.",
+        "line_ranges": [
+          [
+            34,
+            38
+          ],
+          [
+            70,
+            91
+          ]
+        ],
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-02/FoundationProtectionControl.m"
+      },
+      {
+        "explanation": "Strict schema explicitly requires Python bool. validate_observations reaches validate_error on first ordered operation; type(0) is int, so native-error-types is the exact reachable failure. Sibling query fields would likewise fail query-booleans.",
+        "line_ranges": [
+          [
+            93,
+            99
+          ],
+          [
+            102,
+            122
+          ],
+          [
+            149,
+            165
+          ]
+        ],
+        "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-02/run_control.py"
+      }
+    ],
+    "scope": "Isolated diagnostic producer JSON Boolean typing, not a newly established Parlor application defect"
+  },
+  "next_required": [
+    "Review frozen03 producer-only Boolean correction, strict parser unchanged and wire regression; independent synthetic approval first.",
+    "Root runs fresh focused controls in shared lane; reviewer reconciles descriptors and evidence before any fresh native approval.",
+    "Root runs a separately approved owned native control; independently interpret new output and cleanup. L08 remains unresolved until its actual application-host matrix passes required criteria."
+  ],
+  "original_evidence_preserved": [
+    {
+      "bytes": 19545,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/receipt.json",
+      "sha256": "3774d5829a19f3de62f831c652b3e8c3f78b518dea36910858ab56f6e4e0c2ab"
+    },
+    {
+      "bytes": 6718,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/native-observations.stdout",
+      "sha256": "ff5dd1d002b4d2d63a86eb54f6504766a806bb70b3ac3368251f8ef8db3e1811"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/native-observations.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 106,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/adhoc-fixture-sign.stderr",
+      "sha256": "36f7108e3cd3720ce83ca416030a661ea748d65f6faa64e5633bc9d1850b2b78"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/fixture-signature-check.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/fixture-signature-check.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/stop-after-compile-preflight.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/stop-after-compile-preflight.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 31,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/stop-after-compile.stdout",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/stop-after-compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/stop-after-compile-verified.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/stop-after-compile-verified.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/stop-final-preflight.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/stop-final-preflight.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 31,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/stop-final.stdout",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/stop-final.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/stop-final-verified.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/stop-final-verified.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 797,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/cleanup-device-identity.stdout",
+      "sha256": "57e7a8f06bd0e718856aba967f8f67bcfcbd47382e5f991dc8906e4ab0d0f2ff"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/cleanup-device-identity.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/shutdown.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/shutdown.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 799,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/shutdown-identity.stdout",
+      "sha256": "db2d154a4ab35c86cdad47219391a317651dc177e573e780940dc44ef164c660"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/shutdown-identity.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/delete.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/delete.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 147,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/deleted-identity.stdout",
+      "sha256": "0c8dc472862c0b8ca70aea04c9d395f002b03735d71469ad44057d35910e34cf"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/deleted-identity.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/scratch-holders.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/scratch-holders.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "raw_exploratory_metadata_not_pass": {
+    "all8_operations_returned_true_with_no_exception": true,
+    "backup_values": "included before explicit exclusion; excluded after explicit directory/atomic exclusion",
+    "filemanager_values": "all8 missing",
+    "interpretation": "Do not normalize or relabel the original control result. Wait for reviewed Boolean-producer correction and fresh execution before treating schema-validated collection as established.",
+    "malformed_presence_field_count": 95,
+    "observation_rows": 8,
+    "operation_rows": 8,
+    "regular_file_url_values": "all5 until-first-authentication",
+    "rows": 16,
+    "volume_values": "all8 supported"
+  },
+  "recorded_at": "2026-09-08T01:44:09.806055+00:00",
+  "review_scope": "Independent interpretation of root-executed frozen02 Foundation native01 control and exact owned cleanup; no application fix or L08 pass claim.",
+  "reviewer": "/root/factory_review",
+  "reviewer_actions": {
+    "build_test_or_native_execution": false,
+    "deletions": false,
+    "native_process_queries_or_signals": false,
+    "production_or_canonical_changes": false,
+    "repository_executable_imports": false,
+    "writes": "Only this additive review JSON under excluded reviews/. No task-owned worker or build output created."
+  },
+  "schema_version": 1,
+  "source_baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "e1dd40c0f1ff14561ecac6c25967fced8cda74d2",
+    "context_hashes_current_and_before_after_match": true,
+    "context_source_hashes": {
+      "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt": "c2852fafb293a693be830171f4674947289fafb07f8ecdbafa5c0aaae6d1bf8b",
+      "scripts/verification/ios-readiness/L08StorageProbe.kt.in": "a1202e47e1b41feb7e5c558e4df9515704e27762e437778b6ae79c777bfce651"
+    },
+    "frozen02_approved_files_current_match": true,
+    "frozen02_manifest": {
+      "bytes": 822,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-02/manifest.json",
+      "sha256": "aa6867dbf163ba224c7feb5896da267f1648177890f1be669b98d73361dc2d9a"
+    },
+    "seven_preexisting_tracked_modifications_preserved": true,
+    "tree": "1d4822ebea89148635e0d71c74060fce1ab61824"
+  }
+}

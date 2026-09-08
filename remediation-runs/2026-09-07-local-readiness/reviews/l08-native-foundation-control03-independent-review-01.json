@@ -1,0 +1,290 @@
+{
+  "approval_scope": "Root may execute the36 frozen03 Python controls in the exclusive shared lane, with fresh hash-bound evidence and mandatory finalization. This is NOT native-run approval and NOT a passed test/collection/L08/application/physical-device gate.",
+  "author": "/root/native_fix_review",
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "e1dd40c0f1ff14561ecac6c25967fced8cda74d2",
+    "preexisting_tracked_changes_preserved": 7,
+    "tree": "1d4822ebea89148635e0d71c74060fce1ab61824"
+  },
+  "controls_review": {
+    "all33_original_test_methods_ast_identical": true,
+    "all_expected_descriptors": [
+      "DevicePlanTests.test_commands_never_use_wrapper_default_set_all_booted_or_standalone",
+      "DevicePlanTests.test_empty_runtime_keys_are_empty_but_unknown_devices_are_not_owned",
+      "DevicePlanTests.test_exact_private_device_only",
+      "DevicePlanTests.test_probe_baseline_is_not_masked_by_later_directory_set",
+      "MetadataTests.test_bad_source_token_image_runtime_and_platform_rejected",
+      "MetadataTests.test_collection_keeps_false_write_and_exception_distinct",
+      "MetadataTests.test_duplicate_unknown_oversized_and_nonfinite_json_rejected",
+      "MetadataTests.test_key_and_error_type_boundaries",
+      "MetadataTests.test_missing_keys_supported_volume_is_collection_not_l08_pass",
+      "MetadataTests.test_native_error_not_coerced_to_empty_or_success",
+      "MetadataTests.test_no_expanded_claims_or_raw_native_details",
+      "MetadataTests.test_query_exception_requires_unobserved_not_missing",
+      "MetadataTests.test_rows_cannot_be_lost_duplicated_reordered_or_repurposed",
+      "OwnedFixtures.test_cancellation_while_waiting_after_pipe_eof_still_finalizes_child",
+      "OwnedFixtures.test_cancelled_lane_refuses_new_work_but_shields_gradle_stop",
+      "OwnedFixtures.test_device_set_replaced_before_any_contact_is_also_retained",
+      "OwnedFixtures.test_foreign_gradle_is_not_stopped",
+      "OwnedFixtures.test_interrupted_partial_create_recovers_only_unique_token_device",
+      "OwnedFixtures.test_lsof_clean_empty_result_allows_only_owned_root_removal",
+      "OwnedFixtures.test_lsof_warnings_enabled_after_terse_option_and_stderr_is_fatal",
+      "OwnedFixtures.test_main_uses_nonthrowing_handlers_not_exception_raising_callbacks",
+      "OwnedFixtures.test_nested_files_fifo_and_owned_cache_removed",
+      "OwnedFixtures.test_no_creation_attempt_is_not_evidence_of_empty_private_set",
+      "OwnedFixtures.test_no_reap_precedes_termination_on_bounded_output_failure",
+      "OwnedFixtures.test_normal_fake_child_never_signals_any_process",
+      "OwnedFixtures.test_partial_create_wrong_token_never_grants_delete_authority",
+      "OwnedFixtures.test_precreate_ambiguity_cannot_be_cleared_by_later_empty_listing",
+      "OwnedFixtures.test_repeated_cancellation_cannot_unwind_kill_reap_close_or_logs",
+      "OwnedFixtures.test_replaced_device_set_inode_is_not_forwarded_to_simctl",
+      "OwnedFixtures.test_replaced_root_cannot_be_deleted_with_old_identity",
+      "OwnedFixtures.test_symlink_device_set_is_not_forwarded_or_removed_by_lane",
+      "OwnedFixtures.test_symlink_unlinks_only_owned_link_not_target",
+      "OwnedFixtures.test_wrong_mode_or_symlink_root_refused",
+      "WireTypeRegressionTests.test_actual_native01_numeric_boolean_receipt_stays_rejected_and_unchanged",
+      "WireTypeRegressionTests.test_actual_producer_comparisons_select_boolean_objects_not_integer_boxing",
+      "WireTypeRegressionTests.test_every_boolean_wire_slot_rejects_numeric_zero_and_one"
+    ],
+    "new_assertions": [
+      "Immutable6718-byte real native01 witness hash verified before/after and exact native-error-types rejection; actual integer fields explicitly asserted.",
+      "Fixture traversal counts144 Boolean positions;288 numeric0/1 variants rejected via actual JSON decode and strict validator, with unmutated positive fixture checked.",
+      "All3 actual native expression sites source-guarded; each reverse-mutant must raise AssertionError."
+    ],
+    "new_descriptors": [
+      "WireTypeRegressionTests.test_actual_native01_numeric_boolean_receipt_stays_rejected_and_unchanged",
+      "WireTypeRegressionTests.test_actual_producer_comparisons_select_boolean_objects_not_integer_boxing",
+      "WireTypeRegressionTests.test_every_boolean_wire_slot_rejects_numeric_zero_and_one"
+    ],
+    "new_total_expected": 36,
+    "original_count": 33,
+    "reachability": "unittest discover -s frozen03 resolves test_control.py, which imports exactly adjacent run_control.py (lines17-20); no main() on import. No disabling annotations/tests/skips added.",
+    "side_effects": "New cases read immutable evidence/source and exercise parser. Existing owned-fixture suite makes bounded fresh /private/tmp roots and fake pipes; subprocess.Popen/os.killpg/simctl paths are mocked, owned identity-attested cleanup executed by tearDown. No native worker intentionally launched by test suite.",
+    "status": "NOT_RUN_BY_REVIEWER; root must execute and actual36 descriptors/results be reconciled."
+  },
+  "coverage": [
+    {
+      "line_count": 295,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/FoundationProtectionControl.m",
+      "reviewed_line_ranges": [
+        [
+          1,
+          295
+        ]
+      ],
+      "sha256": "a6b025d7b77c3b1b1de57b93869d0beff6b4cc9e365eb5672ffd2be9d52013f2"
+    },
+    {
+      "line_count": 652,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/run_control.py",
+      "reviewed_line_ranges": [
+        [
+          1,
+          652
+        ]
+      ],
+      "sha256": "58e8daf875eaf8061ed017e10cc8c8065eb49292866b6741227814282a1b8e9f"
+    },
+    {
+      "line_count": 589,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/test_control.py",
+      "reviewed_line_ranges": [
+        [
+          1,
+          589
+        ]
+      ],
+      "sha256": "b1eb86d303e3a3d5f886cc800d917ccefc0f78a61c25d686c92f6cd899fb5f43"
+    },
+    {
+      "line_count": 194,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/README.md",
+      "reviewed_line_ranges": [
+        [
+          1,
+          194
+        ]
+      ],
+      "sha256": "3478b82d33b918f78342e21bc93cddbfe2c12d917b634574f91e74f8de50ab53"
+    },
+    {
+      "line_count": 107,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/public-tool-evidence.json",
+      "reviewed_line_ranges": [
+        [
+          1,
+          107
+        ]
+      ],
+      "sha256": "8a5cad552acfb337a3172282c15bfade6dd36fd99f39f1afc02a94cc4c5f1bb2"
+    },
+    {
+      "line_count": 15,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/manifest.json",
+      "reviewed_line_ranges": [
+        [
+          1,
+          15
+        ]
+      ],
+      "sha256": "9efdb9f7918b75c0c4315fa4ecf208ece85ba4b37a8c66bb6d35cab8612c2f3b"
+    }
+  ],
+  "decision": "APPROVED_FOR_FOCUSED_SYNTHETIC_CONTROLS",
+  "diff": {
+    "changed_files": [
+      "FoundationProtectionControl.m",
+      "test_control.py",
+      "README.md"
+    ],
+    "patch": {
+      "line_count": 146,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control02-to03.patch",
+      "sha256": "6c8f06e404a5ca3a7393498a3b15895c307ddefdc4e942b7ed5c7ee09f9c6df8"
+    },
+    "public_tool_evidence_byte_identical_to02": true,
+    "runner_byte_identical_to02": true,
+    "verified_exact_diff_against_frozen02": true
+  },
+  "fix_review": {
+    "compatibility": "JSON schema version1 keeps its original Boolean contract; correction is producer conformance, not a format migration. Production snapshot/protocol/Doctor settings/content versions unaffected.",
+    "correction": "Each presence expression now chooses an explicit @YES/@NO object instead of boxing the int comparison. No operation/error domain or code/query metadata behavior changes. The three sites cover native_error.present in every operation/query and dictionary/key presence in every query.",
+    "counter_evidence": [
+      "Python synthetic fixture is not Objective-C serialization; native01 synthetic33/compile/exit0 did not prove wire correctness.",
+      "Source-expression guard fails every single-site reverse-mutant, but is not compiler proof and may not be counted as native repair verification.",
+      "Official upstream semantics are not attestation of exact installed Apple Clang source; new actual native output must independently pass unchanged strict parser."
+    ],
+    "producer_lines": [
+      [
+        34,
+        38
+      ],
+      [
+        70,
+        91
+      ]
+    ],
+    "sibling_checks": [
+      "Other flags already @YES/@NO; operation result typed BOOL retained and real native01 result was Boolean.",
+      "NSError.code/platform/PID/version deliberately remain integer; no global coercion.",
+      "query missing/unavailable/exception distinction, volume support and protection names unaltered.",
+      "No Kotlin/Swift/app storage/format/game/protocol or canonical-production modification.",
+      "Strict exact Boolean validation at runner95,105,135-137,154 and source/image/runtime/row binding all unchanged."
+    ]
+  },
+  "l08_status": "UNCHANGED_FAILED_UNRESOLVED",
+  "manifest_path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/manifest.json",
+  "manifest_sha256": "9efdb9f7918b75c0c4315fa4ecf208ece85ba4b37a8c66bb6d35cab8612c2f3b",
+  "native09_and_native01_failures_immutable": true,
+  "original_defect": {
+    "independent_classification": {
+      "line_count": 486,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-foundation-native01-independent-classification-01.json",
+      "sha256": "fe45a0709a10a05ef91ea0dad8a524bd8e64400814d33b097bd8ab3794323811"
+    },
+    "original_error": "native-error-types",
+    "original_native_control_status": "CONTROL_FAILED",
+    "raw_failed_wire": {
+      "line_count": 1,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/evidence/l08-foundation-control-01/native-observations.stdout",
+      "sha256": "ff5dd1d002b4d2d63a86eb54f6504766a806bb70b3ac3368251f8ef8db3e1811"
+    },
+    "root_cause": "Three boxed C comparisons produce numeric NSNumber, so95 emitted presence slots contain JSON0/1. Strict parser rejects rather than coerce."
+  },
+  "ownership_review": {
+    "limits": [
+      "No guarantee against machine shutdown/SIGKILL/kernel failure; exact failures stay explicit.",
+      "System shared services/default profiles/personal paths remain out of reviewer scope.",
+      "Native03 operation remains gated on fresh approval after actual36 controls and cleanup."
+    ],
+    "prior_native01_exact_cleanup": "Independent report confirms receipt evidence and exact scratch/devices absent, while retaining original native01 failure. Reviewer performed no native/process/deletion actions.",
+    "source_ranges": {
+      "FoundationProtectionControl.m": [
+        [
+          95,
+          144
+        ],
+        [
+          181,
+          295
+        ]
+      ],
+      "run_control.py": [
+        [
+          206,
+          250
+        ],
+        [
+          253,
+          402
+        ],
+        [
+          404,
+          459
+        ],
+        [
+          461,
+          646
+        ]
+      ]
+    },
+    "unchanged02_safety": "Signal handlers are nonthrowing, child custody protected by mask and unreaped direct Popen ownership; cleanup shielded; device-set inode/token/runtime/UUID pinned; sticky ambiguity quarantines; positive postcontact emptiness required; lsof -t +w warnings fatal; fd-relative no-follow delete only owned root. Exact manifest/reviewer/shared lock checked before native operations."
+  },
+  "recorded_at": "2026-09-08T01:54:28.769029+00:00",
+  "remaining_before_native": [
+    "Root executes all36 controls using /usr/bin/python3 -B in fresh evidence cycle; keep source manifest and actual descriptor log.",
+    "Capture return code, immediately stop Gradle, finalize task-owned outputs/workers and record cleanup.",
+    "Independent reviewer reconcile new evidence/no original mutation, then separately issue manifest-bound native approval if successful.",
+    "Fresh native run still required to verify explicit Boolean producer; success is COLLECTION_VALIDATED_NOT_L08_PASS only."
+  ],
+  "research": {
+    "author_research_read": {
+      "line_count": 133,
+      "path": "/Users/abdelrahman/Projects/parlor/remediation-runs/2026-09-07-local-readiness/reviews/l08-foundation-wire-types-research-01.json",
+      "sha256": "3988ff3ab3cb2b26fd5ffa200e6a8ba8004324de4777ad9b73938e4bbfd7b6ed"
+    },
+    "independently_fetched": {
+      "accessed_at": "2026-09-08T01:52:51.732127+00:00",
+      "applicability": "Longstanding official semantics plus exact native01 witness; not claimed identical Apple Clang source.",
+      "claim": "@YES/@NO use numberWithBool; expression boxing follows scalar type; BOOL keywords disambiguate int.",
+      "reviewed_ranges": [
+        [
+          45,
+          66
+        ],
+        [
+          90,
+          108
+        ],
+        [
+          116,
+          133
+        ]
+      ],
+      "sha256": "6e383d2d968b5ae5909132af7ffc1924ad8318552b52937ea4f546f905875413",
+      "url": "https://raw.githubusercontent.com/llvm/llvm-project/llvmorg-17.0.6/clang/docs/ObjectiveCLiterals.rst"
+    },
+    "sdk_public_headers": [
+      {
+        "line_count": 243,
+        "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/usr/include/objc/objc.h",
+        "sha256": "24d244af818046702546269afbedbe2992ea9b6d8f6ad43e7b0750e53d3bfe2b"
+      },
+      {
+        "line_count": 113,
+        "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.5.sdk/System/Library/Frameworks/Foundation.framework/Headers/NSValue.h",
+        "sha256": "7f06ebd4c71ea0e9b962d55cb8e88a0f8f185cc4e3150c4ee86fa370d9800183"
+      }
+    ]
+  },
+  "reviewer": "/root/factory_review",
+  "reviewer_actions": {
+    "canonical_changes": false,
+    "native_process_queries_signals_or_deletions": false,
+    "repository_executable_imports": false,
+    "tests_builds_compilers_native_commands": false,
+    "writes": "This additive review JSON only. Standard-library AST/hash and bounded authoritative-document fetch; no worker/build output to clean."
+  },
+  "schema_version": 1
+}
