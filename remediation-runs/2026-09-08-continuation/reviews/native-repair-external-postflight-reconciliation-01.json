@@ -1,0 +1,681 @@
+{
+  "schema_version": 1,
+  "kind": "NATIVE_REPAIR_READ_ONLY_EXTERNAL_POSTFLIGHT_RECONCILIATION",
+  "author": "/root/dependency_chain",
+  "started_at": "2026-09-08T12:57:46.426923+00:00",
+  "recorded_at": "2026-09-08T12:57:46.728764+00:00",
+  "status": "PASS_SCOPED_EXTERNAL_CLEANUP_AND_INPUT_BINDINGS",
+  "scope": "Read-only original Linux control evidence reconciliation. No controls rerun, no application/runtime/native qualification, no original FAIL replacement.",
+  "original_status": {
+    "outer": "FAIL",
+    "outer_exit_code": 1,
+    "inner": "FAIL",
+    "errors": [
+      {
+        "stage": "external-cleanup:composition",
+        "type": "RuntimeError",
+        "message": "composition: exactly one ALLOCATION marker required"
+      }
+    ],
+    "composition_external_cleanup": null,
+    "disposition": "Original packet, command/results JSON, logs and outer FAIL receipt remain unchanged."
+  },
+  "defect": {
+    "author": "/root/dependency_chain",
+    "invocation_reviewer": "/root",
+    "inline_function_lines": [
+      174,
+      214
+    ],
+    "cause": "Packet expected exactly one allocation/cleanup pair and selected startswith(marker). Existing composition55 produces four pairs: one outer plus three nested callback cases. Line45 first nested ALLOCATION follows the exact unittest progress prefix; startswith sees3 allocations/4cleanups and raises before RESULTS validation.",
+    "source_explanation": "LauncherControls.test_external_parent_and_environment_are_finalized_on_success_failure_and_cancellation (test_composition.py lines391-418) loops None, ValueError, KeyboardInterrupt through existing with_external_tmp. These are synthetic callbacks, not real OS signals.",
+    "correction_scope": "New postflight report only: exact4+1 counts, closed marker/event sequence and sole known line45 prefix, matching exact path and integer device/inode/UID custody, status PASS/removal true/workers0, all5exact parents now ENOENT. No parser/source-control code or original evidence modified."
+  },
+  "source_binding": {
+    "commit": "4b8c586ce8d1228dda1420c470dff95dd599ddc6",
+    "tree": "b70b8d7478db79251796a500c40ef61dcdccbe92",
+    "branch": "fix/local-readiness-2026-09-07",
+    "working_tree_diff_sha256": "bb5d58442137496d82d7b1cc98b123ee9b6cf33562507c3f67a8f23aee2ae431",
+    "scope": "Working-tree-bound controls at evidence-only checkpoint; not clean frozen-source native qualification",
+    "packet": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-repair-control-command-01.json",
+      "sha256": "b693e857332f142818d65a3196c2f9f7725834975d66abb5ae3bab41a508b358",
+      "bytes": 30907
+    },
+    "outer_command_equals_packet_verbatim": true,
+    "command_canonical_sha256": "561d19ff8c638968fc5d0aeb05d5047a7dafa5bcb4341881b87c7c1b770207f8",
+    "before": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/native-repair-inputs-before.json",
+      "sha256": "ac0ab3e888ca838fbf02f7d06cc858d0bdb8cab7df74fae76340696fc9b8288a",
+      "bytes": 49089
+    },
+    "after": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/native-repair-inputs-after.json",
+      "sha256": "ac0ab3e888ca838fbf02f7d06cc858d0bdb8cab7df74fae76340696fc9b8288a",
+      "bytes": 49089
+    },
+    "before_after_bytes_equal": true,
+    "sorted_unique_inputs": 261,
+    "all261_current_hashes_match": true,
+    "all42_AST_literal_expected_pins_match": true,
+    "all54_supplemental_exact_paths_and_packet_bound": true,
+    "input_manifest_canonical_sha256": "267af755c0f788d7f6bd22e8a50a0d8066d8d4fcd56b7a8239d3a69271308fef",
+    "outer_source_entries": 825,
+    "all825_current_source_hashes_match": true,
+    "outer_source_before_equals_after": true,
+    "outer_runner_before_equals_after": true,
+    "outer_runner_current_hash_matches": true,
+    "current_nine_file_freeze": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/hosted-native-repair-01/draft-freeze-relative.json",
+      "sha256": "2905ce996bad3d6e1d3d45e9fd7594cbe54cc93380e608781a7f34d73b0784a0",
+      "bytes": 2954
+    },
+    "all_nine_current_freeze_hashes_match": true,
+    "references": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py",
+        "sha256": "03c115d45474ee082204d38c6315e19909108148b2de8804898dd66c40c14dbf",
+        "bytes": 5918
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+        "sha256": "1ee5d5889d50b94a11d3e3d2ce881899c2434eb97489e953f546a2b7d344afd5",
+        "bytes": 28101
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py",
+        "sha256": "df030e500c035fc65ede190a8c11b795f7b4a40e2933a86a4b8529b4bdac4c13",
+        "bytes": 24389
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/controls/run_continuation_controls.py",
+        "sha256": "1896d5a309e8802b691bfc9a37db2c0ac92dcfb6173d4cee564e5dcfcc234627",
+        "bytes": 8796
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-command-and-runtime-repair-independent-correction-02.json",
+        "sha256": "2129a189055e44478484515e1a24fd2cc228f7dfdebc97dc277bf49c41383bce",
+        "bytes": 10455
+      }
+    ]
+  },
+  "observed_commands": [
+    {
+      "name": "primary-errors",
+      "exit_code": 0,
+      "tests": 12,
+      "status": "PASS",
+      "log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/primary-errors.log",
+        "sha256": "e390ba75e9146baecff011d451d5eb006812ad82316a4aa2edb73002a2cac965",
+        "bytes": 2131
+      },
+      "scope": "Executed Linux pure controls"
+    },
+    {
+      "name": "toolchain-profile",
+      "exit_code": 0,
+      "tests": 12,
+      "status": "PASS",
+      "log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/toolchain-profile.log",
+        "sha256": "eaf171d76b480905e73435492435d56dc40790f885c053dcf709fe678296f50d",
+        "bytes": 2139
+      },
+      "scope": "Executed Linux pure controls"
+    },
+    {
+      "name": "foundation-profile",
+      "exit_code": 0,
+      "tests": 20,
+      "status": "PASS",
+      "log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/foundation-profile.log",
+        "sha256": "70a6625b9519eae6dc9ddbe43e067710867858ec59cc0a29767dab1642b0316a",
+        "bytes": 4149
+      },
+      "scope": "Executed Linux pure controls"
+    },
+    {
+      "name": "single-tap",
+      "exit_code": 0,
+      "tests": 14,
+      "status": "PASS",
+      "log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/single-tap.log",
+        "sha256": "7cae7d2a541b08ddd4b0531ab0c345a9f4b42c936a16d40948088cfe922a5c61",
+        "bytes": 2489
+      },
+      "scope": "Executed Linux pure controls"
+    },
+    {
+      "name": "functional-copy",
+      "exit_code": 0,
+      "tests": 12,
+      "status": "PASS",
+      "log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/functional-copy.log",
+        "sha256": "c6c5f752ca65909ac693ddf9c3bff70d30226a77dc5685eef748754260ce5217",
+        "bytes": 2543
+      },
+      "scope": "Executed Linux pure controls"
+    },
+    {
+      "name": "composition",
+      "exit_code": 0,
+      "tests": 55,
+      "status": "PASS",
+      "log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/composition.log",
+        "sha256": "063b157f90a064b59f90cf128c5bedfb240cc39a6f240f089086b2c316b8116c",
+        "bytes": 19632
+      },
+      "scope": "Executed Linux pure controls"
+    },
+    {
+      "name": "normal",
+      "exit_code": 0,
+      "tests": 187,
+      "status": "PASS",
+      "log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/normal.log",
+        "sha256": "61e3043fc0324a49e32b218f8ecd873832d4e76827ddc197eb0f6cca47b4eb00",
+        "bytes": 109031
+      },
+      "scope": "Executed Linux pure controls"
+    },
+    {
+      "name": "release-focused",
+      "exit_code": 0,
+      "tests": 122,
+      "status": "PASS",
+      "log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/release-focused.log",
+        "sha256": "3128146db4f21baeae2318a9ad3b005bd07ed1c87f6bb0b394cf75ae9cae5657",
+        "bytes": 30828
+      },
+      "scope": "Executed Linux pure controls"
+    },
+    {
+      "name": "workflow-hygiene",
+      "exit_code": 0,
+      "tests": 2,
+      "status": "PASS",
+      "log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/workflow-hygiene.log",
+        "sha256": "dc69fe2edd426c30b77a1fb3ac8327700ce3d6bbf88098895041a4805185450b",
+        "bytes": 412
+      },
+      "scope": "Executed Linux pure controls"
+    },
+    {
+      "name": "workflow-contract",
+      "exit_code": 0,
+      "tests": null,
+      "status": "PASS",
+      "log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/workflow-contract.log",
+        "sha256": "ed4d00104b82af25bedca2f5586359a98c6d2c5d0667ceb6a849ab748394c196",
+        "bytes": 32
+      },
+      "scope": "Static workflow contract, not workflow execution"
+    }
+  ],
+  "observed_unit_controls": 436,
+  "static_workflow_contract_commands": 1,
+  "unattempted_commands": [],
+  "external_cleanup": {
+    "foundation-profile": {
+      "status": "PASS_SCOPED_POSTFLIGHT",
+      "log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/foundation-profile.log",
+        "sha256": "70a6625b9519eae6dc9ddbe43e067710867858ec59cc0a29767dab1642b0316a",
+        "bytes": 4149
+      },
+      "marker_counts": {
+        "ALLOCATION": 1,
+        "CLEANUP": 1,
+        "RESULTS": 0
+      },
+      "event_sequence": [
+        {
+          "kind": "ALLOCATION",
+          "line": 1
+        },
+        {
+          "kind": "CLEANUP",
+          "line": 27
+        }
+      ],
+      "pairs": [
+        {
+          "allocation": {
+            "kind": "ALLOCATION",
+            "line": 1,
+            "value": {
+              "path": "/tmp/parlor-app-foundation-controls-givasd3h",
+              "device": 27,
+              "inode": 248329,
+              "uid": 0
+            },
+            "raw_line_sha256": "f0841de7bbdcf23e1da213217d9377c1a9a0ed0d0f26b81f6c26a91f255ebc35",
+            "unittest_prefix": ""
+          },
+          "cleanup": {
+            "kind": "CLEANUP",
+            "line": 27,
+            "value": {
+              "status": "PASS",
+              "parent": "/tmp/parlor-app-foundation-controls-givasd3h",
+              "workers_started": 0,
+              "parent_removed": true,
+              "custody": {
+                "device": 27,
+                "inode": 248329,
+                "uid": 0
+              }
+            },
+            "raw_line_sha256": "5782ddbd792dc0cf6a291472a6624dd257d727cc301697a5639ad0299a52c58d",
+            "unittest_prefix": ""
+          },
+          "current_absence": {
+            "path": "/tmp/parlor-app-foundation-controls-givasd3h",
+            "method": "exact os.lstat; no glob/adoption/deletion",
+            "result": "ENOENT",
+            "errno": 2,
+            "checked_at": "2026-09-08T12:57:46.596278+00:00"
+          }
+        }
+      ],
+      "results": null
+    },
+    "composition": {
+      "status": "PASS_SCOPED_POSTFLIGHT",
+      "log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/composition.log",
+        "sha256": "063b157f90a064b59f90cf128c5bedfb240cc39a6f240f089086b2c316b8116c",
+        "bytes": 19632
+      },
+      "marker_counts": {
+        "ALLOCATION": 4,
+        "CLEANUP": 4,
+        "RESULTS": 1
+      },
+      "event_sequence": [
+        {
+          "kind": "ALLOCATION",
+          "line": 1
+        },
+        {
+          "kind": "ALLOCATION",
+          "line": 45
+        },
+        {
+          "kind": "CLEANUP",
+          "line": 46
+        },
+        {
+          "kind": "ALLOCATION",
+          "line": 47
+        },
+        {
+          "kind": "CLEANUP",
+          "line": 48
+        },
+        {
+          "kind": "ALLOCATION",
+          "line": 49
+        },
+        {
+          "kind": "CLEANUP",
+          "line": 50
+        },
+        {
+          "kind": "RESULTS",
+          "line": 68
+        },
+        {
+          "kind": "CLEANUP",
+          "line": 69
+        }
+      ],
+      "pairs": [
+        {
+          "allocation": {
+            "kind": "ALLOCATION",
+            "line": 1,
+            "value": {
+              "path": "/tmp/parlor-app-foundation-controls-uts5yovn",
+              "device": 27,
+              "inode": 249870,
+              "uid": 0
+            },
+            "raw_line_sha256": "eb0c1468209c1eebf84048ab5af92f965da3d4323ef4f599ad415756a863c609",
+            "unittest_prefix": ""
+          },
+          "cleanup": {
+            "kind": "CLEANUP",
+            "line": 69,
+            "value": {
+              "status": "PASS",
+              "parent": "/tmp/parlor-app-foundation-controls-uts5yovn",
+              "workers_started": 0,
+              "parent_removed": true,
+              "custody": {
+                "device": 27,
+                "inode": 249870,
+                "uid": 0
+              }
+            },
+            "raw_line_sha256": "d151ff94ba064b2329b64973877995e65bc29ef215aedee13213ab312fda4fa1",
+            "unittest_prefix": ""
+          },
+          "current_absence": {
+            "path": "/tmp/parlor-app-foundation-controls-uts5yovn",
+            "method": "exact os.lstat; no glob/adoption/deletion",
+            "result": "ENOENT",
+            "errno": 2,
+            "checked_at": "2026-09-08T12:57:46.596911+00:00"
+          }
+        },
+        {
+          "allocation": {
+            "kind": "ALLOCATION",
+            "line": 45,
+            "value": {
+              "path": "/tmp/parlor-app-foundation-controls-21o6pyv3",
+              "device": 27,
+              "inode": 250545,
+              "uid": 0
+            },
+            "raw_line_sha256": "40772214a686d637c559411563e801b9b507d50503e69527653fa67e65b85c35",
+            "unittest_prefix": "test_external_parent_and_environment_are_finalized_on_success_failure_and_cancellation (l08_app_foundation_composition_controls.LauncherControls.test_external_parent_and_environment_are_finalized_on_success_failure_and_cancellation) ... "
+          },
+          "cleanup": {
+            "kind": "CLEANUP",
+            "line": 46,
+            "value": {
+              "status": "PASS",
+              "parent": "/tmp/parlor-app-foundation-controls-21o6pyv3",
+              "workers_started": 0,
+              "parent_removed": true,
+              "custody": {
+                "device": 27,
+                "inode": 250545,
+                "uid": 0
+              }
+            },
+            "raw_line_sha256": "160efc88b036444dc74166f4ef13278955c4e014de1a43ddd3a14b190aeea71a",
+            "unittest_prefix": ""
+          },
+          "current_absence": {
+            "path": "/tmp/parlor-app-foundation-controls-21o6pyv3",
+            "method": "exact os.lstat; no glob/adoption/deletion",
+            "result": "ENOENT",
+            "errno": 2,
+            "checked_at": "2026-09-08T12:57:46.596816+00:00"
+          }
+        },
+        {
+          "allocation": {
+            "kind": "ALLOCATION",
+            "line": 47,
+            "value": {
+              "path": "/tmp/parlor-app-foundation-controls-_59cij9f",
+              "device": 27,
+              "inode": 250548,
+              "uid": 0
+            },
+            "raw_line_sha256": "25f784ed777e1a9f1623869ac89c5fa3aacbff45f89f720faf565b40721512fd",
+            "unittest_prefix": ""
+          },
+          "cleanup": {
+            "kind": "CLEANUP",
+            "line": 48,
+            "value": {
+              "status": "PASS",
+              "parent": "/tmp/parlor-app-foundation-controls-_59cij9f",
+              "workers_started": 0,
+              "parent_removed": true,
+              "custody": {
+                "device": 27,
+                "inode": 250548,
+                "uid": 0
+              }
+            },
+            "raw_line_sha256": "be0162281ca18990f0ddcd10d97ce16f4596bea83c49450eb813f0a1c7d4bd32",
+            "unittest_prefix": ""
+          },
+          "current_absence": {
+            "path": "/tmp/parlor-app-foundation-controls-_59cij9f",
+            "method": "exact os.lstat; no glob/adoption/deletion",
+            "result": "ENOENT",
+            "errno": 2,
+            "checked_at": "2026-09-08T12:57:46.596863+00:00"
+          }
+        },
+        {
+          "allocation": {
+            "kind": "ALLOCATION",
+            "line": 49,
+            "value": {
+              "path": "/tmp/parlor-app-foundation-controls-ciocf53u",
+              "device": 27,
+              "inode": 250551,
+              "uid": 0
+            },
+            "raw_line_sha256": "c48895dd25c82758ee1ecead3c3718f2fe2918b94f06c130297c6f0295b7b060",
+            "unittest_prefix": ""
+          },
+          "cleanup": {
+            "kind": "CLEANUP",
+            "line": 50,
+            "value": {
+              "status": "PASS",
+              "parent": "/tmp/parlor-app-foundation-controls-ciocf53u",
+              "workers_started": 0,
+              "parent_removed": true,
+              "custody": {
+                "device": 27,
+                "inode": 250551,
+                "uid": 0
+              }
+            },
+            "raw_line_sha256": "88a786cf0e549655828fb6da011a635fa595339c538f60666657440183612ccc",
+            "unittest_prefix": ""
+          },
+          "current_absence": {
+            "path": "/tmp/parlor-app-foundation-controls-ciocf53u",
+            "method": "exact os.lstat; no glob/adoption/deletion",
+            "result": "ENOENT",
+            "errno": 2,
+            "checked_at": "2026-09-08T12:57:46.596898+00:00"
+          }
+        }
+      ],
+      "results": {
+        "line": 68,
+        "raw_line_sha256": "ea5536c0cba8801ed97b658c43703e808acd5bda264dfdaa463435ed11e59aec",
+        "tests_run": 55,
+        "unique_discovered": 55,
+        "current_bound_AST_ID_set_match": true,
+        "failures": 0,
+        "errors": 0,
+        "skipped": [],
+        "native_execution": false,
+        "input_tests": [
+          {
+            "path": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py",
+            "sha256": "c04c7d4b1bb99207415beab77ae3b40bb3d5f59709970f7d844d5d14beab0fe5"
+          },
+          {
+            "path": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+            "sha256": "1ee5d5889d50b94a11d3e3d2ce881899c2434eb97489e953f546a2b7d344afd5"
+          }
+        ]
+      }
+    }
+  },
+  "outer_cleanup": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/receipt.json",
+      "sha256": "d8d65f92d4d10014c62ca1b08a0e67ccbe697d6c72141815814b2a221c0f627d",
+      "bytes": 329686
+    },
+    "stop": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    "stop_exit_code": 0,
+    "stop_output": "No Gradle daemons are running.",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "artifact_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "outputs_before": [],
+    "removed_outputs": [],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "errors": [],
+    "completed_at": "2026-09-08T12:35:16.870786+00:00",
+    "scope": "Original coordinator receipt/log evidence, not a newly executed stop/clean/process sweep."
+  },
+  "originals": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/artifact-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/composition.log",
+      "sha256": "063b157f90a064b59f90cf128c5bedfb240cc39a6f240f089086b2c316b8116c",
+      "bytes": 19632
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/foundation-profile.log",
+      "sha256": "70a6625b9519eae6dc9ddbe43e067710867858ec59cc0a29767dab1642b0316a",
+      "bytes": 4149
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/functional-copy.log",
+      "sha256": "c6c5f752ca65909ac693ddf9c3bff70d30226a77dc5685eef748754260ce5217",
+      "bytes": 2543
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/gradle.log",
+      "sha256": "493350d7845bc883a66b9b01d74bb9a83c0843db9e551892931f139413c37815",
+      "bytes": 7933
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/java-toolchain.log",
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+      "bytes": 2026
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/javac-toolchain.log",
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755",
+      "bytes": 14
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/native-repair-command-exits.json",
+      "sha256": "0c7d4deafe8fede705c02892b46ceac1ddc071f279ad9473af9d3bad9b9a3eec",
+      "bytes": 2897
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/native-repair-inputs-after.json",
+      "sha256": "ac0ab3e888ca838fbf02f7d06cc858d0bdb8cab7df74fae76340696fc9b8288a",
+      "bytes": 49089
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/native-repair-inputs-before.json",
+      "sha256": "ac0ab3e888ca838fbf02f7d06cc858d0bdb8cab7df74fae76340696fc9b8288a",
+      "bytes": 49089
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/native-repair-results.json",
+      "sha256": "04973dc16add165b259016d2b86491fb10c96a02538d18d1b53d7ea325d54eef",
+      "bytes": 5645
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/normal.log",
+      "sha256": "61e3043fc0324a49e32b218f8ecd873832d4e76827ddc197eb0f6cca47b4eb00",
+      "bytes": 109031
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/primary-errors.log",
+      "sha256": "e390ba75e9146baecff011d451d5eb006812ad82316a4aa2edb73002a2cac965",
+      "bytes": 2131
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/receipt.json",
+      "sha256": "d8d65f92d4d10014c62ca1b08a0e67ccbe697d6c72141815814b2a221c0f627d",
+      "bytes": 329686
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/release-focused.log",
+      "sha256": "3128146db4f21baeae2318a9ad3b005bd07ed1c87f6bb0b394cf75ae9cae5657",
+      "bytes": 30828
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/single-tap.log",
+      "sha256": "7cae7d2a541b08ddd4b0531ab0c345a9f4b42c936a16d40948088cfe922a5c61",
+      "bytes": 2489
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/test-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/toolchain-profile.log",
+      "sha256": "eaf171d76b480905e73435492435d56dc40790f885c053dcf709fe678296f50d",
+      "bytes": 2139
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/workflow-contract.log",
+      "sha256": "ed4d00104b82af25bedca2f5586359a98c6d2c5d0667ceb6a849ab748394c196",
+      "bytes": 32
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/workflow-hygiene.log",
+      "sha256": "dc69fe2edd426c30b77a1fb3ac8327700ce3d6bbf88098895041a4805185450b",
+      "bytes": 412
+    }
+  ],
+  "preservation": {
+    "all_original_files_and_packet_reopened_byte_identical": true,
+    "all_hashed_inputs_reopened_byte_identical": true,
+    "original_directory_entries_unchanged": true,
+    "new_file_only": "remediation-runs/2026-09-08-continuation/reviews/native-repair-external-postflight-reconciliation-01.json"
+  },
+  "author_activity": {
+    "project_imports": 0,
+    "controls_rerun": 0,
+    "builds": 0,
+    "native_runs": 0,
+    "workflow_dispatches": 0,
+    "source_control_edits": 0,
+    "original_evidence_edits": 0,
+    "cleanup_actions": 0,
+    "commits": 0,
+    "method": "Inline standard-library JSON/AST/hash/exact lstat inspection; new report only, no runner file.",
+    "read_only_audit_failure": "First report-assembly attempt stopped before any write on an incorrect guessed workflow-contract output string. Reopened original actual bytes release workflow contract: PASS plus newline; this audit uses the exact existing output. Original tests/logs were not rerun or changed."
+  },
+  "limitations": [
+    "Canonical packet/outer FAIL remains; scoped reconciliation does not conceal its parser defect.",
+    "436 Linux control tests and one static workflow contract are not Parlor application runtime, iOS strict protection, functional/retained-host completion, ABI/libproc runtime, hosted platform or final combined readiness proof.",
+    "Historical custody is from bound original launcher allocation/cleanup records; current direct lstat establishes exact absence, not retrospective direct observation of inodes.",
+    "Synthetic ValueError/KeyboardInterrupt and handler controls do not prove actual OS signal behavior.",
+    "Separate portability_review and ci_review reports independently review native312 and CI124 coverage/source. No Store or final-readiness verdict issued."
+  ]
+}

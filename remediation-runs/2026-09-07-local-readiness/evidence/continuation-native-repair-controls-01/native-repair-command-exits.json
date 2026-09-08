@@ -1,0 +1,128 @@
+[
+  {
+    "name": "primary-errors",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "scripts/verification/ios-readiness/test_native_command_failures.py",
+      "-v"
+    ],
+    "log": "primary-errors.log",
+    "status": "PASS",
+    "exit_code": 0
+  },
+  {
+    "name": "toolchain-profile",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+      "-v"
+    ],
+    "log": "toolchain-profile.log",
+    "status": "PASS",
+    "exit_code": 0
+  },
+  {
+    "name": "foundation-profile",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py"
+    ],
+    "log": "foundation-profile.log",
+    "status": "PASS",
+    "exit_code": 0
+  },
+  {
+    "name": "single-tap",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py"
+    ],
+    "log": "single-tap.log",
+    "status": "PASS",
+    "exit_code": 0
+  },
+  {
+    "name": "functional-copy",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02",
+      "-p",
+      "test_l08_functional_copy.py",
+      "-v"
+    ],
+    "log": "functional-copy.log",
+    "status": "PASS",
+    "exit_code": 0
+  },
+  {
+    "name": "composition",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py"
+    ],
+    "log": "composition.log",
+    "status": "PASS",
+    "exit_code": 0
+  },
+  {
+    "name": "normal",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py"
+    ],
+    "log": "normal.log",
+    "status": "PASS",
+    "exit_code": 0
+  },
+  {
+    "name": "release-focused",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "scripts/release/tests/test_native_process_probe.py",
+      "scripts/release/tests/test_native_continuation.py",
+      "scripts/release/tests/test_workflow_contract.py",
+      "-v"
+    ],
+    "log": "release-focused.log",
+    "status": "PASS",
+    "exit_code": 0
+  },
+  {
+    "name": "workflow-hygiene",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "scripts/release/tests/test_ci_verification_hygiene.py",
+      "VerificationWorkflowHygieneTest",
+      "-v"
+    ],
+    "log": "workflow-hygiene.log",
+    "status": "PASS",
+    "exit_code": 0
+  },
+  {
+    "name": "workflow-contract",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "scripts/release/workflow_contract.py"
+    ],
+    "log": "workflow-contract.log",
+    "status": "PASS",
+    "exit_code": 0
+  }
+]

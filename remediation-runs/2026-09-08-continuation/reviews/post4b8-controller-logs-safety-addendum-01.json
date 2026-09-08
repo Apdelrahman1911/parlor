@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "kind": "post4b8-source-delivery-safety-two-controller-log-addendum",
+  "author": "/root/evidence_audit",
+  "recorded_at": "2026-09-08T13:17:43.255565+00:00",
+  "status": "PASS_SCOPED_DELIVERY_SAFETY_ONLY",
+  "extends": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/post4b8-source-delivery-safety-01.json",
+    "bytes": 89974,
+    "sha256": "d0a7d25e9f4a2706995e364662cc96d90bd86da2ef3049920407fa84d2cba795",
+    "unchanged": true
+  },
+  "scope": "Only the two coordinator-requested ignored stdout controller logs omitted from the preceding 86-file safety payload. This addendum does not rewrite that report, expand its historical source review, or recategorize any execution result.",
+  "git_observation": {
+    "head": "4b8c586ce8d1228dda1420c470dff95dd599ddc6",
+    "tree": "b70b8d7478db79251796a500c40ef61dcdccbe92",
+    "index_probe_argv": [
+      "git",
+      "diff",
+      "--cached",
+      "--quiet"
+    ],
+    "index_probe_exit": 1,
+    "index_state": "NONEMPTY: coordinator staging of previously approved files was in progress; no empty-index assertion or complete-index audit is made.",
+    "agent_staging_performed": false
+  },
+  "totals": {
+    "files": 2,
+    "bytes": 27715,
+    "ignored_required_evidence": 2,
+    "manifest_sha256": "9df255ff716951e5b988ea2ce2d3bbf71b592896d59918bd61a9790b20d723d7",
+    "manifest_encoding": "compact UTF-8 JSON, ensure_ascii=true, sorted rows [path, git_mode, sha256, bytes]",
+    "includes_this_addendum": false
+  },
+  "files": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-repair-controls-01-controller.log",
+      "bytes": 24887,
+      "sha256": "6e2a2f9074b66da2bb2a20187ba732f9a558527d09e93e11eb534246252c67de",
+      "filesystem_mode": "0o600",
+      "git_mode": "100644",
+      "regular_file": true,
+      "symlink": false,
+      "executable": false,
+      "utf8": true,
+      "identity_stable_across_read": true,
+      "git_observations": [
+        {
+          "argv": [
+            "git",
+            "check-ignore",
+            "-v",
+            "--",
+            "remediation-runs/2026-09-08-continuation/reviews/native-repair-controls-01-controller.log"
+          ],
+          "exit": 0,
+          "stdout": ".gitignore:26:*.log\tremediation-runs/2026-09-08-continuation/reviews/native-repair-controls-01-controller.log\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "git",
+            "status",
+            "--short",
+            "--untracked-files=all",
+            "--ignored",
+            "--",
+            "remediation-runs/2026-09-08-continuation/reviews/native-repair-controls-01-controller.log"
+          ],
+          "exit": 0,
+          "stdout": "!! remediation-runs/2026-09-08-continuation/reviews/native-repair-controls-01-controller.log\n",
+          "stderr": ""
+        }
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/transport-contracts-02-controller.log",
+      "bytes": 2828,
+      "sha256": "c5fafc0ee69443ab597781a40c545213fa38e27f6aec23a3132f3fbff28e3752",
+      "filesystem_mode": "0o600",
+      "git_mode": "100644",
+      "regular_file": true,
+      "symlink": false,
+      "executable": false,
+      "utf8": true,
+      "identity_stable_across_read": true,
+      "git_observations": [
+        {
+          "argv": [
+            "git",
+            "check-ignore",
+            "-v",
+            "--",
+            "remediation-runs/2026-09-08-continuation/reviews/transport-contracts-02-controller.log"
+          ],
+          "exit": 0,
+          "stdout": ".gitignore:26:*.log\tremediation-runs/2026-09-08-continuation/reviews/transport-contracts-02-controller.log\n",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "git",
+            "status",
+            "--short",
+            "--untracked-files=all",
+            "--ignored",
+            "--",
+            "remediation-runs/2026-09-08-continuation/reviews/transport-contracts-02-controller.log"
+          ],
+          "exit": 0,
+          "stdout": "!! remediation-runs/2026-09-08-continuation/reviews/transport-contracts-02-controller.log\n",
+          "stderr": ""
+        }
+      ]
+    }
+  ],
+  "filesystem_safety": {
+    "symlinks": [],
+    "special_files": [],
+    "executables": [],
+    "large_threshold_bytes": 1048576,
+    "large_files": [],
+    "all_scoped_bytes_match_coordinator_expected_hashes": true,
+    "all_scoped_bytes_stable_on_final_reopen": true
+  },
+  "sensitive_signature_scan": {
+    "policy_reference": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/frozen25b1-delivery-safety-01.json",
+      "bytes": 415876,
+      "sha256": "8f9b7dfb5db35b8cc3045c11d5b95d9297d81fd41fde8b5e62cc1ec1572db679",
+      "pattern_set_sha256": "cd8804d59686f0125274263748aaf99e143653370e55d97f72968496c26a6c7d"
+    },
+    "method": "All bytes of the two exact UTF-8 raw stdout logs inspected with every bounded byte-regex signature in the referenced committed policy; actual file paths and JKS/JCEKS binary header signatures also checked. No matching content echoed or retained.",
+    "raw_files": 2,
+    "raw_bytes": 27715,
+    "signature_matches": [],
+    "sensitive_actual_path_matches": [],
+    "binary_keystore_header_matches": [],
+    "limitations": "Zero matches is not proof that arbitrary encoded, unknown-format or low-entropy secrets are absent. No source/test/scanner project program, build, native runtime, CI, inventory generator or network service executed."
+  },
+  "work_and_cleanup": {
+    "only_write": "this addendum",
+    "prior_report_and_logs_modified": false,
+    "staging_commits_pushes": false,
+    "builds_tests_native_actions_inventory": false,
+    "generated_workers_or_build_outputs": false,
+    "gradle_stop_or_cleanup": "Not applicable: read-only Git/data inspection and this explicitly requested report write only; no other agent lane touched."
+  },
+  "readiness_limit": "No runtime, final-qualification, physical-device, Store-operation or owner/legal approval established. Original native-repair-controls-01 envelope remains FAIL/exit1; separate postflight reconciliation is not overwritten or upgraded. Existing NOT READY verdict remains."
+}

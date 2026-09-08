@@ -1,0 +1,774 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_CONTINUATION_LEDGER_NATIVE_REPAIR_CHECKPOINT_REVIEW",
+  "reviewer": "/root/fixture_review",
+  "ledger_author": "/root/l08_fixture",
+  "recorded_at": "2026-09-08T13:07:52.728908+00:00",
+  "status": "APPROVE_EXACT_LEDGER_BYTES_FOR_REVIEWED_COMMIT_FREEZE_CHECKPOINT_NOT_NATIVE_DISPATCH_OR_READINESS",
+  "reviewed_ledger": {
+    "path": "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md",
+    "bytes": 21949,
+    "sha256": "0ca030e55d14cb76c0bce18651ddc69ceb5126418cce8a885f8896af0e9a84a1"
+  },
+  "prior_committed_ledger_sha256": "e0c4ab05557936cf112d57cf54473a73334335a3bcec9c4313d9585d17434ce0",
+  "reviewed_delta": "Adds delivered evidence-only4b8 checkpoint, nine-suite436-control execution with preserved outer FAIL/parser defect and additive five-parent reconciliation, actual transport02, completed source/control independent-review references, and accurate not-yet-executed diagnostic description. Existing25b1 A/B/C evidence and NOT_READY limits remain unchanged.",
+  "source_and_commit_scope": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "local_evidence_head": "4b8c586ce8d1228dda1420c470dff95dd599ddc6",
+    "local_evidence_tree": "b70b8d7478db79251796a500c40ef61dcdccbe92",
+    "evidence_only_commit_paths": 634,
+    "all_paths_under_remediation_runs": true,
+    "earlier_frozen_execution_head": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+    "actual_new_cycle_source_diff_sha256": "bb5d58442137496d82d7b1cc98b123ee9b6cf33562507c3f67a8f23aee2ae431",
+    "actual_new_cycle_manifest_sha256": "4c98187ce5a9b9f6a5e7b8d4897b1132ddf594618b1949fadb3c876738253601",
+    "actual_new_cycle_source_entries": 825,
+    "both_new_cycles_source_and_runner_full_before_after_objects_equal": true,
+    "all825_source_entries_and261_explicit_inputs_independently_rehashed": true,
+    "new_cycle_source_not_clean_HEAD_execution": true,
+    "future_source_control_and_inventory_commits_not_yet_known": true,
+    "current_whole_diff_sha256": "ac8c30c91dd4663fec716e4de161901e9d7c3ad55410705c8c6927b436a15ced",
+    "current_diff_excluding_only_authorized_postcycle_ledger_change_sha256": "bb5d58442137496d82d7b1cc98b123ee9b6cf33562507c3f67a8f23aee2ae431",
+    "excluding_only_ledger_reproduces_actual_execution_diff": true,
+    "limits": "Do not claim current entire tracked diff still equals execution: ledger was authorized after both cycles. Source825 and exact explicit261 inputs remain bound. Remediation evidence-only commits do not regenerate source inventory or promote prior execution to a new SHA.",
+    "remote_scope": "Ledger author reports a fresh direct ls-remote during this refresh returned25b1, so local4b8 is explicitly not yet pushed at the checkpoint. Earlier retained dispatch remote_before also binds25b1. This reviewer did not issue a network query or substitute the local origin ref for one; coordinator remains responsible for final push/remote equality."
+  },
+  "independent_reports_reopened": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-command-and-runtime-repair-independent-correction-02.json",
+      "bytes": 10455,
+      "sha256": "2129a189055e44478484515e1a24fd2cc228f7dfdebc97dc277bf49c41383bce"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-source-independent-01.json",
+      "bytes": 38922,
+      "sha256": "7d214ea0e6b93b46670713518bd822079ee843fb1fe22ff233abbfa1571adadb"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-repair-controls-postrun-independent-01.json",
+      "bytes": 43581,
+      "sha256": "7856e25a8eb1f270e51bd3640a918542694735303c6ffa103426c5bb3be1593e"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-controls-independent-01.json",
+      "bytes": 29479,
+      "sha256": "4c370a22734ec870ab1443982f999455d18322cdfdb469f1475e8bf8af268630"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-repair-external-postflight-reconciliation-01.json",
+      "bytes": 27387,
+      "sha256": "a6bb24ec93b17b0c0b8a2efece775127ea1514036791528aed5399842302e4ad"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-repair-external-postflight-independent-addendum-01.json",
+      "bytes": 2261,
+      "sha256": "941835f9a8f87b490cd87dddaa5af09401a132a4af21f5c195641ebce8385d3e"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/transport-contracts-02-evidence-independent-01.json",
+      "bytes": 25197,
+      "sha256": "5c014ffc2204e78fa0c54ac475b41a1771a71a302e2313deec514f386845eb02"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/frozen-execution-ledger-independent-01.json",
+      "bytes": 17401,
+      "sha256": "85da5158e033f750f976537b1a99df084506839b246a5e495b1e1ff363a1aea0"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/l08-strict-protection-investigation-independent-02.json",
+      "bytes": 11439,
+      "sha256": "0aeb142ac4ed512840a782bffb7a6041658f966b5ba918086abfbfccf0d5e1c0"
+    }
+  ],
+  "control_execution_reconciliation": {
+    "outer_receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/receipt.json",
+      "bytes": 329686,
+      "sha256": "d8d65f92d4d10014c62ca1b08a0e67ccbe697d6c72141815814b2a221c0f627d"
+    },
+    "packet_results": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/native-repair-results.json",
+      "bytes": 5645,
+      "sha256": "04973dc16add165b259016d2b86491fb10c96a02538d18d1b53d7ea325d54eef"
+    },
+    "retained_command_exits": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/native-repair-command-exits.json",
+      "bytes": 2897,
+      "sha256": "0c7d4deafe8fede705c02892b46ceac1ddc071f279ad9473af9d3bad9b9a3eec"
+    },
+    "before_inputs": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/native-repair-inputs-before.json",
+      "bytes": 49089,
+      "sha256": "ac0ab3e888ca838fbf02f7d06cc858d0bdb8cab7df74fae76340696fc9b8288a"
+    },
+    "after_inputs": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/native-repair-inputs-after.json",
+      "bytes": 49089,
+      "sha256": "ac0ab3e888ca838fbf02f7d06cc858d0bdb8cab7df74fae76340696fc9b8288a"
+    },
+    "actual_commands": [
+      {
+        "name": "primary-errors",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "scripts/verification/ios-readiness/test_native_command_failures.py",
+          "-v"
+        ],
+        "exit_code": 0,
+        "log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/primary-errors.log",
+          "bytes": 2131,
+          "sha256": "e390ba75e9146baecff011d451d5eb006812ad82316a4aa2edb73002a2cac965"
+        },
+        "raw_ran_counts": [
+          12
+        ],
+        "unqualified_ok_count": 1
+      },
+      {
+        "name": "toolchain-profile",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+          "-v"
+        ],
+        "exit_code": 0,
+        "log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/toolchain-profile.log",
+          "bytes": 2139,
+          "sha256": "eaf171d76b480905e73435492435d56dc40790f885c053dcf709fe678296f50d"
+        },
+        "raw_ran_counts": [
+          12
+        ],
+        "unqualified_ok_count": 1
+      },
+      {
+        "name": "foundation-profile",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py"
+        ],
+        "exit_code": 0,
+        "log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/foundation-profile.log",
+          "bytes": 4149,
+          "sha256": "70a6625b9519eae6dc9ddbe43e067710867858ec59cc0a29767dab1642b0316a"
+        },
+        "raw_ran_counts": [
+          20
+        ],
+        "unqualified_ok_count": 1
+      },
+      {
+        "name": "single-tap",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py"
+        ],
+        "exit_code": 0,
+        "log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/single-tap.log",
+          "bytes": 2489,
+          "sha256": "7cae7d2a541b08ddd4b0531ab0c345a9f4b42c936a16d40948088cfe922a5c61"
+        },
+        "raw_ran_counts": [
+          14
+        ],
+        "unqualified_ok_count": 1
+      },
+      {
+        "name": "functional-copy",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02",
+          "-p",
+          "test_l08_functional_copy.py",
+          "-v"
+        ],
+        "exit_code": 0,
+        "log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/functional-copy.log",
+          "bytes": 2543,
+          "sha256": "c6c5f752ca65909ac693ddf9c3bff70d30226a77dc5685eef748754260ce5217"
+        },
+        "raw_ran_counts": [
+          12
+        ],
+        "unqualified_ok_count": 1
+      },
+      {
+        "name": "composition",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py"
+        ],
+        "exit_code": 0,
+        "log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/composition.log",
+          "bytes": 19632,
+          "sha256": "063b157f90a064b59f90cf128c5bedfb240cc39a6f240f089086b2c316b8116c"
+        },
+        "raw_ran_counts": [
+          55
+        ],
+        "unqualified_ok_count": 1
+      },
+      {
+        "name": "normal",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py"
+        ],
+        "exit_code": 0,
+        "log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/normal.log",
+          "bytes": 109031,
+          "sha256": "61e3043fc0324a49e32b218f8ecd873832d4e76827ddc197eb0f6cca47b4eb00"
+        },
+        "raw_ran_counts": [
+          187
+        ],
+        "unqualified_ok_count": 1
+      },
+      {
+        "name": "release-focused",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "scripts/release/tests/test_native_process_probe.py",
+          "scripts/release/tests/test_native_continuation.py",
+          "scripts/release/tests/test_workflow_contract.py",
+          "-v"
+        ],
+        "exit_code": 0,
+        "log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/release-focused.log",
+          "bytes": 30828,
+          "sha256": "3128146db4f21baeae2318a9ad3b005bd07ed1c87f6bb0b394cf75ae9cae5657"
+        },
+        "raw_ran_counts": [
+          122
+        ],
+        "unqualified_ok_count": 1
+      },
+      {
+        "name": "workflow-hygiene",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "scripts/release/tests/test_ci_verification_hygiene.py",
+          "VerificationWorkflowHygieneTest",
+          "-v"
+        ],
+        "exit_code": 0,
+        "log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/workflow-hygiene.log",
+          "bytes": 412,
+          "sha256": "dc69fe2edd426c30b77a1fb3ac8327700ce3d6bbf88098895041a4805185450b"
+        },
+        "raw_ran_counts": [
+          2
+        ],
+        "unqualified_ok_count": 1
+      },
+      {
+        "name": "workflow-contract",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "scripts/release/workflow_contract.py"
+        ],
+        "exit_code": 0,
+        "log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/workflow-contract.log",
+          "bytes": 32,
+          "sha256": "ed4d00104b82af25bedca2f5586359a98c6d2c5d0667ceb6a849ab748394c196"
+        },
+        "raw_ran_counts": [],
+        "unqualified_ok_count": 0
+      }
+    ],
+    "actual_test_suites": 9,
+    "actual_test_executions": 436,
+    "actual_all10command_exits_zero": true,
+    "unattempted_commands": [],
+    "unit_test_failures_errors_skips": 0,
+    "literal_packet_review": "Read exact command[3] AST without imports/execution:10fixedcommands,436expectedtests,42literal pins all match261captured before/after/current inputs,54extras present, captured packet equals actual outer command.",
+    "source_independent_review_split": "portability_review7856e25a independently reconciles312actual native-control tests and exact13 reviewed native input bytes. ci_review4c370a22 independently reconciles124actual CI tests and exact9CI/probe sources+13control closure. Both approve commit/inventory preparation only, not native dispatch.",
+    "synthetic_output_limit": "Mocked lifecycle/custody JSON in release-focused.log includes deliberate failed outcomes and artificial context IDs; these are passing fault-injection controls, not actual Darwin ps/libproc/ABI, artifact uploads or simulator cleanup. Normal187 controls do not query Parlor.",
+    "original_cycle": {
+      "outer_status": "FAIL",
+      "outer_exit_code": 1,
+      "results_status": "FAIL",
+      "errors": [
+        {
+          "stage": "external-cleanup:composition",
+          "type": "RuntimeError",
+          "message": "composition: exactly one ALLOCATION marker required"
+        }
+      ],
+      "original_receipts_remain_byte_identical": true,
+      "status_never_changed_to_pass": true
+    },
+    "postflight_cause": "Historic inline external_cleanup.marker assumed one line-start ALLOCATION/CLEANUP pair. Actual composition55 has one outer +three legitimate nested synthetic with_external_tmp callback pairs; first nested ALLOCATION follows unittest prefix at line45, so startswith observes3allocations rather than actual4. It rejects before RESULTS validation. This is not a failed test, native runtime failure or established leaked directory.",
+    "no_rerun_needed_for_retained_scoped_evidence": "Additive independent raw reconciliation accounts for exact existing5pairs, source bindings and actual named-path absence; it does not bypass/modify the original guard, silently ignore extra rows, rewrite FAIL, or authorize reuse of that defective historical invocation."
+  },
+  "external_postflight_reconciliation": {
+    "author_report": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-repair-external-postflight-reconciliation-01.json",
+      "bytes": 27387,
+      "sha256": "a6bb24ec93b17b0c0b8a2efece775127ea1514036791528aed5399842302e4ad"
+    },
+    "independent_report": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-controls-independent-01.json",
+      "bytes": 29479,
+      "sha256": "4c370a22734ec870ab1443982f999455d18322cdfdb469f1475e8bf8af268630"
+    },
+    "independent_author_crosscheck": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-repair-external-postflight-independent-addendum-01.json",
+      "bytes": 2261,
+      "sha256": "941835f9a8f87b490cd87dddaa5af09401a132a4af21f5c195641ebce8385d3e"
+    },
+    "all21_original_file_identities_rehashed": true,
+    "all10_marker_line_hashes_recomputed": true,
+    "all5_actual_exact_lstat_observations_enoent": true,
+    "pairs": [
+      {
+        "suite": "foundation-profile",
+        "allocation_line": 1,
+        "cleanup_line": 27,
+        "allocation": {
+          "path": "/tmp/parlor-app-foundation-controls-givasd3h",
+          "device": 27,
+          "inode": 248329,
+          "uid": 0
+        },
+        "cleanup": {
+          "status": "PASS",
+          "parent": "/tmp/parlor-app-foundation-controls-givasd3h",
+          "workers_started": 0,
+          "parent_removed": true,
+          "custody": {
+            "device": 27,
+            "inode": 248329,
+            "uid": 0
+          }
+        },
+        "current_exact_lstat": "ENOENT"
+      },
+      {
+        "suite": "composition",
+        "allocation_line": 1,
+        "cleanup_line": 69,
+        "allocation": {
+          "path": "/tmp/parlor-app-foundation-controls-uts5yovn",
+          "device": 27,
+          "inode": 249870,
+          "uid": 0
+        },
+        "cleanup": {
+          "status": "PASS",
+          "parent": "/tmp/parlor-app-foundation-controls-uts5yovn",
+          "workers_started": 0,
+          "parent_removed": true,
+          "custody": {
+            "device": 27,
+            "inode": 249870,
+            "uid": 0
+          }
+        },
+        "current_exact_lstat": "ENOENT"
+      },
+      {
+        "suite": "composition",
+        "allocation_line": 45,
+        "cleanup_line": 46,
+        "allocation": {
+          "path": "/tmp/parlor-app-foundation-controls-21o6pyv3",
+          "device": 27,
+          "inode": 250545,
+          "uid": 0
+        },
+        "cleanup": {
+          "status": "PASS",
+          "parent": "/tmp/parlor-app-foundation-controls-21o6pyv3",
+          "workers_started": 0,
+          "parent_removed": true,
+          "custody": {
+            "device": 27,
+            "inode": 250545,
+            "uid": 0
+          }
+        },
+        "current_exact_lstat": "ENOENT"
+      },
+      {
+        "suite": "composition",
+        "allocation_line": 47,
+        "cleanup_line": 48,
+        "allocation": {
+          "path": "/tmp/parlor-app-foundation-controls-_59cij9f",
+          "device": 27,
+          "inode": 250548,
+          "uid": 0
+        },
+        "cleanup": {
+          "status": "PASS",
+          "parent": "/tmp/parlor-app-foundation-controls-_59cij9f",
+          "workers_started": 0,
+          "parent_removed": true,
+          "custody": {
+            "device": 27,
+            "inode": 250548,
+            "uid": 0
+          }
+        },
+        "current_exact_lstat": "ENOENT"
+      },
+      {
+        "suite": "composition",
+        "allocation_line": 49,
+        "cleanup_line": 50,
+        "allocation": {
+          "path": "/tmp/parlor-app-foundation-controls-ciocf53u",
+          "device": 27,
+          "inode": 250551,
+          "uid": 0
+        },
+        "cleanup": {
+          "status": "PASS",
+          "parent": "/tmp/parlor-app-foundation-controls-ciocf53u",
+          "workers_started": 0,
+          "parent_removed": true,
+          "custody": {
+            "device": 27,
+            "inode": 250551,
+            "uid": 0
+          }
+        },
+        "current_exact_lstat": "ENOENT"
+      }
+    ],
+    "composition_results": "One RESULTS marker at line68 between nested cleanup and final outer cleanup;55unique IDs/55tests/0failure/0error/no skips/native_execution false; both input test hashes match captured261/current source. Actual synthetic success/ValueError/KeyboardInterrupt callbacks, not a new OS-signal experiment.",
+    "meaning": "No remaining external-custody blocker to preparing exact reviewed source/inventory freeze. Original outer/controller FAIL remains and does not become app/runtime PASS. Historical allocation inode custody comes from original bound records; current lstat establishes exact absence only. No deletion or rerun performed."
+  },
+  "transport_execution": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-02/receipt.json",
+      "bytes": 307627,
+      "sha256": "94e4724ec6ee9c6b3032698d49bed313407850fdf69698365cc86fc8ac259b26"
+    },
+    "independent_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/transport-contracts-02-evidence-independent-01.json",
+      "bytes": 25197,
+      "sha256": "5c014ffc2204e78fa0c54ac475b41a1771a71a302e2313deec514f386845eb02"
+    },
+    "actual_task": ":shared:transport-p2p:desktopTest",
+    "raw_xml_suites": 22,
+    "testcases": 277,
+    "passed": 274,
+    "skipped": 3,
+    "failures": 0,
+    "errors": 0,
+    "all_case_rows_match_test_receipts": true,
+    "actual_gradle": "desktopTest executed, not FROM-CACHE/UP-TO-DATE;21actionable tasks14executed7cachedcompilation. All3skips are existing peer/broadcast loopback @Ignore fixtures, not network passes.",
+    "source_scope": "Dirty4b8 plus exact same825source-manifest/in-cycle diff and stable lane as controls01; not a clean future candidate.",
+    "cleanup": "Exit0/stop0, no workers/outputs/errors; all7removed task-owned live dirs and scratch independently absent;22archivedXML retained."
+  },
+  "eleven_linux_outer_receipts_reopened": [
+    {
+      "cycle": "continuation-linux-lane-controls-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-lane-controls-01/receipt.json",
+        "bytes": 301976,
+        "sha256": "9538e853b2a868e1f3fac43f37b8363901f095372ec27c1676fa2c5da864c76b"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "artifact_workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      }
+    },
+    {
+      "cycle": "continuation-ci-controls-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-ci-controls-01/receipt.json",
+        "bytes": 305467,
+        "sha256": "68f651a32b4781f80fa1b9d25252c5bf4687d5e861ca5cd41269311ff3b9f23c"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "artifact_workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      }
+    },
+    {
+      "cycle": "continuation-transport-contracts-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/receipt.json",
+        "bytes": 306059,
+        "sha256": "74d7445fd6d60f39bb19a971f73f54c5a292b591963ff2175b65ef5a4d24d0db"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "artifact_workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      }
+    },
+    {
+      "cycle": "continuation-focused-controls-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/receipt.json",
+        "bytes": 305416,
+        "sha256": "32d1d5a0459b64d493b78f7c61b423c6967391eabe46026895cfe13bf642ae77"
+      },
+      "status": "FAIL",
+      "exit_code": 1,
+      "stop_exit_code": 0,
+      "source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "artifact_workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      }
+    },
+    {
+      "cycle": "continuation-l08-control-recheck-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/receipt.json",
+        "bytes": 306834,
+        "sha256": "bc2a7d2f96094ae1d214e16b031f07913a5579fc88e8e2f04ab75d2a1b67bd18"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "artifact_workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      }
+    },
+    {
+      "cycle": "continuation-release-validator-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-01/receipt.json",
+        "bytes": 302804,
+        "sha256": "54f123f4f092c4b7df674eacb8e916f44c87edc98dba16c7558cdba83375c7df"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "artifact_workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      }
+    },
+    {
+      "cycle": "continuation-native-repair-controls-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/receipt.json",
+        "bytes": 329686,
+        "sha256": "d8d65f92d4d10014c62ca1b08a0e67ccbe697d6c72141815814b2a221c0f627d"
+      },
+      "status": "FAIL",
+      "exit_code": 1,
+      "stop_exit_code": 0,
+      "source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "artifact_workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      }
+    },
+    {
+      "cycle": "continuation-transport-contracts-02",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-02/receipt.json",
+        "bytes": 307627,
+        "sha256": "94e4724ec6ee9c6b3032698d49bed313407850fdf69698365cc86fc8ac259b26"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "artifact_workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      }
+    },
+    {
+      "cycle": "final-dependency-export-linux-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-01/receipt.json",
+        "bytes": 303584,
+        "sha256": "49df4bd696294e0a189e2094cbf27a48390f7d62b98c066cd7f39f069f956603"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "artifact_workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      }
+    },
+    {
+      "cycle": "final-dependency-render-linux-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-01/receipt.json",
+        "bytes": 303055,
+        "sha256": "3d72b4ba3360b53e2ee3f6134608c0df3d68a9d545068956be80cf962cc28768"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "artifact_workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      }
+    },
+    {
+      "cycle": "final-candidate-input-linux-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-01/receipt.json",
+        "bytes": 303006,
+        "sha256": "662cf8bc9ad2ac17df57281e11caa7cd907456a4ed1574ae56ee182855a3439c"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "artifact_workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      }
+    }
+  ],
+  "unchanged_historical_and_readiness_boundaries": {
+    "native_A_B": "Successful25b1nonruntime preflight34214410629 remains nonruntime. Actual34216788568A17/B18 remain FAIL before established app install/launch/XCTest/functional-host/protection/Parlor libproc evidence.15sps cause unresolved; cleanup PASS does not alter runtime FAIL.",
+    "strict_protection": "24historical comparisons remain FAIL; latent Foundation26.5guard versus hosted26.2 source defect now corrected/reviewed/tested only in Linux controls. It was not cause of A17/B18ps failure and no new strict metadata observation exists.",
+    "C": "Previously actual export/render/4coupled candidate receipts pass at clean25b1only; all historical source/cleanup identities remain. Entire C chain and independent binding must refresh at next corrected freeze.",
+    "D": "Full combined5jobqualification unexecuted; new source/control commit, separately regenerated/committed inventory, exact remote/bindings and independent native approval still precede justified platform execution.",
+    "verdict": "NOT_READY",
+    "excluded_obligations": "Physical LAN/device/accessibility/lock-keybag/backup-restore/power-loss; private signing/Store operations; separate owner/legal/editorial/privacy declarations. Identity collision and disabled Store safeguards unchanged."
+  },
+  "diagnostic_description_review": {
+    "source_inputs": [
+      {
+        "path": "scripts/ci/native_process_probe.py",
+        "bytes": 43613,
+        "sha256": "b5bfc4a18eb75ecceb1cc4807e2715bc15edd52ffd101a81f6c4d6fb4affb3e4"
+      },
+      {
+        "path": "scripts/ci/native_process_metadata.py",
+        "bytes": 4131,
+        "sha256": "6497e55c6c4a7f0922486d58ce47bc9ad05b987e8cca9bc5c60adf2b13cd9256"
+      }
+    ],
+    "reopened_functions": "ps_identity, metrics, observations, allocate_simulator, nonbuilding_overlap, metadata collect/main; original15s exact-observation limits and no-argv metadata scope.",
+    "corrected_description": "Finalledger replaces obsolete scoped-argv/pressure wording with3way fullps, separate metadata-onlyps and bounded libproc metadata, CPU/memory/VM counters plus actualpsidentity, pre/post one exclusivelyownedboot and one nonbuilding showBuildSettings overlap/liveness attempt.",
+    "scope": "No new probe/native/full run executed; no application/build load is reproduced by assertion. Metadata helper does not collect argv. Synthetic controls, incomplete metadata or cleanup success cannot authorize adoption/signaling or A/B retry. Fresh bindings/approval remain required."
+  },
+  "review_findings": [],
+  "approval_limits": "Approves exact ledger bytes identified above and their factual reconciliation. Does not author/review concurrent production changes, grant runtime/Store readiness, native/probe/A19/B20 dispatch approval or final frozen C/Dqualification. Source/control/transport approvals remain separately referenced and byte-scoped.",
+  "reviewer_activity": "Read-only raw evidence/source/Git/AST/hash/XML/JSON/ZIP identity inspection and exact lstat absence checks. Only this new untracked ledger review and already-delivered transport02 review were written in this task. No tests/builds/native command/CI/network dispatch/commits/pushes/source-control edits or cleanup mutations; no build workers/disposable outputs created and no other lane stopped/cleaned."
+}

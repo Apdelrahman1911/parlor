@@ -1,0 +1,235 @@
+{
+  "schema_version": 1,
+  "cycle": "continuation-native-repair-controls-01",
+  "status": "FAIL",
+  "scope": "Working-tree-bound pure controls; NOT application, simulator, libproc ABI, strict protection or Store proof",
+  "commands": [
+    {
+      "name": "primary-errors",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/verification/ios-readiness/test_native_command_failures.py",
+        "-v"
+      ],
+      "log": "primary-errors.log",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "toolchain-profile",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+        "-v"
+      ],
+      "log": "toolchain-profile.log",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "foundation-profile",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py"
+      ],
+      "log": "foundation-profile.log",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "single-tap",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py"
+      ],
+      "log": "single-tap.log",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "functional-copy",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02",
+        "-p",
+        "test_l08_functional_copy.py",
+        "-v"
+      ],
+      "log": "functional-copy.log",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "composition",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py"
+      ],
+      "log": "composition.log",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "normal",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py"
+      ],
+      "log": "normal.log",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "release-focused",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "scripts/release/tests/test_native_process_probe.py",
+        "scripts/release/tests/test_native_continuation.py",
+        "scripts/release/tests/test_workflow_contract.py",
+        "-v"
+      ],
+      "log": "release-focused.log",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "workflow-hygiene",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/release/tests/test_ci_verification_hygiene.py",
+        "VerificationWorkflowHygieneTest",
+        "-v"
+      ],
+      "log": "workflow-hygiene.log",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "workflow-contract",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/release/workflow_contract.py"
+      ],
+      "log": "workflow-contract.log",
+      "status": "PASS",
+      "exit_code": 0
+    }
+  ],
+  "summaries": {
+    "primary-errors": {
+      "expected_tests": 12,
+      "reported_counts": [
+        "12"
+      ],
+      "unskipped_success_summary": true
+    },
+    "toolchain-profile": {
+      "expected_tests": 12,
+      "reported_counts": [
+        "12"
+      ],
+      "unskipped_success_summary": true
+    },
+    "foundation-profile": {
+      "expected_tests": 20,
+      "reported_counts": [
+        "20"
+      ],
+      "unskipped_success_summary": true
+    },
+    "single-tap": {
+      "expected_tests": 14,
+      "reported_counts": [
+        "14"
+      ],
+      "unskipped_success_summary": true
+    },
+    "functional-copy": {
+      "expected_tests": 12,
+      "reported_counts": [
+        "12"
+      ],
+      "unskipped_success_summary": true
+    },
+    "composition": {
+      "expected_tests": 55,
+      "reported_counts": [
+        "55"
+      ],
+      "unskipped_success_summary": true
+    },
+    "normal": {
+      "expected_tests": 187,
+      "reported_counts": [
+        "187"
+      ],
+      "unskipped_success_summary": true
+    },
+    "release-focused": {
+      "expected_tests": 122,
+      "reported_counts": [
+        "122"
+      ],
+      "unskipped_success_summary": true
+    },
+    "workflow-hygiene": {
+      "expected_tests": 2,
+      "reported_counts": [
+        "2"
+      ],
+      "unskipped_success_summary": true
+    }
+  },
+  "inputs_unchanged": true,
+  "expected_input_pins_match": true,
+  "unattempted_commands": [],
+  "external_cleanup": {
+    "foundation-profile": {
+      "status": "PASS",
+      "allocation": {
+        "path": "/tmp/parlor-app-foundation-controls-givasd3h",
+        "device": 27,
+        "inode": 248329,
+        "uid": 0
+      },
+      "cleanup": {
+        "status": "PASS",
+        "parent": "/tmp/parlor-app-foundation-controls-givasd3h",
+        "workers_started": 0,
+        "parent_removed": true,
+        "custody": {
+          "device": 27,
+          "inode": 248329,
+          "uid": 0
+        }
+      },
+      "parent_absent": true
+    },
+    "composition": null
+  },
+  "errors": [
+    {
+      "stage": "external-cleanup:composition",
+      "type": "RuntimeError",
+      "message": "composition: exactly one ALLOCATION marker required"
+    }
+  ],
+  "pending_signals": [],
+  "deferred_signals": []
+}

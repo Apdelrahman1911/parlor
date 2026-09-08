@@ -91,7 +91,7 @@ class NativeScopeTest(unittest.TestCase):
                 self.assertEqual(native.effective_scope(event, value), "full")
 
     def test_only_explicit_supported_dispatch_scopes_are_accepted(self):
-        for value in ("full", "native-preflight", "native-evidence"):
+        for value in ("full", "native-preflight", "native-evidence", "native-process-probe"):
             self.assertEqual(native.effective_scope("workflow_dispatch", value), value)
         for value in (None, "", "FULL", "skip", "native"):
             with self.subTest(value=value), self.assertRaisesRegex(RuntimeError, "unknown-verification-scope"):
@@ -108,6 +108,10 @@ class NativeScopeTest(unittest.TestCase):
                   ("status", "--porcelain=v1", "--untracked-files=no"): "", ("rev-parse", "HEAD^{tree}"): "b" * 40}
         with patch.object(native, "command", side_effect=lambda args, root: values[tuple(args[1:])].encode()):
             self.assertEqual(native.context(env)["head_sha"], "a" * 40)
+            explicit = Mock(side_effect=lambda args, root: values[tuple(args[1:])].encode())
+            with patch.object(native, "command", side_effect=AssertionError("unexpected default executor")):
+                self.assertEqual(native.context(env, execute=explicit)["head_sha"], "a" * 40)
+            self.assertEqual(explicit.call_count, 6)
             for key, bad in (("GITHUB_SHA", "d" * 40), ("GITHUB_WORKFLOW_SHA", "d" * 40),
                              ("GITHUB_REF", "refs/heads/main"), ("GITHUB_REPOSITORY", "other/parlor"),
                              ("GITHUB_EVENT_NAME", "push"), ("GITHUB_RUN_ID", "0")):
@@ -116,6 +120,21 @@ class NativeScopeTest(unittest.TestCase):
             values[("rev-parse", "--is-shallow-repository")] = "true"
             with self.assertRaisesRegex(RuntimeError, "full-history"):
                 native.context(env)
+
+    def test_probe_executor_is_injected_without_replacing_default_commands(self):
+        with patch.object(native, "command") as default:
+            explicit = Mock(side_effect=RuntimeError("explicit-probe-executor"))
+            with self.assertRaisesRegex(RuntimeError, "qualified-arm64"), patch.object(native.platform, "system", return_value="Linux"):
+                native.qualified_platform(execute=explicit, environment={})
+            explicit.assert_not_called()
+            default.assert_not_called()
+            with patch.object(native.platform, "system", return_value="Darwin"), \
+                    patch.object(native.platform, "machine", return_value="arm64"), \
+                    self.assertRaisesRegex(RuntimeError, "explicit-probe-executor"):
+                native.qualified_platform(execute=explicit, environment={
+                    "DEVELOPER_DIR": "/Applications/Xcode_26.3.app/Contents/Developer"})
+            explicit.assert_called_once_with(["/usr/bin/xcodebuild", "-version"])
+            default.assert_not_called()
 
 
 class NativeArtifactTest(unittest.TestCase):

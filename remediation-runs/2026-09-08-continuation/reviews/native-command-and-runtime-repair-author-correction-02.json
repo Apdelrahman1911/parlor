@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "kind": "NATIVE_REPAIR_CONTROL_ENTRY_CANCELLATION_CORRECTION",
+  "author": "/root/native_ci",
+  "recorded_at": "2026-09-08T12:08:54.755483+00:00",
+  "finding_by": "/root/dependency_chain",
+  "prior_author_report": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-command-and-runtime-repair-author-01.json",
+    "sha256": "5e55755c32a63b88eeeece0adf7e19ac90221113cc62100708c6dd2e5a400b73"
+  },
+  "finding": "Imported run_controls.py does not execute its guarded SIGTERM handler. New Foundation20 direct entry therefore needed its own reviewed handler before external temporary allocation.",
+  "correction": "Mirror exact existing SIGTERM-to-KeyboardInterrupt handler before with_external_tmp; extend existing source control with isolated actual-entry execution using inert signal/test/allocation substitutes to assert installation ordering and interrupt behavior.",
+  "changed": {
+    "path": "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py",
+    "previous_sha256": "59f5642de0f9b7a828698ff5c37810a4076e082f4dacf1bcd78d91a8db8e6647",
+    "sha256": "df030e500c035fc65ede190a8c11b795f7b4a40e2933a86a4b8529b4bdac4c13",
+    "bytes": 24389
+  },
+  "source_files": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "sha256": "a56f47787c5abbda301cdfcafa5c8ac4ad7eb505d21d560e86063f93453a36f7",
+      "bytes": 72609
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "sha256": "98334625a01adbe3c8b2fb1573895a5056c95e430cb9d857142809d8ef4db454",
+      "bytes": 56767
+    },
+    {
+      "path": "scripts/verification/ios-readiness/toolchain_profiles.py",
+      "sha256": "8adacaf4c59ed823aa088ecb70ad5c6c1e3f76e7ca3520d8abf0563341591313",
+      "bytes": 3358
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_native_command_failures.py",
+      "sha256": "7ea11e97a11cc07ba85d09c1366fe4198b95b8ee59414979fa7801122be981be",
+      "bytes": 12002
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py",
+      "sha256": "df030e500c035fc65ede190a8c11b795f7b4a40e2933a86a4b8529b4bdac4c13",
+      "bytes": 24389
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+      "sha256": "0df57639ed7bdef3fd4df62e73489dc85f4006dd587ce82cf9077e4262e1b068",
+      "bytes": 13449
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_receipts.py",
+      "sha256": "db69c16b7d8abfb5998f92db886a8b8c77bcbb3e72fdd1d806f0ea3dd05f1fb6",
+      "bytes": 18855
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py",
+      "sha256": "c04c7d4b1bb99207415beab77ae3b40bb3d5f59709970f7d844d5d14beab0fe5",
+      "bytes": 34661
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/ROOT_INTEGRATION.md",
+      "sha256": "e3009bfe096930dbde969f239dd162da15a25d407e4b39a99f8bf4fab22d8dcb",
+      "bytes": 6638
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+      "sha256": "288c412456e130ec640f40042133ef4686554b4f63abecc097602999f2d20b18",
+      "bytes": 21106
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+      "sha256": "1ee5d5889d50b94a11d3e3d2ce881899c2434eb97489e953f546a2b7d344afd5",
+      "bytes": 28101
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md",
+      "sha256": "e934ab0834cbe9776fbd410bac6f51147919c718bb8e274fb56103d087dc369e",
+      "bytes": 10614
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/hosted-native-repair-01/draft-freeze-relative.json",
+      "sha256": "2905ce996bad3d6e1d3d45e9fd7594cbe54cc93380e608781a7f34d73b0784a0",
+      "bytes": 2954
+    }
+  ],
+  "static_declared_methods": 20,
+  "existing_and_new_test_counts": "UNCHANGED: old55; new20 and12; profile12; normal187; functional12; single-tap14",
+  "execution": "NOT_EXECUTED_BY_AUTHOR; only file edits/hash/stdlib AST inspection",
+  "cleanup": "No actual signal installed/sent, no test/build/native/temporary allocation executed. Coordinator owns subsequent lane and cleanup.",
+  "limitations": "Prior author report and independent review are preserved historical byte bindings; this addendum supersedes only the new support test file hash. Native source, draft/freezes/pins and other12 owned inputs unchanged. No runtime/strict-protection/provenance or readiness claim."
+}

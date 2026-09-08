@@ -18,10 +18,12 @@ CAMPAIGN = ROOT / 'remediation-runs/2026-09-07-local-readiness'
 COMPANION = CAMPAIGN / 'l08-storage-functional-companion-02'
 DRAFT = CAMPAIGN / 'native/l08-app-foundation-draft-01'
 DRIVER = COMPANION / 'run_ios_readiness.py'
-DRIVER_SHA256 = 'fdae88cf835f4b0f5f5271b882641b7284db7ea5e5bdc135870754db7f61fb21'
-DRAFT_FREEZE = CAMPAIGN / 'reviews/hosted-native-portability-01/draft-freeze-relative.json'
-DRAFT_FREEZE_SHA256 = '64c02554e7ddec05b85f533c05733e0f8bbedcc843843245d82cfd1ffd98564a'
+DRIVER_SHA256 = 'a56f47787c5abbda301cdfcafa5c8ac4ad7eb505d21d560e86063f93453a36f7'
+DRAFT_FREEZE = CAMPAIGN / 'reviews/hosted-native-repair-01/draft-freeze-relative.json'
+DRAFT_FREEZE_SHA256 = '2905ce996bad3d6e1d3d45e9fd7594cbe54cc93380e608781a7f34d73b0784a0'
 TOOLCHAIN_HELPER = ROOT / 'scripts/verification/ios-readiness/toolchain_profiles.py'
+SUPPORT_CONTROLS = tuple(TOOLCHAIN_HELPER.parent / name for name in (
+    'test_toolchain_profiles.py', 'test_native_command_failures.py', 'test_foundation_toolchain_binding.py'))
 REFERENCE_PINS = {
     'run_control.py': '58e8daf875eaf8061ed017e10cc8c8065eb49292866b6741227814282a1b8e9f',
     'FoundationProtectionControl.m': 'a6b025d7b77c3b1b1de57b93869d0beff6b4cc9e365eb5672ffd2be9d52013f2',
@@ -81,7 +83,7 @@ TRANSFORMS = (
             copied_source_manifest, app_foundation_binding = foundation.copy.apply_owned_adapter(
                 temp / 'copy', copied_source_manifest, receipt['app_foundation_copy_custody'],
                 receipt['source_before'], approved, mode,
-                Path.home() / 'Library/Developer/CoreSimulator/Devices')
+                Path.home() / 'Library/Developer/CoreSimulator/Devices', toolchain=toolchain_name)
             receipt['app_foundation_copy_binding'] = app_foundation_binding
             write_json(dest / 'app-foundation-copy-binding.json', app_foundation_binding)
             changes = changed + list(MODIFIED_KOTLIN)
@@ -194,7 +196,8 @@ def control_files(binding):
         require(digest(raw_file(path, 131072)) == REFERENCE_PINS[path.name], 'reference-drift')
     inherited = [p for p in COMPANION.iterdir() if p.is_file() and
                  (p.suffix in {'.py', '.in', '.md'} or p.name == 'inherited-controls.json')]
-    files = inherited + draft_files + references + [TOOLCHAIN_HELPER, DRAFT_FREEZE, Path(binding)] + [HERE / name for name in OWN_FILES]
+    files = inherited + draft_files + references + [TOOLCHAIN_HELPER, DRAFT_FREEZE, Path(binding)] + \
+        list(SUPPORT_CONTROLS) + [HERE / name for name in OWN_FILES]
     require(len(set(files)) == len(files), 'duplicate-control-input')
     return sorted(files)
 
@@ -268,7 +271,8 @@ class Hooks:
                 with target.open('xb') as output:
                     output.write(raw)
             receipt['app_foundation_context'] = context
-            state['files'] = self.schema.preserve_available(container, evidence, device, context['run_token'])
+            state['files'] = self.schema.preserve_available(container, evidence, device, context['run_token'],
+                                                           toolchain=receipt.get('toolchain_profile'))
             state['status'] = 'PRESERVED' if self.schema.RESULT_NAME in state['files'] else 'UNAVAILABLE'
         except FileNotFoundError:
             state.update(status='UNAVAILABLE', reason='required-context-or-result-unavailable')
@@ -294,8 +298,10 @@ class Hooks:
     def bind_available(self, receipt, evidence, device, built, installed):
         try:
             require(receipt['app_foundation_preservation']['status'] == 'PRESERVED', 'native-observation-unavailable')
+            toolchain = self.schema.binding_toolchain(receipt.get('app_foundation_copy_binding'),
+                                                       receipt.get('toolchain_profile'))
             value = self.schema.parse_record(self.schema.read_owned_receipt(
-                evidence / self.schema.RESULT_NAME, evidence, 32768))
+                evidence / self.schema.RESULT_NAME, evidence, 32768), toolchain)
             context = receipt['app_foundation_context']
             require(value['process_boot'] == context['process_boot'], 'wrong-first-readiness-boot')
             health_path = evidence / 'parlor-native-readiness-boot-1.json'
@@ -304,7 +310,8 @@ class Hooks:
             log = raw_file(evidence / 'xcodebuild.log', 64 * 1024 * 1024).decode()
             receipt['app_foundation_collection'] = self.schema.bind_collection(value,
                 receipt['app_foundation_copy_binding'], built, installed,
-                receipt.get('native_uuid_inventory', []), log, device, context['run_token'], health)
+                receipt.get('native_uuid_inventory', []), log, device, context['run_token'], health,
+                toolchain=toolchain)
         except Exception as error:
             receipt['app_foundation_collection'] = dict(status='FAIL', reason='collection-binding', error_type=type(error).__name__)
 

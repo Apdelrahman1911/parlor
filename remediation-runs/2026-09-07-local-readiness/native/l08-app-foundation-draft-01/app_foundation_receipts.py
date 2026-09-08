@@ -28,6 +28,12 @@ parent-identity root-identity root-not-pinned row-limit runtime-version simulato
 main-executable-unavailable main-executable-path main-image-count main-image-ambiguous
 main-image-header main-image-missing main-image-changed main-image-address
 objc-exception'''.split())
+TOOLCHAIN_HELPER = ROOT / 'scripts/verification/ios-readiness/toolchain_profiles.py'
+if TOOLCHAIN_HELPER.is_symlink() or TOOLCHAIN_HELPER.resolve(strict=True) != TOOLCHAIN_HELPER:
+    raise RuntimeError('Redirected native toolchain profile helper')
+_toolchain_spec = importlib.util.spec_from_file_location('parlor_foundation_receipt_toolchains', TOOLCHAIN_HELPER)
+toolchains = importlib.util.module_from_spec(_toolchain_spec)
+_toolchain_spec.loader.exec_module(toolchains)
 
 
 def require(condition, code):
@@ -91,7 +97,8 @@ def _rows(value, complete, validator):
                 validator.validate_query(row['url'])
 
 
-def parse_record(raw):
+def parse_record(raw, toolchain=toolchains.LOCAL):
+    expected_runtime = toolchains.profile(toolchain)['runtime_version']
     validator = base_validator()
     value = validator.decode_json(raw, 32768)
     keys = {'schema_version', 'kind', 'run_token', 'process_boot', 'process_id', 'simulator_udid',
@@ -115,7 +122,7 @@ def parse_record(raw):
         require(isinstance(value['reason'], str) and value['reason'] in REASONS, 'unknown-native-reason')
     runtime = value['runtime_version']
     require(isinstance(runtime, list) and len(runtime) in (0, 3) and
-            all(_integer(part, 0, 1000) for part in runtime) and (not complete or runtime == [26, 5, 0]), 'runtime')
+            all(_integer(part, 0, 1000) for part in runtime) and (not complete or runtime == expected_runtime), 'runtime')
     container = value['container']
     if value['app_container']:
         require(isinstance(container, dict) and set(container) == {'status', 'id', 'device', 'inode', 'uid'} and
@@ -182,12 +189,13 @@ def read_owned_receipt(path, parent, maximum):
     return raw
 
 
-def preserve_available(container, evidence, expected_device, expected_token):
+def preserve_available(container, evidence, expected_device, expected_token, toolchain=toolchains.LOCAL):
     """Root calls immediately after exact get_app_container, even on later test failure.
 
     No failed/missing record becomes successful. Source/image/XCTest validation is separate.
     No fixture or source removal occurs here; outer owned-device finalization stays mandatory.
     """
+    toolchains.profile(toolchain)  # Required closed caller selection, even when no record exists.
     container, evidence = Path(container).absolute(), Path(evidence).absolute()
     require(_uuid(expected_device) and _uuid(expected_token), 'preservation-context')
     prefix = Path.home() / 'Library/Developer/CoreSimulator/Devices' / expected_device / 'data/Containers/Data/Application'
@@ -199,7 +207,7 @@ def preserve_available(container, evidence, expected_device, expected_token):
         if not path.exists() and not path.is_symlink():
             continue
         raw = read_owned_receipt(path, path.parent, maximum)
-        value = parse(raw)
+        value = parse(raw, toolchain) if name == RESULT_NAME else parse(raw)
         require(value['run_token'] == expected_token and value['simulator_udid'] == expected_device, 'preserved-cross-task-record')
         if value.get('app_container'):
             observed = value['container']
@@ -216,10 +224,21 @@ def preserve_available(container, evidence, expected_device, expected_token):
     return preserved
 
 
+def binding_toolchain(binding, toolchain):
+    """Cross-check the copy binding against the caller's trusted selected profile."""
+    expected = toolchains.profile(toolchain)
+    require(isinstance(binding, dict) and binding.get('toolchain_profile') == expected['name'] and
+            isinstance(binding.get('expected_runtime_version'), list) and
+            all(type(part) is int for part in binding['expected_runtime_version']) and
+            binding['expected_runtime_version'] == expected['runtime_version'], 'copy-toolchain-binding')
+    return expected['name']
+
+
 def bind_collection(value, binding, built, installed, uuid_inventory, xctest_log, expected_device, expected_token,
-                    first_health=None):
+                    first_health=None, toolchain=toolchains.LOCAL):
     """Complete observation receipt, never an app/storage/release PASS. Inputs already preserved."""
-    value = parse_record(json.dumps(value, separators=(',', ':')).encode())
+    toolchain = binding_toolchain(binding, toolchain)
+    value = parse_record(json.dumps(value, separators=(',', ':')).encode(), toolchain)
     require(value['status'] == 'OBSERVATIONS_COMPLETE' and value['fixture_cleanup']['status'] == 'REMOVED', 'incomplete-native-control')
     require(value['run_token'] == expected_token and value['simulator_udid'] == expected_device and
             all(value[key] == binding[key] for key in ('fixture_template_sha256', 'context_sha256', 'controls_sha256')) and

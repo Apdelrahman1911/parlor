@@ -142,3 +142,42 @@ without another new probe: compare the unchanged Foundation fixture's ordered
 sixteen rows and new Foundation/runtime image identities to native16. Repeated
 missing metadata is still failure, not a universal Simulator-incapability proof;
 different metadata is environment-specific evidence, not hardware enforcement.
+
+## Paired runtime binding and primary-error retention correction
+
+The first hosted attempt at25b1 (Actions34216788568, A17/B18) failed before
+application runtime: both receipts reported an owned-process `ps` timeout.
+The reported exception could have masked an earlier command error because the
+command-stop/read-exit operations were themselves fallible. The actual normal
+runner and mutable companion now record the primary exception before attempting
+that unchanged owned-command stop, retain any secondary cleanup error separately,
+and re-raise the original exception. No timeout, ownership or success gate changes.
+
+Independent source inspection also found that the initial profile portability
+change missed the Foundation native and parser runtime guards. That latent defect
+was **not exercised by A17**. The shared closed profiles now bind exact numeric
+triples: local26.5.0 or explicitly qualified26.2.0. The adapter changes only the
+single exact guard in its owned native copy, records the selected profile/triple
+in its binding, and propagates the root's required profile through preservation
+and both collection parses. Complete records must match that profile exactly;
+wrong/missing bindings and bool/float/patch substitutions are rejected. The
+original closed `CONTROL_ERROR` schema is unchanged: failed observations can be
+preserved but never upgraded to collection or strict L08 success.
+
+The current nine-file freeze is
+`../../reviews/hosted-native-repair-01/draft-freeze-relative.json`; both prior
+freezes remain unchanged. The combined control manifest additionally binds
+the three shared profile/error/runtime test files. Existing55 controls remain
+mandatory, plus root's separate focused12 primary-error and20 paired-runtime
+controls. The latter reuses the existing external-parent custody/cleanup wrapper:
+
+```sh
+/usr/bin/python3 -B scripts/verification/ios-readiness/test_native_command_failures.py -v
+/usr/bin/python3 -B scripts/verification/ios-readiness/test_foundation_toolchain_binding.py
+```
+
+These are synthetic tests, not newly executed platform evidence. Obtain current
+independent review and execute affected controls before freezing source/inventory
+and creating new native bindings. Preserve A17/B18 and all prior failed receipts;
+neither correction identifies the OS root cause or proves application recovery,
+strict file protection, or actual normal-binary libproc provenance.

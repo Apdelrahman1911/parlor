@@ -207,11 +207,18 @@ class Lane:
                 entry['exit_code'] = child.returncode
                 if path.stat().st_size > limit:
                     raise RuntimeError('Owned command exceeded its output budget')
-            except BaseException:
-                if child is not None:
-                    self.owner.stop(lambda item: item['role'] == 'command')
-                    entry['exit_code'] = child.poll()
+            except BaseException as error:
                 entry['interrupted_or_failed'] = True
+                entry['primary_error'] = dict(type=type(error).__name__, message=str(error)[:800])
+                if child is not None:
+                    cleanup_stage = 'stop-owned-command-workers'
+                    try:
+                        self.owner.stop(lambda item: item['role'] == 'command')
+                        cleanup_stage = 'read-owned-command-exit'
+                        entry['exit_code'] = child.poll()
+                    except BaseException as cleanup_error:
+                        entry['command_cleanup_error'] = dict(stage=cleanup_stage,
+                            type=type(cleanup_error).__name__, message=str(cleanup_error)[:800])
                 raise
             finally:
                 entry['finished_at'] = now()

@@ -72,7 +72,8 @@ def encoded(value):
 
 
 def binding():
-    return dict(fixture_template_sha256='a' * 64, context_sha256='b' * 64, controls_sha256='c' * 64, mode='adhoc')
+    return dict(fixture_template_sha256='a' * 64, context_sha256='b' * 64, controls_sha256='c' * 64, mode='adhoc',
+                toolchain_profile=schema.toolchains.LOCAL, expected_runtime_version=[26, 5, 0])
 
 
 def inventories():

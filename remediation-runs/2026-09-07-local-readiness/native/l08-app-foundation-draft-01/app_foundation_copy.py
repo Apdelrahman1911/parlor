@@ -1,5 +1,6 @@
 """Additive owned-copy hooks only. No CLI, builds, processes, device actions or deletion."""
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path, PurePosixPath
@@ -20,13 +21,19 @@ MODIFIED = (PROJECT, CONTENT, TESTS)
 HASH = re.compile(r'[0-9a-f]{64}\Z')
 TEMP = re.compile(r'parlor-audit-ios-readiness-[0-9]{2}-[A-Za-z0-9_-]{1,64}\Z')
 PINS = {
-    'run_ios_readiness.py': 'fdae88cf835f4b0f5f5271b882641b7284db7ea5e5bdc135870754db7f61fb21',
+    'run_ios_readiness.py': 'a56f47787c5abbda301cdfcafa5c8ac4ad7eb505d21d560e86063f93453a36f7',
     'copied_sources.py': 'ba1dbbd9fabc23e43060663ff6051617f1fe3119979e60df7a1db3c13fe950d6',
     'NativeReadinessUITests.swift.in': 'fa2dc7dbc97c576262ad14cd85b22f65aa908b1629ab1a205b22aa4873f5c0dc',
     'NativeReadinessLaunch.swift.in': 'df8f0cce3f45bedbfea47df3ca0b2e56c6a777383395fc170f0f07b83f8d143a',
     'DSC01Probe.swift.in': '1c4b113ec8695d8da2115e4f386fdaf8820411879af6ff9492109b62c7770746',
     'l08_functional_copy.py': '417865a86daca8c09e1d650abc2d46b20920a128d95d2021ad365e38e7a207a4',
 }
+TOOLCHAIN_HELPER = ROOT / 'scripts/verification/ios-readiness/toolchain_profiles.py'
+if TOOLCHAIN_HELPER.is_symlink() or TOOLCHAIN_HELPER.resolve(strict=True) != TOOLCHAIN_HELPER:
+    raise RuntimeError('Redirected native toolchain profile helper')
+_toolchain_spec = importlib.util.spec_from_file_location('parlor_foundation_copy_toolchains', TOOLCHAIN_HELPER)
+toolchains = importlib.util.module_from_spec(_toolchain_spec)
+_toolchain_spec.loader.exec_module(toolchains)
 
 
 def require(condition, code):
@@ -113,7 +120,8 @@ def transform_project(text):
                 '\t\t\t\tSWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/iosApp/L08AppFoundationBridge.h";')
 
 
-def render_native(template, context, controls, mode, device_set):
+def render_native(template, context, controls, mode, device_set, toolchain=toolchains.LOCAL):
+    expected_runtime = toolchains.profile(toolchain)['runtime_version']
     require(all(isinstance(value, str) and HASH.fullmatch(value) for value in (context, controls)), 'compile-hash-binding')
     require(mode in {'disabled', 'adhoc'}, 'signing-mode')
     path = Path(device_set)
@@ -121,6 +129,11 @@ def render_native(template, context, controls, mode, device_set):
             path == Path.home() / 'Library/Developer/CoreSimulator/Devices', 'expected-device-set')
     require(path.is_dir() and not path.is_symlink() and path.resolve() == path, 'device-set-canonical')
     template_hash = hashlib.sha256(template.encode()).hexdigest()
+    # One exact copy-only guard; never accept both runtimes or relax the patch version.
+    template = once(template,
+        'version.majorVersion == 26 && version.minorVersion == 5 && version.patchVersion == 0',
+        'version.majorVersion == %d && version.minorVersion == %d && version.patchVersion == %d' %
+        tuple(expected_runtime))
     for key, value in (('TEMPLATE_SHA256', template_hash), ('CONTEXT_SHA256', context),
                        ('CONTROLS_SHA256', controls), ('DEVICE_SET', str(path)), ('SIGNING_MODE', mode)):
         template = once(template, '__L08_' + key + '__', json.dumps(value))
@@ -167,7 +180,8 @@ def _copy_paths(copy_root, before, custody):
     return root, entries
 
 
-def apply_owned_adapter(copy_root, before, custody, source_identity, controls, mode, device_set):
+def apply_owned_adapter(copy_root, before, custody, source_identity, controls, mode, device_set,
+                        toolchain=toolchains.LOCAL):
     """Root must pass its creation-attested custody and freshly reviewed control binding.
 
     Call AFTER the inherited inspector, BEFORE writing copied-source.diff/manifest.
@@ -178,7 +192,8 @@ def apply_owned_adapter(copy_root, before, custody, source_identity, controls, m
     dependencies = pin_dependencies()
     root, entries = _copy_paths(copy_root, before, custody)
     context = context_digest(source_identity)
-    rendered, template_hash = render_native((HERE / ADDITIONS[NATIVE]).read_text(), context, controls, mode, device_set)
+    rendered, template_hash = render_native((HERE / ADDITIONS[NATIVE]).read_text(), context, controls, mode,
+                                            device_set, toolchain)
     originals = {name: (root / name).read_text() for name in MODIFIED}
     modifications = {
         PROJECT: transform_project(originals[PROJECT]),
@@ -199,5 +214,6 @@ def apply_owned_adapter(copy_root, before, custody, source_identity, controls, m
     return result, dict(schema_version=1, kind='L08_APP_FOUNDATION_COPY_BINDING',
         context_sha256=context, controls_sha256=controls, fixture_template_sha256=template_hash,
         native_copy_sha256=digest(root / NATIVE), bridge_copy_sha256=digest(root / BRIDGE),
+        toolchain_profile=toolchain, expected_runtime_version=toolchains.profile(toolchain)['runtime_version'],
         companion_dependencies=dependencies, modified_paths=list(MODIFIED), added_paths=sorted(additions),
         mode=mode, execution='NOT_RUN', native_build='NOT_RUN', original_l08='UNCHANGED_NOT_SATISFIED')

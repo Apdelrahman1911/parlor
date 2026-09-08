@@ -1,0 +1,977 @@
+{
+  "schema_version": 1,
+  "kind": "NATIVE_REPAIR_CONTROLS_INDEPENDENT_POSTRUN_RECONCILIATION",
+  "reviewer": "/root/portability_review",
+  "coordinator": "/root",
+  "source_author": "/root/native_ci",
+  "recorded_at": "2026-09-08T13:01:44.683180+00:00",
+  "status": "NATIVE_312_CONTROLS_PASS_PACKET_FAIL_PRESERVED",
+  "native_source_commit_scope": "The exact13 previously independently reviewed native correction inputs satisfy their focused control requirement; no new blocking native-source finding. Coordinator may include them in reviewed source/inventory commits, subject to separate CI/source reviews and fresh frozen-source qualification bindings.",
+  "scope": {
+    "included": "Seven actually executed Linux synthetic/native-control suites totaling312 methods, their exact input/source identity and raw evidence, and independent five-parent cleanup reconciliation.",
+    "excluded": "ci_review owns122 release-focused plus2 workflow-hygiene methods, workflow-contract implementation/result review, packet independent review and the separate author postflight narrative. This report does not aggregate436 as its own reviewed test count. No macOS/iOS runtime, libproc syscall/ABI, application recovery, strict protection or final release qualification is established.",
+    "application_runtime_pass_claimed": false,
+    "native_or_ci_dispatch_approved": false
+  },
+  "cycle": {
+    "name": "continuation-native-repair-controls-01",
+    "directory": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01",
+    "outer_receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/receipt.json",
+      "sha256": "d8d65f92d4d10014c62ca1b08a0e67ccbe697d6c72141815814b2a221c0f627d",
+      "bytes": 329686
+    },
+    "packet_results": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/native-repair-results.json",
+      "sha256": "04973dc16add165b259016d2b86491fb10c96a02538d18d1b53d7ea325d54eef",
+      "bytes": 5645
+    },
+    "command_exits": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/native-repair-command-exits.json",
+      "sha256": "0c7d4deafe8fede705c02892b46ceac1ddc071f279ad9473af9d3bad9b9a3eec",
+      "bytes": 2897
+    },
+    "execution_started_at": "2026-09-08T12:34:57.757633+00:00",
+    "execution_finished_at": "2026-09-08T12:35:16.083969+00:00",
+    "canonical_status": "FAIL",
+    "canonical_exit_code": 1,
+    "packet_status": "FAIL",
+    "packet_errors": [
+      {
+        "stage": "external-cleanup:composition",
+        "type": "RuntimeError",
+        "message": "composition: exactly one ALLOCATION marker required"
+      }
+    ],
+    "all_ten_attempted_command_exits": [
+      {
+        "name": "primary-errors",
+        "status": "PASS",
+        "exit_code": 0,
+        "log": "primary-errors.log"
+      },
+      {
+        "name": "toolchain-profile",
+        "status": "PASS",
+        "exit_code": 0,
+        "log": "toolchain-profile.log"
+      },
+      {
+        "name": "foundation-profile",
+        "status": "PASS",
+        "exit_code": 0,
+        "log": "foundation-profile.log"
+      },
+      {
+        "name": "single-tap",
+        "status": "PASS",
+        "exit_code": 0,
+        "log": "single-tap.log"
+      },
+      {
+        "name": "functional-copy",
+        "status": "PASS",
+        "exit_code": 0,
+        "log": "functional-copy.log"
+      },
+      {
+        "name": "composition",
+        "status": "PASS",
+        "exit_code": 0,
+        "log": "composition.log"
+      },
+      {
+        "name": "normal",
+        "status": "PASS",
+        "exit_code": 0,
+        "log": "normal.log"
+      },
+      {
+        "name": "release-focused",
+        "status": "PASS",
+        "exit_code": 0,
+        "log": "release-focused.log"
+      },
+      {
+        "name": "workflow-hygiene",
+        "status": "PASS",
+        "exit_code": 0,
+        "log": "workflow-hygiene.log"
+      },
+      {
+        "name": "workflow-contract",
+        "status": "PASS",
+        "exit_code": 0,
+        "log": "workflow-contract.log"
+      }
+    ],
+    "unattempted_commands": [],
+    "pending_signals": [],
+    "deferred_signals": []
+  },
+  "source_binding": {
+    "base_commit": "4b8c586ce8d1228dda1420c470dff95dd599ddc6",
+    "base_tree": "b70b8d7478db79251796a500c40ef61dcdccbe92",
+    "branch": "fix/local-readiness-2026-09-07",
+    "source_manifest_sha256": "4c98187ce5a9b9f6a5e7b8d4897b1132ddf594618b1949fadb3c876738253601",
+    "source_rows": 825,
+    "all_current_source_hashes_match": true,
+    "full_noncampaign_source_set_independently_reconstructed_from_git": true,
+    "source_before_equals_source_after_including_git_status_and_diff": true,
+    "tracked_changes_present_during_execution": true,
+    "historical_whole_diff_sha256": "bb5d58442137496d82d7b1cc98b123ee9b6cf33562507c3f67a8f23aee2ae431",
+    "explicit_inputs_before": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/native-repair-inputs-before.json",
+      "sha256": "ac0ab3e888ca838fbf02f7d06cc858d0bdb8cab7df74fae76340696fc9b8288a",
+      "bytes": 49089
+    },
+    "explicit_inputs_after": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/native-repair-inputs-after.json",
+      "sha256": "ac0ab3e888ca838fbf02f7d06cc858d0bdb8cab7df74fae76340696fc9b8288a",
+      "bytes": 49089
+    },
+    "explicit_input_rows": 261,
+    "explicit_inputs_byte_identical": true,
+    "all_current_explicit_input_hashes_match": true,
+    "full261_input_set_independently_reconstructed_from_reviewed_helper_directories_extras_and_packet": true,
+    "packet_expected_pins": 42,
+    "all_expected_pins_match": true,
+    "source_approval": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-command-and-runtime-repair-independent-correction-02.json",
+      "sha256": "2129a189055e44478484515e1a24fd2cc228f7dfdebc97dc277bf49c41383bce",
+      "bytes": 10455
+    },
+    "approved_native_input_count": 13,
+    "approved_native_inputs": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+        "sha256": "a56f47787c5abbda301cdfcafa5c8ac4ad7eb505d21d560e86063f93453a36f7",
+        "bytes": 72609
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+        "sha256": "98334625a01adbe3c8b2fb1573895a5056c95e430cb9d857142809d8ef4db454",
+        "bytes": 56767
+      },
+      {
+        "path": "scripts/verification/ios-readiness/toolchain_profiles.py",
+        "sha256": "8adacaf4c59ed823aa088ecb70ad5c6c1e3f76e7ca3520d8abf0563341591313",
+        "bytes": 3358
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_native_command_failures.py",
+        "sha256": "7ea11e97a11cc07ba85d09c1366fe4198b95b8ee59414979fa7801122be981be",
+        "bytes": 12002
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py",
+        "sha256": "df030e500c035fc65ede190a8c11b795f7b4a40e2933a86a4b8529b4bdac4c13",
+        "bytes": 24389
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+        "sha256": "0df57639ed7bdef3fd4df62e73489dc85f4006dd587ce82cf9077e4262e1b068",
+        "bytes": 13449
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_receipts.py",
+        "sha256": "db69c16b7d8abfb5998f92db886a8b8c77bcbb3e72fdd1d806f0ea3dd05f1fb6",
+        "bytes": 18855
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py",
+        "sha256": "c04c7d4b1bb99207415beab77ae3b40bb3d5f59709970f7d844d5d14beab0fe5",
+        "bytes": 34661
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/ROOT_INTEGRATION.md",
+        "sha256": "e3009bfe096930dbde969f239dd162da15a25d407e4b39a99f8bf4fab22d8dcb",
+        "bytes": 6638
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+        "sha256": "288c412456e130ec640f40042133ef4686554b4f63abecc097602999f2d20b18",
+        "bytes": 21106
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+        "sha256": "1ee5d5889d50b94a11d3e3d2ce881899c2434eb97489e953f546a2b7d344afd5",
+        "bytes": 28101
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md",
+        "sha256": "e934ab0834cbe9776fbd410bac6f51147919c718bb8e274fb56103d087dc369e",
+        "bytes": 10614
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/hosted-native-repair-01/draft-freeze-relative.json",
+        "sha256": "2905ce996bad3d6e1d3d45e9fd7594cbe54cc93380e608781a7f34d73b0784a0",
+        "bytes": 2954
+      }
+    ],
+    "runner_before_equals_after": true,
+    "runner_identity": {
+      "manifest": [
+        [
+          "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+          "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc"
+        ]
+      ],
+      "manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912"
+    },
+    "fresh_native_source_binding_created_by_this_cycle": false
+  },
+  "postcycle_worktree_note": {
+    "path": "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md",
+    "fact": "Root explicitly authorized l08_fixture to update only this handoff after controls/transport completed. An initial current-whole-status equality assertion detected that later ledger-only change; it is not a product test failure.",
+    "independent_reconciliation": "Current825 source and261 explicit control rows remain exact. Current tracked status excluding only this newly modified ledger equals the in-cycle status, and current git diff --binary HEAD excluding only this ledger hashes to the original bb5d58442137496d82d7b1cc98b123ee9b6cf33562507c3f67a8f23aee2ae431. Do not claim the entire current worktree is byte-identical to the execution worktree.",
+    "current_whole_worktree_identical_claimed": false
+  },
+  "actual_native_control_results": [
+    {
+      "suite": "primary-errors",
+      "status": "PASS",
+      "tests_run": 12,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "unexpected_or_expected_failures": 0,
+      "elapsed_seconds": 0.513,
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/verification/ios-readiness/test_native_command_failures.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/primary-errors.log",
+        "sha256": "e390ba75e9146baecff011d451d5eb006812ad82316a4aa2edb73002a2cac965",
+        "bytes": 2131
+      },
+      "actual_unique_ids_equal_current_source_declarations": true,
+      "actual_ids_sha256": "35e771edbe9561e19cd169793c8a252e07f706d07aab7d7a8475be6551b16465",
+      "ids_digest_encoding": "UTF-8 compact JSON list in actual log order",
+      "source_files": [
+        {
+          "path": "scripts/verification/ios-readiness/test_native_command_failures.py",
+          "sha256": "7ea11e97a11cc07ba85d09c1366fe4198b95b8ee59414979fa7801122be981be",
+          "bytes": 12002,
+          "declared_method_count": 12
+        }
+      ]
+    },
+    {
+      "suite": "toolchain-profile",
+      "status": "PASS",
+      "tests_run": 12,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "unexpected_or_expected_failures": 0,
+      "elapsed_seconds": 0.09,
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/toolchain-profile.log",
+        "sha256": "eaf171d76b480905e73435492435d56dc40790f885c053dcf709fe678296f50d",
+        "bytes": 2139
+      },
+      "actual_unique_ids_equal_current_source_declarations": true,
+      "actual_ids_sha256": "1f67d7adbf95513e82ada106eed888c76238e8af0e2006b1beb0982358f6c02e",
+      "ids_digest_encoding": "UTF-8 compact JSON list in actual log order",
+      "source_files": [
+        {
+          "path": "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+          "sha256": "77ee3b78862c23bee045ff9ca049f312a20b45bff1257768b13e2c5f2ca6bf4a",
+          "bytes": 12098,
+          "declared_method_count": 12
+        }
+      ]
+    },
+    {
+      "suite": "foundation-profile",
+      "status": "PASS",
+      "tests_run": 20,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "unexpected_or_expected_failures": 0,
+      "elapsed_seconds": 1.822,
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py"
+      ],
+      "exit_code": 0,
+      "log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/foundation-profile.log",
+        "sha256": "70a6625b9519eae6dc9ddbe43e067710867858ec59cc0a29767dab1642b0316a",
+        "bytes": 4149
+      },
+      "actual_unique_ids_equal_current_source_declarations": true,
+      "actual_ids_sha256": "367ce0712a84a388054c7d98d2b586c6723b9d63b2e69bc6a643def5eeafdff4",
+      "ids_digest_encoding": "UTF-8 compact JSON list in actual log order",
+      "source_files": [
+        {
+          "path": "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py",
+          "sha256": "df030e500c035fc65ede190a8c11b795f7b4a40e2933a86a4b8529b4bdac4c13",
+          "bytes": 24389,
+          "declared_method_count": 20
+        }
+      ]
+    },
+    {
+      "suite": "single-tap",
+      "status": "PASS",
+      "tests_run": 14,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "unexpected_or_expected_failures": 0,
+      "elapsed_seconds": 2.019,
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py"
+      ],
+      "exit_code": 0,
+      "log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/single-tap.log",
+        "sha256": "7cae7d2a541b08ddd4b0531ab0c345a9f4b42c936a16d40948088cfe922a5c61",
+        "bytes": 2489
+      },
+      "actual_unique_ids_equal_current_source_declarations": true,
+      "actual_ids_sha256": "d1ecebba4d5e92be2c75ac80396e483de10f33ad7e77c62b66801a50a4375cd9",
+      "ids_digest_encoding": "UTF-8 compact JSON list in actual log order",
+      "source_files": [
+        {
+          "path": "remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py",
+          "sha256": "6443de2ea249c74a945aee5513e74eedadc077a68c43089201b89e9c90695298",
+          "bytes": 24518,
+          "declared_method_count": 14
+        }
+      ]
+    },
+    {
+      "suite": "functional-copy",
+      "status": "PASS",
+      "tests_run": 12,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "unexpected_or_expected_failures": 0,
+      "elapsed_seconds": 0.09,
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02",
+        "-p",
+        "test_l08_functional_copy.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/functional-copy.log",
+        "sha256": "c6c5f752ca65909ac693ddf9c3bff70d30226a77dc5685eef748754260ce5217",
+        "bytes": 2543
+      },
+      "actual_unique_ids_equal_current_source_declarations": true,
+      "actual_ids_sha256": "b19c5822fe8eb83962656559b4173555a4d84318cf69a62715f046b0a39b1b8b",
+      "ids_digest_encoding": "UTF-8 compact JSON list in actual log order",
+      "source_files": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+          "sha256": "b58d9761b7c199f0ab7fd01c2c6614d2f49e0a71102fd54ff3f6783acfede7f0",
+          "bytes": 25344,
+          "declared_method_count": 12
+        }
+      ]
+    },
+    {
+      "suite": "composition",
+      "status": "PASS",
+      "tests_run": 55,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "unexpected_or_expected_failures": 0,
+      "elapsed_seconds": 5.214,
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py"
+      ],
+      "exit_code": 0,
+      "log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/composition.log",
+        "sha256": "063b157f90a064b59f90cf128c5bedfb240cc39a6f240f089086b2c316b8116c",
+        "bytes": 19632
+      },
+      "actual_unique_ids_equal_current_source_declarations": true,
+      "actual_ids_sha256": "4ddcc4781904d0c0070313d1c8e78deca9bc20f1844d75fa8242b9484882db79",
+      "ids_digest_encoding": "UTF-8 compact JSON list in actual log order",
+      "source_files": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py",
+          "sha256": "c04c7d4b1bb99207415beab77ae3b40bb3d5f59709970f7d844d5d14beab0fe5",
+          "bytes": 34661,
+          "declared_method_count": 33
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+          "sha256": "1ee5d5889d50b94a11d3e3d2ce881899c2434eb97489e953f546a2b7d344afd5",
+          "bytes": 28101,
+          "declared_method_count": 22
+        }
+      ]
+    },
+    {
+      "suite": "normal",
+      "status": "PASS",
+      "tests_run": 187,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "unexpected_or_expected_failures": 0,
+      "elapsed_seconds": 0.757,
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py"
+      ],
+      "exit_code": 0,
+      "log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/normal.log",
+        "sha256": "61e3043fc0324a49e32b218f8ecd873832d4e76827ddc197eb0f6cca47b4eb00",
+        "bytes": 109031
+      },
+      "actual_unique_ids_equal_current_source_declarations": true,
+      "actual_ids_sha256": "0d3c8eea247b0f7d2c789ea1574655b22ebcd1117b64752690d83fe60f1f6851",
+      "ids_digest_encoding": "UTF-8 compact JSON list in actual log order",
+      "source_files": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_header_diagnostics.py",
+          "sha256": "e2d835d4c7919c1448eebc51079d5f0673e71b3a1a8998ed97b616325e5bd06a",
+          "bytes": 5672,
+          "declared_method_count": 8
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_image_diagnostic_orchestration.py",
+          "sha256": "133fbc769d331581d7ad6e1154d5d1c6bf35bf9a853e28fc56bafa25049e5a8d",
+          "bytes": 22696,
+          "declared_method_count": 18
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_image_diagnostics.py",
+          "sha256": "80f4ca531634bcb377d29803e58f5a99522e74e10402ce8221448b9d3ef3ab2c",
+          "bytes": 22341,
+          "declared_method_count": 25
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_kernel_image_regions.py",
+          "sha256": "92c6218d227ec93e50d5e6df7a21274e8f1b469ddf14839e51c050c1d0f196e4",
+          "bytes": 12776,
+          "declared_method_count": 10
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+          "sha256": "af5c912dbc9655468d5d428b18f5a7c16d7b0f2fa421e14cf559ee674eaceb76",
+          "bytes": 42841,
+          "declared_method_count": 78
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_owned_tool_paths.py",
+          "sha256": "f310d2af99449e4d8570dcc2eba8db4f1cb99c44574eeb1bfc32e447bcff6b58",
+          "bytes": 14851,
+          "declared_method_count": 21
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_sample_literal_star.py",
+          "sha256": "e1cec3bb236fff0e518b153308e09cf850a865ee22e028201bcbe1d86346b814",
+          "bytes": 7046,
+          "declared_method_count": 7
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_vmmap_command_failure.py",
+          "sha256": "97114b22407d470f0f71ab05d1f5b7e53158db0e8787150b0170a3d678aaaa50",
+          "bytes": 10171,
+          "declared_method_count": 7
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_xcode26_repetitions.py",
+          "sha256": "3e51f197304d1b7f16da4ee3269fcd48bf0fa6f0632d2dbc36ab395e68d5e66a",
+          "bytes": 5869,
+          "declared_method_count": 13
+        }
+      ]
+    }
+  ],
+  "reviewed_tests_total": 312,
+  "reviewed_failures": 0,
+  "reviewed_errors": 0,
+  "reviewed_skips": 0,
+  "actual_result_crosschecks": {
+    "method_validation": "For each suite independently matched every verbose actual test ID to current AST declarations, checked uniqueness, exact per-method ok (including the single interleaved composition method), one exact Ran count and one unqualified OK summary. No expected/unexpected failure or skip status was accepted.",
+    "normal_internal_control_rows": 90,
+    "normal_before_after_manifest_equal": true,
+    "normal_internal_current_hashes_all_match_explicit_manifest": true,
+    "normal_actual_import_entries": 35,
+    "normal_unique_import_paths": 35,
+    "all_actual_import_paths_bound_in_internal90": true,
+    "normal_declared_ids_discovered_ids_verbose_ids_all_equal": true,
+    "normal_internal_manifest_sha256": "9e648b989d3b1f1ba17efb1b477c0e4ad1e4ddbafab47afec92c82b0b25840d2",
+    "normal_kind": "PURE_CONTROL_TESTS_NOT_APP_RUNTIME",
+    "normal_driver_reference": {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+      "sha256": "0aa080c52ff3f30bb159bc59f728084ff92d6ad4f340b1ec051dfc55dd317f2e",
+      "bytes": 2837
+    },
+    "normal_control_scope": "This inner manifest has no native source-binding input. Its187 successes are controls, not eight actual XCTest repetitions or a ninth Parlor libproc observation.",
+    "composition_results_marker_count": 1,
+    "composition_actual_discovered_ids_equal_verbose_ids_and_current33plus22_declarations": true,
+    "composition_reported_tests": 55,
+    "composition_failures": 0,
+    "composition_errors": 0,
+    "composition_skipped": [],
+    "composition_native_execution": false,
+    "composition_input_tests": [
+      {
+        "path": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py",
+        "sha256": "c04c7d4b1bb99207415beab77ae3b40bb3d5f59709970f7d844d5d14beab0fe5"
+      },
+      {
+        "path": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+        "sha256": "1ee5d5889d50b94a11d3e3d2ce881899c2434eb97489e953f546a2b7d344afd5"
+      }
+    ],
+    "foundation_entry_regression": "Corrected df030e50 script actually ran its enhanced composed-source test, including isolated actual main ordering and KeyboardInterrupt handler callback. This was inert synthetic execution, not a real OS SIGTERM delivery experiment."
+  },
+  "packet_postflight_defect": {
+    "finding": "Packet external_cleanup.marker requires exactly one line-start ALLOCATION and CLEANUP marker for composition. Existing composition launcher control legitimately creates three nested external parents for success, ValueError and KeyboardInterrupt inside the one outer allocation.",
+    "raw_counts": {
+      "foundation-profile": {
+        "allocations": 1,
+        "cleanups": 1,
+        "allocation_markers_starting_line": 1,
+        "midline_allocation_lines": []
+      },
+      "composition": {
+        "allocations": 4,
+        "cleanups": 4,
+        "allocation_markers_starting_line": 3,
+        "midline_allocation_lines": [
+          45
+        ]
+      }
+    },
+    "why_original_failed": "There are four actual composition allocations, but startswith sees only three because the first nested allocation is appended to the verbose test heading at raw line45. The packet rejects that count before returning composition cleanup/results. Four matching cleanup rows are retained.",
+    "source_explanation": {
+      "launcher": {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py",
+        "sha256": "03c115d45474ee082204d38c6315e19909108148b2de8804898dd66c40c14dbf",
+        "bytes": 5918
+      },
+      "controls": {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+        "sha256": "1ee5d5889d50b94a11d3e3d2ce881899c2434eb97489e953f546a2b7d344afd5",
+        "bytes": 28101
+      },
+      "test": "LauncherControls.test_external_parent_and_environment_are_finalized_on_success_failure_and_cancellation",
+      "expected_multiplicity": "one outer + one each for (None, ValueError, KeyboardInterrupt) = four; source inspected, not inferred from a desired PASS."
+    },
+    "conclusion": "A packet-only evidence parser/cardinality defect after all ten child commands completed. It is not a source test failure or missing external cleanup in these retained raw records. Original packet and both canonical FAIL receipts remain unchanged. This review does not retroactively replace them with PASS or rerun any tests.",
+    "packet": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-repair-control-command-01.json",
+      "sha256": "b693e857332f142818d65a3196c2f9f7725834975d66abb5ae3bab41a508b358",
+      "bytes": 30907
+    },
+    "whole_retained_inline_command_equals_packet": true,
+    "separate_author_postflight_reference": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-repair-external-postflight-reconciliation-01.json",
+      "sha256": "a6bb24ec93b17b0c0b8a2efece775127ea1514036791528aed5399842302e4ad",
+      "bytes": 27387,
+      "scope": "Separate additive narrative; ci_review owns its independent review. This report derives all results directly from raw evidence, not this author summary."
+    }
+  },
+  "independent_external_cleanup": {
+    "status": "ALL_FIVE_EXACT_PARENTS_PAIRED_AND_ABSENT",
+    "expected_parents": 5,
+    "actual_parents": 5,
+    "pairs": [
+      {
+        "suite": "foundation-profile",
+        "allocation": {
+          "event": "ALLOCATION",
+          "line": 1,
+          "midline": false,
+          "value": {
+            "path": "/tmp/parlor-app-foundation-controls-givasd3h",
+            "device": 27,
+            "inode": 248329,
+            "uid": 0
+          }
+        },
+        "cleanup": {
+          "event": "CLEANUP",
+          "line": 27,
+          "midline": false,
+          "value": {
+            "status": "PASS",
+            "parent": "/tmp/parlor-app-foundation-controls-givasd3h",
+            "workers_started": 0,
+            "parent_removed": true,
+            "custody": {
+              "device": 27,
+              "inode": 248329,
+              "uid": 0
+            }
+          }
+        },
+        "independent_absence_check": {
+          "method": "lstat exact logged path; not glob or deletion",
+          "observed_at": "2026-09-08T13:01:44.589144+00:00",
+          "result": "FileNotFoundError_ENOENT"
+        }
+      },
+      {
+        "suite": "composition",
+        "allocation": {
+          "event": "ALLOCATION",
+          "line": 1,
+          "midline": false,
+          "value": {
+            "path": "/tmp/parlor-app-foundation-controls-uts5yovn",
+            "device": 27,
+            "inode": 249870,
+            "uid": 0
+          }
+        },
+        "cleanup": {
+          "event": "CLEANUP",
+          "line": 69,
+          "midline": false,
+          "value": {
+            "status": "PASS",
+            "parent": "/tmp/parlor-app-foundation-controls-uts5yovn",
+            "workers_started": 0,
+            "parent_removed": true,
+            "custody": {
+              "device": 27,
+              "inode": 249870,
+              "uid": 0
+            }
+          }
+        },
+        "independent_absence_check": {
+          "method": "lstat exact logged path; not glob or deletion",
+          "observed_at": "2026-09-08T13:01:44.589144+00:00",
+          "result": "FileNotFoundError_ENOENT"
+        }
+      },
+      {
+        "suite": "composition",
+        "allocation": {
+          "event": "ALLOCATION",
+          "line": 45,
+          "midline": true,
+          "value": {
+            "path": "/tmp/parlor-app-foundation-controls-21o6pyv3",
+            "device": 27,
+            "inode": 250545,
+            "uid": 0
+          }
+        },
+        "cleanup": {
+          "event": "CLEANUP",
+          "line": 46,
+          "midline": false,
+          "value": {
+            "status": "PASS",
+            "parent": "/tmp/parlor-app-foundation-controls-21o6pyv3",
+            "workers_started": 0,
+            "parent_removed": true,
+            "custody": {
+              "device": 27,
+              "inode": 250545,
+              "uid": 0
+            }
+          }
+        },
+        "independent_absence_check": {
+          "method": "lstat exact logged path; not glob or deletion",
+          "observed_at": "2026-09-08T13:01:44.589144+00:00",
+          "result": "FileNotFoundError_ENOENT"
+        }
+      },
+      {
+        "suite": "composition",
+        "allocation": {
+          "event": "ALLOCATION",
+          "line": 47,
+          "midline": false,
+          "value": {
+            "path": "/tmp/parlor-app-foundation-controls-_59cij9f",
+            "device": 27,
+            "inode": 250548,
+            "uid": 0
+          }
+        },
+        "cleanup": {
+          "event": "CLEANUP",
+          "line": 48,
+          "midline": false,
+          "value": {
+            "status": "PASS",
+            "parent": "/tmp/parlor-app-foundation-controls-_59cij9f",
+            "workers_started": 0,
+            "parent_removed": true,
+            "custody": {
+              "device": 27,
+              "inode": 250548,
+              "uid": 0
+            }
+          }
+        },
+        "independent_absence_check": {
+          "method": "lstat exact logged path; not glob or deletion",
+          "observed_at": "2026-09-08T13:01:44.589144+00:00",
+          "result": "FileNotFoundError_ENOENT"
+        }
+      },
+      {
+        "suite": "composition",
+        "allocation": {
+          "event": "ALLOCATION",
+          "line": 49,
+          "midline": false,
+          "value": {
+            "path": "/tmp/parlor-app-foundation-controls-ciocf53u",
+            "device": 27,
+            "inode": 250551,
+            "uid": 0
+          }
+        },
+        "cleanup": {
+          "event": "CLEANUP",
+          "line": 50,
+          "midline": false,
+          "value": {
+            "status": "PASS",
+            "parent": "/tmp/parlor-app-foundation-controls-ciocf53u",
+            "workers_started": 0,
+            "parent_removed": true,
+            "custody": {
+              "device": 27,
+              "inode": 250551,
+              "uid": 0
+            }
+          }
+        },
+        "independent_absence_check": {
+          "method": "lstat exact logged path; not glob or deletion",
+          "observed_at": "2026-09-08T13:01:44.589144+00:00",
+          "result": "FileNotFoundError_ENOENT"
+        }
+      }
+    ],
+    "ordinary_source_freezes_and_no_adoption": "Only exact logged root-owned /tmp/parlor-app-foundation-controls-* paths with numeric custody were checked. No prefix deletion, live ownership adoption, signal or cleanup operation was performed. Nested and outer parents have distinct creation identities and one matching later PASS cleanup each."
+  },
+  "outer_cleanup": {
+    "status": "CLEANUP_RECONCILED_WHILE_OVERALL_FAIL_RETAINED",
+    "stop_command": [
+      "./gradlew",
+      "--stop"
+    ],
+    "stop_exit_code": 0,
+    "stop_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    "stop_message": "No Gradle daemons are running.",
+    "finished_at": "2026-09-08T12:35:16.083969+00:00",
+    "stopped_at": "2026-09-08T12:35:16.780982+00:00",
+    "cleanup_completed_at": "2026-09-08T12:35:16.870786+00:00",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "artifact_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "outputs_before": [],
+    "removed_outputs": [],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "deferred_signals": [],
+    "outer_scratch": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/scratch",
+    "independent_scratch_lstat": "FileNotFoundError_ENOENT",
+    "method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership.",
+    "interpretation": "No Gradle build/generated module output, native simulator or DerivedData was created by these fixed pure-control commands. Immediate wrapper stop completed before precise scratch retirement; no Gradle clean was needed or run, so no cleanup-started daemon required a second stop. Required Python logs/JSON were retained; empty artifact/test-receipts arrays are not application artifact/runtime evidence. Worker absence is the retained owner-specific receipt, not a new reviewer process probe."
+  },
+  "platform_evidence": {
+    "os": "Linux amd64 as retained actual Java properties",
+    "python_invocations": "/usr/bin/python3 -B with packet fixed sys.platform linux gate",
+    "jdk21": {
+      "home": "/usr/lib/jvm/java-21-openjdk-amd64",
+      "specification_version": "21",
+      "javac_version": "21.0.12",
+      "java_log_sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+      "javac_log_sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755"
+    },
+    "java_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/java-toolchain.log",
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+      "bytes": 2026
+    },
+    "javac_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/javac-toolchain.log",
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755",
+      "bytes": 14
+    },
+    "no_apple_platform_execution": true
+  },
+  "retained_evidence_inventory": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/artifact-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/composition.log",
+      "sha256": "063b157f90a064b59f90cf128c5bedfb240cc39a6f240f089086b2c316b8116c",
+      "bytes": 19632
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/foundation-profile.log",
+      "sha256": "70a6625b9519eae6dc9ddbe43e067710867858ec59cc0a29767dab1642b0316a",
+      "bytes": 4149
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/functional-copy.log",
+      "sha256": "c6c5f752ca65909ac693ddf9c3bff70d30226a77dc5685eef748754260ce5217",
+      "bytes": 2543
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/gradle.log",
+      "sha256": "493350d7845bc883a66b9b01d74bb9a83c0843db9e551892931f139413c37815",
+      "bytes": 7933
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/java-toolchain.log",
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+      "bytes": 2026
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/javac-toolchain.log",
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755",
+      "bytes": 14
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/native-repair-command-exits.json",
+      "sha256": "0c7d4deafe8fede705c02892b46ceac1ddc071f279ad9473af9d3bad9b9a3eec",
+      "bytes": 2897
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/native-repair-inputs-after.json",
+      "sha256": "ac0ab3e888ca838fbf02f7d06cc858d0bdb8cab7df74fae76340696fc9b8288a",
+      "bytes": 49089
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/native-repair-inputs-before.json",
+      "sha256": "ac0ab3e888ca838fbf02f7d06cc858d0bdb8cab7df74fae76340696fc9b8288a",
+      "bytes": 49089
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/native-repair-results.json",
+      "sha256": "04973dc16add165b259016d2b86491fb10c96a02538d18d1b53d7ea325d54eef",
+      "bytes": 5645
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/normal.log",
+      "sha256": "61e3043fc0324a49e32b218f8ecd873832d4e76827ddc197eb0f6cca47b4eb00",
+      "bytes": 109031
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/primary-errors.log",
+      "sha256": "e390ba75e9146baecff011d451d5eb006812ad82316a4aa2edb73002a2cac965",
+      "bytes": 2131
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/receipt.json",
+      "sha256": "d8d65f92d4d10014c62ca1b08a0e67ccbe697d6c72141815814b2a221c0f627d",
+      "bytes": 329686
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/release-focused.log",
+      "sha256": "3128146db4f21baeae2318a9ad3b005bd07ed1c87f6bb0b394cf75ae9cae5657",
+      "bytes": 30828
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/single-tap.log",
+      "sha256": "7cae7d2a541b08ddd4b0531ab0c345a9f4b42c936a16d40948088cfe922a5c61",
+      "bytes": 2489
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/test-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/toolchain-profile.log",
+      "sha256": "eaf171d76b480905e73435492435d56dc40790f885c053dcf709fe678296f50d",
+      "bytes": 2139
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/workflow-contract.log",
+      "sha256": "ed4d00104b82af25bedca2f5586359a98c6d2c5d0667ceb6a849ab748394c196",
+      "bytes": 32
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/workflow-hygiene.log",
+      "sha256": "dc69fe2edd426c30b77a1fb3ac8327700ce3d6bbf88098895041a4805185450b",
+      "bytes": 412
+    }
+  ],
+  "remaining_requirements": [
+    "Do not rerun unchanged successful controls merely to disguise the retained one-off packet FAIL. Any future packet reuse must correct cardinality in a new separately reviewed artifact; current tests remain scoped to their exact bound bytes.",
+    "Finish separate CI/source evidence reviews, then coordinator commits reviewed source/control changes and regenerated mechanical inventory before fresh bindings and justified platform qualification. This working-tree control cycle is not final frozen-source qualification.",
+    "A functional-storage, retained-host, Settings/lifecycle and strict file-protection runtime observations remain unresolved; current12/14/20/55 source-control successes do not complete those scenarios. Preserve historical failed receipts and strict metadata mismatches.",
+    "B actual normal Parlor libproc runtime and ABI/artifact provenance remain unexecuted by this cycle; no ps root-cause correction is proven by synthetic controls.",
+    "C fresh final dependency chain and D combined qualification/reconciliation remain separate work. No physical-device testing, Store publication/promotion/signing, identity collision resolution or owner/legal/content/privacy approval is claimed."
+  ],
+  "reviewer_activity": {
+    "tests_executed": 0,
+    "builds": 0,
+    "native_or_platform_commands": 0,
+    "project_imports": 0,
+    "signals_or_cleanup_operations": 0,
+    "workflow_dispatches": 0,
+    "source_or_test_edits": 0,
+    "commits": 0,
+    "performed": "Read underlying logs/JSON/source, stdlib AST/hash/ID and custody/path checks, read-only git comparisons; wrote only this unique untracked review report. Static audit of historical/current state is not another test cycle."
+  },
+  "reviewer_cleanup": {
+    "cycle_started": false,
+    "needed": false,
+    "disposition": "No reviewer-owned workers, temp fixture or build output. No Gradle stop or deletion of coordinator/unrelated work; all original failures retained."
+  },
+  "readiness_verdict": "NOT_READY. The exact native correction source passed312 Linux control methods with independently reconciled cleanup; canonical packet/outer FAIL remains evidence. No application runtime, strict protection, real libproc provenance or final combined qualification success follows."
+}

@@ -1,0 +1,76 @@
+{
+  "cycle": "continuation-transport-contracts-02",
+  "started_at": "2026-09-08T12:37:09.305351+00:00",
+  "runner_before": {
+    "manifest": [
+      [
+        "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+        "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc"
+      ]
+    ],
+    "manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912"
+  },
+  "command": [
+    "./gradlew",
+    ":shared:transport-p2p:desktopTest",
+    "--no-daemon",
+    "--no-parallel",
+    "--max-workers=1",
+    "--no-configuration-cache",
+    "--dependency-verification=strict",
+    "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=continuation-transport-contracts-02",
+    "-Pkotlin.compiler.execution.strategy=in-process",
+    "-Pparlor.android.signing.storeFile=",
+    "-Pparlor.android.signing.storePassword=",
+    "-Pparlor.android.signing.keyAlias=",
+    "-Pparlor.android.signing.keyPassword="
+  ],
+  "env_policy": "Explicit JDK21 release and owned runtime/compiler probes, system Python, strict verification, signing env removed/empty Gradle signing props, cycle-owned TMPDIR/pycache",
+  "outputs_before": [],
+  "status": "PASS",
+  "jdk21": {
+    "home": "/usr/lib/jvm/java-21-openjdk-amd64",
+    "specification_version": "21",
+    "javac_version": "21.0.12",
+    "java_log_sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+    "javac_log_sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755"
+  },
+  "exit_code": 0,
+  "finished_at": "2026-09-08T12:37:57.920211+00:00",
+  "stop_exit_code": 0,
+  "stopped_at": "2026-09-08T12:37:58.569228+00:00",
+  "workers": {
+    "terminated_owned_workers": [],
+    "remaining_owned_workers": []
+  },
+  "artifact_workers": {
+    "terminated_owned_workers": [],
+    "remaining_owned_workers": []
+  },
+  "removed_outputs": [
+    "shared/networking/build",
+    "shared/transport-p2p/build",
+    "shared/core/build",
+    "shared/storage/build",
+    "shared/engine/build",
+    "build",
+    "build-logic/convention/build"
+  ],
+  "retained_outputs": [],
+  "remaining_outputs": [],
+  "cleanup_completed_at": "2026-09-08T12:37:58.700830+00:00",
+  "source_changed_during_cycle": false,
+  "runner_after": {
+    "manifest": [
+      [
+        "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+        "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc"
+      ]
+    ],
+    "manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912"
+  },
+  "runner_changed_during_cycle": false,
+  "cleanup_errors": [],
+  "deferred_signals": [],
+  "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership."
+}

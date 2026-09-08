@@ -407,12 +407,19 @@ def main():
                             raise subprocess.TimeoutExpired(entry['command'], timeout)
                         time.sleep(0.25)
                     entry['exit_code'] = child.returncode
-                except BaseException:
+                except BaseException as error:
                     # All direct command groups are task-owned; no global pkill.
-                    if child is not None:
-                        owner.stop(lambda item: item['role'] == 'command')
-                        entry['exit_code'] = child.poll()
                     entry['interrupted_or_failed'] = True
+                    entry['primary_error'] = dict(type=type(error).__name__, message=str(error)[:800])
+                    if child is not None:
+                        cleanup_stage = 'stop-owned-command-workers'
+                        try:
+                            owner.stop(lambda item: item['role'] == 'command')
+                            cleanup_stage = 'read-owned-command-exit'
+                            entry['exit_code'] = child.poll()
+                        except BaseException as cleanup_error:
+                            entry['command_cleanup_error'] = dict(stage=cleanup_stage,
+                                type=type(cleanup_error).__name__, message=str(cleanup_error)[:800])
                     raise
                 finally:
                     entry['finished_at'] = now(); save()

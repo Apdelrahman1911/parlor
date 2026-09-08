@@ -33,7 +33,7 @@ Then call:
 copied_source_manifest, app_foundation_binding = apply_owned_adapter(
     temp / 'copy', copied_source_manifest, creation_attested_custody,
     receipt['source_before'], approved, mode,
-    Path.home() / 'Library/Developer/CoreSimulator/Devices')
+    Path.home() / 'Library/Developer/CoreSimulator/Devices', toolchain=toolchain_name)
 ```
 
 Regenerate `copied-source.diff` **after** this call from original source to the
@@ -55,7 +55,8 @@ After actual `get_app_container` and inherited bounded readiness-result copying
 scenario `readiness`, a UUID `runToken`, and bounded observations. Take the
 expected token from that existing context, never from the new receipt itself.
 
-Call `preserve_available(container, dest, uuid, context['runToken'])` before any
+Call `preserve_available(container, dest, uuid, context['runToken'],
+toolchain=receipt['toolchain_profile'])` before any
 later storage/host/native validator can abort. Save its returned names. It reads
 only the two exact bounded receipt names, never recursively inspects the sandbox,
 and never deletes anything. Preservation and collection validation are distinct.
@@ -75,6 +76,15 @@ record, returned copy binding, both inventories, exact XCTest log, actual UDID,
 and the independently established token. Pass the first native health receipt
 when available: its actual `process_id`, `process_boot`, signing mode and token
 must match; it is not the later aggregate cold-launch log row.
+Pass the required root-selected `toolchain=receipt['toolchain_profile']` through
+`parse_record` and `bind_collection` as well; never derive it from native output.
+The copy binding must name that same closed profile and exact integer runtime
+triple. Standalone defaults retain local26.5.0 only; the composed runner has no
+missing-profile fallback. Qualified26.3 compiler observations require runtime
+26.2.0 exactly, including patch0. The copy renderer changes only the one exact
+native runtime guard; all Foundation operations and strict metadata queries stay
+unchanged. A closed `CONTROL_ERROR` with a mismatched runtime remains preservable
+under the original bounded error schema, but can never validate a collection.
 
 Only `COLLECTION_VALIDATED_NOT_L08_PASS` is possible. Missing/failed observation,
 delivery failure, unavailable image, cleanup failure, or unmatched XCTest/image

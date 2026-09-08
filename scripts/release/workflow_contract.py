@@ -31,6 +31,7 @@ FULL_VERIFICATION_SCOPE = "github.event_name != 'workflow_dispatch' || inputs.ve
 FULL_VERIFICATION_FINALIZER = "always() && (" + FULL_VERIFICATION_SCOPE + ")"
 NATIVE_VERIFICATION_SCOPE = ("github.event_name == 'workflow_dispatch' && "
                              "(inputs.verification_scope == 'native-preflight' || inputs.verification_scope == 'native-evidence')")
+PROCESS_PROBE_SCOPE = "github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'native-process-probe'"
 
 
 def fail(message: str) -> None:
@@ -140,7 +141,7 @@ def verify_owned_ios_app_launch(text: str) -> None:
 
 
 def verify_verification_scopes(text: str) -> None:
-    """Only two explicit dispatch modes may bypass the unchanged five-job gate."""
+    """Only three explicit dispatch modes may bypass the unchanged five-job gate."""
     jobs_text = text.split("\njobs:\n", 1)[-1]
     jobs = re.findall(r"(?m)^  ([a-z][a-z0-9-]+):$", jobs_text)
     expected = ["desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64", "ios"]
@@ -153,13 +154,17 @@ def verify_verification_scopes(text: str) -> None:
     ios = jobs_text.split("\n  ios:\n", 1)[1]
     if re.findall(r"(?m)^    if: (.*)$", ios):
         fail("verification scope validation must not be skipped by an iOS job condition")
-    for token in ("        default: full\n", "        options: [full, native-preflight, native-evidence]\n"):
+    if re.findall(r"(?m)^    timeout-minutes: (.*)$", ios) != [
+            "${{ inputs.verification_scope == 'native-process-probe' && 10 || 120 }}"]:
+        fail("verification scope must bound the diagnostic to ten minutes without shortening full qualification")
+    for token in ("        default: full\n", "        options: [full, native-preflight, native-evidence, native-process-probe]\n"):
         if token not in text.split("\nconcurrency:", 1)[0]:
-            fail("verification scope must default to full with only the two reviewed focused modes")
+            fail("verification scope must default to full with only the three reviewed focused modes")
     validator = validation_step(ios, "Validate verification scope")
     if (re.findall(r"(?m)^        if: (.*)$", validator) or
             "run: /usr/bin/python3 -B scripts/ci/native_continuation.py validate-scope\n" not in validator or
-            ios.index("- name: Validate verification scope\n") > ios.index("- name: Run focused native continuation\n")):
+            any(ios.index("- name: Validate verification scope\n") > ios.index("- name: " + name + "\n")
+                for name in ("Run focused native continuation", "Observe hosted native processes without an app build"))):
         fail("verification scope must reject unknown values before any native execution")
     full_steps = (
         "Claim fresh verification output ownership", "Claim apple-aggregate native resource ownership",
@@ -188,6 +193,50 @@ def verify_verification_scopes(text: str) -> None:
         required = NATIVE_VERIFICATION_SCOPE if name == focused_steps[0] else "always() && (" + NATIVE_VERIFICATION_SCOPE + ")"
         if re.findall(r"(?m)^        if: (.*)$", validation_step(ios, name)) != [required]:
             fail("verification scope must restrict native execution and always preserve focused evidence/cleanup")
+    probe_steps = ("Observe hosted native processes without an app build", "Upload bounded process-probe evidence",
+                   "Verify process-probe cleanup and uploaded custody", "Upload process-probe cleanup receipt")
+    for name in probe_steps:
+        required = PROCESS_PROBE_SCOPE if name == probe_steps[0] else "always() && (" + PROCESS_PROBE_SCOPE + ")"
+        if re.findall(r"(?m)^        if: (.*)$", validation_step(ios, name)) != [required]:
+            fail("verification scope must isolate the non-app process probe and preserve its evidence/cleanup")
+    probe = validation_step(ios, probe_steps[0])
+    cleanup = validation_step(ios, probe_steps[2])
+    public_binding = [
+        ("PARLOR_DISPATCH_SCOPE", "${{ inputs.verification_scope }}"),
+        ("PARLOR_FROZEN_SOURCE_SHA", "${{ inputs.frozen_source_sha }}"),
+        ("PARLOR_APPROVED_PROBE_CONTROL_SHA256", "${{ inputs.approved_probe_control_sha256 }}"),
+    ]
+    for block, command, environment in (
+        (probe, "run", public_binding),
+        (cleanup, "cleanup", public_binding + [
+            ("PARLOR_PROBE_UPLOAD_OUTCOME", "${{ steps.process_probe_artifact.outcome }}"),
+            ("PARLOR_PROBE_ARTIFACT_ID", "${{ steps.process_probe_artifact.outputs.artifact-id }}"),
+            ("PARLOR_PROBE_ARTIFACT_DIGEST", "${{ steps.process_probe_artifact.outputs.artifact-digest }}"),
+        ]),
+    ):
+        if (re.findall(r"(?m)^        run: (.*)$", block) != [
+                "/usr/bin/python3 -B scripts/ci/native_process_probe.py " + command] or
+                re.findall(r"(?m)^          ([A-Z][A-Z0-9_]+): (.*)$", block) != environment or
+                "github.token" in block):
+            fail("verification scope process probe requires exact reviewed source/control and token-free custody inputs")
+    artifact = validation_step(ios, probe_steps[1])
+    cleanup_artifact = validation_step(ios, probe_steps[3])
+    if (re.findall(r"(?m)^        id: (.*)$", probe) != ["process_probe"] or
+            re.findall(r"(?m)^        id: (.*)$", artifact) != ["process_probe_artifact"]):
+        fail("verification scope process probe requires exact producer/upload step identities")
+    for block, name, path in (
+        (artifact, "native-process-probe-${{ github.run_id }}-${{ github.run_attempt }}",
+         "${{ runner.temp }}/parlor-process-probe-${{ github.run_id }}-${{ github.run_attempt }}/bundle/"),
+        (cleanup_artifact, "native-process-probe-cleanup-${{ github.run_id }}-${{ github.run_attempt }}",
+         "${{ runner.temp }}/parlor-process-probe-${{ github.run_id }}-${{ github.run_attempt }}-cleanup.json"),
+    ):
+        if ("uses: actions/upload-artifact@" not in block or
+                re.findall(r"(?m)^          (name|path|if-no-files-found|retention-days): (.*)$", block) !=
+                [("name", name), ("if-no-files-found", "error"), ("retention-days", "14"), ("path", path)]):
+            fail("verification scope process probe requires exact evidence and cleanup artifact custody")
+    if (sorted(ios.index("- name: " + name + "\n") for name in probe_steps) !=
+            [ios.index("- name: " + name + "\n") for name in probe_steps]):
+        fail("verification scope process probe requires reviewed source/control, no token, and upload-before-cleanup custody")
 
 
 def verify_validation(text: str) -> None:

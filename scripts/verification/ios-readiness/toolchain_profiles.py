@@ -16,11 +16,13 @@ def profile(name):
     if name == LOCAL:
         return dict(name=name, xcode='26.5', build='17F42', sdk='26.5',
                     runtime='com.apple.CoreSimulator.SimRuntime.iOS-26-5',
+                    runtime_version=[26, 5, 0],
                     developer_dir=None,
                     scope='Xcode26.5/17F42 Debug simulator; not Store-qualified26.3/17C529')
     if name == QUALIFIED:
         return dict(name=name, xcode='26.3', build='17C529', sdk='26.2',
                     runtime='com.apple.CoreSimulator.SimRuntime.iOS-26-2',
+                    runtime_version=[26, 2, 0],
                     developer_dir=QUALIFIED_DEVELOPER,
                     scope='Xcode26.3/17C529 qualified compiler; Debug iOS26.2 simulator '
                           'observation only, not Store-signing or physical-device evidence')

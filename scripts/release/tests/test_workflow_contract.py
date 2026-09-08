@@ -19,13 +19,66 @@ class WorkflowContractTest(unittest.TestCase):
         workflow_contract.verify_verification_scopes(workflow)
         for original, replacement in (
             ("default: full", "default: native-preflight"),
-            ("options: [full, native-preflight, native-evidence]", "options: [full, skip]"),
+            ("options: [full, native-preflight, native-evidence, native-process-probe]", "options: [full, skip]"),
             ("  desktop-linux-arm64:\n", "  unreviewed-sixth-job:\n    runs-on: ubuntu-latest\n  desktop-linux-arm64:\n"),
             ("    if: " + workflow_contract.FULL_VERIFICATION_SCOPE, "    if: false"),
             ("scripts/ci/native_continuation.py validate-scope", "true"),
         ):
             with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
                 workflow_contract.verify_verification_scopes(workflow.replace(original, replacement, 1))
+
+    def test_non_app_probe_requires_explicit_review_no_token_and_uploaded_custody(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+        for original, replacement in (
+            ("run: /usr/bin/python3 -B scripts/ci/native_process_probe.py run", "run: /usr/bin/python3 -B scripts/ci/native_continuation.py run"),
+            ("PARLOR_APPROVED_PROBE_CONTROL_SHA256: ${{ inputs.approved_probe_control_sha256 }}", "UNREVIEWED: yes"),
+            ("PARLOR_PROBE_UPLOAD_OUTCOME: ${{ steps.process_probe_artifact.outcome }}", "PARLOR_PROBE_UPLOAD_OUTCOME: success"),
+            ("PARLOR_PROBE_ARTIFACT_ID: ${{ steps.process_probe_artifact.outputs.artifact-id }}", "PARLOR_PROBE_ARTIFACT_ID: 1"),
+            ("PARLOR_PROBE_ARTIFACT_DIGEST: ${{ steps.process_probe_artifact.outputs.artifact-digest }}", "PARLOR_PROBE_ARTIFACT_DIGEST: cached"),
+            ("if: " + workflow_contract.PROCESS_PROBE_SCOPE, "if: always()"),
+        ):
+            with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(workflow.replace(original, replacement, 1))
+        step = workflow_contract.validation_step(workflow, "Observe hosted native processes without an app build")
+        changed = workflow.replace(step, step.replace("        env:\n", "        env:\n          GH_TOKEN: ${{ github.token }}\n"), 1)
+        with self.assertRaisesRegex(RuntimeError, "verification scope"):
+            workflow_contract.verify_verification_scopes(changed)
+
+    def test_probe_cleanup_binding_timeout_and_artifact_paths_are_exact(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+        for name, original, replacement in (
+            ("Verify process-probe cleanup and uploaded custody", "PARLOR_FROZEN_SOURCE_SHA", "UNBOUND_SOURCE"),
+            ("Verify process-probe cleanup and uploaded custody", "PARLOR_APPROVED_PROBE_CONTROL_SHA256", "UNREVIEWED"),
+            ("Verify process-probe cleanup and uploaded custody", "PARLOR_DISPATCH_SCOPE", "UNSCOPED"),
+            ("Verify process-probe cleanup and uploaded custody", "        env:\n", "        env:\n          GH_TOKEN: ${{ github.token }}\n"),
+            ("Upload bounded process-probe evidence", "id: process_probe_artifact", "id: unrelated"),
+            ("Upload bounded process-probe evidence", "/bundle/", "/resources/"),
+            ("Upload bounded process-probe evidence", "name: native-process-probe-", "name: unrelated-"),
+            ("Upload bounded process-probe evidence", "if-no-files-found: error", "if-no-files-found: warn"),
+            ("Upload process-probe cleanup receipt", "-cleanup.json", "-unknown.json"),
+            ("Upload process-probe cleanup receipt", "name: native-process-probe-cleanup-", "name: unrelated-"),
+        ):
+            block = workflow_contract.validation_step(workflow, name)
+            self.assertIn(original, block)
+            changed = workflow.replace(block, block.replace(original, replacement, 1), 1)
+            with self.subTest(name=name, original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+        changed = workflow.replace("'native-process-probe' && 10 || 120", "'native-process-probe' && 30 || 120", 1)
+        with self.assertRaisesRegex(RuntimeError, "verification scope"):
+            workflow_contract.verify_verification_scopes(changed)
+
+    def test_probe_cannot_precede_scope_validation_or_upload(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+        for first, second in (
+            ("Validate verification scope", "Observe hosted native processes without an app build"),
+            ("Upload bounded process-probe evidence", "Verify process-probe cleanup and uploaded custody"),
+        ):
+            def complete_step(name):
+                return "\n      - name: " + name + "\n" + workflow_contract.validation_step(workflow, name)
+            a, b = complete_step(first), complete_step(second)
+            changed = workflow.replace(a, "SYNTHETIC_STEP_HOLE", 1).replace(b, a, 1).replace("SYNTHETIC_STEP_HOLE", b, 1)
+            with self.subTest(first=first), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
 
     def test_scoped_full_finalizers_reject_every_nonexact_predicate(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")

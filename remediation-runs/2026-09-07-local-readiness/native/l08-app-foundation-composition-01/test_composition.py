@@ -140,7 +140,8 @@ class SourceControls(unittest.TestCase):
                       for name in composition.REFERENCE_PINS}
         own = {HERE / name for name in composition.OWN_FILES}
         self.assertEqual(set(files), inherited | frozen | references | own |
-                         {binding, composition.DRAFT_FREEZE, composition.TOOLCHAIN_HELPER})
+                         {binding, composition.DRAFT_FREEZE, composition.TOOLCHAIN_HELPER} |
+                         set(composition.SUPPORT_CONTROLS))
         self.assertEqual(len(files), len(set(files)))
         self.assertTrue(all(p.is_file() for p in own))
         with self.assertRaisesRegex(RuntimeError, 'explicit-source-binding-required'):
@@ -206,6 +207,7 @@ class OwnedFixtures(unittest.TestCase):
         built, installed, uuids = fixtures.inventories()
         receipt = dict(app_foundation_preservation=dict(status='NOT_RUN', files=[]),
                        app_foundation_collection=dict(status='NOT_RUN'),
+                       toolchain_profile=fixtures.schema.toolchains.LOCAL,
                        app_foundation_copy_binding=fixtures.binding(), native_uuid_inventory=uuids)
         for name, record in ((fixtures.schema.RESULT_NAME, value), ('parlor-dsc01-readiness-result.json', context)):
             with (container / 'tmp' / name).open('xb') as output: output.write(fixtures.encoded(record))

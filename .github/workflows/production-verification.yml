@@ -14,12 +14,12 @@ on:
   workflow_dispatch:
     inputs:
       verification_scope:
-        description: Full qualification (default), or focused native continuation only
+        description: Full qualification (default), focused native continuation, or non-app process probe
         type: choice
         default: full
-        options: [full, native-preflight, native-evidence]
+        options: [full, native-preflight, native-evidence, native-process-probe]
       frozen_source_sha:
-        description: Exact reviewed source/inventory SHA (required for either native mode)
+        description: Exact reviewed source/inventory SHA (required for every focused mode)
         type: string
       preflight_run_id:
         description: Successful native-preflight run ID (native-evidence only)
@@ -38,6 +38,9 @@ on:
         type: string
       approved_normal_control_sha256:
         description: Independently approved normal libproc control hash (native-evidence only)
+        type: string
+      approved_probe_control_sha256:
+        description: Independently approved non-app process-probe control hash (native-process-probe only)
         type: string
 
 concurrency:
@@ -475,7 +478,7 @@ jobs:
   ios:
     name: iOS tests, release frameworks, and Swift wrapper
     runs-on: macos-15
-    timeout-minutes: 120
+    timeout-minutes: ${{ inputs.verification_scope == 'native-process-probe' && 10 || 120 }}
     permissions:
       contents: read
       actions: read
@@ -554,6 +557,48 @@ jobs:
           if-no-files-found: error
           retention-days: 14
           path: ${{ runner.temp }}/parlor-native-${{ github.run_id }}-${{ github.run_attempt }}-cleanup.json
+
+      # One bounded diagnostic, not an application retry or ownership fallback.
+      - name: Observe hosted native processes without an app build
+        id: process_probe
+        if: github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'native-process-probe'
+        shell: bash
+        env:
+          PARLOR_DISPATCH_SCOPE: ${{ inputs.verification_scope }}
+          PARLOR_FROZEN_SOURCE_SHA: ${{ inputs.frozen_source_sha }}
+          PARLOR_APPROVED_PROBE_CONTROL_SHA256: ${{ inputs.approved_probe_control_sha256 }}
+        run: /usr/bin/python3 -B scripts/ci/native_process_probe.py run
+
+      - name: Upload bounded process-probe evidence
+        id: process_probe_artifact
+        if: always() && (github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'native-process-probe')
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: native-process-probe-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-process-probe-${{ github.run_id }}-${{ github.run_attempt }}/bundle/
+
+      - name: Verify process-probe cleanup and uploaded custody
+        if: always() && (github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'native-process-probe')
+        shell: bash
+        env:
+          PARLOR_DISPATCH_SCOPE: ${{ inputs.verification_scope }}
+          PARLOR_FROZEN_SOURCE_SHA: ${{ inputs.frozen_source_sha }}
+          PARLOR_APPROVED_PROBE_CONTROL_SHA256: ${{ inputs.approved_probe_control_sha256 }}
+          PARLOR_PROBE_UPLOAD_OUTCOME: ${{ steps.process_probe_artifact.outcome }}
+          PARLOR_PROBE_ARTIFACT_ID: ${{ steps.process_probe_artifact.outputs.artifact-id }}
+          PARLOR_PROBE_ARTIFACT_DIGEST: ${{ steps.process_probe_artifact.outputs.artifact-digest }}
+        run: /usr/bin/python3 -B scripts/ci/native_process_probe.py cleanup
+
+      - name: Upload process-probe cleanup receipt
+        if: always() && (github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'native-process-probe')
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: native-process-probe-cleanup-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-process-probe-${{ github.run_id }}-${{ github.run_attempt }}-cleanup.json
 
       - name: Claim fresh verification output ownership
         if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'

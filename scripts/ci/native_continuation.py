@@ -39,7 +39,7 @@ RUNNERS = {
     "l08": OLD_CAMPAIGN + "/native/l08-app-foundation-composition-01/compose_runner.py",
     "normal": OLD_CAMPAIGN + "/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
 }
-CYCLES = {"l08": "ios-readiness-17", "normal": "ios-readiness-18"}
+CYCLES = {"l08": "ios-readiness-19", "normal": "ios-readiness-20"}
 PREFLIGHT_FILES = {"preflight.json", BINDING_NAME, "l08-controls.json", "normal-controls.json"}
 HEX40 = re.compile(r"[0-9a-f]{40}\Z")
 HEX64 = re.compile(r"[0-9a-f]{64}\Z")
@@ -129,11 +129,12 @@ def command(arguments, root=ROOT, timeout=120):
 def effective_scope(event, requested):
     if event != "workflow_dispatch":
         return "full"
-    require(requested in {"full", "native-preflight", "native-evidence"}, "unknown-verification-scope")
+    require(requested in {"full", "native-preflight", "native-evidence", "native-process-probe"}, "unknown-verification-scope")
     return requested
 
 
-def context(env, root=ROOT):
+def context(env, root=ROOT, execute=None):
+    execute = command if execute is None else execute
     require(env.get("GITHUB_ACTIONS") == "true" and env.get("GITHUB_EVENT_NAME") == "workflow_dispatch"
             and env.get("GITHUB_JOB") == "ios", "focused-mode-needs-ios-dispatch")
     require(env.get("GITHUB_REPOSITORY") == REPOSITORY and
@@ -147,7 +148,7 @@ def context(env, root=ROOT):
             "invalid-run-identity")
     require(root == root.resolve() and Path(env.get("GITHUB_WORKSPACE", "")).resolve() == root,
             "unexpected-checkout-root")
-    git = lambda *args: command(["git", *args], root).decode().strip()
+    git = lambda *args: execute(["git", *args], root).decode().strip()
     require(git("rev-parse", "--show-toplevel") == str(root) and git("rev-parse", "HEAD") == commit and
             git("branch", "--show-current") == BRANCH and git("rev-parse", "--is-shallow-repository") == "false",
             "frozen-branch-or-full-history-mismatch")
@@ -157,34 +158,36 @@ def context(env, root=ROOT):
                 run_attempt=int(env["GITHUB_RUN_ATTEMPT"]))
 
 
-def qualified_platform(root=ROOT):
+def qualified_platform(root=ROOT, execute=None, environment=None):
+    execute = command if execute is None else execute
+    environment = os.environ if environment is None else environment
     require(platform.system() == "Darwin" and platform.machine() == "arm64", "qualified-arm64-macos-required")
     specification = importlib.util.spec_from_file_location("_native_ci_toolchain", root / SUPPORT / "toolchain_profiles.py")
     module = importlib.util.module_from_spec(specification)
     specification.loader.exec_module(module)
-    module.developer_environment(PROFILE, os.environ)
+    module.developer_environment(PROFILE, environment)
     value = module.validate_observation(PROFILE,
-        command(["/usr/bin/xcodebuild", "-version"]).decode(),
-        command(["/usr/bin/xcrun", "--sdk", "iphonesimulator", "--show-sdk-version"]).decode(),
-        command(["/usr/bin/xcode-select", "-p"]).decode(), platform.machine())
-    require(command(["/usr/bin/xcrun", "--sdk", "iphoneos", "--show-sdk-version"]).decode().strip() == value["sdk"],
+        execute(["/usr/bin/xcodebuild", "-version"]).decode(),
+        execute(["/usr/bin/xcrun", "--sdk", "iphonesimulator", "--show-sdk-version"]).decode(),
+        execute(["/usr/bin/xcode-select", "-p"]).decode(), platform.machine())
+    require(execute(["/usr/bin/xcrun", "--sdk", "iphoneos", "--show-sdk-version"]).decode().strip() == value["sdk"],
             "qualified-device-sdk-mismatch")
-    sdk_path = Path(command(["/usr/bin/xcrun", "--sdk", "iphonesimulator", "--show-sdk-path"]).decode().strip())
+    sdk_path = Path(execute(["/usr/bin/xcrun", "--sdk", "iphonesimulator", "--show-sdk-path"]).decode().strip())
     require(sdk_path.is_absolute() and sdk_path.is_dir() and
             Path(value["developer_dir"]).resolve() in sdk_path.resolve().parents, "sdk-path-outside-qualified-xcode")
-    runtimes = decode(command(["/usr/bin/xcrun", "simctl", "list", "runtimes", "--json"]))
+    runtimes = decode(execute(["/usr/bin/xcrun", "simctl", "list", "runtimes", "--json"]))
     matches = [row for row in runtimes["runtimes"] if row.get("identifier") == value["runtime"]]
     require(len(matches) == 1 and matches[0].get("isAvailable") is True and matches[0].get("version") == value["sdk"],
             "qualified-runtime-unavailable")
     device = "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro"
-    types = decode(command(["/usr/bin/xcrun", "simctl", "list", "devicetypes", "--json"]))
+    types = decode(execute(["/usr/bin/xcrun", "simctl", "list", "devicetypes", "--json"]))
     require(len([row for row in types["devicetypes"] if row.get("identifier") == device]) == 1,
             "qualified-device-type-unavailable")
     android = Path.home() / "Library/Android/sdk"
     require(android.is_dir() and android.resolve() == android and
-            all(not os.environ.get(key) or Path(os.environ[key]).resolve() == android
+            all(not environment.get(key) or Path(environment[key]).resolve() == android
                 for key in ("ANDROID_HOME", "ANDROID_SDK_ROOT")), "unexpected-public-android-sdk")
-    java = Path(command(["/usr/libexec/java_home", "-v", "21"]).decode().strip())
+    java = Path(execute(["/usr/libexec/java_home", "-v", "21"]).decode().strip())
     require(java.is_absolute() and java.name == "Home" and (java / "bin/java").is_file(), "public-jdk21-unavailable")
     value.update(runtime_build=matches[0].get("buildversion"), device_type=device,
                  simulator_sdk_path=str(sdk_path), android_sdk=str(android), java_home=str(java),
@@ -469,7 +472,7 @@ class Continuation:
     def __init__(self, env, root=ROOT):
         self.env, self.root = env, root
         self.scope = effective_scope(env.get("GITHUB_EVENT_NAME"), env.get("PARLOR_DISPATCH_SCOPE"))
-        require(self.scope != "full", "full-verification-is-not-a-native-continuation")
+        require(self.scope in {"native-preflight", "native-evidence"}, "scope-is-not-an-app-native-continuation")
         self.context = context(env, root)
         temporary = Path(env["RUNNER_TEMP"]).resolve(strict=True)
         require(root not in temporary.parents and temporary != root, "native-custody-must-be-outside-checkout")

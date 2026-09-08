@@ -1,0 +1,629 @@
+{
+  "schema_version": 1,
+  "kind": "NATIVE_PROCESS_PROBE_INDEPENDENT_SOURCE_REVIEW_NOT_RUNTIME_EVIDENCE",
+  "reviewer": "/root/ci_review",
+  "implementation_author": "/root/ci_workflow",
+  "coordinator": "/root",
+  "recorded_at": "2026-09-08T12:37:12.880Z",
+  "status": "SOURCE_APPROVED_FOR_COORDINATOR_FOCUSED_CONTROLS_NATIVE_DISPATCH_NOT_YET_APPROVED",
+  "blocking_source_findings": [],
+  "scope": {
+    "reviewed": "Nine exact workflow/probe/adapter/contract/documentation/test files below, thirteen-file probe execution-control closure, unchanged original ownership helpers, and failed-run rationale. Read-only source/test review; no implementation, tests, builds, native calls, workflow dispatch or commits by reviewer.",
+    "uncommitted_source_is_not_frozen": true,
+    "controls_execution_claimed": false,
+    "native_process_probe_execution_claimed": false,
+    "application_runtime_pass_claimed": false,
+    "native_dispatch_approved_by_this_report": false,
+    "source_approval_condition": "Exact bytes only. Coordinator must execute/reconcile focused controls, commit reviewed source/control changes then the mechanical inventory separately, verify remote frozen SHA, and obtain a fresh control/source dispatch binding. Any relevant correction requires reviewed replacement bytes, not silent reuse.",
+    "report_finalization": "Coordinator permitted evidence-only review writes after continuation-native-repair-controls-01 finalized; execution reconciliation is separate and does not alter this source-only approval."
+  },
+  "repository": {
+    "root": "/root/projects/Parlor/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "head_at_review": "4b8c586ce8d1228dda1420c470dff95dd599ddc6",
+    "head_tree": "b70b8d7478db79251796a500c40ef61dcdccbe92",
+    "head_scope": "Evidence-only advancement from the prior25b1 frozen source; current authored implementation/control files are still modified or untracked. This is not a clean final-source claim.",
+    "prior_native_frozen_commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+    "prior_native_tree": "629a5d2b699cddb62d61849de3bd185fd4c01378"
+  },
+  "reviewed_authored_inputs": [
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "bytes": 40414,
+      "sha256": "d347a4cd3e22181b37e5aec91203d3aa37779cb7bb7976fb74ed01cc29ba328d"
+    },
+    {
+      "path": "scripts/ci/native_process_probe.py",
+      "bytes": 43613,
+      "sha256": "b5bfc4a18eb75ecceb1cc4807e2715bc15edd52ffd101a81f6c4d6fb4affb3e4",
+      "static_test_descriptors": []
+    },
+    {
+      "path": "scripts/ci/native_process_metadata.py",
+      "bytes": 4131,
+      "sha256": "6497e55c6c4a7f0922486d58ce47bc9ad05b987e8cca9bc5c60adf2b13cd9256",
+      "static_test_descriptors": []
+    },
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "bytes": 42095,
+      "sha256": "d5c6faf5a33187a9bed855f8d82b17ea2c90d72c3b22df0a041975f7a6bc7b21",
+      "static_test_descriptors": []
+    },
+    {
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "bytes": 10029,
+      "sha256": "1d3b4fa1f8fed36598fc423948acf9c633c24e058076418315e4b59a30b1721e"
+    },
+    {
+      "path": "scripts/release/workflow_contract.py",
+      "bytes": 46085,
+      "sha256": "30357f2ac67567f65a5e3af316b44497a6a08b6faf370f56161f642f6e5788a9",
+      "static_test_descriptors": []
+    },
+    {
+      "path": "scripts/release/tests/test_native_process_probe.py",
+      "bytes": 34742,
+      "sha256": "f7c7a9c23f6426cdcb3feaeabfa6d6fab28922387e8fb247b4040231058dacb1",
+      "static_test_descriptors": [
+        "ProbeSourceContractTest.test_original_command_and_timeout_are_bound_without_importing_runner",
+        "ProbeSourceContractTest.test_changed_original_timeout_or_fields_cannot_be_silently_compared",
+        "ProbeSourceContractTest.test_complete_runtime_closure_and_control_hash_are_explicit",
+        "ProbeSourceContractTest.test_environment_is_an_allowlist_not_only_one_token_exclusion",
+        "ProbeSourceContractTest.test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels",
+        "ProbeSourceContractTest.test_nonbuilding_xcode_arguments_have_no_build_or_test_action",
+        "ProbeBoundedCaptureTest.test_capture_drains_bounded_pipes_and_never_persists_raw_bytes",
+        "ProbeBoundedCaptureTest.test_output_limit_is_enforced_before_unbounded_accumulation",
+        "ProbeBoundedCaptureTest.test_timeout_is_latched_before_owned_sample_even_if_ps_exits_during_sample",
+        "ProbeBoundedCaptureTest.test_failed_or_unreaped_sample_cannot_claim_usable_frames",
+        "ProbeBoundedCaptureTest.test_sample_exception_cannot_mask_primary_timeout_or_disclose_text",
+        "ProbeBoundedCaptureTest.test_budget_refuses_launch_rather_than_shortening_fifteen_seconds",
+        "ProbeBoundedCaptureTest.test_signal_before_launch_does_not_launch_or_block_child_masks",
+        "ProbeBoundedCaptureTest.test_only_original_ps_may_be_sampled",
+        "ProbeBoundedCaptureTest.test_failed_durable_intent_prevents_launch_and_never_exports_exception_text",
+        "ProbeBoundedCaptureTest.test_postlaunch_and_final_write_failures_still_retire_direct_child",
+        "ProbeBoundedCaptureTest.test_cleanup_capture_continues_when_receipt_writes_fail",
+        "ProbeBoundedCaptureTest.test_required_reconciliation_commands_fit_twenty_second_cleanup_stage",
+        "ProbePrivacyAndCustodyTest.test_numeric_summary_cannot_export_argv_or_promote_a_timed_out_partial_table",
+        "ProbePrivacyAndCustodyTest.test_stack_filter_drops_headers_private_paths_and_unbounded_or_unknown_lines",
+        "ProbePrivacyAndCustodyTest.test_confirmed_upload_allows_deletion_but_preserves_failed_probe_verdict",
+        "ProbePrivacyAndCustodyTest.test_no_upload_id_digest_or_success_preserves_last_evidence",
+        "ProbePrivacyAndCustodyTest.test_mutated_uploaded_bundle_or_unretired_resources_block_staging_deletion",
+        "ProbePrivacyAndCustodyTest.test_changed_source_controls_custody_or_preservation_refuses_evidence_deletion",
+        "ProbePrivacyAndCustodyTest.test_every_lsof_warning_holder_or_invalid_empty_success_preserves_resources",
+        "ProbePrivacyAndCustodyTest.test_unreaped_or_cleanup_failed_lsof_cannot_authorize_resource_deletion",
+        "ProbeLifecycleTest.test_cleanup_receipt_write_failures_do_not_abort_later_independent_finalizers",
+        "ProbeLifecycleTest.test_initial_checkpoint_failure_is_inside_resource_finalizer",
+        "ProbeLifecycleTest.test_partial_metadata_deliberately_fails_even_with_all_commands_and_cleanup_complete",
+        "ProbeLifecycleTest.test_complete_synthetic_glue_is_observation_only_not_an_always_fail_fixture",
+        "ProbeLifecycleTest.test_constructor_failure_is_signal_protected_and_retires_owned_handle",
+        "ProbeLifecycleTest.test_settings_tail_wait_notices_signal_without_waiting_sixty_seconds",
+        "ProbeSimulatorGlueTest.test_exact_qualified_simulator_is_journaled_once_before_boot_and_retired_by_uuid",
+        "ProbeSimulatorGlueTest.test_failed_plan_write_never_creates_and_interrupted_create_reuses_only_attested_intent",
+        "ProbeSimulatorGlueTest.test_bootstatus_uses_evidence_based_bound_without_changing_original_ps",
+        "NativeMetadataObservationTest.test_actual_struct_layout_and_self_fields_are_observed_without_task_or_argv_api",
+        "NativeMetadataObservationTest.test_permission_denial_is_explicit_partial_not_a_missing_or_cleaned_worker",
+        "NativeMetadataObservationTest.test_short_self_metadata_cannot_be_a_successful_observation",
+        "NativeMetadataObservationTest.test_pid_enumeration_truncation_or_duplicate_rows_fail_closed"
+      ]
+    },
+    {
+      "path": "scripts/release/tests/test_native_continuation.py",
+      "bytes": 37634,
+      "sha256": "7113f5cf5283fb9cb44dcf18c885c6c8dcf4a14ed2a948cac3ff4a173fcb1337",
+      "static_test_descriptors": [
+        "NativeScopeTest.test_push_and_pr_always_select_full_even_if_input_is_present",
+        "NativeScopeTest.test_only_explicit_supported_dispatch_scopes_are_accepted",
+        "NativeScopeTest.test_frozen_context_requires_source_branch_workflow_and_full_history",
+        "NativeScopeTest.test_probe_executor_is_injected_without_replacing_default_commands",
+        "NativeArtifactTest.test_exact_preflight_zip_and_package_are_accepted_without_execution",
+        "NativeArtifactTest.test_package_rejects_root_source_attempt_binding_or_review_hash_drift",
+        "NativeArtifactTest.test_package_cannot_claim_runtime_pass_or_accept_duplicate_json_keys",
+        "NativeArtifactTest.test_zip_refuses_path_traversal_extras_duplicates_and_missing_entries",
+        "NativeArtifactTest.test_zip_refuses_symlink_fifo_and_encrypted_members",
+        "NativeArtifactTest.test_zip_has_independent_archive_and_member_size_limits",
+        "NativeArtifactTest.test_producer_requires_exact_successful_attempt_source_workflow_and_artifact",
+        "NativeArtifactTest.test_artifact_cannot_come_from_another_repository_or_run",
+        "NativeArtifactTest.test_retained_api_observation_supports_offline_validation_without_urls_or_actor_data",
+        "NativeArtifactTest.test_signed_download_never_forwards_the_api_token",
+        "NativeArtifactTest.test_download_rejects_untrusted_or_plaintext_redirects",
+        "NativeArtifactTest.test_authenticated_api_is_read_only_and_fixed_to_the_same_repository",
+        "NativeCleanupTest.test_failed_strict_receipt_can_be_cleanup_safe_without_becoming_pass",
+        "NativeCleanupTest.test_archived_a16_and_b15_actual_cleanup_shapes_remain_compatible",
+        "NativeCleanupTest.test_cleanup_refuses_contradictory_worker_holder_source_or_stop_receipts",
+        "NativeCleanupTest.test_prebuild_toolchain_failure_does_not_invent_a_gradle_attempt",
+        "NativeCleanupTest.test_unsafe_file_descriptor_or_symlink_is_rejected",
+        "NativeCleanupTest.test_post_descriptor_hardlink_or_mode_change_is_not_hidden_by_stable_path_inode",
+        "NativeCleanupTest.test_malformed_native_receipt_is_preserved_before_parsing",
+        "NativeCleanupTest.test_missing_receipt_and_partial_preservation_retain_available_raw_logs",
+        "NativeCleanupTest.test_directory_read_failure_cannot_be_silently_omitted_from_preservation",
+        "NativeCleanupTest.test_native_a_partial_runs_b_but_unsafe_cleanup_does_not",
+        "NativeCleanupTest.test_native_timeout_sends_term_and_waits_for_finalizer_without_kill",
+        "NativeCleanupTest.test_native_unfinished_finalizer_keeps_cleanup_unsafe_and_does_not_kill",
+        "NativeCleanupTest.test_signal_during_popen_assignment_is_forwarded_after_exact_child_is_known",
+        "NativeCleanupTest.test_cleanup_removes_only_owned_outputs_after_successful_upload",
+        "NativeCleanupTest.test_failed_missing_upload_or_unsafe_cleanup_preserves_last_local_custody",
+        "NativeCleanupTest.test_changed_hash_inode_or_symlink_prevents_any_cleanup_deletion",
+        "NativeCleanupTest.test_postqualification_deletion_failure_is_not_reported_as_pass",
+        "NativePreflightTest.test_preflight_only_binds_and_observes_exact_four_file_package",
+        "NativePreflightTest.test_fetch_rejects_zip_digest_before_install_and_live_control_drift_before_build"
+      ]
+    },
+    {
+      "path": "scripts/release/tests/test_workflow_contract.py",
+      "bytes": 33008,
+      "sha256": "525574c073695dd6d5ea50685573827039bd0b9ecd359fefe48c1025765c2a38",
+      "static_test_descriptors": [
+        "WorkflowContractTest.test_focused_native_modes_do_not_weaken_full_verification",
+        "WorkflowContractTest.test_non_app_probe_requires_explicit_review_no_token_and_uploaded_custody",
+        "WorkflowContractTest.test_probe_cleanup_binding_timeout_and_artifact_paths_are_exact",
+        "WorkflowContractTest.test_probe_cannot_precede_scope_validation_or_upload",
+        "WorkflowContractTest.test_scoped_full_finalizers_reject_every_nonexact_predicate",
+        "WorkflowContractTest.test_repository_workflows_satisfy_release_contract",
+        "WorkflowContractTest.test_xcode_identity_guard_matches_the_exact_build_setting",
+        "WorkflowContractTest.test_ios_app_launch_ui_test_cannot_be_replaced_with_a_build",
+        "WorkflowContractTest.test_ios_app_launch_requires_owned_simulator_and_nonparallel_execution",
+        "WorkflowContractTest.test_ios_app_launch_requires_its_own_preparation_and_finalization",
+        "WorkflowContractTest.test_ios_app_launch_cannot_delay_finalization_or_claim_ownership_after_launch",
+        "WorkflowContractTest.test_android_and_ios_release_packages_must_verify_notice_bytes",
+        "WorkflowContractTest.test_unsigned_android_inventory_is_required_and_tool_cleanup_is_scoped",
+        "WorkflowContractTest.test_complete_ios_inventory_requires_successful_build_and_cleanup",
+        "WorkflowContractTest.test_mobile_release_kit_android_signing_fallbacks_remain_bounded",
+        "WorkflowContractTest.test_mobile_release_kit_ios_signing_mapping_is_release_target_only",
+        "WorkflowContractTest.test_candidate_bundletool_download_must_be_bounded",
+        "WorkflowContractTest.test_candidate_dependency_report_must_use_release_runtime",
+        "WorkflowContractTest.test_candidate_dependency_and_validation_evidence_must_be_retained",
+        "WorkflowContractTest.test_validation_requires_release_managed_device_runtime_gate",
+        "WorkflowContractTest.test_candidate_preflight_requires_reviewed_managed_device_image",
+        "WorkflowContractTest.test_managed_device_runner_cannot_use_production_signing_material",
+        "WorkflowContractTest.test_candidate_build_number_claim_cannot_be_removed",
+        "WorkflowContractTest.test_candidate_claim_transaction_cannot_be_scoped_per_sha",
+        "WorkflowContractTest.test_candidate_claim_requires_a_secretless_protected_environment",
+        "WorkflowContractTest.test_release_policy_includes_the_candidate_control_environment",
+        "WorkflowContractTest.test_external_partial_rerun_evidence_cannot_be_removed",
+        "WorkflowContractTest.test_mutable_action_reference_is_rejected",
+        "WorkflowContractTest.test_unreviewed_workflow_file_is_rejected",
+        "WorkflowContractTest.test_production_build_command_is_rejected",
+        "WorkflowContractTest.test_production_push_trigger_is_rejected",
+        "WorkflowContractTest.test_missing_shared_store_lock_is_rejected",
+        "WorkflowContractTest.test_store_workflow_without_identity_ownership_gate_is_rejected",
+        "WorkflowContractTest.test_every_store_workflow_job_is_repository_disabled",
+        "WorkflowContractTest.test_new_store_workflow_job_cannot_omit_the_release_stop",
+        "WorkflowContractTest.test_release_tool_download_failure_cannot_false_pass",
+        "WorkflowContractTest.test_release_system_enforces_review_inventory_freshness",
+        "WorkflowContractTest.test_review_inventory_gate_has_full_git_history",
+        "WorkflowContractTest.test_apple_signing_and_upload_scripts_require_identity_approval",
+        "WorkflowContractTest.test_promotion_without_candidate_attestation_is_rejected",
+        "WorkflowContractTest.test_production_without_external_receipt_attestation_is_rejected",
+        "WorkflowContractTest.test_production_without_its_own_receipt_attestations_is_rejected",
+        "WorkflowContractTest.test_ios_profile_refusal_cannot_delete_a_preexisting_profile",
+        "WorkflowContractTest.test_ios_signing_cleanup_is_fail_closed",
+        "WorkflowContractTest.test_ios_build_phases_do_not_inherit_source_signing_secrets",
+        "WorkflowContractTest.test_ios_artifact_validator_enforces_pinned_store_toolchain",
+        "WorkflowContractTest.test_all_release_temporary_directories_use_signal_safe_cleanup",
+        "WorkflowContractTest.test_ios_upload_uses_scoped_key_directory_and_removes_raw_response"
+      ]
+    }
+  ],
+  "independently_derived_control_manifest": {
+    "files": [
+      {
+        "path": ".github/workflows/production-verification.yml",
+        "sha256": "d347a4cd3e22181b37e5aec91203d3aa37779cb7bb7976fb74ed01cc29ba328d"
+      },
+      {
+        "path": "gradle/wrapper/gradle-wrapper.jar",
+        "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f"
+      },
+      {
+        "path": "gradle/wrapper/gradle-wrapper.properties",
+        "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2"
+      },
+      {
+        "path": "gradlew",
+        "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933"
+      },
+      {
+        "path": "scripts/ci/NATIVE_CONTINUATION.md",
+        "sha256": "1d3b4fa1f8fed36598fc423948acf9c633c24e058076418315e4b59a30b1721e"
+      },
+      {
+        "path": "scripts/ci/darwin_worker_identity.py",
+        "sha256": "939ac6c98628046f9f45547135cbc439f217403e60c7e4033db5f541ab017ecc"
+      },
+      {
+        "path": "scripts/ci/native_continuation.py",
+        "sha256": "d5c6faf5a33187a9bed855f8d82b17ea2c90d72c3b22df0a041975f7a6bc7b21"
+      },
+      {
+        "path": "scripts/ci/native_process_metadata.py",
+        "sha256": "6497e55c6c4a7f0922486d58ce47bc9ad05b987e8cca9bc5c60adf2b13cd9256"
+      },
+      {
+        "path": "scripts/ci/native_process_probe.py",
+        "sha256": "b5bfc4a18eb75ecceb1cc4807e2715bc15edd52ffd101a81f6c4d6fb4affb3e4"
+      },
+      {
+        "path": "scripts/ci/owned_ci_simulator.py",
+        "sha256": "717c8c02dc06e4eac175c5dde5c7f9bdd6ebbd5e7028cc94c6ba4f84b44388af"
+      },
+      {
+        "path": "scripts/ci/verification_hygiene.py",
+        "sha256": "9eab427aeb3d810c033a3827aa44f7201cbb261345a2e6667a8d085df2fbd603"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/owned_lane.py",
+        "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/toolchain_profiles.py",
+        "sha256": "8adacaf4c59ed823aa088ecb70ad5c6c1e3f76e7ca3520d8abf0563341591313"
+      }
+    ],
+    "control_sha256": "0b60d4219b279c1022232d18a261a21ac7c577357cafbac2d695e58fbcf92a87",
+    "file_count": 13,
+    "derivation": "Independently AST-read literal CONTROL_PATHS, read/hash each current file, sort paths, and SHA256 canonical compact JSON rows; no project import or control/native command executed.",
+    "import_closure": "native_process_probe imports native_continuation and owned_ci_simulator; owned_ci_simulator imports verification_hygiene; native_process_metadata imports only the ProcBsdInfo definition from darwin_worker_identity; qualified_platform dynamically imports toolchain_profiles. scripts and scripts/ci have no __init__.py. Original owned_lane is AST-read, never imported. Wrapper script/JAR/properties and workflow/docs are additionally bound.",
+    "known_control_hash_is_not_dispatch_approval": true
+  },
+  "unchanged_protected_inputs": [
+    {
+      "path": "scripts/verification/ios-readiness/owned_lane.py",
+      "bytes": 10446,
+      "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+      "static_test_descriptors": [],
+      "equals_head_blob": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/owned_lane.py",
+      "bytes": 10446,
+      "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+      "static_test_descriptors": [],
+      "equals_head_blob": true
+    },
+    {
+      "path": "scripts/ci/darwin_worker_identity.py",
+      "bytes": 12894,
+      "sha256": "939ac6c98628046f9f45547135cbc439f217403e60c7e4033db5f541ab017ecc",
+      "static_test_descriptors": [],
+      "equals_head_blob": true
+    },
+    {
+      "path": "scripts/ci/owned_ci_simulator.py",
+      "bytes": 11229,
+      "sha256": "717c8c02dc06e4eac175c5dde5c7f9bdd6ebbd5e7028cc94c6ba4f84b44388af",
+      "static_test_descriptors": [],
+      "equals_head_blob": true
+    },
+    {
+      "path": "scripts/ci/verification_hygiene.py",
+      "bytes": 13802,
+      "sha256": "9eab427aeb3d810c033a3827aa44f7201cbb261345a2e6667a8d085df2fbd603",
+      "static_test_descriptors": [],
+      "equals_head_blob": true
+    },
+    {
+      "path": "gradlew",
+      "bytes": 8752,
+      "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933",
+      "equals_head_blob": true
+    },
+    {
+      "path": "gradle/wrapper/gradle-wrapper.jar",
+      "bytes": 43705,
+      "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f",
+      "equals_head_blob": true
+    },
+    {
+      "path": "gradle/wrapper/gradle-wrapper.properties",
+      "bytes": 338,
+      "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2",
+      "equals_head_blob": true
+    }
+  ],
+  "separate_profile_authority": {
+    "review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-command-and-runtime-repair-independent-correction-02.json",
+      "bytes": 10455,
+      "sha256": "2129a189055e44478484515e1a24fd2cc228f7dfdebc97dc277bf49c41383bce"
+    },
+    "note": "Exact runtime_version arrays in toolchain_profiles are owned by native_ci and separately reviewed by portability_review. That review supersedes the earlier Foundation20 entry-cancellation approval. This review does not replace their full command/error/Foundation proof."
+  },
+  "underlying_failed_evidence": {
+    "references": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/receipt.json",
+        "bytes": 334590,
+        "sha256": "a25d6c67dba4d69f92d741089cfbe54f44aa8ae6158c4cd6dbb1a4b13f187512"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-18/receipt.json",
+        "bytes": 326168,
+        "sha256": "f89b9a66db4162f8da414f5500f726134bdbdd84790f3fc0a69ada953d4778b8"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-run-34216788568-independent-01.json",
+        "bytes": 43971,
+        "sha256": "bd23a666945076731b2df24bc6a5044bce5d70270610ca5662020e0e3000a778"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-ps-timeout-diagnosis-01.json",
+        "bytes": 18505,
+        "sha256": "a5ac5eedd0924a5390baccf15edbbc8479145a816281c48dfa574b39af8df72f"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-ps-source-research-01/FINDINGS.md",
+        "bytes": 12757,
+        "sha256": "b93b245653d7d70339191198ffc624eded19899ab8fb29888f54d48ecee29d1c"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-ps-source-research-01/manifest.json",
+        "bytes": 8595,
+        "sha256": "1260f535d0f5e086b18a5ca287e6b3dea9fd22e404a5730106ea566b5630a91d"
+      }
+    ],
+    "actual_prior_outcome": "Actions34216788568 attempt1: A17 and B18 FAIL, both retained ps -axo pid=,ppid=,pgid=,lstart=,command= TimeoutExpired at15s; cleanup PASS. A17 application/Foundation collection NOT_RUN; B18 provenance and notices NOT_RUN. No actual Parlor libproc runtime evidence.",
+    "phase_limit": "The failures occurred after an Xcode Popen attempt, whereas ownership observation was usable during earlier simulator work. Their exact first failing ownership call and stalled syscall were not preserved conclusively; the separate native_ci phase/error correction is needed.",
+    "bounded_timing_basis": {
+      "A17_bootstatus_seconds": 67.919847,
+      "B18_bootstatus_seconds": 92.341284,
+      "A17_cold_stop_seconds": 54.705025,
+      "B18_warm_immediate_stop_seconds": 5.11332,
+      "B18_final_stop_seconds": 9.236584,
+      "no_gradle_build_JVM_demonstrated": true
+    },
+    "research_limit": "Pinned upstream adv_cmds/xnu sources expose argv and conditional Mach acquisition hypotheses. They do not identify the exact installed ps variant or failed host syscall, and do not justify ownership substitution, timeout extension or an application retry."
+  },
+  "resolved_review_findings": [
+    {
+      "id": "PROBE-R1",
+      "issue": "Initial Git children and setup directories preceded the signal/finalizer lifetime.",
+      "resolution": "main installs a non-raising SIGINT/SIGTERM latch before Probe/context and all allocations, retains exact handles, retires them in outer finally, and writes an additive bounded entry failure. Only an attested empty setup resource directory may be rmdir'd; pre-existing/unknown paths are never adopted.",
+      "source": [
+        {
+          "name": "main",
+          "start": 697,
+          "end": 721
+        },
+        {
+          "name": "preserve_entry_failure",
+          "start": 658,
+          "end": 694
+        }
+      ],
+      "witness": "ProbeLifecycleTest.test_constructor_failure_is_signal_protected_and_retires_owned_handle"
+    },
+    {
+      "id": "PROBE-R2",
+      "issue": "A state-save failure in stage finally could abort subsequent independent cleanup stages.",
+      "resolution": "Bounded sticky preservation ledger/checkpoint blocks new observations after failed durable intent, but finalization checkpoints cannot abort later cleanup. Initial state checkpoint is inside run try/finally; final bundle failures remain failed/additive, and post-upload staging deletion rejects any preservation failure.",
+      "source": [
+        {
+          "name": "checkpoint",
+          "start": 148,
+          "end": 160
+        },
+        {
+          "name": "capture",
+          "start": 183,
+          "end": 277
+        },
+        {
+          "name": "stage",
+          "start": 331,
+          "end": 344
+        },
+        {
+          "name": "run",
+          "start": 510,
+          "end": 595
+        },
+        {
+          "name": "finish_evidence",
+          "start": 608,
+          "end": 629
+        },
+        {
+          "name": "cleanup",
+          "start": 631,
+          "end": 655
+        }
+      ],
+      "witnesses": [
+        "test_failed_durable_intent_prevents_launch_and_never_exports_exception_text",
+        "test_postlaunch_and_final_write_failures_still_retire_direct_child",
+        "test_cleanup_receipt_write_failures_do_not_abort_later_independent_finalizers",
+        "test_initial_checkpoint_failure_is_inside_resource_finalizer"
+      ]
+    },
+    {
+      "id": "PROBE-R3",
+      "issue": "Exit0 plus parsed frames could label a timed-out or unreaped sample usable.",
+      "resolution": "Sample usable requires EXITED, exit0, direct child reaped, no child cleanup error and nonempty bounded frames. Original TIMEOUT is latched before a separate at-most4s sample and never becomes success when ps later exits.",
+      "source": [
+        {
+          "name": "capture",
+          "start": 183,
+          "end": 277
+        },
+        {
+          "name": "stack_frames",
+          "start": 118,
+          "end": 132
+        }
+      ],
+      "witnesses": [
+        "test_timeout_is_latched_before_owned_sample_even_if_ps_exits_during_sample",
+        "test_failed_or_unreaped_sample_cannot_claim_usable_frames",
+        "test_sample_exception_cannot_mask_primary_timeout_or_disclose_text"
+      ]
+    },
+    {
+      "id": "PROBE-R4",
+      "issue": "Resource deletion checked prior handles but not the lsof child's own retirement.",
+      "resolution": "Exact resource custody plus all previous direct-child reaping, EXITED lsof exit1, direct-child reaped/no cleanup error, blank bounded stdout/stderr and exact DerivedData custody are all required before descriptor-safe owned-root removal. Warnings, holders, timeout, malformed empty exit0 and cleanup failure retain resources.",
+      "source": [
+        {
+          "name": "clean_resources",
+          "start": 495,
+          "end": 508
+        }
+      ],
+      "witnesses": [
+        "test_every_lsof_warning_holder_or_invalid_empty_success_preserves_resources",
+        "test_unreaped_or_cleanup_failed_lsof_cannot_authorize_resource_deletion"
+      ]
+    },
+    {
+      "id": "PROBE-R5",
+      "issue": "Installed ps identity used path-stat brackets without descriptor binding or end-of-observation reconciliation.",
+      "resolution": "Selected actual PATH ps must be a bounded root-owned executable, not group/world writable, with canonical path, O_NOFOLLOW descriptor/path identity before/during/after read, SHA256 and signature/entitlement observations. Source reconciliation rechecks that identical executable after observation. No binary substitution or fallback.",
+      "source": [
+        {
+          "name": "executable_identity",
+          "start": 79,
+          "end": 97
+        },
+        {
+          "name": "ps_identity",
+          "start": 346,
+          "end": 371
+        },
+        {
+          "name": "source_after",
+          "start": 583,
+          "end": 589
+        }
+      ],
+      "test_limit": "Descriptor logic reviewed directly; existing native file-custody controls and new source reconciliation glue are not an actual Darwin ps/signature test."
+    },
+    {
+      "id": "PROBE-R6",
+      "issue": "Final Git reconciliation command could consume its entire20s stage before retirement reserve; first cold wrapper stop needed more than30s.",
+      "resolution": "Only binding/platform execute dynamically fits its remaining stage minus4.1s retirement reserve; original sampled ps remains exactly15s or SKIPPED_BUDGET. Cold immediate Gradle stop permits65s, final30s, with launch-budget stages70+85+35+15+20=225s. Known first cold stop54.705s is accounted for without pretending a shared wrapper cache is warm.",
+      "source": [
+        {
+          "name": "execute",
+          "start": 279,
+          "end": 285
+        },
+        {
+          "name": "capture",
+          "start": 183,
+          "end": 277
+        },
+        {
+          "name": "stop_gradle",
+          "start": 483,
+          "end": 493
+        },
+        {
+          "name": "run",
+          "start": 510,
+          "end": 595
+        }
+      ],
+      "witnesses": [
+        "test_required_reconciliation_commands_fit_twenty_second_cleanup_stage",
+        "test_budget_refuses_launch_rather_than_shortening_fifteen_seconds"
+      ]
+    },
+    {
+      "id": "PROBE-R7",
+      "issue": "The nonbuilding Xcode tail wait could ignore the signal latch until60s elapsed.",
+      "resolution": "Tail wait checks the latch with at-most0.1s waits; interruption remains failed and the exact Popen handle is retired. One showBuildSettings attempt only; no build/test/package update, app launch or repeat when Xcode exits too fast.",
+      "source": [
+        {
+          "name": "nonbuilding_overlap",
+          "start": 437,
+          "end": 481
+        }
+      ],
+      "witness": "test_settings_tail_wait_notices_signal_without_waiting_sixty_seconds"
+    },
+    {
+      "id": "PROBE-R8",
+      "issue": "Partial/malformed process observations or cleanup errors must not aggregate into a complete observation verdict.",
+      "resolution": "failed() covers primary error, signals, sticky preservation, stage/cleanup failures, command status/nonzero exit, unreaped/cleanup-failed handles and explicit complete=false observations. Positive synthetic lifecycle and partial-negative lifecycle distinguish a valid observation-only result from always-pass/always-fail fixtures.",
+      "source": [
+        {
+          "name": "ps_summary",
+          "start": 100,
+          "end": 115
+        },
+        {
+          "name": "observations",
+          "start": 389,
+          "end": 412
+        },
+        {
+          "name": "failed",
+          "start": 597,
+          "end": 606
+        }
+      ],
+      "witnesses": [
+        "test_partial_metadata_deliberately_fails_even_with_all_commands_and_cleanup_complete",
+        "test_complete_synthetic_glue_is_observation_only_not_an_always_fail_fixture"
+      ]
+    },
+    {
+      "id": "PROBE-R9",
+      "issue": "Focused workflow mode needed exact cleanup bindings, upload custody, step order and scoped timeout regression protection.",
+      "resolution": "Contract requires explicit probe predicates, source/scope/control envs for run and cleanup, no github.token, exact command/step identities, correct run-attempt artifact names/paths, pinned upload through existing global pin validation,14-day/error retention, upload-before-cleanup order and10min probe/120min otherwise. Five full jobs and all full gate/finalizer predicates are preserved.",
+      "witnesses": [
+        "WorkflowContractTest.test_probe_cleanup_binding_timeout_and_artifact_paths_are_exact",
+        "WorkflowContractTest.test_probe_cannot_precede_scope_validation_or_upload"
+      ]
+    }
+  ],
+  "design_review": {
+    "source_binding": "Explicit same repository/branch/workflow/run/attempt, GITHUB_SHA/GITHUB_WORKFLOW_SHA/frozen input equality, clean full-history checkout, exact independently approved control manifest, end source/control/ps identity reconciliation. Native A/B modes cannot accidentally select the probe or vice versa.",
+    "original_observer": "AST seam requires unchanged exact argv and15s timeout from canonical snapshot_processes. No baseline/global ownership predicate is changed; metadata observations are never accepted as ownership rows or missing-worker proof.",
+    "privacy": "Child env is an explicit public-tool allowlist. Combined pipe retention is bounded at2MiB while reading; original/global argv is reduced to counts and never persisted. Stack output retains bounded numeric symbol/module call-graph lines only, not headers/image paths/argv. No raw exception text is stored. Metadata retains aggregate error counts/hash plus own numeric row only.",
+    "metadata_limits": "Bounded4097-slot enumeration rejects truncated/malformed/duplicate PID lists;136-byte layout/offsets and native return equality plus own PID/PPID/PGID/effective UID checked. Denied/disappeared/short metadata is explicit partial/failure. No task ports, argv syscall, signals, PID adoption or native calls on import. This is neither an atomic system snapshot nor application-region ABI/provenance evidence.",
+    "simulator": "Exactly one random-nonce journaled device, exact qualified runtime/device type, pre-create baseline, create result, fresh inventory identity, boot and bounded bootstatus. Existing unchanged helper retains interrupted-create adoption and ambiguity/baseline/clone/shutdown/delete refusal. Only exact UUID/name/runtime/type custody permits removal; simulator directory absence required.",
+    "xcode_scope": "One Debug simulator source-project showBuildSettings with isolated DerivedData, automatic package resolution and package updates disabled, stdout/stderr DEVNULL, actual liveness before/after each observation. No assertion that actool, Kotlin or the failed app workload was reproduced. Qualified DEVELOPER_DIR/observed SDK makes the simulator alias explicit within that selected toolchain.",
+    "cleanup_and_custody": "Separate cleanup stages after both success/failure/interruption; isolated Gradle registry, only wrapper cache shared by symlink, no global cache deletion. Direct Popen handles only, no name/PGID/global ownership fallback. Native resources retire before artifact upload. Exact unchanged evidence staging is deleted only after successful artifact ID/digest custody and complete preservation/cleanup guards.",
+    "timing_limit": "300s observation admission budget and225s summed stage command-admission budgets include explicit retirement reserves; these are not a guarantee against host stalls, filesystem failure or external SIGKILL. The10-minute workflow cap is backup, not native finalization proof."
+  },
+  "test_source_review": {
+    "static_descriptors": {
+      "probe": 39,
+      "native_continuation": 35,
+      "workflow_contract": 48
+    },
+    "static_counts_are_not_execution_results": true,
+    "reviewed_witnesses": "Synthetic owned subprocesses/selectors/clocks, metadata backends, independent timeout/sample states, in-memory workflow mutations, run-scoped temporary custody, preservation-write failures, positive/negative aggregate status, signal latch before constructor and during Xcode wait, explicit context/platform executor routing,20s binding budget and simulator journal/glue.",
+    "unchanged_helper_controls": "Read existing SimulatorOwnershipTest cases in scripts/release/tests/test_apple_ci_hygiene.py: exact UUID, failed/interrupted create, duplicate/changed identity, existing UUID/name, stale journal, absent intent/orphan record, shutdown failure, deletion survivor/unknown clone. They are source-review context only unless coordinator supplies actual execution receipts.",
+    "not_run_by_reviewer": [
+      "unit tests",
+      "mutations",
+      "Gradle",
+      "compiler",
+      "ps/libproc/sample",
+      "simctl",
+      "xcodebuild",
+      "GitHub Actions"
+    ],
+    "pending": "Coordinator's focused Linux packet actual counts/results/source-control before-after and cleanup must be independently reconciled separately. No harness result authorizes A/B runtime."
+  },
+  "required_next_gates": [
+    "Inspect/reconcile actual coordinator Linux controls, failures/skips and exact cleanup receipts at these bytes.",
+    "Commit reviewed implementation/control/doc changes, regenerate and commit mechanical inventory separately, check freshness and remote SHA equality.",
+    "Recompute control closure at that frozen source, approve a new source/run/control-bound non-app dispatch once; preserve its actual logs/artifact identities/cleanup.",
+    "Decide any later A19/B20 application attempt only after reviewing diagnostic results and obtaining fresh native preflight/source/control approval. Old17/18 remains failed history.",
+    "Complete missing A functional/retained-host/protection observations, B actual Parlor libproc provenance, refreshed C chain and D frozen-source five-job qualification; no readiness substitution."
+  ],
+  "readiness_verdict": "NOT READY. Source-review approval for an explicit non-app diagnostic is not process-runtime evidence, an ownership repair, a Parlor libproc query, L08 protection success, final qualification, Store readiness or retry approval.",
+  "unchanged_exclusions": "No Store credentials/signing/publication/promotion, physical-device tests, replacement app identity, merge, force-push, issue mutation or unrelated repository/cache/user-work modification. Host-only reducers, exact4.2, deterministic seed, privacy, strict validation, Doctor ON/OFF and Leave-confirmation timing remain outside/untouched by this verification-only delta.",
+  "reviewer_activity": {
+    "read_hash_AST_only": true,
+    "implementation_edits": 0,
+    "test_build_native_processes_started": 0,
+    "workflow_dispatches": 0,
+    "commits": 0,
+    "report_write": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-source-independent-01.json"
+  },
+  "reviewer_cleanup": "No test/build/native workers, simulator, DerivedData or generated build outputs were created by reviewer. No global cleanup or Gradle stop was run against coordinator-owned activity."
+}
