@@ -60,13 +60,20 @@ def snapshot_processes():
 
 def lsof_pids(arguments):
     result = subprocess.run(
-        ['/usr/sbin/lsof', '-nP', '-w', '-t', *arguments], text=True,
+        # -t also suppresses warnings. Re-enable them afterwards so a failed
+        # directory/file selection cannot masquerade as an empty holder set.
+        ['/usr/sbin/lsof', '-nP', '-t', '+w', *arguments], text=True,
         capture_output=True, timeout=30,
     )
-    # lsof returns1 for no matches. An actual diagnostic is not an empty scan.
+    if len(result.stdout.encode()) > 65536 or len(result.stderr.encode()) > 4096:
+        raise RuntimeError('Ownership lsof output exceeds its acceptance limit')
+    # Exit1 also covers a partially unmatched +D selection: preserve every PID.
+    # Diagnostics may mention unrelated native paths; do not echo them to logs.
     if result.returncode not in (0, 1) or result.stderr.strip():
-        raise RuntimeError('Ownership lsof failed: ' + sanitized(result.stderr[:500]))
+        raise RuntimeError('Ownership lsof failed or reported an inspection warning')
     lines = result.stdout.splitlines()
+    if result.returncode == 0 and not lines:
+        raise RuntimeError('Ownership lsof success did not identify any holder')
     if any(not line.isdigit() for line in lines):
         raise RuntimeError('Unexpected lsof ownership output')
     return {int(line) for line in lines}
