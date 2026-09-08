@@ -43,6 +43,7 @@ from normal_source_copy import transform_copy, inventory_copy, CHANGED, PROJECT
 from normal_launch_receipts import read_json, verify_markers, verify_xctest, METHOD, SELECTOR, UUID
 from external_image_provenance import (APP_ID, parse_launch_pid, attest_target, unchanged_target,
                                        parse_sample, bind_vmmap, header_diagnostic, OwnedToolPaths, LIMITATION)
+from external_image_diagnostics import image_diagnostic
 
 
 def now():
@@ -502,16 +503,30 @@ class Lane:
             self.require(['/usr/bin/sample', str(pid), '1', '10', '-file', raw_sample],
                          'sample-command.log', timeout=45, limit=65536)
             middle = unchanged_target(before, backend.read(pid))
+            self.receipt['sample_command_lifetime_verified'] = True
             if (not raw_sample.is_file() or raw_sample.is_symlink() or
                     not 0 < raw_sample.stat().st_size <= 16 * 1024 * 1024):
                 raise RuntimeError('Missing or unbounded public sample image evidence')
-            selected = self.parse_external_observation('sample', raw_sample, pid, executable,
-                lambda raw: parse_sample(raw, pid, executable, artifacts, tool_paths=tool_paths))
+            try:
+                selected = self.parse_external_observation('sample', raw_sample, pid, executable,
+                    lambda raw: parse_sample(raw, pid, executable, artifacts, tool_paths=tool_paths),
+                    artifacts=artifacts, tool_paths=tool_paths)
+            except RuntimeError:
+                # A rejected sample never supplies selected images. The one
+                # sibling tool attempt is diagnostic-only and cannot rescue it.
+                self.receipt['provenance_status'] = 'FAIL'
+                try:
+                    self.observe_failure_only_vmmap(before, backend, pid, executable,
+                                                    artifacts, tool_paths, raw_vmmap)
+                except BaseException as diagnostic_error:
+                    self.receipt['failure_only_vmmap_error_type'] = type(diagnostic_error).__name__
+                raise  # Preserve the original sample exception, including its identity.
             self.require(['/usr/bin/vmmap', '-w', str(pid)], 'vmmap', timeout=45,
                          output=raw_vmmap, limit=16 * 1024 * 1024)
             after = unchanged_target(before, backend.read(pid))
             bound = self.parse_external_observation('vmmap', raw_vmmap, pid, executable,
-                lambda raw: bind_vmmap(raw, pid, executable, selected, tool_paths=tool_paths))
+                lambda raw: bind_vmmap(raw, pid, executable, selected, tool_paths=tool_paths),
+                artifacts=artifacts, tool_paths=tool_paths, selected=selected)
             self.check_watched_outputs()
             # File bytes remain tied to the prior installed/current-build image
             # inventory. This does not claim the mapped pages were rehashed.
@@ -532,7 +547,8 @@ class Lane:
             self.receipt['raw_external_stack_mapping_files_removed'] = all(not path.exists() for path in (raw_sample, raw_vmmap))
             self.receipt['external_provenance_limitation'] = LIMITATION
 
-    def parse_external_observation(self, tool, path, pid, executable, parse):
+    def parse_external_observation(self, tool, path, pid, executable, parse, *,
+                                   artifacts=None, tool_paths=None, selected=None):
         if tool not in {'sample', 'vmmap'}:
             raise RuntimeError('Unknown external diagnostic producer')
         raw = path.read_text()
@@ -543,12 +559,79 @@ class Lane:
             # metadata before the existing finalizer destroys raw stacks/maps.
             # Do not retain an unknown native path, process name, stack or symbol.
             try:
-                name = tool + '-header-failure.json'
-                write_json(self.destination / name, header_diagnostic(raw, pid, executable))
-                self.receipt[tool + '_header_failure_sha256'] = digest(self.destination / name)
-            except Exception as diagnostic_error:
-                self.receipt[tool + '_header_diagnostic_error'] = type(diagnostic_error).__name__
+                self.collect_external_failure_diagnostics(tool, raw, pid, executable,
+                                                         artifacts, tool_paths, selected)
+            except BaseException as diagnostic_interrupt:
+                # The primary parser is already failed. Record a cancellation
+                # without replacing it or starting further optional native work.
+                self.receipt[tool + '_failure_diagnostics_interrupted'] = True
+                self.receipt[tool + '_failure_diagnostics_interrupt_type'] = type(diagnostic_interrupt).__name__
             raise
+
+    def collect_external_failure_diagnostics(self, tool, raw, pid, executable,
+                                             artifacts, tool_paths, selected):
+        try:
+            name = tool + '-header-failure.json'
+            write_json(self.destination / name, header_diagnostic(raw, pid, executable))
+            self.receipt[tool + '_header_failure_sha256'] = digest(self.destination / name)
+        except Exception as diagnostic_error:
+            self.receipt[tool + '_header_diagnostic_error'] = type(diagnostic_error).__name__
+        if artifacts is not None:
+            try:
+                name = tool + '-images-failure.json'
+                value = image_diagnostic(raw, tool, artifacts, tool_paths=tool_paths, selected=selected)
+                write_json(self.destination / name, value)
+                self.receipt[tool + '_images_failure_sha256'] = digest(self.destination / name)
+            except Exception as diagnostic_error:
+                self.receipt[tool + '_images_diagnostic_error'] = type(diagnostic_error).__name__
+
+    def observe_failure_only_vmmap(self, before, backend, pid, executable,
+                                  artifacts, tool_paths, raw_vmmap):
+        observation = dict(kind='FAILURE_ONLY_VMMAP_AFTER_SAMPLE_REJECTION', proves_provenance=False,
+            status='NOT_STARTED', sample_selection_available=False,
+            original_sample_failure_preserved=True, command_attempted=False, command_succeeded=False,
+            lifetime_before_verified=False, lifetime_after_verified=False)
+        self.receipt['failure_only_vmmap_after_sample'] = observation
+        if self.receipt.get('sample_failure_diagnostics_interrupted'):
+            observation['status'] = 'NOT_RUN_PRIOR_DIAGNOSTIC_INTERRUPTION'
+            return
+        try:
+            self.check_watched_outputs()
+            unchanged_target(before, backend.read(pid))
+            observation['lifetime_before_verified'] = True
+        except BaseException as error:
+            observation.update(status='NOT_RUN_PREFLIGHT_FAILED', preflight_error_type=type(error).__name__)
+            return
+        try:
+            observation.update(status='COMMAND_RUNNING', command_attempted=True)
+            self.require(['/usr/bin/vmmap', '-w', str(pid)], 'vmmap-failure-only', timeout=45,
+                         output=raw_vmmap, limit=16 * 1024 * 1024)
+            observation['command_succeeded'] = True
+        except BaseException as error:
+            observation['command_error_type'] = type(error).__name__
+        finally:
+            try:
+                unchanged_target(before, backend.read(pid))
+                observation['lifetime_after_verified'] = True
+            except BaseException as error:
+                observation['postflight_error_type'] = type(error).__name__
+        if not observation['command_succeeded'] or not observation['lifetime_after_verified']:
+            observation['status'] = 'FAILED_COMMAND_OR_LIFETIME'
+            return
+        try:
+            self.check_watched_outputs()
+            if (not raw_vmmap.is_file() or raw_vmmap.is_symlink() or
+                    not 0 < raw_vmmap.stat().st_size <= 16 * 1024 * 1024):
+                raise RuntimeError('Missing or unbounded failure-only mapping observation')
+            # No bind_vmmap call and no selected-image result: only closed
+            # diagnostics, even if vmmap alone appears plausible.
+            self.collect_external_failure_diagnostics('vmmap', raw_vmmap.read_text(), pid, executable,
+                                                     artifacts, tool_paths, None)
+            observation['status'] = ('COLLECTED_FAILURE_ONLY_NOT_PROVENANCE'
+                if 'vmmap_images_failure_sha256' in self.receipt and 'vmmap_header_failure_sha256' in self.receipt
+                else 'FAILED_DIAGNOSTIC_COLLECTION')
+        except BaseException as error:
+            observation.update(status='FAILED_DIAGNOSTIC_COLLECTION', diagnostic_error_type=type(error).__name__)
 
     def shutdown_device(self):
         info = self.simulator_metadata('owned-device-before-shutdown')

@@ -1,11 +1,17 @@
 # Normal-source iOS launch observation — campaign controls
 
+The failure-only image diagnostics were adopted from the independently reviewed
+`normal-image-diagnostics-draft-01/` after its **163 passing controls** in
+`evidence/normal-image-diagnostics-draft-controls-01/`. Canonical control execution
+and a fresh independently reviewed source/control binding are still required
+before a new native cycle. This tooling adoption is not app-runtime evidence.
+
 The original controls had independent source review and **78 passing synthetic
 tests** in `evidence/package-controls-01/` (2026-09-07). The subsequent **99** controls
 passed in `evidence/normal-after-native10-controls-01/`. The current suite declares
-**120 tests**, adding explicit USER-only presentation binding and adversarial
-cases. The additional tests need their own execution receipt; test-control success
-is not app-runtime evidence.
+**163 tests** (43 added failure-only diagnostic, negative, orchestration and
+mutation controls beyond the previous 120). Existing assertions and test
+signatures are preserved. Test-control success is not app-runtime evidence.
 
 `ios-readiness-06` executed eight successful XCTest repetitions but then failed
 report parsing, before the separate ninth-launch provenance observation. Its
@@ -40,6 +46,49 @@ This presentation map is deliberately lossy, not independent kernel attestation
 of each loaded non-launcher image's full path or mapped-memory bytes. Actual
 Binary Images and `vmmap` support remain unverified until a new approved native
 cycle exercises them; synthetic fixtures do not prove those tool formats.
+
+## Failure-only image diagnostics
+
+`ios-readiness-11` passed eight XCTest repetitions, both notice-package checks
+and cleanup. Its separate image observation failed with **“Runtime contains an
+unbound application/framework image.”** The offending Binary Images row was not
+retained, so neither its path format nor an explanation is established. That
+original FAIL is unchanged. These diagnostics grant **no additional path aliases**.
+
+`external_image_diagnostics.py` examines bounded already-acquired text only after
+a parser rejection. Its closed `FAILURE_ONLY_EXTERNAL_IMAGE_FORMAT` result always
+has `proves_provenance=false`. It retains only Parlor/Compose names, known
+artifact/origin/kind/component indexes, exact UUID-equality/index relationships,
+interval metadata, closed public redaction markers, and unknown component
+SHA-256/lengths. Indexes refer to sorted canonical keys of the existing artifact
+inventory, additionally bound by its canonical JSON value hash. They are
+comparisons, never newly authorized paths. No unknown paths, raw UUIDs, stacks,
+symbols, unrelated mappings or arbitrary exception messages are retained.
+Alternate `__TEXT_EXEC` and malformed literal `__TEXT`-prefixed rows can receive
+closed diagnostic-kind labels; the unchanged acceptance parser still rejects
+missing required `__TEXT` bindings. This is not support for another native format.
+
+Limits remain 16 MiB input, 65,536 scanned lines, 8,192 bytes per line, 32 relevant
+rows, 4,096 path bytes, 128 path components, 64 known-component relationships per
+component / 2,048 per path, and 256 KiB serialized output. Each appended row is
+budget-checked. Missing or ambiguous Binary Images tables are explicitly unscanned,
+not normalized. Bound failures remain diagnostic insufficiency, not provenance.
+
+The reviewed control design allows a single guarded sibling
+`vmmap -w` attempt after a successful `sample` command, unchanged post-sample
+lifetime, and a `RuntimeError` parser rejection. Native execution still requires
+the separate fresh binding and approval below. A fresh same-target preflight
+must succeed, command time/output limits are unchanged, and postflight is attempted
+even if the command fails. Diagnostic interruption prevents further optional
+native work. A sample failure provides **no selected-image reference**; this path
+never calls `bind_vmmap`, retries, changes a parser, or reaches provenance PASS.
+The original sample exception remains primary; sibling command, lifetime and
+diagnostic failures are recorded separately by type. Normal successful-sample
+`vmmap` diagnostics may compare only to that actual successful sample result.
+
+Failure-only records never substitute for the provenance document. Original raw
+file deletion, process ownership, simulator cleanup, copied-input validation,
+source/control binding and final PASS predicates remain unchanged.
 
 ## What this runner does
 
@@ -137,7 +186,7 @@ by guesswork; cleanup fails with evidence for targeted follow-up.
 ## Root review and execution
 
 Do not execute while another lane is active. Independent review must examine all
-new source and the referenced approved helper hashes, then run the **120** synthetic
+new source and the referenced approved helper hashes, then run the **163** synthetic
 control tests (not Swift compilation or app runtime):
 
 ```sh
