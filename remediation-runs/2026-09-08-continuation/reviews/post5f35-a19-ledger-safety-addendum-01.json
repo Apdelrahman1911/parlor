@@ -1,0 +1,1054 @@
+{
+  "schema_version": 1,
+  "kind": "ADDITIVE_A19_PACKET_AND_CLOSED_LEDGER_DELIVERY_SAFETY_MANIFEST",
+  "author": "/root/evidence_audit",
+  "started_at": "2026-09-08T16:43:26.450409+00:00",
+  "recorded_at": "2026-09-08T16:43:27.764140+00:00",
+  "status": "PASS_SCOPED_DELIVERY_SAFETY_NOT_RUNTIME_OR_NATIVE_CLEANUP_PASS",
+  "execution_source": {
+    "head": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+    "tree": "e0e7abfff89975682a96a884cb745bcbc12e7238",
+    "branch": "fix/local-readiness-2026-09-07",
+    "current_tracked_worktree_clean": false,
+    "limit": "Raw A19 execution remains frozen5f35. Current companion/test/lifecycle work and later evidence-only delivery are not source/control freeze or new execution. No network/remote requery by this author."
+  },
+  "scope": "Exact52-file additive payload: completed A19 Actions packet41, closed dispatch request6, closed A19/diagnosis reviews3, held ledger and its independent review2. Adds to but does not modify accepted562-file report. No source changes, active source-test/proposal receipts, workers, drafts, inventory generation, native commands or Actions dispatch.",
+  "prior_accepted_scope": {
+    "report": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/post5f35-completed-evidence-safety-01.json",
+      "bytes": 263525,
+      "sha256": "a7e2e135e6de044fa26a3e67db1799e74e17d96c7538488dc8df56367b374779"
+    },
+    "payload_files": 562,
+    "payload_bytes": 5981526,
+    "payload_manifest_sha256": "719d5e484e0d9a1d31cd69debb55539612b606faa94963404588219d41433c32",
+    "report_and_all562_payload_bytes_rehashed_unchanged": true,
+    "report_immutable_not_rewritten": true,
+    "payload_overlap_with_addendum": [],
+    "combined_exact_payload_files": 614,
+    "combined_exact_payload_bytes": 8856701,
+    "limit": "614 payload files plus these two separately Git-bound safety reports are616 deliverables. No combined runtime/cleanup/readiness approval; every prior result retains its source/platform/scope."
+  },
+  "totals": {
+    "files": 52,
+    "bytes": 2875175,
+    "tracked_modifications": 1,
+    "ordinarily_untracked": 37,
+    "required_ignored_logs": 14,
+    "retained_poms": 0,
+    "retained_junit_xml_files": 0,
+    "original_zip_archives": 2,
+    "exact_extracted_zip_members": 29,
+    "manifest_sha256": "400b1046f3618a1988a4f2783dc6452a89b4d3c701f5c5602310734e8d96f38a",
+    "manifest_encoding": "compact UTF-8 JSON, ensure_ascii=true, sorted rows [path, git_mode, sha256, bytes]",
+    "this_report_excluded": true
+  },
+  "groups": {
+    "remediation-runs/2026-09-08-continuation/actions/34244902185": {
+      "files": 41,
+      "bytes": 2717365,
+      "paths": "Exact descendants listed in files; root is the group key."
+    },
+    "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-02": {
+      "files": 6,
+      "bytes": 8965,
+      "paths": "Exact descendants listed in files; root is the group key."
+    },
+    "closed_a19_reviews": {
+      "files": 3,
+      "bytes": 58342,
+      "paths": [
+        "remediation-runs/2026-09-08-continuation/reviews/native-evidence-34244902185-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/native-ps-timeout-diagnosis-02.json",
+        "remediation-runs/2026-09-08-continuation/reviews/native-ps-timeout-diagnosis-independent-02.json"
+      ]
+    },
+    "closed_ledger_and_independent_review": {
+      "files": 2,
+      "bytes": 90503,
+      "paths": [
+        "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md",
+        "remediation-runs/2026-09-08-continuation/reviews/continuation-ledger-a19-independent-01.json"
+      ]
+    }
+  },
+  "ignored_required_evidence": {
+    "paths": [
+      "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/boot.log",
+      "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/bootstatus.log",
+      "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/create.log",
+      "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/darwin-version.log",
+      "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/host-architecture.log",
+      "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/java-version.log",
+      "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/macos-version.log",
+      "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/sdk-version.log",
+      "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/selected-developer.log",
+      "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/selected-sdk-path.log",
+      "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/xcode-version.log",
+      "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/l08-runner.log",
+      "remediation-runs/2026-09-08-continuation/actions/34244902185/run.log",
+      "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-02/dispatch.log"
+    ],
+    "rule": ".gitignore:26:*.log",
+    "check_ignore_method": "git check-ignore -v -z --stdin, exact NUL-separated52-file allowlist",
+    "check_ignore_exit": 0,
+    "all14_exact_statuses": "!!",
+    "reason": "Preserve original bounded metadata/boot logs, failed canonical JSON duplicated as runner stdout, completed Actions run log and closed dispatch log. Parent must stage exact listed ignored paths explicitly, never force-add broad trees.",
+    "report_boundary": "No app build/XCTest occurred in A19; no JUnit/XML/XCResult/app artifact is claimed. Retain failure packet and both original ZIPs regardless of runtime/cleanup FAIL."
+  },
+  "filesystem_safety": {
+    "all_regular_files": true,
+    "symlinks_or_symlinked_ancestors": [],
+    "special_files": [],
+    "executables": [],
+    "multiple_link_files": [],
+    "large_threshold_bytes": 1048576,
+    "large_files": [],
+    "all_nonzip_files_strict_utf8": true,
+    "all_read_identities_stable": true,
+    "all_selected_bytes_and_completed_directory_inventories_stable_on_final_reopen": true,
+    "byte_preservation_attributes": {
+      "checked_files": 52,
+      "text": "unset",
+      "filter": "unspecified",
+      "working-tree-encoding": "unspecified",
+      "eol": "unspecified",
+      "method": "git check-attr -z --stdin text filter working-tree-encoding eol for exact52-file allowlist"
+    }
+  },
+  "sensitive_signature_scan": {
+    "policy_reference": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/frozen25b1-delivery-safety-01.json",
+      "bytes": 415876,
+      "sha256": "8f9b7dfb5db35b8cc3045c11d5b95d9297d81fd41fde8b5e62cc1ec1572db679",
+      "pattern_set_sha256": "cd8804d59686f0125274263748aaf99e143653370e55d97f72968496c26a6c7d"
+    },
+    "method": "Every raw payload file, decoded JSON keys/string values, decoded JSONL keys/string values, all nonencrypted decompressed ZIP members and decoded member JSON scanned with the committed bounded14 byte-regex signatures. Actual selected/member paths and binary JKS/JCEKS headers checked. No project scanner/import/test/native execution; matched literal content never retained.",
+    "surface_counts": {
+      "raw-file": 52,
+      "decoded-json-strings": 33,
+      "decoded-jsonl-strings": 1,
+      "zip-member": 29,
+      "decoded-zip-json-strings": 16
+    },
+    "surface_bytes": {
+      "raw-file": 2875175,
+      "decoded-json-strings": 1457164,
+      "decoded-jsonl-strings": 3129,
+      "zip-member": 2073627,
+      "decoded-zip-json-strings": 1318524
+    },
+    "signature_matches": [],
+    "sensitive_actual_path_matches": [],
+    "binary_keystore_header_matches": [],
+    "limitations": "Zero signatures is not universal absence-of-secret proof: arbitrary encoded, unknown-format and low-entropy secrets cannot be ruled out. No global credential/cache files or unrelated user work inspected."
+  },
+  "privacy_and_scope": {
+    "observed": "Public repository/GitHub/source/control metadata, completed failure/status/dispatch records, exact task-owned synthetic simulator identifiers, bounded toolchain/host diagnostics and copy-only fixture/source diffs; closed independent reviews/ledger.",
+    "live_credential_or_private_store_signing_payload_observed": false,
+    "private_player_or_session_state_payload_observed": false,
+    "global_cache_contents_included": false,
+    "reference_boundary": "Source references to public cache links, toolchain defaults, synthetic fixture paths and runner UID are provenance metadata, not copied private keys/cache contents or authorization to delete them. No application storage/profile payload was produced by this prebuild A19 failure."
+  },
+  "archive_integrity": {
+    "archives": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-cleanup.zip",
+        "bytes": 683,
+        "sha256": "5b98cf597751077b4ead067dc2d347dc179934ef304e70803a863413cf053340",
+        "run_id": 34244902185,
+        "attempt": 1,
+        "artifact_id": 10063816208,
+        "artifact_name": "native-cleanup-34244902185-1",
+        "api_digest_size_name_run_source_match": true,
+        "download_record_matches": true,
+        "member_count": 1,
+        "uncompressed_bytes": 814,
+        "members": [
+          {
+            "name": "parlor-native-34244902185-1-cleanup.json",
+            "bytes": 814,
+            "sha256": "a771df59e74c61cfb89d580a7c75f256bece1b630138c34f9a1d8eb192956631",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-cleanup/parlor-native-34244902185-1-cleanup.json",
+            "extracted_bytes_identical": true
+          }
+        ]
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence.zip",
+        "bytes": 512932,
+        "sha256": "b18ef5c99f5a52e3c014fbe7eb8ba0202c3da9f6c3015c0c804b719492aa6a62",
+        "run_id": 34244902185,
+        "attempt": 1,
+        "artifact_id": 10063811944,
+        "artifact_name": "native-evidence-34244902185-1",
+        "api_digest_size_name_run_source_match": true,
+        "download_record_matches": true,
+        "member_count": 28,
+        "uncompressed_bytes": 2072813,
+        "members": [
+          {
+            "name": "continuation.json",
+            "bytes": 8034,
+            "sha256": "27ffc9124098845dfd80b3af82bc3a4db42aeb0c933b87d1d518c002e0edb93d",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/continuation.json",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "failure.json",
+            "bytes": 137,
+            "sha256": "9905a886e7445860f66bc0f94406deb5177e4b79e742f69afd7389ca799510a4",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/failure.json",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "ios-readiness-19/app-foundation-copy-binding.json",
+            "bytes": 2365,
+            "sha256": "6868b59cb59ac1e074f46a766557afd1bff1d1deb9e50fd7ecf3f0529da48424",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/app-foundation-copy-binding.json",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "ios-readiness-19/boot.log",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/boot.log",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "ios-readiness-19/bootstatus.log",
+            "bytes": 1684,
+            "sha256": "5cfee89af832bf58d99076c25184e7ab2f716c3b62e3f1839aa781075a9915e7",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/bootstatus.log",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "ios-readiness-19/composed-runner.diff",
+            "bytes": 9103,
+            "sha256": "9d0c6d29c55ca2196995e491a29d63bf036f15651007c10b3831a167f966dc1a",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/composed-runner.diff",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "ios-readiness-19/copied-source-inputs-after-build.json",
+            "bytes": 247906,
+            "sha256": "ffe9b1df067db4851583c7700cb73f738ec464386db551ff922d7d20dbcad699",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/copied-source-inputs-after-build.json",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "ios-readiness-19/copied-source-manifest.json",
+            "bytes": 218460,
+            "sha256": "afc3b247624b21514f5e5dc0296328b539580dd55daab2948fb98f303b46ed2d",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/copied-source-manifest.json",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "ios-readiness-19/copied-source.diff",
+            "bytes": 425637,
+            "sha256": "a70f2dee1a816e1b2ee4f066042a9fb5f67b0db0b3f568d36c7aae0a24af6895",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/copied-source.diff",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "ios-readiness-19/create.log",
+            "bytes": 37,
+            "sha256": "358552271a9ca610001ce76abd97c1f61eb85b966e967b31368bae61296f6d8a",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/create.log",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "ios-readiness-19/darwin-version.log",
+            "bytes": 14,
+            "sha256": "39f2bb4ba4caae31e47a5b186080638b2c4b483e91d49de4e838e778e92030bd",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/darwin-version.log",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "ios-readiness-19/host-architecture.log",
+            "bytes": 6,
+            "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/host-architecture.log",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "ios-readiness-19/input-manifest.json",
+            "bytes": 171914,
+            "sha256": "a5d1a7a60bb81bf3cca8bc7672247472b8cd62b540279c5139b618b01a886c53",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/input-manifest.json",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "ios-readiness-19/java-version.log",
+            "bytes": 205,
+            "sha256": "5b4412738541184e84f6b2d7520d4f4a7c2a455f60650491464c61adcbbbdeb0",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/java-version.log",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "ios-readiness-19/macos-version.log",
+            "bytes": 66,
+            "sha256": "31fd674ddb951680692d7b68cafdeab5baa6b3e82aae843269dad73b53f25fc5",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/macos-version.log",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "ios-readiness-19/receipt.json",
+            "bytes": 322627,
+            "sha256": "872ba1e34987928fbe8981f6abe39cab8bd6b517d6f1bcd8fca2dc4f9bdb65c1",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/receipt.json",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "ios-readiness-19/sdk-version.log",
+            "bytes": 5,
+            "sha256": "14a06c556ac677f94334dd2c86395d46009b9def8685e00741e60d31305a0262",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/sdk-version.log",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "ios-readiness-19/secondary-fifo-ownership-final.json",
+            "bytes": 115,
+            "sha256": "f2e3cae334d700c17135100cce60a0895c6faff407328f324ee4e005f8827595",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/secondary-fifo-ownership-final.json",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "ios-readiness-19/secondary-fifo-ownership.json",
+            "bytes": 115,
+            "sha256": "f2e3cae334d700c17135100cce60a0895c6faff407328f324ee4e005f8827595",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/secondary-fifo-ownership.json",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "ios-readiness-19/selected-developer.log",
+            "bytes": 48,
+            "sha256": "f61dc333807430553f78902403e4cc45b547d508c03963122c5c75c6d27beedb",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/selected-developer.log",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "ios-readiness-19/selected-sdk-path.log",
+            "bytes": 122,
+            "sha256": "7a600faec8bfe87bad2f5e0f3c3a4886ab3143a661d90b7e7cd8acadf806627a",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/selected-sdk-path.log",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "ios-readiness-19/xcode-version.log",
+            "bytes": 32,
+            "sha256": "bb7fc9a8f5e063e81975b33054b3a526c91bcccff263ad11d5bd8bcdbe8f0973",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/xcode-version.log",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "l08-runner.log",
+            "bytes": 322627,
+            "sha256": "872ba1e34987928fbe8981f6abe39cab8bd6b517d6f1bcd8fca2dc4f9bdb65c1",
+            "mode": "0o100644",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/l08-runner.log",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "preflight-api-binding.json",
+            "bytes": 1764,
+            "sha256": "f8dc35e05599653d550faa5e817428ef40669d46e04209de71d936beefa33003",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/preflight-api-binding.json",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "reviewed-preflight/ios-readiness-source-ci.json",
+            "bytes": 299323,
+            "sha256": "828016ceb191c6baca42c78202586ab6e2d516fba68698c2fa5d2a8a129c3b86",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/reviewed-preflight/ios-readiness-source-ci.json",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "reviewed-preflight/l08-controls.json",
+            "bytes": 20904,
+            "sha256": "ca75dcc1c4cceb57b55d0c9557a6ade086bba4179b56f2e2ab99e742f31701eb",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/reviewed-preflight/l08-controls.json",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "reviewed-preflight/normal-controls.json",
+            "bytes": 16860,
+            "sha256": "9df79d071925661130045e5994cc8078ef2f5ae179f1934423b40b8f5dd56d6f",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/reviewed-preflight/normal-controls.json",
+            "extracted_bytes_identical": true
+          },
+          {
+            "name": "reviewed-preflight/preflight.json",
+            "bytes": 2703,
+            "sha256": "66fcb21e70d6bbce8836ff3c63a4628638b67856c17941d38dcd2531deb25c9a",
+            "mode": "0o100600",
+            "encrypted": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/reviewed-preflight/preflight.json",
+            "extracted_bytes_identical": true
+          }
+        ]
+      }
+    ],
+    "all_eight_download_command_file_hashes_bytes_and_exit0_matched": true,
+    "all29_members_crc_size_hash_and_exact_extracted_bytes_matched": true,
+    "duplicate_member_names": [],
+    "unsafe_paths_encryption_or_nonregular_members": [],
+    "meaning": "Verified artifact custody/integrity only. A19 canonical runtime NOT_RUN/cleanup FAIL and outer custody-cleanup FAIL remain unchanged."
+  },
+  "closed_ledger": {
+    "ledger": {
+      "path": "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md",
+      "bytes": 47802,
+      "sha256": "666d195219ac116b4495af8adee04cd3c55383b1d8f901a1ca829fb10784c3a7"
+    },
+    "independent_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-ledger-a19-independent-01.json",
+      "bytes": 42701,
+      "sha256": "c0e4e4988fec8c4d9b51dafced73be9fa9cb6e1e762d1af1cb2a5ea36d76c813"
+    },
+    "author": "/root/l08_fixture",
+    "reviewer": "/root/evidence_audit",
+    "review_decision": "APPROVE_EXACT_HELD_LEDGER_FOR_CHECKPOINT_EVIDENCE_DELIVERY_NOT_SOURCE_OR_NATIVE_DISPATCH_APPROVAL",
+    "historical_source_current_dirty_distinction_explicit": true,
+    "actual_current_summary": "Frozen5f35 diagnostic02 FAIL, preflight02 non-runtime SUCCESS, A19 FAIL/runtime NOT_RUN/cleanup FAIL, B20 NOT_RUN, C02 scoped PASS; D unexecuted.",
+    "scope": "Exact ledger/checkpoint only. Later implementation/tests/proposals require separate reviewed updates; no final A-D, Store or readiness claim."
+  },
+  "failed_native_evidence_boundary": {
+    "run_id": 34244902185,
+    "attempt": 1,
+    "api_run_and_ios_job_conclusion": "failure",
+    "canonical_status": "FAIL",
+    "runtime_evidence_status": "NOT_RUN",
+    "cleanup_status": "FAIL",
+    "b20": "NOT_RUN",
+    "actual_shutdown_delete_commands": 0,
+    "owned_uuid_absence_attested": false,
+    "actual_gradle_stop_commands": 0,
+    "outer_cleanup_status": "FAIL",
+    "outer_removed": [],
+    "bootstatus_boundary": "Terminal Finished line follows wrapper finished_at and does not supply child exit/success or exact retirement. Final empty worker lists/copy removal do not repair failed simulator cleanup.",
+    "no_application_execution": "No app build, XCTest, functional-storage/retained-host interaction, strict protection or actual normal Parlor libproc query."
+  },
+  "exclusions_and_preservation": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "reason": "Concurrent unfrozen source correction; author/reviewer own separately. No edit/review/staging here.",
+      "preserve_locally": true
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_native_command_failures.py",
+      "reason": "Concurrent unfrozen regression changes; not in this evidence-only payload.",
+      "preserve_locally": true
+    },
+    {
+      "scope": "All current or future metadata/lifecycle source, tests, proposal reports and execution receipts not individually listed in files",
+      "reason": "Outside this closed A19/ledger additive assignment, even if another agent subsequently completes them.",
+      "preserve_locally": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/post0607-ledger-notes-01.md",
+      "reason": "Unreviewed draft excluded; do not delete or silently include.",
+      "preserve_locally": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/build-lane.lock",
+      "reason": "Task coordination state, not completed evidence payload; preserve.",
+      "preserve_locally": true
+    },
+    {
+      "scope": "Global caches, temporary/build workers, source/configuration/signing files, unrelated stashes/user work and every nonallowlisted path",
+      "reason": "Not selected/scanned/deleted/staged by this task. Archived evidence build directories remain retained evidence.",
+      "preserve_locally": true
+    }
+  ],
+  "staging_notes": {
+    "payload_list_key": "files",
+    "path_key": "path",
+    "byte_count_key": "bytes",
+    "sha256_key": "sha256",
+    "git_mode_key": "git_mode",
+    "observed_status_key": "git_status_code",
+    "ignored_list_key": "ignored_required_evidence.paths",
+    "this_report_self_hash_excluded": "This report is a separate deliverable bound by final Git; cannot self-hash. Parent independently reopens/rehashes report and all selected/staged bytes.",
+    "prior_report_self_hash_excluded": "Prior accepted263525-byte safety report remains separately included without rewriting or scanning unrelated evidence into its payload.",
+    "authorization": "Parent requested evidence-only normal branch delivery of exact562+52 payloads and two safety reports, after parent rehash/staged-diff inspection. No staging/commit/push by this agent, no inventory/native/full/Store authorization."
+  },
+  "auditor_calculation_note": {
+    "initial_read_only_preparation": "AssertionError before report creation: auditor compared full repository extracted path to download receipt artifact-relative member key.",
+    "corrected_calculation": "Use extracted.relative_to(actions/34244902185) to match exact download-receipt key, while reading the full repository path. Both original ZIPs, all29 member CRC/size/hash/extracted bytes and all52 files independently rechecked afterward.",
+    "evidence_or_source_mutation": false,
+    "failed_report_written": false,
+    "original562_report_unchanged": true,
+    "meaning": "Auditor path-key calculation error, not a failed project test or platform/archive-integrity failure. No payload/path/digest changed to accommodate it."
+  },
+  "files": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md",
+      "bytes": 47802,
+      "sha256": "666d195219ac116b4495af8adee04cd3c55383b1d8f901a1ca829fb10784c3a7",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": " M",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/artifacts.json",
+      "bytes": 1483,
+      "sha256": "f0ed89b76e617fe6261a7279d17040a00c111bc5857ce5f1bc17fa431c445ceb",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/attempt.json",
+      "bytes": 12707,
+      "sha256": "20b1942455a0b964b861a05caa0d75aca9a15c117060ce5444f3b430b9168b61",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/download-receipt.json",
+      "bytes": 9389,
+      "sha256": "bc0f591bafe07a56abcf9603a5e11beed393139704a95c4e6e1ab9bbfa0ab4a4",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/jobs.json",
+      "bytes": 10561,
+      "sha256": "22121494084e48c569a646b731de4ae2c7ded3f4fc369fdae0be0a364d006bb4",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-cleanup.zip",
+      "bytes": 683,
+      "sha256": "5b98cf597751077b4ead067dc2d347dc179934ef304e70803a863413cf053340",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-cleanup/parlor-native-34244902185-1-cleanup.json",
+      "bytes": 814,
+      "sha256": "a771df59e74c61cfb89d580a7c75f256bece1b630138c34f9a1d8eb192956631",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence.zip",
+      "bytes": 512932,
+      "sha256": "b18ef5c99f5a52e3c014fbe7eb8ba0202c3da9f6c3015c0c804b719492aa6a62",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/continuation.json",
+      "bytes": 8034,
+      "sha256": "27ffc9124098845dfd80b3af82bc3a4db42aeb0c933b87d1d518c002e0edb93d",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/failure.json",
+      "bytes": 137,
+      "sha256": "9905a886e7445860f66bc0f94406deb5177e4b79e742f69afd7389ca799510a4",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/app-foundation-copy-binding.json",
+      "bytes": 2365,
+      "sha256": "6868b59cb59ac1e074f46a766557afd1bff1d1deb9e50fd7ecf3f0529da48424",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/boot.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "!!",
+      "ignore_rule": ".gitignore:26:*.log"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/bootstatus.log",
+      "bytes": 1684,
+      "sha256": "5cfee89af832bf58d99076c25184e7ab2f716c3b62e3f1839aa781075a9915e7",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "!!",
+      "ignore_rule": ".gitignore:26:*.log"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/composed-runner.diff",
+      "bytes": 9103,
+      "sha256": "9d0c6d29c55ca2196995e491a29d63bf036f15651007c10b3831a167f966dc1a",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/copied-source-inputs-after-build.json",
+      "bytes": 247906,
+      "sha256": "ffe9b1df067db4851583c7700cb73f738ec464386db551ff922d7d20dbcad699",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/copied-source-manifest.json",
+      "bytes": 218460,
+      "sha256": "afc3b247624b21514f5e5dc0296328b539580dd55daab2948fb98f303b46ed2d",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/copied-source.diff",
+      "bytes": 425637,
+      "sha256": "a70f2dee1a816e1b2ee4f066042a9fb5f67b0db0b3f568d36c7aae0a24af6895",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/create.log",
+      "bytes": 37,
+      "sha256": "358552271a9ca610001ce76abd97c1f61eb85b966e967b31368bae61296f6d8a",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "!!",
+      "ignore_rule": ".gitignore:26:*.log"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/darwin-version.log",
+      "bytes": 14,
+      "sha256": "39f2bb4ba4caae31e47a5b186080638b2c4b483e91d49de4e838e778e92030bd",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "!!",
+      "ignore_rule": ".gitignore:26:*.log"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/host-architecture.log",
+      "bytes": 6,
+      "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "!!",
+      "ignore_rule": ".gitignore:26:*.log"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/input-manifest.json",
+      "bytes": 171914,
+      "sha256": "a5d1a7a60bb81bf3cca8bc7672247472b8cd62b540279c5139b618b01a886c53",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/java-version.log",
+      "bytes": 205,
+      "sha256": "5b4412738541184e84f6b2d7520d4f4a7c2a455f60650491464c61adcbbbdeb0",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "!!",
+      "ignore_rule": ".gitignore:26:*.log"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/macos-version.log",
+      "bytes": 66,
+      "sha256": "31fd674ddb951680692d7b68cafdeab5baa6b3e82aae843269dad73b53f25fc5",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "!!",
+      "ignore_rule": ".gitignore:26:*.log"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/receipt.json",
+      "bytes": 322627,
+      "sha256": "872ba1e34987928fbe8981f6abe39cab8bd6b517d6f1bcd8fca2dc4f9bdb65c1",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/sdk-version.log",
+      "bytes": 5,
+      "sha256": "14a06c556ac677f94334dd2c86395d46009b9def8685e00741e60d31305a0262",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "!!",
+      "ignore_rule": ".gitignore:26:*.log"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/secondary-fifo-ownership-final.json",
+      "bytes": 115,
+      "sha256": "f2e3cae334d700c17135100cce60a0895c6faff407328f324ee4e005f8827595",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/secondary-fifo-ownership.json",
+      "bytes": 115,
+      "sha256": "f2e3cae334d700c17135100cce60a0895c6faff407328f324ee4e005f8827595",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/selected-developer.log",
+      "bytes": 48,
+      "sha256": "f61dc333807430553f78902403e4cc45b547d508c03963122c5c75c6d27beedb",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "!!",
+      "ignore_rule": ".gitignore:26:*.log"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/selected-sdk-path.log",
+      "bytes": 122,
+      "sha256": "7a600faec8bfe87bad2f5e0f3c3a4886ab3143a661d90b7e7cd8acadf806627a",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "!!",
+      "ignore_rule": ".gitignore:26:*.log"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/xcode-version.log",
+      "bytes": 32,
+      "sha256": "bb7fc9a8f5e063e81975b33054b3a526c91bcccff263ad11d5bd8bcdbe8f0973",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "!!",
+      "ignore_rule": ".gitignore:26:*.log"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/l08-runner.log",
+      "bytes": 322627,
+      "sha256": "872ba1e34987928fbe8981f6abe39cab8bd6b517d6f1bcd8fca2dc4f9bdb65c1",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "!!",
+      "ignore_rule": ".gitignore:26:*.log"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/preflight-api-binding.json",
+      "bytes": 1764,
+      "sha256": "f8dc35e05599653d550faa5e817428ef40669d46e04209de71d936beefa33003",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/reviewed-preflight/ios-readiness-source-ci.json",
+      "bytes": 299323,
+      "sha256": "828016ceb191c6baca42c78202586ab6e2d516fba68698c2fa5d2a8a129c3b86",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/reviewed-preflight/l08-controls.json",
+      "bytes": 20904,
+      "sha256": "ca75dcc1c4cceb57b55d0c9557a6ade086bba4179b56f2e2ab99e742f31701eb",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/reviewed-preflight/normal-controls.json",
+      "bytes": 16860,
+      "sha256": "9df79d071925661130045e5994cc8078ef2f5ae179f1934423b40b8f5dd56d6f",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/reviewed-preflight/preflight.json",
+      "bytes": 2703,
+      "sha256": "66fcb21e70d6bbce8836ff3c63a4628638b67856c17941d38dcd2531deb25c9a",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/run-initial.json",
+      "bytes": 12682,
+      "sha256": "e5f0e5b7a024c06e447dca07bf7746f77394ecc72d8d5eb495e8e594c8ae5efc",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/run.json",
+      "bytes": 12685,
+      "sha256": "66f2c1f2fffca27de0eae16298f53eec15eeef43d5ba63e8044d80bbdd1ef4f1",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/run.log",
+      "bytes": 65933,
+      "sha256": "a91feb74663bb99bd8a85ec4f9bed5e35d91d8fc04a6233acba005b881de6659",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "!!",
+      "ignore_rule": ".gitignore:26:*.log"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/status-observations.jsonl",
+      "bytes": 3973,
+      "sha256": "fda1351c644ba8fa080af0944eb27ef6128fda38615bc2de2cc10eab8cf7e604",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/status-observer-result.json",
+      "bytes": 177,
+      "sha256": "a6719fae869c8521e5afc072ff3b762e76ed8e4c8294272f8fe873e363e4c3a0",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/workflow.json",
+      "bytes": 533,
+      "sha256": "8345984073768616fd6aff6682c95051f186881c5fa4727b120c80e019841ece",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-02/dispatch-result.json",
+      "bytes": 104,
+      "sha256": "e9992afe89dfe6b42935ee3acada460886afd78fbf58afce5b2c9bdc95c851fb",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-02/dispatch.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "!!",
+      "ignore_rule": ".gitignore:26:*.log"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-02/prior-runs.json",
+      "bytes": 2970,
+      "sha256": "3a0e8f5df14e8f7c11b7bdf0b8da2e155537c8bc380dd47493716b812480ac91",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-02/request.json",
+      "bytes": 2468,
+      "sha256": "b06001c9331d799c80998e0e972e10c15dde01c9835a727bd663709d96e4c2e5",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-02/run-association.json",
+      "bytes": 456,
+      "sha256": "fabd998aaddede2907fc7cb72d0059afe286d0ea3cf52449a910e1cc5ef5ce4c",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-02/runs-after-dispatch.json",
+      "bytes": 2967,
+      "sha256": "368d31ce67053df056f852f2ddb9df1147c17456c0ede56122850bb4f620703d",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-ledger-a19-independent-01.json",
+      "bytes": 42701,
+      "sha256": "c0e4e4988fec8c4d9b51dafced73be9fa9cb6e1e762d1af1cb2a5ea36d76c813",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-evidence-34244902185-independent-01.json",
+      "bytes": 17595,
+      "sha256": "cab3c048a245f5dfba84ce1e652005d05b47e1a5ad620181d2ca92a54f534413",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-ps-timeout-diagnosis-02.json",
+      "bytes": 36743,
+      "sha256": "db299fa48618a0c2232961c4ac50e8c94c2ae8bafa982cff7706994cb8b7785e",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-ps-timeout-diagnosis-independent-02.json",
+      "bytes": 4004,
+      "sha256": "3a0c2a12a7e57458fd34057afcf663ae08d40d7a57c49bf17b8b244da7eb2cc6",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "git_status_code": "??",
+      "ignore_rule": null
+    }
+  ],
+  "work_and_cleanup": {
+    "project_imports": 0,
+    "build_test_or_native_cycles": 0,
+    "workflow_dispatches": 0,
+    "network_requests": 0,
+    "source_or_existing_evidence_edits": 0,
+    "staging_commits_pushes": 0,
+    "gradle_stop_or_clean": 0,
+    "generated_runtime_workers_or_fixtures": 0,
+    "created_files": [
+      "remediation-runs/2026-09-08-continuation/reviews/post5f35-a19-ledger-safety-addendum-01.json"
+    ],
+    "cleanup": "Read-only standard-library/Git inspection and this new report only. No build lane, simulator, DerivedData, temporary worker or scratch output created. No cleanup commands against another owner lane; originals including failed receipts and excluded work preserved."
+  },
+  "findings": [],
+  "readiness_limit": "NOT READY. This is additive delivery safety and exact-byte custody, not application/runtime, native cleanup success, final combined qualification, physical-device/Store operations or owner legal/editorial/privacy approval."
+}

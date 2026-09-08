@@ -1,0 +1,577 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_FROZEN_SOURCE_SCOPE_AND_APPLICABLE_EVIDENCE_RECONCILIATION",
+  "reviewer": "/root/portability_review",
+  "recorded_at": "2026-09-08T15:18:10.355487+00:00",
+  "classification": "FROZEN_SCOPE_RECONCILED_NOT_FINAL_A_B_C_D_OR_STORE_QUALIFICATION",
+  "blocking_source_delta_findings": [],
+  "scope": "Bounded current-source/control/delivery-scope reconciliation. Reopened actual selected evidence and source; no repeated original16 test campaign, no new build/test/platform/CI execution and no blanket readiness approval.",
+  "frozen_source": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "transfer": "ec0de52a2c7ff9077482a291dc4fd2591fdea01f",
+    "previous_preparation": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+    "source_control_commit": "0607ced90fbd817ecff6994bf68ad51a9f30ebca",
+    "current_inventory_commit": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+    "tree": "e0e7abfff89975682a96a884cb745bcbc12e7238",
+    "tracked_status": "",
+    "full_history": true,
+    "local_origin_tracking_ref": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+    "remote_limit": "Local tracking ref inspected only; final direct remote equality remains coordinator-owned. No network request by reviewer.",
+    "source_manifest_rows": 825,
+    "source_manifest_sha256": "eb18e3a2d498ef43432d5ad97c7a885db9b648ae7981cfdadafb10e039c23413",
+    "current_manifest_reconstructed_and_all_hashes_equal_release03": true,
+    "inventory": {
+      "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "bytes": 9739610,
+      "sha256": "0f99bb5bb32977587c51ce61e46b240778b98d85ae0e0cc466b1efa921c45dac"
+    },
+    "inventory_rows": 15628,
+    "inventory_paths_equal_tracked_git_paths": true,
+    "inventory_only_commit": true,
+    "inventory_execution": "Actual frozen release-validator03 logs successful15628-row --check; no generator was executed by reviewer. Mechanical inventory is not15628 source reviews."
+  },
+  "previous_preparation": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/frozen-source-reconciliation-prep-01.json",
+    "bytes": 111413,
+    "sha256": "c0f0f14bcfb01f24d63d79be434f46d74fc88dddab8bd6bd938ce788371d33b3"
+  },
+  "delta": {
+    "ec0de_to_current_name_status_paths": 924,
+    "ec0de_to_current_name_status_sha256": "a706fb29e72b8c213828157ca1c3d209bbee8ef35a500434f9c3de86628ed13e",
+    "25b1_to_current_name_status_paths": 799,
+    "25b1_to_current_name_status_sha256": "5252f83e00ef360afd4cea4fd567ab06ed736120048077b404693667ef11ccd0",
+    "ordinary_changed_paths": [
+      "M\t.github/workflows/production-verification.yml",
+      "M\tCONTINUE_HERE.md",
+      "A\tdocs/AGENT_CONTINUATION_2026-09-08_LINUX.md",
+      "M\tdocs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "A\tscripts/ci/NATIVE_CONTINUATION.md",
+      "A\tscripts/ci/native_continuation.py",
+      "A\tscripts/ci/native_process_metadata.py",
+      "A\tscripts/ci/native_process_probe.py",
+      "A\tscripts/release/tests/test_native_continuation.py",
+      "A\tscripts/release/tests/test_native_process_probe.py",
+      "M\tscripts/release/tests/test_workflow_contract.py",
+      "M\tscripts/release/workflow_contract.py",
+      "A\tscripts/verification/ios-readiness/test_foundation_toolchain_binding.py",
+      "A\tscripts/verification/ios-readiness/test_native_command_failures.py",
+      "A\tscripts/verification/ios-readiness/test_toolchain_profiles.py",
+      "A\tscripts/verification/ios-readiness/toolchain_profiles.py"
+    ],
+    "unchanged_runtime_build_config_files": 632,
+    "unchanged_subtrees": [
+      {
+        "path": "composeApp",
+        "tracked_files": 121,
+        "nul_delimited_git_ls_tree_sha256": "530cbcbee413bd11a6c70992a627264c5c753efa24fa166ce47fb3b0e06f4e68",
+        "equal_at_all_three_commits": true
+      },
+      {
+        "path": "shared",
+        "tracked_files": 239,
+        "nul_delimited_git_ls_tree_sha256": "e6091ab34b38870e54a042171d7626c5832b75406f3f6eb3bb7c6e103d5cd5a8",
+        "equal_at_all_three_commits": true
+      },
+      {
+        "path": "game-modes",
+        "tracked_files": 238,
+        "nul_delimited_git_ls_tree_sha256": "b2ac350063b503585a5ca2f33a1a6acfd3e6872375bb5a600c6580a7c4b20bd1",
+        "equal_at_all_three_commits": true
+      },
+      {
+        "path": "iosApp",
+        "tracked_files": 19,
+        "nul_delimited_git_ls_tree_sha256": "272a4cccfefc0a2dd534fc064296769c4e3e03ae594ebdee73282fa62535e7f2",
+        "equal_at_all_three_commits": true
+      },
+      {
+        "path": "build-logic",
+        "tracked_files": 5,
+        "nul_delimited_git_ls_tree_sha256": "ed84ec392767420e47a7ce9b3905f36d279f3def3404f7d0dee20a4ef5bf4c9a",
+        "equal_at_all_three_commits": true
+      },
+      {
+        "path": "config",
+        "tracked_files": 6,
+        "nul_delimited_git_ls_tree_sha256": "44c98de7f682048130f2122463a85a2c90ef9efca039965be6cce5ea76a17cc9",
+        "equal_at_all_three_commits": true
+      },
+      {
+        "path": "gradle",
+        "tracked_files": 4,
+        "nul_delimited_git_ls_tree_sha256": "3ef8e5d248362d02c9c4c3127fa3a1e9996d20540f9b6ec5442a636639447348",
+        "equal_at_all_three_commits": true
+      }
+    ],
+    "comparison_command": "git ls-tree -r -z <each of ec0de,25b1,5f35> -- <path>; exact object/mode/path tables equal. Hashes use NUL-delimited output, unlike earlier prep newline tables.",
+    "unchanged_root_build_contract_and_store_files": [
+      {
+        "path": "settings.gradle.kts",
+        "bytes": 1422,
+        "sha256": "27a40495b1adf18ca90b5a8fdd345448c2ecf2f9ac726c753468a5e627b27d18"
+      },
+      {
+        "path": "build.gradle.kts",
+        "bytes": 8766,
+        "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b"
+      },
+      {
+        "path": "gradle.properties",
+        "bytes": 973,
+        "sha256": "2df8685921ad2c6eead097a6d9994bbcc93dbc5cbdeb0bce8911ffa4e83162ce"
+      },
+      {
+        "path": "gradlew",
+        "bytes": 8752,
+        "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933"
+      },
+      {
+        "path": "gradlew.bat",
+        "bytes": 2872,
+        "sha256": "2209f919a22528af59a2af2ad97e8d056cca18e39f7d87aa3fd549a73b180150"
+      },
+      {
+        "path": "AGENTS.md",
+        "bytes": 5834,
+        "sha256": "1e8cbc4f414819f47908e1a3be9f717792a0401fb4fb35b7272c053c00e2f609"
+      },
+      {
+        "path": "docs/PRODUCTION_ARCHITECTURE.md",
+        "bytes": 16988,
+        "sha256": "279e3287ab49d8889f9f9450a6a6769cc1dd9f72cbfa8c5ff559d2fa1884ca99"
+      },
+      {
+        "path": "docs/RELEASE_GATES.md",
+        "bytes": 9623,
+        "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+      },
+      {
+        "path": "docs/HOW_TO_ADD_A_GAME.md",
+        "bytes": 5627,
+        "sha256": "4e516e4340fff99813ad78d3508cfbdb55173d8e789fd12d7bd30978f3f8c356"
+      },
+      {
+        "path": "docs/adr/0001-game-module-registration.md",
+        "bytes": 2349,
+        "sha256": "20cd132edfb3e319d94bacbcd68cfd8caeed9ebf077b77a72d7861c863fc160c"
+      },
+      {
+        "path": "docs/adr/0002-manual-endpoint-connection.md",
+        "bytes": 3653,
+        "sha256": "29c2519cd37fde9bff64804417beca2220529c4449da2b29b3b88cbd3f8a8407"
+      },
+      {
+        "path": "docs/WHODUNIT_DISCUSSION_TIMING.md",
+        "bytes": 2360,
+        "sha256": "877084e47d0e823278057da1f0881fbab0a52e5a8e57aa48eec5fbabc49cece1"
+      },
+      {
+        "path": "docs/PRE_RELEASE_COMPATIBILITY.md",
+        "bytes": 3361,
+        "sha256": "32ae112de9fd761636191c3308faf28fa5a3a8f3fd694064bbeaf3f2ffe69060"
+      },
+      {
+        "path": "docs/WHODUNIT_TEST_CONTENT.md",
+        "bytes": 10841,
+        "sha256": "e10fc5f4d8d5024c5a9f1fcf51d1bf30a9a1fda410843ed51e42d66186cd5a33"
+      },
+      {
+        "path": ".github/workflows/testing-candidate.yml",
+        "bytes": 58091,
+        "sha256": "0488fc5e0c4e520a767408cfb5e7fa387bc5fdfa0edfeb9dcd29a4cb0d2c7976"
+      },
+      {
+        "path": ".github/workflows/testing-external-promotion.yml",
+        "bytes": 18217,
+        "sha256": "5874b8b435e3b6fbfc02bb1cb54f8ab1d26ab01cf25b4220b2d81985fecc8a86"
+      },
+      {
+        "path": ".github/workflows/production-promotion.yml",
+        "bytes": 21024,
+        "sha256": "94ca7f617c24cb4c9ffafa5860c7ebc104f08cfa46b2a2e13fbae3ed816c461b"
+      }
+    ],
+    "interpretation": "No application/game/UI/platform app, protocol, content, module graph, dependency pin/verification metadata, identity/signing configuration or accepted architecture contract changed. Active archived runners/templates/consumers remain executable controls despite their remediation-runs location; their changes are reconciled below rather than dismissed as evidence."
+  },
+  "preserved_invariants": [
+    "Host-only multiplayer reducer authority and public/own-private/host-only projection boundaries: complete shared/session/networking/engine and game sources unchanged; reopened current architecture boundaries.",
+    "Protocol.kt still declares major4/minor2 and isCompatibleWith uses exact equality. No seed, rule, action, snapshot or wire schema migration; deterministic RandomSource/reducer/session inputs unchanged.",
+    "Strict snapshots/content and iOS storage validation untouched. Missing or mismatched protection observations still fail; functional companion acceptance cannot replace strict L08.",
+    "Existing Mafia doctorCanProtectSamePlayerConsecutively defaultOFF and independent self-heal behavior retained; ON/OFF legality and recovery/privacy code unchanged. No extra game rule.",
+    "Whodunit Leave Confirmation time remains excluded from Discussion; peers gain no timer authority and other pause owners survive Stay. Current timing contract/source are byte-identical.",
+    "P2pKit0.7.0-rc3 core/LAN coordinates still share one version and resolve through Maven Central. Settings retain only the legitimate build-logic included build, no mavenLocal/sibling dependency override.",
+    "com.parlor.app identity collision remains unresolved; Debug .debug isolation and Store identity guards unchanged. All three publication/promotion workflows are byte-identical and remain disabled; none was dispatched by reviewer."
+  ],
+  "original16_and_timer": {
+    "preserved_maps": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/original16-timer-commit-evidence-map-01.json",
+        "bytes": 145466,
+        "sha256": "82cc49b33044b27c1be99115847a04bfa505fa5ee28706ccfd7e30f4f0e6f0ff"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/original16-timer-regression-descriptors-01.json",
+        "bytes": 150391,
+        "sha256": "b2fee80c8d9210fb44ab8b226a97912d30f381bc3eeea7ec9d4cb1a0e8d7e7af"
+      }
+    ],
+    "primary_repair_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+    "timer_policy_commit": "b4f0ece464aa44819044dd78d2f2fd137d88c91d",
+    "both_ancestors_of_current": true,
+    "basis": "The earlier independent prep reconciled51 mechanism references/50 unique paths and historical descriptor evidence. Maps are byte-identical to transfer; full632-file source equality preserves that narrow historical applicability. No original16 tests were rerun or claimed executed at5f35 by this review."
+  },
+  "changed_control_reconciliation": [
+    {
+      "area": "Transfer-to25b1 preparation",
+      "review": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/frozen-source-reconciliation-prep-01.json",
+        "bytes": 111413,
+        "sha256": "c0f0f14bcfb01f24d63d79be434f46d74fc88dddab8bd6bd938ce788371d33b3"
+      },
+      "conclusion": "Its copy-only single-tap correction, Linux JDK21/SDK lane portability, closed hosted profile, source-bound serial A/B adapter and additive candidate schema bootstrap remain scoped controls, not application changes. Relevant current sources/diffs and earlier approvals reopened; later supersession is explicitly below.",
+      "selected_approvals": [
+        {
+          "path": "remediation-runs/2026-09-08-continuation/reviews/l08-single-tap-independent-01.json",
+          "bytes": 13314,
+          "sha256": "7e8584012393a899aa3c5423c586834ee2703251c26d443513d03a4e5e16e8ac"
+        },
+        {
+          "path": "remediation-runs/2026-09-08-continuation/reviews/l08-single-tap-scanner-correction-independent-01.json",
+          "bytes": 5100,
+          "sha256": "f63242eb367d6b227c2bc2b38391a3963b50672821e20c1617cce8c0c9b65083"
+        },
+        {
+          "path": "remediation-runs/2026-09-08-continuation/reviews/native-portability-independent-01.json",
+          "bytes": 19885,
+          "sha256": "f6b77fac3047368fe8aec883a6f8a0daf82416e8f0b16a0e8b5d9a05a852724f"
+        },
+        {
+          "path": "remediation-runs/2026-09-08-continuation/reviews/schema-base-bootstrap-independent-01.json",
+          "bytes": 9865,
+          "sha256": "65dfcfdb2c9531f7ae2588f1d128d52d425584b4ca19ef3269cdc7abc7222e99"
+        }
+      ]
+    },
+    {
+      "area": "Primary command receipt and paired Foundation runtime correction",
+      "review": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-command-and-runtime-repair-independent-correction-02.json",
+        "bytes": 10455,
+        "sha256": "2129a189055e44478484515e1a24fd2cc228f7dfdebc97dc277bf49c41383bce"
+      },
+      "current_approved_inputs_rehashed": 13,
+      "conclusion": "Exact current13 inputs match corrected approval. Primary failure is recorded before secondary cleanup error and original exception re-raised. Only an owned Foundation render substitutes the closed local26.5.0 or qualified26.2.0 guard; copy binding/parser/preservation/collection pair the trusted profile. The native template and strict protection rules are not weakened. The initially missed SIGTERM entry finalizer was corrected and approved before execution; initial approval remains historical, not current."
+    },
+    {
+      "area": "New non-app probe, adapter injection and full-workflow isolation",
+      "review": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-source-independent-01.json",
+        "bytes": 38922,
+        "sha256": "7d214ea0e6b93b46670713518bd822079ee843fb1fe22ff233abbfa1571adadb"
+      },
+      "original_approved_inputs": 9,
+      "unchanged_current_inputs": 6,
+      "superseded_three": [
+        "scripts/ci/native_process_probe.py",
+        "scripts/ci/NATIVE_CONTINUATION.md",
+        "scripts/release/tests/test_native_process_probe.py"
+      ],
+      "conclusion": "Default full verification still selects all five jobs; focused modes are explicit and fail closed. Probe has source/control/ownership/privacy/output/deadline/custody guards and cannot invoke app A/B mode or become a production ownership fallback. Original ps15s backend/canonical runner remain unchanged. Current workflow diff only adds isolated approved diagnostic steps/10-minute diagnostic bound; full job allowance and full finalizers remain."
+    },
+    {
+      "area": "Exact qualification-enumeration budget correction",
+      "review": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-budget-independent-01.json",
+        "bytes": 9842,
+        "sha256": "53934d03592b917f311724e7e586744bfee36acad97a0fd88a7ea12c98cf7cda"
+      },
+      "current_inputs": [
+        {
+          "path": "scripts/ci/native_process_probe.py",
+          "bytes": 44789,
+          "sha256": "c87f6d1289ee50a7387988bd85953d451dac9e1b7b88a4d60f7b4848f86516da"
+        },
+        {
+          "path": "scripts/release/tests/test_native_process_probe.py",
+          "bytes": 43371,
+          "sha256": "707f394e34d8234f4617963af32a865b3620aaec7a16ee6e0c166c0e1090ef39"
+        },
+        {
+          "path": "scripts/ci/NATIVE_CONTINUATION.md",
+          "bytes": 10879,
+          "sha256": "e2e5f62f4a8d876585120e32ff73e91f7c3d992963c80346e94e54f906eec846"
+        }
+      ],
+      "conclusion": "Only exact absolute runtime/devicetype enumeration receives120s; all other adapter defaults20s, original ps15s and300/225 budgets unchanged. Full allowance must fit or no launch; only cleanup Git adapts remaining time. Named qualification failure prevents observations; all finalizers preserved. Current three changed CI pins match this later review, not the older probe approval."
+    }
+  ],
+  "applicable_actual_linux_evidence": {
+    "binding_reconciliation": {
+      "continuation-process-probe-budget-controls-01": {
+        "executed_commit": "1efed50cbc7856c11867e4cb088ba3b68716c8fc",
+        "tracked_diff_sha256": "a7c128e8a6a14954963b8f1818885cf403c0bcd2092ff93d529df5805ed92cf5",
+        "source_manifest_sha256": "fa02baf9686cb9e553157aedc35ada87e613b912f66192a4baa7a615011b179a",
+        "before_after_equal": true,
+        "current_825_path_set_equal": true,
+        "current_input_hash_differences": [
+          "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv"
+        ]
+      },
+      "continuation-release-validator-03": {
+        "executed_commit": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+        "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_manifest_sha256": "eb18e3a2d498ef43432d5ad97c7a885db9b648ae7981cfdadafb10e039c23413",
+        "before_after_equal": true,
+        "current_825_path_set_equal": true,
+        "current_input_hash_differences": []
+      },
+      "continuation-transport-contracts-03": {
+        "executed_commit": "1efed50cbc7856c11867e4cb088ba3b68716c8fc",
+        "tracked_diff_sha256": "a7c128e8a6a14954963b8f1818885cf403c0bcd2092ff93d529df5805ed92cf5",
+        "source_manifest_sha256": "fa02baf9686cb9e553157aedc35ada87e613b912f66192a4baa7a615011b179a",
+        "before_after_equal": true,
+        "current_825_path_set_equal": true,
+        "current_input_hash_differences": [
+          "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv"
+        ]
+      }
+    },
+    "focused45": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-process-probe-budget-controls-01/receipt.json",
+        "bytes": 304816,
+        "sha256": "d2a468ee6bbedeb8c2f06c16b5afe21d38036adfc560dd1f09658c7c59796d9e"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-process-probe-budget-controls-01/gradle.log",
+        "bytes": 15946,
+        "sha256": "46fcf68465f5bda416585d1a59892b616363b498c2fee7ec009b9f994e8489d8"
+      },
+      "independent_review": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/process-probe-budget-controls-independent-01.json",
+        "bytes": 11128,
+        "sha256": "bc2de7978febf58d17813762b16b8f36c78d5be7b60bbf39924ee74a6c73a08b"
+      },
+      "result": "Actual45 unique IDs allok, no failures/errors/skips; actual named qualifier/timeout/finalizer regression. The45 also reran within432 below: do not sum them as477 distinct tests. All824 non-inventory ordinary input hashes still match current5f35; label execution at1efed50 plus reviewed held delta, not new-SHA execution."
+    },
+    "frozen_release_validator432": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-03/receipt.json",
+        "bytes": 304360,
+        "sha256": "e39cba487668d9dcd3a0f294078422cee63dcbe18d08a8ddcdb8f8bfe4c89eef"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-03/gradle.log",
+        "bytes": 82865,
+        "sha256": "e49d299aa5b3196f305ded575091c512ef3032ab3dd17ba90f6e8d4264ace2a7"
+      },
+      "script": {
+        "path": "scripts/release/validate_release_system.sh",
+        "bytes": 3673,
+        "sha256": "ce52c9c08edecba968337d6de42c90895badec127c7029a5afc16737d3b8864a"
+      },
+      "result": "Actual432 unique verbose IDs exactly equal current AST declarations; Ran432 tests in44.372s; OK; zero failures/errors/skips.430 direct same-lineok and two fixture-output then next-lineok entries independently verified.",
+      "split_descriptors": [
+        {
+          "id": "test_notice_git_bytes.NoticeGitBytesTest.test_notice_bytes_survive_crlf_checkout_conversion",
+          "descriptor_line": 254,
+          "ok_line": 255
+        },
+        {
+          "id": "test_release_tool.GitTreeVerificationTest.test_unrelated_same_tree_is_rejected",
+          "descriptor_line": 284,
+          "ok_line": 285
+        }
+      ],
+      "sorted_ids_sha256": "4eaca5845d968f6707402ad77544b226b135db7dcbaed1fadb6f1ad8f080f031",
+      "static_checks": "Hash-bound unchanged set-euo-pipefail validator and exit0 establish unconditional py_compile, workflow contract, inventory --check, pinned ShellCheck0.11.0 and actionlint1.7.12. Actual workflow PASS, inventory freshness and tool-archive checksum lines retained; no separate per-tool exit receipts invented.",
+      "limit": "Local release automation/static/control execution at clean tracked5f35; no productionCheck/allTests/full five-job or app runtime assertion. Synthetic FAILED probe/custody JSONs are expected test fixtures, not native outcomes."
+    },
+    "transport03": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-03/receipt.json",
+        "bytes": 305441,
+        "sha256": "230bea21323f6443e2d87e82d90e6326bf66651d05a9e667adadf242ccecb312"
+      },
+      "log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-03/gradle.log",
+        "bytes": 4844,
+        "sha256": "3d5ae9254b8f1c4b58c0bba7feb744bf8ac6f9555cf0d62fc9141f9364f6ef47"
+      },
+      "independent_review": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/transport-contracts-03-evidence-independent-01.json",
+        "bytes": 23797,
+        "sha256": "73e05c66850697a44583673b7ac5b7851690f4d4b7f91713aaaa50315faee651"
+      },
+      "raw_xml_suites": 22,
+      "counts": {
+        "tests": 277,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 3
+      },
+      "actual_passes": 274,
+      "skips": [
+        "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]",
+        "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+        "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.host_broadcast_reaches_every_peer()[desktop]"
+      ],
+      "xml_path_hash_manifest_sha256": "c860a4b2c6cec6fb4be454c928c234cc2b1c26055c0496bd39eb244d1c724f83",
+      "execution": "desktopTest really executed;21 actionable tasks/14 executed/7 compilation tasks FROM-CACHE. Cached compilation is not newly executed compilation. Three peer loopback skips are unchanged single-JVM JmDNS fixtures, not physical tests or LAN passes.",
+      "applicability": "Current input-set delta from execution is only mechanical inventory; source, workflow/doc contract and dependency/build bytes otherwise equal. It remains working-tree-bound execution, not a fresh5f35 transport or final-matrix run."
+    },
+    "earlier_native_control_repairs": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/receipt.json",
+        "bytes": 329686,
+        "sha256": "d8d65f92d4d10014c62ca1b08a0e67ccbe697d6c72141815814b2a221c0f627d"
+      },
+      "packet": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/native-repair-results.json",
+        "bytes": 5645,
+        "sha256": "04973dc16add165b259016d2b86491fb10c96a02538d18d1b53d7ea325d54eef"
+      },
+      "independent_native_review": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-repair-controls-postrun-independent-01.json",
+        "bytes": 43581,
+        "sha256": "7856e25a8eb1f270e51bd3640a918542694735303c6ffa103426c5bb3be1593e"
+      },
+      "independent_ci_review": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-controls-independent-01.json",
+        "bytes": 29479,
+        "sha256": "4c370a22734ec870ab1443982f999455d18322cdfdb469f1475e8bf8af268630"
+      },
+      "result": "Raw nine unittest summaries total436 PASS (12+12+20+14+12+55+187+122+2); all ten commands including direct workflow contract exited0. Canonical outer/packet FAIL1 remains: one-off parser expected one composition allocation but actual four plus the separate Foundation allocation were independently reconciled. No failure receipt rewritten or hidden retest.",
+      "current261_explicit_input_differences": [
+        "scripts/ci/NATIVE_CONTINUATION.md",
+        "scripts/ci/native_process_probe.py",
+        "scripts/release/tests/test_native_process_probe.py"
+      ],
+      "applicability": "All13 current native authored inputs and unchanged normal187 controls remain byte-bound; the three superseded probe/doc/test inputs are covered by newer45/432. Synthetic harness evidence never proves actual Parlor libproc or L08 runtime."
+    },
+    "cleanup": {
+      "continuation-process-probe-budget-controls-01": {
+        "status": "PASS",
+        "stop_exit_code": 0,
+        "remaining_workers": [],
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "owned_scratch_lstat": "ENOENT",
+        "removed_outputs": [],
+        "completed_at": "2026-09-08T13:59:04.319495+00:00"
+      },
+      "continuation-release-validator-03": {
+        "status": "PASS",
+        "stop_exit_code": 0,
+        "remaining_workers": [],
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "owned_scratch_lstat": "ENOENT",
+        "removed_outputs": [],
+        "completed_at": "2026-09-08T14:22:42.477099+00:00"
+      },
+      "continuation-transport-contracts-03": {
+        "status": "PASS",
+        "stop_exit_code": 0,
+        "remaining_workers": [],
+        "remaining_outputs": [],
+        "cleanup_errors": [],
+        "owned_scratch_lstat": "ENOENT",
+        "removed_outputs": [
+          "shared/networking/build",
+          "shared/transport-p2p/build",
+          "shared/core/build",
+          "shared/storage/build",
+          "shared/engine/build",
+          "build",
+          "build-logic/convention/build"
+        ],
+        "completed_at": "2026-09-08T14:00:25.079678+00:00"
+      }
+    }
+  },
+  "latest_actual_non_app_diagnostic": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34239707887/native-process-probe/probe.json",
+      "bytes": 49515,
+      "sha256": "b598069f8c26e3d1851dc7e4eaade20fe72968f22403b32716fd996535990bb0"
+    },
+    "diagnosis": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-platform-diagnosis-02.json",
+      "bytes": 48184,
+      "sha256": "75a859b15fc3ac22163c277ad1900db71e4c3503eb886360459a15661fb3a3e9"
+    },
+    "outer_cleanup": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34239707887/native-process-probe-cleanup/parlor-process-probe-34239707887-1-cleanup.json",
+      "bytes": 913,
+      "sha256": "87666a0b900b950b7eb69aa7fafabfff6999305ff7720ed843f0fe2dd762bdb7"
+    },
+    "run_id": 34239707887,
+    "source": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+    "control_sha256": "eaf596f24601bfe908cae23039dc99e383ac3f2b29fd775e303bbe395485153b",
+    "all13_current_and_frozen_control_pins_match": true,
+    "status": "OBSERVATIONS_WITH_FAILURES_NOT_RUNTIME_EVIDENCE",
+    "original_ps": [
+      {
+        "label": "before-boot-original-ps",
+        "timeout_seconds": 15,
+        "elapsed_seconds": 0.04,
+        "exit_code": 0,
+        "complete": true
+      },
+      {
+        "label": "after-boot-original-ps",
+        "timeout_seconds": 15,
+        "elapsed_seconds": 4.128,
+        "exit_code": 0,
+        "complete": true
+      },
+      {
+        "label": "nonbuilding-xcode-original-ps",
+        "timeout_seconds": 15,
+        "elapsed_seconds": 10.207,
+        "exit_code": 0,
+        "complete": true
+      }
+    ],
+    "remaining_failures": "All three libproc metadata observations are explicitly partial (denied/disappeared rows); the one nonbuilding xcodebuild -showBuildSettings process timed out60s and was retired. No original15s ps timeout reproduced in this diagnostic, but no actool/Kotlin/application-build workload was reproduced or claimed.",
+    "cleanup": "All five internal stages COMPLETE, preservation failures0 and upload-bound owned-staging cleanup COMPLETE; canonical diagnostic FAIL is preserved.",
+    "limit": "Real bounded diagnostic observations only, not A functional/strict protection or B app-image libproc provenance, and not permission to weaken metadata validation or silently retry A/B."
+  },
+  "remaining_qualification": {
+    "A": "Fresh source/control/platform-bound composed native run still required:13 functional boots/20 operation records/26 protection comparisons plus three retained-host fixtures/42 operations, full recovery/Retry/Discard/retained-dual boundaries and paired Foundation observations. Missing/mismatched strict Complete observations remain failures; even full functional companion success is at best PARTIALLY_VERIFIED, not original strict L08 PASS. Native16 strict24 failures and pre-runtime A17 failure remain historical unresolved evidence.",
+    "B": "Eight genuine normal Debug-source XCTest repetitions plus separate ninth explicit application libproc query, exact process/image/provenance/structure-return-size/notices/signature and cleanup evidence still required with fresh bindings. B18 never reached app runtime.187 harness tests and diagnostic PROC_ALL_PIDS metadata are different scopes, not an actual Parlor provenance query.",
+    "C": "C01 at25b1 was separately completed; graph/build bytes have not changed. Fresh5f35 C02 is coordinator-owned and in progress outside this report: accept only reconciled four-graph export, production rendering, approved bindings and all four coupled candidate/prerequisite/schema-base/outer receipts with cleanup. This report neither re-labels C01 as5f35 nor certifies unfinished/current C02.",
+    "D": "Final same-frozen-source full five-job Actions qualification and independent executed-versus-cached/skipped/runtime reconciliation still required, including Apple and Windows scopes, five main/cleanup evidence sets, source/control drift checks and final commit/push/remote confirmation. No full5f35 result is claimed here."
+  },
+  "strict_investigation_reference": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/l08-strict-protection-investigation-independent-02.json",
+    "bytes": 11439,
+    "sha256": "0aeb142ac4ed512840a782bffb7a6041658f966b5ba918086abfbfccf0d5e1c0"
+  },
+  "execution_versus_delivery_policy": [
+    "Freeze source/control/ledger/inventory while coordinated runs execute. Evidence directories are not an automatic exemption: executable archived runners/templates/consumers/tests and freeze manifests are real inputs.",
+    "After runs, independently review exact delivery delta. A delta of retained non-executable evidence/remediation ledger plus mechanical inventory may preserve applicability to unchanged executable bytes, labelled executed at5f35 and delivered at a later SHA; it is not CI execution at that later SHA or a new candidate binding.",
+    "Inventory CSV is one of825 ordinary manifest inputs. Any inventory-only commit changes commit/tree/source-manifest hash; never claim whole-manifest equality across it. Regenerate/commit inventory as a separate mechanical step and preserve actual executed identities.",
+    "Any further application/build/dependency/schema/control or semantic contract correction needs separate review, affected checks, new source then inventory freeze, fresh explicit bindings and requalification. Do not reuse25b1/1efed50/5f35 approval hashes at a changed HEAD.",
+    "Preserve failed native15/16/A17/B18, initial diagnostic34232325670, new diagnostic34239707887, packet failures and skipped test receipts. Final direct remote confirmation and final task-owned worktree reconciliation remain coordinator-owned."
+  ],
+  "external_requirements": [
+    "Physical Android/iOS/mixed LAN, lifecycle, accessibility and signed-candidate device matrices remain separate and excluded here.",
+    "Real-device keybag/lock, backup/restore and power-loss behavior cannot be inferred from simulator observations.",
+    "Private signing, Store publication/promotion and credentials remain excluded; known com.parlor.app Store identity ownership collision unresolved.",
+    "Owner/legal approvals for distribution license, dependency licenses/notices, content rights/editorial, trademarks, privacy/support URLs, Store declarations and release operations remain required."
+  ],
+  "reviewer_activity": {
+    "tests": 0,
+    "builds": 0,
+    "project_imports": 0,
+    "network_or_workflow_dispatches": 0,
+    "source_edits": 0,
+    "commits_or_pushes": 0,
+    "cleanup_actions": 0,
+    "performed": "Read-only current Git/source/contract/review/log/JSON/XML/CSV inspection and stdlib comparisons; write only this unique review report. Current coordinator-owned C02 outputs/workers were not modified or claimed absent.",
+    "cleanup": "No reviewer build/test/native or temporary runtime resource created; no global cache or retained-evidence deletion."
+  },
+  "readiness": "NOT_READY. Current executable application/build/contracts remain compatible with the transfer and prior prep, and reviewed verification controls have scoped actual Linux evidence, but unresolved A/B/strict protection and final combined qualification prevent readiness/Store claims."
+}

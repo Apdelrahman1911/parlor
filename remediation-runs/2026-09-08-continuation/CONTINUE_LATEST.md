@@ -1,6 +1,8 @@
 # Continuation execution ledger — 2026-09-08
 
-**1efed50 diagnostic FAIL; qualifier-budget correction reviewed and Linux-checked; next freeze pending; NOT READY.** Read `AGENTS.md`,
+**At frozen5f35: corrected diagnostic FAIL; preflight SUCCESS (binding only);
+A19 FAIL / runtime NOT_RUN / cleanup FAIL; B20 NOT_RUN; fresh C02 PASS;
+full D unexecuted. NOT READY.** Read `AGENTS.md`,
 [`CONTINUE_HERE.md`](../../CONTINUE_HERE.md), the
 [Linux handoff](../../docs/AGENT_CONTINUATION_2026-09-08_LINUX.md) and the preserved
 [transfer handoff](../../docs/AGENT_CONTINUATION_2026-09-08.md).
@@ -22,7 +24,7 @@ evidence-delivery or inventory commit.
 - Reviewed continuation source/control commit:
   `160824e17caa384fa1802a82760638de1f71f2af`
   (`fix(verification): qualify continuation controls for hosted native runs`).
-- Earlier inventory-only commit, **A17/B18/C execution HEAD**:
+- Earlier inventory-only commit, **A17/B18/C01 execution HEAD**:
   `25b1c5551aee7630ac22d4b34668dd4b06c71b17`
   (`chore(review): refresh continuation source inventory`); tree
   `629a5d2b699cddb62d61849de3bd185fd4c01378`.
@@ -46,22 +48,55 @@ evidence-delivery or inventory commit.
   (`fix(verification): harden native receipts and add bounded hosted probe`);
   tree `25b6f87943867d2b5efe4e2b6820519db7779a8d`. It commits primary-error
   retention, exact Foundation-profile propagation and the bounded no-app probe.
-- Following inventory-only commit, **current pushed execution HEAD**:
+- Following inventory-only commit, **initial diagnostic execution HEAD**:
   `1efed50cbc7856c11867e4cb088ba3b68716c8fc`; tree
   `bcabd2fd29eaea276bee31ec4ff6b74b63a79366`. Inventory15,553 rows, SHA-256
   `3e067a3ccf70967663c2f6ddedff1c078a993312b13c968fd8d34d524fa7cc89`;
   frozen source825 entries, SHA-256
   `9aafa1d908884f2c083d75c2959be625806ea7984da4c72e07b0f2e60f45ff4c`.
   `reviews/hosted-probe-freeze-01.json` retains normal push exit0 and exact remote
-  equality. A direct `git ls-remote` during this refresh also returned exact1efed50.
+  equality. A direct `git ls-remote` during that earlier refresh also returned exact1efed50.
 - Fresh validator02 and the authorized initial diagnostic actually executed at
   clean1efed50, not a future correction/delivery revision. The diagnostic failed
   before process observations, as detailed below. The narrowly scoped qualifier-
-  budget correction is independently source-reviewed; its actual45 controls and
+  budget correction was independently source-reviewed; its actual45 controls and
   affected transport03 checks passed at1efed50 plus reviewed working-tree changes.
-  Next source/inventory commit SHAs and fresh native bindings are **not yet
-  established**. A19/B20, refreshed C and full D remain unexecuted; no repeat
-  diagnostic approval follows from the earlier one-run approval.
+- Subsequent reviewed source/control/evidence commit:
+  `0607ced90fbd817ecff6994bf68ad51a9f30ebca`
+  (`fix(verification): preserve qualified simulator discovery budgets`); tree
+  `28ed2a46e5ea0f126f42655c16c38bca898fd9bb`.
+- Following inventory-only commit, **current pushed execution HEAD**:
+  `5f35a20d3c9c846cd98b38a16881997ecf577497`
+  (`chore(review): freeze qualified discovery controls inventory`); tree
+  `e0e7abfff89975682a96a884cb745bcbc12e7238`. Inventory15,628 rows, SHA-256
+  `0f99bb5bb32977587c51ce61e46b240778b98d85ae0e0cc466b1efa921c45dac`;
+  frozen source825 entries, SHA-256
+  `eb18e3a2d498ef43432d5ad97c7a885db9b648ae7981cfdadafb10e039c23413`.
+  New execution receipts bind the clean tracked diff, not this later ledger edit.
+  `reviews/hosted-probe-freeze-02.json` (SHA-256
+  `ca885a8475e9e598e02bc07f01f1aac43bee0783f603dc38229b89d88a8bcf01`)
+  retains normal push0 and exact remote5f35. This refresh reopened the retained
+  receipts; the independent dispatch02 reviewer separately performed a direct
+  `git ls-remote` and confirmed the same exact remote, not merely a tracking ref.
+- Preserve the failed local pre-push preparation assertion in
+  `reviews/hosted-probe-freeze-02-binding-preparation-failure.json`, SHA-256
+  `94ceca439aa570aa712acaf4d7bf2af666d4fe2978f8771a2cbccae9c5e12307`.
+  The preliminary reviewer digest serialized a path-keyed dictionary rather than
+  the required sorted list. All13 source hashes agreed; the correct controls hash is
+  `eaf596f24601bfe908cae23039dc99e383ac3f2b29fd775e303bbe395485153b`.
+  No source edit, test rerun or dispatch occurred during reconciliation. Independent
+  `reviews/native-process-probe-dispatch-independent-02.json`, SHA-256
+  `9b80b40470010592ee9edf3b7fbb9ee18982241fbf890b566e541c4e184b1b1f`,
+  closes that preparation error, not by deleting or relabeling it as a test PASS.
+- Validator03, corrected diagnostic34239707887, fresh preflight34242374948,
+  A19 attempt34244902185 and C02 actually executed at clean5f35. Their distinct
+  results are below; B20 did not start and full D has not run. A narrow metadata
+  error-preservation correction is now underway, with separate safe-lifecycle
+  feasibility under review. Neither is completed native evidence or authorization
+  for another execution; no future source/inventory SHA or binding is claimed.
+  The current checkout has in-progress tracked companion/test edits and this
+  ledger edit; it is **not** the clean5f35 execution tree. Their author/reviewer
+  own the unfrozen correction separately from these historical receipts.
 
 Aliases: `C=remediation-runs/2026-09-07-local-readiness`,
 `N=remediation-runs/2026-09-08-continuation`.
@@ -71,9 +106,10 @@ Aliases: `C=remediation-runs/2026-09-07-local-readiness`,
 All paths in this table are `$C/evidence/<cycle>/`. Each retains `receipt.json`,
 raw logs and stop/cleanup evidence. The first five are working-tree-bound cycles;
 the sixth actually executed at clean25b1; the next two bind4b8 plus reviewed
-working-tree changes; validator02 executed at clean1efed50. The last two bind1efed50
-plus the reviewed budget correction and then-held ledger. None qualifies a future
-SHA; repeated test counts are not unique coverage.
+working-tree changes; validator02 executed at clean1efed50. The next two bind1efed50
+plus the reviewed budget correction and then-held ledger; validator03 actually
+executed at clean5f35. None qualifies a future SHA; repeated test counts are not
+unique coverage.
 
 | Cycle | Result and scope | Independent review under `$N/reviews/` |
 |---|---|---|
@@ -88,6 +124,7 @@ SHA; repeated test counts are not unique coverage.
 | `continuation-release-validator-02` | **426 PASS** at1efed50, zero failures/errors/skips; actual release validator, inventory15,553 freshness and pinned tools. | `native-process-probe-dispatch-independent-01.json` |
 | `continuation-process-probe-budget-controls-01` | **45 PASS**, zero failures/errors/skips; actual focused Python controls, not native observations. | `process-probe-budget-controls-independent-01.json` |
 | `continuation-transport-contracts-03` | **PASS**, actual `:shared:transport-p2p:desktopTest`: 22 XML suites, 277 cases / 274 PASS / three existing skips / zero failures/errors. | `transport-contracts-03-evidence-independent-01.json` |
+| `continuation-release-validator-03` | **432 PASS** at5f35, zero failures/errors/skips; actual release validator, inventory15,628 freshness and pinned tools. | `native-process-probe-dispatch-independent-02.json`; `frozen-source-scope-reconciliation-5f35a20d-01.json` |
 
 Focused passing scopes: packet16, lane21, schema-bootstrap26, toolchain12,
 composition55, normal187, schema-closure16. Schema closure also produced actual
@@ -120,6 +157,17 @@ matching source825/runner before-after bindings, immediate stop0 and no cleanup
 errors/workers/live outputs. Receipt SHA-256
 `1c538a25c7fdb6da3a6b0b6a72ce5d87047f7cf18e30963f8f061c07413bff6b`.
 This is Linux release-control execution, not `productionCheck` or native runtime.
+
+The actual validator freshly ran432 tests at clean5f35 in
+`continuation-release-validator-03`: raw `Ran 432 tests in 44.372s`, `OK`,
+script exit0. All432 verbose test IDs reconcile, including two Git-fixture
+interleavings rather than inline `ok` labels. Inventory15,628 freshness and
+pinned ShellCheck/actionlint stages passed. Source825/runner before-after bindings
+match, immediate stop0, no workers/live outputs/cleanup errors; cleanup completed
+at `2026-09-08T14:22:42.477099+00:00`. Receipt SHA-256
+`e39cba487668d9dcd3a0f294078422cee63dcbe18d08a8ddcdb8f8bfe4c89eef`.
+This is a new execution at5f35, not a relabeling of426/45 results, and is not
+`productionCheck`, an application test or final combined qualification.
 
 ### Resumed source/control checkpoint
 
@@ -209,18 +257,19 @@ Cleanup completed at `2026-09-08T13:59:04.319495+00:00` and
 `2026-09-08T14:00:25.079678+00:00`, respectively. This later ledger update is
 outside those execution bindings, not a new frozen qualification.
 
-All eleven outer receipts record source/runner stability, **stop0**, no remaining
+All twelve outer receipts record source/runner stability, **stop0**, no remaining
 owned workers/live outputs and no outer cleanup errors, including both failed
 cycles. Repair-controls01's failed postflight and additive raw-custody reconciliation
-remain separate above. The three C cycles below satisfy the same outer cleanup conditions:
-fourteen Linux outer receipts in total, not fourteen application-runtime passes.
+remain separate above. The six C01/C02 cycles below satisfy the same outer cleanup
+conditions: eighteen Linux outer receipts in total, not eighteen application-runtime
+passes. This Linux cleanup conclusion does **not** apply to A19's failed native cleanup.
 Required evidence and failed receipts remain retained. This ledger update ran
 no build/test/native worker and did not start or clean another agent's lane.
 
 ## A / B — actual hosted Apple evidence and remaining scope
 
 The earlier preflight and A17/B18 runs used `production-verification.yml` at exact25b1, attempt1,
-qualified Xcode26.3/17C529, simulator SDK/runtime26.2 on arm64. Four non-Apple
+qualified Xcode26.3/17C529, simulator SDK/runtime26.2 on arm64. Four other
 jobs and full Apple aggregate/wrapper steps were **skipped** by focused mode,
 not passed. Full raw logs, API run/jobs/artifact identities, ZIPs, extracted
 receipts and download receipts are under `$N/actions/<run-id>/`.
@@ -314,7 +363,141 @@ receipts and download receipts are under `$N/actions/<run-id>/`.
   reconciliation, not correction/tests or another dispatch. Original failed
   receipts remain immutable.
 
-### Reviewed corrections and next qualification-budget gate
+### Corrected no-app diagnostic at5f35 — actual FAIL with observations
+
+- Run **34239707887**, attempt1, `native-process-probe`: API/run and iOS job
+  **FAILURE**, probe step exit2. The fresh one-run dispatch02 approval was consumed
+  by this run. Raw `actions/34239707887/native-process-probe/probe.json`, SHA-256
+  `b598069f8c26e3d1851dc7e4eaade20fe72968f22403b32716fd996535990bb0`,
+  retains `OBSERVATIONS_WITH_FAILURES_NOT_RUNTIME_EVIDENCE`.
+- Actual platform: macOS15.7.9/24G830 arm64, Xcode26.3/17C529,
+  iOS26.2/23C54. Runtime/devicetype enumeration completed in6.115s/0.175s under
+  the corrected120s caps. That does not explain the prior20s failure or prove
+  that the larger allowance caused success.
+- The original unchanged15s full-ps command completed before boot, after boot
+  and during nonbuilding Xcode overlap in **0.040s / 4.128s / 10.207s**, exit0,
+  complete parsed counts. All three separate metadata-ps observations completed.
+  No global PID/argv rows were retained. These phases did not reproduce A17/B18's
+  timeout and did not observe ps during the synchronous bootstatus wait.
+- All three libproc **metadata** observations were partial: denied248/255/255;
+  the middle also had six disappeared processes. The actual136-byte structure
+  and successful self-row metadata are **not** a complete census, an ownership
+  fallback, a Parlor image query or normal Debug-binary provenance. Do not suppress
+  the denials or promote these observations to PASS.
+- The single `xcodebuild -showBuildSettings` command timed out at60s
+  (60.639s including retirement), exit-15, direct child reaped. Its output was
+  deliberately DEVNULL. The recorded overlap/live flags do not establish a
+  build/actool/Kotlin workload, successful settings extraction or a timeout cause.
+  All eight stage callbacks completed, **not all observations passed**. No app
+  build/XCTest/protection operation or timed-out-ps stack sampling occurred.
+- All five cleanup finalizers completed: immediate/final isolated Gradle stops0,
+  exact owned simulator shutdown0/delete0 with absence guards, exact resources/
+  DerivedData removal and unchanged source/control reconciliation. Preservation
+  errors/signals were empty. Post-upload custody was `COMPLETE`, preserving the
+  failed probe verdict. Four other jobs and full Apple/A/B steps were skipped.
+- Main artifact **10061558867**, ZIP SHA-256
+  `e5208be6be2c9603c622dbe8c6eb09072fdea9d4accb8174b2a5f661343bcd97`;
+  cleanup artifact **10061560599**, ZIP SHA-256
+  `687c3e2b09c8e34f4e3c0f299c2f0b62caa249da08168d9eb12f951c7f10c3f7`.
+  Raw API/log/ZIPs/extracted/download receipts are retained under
+  `actions/34239707887/`. Independent review
+  `reviews/native-process-probe-34239707887-independent-01.json`, SHA-256
+  `e281ebb0e606febac31c3ac012f495d11715430b9947a38d89acc200c7f99984`,
+  and diagnosis `reviews/native-process-probe-platform-diagnosis-02.json`, SHA-256
+  `75a859b15fc3ac22163c277ad1900db71e4c3503eb886360459a15661fb3a3e9`,
+  approve the factual reconciliation and a fresh binding-only preflight, not a
+  third unchanged diagnostic or an application-runtime success.
+
+### Fresh binding-only preflight at5f35 — actual SUCCESS
+
+- Run **34242374948**, attempt1, `native-preflight`: API/run and iOS job
+  **SUCCESS**. `actions/34242374948/native-preflight/preflight.json`, SHA-256
+  `66fcb21e70d6bbce8836ff3c63a4628638b67856c17941d38dcd2531deb25c9a`,
+  is `REVIEW_REQUIRED_NOT_RUNTIME_EVIDENCE`. No simulator allocation, app build,
+  XCTest, Parlor libproc or protection validation executed.
+- Fresh manifest `control_sha256` values, not JSON-file digests:
+  L08 `b2afb7dc5b900ff7ac8dac9fb9458b1aa762fba6ef4cd0c16513ac9757c37a99`;
+  normal `e0fd9c7859af3bdc20b82ca8807a6f5a053c09fde4e5d5a4b96896aafc3ebc71`.
+  Source825 and181 frozen control files plus the fresh binding were independently
+  reconstructed; A has96 control entries and normal91.
+- Main artifact **10062533514**, ZIP SHA-256
+  `fde8891243b7a33a70f4bfa275325844f7949e55c3bf00192fff9476213902e3`;
+  cleanup artifact **10062534419**, ZIP SHA-256
+  `2297a255d46fc8db92f09edad77f93de6db8d668393ec787b2042a554af705ed`.
+  Cleanup PASS, errors `[]`, binding removed after confirmed upload and source
+  unchanged. No build or simulator was allocated to retire. Four other jobs and
+  full Apple steps were skipped, not passed.
+- Independent `reviews/native-preflight-34242374948-independent-01.json`, SHA-256
+  `fc0a6a976cca30ee86a74137fc8b7fefcb8ab80c234c5754120ac0418a96038c`,
+  authorized exactly one initial A19, then B20 only if A's preservation and cleanup
+  were safe. **Run34244902185 consumed that approval. It is not retry permission.**
+
+### A19 at5f35 — FAIL / runtime NOT_RUN / cleanup FAIL; B20 NOT_RUN
+
+- Run **34244902185**, attempt1, `native-evidence`: API/run and iOS job102124280589
+  **FAILURE**. Focused native and custody-cleanup steps each exited1; both evidence
+  uploads succeeded. Four other jobs and full Apple steps were skipped.
+- Canonical `actions/34244902185/native-evidence/ios-readiness-19/receipt.json`,
+  SHA-256 `872ba1e34987928fbe8981f6abe39cab8bd6b517d6f1bcd8fca2dc4f9bdb65c1`,
+  retains **FAIL**, runner exit1, `runtime_evidence_status: NOT_RUN`,
+  `cleanup_status: FAIL`, `strict_l08_gate: NOT_SATISFIED_BY_COMPANION`.
+  No application build, XCTest, single-tap interaction, functional-storage,
+  retained-host, strict-protection or normal Parlor libproc query executed.
+- The13 command rows contain ten successful commands (eight toolchain/host
+  metadata queries, create and boot). The exact owned UUID
+  `2BE2D866-E8C8-42E6-B5EC-22D6789EECDA` was created/booted. Zero-based row10,
+  `simctl bootstatus ... -b`, preserves the original **ps15 TimeoutExpired** as
+  `primary_error` and the separate exact-owned-root **lsof30 TimeoutExpired**
+  as `command_cleanup_error`. The generic primary-error repair actually worked;
+  the individual registration-versus-monitoring census call remains unknown.
+- Row10 has no recorded child exit. Raw `bootstatus.log` reaches terminal
+  `Finished` at15:31:15Z/elapsed01:41, **after** the wrapper's
+  `finished_at: 15:31:01.112444Z`. That log is not a recorded command PASS, does
+  not establish direct-child retirement, and is not a300s boot-deadline failure.
+- Finalizer rows11/12 are `xcrun simctl list devices -j`, with no exit or
+  primary/secondary error fields and no accepted owned-metadata files.
+  **The actual shutdown/delete commands were never reached; exact simulator
+  absence was not attested.** Shutdown finalization surfaced lsof30 and delete
+  finalization ps15. Their original metadata-operation triggers are unrecoverable
+  because the separate metadata wrapper can mask them. Do not claim that simctl
+  inventory itself timed out45s.
+- The later six finalizers passed: owned-worker stop, secondary FIFO cleanup,
+  worker verification, copied-input verification, exact temporary copy/DerivedData/
+  home removal and final source identity. `owned_processes_remaining` and
+  `unknown_holders` are empty; source825/controls/copy764 bindings remained stable.
+  Those results **do not** retire the simulator or turn native cleanup into PASS.
+  **Zero Gradle build or stop commands executed**: `gradle_attempted` never became
+  true. Generic `cleanup_method` policy prose is not evidence of isolated stops.
+- Outer `continuation.json`, SHA-256
+  `27ffc9124098845dfd80b3af82bc3a4db42aeb0c933b87d1d518c002e0edb93d`,
+  is FAIL with `cleanup_safe: false` and
+  `native-cleanup-or-source-identity-unsafe-do-not-start-another-cycle`.
+  Only `runs.l08` exists. **B20 is NOT_RUN, not an independently failed B runtime.**
+  Canonical evidence preservation is COMPLETE/errors `[]`; the guard correctly
+  stopped the serial chain despite successful evidence preservation/upload.
+- Outer cleanup receipt SHA-256
+  `a771df59e74c61cfb89d580a7c75f256bece1b630138c34f9a1d8eb192956631`
+  is FAIL, `removed: []`, `native-cleanup-unsafe-retain-owned-evidence`.
+  Canonical evidence, binding, lock and staging were deliberately retained.
+  Generic Actions `Cleaning up orphan processes` is not exact UUID/PID retirement
+  proof; local review cannot retroactively clean the ended hosted runner.
+- Main artifact **10063811944**, ZIP SHA-256
+  `b18ef5c99f5a52e3c014fbe7eb8ba0202c3da9f6c3015c0c804b719492aa6a62`;
+  cleanup artifact **10063816208**, ZIP SHA-256
+  `5b98cf597751077b4ead067dc2d347dc179934ef304e70803a863413cf053340`.
+  Raw API/attempt/jobs/log/ZIPs/extracted/download receipts remain under
+  `actions/34244902185/`. Independent postrun
+  `reviews/native-evidence-34244902185-independent-01.json`, SHA-256
+  `cab3c048a245f5dfba84ce1e652005d05b47e1a5ad620181d2ca92a54f534413`,
+  reconciles eight downloads,29 ZIP members and20 canonical A files without
+  upgrading failures. Diagnosis `reviews/native-ps-timeout-diagnosis-02.json`,
+  SHA-256 `db299fa48618a0c2232961c4ac50e8c94c2ae8bafa982cff7706994cb8b7785e`,
+  has independent factual approval in
+  `reviews/native-ps-timeout-diagnosis-independent-02.json`, SHA-256
+  `3a0c2a12a7e57458fd34057afcf663ae08d40d7a57c49bf17b8b244da7eb2cc6`.
+  That addendum authorizes no source edit, test/build or further native dispatch.
+
+### Remaining A/B work and safe next-operation gates
 
 Use [`scripts/ci/NATIVE_CONTINUATION.md`](../../scripts/ci/NATIVE_CONTINUATION.md),
 not a Store workflow. One coordinator owns dispatches; same-ref concurrency can
@@ -326,55 +509,69 @@ cancel earlier runs, so do not overlap focused/full executions.
   independently source-reviewed, with the actual20 profile controls passing.
   The bounded investigation itself is independently approved in
   `reviews/l08-strict-protection-investigation-independent-02.json`. A17/B18 never
-  reached this guard; it is **not their observed ps failure cause**.
+  reached this guard; it is **not their observed ps failure cause**. A19 reached
+  no app/Foundation execution either. Public Foundation-source observations do
+  not waive the original strict gate or make its simulator failures physical-only.
 
 1. Source approval is recorded in
    `reviews/native-command-and-runtime-repair-independent-correction-02.json`
    (the current corrected approval, not the superseded initial test-entry bytes)
    and `reviews/native-process-probe-source-independent-01.json`. Actual affected
    controls436, transport02 and independent external reconciliation are recorded
-   above and were committed in22467846, then frozen by1efed50. They do not approve
-   unreviewed later changes. The introduced qualifier20s-cap correction now has
+   above and were committed in22467846, then frozen by1efed50. The introduced
+   qualifier20s-cap correction has
    independent source approval, actual focused45 PASS and affected transport03
-   PASS as recorded above. Both postrun reviews are closed; this ledger's
-   independent review remains a separate gate. These working-tree-bound checks do not authorize
-   native dispatch. Do not blindly repeat successful controls or erase the
-   retained cycle01 FAIL.
-   Primary and secondary cleanup errors remain separate; retain FAIL/finalizers.
-   Do not edit immutable ownership controls, increase the original ps15s bound, use stale process
-   rows, accept incomplete observations, weaken protection checks or change the
-   qualified toolchain as an unexplained workaround.
-2. After remaining independent reconciliation, commit reviewed source/controls, regenerate and commit mechanical inventory
-   separately, check/push/verify the exact new SHA, then create fresh bindings.
-   Obtain a fresh one-run approval before any corrected diagnostic. Its intended
-   scope still compares unchanged bounded15s full ps,
-   separate metadata-only ps and bounded libproc metadata before/after one owned
-   simulator boot, with CPU/memory/VM counters and ps binary identities. It also
-   records one nonbuilding `showBuildSettings` overlap/liveness observation.
-   It must not retain raw unrelated argv/environment or turn a failed observation
-   into permission to signal a process or run A/B. A no-app probe cannot prove
-   behavior under Xcode build load. Preserve outcomes before deciding a retry.
-3. Obtain fresh source/control preflight approval for any later A/B execution;
-   the reviewed next adapter identities are `ios-readiness-19` (A) and
-   `ios-readiness-20` (B), still pending source/inventory freeze and dispatch
-   approval. Never overwrite A17/B18.
-   No A19/B20 or repeat diagnostic approval has been issued at this checkpoint;
-   the initial1efed50 diagnostic failed before its observation stages.
-4. A still needs 13 functional boots / 20 operations / 26 protection comparisons,
+   PASS; committed0607, frozen5f35 and fresh validator432 are now recorded above.
+   The copy-only single-tap geometry/zero-counter fixture correction is also
+   already reviewed (`reviews/l08-single-tap-independent-01.json`) and committed;
+   do not add retaps or redo it as an unimplemented repair. Its application
+   interaction still has no new runtime proof. These
+   completed source/control changes do not approve later changes or retries.
+   Do not blindly repeat successful controls or erase retained failures.
+2. A19 exposes a separate mutable-companion seam at frozen5f35
+   `C/l08-storage-functional-companion-02/run_ios_readiness.py:434–470`:
+   `own_simulator_metadata` uses unguarded `except BaseException -> owner.stop ->
+   raise`, allowing cleanup to replace the primary error. The coordinator has
+   assigned a narrowly scoped primary/secondary error-preservation correction;
+   implementation is **underway**, not yet independently reviewed, tested,
+   committed or platform-verified at this ledger cutoff. Preserve bounded error
+   reporting, the same primary exception, final timestamps, exact owned metadata
+   privacy/identity/timeout guards and unchanged canonical ownership clones.
+   This is evidence preservation, not an OS-timeout or simulator-retirement fix.
+3. Separate safe-lifecycle feasibility is **under review, not authorized
+   execution**. Prior probe342397 sampled before/after synchronous bootstatus;
+   A19's ps15 failed during that wait before any application build. Active-boot
+   overlap is a prospective discriminator, not an established cause or proof
+   that A17/B18 failed identically. No unchanged A/B retry, third unchanged probe,
+   ownership fallback, stale/partial process rows, privilege increase or larger
+   ps/Xcode/lsof timeout is justified. Preserve ps15, exact-owned-root lsof30,
+   source/toolchain/privacy/protection/cleanup guards and every failed receipt.
+4. Any approved next native scope requires separate source/control review,
+   focused affected checks, committed reviewed changes, separately regenerated
+   and committed mechanical inventory, exact normal push/remote confirmation and
+   fresh bindings/independent dispatch approval. This ledger authorizes none.
+   Never overwrite A17/B18/A19, reuse consumed one-run approvals, or start B after
+   unsafe A merely because the process exited. Preserve new outcomes and inspect
+   them before another cycle; a full matrix is not a repair for prebuild ownership
+   failure. Use freshly reviewed cycle identities, not guessed future receipts.
+5. A still needs 13 functional boots / 20 operations / 26 protection comparisons,
    three retained-host fixtures / 42 operations, Settings/OS/lifecycle/image paths.
    Historical native16 remains FAIL: 14/15 observed functional operations passed,
    boot10 Home callback stayed zero, boots11–13 and retained-host paths were not
-   reached; all24 strict Complete comparisons failed. A17 adds no new protection
+   reached; all24 strict Complete comparisons failed. A17/A19 add no new protection
    observations. The companion never proves original strict L08 PASS. Preserve
    and separately report functional outcomes and strict metadata mismatches.
-5. B still needs eight genuine normal-source launches plus a separate ninth native
+6. B still needs eight genuine normal-source launches plus a separate ninth native
    libproc image query, actual native return/structure sizes, artifact/signature/
    notices bindings and cleanup. Historical native15's eight launches/48 samples
-   passed but ninth vmmap provenance failed; 187 controls do not query Parlor.
+   passed but ninth vmmap provenance failed; 187 controls and diagnostic metadata
+   do not query Parlor. B18 failed before that scope and B20 never started.
    A partial/failure permits B only when A's full ownership/source/control/cleanup
    receipts are safe, not merely because its process exited.
 
-## C — completed fresh chain at25b1 only
+## C — historical C01 at25b1; fresh C02 completed at5f35 only
+
+### Historical C01 — preserve its25b1 execution binding
 
 Actual cycles under `$C/evidence/`:
 
@@ -408,10 +605,58 @@ Independent reviews: `reviews/candidate-input-binding-independent-01.json` and
 `PASS_SCOPED_FRESH_C_CHAIN_AT_25B1C555_ONLY`, no open C input/schema/integrity/
 cleanup findings. This is not final-package, owner/legal, physical or Store proof.
 
-**Refresh export/render/candidate execution and approval after the next corrected
-source/control/inventory freeze.** C did not execute at22467846 or1efed50. Never promote the25b1 binding or results to
-the next SHA. Follow `reviews/dependency-chain-linux-preparation-01.md`; retain
-this successful chain as historical scoped evidence, not an unexecuted claim.
+C01 did not execute at22467846,1efed50 or5f35. Never promote its25b1 binding/results
+to a later SHA. The fresh C02 below is a separately approved, newly executed chain,
+not relocation of historical evidence. Preparation remains documented in
+`reviews/dependency-chain-linux-preparation-01.md`.
+
+### Fresh C02 — actual export/render/candidate consumption at clean5f35
+
+| Cycle under `$C/evidence/` | Actual result and outer receipt SHA-256 |
+|---|---|
+| `final-dependency-export-linux-02` | PASS/exit0/stop0; strict `writeResolvedDependencyInventory` executed. Five actionable tasks: four executed, one compilation task from cache. androidRelease239 components/129 artifacts; each iOS graph167/81. `ef7d3881f77ad0ff4177f7247f6865f9a1996a2fa904b441898af82c11c400ae` |
+| `final-dependency-render-linux-02` | PASS/exit0/stop0; actual renderer: four graphs,456 Maven components, unresolved `[]`. `30b10b62d293ad35d0b7c32b6a15719b532278cbd5580d1ce06f09522aa91971` |
+| `final-candidate-input-linux-02` | PASS/exit0/stop0; actual candidate consumer, not `--controls`, tests or app runtime. `dff3d1ff4369f338ede10946892b67ad0157c92b2305dd97b07223721dbbf64f` |
+
+Fresh `$N/candidate-input-binding-02.json`, SHA-256
+`f6a469a0df64b1f9c294c5ecdbd6f7b2f36642153928c7470d0827126e26c5af`,
+was approved before candidate execution in
+`reviews/candidate-input-binding-independent-02.json`, SHA-256
+`fc03d69f55d09e6ff6b4f7a05a12eba933fccae6c55dfd8b03204995af762462`.
+All four **C02** coupled receipts actually passed:
+
+- Consumer `candidate-input-verification.json`: `PASS_SCOPED_CANDIDATE_INPUTS`.
+- Adapter `candidate-prerequisites.json`:
+  `PASS_SCOPED_CANDIDATE_INPUT_EXECUTION`, consumer0, optional parser cleanup true.
+- Bootstrap `schema-base-prerequisites.json`: `PASS_OWNED_SCHEMA_PREREQUISITES`,
+  candidate mode, inner0, base-package cleanup true.
+- Outer `receipt.json`: PASS/exit0/stop0, no cleanup errors.
+
+The actual C02 consumer reconciles456 Maven components,459 publisher POMs,
+1,507,794 metadata bytes,26 source-notice resources and511 consumed files.
+Consumed-manifest SHA-256
+`5abe9120172a3e91961eec3a78868dd5a362935fbb251125d3b9538a54e6fe96`.
+**Four actual BOMs were validated using three pinned schema files**;
+`iri-reference` was encountered and checked, missing formats `[]`. Registration
+of other formats is not a claim they were all exercised. This is dependency/input/
+source-notice/schema consumption evidence, not app runtime or final-package proof.
+
+All three before/after source objects bind clean5f35/source825 and match; runner
+bindings are stable. Each immediate stop exited0; owned parser/scratch directories
+were removed, no owned workers/live outputs/cleanup errors remained. Cleanup
+completed at `2026-09-08T14:50:22.552970+00:00`,
+`2026-09-08T14:54:01.612109+00:00` and `2026-09-08T15:10:15.550640+00:00`.
+These passing Linux cleanups do not supersede A19's later failed native cleanup.
+
+Author postrun `reviews/candidate-input-postrun-author-02.json`, SHA-256
+`d22679559d86f8481659296623dc4f0773d148b68ea4070fb01570c64beb0599`,
+has independent raw-evidence approval in
+`reviews/candidate-input-postrun-independent-02.json`, SHA-256
+`f84071e1b693f0effc266b311dbdd084946952444d6093b55375917805e5b16e`:
+**`PASS_SCOPED_FRESH_C02_CHAIN_AT_5F35A20D_ONLY`**, no blocking C02 findings.
+This closes the fresh C02 chain at5f35, not A/B/D or owner/legal/Store requirements.
+A further source/control/inventory freeze requires fresh applicability/binding
+review; do not claim that these checks executed at an untested future SHA.
 
 Strict consumer binding keys remain exactly `schema_version, source,
 export_receipt, render_receipt, graphs, report, schemas, lane, consumer`;
@@ -420,7 +665,7 @@ or loosen schemas. Ordinary Linux cycle evidence remains under `$C/evidence/`.
 
 ## D — still unexecuted: combined qualification and final reconciliation
 
-After the justified investigation and new freeze, run existing workflow `full`
+After the justified investigation and independently reviewed new freeze, run existing workflow `full`
 at that frozen SHA; obtain all five jobs and
 five main/five cleanup artifacts. Inspect raw executed tasks/tests, cache hits,
 skips, Apple linkage versus runtime and artifact digests. Independently reconcile
@@ -429,9 +674,16 @@ identities here; commit/push completed evidence and verify remote equality.
 
 The prior reconciliation `reviews/frozen-source-reconciliation-prep-01.json`
 remains a preserved earlier-cutoff audit, not the actual later A/B/C result.
-No production/module/dependency/identity/architecture-contract delta was found
-from ec0de to25b1; original16/timer evidence retains its reviewed historical
-scope. Source/control or semantic-contract changes require affected requalification
+Fresh `reviews/frozen-source-scope-reconciliation-5f35a20d-01.json`, SHA-256
+`c22bce87856e880b1f0f27a2410a8b385746f2885016b1495f4f50a237babcf0`,
+reopened632 module/runtime files plus root/build/contracts and found no executable
+application/build/architecture-contract delta from ec0de/25b1 to5f35. Original16/
+timer evidence retains its reviewed historical scope, without repeating that
+campaign. Actual432 validator results and changed-control applicability were
+reconciled; the earlier45/transport03 cycles remain1efed50-plus-dirty executions,
+not new5f35 runs. This report deliberately does not certify C02, A/B or full D;
+their separately scoped evidence/remaining work is recorded above.
+Source/control or semantic-contract changes require affected requalification
 and fresh bindings. A reviewed evidence-only plus mechanical-inventory delta may
 retain applicability to unchanged runtime bytes, but must separate execution SHA
 from delivery SHA and must never claim exact newer-candidate execution.

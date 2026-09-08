@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "requested_at": "2026-09-08T14:39:48.459713+00:00",
+  "repository": "Apdelrahman1911/parlor",
+  "workflow": ".github/workflows/production-verification.yml",
+  "ref": "fix/local-readiness-2026-09-07",
+  "inputs": {
+    "verification_scope": "native-process-probe",
+    "frozen_source_sha": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+    "approved_probe_control_sha256": "eaf596f24601bfe908cae23039dc99e383ac3f2b29fd775e303bbe395485153b"
+  },
+  "approval": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-dispatch-independent-02.json",
+    "sha256": "9b80b40470010592ee9edf3b7fbb9ee18982241fbf890b566e541c4e184b1b1f"
+  },
+  "source_before": {
+    "commit": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+    "tree": "e0e7abfff89975682a96a884cb745bcbc12e7238",
+    "full_history": true,
+    "tracked_diff_empty": true
+  },
+  "remote_before": "5f35a20d3c9c846cd98b38a16881997ecf577497\trefs/heads/fix/local-readiness-2026-09-07",
+  "prior_run_ids": [
+    34232325670,
+    34216788568,
+    34214410629,
+    34152138368,
+    34143924756,
+    34112913001
+  ],
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=native-process-probe",
+    "-f",
+    "frozen_source_sha=5f35a20d3c9c846cd98b38a16881997ecf577497",
+    "-f",
+    "approved_probe_control_sha256=eaf596f24601bfe908cae23039dc99e383ac3f2b29fd775e303bbe395485153b"
+  ],
+  "scope": "ONE_FRESH_CORRECTED_NON_APP_DIAGNOSTIC_INITIAL_ATTEMPT_ONLY; no A/B, preflight, full, retries or Store workflows"
+}

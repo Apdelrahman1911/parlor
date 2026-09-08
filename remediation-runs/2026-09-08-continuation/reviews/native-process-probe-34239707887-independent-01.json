@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_NATIVE_PROCESS_PROBE_POSTRUN_AND_NON_APP_PREFLIGHT_DECISION",
+  "reviewer": "/root/ci_review",
+  "diagnosis_author": "/root/native_ci",
+  "recorded_at": "2026-09-08T15:01:51.464482+00:00",
+  "status": "VERIFIED_DIAGNOSTIC_FAILURE_WITH_BOUND_OBSERVATIONS_AND_SAFE_CUSTODY_CLEANUP",
+  "run": {
+    "repository": "Apdelrahman1911/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "head_sha": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+    "tree": "e0e7abfff89975682a96a884cb745bcbc12e7238",
+    "workflow": ".github/workflows/production-verification.yml",
+    "root": "/Users/runner/work/parlor/parlor",
+    "run_id": 34239707887,
+    "run_attempt": 1,
+    "workflow_id": 335554528,
+    "ios_job_id": 102106444528,
+    "run_conclusion": "failure",
+    "probe_exit_code": 2,
+    "job_started_at": "2026-09-08T14:40:00Z",
+    "job_completed_at": "2026-09-08T14:43:39Z",
+    "other_jobs_skipped": 4
+  },
+  "source_binding": {
+    "control_sha256": "eaf596f24601bfe908cae23039dc99e383ac3f2b29fd775e303bbe395485153b",
+    "control_files": 13,
+    "independent_check": "Actual artifact sorted LIST manifest, controls02 and approval02 agree; all13 file hashes independently matched frozen Git blobs and current bytes. Original full ps command/15s seam independently checked by AST without importing it.",
+    "dispatch_approval": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-dispatch-independent-02.json",
+    "dispatch_approval_sha256": "9b80b40470010592ee9edf3b7fbb9ee18982241fbf890b566e541c4e184b1b1f",
+    "actual_request": "remediation-runs/2026-09-08-continuation/actions/native-process-probe-dispatch-02/request.json",
+    "actual_request_sha256": "23772eaa06dbba29c935464cef8dd5cb32ab23c04ddac27a21dc8a37ac09e54e",
+    "request_check": "Exactly the three approved native-process-probe inputs, one new run/attempt1 at frozen source, successful dispatch and no retry permission; API run/attempt/job/workflow and retained log bindings agree."
+  },
+  "evidence_root": "remediation-runs/2026-09-08-continuation/actions/34239707887",
+  "evidence_file_sha256": {
+    "artifacts.json": "8c27b98e0a8a79efd30f6f532eb5f8921e57c468366a7295e9cfdc86ccb002fa",
+    "attempt.json": "9093d9f7b2bf862f2d0922320a864859027cd28bff784587e0c51e70dbf00310",
+    "download-receipt.json": "c292cf291a606c322fb701b1a5402a58844126fc780267481fd2a9a76f2e3214",
+    "jobs.json": "51443cd2e97d3d8b0321bd748dbafead696c41b5b722e3f65df39d78a7edffff",
+    "native-process-probe/owned-simulator-adopted.json": "91c05c1d26e13ac4e664f135fcfa4b5656b24cc708d2619e84b531dc58881675",
+    "native-process-probe/owned-simulator-create.json": "4759db5a4262fb6154c7b27abc5776ac4a51c020e416d18be7907456429d08ac",
+    "native-process-probe/owned-simulator-plan.json": "a59c2e17a481d94bd6768291614926677b3dd77a5fe85140862fb24662d32f15",
+    "native-process-probe/probe.json": "b598069f8c26e3d1851dc7e4eaade20fe72968f22403b32716fd996535990bb0",
+    "native-process-probe-cleanup/parlor-process-probe-34239707887-1-cleanup.json": "87666a0b900b950b7eb69aa7fafabfff6999305ff7720ed843f0fe2dd762bdb7",
+    "native-process-probe-cleanup.zip": "687c3e2b09c8e34f4e3c0f299c2f0b62caa249da08168d9eb12f951c7f10c3f7",
+    "native-process-probe.zip": "e5208be6be2c9603c622dbe8c6eb09072fdea9d4accb8174b2a5f661343bcd97",
+    "run-initial.json": "a3d9b1fe0c3b90329b3c3c27718d6585ad4f5c9da1cfcabec6cd88ffa01f37d1",
+    "run.json": "f1271cd966ce0aa371606e10a9eb8b3e24d6a80aec0363b204e7c02d90e4daf6",
+    "run.log": "b5eb7eae4a7cc64d9c26b2f9338756a94433fcaba4d17161c5568ab2c3943e42",
+    "watch.log": "070afa6ec2bc88d3554fafcd0f3aa16473b56a0261220fb0d9ddd759ceddfa00",
+    "workflow.json": "8345984073768616fd6aff6682c95051f186881c5fa4727b120c80e019841ece"
+  },
+  "artifacts": [
+    {
+      "artifact_id": 10061560599,
+      "name": "native-process-probe-cleanup-34239707887-1",
+      "archive": "native-process-probe-cleanup.zip",
+      "sha256": "687c3e2b09c8e34f4e3c0f299c2f0b62caa249da08168d9eb12f951c7f10c3f7",
+      "bytes": 788,
+      "members": 1
+    },
+    {
+      "artifact_id": 10061558867,
+      "name": "native-process-probe-34239707887-1",
+      "archive": "native-process-probe.zip",
+      "sha256": "e5208be6be2c9603c622dbe8c6eb09072fdea9d4accb8174b2a5f661343bcd97",
+      "bytes": 12438,
+      "members": 4
+    }
+  ],
+  "integrity": "All8 download records independently matched bytes/hash/exit0; both API artifact source/IDs/digests/sizes and original ZIP CRCs/5 extracted members match. Download integrity PASS is not diagnostic PASS.",
+  "platform": {
+    "host": "macOS15.7.9/build24G830; Actions macos-15-arm64 image20260829.0321.1; observed arm64,3 logical CPUs,7GiB RAM.",
+    "qualified_toolchain": "Xcode26.3/build17C529, iphonesimulator/device SDK26.2, iOS26.2 runtime23C54, iPhone17Pro type, exact qualified developer dir and JDK21.0.12 arm64 path; named qualification stage COMPLETE.",
+    "enumeration": "Exact runtimes/devicetypes commands each admitted120s; EXITED0/reaped in6.115s/.175s. No budget skips or retry. Current runtime query completed below20s, so this does not prove why the earlier20.003s query failed or that extra allowance caused success."
+  },
+  "installed_ps": {
+    "path": "/bin/ps",
+    "sha256": "b4dc60d3bfb3b5e4653b08741f5da6494efe9603f2dc359b7218850d46b9f2e0",
+    "identity": "Observed root-owned regular file, mode0104755(setuid),170816 bytes; Apple-signed com.apple.ps; signature verification exit0.",
+    "entitlements": {
+      "com.apple.private.persona-mgmt": true,
+      "com.apple.system-task-ports.read": true
+    },
+    "limit": "After-source reconciliation required the same exact executable identity. These observed permissions/entitlements are not authority-equivalent proof for UID501 Python, source-build configuration proof or a timeout mechanism."
+  },
+  "ps_observations": {
+    "before-boot": {
+      "original_seconds": 0.04,
+      "original_rows": 484,
+      "metadata_seconds": 0.012,
+      "metadata_rows": 484
+    },
+    "after-boot": {
+      "original_seconds": 4.128,
+      "original_rows": 670,
+      "metadata_seconds": 1.027,
+      "metadata_rows": 679
+    },
+    "nonbuilding-xcode": {
+      "original_seconds": 10.207,
+      "original_rows": 701,
+      "metadata_seconds": 0.543,
+      "metadata_rows": 715
+    }
+  },
+  "ps_result": "All6 full/ucomm ps commands EXITED0 within the original15s limit, empty stderr, no malformed rows, coordinator/observer seen and complete=true. These are sequential/non-atomic counts; before-boot means before the newly owned simulator, not before all CoreSimulator initialization.",
+  "libproc_metadata_observations": {
+    "before-boot": {
+      "elapsed_seconds": 0.174,
+      "enumerated": 485,
+      "observed": 236,
+      "error_counts": {
+        "denied:1": 248
+      }
+    },
+    "after-boot": {
+      "elapsed_seconds": 8.749,
+      "enumerated": 698,
+      "observed": 436,
+      "error_counts": {
+        "denied:1": 255,
+        "disappeared:3": 6
+      }
+    },
+    "nonbuilding-xcode": {
+      "elapsed_seconds": 4.028,
+      "enumerated": 716,
+      "observed": 460,
+      "error_counts": {
+        "denied:1": 255
+      }
+    }
+  },
+  "libproc_result": "All3 actual diagnostic metadata children EXITED0/reaped,136-byte PROC_PIDTBSDINFO layout and own UID501/PPID2645/PGID identity checked. Each complete=false; EPERM(1) denials and after-boot ESRCH(3) disappearances remain failures. Counts reconcile with skipped PID0. No denied target rows/UIDs were retained; no complete-worker census, argv/image selection, ownership fallback or Parlor Debug-binary provenance is established.",
+  "nonbuilding_xcode": {
+    "command_scope": "One xcodebuild -showBuildSettings with Debug/iphonesimulator/generic destination, exact owned DerivedData and package updates disabled; no build/test action.",
+    "pid": 4442,
+    "timeout_seconds": 60,
+    "status": "TIMEOUT",
+    "exit_code": -15,
+    "elapsed_seconds_including_retirement": 60.639,
+    "direct_child_reaped": true,
+    "overlap": "All3 nonbuilding-phase observations independently retained live_before=true/live_after=true for the same owned xcodebuild handle.",
+    "output_and_limit": "stdout/stderr intentionally DEVNULL; no settings/diagnostics retained and timeout cause unknown. This is not completed settings resolution or actool/Kotlin/application workload equivalence."
+  },
+  "failure_reconciliation": "All8 stage callbacks COMPLETE is not all observations PASS:3 partial libproc summaries and1 timed-out settings command correctly retain OBSERVATIONS_WITH_FAILURES_NOT_RUNTIME_EVIDENCE/exit2. Of54 direct command rows,53 EXITED and1 TIMEOUT; exitcodes52 zero,1 -15,1 expected blank-holder lsof exit1. No ps timeout, sampled stack, budget skip, primary-error field or signal occurred.",
+  "cleanup": {
+    "five_finalizers": "stop-immediate, owned-simulator-retirement, stop-final, exact-owned-resource-cleanup, source-control-reconciliation all COMPLETE.",
+    "gradle_stops": "Actual isolated-registry gradlew --stop commands exit0/reaped,18.499s immediate and.818s final; no application build/test task was selected.",
+    "owned_simulator": "Fresh exact UUID61CFBA14-3FA7-4210-BCB4-F4D3E8B1C776 absent from132-device baseline; context/nonce/name/runtime/type match plan/create/adoption receipts. Boot/bootstatus exit0; exact shutdown0/delete0 and final inventory/owned-directory absence guards passed.",
+    "workers_resources": "All54 direct handles reaped, no child/pipe/selector cleanup errors. Exact resource lsof exited1 with blank stdout/stderr; custody-checked resources and DerivedData removed; global wrapper distribution cache intentionally retained.",
+    "preservation": "Zero preservation errors/signals; source/controls and installed ps identity reconciled unchanged; cleanup_safe=true.",
+    "uploaded_custody": "COMPLETE at14:43:32.892187Z; matches main artifact10061558867/ZIP e5208be6..., removes only owned staging and preserves failed probe status.",
+    "limit": "Bound remote receipts/commands/source guards, not reviewer remote filesystem inspection or global missing-worker proof."
+  },
+  "independent_diagnosis_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-platform-diagnosis-02.json",
+    "sha256": "75a859b15fc3ac22163c277ad1900db71e4c3503eb886360459a15661fb3a3e9",
+    "result": "APPROVED_FACTUAL_DIAGNOSIS_NO_BLOCKING_FINDINGS",
+    "checks": "45 cited file references(33 unique) rehashed;23 copied command/stage objects exact to raw probe; platform/identity/metrics/custody objects independently matched. Narrative limits and proposed next step agree with independently reopened source/evidence.",
+    "conclusion": "Original historical ps15 timeout was not reproduced and is not proved fixed. No sampled stack or controlled same-table/workload comparison establishes KERN_PROCARGS2/task-port/VM/CoreSimulator/memory-pressure causation. No source correction or third unchanged diagnostic is justified by this run."
+  },
+  "next_native_preflight_decision": {
+    "status": "APPROVED_ONE_FRESH_NATIVE_PREFLIGHT_INITIAL_ATTEMPT_ONLY",
+    "workflow": ".github/workflows/production-verification.yml",
+    "branch": "fix/local-readiness-2026-09-07",
+    "allowed_inputs": {
+      "verification_scope": "native-preflight",
+      "frozen_source_sha": "5f35a20d3c9c846cd98b38a16881997ecf577497"
+    },
+    "other_inputs": "Omit all preflight-artifact, approved_l08, approved_normal and approved_probe inputs; no native-evidence/full/probe scope.",
+    "justification": "Exact discriminating no-app observations now executed and safe retirement/custody independently established. Fresh source/toolchain/A/B-control binding is a separate uncompleted preparation step; global metadata denials and settings timeout do not justify suppressing failures or another unchanged probe.",
+    "reopened_preflight_source_sha256": {
+      ".github/workflows/production-verification.yml": "d347a4cd3e22181b37e5aec91203d3aa37779cb7bb7976fb74ed01cc29ba328d",
+      "scripts/ci/native_continuation.py": "d5c6faf5a33187a9bed855f8d82b17ea2c90d72c3b22df0a041975f7a6bc7b21",
+      "scripts/verification/ios-readiness/toolchain_profiles.py": "8adacaf4c59ed823aa088ecb70ad5c6c1e3f76e7ca3520d8abf0563341591313",
+      "scripts/verification/ios-readiness/bind_source.py": "0954f5c24eb61c4f09c365efe6b3ab1fdb9f8342f86bad3e7654795464b53347"
+    },
+    "scope": "Existing preflight/run/cleanup branches qualify the exact platform, describe/bind source, compose A/B control manifests and upload them. No app build, XCTest, simulator allocation, libproc ABI/query or storage/protection validation. Cleanup removes only upload-confirmed custody/hash-bound binding/staging and requires clean source.",
+    "current_freeze": "Reviewer observed clean tracked5f35a20d/treee0e7ab; source/inventory freeze and actual432 controls remain bound by approval02. A fresh read-only git ls-remote again returned exact5f35a20d3c9c846cd98b38a16881997ecf577497 for continuation branch.",
+    "coordinator_conditions": "One coordinator dispatches once only after rechecking unchanged local/remote source and no conflicting active own run. Preserve exact run/attempt/source/platform, preflight ZIP/artifact identity/generated manifests and custody cleanup. Review actual results before any next operation; no automatic retry.",
+    "A_B_gate": "No A19/B20/native-evidence application dispatch approval. Its fresh preflight artifact, binding, composed L08 and normal controls require separate independent approval; historical bindings are not reusable. If source/control bytes change, reviewed commit/inventory and new bindings are required."
+  },
+  "exclusions": "No actual Parlor app/XCTest/L08 functional/retained-host/strict-protection or normal Debug-image libproc runtime evidence in this diagnostic; four other jobs and all full Apple/native-evidence steps skipped. No combined qualification approval, Store/device operation, privileges, ownership fallback or weakened checks.",
+  "preserved_history": "Current diagnostic failure and prior failed diagnostics/A17/B18/outer-control/preparation receipts remain unchanged. Failed non-app observations are not relabeled as application failures or application passes.",
+  "findings": [],
+  "readiness": "NOT READY. A/B and final combined qualification remain unproved; C evidence is separately coordinated and not assessed by this diagnostic report. Physical-device, Store-operation and owner/legal requirements remain separate.",
+  "reviewer_activity": "Read-only source/AST/Git/hash/JSON/log/ZIP inspection and one renewed remote equality query; no project imports, tests/builds/native queries, dispatches, cleanup operations or tracked edits. Only this unique postrun review file written."
+}

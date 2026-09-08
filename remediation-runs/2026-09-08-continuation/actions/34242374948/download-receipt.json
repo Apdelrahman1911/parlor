@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-08T15:06:01.175682+00:00",
+  "status": "PASS_DOWNLOAD_AND_INTEGRITY_NOT_RUNTIME_EVIDENCE",
+  "run_id": 34242374948,
+  "attempt": 1,
+  "head_sha": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+  "commands": [
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34242374948"
+      ],
+      "file": "run.json",
+      "exit_code": 0,
+      "bytes": 12685,
+      "sha256": "4a8026d6651c98729d06be30a22bbab126a38a93ee0e9e3184f766434761f079"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34242374948/attempts/1"
+      ],
+      "file": "attempt.json",
+      "exit_code": 0,
+      "bytes": 12707,
+      "sha256": "095afc3cc14807468e8703cd9ff6ccad651cd0d9bf5c5346514f250cdac4ef7b"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34242374948/attempts/1/jobs?per_page=100"
+      ],
+      "file": "jobs.json",
+      "exit_code": 0,
+      "bytes": 10561,
+      "sha256": "8d7b7a6229b1db5b381a4e17e0aa3468f98d62ba99b900257cb31f514bba93f0"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/workflows/335554528"
+      ],
+      "file": "workflow.json",
+      "exit_code": 0,
+      "bytes": 533,
+      "sha256": "8345984073768616fd6aff6682c95051f186881c5fa4727b120c80e019841ece"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34242374948/artifacts?per_page=100"
+      ],
+      "file": "artifacts.json",
+      "exit_code": 0,
+      "bytes": 1483,
+      "sha256": "bd7c4429453f7d825a62035e022eba86c74b8b99f8d3044bbc578cf76a52d0e6"
+    },
+    {
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "34242374948",
+        "--repo",
+        "Apdelrahman1911/parlor",
+        "--attempt",
+        "1",
+        "--log"
+      ],
+      "file": "run.log",
+      "exit_code": 0,
+      "bytes": 65513,
+      "sha256": "2a9503eb6a6c5d8a39ab75a365a1b96b1ae0b1338e0894cdb81a067c9c435c5c"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/artifacts/10062534419/zip"
+      ],
+      "file": "native-cleanup.zip",
+      "exit_code": 0,
+      "bytes": 767,
+      "sha256": "2297a255d46fc8db92f09edad77f93de6db8d668393ec787b2042a554af705ed"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/artifacts/10062533514/zip"
+      ],
+      "file": "native-preflight.zip",
+      "exit_code": 0,
+      "bytes": 93390,
+      "sha256": "fde8891243b7a33a70f4bfa275325844f7949e55c3bf00192fff9476213902e3"
+    }
+  ],
+  "artifacts": [
+    {
+      "artifact_id": 10062534419,
+      "artifact_name": "native-cleanup-34242374948-1",
+      "archive": "native-cleanup.zip",
+      "sha256": "2297a255d46fc8db92f09edad77f93de6db8d668393ec787b2042a554af705ed",
+      "api_digest_matches": true,
+      "members": [
+        {
+          "path": "native-cleanup/parlor-native-34242374948-1-cleanup.json",
+          "bytes": 977,
+          "sha256": "ae7a91878e2fc22baad097fc422ae92b3f43424e7bdad1ddb7ba941871e6bb61"
+        }
+      ]
+    },
+    {
+      "artifact_id": 10062533514,
+      "artifact_name": "native-preflight-34242374948-1",
+      "archive": "native-preflight.zip",
+      "sha256": "fde8891243b7a33a70f4bfa275325844f7949e55c3bf00192fff9476213902e3",
+      "api_digest_matches": true,
+      "members": [
+        {
+          "path": "native-preflight/ios-readiness-source-ci.json",
+          "bytes": 299323,
+          "sha256": "828016ceb191c6baca42c78202586ab6e2d516fba68698c2fa5d2a8a129c3b86"
+        },
+        {
+          "path": "native-preflight/l08-controls.json",
+          "bytes": 20904,
+          "sha256": "ca75dcc1c4cceb57b55d0c9557a6ade086bba4179b56f2e2ab99e742f31701eb"
+        },
+        {
+          "path": "native-preflight/normal-controls.json",
+          "bytes": 16860,
+          "sha256": "9df79d071925661130045e5994cc8078ef2f5ae179f1934423b40b8f5dd56d6f"
+        },
+        {
+          "path": "native-preflight/preflight.json",
+          "bytes": 2703,
+          "sha256": "66fcb21e70d6bbce8836ff3c63a4628638b67856c17941d38dcd2531deb25c9a"
+        }
+      ]
+    }
+  ],
+  "run_conclusion": "success",
+  "finished_at": "2026-09-08T15:06:08.663028+00:00"
+}

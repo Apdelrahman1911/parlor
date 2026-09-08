@@ -1,0 +1,728 @@
+{
+  "schema_version": 1,
+  "kind": "READ_ONLY_NATIVE_A19_PROCESS_TIMEOUT_AND_CLEANUP_FAILURE_DIAGNOSIS",
+  "author": "/root/native_ci",
+  "recorded_at": "2026-09-08T15:54:46.504006+00:00",
+  "status": "DIAGNOSED_PREBUILD_PS_PRIMARY_PRESERVED_METADATA_CLEANUP_MASKING_AND_UNVERIFIED_SIMULATOR_RETIREMENT",
+  "ownership": "New report only; no source/control correction, test, build, native process, workflow dispatch, retry or cleanup by this author.",
+  "run": {
+    "repository": "Apdelrahman1911/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "head_sha": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+    "tree": "e0e7abfff89975682a96a884cb745bcbc12e7238",
+    "workflow": ".github/workflows/production-verification.yml",
+    "root": "/Users/runner/work/parlor/parlor",
+    "run_id": 34244902185,
+    "run_attempt": 1,
+    "conclusion": "failure",
+    "ios_job_id": 102124280589,
+    "job_started_at": "2026-09-08T15:27:59Z",
+    "job_completed_at": "2026-09-08T15:34:29Z",
+    "native_step_exit_code": 1,
+    "outer_cleanup_step_exit_code": 1,
+    "non_apple_jobs_skipped": 4,
+    "runner": {
+      "image": "macos-15-arm64",
+      "image_version": "20260829.0321.1",
+      "os": "macOS15.7.9",
+      "os_build": "24G830"
+    },
+    "scope": "One serial A19/B20 native-evidence dispatch was approved; only A19 began because its cleanup/source safety gate failed."
+  },
+  "source_and_preflight": {
+    "approval": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-preflight-34242374948-independent-01.json",
+      "sha256": "fc0a6a976cca30ee86a74137fc8b7fefcb8ab80c234c5754120ac0418a96038c",
+      "bytes": 17512
+    },
+    "producer_run_id": 34242374948,
+    "producer_attempt": 1,
+    "producer_artifact_id": 10062533514,
+    "producer_zip_sha256": "fde8891243b7a33a70f4bfa275325844f7949e55c3bf00192fff9476213902e3",
+    "actual_api_binding": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/preflight-api-binding.json",
+      "sha256": "f8dc35e05599653d550faa5e817428ef40669d46e04209de71d936beefa33003",
+      "bytes": 1764
+    },
+    "source_binding": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/reviewed-preflight/ios-readiness-source-ci.json",
+      "sha256": "828016ceb191c6baca42c78202586ab6e2d516fba68698c2fa5d2a8a129c3b86",
+      "bytes": 299323
+    },
+    "source_manifest_sha256": "eb18e3a2d498ef43432d5ad97c7a885db9b648ae7981cfdadafb10e039c23413",
+    "source_rows_rehashed": 825,
+    "source_before_after_and_fresh_binding_exact": true,
+    "unique_control_paths": 182,
+    "controls_rehashed": {
+      "frozen_git_and_current_files": 181,
+      "retained_fresh_binding": 1,
+      "l08_rows": 96,
+      "normal_rows": 91
+    },
+    "l08_control_sha256": "b2afb7dc5b900ff7ac8dac9fb9458b1aa762fba6ef4cd0c16513ac9757c37a99",
+    "normal_control_sha256": "e0fd9c7859af3bdc20b82ca8807a6f5a053c09fde4e5d5a4b96896aafc3ebc71",
+    "composed_runner_sha256": "4ddc5f2e2215d02b1399042981352cbe12244a63149f0fa8d19e810936feaca2",
+    "composed_diff": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/composed-runner.diff",
+      "sha256": "9d0c6d29c55ca2196995e491a29d63bf036f15651007c10b3831a167f966dc1a",
+      "bytes": 9103
+    },
+    "composed_error_paths_unchanged": "Retained composed-runner diff does not alter generic command, own_simulator_metadata, shutdown/delete or Ownership functions; current source locations below therefore explain the actual failure paths.",
+    "platform": {
+      "name": "qualified-xcode-26.3",
+      "xcode": "26.3",
+      "build": "17C529",
+      "sdk": "26.2",
+      "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+      "runtime_version": [
+        26,
+        2,
+        0
+      ],
+      "developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+      "scope": "Xcode26.3/17C529 qualified compiler; Debug iOS26.2 simulator observation only, not Store-signing or physical-device evidence",
+      "selected_developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+      "architecture": "arm64",
+      "sdk_name": "iphonesimulator26.2",
+      "runtime_build": "23C54",
+      "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+      "simulator_sdk_path": "/Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk",
+      "android_sdk": "/Users/runner/Library/Android/sdk",
+      "java_home": "/Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home",
+      "runtime_scope": "Toolchain observation only; no application/ABI/protection/runtime claim"
+    }
+  },
+  "integrity": {
+    "download_receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/download-receipt.json",
+      "sha256": "bc0f591bafe07a56abcf9603a5e11beed393139704a95c4e6e1ab9bbfa0ab4a4",
+      "bytes": 9389
+    },
+    "download_status": "PASS_DOWNLOAD_AND_INTEGRITY_NOT_RUNTIME_EVIDENCE",
+    "downloaded_outputs_rehashed": 8,
+    "zip_api_ids_digests_names_bytes_and_crc_verified": true,
+    "archived_and_extracted_members_equal": 29,
+    "artifacts": [
+      {
+        "artifact_id": 10063816208,
+        "artifact_name": "native-cleanup-34244902185-1",
+        "archive": "native-cleanup.zip",
+        "sha256": "5b98cf597751077b4ead067dc2d347dc179934ef304e70803a863413cf053340",
+        "api_digest_matches": true
+      },
+      {
+        "artifact_id": 10063811944,
+        "artifact_name": "native-evidence-34244902185-1",
+        "archive": "native-evidence.zip",
+        "sha256": "b18ef5c99f5a52e3c014fbe7eb8ba0202c3da9f6c3015c0c804b719492aa6a62",
+        "api_digest_matches": true
+      }
+    ],
+    "canonical_a_files": 20,
+    "preserved_a_manifest_all_hashes_and_exact_file_set_verified": true,
+    "l08_runner_stdout_exactly_equals_canonical_receipt": true,
+    "preflight_four_retained_members_exactly_equal_reviewed_producer": true,
+    "scope": "Download/preservation integrity only. Both native and cleanup outcomes remain FAIL."
+  },
+  "execution_boundary": {
+    "cycle": "ios-readiness-19",
+    "canonical_status": "FAIL",
+    "runtime_evidence_status": "NOT_RUN",
+    "app_foundation_preservation": {
+      "status": "NOT_RUN",
+      "files": []
+    },
+    "app_foundation_collection": {
+      "status": "NOT_RUN"
+    },
+    "strict_l08_gate": "NOT_SATISFIED_BY_COMPANION",
+    "command_rows": 13,
+    "successful_qualifier_and_create_boot_commands": 10,
+    "first_failure_row_zero_based": 10,
+    "all_commands": [
+      {
+        "command": [
+          "xcrun",
+          "--sdk",
+          "iphonesimulator",
+          "--show-sdk-version"
+        ],
+        "started_at": "2026-09-08T15:29:28.681233+00:00",
+        "log": "sdk-version.log",
+        "exit_code": 0,
+        "finished_at": "2026-09-08T15:29:28.717070+00:00"
+      },
+      {
+        "command": [
+          "xcodebuild",
+          "-version"
+        ],
+        "started_at": "2026-09-08T15:29:28.719773+00:00",
+        "log": "xcode-version.log",
+        "exit_code": 0,
+        "finished_at": "2026-09-08T15:29:29.781094+00:00"
+      },
+      {
+        "command": [
+          "/usr/bin/sw_vers"
+        ],
+        "started_at": "2026-09-08T15:29:29.788470+00:00",
+        "log": "macos-version.log",
+        "exit_code": 0,
+        "finished_at": "2026-09-08T15:29:29.840697+00:00"
+      },
+      {
+        "command": [
+          "/usr/bin/uname",
+          "-sr"
+        ],
+        "started_at": "2026-09-08T15:29:29.845514+00:00",
+        "log": "darwin-version.log",
+        "exit_code": 0,
+        "finished_at": "2026-09-08T15:29:29.895403+00:00"
+      },
+      {
+        "command": [
+          "/usr/bin/uname",
+          "-m"
+        ],
+        "started_at": "2026-09-08T15:29:29.898089+00:00",
+        "log": "host-architecture.log",
+        "exit_code": 0,
+        "finished_at": "2026-09-08T15:29:29.937600+00:00"
+      },
+      {
+        "command": [
+          "/Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home/bin/java",
+          "-version"
+        ],
+        "started_at": "2026-09-08T15:29:29.939959+00:00",
+        "log": "java-version.log",
+        "exit_code": 0,
+        "finished_at": "2026-09-08T15:29:30.366876+00:00"
+      },
+      {
+        "command": [
+          "xcode-select",
+          "-p"
+        ],
+        "started_at": "2026-09-08T15:29:30.374220+00:00",
+        "log": "selected-developer.log",
+        "exit_code": 0,
+        "finished_at": "2026-09-08T15:29:30.428104+00:00"
+      },
+      {
+        "command": [
+          "xcrun",
+          "--sdk",
+          "iphonesimulator",
+          "--show-sdk-path"
+        ],
+        "started_at": "2026-09-08T15:29:30.431613+00:00",
+        "log": "selected-sdk-path.log",
+        "exit_code": 0,
+        "finished_at": "2026-09-08T15:29:30.488385+00:00"
+      },
+      {
+        "command": [
+          "xcrun",
+          "simctl",
+          "create",
+          "Parlor-Audit-parlor-audit-ios-readiness-19-93fjrjgh",
+          "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+          "com.apple.CoreSimulator.SimRuntime.iOS-26-2"
+        ],
+        "started_at": "2026-09-08T15:29:31.589469+00:00",
+        "log": "create.log",
+        "exit_code": 0,
+        "finished_at": "2026-09-08T15:29:32.313665+00:00"
+      },
+      {
+        "command": [
+          "xcrun",
+          "simctl",
+          "boot",
+          "2BE2D866-E8C8-42E6-B5EC-22D6789EECDA"
+        ],
+        "started_at": "2026-09-08T15:29:32.319997+00:00",
+        "log": "boot.log",
+        "exit_code": 0,
+        "finished_at": "2026-09-08T15:29:35.511334+00:00"
+      },
+      {
+        "command": [
+          "xcrun",
+          "simctl",
+          "bootstatus",
+          "2BE2D866-E8C8-42E6-B5EC-22D6789EECDA",
+          "-b"
+        ],
+        "started_at": "2026-09-08T15:29:35.600927+00:00",
+        "log": "bootstatus.log",
+        "interrupted_or_failed": true,
+        "primary_error": {
+          "type": "TimeoutExpired",
+          "message": "Command '['ps', '-axo', 'pid=,ppid=,pgid=,lstart=,command=']' timed out after 15 seconds"
+        },
+        "command_cleanup_error": {
+          "stage": "stop-owned-command-workers",
+          "type": "TimeoutExpired",
+          "message": "Command '['/usr/sbin/lsof', '-nP', '-t', '+w', '+D', '/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-19-93fjrjgh']' timed out after 30 seconds"
+        },
+        "finished_at": "2026-09-08T15:31:01.112444+00:00"
+      },
+      {
+        "command": [
+          "xcrun",
+          "simctl",
+          "list",
+          "devices",
+          "-j"
+        ],
+        "started_at": "2026-09-08T15:31:02.345851+00:00",
+        "log": "owned-device-before-shutdown.json",
+        "retention": "Only exact synthetic owned-name matches retained",
+        "finished_at": "2026-09-08T15:32:08.951541+00:00"
+      },
+      {
+        "command": [
+          "xcrun",
+          "simctl",
+          "list",
+          "devices",
+          "-j"
+        ],
+        "started_at": "2026-09-08T15:32:10.909354+00:00",
+        "log": "owned-device-before-delete.json",
+        "retention": "Only exact synthetic owned-name matches retained",
+        "finished_at": "2026-09-08T15:33:05.114911+00:00"
+      }
+    ],
+    "no_app_build_command": true,
+    "no_xctest_or_xcresult": true,
+    "no_gradle_build_or_stop_command": true,
+    "gradle_stop_interpretation": "No application build/test or Gradle wrapper call was reached; gradle_attempted remains false before line684. The receipt cleanup_method is a generic policy string, not evidence that an immediate/final stop occurred in A19. No Gradle stop PASS is claimed.",
+    "A_functional_storage": "NOT_RUN",
+    "A_retained_hosts": "NOT_RUN",
+    "A_single_tap_runtime": "NOT_RUN",
+    "A_strict_protection": "NOT_RUN",
+    "B20": "NOT_RUN_NOT_FAILED_RUNTIME",
+    "B20_basis": "continuation.runs contains only l08; no ios-readiness-20 directory, normal runner log, normal controls execution or region helper/query exists in this complete preservation set."
+  },
+  "primary_secondary": {
+    "primary": {
+      "type": "TimeoutExpired",
+      "message": "Command '['ps', '-axo', 'pid=,ppid=,pgid=,lstart=,command=']' timed out after 15 seconds"
+    },
+    "command_row": {
+      "command": [
+        "xcrun",
+        "simctl",
+        "bootstatus",
+        "2BE2D866-E8C8-42E6-B5EC-22D6789EECDA",
+        "-b"
+      ],
+      "started_at": "2026-09-08T15:29:35.600927+00:00",
+      "log": "bootstatus.log",
+      "interrupted_or_failed": true,
+      "primary_error": {
+        "type": "TimeoutExpired",
+        "message": "Command '['ps', '-axo', 'pid=,ppid=,pgid=,lstart=,command=']' timed out after 15 seconds"
+      },
+      "command_cleanup_error": {
+        "stage": "stop-owned-command-workers",
+        "type": "TimeoutExpired",
+        "message": "Command '['/usr/sbin/lsof', '-nP', '-t', '+w', '+D', '/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-19-93fjrjgh']' timed out after 30 seconds"
+      },
+      "finished_at": "2026-09-08T15:31:01.112444+00:00"
+    },
+    "source_behavior": "The generic command now records the first ps15 TimeoutExpired before calling owner.stop. That best-effort stop raised the separate lsof30 TimeoutExpired; primary was preserved and rethrown unchanged. This is actual error-path evidence for the reviewed repair, not native/application success.",
+    "primary_location_limit": "The generic wrapper registers the new child and later refreshes ownership during monitoring. Either can call full ps; this receipt has no registration-vs-monitoring subphase or observer PID/stack timestamp. Do not assert the exact individual snapshot call.",
+    "secondary_location": "stop-owned-command-workers invokes Ownership.stop; its AppHostOwnership.refresh(inspect_files=True) includes exact owned-root lsof. A30s lsof timeout is explicitly retained as command_cleanup_error, without replacing primary.",
+    "missing_exit": "Row10 lacks exit_code because owner.stop threw before child.poll. Neither failure nor success of the bootstatus direct child is implied by the absent exit field."
+  },
+  "bootstatus_lifecycle": {
+    "raw_log": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/bootstatus.log",
+      "sha256": "5cfee89af832bf58d99076c25184e7ab2f716c3b62e3f1839aa781075a9915e7",
+      "bytes": 1684
+    },
+    "wrapper_started_at": "2026-09-08T15:29:35.600927+00:00",
+    "wrapper_finished_at": "2026-09-08T15:31:01.112444+00:00",
+    "observed_output_start": "2026-09-08T15:30:47+00:00",
+    "last_terminal_output_at": "2026-09-08T15:31:15+00:00",
+    "last_terminal_text": "Status=4294967295, isTerminal=YES, Elapsed=01:41. Finished",
+    "timing_interpretation": "Raw owned bootstatus output continues after the wrapper has saved finished_at. That timestamp marks completion of exception handling, not child retirement. Failed owned stop left the child able to finish/report while later finalization proceeded. No saved final child exit code exists.",
+    "what_is_proven": "simctl create and boot returned0; the owned bootstatus emitted data-migration/system-app wait messages and later a terminal Finished marker. This is not an app launch or a successful bootstatus command receipt.",
+    "what_is_not_proven": [
+      "Not a300s bootstatus deadline breach; actual primary is the unchanged15s ps observer.",
+      "No proof that a specific migration plugin caused ps or lsof to block.",
+      "No measured PS/systemcall stack, peak memory/CPU, OOM or Gradle JVM pressure; only java -version was executed.",
+      "No current successful app/XCTest/strict-protection/libproc provenance."
+    ]
+  },
+  "newly_exposed_source_finding": {
+    "id": "NATIVE_METADATA_PRIMARY_EXCEPTION_MASKING",
+    "severity": "evidence-preservation defect; does not by itself identify or repair OS timeout cause",
+    "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+    "lines": "434-470",
+    "description": "own_simulator_metadata retains a separate unguarded except BaseException -> owner.stop -> raise. A stop error can replace the triggering registration/communicate/parse/identity failure. This exact path produced two rows without exit or primary/secondary fields during A19 finalization.",
+    "actual_rows": [
+      {
+        "command": [
+          "xcrun",
+          "simctl",
+          "list",
+          "devices",
+          "-j"
+        ],
+        "started_at": "2026-09-08T15:31:02.345851+00:00",
+        "log": "owned-device-before-shutdown.json",
+        "retention": "Only exact synthetic owned-name matches retained",
+        "finished_at": "2026-09-08T15:32:08.951541+00:00"
+      },
+      {
+        "command": [
+          "xcrun",
+          "simctl",
+          "list",
+          "devices",
+          "-j"
+        ],
+        "started_at": "2026-09-08T15:32:10.909354+00:00",
+        "log": "owned-device-before-delete.json",
+        "retention": "Only exact synthetic owned-name matches retained",
+        "finished_at": "2026-09-08T15:33:05.114911+00:00"
+      }
+    ],
+    "surfaced_finalizer_errors": [
+      {
+        "stage": "shutdown-owned-simulator-and-app",
+        "error_type": "TimeoutExpired",
+        "message": "Command '['/usr/sbin/lsof', '-nP', '-t', '+w', '+D', '/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-19-93fjrjgh']' timed out after 30 seconds"
+      },
+      {
+        "stage": "delete-owned-simulator",
+        "error_type": "TimeoutExpired",
+        "message": "Command '['ps', '-axo', 'pid=,ppid=,pgid=,lstart=,command=']' timed out after 15 seconds"
+      }
+    ],
+    "scope_of_inference": "The shutdown finalizer exposed lsof30 and delete finalizer exposed ps15, but either can be secondary masking. The triggering failure for either inventory operation is unrecoverable from these receipts. Do not claim simctl inventory itself timed out45s. No actual shutdown/delete command was reached.",
+    "minimal_correctness_direction": "Preserve bounded primary error before fallible stop/poll, independently capture bounded secondary cleanup errors, always retain final timestamp and rethrow the same primary in this one mutable-companion metadata wrapper. Preserve exact metadata output/privacy/identity/timeout guards; do not alter frozen ownership clones or treat this correction as a ps fix.",
+    "implementation_status": "NOT_IMPLEMENTED_OR_AUTHORIZED_BY_THIS_REPORT; requires coordinator ownership, independent source review, focused controls, source/control freeze and fresh bindings before any future native execution."
+  },
+  "cleanup": {
+    "canonical_status": "FAIL",
+    "finalization_stages": [
+      {
+        "stage": "shutdown-owned-simulator-and-app",
+        "status": "FAIL",
+        "at": "2026-09-08T15:32:10.907954+00:00"
+      },
+      {
+        "stage": "delete-owned-simulator",
+        "status": "FAIL",
+        "at": "2026-09-08T15:33:08.099059+00:00"
+      },
+      {
+        "stage": "stop-owned-command-workers",
+        "status": "PASS",
+        "at": "2026-09-08T15:33:47.835974+00:00"
+      },
+      {
+        "stage": "cleanup-attested-secondary-fifos",
+        "status": "PASS",
+        "at": "2026-09-08T15:33:48.192350+00:00"
+      },
+      {
+        "stage": "verify-workers-before-file-removal",
+        "status": "PASS",
+        "at": "2026-09-08T15:33:50.016262+00:00"
+      },
+      {
+        "stage": "verify-copied-input-identity-after-workers-stop",
+        "status": "PASS",
+        "at": "2026-09-08T15:33:51.287605+00:00"
+      },
+      {
+        "stage": "remove-owned-copy-derived-data-home-temp",
+        "status": "PASS",
+        "at": "2026-09-08T15:33:51.701256+00:00"
+      },
+      {
+        "stage": "read-final-source-identity",
+        "status": "PASS",
+        "at": "2026-09-08T15:33:54.560892+00:00"
+      }
+    ],
+    "errors": [
+      {
+        "stage": "shutdown-owned-simulator-and-app",
+        "error_type": "TimeoutExpired",
+        "message": "Command '['/usr/sbin/lsof', '-nP', '-t', '+w', '+D', '/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-19-93fjrjgh']' timed out after 30 seconds"
+      },
+      {
+        "stage": "delete-owned-simulator",
+        "error_type": "TimeoutExpired",
+        "message": "Command '['ps', '-axo', 'pid=,ppid=,pgid=,lstart=,command=']' timed out after 15 seconds"
+      }
+    ],
+    "owned_uuid": "2BE2D866-E8C8-42E6-B5EC-22D6789EECDA",
+    "simulator_shutdown_command": "NOT_REACHED",
+    "simulator_delete_command": "NOT_REACHED",
+    "owned_device_absence": "NOT_ATTESTED_FIELD_ABSENT",
+    "simulator_conclusion": "Task-owned simulator retirement failed. Exact UUID was created but neither shutdown/delete nor final inventory/directory-absence proof was obtained. Do not claim full cleanup because later worker/temp checks or the hosted job completed.",
+    "later_worker_check": {
+      "owned_processes_remaining": [],
+      "unknown_holders": [],
+      "stage": "verify-workers-before-file-removal PASS after stop-owned-command-workers PASS"
+    },
+    "worker_scope": "The later canonical PID/start/file-holder check reports no owned workers or unknown holders and allows exact temp removal. It does not prove the simulator managed by CoreSimulator services was retired.",
+    "secondary_fifos": {
+      "status": "PASS",
+      "removed": [],
+      "remaining": []
+    },
+    "secondary_attestation_errors": [],
+    "temporary_removed": true,
+    "copy_verification": {
+      "files": 764,
+      "source_files": 750,
+      "added_files": 14,
+      "before_after_all_copied_hashes_equal": true,
+      "unexpected_build_inputs": [],
+      "missing_build_inputs": [],
+      "unexpected_source_symlinks": [],
+      "unchanged": true,
+      "receipt": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/copied-source-inputs-after-build.json",
+        "sha256": "ffe9b1df067db4851583c7700cb73f738ec464386db551ff922d7d20dbcad699",
+        "bytes": 247906
+      }
+    },
+    "remaining_outputs": [],
+    "unexpected_original_outputs_preserved": [],
+    "source_unchanged": true,
+    "controls_unchanged": true,
+    "deferred_signals": [],
+    "outer_gate_error": "native-cleanup-or-source-identity-unsafe-do-not-start-another-cycle",
+    "outer_custody_receipt": {
+      "schema_version": 1,
+      "context": {
+        "repository": "Apdelrahman1911/parlor",
+        "branch": "fix/local-readiness-2026-09-07",
+        "head_sha": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+        "tree": "e0e7abfff89975682a96a884cb745bcbc12e7238",
+        "workflow": ".github/workflows/production-verification.yml",
+        "root": "/Users/runner/work/parlor/parlor",
+        "run_id": 34244902185,
+        "run_attempt": 1
+      },
+      "started_at": "2026-09-08T15:34:02.463508+00:00",
+      "status": "FAIL",
+      "removed": [],
+      "errors": [
+        {
+          "type": "RuntimeError",
+          "reason": "native-cleanup-unsafe-retain-owned-evidence"
+        }
+      ],
+      "upload": {
+        "artifact_id": "10063811944",
+        "sha256": "b18ef5c99f5a52e3c014fbe7eb8ba0202c3da9f6c3015c0c804b719492aa6a62"
+      },
+      "finished_at": "2026-09-08T15:34:02.473924+00:00"
+    },
+    "outer_interpretation": "Evidence upload succeeded and custody digest matches. Outer cleanup deliberately refused to delete claimed binding/lock/evidence/staging when canonical cleanup_safe=false; removed=[] remains FAIL, not a preservation failure or missing upload.",
+    "hosted_job_boundary": "The final Actions log only reports Cleaning up orphan processes, without a task PID/UUID retirement receipt. Do not turn generic hosted teardown into task-owned simulator cleanup proof. No read-only local review can execute cleanup on the ended remote runner."
+  },
+  "comparison_to_prior_probe": {
+    "prior_diagnosis": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-platform-diagnosis-02.json",
+      "sha256": "75a859b15fc3ac22163c277ad1900db71e4c3503eb886360459a15661fb3a3e9",
+      "bytes": 48184
+    },
+    "prior_run_id": 34239707887,
+    "known_scope_difference": "Prior no-app probe observed full ps before and after its owned bootstatus wait, not during bootstatus. A19 now reproduces the canonical ps15 failure during that wait without app build. That makes an active-boot observation a new discriminating scope, not evidence that a previous successful after-boot observation failed.",
+    "non_conclusions": [
+      "Prior .040/4.128/10.207s full-ps observations remain valid only for their recorded phases/host.",
+      "Current A19 does not prove the same syscall caused A17/B18 or that active boot is the sole necessary cause.",
+      "No global metadata/argv fallback, timeout increase, ownership-policy change or elevated privileges are justified by these receipts alone."
+    ]
+  },
+  "bounded_next_recommendation": {
+    "immediate": "Preserve A19 FAIL, unsafe simulator/custody cleanup and B20 NOT_RUN; independently review this diagnosis. Do not dispatch another unchanged A/B or after-boot probe.",
+    "actionable_source": "Address the newly demonstrated metadata exception-preservation defect only through a separately assigned, independently reviewed narrow correction and focused tests. This is actionable without Apple hardware but is not proof that app runtime can now proceed.",
+    "next_platform_hypothesis": "If further platform observation is approved, use one focused source-bound no-app observation that explicitly overlaps the owned simulator bootstatus phase with the exact original ps15; retain actual phase/live flags and optional bounded exact-owned timed-out observer stack. The prior probe did not observe that window. Any lsof investigation must retain the exact owned-root scope, unmodified30s canonical policy and direct-child/cleanup proof, without dumping unrelated paths/argv.",
+    "diagnostic_constraints": "Existing diagnostic direct-child/journal ownership can be used only after independently reviewed source/control changes; no fallback adoption, no global service kill, no privilege change, no original timeout shortening/extension, no cached/partial metadata success and no automatic retries. All failures, owned simulator retirement and upload custody must be evaluated before another native cycle.",
+    "why_not_full_qualification_as_a_repair": "The new failure occurs before any app build; repeating expensive application matrices does not isolate it. Separate final cross-platform gates may have independent justification, but cannot replace missing A/B or simulator cleanup proof.",
+    "authorization": "Recommendation only. No code change or additional workflow is authorized by this report; coordinator and independent review must approve exact next source/control/scope. If source/control changes, commit reviewed changes and regenerated inventory and create new bindings."
+  },
+  "source_citations": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "sha256": "a56f47787c5abbda301cdfcafa5c8ac4ad7eb505d21d560e86063f93453a36f7",
+      "bytes": 72609,
+      "lines": "393-425",
+      "meaning": "Generic command records primary before best-effort owned stop and child poll; records bounded secondary cleanup error; bare-raises original; saves finished_at even though child cleanup may have failed."
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "sha256": "a56f47787c5abbda301cdfcafa5c8ac4ad7eb505d21d560e86063f93453a36f7",
+      "bytes": 72609,
+      "lines": "434-470",
+      "meaning": "Separate pipe-capturing own_simulator_metadata still calls owner.stop in an unguarded exception handler. A secondary stop failure can mask the triggering registration/communicate/parse/validation failure; no primary/secondary fields retained."
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "sha256": "a56f47787c5abbda301cdfcafa5c8ac4ad7eb505d21d560e86063f93453a36f7",
+      "bytes": 72609,
+      "lines": "472-496",
+      "meaning": "Exact synthetic metadata/name/runtime/UUID check is required before shutdown/delete; shutdown state must be proved before deletion; final inventory+owned-device-directory absence required."
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "sha256": "a56f47787c5abbda301cdfcafa5c8ac4ad7eb505d21d560e86063f93453a36f7",
+      "bytes": 72609,
+      "lines": "299-327",
+      "meaning": "AppHostOwnership.refresh invokes canonical full ps, then secondary FIFO observation; inspect_files invokes lsof on only owned temporary/output roots and refuses unknown holders."
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "sha256": "a56f47787c5abbda301cdfcafa5c8ac4ad7eb505d21d560e86063f93453a36f7",
+      "bytes": 72609,
+      "lines": "376,681-706,926-1031",
+      "meaning": "bootstatus command must succeed before gradle_attempted/runtime RUNNING and app test; finalizers run independently, retaining simulator failures even if later worker/copy/temp checks pass; Gradle stops are conditional on a build being attempted."
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/owned_lane.py",
+      "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+      "bytes": 10446,
+      "lines": "42-58,61-79,114-188",
+      "meaning": "Exact full ps15 used for registration/refresh/fresh pre-signal checks; lsof30 strict inspection. Ownership.stop refreshes inspect_files=True before signalling, so inspection failure can abort stop before the direct child is retired."
+    },
+    {
+      "path": "scripts/verification/ios-readiness/owned_lane.py",
+      "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+      "bytes": 10446,
+      "lines": "42-188",
+      "meaning": "Byte-identical canonical ownership control; original argv,15s ps,30s lsof, full-command detached-Java and PID/start authority must remain unchanged absent a separately reviewed design."
+    },
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "sha256": "d5c6faf5a33187a9bed855f8d82b17ea2c90d72c3b22df0a041975f7a6bc7b21",
+      "bytes": 42095,
+      "lines": "364-387,603-650,686-729",
+      "meaning": "Native source/copy/cleanup proof gate rejects unsafe A and does not start B; preserves native artifacts first. Outer upload is insufficient for custody deletion if canonical cleanup_safe=false."
+    },
+    {
+      "path": "scripts/ci/native_process_probe.py",
+      "sha256": "c87f6d1289ee50a7387988bd85953d451dac9e1b7b88a4d60f7b4848f86516da",
+      "bytes": 44789,
+      "lines": "405-450,559-574",
+      "meaning": "Completed diagnostic measures before/after synchronous owned simulator boot and later showBuildSettings; no original ps probe overlapped its bootstatus wait. That prior nonreproduction does not cover current active-boot failure window."
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "sha256": "98334625a01adbe3c8b2fb1573895a5056c95e430cb9d857142809d8ef4db454",
+      "bytes": 56767,
+      "lines": "275-295,533-645,841-870",
+      "meaning": "Normal metadata uses the already repaired generic command; later eight XCTest repetitions and separate app libproc region path/lifetime proof never ran in this attempt. No B source/runtime inference from A19."
+    }
+  ],
+  "evidence": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/run.json",
+      "sha256": "66f2c1f2fffca27de0eae16298f53eec15eeef43d5ba63e8044d80bbdd1ef4f1",
+      "bytes": 12685
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/attempt.json",
+      "sha256": "20b1942455a0b964b861a05caa0d75aca9a15c117060ce5444f3b430b9168b61",
+      "bytes": 12707
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/jobs.json",
+      "sha256": "22121494084e48c569a646b731de4ae2c7ded3f4fc369fdae0be0a364d006bb4",
+      "bytes": 10561
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/workflow.json",
+      "sha256": "8345984073768616fd6aff6682c95051f186881c5fa4727b120c80e019841ece",
+      "bytes": 533
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/artifacts.json",
+      "sha256": "f0ed89b76e617fe6261a7279d17040a00c111bc5857ce5f1bc17fa431c445ceb",
+      "bytes": 1483
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/run.log",
+      "sha256": "a91feb74663bb99bd8a85ec4f9bed5e35d91d8fc04a6233acba005b881de6659",
+      "bytes": 65933
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/continuation.json",
+      "sha256": "27ffc9124098845dfd80b3af82bc3a4db42aeb0c933b87d1d518c002e0edb93d",
+      "bytes": 8034
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/failure.json",
+      "sha256": "9905a886e7445860f66bc0f94406deb5177e4b79e742f69afd7389ca799510a4",
+      "bytes": 137
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/receipt.json",
+      "sha256": "872ba1e34987928fbe8981f6abe39cab8bd6b517d6f1bcd8fca2dc4f9bdb65c1",
+      "bytes": 322627
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/bootstatus.log",
+      "sha256": "5cfee89af832bf58d99076c25184e7ab2f716c3b62e3f1839aa781075a9915e7",
+      "bytes": 1684
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/create.log",
+      "sha256": "358552271a9ca610001ce76abd97c1f61eb85b966e967b31368bae61296f6d8a",
+      "bytes": 37
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/app-foundation-copy-binding.json",
+      "sha256": "6868b59cb59ac1e074f46a766557afd1bff1d1deb9e50fd7ecf3f0529da48424",
+      "bytes": 2365
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/input-manifest.json",
+      "sha256": "a5d1a7a60bb81bf3cca8bc7672247472b8cd62b540279c5139b618b01a886c53",
+      "bytes": 171914
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/copied-source-manifest.json",
+      "sha256": "afc3b247624b21514f5e5dc0296328b539580dd55daab2948fb98f303b46ed2d",
+      "bytes": 218460
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/copied-source-inputs-after-build.json",
+      "sha256": "ffe9b1df067db4851583c7700cb73f738ec464386db551ff922d7d20dbcad699",
+      "bytes": 247906
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-cleanup/parlor-native-34244902185-1-cleanup.json",
+      "sha256": "a771df59e74c61cfb89d580a7c75f256bece1b630138c34f9a1d8eb192956631",
+      "bytes": 814
+    }
+  ],
+  "activity": {
+    "project_imports": 0,
+    "unit_tests": 0,
+    "builds": 0,
+    "native_commands": 0,
+    "workflow_dispatches": 0,
+    "remote_queries": 0,
+    "source_edits": 0,
+    "task_generated_resources": 0,
+    "performed": "Retained JSON/log/ZIP/source reading; stdlib hash/JSON/ZIP/CRC checks and read-only Git comparisons; wrote only this new diagnosis. One source-file lookup used wrong filename casing then was corrected; no executable native attempt resulted.",
+    "cleanup": "No author-owned build/test/native worker or temporary fixture created; no Gradle stop or unrelated cleanup attempted."
+  },
+  "readiness": "NOT_READY. A19 stopped before app build/runtime and has failed simulator/custody cleanup. B20 did not start. Functional storage/retained-host/strict protection and actual normal Parlor libproc provenance remain unverified. C and final combined qualification require their own evidence; physical-device, Store-operation and owner/legal requirements remain separate."
+}
