@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "context": {
+    "repository": "Apdelrahman1911/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "head_sha": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+    "tree": "629a5d2b699cddb62d61849de3bd185fd4c01378",
+    "workflow": ".github/workflows/production-verification.yml",
+    "root": "/Users/runner/work/parlor/parlor",
+    "run_id": 34216788568,
+    "run_attempt": 1
+  },
+  "started_at": "2026-09-08T10:51:12.987435+00:00",
+  "status": "PASS",
+  "removed": [
+    "remediation-runs/2026-09-08-continuation/evidence/ios-readiness-17",
+    "remediation-runs/2026-09-08-continuation/evidence/ios-readiness-18",
+    "remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json",
+    "remediation-runs/2026-09-08-continuation/build-lane.lock"
+  ],
+  "errors": [],
+  "upload": {
+    "artifact_id": "10052421289",
+    "sha256": "531b4ef9dd45d2a0a98b52c6fe7bc1dd2cbc3b431a74a556c2273c6776a8a8a1"
+  },
+  "native_runs": {
+    "l08": {
+      "cycle": "ios-readiness-17",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/Users/runner/work/parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+        "ios-readiness-17",
+        "/Users/runner/work/parlor/parlor/remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json",
+        "07ee6204dc12ff9fb53253818209893f4de7649f21c3e51cc477bf4157d7322a",
+        "--simulator-signing=adhoc",
+        "--toolchain=qualified-xcode-26.3"
+      ],
+      "started_at": "2026-09-08T10:43:07.323486+00:00",
+      "status": "FINISHED",
+      "exit_code": 1,
+      "finished_at": "2026-09-08T10:47:03.563565+00:00",
+      "receipt_status": "FAIL",
+      "cleanup_safe": true,
+      "receipt_sha256": "a25d6c67dba4d69f92d741089cfbe54f44aa8ae6158c4cd6dbb1a4b13f187512"
+    },
+    "normal": {
+      "cycle": "ios-readiness-18",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/Users/runner/work/parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+        "ios-readiness-18",
+        "/Users/runner/work/parlor/parlor/remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json",
+        "8128bafc217e491d09ca0a7b54d70c1cb67ff9392ade958b910933d247394750",
+        "--simulator-signing=adhoc",
+        "--toolchain=qualified-xcode-26.3",
+        "--image-observer=libproc"
+      ],
+      "started_at": "2026-09-08T10:47:03.646674+00:00",
+      "status": "FINISHED",
+      "exit_code": 1,
+      "finished_at": "2026-09-08T10:51:08.758909+00:00",
+      "receipt_status": "FAIL",
+      "cleanup_safe": true,
+      "receipt_sha256": "f89b9a66db4162f8da414f5500f726134bdbdd84790f3fc0a69ada953d4778b8"
+    }
+  },
+  "cache_policy": {
+    "created": [
+      "/Users/runner/.gradle/caches",
+      "/Users/runner/.gradle/wrapper"
+    ],
+    "policy": "Dependency/distribution cache only; never delete global caches."
+  },
+  "stop_policy": "Canonical native receipts attest immediate/final isolated Gradle stops; preflight builds nothing.",
+  "source_unchanged": true,
+  "finished_at": "2026-09-08T10:51:13.516712+00:00"
+}

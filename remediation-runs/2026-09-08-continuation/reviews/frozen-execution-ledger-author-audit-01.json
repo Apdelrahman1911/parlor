@@ -1,0 +1,1797 @@
+{
+  "schema_version": 1,
+  "kind": "EXECUTION_LEDGER_AUTHOR_EVIDENCE_RECONCILIATION_NOT_INDEPENDENT_LEDGER_REVIEW",
+  "author": "/root/evidence_audit",
+  "independent_ledger_review_owner": "/root/fixture_review",
+  "recorded_at": "2026-09-08T11:45:38.242800+00:00",
+  "status": "SCOPED_EVIDENCE_RECONCILED_NATIVE_FAIL_D_NOT_RUN_NOT_READY",
+  "ledger": {
+    "path": "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md",
+    "bytes": 17674,
+    "sha256": "e0c4ab05557936cf112d57cf54473a73334335a3bcec9c4313d9585d17434ce0"
+  },
+  "ownership": {
+    "tracked_edit_only": "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md",
+    "new_audit_only": "remediation-runs/2026-09-08-continuation/reviews/frozen-execution-ledger-author-audit-01.json",
+    "historical_evidence_modified": false,
+    "application_docs_controls_inventory_edited_by_this_author": false,
+    "tests_builds_native_commands_workflow_dispatches_commits": 0,
+    "read_only_reconciliation_not_test_execution": true
+  },
+  "source": {
+    "delivered_baseline": "ec0de52a2c7ff9077482a291dc4fd2591fdea01f",
+    "reviewed_control_commit": "160824e17caa384fa1802a82760638de1f71f2af",
+    "inventory_execution_commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+    "tree": "629a5d2b699cddb62d61849de3bd185fd4c01378",
+    "inventory_rows": 14847,
+    "manifest_sha256": "6e83dcdccc950fde35ccbf8fe2d4c73671a05a5f4a6a3a5068799af86bbd2334",
+    "manifest_entries": 820,
+    "all_820_source_rows_rehashed_from_execution_git_blobs": true,
+    "clean_execution_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "local_origin_tracking_ref_observed": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+    "retained_network_remote_observation": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-01/request.json",
+      "bytes": 1201,
+      "sha256": "7eaf6bfea23322d93feea35aaa02ae16be4f25ef357e79122ce89d23d49cd7a5"
+    },
+    "coordinator_additional_remote_confirmation": "Coordinator message in this resumed ledger-author turn reports directly executed git ls-remote origin refs/heads/fix/local-readiness-2026-09-07 returned exact25b1c5551aee7630ac22d4b34668dd4b06c71b17; this author did not execute another network query or fabricate a receipt.",
+    "production_subtree_entries_at_frozen_sha": 632,
+    "production_subtree_paths_changed_from_baseline": [],
+    "working_tree_clean_not_claimed_after_ledger_edit": true,
+    "working_tree_status_at_initial_audit": " M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\n M remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md\n M scripts/ci/native_continuation.py\n",
+    "working_tree_status_at_update": " M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_receipts.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\n M remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md\n M scripts/ci/native_continuation.py\n M scripts/verification/ios-readiness/toolchain_profiles.py\n"
+  },
+  "linux_outer_cycles": [
+    {
+      "cycle": "continuation-linux-lane-controls-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-lane-controls-01/receipt.json",
+        "bytes": 301976,
+        "sha256": "9538e853b2a868e1f3fac43f37b8363901f095372ec27c1676fa2c5da864c76b"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-08-continuation/controls/test_gradle_lane_portability.py"
+      ],
+      "source": {
+        "commit": "ec0de52a2c7ff9077482a291dc4fd2591fdea01f",
+        "tree": "48b099f3cd002a3253f21d2b06a4ece5787e62cb",
+        "branch": "fix/local-readiness-2026-09-07",
+        "tracked_status": "M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\n M remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+        "diff_sha256": "29fb270888ae197ac1352993a124c90441401642a670d4a677a8d64c5e7c554b",
+        "source_manifest_sha256": "95fa3b14c818024f97c5a58e0ad1e485e2a69df21f08a80b89ea0dfe4aa466e3"
+      },
+      "source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "remaining_owned_workers": [],
+      "started_at": "2026-09-08T08:54:59.486282+00:00",
+      "finished_at": "2026-09-08T08:55:00.865547+00:00",
+      "stopped_at": "2026-09-08T08:55:05.823413+00:00",
+      "cleanup_completed_at": "2026-09-08T08:55:05.887901+00:00",
+      "raw_test_summaries": {
+        "gradle.log": [
+          "Ran 21 tests in 0.037s",
+          "OK"
+        ]
+      }
+    },
+    {
+      "cycle": "continuation-ci-controls-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-ci-controls-01/receipt.json",
+        "bytes": 305467,
+        "sha256": "68f651a32b4781f80fa1b9d25252c5bf4687d5e861ca5cd41269311ff3b9f23c"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "scripts.release.tests.test_native_continuation",
+        "scripts.release.tests.test_workflow_contract",
+        "-v"
+      ],
+      "source": {
+        "commit": "ec0de52a2c7ff9077482a291dc4fd2591fdea01f",
+        "tree": "48b099f3cd002a3253f21d2b06a4ece5787e62cb",
+        "branch": "fix/local-readiness-2026-09-07",
+        "tracked_status": "M .github/workflows/production-verification.yml\n M CONTINUE_HERE.md\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/README.md\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\n M remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py\n M scripts/release/tests/test_workflow_contract.py\n M scripts/release/workflow_contract.py",
+        "diff_sha256": "7556edc910e117709b63ffb24f9effe82625af9d525cab143789e1eb58d3948a",
+        "source_manifest_sha256": "b3614749ea6ed13c68dd78d676587ee476a6ffb83e21dd752f42a178bd6bcfea"
+      },
+      "source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "remaining_owned_workers": [],
+      "started_at": "2026-09-08T09:38:32.532829+00:00",
+      "finished_at": "2026-09-08T09:38:34.184208+00:00",
+      "stopped_at": "2026-09-08T09:38:35.033226+00:00",
+      "cleanup_completed_at": "2026-09-08T09:38:35.126124+00:00",
+      "raw_test_summaries": {
+        "gradle.log": [
+          "Ran 79 tests in 0.162s",
+          "OK"
+        ]
+      }
+    },
+    {
+      "cycle": "continuation-transport-contracts-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/receipt.json",
+        "bytes": 306059,
+        "sha256": "74d7445fd6d60f39bb19a971f73f54c5a292b591963ff2175b65ef5a4d24d0db"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "command": [
+        "./gradlew",
+        ":shared:transport-p2p:desktopTest",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=continuation-transport-contracts-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "source": {
+        "commit": "ec0de52a2c7ff9077482a291dc4fd2591fdea01f",
+        "tree": "48b099f3cd002a3253f21d2b06a4ece5787e62cb",
+        "branch": "fix/local-readiness-2026-09-07",
+        "tracked_status": "M .github/workflows/production-verification.yml\n M CONTINUE_HERE.md\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/README.md\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\n M remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py\n M scripts/release/tests/test_workflow_contract.py\n M scripts/release/workflow_contract.py",
+        "diff_sha256": "7556edc910e117709b63ffb24f9effe82625af9d525cab143789e1eb58d3948a",
+        "source_manifest_sha256": "b3614749ea6ed13c68dd78d676587ee476a6ffb83e21dd752f42a178bd6bcfea"
+      },
+      "source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "remaining_owned_workers": [],
+      "started_at": "2026-09-08T09:39:20.344196+00:00",
+      "finished_at": "2026-09-08T09:44:05.795394+00:00",
+      "stopped_at": "2026-09-08T09:44:06.890033+00:00",
+      "cleanup_completed_at": "2026-09-08T09:44:07.125601+00:00",
+      "raw_test_summaries": {}
+    },
+    {
+      "cycle": "continuation-focused-controls-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/receipt.json",
+        "bytes": 305416,
+        "sha256": "32d1d5a0459b64d493b78f7c61b423c6967391eabe46026895cfe13bf642ae77"
+      },
+      "status": "FAIL",
+      "exit_code": 1,
+      "stop_exit_code": 0,
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-08-continuation/controls/run_continuation_controls.py"
+      ],
+      "source": {
+        "commit": "ec0de52a2c7ff9077482a291dc4fd2591fdea01f",
+        "tree": "48b099f3cd002a3253f21d2b06a4ece5787e62cb",
+        "branch": "fix/local-readiness-2026-09-07",
+        "tracked_status": "M .github/workflows/production-verification.yml\n M CONTINUE_HERE.md\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/README.md\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\n M remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py\n M scripts/release/tests/test_workflow_contract.py\n M scripts/release/workflow_contract.py",
+        "diff_sha256": "7556edc910e117709b63ffb24f9effe82625af9d525cab143789e1eb58d3948a",
+        "source_manifest_sha256": "b3614749ea6ed13c68dd78d676587ee476a6ffb83e21dd752f42a178bd6bcfea"
+      },
+      "source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "remaining_owned_workers": [],
+      "started_at": "2026-09-08T09:44:52.869406+00:00",
+      "finished_at": "2026-09-08T09:45:11.376493+00:00",
+      "stopped_at": "2026-09-08T09:45:12.018204+00:00",
+      "cleanup_completed_at": "2026-09-08T09:45:12.102762+00:00",
+      "raw_test_summaries": {
+        "schema-closure.log": [
+          "Ran 16 tests in 1.147s",
+          "OK"
+        ],
+        "lane.log": [
+          "Ran 21 tests in 0.060s",
+          "OK"
+        ],
+        "schema-bootstrap.log": [
+          "Ran 26 tests in 0.285s",
+          "OK"
+        ],
+        "functional-copy.log": [
+          "Ran 12 tests in 0.097s",
+          "FAILED (failures=1)"
+        ],
+        "single-tap.log": [
+          "Ran 13 tests in 1.061s",
+          "FAILED (errors=1)"
+        ],
+        "packet.log": [
+          "Ran 16 tests in 0.082s",
+          "OK"
+        ],
+        "normal.log": [
+          "Ran 187 tests in 0.775s",
+          "OK"
+        ],
+        "composition.log": [
+          "Ran 55 tests in 5.002s",
+          "OK"
+        ],
+        "toolchain.log": [
+          "Ran 12 tests in 0.100s",
+          "OK"
+        ]
+      }
+    },
+    {
+      "cycle": "continuation-l08-control-recheck-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/receipt.json",
+        "bytes": 306834,
+        "sha256": "bc2a7d2f96094ae1d214e16b031f07913a5579fc88e8e2f04ab75d2a1b67bd18"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "command": [
+        "/bin/bash",
+        "-c",
+        "set -u -o pipefail -C\ndestination=$(dirname \"$(dirname \"$TMPDIR\")\")\nmanifest() {\n  /usr/bin/python3 -B -c 'import json,runpy; p=runpy.run_path(\"remediation-runs/2026-09-08-continuation/controls/run_continuation_controls.py\",run_name=\"control_input_observation\"); print(json.dumps(p[\"manifest\"](),indent=2))'\n}\nmanifest > \"$destination/l08-control-inputs-before.json\" || exit 2\nsingle=0\n/usr/bin/python3 -B remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py > \"$destination/single-tap-recheck.log\" 2>&1 || single=$?\nfunctional=0\n/usr/bin/python3 -B -m unittest discover -s remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02 -p test_l08_functional_copy.py -v > \"$destination/functional-copy-recheck.log\" 2>&1 || functional=$?\nprintf '{\"single_tap_exit_code\":%s,\"functional_copy_exit_code\":%s}\\n' \"$single\" \"$functional\" > \"$destination/l08-command-exits.json\" || exit 2\nmanifest > \"$destination/l08-control-inputs-after.json\" || exit 2\ncmp \"$destination/l08-control-inputs-before.json\" \"$destination/l08-control-inputs-after.json\" || exit 2\nprintf '{\"single_tap_exit_code\":%s,\"functional_copy_exit_code\":%s,\"control_inputs_unchanged\":true,\"scope\":\"Focused control recheck, not application/runtime proof\"}\\n' \"$single\" \"$functional\" > \"$destination/l08-control-recheck-results.json\" || exit 2\ntest \"$single\" -eq 0 && test \"$functional\" -eq 0\n"
+      ],
+      "source": {
+        "commit": "ec0de52a2c7ff9077482a291dc4fd2591fdea01f",
+        "tree": "48b099f3cd002a3253f21d2b06a4ece5787e62cb",
+        "branch": "fix/local-readiness-2026-09-07",
+        "tracked_status": "M .github/workflows/production-verification.yml\n M CONTINUE_HERE.md\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08_FUNCTIONAL_README.md\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\n M remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py\n M scripts/release/tests/test_workflow_contract.py\n M scripts/release/workflow_contract.py",
+        "diff_sha256": "8c1d05aa764413e8c0d13758572fe7f267bfb2e588f26fc47600543e06d32f06",
+        "source_manifest_sha256": "b3614749ea6ed13c68dd78d676587ee476a6ffb83e21dd752f42a178bd6bcfea"
+      },
+      "source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "remaining_owned_workers": [],
+      "started_at": "2026-09-08T09:57:31.706519+00:00",
+      "finished_at": "2026-09-08T09:57:36.280167+00:00",
+      "stopped_at": "2026-09-08T09:57:37.129910+00:00",
+      "cleanup_completed_at": "2026-09-08T09:57:37.212087+00:00",
+      "raw_test_summaries": {
+        "single-tap-recheck.log": [
+          "Ran 14 tests in 1.841s",
+          "OK"
+        ],
+        "functional-copy-recheck.log": [
+          "Ran 12 tests in 0.098s",
+          "OK"
+        ]
+      }
+    },
+    {
+      "cycle": "continuation-release-validator-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-01/receipt.json",
+        "bytes": 302804,
+        "sha256": "54f123f4f092c4b7df674eacb8e916f44c87edc98dba16c7558cdba83375c7df"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "command": [
+        "/bin/bash",
+        "scripts/release/validate_release_system.sh"
+      ],
+      "source": {
+        "commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+        "tree": "629a5d2b699cddb62d61849de3bd185fd4c01378",
+        "branch": "fix/local-readiness-2026-09-07",
+        "tracked_status": "",
+        "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_manifest_sha256": "6e83dcdccc950fde35ccbf8fe2d4c73671a05a5f4a6a3a5068799af86bbd2334"
+      },
+      "source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "remaining_owned_workers": [],
+      "started_at": "2026-09-08T10:11:11.406876+00:00",
+      "finished_at": "2026-09-08T10:12:07.158226+00:00",
+      "stopped_at": "2026-09-08T10:12:07.956685+00:00",
+      "cleanup_completed_at": "2026-09-08T10:12:08.044964+00:00",
+      "raw_test_summaries": {
+        "gradle.log": [
+          "Ran 383 tests in 49.929s",
+          "OK"
+        ]
+      }
+    },
+    {
+      "cycle": "final-dependency-export-linux-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-01/receipt.json",
+        "bytes": 303584,
+        "sha256": "49df4bd696294e0a189e2094cbf27a48390f7d62b98c066cd7f39f069f956603"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "command": [
+        "./gradlew",
+        "writeResolvedDependencyInventory",
+        "-I",
+        "scripts/verification/resolved_dependencies.init.gradle",
+        "-Pparlor.dependencyInventoryDir=/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-01/raw-graphs",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=final-dependency-export-linux-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "source": {
+        "commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+        "tree": "629a5d2b699cddb62d61849de3bd185fd4c01378",
+        "branch": "fix/local-readiness-2026-09-07",
+        "tracked_status": "",
+        "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_manifest_sha256": "6e83dcdccc950fde35ccbf8fe2d4c73671a05a5f4a6a3a5068799af86bbd2334"
+      },
+      "source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "remaining_owned_workers": [],
+      "started_at": "2026-09-08T10:38:12.570311+00:00",
+      "finished_at": "2026-09-08T10:41:52.052026+00:00",
+      "stopped_at": "2026-09-08T10:41:53.455358+00:00",
+      "cleanup_completed_at": "2026-09-08T10:41:53.563118+00:00",
+      "raw_test_summaries": {}
+    },
+    {
+      "cycle": "final-dependency-render-linux-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-01/receipt.json",
+        "bytes": 303055,
+        "sha256": "3d72b4ba3360b53e2ee3f6134608c0df3d68a9d545068956be80cf962cc28768"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/verification/dependency_inventory.py",
+        "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-01/raw-graphs",
+        "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-01/report"
+      ],
+      "source": {
+        "commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+        "tree": "629a5d2b699cddb62d61849de3bd185fd4c01378",
+        "branch": "fix/local-readiness-2026-09-07",
+        "tracked_status": "",
+        "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_manifest_sha256": "6e83dcdccc950fde35ccbf8fe2d4c73671a05a5f4a6a3a5068799af86bbd2334"
+      },
+      "source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "remaining_owned_workers": [],
+      "started_at": "2026-09-08T10:44:00.286914+00:00",
+      "finished_at": "2026-09-08T10:46:31.894082+00:00",
+      "stopped_at": "2026-09-08T10:46:32.788296+00:00",
+      "cleanup_completed_at": "2026-09-08T10:46:32.888202+00:00",
+      "raw_test_summaries": {}
+    },
+    {
+      "cycle": "final-candidate-input-linux-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-01/receipt.json",
+        "bytes": 303006,
+        "sha256": "662cf8bc9ad2ac17df57281e11caa7cd907456a4ed1574ae56ee182855a3439c"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py",
+        "remediation-runs/2026-09-08-continuation/candidate-input-binding-01.json",
+        "d3d1a6d0c3345650e6eeb7f7a473e322a6c122a8e7036684cf701f5977de7fad"
+      ],
+      "source": {
+        "commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+        "tree": "629a5d2b699cddb62d61849de3bd185fd4c01378",
+        "branch": "fix/local-readiness-2026-09-07",
+        "tracked_status": "",
+        "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_manifest_sha256": "6e83dcdccc950fde35ccbf8fe2d4c73671a05a5f4a6a3a5068799af86bbd2334"
+      },
+      "source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "remaining_owned_workers": [],
+      "started_at": "2026-09-08T11:04:47.955632+00:00",
+      "finished_at": "2026-09-08T11:05:06.620688+00:00",
+      "stopped_at": "2026-09-08T11:05:07.469153+00:00",
+      "cleanup_completed_at": "2026-09-08T11:05:07.549791+00:00",
+      "raw_test_summaries": {}
+    }
+  ],
+  "transport_raw_xml": {
+    "suites": 22,
+    "tests": 277,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3,
+    "passed": 274,
+    "skip_scope": "Three existing single-JVM JmDNS multicast/loopback peer fixtures, not physical-device tests."
+  },
+  "frozen_validator": {
+    "actual_command": [
+      "/bin/bash",
+      "scripts/release/validate_release_system.sh"
+    ],
+    "executed_test_ids": 383,
+    "unique_test_ids": 383,
+    "raw_same_line_ok": 381,
+    "interleaved_ok_test_ids": 2,
+    "summary": "Ran 383 tests in 49.929s; OK",
+    "inventory_check_rows": 14847,
+    "scope": "Release-control validator, pinned tools and inventory freshness only; not productionCheck or application runtime."
+  },
+  "github_runs": [
+    {
+      "run_id": 34214410629,
+      "run_attempt": 1,
+      "workflow": ".github/workflows/production-verification.yml",
+      "source_commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+      "conclusion": "success",
+      "url": "https://github.com/Apdelrahman1911/parlor/actions/runs/34214410629",
+      "jobs": [
+        {
+          "name": "iOS tests, release frameworks, and Swift wrapper",
+          "conclusion": "success",
+          "skipped_step_names": [
+            "Claim fresh verification output ownership",
+            "Claim apple-aggregate native resource ownership",
+            "Record Xcode toolchain and exact source",
+            "Run iOS simulator tests, Apple static analysis, and release linkage gates",
+            "Stop Gradle after apple-aggregate and retire owned Apple resources",
+            "Validate iOS plist and privacy manifest",
+            "Claim apple-ui native resource ownership",
+            "Verify effective Debug and Release application identities",
+            "Launch Swift host and Compose root on iOS Simulator",
+            "Stop Gradle after apple-ui and retire owned Apple resources",
+            "Claim apple-wrapper native resource ownership",
+            "Build unsigned Swift Release wrapper",
+            "Stop Gradle after apple-wrapper and retire owned Apple resources",
+            "Inspect complete unsigned iOS Release package",
+            "Upload Apple verification evidence",
+            "Clean only attested verification outputs",
+            "Upload verification cleanup receipt"
+          ],
+          "failed_step_names": []
+        },
+        {
+          "name": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+          "conclusion": "skipped",
+          "skipped_step_names": [],
+          "failed_step_names": []
+        },
+        {
+          "name": "Desktop strict verification (Linux arm64)",
+          "conclusion": "skipped",
+          "skipped_step_names": [],
+          "failed_step_names": []
+        },
+        {
+          "name": "Desktop and Kotlin Native strict verification (macOS x64)",
+          "conclusion": "skipped",
+          "skipped_step_names": [],
+          "failed_step_names": []
+        },
+        {
+          "name": "Common, desktop, and Android release",
+          "conclusion": "skipped",
+          "skipped_step_names": [],
+          "failed_step_names": []
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 10051167436,
+          "name": "native-cleanup-34214410629-1",
+          "zip": {
+            "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/native-cleanup.zip",
+            "bytes": 766,
+            "sha256": "984a7de91727e89b0505d32081a1fb1d5b78408d9227e47ad9179fda2669da81"
+          },
+          "member_count": 1,
+          "member_manifest_sha256": "9587703a53f56c0fc79532b153de9f1bfb375bf47e5250f658cc25c194ed654a",
+          "all_zip_and_extracted_bytes_equal": true,
+          "api_digest_and_bytes_equal": true
+        },
+        {
+          "id": 10051166213,
+          "name": "native-preflight-34214410629-1",
+          "zip": {
+            "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/native-preflight.zip",
+            "bytes": 92593,
+            "sha256": "a64a699e4dd895b14089c9fcd867d3d2aa4166f745891864918aefc944d9de48"
+          },
+          "member_count": 4,
+          "member_manifest_sha256": "143f0295ef14ffcd8f29e3bd72c171f523897ee3b66439155a90b77c93af77c3",
+          "all_zip_and_extracted_bytes_equal": true,
+          "api_digest_and_bytes_equal": true
+        }
+      ]
+    },
+    {
+      "run_id": 34216788568,
+      "run_attempt": 1,
+      "workflow": ".github/workflows/production-verification.yml",
+      "source_commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+      "conclusion": "failure",
+      "url": "https://github.com/Apdelrahman1911/parlor/actions/runs/34216788568",
+      "jobs": [
+        {
+          "name": "iOS tests, release frameworks, and Swift wrapper",
+          "conclusion": "failure",
+          "skipped_step_names": [
+            "Claim fresh verification output ownership",
+            "Claim apple-aggregate native resource ownership",
+            "Record Xcode toolchain and exact source",
+            "Run iOS simulator tests, Apple static analysis, and release linkage gates",
+            "Stop Gradle after apple-aggregate and retire owned Apple resources",
+            "Validate iOS plist and privacy manifest",
+            "Claim apple-ui native resource ownership",
+            "Verify effective Debug and Release application identities",
+            "Launch Swift host and Compose root on iOS Simulator",
+            "Stop Gradle after apple-ui and retire owned Apple resources",
+            "Claim apple-wrapper native resource ownership",
+            "Build unsigned Swift Release wrapper",
+            "Stop Gradle after apple-wrapper and retire owned Apple resources",
+            "Inspect complete unsigned iOS Release package",
+            "Upload Apple verification evidence",
+            "Clean only attested verification outputs",
+            "Upload verification cleanup receipt"
+          ],
+          "failed_step_names": [
+            "Run focused native continuation"
+          ]
+        },
+        {
+          "name": "Desktop and Kotlin Native strict verification (macOS x64)",
+          "conclusion": "skipped",
+          "skipped_step_names": [],
+          "failed_step_names": []
+        },
+        {
+          "name": "Common, desktop, and Android release",
+          "conclusion": "skipped",
+          "skipped_step_names": [],
+          "failed_step_names": []
+        },
+        {
+          "name": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+          "conclusion": "skipped",
+          "skipped_step_names": [],
+          "failed_step_names": []
+        },
+        {
+          "name": "Desktop strict verification (Linux arm64)",
+          "conclusion": "skipped",
+          "skipped_step_names": [],
+          "failed_step_names": []
+        }
+      ],
+      "artifacts": [
+        {
+          "id": 10052423028,
+          "name": "native-cleanup-34216788568-1",
+          "zip": {
+            "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-cleanup.zip",
+            "bytes": 1368,
+            "sha256": "8471be7152e0a4535ae99fe4e0d4ade975c0564aeaa508d72a10fe6ab194f536"
+          },
+          "member_count": 1,
+          "member_manifest_sha256": "d6dfed8a0c44f0cb7287992b563dfb25ccef4aa406477563b7305c33ea2ea958",
+          "all_zip_and_extracted_bytes_equal": true,
+          "api_digest_and_bytes_equal": true
+        },
+        {
+          "id": 10052421289,
+          "name": "native-evidence-34216788568-1",
+          "zip": {
+            "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence.zip",
+            "bytes": 749848,
+            "sha256": "531b4ef9dd45d2a0a98b52c6fe7bc1dd2cbc3b431a74a556c2273c6776a8a8a1"
+          },
+          "member_count": 67,
+          "member_manifest_sha256": "8a47f799f5bb3f8e5fdc1e512861eb56432b0b7caccbfca2e1aacb15c99f8f52",
+          "all_zip_and_extracted_bytes_equal": true,
+          "api_digest_and_bytes_equal": true
+        }
+      ]
+    }
+  ],
+  "preflight": {
+    "status": "REVIEW_REQUIRED_NOT_RUNTIME_EVIDENCE",
+    "source": {
+      "branch": "fix/local-readiness-2026-09-07",
+      "commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+      "tree": "629a5d2b699cddb62d61849de3bd185fd4c01378",
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_manifest_sha256": "6e83dcdccc950fde35ccbf8fe2d4c73671a05a5f4a6a3a5068799af86bbd2334"
+    },
+    "toolchain": {
+      "name": "qualified-xcode-26.3",
+      "xcode": "26.3",
+      "build": "17C529",
+      "sdk": "26.2",
+      "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+      "developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+      "scope": "Xcode26.3/17C529 qualified compiler; Debug iOS26.2 simulator observation only, not Store-signing or physical-device evidence",
+      "selected_developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+      "architecture": "arm64",
+      "sdk_name": "iphonesimulator26.2",
+      "runtime_build": "23C54",
+      "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+      "simulator_sdk_path": "/Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk",
+      "android_sdk": "/Users/runner/Library/Android/sdk",
+      "java_home": "/Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home",
+      "runtime_scope": "Toolchain observation only; no application/ABI/protection/runtime claim"
+    },
+    "control_sha256": {
+      "l08": "07ee6204dc12ff9fb53253818209893f4de7649f21c3e51cc477bf4157d7322a",
+      "normal": "8128bafc217e491d09ca0a7b54d70c1cb67ff9392ade958b910933d247394750"
+    },
+    "scope": "No application build, XCTest, libproc ABI/query or storage/protection validation executed.",
+    "cleanup_status": "PASS"
+  },
+  "native_attempt": {
+    "outer_status": "NOT_READY",
+    "runs": [
+      {
+        "cycle": "ios-readiness-17",
+        "receipt": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/receipt.json",
+          "bytes": 334590,
+          "sha256": "a25d6c67dba4d69f92d741089cfbe54f44aa8ae6158c4cd6dbb1a4b13f187512"
+        },
+        "status": "FAIL",
+        "runner_exit_code": 1,
+        "runtime_evidence_status": "FAIL",
+        "error": {
+          "type": "TimeoutExpired",
+          "message": "Command '['ps', '-axo', 'pid=,ppid=,pgid=,lstart=,command=']' timed out after 15 seconds"
+        },
+        "image_observer_requested": null,
+        "provenance_status": "NOT_REACHED_BY_COMPOSITION",
+        "foundation_collection": {
+          "status": "NOT_RUN"
+        },
+        "strict_l08_gate": "NOT_SATISFIED_BY_COMPANION",
+        "xcode_command": {
+          "command": [
+            "xcodebuild",
+            "-project",
+            "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-17-3c4g25yb/copy/iosApp/iosApp.xcodeproj",
+            "-scheme",
+            "iosApp",
+            "-configuration",
+            "Debug",
+            "-sdk",
+            "iphonesimulator26.2",
+            "-destination",
+            "id=CE3BE344-9BCE-4A13-B4A9-2C5D9BFC3A9D",
+            "-derivedDataPath",
+            "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-17-3c4g25yb/DerivedData",
+            "-resultBundlePath",
+            "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-17-3c4g25yb/Results.xcresult",
+            "-parallel-testing-enabled",
+            "NO",
+            "-maximum-concurrent-test-simulator-destinations",
+            "1",
+            "-disable-concurrent-destination-testing",
+            "-jobs",
+            "1",
+            "-test-timeouts-enabled",
+            "YES",
+            "-default-test-execution-time-allowance",
+            "1200",
+            "-maximum-test-execution-time-allowance",
+            "1500",
+            "CODE_SIGNING_ALLOWED=YES",
+            "CODE_SIGNING_REQUIRED=YES",
+            "CODE_SIGN_IDENTITY=-",
+            "CODE_SIGN_STYLE=Manual",
+            "DEVELOPMENT_TEAM=",
+            "PROVISIONING_PROFILE=",
+            "PROVISIONING_PROFILE_SPECIFIER=",
+            "CODE_SIGN_ENTITLEMENTS=",
+            "OTHER_CODE_SIGN_FLAGS=",
+            "ONLY_ACTIVE_ARCH=YES",
+            "COMPILER_INDEX_STORE_ENABLE=NO",
+            "test"
+          ],
+          "started_at": "2026-09-08T10:44:21.019931+00:00",
+          "log": "xcodebuild.log",
+          "finished_at": "2026-09-08T10:45:42.398584+00:00"
+        },
+        "xcode_log": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/xcodebuild.log",
+          "bytes": 3949,
+          "sha256": "f9f536606fdb451a9201dd8a52e0e5197033ed4d171b19cc7d33eb666fff36f9"
+        },
+        "uncompressed_log_bytes": 3949,
+        "uncompressed_log_sha256": "f9f536606fdb451a9201dd8a52e0e5197033ed4d171b19cc7d33eb666fff36f9",
+        "app_runtime_or_protection_observations_established": false,
+        "source_and_control_stability": true,
+        "gradle_stops": [
+          {
+            "label": "stop-xcode-immediate",
+            "exit_code": 0,
+            "at": "2026-09-08T10:46:39.142166+00:00"
+          },
+          {
+            "label": "stop-final",
+            "exit_code": 0,
+            "at": "2026-09-08T10:46:43.675311+00:00"
+          }
+        ],
+        "cleanup_status": "PASS",
+        "cleanup_errors": [],
+        "owned_device_absent": true,
+        "owned_processes_remaining": [],
+        "unknown_holders": [],
+        "temporary_directory_removed": true,
+        "finished_at": "2026-09-08T10:47:03.459085+00:00"
+      },
+      {
+        "cycle": "ios-readiness-18",
+        "receipt": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-18/receipt.json",
+          "bytes": 326168,
+          "sha256": "f89b9a66db4162f8da414f5500f726134bdbdd84790f3fc0a69ada953d4778b8"
+        },
+        "status": "FAIL",
+        "runner_exit_code": 1,
+        "runtime_evidence_status": "FAIL",
+        "error": {
+          "type": "TimeoutExpired",
+          "message": "Command '['ps', '-axo', 'pid=,ppid=,pgid=,lstart=,command=']' timed out after 15 seconds"
+        },
+        "image_observer_requested": "libproc",
+        "provenance_status": "NOT_RUN",
+        "foundation_collection": null,
+        "strict_l08_gate": null,
+        "xcode_command": {
+          "command": [
+            "xcodebuild",
+            "-project",
+            "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-18-trbqw7gj/copy/iosApp/iosApp.xcodeproj",
+            "-scheme",
+            "iosApp",
+            "-configuration",
+            "Debug",
+            "-sdk",
+            "iphonesimulator26.2",
+            "-destination",
+            "id=BE1EB562-E3A6-4DA8-BBE2-233CF0CFEC44",
+            "-derivedDataPath",
+            "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-18-trbqw7gj/DerivedData",
+            "-resultBundlePath",
+            "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-18-trbqw7gj/Results.xcresult",
+            "-only-testing:iosAppUITests/IOSAppLaunchUITests/testColdLaunchRendersComposeHomeWithoutUnexpectedAlert",
+            "-test-iterations",
+            "8",
+            "-test-repetition-relaunch-enabled",
+            "YES",
+            "-parallel-testing-enabled",
+            "NO",
+            "-maximum-concurrent-test-simulator-destinations",
+            "1",
+            "-disable-concurrent-destination-testing",
+            "-jobs",
+            "1",
+            "-test-timeouts-enabled",
+            "YES",
+            "-default-test-execution-time-allowance",
+            "120",
+            "-maximum-test-execution-time-allowance",
+            "240",
+            "CODE_SIGNING_ALLOWED=YES",
+            "CODE_SIGNING_REQUIRED=YES",
+            "CODE_SIGN_IDENTITY=-",
+            "CODE_SIGN_STYLE=Manual",
+            "DEVELOPMENT_TEAM=",
+            "PROVISIONING_PROFILE=",
+            "PROVISIONING_PROFILE_SPECIFIER=",
+            "CODE_SIGN_ENTITLEMENTS=",
+            "OTHER_CODE_SIGN_FLAGS=",
+            "ONLY_ACTIVE_ARCH=YES",
+            "COMPILER_INDEX_STORE_ENABLE=NO",
+            "test"
+          ],
+          "started_at": "2026-09-08T10:48:49.106557+00:00",
+          "log": "xcodebuild.log",
+          "exit_code": -15,
+          "interrupted_or_failed": true,
+          "finished_at": "2026-09-08T10:50:34.554133+00:00"
+        },
+        "xcode_log": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-18/xcodebuild.log.gz",
+          "bytes": 35,
+          "sha256": "d52f73c89e90911d562cbbd7330a5772021a61a0d13c0e28bfb123188dc589b4"
+        },
+        "uncompressed_log_bytes": 0,
+        "uncompressed_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "app_runtime_or_protection_observations_established": false,
+        "source_and_control_stability": true,
+        "gradle_stops": [
+          {
+            "label": "stop-xcode-immediate",
+            "exit_code": 0,
+            "at": "2026-09-08T10:50:39.697980+00:00"
+          },
+          {
+            "label": "stop-final",
+            "exit_code": 0,
+            "at": "2026-09-08T10:50:48.940361+00:00"
+          }
+        ],
+        "cleanup_status": "PASS",
+        "cleanup_errors": [],
+        "owned_device_absent": true,
+        "owned_processes_remaining": [],
+        "unknown_holders": [],
+        "temporary_directory_removed": true,
+        "finished_at": "2026-09-08T10:51:08.555481+00:00"
+      }
+    ],
+    "sequential_safe_cleanup_before_B": true,
+    "outer_cleanup_receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-cleanup/parlor-native-34216788568-1-cleanup.json",
+      "bytes": 3182,
+      "sha256": "fbbd6bcbd873405a5918aefba95cfc6580676d7ec9cc4b301e895b13638430c6"
+    },
+    "outer_cleanup_status": "PASS",
+    "all_native_stop_exit_codes": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "retained_failure_interpretation": "Exact15s ownership ps observation failed; first call phase and OS root cause unresolved. No application crash/XCTest assertion, app launch, functional/host/protection observations or actual Parlor libproc query established. No built Gradle JVM evidence; heap/OOM attribution unsupported. Safe cleanup is not runtime success.",
+    "underway_work_not_a_completed_fix": "Coordinator-authorized primary-error/call-phase retention before fallible cleanup, separate secondary errors and bounded no-app diagnostics. Immutable ownership controls and fail-closed15s policy remain requirements. No retry or diagnostic platform dispatch executed by this checkpoint.",
+    "additional_latent_profile_source_finding": {
+      "report": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/l08-strict-protection-investigation-02.md",
+        "bytes": 11293,
+        "sha256": "e44de5a5c5a8eb7a439a0ef18ead7bb176d85c890ef77641e25db18dc23fe708"
+      },
+      "source_controls": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/L08AppFoundation.m.in",
+          "commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+          "bytes": 29952,
+          "sha256": "f7b0e515b580f4bd9c49857ad4a49a3ab925218e8e52c260eb14cc75e410cba7",
+          "read_only_git_source_reopened": true
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_receipts.py",
+          "commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+          "bytes": 17436,
+          "sha256": "0d6c5415522ec5a4645abe4839ab7865c89e916e7c752c73035d0fea1b4e6a3c",
+          "read_only_git_source_reopened": true
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+          "commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+          "bytes": 12292,
+          "sha256": "07ae34ff3e6059e83ac041c55d0f380e21106666e867b1842534982c7450be08",
+          "read_only_git_source_reopened": true
+        },
+        {
+          "path": "scripts/verification/ios-readiness/toolchain_profiles.py",
+          "commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+          "bytes": 3262,
+          "sha256": "65ffab3c3f13785a5574b6018c61ec23f8b36c8ecd5528737a1bfb88fd21cce0",
+          "read_only_git_source_reopened": true
+        }
+      ],
+      "finding": "At executed25b1 source, paired native Foundation template and complete-receipt parser require exact26.5.0, while qualified hosted toolchain selects SDK/runtime26.2. Selected trusted profile must propagate through native generation/preservation/parsing/final binding; arbitrary runtime acceptance or fallback not authorized.",
+      "scope": "SOURCE finding, NOT executed A17/B18 failure and not their observed15s ps timeout cause; both failed before app and never reached this runtime guard.",
+      "implementation_owner": "/root/native_ci",
+      "independent_source_review_owner": "/root/portability_review",
+      "implementation_and_review": "Underway, not represented here as completed or runtime-qualified."
+    }
+  },
+  "candidate_chain": {
+    "status": "PASS_SCOPED_FRESH_C_CHAIN_AT_25B1C555_ONLY",
+    "binding": {
+      "path": "remediation-runs/2026-09-08-continuation/candidate-input-binding-01.json",
+      "bytes": 1517,
+      "sha256": "d3d1a6d0c3345650e6eeb7f7a473e322a6c122a8e7036684cf701f5977de7fad"
+    },
+    "source": {
+      "commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+      "tree": "629a5d2b699cddb62d61849de3bd185fd4c01378",
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_manifest_sha256": "6e83dcdccc950fde35ccbf8fe2d4c73671a05a5f4a6a3a5068799af86bbd2334"
+    },
+    "four_coupled_receipts": [
+      {
+        "receipt": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-01/candidate-input-verification.json",
+          "bytes": 8078,
+          "sha256": "69a9cbc22667a7551ff07eddd33cf5c1ce9d8028d57519d086ea88a77e1f3d43"
+        },
+        "status": "PASS_SCOPED_CANDIDATE_INPUTS"
+      },
+      {
+        "receipt": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-01/candidate-prerequisites.json",
+          "bytes": 9943,
+          "sha256": "51a4957dfd9c851a451e0a7ab92bdf21f72f4ea71f24fa1353e2090e6117c929"
+        },
+        "status": "PASS_SCOPED_CANDIDATE_INPUT_EXECUTION"
+      },
+      {
+        "receipt": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-01/schema-base-prerequisites.json",
+          "bytes": 28590,
+          "sha256": "5be0c0bdaa6ffd7d38f689412cae36df0dabecf4ad8dc6cff08771777d6bc05b"
+        },
+        "status": "PASS_OWNED_SCHEMA_PREREQUISITES"
+      },
+      {
+        "receipt": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-01/receipt.json",
+          "bytes": 303006,
+          "sha256": "662cf8bc9ad2ac17df57281e11caa7cd907456a4ed1574ae56ee182855a3439c"
+        },
+        "status": "PASS"
+      }
+    ],
+    "export_task_execution": "writeResolvedDependencyInventory executed; actual log five actionable tasks/four executed/one from cache. Linux-disabled native-test warnings are not executed simulator tests.",
+    "graphs": [
+      {
+        "graph": "androidRelease",
+        "graph_sha256": "6d93fd0fa7448fa3adf3b68681f1e620fbd9ca85173d08fe90024b7c45696f2c",
+        "sbom_sha256": "26a2378d62e13fdc2a2fe10f4591c6b006010d60ee4fc1135cfa2ce8032e336b",
+        "components": 239,
+        "artifacts": 129,
+        "status": "PASS"
+      },
+      {
+        "graph": "iosArm64",
+        "graph_sha256": "39755a52285e8d361a900e6fb05d823feeb57b01729861a34017a9c78edee28a",
+        "sbom_sha256": "6156536dfe5008f383d2abfb40b0e93c9f212fae9768eb38c62da7032a62d953",
+        "components": 167,
+        "artifacts": 81,
+        "status": "PASS"
+      },
+      {
+        "graph": "iosSimulatorArm64",
+        "graph_sha256": "12c7fa9419fb35f9b504029c3aef418e01eb9704975b9a2d570844f6931cc55a",
+        "sbom_sha256": "1ee190332f99082996da1f090dac80fed4d0f38ca44df061b6875135e7f116b3",
+        "components": 167,
+        "artifacts": 81,
+        "status": "PASS"
+      },
+      {
+        "graph": "iosX64",
+        "graph_sha256": "a65fde3f5b45353c7414888c584f756a30de6741389e3234f8fb672af1735c7b",
+        "sbom_sha256": "2991e258761fc51bf31d3b9cdeab315fb1a7833cfdbd57ae45baa823f1de7684",
+        "components": 167,
+        "artifacts": 81,
+        "status": "PASS"
+      }
+    ],
+    "maven_components": 456,
+    "publisher_poms": 459,
+    "metadata_bytes": 1507794,
+    "source_notice_resources": 26,
+    "consumed_file_count_recomputed": 511,
+    "consumed_manifest_sha256_recomputed": "d86f4db4329683fd512123a7236645862ae1c5a15cc80f3a5846705f984046d9",
+    "consumed_hash_matches_actual_receipt": true,
+    "schema_formats": {
+      "registered": [
+        "date",
+        "email",
+        "idn-email",
+        "ipv4",
+        "ipv6",
+        "iri",
+        "iri-reference",
+        "regex",
+        "time",
+        "uuid"
+      ],
+      "encountered": [
+        "iri-reference"
+      ],
+      "missing": []
+    },
+    "bootstrap_controls_before_after_equal_and_rehashed": true,
+    "optional_packages_cleanup": true,
+    "base_packages_cleanup": true,
+    "scope": "Real scoped candidate consumer and official schema validation evidence; read-only audit did not rerun it. No unit test, app runtime, final-binary or owner/legal/Store approval.",
+    "refresh_required": "Upcoming corrected source/control + inventory commit requires fresh C chain execution and approved binding. Do not relabel25b1 results as next-SHA execution."
+  },
+  "independent_evidence_reviews_and_diagnosis": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/frozen-source-reconciliation-prep-01.json",
+      "bytes": 111413,
+      "sha256": "c0f0f14bcfb01f24d63d79be434f46d74fc88dddab8bd6bd938ce788371d33b3",
+      "status": null,
+      "author_or_reviewer": "/root/evidence_audit"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/release-validator-independent-01.json",
+      "bytes": 12088,
+      "sha256": "8f72f2e09e6af59fbd18c47517db11ca39a6272d8ad1783541ccc37411e49493",
+      "status": "PASS_FOR_RELEASE_AUTOMATION_AND_STATIC_WORKFLOW_SCOPE",
+      "author_or_reviewer": "/root/ci_review"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-preflight-34214410629-independent-01.json",
+      "bytes": 19459,
+      "sha256": "ebc84da0838a3333ba3ee102374edec6e629dbdaab07d4fb3c2fe9cc470b64d6",
+      "status": "APPROVED_EXACT_NATIVE_EVIDENCE_DISPATCH_ONLY_NO_RUNTIME_PASS",
+      "author_or_reviewer": "/root/ci_review"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-run-34216788568-independent-01.json",
+      "bytes": 43971,
+      "sha256": "bd23a666945076731b2df24bc6a5044bce5d70270610ca5662020e0e3000a778",
+      "status": "FAILED_NATIVE_ATTEMPT_RECONCILED_CUSTODY_AND_CLEANUP_PASS_NOT_READY",
+      "author_or_reviewer": "/root/ci_review"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-ps-timeout-diagnosis-01.json",
+      "bytes": 18505,
+      "sha256": "a5ac5eedd0924a5390baccf15edbbc8479145a816281c48dfa574b39af8df72f",
+      "status": "FAILURE_SITE_VERIFIED_OS_ROOT_CAUSE_UNRESOLVED_NO_SOURCE_EDIT",
+      "author_or_reviewer": "/root/native_ci"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-independent-01.json",
+      "bytes": 19821,
+      "sha256": "7fd149a67d16f7b3d61f5b3e4ce8f431b4a2aba122e1114133c321dfd14478a6",
+      "status": "APPROVED_EXACT_BINDING_AND_CONTROLS_FOR_COORDINATOR_CANDIDATE_EXECUTION",
+      "author_or_reviewer": "/root/portability_review"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-postrun-independent-01.json",
+      "bytes": 27334,
+      "sha256": "3452f006a6be197767573182264c8d601d1191ad27ad578b5e14f1eeefda7728",
+      "status": "PASS_SCOPED_FRESH_C_CHAIN_AT_25B1C555_ONLY",
+      "author_or_reviewer": "/root/portability_review"
+    }
+  ],
+  "historical_scope": {
+    "prior_reconciliation_unchanged": "frozen-source-reconciliation-prep-01.json represents its earlier cutoff; preserved without rewriting for later A/B/C results.",
+    "original_repairs_and_timer": "Already committed; no production subtree delta from baseline to25b1. Historical original16/timer results remain historical, not current-SHA app execution.",
+    "native16": "FAIL;14/15 functional operations passed, boot10 Home callback0, boots11-13 and retained-host paths not reached; all24 observed strict Complete comparisons failed. A17 established no new protection rows.",
+    "native15": "Eight normal launches/48 samples passed historically, ninth vmmap observation failed; actual Parlorlibproc remains NOT_RUN."
+  },
+  "next_execution_and_applicability_policy": {
+    "D": "NOT_RUN",
+    "later_native_retry": "NOT_RUN",
+    "bounded_diagnostic_platform_run": "NOT_RUN",
+    "required_order": [
+      "Review retention/diagnostic corrections independently and execute affected Linux controls",
+      "Commit reviewed source/control changes",
+      "Regenerate inventory, inventory-only commit, freshness check, normal push and remote equality",
+      "Create fresh source/control/platform approvals; inspect diagnostic outcomes before justified A/B retry",
+      "Refresh export/render/bound candidate C chain at next freeze",
+      "Execute selective final full qualification and reconcile raw A-D evidence independently",
+      "Commit/push completed evidence; distinguish execution SHA from evidence-delivery SHA"
+    ],
+    "evidence_only_limit": "Remediation ledger excluded from ordinary source manifest but tracked edits change Git diff. Inventory CSV is included in source manifest. Evidence+mechanical-only reconciliation can preserve applicable unchanged runtime scope, never relabel old execution as exact newer-SHA run. Source/control or semantic-contract changes require affected requalification and fresh bindings.",
+    "planned_adapter_cycles": {
+      "A": "ios-readiness-19",
+      "B": "ios-readiness-20",
+      "source_implementation_owner": "/root/ci_workflow",
+      "state": "Coordinator requested source-in-progress change; independent review/freeze required, no runtime retry approval issued. Diagnostic first. Preserve17/18 archives."
+    }
+  },
+  "readiness": {
+    "verdict": "NOT_READY",
+    "strict_protection": "Unresolved observed metadata failure, not reclassified physical-only.",
+    "remaining_exclusions": [
+      "Physical LAN/device/lifecycle/accessibility/lock-keybag/backup-restore/power-loss checks",
+      "Private signing and Store publication/promotion/submission operations",
+      "Owner legal/license/content-rights and editorial/privacy URL/questionnaire/declaration approval",
+      "Known com.parlor.app identity collision and disabled Store safeguards remain; no replacement identity chosen"
+    ]
+  },
+  "cleanup": "Author performed only file/Git/data inspection plus the two authorized evidence-document writes. No build/test/native workers or live generated outputs were created. Nine Linux lane receipts, four native Gradle stops, two native cleanup receipts and uploaded custody cleanup were reopened; no retained cleanup failure found. Do not stop/clean another agent lane or remove global caches/historical evidence.",
+  "evidence_files_reopened": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-01/receipt.json",
+      "bytes": 302804,
+      "sha256": "54f123f4f092c4b7df674eacb8e916f44c87edc98dba16c7558cdba83375c7df"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-lane-controls-01/receipt.json",
+      "bytes": 301976,
+      "sha256": "9538e853b2a868e1f3fac43f37b8363901f095372ec27c1676fa2c5da864c76b"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-lane-controls-01/gradle.log",
+      "bytes": 3206,
+      "sha256": "a303ec923aaab97e3223ededebf653bce4b96ddd3f9059590b9da59bd7f6491e"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-lane-controls-01/stop.log",
+      "bytes": 544,
+      "sha256": "01cc71b2d614314df3ccd1c1422e5ae0c996070e78e0a858042b0596b36091f6"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-ci-controls-01/receipt.json",
+      "bytes": 305467,
+      "sha256": "68f651a32b4781f80fa1b9d25252c5bf4687d5e861ca5cd41269311ff3b9f23c"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-ci-controls-01/gradle.log",
+      "bytes": 15820,
+      "sha256": "8ca3562785376355c3035f6122a4145f8ade4cdd45a6e5d6d80b55d8557ed07e"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-ci-controls-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/receipt.json",
+      "bytes": 306059,
+      "sha256": "74d7445fd6d60f39bb19a971f73f54c5a292b591963ff2175b65ef5a4d24d0db"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/gradle.log",
+      "bytes": 4690,
+      "sha256": "5d32f5fa9501c395ecb97fd7187c0529fd9fe765aa2e81f4ebd9ab7b1b75c82d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/receipt.json",
+      "bytes": 305416,
+      "sha256": "32d1d5a0459b64d493b78f7c61b423c6967391eabe46026895cfe13bf642ae77"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/gradle.log",
+      "bytes": 1965,
+      "sha256": "b156044d687f976bb468a1e9b29b80bd90cdbd79e43726faf3248d6b39097043"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/schema-closure.log",
+      "bytes": 3240,
+      "sha256": "d17537dd20adb47a54ecf8d2f9e603de034650f3c99a693a9ca10a2c7b2d222a"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/lane.log",
+      "bytes": 3206,
+      "sha256": "3b75709456473da1aac4d13b42c5e3ee9988eff8e353c61ca4c968a9184e37ef"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/schema-bootstrap.log",
+      "bytes": 4403,
+      "sha256": "88d5b62da6bb3675b2b94003a86cb5747d06196a6f2fafc38e6699a299f892f1"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/functional-copy.log",
+      "bytes": 3744,
+      "sha256": "c5149707a2a4beff5bad62431aa519a8fb54a04da7fe936aa3edd09775d36bd2"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/single-tap.log",
+      "bytes": 3406,
+      "sha256": "752e376073d021f26a5c47e992c3e57cb734d2f45b51b5699924b3742d3dd53a"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/packet.log",
+      "bytes": 2749,
+      "sha256": "b9fe8203cf2b48f2321ebfa38fcba89316323defc53a5f5db1c8561557ef4e0e"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/normal.log",
+      "bytes": 108389,
+      "sha256": "3b1d45a4e4dcdda380f0ebe7ce1b16d82bdea96f3e74547f3da618b800f8695f"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/composition.log",
+      "bytes": 19632,
+      "sha256": "d32f6967e03f1157bcd5b1a0497bd057cf5d95cdbae0c2152aa9662ee9c3e8e4"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/toolchain.log",
+      "bytes": 2139,
+      "sha256": "22490b9d9395f70797a3dc1e01647c1c2fbdabdf157a106c26c188cf1b8eb3d4"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/receipt.json",
+      "bytes": 306834,
+      "sha256": "bc2a7d2f96094ae1d214e16b031f07913a5579fc88e8e2f04ab75d2a1b67bd18"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/gradle.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/single-tap-recheck.log",
+      "bytes": 2489,
+      "sha256": "7c5dc99e792145a655fa0538bfe214ddd7ce5d1e88fe867708625e2ac8d86ac7"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/functional-copy-recheck.log",
+      "bytes": 2543,
+      "sha256": "25275e508fe4223c29da4207223b7ce1aec94b535993ebe808e49b77c29701dd"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-01/gradle.log",
+      "bytes": 67283,
+      "sha256": "f4274409dbeafc1a1b71a86571bf7dd4adfab524751edcc619885b2b0521c5ae"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-01/receipt.json",
+      "bytes": 303584,
+      "sha256": "49df4bd696294e0a189e2094cbf27a48390f7d62b98c066cd7f39f069f956603"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-01/gradle.log",
+      "bytes": 2486,
+      "sha256": "4ba8d519cff7575d3cd2ed7bd76dd278fc9d30297a06b77ae85ff424d438b343"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-01/receipt.json",
+      "bytes": 303055,
+      "sha256": "3d72b4ba3360b53e2ee3f6134608c0df3d68a9d545068956be80cf962cc28768"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-01/gradle.log",
+      "bytes": 51,
+      "sha256": "ef1042602e31e11bb04d1d6614e648956b37c0108d001a6f016c863bb9b0ca97"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-01/receipt.json",
+      "bytes": 303006,
+      "sha256": "662cf8bc9ad2ac17df57281e11caa7cd907456a4ed1574ae56ee182855a3439c"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-01/gradle.log",
+      "bytes": 289,
+      "sha256": "1366576e7c5a743d9620e0d1849edc379e1dcc369335c2c0176c80d87d0a20b8"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidManifestLanPermissionTest.xml",
+      "bytes": 689,
+      "sha256": "be92192a7744c339f392af7e5c4642f4bed691918a56409cd107f34173288ce8"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidReleaseLintContractTest.xml",
+      "bytes": 1743,
+      "sha256": "2faf8f19610c7f279b1efb1d07fcb58701d848508182b863720fcaf06a21fbc5"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomCoordinatorTest.xml",
+      "bytes": 709,
+      "sha256": "b9558f4de4e4e5034db24d0221d673c526acd59e84582b4d783a19f4b379d45f"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+      "bytes": 845,
+      "sha256": "f4b2f3566f56fefebfd650a80341041a4b53355bf227ab8a714279cf10d543f2"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DesktopDependencyVerificationContractTest.xml",
+      "bytes": 924,
+      "sha256": "b911e17ba3ef02059b0c33e9c861193732cec08dc89d8c0429ef053943c74292"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest.xml",
+      "bytes": 2688,
+      "sha256": "cd3d69c616523123f68815d9a652698268e23947c0e4ed09f9eade9cd20bb2e7"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.HostOpeningCancellationTest.xml",
+      "bytes": 1145,
+      "sha256": "b57213d5a362bf80a1ae9dd71ac4b87d136b5ea236f863b476eab0be28e32393"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.IosInfoPlistBonjourTest.xml",
+      "bytes": 490,
+      "sha256": "afe28756183d74ddd49991e22734ac76c9b3641bfb7e7be9469f38efb53e7da5"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+      "bytes": 504,
+      "sha256": "08ab7c45dac65e6c625860ca6ed874b75144a9b5faafdfd743d70020bf064d2a"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.LoopbackFixtureContractTest.xml",
+      "bytes": 1225,
+      "sha256": "3af5c462d9cfa2c08cb5068dc1e06f577598ffd5c4abbcb5a8863db81c138f39"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.MultiplayerDocumentationContractTest.xml",
+      "bytes": 2315,
+      "sha256": "447f4faf9095f6271b4c0152ddcb0a784ffcea4cee8b08a3d5c364e7c02aee07"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pDiagnosticsTest.xml",
+      "bytes": 1095,
+      "sha256": "993d468e2ddeaef04131402dc75d55c776bba05468d53c47883866c078fef8ab"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitCreationTest.xml",
+      "bytes": 1724,
+      "sha256": "4aa194454eb5ae1b39d3107cca5e07c3d157768fdf4d51907b930694b40fcce3"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitMavenProvenanceContractTest.xml",
+      "bytes": 689,
+      "sha256": "7bc1d7fba030132e936771b98fed28ade74bf6f7573a599cede9c49bdadb72ee"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.xml",
+      "bytes": 23993,
+      "sha256": "73659603381d98c88b8bfa519954b2469e8327c3d2230891358088ec6b7296f7"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+      "bytes": 1263,
+      "sha256": "fd12bc065698af0f3614b6ddca17210ac70fbf20a1a57dc757183fda5ca8d226"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pTrafficPolicyTest.xml",
+      "bytes": 1501,
+      "sha256": "08d3dbeb2ed0ae3fed2c5dd5782673b5264d923b5d7038c8c9b1f9eb0428d3b5"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.PeerOpeningCancellationTest.xml",
+      "bytes": 2381,
+      "sha256": "36b795dda05c634c058ab67e32f5b6821c0c7550f072192d070e9843a617562c"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+      "bytes": 2115,
+      "sha256": "ea1d171b768d6dac2ddde077036a8be53ebc0c39786f9c9d535399c22e68ab72"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ResumableCredentialStoreTest.xml",
+      "bytes": 4420,
+      "sha256": "c728c4d28cada93ced9419f7d4fd258a67c272d3a17d64fe41fb8120ce614b18"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.TestTransportIsolationContractTest.xml",
+      "bytes": 1055,
+      "sha256": "d1805b2dbca8e48744a53d9911172e918fb9c2394cf826c42025bc67e3860290"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.VerificationMetadataAssertionsTest.xml",
+      "bytes": 3573,
+      "sha256": "3bd02887736188ebca9fbf39eb6ffb30f5911a0bf8f1271868fc07b68458adac"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/run.json",
+      "bytes": 12677,
+      "sha256": "a278e1cb55bc11366d7e3439071c1e8ba2eb6d2958eb56e2d479d87ab2cbb346"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/jobs.json",
+      "bytes": 9819,
+      "sha256": "ed9b5a44e4d079919c72febbdf8e909fe440ef49d995d1d4684c9781d2cf8fa4"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/artifacts.json",
+      "bytes": 1483,
+      "sha256": "c733213559b707a197ae78febc4aefab0abf3664293ac63b8f9c47608e1f9897"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/run.log",
+      "bytes": 63445,
+      "sha256": "ac72bb9814f258d08129904c5575ffe67d17ab5e721f260fe5ba0f64c272ec14"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/download-receipt.json",
+      "bytes": 1720,
+      "sha256": "a3d9f32b4ae0521c851ec67ba7b1addcae85ddb5bc1f1c8bc1d68fc5cb92e42c"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/workflow.json",
+      "bytes": 533,
+      "sha256": "8345984073768616fd6aff6682c95051f186881c5fa4727b120c80e019841ece"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/native-cleanup.zip",
+      "bytes": 766,
+      "sha256": "984a7de91727e89b0505d32081a1fb1d5b78408d9227e47ad9179fda2669da81"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/native-preflight.zip",
+      "bytes": 92593,
+      "sha256": "a64a699e4dd895b14089c9fcd867d3d2aa4166f745891864918aefc944d9de48"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/run.json",
+      "bytes": 12677,
+      "sha256": "ccf41da35a27545b998dc9e2df025eed1ca4c29a99c19afc8d8c84f2da09123b"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/jobs.json",
+      "bytes": 9819,
+      "sha256": "5eef357c14fd594baff37d084782c046d1e341ae692a6457ab2c59239adf3fc7"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/artifacts.json",
+      "bytes": 1484,
+      "sha256": "613809d6f91298388b8ddb244f1788b8a5275d3373adb6347846f78e920e7646"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/run.log",
+      "bytes": 75933,
+      "sha256": "1d37e3fefbe3548007935bf083e228b048cfdb9ba49ba341becf0f5ded204b8d"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/download-receipt.json",
+      "bytes": 13808,
+      "sha256": "a8ed749ef53fe73e7bcf568d7bd0751d85676b9ae99f955a4d3400cbe9da5aa9"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/workflow.json",
+      "bytes": 533,
+      "sha256": "8345984073768616fd6aff6682c95051f186881c5fa4727b120c80e019841ece"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-cleanup.zip",
+      "bytes": 1368,
+      "sha256": "8471be7152e0a4535ae99fe4e0d4ade975c0564aeaa508d72a10fe6ab194f536"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence.zip",
+      "bytes": 749848,
+      "sha256": "531b4ef9dd45d2a0a98b52c6fe7bc1dd2cbc3b431a74a556c2273c6776a8a8a1"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/native-preflight/preflight.json",
+      "bytes": 2644,
+      "sha256": "13152860a8f67790b4d52a2e8f2db23b20dd567476160d80964a1d35d886a689"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/native-preflight/ios-readiness-source-ci.json",
+      "bytes": 297717,
+      "sha256": "84628f5e410be23d282680f5db9d5366a92dfe30ef23ac2a90bf605ec6526fe8"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/native-preflight/normal-controls.json",
+      "bytes": 16495,
+      "sha256": "cc9911f15c2f738076abb9d55243c6574b24037d61dd84dd52fb3b8cc2d18f65"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/native-preflight/l08-controls.json",
+      "bytes": 20369,
+      "sha256": "1ddcf37aca1871646598c8c457e14ff459b310c51b2b3e5af41de91c4f04d7c8"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/native-cleanup/parlor-native-34214410629-1-cleanup.json",
+      "bytes": 977,
+      "sha256": "12ac3fa63903a844089e895576d60bbfb8ae5ff78cd80523905028d3887d109e"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/continuation.json",
+      "bytes": 17095,
+      "sha256": "91b731ab092e1121d178d623a791db517a6c9efecf337d7a9a474c537b88b9c9"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/receipt.json",
+      "bytes": 334590,
+      "sha256": "a25d6c67dba4d69f92d741089cfbe54f44aa8ae6158c4cd6dbb1a4b13f187512"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/stop-xcode-immediate.log",
+      "bytes": 544,
+      "sha256": "01cc71b2d614314df3ccd1c1422e5ae0c996070e78e0a858042b0596b36091f6"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/stop-final.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/bootstatus.log",
+      "bytes": 2991,
+      "sha256": "a32e9e420276b56ccff7b0b7f140d29a80379de1f585ca524ee6628e891031ce"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/owned-device-after-delete.json",
+      "bytes": 20,
+      "sha256": "755d442cf44919879856407fe199e916c770d206e3f6b050d6eb286b7af73782"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/xcodebuild.log",
+      "bytes": 3949,
+      "sha256": "f9f536606fdb451a9201dd8a52e0e5197033ed4d171b19cc7d33eb666fff36f9"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-18/receipt.json",
+      "bytes": 326168,
+      "sha256": "f89b9a66db4162f8da414f5500f726134bdbdd84790f3fc0a69ada953d4778b8"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-18/stop-xcode-immediate.log",
+      "bytes": 308,
+      "sha256": "3770584a9c18434fc8ad9af00ce8631ae72476a21159980c8f235370ba584bc5"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-18/stop-final.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-18/bootstatus.log",
+      "bytes": 4840,
+      "sha256": "1194b98ec4cf4f987745816d280caf40a7c066a1a771b140d64a79445ed870c5"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-18/owned-device-after-delete.json",
+      "bytes": 20,
+      "sha256": "755d442cf44919879856407fe199e916c770d206e3f6b050d6eb286b7af73782"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-18/xcodebuild.log.gz",
+      "bytes": 35,
+      "sha256": "d52f73c89e90911d562cbbd7330a5772021a61a0d13c0e28bfb123188dc589b4"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-cleanup/parlor-native-34216788568-1-cleanup.json",
+      "bytes": 3182,
+      "sha256": "fbbd6bcbd873405a5918aefba95cfc6580676d7ec9cc4b301e895b13638430c6"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/l08-runner.log",
+      "bytes": 334590,
+      "sha256": "a25d6c67dba4d69f92d741089cfbe54f44aa8ae6158c4cd6dbb1a4b13f187512"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/normal-runner.log",
+      "bytes": 404,
+      "sha256": "d687b9f5863bfdee0644525a7d43022ddeae185cb7e6e58393c01d0e57472091"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/preflight-api-binding.json",
+      "bytes": 1764,
+      "sha256": "2cc7616aa1d5b6196a1c0212ae4160327a1f9242f13acb1e33de2aa387873bb0"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/candidate-input-binding-01.json",
+      "bytes": 1517,
+      "sha256": "d3d1a6d0c3345650e6eeb7f7a473e322a6c122a8e7036684cf701f5977de7fad"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-01/candidate-input-verification.json",
+      "bytes": 8078,
+      "sha256": "69a9cbc22667a7551ff07eddd33cf5c1ce9d8028d57519d086ea88a77e1f3d43"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-01/candidate-prerequisites.json",
+      "bytes": 9943,
+      "sha256": "51a4957dfd9c851a451e0a7ab92bdf21f72f4ea71f24fa1353e2090e6117c929"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-01/schema-base-prerequisites.json",
+      "bytes": 28590,
+      "sha256": "5be0c0bdaa6ffd7d38f689412cae36df0dabecf4ad8dc6cff08771777d6bc05b"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "bytes": 25106,
+      "sha256": "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/candidate_consumer.py",
+      "bytes": 23404,
+      "sha256": "eb6e2baaac22739b4652bc63c6b57a24374ee57fb81d4711b981b872e8ac1c7f"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/run_candidate_input_01.py",
+      "bytes": 4319,
+      "sha256": "2a306819fb41b1883139fb42355d493f02e1d93a687f54d06f43ffbb758afa60"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/run_schema_consumer_controls_01.py",
+      "bytes": 8956,
+      "sha256": "78222a79d0d19cdce28077506ce1fd74481cc419fdf9dce9e9e5b6fd8840336f"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/test_candidate_consumer.py",
+      "bytes": 22210,
+      "sha256": "92eef687dbf037b310b00c9b678a5718d95cf5e8313094861c398554755a3535"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/schema-base-prerequisites-research-01.json",
+      "bytes": 55180,
+      "sha256": "54c9f96db0ead50008cab5c8c960c0540351922f949757e03dc91b8c5328b13e"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py",
+      "bytes": 14663,
+      "sha256": "c9d3a26fb3901b3518f7c066d91ebda906d0bb8bef67273acb4720d5c37419c9"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-01/report/license-evidence.json",
+      "bytes": 332551,
+      "sha256": "a3bce3ff705af5a12a61906f02d4e6bbfa29ca27d6fbedd12729db36f8a4119b"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-01/raw-graphs/androidRelease.json",
+      "bytes": 277318,
+      "sha256": "6d93fd0fa7448fa3adf3b68681f1e620fbd9ca85173d08fe90024b7c45696f2c"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-01/report/androidRelease.cdx.json",
+      "bytes": 294860,
+      "sha256": "26a2378d62e13fdc2a2fe10f4591c6b006010d60ee4fc1135cfa2ce8032e336b"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-01/raw-graphs/iosArm64.json",
+      "bytes": 154639,
+      "sha256": "39755a52285e8d361a900e6fb05d823feeb57b01729861a34017a9c78edee28a"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-01/report/iosArm64.cdx.json",
+      "bytes": 198842,
+      "sha256": "6156536dfe5008f383d2abfb40b0e93c9f212fae9768eb38c62da7032a62d953"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-01/raw-graphs/iosSimulatorArm64.json",
+      "bytes": 157924,
+      "sha256": "12c7fa9419fb35f9b504029c3aef418e01eb9704975b9a2d570844f6931cc55a"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-01/report/iosSimulatorArm64.cdx.json",
+      "bytes": 201956,
+      "sha256": "1ee190332f99082996da1f090dac80fed4d0f38ca44df061b6875135e7f116b3"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-01/raw-graphs/iosX64.json",
+      "bytes": 153736,
+      "sha256": "a65fde3f5b45353c7414888c584f756a30de6741389e3234f8fb672af1735c7b"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-01/report/iosX64.cdx.json",
+      "bytes": 197981,
+      "sha256": "2991e258761fc51bf31d3b9cdeab315fb1a7833cfdbd57ae45baa823f1de7684"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/frozen-source-reconciliation-prep-01.json",
+      "bytes": 111413,
+      "sha256": "c0f0f14bcfb01f24d63d79be434f46d74fc88dddab8bd6bd938ce788371d33b3"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/release-validator-independent-01.json",
+      "bytes": 12088,
+      "sha256": "8f72f2e09e6af59fbd18c47517db11ca39a6272d8ad1783541ccc37411e49493"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-preflight-34214410629-independent-01.json",
+      "bytes": 19459,
+      "sha256": "ebc84da0838a3333ba3ee102374edec6e629dbdaab07d4fb3c2fe9cc470b64d6"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-run-34216788568-independent-01.json",
+      "bytes": 43971,
+      "sha256": "bd23a666945076731b2df24bc6a5044bce5d70270610ca5662020e0e3000a778"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-ps-timeout-diagnosis-01.json",
+      "bytes": 18505,
+      "sha256": "a5ac5eedd0924a5390baccf15edbbc8479145a816281c48dfa574b39af8df72f"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-independent-01.json",
+      "bytes": 19821,
+      "sha256": "7fd149a67d16f7b3d61f5b3e4ce8f431b4a2aba122e1114133c321dfd14478a6"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-postrun-independent-01.json",
+      "bytes": 27334,
+      "sha256": "3452f006a6be197767573182264c8d601d1191ad27ad578b5e14f1eeefda7728"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-01/request.json",
+      "bytes": 1201,
+      "sha256": "7eaf6bfea23322d93feea35aaa02ae16be4f25ef357e79122ce89d23d49cd7a5"
+    },
+    {
+      "path": "docs/AGENT_CONTINUATION_2026-09-08.md",
+      "bytes": 33526,
+      "sha256": "e9979e663b014f5e3289ea16544d916c60cf283a5c1e7e581c69ecf2b5017458"
+    },
+    {
+      "path": "docs/AGENT_CONTINUATION_2026-09-08_LINUX.md",
+      "bytes": 11774,
+      "sha256": "560dcec08755a3ef94a5daaaaad8a6bdd010ec9893cf148481d6bf16a4456718"
+    },
+    {
+      "path": "CONTINUE_HERE.md",
+      "bytes": 1088,
+      "sha256": "2ee8d3ebc3c0566e8a707cc5d4959298a8717db5a3e80eb1bcf99dc25ac187fd"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md",
+      "bytes": 17674,
+      "sha256": "e0c4ab05557936cf112d57cf54473a73334335a3bcec9c4313d9585d17434ce0"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/l08-strict-protection-investigation-02.md",
+      "bytes": 11293,
+      "sha256": "e44de5a5c5a8eb7a439a0ef18ead7bb176d85c890ef77641e25db18dc23fe708"
+    }
+  ],
+  "initial_recorded_at": "2026-09-08T11:42:28.181846+00:00",
+  "update_reason": "Coordinator requested one concise source-only paired-Foundation exact-runtime mismatch finding; actual A17/B18 failure attribution and all existing result/cleanup scopes unchanged. Coordinator also requested pending next adapter cycle identities19/20, with diagnostic first and no retry approval.",
+  "previous_author_audit_sha256": "1f1bce2357ef9930a3cf931d51176626304597bd248b3ad4dbf1f4108f10c577",
+  "previous_ledger_sha256": "57165f57705fa55a49bda7344d10585bee1f03dfc4f3017c1b7124b59662ad8c"
+}

@@ -1,0 +1,281 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_FROZEN_SOURCE_RELEASE_VALIDATOR_EXECUTION_RECONCILIATION",
+  "reviewer": "/root/ci_review",
+  "executor": "/root",
+  "recorded_at": "2026-09-08T10:17:01.564476+00:00",
+  "status": "PASS_FOR_RELEASE_AUTOMATION_AND_STATIC_WORKFLOW_SCOPE",
+  "cycle": "continuation-release-validator-01",
+  "command": [
+    "/bin/bash",
+    "scripts/release/validate_release_system.sh"
+  ],
+  "started_at": "2026-09-08T10:11:11.406876+00:00",
+  "finished_at": "2026-09-08T10:12:07.158226+00:00",
+  "exit_code": 0,
+  "evidence": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-01/artifact-receipts.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-01/gradle.log",
+      "bytes": 67283,
+      "sha256": "f4274409dbeafc1a1b71a86571bf7dd4adfab524751edcc619885b2b0521c5ae"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-01/java-toolchain.log",
+      "bytes": 2026,
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-01/javac-toolchain.log",
+      "bytes": 14,
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-01/receipt.json",
+      "bytes": 302804,
+      "sha256": "54f123f4f092c4b7df674eacb8e916f44c87edc98dba16c7558cdba83375c7df"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-01/test-receipts.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    }
+  ],
+  "source_binding": {
+    "commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+    "tree": "629a5d2b699cddb62d61849de3bd185fd4c01378",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "6e83dcdccc950fde35ccbf8fe2d4c73671a05a5f4a6a3a5068799af86bbd2334",
+    "source_manifest_rows": 820,
+    "full_before_after_equal": true,
+    "manifest_digest_recomputed": true,
+    "runner_before_after_equal": true,
+    "runner_manifest": {
+      "manifest": [
+        [
+          "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+          "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc"
+        ]
+      ],
+      "manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912"
+    },
+    "six_scoped_ci_files_still_match_independent_source_approval": true,
+    "source_commit": "160824e17caa384fa1802a82760638de1f71f2af",
+    "inventory_commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+    "inventory_commit_files": [
+      "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv"
+    ]
+  },
+  "tests": {
+    "executed": 383,
+    "unique_raw_ids": 383,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "all_statuses_ok": true,
+    "raw_ids_equal_all_current_hash_bound_AST_declarations": true,
+    "direct_single_line_ok_count": 381,
+    "interleaved_output_ok_count": 2,
+    "interleaved": [
+      {
+        "id": "test_notice_git_bytes.NoticeGitBytesTest.test_notice_bytes_survive_crlf_checkout_conversion",
+        "line": 208,
+        "interleaved_output": "warning: in the working copy of '.gitattributes', LF will be replaced by CRLF the next time Git touches it",
+        "ok_line": 209
+      },
+      {
+        "id": "test_release_tool.GitTreeVerificationTest.test_unrelated_same_tree_is_rejected",
+        "line": 238,
+        "interleaved_output": "Switched to a new branch 'unrelated'",
+        "ok_line": 239
+      }
+    ],
+    "summary": "Ran 383 tests in 49.929s; OK",
+    "sorted_ids_sha256": "ca47a548afed92902bb46223746dd22ccb600b7c1bb684d8912e07cb00f14635",
+    "files": [
+      {
+        "path": "scripts/release/tests/test_android_artifact_size.py",
+        "sha256": "1bdf6fe45be629ed8ea6d435727e88d87644319257127732b61a529f1ce1a0b1",
+        "tests": 7
+      },
+      {
+        "path": "scripts/release/tests/test_android_release_artifacts.py",
+        "sha256": "f8b9a707ef2a023fce7fa1a2cd658a0820042af4e28aae647d91567d80004963",
+        "tests": 17
+      },
+      {
+        "path": "scripts/release/tests/test_android_upload_signature.py",
+        "sha256": "fd9723397cd3ae4336371cd6fdd93164d225919d1ed615d5fd48f75055b3eade",
+        "tests": 21
+      },
+      {
+        "path": "scripts/release/tests/test_apple_ci_hygiene.py",
+        "sha256": "0ceea9e5afacd3feeaa8b0aa55134dd559482ffeaaff259906c605cfc41e3549",
+        "tests": 50
+      },
+      {
+        "path": "scripts/release/tests/test_ci_verification_hygiene.py",
+        "sha256": "3fc6f1d4a15152bcca6d86d77bcbc782b3936c6c47336a3ff7b3067d3790e4c8",
+        "tests": 22
+      },
+      {
+        "path": "scripts/release/tests/test_dependency_inventory.py",
+        "sha256": "a3c454f08af038a59381360a1290a470d2b04e3ad4201fa1ca63bc96d01f1b91",
+        "tests": 15
+      },
+      {
+        "path": "scripts/release/tests/test_google_promotion_edit.py",
+        "sha256": "b6ed5e950782ef5581f86cabd7a263937da52d3dfcf7c84cc45df5bcc2d147db",
+        "tests": 9
+      },
+      {
+        "path": "scripts/release/tests/test_ios_release_artifacts.py",
+        "sha256": "e5239b6587b963d009a2a477de6d6e1e36bac5c03e144059c92657527ec3e1c6",
+        "tests": 29
+      },
+      {
+        "path": "scripts/release/tests/test_native_continuation.py",
+        "sha256": "ad0aa309b90eaf39b26f1c6638acde335100a0a4a76c5b73afda0b54d5fc0479",
+        "tests": 34
+      },
+      {
+        "path": "scripts/release/tests/test_normalize_embedded_apple_framework.py",
+        "sha256": "f05aebef486c23bc9bf28fe4eafdf17bbb3789d8c807cb69c7ec10de6aedecc9",
+        "tests": 3
+      },
+      {
+        "path": "scripts/release/tests/test_notice_git_bytes.py",
+        "sha256": "a1a4196e301f7a310efd4ce4a6f92b2be16cefeafa5b5feabe409200d74f6ba6",
+        "tests": 2
+      },
+      {
+        "path": "scripts/release/tests/test_release_documentation.py",
+        "sha256": "414579949e9668da6971d41dd4ef7434271fd17b8af4547b0009162ea5c83046",
+        "tests": 1
+      },
+      {
+        "path": "scripts/release/tests/test_release_tool.py",
+        "sha256": "89a2f83994e461184706e9c2ec50d13bffabc622f615793802a6f7e040f9c140",
+        "tests": 36
+      },
+      {
+        "path": "scripts/release/tests/test_review_inventory.py",
+        "sha256": "841961fda25e9d4455c3178a3beab93f713e41667592538fcaef0621af74b78c",
+        "tests": 4
+      },
+      {
+        "path": "scripts/release/tests/test_store_api.py",
+        "sha256": "18d49c5deb8cc5383b5a9888f7f14f21884bbbfeb577348412f1930f4972a1d1",
+        "tests": 51
+      },
+      {
+        "path": "scripts/release/tests/test_third_party_notices.py",
+        "sha256": "0a395e8b064dea6ec229509026abfd5ec7c7f5a5a23969f606e461100f42eed3",
+        "tests": 32
+      },
+      {
+        "path": "scripts/release/tests/test_workflow_contract.py",
+        "sha256": "36c89b71edbf9d56ba743f86f3ed11c64a6eaacc58116130e3e6941094e4408e",
+        "tests": 45
+      },
+      {
+        "path": "scripts/release/tests/test_xcode_framework_phase.py",
+        "sha256": "3033307b0a029d87ab9c8c14d3b3b4d3a0d4db9d183012d6da58fb1e8b5c4a73",
+        "tests": 5
+      }
+    ],
+    "scope": "Linux release-system control suite, including34native-adapter and45workflow-contract tests. No application or native runtime test assertion is inferred."
+  },
+  "static_validation": {
+    "validator_sha256": "ce52c9c08edecba968337d6de42c90895badec127c7029a5afc16737d3b8864a",
+    "release_policy_sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+    "py_compile": "Executed unconditionally before unit tests by hash-bound successful script.",
+    "workflow_contract": "Two PASS lines: suite invocation and dedicated post-suite command.",
+    "inventory": {
+      "rows": 14847,
+      "observed": "Verified freshness of 14847 inventory rows in docs/review/INDEPENDENT_REVIEW_INVENTORY.csv; source review not attested",
+      "limitation": "Mechanical freshness only; not14847 source reviews."
+    },
+    "tools": {
+      "shellcheck": {
+        "version": "0.11.0",
+        "platform": "linux-amd64",
+        "artifact_sha256": "b7af85e41cc99489dcc21d66c6d5f3685138f06d34651e6d34b42ec6d54fe6f6",
+        "checksum_stdout": "archive: OK",
+        "conclusion": "Executed successfully",
+        "basis": "Hash-bound set-euo-pipefail validator unconditionally invokes pinned analyzer; overall exit0 and successful checksum lines, with no bypass or continue-on-error.",
+        "individual_exit_receipt_recorded": false
+      },
+      "actionlint": {
+        "version": "1.7.12",
+        "platform": "linux-amd64",
+        "artifact_sha256": "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8",
+        "checksum_stdout": "archive: OK",
+        "conclusion": "Executed successfully",
+        "basis": "Hash-bound set-euo-pipefail validator unconditionally invokes pinned analyzer; overall exit0 and successful checksum lines, with no bypass or continue-on-error.",
+        "individual_exit_receipt_recorded": false
+      }
+    }
+  },
+  "cleanup": {
+    "stop_command": [
+      "./gradlew",
+      "--stop"
+    ],
+    "stop_exit_code": 0,
+    "stop_stdout": "No Gradle daemons are running.",
+    "stopped_at": "2026-09-08T10:12:07.956685+00:00",
+    "cleanup_completed_at": "2026-09-08T10:12:08.044964+00:00",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "artifact_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "removed_outputs": [],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "deferred_signals": [],
+    "cycle_scratch_absence_independently_checked": true,
+    "tools_temp_absence": "Nested parlor-release-tools.RWyyam absent with its owned cycle scratch; no global caches removed."
+  },
+  "conclusions": [
+    "No discrepancy found in383executed unique test IDs, source/control binding, status, inventory freshness or cleanup; the two split ok results are evidenced explicitly rather than dismissed or miscounted.",
+    "Source/control commit precedes the mechanically inventory-only frozen commit, and this validator ran on that clean tracked source with empty diff.",
+    "Nonbuilding focused preflight may now be assessed on the same frozen SHA after remote confirmation. This report does not approve unobserved preflight artifacts or native execution.",
+    "Actual L08/retained-host/protection results, Parlor libproc runtime, fresh dependency export/rendering/candidate chain and final five-job qualification remain separate required evidence. No Store, physical-device, owner/legal or all-ready claim."
+  ],
+  "native_execution_approved": false,
+  "reviewer_activity": {
+    "tests_or_builds_run": 0,
+    "native_or_gradle_commands": 0,
+    "workflow_dispatches": 0,
+    "performed": [
+      "Read actual retained logs and receipt",
+      "Hash/reconcile source and runner manifests",
+      "AST-to-raw-ID comparison with two explicit output interleavings",
+      "Read pinned validator/policy",
+      "Inspect frozen Git identities and inventory-only commit",
+      "Check owned scratch absent",
+      "Write only this retained report"
+    ]
+  },
+  "reviewer_cleanup": {
+    "needed": false,
+    "detail": "No reviewer test/build/native allocation; existing source/docs/evidence were not edited or removed."
+  }
+}

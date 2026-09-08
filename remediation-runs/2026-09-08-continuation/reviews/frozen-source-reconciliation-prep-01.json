@@ -1,0 +1,1707 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_FROZEN_SOURCE_COMPATIBILITY_AND_EVIDENCE_RECONCILIATION_PREPARATION",
+  "recorded_at": "2026-09-08T10:45:13.123253+00:00",
+  "reviewer": "/root/evidence_audit",
+  "classification": "SCOPED_RECONCILIATION_COMPLETE_FINAL_A_B_C_D_QUALIFICATION_PENDING",
+  "scope": "Read-only frozen delta/original16+timer/architecture/control-evidence reconciliation, plus this new report. No exhaustive fresh application review or runtime re-execution. Separate actual A-D outcomes must be appended in later independently reconciled evidence.",
+  "independence": {
+    "application_or_control_changes_authored_by_reviewer": false,
+    "documentation_authored_by_reviewer": [
+      "CONTINUE_HERE.md",
+      "docs/AGENT_CONTINUATION_2026-09-08_LINUX.md",
+      "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md"
+    ],
+    "documentation_not_self_approved": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-handoff-independent-02.json",
+      "bytes": 2601,
+      "sha256": "581c495dc931def78b09d97bdcf061151c384f2cce8a952bfa28e580c533a1c3"
+    },
+    "independent_documentation_reviewer": "/root",
+    "prior_baseline_audit_authored_by_reviewer": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/baseline-evidence-audit-01.json",
+      "bytes": 39001,
+      "sha256": "6c82cd58ce41377f9ca1f20b09ff46fb49da6f0fa8a62595b53a5fd454d0960d"
+    }
+  },
+  "frozen_source": {
+    "repository": "https://github.com/Apdelrahman1911/parlor.git",
+    "branch": "fix/local-readiness-2026-09-07",
+    "baseline": "ec0de52a2c7ff9077482a291dc4fd2591fdea01f",
+    "source_control_commit": "160824e17caa384fa1802a82760638de1f71f2af",
+    "frozen_inventory_commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+    "tree": "629a5d2b699cddb62d61849de3bd185fd4c01378",
+    "full_history": true,
+    "tracked_status_at_review": "",
+    "local_origin_tracking_ref": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+    "remote_confirmation": "Coordinator supplied matching remote SHA; reviewer inspected local origin tracking ref, issued no GitHub/network request. Final direct remote equality remains coordinator-owned.",
+    "source_manifest_sha256": "6e83dcdccc950fde35ccbf8fe2d4c73671a05a5f4a6a3a5068799af86bbd2334",
+    "source_manifest_rows": 820,
+    "inventory": {
+      "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "bytes": 9253207,
+      "sha256": "34842bc028bd45013aedc646a8a19f2db75481b67f11b3de25b99e1f56720b57"
+    },
+    "inventory_rows": 14847,
+    "inventory_path_set_equals_tracked_git_files": true,
+    "inventory_only_commit_paths": [
+      "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv"
+    ],
+    "inventory_freshness_actual_execution": "Raw continuation-release-validator-01 log records --check success; reviewer did not rerun generator. Inventory mechanically classifies files, not14847 independent reviews."
+  },
+  "delta": {
+    "changed_paths": 140,
+    "git_full_index_binary_diff_sha256": "4ca53cc0604db1969932eac36f0ecdf240ccfe65ca36acc65e0f29fd1afa8a1f",
+    "all_name_status_lines": [
+      "M\t.github/workflows/production-verification.yml",
+      "M\tCONTINUE_HERE.md",
+      "A\tdocs/AGENT_CONTINUATION_2026-09-08_LINUX.md",
+      "M\tdocs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-ci-controls-01/artifact-receipts.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-ci-controls-01/gradle.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-ci-controls-01/java-toolchain.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-ci-controls-01/javac-toolchain.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-ci-controls-01/receipt.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-ci-controls-01/stop.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-ci-controls-01/test-receipts.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/artifact-receipts.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/composition.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/control-inputs-after.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/control-inputs-before.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/focused-command-results.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/functional-copy.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/gradle.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/java-toolchain.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/javac-toolchain.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/lane.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/normal.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/packet.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/receipt.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/schema-base-prerequisites.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/schema-bootstrap.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/schema-closure.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/schema-consumer-controls.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/single-tap.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/stop.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/test-receipts.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/toolchain.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/artifact-receipts.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/functional-copy-recheck.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/gradle.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/java-toolchain.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/javac-toolchain.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/l08-command-exits.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/l08-control-inputs-after.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/l08-control-inputs-before.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/l08-control-recheck-results.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/receipt.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/single-tap-recheck.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/stop.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/test-receipts.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-lane-controls-01/artifact-receipts.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-lane-controls-01/gradle.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-lane-controls-01/java-toolchain.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-lane-controls-01/javac-toolchain.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-lane-controls-01/receipt.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-lane-controls-01/stop.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-lane-controls-01/test-receipts.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/artifact-receipts.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/gradle.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/java-toolchain.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/javac-toolchain.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/receipt.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidManifestLanPermissionTest.xml",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidReleaseLintContractTest.xml",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomCoordinatorTest.xml",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DesktopDependencyVerificationContractTest.xml",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest.xml",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.HostOpeningCancellationTest.xml",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.IosInfoPlistBonjourTest.xml",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.LoopbackFixtureContractTest.xml",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.MultiplayerDocumentationContractTest.xml",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pDiagnosticsTest.xml",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitCreationTest.xml",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitMavenProvenanceContractTest.xml",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.xml",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pTrafficPolicyTest.xml",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.PeerOpeningCancellationTest.xml",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ResumableCredentialStoreTest.xml",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.TestTransportIsolationContractTest.xml",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.VerificationMetadataAssertionsTest.xml",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/stop.log",
+      "A\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/test-receipts.json",
+      "M\tremediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in",
+      "M\tremediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08_FUNCTIONAL_README.md",
+      "M\tremediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "M\tremediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md",
+      "M\tremediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+      "M\tremediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py",
+      "M\tremediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+      "M\tremediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+      "M\tremediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+      "M\tremediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "A\tremediation-runs/2026-09-07-local-readiness/reviews/hosted-native-portability-01/author-notes-01.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/reviews/hosted-native-portability-01/author-notes-02.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/reviews/hosted-native-portability-01/author-notes-03.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/reviews/hosted-native-portability-01/draft-freeze-relative.json",
+      "A\tremediation-runs/2026-09-07-local-readiness/reviews/hosted-native-portability-01/macos-15-arm64-Readme.md",
+      "A\tremediation-runs/2026-09-07-local-readiness/reviews/hosted-native-portability-01/runner-image-source.json",
+      "M\tremediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "A\tremediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md",
+      "A\tremediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py",
+      "A\tremediation-runs/2026-09-08-continuation/controls/run_continuation_controls.py",
+      "A\tremediation-runs/2026-09-08-continuation/controls/test_continuation_packet.py",
+      "A\tremediation-runs/2026-09-08-continuation/controls/test_gradle_lane_portability.py",
+      "A\tremediation-runs/2026-09-08-continuation/controls/test_schema_base_bootstrap.py",
+      "A\tremediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/baseline-evidence-audit-01.json",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/continuation-control-driver-independent-01.json",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/control-packet-tests-independent-01.json",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/dependency-chain-linux-preparation-01.md",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/focused-controls-01-packet-and-l08-evidence-review.json",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/focused-controls-evidence-independent-01.json",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/gradle-lane-portability-evidence-independent-01.json",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/gradle-lane-portability-independent-01.json",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/l08-control-recheck-01-independent-postrun-review.json",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/l08-controls-recheck-command-01.json",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/l08-controls-recheck-command-02.json",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/l08-controls-recheck-invocation-independent-01.json",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/l08-single-tap-independent-01.json",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/l08-single-tap-scanner-correction-01/author-notes.json",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/l08-single-tap-scanner-correction-01/scanner-delta.patch",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/l08-single-tap-scanner-correction-01/test_single_tap_fixture_review.before.py",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/l08-single-tap-scanner-correction-independent-01.json",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/linux-handoff-independent-01.json",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/linux-handoff-independent-02.json",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/local-checkpoint-cleanup-01.json",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/native-continuation-controls-independent-01.json",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/native-continuation-source-independent-01.json",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/native-portability-doc-correction-independent-01.json",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/native-portability-independent-01.json",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/pre-freeze-source-safety-01.json",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/schema-base-bootstrap-independent-01.json",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/schema-base-prerequisites-research-01.json",
+      "A\tremediation-runs/2026-09-08-continuation/reviews/transport-contracts-evidence-independent-01.json",
+      "A\tscripts/ci/NATIVE_CONTINUATION.md",
+      "A\tscripts/ci/native_continuation.py",
+      "A\tscripts/release/tests/test_native_continuation.py",
+      "M\tscripts/release/tests/test_workflow_contract.py",
+      "M\tscripts/release/workflow_contract.py",
+      "A\tscripts/verification/ios-readiness/test_toolchain_profiles.py",
+      "A\tscripts/verification/ios-readiness/toolchain_profiles.py"
+    ],
+    "non_archived_evidence_or_review_files": [
+      {
+        "path": ".github/workflows/production-verification.yml",
+        "bytes": 37612,
+        "sha256": "af0a96cf33c950818546024627641fa842d4c1336b64c67467b01f7384c6f2e6"
+      },
+      {
+        "path": "CONTINUE_HERE.md",
+        "bytes": 1088,
+        "sha256": "2ee8d3ebc3c0566e8a707cc5d4959298a8717db5a3e80eb1bcf99dc25ac187fd"
+      },
+      {
+        "path": "docs/AGENT_CONTINUATION_2026-09-08_LINUX.md",
+        "bytes": 11774,
+        "sha256": "560dcec08755a3ef94a5daaaaad8a6bdd010ec9893cf148481d6bf16a4456718"
+      },
+      {
+        "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+        "bytes": 9253207,
+        "sha256": "34842bc028bd45013aedc646a8a19f2db75481b67f11b3de25b99e1f56720b57"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in",
+        "bytes": 19846,
+        "sha256": "5d81dfb0b5accc127a4f5510a23d610ba73efd2fc8b19a0ff12395912e2d0c59"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08_FUNCTIONAL_README.md",
+        "bytes": 11038,
+        "sha256": "ef7d79b8180a0aa7b412d1257b0948adcf41f602f5fdc8bb576e41ed3731aa0b"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+        "bytes": 72070,
+        "sha256": "fdae88cf835f4b0f5f5271b882641b7284db7ea5e5bdc135870754db7f61fb21"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md",
+        "bytes": 8201,
+        "sha256": "2522dbd4cc64412c8095c06bcafde98d84ee025c245b639ac308938dcf12136e"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+        "bytes": 20532,
+        "sha256": "28e0dc259096eba2b5d065710d19b83fbe15b1ee4682306277ad2450fbb6f9ec"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py",
+        "bytes": 5918,
+        "sha256": "03c115d45474ee082204d38c6315e19909108148b2de8804898dd66c40c14dbf"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+        "bytes": 27965,
+        "sha256": "ed10ea8bba376cbe7ddac47c25d888c6d708b1a808b2ce2cacc9a45d398d18ce"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+        "bytes": 12292,
+        "sha256": "07ae34ff3e6059e83ac041c55d0f380e21106666e867b1842534982c7450be08"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+        "bytes": 21350,
+        "sha256": "f1d77ff98814e515461f9d91f0e3c640638552b26990227c6d5069181f588e88"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+        "bytes": 56256,
+        "sha256": "b9fa9b43ed7a422dd54adbb8b8f14ae313a2aab2f82d081d70dc32b8583af698"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+        "bytes": 25106,
+        "sha256": "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md",
+        "bytes": 8544,
+        "sha256": "7ba40db8859dbbdc4c7ccdfcda31361a7477ee095a19d2d680bfb395a5160b5a"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py",
+        "bytes": 14663,
+        "sha256": "c9d3a26fb3901b3518f7c066d91ebda906d0bb8bef67273acb4720d5c37419c9"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/controls/run_continuation_controls.py",
+        "bytes": 8796,
+        "sha256": "1896d5a309e8802b691bfc9a37db2c0ac92dcfb6173d4cee564e5dcfcc234627"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/controls/test_continuation_packet.py",
+        "bytes": 16635,
+        "sha256": "3229ee84a80ec116a172b725b3005b24cb6c252ef1b11ca907109d4301af1d47"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/controls/test_gradle_lane_portability.py",
+        "bytes": 11955,
+        "sha256": "27283e41eb10bfdd9f9fdab1908d45575da75ce9322936d19ced11cd3de3eb33"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/controls/test_schema_base_bootstrap.py",
+        "bytes": 19518,
+        "sha256": "3923b1a3451ac7bcdb54293f93ae6dd8f55d334f69e4a4e297405ea99c6a028c"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py",
+        "bytes": 24518,
+        "sha256": "6443de2ea249c74a945aee5513e74eedadc077a68c43089201b89e9c90695298"
+      },
+      {
+        "path": "scripts/ci/NATIVE_CONTINUATION.md",
+        "bytes": 4719,
+        "sha256": "c3f4f0e9b9f4d606a567f78c8a9c3678485ce947fde157396b9d33ade91fbf9f"
+      },
+      {
+        "path": "scripts/ci/native_continuation.py",
+        "bytes": 41819,
+        "sha256": "1a79be62a223747d9a704819bf5bacac0bed512292a556afd9f2f8ddee66bed2"
+      },
+      {
+        "path": "scripts/release/tests/test_native_continuation.py",
+        "bytes": 36207,
+        "sha256": "ad0aa309b90eaf39b26f1c6638acde335100a0a4a76c5b73afda0b54d5fc0479"
+      },
+      {
+        "path": "scripts/release/tests/test_workflow_contract.py",
+        "bytes": 28410,
+        "sha256": "36c89b71edbf9d56ba743f86f3ed11c64a6eaacc58116130e3e6941094e4408e"
+      },
+      {
+        "path": "scripts/release/workflow_contract.py",
+        "bytes": 42263,
+        "sha256": "55ad26a933eb1c2b3e8fbedaf1e35dc42875c6d1d13897d43263c71c7080ce9a"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+        "bytes": 12098,
+        "sha256": "77ee3b78862c23bee045ff9ca049f312a20b45bff1257768b13e2c5f2ca6bf4a"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/toolchain_profiles.py",
+        "bytes": 3262,
+        "sha256": "65ffab3c3f13785a5574b6018c61ec23f8b36c8ecd5528737a1bfb88fd21cce0"
+      }
+    ],
+    "unchanged_runtime_build_config_subtrees": [
+      {
+        "path": "composeApp",
+        "tracked_files": 121,
+        "git_ls_tree_bytes_equal": true,
+        "git_ls_tree_sha256": "1de599af779adaac29fc66add7a0a87ff52c6822c1cd0f1bc1e06d9bdeb67f74"
+      },
+      {
+        "path": "shared",
+        "tracked_files": 239,
+        "git_ls_tree_bytes_equal": true,
+        "git_ls_tree_sha256": "d7b4ac894890109aed3c9c5089a8c7bbb6fa746d15b84b82ebc0900df8b0ee06"
+      },
+      {
+        "path": "game-modes",
+        "tracked_files": 238,
+        "git_ls_tree_bytes_equal": true,
+        "git_ls_tree_sha256": "50323bc8954a29c8953a9a4b0e119ba115a7ccd65039967f931e3b582b9488bb"
+      },
+      {
+        "path": "iosApp",
+        "tracked_files": 19,
+        "git_ls_tree_bytes_equal": true,
+        "git_ls_tree_sha256": "ec025a3c8458a38f5a367ae3af321e9a0a528faf526eccf8b8284c0bec6f3634"
+      },
+      {
+        "path": "build-logic",
+        "tracked_files": 5,
+        "git_ls_tree_bytes_equal": true,
+        "git_ls_tree_sha256": "5daeca1554fa9db48837ed51095190755a09d201fe73e8c792ff05dbb45f327e"
+      },
+      {
+        "path": "config",
+        "tracked_files": 6,
+        "git_ls_tree_bytes_equal": true,
+        "git_ls_tree_sha256": "962b26df4caea7040554d6ec3bb1ade6b4fc76b0075b29ad135a3acabbfaebe0"
+      },
+      {
+        "path": "gradle",
+        "tracked_files": 4,
+        "git_ls_tree_bytes_equal": true,
+        "git_ls_tree_sha256": "f56526ed34d59e5910de3d8b69378ee964e9cb7c4b4a7c94c08b68107d39bd31"
+      }
+    ],
+    "unchanged_root_build_files": [
+      "settings.gradle.kts",
+      "build.gradle.kts",
+      "gradle.properties",
+      "gradlew",
+      "gradlew.bat"
+    ],
+    "unchanged_architecture_contracts": [
+      {
+        "path": "AGENTS.md",
+        "bytes": 5834,
+        "sha256": "1e8cbc4f414819f47908e1a3be9f717792a0401fb4fb35b7272c053c00e2f609"
+      },
+      {
+        "path": "docs/PRODUCTION_ARCHITECTURE.md",
+        "bytes": 16988,
+        "sha256": "279e3287ab49d8889f9f9450a6a6769cc1dd9f72cbfa8c5ff559d2fa1884ca99"
+      },
+      {
+        "path": "docs/RELEASE_GATES.md",
+        "bytes": 9623,
+        "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+      },
+      {
+        "path": "docs/HOW_TO_ADD_A_GAME.md",
+        "bytes": 5627,
+        "sha256": "4e516e4340fff99813ad78d3508cfbdb55173d8e789fd12d7bd30978f3f8c356"
+      },
+      {
+        "path": "docs/adr/0001-game-module-registration.md",
+        "bytes": 2349,
+        "sha256": "20cd132edfb3e319d94bacbcd68cfd8caeed9ebf077b77a72d7861c863fc160c"
+      },
+      {
+        "path": "docs/adr/0002-manual-endpoint-connection.md",
+        "bytes": 3653,
+        "sha256": "29c2519cd37fde9bff64804417beca2220529c4449da2b29b3b88cbd3f8a8407"
+      },
+      {
+        "path": "docs/WHODUNIT_DISCUSSION_TIMING.md",
+        "bytes": 2360,
+        "sha256": "877084e47d0e823278057da1f0881fbab0a52e5a8e57aa48eec5fbabc49cece1"
+      },
+      {
+        "path": "docs/PRE_RELEASE_COMPATIBILITY.md",
+        "bytes": 3361,
+        "sha256": "32ae112de9fd761636191c3308faf28fa5a3a8f3fd694064bbeaf3f2ffe69060"
+      },
+      {
+        "path": "docs/WHODUNIT_TEST_CONTENT.md",
+        "bytes": 10841,
+        "sha256": "e10fc5f4d8d5024c5a9f1fcf51d1bf30a9a1fda410843ed51e42d66186cd5a33"
+      }
+    ],
+    "inspection_conclusions": [
+      "No production, game, protocol, platform app source, module graph, dependency pin/verification metadata, application identity, content, signing config or accepted architecture contract changed in this continuation delta. Complete Git object/mode inventories match for632 files under the seven listed subtrees.",
+      "Copy-only L08 Swift adds bounded stable fully visible/uncovered exact-card geometry, fresh zero-before and one-after callback observation, and one actual Home target.tap. Additional Observe taps are read-only counter observations, not retry Home activations. Closed numeric/enum diagnostics explicitly set proves_recovery=false. Production Home/counter/storage/reducer code and original strict validators remain unchanged.",
+      "Linux lane portability requires explicit JDK21 plus bounded real java/javac probes and exact agreeing Android SDK36.0.0 selection. Existing ownership, locks, strict dependency verification, process finalization and precision cleanup remain.",
+      "Explicit hosted profile pins Xcode26.3/17C529 with actual SDK/runtime26.2; original26.5 default stays separate. Composition now binds exact relative nine-file draft freeze and the profile helper; fresh execution bindings are required. No protection policy, snapshot schema or validator was relaxed.",
+      "Native adapter uses only read-only Actions API, exact run/attempt/SHA/artifact ZIP/source/control validation, sequential A17 then explicit-libproc B18, bounded preservation before parsing failed evidence and cleanup custody. Safe cleanup is mandatory before B; a partial A cannot become a strict L08 pass. Full five-job commands remain with exact mode/finalizer predicates. Store workflows, publication guards and their source bytes are unchanged.",
+      "Schema bootstrap is additive around hash-pinned unchanged consumer/helper/test sources and exact wheel bytes. It enforces owned LinuxCPython3.12 imports/package rechecks/cleanup and all coupled candidate receipts; synthetic-control mode is not candidate execution.",
+      "The separate single-tap scanner and README corrections have source reviews and fresh26 execution; old failure receipts are preserved. Documentation was reviewed by/root, not self-approved by this report."
+    ]
+  },
+  "original16_and_timer": {
+    "map": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/original16-timer-commit-evidence-map-01.json",
+      "bytes": 145466,
+      "sha256": "82cc49b33044b27c1be99115847a04bfa505fa5ee28706ccfd7e30f4f0e6f0ff"
+    },
+    "descriptors": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/original16-timer-regression-descriptors-01.json",
+      "bytes": 150391,
+      "sha256": "b2fee80c8d9210fb44ab8b226a97912d30f381bc3eeea7ec9d4cb1a0e8d7e7af"
+    },
+    "original_findings": [
+      {
+        "id": "ST-C1",
+        "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "mechanism_paths": [
+          "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt"
+        ],
+        "all_mechanism_hashes_match": true
+      },
+      {
+        "id": "SN-C1",
+        "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "mechanism_paths": [
+          "shared/session/src/commonMain/kotlin/com/parlor/session/multidevice/SessionStartHandshake.kt"
+        ],
+        "all_mechanism_hashes_match": true
+      },
+      {
+        "id": "SN-C2",
+        "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "mechanism_paths": [
+          "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitCreation.kt",
+          "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/AppLifecycleRoomCoordinator.kt",
+          "shared/transport-p2p/src/commonMain/kotlin/com/parlor/transport/p2p/P2pKitRoomTransport.kt",
+          "shared/transport-p2p/src/androidMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.android.kt",
+          "shared/transport-p2p/src/iosMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.ios.kt",
+          "shared/transport-p2p/src/desktopMain/kotlin/com/parlor/transport/p2p/P2pTransportModule.desktop.kt"
+        ],
+        "all_mechanism_hashes_match": true
+      },
+      {
+        "id": "WD-C1",
+        "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "mechanism_paths": [
+          "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitPhaseRouter.kt"
+        ],
+        "all_mechanism_hashes_match": true
+      },
+      {
+        "id": "IOS-B1",
+        "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "mechanism_paths": [
+          "iosApp/iosApp.xcodeproj/project.pbxproj",
+          "scripts/release/tests/test_xcode_framework_phase.py"
+        ],
+        "all_mechanism_hashes_match": true
+      },
+      {
+        "id": "ROOT-T3",
+        "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "mechanism_paths": [
+          "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/JupiterDiscoveryContractTest.kt",
+          "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLifecycleTest.kt",
+          "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt"
+        ],
+        "all_mechanism_hashes_match": true
+      },
+      {
+        "id": "MF-C1",
+        "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "mechanism_paths": [
+          "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/snapshot/MafiaSnapshotRecovery.kt",
+          "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/night/DoctorTargetEligibility.kt",
+          "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupScreen.kt",
+          "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/multidevice/MafiaMultiDevicePhaseRouter.kt",
+          "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/flow/passandplay/MafiaPassAndPlayPhaseRouter.kt",
+          "game-modes/mafia/src/commonMain/composeResources/values-ar/strings.xml",
+          "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/settings/MafiaSettings.kt",
+          "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/reducer/MafiaReducer.kt",
+          "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/rules/NightResolution.kt",
+          "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/domain/state/MafiaPeerSnapshotValidator.kt",
+          "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/setup/MafiaSetupDraft.kt",
+          "game-modes/mafia/src/commonMain/composeResources/values/strings.xml"
+        ],
+        "all_mechanism_hashes_match": true
+      },
+      {
+        "id": "WD-C3",
+        "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "mechanism_paths": [
+          "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/domain/state/WhodunitStateValidator.kt"
+        ],
+        "all_mechanism_hashes_match": true
+      },
+      {
+        "id": "M-C03",
+        "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "mechanism_paths": [
+          "game-modes/mafia/src/commonMain/kotlin/com/parlor/games/mafia/ui/screens/postgame/PostGameScreen.kt"
+        ],
+        "all_mechanism_hashes_match": true
+      },
+      {
+        "id": "DS-C01",
+        "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "mechanism_paths": [
+          "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+          "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+          "iosApp/iosApp/ContentView.swift",
+          "iosApp/iosApp/ComposeContainerViewController.swift",
+          "iosApp/iosAppUITests/ComposeContainerViewControllerTests.swift"
+        ],
+        "all_mechanism_hashes_match": true
+      },
+      {
+        "id": "DS-C02",
+        "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "mechanism_paths": [
+          "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorToastHost.kt"
+        ],
+        "all_mechanism_hashes_match": true
+      },
+      {
+        "id": "DS-C03",
+        "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "mechanism_paths": [
+          "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorButton.kt",
+          "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/HostDisconnectedOverlay.kt",
+          "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ReconnectingOverlay.kt"
+        ],
+        "all_mechanism_hashes_match": true
+      },
+      {
+        "id": "WD-C2",
+        "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "mechanism_paths": [
+          "game-modes/whodunit/src/commonMain/composeResources/files/cases/last-dinner.json",
+          "game-modes/whodunit/src/commonMain/composeResources/files/cases/layla-halabi.json",
+          "game-modes/whodunit/src/commonMain/composeResources/files/cases/jasmine-ring.json",
+          "game-modes/whodunit/src/commonMain/composeResources/files/cases/khan-el-khalili.json",
+          "game-modes/whodunit/src/commonMain/kotlin/com/parlor/games/whodunit/ui/flow/WhodunitGameFlow.kt",
+          "docs/PRE_RELEASE_COMPATIBILITY.md",
+          "docs/WHODUNIT_TEST_CONTENT.md",
+          "game-modes/whodunit/src/commonMain/composeResources/files/cases/saidi-inheritance.json",
+          "game-modes/whodunit/src/commonMain/composeResources/files/cases/iskenderia-corniche.json",
+          "game-modes/whodunit/src/commonMain/composeResources/files/cases/zamalek-ramadan.json"
+        ],
+        "all_mechanism_hashes_match": true
+      },
+      {
+        "id": "RL-C1",
+        "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "mechanism_paths": [
+          "scripts/release/validate_android_artifact.sh"
+        ],
+        "all_mechanism_hashes_match": true
+      },
+      {
+        "id": "RL-C2",
+        "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "mechanism_paths": [
+          "scripts/release/PrepareAndroidUploadTrust.java",
+          "scripts/release/validate_android_artifact.sh"
+        ],
+        "all_mechanism_hashes_match": true
+      },
+      {
+        "id": "RL-C3",
+        "primary_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "mechanism_paths": [
+          "scripts/release/store_api.py"
+        ],
+        "all_mechanism_hashes_match": true
+      }
+    ],
+    "mechanism_reference_rows": 51,
+    "mechanism_unique_paths": 50,
+    "mechanism_hash_mismatches": [],
+    "all_primary_and_followup_commits_ancestors_of_frozen": true,
+    "historical_executed_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+    "historical_run_id": 34152138368,
+    "historical_attempt": 1,
+    "descriptor_rows": 49,
+    "raw_xml_rows": 45,
+    "raw_python_log_groups": 4,
+    "selected_historical_outcomes": {
+      "PASS": 352,
+      "FAIL": 0,
+      "SKIP": 3
+    },
+    "current_test_source_reference_rows": 49,
+    "current_test_source_unique_paths": 45,
+    "current_test_source_hash_mismatches": [],
+    "raw_descriptor_or_task_event_mismatches": [],
+    "raw_evidence_identity": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836438981.log",
+        "bytes": 538242,
+        "sha256": "1a0fe5199142cba9a90ee7b87272805c01a220c301bc87b93a6226ad7f84689c"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836439057.log",
+        "bytes": 417385,
+        "sha256": "80dbdb299846b9b41835e4b436f12213dd8cbf5f0075b36a99c3eb62728bed7a"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.MafiaDoctorRulesTest.xml",
+        "bytes": 1725,
+        "sha256": "2ecfec74f3ea53ca2868e21569b6f0c8a2fae3b02b9283e75ded6f59c2251176"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaDoctorLanTest.xml",
+        "bytes": 723,
+        "sha256": "7a8ec298f5ec7727259b1c3af6246b0b93c64e3bdfbab8b1f8f9e4a6d348e891"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest.xml",
+        "bytes": 3205,
+        "sha256": "d144ede88018c78b6ac367fdde46278fd0224dfae45c1da4b1be3807fab8ac81"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.components.MafiaCoverContrastTest.xml",
+        "bytes": 1435,
+        "sha256": "8969bd9f1aa6605d3a5bdc623bbebc0ea42b57abd78e9571e6f65fa6f44fe577"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLanguageContinuityTest.xml",
+        "bytes": 761,
+        "sha256": "c6b955dc42b33460b2c0705a6ff85e58612205d2a2b3bf4830f031eaba9bc27d"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.MafiaTallyLayoutTest.xml",
+        "bytes": 1723,
+        "sha256": "1e7c2f63ee6792dee141358b26dd838172d9815fece5a4d25bb296ba5e3113d5"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest.xml",
+        "bytes": 748,
+        "sha256": "eeafb24b1827f6544610beee66766d29cf0c4b687eaec6fe68f661ae25411c14"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest.xml",
+        "bytes": 1437,
+        "sha256": "2eb055c9f46efdb56bf04101d9e2519983ad6afe3d1c45975803adc8268bab6b"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest.xml",
+        "bytes": 736,
+        "sha256": "2364564959598b79aa00ecddbfb15317bdc5aa81b5240995dcdbb11bfde027cd"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupReadOnlyCountLayoutTest.xml",
+        "bytes": 1086,
+        "sha256": "c013cd64de94672e7394bff727d29f5299d73194c34a5121563f70de426854f0"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupStepperLayoutTest.xml",
+        "bytes": 1092,
+        "sha256": "670292314f9a774d241a053a664f4918eca779161dc84f03d21f5949d6bfa636"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaSetupToggleLayoutTest.xml",
+        "bytes": 1067,
+        "sha256": "8c58471e38dc27c8c0a93209150f852482ce78403ea23b02434b093a04f2763f"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryChronologyTest.xml",
+        "bytes": 1236,
+        "sha256": "b7a7cb095e07cfb9f346852a6ca1e407ba8cf1da3ad772fc461e095bbda1a050"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryCompatibilityTest.xml",
+        "bytes": 1100,
+        "sha256": "fdcb68bfa3b98ab2c40209fbf9f31b28199a775a373e3372756e5b5c9778d97d"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryFollowupChronologyTest.xml",
+        "bytes": 2778,
+        "sha256": "761167af2e7beb43f1829c39effe4bd9efd3b1bb776dc21f6e8ad2627216354e"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryGameTraceTest.xml",
+        "bytes": 536,
+        "sha256": "18046f37dea63ee1cae4dbf8f48e98dbced35750261d7fd309edc92b7247e865"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryRemainingChronologyTest.xml",
+        "bytes": 962,
+        "sha256": "0a09b895f167447c4a288a763f1e42edc5a36fd321e77587c99ba98468ec5f7e"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest.xml",
+        "bytes": 1961,
+        "sha256": "0546d9ed9c162970895956b875a411af54cd10b0d7bd1766c005441cdc6eecef"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitSnapshotValidationTest.xml",
+        "bytes": 8628,
+        "sha256": "40ff659e1a119393d2cf59924e47ac8bb4ea37647974d3170f2b0805e9c7ff82"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerPausedCoverContrastTest.xml",
+        "bytes": 970,
+        "sha256": "231327a83cbf00d9441fef36e1f6a3dac372ed2b55aa310daafaf1b41b25b5ea"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest.xml",
+        "bytes": 2449,
+        "sha256": "f6d974734874c17dc1b947d3cc0bfcc5519fa1ea912a8e7c901e58786770c05b"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest.xml",
+        "bytes": 1406,
+        "sha256": "fa0859c8e52124189fccba6e4110bc83acf4370d176a3ec68d5f3e83410683c8"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest.xml",
+        "bytes": 1987,
+        "sha256": "def7d5cdb4afe3474b93f7e7df7c6ddc86e2d20395db2ec4be2e6d297e90f005"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLanguageContinuityTest.xml",
+        "bytes": 751,
+        "sha256": "1fa756b998066deb44d11829d92a88a3eb58078c095fde7237115716f5c3d578"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest.xml",
+        "bytes": 1127,
+        "sha256": "447cade9cde6142ab2979c5d450bb6efd807876ee9dd47ed648fb017a776bdb8"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastConcurrencyTest.xml",
+        "bytes": 737,
+        "sha256": "007fe50b6973d5ce94042596dd8b9959533be3781ba715e98165e0e211bf3991"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastLifetimeTest.xml",
+        "bytes": 886,
+        "sha256": "9a15f07087fabe30a668182de476f0084125238736ae75ee0bc9733f092b6ee6"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+        "bytes": 1038,
+        "sha256": "7ee1db32c1389e39e72f767a60a3512993b9ece5adfd607f48cd39da22b189b5"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.RecoveryActionContrastTest.xml",
+        "bytes": 867,
+        "sha256": "ab9db98bf830d8f9397fda340c5260f723a0f522dfec87d5b3b061611e434c6a"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.localization.ProvideAppLanguageDesktopTest.xml",
+        "bytes": 548,
+        "sha256": "279265e469193dfad40f70791ab45f16e6e4f2adadfbdd14defdcb2ebc788bc2"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+        "bytes": 1945,
+        "sha256": "9dabd9eb8fff948f8fd8730dd9ae6a42fd8ddb3ec85c1dc824c7b8eff0ad14c0"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+        "bytes": 851,
+        "sha256": "4368ecb8314aa5964b9c270e4eaed6ce1879234f217ad8957db5e524c3688424"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.HostOpeningCancellationTest.xml",
+        "bytes": 1151,
+        "sha256": "5bd265a20cc727e61768c9784e836670705c50c2dd30a3cf4e9f263df810f9f8"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+        "bytes": 511,
+        "sha256": "3890e026d3e8b2b7901f84a93886d86e661d60715fa01747039eaef75625cd86"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitCreationTest.xml",
+        "bytes": 1731,
+        "sha256": "684c13f26d7bd25ff46f0be4b2bd123c92ffe445290e6f1c588a8c9751f9af6e"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.xml",
+        "bytes": 23996,
+        "sha256": "a22897ce38ea4643eb93f509b3c14bf5ef11f031b1a12550e4e971d62d211c66"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+        "bytes": 1272,
+        "sha256": "fb0663cdcf618579dbc887ee1c6e5d2a19f55317be96b930157f97fce2cc586e"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.PeerOpeningCancellationTest.xml",
+        "bytes": 2386,
+        "sha256": "1999e92295288c247c4d3bf467b89b0fc143c4c2bed33d1e791a277675a867b4"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.IosLegacySnapshotBackupTest.xml",
+        "bytes": 2836,
+        "sha256": "c1382ce91cfe6c138b70850cbd5aecf93f338e0a2435c2b8f8d280037986c6c5"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.IosStorageSafetyTest.xml",
+        "bytes": 1361,
+        "sha256": "0c8e5c57e2a63c6a9791a07cb9f5eb18d3ad424181633006fb3eeadecb9d9749"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/game-modes/mafia/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.mafia.domain.MafiaDoctorRulesTest.xml",
+        "bytes": 1831,
+        "sha256": "6d398522d89b928facca50a61098af603235287732526ea5f38305a103d030e8"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/game-modes/mafia/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest.xml",
+        "bytes": 3360,
+        "sha256": "f33e49f21b1f8b69e663798bbe8acf5eb22dd8bb994151ceb991b7eb8ebb564b"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest.xml",
+        "bytes": 2493,
+        "sha256": "8e69f95e4b8d03c0dee932bcdfefe5c2822baacde4d874d33738a03eca2a2d82"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+        "bytes": 2055,
+        "sha256": "6140aa7f29ca93fbb9c64be3af21f9830b35e5f2cdc3d2db4f75bae8b356ed82"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+        "bytes": 922,
+        "sha256": "6f101d17603f4c3d985b367d11187d8de091aa724dee576d868d5e57bc27b3bb"
+      }
+    ],
+    "timer_policy_commit": "b4f0ece464aa44819044dd78d2f2fd137d88c91d",
+    "timer_policy_source": {
+      "path": "docs/WHODUNIT_DISCUSSION_TIMING.md",
+      "bytes": 2360,
+      "sha256": "877084e47d0e823278057da1f0881fbab0a52e5a8e57aa48eec5fbabc49cece1"
+    },
+    "timer_execution_scope": "Six local+four host historical methods verified in actual XML; virtual Compose time and synthetic pre-admitted transport, not physical LAN. Leave Confirmation excluded from Discussion, Stay preserves other pause owners, peer never owns clock. Existing authorized policy, not a17th original defect.",
+    "doctor_scope": "Existing defaultOFF setting and uncapped legalON consecutive targeting, independent self-heal rule, host-only privacy/history and strict recovery validation unchanged; no new game setting or rule was introduced.",
+    "scope_limit": "These unchanged mechanisms and source-bound historical results remain relevant historical regression evidence, not new25b1 application execution or a substitute for finalD."
+  },
+  "preserved_skip_wording_erratum": {
+    "corrected_interpretation": "All three retained P2pKit peer skips are existing single-JVM JmDNS multicast/loopback fixtures. They are not physical tests and provide no physical-device evidence.",
+    "source": {
+      "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+      "bytes": 10824,
+      "sha256": "21451bf407d791ec85066227a2670ccf61d3506efaae47375c0bba557fe3be73"
+    },
+    "lines": "44-54; @Ignore methods remain skipped",
+    "older_wording_to_not_reuse": [
+      "baseline-evidence-audit-01.json original16_and_timer.skip_scope",
+      "original16-timer-regression-descriptors-01.json historical physical-method prose",
+      "other historical map descriptions calling ignored loopback fixtures physical"
+    ],
+    "preservation": "Old reports remain byte-for-byte retained; this explicit erratum changes interpretation, not raw outcomes. Updated Linux handoff/ledger already contain correct wording after/root independent review."
+  },
+  "new_linux_evidence": [
+    {
+      "cycle": "continuation-linux-lane-controls-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-lane-controls-01/receipt.json",
+        "bytes": 301976,
+        "sha256": "9538e853b2a868e1f3fac43f37b8363901f095372ec27c1676fa2c5da864c76b"
+      },
+      "independent_review": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/gradle-lane-portability-evidence-independent-01.json",
+        "bytes": 8575,
+        "sha256": "58161ccbd00fc6deace0be4e7f7acb88bb4890871cb71220606b966335cd27f6"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at": "2026-09-08T08:54:59.486282+00:00",
+      "finished_at": "2026-09-08T08:55:00.865547+00:00",
+      "scope": "21 Python controls PASS plus actual bounded Java/Javac21 probes; first cycle lacks separate execution-time test-file byte binding. Bound lane21 later executed within the retained failed focused cycle.",
+      "binding": {
+        "commit": "ec0de52a2c7ff9077482a291dc4fd2591fdea01f",
+        "tree": "48b099f3cd002a3253f21d2b06a4ece5787e62cb",
+        "branch": "fix/local-readiness-2026-09-07",
+        "diff_sha256": "29fb270888ae197ac1352993a124c90441401642a670d4a677a8d64c5e7c554b",
+        "source_manifest_sha256": "95fa3b14c818024f97c5a58e0ad1e485e2a69df21f08a80b89ea0dfe4aa466e3",
+        "tracked_status": "M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\n M remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py"
+      },
+      "source_manifest_rows": 815,
+      "full_source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "source_paths_different_from_frozen": [
+        {
+          "path": ".github/workflows/production-verification.yml",
+          "bound_sha256": "f823182501d7a28dd20d117781b59dd46bc5103baef5b016316a5a672a18258f",
+          "current_sha256": "af0a96cf33c950818546024627641fa842d4c1336b64c67467b01f7384c6f2e6"
+        },
+        {
+          "path": "CONTINUE_HERE.md",
+          "bound_sha256": "f3f6beb0e6b1d0c889e3ffe05cd8cdbc40f396197c10636b247942286a2a65d5",
+          "current_sha256": "2ee8d3ebc3c0566e8a707cc5d4959298a8717db5a3e80eb1bcf99dc25ac187fd"
+        },
+        {
+          "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+          "bound_sha256": "377689ddaa4e38db24ccbc27abf7807ce722a829bf3f7938433fe3225a4753fb",
+          "current_sha256": "34842bc028bd45013aedc646a8a19f2db75481b67f11b3de25b99e1f56720b57"
+        },
+        {
+          "path": "scripts/release/tests/test_workflow_contract.py",
+          "bound_sha256": "b2e5f6af1a37f86e5e47c3c69e7a31afb1b4090034c202a39c7bfc3a93f3e219",
+          "current_sha256": "36c89b71edbf9d56ba743f86f3ed11c64a6eaacc58116130e3e6941094e4408e"
+        },
+        {
+          "path": "scripts/release/workflow_contract.py",
+          "bound_sha256": "8907e1abd5e06812ebe2674bb175056bfb6b27423bbc9819d02404450e1141ca",
+          "current_sha256": "55ad26a933eb1c2b3e8fbedaf1e35dc42875c6d1d13897d43263c71c7080ce9a"
+        }
+      ],
+      "frozen_source_paths_absent_from_old_manifest": [
+        "docs/AGENT_CONTINUATION_2026-09-08_LINUX.md",
+        "scripts/ci/NATIVE_CONTINUATION.md",
+        "scripts/ci/native_continuation.py",
+        "scripts/release/tests/test_native_continuation.py",
+        "scripts/verification/ios-readiness/test_toolchain_profiles.py"
+      ],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-08T08:55:05.823413+00:00",
+        "cleanup_completed_at": "2026-09-08T08:55:05.887901+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "artifact_workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "cleanup_errors": [],
+        "deferred_signals": []
+      },
+      "logs": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-lane-controls-01/gradle.log",
+          "bytes": 3206,
+          "sha256": "a303ec923aaab97e3223ededebf653bce4b96ddd3f9059590b9da59bd7f6491e"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-lane-controls-01/stop.log",
+          "bytes": 544,
+          "sha256": "01cc71b2d614314df3ccd1c1422e5ae0c996070e78e0a858042b0596b36091f6"
+        }
+      ]
+    },
+    {
+      "cycle": "continuation-ci-controls-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-ci-controls-01/receipt.json",
+        "bytes": 305467,
+        "sha256": "68f651a32b4781f80fa1b9d25252c5bf4687d5e861ca5cd41269311ff3b9f23c"
+      },
+      "independent_review": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-continuation-controls-independent-01.json",
+        "bytes": 8490,
+        "sha256": "4c37fe9e332b0feafdc1e1f05e91011aacefd138e1e08c80c2f95210e34fff0a"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at": "2026-09-08T09:38:32.532829+00:00",
+      "finished_at": "2026-09-08T09:38:34.184208+00:00",
+      "scope": "79 workflow/native-adapter Python controls PASS; unchanged executable/control scope is also covered within383 frozen release-validator tests. Neither cycle is native runtime.",
+      "binding": {
+        "commit": "ec0de52a2c7ff9077482a291dc4fd2591fdea01f",
+        "tree": "48b099f3cd002a3253f21d2b06a4ece5787e62cb",
+        "branch": "fix/local-readiness-2026-09-07",
+        "diff_sha256": "7556edc910e117709b63ffb24f9effe82625af9d525cab143789e1eb58d3948a",
+        "source_manifest_sha256": "b3614749ea6ed13c68dd78d676587ee476a6ffb83e21dd752f42a178bd6bcfea",
+        "tracked_status": "M .github/workflows/production-verification.yml\n M CONTINUE_HERE.md\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/README.md\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\n M remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py\n M scripts/release/tests/test_workflow_contract.py\n M scripts/release/workflow_contract.py"
+      },
+      "source_manifest_rows": 820,
+      "full_source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "source_paths_different_from_frozen": [
+        {
+          "path": "CONTINUE_HERE.md",
+          "bound_sha256": "abaca069ad3e876aeb1d39a860fb7b85650a594d9f0e035c81d29858ee9bd7af",
+          "current_sha256": "2ee8d3ebc3c0566e8a707cc5d4959298a8717db5a3e80eb1bcf99dc25ac187fd"
+        },
+        {
+          "path": "docs/AGENT_CONTINUATION_2026-09-08_LINUX.md",
+          "bound_sha256": "5873bdc1bf83c6e08f86d76cbdba5b261b4c6f9e7f22e368c965f8913ab8dd15",
+          "current_sha256": "560dcec08755a3ef94a5daaaaad8a6bdd010ec9893cf148481d6bf16a4456718"
+        },
+        {
+          "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+          "bound_sha256": "377689ddaa4e38db24ccbc27abf7807ce722a829bf3f7938433fe3225a4753fb",
+          "current_sha256": "34842bc028bd45013aedc646a8a19f2db75481b67f11b3de25b99e1f56720b57"
+        }
+      ],
+      "frozen_source_paths_absent_from_old_manifest": [],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-08T09:38:35.033226+00:00",
+        "cleanup_completed_at": "2026-09-08T09:38:35.126124+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "artifact_workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "cleanup_errors": [],
+        "deferred_signals": []
+      },
+      "logs": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-ci-controls-01/gradle.log",
+          "bytes": 15820,
+          "sha256": "8ca3562785376355c3035f6122a4145f8ade4cdd45a6e5d6d80b55d8557ed07e"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-ci-controls-01/stop.log",
+          "bytes": 31,
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        }
+      ]
+    },
+    {
+      "cycle": "continuation-transport-contracts-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/receipt.json",
+        "bytes": 306059,
+        "sha256": "74d7445fd6d60f39bb19a971f73f54c5a292b591963ff2175b65ef5a4d24d0db"
+      },
+      "independent_review": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/transport-contracts-evidence-independent-01.json",
+        "bytes": 18060,
+        "sha256": "a6e7b97af6cfb76e3dfb10e1452f8b4a577f84f931d1cb3e339e04443b866579"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at": "2026-09-08T09:39:20.344196+00:00",
+      "finished_at": "2026-09-08T09:44:05.795394+00:00",
+      "scope": "277 XML cases:274PASS,3existing single-JVM multicast/loopback peer skips. Earlier working-tree execution, not a frozen25b1 transport run; full-D actual transport execution remains required.",
+      "binding": {
+        "commit": "ec0de52a2c7ff9077482a291dc4fd2591fdea01f",
+        "tree": "48b099f3cd002a3253f21d2b06a4ece5787e62cb",
+        "branch": "fix/local-readiness-2026-09-07",
+        "diff_sha256": "7556edc910e117709b63ffb24f9effe82625af9d525cab143789e1eb58d3948a",
+        "source_manifest_sha256": "b3614749ea6ed13c68dd78d676587ee476a6ffb83e21dd752f42a178bd6bcfea",
+        "tracked_status": "M .github/workflows/production-verification.yml\n M CONTINUE_HERE.md\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/README.md\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\n M remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py\n M scripts/release/tests/test_workflow_contract.py\n M scripts/release/workflow_contract.py"
+      },
+      "source_manifest_rows": 820,
+      "full_source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "source_paths_different_from_frozen": [
+        {
+          "path": "CONTINUE_HERE.md",
+          "bound_sha256": "abaca069ad3e876aeb1d39a860fb7b85650a594d9f0e035c81d29858ee9bd7af",
+          "current_sha256": "2ee8d3ebc3c0566e8a707cc5d4959298a8717db5a3e80eb1bcf99dc25ac187fd"
+        },
+        {
+          "path": "docs/AGENT_CONTINUATION_2026-09-08_LINUX.md",
+          "bound_sha256": "5873bdc1bf83c6e08f86d76cbdba5b261b4c6f9e7f22e368c965f8913ab8dd15",
+          "current_sha256": "560dcec08755a3ef94a5daaaaad8a6bdd010ec9893cf148481d6bf16a4456718"
+        },
+        {
+          "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+          "bound_sha256": "377689ddaa4e38db24ccbc27abf7807ce722a829bf3f7938433fe3225a4753fb",
+          "current_sha256": "34842bc028bd45013aedc646a8a19f2db75481b67f11b3de25b99e1f56720b57"
+        }
+      ],
+      "frozen_source_paths_absent_from_old_manifest": [],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-08T09:44:06.890033+00:00",
+        "cleanup_completed_at": "2026-09-08T09:44:07.125601+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "artifact_workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "cleanup_errors": [],
+        "deferred_signals": []
+      },
+      "logs": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/gradle.log",
+          "bytes": 4690,
+          "sha256": "5d32f5fa9501c395ecb97fd7187c0529fd9fe765aa2e81f4ebd9ab7b1b75c82d"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/stop.log",
+          "bytes": 31,
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        }
+      ]
+    },
+    {
+      "cycle": "continuation-focused-controls-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/receipt.json",
+        "bytes": 305416,
+        "sha256": "32d1d5a0459b64d493b78f7c61b423c6967391eabe46026895cfe13bf642ae77"
+      },
+      "independent_review": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/focused-controls-evidence-independent-01.json",
+        "bytes": 24764,
+        "sha256": "5bc68543ef589bb76e076eaecb8ce221593fd9537a9a118b26698f373c55ab1f"
+      },
+      "status": "FAIL",
+      "exit_code": 1,
+      "started_at": "2026-09-08T09:44:52.869406+00:00",
+      "finished_at": "2026-09-08T09:45:11.376493+00:00",
+      "scope": "Aggregate FAIL preserved:358tests=356PASS+1FAIL+1ERROR; all9commands ran. Passing scopes packet16,lane21,schema-bootstrap26,toolchain12,composition55,normal187,schema-closure16. Earlier mutation OK labels do not prove valid witnesses.",
+      "binding": {
+        "commit": "ec0de52a2c7ff9077482a291dc4fd2591fdea01f",
+        "tree": "48b099f3cd002a3253f21d2b06a4ece5787e62cb",
+        "branch": "fix/local-readiness-2026-09-07",
+        "diff_sha256": "7556edc910e117709b63ffb24f9effe82625af9d525cab143789e1eb58d3948a",
+        "source_manifest_sha256": "b3614749ea6ed13c68dd78d676587ee476a6ffb83e21dd752f42a178bd6bcfea",
+        "tracked_status": "M .github/workflows/production-verification.yml\n M CONTINUE_HERE.md\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/README.md\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\n M remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py\n M scripts/release/tests/test_workflow_contract.py\n M scripts/release/workflow_contract.py"
+      },
+      "source_manifest_rows": 820,
+      "full_source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "source_paths_different_from_frozen": [
+        {
+          "path": "CONTINUE_HERE.md",
+          "bound_sha256": "abaca069ad3e876aeb1d39a860fb7b85650a594d9f0e035c81d29858ee9bd7af",
+          "current_sha256": "2ee8d3ebc3c0566e8a707cc5d4959298a8717db5a3e80eb1bcf99dc25ac187fd"
+        },
+        {
+          "path": "docs/AGENT_CONTINUATION_2026-09-08_LINUX.md",
+          "bound_sha256": "5873bdc1bf83c6e08f86d76cbdba5b261b4c6f9e7f22e368c965f8913ab8dd15",
+          "current_sha256": "560dcec08755a3ef94a5daaaaad8a6bdd010ec9893cf148481d6bf16a4456718"
+        },
+        {
+          "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+          "bound_sha256": "377689ddaa4e38db24ccbc27abf7807ce722a829bf3f7938433fe3225a4753fb",
+          "current_sha256": "34842bc028bd45013aedc646a8a19f2db75481b67f11b3de25b99e1f56720b57"
+        }
+      ],
+      "frozen_source_paths_absent_from_old_manifest": [],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-08T09:45:12.018204+00:00",
+        "cleanup_completed_at": "2026-09-08T09:45:12.102762+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "artifact_workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "cleanup_errors": [],
+        "deferred_signals": []
+      },
+      "logs": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/composition.log",
+          "bytes": 19632,
+          "sha256": "d32f6967e03f1157bcd5b1a0497bd057cf5d95cdbae0c2152aa9662ee9c3e8e4"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/functional-copy.log",
+          "bytes": 3744,
+          "sha256": "c5149707a2a4beff5bad62431aa519a8fb54a04da7fe936aa3edd09775d36bd2"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/gradle.log",
+          "bytes": 1965,
+          "sha256": "b156044d687f976bb468a1e9b29b80bd90cdbd79e43726faf3248d6b39097043"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/lane.log",
+          "bytes": 3206,
+          "sha256": "3b75709456473da1aac4d13b42c5e3ee9988eff8e353c61ca4c968a9184e37ef"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/normal.log",
+          "bytes": 108389,
+          "sha256": "3b1d45a4e4dcdda380f0ebe7ce1b16d82bdea96f3e74547f3da618b800f8695f"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/packet.log",
+          "bytes": 2749,
+          "sha256": "b9fe8203cf2b48f2321ebfa38fcba89316323defc53a5f5db1c8561557ef4e0e"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/schema-bootstrap.log",
+          "bytes": 4403,
+          "sha256": "88d5b62da6bb3675b2b94003a86cb5747d06196a6f2fafc38e6699a299f892f1"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/schema-closure.log",
+          "bytes": 3240,
+          "sha256": "d17537dd20adb47a54ecf8d2f9e603de034650f3c99a693a9ca10a2c7b2d222a"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/single-tap.log",
+          "bytes": 3406,
+          "sha256": "752e376073d021f26a5c47e992c3e57cb734d2f45b51b5699924b3742d3dd53a"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/stop.log",
+          "bytes": 31,
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/toolchain.log",
+          "bytes": 2139,
+          "sha256": "22490b9d9395f70797a3dc1e01647c1c2fbdabdf157a106c26c188cf1b8eb3d4"
+        }
+      ],
+      "explicit_control_binding": {
+        "before": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/control-inputs-before.json",
+          "bytes": 39641,
+          "sha256": "58e37406363c01b52c9ebe080d12030c90e90886001653ed452798986f7ad37f"
+        },
+        "after": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/control-inputs-after.json",
+          "bytes": 39641,
+          "sha256": "58e37406363c01b52c9ebe080d12030c90e90886001653ed452798986f7ad37f"
+        },
+        "rows": 204,
+        "byte_equal": true,
+        "current_mismatches": [
+          {
+            "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08_FUNCTIONAL_README.md",
+            "bound_sha256": "66cc129781125196bca34ec7bb287869dfaa080741296d6d77af3d02cff5ce89",
+            "current_sha256": "ef7d79b8180a0aa7b412d1257b0948adcf41f602f5fdc8bb576e41ed3731aa0b"
+          },
+          {
+            "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/README.md",
+            "bound_sha256": "911f1b73bba672da8b344c1523723d4b9ced77b0ca200901230a48ad1aca448f",
+            "current_sha256": "69afd6136fdeecf9cca3426a523e130de01389b463db60ffd25254de87294142"
+          },
+          {
+            "path": "remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py",
+            "bound_sha256": "e0300c3d339798b4224d81f0e21b4043b78eca8145c98523abdc7110c76b68aa",
+            "current_sha256": "6443de2ea249c74a945aee5513e74eedadc077a68c43089201b89e9c90695298"
+          }
+        ]
+      }
+    },
+    {
+      "cycle": "continuation-l08-control-recheck-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/receipt.json",
+        "bytes": 306834,
+        "sha256": "bc2a7d2f96094ae1d214e16b031f07913a5579fc88e8e2f04ab75d2a1b67bd18"
+      },
+      "independent_review": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/l08-control-recheck-01-independent-postrun-review.json",
+        "bytes": 14836,
+        "sha256": "50e037f9ba514e44a38612a09737e9654e2a52498d80b66513944aa6e707e2ec"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at": "2026-09-08T09:57:31.706519+00:00",
+      "finished_at": "2026-09-08T09:57:36.280167+00:00",
+      "scope": "26PASS=corrected scanner14+unchanged functional-copy12; all204 control-input records now match frozen source. Separate reviewer approved scanner and README corrections; no runtime proof.",
+      "binding": {
+        "commit": "ec0de52a2c7ff9077482a291dc4fd2591fdea01f",
+        "tree": "48b099f3cd002a3253f21d2b06a4ece5787e62cb",
+        "branch": "fix/local-readiness-2026-09-07",
+        "diff_sha256": "8c1d05aa764413e8c0d13758572fe7f267bfb2e588f26fc47600543e06d32f06",
+        "source_manifest_sha256": "b3614749ea6ed13c68dd78d676587ee476a6ffb83e21dd752f42a178bd6bcfea",
+        "tracked_status": "M .github/workflows/production-verification.yml\n M CONTINUE_HERE.md\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08_FUNCTIONAL_README.md\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\n M remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py\n M scripts/release/tests/test_workflow_contract.py\n M scripts/release/workflow_contract.py"
+      },
+      "source_manifest_rows": 820,
+      "full_source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "source_paths_different_from_frozen": [
+        {
+          "path": "CONTINUE_HERE.md",
+          "bound_sha256": "abaca069ad3e876aeb1d39a860fb7b85650a594d9f0e035c81d29858ee9bd7af",
+          "current_sha256": "2ee8d3ebc3c0566e8a707cc5d4959298a8717db5a3e80eb1bcf99dc25ac187fd"
+        },
+        {
+          "path": "docs/AGENT_CONTINUATION_2026-09-08_LINUX.md",
+          "bound_sha256": "5873bdc1bf83c6e08f86d76cbdba5b261b4c6f9e7f22e368c965f8913ab8dd15",
+          "current_sha256": "560dcec08755a3ef94a5daaaaad8a6bdd010ec9893cf148481d6bf16a4456718"
+        },
+        {
+          "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+          "bound_sha256": "377689ddaa4e38db24ccbc27abf7807ce722a829bf3f7938433fe3225a4753fb",
+          "current_sha256": "34842bc028bd45013aedc646a8a19f2db75481b67f11b3de25b99e1f56720b57"
+        }
+      ],
+      "frozen_source_paths_absent_from_old_manifest": [],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-08T09:57:37.129910+00:00",
+        "cleanup_completed_at": "2026-09-08T09:57:37.212087+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "artifact_workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "cleanup_errors": [],
+        "deferred_signals": []
+      },
+      "logs": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/functional-copy-recheck.log",
+          "bytes": 2543,
+          "sha256": "25275e508fe4223c29da4207223b7ce1aec94b535993ebe808e49b77c29701dd"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/gradle.log",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/single-tap-recheck.log",
+          "bytes": 2489,
+          "sha256": "7c5dc99e792145a655fa0538bfe214ddd7ce5d1e88fe867708625e2ac8d86ac7"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/stop.log",
+          "bytes": 31,
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        }
+      ],
+      "explicit_control_binding": {
+        "before": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/l08-control-inputs-before.json",
+          "bytes": 39641,
+          "sha256": "c9d197e9b3796a265cef6ea1b04d060569e1919899bce614242e0f0ae29719c1"
+        },
+        "after": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-l08-control-recheck-01/l08-control-inputs-after.json",
+          "bytes": 39641,
+          "sha256": "c9d197e9b3796a265cef6ea1b04d060569e1919899bce614242e0f0ae29719c1"
+        },
+        "rows": 204,
+        "byte_equal": true,
+        "current_mismatches": []
+      }
+    },
+    {
+      "cycle": "continuation-release-validator-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-01/receipt.json",
+        "bytes": 302804,
+        "sha256": "54f123f4f092c4b7df674eacb8e916f44c87edc98dba16c7558cdba83375c7df"
+      },
+      "independent_review": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/release-validator-independent-01.json",
+        "bytes": 12088,
+        "sha256": "8f72f2e09e6af59fbd18c47517db11ca39a6272d8ad1783541ccc37411e49493"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at": "2026-09-08T10:11:11.406876+00:00",
+      "finished_at": "2026-09-08T10:12:07.158226+00:00",
+      "scope": "383PASS,0FAIL,0ERROR,0SKIP; exact frozen25b1 tracked source, direct release validator plus pinned static analyzers and inventory --check; not a Gradle production task or native application execution.",
+      "binding": {
+        "commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+        "tree": "629a5d2b699cddb62d61849de3bd185fd4c01378",
+        "branch": "fix/local-readiness-2026-09-07",
+        "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_manifest_sha256": "6e83dcdccc950fde35ccbf8fe2d4c73671a05a5f4a6a3a5068799af86bbd2334",
+        "tracked_status": ""
+      },
+      "source_manifest_rows": 820,
+      "full_source_before_after_equal": true,
+      "runner_before_after_equal": true,
+      "source_paths_different_from_frozen": [],
+      "frozen_source_paths_absent_from_old_manifest": [],
+      "cleanup": {
+        "stop_exit_code": 0,
+        "stopped_at": "2026-09-08T10:12:07.956685+00:00",
+        "cleanup_completed_at": "2026-09-08T10:12:08.044964+00:00",
+        "workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "artifact_workers": {
+          "terminated_owned_workers": [],
+          "remaining_owned_workers": []
+        },
+        "remaining_outputs": [],
+        "retained_outputs": [],
+        "cleanup_errors": [],
+        "deferred_signals": []
+      },
+      "logs": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-01/gradle.log",
+          "bytes": 67283,
+          "sha256": "f4274409dbeafc1a1b71a86571bf7dd4adfab524751edcc619885b2b0521c5ae"
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-01/stop.log",
+          "bytes": 31,
+          "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+        }
+      ]
+    }
+  ],
+  "transport_raw_reconciliation": {
+    "xml_suites": 22,
+    "counts": {
+      "tests": 277,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 3
+    },
+    "actual_passes": 274,
+    "skipped_methods": [
+      {
+        "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "name": "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]"
+      },
+      {
+        "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "name": "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]"
+      },
+      {
+        "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "name": "host_broadcast_reaches_every_peer()[desktop]"
+      }
+    ],
+    "xml_identity": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidManifestLanPermissionTest.xml",
+        "bytes": 689,
+        "sha256": "be92192a7744c339f392af7e5c4642f4bed691918a56409cd107f34173288ce8"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidReleaseLintContractTest.xml",
+        "bytes": 1743,
+        "sha256": "2faf8f19610c7f279b1efb1d07fcb58701d848508182b863720fcaf06a21fbc5"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomCoordinatorTest.xml",
+        "bytes": 709,
+        "sha256": "b9558f4de4e4e5034db24d0221d673c526acd59e84582b4d783a19f4b379d45f"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+        "bytes": 845,
+        "sha256": "f4b2f3566f56fefebfd650a80341041a4b53355bf227ab8a714279cf10d543f2"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DesktopDependencyVerificationContractTest.xml",
+        "bytes": 924,
+        "sha256": "b911e17ba3ef02059b0c33e9c861193732cec08dc89d8c0429ef053943c74292"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest.xml",
+        "bytes": 2688,
+        "sha256": "cd3d69c616523123f68815d9a652698268e23947c0e4ed09f9eade9cd20bb2e7"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.HostOpeningCancellationTest.xml",
+        "bytes": 1145,
+        "sha256": "b57213d5a362bf80a1ae9dd71ac4b87d136b5ea236f863b476eab0be28e32393"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.IosInfoPlistBonjourTest.xml",
+        "bytes": 490,
+        "sha256": "afe28756183d74ddd49991e22734ac76c9b3641bfb7e7be9469f38efb53e7da5"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+        "bytes": 504,
+        "sha256": "08ab7c45dac65e6c625860ca6ed874b75144a9b5faafdfd743d70020bf064d2a"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.LoopbackFixtureContractTest.xml",
+        "bytes": 1225,
+        "sha256": "3af5c462d9cfa2c08cb5068dc1e06f577598ffd5c4abbcb5a8863db81c138f39"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.MultiplayerDocumentationContractTest.xml",
+        "bytes": 2315,
+        "sha256": "447f4faf9095f6271b4c0152ddcb0a784ffcea4cee8b08a3d5c364e7c02aee07"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pDiagnosticsTest.xml",
+        "bytes": 1095,
+        "sha256": "993d468e2ddeaef04131402dc75d55c776bba05468d53c47883866c078fef8ab"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitCreationTest.xml",
+        "bytes": 1724,
+        "sha256": "4aa194454eb5ae1b39d3107cca5e07c3d157768fdf4d51907b930694b40fcce3"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitMavenProvenanceContractTest.xml",
+        "bytes": 689,
+        "sha256": "7bc1d7fba030132e936771b98fed28ade74bf6f7573a599cede9c49bdadb72ee"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.xml",
+        "bytes": 23993,
+        "sha256": "73659603381d98c88b8bfa519954b2469e8327c3d2230891358088ec6b7296f7"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+        "bytes": 1263,
+        "sha256": "fd12bc065698af0f3614b6ddca17210ac70fbf20a1a57dc757183fda5ca8d226"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pTrafficPolicyTest.xml",
+        "bytes": 1501,
+        "sha256": "08d3dbeb2ed0ae3fed2c5dd5782673b5264d923b5d7038c8c9b1f9eb0428d3b5"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.PeerOpeningCancellationTest.xml",
+        "bytes": 2381,
+        "sha256": "36b795dda05c634c058ab67e32f5b6821c0c7550f072192d070e9843a617562c"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+        "bytes": 2115,
+        "sha256": "ea1d171b768d6dac2ddde077036a8be53ebc0c39786f9c9d535399c22e68ab72"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ResumableCredentialStoreTest.xml",
+        "bytes": 4420,
+        "sha256": "c728c4d28cada93ced9419f7d4fd258a67c272d3a17d64fe41fb8120ce614b18"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.TestTransportIsolationContractTest.xml",
+        "bytes": 1055,
+        "sha256": "d1805b2dbca8e48744a53d9911172e918fb9c2394cf826c42025bc67e3860290"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.VerificationMetadataAssertionsTest.xml",
+        "bytes": 3573,
+        "sha256": "3bd02887736188ebca9fbf39eb6ffb30f5911a0bf8f1271868fc07b68458adac"
+      }
+    ]
+  },
+  "frozen_release_validator_raw_reconciliation": {
+    "review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/release-validator-independent-01.json",
+      "bytes": 12088,
+      "sha256": "8f72f2e09e6af59fbd18c47517db11ca39a6272d8ad1783541ccc37411e49493"
+    },
+    "review_evidence_hash_mismatches": [],
+    "observed_unique_methods": 383,
+    "current_AST_declared_methods": 383,
+    "raw_ids_equal_declarations": true,
+    "direct_same_line_ok": 381,
+    "split_output_then_ok": 2,
+    "split_ids": [
+      "test_notice_git_bytes.NoticeGitBytesTest.test_notice_bytes_survive_crlf_checkout_conversion",
+      "test_release_tool.GitTreeVerificationTest.test_unrelated_same_tree_is_rejected"
+    ],
+    "overall_summary": "Ran383tests; OK; no failures/errors/skips",
+    "source_before_after_equal": true,
+    "all820_source_paths_match_frozen": true,
+    "pinned_static_tools": "Hash-bound set-euo-pipefail script and successful exit0 prove its unconditional py_compile, workflow contract, inventory check, ShellCheck0.11.0 and actionlint1.7.12 invocations. Raw archive checksum success retained; no standalone per-tool exit receipts fabricated.",
+    "validator": {
+      "path": "scripts/release/validate_release_system.sh",
+      "bytes": 3673,
+      "sha256": "ce52c9c08edecba968337d6de42c90895badec127c7029a5afc16737d3b8864a"
+    },
+    "policy": {
+      "path": "config/release-policy.json",
+      "bytes": 4481,
+      "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4"
+    },
+    "qualification_limit": "Direct Linux release automation/static/control execution only; not productionCheck, platform runtime, signed artifacts or Store interaction."
+  },
+  "new_native_preflight_observation": {
+    "run_id": 34214410629,
+    "attempt": 1,
+    "actual_retained_run_status": "completed",
+    "actual_retained_run_conclusion": "success",
+    "head_sha": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+    "preflight_status": "REVIEW_REQUIRED_NOT_RUNTIME_EVIDENCE",
+    "source": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/native-preflight/preflight.json",
+      "bytes": 2644,
+      "sha256": "13152860a8f67790b4d52a2e8f2db23b20dd567476160d80964a1d35d886a689"
+    },
+    "run": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/run.json",
+      "bytes": 12677,
+      "sha256": "a278e1cb55bc11366d7e3439071c1e8ba2eb6d2958eb56e2d479d87ab2cbb346"
+    },
+    "zip": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/native-preflight.zip",
+      "bytes": 92593,
+      "sha256": "a64a699e4dd895b14089c9fcd867d3d2aa4166f745891864918aefc944d9de48"
+    },
+    "cleanup": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/native-cleanup/parlor-native-34214410629-1-cleanup.json",
+      "bytes": 977,
+      "sha256": "12ac3fa63903a844089e895576d60bbfb8ae5ff78cd80523905028d3887d109e"
+    },
+    "review_scope": "/root/ci_review separately owns independent artifact/control approval. This report merely reopens actual retained statuses/source identities and does not approve native execution. Preflight contains no app build/XCTest/libproc/protection execution."
+  },
+  "evidence_only_later_commit_and_inventory_policy": [
+    "Keep all native/C/full execution on frozen25b1 until their owned cycles and finalizers finish. Do not edit any tracked source, control, binding, inventory or tracked ledger during a run; remediation exclusion from application manifests does not waive Git dirty/commit/tree guards.",
+    "After execution, commit only separately reviewed retained evidence and remediation-only ledger updates. Enumerate exact paths and digests in the final reconciliation. Evidence-only means actual non-executable receipts/logs/reviews/artifact metadata, not every path under remediation-runs: native runners, templates, consumers, tests and control freezes there remain executable inputs requiring new qualification when changed.",
+    "If new evidence files or ledger history are committed, regenerate the mechanical inventory afterward and use a separate inventory-only commit, with coordinator-owned freshness verification and final remote confirmation. Never amend an old inventory/receipt to pretend it ran after those new commits.",
+    "The inventory CSV is INCLUDED in run_gradle_cycle.identity source_manifest, although remediation-runs paths are excluded. Therefore a final inventory-only commit changes commit/tree AND source-manifest hash. State this explicitly and bind both qualification SHA25b1 and final delivery SHA; never assert blanket byte-identical full source manifests or new-SHA CI execution.",
+    "A later independently inspected delta containing only retained evidence plus the mechanical inventory may preserve applicability of earlier runtime results to unchanged application/control bytes, labelled executed at25b1, delivered by later evidence commit. It is not same-current-SHA final CI or an exact-candidate binding for a new binary. Current release contracts still control any later release operation.",
+    "If later changes include application/code/build/dependency/schema/control files or semantic repository/release contracts, stop calling the delta evidence-only. Review by a different author, run the affected checks, refreeze source then inventory, create fresh bindings and requalify affected native/candidate/full scopes. Never reuse25b1 explicit bindings for commands on a new HEAD.",
+    "Final reconciliation must retain failed358 receipts, original native15/16 failures, any new failures/skips, all source/platform/control identities and cleanup errors. Preflight success, harness success, compilation, cached tests and omitted jobs must never be upgraded to application or final-five-job runtime evidence."
+  ],
+  "remaining_A_B_C_D": {
+    "A": "Fresh functional-storage13boots/20operations/26protection comparisons plus retained-host3fixtures/42operations, OS/lifecycle/image observations still need actual reconciled native receipts. Original strict Complete mismatch remains unresolved; companion functional success cannot satisfy strictL08.",
+    "B": "Actual8normal-source repetitions plus separate9th explicit libproc query/structure-return sizes, provenance, notices/signature and cleanup not yet accepted by this report;187controls are not a Parlor runtime query.",
+    "C": "Actual frozen export4graphs, production render, approved binding and all4coupled candidate/prerequisite/schema-base/outer receipts required. A newly observed owned export directory is not candidate success; parent will provide finished evidence.",
+    "D": "Actual same-frozen-SHA five-job full run, raw executed-versus-cached tasks/tests, five main/five cleanup artifacts, independent reconciliation and final evidence commits/remote confirmation remain required.",
+    "cutoff": "No A/B/C/full success is asserted here. Coordinator-owned execution may continue after this report; later reports must inspect its real outcomes rather than treating this preparation as final readiness."
+  },
+  "readiness": {
+    "verdict": "NOT_READY",
+    "basis": "Independent narrow compatibility/evidence reconciliation is complete, but actual remaining native/dependency/combined execution has not been accepted and strict protection remains unresolved.",
+    "unchanged_external_requirements": [
+      "Physical Android/iOS/mixed-LAN/lifecycle/accessibility and signed-candidate checks",
+      "Real device keybag/lock/backup/restore/power-loss behavior",
+      "Private signing, physical-device testing and Store publication/promotion remain excluded in this task",
+      "Known com.parlor.app Store identity collision and disabled publication guards",
+      "Separate owner legal/license/content-rights/editorial/privacy/supportURL/Store declarations"
+    ],
+    "invariants": "Host-only reducers; exact4.2; deterministic session seed; public/own-private/host-only isolation; strict snapshots/content; unchanged DoctorON/OFF; Leave Confirmation excluded Discussion time; P2pKit0.7.0-rc3 MavenCentral only."
+  },
+  "reviewer_operations": {
+    "builds_tests_native_workflows_or_commits": 0,
+    "performed": [
+      "Git identity/delta/subtree/ancestry inspection",
+      "Read current contracts and changed source",
+      "Hash recorded source/control/receipt files",
+      "Parse retained XML and exact raw log/task events",
+      "AST declaration inspection without test import/execution",
+      "Write only this new untracked report"
+    ],
+    "tracked_files_modified": false,
+    "cleanup_needed": false,
+    "cleanup_note": "Reviewer allocated no builds/workers/cache/toolchain/simulator fixture. Coordinator-owned live outputs/locks and retained archives were not edited or removed; six inspected completed Linux cycles each attest stop0 and precise safe cleanup."
+  }
+}

@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "at": "2026-09-08T10:51:52.847197+00:00",
+  "author": "/root/dependency_chain",
+  "classification": "ACTUAL_FROZEN_EXPORT_RENDER_INSPECTION_AND_BINDING_FOR_INDEPENDENT_REVIEW_NOT_CONSUMER_PASS",
+  "binding": {
+    "path": "remediation-runs/2026-09-08-continuation/candidate-input-binding-01.json",
+    "sha256": "d3d1a6d0c3345650e6eeb7f7a473e322a6c122a8e7036684cf701f5977de7fad"
+  },
+  "source": {
+    "commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+    "tree": "629a5d2b699cddb62d61849de3bd185fd4c01378",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "6e83dcdccc950fde35ccbf8fe2d4c73671a05a5f4a6a3a5068799af86bbd2334"
+  },
+  "source_manifest_entries": 820,
+  "export_receipt": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-01/receipt.json",
+    "sha256": "49df4bd696294e0a189e2094cbf27a48390f7d62b98c066cd7f39f069f956603"
+  },
+  "render_receipt": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-01/receipt.json",
+    "sha256": "3d72b4ba3360b53e2ee3f6134608c0df3d68a9d545068956be80cf962cc28768"
+  },
+  "producer_source_control_cleanup_checks": "PASS; source_before/source_after equal fresh current frozen observation, runner manifests current, exit0/stop0, no workers/outputs/scratch/errors; serial timestamps",
+  "export_task_outcome": "writeResolvedDependencyInventory executed fresh; build log says4tasks executed,1cached convention setup task, not application runtime",
+  "graphs": [
+    {
+      "graph": "androidRelease",
+      "raw_sha256": "6d93fd0fa7448fa3adf3b68681f1e620fbd9ca85173d08fe90024b7c45696f2c",
+      "components": 239,
+      "artifacts": 129,
+      "edges": 1198,
+      "all_reachable": true,
+      "all_artifact_rows_strictly_pinned": true,
+      "components_edges_identical_export02": true,
+      "artifact_identity_variants_identical_export02": true,
+      "non_source_field_differences": []
+    },
+    {
+      "graph": "iosArm64",
+      "raw_sha256": "39755a52285e8d361a900e6fb05d823feeb57b01729861a34017a9c78edee28a",
+      "components": 167,
+      "artifacts": 81,
+      "edges": 577,
+      "all_reachable": true,
+      "all_artifact_rows_strictly_pinned": true,
+      "components_edges_identical_export02": true,
+      "artifact_identity_variants_identical_export02": true,
+      "non_source_field_differences": []
+    },
+    {
+      "graph": "iosSimulatorArm64",
+      "raw_sha256": "12c7fa9419fb35f9b504029c3aef418e01eb9704975b9a2d570844f6931cc55a",
+      "components": 167,
+      "artifacts": 81,
+      "edges": 577,
+      "all_reachable": true,
+      "all_artifact_rows_strictly_pinned": true,
+      "components_edges_identical_export02": true,
+      "artifact_identity_variants_identical_export02": true,
+      "non_source_field_differences": []
+    },
+    {
+      "graph": "iosX64",
+      "raw_sha256": "a65fde3f5b45353c7414888c584f756a30de6741389e3234f8fb672af1735c7b",
+      "components": 167,
+      "artifacts": 81,
+      "edges": 577,
+      "all_reachable": true,
+      "all_artifact_rows_strictly_pinned": true,
+      "components_edges_identical_export02": true,
+      "artifact_identity_variants_identical_export02": true,
+      "non_source_field_differences": []
+    }
+  ],
+  "maven_union": 456,
+  "publisher_declarations": 459,
+  "retained_pom_files": 459,
+  "metadata_bytes": 1507794,
+  "unresolved": [],
+  "inherited_license_chains": [
+    [
+      "com.google.guava:listenablefuture:1.0",
+      "com.google.guava:guava-parent:26.0-android"
+    ],
+    [
+      "org.slf4j:slf4j-api:2.0.16",
+      "org.slf4j:slf4j-parent:2.0.16",
+      "org.slf4j:slf4j-bom:2.0.16"
+    ]
+  ],
+  "publisher_declaration_changes_vs_previous_excluding_access_time": [],
+  "added_publisher_declarations": [],
+  "removed_publisher_declarations": [],
+  "sboms": [
+    {
+      "graph": "androidRelease",
+      "sha256": "26a2378d62e13fdc2a2fe10f4591c6b006010d60ee4fc1135cfa2ce8032e336b",
+      "non_source_content_identical_previous_report": true,
+      "official_schema_execution": "PENDING_COORDINATOR_CANDIDATE_CONSUMER"
+    },
+    {
+      "graph": "iosArm64",
+      "sha256": "6156536dfe5008f383d2abfb40b0e93c9f212fae9768eb38c62da7032a62d953",
+      "non_source_content_identical_previous_report": true,
+      "official_schema_execution": "PENDING_COORDINATOR_CANDIDATE_CONSUMER"
+    },
+    {
+      "graph": "iosSimulatorArm64",
+      "sha256": "1ee190332f99082996da1f090dac80fed4d0f38ca44df061b6875135e7f116b3",
+      "non_source_content_identical_previous_report": true,
+      "official_schema_execution": "PENDING_COORDINATOR_CANDIDATE_CONSUMER"
+    },
+    {
+      "graph": "iosX64",
+      "sha256": "2991e258761fc51bf31d3b9cdeab315fb1a7833cfdbd57ae45baa823f1de7684",
+      "non_source_content_identical_previous_report": true,
+      "official_schema_execution": "PENDING_COORDINATOR_CANDIDATE_CONSUMER"
+    }
+  ],
+  "declaration_draft_identical_previous_report": true,
+  "extra_controls": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py",
+      "sha256": "c9d3a26fb3901b3518f7c066d91ebda906d0bb8bef67273acb4720d5c37419c9"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/run_candidate_input_01.py",
+      "sha256": "2a306819fb41b1883139fb42355d493f02e1d93a687f54d06f43ffbb758afa60"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/run_schema_consumer_controls_01.py",
+      "sha256": "78222a79d0d19cdce28077506ce1fd74481cc419fdf9dce9e9e5b6fd8840336f"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/schema-base-prerequisites-research-01.json",
+      "sha256": "54c9f96db0ead50008cab5c8c960c0540351922f949757e03dc91b8c5328b13e"
+    }
+  ],
+  "consumed_file_count": 492,
+  "consumed_manifest_sha256": "2f7b694970c073dbdf7bbb61dcafe4aee9dfd7366a868752c67cf34cc6deb833",
+  "limits": [
+    "Binding author is not its independent reviewer. Wait for portability_review approval before coordinator execution.",
+    "This inspection parsed/hash-checked immutable producer files, POM coordinates/license inheritance and compared actual old/new graph/BOM content; it did not run the candidate consumer or schema engine.",
+    "No builders/tests, package imports/downloads, CI, tracked-source changes, signing, Store or physical-device operations performed by this inspection.",
+    "Producer artifact hashes were reconciled to strict metadata; cleaned third-party binary inputs were not independently rehashed by this report.",
+    "Candidate acceptance still requires four coupled successful consumer/optional-prerequisite/base-prerequisite/outer receipts and their full frozen source/cleanup identity. Resolved inputs are not final-binary or legal approval."
+  ]
+}

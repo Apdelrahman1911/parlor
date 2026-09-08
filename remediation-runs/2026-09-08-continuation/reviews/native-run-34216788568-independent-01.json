@@ -1,0 +1,987 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_FAILED_NATIVE_RUN_CUSTODY_FAILURE_AND_CLEANUP_RECONCILIATION",
+  "reviewer": "/root/ci_review",
+  "coordinator": "/root",
+  "implementation_author": "/root/ci_workflow",
+  "recorded_at": "2026-09-08T11:14:38.163048+00:00",
+  "status": "FAILED_NATIVE_ATTEMPT_RECONCILED_CUSTODY_AND_CLEANUP_PASS_NOT_READY",
+  "runtime_pass_claimed": false,
+  "retry_dispatch_approved": false,
+  "producer": {
+    "id": 34216788568,
+    "run_attempt": 1,
+    "run_number": 159,
+    "workflow_id": 335554528,
+    "path": ".github/workflows/production-verification.yml",
+    "head_branch": "fix/local-readiness-2026-09-07",
+    "head_sha": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+    "event": "workflow_dispatch",
+    "status": "completed",
+    "conclusion": "failure",
+    "created_at": "2026-09-08T10:41:37Z",
+    "updated_at": "2026-09-08T10:51:22Z",
+    "run_started_at": "2026-09-08T10:41:37Z"
+  },
+  "repository": {
+    "id": 1247560518,
+    "full_name": "Apdelrahman1911/parlor",
+    "head_repository_id": 1247560518
+  },
+  "source": {
+    "source_commit_before_inventory": "160824e17caa384fa1802a82760638de1f71f2af",
+    "frozen_commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+    "tree": "629a5d2b699cddb62d61849de3bd185fd4c01378",
+    "source_manifest_sha256": "6e83dcdccc950fde35ccbf8fe2d4c73671a05a5f4a6a3a5068799af86bbd2334",
+    "source_rows": 820,
+    "copy_only_rows": 745,
+    "all_current_source_bytes_checked_against_binding_at_review": true,
+    "local_tracked_status_at_review": "",
+    "source_or_control_edits_by_reviewer": false
+  },
+  "approved_preflight": {
+    "review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-preflight-34214410629-independent-01.json",
+      "bytes": 19459,
+      "sha256": "ebc84da0838a3333ba3ee102374edec6e629dbdaab07d4fb3c2fe9cc470b64d6"
+    },
+    "run_id": 34214410629,
+    "run_attempt": 1,
+    "artifact_id": 10051166213,
+    "artifact_zip": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34214410629/native-preflight.zip",
+      "bytes": 92593,
+      "sha256": "a64a699e4dd895b14089c9fcd867d3d2aa4166f745891864918aefc944d9de48"
+    },
+    "binding_file_sha256": "84628f5e410be23d282680f5db9d5366a92dfe30ef23ac2a90bf605ec6526fe8",
+    "control_sha256": {
+      "l08": "07ee6204dc12ff9fb53253818209893f4de7649f21c3e51cc477bf4157d7322a",
+      "normal": "8128bafc217e491d09ca0a7b54d70c1cb67ff9392ade958b910933d247394750"
+    },
+    "all_four_retained_preflight_files_byte_identical_to_original_approved_zip": true,
+    "expected_and_observed_API_record": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/preflight-api-binding.json",
+      "bytes": 1764,
+      "sha256": "2cc7616aa1d5b6196a1c0212ae4160327a1f9242f13acb1e33de2aa387873bb0"
+    },
+    "actual_dispatch_environment_and_native_commands_equal_approved_inputs": true,
+    "compact_observed_producer_API_fields_equal_original_captured_run_workflow_artifact_records": true,
+    "no_stale_or_newer_source_relabeling": true
+  },
+  "artifacts": [
+    {
+      "id": 10052423028,
+      "node_id": "MDg6QXJ0aWZhY3QxMDA1MjQyMzAyOA==",
+      "name": "native-cleanup-34216788568-1",
+      "size_in_bytes": 1368,
+      "url": "https://api.github.com/repos/Apdelrahman1911/parlor/actions/artifacts/10052423028",
+      "archive_download_url": "https://api.github.com/repos/Apdelrahman1911/parlor/actions/artifacts/10052423028/zip",
+      "expired": false,
+      "digest": "sha256:8471be7152e0a4535ae99fe4e0d4ade975c0564aeaa508d72a10fe6ab194f536",
+      "created_at": "2026-09-08T10:51:15Z",
+      "updated_at": "2026-09-08T10:51:15Z",
+      "expires_at": "2026-09-22T10:51:13Z",
+      "workflow_run": {
+        "id": 34216788568,
+        "repository_id": 1247560518,
+        "head_repository_id": 1247560518,
+        "head_branch": "fix/local-readiness-2026-09-07",
+        "head_sha": "25b1c5551aee7630ac22d4b34668dd4b06c71b17"
+      },
+      "zip": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-cleanup.zip",
+        "bytes": 1368,
+        "sha256": "8471be7152e0a4535ae99fe4e0d4ade975c0564aeaa508d72a10fe6ab194f536"
+      },
+      "member_count": 1,
+      "uncompressed_bytes": 3182
+    },
+    {
+      "id": 10052421289,
+      "node_id": "MDg6QXJ0aWZhY3QxMDA1MjQyMTI4OQ==",
+      "name": "native-evidence-34216788568-1",
+      "size_in_bytes": 749848,
+      "url": "https://api.github.com/repos/Apdelrahman1911/parlor/actions/artifacts/10052421289",
+      "archive_download_url": "https://api.github.com/repos/Apdelrahman1911/parlor/actions/artifacts/10052421289/zip",
+      "expired": false,
+      "digest": "sha256:531b4ef9dd45d2a0a98b52c6fe7bc1dd2cbc3b431a74a556c2273c6776a8a8a1",
+      "created_at": "2026-09-08T10:51:12Z",
+      "updated_at": "2026-09-08T10:51:12Z",
+      "expires_at": "2026-09-22T10:51:10Z",
+      "workflow_run": {
+        "id": 34216788568,
+        "repository_id": 1247560518,
+        "head_repository_id": 1247560518,
+        "head_branch": "fix/local-readiness-2026-09-07",
+        "head_sha": "25b1c5551aee7630ac22d4b34668dd4b06c71b17"
+      },
+      "zip": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence.zip",
+        "bytes": 749848,
+        "sha256": "531b4ef9dd45d2a0a98b52c6fe7bc1dd2cbc3b431a74a556c2273c6776a8a8a1"
+      },
+      "member_count": 67,
+      "uncompressed_bytes": 3069030
+    }
+  ],
+  "evidence_anchors": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/run.json",
+      "bytes": 12677,
+      "sha256": "ccf41da35a27545b998dc9e2df025eed1ca4c29a99c19afc8d8c84f2da09123b"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/jobs.json",
+      "bytes": 9819,
+      "sha256": "5eef357c14fd594baff37d084782c046d1e341ae692a6457ab2c59239adf3fc7"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/artifacts.json",
+      "bytes": 1484,
+      "sha256": "613809d6f91298388b8ddb244f1788b8a5275d3373adb6347846f78e920e7646"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/workflow.json",
+      "bytes": 533,
+      "sha256": "8345984073768616fd6aff6682c95051f186881c5fa4727b120c80e019841ece"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/run.log",
+      "bytes": 75933,
+      "sha256": "1d37e3fefbe3548007935bf083e228b048cfdb9ba49ba341becf0f5ded204b8d"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/download-receipt.json",
+      "bytes": 13808,
+      "sha256": "a8ed749ef53fe73e7bcf568d7bd0751d85676b9ae99f955a4d3400cbe9da5aa9"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/continuation.json",
+      "bytes": 17095,
+      "sha256": "91b731ab092e1121d178d623a791db517a6c9efecf337d7a9a474c537b88b9c9"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/l08-runner.log",
+      "bytes": 334590,
+      "sha256": "a25d6c67dba4d69f92d741089cfbe54f44aa8ae6158c4cd6dbb1a4b13f187512"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/normal-runner.log",
+      "bytes": 404,
+      "sha256": "d687b9f5863bfdee0644525a7d43022ddeae185cb7e6e58393c01d0e57472091"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-cleanup/parlor-native-34216788568-1-cleanup.json",
+      "bytes": 3182,
+      "sha256": "fbbd6bcbd873405a5918aefba95cfc6580676d7ec9cc4b301e895b13638430c6"
+    }
+  ],
+  "custody_review": {
+    "method": "Read original ZIP bytes and all68 extracted members; recompute hashes and byte/size equality against download manifest, captured artifact API digests/ownership and upload log; reject duplicate JSON keys, unsafe/duplicate paths, encryption, unsupported compression and nonregular members; inspect all local evidence files as canonical owned single-link regular files.",
+    "zip_API_upload_download_digest_and_size_equality": true,
+    "exact_unique_safe_member_sets": true,
+    "all_extracted_bytes_equal_original_archive_members": true,
+    "all_JSON_members_duplicate_key_checked": true,
+    "canonical_l08_files": 30,
+    "canonical_normal_files": 29,
+    "all59_files_equal_continuation_directory_and_preservation_manifests": true,
+    "preservation_statuses": {
+      "l08": "COMPLETE",
+      "normal": "COMPLETE"
+    },
+    "preservation_errors": {
+      "l08": [],
+      "normal": []
+    },
+    "hosted_directory_custody_receipts_agree": true,
+    "raw_receipt_hashes_equal_outer_records": true,
+    "l08_runner_stdout_byte_identical_to_canonical_receipt": true,
+    "normal_runner_stdout_agrees_with_canonical_failure_summary": true,
+    "interpretation": "Original host custody/absence facts are evidenced by retained command receipts, exact source-bound code and artifact bytes; the retired hosted filesystem is not independently re-inspected from Linux."
+  },
+  "actual_workflow_scope": {
+    "jobs": [
+      {
+        "id": 102030332432,
+        "name": "iOS tests, release frameworks, and Swift wrapper",
+        "head_sha": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+        "status": "completed",
+        "conclusion": "failure",
+        "labels": [
+          "macos-15"
+        ]
+      },
+      {
+        "id": 102030333563,
+        "name": "Desktop and Kotlin Native strict verification (macOS x64)",
+        "head_sha": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+        "status": "completed",
+        "conclusion": "skipped",
+        "labels": [
+          "macos-15-intel"
+        ]
+      },
+      {
+        "id": 102030333634,
+        "name": "Common, desktop, and Android release",
+        "head_sha": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+        "status": "completed",
+        "conclusion": "skipped",
+        "labels": [
+          "ubuntu-24.04"
+        ]
+      },
+      {
+        "id": 102030333723,
+        "name": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+        "head_sha": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+        "status": "completed",
+        "conclusion": "skipped",
+        "labels": [
+          "windows-2025"
+        ]
+      },
+      {
+        "id": 102030333792,
+        "name": "Desktop strict verification (Linux arm64)",
+        "head_sha": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+        "status": "completed",
+        "conclusion": "skipped",
+        "labels": [
+          "ubuntu-24.04-arm"
+        ]
+      }
+    ],
+    "focused_step_exit_code": 2,
+    "outer_status": "NOT_READY",
+    "outer_cleanup_safe": true,
+    "failed_step": "Run focused native continuation",
+    "native_evidence_upload_cleanup_cleanup_upload": "All three success",
+    "nonApple_jobs_skipped": 4,
+    "full_Apple_steps9_through25_skipped": 17,
+    "outer_timeout_or_cancellation_observed": false,
+    "full_matrix_or_Apple_aggregate_linkage_wrapper_qualification_claimed": false
+  },
+  "platform": {
+    "toolchain": {
+      "name": "qualified-xcode-26.3",
+      "xcode": "26.3",
+      "build": "17C529",
+      "sdk": "26.2",
+      "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+      "developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+      "scope": "Xcode26.3/17C529 qualified compiler; Debug iOS26.2 simulator observation only, not Store-signing or physical-device evidence",
+      "selected_developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+      "architecture": "arm64",
+      "sdk_name": "iphonesimulator26.2",
+      "runtime_build": "23C54",
+      "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+      "simulator_sdk_path": "/Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk",
+      "android_sdk": "/Users/runner/Library/Android/sdk",
+      "java_home": "/Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home",
+      "runtime_scope": "Toolchain observation only; no application/ABI/protection/runtime claim"
+    },
+    "os": "macOS15.7.9/build24G830",
+    "darwin": "24.6.0",
+    "runner_image": "macos-15-arm64",
+    "runner_image_version": "20260829.0321.1",
+    "runner_version": "2.337.0",
+    "raw_Xcode_sdk_architecture_developer_logs_checked": true,
+    "setup_java_reported": "21.0.12+101.0 at path named21.0.12-101.0",
+    "actual_java_version_stdout": "openjdk21.0.12.1; Temurin21.0.12.1+1-LTS; both native logs identical",
+    "java_scope": "JDK21 guard, not a claim that the setup display string is the binary patch-version output. No toolchain/profile fallback observed."
+  },
+  "native_runs": {
+    "l08": {
+      "cycle": "ios-readiness-17",
+      "receipt": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/receipt.json",
+        "bytes": 334590,
+        "sha256": "a25d6c67dba4d69f92d741089cfbe54f44aa8ae6158c4cd6dbb1a4b13f187512"
+      },
+      "canonical_status": "FAIL",
+      "runtime_evidence_status": "FAIL",
+      "runner_exit_code": 1,
+      "native_command": [
+        "/usr/bin/python3",
+        "-B",
+        "/Users/runner/work/parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+        "ios-readiness-17",
+        "/Users/runner/work/parlor/parlor/remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json",
+        "07ee6204dc12ff9fb53253818209893f4de7649f21c3e51cc477bf4157d7322a",
+        "--simulator-signing=adhoc",
+        "--toolchain=qualified-xcode-26.3"
+      ],
+      "native_started_at": "2026-09-08T10:43:07.544741+00:00",
+      "native_finished_at": "2026-09-08T10:47:03.459085+00:00",
+      "error": {
+        "type": "TimeoutExpired",
+        "message": "Command '['ps', '-axo', 'pid=,ppid=,pgid=,lstart=,command=']' timed out after 15 seconds"
+      },
+      "xcode_test_command_observation": {
+        "command": [
+          "xcodebuild",
+          "-project",
+          "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-17-3c4g25yb/copy/iosApp/iosApp.xcodeproj",
+          "-scheme",
+          "iosApp",
+          "-configuration",
+          "Debug",
+          "-sdk",
+          "iphonesimulator26.2",
+          "-destination",
+          "id=CE3BE344-9BCE-4A13-B4A9-2C5D9BFC3A9D",
+          "-derivedDataPath",
+          "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-17-3c4g25yb/DerivedData",
+          "-resultBundlePath",
+          "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-17-3c4g25yb/Results.xcresult",
+          "-parallel-testing-enabled",
+          "NO",
+          "-maximum-concurrent-test-simulator-destinations",
+          "1",
+          "-disable-concurrent-destination-testing",
+          "-jobs",
+          "1",
+          "-test-timeouts-enabled",
+          "YES",
+          "-default-test-execution-time-allowance",
+          "1200",
+          "-maximum-test-execution-time-allowance",
+          "1500",
+          "CODE_SIGNING_ALLOWED=YES",
+          "CODE_SIGNING_REQUIRED=YES",
+          "CODE_SIGN_IDENTITY=-",
+          "CODE_SIGN_STYLE=Manual",
+          "DEVELOPMENT_TEAM=",
+          "PROVISIONING_PROFILE=",
+          "PROVISIONING_PROFILE_SPECIFIER=",
+          "CODE_SIGN_ENTITLEMENTS=",
+          "OTHER_CODE_SIGN_FLAGS=",
+          "ONLY_ACTIVE_ARCH=YES",
+          "COMPILER_INDEX_STORE_ENABLE=NO",
+          "test"
+        ],
+        "started_at": "2026-09-08T10:44:21.019931+00:00",
+        "log": "xcodebuild.log",
+        "finished_at": "2026-09-08T10:45:42.398584+00:00"
+      },
+      "xcode_exit_code_recorded": false,
+      "source_before_and_after_identical_to_reviewed_binding": true,
+      "source_identity": {
+        "commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+        "tree": "629a5d2b699cddb62d61849de3bd185fd4c01378",
+        "branch": "fix/local-readiness-2026-09-07",
+        "tracked_status": "",
+        "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_manifest_sha256": "6e83dcdccc950fde35ccbf8fe2d4c73671a05a5f4a6a3a5068799af86bbd2334"
+      },
+      "source_rows": 820,
+      "input_manifest": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/input-manifest.json",
+        "bytes": 170601,
+        "sha256": "5870f72c775c5d9abf65f8c1dd577e19f2d2851b4f521234b5b47f7bf20181ff"
+      },
+      "control_rows": 93,
+      "control_sha256": "07ee6204dc12ff9fb53253818209893f4de7649f21c3e51cc477bf4157d7322a",
+      "control_before_after_and_preflight_match": true,
+      "copy": {
+        "manifest": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/copied-source-manifest.json",
+          "bytes": 217182,
+          "sha256": "92b4594b789e694636b10935f8c583df1e1cb7960dd15844be239a1312c86f9f"
+        },
+        "diff": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/copied-source.diff",
+          "bytes": 425637,
+          "sha256": "9b1268a9f65b79f8d05e4bf8ed375df74ce78b94a028d119a3a6323abb9a0d29"
+        },
+        "after_build": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/copied-source-inputs-after-build.json",
+          "bytes": 246443,
+          "sha256": "1940468cf9698d482dd8f0fba20556ce1945a54eb64109574e7e93df749980eb"
+        },
+        "rows": 759,
+        "original_bound_inputs": 745,
+        "modified_existing_paths": 16,
+        "added_paths": 14,
+        "retained_diff_strictly_replayed_in_memory_against_bound_originals": true,
+        "strict_diff_hunks_replayed": 53,
+        "every_resulting_modified_or_added_file_hash_equals_copy_manifest": true,
+        "every_after_build_expected_and_observed_hash_equals_copy_manifest": true,
+        "missing_unexpected_or_symlink_build_inputs": [],
+        "copied_sources_unchanged": true
+      },
+      "cleanup": {
+        "status": "PASS",
+        "gradle_stops": [
+          {
+            "command": [
+              "./gradlew",
+              "--stop"
+            ],
+            "started_at": "2026-09-08T10:45:44.396077+00:00",
+            "log": "stop-xcode-immediate.log",
+            "exit_code": 0,
+            "finished_at": "2026-09-08T10:46:39.101102+00:00",
+            "evidence": {
+              "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/stop-xcode-immediate.log",
+              "bytes": 544,
+              "sha256": "01cc71b2d614314df3ccd1c1422e5ae0c996070e78e0a858042b0596b36091f6"
+            }
+          },
+          {
+            "command": [
+              "./gradlew",
+              "--stop"
+            ],
+            "started_at": "2026-09-08T10:46:39.142766+00:00",
+            "log": "stop-final.log",
+            "exit_code": 0,
+            "finished_at": "2026-09-08T10:46:43.663194+00:00",
+            "evidence": {
+              "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/stop-final.log",
+              "bytes": 31,
+              "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+            }
+          }
+        ],
+        "finalization_stages": [
+          {
+            "stage": "final-isolated-gradle-stop",
+            "status": "PASS",
+            "at": "2026-09-08T10:46:43.675331+00:00"
+          },
+          {
+            "stage": "preserve-app-foundation-before-device-cleanup",
+            "status": "PASS",
+            "at": "2026-09-08T10:46:52.213026+00:00"
+          },
+          {
+            "stage": "shutdown-owned-simulator-and-app",
+            "status": "PASS",
+            "at": "2026-09-08T10:46:58.166740+00:00"
+          },
+          {
+            "stage": "delete-owned-simulator",
+            "status": "PASS",
+            "at": "2026-09-08T10:46:59.466915+00:00"
+          },
+          {
+            "stage": "stop-owned-command-workers",
+            "status": "PASS",
+            "at": "2026-09-08T10:47:01.267685+00:00"
+          },
+          {
+            "stage": "cleanup-attested-secondary-fifos",
+            "status": "PASS",
+            "at": "2026-09-08T10:47:01.334783+00:00"
+          },
+          {
+            "stage": "verify-workers-before-file-removal",
+            "status": "PASS",
+            "at": "2026-09-08T10:47:01.596483+00:00"
+          },
+          {
+            "stage": "verify-copied-input-identity-after-workers-stop",
+            "status": "PASS",
+            "at": "2026-09-08T10:47:01.937932+00:00"
+          },
+          {
+            "stage": "remove-owned-copy-derived-data-home-temp",
+            "status": "PASS",
+            "at": "2026-09-08T10:47:02.092517+00:00"
+          },
+          {
+            "stage": "read-final-source-identity",
+            "status": "PASS",
+            "at": "2026-09-08T10:47:03.420241+00:00"
+          }
+        ],
+        "owned_temporary_directory": "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-17-3c4g25yb",
+        "owned_uuid": "CE3BE344-9BCE-4A13-B4A9-2C5D9BFC3A9D",
+        "owned_device_name": "Parlor-Audit-parlor-audit-ios-readiness-17-3c4g25yb",
+        "simulator_create_boot_bootstatus_shutdown_delete_command_exits": [
+          {
+            "action": "create",
+            "exit_code": 0
+          },
+          {
+            "action": "boot",
+            "exit_code": 0
+          },
+          {
+            "action": "bootstatus",
+            "exit_code": 0
+          },
+          {
+            "action": "shutdown",
+            "exit_code": 0
+          },
+          {
+            "action": "delete",
+            "exit_code": 0
+          }
+        ],
+        "device_after_shutdown": {
+          "matches": [
+            {
+              "udid": "CE3BE344-9BCE-4A13-B4A9-2C5D9BFC3A9D",
+              "name": "Parlor-Audit-parlor-audit-ios-readiness-17-3c4g25yb",
+              "state": "Shutdown",
+              "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2"
+            }
+          ]
+        },
+        "device_after_delete": {
+          "matches": []
+        },
+        "secondary_cleanup": {
+          "status": "PASS",
+          "removed": [],
+          "remaining": []
+        },
+        "owned_processes_remaining": [],
+        "unknown_holders": [],
+        "secondary_attestation_errors": [],
+        "temporary_directory_removed": true,
+        "owned_device_absent": true,
+        "cleanup_errors": [],
+        "source_unchanged": true,
+        "controls_unchanged": true
+      },
+      "xcode_log": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/xcodebuild.log",
+        "bytes": 3949,
+        "sha256": "f9f536606fdb451a9201dd8a52e0e5197033ed4d171b19cc7d33eb666fff36f9"
+      },
+      "observed_failure_scope": "Actual xcodebuild test process attempted; log reaches build preparation, dependency graph, compiler/preprocessor/version inspection and actool inspection, then ** BUILD INTERRUPTED **. No executed/passing XCTest or application scenario is established by the retained log. The command has no recorded exit_code; do not invent exit65 or another value.",
+      "app_foundation_preservation": {
+        "status": "UNAVAILABLE",
+        "files": [],
+        "reason": "owned-container-unavailable"
+      },
+      "app_foundation_collection": {
+        "status": "NOT_RUN"
+      },
+      "app_foundation_final_container_lookup": {
+        "command": {
+          "command": [
+            "xcrun",
+            "simctl",
+            "get_app_container",
+            "CE3BE344-9BCE-4A13-B4A9-2C5D9BFC3A9D",
+            "com.parlor.app.debug",
+            "data"
+          ],
+          "started_at": "2026-09-08T10:46:43.675389+00:00",
+          "log": "app-foundation-final-container.log",
+          "exit_code": 2,
+          "finished_at": "2026-09-08T10:46:52.193054+00:00"
+        },
+        "evidence": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/app-foundation-final-container.log",
+          "bytes": 176,
+          "sha256": "eff64c578677a922269a71122a28c8c3b6bd9bdfa33f2ee67bf4aef68a42d1db"
+        },
+        "observation": "NSPOSIXErrorDomain code2, No such file or directory"
+      },
+      "app_foundation_copy_binding": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/app-foundation-copy-binding.json",
+        "bytes": 2260,
+        "sha256": "cfc8b676d52cb9ce8d5d2faba63a776676ed6004f104b574fbe492255b55d6c9"
+      },
+      "app_foundation_composition": {
+        "original_sha256": "fdae88cf835f4b0f5f5271b882641b7284db7ea5e5bdc135870754db7f61fb21",
+        "generated_runner_sha256": "c61b51c6f74369ad7dcbe4d4ae6b3f64b44639904100fd0295f75bb4a4a2b7dd",
+        "diff_sha256": "af27199f5270585eb734cd00254f7e7acc68f507f4c8a3a599efeeffd392aa2f",
+        "diff": "composed-runner.diff",
+        "original_strict_l08": "UNCHANGED_NOT_SATISFIED"
+      },
+      "strict_l08_gate": "NOT_SATISFIED_BY_COMPANION",
+      "composition_diff": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-17/composed-runner.diff",
+        "bytes": 9077,
+        "sha256": "af27199f5270585eb734cd00254f7e7acc68f507f4c8a3a599efeeffd392aa2f"
+      },
+      "composition_diff_independent_replay": {
+        "hunks": 11,
+        "result_sha256": "c61b51c6f74369ad7dcbe4d4ae6b3f64b44639904100fd0295f75bb4a4a2b7dd",
+        "matches_approved_generated_runner": true
+      },
+      "companion_scenario_evidence": "No new functional-storage operation/boot, retained-host operation, Settings/OS/lifecycle assertion, strict metadata comparison or app/native loaded-image result was preserved. Historical native16 failed receipts and24 strict Complete mismatches remain unchanged, not superseded by this attempt.",
+      "foundation_cleanup_stage_interpretation": "preserve-app-foundation-before-device-cleanup PASS is safe completion of the preservation attempt, not Foundation runtime success: subordinate preservation is UNAVAILABLE and collection NOT_RUN."
+    },
+    "normal": {
+      "cycle": "ios-readiness-18",
+      "receipt": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-18/receipt.json",
+        "bytes": 326168,
+        "sha256": "f89b9a66db4162f8da414f5500f726134bdbdd84790f3fc0a69ada953d4778b8"
+      },
+      "canonical_status": "FAIL",
+      "runtime_evidence_status": "FAIL",
+      "runner_exit_code": 1,
+      "native_command": [
+        "/usr/bin/python3",
+        "-B",
+        "/Users/runner/work/parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+        "ios-readiness-18",
+        "/Users/runner/work/parlor/parlor/remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json",
+        "8128bafc217e491d09ca0a7b54d70c1cb67ff9392ade958b910933d247394750",
+        "--simulator-signing=adhoc",
+        "--toolchain=qualified-xcode-26.3",
+        "--image-observer=libproc"
+      ],
+      "native_started_at": "2026-09-08T10:47:05.860493+00:00",
+      "native_finished_at": "2026-09-08T10:51:08.555481+00:00",
+      "error": {
+        "type": "TimeoutExpired",
+        "message": "Command '['ps', '-axo', 'pid=,ppid=,pgid=,lstart=,command=']' timed out after 15 seconds"
+      },
+      "xcode_test_command_observation": {
+        "command": [
+          "xcodebuild",
+          "-project",
+          "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-18-trbqw7gj/copy/iosApp/iosApp.xcodeproj",
+          "-scheme",
+          "iosApp",
+          "-configuration",
+          "Debug",
+          "-sdk",
+          "iphonesimulator26.2",
+          "-destination",
+          "id=BE1EB562-E3A6-4DA8-BBE2-233CF0CFEC44",
+          "-derivedDataPath",
+          "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-18-trbqw7gj/DerivedData",
+          "-resultBundlePath",
+          "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-18-trbqw7gj/Results.xcresult",
+          "-only-testing:iosAppUITests/IOSAppLaunchUITests/testColdLaunchRendersComposeHomeWithoutUnexpectedAlert",
+          "-test-iterations",
+          "8",
+          "-test-repetition-relaunch-enabled",
+          "YES",
+          "-parallel-testing-enabled",
+          "NO",
+          "-maximum-concurrent-test-simulator-destinations",
+          "1",
+          "-disable-concurrent-destination-testing",
+          "-jobs",
+          "1",
+          "-test-timeouts-enabled",
+          "YES",
+          "-default-test-execution-time-allowance",
+          "120",
+          "-maximum-test-execution-time-allowance",
+          "240",
+          "CODE_SIGNING_ALLOWED=YES",
+          "CODE_SIGNING_REQUIRED=YES",
+          "CODE_SIGN_IDENTITY=-",
+          "CODE_SIGN_STYLE=Manual",
+          "DEVELOPMENT_TEAM=",
+          "PROVISIONING_PROFILE=",
+          "PROVISIONING_PROFILE_SPECIFIER=",
+          "CODE_SIGN_ENTITLEMENTS=",
+          "OTHER_CODE_SIGN_FLAGS=",
+          "ONLY_ACTIVE_ARCH=YES",
+          "COMPILER_INDEX_STORE_ENABLE=NO",
+          "test"
+        ],
+        "started_at": "2026-09-08T10:48:49.106557+00:00",
+        "log": "xcodebuild.log",
+        "exit_code": -15,
+        "interrupted_or_failed": true,
+        "finished_at": "2026-09-08T10:50:34.554133+00:00"
+      },
+      "xcode_exit_code_recorded": true,
+      "source_before_and_after_identical_to_reviewed_binding": true,
+      "source_identity": {
+        "commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+        "tree": "629a5d2b699cddb62d61849de3bd185fd4c01378",
+        "branch": "fix/local-readiness-2026-09-07",
+        "tracked_status": "",
+        "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "source_manifest_sha256": "6e83dcdccc950fde35ccbf8fe2d4c73671a05a5f4a6a3a5068799af86bbd2334"
+      },
+      "source_rows": 820,
+      "input_manifest": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-18/input-manifest.json",
+        "bytes": 166836,
+        "sha256": "231f4ea17cb8a8e42fda29ee7bd12632f841d9cd120fbea49381cf17b3acfb55"
+      },
+      "control_rows": 89,
+      "control_sha256": "8128bafc217e491d09ca0a7b54d70c1cb67ff9392ade958b910933d247394750",
+      "control_before_after_and_preflight_match": true,
+      "copy": {
+        "manifest": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-18/copied-source-manifest.json",
+          "bytes": 214086,
+          "sha256": "b1760f4829c80b19dc028c44940306b46cbd7cd212ac24b66e6aac4fce885314"
+        },
+        "diff": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-18/copied-source.diff",
+          "bytes": 6917,
+          "sha256": "b39e40c8605e14233637345b4f855033b3c7aca4634d3dd1b6338219fe5aa47b"
+        },
+        "after_build": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-18/copied-inputs-after-build.json",
+          "bytes": 241961,
+          "sha256": "fbd5c9b2780f3301262eb30b8e19b9794d2dde59ce31841e81ecf5638661d07e"
+        },
+        "rows": 745,
+        "original_bound_inputs": 745,
+        "modified_existing_paths": 2,
+        "added_paths": 0,
+        "retained_diff_strictly_replayed_in_memory_against_bound_originals": true,
+        "strict_diff_hunks_replayed": 4,
+        "every_resulting_modified_or_added_file_hash_equals_copy_manifest": true,
+        "every_after_build_expected_and_observed_hash_equals_copy_manifest": true,
+        "missing_unexpected_or_symlink_build_inputs": [],
+        "copied_sources_unchanged": true
+      },
+      "cleanup": {
+        "status": "PASS",
+        "gradle_stops": [
+          {
+            "command": [
+              "./gradlew",
+              "--stop"
+            ],
+            "started_at": "2026-09-08T10:50:34.581777+00:00",
+            "log": "stop-xcode-immediate.log",
+            "exit_code": 0,
+            "finished_at": "2026-09-08T10:50:39.695097+00:00",
+            "evidence": {
+              "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-18/stop-xcode-immediate.log",
+              "bytes": 308,
+              "sha256": "3770584a9c18434fc8ad9af00ce8631ae72476a21159980c8f235370ba584bc5"
+            }
+          },
+          {
+            "command": [
+              "./gradlew",
+              "--stop"
+            ],
+            "started_at": "2026-09-08T10:50:39.698176+00:00",
+            "log": "stop-final.log",
+            "exit_code": 0,
+            "finished_at": "2026-09-08T10:50:48.934760+00:00",
+            "evidence": {
+              "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-18/stop-final.log",
+              "bytes": 31,
+              "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+            }
+          }
+        ],
+        "finalization_stages": [
+          {
+            "stage": "final-isolated-gradle-stop",
+            "status": "PASS",
+            "at": "2026-09-08T10:50:48.940399+00:00"
+          },
+          {
+            "stage": "shutdown-owned-simulator-and-app",
+            "status": "PASS",
+            "at": "2026-09-08T10:51:04.869734+00:00"
+          },
+          {
+            "stage": "delete-owned-simulator",
+            "status": "PASS",
+            "at": "2026-09-08T10:51:06.361347+00:00"
+          },
+          {
+            "stage": "stop-owned-command-workers",
+            "status": "PASS",
+            "at": "2026-09-08T10:51:06.724251+00:00"
+          },
+          {
+            "stage": "cleanup-attested-secondary-fifos",
+            "status": "PASS",
+            "at": "2026-09-08T10:51:06.778106+00:00"
+          },
+          {
+            "stage": "preserve-secondary-fifo-final-ledger",
+            "status": "PASS",
+            "at": "2026-09-08T10:51:06.778343+00:00"
+          },
+          {
+            "stage": "verify-workers-before-file-removal",
+            "status": "PASS",
+            "at": "2026-09-08T10:51:06.977243+00:00"
+          },
+          {
+            "stage": "verify-copied-inputs-after-workers-stop",
+            "status": "PASS",
+            "at": "2026-09-08T10:51:07.348474+00:00"
+          },
+          {
+            "stage": "compact-required-xcode-evidence",
+            "status": "PASS",
+            "at": "2026-09-08T10:51:07.353131+00:00"
+          },
+          {
+            "stage": "remove-exact-owned-copy-build-deriveddata-temp",
+            "status": "PASS",
+            "at": "2026-09-08T10:51:07.509571+00:00"
+          },
+          {
+            "stage": "read-final-source-identity",
+            "status": "PASS",
+            "at": "2026-09-08T10:51:08.524729+00:00"
+          },
+          {
+            "stage": "read-final-control-identity",
+            "status": "PASS",
+            "at": "2026-09-08T10:51:08.554308+00:00"
+          }
+        ],
+        "owned_temporary_directory": "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-18-trbqw7gj",
+        "owned_uuid": "BE1EB562-E3A6-4DA8-BBE2-233CF0CFEC44",
+        "owned_device_name": "Parlor-Audit-parlor-audit-ios-readiness-18-trbqw7gj",
+        "simulator_create_boot_bootstatus_shutdown_delete_command_exits": [
+          {
+            "action": "create",
+            "exit_code": 0
+          },
+          {
+            "action": "boot",
+            "exit_code": 0
+          },
+          {
+            "action": "bootstatus",
+            "exit_code": 0
+          },
+          {
+            "action": "shutdown",
+            "exit_code": 0
+          },
+          {
+            "action": "delete",
+            "exit_code": 0
+          }
+        ],
+        "device_after_shutdown": {
+          "matches": [
+            {
+              "udid": "BE1EB562-E3A6-4DA8-BBE2-233CF0CFEC44",
+              "name": "Parlor-Audit-parlor-audit-ios-readiness-18-trbqw7gj",
+              "state": "Shutdown",
+              "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2"
+            }
+          ]
+        },
+        "device_after_delete": {
+          "matches": []
+        },
+        "secondary_cleanup": {
+          "status": "PASS",
+          "removed": [],
+          "remaining": []
+        },
+        "owned_processes_remaining": [],
+        "unknown_holders": [],
+        "secondary_attestation_errors": [],
+        "temporary_directory_removed": true,
+        "owned_device_absent": true,
+        "cleanup_errors": [],
+        "source_unchanged": true,
+        "controls_unchanged": true
+      },
+      "xcode_log_gzip": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-evidence/ios-readiness-18/xcodebuild.log.gz",
+        "bytes": 35,
+        "sha256": "d52f73c89e90911d562cbbd7330a5772021a61a0d13c0e28bfb123188dc589b4"
+      },
+      "xcode_log_uncompressed_bytes": 0,
+      "xcode_log_uncompressed_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "observed_failure_scope": "Actual xcodebuild test command requested the exact fixed eight repetitions and was recorded with exit_code -15 / interrupted_or_failed true. The preserved gzip expands to zero bytes; it does not establish even compilation progress, executed XCTest repetitions or normal app behavior.",
+      "provenance_status": "NOT_RUN",
+      "notice_package_status": "NOT_RUN",
+      "image_observer": "libproc",
+      "application_source_transformations": 0,
+      "ui_test_source_transformations": 1,
+      "copied_build_phase_transformations": 1,
+      "runtime_limits": "No ninth simctl launch, actual Parlor libproc query, ABI/struct-size observation, built/installed image/signature/notices verification or provenance PASS is established. Historical187 controls/compile/mutation and native15 repetitions are not new execution."
+    }
+  },
+  "sequential_lane": {
+    "l08_outer_finished_at": "2026-09-08T10:47:03.563565+00:00",
+    "normal_outer_started_at": "2026-09-08T10:47:03.646674+00:00",
+    "l08_all_cleanup_source_and_control_safety_conditions_reconciled_before_B": true,
+    "overlapping_A_B_execution_observed": false
+  },
+  "outer_cleanup": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34216788568/native-cleanup/parlor-native-34216788568-1-cleanup.json",
+      "bytes": 3182,
+      "sha256": "fbbd6bcbd873405a5918aefba95cfc6580676d7ec9cc4b301e895b13638430c6"
+    },
+    "status": "PASS",
+    "started_at": "2026-09-08T10:51:12.987435+00:00",
+    "finished_at": "2026-09-08T10:51:13.516712+00:00",
+    "upload": {
+      "artifact_id": "10052421289",
+      "sha256": "531b4ef9dd45d2a0a98b52c6fe7bc1dd2cbc3b431a74a556c2273c6776a8a8a1"
+    },
+    "removed": [
+      "remediation-runs/2026-09-08-continuation/evidence/ios-readiness-17",
+      "remediation-runs/2026-09-08-continuation/evidence/ios-readiness-18",
+      "remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json",
+      "remediation-runs/2026-09-08-continuation/build-lane.lock"
+    ],
+    "errors": [],
+    "source_unchanged": true,
+    "cache_policy": {
+      "created": [
+        "/Users/runner/.gradle/caches",
+        "/Users/runner/.gradle/wrapper"
+      ],
+      "policy": "Dependency/distribution cache only; never delete global caches."
+    },
+    "both_native_FAIL_exit1_states_retained": true,
+    "removed_exactly_two_preserved_canonical_evidence_directories_binding_and_lock": true,
+    "owned_external_staging_removed": "Successful source-bound cleanup function removes its attested base and requires absence before returningPASS; not separately enumerated in removed array.",
+    "global_caches_deleted": false,
+    "scope": "Immediate/final isolated wrapper Gradle stops, owned Simulator shutdown/delete, worker/FIFO and copied-input checks, copy/DerivedData/temp removal and upload-before-canonical-evidence cleanup. Cleanup PASS does not change runtime FAIL."
+  },
+  "findings": [
+    {
+      "severity": "blocking-runtime-evidence",
+      "id": "NATIVE17_18_PROCESS_SNAPSHOT_TIMEOUT",
+      "fact": {
+        "type": "TimeoutExpired",
+        "message": "Command '['ps', '-axo', 'pid=,ppid=,pgid=,lstart=,command=']' timed out after 15 seconds"
+      },
+      "interpretation": "Same15-second process snapshot timeout recorded in both attempts. This is an ownership/process-observation failure during attempted xcode tests, not an established application assertion/crash or a whole-job timeout. Underlying reason ps blocked is not established by these archives; native_ci investigates separately."
+    },
+    {
+      "severity": "evidence-limitation",
+      "id": "A17_MISSING_XCODE_EXIT_AND_B18_EMPTY_LOG",
+      "fact": "A17 command lacks exit_code while its raw log endsBUILD INTERRUPTED; B18 records-15 but its35-byte gzip expands to empty bytes.",
+      "interpretation": "Preserve both facts. Do not fabricate XCTest counts, compilation success or an app defect from these gaps."
+    }
+  ],
+  "next_required_actions": [
+    "Preserve this failed run and historical native failures; no blind retry is approved by this review.",
+    "Investigate the specific ps ownership-observation failure. Any correction needs a different-agent source review, focused controls, reviewed source commit plus inventory-only freeze, fresh source/control preflight and independent dispatch approval.",
+    "A remains incomplete: functional-storage/retained-host/Settings/lifecycle/image scenarios and strict file-protection observations are not verified by this attempt. Hosted26.2 supplied no new strict metadata comparison.",
+    "B remains incomplete: actual eight normal XCTest repetitions plus separate ninth libproc Parlor observation/ABI/artifact/signature/notices evidence must run.",
+    "C dependency/candidate andD final frozen-source combined qualification are separate coordinator work; this report makes no completion claim for them."
+  ],
+  "readiness_verdict": "NOT READY. Failed native execution honestly preserved; custody, unchanged source/controls and cleanup are independently reconciled, not substitutes for application-runtime verification.",
+  "unchanged_exclusions": "No physical-device/LAN/accessibility/locked-keybag/backup/power-loss tests, private signing, Store candidate/promotion/publication, application identity choice, merge/force-push or issue mutation. com.parlor.app collision and separate owner/legal/content/editorial/privacy declarations remain unchanged.",
+  "reviewer_activity": {
+    "builds_tests_native_commands_workflow_dispatches_commits": 0,
+    "performed": [
+      "Read current contracts and exact evidence/source",
+      "Recomputed68 archive/member records and all820 source plus93/89 control hashes",
+      "Replayed retained copied-source and composition diffs strictly in memory without executing runners",
+      "Reconciled command/failure/stop/device/finalizer/source/control/custody timelines",
+      "Wrote only this new untracked review report"
+    ],
+    "project_test_success_claimed": false
+  },
+  "reviewer_cleanup": {
+    "needed": false,
+    "detail": "No reviewer build/test workers, imports executing repo code, temporary copies, source bindings or simulator fixtures were created. No Gradle stop or cleanup of coordinator/unrelated workers was attempted. Failed archives and user/coordinator work preserved."
+  }
+}

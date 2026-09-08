@@ -1,0 +1,588 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_ACTUAL_CANDIDATE_INPUT_EXECUTION_EVIDENCE_RECONCILIATION",
+  "reviewer": "/root/portability_review",
+  "executor": "/root",
+  "binding_author": "/root/dependency_chain",
+  "recorded_at": "2026-09-08T11:14:02.746934+00:00",
+  "status": "PASS_SCOPED_FRESH_C_CHAIN_AT_25B1C555_ONLY",
+  "blocking_findings": [],
+  "source": {
+    "commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+    "tree": "629a5d2b699cddb62d61849de3bd185fd4c01378",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "6e83dcdccc950fde35ccbf8fe2d4c73671a05a5f4a6a3a5068799af86bbd2334"
+  },
+  "source_manifest_entries": 820,
+  "all_current_source_manifest_hashes_reopened_and_matched_at_review": true,
+  "all_three_export_render_candidate_full_source_before_after_objects_identical": true,
+  "all_three_runner_before_after_objects_identical": true,
+  "tracked_worktree_was_clean_at_read_only_reconciliation": true,
+  "prior_execution_approval": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-independent-01.json",
+    "sha256": "7fd149a67d16f7b3d61f5b3e4ce8f431b4a2aba122e1114133c321dfd14478a6"
+  },
+  "binding": {
+    "path": "remediation-runs/2026-09-08-continuation/candidate-input-binding-01.json",
+    "sha256": "d3d1a6d0c3345650e6eeb7f7a473e322a6c122a8e7036684cf701f5977de7fad"
+  },
+  "approval_preceded_actual_candidate_execution": true,
+  "four_coupled_receipts": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-01/candidate-input-verification.json",
+      "sha256": "69a9cbc22667a7551ff07eddd33cf5c1ce9d8028d57519d086ea88a77e1f3d43",
+      "status": "PASS_SCOPED_CANDIDATE_INPUTS",
+      "checked_at": "2026-09-08T11:05:06.452530+00:00"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-01/candidate-prerequisites.json",
+      "sha256": "51a4957dfd9c851a451e0a7ab92bdf21f72f4ea71f24fa1353e2090e6117c929",
+      "status": "PASS_SCOPED_CANDIDATE_INPUT_EXECUTION",
+      "consumer_exit_code": 0,
+      "ephemeral_parser_cleanup": true,
+      "started_at": "2026-09-08T11:04:50.479887+00:00",
+      "finished_at": "2026-09-08T11:05:06.455295+00:00"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-01/schema-base-prerequisites.json",
+      "sha256": "5be0c0bdaa6ffd7d38f689412cae36df0dabecf4ad8dc6cff08771777d6bc05b",
+      "status": "PASS_OWNED_SCHEMA_PREREQUISITES",
+      "mode": "candidate",
+      "inner_exit_code": 0,
+      "base_package_cleanup": true,
+      "started_at": "2026-09-08T11:04:49.035396+00:00",
+      "finished_at": "2026-09-08T11:05:06.478327+00:00"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-01/receipt.json",
+      "sha256": "662cf8bc9ad2ac17df57281e11caa7cd907456a4ed1574ae56ee182855a3439c",
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "started_at": "2026-09-08T11:04:47.955632+00:00",
+      "finished_at": "2026-09-08T11:05:06.620688+00:00",
+      "stopped_at": "2026-09-08T11:05:07.469153+00:00",
+      "cleanup_completed_at": "2026-09-08T11:05:07.549791+00:00"
+    }
+  ],
+  "actual_command": [
+    "/usr/bin/python3",
+    "-B",
+    "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py",
+    "remediation-runs/2026-09-08-continuation/candidate-input-binding-01.json",
+    "d3d1a6d0c3345650e6eeb7f7a473e322a6c122a8e7036684cf701f5977de7fad"
+  ],
+  "actual_execution_log": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-01/gradle.log",
+    "sha256": "1366576e7c5a743d9620e0d1849edc379e1dcc369335c2c0176c80d87d0a20b8"
+  },
+  "actual_three_inner_log_records": [
+    {
+      "status": "PASS_SCOPED_CANDIDATE_INPUTS",
+      "exit_code": 0
+    },
+    {
+      "status": "PASS_SCOPED_CANDIDATE_INPUT_EXECUTION",
+      "consumer_exit_code": 0,
+      "ephemeral_parser_cleanup": true
+    },
+    {
+      "status": "PASS_OWNED_SCHEMA_PREREQUISITES",
+      "mode": "candidate",
+      "inner_exit_code": 0,
+      "base_package_cleanup": true
+    }
+  ],
+  "execution_scope": {
+    "mode": "candidate, not --controls",
+    "actual_fresh_candidate_consumer_executed": true,
+    "actual_official_schema_checks": 4,
+    "unit_tests_executed_in_this_cycle": 0,
+    "unit_test_receipts": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-01/test-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "artifact_receipts": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-01/artifact-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    "synthetic_control_result_not_substituted": true,
+    "no_gradle_build_or_app_runtime_requested": true,
+    "execution_seconds": 18.665056,
+    "outer_final_cleanup_after_finish_seconds": 0.929103,
+    "linux_platform_gate": "Hash-bound bootstrap required Linux x86_64 CPython3.12 glibc>=2.17 and -B; native rpds wheel loaded from owned extraction."
+  },
+  "controls": {
+    "all_six_explicit_before_after_hashes_identical_and_current": true,
+    "before_after_map": {
+      "remediation-runs/2026-09-07-local-readiness/reviews/run_candidate_input_01.py": "2a306819fb41b1883139fb42355d493f02e1d93a687f54d06f43ffbb758afa60",
+      "remediation-runs/2026-09-07-local-readiness/reviews/run_schema_consumer_controls_01.py": "78222a79d0d19cdce28077506ce1fd74481cc419fdf9dce9e9e5b6fd8840336f",
+      "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/candidate_consumer.py": "eb6e2baaac22739b4652bc63c6b57a24374ee57fb81d4711b981b872e8ac1c7f",
+      "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/test_candidate_consumer.py": "92eef687dbf037b310b00c9b678a5718d95cf5e8313094861c398554755a3535",
+      "remediation-runs/2026-09-08-continuation/reviews/schema-base-prerequisites-research-01.json": "54c9f96db0ead50008cab5c8c960c0540351922f949757e03dc91b8c5328b13e",
+      "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py": "c9d3a26fb3901b3518f7c066d91ebda906d0bb8bef67273acb4720d5c37419c9"
+    },
+    "adapter_sha256": "2a306819fb41b1883139fb42355d493f02e1d93a687f54d06f43ffbb758afa60",
+    "optional_helper_sha256": "78222a79d0d19cdce28077506ce1fd74481cc419fdf9dce9e9e5b6fd8840336f",
+    "consumer_sha256": "eb6e2baaac22739b4652bc63c6b57a24374ee57fb81d4711b981b872e8ac1c7f",
+    "runner": {
+      "manifest": [
+        [
+          "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+          "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc"
+        ]
+      ],
+      "manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912"
+    },
+    "exact_approved_inner_command_and_binding_hash": true,
+    "no_inner_error_type_fields": true
+  },
+  "base_prerequisites": {
+    "versions": {
+      "jsonschema": "4.25.1",
+      "referencing": "0.36.2",
+      "attrs": "25.3.0",
+      "jsonschema-specifications": "2025.4.1",
+      "rpds-py": "0.27.1",
+      "typing-extensions": "4.15.0"
+    },
+    "packages": [
+      {
+        "distribution": "jsonschema",
+        "version": "4.25.1",
+        "url": "https://files.pythonhosted.org/packages/bf/9c/8c95d856233c1f82500c2450b8c68576b4cf1c871db3afac5c34ff84e6fd/jsonschema-4.25.1-py3-none-any.whl",
+        "bytes": 90040,
+        "sha256": "3fba0169e345c7175110351d456342c364814cfcf3b964ba4587f22915230a63",
+        "expanded_bytes": 475270,
+        "member_count": 42,
+        "member_ledger_sha256": "dd1266e10b6535be4d63a9e86c084977fead488355726a47295240205477be7b"
+      },
+      {
+        "distribution": "referencing",
+        "version": "0.36.2",
+        "url": "https://files.pythonhosted.org/packages/c1/b1/3baf80dc6d2b7bc27a95a67752d0208e410351e3feb4eb78de5f77454d8d/referencing-0.36.2-py3-none-any.whl",
+        "bytes": 26775,
+        "sha256": "e8699adbbf8b5c7de96d8ffa0eb5c158b3beafce084968e2ea8bb08c6794dcd0",
+        "expanded_bytes": 115431,
+        "member_count": 19,
+        "member_ledger_sha256": "e7b36da69b3b643fa83388e9017e816adda8f4a32c4b934595724a3250b0e4df"
+      },
+      {
+        "distribution": "attrs",
+        "version": "25.3.0",
+        "url": "https://files.pythonhosted.org/packages/77/06/bb80f5f86020c4551da315d78b3ab75e8228f89f0162f2c3a819e407941a/attrs-25.3.0-py3-none-any.whl",
+        "bytes": 63815,
+        "sha256": "427318ce031701fea540783410126f03899a97ffc6f61596ad581ac2e40e3bc3",
+        "expanded_bytes": 219126,
+        "member_count": 35,
+        "member_ledger_sha256": "8be2c5e364e65aeb1f21931bee4f192b1f6960c690e5051979f0c0ea1d306aad"
+      },
+      {
+        "distribution": "jsonschema-specifications",
+        "version": "2025.4.1",
+        "url": "https://files.pythonhosted.org/packages/01/0e/b27cdbaccf30b890c40ed1da9fd4a3593a5cf94dae54fb34f8a4b74fcd3f/jsonschema_specifications-2025.4.1-py3-none-any.whl",
+        "bytes": 18437,
+        "sha256": "4653bffbd6584f7de83a67e0d620ef16900b390ddc7939d56684d6c81e33f1af",
+        "expanded_bytes": 47261,
+        "member_count": 28,
+        "member_ledger_sha256": "bf9b8193bfdcd0e3e8a3e65e74116e87c75df3f573f81c98b04e767e4daad36f"
+      },
+      {
+        "distribution": "rpds-py",
+        "version": "0.27.1",
+        "url": "https://files.pythonhosted.org/packages/ed/7b/8f4fee9ba1fb5ec856eb22d725a4efa3deb47f769597c809e03578b0f9d9/rpds_py-0.27.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+        "bytes": 386883,
+        "sha256": "466bfe65bd932da36ff279ddd92de56b042f2266d752719beb97b08526268ec5",
+        "expanded_bytes": 1046710,
+        "member_count": 8,
+        "member_ledger_sha256": "697c5ff8394a644831ac96871591b4459dbc439d57d0c36a8eb37007e08cd55a"
+      },
+      {
+        "distribution": "typing-extensions",
+        "version": "4.15.0",
+        "url": "https://files.pythonhosted.org/packages/18/67/36e9267722cc04a6b9f15c7f3441c2363321a3ea07da7ae0c0707beb2a9c/typing_extensions-4.15.0-py3-none-any.whl",
+        "bytes": 44614,
+        "sha256": "f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548",
+        "expanded_bytes": 178133,
+        "member_count": 5,
+        "member_ledger_sha256": "904902592e917247263bca8d345c3f320d266568f655d8707a0210f68c925b76"
+      }
+    ],
+    "downloaded_bytes": 630564,
+    "expanded_bytes": 2081931,
+    "retained_member_rows": 137,
+    "all_package_url_size_sha_version_pins_match_source_ast_and_pinned_public_research": true,
+    "all137_extracted_member_hashes_sizes_names_match_pinned_public_research": true,
+    "all_members_unique_bounded_allowed_roots_no_pth": true,
+    "execution_time_imported_modules": {
+      "jsonschema": {
+        "path": "jsonschema/__init__.py",
+        "sha256": "a7e470e134bfd0e3c76482722260d6b1d5a099de823d61cc5cbabb06e4314c67"
+      },
+      "referencing": {
+        "path": "referencing/__init__.py",
+        "sha256": "e4864a5da007fc55b20894646939f55dca6d2df83d72f78b6fdbb99d853124ab"
+      },
+      "attr": {
+        "path": "attr/__init__.py",
+        "sha256": "7ce608bedd5e192a90adee2e092dec256299d26c00b82f140faa9b6b9392f7f5"
+      },
+      "attrs": {
+        "path": "attrs/__init__.py",
+        "sha256": "a9e4096783b4f327334a7f38d2ff5b60e699c9113cd56b158be402ad8de4ac25"
+      },
+      "jsonschema_specifications": {
+        "path": "jsonschema_specifications/__init__.py",
+        "sha256": "aa84c1d83298eeabcdac684c3c7ea0b6600944b8a599543e7c56704faaf2ab0d"
+      },
+      "rpds": {
+        "path": "rpds/__init__.py",
+        "sha256": "c373205d6ee5a530880b0d0a5dbc36d105f9ef7fe46ec12758878cb0202e82f3"
+      },
+      "typing_extensions": {
+        "path": "typing_extensions.py",
+        "sha256": "433d11d170d3a24d2eb065ebc1bfe848cea7e3d7ce68567ab52bea2d4c2f7ed8"
+      },
+      "rpds.rpds": {
+        "path": "rpds/rpds.cpython-312-x86_64-linux-gnu.so",
+        "sha256": "1a5acf297faad922c1335dc00cc2ae6e24dd907f77576bef0e200bd07e0f0e5c"
+      }
+    },
+    "all8_imported_module_hashes_match_extracted_member_rows": true,
+    "native_rpds_import_record_present": true,
+    "before_cleanup_full_base_package_inventory_hash_recheck_enforced_by_bound_control": true,
+    "owned_package_cleanup": true,
+    "research": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/schema-base-prerequisites-research-01.json",
+      "sha256": "54c9f96db0ead50008cab5c8c960c0540351922f949757e03dc91b8c5328b13e"
+    }
+  },
+  "optional_prerequisites": {
+    "versions": {
+      "jsonschema": "4.25.1",
+      "referencing": "0.36.2",
+      "rfc3987-syntax": "1.1.0",
+      "lark": "1.2.2"
+    },
+    "packages": [
+      {
+        "distribution": "rfc3987-syntax",
+        "version": "1.1.0",
+        "url": "https://files.pythonhosted.org/packages/7e/71/44ce230e1b7fadd372515a97e32a83011f906ddded8d03e3c6aafbdedbb7/rfc3987_syntax-1.1.0-py3-none-any.whl",
+        "bytes": 8046,
+        "sha256": "6c3d97604e4c5ce9f714898e05401a0445a641cfa276432b0a648c80856f6a3f",
+        "uncompressed_bytes": 18424,
+        "member_count": 9,
+        "member_ledger_sha256": "d755408c62289047d31750fb7e2d0e765709937f3e13b0acb1094d3d2729cacf"
+      },
+      {
+        "distribution": "lark",
+        "version": "1.2.2",
+        "url": "https://files.pythonhosted.org/packages/2d/00/d90b10b962b4277f5e64a78b6609968859ff86889f5b898c1a778c06ec00/lark-1.2.2-py3-none-any.whl",
+        "bytes": 111036,
+        "sha256": "c2276486b02f0f1b90be155f2c8ba4a8e194d42775786db622faccd652d8e80c",
+        "uncompressed_bytes": 350066,
+        "member_count": 46,
+        "member_ledger_sha256": "22aac0857831066f6242f0f41ea47e766352d1d8d68cdda8971a493a36e1201a"
+      }
+    ],
+    "downloaded_bytes": 119082,
+    "expanded_bytes": 368490,
+    "retained_member_rows": 55,
+    "url_size_sha_version_match_fixed_reviewed_helper_ast_pins": true,
+    "unique_bounded_allowed_member_roots": true,
+    "module_origins_enforced_inside_owned_extraction_before_consumer_by_bound_helper": true,
+    "explicit_separate_optional_module_import_hash_map_present": false,
+    "owned_parser_cleanup": true,
+    "research": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/schema-optional-checker-research-01.json",
+        "sha256": "c86d42085a732ec94ba0397852abbe245fb5de0d1a154c6f960e4135a6e233db"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/schema-optional-lark-research-01.json",
+        "sha256": "7522e4d9aeffd11eeb9ff862334bd40a99936442bd620e82c7371db71ea2af4f"
+      }
+    ]
+  },
+  "fresh_not_cached_prerequisite_execution": {
+    "base_and_optional_package_member_ledgers_match_previous_focused_schema_controls": true,
+    "comparison_scope": "Same pinned tool bytes; this does not reuse previous control execution. New candidate mode has distinct current timestamps, current producer binding, actual candidate receipt and fresh cleanup. Wheel fetch/extraction happens each invocation in owned scratch under fixed byte/URL pins."
+  },
+  "actual_schema_result": {
+    "schema_pins": {
+      "bom-1.6.schema.json": "3e92dddbc30cf7f6a02b80f0942b1a4cfd4fb1c26f1dfc4310afa9d613cafb93",
+      "spdx.schema.json": "baa9d3bd1ed57b6751b0887edead6b5063ff53ff7429cf85d476c6c94af0166e",
+      "jsf-0.82.schema.json": "8bae002c25e723db7ee1f26afde680ae1a2b1a8f6b4b4b0fd65dc3becb090aae"
+    },
+    "jsonschema_version": "4.25.1",
+    "referencing_version": "0.36.2",
+    "schema_formats": {
+      "registered": [
+        "date",
+        "email",
+        "idn-email",
+        "ipv4",
+        "ipv6",
+        "iri",
+        "iri-reference",
+        "regex",
+        "time",
+        "uuid"
+      ],
+      "encountered": [
+        "iri-reference"
+      ],
+      "missing": []
+    },
+    "all4_graphs_validated_through_offline_registry_and_recording_format_checker": true,
+    "encountered_iri_reference_was_registered_and_executed": true,
+    "missing_formats": [],
+    "no_schema_waiver_or_default_remote_resolver": true,
+    "limits": "Success covers these encountered formats and exact four BOM inputs, not every possible optional format."
+  },
+  "validated_inputs": {
+    "graphs": [
+      {
+        "graph": "androidRelease",
+        "graph_sha256": "6d93fd0fa7448fa3adf3b68681f1e620fbd9ca85173d08fe90024b7c45696f2c",
+        "sbom_sha256": "26a2378d62e13fdc2a2fe10f4591c6b006010d60ee4fc1135cfa2ce8032e336b",
+        "components": 239,
+        "artifacts": 129,
+        "status": "PASS"
+      },
+      {
+        "graph": "iosArm64",
+        "graph_sha256": "39755a52285e8d361a900e6fb05d823feeb57b01729861a34017a9c78edee28a",
+        "sbom_sha256": "6156536dfe5008f383d2abfb40b0e93c9f212fae9768eb38c62da7032a62d953",
+        "components": 167,
+        "artifacts": 81,
+        "status": "PASS"
+      },
+      {
+        "graph": "iosSimulatorArm64",
+        "graph_sha256": "12c7fa9419fb35f9b504029c3aef418e01eb9704975b9a2d570844f6931cc55a",
+        "sbom_sha256": "1ee190332f99082996da1f090dac80fed4d0f38ca44df061b6875135e7f116b3",
+        "components": 167,
+        "artifacts": 81,
+        "status": "PASS"
+      },
+      {
+        "graph": "iosX64",
+        "graph_sha256": "a65fde3f5b45353c7414888c584f756a30de6741389e3234f8fb672af1735c7b",
+        "sbom_sha256": "2991e258761fc51bf31d3b9cdeab315fb1a7833cfdbd57ae45baa823f1de7684",
+        "components": 167,
+        "artifacts": 81,
+        "status": "PASS"
+      }
+    ],
+    "maven_components": 456,
+    "publisher_poms": 459,
+    "metadata_bytes": 1507794,
+    "unresolved": [],
+    "all_raw_graph_completion_sbom_and_license_declaration_hashes_match_preflight_and_fresh_result": true,
+    "source_notice": {
+      "status": "PASS",
+      "manifest_sha256": "4b501223b3841017477a226515d3758bc60848fe00d579fac3152a81928d6406",
+      "catalog_sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "catalog_raw_sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "catalog_hash_policy": "CRLF_TO_LF",
+      "resource_namespace": "com.parlor.app.resources",
+      "resource_directory": "composeApp/src/commonMain/composeResources/files/legal",
+      "resource_count": 26,
+      "total_bytes": 99515,
+      "files": [
+        {
+          "name": "APACHE-2.0.txt",
+          "bytes": 11358,
+          "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+        },
+        {
+          "name": "BouncyCastle-1.85-LICENSE.md",
+          "bytes": 1171,
+          "sha256": "0e01f1549c9022f406392ac2947d32223b7c2e977d21ea2f8c182fdeb4dae5fd"
+        },
+        {
+          "name": "DNG-SDK-NOTICE.txt",
+          "bytes": 5422,
+          "sha256": "b60660d2a5a3ee1a49366400e7e9b01c1872356d6f08942f095d356a44deb5f6"
+        },
+        {
+          "name": "DNG-SDK-PATENTS.txt",
+          "bytes": 3496,
+          "sha256": "bd958835863f42d8479457503a7ed716424d35b6e76ef76db06b72b109696ec4"
+        },
+        {
+          "name": "Expat-COPYING.txt",
+          "bytes": 1144,
+          "sha256": "31b15de82aa19a845156169a17a5488bf597e561b2c318d159ed583139b25e87"
+        },
+        {
+          "name": "HarfBuzz-COPYING.txt",
+          "bytes": 1971,
+          "sha256": "ba8f810f2455c2f08e2d56bb49b72f37fcf68f1f4fade38977cfd7372050ad64"
+        },
+        {
+          "name": "HarfBuzz-hb-ucd-ISC-LICENSE.txt",
+          "bytes": 795,
+          "sha256": "cb95728cc2b4a3502bb8e69c019e0e5f01c0a218a855168e9c19d4df51582cd5"
+        },
+        {
+          "name": "ICU-LICENSE.txt",
+          "bytes": 25185,
+          "sha256": "17510cf7a58b4879b887ec05a45d72cf1b73544dd9ec7e72f20110ed104229ee"
+        },
+        {
+          "name": "INDEX.txt",
+          "bytes": 5031,
+          "sha256": "53b6a73e28b2aa88bc2084bae2923348d109a9e6d117b9f98c5b6b37495d4764"
+        },
+        {
+          "name": "Kotlin-Boost-LICENSE.txt",
+          "bytes": 1337,
+          "sha256": "8d8291caf1cee26d23acf3eb67c9f9a2d58f1c681b16a4fbe8cbfb9e3c0b5a9b"
+        },
+        {
+          "name": "Kotlin-Harmony-NOTICE.txt",
+          "bytes": 563,
+          "sha256": "8a6725437c8f16af6322496d8e22169fdb8988ad43c5b300350ef867fd7d48e4"
+        },
+        {
+          "name": "Kotlin-MPMC-QUEUE-LICENSE.txt",
+          "bytes": 1537,
+          "sha256": "bd41bc36bf821736a2ad3a2f081da9acc9c53ab96c9e375191003c7176d2ef96"
+        },
+        {
+          "name": "Kotlin-ThreeTenBP-LICENSE.txt",
+          "bytes": 1520,
+          "sha256": "d1bc53b493a3ab387b42717ed5c4b1976a5048996f81154278100bff86d39331"
+        },
+        {
+          "name": "Kotlin-Unicode-LICENSE.txt",
+          "bytes": 3397,
+          "sha256": "1c3ddd6cc94ad4357e76a589325dd46520850348770536ef66bf8f2b56c77463"
+        },
+        {
+          "name": "Kotlin-libbacktrace-LICENSE.txt",
+          "bytes": 1470,
+          "sha256": "660729a7713d03d375b81ec8126f9c801b11d1eacefbe9685185d4c6a24e79cf"
+        },
+        {
+          "name": "SLF4J-2.0.16-LICENSE.txt",
+          "bytes": 1178,
+          "sha256": "4e7f90c86ab51278228bce153122f1d8df30149d13ce9ef524c8444a84c32dcc"
+        },
+        {
+          "name": "Skia-LICENSE.txt",
+          "bytes": 1507,
+          "sha256": "5f787c1dee3c56547f09ccc2906ab5f5293c4d8dd6c8654e573216c38e908dbd"
+        },
+        {
+          "name": "Skiko-NOTICE.txt",
+          "bytes": 197,
+          "sha256": "35dd077c24768b53625101cfcc0ad853ae7e2abc08bd2a111a0267760d1406d8"
+        },
+        {
+          "name": "Unicode-V3-LICENSE.txt",
+          "bytes": 1995,
+          "sha256": "e7a93b009565cfce55919a381437ac4db883e9da2126fa28b91d12732bc53d96"
+        },
+        {
+          "name": "WebP-COPYING.txt",
+          "bytes": 1496,
+          "sha256": "5aec868f669e384a22372a4e8a1a6cd7d44c64cd451f960ca69cc170d1e13acf"
+        },
+        {
+          "name": "WebP-PATENTS.txt",
+          "bytes": 1436,
+          "sha256": "cc3273e0694ea5896145e0677699b53471b03ea43021ddc50e7923fbb9f5023c"
+        },
+        {
+          "name": "Wuffs-Skia-wrapper-LICENSE.txt",
+          "bytes": 1635,
+          "sha256": "e59bb5c5c6ba426a9ac4ba9fe667ad14c5166b12aa25be8af1d122b14fbe2e36"
+        },
+        {
+          "name": "libjpeg-turbo-LICENSE.md",
+          "bytes": 5620,
+          "sha256": "96f5b328adbb78eeaaec6980d73fd558cb1e4d62560ed615646bc3cf5e532430"
+        },
+        {
+          "name": "libjpeg-turbo-README.ijg.txt",
+          "bytes": 12799,
+          "sha256": "75815e3bf6484201a3c3d17a1bbf10f2e8e3237f84df10a2357ea896db2a81d6"
+        },
+        {
+          "name": "libpng-LICENSE.txt",
+          "bytes": 5345,
+          "sha256": "7317e078e2d3b5d7ba5a6159e650945153262b44b76f6700f8e9edb261c5143e"
+        },
+        {
+          "name": "zlib-LICENSE.txt",
+          "bytes": 910,
+          "sha256": "e1cfcc55c325b3f78cf55df9664abaa066e2271dffe8213347d9fccdfbac8f2c"
+        }
+      ]
+    },
+    "all26_current_resource_bytes_sizes_sha_and_exact_set_rechecked": true,
+    "manifest_catalog_and_crlf_hash_policy_rechecked": true,
+    "consumed_file_count": 511,
+    "consumed_manifest_sha256": "d86f4db4329683fd512123a7236645862ae1c5a15cc80f3a5846705f984046d9",
+    "consumed_total_bytes": 5562718,
+    "independent_ledger_algorithm": "Sorted compact JSON [repository-relative path,sha256,bytes]; exact binding/consumer/lane/two producer receipts/exporter/renderer/five graph files/465 report files/three schemas/verification metadata/notices verifier/manifest/catalog/build/26 resources. Every current file reread; paths regular and nonsymlink.",
+    "actual_ledger_exactly_matches_independent_before_execution_prediction_and_postrun_recomputation": true,
+    "author_inspection_ledger492_not_used_as_actual_count": true,
+    "producer_graph_pom_bom_legal_relationship_checks_reference": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-independent-01.json",
+      "sha256": "7fd149a67d16f7b3d61f5b3e4ce8f431b4a2aba122e1114133c321dfd14478a6"
+    }
+  },
+  "time_and_custody": {
+    "producer_receipt_hashes": {
+      "export": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-01/receipt.json",
+        "sha256": "49df4bd696294e0a189e2094cbf27a48390f7d62b98c066cd7f39f069f956603"
+      },
+      "render": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-01/receipt.json",
+        "sha256": "3d72b4ba3360b53e2ee3f6134608c0df3d68a9d545068956be80cf962cc28768"
+      }
+    },
+    "export_cleanup_before_render_start_before_render_cleanup_before_candidate_start": true,
+    "outer_start_before_base_start_before_optional_start_before_candidate_receipt_before_optional_finish_before_base_finish_before_outer_finish_before_stop_before_cleanup": true,
+    "all_timestamps_timezone_qualified": true,
+    "all_receipt_hashes_equal_coordinator_supplied_final_hashes": true,
+    "jdk_java_javac_log_hashes_match_outer_receipt": true,
+    "candidate_receipt_and_inputs_not_overwritten_or_relabelled": true
+  },
+  "cleanup": {
+    "stop_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    "stop_exit_code": 0,
+    "stop_log_text": "No Gradle daemons are running.",
+    "base_package_cleanup": true,
+    "ephemeral_parser_cleanup": true,
+    "source_and_runner_unchanged": true,
+    "outputs_before": [],
+    "removed_outputs": [],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "remaining_owned_workers": [],
+    "remaining_owned_artifact_workers": [],
+    "cleanup_errors": [],
+    "deferred_signals": [],
+    "cycle_scratch_independently_absent": true,
+    "no_global_cache_or_archived_evidence_deleted": true
+  },
+  "conclusion": "Workstream C fresh export -> render -> actual candidate-consumer chain is scoped-complete for frozen source25b1c5551aee7630ac22d4b34668dd4b06c71b17 and this exact binding/control set only. No open C input/schema/integrity/cleanup findings in this run.",
+  "limits": [
+    "If native/source/control corrections produce a new frozen revision, do not relabel this25b chain; apply the required fresh export/render/binding/consumer chain for the new source.",
+    "No A recovery/strict-protection, B actual Parlor libproc, combined D qualification, final-package/legal/owner, physical-device, signing or Store-publication inference.",
+    "Native run34216788568 failure is separately assigned to ci_review/native_ci; no B runtime evidence was reviewed or claimed here.",
+    "Official schema execution was performed by coordinator through the exact reviewed consumer; reviewer independently inspected actual receipts and inputs without rerunning the schema engine.",
+    "Eight downloaded/extracted tools were already cleaned; reviewer reconciled retained wheel/member/import receipts to fixed source/public-research pins and cleanup, without redownloading or reimporting packages.",
+    "No tests/builds, project imports, downloads, CI dispatches, tracked edits, Gradle cleanup, commits or pushes by this reviewer. Only this unique untracked report was written."
+  ]
+}
