@@ -47,6 +47,8 @@ from external_image_provenance import (APP_ID, parse_launch_pid, attest_target, 
                                        parse_sample, bind_vmmap, header_diagnostic, OwnedToolPaths, LIMITATION)
 from external_image_diagnostics import image_diagnostic, vmmap_command_diagnostic
 from kernel_image_regions import bind_regions, selected_observer, LIMITATION as KERNEL_LIMITATION
+from simulator_lifecycle import (OwnedSimulatorLifecycle, selected_lifecycle, validate_selection,
+                                  DIRECT as DIRECT_LIFECYCLE, LEGACY as LEGACY_LIFECYCLE)
 
 
 def now():
@@ -136,7 +138,10 @@ def isolated_environment(parent, java, temporary, android_sdk, mode, toolchain=L
 
 
 class Lane:
-    def __init__(self, name, binding, approved, mode, image_observer='vmmap', toolchain=LOCAL_TOOLCHAIN):
+    def __init__(self, name, binding, approved, mode, image_observer='vmmap', toolchain=LOCAL_TOOLCHAIN,
+                 lifecycle_mode=LEGACY_LIFECYCLE):
+        validate_selection(lifecycle_mode, toolchain)
+        self.lifecycle_mode, self.lifecycle = lifecycle_mode, None
         if image_observer not in {'vmmap', 'libproc'}:
             raise RuntimeError('Unknown explicit image observer')
         self.image_observer = image_observer
@@ -151,7 +156,8 @@ class Lane:
         self.receipt = dict(schema_version=1, cycle=name, started_at=now(), status='RUNNING',
             execution_kind='normal-source-fixed-eight-plus-separate-public-tool-provenance',
             signing_mode=mode, image_observer=image_observer, approved_control_sha256=approved, commands=[], gradle_stops=[],
-            toolchain_profile=self.toolchain['name'],
+            toolchain_profile=self.toolchain['name'], simulator_lifecycle_mode=lifecycle_mode, build_attempted=False,
+            postbuild_evidence_preserved=False,
             runtime_evidence_status='NOT_RUN', provenance_status='NOT_RUN',
             notice_package_status='NOT_RUN', cleanup_status='BLOCKED',
             scope='Eight fixed English XCTest repetitions observing unchanged production app source '
@@ -266,6 +272,11 @@ class Lane:
         if self.command(*args, **kwargs) != 0:
             raise RuntimeError('Required owned command failed; consult its retained receipt')
 
+    def simulator_command(self, arguments, filename, timeout=120):
+        if self.lifecycle is None:
+            return self.command(arguments, filename, timeout)
+        return self.lifecycle.command(arguments, filename, timeout)  # No automatic fallback.
+
     def stop_gradle(self, label):
         code = self.command(['./gradlew', '--stop'], label + '.log', timeout=90, cwd=self.temporary / 'copy')
         self.receipt['gradle_stops'].append(dict(label=label, exit_code=code, at=now()))
@@ -273,6 +284,8 @@ class Lane:
             raise RuntimeError('Required isolated Gradle stop failed')
 
     def simulator_metadata(self, label):
+        if self.lifecycle is not None:
+            return self.lifecycle.metadata(label)
         # Listing needs the public inventory, but no unrelated device metadata
         # survives in evidence. This temporary raw file is deleted on every path.
         raw = self.temporary / (label + '.json')
@@ -387,13 +400,19 @@ class Lane:
                             copied_source_manifest_sha256=digest(self.destination / 'copied-source-manifest.json'),
                             application_source_transformations=0, ui_test_source_transformations=1,
                             copied_build_phase_transformations=1)
+        if self.lifecycle_mode == DIRECT_LIFECYCLE:
+            self.lifecycle = OwnedSimulatorLifecycle(root=ROOT, temporary=self.temporary, evidence=self.destination,
+                cycle=self.name, name=self.receipt['owned_device_name'], toolchain=self.toolchain['name'],
+                source=self.receipt['source_before'], approved=self.approved, receipt=self.receipt, save=self.save,
+                current_bindings=lambda: (normalized_identity(), control_hash(self.binding)), environment=self.environment)
         if self.simulator_metadata('owned-device-before-create') is not None:
             raise RuntimeError('Unique newly allocated simulator name already exists')
         self.receipt['simulator_creation_attempted'] = True
         self.save()
-        self.require(['xcrun', 'simctl', 'create', self.receipt['owned_device_name'],
+        if self.simulator_command(['xcrun', 'simctl', 'create', self.receipt['owned_device_name'],
                       'com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro',
-                      self.toolchain['runtime']], 'create.log')
+                      self.toolchain['runtime']], 'create.log'):
+            raise RuntimeError('New simulator creation failed')
         value = (self.destination / 'create.log').read_text().strip()
         if UUID.fullmatch(value) is None:
             raise RuntimeError('New simulator did not return an exact UUID')
@@ -401,17 +420,21 @@ class Lane:
         self.receipt['owned_uuid'] = value
         if self.simulator_metadata('owned-device-after-create') is None:
             raise RuntimeError('Created UUID is not registered under our exact owned name')
-        self.require(['xcrun', 'simctl', 'boot', self.uuid], 'boot.log')
-        self.require(['xcrun', 'simctl', 'bootstatus', self.uuid, '-b'], 'bootstatus.log', timeout=300)
+        if (self.simulator_command(['xcrun', 'simctl', 'boot', self.uuid], 'boot.log') or
+                self.simulator_command(['xcrun', 'simctl', 'bootstatus', self.uuid, '-b'], 'bootstatus.log', timeout=300)):
+            raise RuntimeError('Owned simulator boot failed')
 
     def run_xctest(self):
         self.gradle_attempted = True
+        self.receipt['build_attempted'] = True
         self.receipt['runtime_evidence_status'] = 'RUNNING'
         self.receipt['temporary_artifact_retention_reason'] = (
             'Retain this one build only through XCTest extraction, installed-file comparison and '
             'the separate image-provenance observation. Delete its copy/build/DerivedData immediately afterward.')
         self.save()
         try:
+            if self.lifecycle is not None:
+                self.lifecycle.mark_build_attempted()
             code = self.command(xcode_arguments(self.temporary / 'copy' / PROJECT,
                                 self.environment['SDK_NAME'], self.uuid, self.temporary, self.signing),
                                 'xcodebuild.log', timeout=2700, limit=64 * 1024 * 1024)
@@ -430,6 +453,13 @@ class Lane:
         self.receipt['xcresult_extraction_exit_codes'] = exits
         if any(exits.values()):
             raise RuntimeError('Actual XCTest extraction failed; never infer success from marker output')
+        # This acknowledges retained raw structured views, never runtime success.
+        self.receipt['postbuild_evidence_preserved'] = True
+        try:
+            self.save()
+        except BaseException:
+            self.receipt['postbuild_evidence_preserved'] = False
+            raise
         self.receipt['xctest'] = verify_xctest(*[read_json((self.destination / ('xcresult-' + view + '.json')).read_text())
                                                 for view in ('summary', 'tests', 'test-details')], self.uuid)
         with (self.destination / 'xcodebuild.log').open() as stream:
@@ -731,6 +761,8 @@ class Lane:
             observation.update(status='FAILED_DIAGNOSTIC_COLLECTION', diagnostic_error_type=type(error).__name__)
 
     def shutdown_device(self):
+        if self.lifecycle is not None:
+            return self.lifecycle.shutdown()
         info = self.simulator_metadata('owned-device-before-shutdown')
         if info is None or info['state'] == 'Shutdown':
             return
@@ -740,6 +772,8 @@ class Lane:
             raise RuntimeError('Owned simulator did not reach Shutdown')
 
     def delete_device(self):
+        if self.lifecycle is not None:
+            return self.lifecycle.delete()
         info = self.simulator_metadata('owned-device-before-delete')
         if info is not None:
             if info['state'] != 'Shutdown':
@@ -795,14 +829,24 @@ class Lane:
     def finalize(self):
         if self.gradle_attempted and self.owner is not None:
             self.stage('final-isolated-gradle-stop', lambda: self.stop_gradle('stop-final'))
-        if self.uuid is None and self.receipt.get('simulator_creation_attempted'):
+        if self.lifecycle is not None:
+            info = self.stage('recover-journaled-owned-simulator-identity', self.lifecycle.recover)
+            if isinstance(info, dict):
+                self.uuid = info['udid']
+                self.receipt['owned_uuid'] = self.uuid
+        if self.lifecycle is None and self.uuid is None and self.receipt.get('simulator_creation_attempted'):
             info = self.stage('recover-owned-simulator-identity', lambda: self.simulator_metadata('owned-device-recovery'))
             if isinstance(info, dict):
                 self.uuid = info['udid']
                 self.receipt['owned_uuid'] = self.uuid
         if self.uuid is not None:
-            self.stage('shutdown-owned-simulator-and-app', self.shutdown_device)
-            self.stage('delete-owned-simulator', self.delete_device)
+            device_cleanup_allowed = self.lifecycle is None or self.stage('authorize-journaled-device-cleanup',
+                lambda: self.lifecycle.prepare_cleanup(self.owner, self.gradle_attempted)) is True
+            if device_cleanup_allowed:
+                self.stage('shutdown-owned-simulator-and-app', self.shutdown_device)
+                self.stage('delete-owned-simulator', self.delete_device)
+        if self.lifecycle is not None:
+            self.stage('finalize-direct-simulator-lifecycle', self.lifecycle.finish)
         if self.owner is not None:
             self.stage('stop-owned-command-workers', self.owner.stop)
             self.receipt['secondary_cleanup'] = self.stage('cleanup-attested-secondary-fifos', self.owner.secondary.cleanup)
@@ -812,10 +856,11 @@ class Lane:
             self.stage('preserve-secondary-fifo-final-ledger', lambda: write_json(
                 self.destination / 'secondary-fifo-final.json', self.owner.secondary.dump()))
         safe = self.stage('verify-workers-before-file-removal', self.verify_workers) is True
+        preservation_safe = self.lifecycle is None or not self.gradle_attempted or self.receipt.get('postbuild_evidence_preserved') is True
         if self.copy_manifest is not None and safe:
             self.stage('verify-copied-inputs-after-workers-stop', self.verify_copy)
         self.stage('compact-required-xcode-evidence', self.compact_log)
-        if self.temporary is not None and safe:
+        if self.temporary is not None and safe and preservation_safe:
             self.stage('remove-exact-owned-copy-build-deriveddata-temp', self.remove_temporary)
         self.receipt['temporary_directory_removed'] = self.temporary is None or (
             not self.temporary.exists() and not self.temporary.is_symlink())
@@ -874,17 +919,18 @@ def main(arguments=None):
         binding = checked_binding_path(arguments[1])
         print(json.dumps(dict(control_sha256=control_hash(binding), files=control_manifest(binding)), indent=2))
         return 0  # Source/control observation only. No allocation or native execution.
-    if len(arguments) not in (3, 4, 5, 6) or re.fullmatch(r'ios-readiness-[0-9]{2}', arguments[0]) is None:
-        raise SystemExit('Usage: run_normal_ios_launch.py ios-readiness-NN SOURCE_BINDING REVIEWED_CONTROL_SHA [--simulator-signing=adhoc] [--image-observer=libproc] [--toolchain=qualified-xcode-26.3]')
+    if len(arguments) not in (3, 4, 5, 6, 7) or re.fullmatch(r'ios-readiness-[0-9]{2}', arguments[0]) is None:
+        raise SystemExit('Usage: run_normal_ios_launch.py ios-readiness-NN SOURCE_BINDING REVIEWED_CONTROL_SHA [--simulator-signing=adhoc] [--image-observer=libproc] [--toolchain=qualified-xcode-26.3] [--simulator-lifecycle=direct-owned-v1]')
     name, binding, approved = arguments[0], checked_binding_path(arguments[1]), arguments[2]
     toolchain, remaining = selected_toolchain(arguments[3:])
+    lifecycle_mode, remaining = selected_lifecycle(remaining, toolchain)
     observer, signing = selected_observer(remaining)
     mode = selected_mode(signing)
     if re.fullmatch(r'[a-f0-9]{64}', approved) is None or approved != control_hash(binding):
         raise RuntimeError('Control bytes differ from the explicit independent execution review')
     with (binding.parent / 'build-lane.lock').open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        return Lane(name, binding, approved, mode, observer, toolchain).run()
+        return Lane(name, binding, approved, mode, observer, toolchain, lifecycle_mode).run()
 
 
 if __name__ == '__main__':

@@ -18,12 +18,13 @@ CAMPAIGN = ROOT / 'remediation-runs/2026-09-07-local-readiness'
 COMPANION = CAMPAIGN / 'l08-storage-functional-companion-02'
 DRAFT = CAMPAIGN / 'native/l08-app-foundation-draft-01'
 DRIVER = COMPANION / 'run_ios_readiness.py'
-DRIVER_SHA256 = 'a56f47787c5abbda301cdfcafa5c8ac4ad7eb505d21d560e86063f93453a36f7'
-DRAFT_FREEZE = CAMPAIGN / 'reviews/hosted-native-repair-01/draft-freeze-relative.json'
-DRAFT_FREEZE_SHA256 = '2905ce996bad3d6e1d3d45e9fd7594cbe54cc93380e608781a7f34d73b0784a0'
+DRIVER_SHA256 = 'b0f3794fe89537d5108a2c24c22c33ed94d9330ee220e7fa257bfb2c4a7b1e29'
+DRAFT_FREEZE = ROOT / 'remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-draft-freeze-01.json'
+DRAFT_FREEZE_SHA256 = '4a18e36224c895581515d538f995e6f8a1bd7016a3cf6eba3328712e5535bd08'
 TOOLCHAIN_HELPER = ROOT / 'scripts/verification/ios-readiness/toolchain_profiles.py'
 SUPPORT_CONTROLS = tuple(TOOLCHAIN_HELPER.parent / name for name in (
-    'test_toolchain_profiles.py', 'test_native_command_failures.py', 'test_foundation_toolchain_binding.py'))
+    'test_toolchain_profiles.py', 'test_native_command_failures.py', 'test_foundation_toolchain_binding.py',
+    'simulator_lifecycle.py', 'test_simulator_lifecycle.py', 'test_simulator_lifecycle_integration.py'))
 REFERENCE_PINS = {
     'run_control.py': '58e8daf875eaf8061ed017e10cc8c8065eb49292866b6741227814282a1b8e9f',
     'FoundationProtectionControl.m': 'a6b025d7b77c3b1b1de57b93869d0beff6b4cc9e365eb5672ffd2be9d52013f2',
@@ -40,7 +41,7 @@ TRANSFORMS = (
     if BINDING is None:
         raise RuntimeError('An explicit campaign source binding is required')
     return sorted([path for path in HERE.iterdir() if path.is_file() and
-                   (path.suffix in {'.py', '.in', '.md'} or path.name == 'inherited-controls.json')]) + [TOOLCHAIN_HELPER, BINDING]
+                   (path.suffix in {'.py', '.in', '.md'} or path.name == 'inherited-controls.json')]) + [TOOLCHAIN_HELPER, LIFECYCLE_HELPER, *LIFECYCLE_TESTS, BINDING]
 ''', '''def control_files():
     return foundation.control_files(BINDING)
 '''),
@@ -117,8 +118,15 @@ TRANSFORMS = (
                     # XCTest itself defers app.terminate(). Shutting down the
 ''', '''                if uuid is not None:
                     if gradle_attempted:
-                        stage('preserve-app-foundation-before-device-cleanup', lambda:
-                              foundation.preserve_before_cleanup(receipt, dest, uuid, command))
+                        foundation_preserved = stage('preserve-app-foundation-before-device-cleanup', lambda:
+                              foundation.preserve_before_cleanup(receipt, dest, uuid, command)) is True
+                        receipt['postbuild_evidence_preserved'] = (
+                            receipt.get('postbuild_evidence_preserved') is True and foundation_preserved)
+                        def persist_preservation_ack():
+                            save()
+                            return True
+                        if stage('persist-postbuild-evidence-ack', persist_preservation_ack) is not True:
+                            receipt['postbuild_evidence_preserved'] = False
                     # XCTest itself defers app.terminate(). Shutting down the
 '''),
     ('''                receipt.update(classify_final_companion(receipt))
@@ -294,6 +302,7 @@ class Hooks:
             else:
                 state.update(status='UNAVAILABLE', reason='owned-container-unavailable')
         require(state['status'] not in {'RUNNING', 'FAIL'}, 'preservation-incomplete-before-cleanup')
+        return True  # Retention outcome only; collection/runtime verdict is separate.
 
     def bind_available(self, receipt, evidence, device, built, installed):
         try:
@@ -342,7 +351,7 @@ def load_frozen_module(name, path):
 
 def main():
     manifest_only = len(sys.argv) == 3 and sys.argv[1] == '--control-manifest'
-    require(manifest_only or (len(sys.argv) in (4, 5, 6) and re.fullmatch(r'ios-readiness-[0-9]{2}', sys.argv[1])), 'usage')
+    require(manifest_only or (len(sys.argv) in (4, 5, 6, 7) and re.fullmatch(r'ios-readiness-[0-9]{2}', sys.argv[1])), 'usage')
     binding = checked_binding(sys.argv[2])
     manifest = control_manifest(binding)
     approved = digest(json.dumps(manifest, separators=(',', ':')).encode())

@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "kind": "DIRECT_OWNED_SIMULATOR_LIFECYCLE_AUTHOR_COUNT_ADDENDUM",
+  "author": "/root/ci_workflow",
+  "status": "FACTUAL_DECLARATION_COUNT_CORRECTION_REQUIRES_INDEPENDENT_REVIEW",
+  "held_author_report": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-source-02.json",
+    "sha256": "0e3ef86e9e66708be391630e864f01bfeb9f03bbfa183a0a027bec4a12f951ec",
+    "preserved_unchanged": true
+  },
+  "correction": {
+    "incorrect_field": "declarations_not_executed.probe_other_38",
+    "correct_field": "declarations_not_executed.probe_other_44",
+    "correct_value": "UNCHANGED_NOT_REQUESTED_FOR_THIS_DELTA",
+    "reason": "The probe test file declares 45 unittest methods, of which exactly one has a changed cycle expectation. The held report's label of 38 unchanged methods is an author counting error, not a test removal or execution result."
+  },
+  "inspection": {
+    "method": "Read-only Python ast.parse of git-show bytes and worktree bytes; counted test_-prefixed methods directly declared in top-level unittest classes; inspected git diff against application/control baseline. No module import, test runner, build, native tool, or Actions execution.",
+    "path": "scripts/release/tests/test_native_process_probe.py",
+    "snapshots": [
+      {
+        "revision": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+        "sha256": "707f394e34d8234f4617963af32a865b3620aaec7a16ee6e0c166c0e1090ef39",
+        "bytes": 43371,
+        "declared_methods": 45
+      },
+      {
+        "revision": "700243c3426db2da3855a9d3a3df58ada607ffc5",
+        "sha256": "707f394e34d8234f4617963af32a865b3620aaec7a16ee6e0c166c0e1090ef39",
+        "bytes": 43371,
+        "declared_methods": 45
+      },
+      {
+        "revision": "HELD_AUTHOR_SOURCE_V2_WORKTREE",
+        "sha256": "2730119da9d074d490a259669d3e9f9b4fec655da2045bfd9401ee44dc91e4ea",
+        "bytes": 43371,
+        "declared_methods": 45
+      }
+    ],
+    "per_class_declared_methods": {
+      "ProbeSourceContractTest": 6,
+      "ProbeBoundedCaptureTest": 17,
+      "ProbePrivacyAndCustodyTest": 8,
+      "ProbeLifecycleTest": 7,
+      "ProbeSimulatorGlueTest": 3,
+      "NativeMetadataObservationTest": 4
+    },
+    "affected_selector": "ProbeSourceContractTest.test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels",
+    "affected_selector_change": "Only expected native.CYCLES changes from A19/B20 to A21/B22.",
+    "affected_methods": 1,
+    "unchanged_methods": 44
+  },
+  "scope_and_limits": [
+    "Additive evidence correction only; held author reports 01/02, all source/control bytes, historical evidence and failed receipts remain unchanged.",
+    "No expansion of the proposed focused probe execution beyond the one changed selector, and no request to repeat the 44 unchanged methods.",
+    "Declared method counts are not successful test results, Apple/native execution, or Parlor runtime evidence.",
+    "Parent /root retains sole ownership of execution, cleanup cycles, commits/pushes and Actions dispatches."
+  ],
+  "execution": {
+    "tests": "NOT_RUN_BY_AUTHOR",
+    "builds": "NOT_RUN_BY_AUTHOR",
+    "native_tools": "NOT_RUN_BY_AUTHOR",
+    "actions": "NOT_DISPATCHED_BY_AUTHOR",
+    "cleanup": "Read-only AST/Git inspection and one additive JSON file; no test/build/native fixture, temporary worker, or generated build output was created. No cleanup cycle was run."
+  }
+}

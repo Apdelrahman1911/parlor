@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_NARROW_METADATA_PRIMARY_ERROR_PRESERVATION_SOURCE_REVIEW",
+  "recorded_at": "2026-09-08T16:25:30.961891+00:00",
+  "reviewer": "/root/ci_review",
+  "author": "/root/native_ci",
+  "status": "APPROVED_NARROW_SOURCE_PENDING_MECHANICAL_PIN_AND_COORDINATED_CONTROLS",
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+    "tree": "e0e7abfff89975682a96a884cb745bcbc12e7238"
+  },
+  "references": {
+    "driver": {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "sha256": "030e15b39d728195a1f331aa28dbfa4eef3fa8e55e352e22febebc57f827ddb8",
+      "bytes": 73458
+    },
+    "tests": {
+      "path": "scripts/verification/ios-readiness/test_native_command_failures.py",
+      "sha256": "6073cc0bad157bfed8cde4d9a94f38953e6d51a8f84d138042f00f0244efde2e",
+      "bytes": 27548
+    },
+    "composer": {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+      "sha256": "288c412456e130ec640f40042133ef4686554b4f63abecc097602999f2d20b18",
+      "bytes": 21106
+    },
+    "author": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-metadata-primary-repair-author-01.json",
+      "sha256": "292a61f891dc7820628a45e7a8ad8e92a87da3a48f41ba4f57ca4aa9a24904d6",
+      "bytes": 28590
+    },
+    "postrun": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-evidence-34244902185-independent-01.json",
+      "sha256": "cab3c048a245f5dfba84ce1e652005d05b47e1a5ad620181d2ca92a54f534413",
+      "bytes": 17595
+    },
+    "diagnosis": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-ps-timeout-diagnosis-independent-02.json",
+      "sha256": "3a0c2a12a7e57458fd34057afcf663ae08d40d7a57c49bf17b8b244da7eb2cc6",
+      "bytes": 4004
+    }
+  },
+  "scope": "Exact held two-file correction only: companion own_simulator_metadata exception handler and isolated regression declarations. Separate lifecycle changes and later integrations are not approved by this report.",
+  "independent_inspection": {
+    "author_path_byte_sha256_references_verified": 9,
+    "author_exact_two_file_diff_matches_actual_git_diff": true,
+    "driver_bytes_outside_metadata_function_unchanged": true,
+    "only_exact_outer_exception_handler_ast_changed": true,
+    "metadata_try_body_and_finally_unchanged": true,
+    "existing_generic_twelve_test_class_byte_identical": true,
+    "old_test_module_ast_identical_after_removing_only_re_import_and_new_metadata_class": true,
+    "new_tests_extract_real_function_ast_with_inert_subprocess_ownership_and_write_stubs": true,
+    "declared_test_methods": {
+      "existing": 12,
+      "new_metadata": 14,
+      "total": 26,
+      "executed_by_reviewer": 0,
+      "executed_by_author": 0
+    },
+    "coverage_inspected": "Success and absent owned device; exact command/retention contract; spawn/register/communicate failure; timeout raw-output privacy; successful-stop negative/unknown exit; stop/poll secondary error; BaseException identity; bounded800-character messages; nonzero/stderr/oversize rejection; parser failure; preserved observed exit; duplicate/malformed/wrong-runtime/drifted-UUID guards.",
+    "method": "Read-only Git/diff, file bytes, SHA256/JSON/reference comparisons and AST parse/literal composition. No project import, compile/exec of project source, test discovery or test execution."
+  },
+  "source_conclusions": [
+    "The primary exception record is populated before the fallible command-only owned stop. A stop or post-stop poll BaseException is retained separately with its bounded message and exact cleanup stage; bare raise preserves the triggering exception, including cancellation classes.",
+    "Popen failure never invents an owned child or exit. A successful stop polls only when communicate did not record an exit. Known zero/nonzero stays command status, not metadata validity; unknown poll remains null and unobserved exit remains absent after stop/poll failure.",
+    "Existing exact simctl command, deferred-parent-signals spawn, ownership registration,45-second communicate deadline,2MiB stdout bound, nonzero/stderr/raw-output rejection, filtered owned-name metadata, UUID/runtime/ambiguity guards and final timestamp/save remain unchanged.",
+    "No normal runner or generic companion command, canonical/companion ownership, process census, lsof, UID/PPID/PGID/FIFO policy, timeout, simulator lifecycle, app shipping source, protection validation or provenance behavior changed in this reviewed delta."
+  ],
+  "mechanical_integration_pending": {
+    "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+    "field": "DRIVER_SHA256",
+    "current_value": "a56f47787c5abbda301cdfcafa5c8ac4ad7eb505d21d560e86063f93453a36f7",
+    "required_for_reviewed_driver": "030e15b39d728195a1f331aa28dbfa4eef3fa8e55e352e22febebc57f827ddb8",
+    "current_composer_sha256": "288c412456e130ec640f40042133ef4686554b4f63abecc097602999f2d20b18",
+    "prospective_pin_only_composer_sha256": "27b00421ad5c527b7e658f87bc95a8c36ad69563d842877fa2926fe38aa4e8c7",
+    "prospective_generated_runner_sha256": "b4591546f5cb1b7a35446365d8df3ebceca37ceb4c6896fb3c6ed4d4fe26e0a2",
+    "independent_derivation": "All12 AST-literal composition transforms applied only in memory, every anchor unique; prospective composed source AST parses and metadata handler remains unchanged. These are prospective hashes, not edited files or executed composition tests.",
+    "condition": "Current composer correctly rejects companion-driver-drift. Integrator owns the pin and separate exact-byte review. Later lifecycle edits require recalculation and review; these prospective hashes do not authorize later bytes.",
+    "support_binding": "Existing SUPPORT_CONTROLS already includes test_native_command_failures.py; no new support allowlist entry is necessary for this two-file delta.",
+    "historical_evidence": "Do not rewrite immutable controls, historical creation-time draft counts/pins, clone manifests or failed receipts."
+  },
+  "findings": [],
+  "authorization": {
+    "narrow_exact_byte_source_review": true,
+    "project_test_or_build_execution": false,
+    "native_or_ci_dispatch": false,
+    "requirement": "Coordinator must integrate and independently review all source/control changes, execute the combined affected focused controls in its owned lane, commit reviewed source and regenerated mechanical inventory, then create fresh bindings before any separately approved platform execution."
+  },
+  "limits": [
+    "26 declared tests are not26 successful tests. No control, build or app-runtime evidence is produced by this review.",
+    "This bounded stop/poll diagnostic correction does not solve hosted ps/lsof latency or recover masked historical metadata triggers. The unchanged final now()/save() is not claimed immune to unrelated failures.",
+    "A19 remains prebuildFAIL/runtimeNOT_RUN with simulator finalizationFAIL and outer cleanupFAIL; B20 remainsNOT_RUN. Later worker/temp/source success does not prove simulator retirement.",
+    "No L08 single-tap, functional-storage, retained-host, strict file-protection, normal Parlor libproc, combined qualification or readiness success is inferred. C02 and owner/legal, Store-operation and physical-device requirements remain separately scoped."
+  ],
+  "readiness": "NOT_READY; original platform failures and missing application-runtime evidence remain.",
+  "activity_and_cleanup": "Only read-only source/retained-evidence inspection and this new uniquely owned report. No tests/builds, project imports, native actions, workflow dispatch/download/retry, source edits, cleanup, staging, commit or push. No build lane opened or generated outputs/workers created; existing lock, historical evidence and unrelated work preserved."
+}

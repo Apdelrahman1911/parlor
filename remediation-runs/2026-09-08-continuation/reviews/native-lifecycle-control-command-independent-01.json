@@ -1,0 +1,718 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/ci_review",
+  "author_of_reviewed_packet": "/root/dependency_chain",
+  "status": "APPROVED_EXACT_FIXED_LINUX_CONTROL_INVOCATION_WITH_MANDATORY_EXTERNAL_POSTRUN_RECONCILIATION",
+  "scope": "Independent invocation/source-binding/custody/finalization review only. No project import, control execution, native execution, build, workflow dispatch, cleanup, staging, commit or push performed by this reviewer.",
+  "reviewed_packet": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-lifecycle-control-command-01.json",
+    "sha256": "2ce09a989775c8a99b4b4a98b68859fbd6c9eda926c1f56eae302318ef1c18cc",
+    "bytes": 56759
+  },
+  "embedded_python": {
+    "sha256": "e983f71fb9a47b30eb3b89d1ed1c90234505f3cf6c4b18ff39d3a0bfd6d7e128",
+    "bytes": 39192,
+    "lines": 467
+  },
+  "findings": [],
+  "source_context": {
+    "head": "700243c3426db2da3855a9d3a3df58ada607ffc5",
+    "tree": "bd93099fe19ccf46e27eb67f22d694cc1ae074aa",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_binary_diff_sha256": "6c6e32a20e6d6b404d197634ff40e27424b070e01248334bfddca6a5b6542190",
+    "meaning": "Evidence checkpoint with reviewed held working-tree changes, not final source/inventory freeze; the enclosing actual lane must retain its real before/after commit/tree/diff/source and runner identities."
+  },
+  "authorized_invocation": {
+    "owner": "Coordinator /root only",
+    "outer_command_prefix": [
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "continuation-native-lifecycle-controls-01",
+      "--command"
+    ],
+    "command": "Concatenate the reviewed packet outer_command_prefix + command exactly, from /root/projects/Parlor/parlor. Do not rewrite, import, execute fragments, broaden selectors or substitute a driver.",
+    "prospective_cycle": "continuation-native-lifecycle-controls-01",
+    "cycle_absent_at_review": true,
+    "preconditions": [
+      "Prior transport-contracts-04 lane must remain finalized and independently reconciled; no competing build/test lane.",
+      "Packet SHA, inline bytes, all 87 expected pins and complete inherited/supplemented input closure remain exactly held.",
+      "All live generated outputs must be absent and the outer lane ownership/daemon/custody checks must pass; this review does not waive any preflight.",
+      "Only the ten fixed affected commands below are authorized; native/build/application entrypoints, GH dispatch and final freeze are not authorized."
+    ]
+  },
+  "source_review_references": [
+    {
+      "label": "author",
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-source-02.json",
+      "sha256": "0e3ef86e9e66708be391630e864f01bfeb9f03bbfa183a0a027bec4a12f951ec",
+      "bytes": 11177
+    },
+    {
+      "label": "implementation",
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-implementation-independent-01.json",
+      "sha256": "44239859c10b762b6447234eddbc993ac1e9e65982a0e149250e943941194bdf",
+      "bytes": 28603
+    },
+    {
+      "label": "controls",
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-lifecycle-controls-independent-01.json",
+      "sha256": "719427b07d3cad552bf638e3c424f09c3e1f334c8aaea855b98e1559913791f7",
+      "bytes": 41645
+    },
+    {
+      "label": "persistence_policy",
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-persistence-policy-independent-01.json",
+      "sha256": "756a549e40145cb659c7ac2829974413f179bdd588c5a9f5a41d599531a02f0e",
+      "bytes": 5567
+    },
+    {
+      "label": "integration_author",
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-integration-author-01.json",
+      "sha256": "a457352a93dd8875ff1f306797a8f56cceed7b063142acc404f54d8bc2a729ae",
+      "bytes": 11679
+    },
+    {
+      "label": "metadata_prior_narrow_review",
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-metadata-error-preservation-independent-01.json",
+      "sha256": "e8dd16bbd4a2f062bde7a8bdd81b6ea3742f4affe0f84b566e761c29fbec34b7",
+      "bytes": 7983
+    },
+    {
+      "label": "count_correction",
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-count-addendum-01.json",
+      "sha256": "6c34261e6903cf7f4d27fbd2ccaa1e44de9ce4c3981a625ee0cc66d89ebe003b",
+      "bytes": 3425
+    },
+    {
+      "label": "count_independent",
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-count-independent-01.json",
+      "sha256": "30a6cc2bceb26fb1d70b68a5cc6d30351802212df76c2d90b8e7720df8c8044f",
+      "bytes": 4011
+    }
+  ],
+  "independent_input_audit": {
+    "method": "Read-only stdlib ast.parse/ast.literal_eval, Git inspection and bounded canonical regular-file SHA-256 reads. Manually reconstructed the original helper directory/EXTRA manifest without importing any project module or evaluating the embedded command.",
+    "imported_helper": {
+      "path": "remediation-runs/2026-09-08-continuation/controls/run_continuation_controls.py",
+      "sha256": "1896d5a309e8802b691bfc9a37db2c0ac92dcfb6173d4cee564e5dcfcc234627",
+      "bytes": 8796
+    },
+    "inherited_directory_count": 7,
+    "inherited_extra_count": 8,
+    "inherited_row_count": 209,
+    "supplemental_exact_paths": 87,
+    "expected_pin_count": 87,
+    "supplemental_unique_count": 87,
+    "pins_equal_supplemental": true,
+    "union_without_packet": 254,
+    "union_including_packet": 255,
+    "expected_manifest_compact_sha256": "62a09a27a31419f85469e53cd03c058acbc2ecff12a16af4f8b94687af4dd83e",
+    "manifest_digest_serialization": "SHA-256 of UTF-8 json.dumps(sorted path rows with keys inserted as path,sha256), separators=(',', ':'), no newline. This is the normalized row digest, not the future pretty-printed evidence-file digest.",
+    "custody_errors": [],
+    "pin_errors": [],
+    "source_review_ref_errors": [],
+    "prior_inherited_hash_drift": [],
+    "reopened_actual_input_closure": [
+      "All seven helper directories plus its eight explicit inherited inputs, including the archived darwin_owned_processes.py and schema/dependency support paths.",
+      "Canonical and companion readiness support imports, copied-source fixtures/templates, unchanged owned_lane/secondary_fifo, strict and functional parser/copy controls, both new lifecycle test files and helper.",
+      "Normal driver and all nine test files; actual run_normal_ios_launch imports and normal_source_copy, normal_launch_receipts, external_image_provenance/diagnostics, kernel_image_regions and inherited support modules/templates.",
+      "Foundation/composition live test module imports, exact new draft freeze, companion pin_dependencies, all four native bridge/launch/test templates, original FoundationProtectionControl.m and base schema run_control.py.",
+      "Native adapter plus selected probe module import closure through owned_ci_simulator, verification_hygiene, native_process_metadata and darwin_worker_identity; no Python package initializer files exist in scripts.",
+      "Old ios-readiness-15/16 receipt JSON actually consumed as schema fixtures, immutable original clone manifest and old freeze references, source fixture Kotlin/Swift/project/policy/workflow/wrapper paths.",
+      "AGENTS.md is deliberately consumed as a synthetic manifest-shape file only; it is not a source-execution binding."
+    ],
+    "boundary": "The outer lane additionally binds the actual full non-audit source manifest and runner. The packet augments the archived-control gap with complete repository-local control/import/fixture closure; this is not a claim that the standard library or an application binary has executed.",
+    "normal_actual_import_contract": "The unchanged normal control driver must retain declared IDs versus discovery, actual local module imports as a subset of bound files and identical before/after control manifests."
+  },
+  "declared_controls": {
+    "status": "DECLARATIONS_ONLY_NOT_EXECUTED",
+    "command_count": 10,
+    "total": 436,
+    "commands": [
+      {
+        "name": "primary-errors",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-v",
+          "-s",
+          "scripts/verification/ios-readiness",
+          "-p",
+          "test_native_command_failures.py"
+        ],
+        "expected_tests": 26
+      },
+      {
+        "name": "simulator-lifecycle",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-v",
+          "-s",
+          "scripts/verification/ios-readiness",
+          "-p",
+          "test_simulator_lifecycle.py"
+        ],
+        "expected_tests": 51
+      },
+      {
+        "name": "lifecycle-integration",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-v",
+          "-s",
+          "scripts/verification/ios-readiness",
+          "-p",
+          "test_simulator_lifecycle_integration.py"
+        ],
+        "expected_tests": 32
+      },
+      {
+        "name": "toolchain-profile",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+          "-v"
+        ],
+        "expected_tests": 12
+      },
+      {
+        "name": "foundation-profile",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py"
+        ],
+        "expected_tests": 20
+      },
+      {
+        "name": "functional-copy",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-v",
+          "-s",
+          "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02",
+          "-p",
+          "test_l08_functional_copy.py"
+        ],
+        "expected_tests": 12
+      },
+      {
+        "name": "composition",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py"
+        ],
+        "expected_tests": 55
+      },
+      {
+        "name": "normal",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py"
+        ],
+        "expected_tests": 187
+      },
+      {
+        "name": "native-adapter",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "-v",
+          "scripts/release/tests/test_native_continuation.py"
+        ],
+        "expected_tests": 40
+      },
+      {
+        "name": "probe-cycle-guard",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "-v",
+          "scripts.release.tests.test_native_process_probe.ProbeSourceContractTest.test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels"
+        ],
+        "expected_tests": 1
+      }
+    ],
+    "class_and_file_counts": [
+      {
+        "name": "primary-errors",
+        "count": 26,
+        "files": [
+          {
+            "path": "scripts/verification/ios-readiness/test_native_command_failures.py",
+            "sha256": "2dae0e77803d5c6b98bd3d4bc1ee4f84a366b799da7e21c16e2068312e0d9b8c",
+            "bytes": 27564,
+            "classes": {
+              "NativeCommandFailureControls": 12,
+              "NativeSimulatorMetadataFailureControls": 14
+            },
+            "all_declarations": 26,
+            "selected_declarations": 26,
+            "skip_decorators": []
+          }
+        ]
+      },
+      {
+        "name": "simulator-lifecycle",
+        "count": 51,
+        "files": [
+          {
+            "path": "scripts/verification/ios-readiness/test_simulator_lifecycle.py",
+            "sha256": "2f7c957e47aa63804866a71e3b5a8566342c6f7deca2f80e57f0cd42af1a5a46",
+            "bytes": 75257,
+            "classes": {
+              "SyntheticPipe": 0,
+              "SyntheticChild": 0,
+              "SyntheticSelector": 0,
+              "LifecycleFixture": 0,
+              "SelectionAndInventoryControls": 5,
+              "ConstructionAndClosedCommandControls": 4,
+              "DurableCreationAndRecoveryControls": 10,
+              "CaptureAndPersistenceControls": 11,
+              "CustodyAndPostbuildBarrierControls": 8,
+              "CleanupAndReceiptControls": 8,
+              "WaitOnceAdapter": 0,
+              "HarnessSubprocessControls": 5
+            },
+            "all_declarations": 51,
+            "selected_declarations": 51,
+            "skip_decorators": []
+          }
+        ]
+      },
+      {
+        "name": "lifecycle-integration",
+        "count": 32,
+        "files": [
+          {
+            "path": "scripts/verification/ios-readiness/test_simulator_lifecycle_integration.py",
+            "sha256": "93d88840fcef436dbf45cc20de071e784daa4c6bc0e7683b623da8df7197100c",
+            "bytes": 56392,
+            "classes": {
+              "LifecycleRouteIntegration": 9,
+              "LifecycleBuildBoundaryIntegration": 6,
+              "LifecycleFinalizerIntegration": 14,
+              "LifecycleCompositionClosureIntegration": 3
+            },
+            "all_declarations": 32,
+            "selected_declarations": 32,
+            "skip_decorators": []
+          }
+        ]
+      },
+      {
+        "name": "toolchain-profile",
+        "count": 12,
+        "files": [
+          {
+            "path": "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+            "sha256": "aee9e30948813929393acedfaad5767fee2a47eb896a7eddd81db96208f14672",
+            "bytes": 12166,
+            "classes": {
+              "ProfileControls": 8,
+              "RunnerProfileControls": 4
+            },
+            "all_declarations": 12,
+            "selected_declarations": 12,
+            "skip_decorators": []
+          }
+        ]
+      },
+      {
+        "name": "foundation-profile",
+        "count": 20,
+        "files": [
+          {
+            "path": "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py",
+            "sha256": "613f255556f052d553a2e85dc7d84e4f137957f47732356449e22d6991f7fc53",
+            "bytes": 24627,
+            "classes": {
+              "FoundationToolchainControls": 13,
+              "FoundationToolchainHookControls": 7
+            },
+            "all_declarations": 20,
+            "selected_declarations": 20,
+            "skip_decorators": []
+          }
+        ]
+      },
+      {
+        "name": "functional-copy",
+        "count": 12,
+        "files": [
+          {
+            "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+            "sha256": "b58d9761b7c199f0ab7fd01c2c6614d2f49e0a71102fd54ff3f6783acfede7f0",
+            "bytes": 25344,
+            "classes": {
+              "L08FunctionalCopyTests": 12
+            },
+            "all_declarations": 12,
+            "selected_declarations": 12,
+            "skip_decorators": []
+          }
+        ]
+      },
+      {
+        "name": "composition",
+        "count": 55,
+        "files": [
+          {
+            "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py",
+            "sha256": "c04c7d4b1bb99207415beab77ae3b40bb3d5f59709970f7d844d5d14beab0fe5",
+            "bytes": 34661,
+            "classes": {
+              "SchemaControls": 16,
+              "SourceControls": 9,
+              "OwnedCopyControls": 8
+            },
+            "all_declarations": 33,
+            "selected_declarations": 33,
+            "skip_decorators": []
+          },
+          {
+            "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+            "sha256": "1ee5d5889d50b94a11d3e3d2ce881899c2434eb97489e953f546a2b7d344afd5",
+            "bytes": 28101,
+            "classes": {
+              "SourceControls": 9,
+              "OwnedFixtures": 0,
+              "IntegrationControls": 10,
+              "LauncherControls": 3
+            },
+            "all_declarations": 22,
+            "selected_declarations": 22,
+            "skip_decorators": []
+          }
+        ]
+      },
+      {
+        "name": "normal",
+        "count": 187,
+        "files": [
+          {
+            "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_header_diagnostics.py",
+            "sha256": "e2d835d4c7919c1448eebc51079d5f0673e71b3a1a8998ed97b616325e5bd06a",
+            "bytes": 5672,
+            "classes": {
+              "HeaderDiagnosticTests": 8
+            },
+            "all_declarations": 8,
+            "selected_declarations": 8,
+            "skip_decorators": []
+          },
+          {
+            "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_image_diagnostic_orchestration.py",
+            "sha256": "133fbc769d331581d7ad6e1154d5d1c6bf35bf9a853e28fc56bafa25049e5a8d",
+            "bytes": 22696,
+            "classes": {
+              "ImageDiagnosticOrchestrationTests": 18
+            },
+            "all_declarations": 18,
+            "selected_declarations": 18,
+            "skip_decorators": []
+          },
+          {
+            "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_image_diagnostics.py",
+            "sha256": "80f4ca531634bcb377d29803e58f5a99522e74e10402ce8221448b9d3ef3ab2c",
+            "bytes": 22341,
+            "classes": {
+              "ImageDiagnosticTests": 25
+            },
+            "all_declarations": 25,
+            "selected_declarations": 25,
+            "skip_decorators": []
+          },
+          {
+            "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_kernel_image_regions.py",
+            "sha256": "92c6218d227ec93e50d5e6df7a21274e8f1b469ddf14839e51c050c1d0f196e4",
+            "bytes": 12776,
+            "classes": {
+              "KernelImageRegionTests": 10
+            },
+            "all_declarations": 10,
+            "selected_declarations": 10,
+            "skip_decorators": []
+          },
+          {
+            "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+            "sha256": "af5c912dbc9655468d5d428b18f5a7c16d7b0f2fa421e14cf559ee674eaceb76",
+            "bytes": 42841,
+            "classes": {
+              "Record": 0,
+              "MarkerTests": 14,
+              "XCTestTests": 14,
+              "ExternalProvenanceTests": 15,
+              "CopiedSourceTests": 6,
+              "RunnerGuards": 29
+            },
+            "all_declarations": 78,
+            "selected_declarations": 78,
+            "skip_decorators": []
+          },
+          {
+            "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_owned_tool_paths.py",
+            "sha256": "f310d2af99449e4d8570dcc2eba8db4f1cb99c44574eeb1bfc32e447bcff6b58",
+            "bytes": 14851,
+            "classes": {
+              "OwnedToolPathTests": 16,
+              "DriverContextTests": 5
+            },
+            "all_declarations": 21,
+            "selected_declarations": 21,
+            "skip_decorators": []
+          },
+          {
+            "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_sample_literal_star.py",
+            "sha256": "e1cec3bb236fff0e518b153308e09cf850a865ee22e028201bcbe1d86346b814",
+            "bytes": 7046,
+            "classes": {
+              "SampleLiteralStarTests": 7
+            },
+            "all_declarations": 7,
+            "selected_declarations": 7,
+            "skip_decorators": []
+          },
+          {
+            "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_vmmap_command_failure.py",
+            "sha256": "97114b22407d470f0f71ab05d1f5b7e53158db0e8787150b0170a3d678aaaa50",
+            "bytes": 10171,
+            "classes": {
+              "VmmapCommandFailureTests": 7
+            },
+            "all_declarations": 7,
+            "selected_declarations": 7,
+            "skip_decorators": []
+          },
+          {
+            "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_xcode26_repetitions.py",
+            "sha256": "3e51f197304d1b7f16da4ee3269fcd48bf0fa6f0632d2dbc36ab395e68d5e66a",
+            "bytes": 5869,
+            "classes": {
+              "ObservedXcodeRepetitionTests": 13
+            },
+            "all_declarations": 13,
+            "selected_declarations": 13,
+            "skip_decorators": []
+          }
+        ]
+      },
+      {
+        "name": "native-adapter",
+        "count": 40,
+        "files": [
+          {
+            "path": "scripts/release/tests/test_native_continuation.py",
+            "sha256": "dac139c779e33b795aa6f36fc0f853ee071099b927c901a9b993323c6f6edb35",
+            "bytes": 55155,
+            "classes": {
+              "NativeScopeTest": 4,
+              "NativeArtifactTest": 12,
+              "NativeCleanupTest": 17,
+              "NativePreflightTest": 2,
+              "DirectLifecycleAdapterTest": 5
+            },
+            "all_declarations": 40,
+            "selected_declarations": 40,
+            "skip_decorators": []
+          }
+        ]
+      },
+      {
+        "name": "probe-cycle-guard",
+        "count": 1,
+        "files": [
+          {
+            "path": "scripts/release/tests/test_native_process_probe.py",
+            "sha256": "2730119da9d074d490a259669d3e9f9b4fec655da2045bfd9401ee44dc91e4ea",
+            "bytes": 43371,
+            "classes": {
+              "Clock": 0,
+              "Child": 0,
+              "Selector": 0,
+              "ProbeSourceContractTest": 6,
+              "ProbeBoundedCaptureTest": 17,
+              "ProbePrivacyAndCustodyTest": 8,
+              "ProbeLifecycleTest": 7,
+              "ProbeSimulatorGlueTest": 3,
+              "NativeMetadataObservationTest": 4
+            },
+            "all_declarations": 45,
+            "selected_declarations": 1,
+            "skip_decorators": []
+          }
+        ]
+      }
+    ],
+    "low_level_split": {
+      "synthetic": 46,
+      "reviewed_local_python_standins": 5
+    },
+    "probe": {
+      "whole_file_declarations": 45,
+      "selected_changed_method": 1,
+      "unchanged_unrequested": 44,
+      "unrequested_are_not_skips": true,
+      "entire_current_diff": "diff --git a/scripts/release/tests/test_native_process_probe.py b/scripts/release/tests/test_native_process_probe.py\nindex 79fa0ba5..149aa7d8 100644\n--- a/scripts/release/tests/test_native_process_probe.py\n+++ b/scripts/release/tests/test_native_process_probe.py\n@@ -123,7 +123,7 @@ class ProbeSourceContractTest(unittest.TestCase):\n     def test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels(self):\n         self.assertEqual(native.effective_scope(\"workflow_dispatch\", probe.SCOPE), probe.SCOPE)\n         self.assertEqual(native.effective_scope(\"pull_request\", probe.SCOPE), \"full\")\n-        self.assertEqual(native.CYCLES, {\"l08\": \"ios-readiness-19\", \"normal\": \"ios-readiness-20\"})\n+        self.assertEqual(native.CYCLES, {\"l08\": \"ios-readiness-21\", \"normal\": \"ios-readiness-22\"})\n         with self.assertRaisesRegex(RuntimeError, \"not-an-app-native-continuation\"):\n             native.Continuation(dict(GITHUB_EVENT_NAME=\"workflow_dispatch\", PARLOR_DISPATCH_SCOPE=probe.SCOPE))\n \n"
+    },
+    "exclusions": "Unchanged single-tap14, schema/bootstrap/consumer/lane/research/workflow/security/hygiene scopes and44 other probe methods are not scheduled. Directory hashing does not execute their tests.",
+    "affected_scope_basis": "Current source/diff and final independent source reports reopened. Companion/native metadata, lifecycle helper and glue, live Foundation repin/control closure, normal integration, adapter cleanup gate and sole A21/B22 source-contract method justify the selected commands."
+  },
+  "low_level_subprocess_review": {
+    "permitted_processes": "Exactly five source-bound local Python stand-ins under HarnessSubprocessControls, not xcrun/simctl, compiler, Gradle, XCTest, Parlor or libproc.",
+    "source": {
+      "path": "scripts/verification/ios-readiness/test_simulator_lifecycle.py",
+      "sha256": "2f7c957e47aa63804866a71e3b5a8566342c6f7deca2f80e57f0cd42af1a5a46",
+      "bytes": 75257
+    },
+    "observations": [
+      "Default test fixture denies Popen. Each stand-in launch first asserts the exact original closed inventory argv, cwd, environment and stream options, then substitutes only saved REAL_POPEN([sys.executable,'-B','-c',fixed_code],...).",
+      "The actual Popen handle is captured immediately. Normal helper paths drain and journal against that handle; fixture retirement is bounded wait0/terminate5/kill5, continues through failures, closes both pipes and emits an audit record.",
+      "Every successful stand-in method asserts helper reaping before fallback. The mandatory external review must additionally require fallback_retirement=False, empty cleanup_errors and an integer final return code.",
+      "The success case, diagnostic stderr case and stdout overflow use actual local pipes. TimeoutExpired and KeyboardInterrupt cases are injected at the wait seam, not observed native timeout or OS signal/cancellation evidence.",
+      "Audit arguments show sanitized <fixed-stand-in>, not actual full argv; code is bound by reviewed source. Synthetic PRIVATE sentinel data is not real user data and must not escape diagnostic journals."
+    ]
+  },
+  "invocation_and_finalization_review": {
+    "fixed_admission": "Linux/-B/sys.argv fixed checks, canonical exact TMPDIR and destination ownership, RUNNING outer receipt, exact packet command == receipt command == sys.orig_argv, reviewed helper hash and matching ROOT precede child execution.",
+    "helper_reuse": "One real imported helper module object, only manifest() and run_command() invoked. The embedded signal handler and finalizer use that same object's FINALIZING, LAUNCHING, STOPPING_CHILD, PENDING_SIGNALS and DEFERRED_SIGNALS; no globals-copy seam.",
+    "prohibited_calls_absent": "Neither helper main()/owned_destination() nor a native/build entrypoint is invoked; selection is a closed ten-command literal.",
+    "evidence": "Exclusive child logs and new JSON files. An attempted row is retained before log allocation/Popen. Original exit/error/shutdown fields are written before postflight; each available raw log is bounded-read and identified by SHA/size; complete before/after input manifests and their file identities are retained.",
+    "outcome": "Nonzero child, launch/wait/retirement exception,600s child timeout, interruption, pin drift, postflight drift, missing log/evidence, count mismatch, skips or evidence-write error cannot yield a successful aggregate exit. Shared pending/deferred signals also force failure.",
+    "test_summary_contract": "Each passing command must produce exactly one matching 'Ran N test(s) in ...' summary and exactly one bare OK, with no FAILED or OK(skipped...) summary. Static declarations are not reported as executions; raw logs remain authoritative.",
+    "cleanup_nonclaim": "Rows for simulator-lifecycle/foundation-profile/composition are always marked as requiring independent inspection, including success. Packet final results unconditionally retain REQUIRED_EXTERNAL_POSTRUN_RECONCILIATION and NOT_GRANTED_BY_THIS_PACKET_OR_ORDINARY_LANE_PASS.",
+    "final_write_boundary": "If writing final results itself fails, the wrapper must exit nonzero and print its failure report where possible. A partial/stale JSON PASS cannot override child/outer receipt failure, signals or missing evidence; reconciliation must consider all channels."
+  },
+  "mandatory_external_postrun": {
+    "state": "REQUIRED_ON_EVERY_OUTCOME_AND_NOT_CLOSED_BY_THIS_REVIEW",
+    "owner": "/root plus a different independent reviewer",
+    "gates_blocked_until_closed": [
+      "Source/inventory freeze",
+      "Native focused CI dispatch",
+      "Final combined CI qualification"
+    ],
+    "actual_logs": "Reopen every attempted raw log, original command exits/errors/shutdown records, before/after input manifests, final report and actual outer source/runner/cleanup receipt. All unattempted commands stay NOT_RUN.",
+    "standins": "Require all five distinct exact method audit records, native_runtime_proof=False, helper_reaped=True, reaped=True, type(return_code) is int, fallback_retirement=False and cleanup_errors=[]. Bind sanitized marker to fixed reviewed source and freshly verify every exact temporary path absent.",
+    "foundation": "Exactly one external allocation/cleanup pair expected from current20-test source. Bind exact path/device/inode/uid, cleanup PASS, parent_removed=True,workers_started=0 and fresh exact parent absence.",
+    "composition": "Exactly four pairs expected: outer launcher plus three nested None/ValueError/KeyboardInterrupt callback allocations. Markers may be embedded after unittest prefixes. Pair all actual rows by exact custody, verify cleanup PASS,parent_removed=True,workers_started=0 and fresh exact absence.",
+    "composition_results": "Reopen RESULTS:55 distinct discovered IDs, tests_run55, failures0,errors0,skipped[],native_execution=False and the two exact test source hashes c04c7d4b… /1ee5d588… from this packet.",
+    "no_shortcuts": "No startswith-only/exactly-one parser, no prefix deletion, no adoption, no ordinary scratch cleanup substituted for external allocation evidence. Missing/contrary/ambiguous rows, unresolved absence, timeout/interruption/escalation or cleanup failure withhold clearance and require owned follow-up evidence.",
+    "outer_cleanup": "The coordinator must preserve evidence, immediately run Gradle stop via the actual outer finalizer, remove only task-owned outputs/scratch when safe, check exact workers and record all failures. Existing external parent finalizers remain independently reconciled.",
+    "metadata_matches_inline": true
+  },
+  "prior_lane_observed": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/receipt.json",
+    "sha256": "03ade63d4dcaff14da734fd8ccf79732538bdb87c0ca542a902d6dd3e30f07af",
+    "bytes": 308099,
+    "cycle": "continuation-transport-contracts-04",
+    "status": "PASS",
+    "exit_code": 0,
+    "stop_exit_code": 0,
+    "outputs_before": [],
+    "removed_outputs": [
+      "shared/networking/build",
+      "shared/transport-p2p/build",
+      "shared/core/build",
+      "shared/storage/build",
+      "shared/engine/build",
+      "build",
+      "build-logic/convention/build"
+    ],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "artifact_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "cleanup_errors": [],
+    "source_changed_during_cycle": false,
+    "runner_changed_during_cycle": false,
+    "cleanup_completed_at": "2026-09-08T18:11:50.304473+00:00",
+    "deferred_signals": [],
+    "scratch_present": false,
+    "before_commit": "700243c3426db2da3855a9d3a3df58ada607ffc5",
+    "before_tree": "bd93099fe19ccf46e27eb67f22d694cc1ae074aa",
+    "source_identity_exactly_equal": true,
+    "runner_identity_exactly_equal": true
+  },
+  "prior_lane_boundary": "Read the finalized transport04 receipt and freshly observed its scratch absent. Underlying transport test-result review remains portability_review's ownership; its declaration/pass count is not independently upgraded here.",
+  "immutable_failures_retained": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-repair-controls-01/receipt.json",
+      "sha256": "d8d65f92d4d10014c62ca1b08a0e67ccbe697d6c72141815814b2a221c0f627d",
+      "bytes": 329686,
+      "cycle": "continuation-native-repair-controls-01",
+      "status": "FAIL",
+      "exit_code": 1,
+      "stop_exit_code": 0,
+      "outputs_before": [],
+      "removed_outputs": [],
+      "retained_outputs": [],
+      "remaining_outputs": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "artifact_workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "cleanup_errors": [],
+      "source_changed_during_cycle": false,
+      "runner_changed_during_cycle": false,
+      "cleanup_completed_at": "2026-09-08T12:35:16.870786+00:00",
+      "deferred_signals": [],
+      "scratch_present": false,
+      "before_commit": "4b8c586ce8d1228dda1420c470dff95dd599ddc6",
+      "before_tree": "b70b8d7478db79251796a500c40ef61dcdccbe92",
+      "source_identity_exactly_equal": true,
+      "runner_identity_exactly_equal": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-repair-control-command-01.json",
+      "sha256": "b693e857332f142818d65a3196c2f9f7725834975d66abb5ae3bab41a508b358",
+      "bytes": 30907
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-evidence-34244902185-independent-01.json",
+      "sha256": "cab3c048a245f5dfba84ce1e652005d05b47e1a5ad620181d2ca92a54f534413",
+      "bytes": 17595
+    }
+  ],
+  "readiness_boundary": {
+    "invocation_tests_executed_by_reviewer": 0,
+    "application_runtime_executed_by_reviewer": false,
+    "ci_dispatch_authorized": false,
+    "prior_native": "34244902185 attempt1 A19FAIL/runtimeNOT_RUN before application build/XCTest/libproc, secondary cleanupFAIL; B20NOT_RUN. No source review or local stand-in upgrades that evidence.",
+    "original_control_packet": "continuation-native-repair-controls-01 remains FAIL with exact immutable packet/receipt. This affected lifecycle packet does not rewrite it or rerun merely to turn that failure green.",
+    "current_verdict": "NOT READY: L08 interaction/functional storage/retained host/strict protection and real normal Parlor libproc evidence remain unresolved; final frozen combined qualification also remains.",
+    "separate_exclusions": "Physical-device/LAN/hardware protection, Store signing/publication/promotion and known app-identity collision, plus owner/legal/editorial/privacy requirements remain separate; none authorized."
+  }
+}

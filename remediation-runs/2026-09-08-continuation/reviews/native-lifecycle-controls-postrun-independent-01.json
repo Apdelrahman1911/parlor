@@ -1,0 +1,1704 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_FAILED_NATIVE_LIFECYCLE_CONTROL_PACKET_AND_EXTERNAL_CLEANUP_RECONCILIATION",
+  "reviewer": "/root/fixture_review",
+  "recorded_at": "2026-09-08T19:08:45.030Z",
+  "status": "CONTROL_PACKET_FAIL_PRESERVED_EXTERNAL_AND_ORDINARY_CLEANUP_INDEPENDENTLY_CLEARED",
+  "cycle": "continuation-native-lifecycle-controls-01",
+  "scope": "Postrun read-only reconciliation of actual ten-command Linux control packet. This closes only the mandatory original-cycle external/process cleanup gate, while preserving the failed aggregate and every test error. It is not source freeze, native/CI execution, application runtime or readiness authorization.",
+  "repository": {
+    "root": "/root/projects/Parlor/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "executed_head": "700243c3426db2da3855a9d3a3df58ada607ffc5",
+    "executed_tree": "bd93099fe19ccf46e27eb67f22d694cc1ae074aa",
+    "state": "Recorded held dirty source V2, not clean frozen qualification."
+  },
+  "execution_ownership": {
+    "executed_by": "/root",
+    "reviewer_tests_or_project_imports": 0,
+    "reviewer_builds_native_tools_or_cleanup": 0,
+    "reviewer_activity": "Read finalized raw logs/JSON/source, stdlib AST/hash/JSON inspections, exact no-adoption path absence and this one new additive report only. No active-cycle artifacts opened before root's explicit completion signal."
+  },
+  "reviewed_invocation": {
+    "packet": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-lifecycle-control-command-01.json",
+      "sha256": "2ce09a989775c8a99b4b4a98b68859fbd6c9eda926c1f56eae302318ef1c18cc"
+    },
+    "independent_packet_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-lifecycle-control-command-independent-01.json",
+      "sha256": "59bb266cb18fc37d0f055ef788e7bb6d3dcae8fcb79cd78140faf063bcc7b835"
+    },
+    "actual_outer_command_matches_packet": true,
+    "command_rows_equal_retained_results": true,
+    "original_stdout": {
+      "json_records": 11,
+      "printed_command_rows": 10,
+      "printed_original_rows_equal": true,
+      "printed_final_result_equal": true,
+      "printed_status": "FAIL",
+      "printed_errors": [],
+      "original_command_exit_codes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0
+      ]
+    },
+    "commands_scheduled": 10,
+    "commands_executed": 10,
+    "unattempted": [],
+    "child_order": "primary-errors, simulator-lifecycle, lifecycle-integration, toolchain-profile, foundation-profile, functional-copy, composition, normal, native-adapter, probe-cycle-guard",
+    "no_broad_retry_or_native_execution": "Ten reviewed fixed Linux control commands only. Normal failed at original inputs; later scopes still executed as specified by the packet. No application build, XCTest, simctl, Parlor libproc or Store operation occurred."
+  },
+  "actual_test_result": {
+    "declared": 436,
+    "verbose_executed_distinct": 436,
+    "passed": 415,
+    "failures": 1,
+    "errors": 20,
+    "skipped": 0,
+    "aggregate_status": "FAIL",
+    "aggregate_exit": 1,
+    "wholly_passing_scopes": 9,
+    "passing_methods_in_those_scopes": 249,
+    "normal": {
+      "declared": 187,
+      "discovered": 187,
+      "executed": 187,
+      "passed": 166,
+      "failures": 1,
+      "errors": 20,
+      "skipped": 0,
+      "exit_code": 1
+    },
+    "excluded_scopes": "The44 unchanged probe methods and the other explicitly excluded packet scopes were unrequested, not skipped. No Apple/native checks are counted.",
+    "method_identity_reconciliation": "Independently parsed all10 raw verbose logs, including progress entries with embedded marker output, and compared every ID to AST declarations from its recorded source bytes. All expected/current recorded-source IDs are distinct and equal: zero missing or extra IDs. Normal and composition actual discovered-ID records also match. Hashes below identify the complete sorted ID arrays without substituting aggregate Ran/OK lines for method evidence.",
+    "logs": [
+      {
+        "name": "primary-errors",
+        "identity": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/primary-errors.log",
+          "sha256": "649bb10000b0b28d01ede1364c40ad2374e77f816df6d71f9b755156905f77c8",
+          "bytes": 5259
+        },
+        "identity_matches_retained": true,
+        "command": {
+          "name": "primary-errors",
+          "command": [
+            "/usr/bin/python3",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-v",
+            "-s",
+            "scripts/verification/ios-readiness",
+            "-p",
+            "test_native_command_failures.py"
+          ],
+          "log": "primary-errors.log",
+          "status": "PASS",
+          "exit_code": 0
+        },
+        "command_matches_reviewed": true,
+        "expected": 26,
+        "declared": 26,
+        "declared_unique": 26,
+        "verbose": 26,
+        "verbose_unique": 26,
+        "declared_ids_sha256": "875ea0ad86a76e728858761089ae31e65c424417d57232588f4760672c02b836",
+        "verbose_ids_sha256": "875ea0ad86a76e728858761089ae31e65c424417d57232588f4760672c02b836",
+        "missing_ids": [],
+        "unexpected_ids": [],
+        "status_counts": {
+          "ok": 26
+        },
+        "nonpass": [],
+        "summaries": [
+          "Ran 26 tests in 1.241s"
+        ],
+        "result_summaries": [
+          "OK"
+        ]
+      },
+      {
+        "name": "simulator-lifecycle",
+        "identity": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/simulator-lifecycle.log",
+          "sha256": "1b52c07a34c978abc2ea98031079d203cd624900a9c7625735c8037933a0572d",
+          "bytes": 14098
+        },
+        "identity_matches_retained": true,
+        "command": {
+          "name": "simulator-lifecycle",
+          "command": [
+            "/usr/bin/python3",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-v",
+            "-s",
+            "scripts/verification/ios-readiness",
+            "-p",
+            "test_simulator_lifecycle.py"
+          ],
+          "log": "simulator-lifecycle.log",
+          "status": "PASS",
+          "exit_code": 0,
+          "external_cleanup_requires_independent_inspection": true
+        },
+        "command_matches_reviewed": true,
+        "expected": 51,
+        "declared": 51,
+        "declared_unique": 51,
+        "verbose": 51,
+        "verbose_unique": 51,
+        "declared_ids_sha256": "35ae6bfacd578918641c6d64a948108ddaaa7a2bfad528fd07fecac72d47942f",
+        "verbose_ids_sha256": "35ae6bfacd578918641c6d64a948108ddaaa7a2bfad528fd07fecac72d47942f",
+        "missing_ids": [],
+        "unexpected_ids": [],
+        "status_counts": {
+          "ok": 51
+        },
+        "nonpass": [],
+        "summaries": [
+          "Ran 51 tests in 3.080s"
+        ],
+        "result_summaries": [
+          "OK"
+        ]
+      },
+      {
+        "name": "lifecycle-integration",
+        "identity": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/lifecycle-integration.log",
+          "sha256": "af4d1503e796df44647932a60d70a08b5440bdf0fc6d4d7b279c6d8d9b8dc5e5",
+          "bytes": 7483
+        },
+        "identity_matches_retained": true,
+        "command": {
+          "name": "lifecycle-integration",
+          "command": [
+            "/usr/bin/python3",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-v",
+            "-s",
+            "scripts/verification/ios-readiness",
+            "-p",
+            "test_simulator_lifecycle_integration.py"
+          ],
+          "log": "lifecycle-integration.log",
+          "status": "PASS",
+          "exit_code": 0
+        },
+        "command_matches_reviewed": true,
+        "expected": 32,
+        "declared": 32,
+        "declared_unique": 32,
+        "verbose": 32,
+        "verbose_unique": 32,
+        "declared_ids_sha256": "5bd60f368e4551682af8e7b3e5cc3853c5c77bb987b0274b39e2f70a4e21cf83",
+        "verbose_ids_sha256": "5bd60f368e4551682af8e7b3e5cc3853c5c77bb987b0274b39e2f70a4e21cf83",
+        "missing_ids": [],
+        "unexpected_ids": [],
+        "status_counts": {
+          "ok": 32
+        },
+        "nonpass": [],
+        "summaries": [
+          "Ran 32 tests in 10.867s"
+        ],
+        "result_summaries": [
+          "OK"
+        ]
+      },
+      {
+        "name": "toolchain-profile",
+        "identity": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/toolchain-profile.log",
+          "sha256": "4e317da79580be161f95988829550bcd3a260c9bef7fcaa4091bea9d08b79418",
+          "bytes": 2139
+        },
+        "identity_matches_retained": true,
+        "command": {
+          "name": "toolchain-profile",
+          "command": [
+            "/usr/bin/python3",
+            "-B",
+            "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+            "-v"
+          ],
+          "log": "toolchain-profile.log",
+          "status": "PASS",
+          "exit_code": 0
+        },
+        "command_matches_reviewed": true,
+        "expected": 12,
+        "declared": 12,
+        "declared_unique": 12,
+        "verbose": 12,
+        "verbose_unique": 12,
+        "declared_ids_sha256": "1f67d7adbf95513e82ada106eed888c76238e8af0e2006b1beb0982358f6c02e",
+        "verbose_ids_sha256": "1f67d7adbf95513e82ada106eed888c76238e8af0e2006b1beb0982358f6c02e",
+        "missing_ids": [],
+        "unexpected_ids": [],
+        "status_counts": {
+          "ok": 12
+        },
+        "nonpass": [],
+        "summaries": [
+          "Ran 12 tests in 0.077s"
+        ],
+        "result_summaries": [
+          "OK"
+        ]
+      },
+      {
+        "name": "foundation-profile",
+        "identity": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/foundation-profile.log",
+          "sha256": "42082044dcaa16f228383c655d53b034859d451f4bd65ee1cea2c02c96bf7891",
+          "bytes": 4149
+        },
+        "identity_matches_retained": true,
+        "command": {
+          "name": "foundation-profile",
+          "command": [
+            "/usr/bin/python3",
+            "-B",
+            "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py"
+          ],
+          "log": "foundation-profile.log",
+          "status": "PASS",
+          "exit_code": 0,
+          "external_cleanup_requires_independent_inspection": true
+        },
+        "command_matches_reviewed": true,
+        "expected": 20,
+        "declared": 20,
+        "declared_unique": 20,
+        "verbose": 20,
+        "verbose_unique": 20,
+        "declared_ids_sha256": "367ce0712a84a388054c7d98d2b586c6723b9d63b2e69bc6a643def5eeafdff4",
+        "verbose_ids_sha256": "367ce0712a84a388054c7d98d2b586c6723b9d63b2e69bc6a643def5eeafdff4",
+        "missing_ids": [],
+        "unexpected_ids": [],
+        "status_counts": {
+          "ok": 20
+        },
+        "nonpass": [],
+        "summaries": [
+          "Ran 20 tests in 1.668s"
+        ],
+        "result_summaries": [
+          "OK"
+        ]
+      },
+      {
+        "name": "functional-copy",
+        "identity": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/functional-copy.log",
+          "sha256": "0d7d7eff25a88141614c231a899802b4b492ea5ed3ac88bae879719a53ed664f",
+          "bytes": 2543
+        },
+        "identity_matches_retained": true,
+        "command": {
+          "name": "functional-copy",
+          "command": [
+            "/usr/bin/python3",
+            "-B",
+            "-m",
+            "unittest",
+            "discover",
+            "-v",
+            "-s",
+            "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02",
+            "-p",
+            "test_l08_functional_copy.py"
+          ],
+          "log": "functional-copy.log",
+          "status": "PASS",
+          "exit_code": 0
+        },
+        "command_matches_reviewed": true,
+        "expected": 12,
+        "declared": 12,
+        "declared_unique": 12,
+        "verbose": 12,
+        "verbose_unique": 12,
+        "declared_ids_sha256": "b19c5822fe8eb83962656559b4173555a4d84318cf69a62715f046b0a39b1b8b",
+        "verbose_ids_sha256": "b19c5822fe8eb83962656559b4173555a4d84318cf69a62715f046b0a39b1b8b",
+        "missing_ids": [],
+        "unexpected_ids": [],
+        "status_counts": {
+          "ok": 12
+        },
+        "nonpass": [],
+        "summaries": [
+          "Ran 12 tests in 0.097s"
+        ],
+        "result_summaries": [
+          "OK"
+        ]
+      },
+      {
+        "name": "composition",
+        "identity": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/composition.log",
+          "sha256": "818a3de073f3c79e1d037372627b7c9704b03acef97e1a532e8431075c2eae0c",
+          "bytes": 19632
+        },
+        "identity_matches_retained": true,
+        "command": {
+          "name": "composition",
+          "command": [
+            "/usr/bin/python3",
+            "-B",
+            "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py"
+          ],
+          "log": "composition.log",
+          "status": "PASS",
+          "exit_code": 0,
+          "external_cleanup_requires_independent_inspection": true
+        },
+        "command_matches_reviewed": true,
+        "expected": 55,
+        "declared": 55,
+        "declared_unique": 55,
+        "verbose": 55,
+        "verbose_unique": 55,
+        "declared_ids_sha256": "fae71116e2866024685f570a55bdd88da8246e96e834e545bc8d4385e55b0ef8",
+        "verbose_ids_sha256": "fae71116e2866024685f570a55bdd88da8246e96e834e545bc8d4385e55b0ef8",
+        "missing_ids": [],
+        "unexpected_ids": [],
+        "status_counts": {
+          "ok": 55
+        },
+        "nonpass": [],
+        "summaries": [
+          "Ran 55 tests in 5.700s"
+        ],
+        "result_summaries": [
+          "OK"
+        ]
+      },
+      {
+        "name": "normal",
+        "identity": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/normal.log",
+          "sha256": "6371a4a2b780b0bd3775ec0322357cb3882bea798951f5cf4c5731e06374d6d4",
+          "bytes": 131207
+        },
+        "identity_matches_retained": true,
+        "command": {
+          "name": "normal",
+          "command": [
+            "/usr/bin/python3",
+            "-B",
+            "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py"
+          ],
+          "log": "normal.log",
+          "status": "FAIL",
+          "exit_code": 1
+        },
+        "command_matches_reviewed": true,
+        "expected": 187,
+        "declared": 187,
+        "declared_unique": 187,
+        "verbose": 187,
+        "verbose_unique": 187,
+        "declared_ids_sha256": "0d3c8eea247b0f7d2c789ea1574655b22ebcd1117b64752690d83fe60f1f6851",
+        "verbose_ids_sha256": "0d3c8eea247b0f7d2c789ea1574655b22ebcd1117b64752690d83fe60f1f6851",
+        "missing_ids": [],
+        "unexpected_ids": [],
+        "status_counts": {
+          "ok": 166,
+          "FAIL": 1,
+          "ERROR": 20
+        },
+        "nonpass": [
+          {
+            "id": "test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_run_keeps_original_failure_and_all_finalization_even_when_diagnostics_succeed",
+            "status": "FAIL",
+            "line": 23
+          },
+          {
+            "id": "test_normal_launch_controls.RunnerGuards.test_allocation_canonicalizes_parent_before_mkdtemp_and_retains_exact_identity",
+            "status": "ERROR",
+            "line": 99
+          },
+          {
+            "id": "test_normal_launch_controls.RunnerGuards.test_allocation_receipt_failure_does_not_strand_owned_directory",
+            "status": "ERROR",
+            "line": 100
+          },
+          {
+            "id": "test_normal_launch_controls.RunnerGuards.test_cache_link_cleanup_does_not_remove_dependency_cache",
+            "status": "ERROR",
+            "line": 101
+          },
+          {
+            "id": "test_normal_launch_controls.RunnerGuards.test_changed_cache_link_preserves_allocation",
+            "status": "ERROR",
+            "line": 102
+          },
+          {
+            "id": "test_normal_launch_controls.RunnerGuards.test_control_drift_invalidates_overall_result",
+            "status": "ERROR",
+            "line": 103
+          },
+          {
+            "id": "test_normal_launch_controls.RunnerGuards.test_deferred_interrupt_after_mkdtemp_keeps_finalizer_ownership",
+            "status": "ERROR",
+            "line": 104
+          },
+          {
+            "id": "test_normal_launch_controls.RunnerGuards.test_existing_allocation_cannot_be_replaced",
+            "status": "ERROR",
+            "line": 106
+          },
+          {
+            "id": "test_normal_launch_controls.RunnerGuards.test_failed_gradle_stop_does_not_skip_device_workers_and_file_cleanup",
+            "status": "ERROR",
+            "line": 107
+          },
+          {
+            "id": "test_normal_launch_controls.RunnerGuards.test_failed_xcode_attempt_immediately_stops_gradle",
+            "status": "ERROR",
+            "line": 110
+          },
+          {
+            "id": "test_normal_launch_controls.RunnerGuards.test_finalization_removes_only_exact_task_allocation",
+            "status": "ERROR",
+            "line": 111
+          },
+          {
+            "id": "test_normal_launch_controls.RunnerGuards.test_interrupted_xcode_attempt_immediately_stops_gradle",
+            "status": "ERROR",
+            "line": 113
+          },
+          {
+            "id": "test_normal_launch_controls.RunnerGuards.test_mkdtemp_failure_has_no_allocation_or_cleanup_target",
+            "status": "ERROR",
+            "line": 114
+          },
+          {
+            "id": "test_normal_launch_controls.RunnerGuards.test_owned_name_failure_retains_preowner_cleanup_identity",
+            "status": "ERROR",
+            "line": 117
+          },
+          {
+            "id": "test_normal_launch_controls.RunnerGuards.test_owner_constructor_failure_retains_preworker_cleanup_identity",
+            "status": "ERROR",
+            "line": 118
+          },
+          {
+            "id": "test_normal_launch_controls.RunnerGuards.test_preexisting_original_output_is_preserved_not_deleted",
+            "status": "ERROR",
+            "line": 119
+          },
+          {
+            "id": "test_normal_launch_controls.RunnerGuards.test_secondary_path_attestation_failure_is_not_cleanup_success",
+            "status": "ERROR",
+            "line": 121
+          },
+          {
+            "id": "test_normal_launch_controls.RunnerGuards.test_source_drift_invalidates_overall_result",
+            "status": "ERROR",
+            "line": 122
+          },
+          {
+            "id": "test_normal_launch_controls.RunnerGuards.test_timed_out_xcode_attempt_immediately_stops_gradle",
+            "status": "ERROR",
+            "line": 124
+          },
+          {
+            "id": "test_normal_launch_controls.RunnerGuards.test_unexecuted_notice_verification_cannot_be_overall_pass",
+            "status": "ERROR",
+            "line": 125
+          },
+          {
+            "id": "test_normal_launch_controls.RunnerGuards.test_unknown_holders_preserve_allocation_and_fail_cleanup",
+            "status": "ERROR",
+            "line": 126
+          }
+        ],
+        "summaries": [
+          "Ran 187 tests in 0.729s"
+        ],
+        "result_summaries": [
+          "FAILED (failures=1, errors=20)"
+        ]
+      },
+      {
+        "name": "native-adapter",
+        "identity": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/native-adapter.log",
+          "sha256": "9e7cfd954921bc197091a2e10022cf54e155b52c61a85465f72763404210e152",
+          "bytes": 8604
+        },
+        "identity_matches_retained": true,
+        "command": {
+          "name": "native-adapter",
+          "command": [
+            "/usr/bin/python3",
+            "-B",
+            "-m",
+            "unittest",
+            "-v",
+            "scripts/release/tests/test_native_continuation.py"
+          ],
+          "log": "native-adapter.log",
+          "status": "PASS",
+          "exit_code": 0
+        },
+        "command_matches_reviewed": true,
+        "expected": 40,
+        "declared": 40,
+        "declared_unique": 40,
+        "verbose": 40,
+        "verbose_unique": 40,
+        "declared_ids_sha256": "f37f76e866bb56baf180e516b9ef824d1eeba23fcce87144789760b72b88f471",
+        "verbose_ids_sha256": "f37f76e866bb56baf180e516b9ef824d1eeba23fcce87144789760b72b88f471",
+        "missing_ids": [],
+        "unexpected_ids": [],
+        "status_counts": {
+          "ok": 40
+        },
+        "nonpass": [],
+        "summaries": [
+          "Ran 40 tests in 0.166s"
+        ],
+        "result_summaries": [
+          "OK"
+        ]
+      },
+      {
+        "name": "probe-cycle-guard",
+        "identity": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/probe-cycle-guard.log",
+          "sha256": "b6c42af9add74670e9e1abdb64cdd0e27199b7cc8768d73977200e4636fca6e0",
+          "bytes": 326
+        },
+        "identity_matches_retained": true,
+        "command": {
+          "name": "probe-cycle-guard",
+          "command": [
+            "/usr/bin/python3",
+            "-B",
+            "-m",
+            "unittest",
+            "-v",
+            "scripts.release.tests.test_native_process_probe.ProbeSourceContractTest.test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels"
+          ],
+          "log": "probe-cycle-guard.log",
+          "status": "PASS",
+          "exit_code": 0
+        },
+        "command_matches_reviewed": true,
+        "expected": 1,
+        "declared": 1,
+        "declared_unique": 1,
+        "verbose": 1,
+        "verbose_unique": 1,
+        "declared_ids_sha256": "a82c34a94691f9d87d4ee518f1d32687b0667d54d71279fc86427846e4dd66e4",
+        "verbose_ids_sha256": "a82c34a94691f9d87d4ee518f1d32687b0667d54d71279fc86427846e4dd66e4",
+        "missing_ids": [],
+        "unexpected_ids": [],
+        "status_counts": {
+          "ok": 1
+        },
+        "nonpass": [],
+        "summaries": [
+          "Ran 1 test in 0.000s"
+        ],
+        "result_summaries": [
+          "OK"
+        ]
+      }
+    ],
+    "normal_driver": [
+      {
+        "kind": "PURE_CONTROL_TESTS_NOT_APP_RUNTIME",
+        "phase": "before",
+        "expected": 187,
+        "declared_count": 187,
+        "discovered_count": 187,
+        "all_ids_distinct": true,
+        "ids_equal": true,
+        "ids_equal_recorded_source": true,
+        "ids_sha256": "0d3c8eea247b0f7d2c789ea1574655b22ebcd1117b64752690d83fe60f1f6851",
+        "input_count": 93,
+        "inputs_all_bound": true,
+        "actual_imports": {
+          "__main__": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+          "artifact_inventory": "/root/projects/Parlor/parlor/scripts/verification/ios-readiness/artifact_inventory.py",
+          "copied_sources": "/root/projects/Parlor/parlor/scripts/verification/ios-readiness/copied_sources.py",
+          "external_image_diagnostics": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_diagnostics.py",
+          "external_image_provenance": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/external_image_provenance.py",
+          "instrument_storage": "/root/projects/Parlor/parlor/scripts/verification/ios-readiness/instrument_storage.py",
+          "kernel_image_regions": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_regions.py",
+          "l08_copy": "/root/projects/Parlor/parlor/scripts/verification/ios-readiness/l08_copy.py",
+          "l08_receipts": "/root/projects/Parlor/parlor/scripts/verification/ios-readiness/l08_receipts.py",
+          "native_failure_receipts": "/root/projects/Parlor/parlor/scripts/verification/ios-readiness/native_failure_receipts.py",
+          "native_readiness_receipts": "/root/projects/Parlor/parlor/scripts/verification/ios-readiness/native_readiness_receipts.py",
+          "normal_launch_receipts": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_launch_receipts.py",
+          "normal_source_copy": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/normal_source_copy.py",
+          "os_action_receipts": "/root/projects/Parlor/parlor/scripts/verification/ios-readiness/os_action_receipts.py",
+          "os_pane_receipts": "/root/projects/Parlor/parlor/scripts/verification/ios-readiness/os_pane_receipts.py",
+          "os_preference_receipts": "/root/projects/Parlor/parlor/scripts/verification/ios-readiness/os_preference_receipts.py",
+          "owned_lane": "/root/projects/Parlor/parlor/scripts/verification/ios-readiness/owned_lane.py",
+          "prerequisite_receipts": "/root/projects/Parlor/parlor/scripts/verification/ios-readiness/prerequisite_receipts.py",
+          "probe_validation": "/root/projects/Parlor/parlor/scripts/verification/ios-readiness/probe_validation.py",
+          "public_interaction_receipts": "/root/projects/Parlor/parlor/scripts/verification/ios-readiness/public_interaction_receipts.py",
+          "run_ios_readiness": "/root/projects/Parlor/parlor/scripts/verification/ios-readiness/run_ios_readiness.py",
+          "run_normal_ios_launch": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+          "secondary_fifo": "/root/projects/Parlor/parlor/scripts/verification/ios-readiness/secondary_fifo.py",
+          "simulator_entitlements": "/root/projects/Parlor/parlor/scripts/verification/ios-readiness/simulator_entitlements.py",
+          "simulator_lifecycle": "/root/projects/Parlor/parlor/scripts/verification/ios-readiness/simulator_lifecycle.py",
+          "simulator_signing": "/root/projects/Parlor/parlor/scripts/verification/ios-readiness/simulator_signing.py",
+          "test_header_diagnostics": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_header_diagnostics.py",
+          "test_image_diagnostic_orchestration": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_image_diagnostic_orchestration.py",
+          "test_image_diagnostics": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_image_diagnostics.py",
+          "test_kernel_image_regions": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_kernel_image_regions.py",
+          "test_normal_launch_controls": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+          "test_owned_tool_paths": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_owned_tool_paths.py",
+          "test_sample_literal_star": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_sample_literal_star.py",
+          "test_vmmap_command_failure": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_vmmap_command_failure.py",
+          "test_xcode26_repetitions": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_xcode26_repetitions.py",
+          "toolchain_profiles": "/root/projects/Parlor/parlor/scripts/verification/ios-readiness/toolchain_profiles.py"
+        },
+        "imports_all_bound": true
+      },
+      {
+        "kind": "PURE_CONTROL_TESTS_NOT_APP_RUNTIME",
+        "phase": "after",
+        "input_count": 93,
+        "inputs_equal_before": true,
+        "inputs_all_bound": true,
+        "tests": 187,
+        "failures": 1,
+        "errors": 20,
+        "skips": 0,
+        "source_unchanged": true
+      }
+    ],
+    "composition_driver": [
+      {
+        "line": 68,
+        "discovered_count": 55,
+        "distinct_discovered_count": 55,
+        "ids_equal_recorded_source": true,
+        "ids_sha256": "fae71116e2866024685f570a55bdd88da8246e96e834e545bc8d4385e55b0ef8",
+        "tests_run": 55,
+        "failures": 0,
+        "errors": 0,
+        "skipped": [],
+        "native_execution": false,
+        "input_tests": [
+          {
+            "path": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py",
+            "sha256": "c04c7d4b1bb99207415beab77ae3b40bb3d5f59709970f7d844d5d14beab0fe5"
+          },
+          {
+            "path": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+            "sha256": "1ee5d5889d50b94a11d3e3d2ce881899c2434eb97489e953f546a2b7d344afd5"
+          }
+        ],
+        "input_tests_bound": true
+      }
+    ]
+  },
+  "failure_analysis": {
+    "open_execution_defect": "Normal legacy synthetic Lane fixture was incomplete after lifecycle integration; the original cycle remains failed, even though the failure is in control setup rather than application execution.",
+    "raw_failure_count": 1,
+    "raw_error_count": 20,
+    "common_error": "AttributeError: 'Lane' object has no attribute 'lifecycle'",
+    "locations": [
+      "test_normal_launch_controls.py RunnerGuards.lane creates Lane through object.__new__ without __init__ lifecycle state.",
+      "run_normal_ios_launch.py:436 run_xctest and :832 finalize read the missing field.",
+      "test_image_diagnostic_orchestration.py:330 expected cleanup PASS but received FAIL through the same inherited fixture."
+    ],
+    "original_error_blocks": [
+      {
+        "header": "ERROR: test_allocation_canonicalizes_parent_before_mkdtemp_and_retains_exact_identity (test_normal_launch_controls.RunnerGuards.test_allocation_canonicalizes_parent_before_mkdtemp_and_retains_exact_identity)",
+        "traceback": [
+          "Traceback (most recent call last):",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 514, in test_allocation_canonicalizes_parent_before_mkdtemp_and_retains_exact_identity",
+          "    self.finish(lane)",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 498, in finish",
+          "    lane.finalize()",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\", line 832, in finalize",
+          "    if self.lifecycle is not None:",
+          "       ^^^^^^^^^^^^^^",
+          "AttributeError: 'Lane' object has no attribute 'lifecycle'",
+          ""
+        ]
+      },
+      {
+        "header": "ERROR: test_allocation_receipt_failure_does_not_strand_owned_directory (test_normal_launch_controls.RunnerGuards.test_allocation_receipt_failure_does_not_strand_owned_directory)",
+        "traceback": [
+          "Traceback (most recent call last):",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 557, in test_allocation_receipt_failure_does_not_strand_owned_directory",
+          "    self.finish(lane)",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 498, in finish",
+          "    lane.finalize()",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\", line 832, in finalize",
+          "    if self.lifecycle is not None:",
+          "       ^^^^^^^^^^^^^^",
+          "AttributeError: 'Lane' object has no attribute 'lifecycle'",
+          ""
+        ]
+      },
+      {
+        "header": "ERROR: test_cache_link_cleanup_does_not_remove_dependency_cache (test_normal_launch_controls.RunnerGuards.test_cache_link_cleanup_does_not_remove_dependency_cache)",
+        "traceback": [
+          "Traceback (most recent call last):",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 754, in test_cache_link_cleanup_does_not_remove_dependency_cache",
+          "    self.finish(lane)",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 498, in finish",
+          "    lane.finalize()",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\", line 832, in finalize",
+          "    if self.lifecycle is not None:",
+          "       ^^^^^^^^^^^^^^",
+          "AttributeError: 'Lane' object has no attribute 'lifecycle'",
+          ""
+        ]
+      },
+      {
+        "header": "ERROR: test_changed_cache_link_preserves_allocation (test_normal_launch_controls.RunnerGuards.test_changed_cache_link_preserves_allocation)",
+        "traceback": [
+          "Traceback (most recent call last):",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 766, in test_changed_cache_link_preserves_allocation",
+          "    self.finish(lane)",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 498, in finish",
+          "    lane.finalize()",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\", line 832, in finalize",
+          "    if self.lifecycle is not None:",
+          "       ^^^^^^^^^^^^^^",
+          "AttributeError: 'Lane' object has no attribute 'lifecycle'",
+          ""
+        ]
+      },
+      {
+        "header": "ERROR: test_control_drift_invalidates_overall_result (test_normal_launch_controls.RunnerGuards.test_control_drift_invalidates_overall_result)",
+        "traceback": [
+          "Traceback (most recent call last):",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 790, in test_control_drift_invalidates_overall_result",
+          "    lane.finalize()",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\", line 832, in finalize",
+          "    if self.lifecycle is not None:",
+          "       ^^^^^^^^^^^^^^",
+          "AttributeError: 'Lane' object has no attribute 'lifecycle'",
+          ""
+        ]
+      },
+      {
+        "header": "ERROR: test_deferred_interrupt_after_mkdtemp_keeps_finalizer_ownership (test_normal_launch_controls.RunnerGuards.test_deferred_interrupt_after_mkdtemp_keeps_finalizer_ownership)",
+        "traceback": [
+          "Traceback (most recent call last):",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 543, in test_deferred_interrupt_after_mkdtemp_keeps_finalizer_ownership",
+          "    self.finish(lane)",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 498, in finish",
+          "    lane.finalize()",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\", line 832, in finalize",
+          "    if self.lifecycle is not None:",
+          "       ^^^^^^^^^^^^^^",
+          "AttributeError: 'Lane' object has no attribute 'lifecycle'",
+          ""
+        ]
+      },
+      {
+        "header": "ERROR: test_existing_allocation_cannot_be_replaced (test_normal_launch_controls.RunnerGuards.test_existing_allocation_cannot_be_replaced)",
+        "traceback": [
+          "Traceback (most recent call last):",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 608, in test_existing_allocation_cannot_be_replaced",
+          "    self.finish(lane)",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 498, in finish",
+          "    lane.finalize()",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\", line 832, in finalize",
+          "    if self.lifecycle is not None:",
+          "       ^^^^^^^^^^^^^^",
+          "AttributeError: 'Lane' object has no attribute 'lifecycle'",
+          ""
+        ]
+      },
+      {
+        "header": "ERROR: test_failed_gradle_stop_does_not_skip_device_workers_and_file_cleanup (test_normal_launch_controls.RunnerGuards.test_failed_gradle_stop_does_not_skip_device_workers_and_file_cleanup)",
+        "traceback": [
+          "Traceback (most recent call last):",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 725, in test_failed_gradle_stop_does_not_skip_device_workers_and_file_cleanup",
+          "    self.finish(lane)",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 498, in finish",
+          "    lane.finalize()",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\", line 832, in finalize",
+          "    if self.lifecycle is not None:",
+          "       ^^^^^^^^^^^^^^",
+          "AttributeError: 'Lane' object has no attribute 'lifecycle'",
+          ""
+        ]
+      },
+      {
+        "header": "ERROR: test_failed_xcode_attempt_immediately_stops_gradle (test_normal_launch_controls.RunnerGuards.test_failed_xcode_attempt_immediately_stops_gradle)",
+        "traceback": [
+          "Traceback (most recent call last):",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 646, in test_failed_xcode_attempt_immediately_stops_gradle",
+          "    lane.run_xctest()",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\", line 436, in run_xctest",
+          "    if self.lifecycle is not None:",
+          "       ^^^^^^^^^^^^^^",
+          "AttributeError: 'Lane' object has no attribute 'lifecycle'",
+          ""
+        ]
+      },
+      {
+        "header": "ERROR: test_finalization_removes_only_exact_task_allocation (test_normal_launch_controls.RunnerGuards.test_finalization_removes_only_exact_task_allocation)",
+        "traceback": [
+          "Traceback (most recent call last):",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 713, in test_finalization_removes_only_exact_task_allocation",
+          "    self.finish(lane)",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 498, in finish",
+          "    lane.finalize()",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\", line 832, in finalize",
+          "    if self.lifecycle is not None:",
+          "       ^^^^^^^^^^^^^^",
+          "AttributeError: 'Lane' object has no attribute 'lifecycle'",
+          ""
+        ]
+      },
+      {
+        "header": "ERROR: test_interrupted_xcode_attempt_immediately_stops_gradle (test_normal_launch_controls.RunnerGuards.test_interrupted_xcode_attempt_immediately_stops_gradle)",
+        "traceback": [
+          "Traceback (most recent call last):",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 697, in test_interrupted_xcode_attempt_immediately_stops_gradle",
+          "    lane.run_xctest()",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\", line 436, in run_xctest",
+          "    if self.lifecycle is not None:",
+          "       ^^^^^^^^^^^^^^",
+          "AttributeError: 'Lane' object has no attribute 'lifecycle'",
+          ""
+        ]
+      },
+      {
+        "header": "ERROR: test_mkdtemp_failure_has_no_allocation_or_cleanup_target (test_normal_launch_controls.RunnerGuards.test_mkdtemp_failure_has_no_allocation_or_cleanup_target)",
+        "traceback": [
+          "Traceback (most recent call last):",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 596, in test_mkdtemp_failure_has_no_allocation_or_cleanup_target",
+          "    self.finish(lane)",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 498, in finish",
+          "    lane.finalize()",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\", line 832, in finalize",
+          "    if self.lifecycle is not None:",
+          "       ^^^^^^^^^^^^^^",
+          "AttributeError: 'Lane' object has no attribute 'lifecycle'",
+          ""
+        ]
+      },
+      {
+        "header": "ERROR: test_owned_name_failure_retains_preowner_cleanup_identity (test_normal_launch_controls.RunnerGuards.test_owned_name_failure_retains_preowner_cleanup_identity)",
+        "traceback": [
+          "Traceback (most recent call last):",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 583, in test_owned_name_failure_retains_preowner_cleanup_identity",
+          "    self.finish(lane)",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 498, in finish",
+          "    lane.finalize()",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\", line 832, in finalize",
+          "    if self.lifecycle is not None:",
+          "       ^^^^^^^^^^^^^^",
+          "AttributeError: 'Lane' object has no attribute 'lifecycle'",
+          ""
+        ]
+      },
+      {
+        "header": "ERROR: test_owner_constructor_failure_retains_preworker_cleanup_identity (test_normal_launch_controls.RunnerGuards.test_owner_constructor_failure_retains_preworker_cleanup_identity)",
+        "traceback": [
+          "Traceback (most recent call last):",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 570, in test_owner_constructor_failure_retains_preworker_cleanup_identity",
+          "    self.finish(lane)",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 498, in finish",
+          "    lane.finalize()",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\", line 832, in finalize",
+          "    if self.lifecycle is not None:",
+          "       ^^^^^^^^^^^^^^",
+          "AttributeError: 'Lane' object has no attribute 'lifecycle'",
+          ""
+        ]
+      },
+      {
+        "header": "ERROR: test_preexisting_original_output_is_preserved_not_deleted (test_normal_launch_controls.RunnerGuards.test_preexisting_original_output_is_preserved_not_deleted)",
+        "traceback": [
+          "Traceback (most recent call last):",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 803, in test_preexisting_original_output_is_preserved_not_deleted",
+          "    self.finish(lane)",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 498, in finish",
+          "    lane.finalize()",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\", line 832, in finalize",
+          "    if self.lifecycle is not None:",
+          "       ^^^^^^^^^^^^^^",
+          "AttributeError: 'Lane' object has no attribute 'lifecycle'",
+          ""
+        ]
+      },
+      {
+        "header": "ERROR: test_secondary_path_attestation_failure_is_not_cleanup_success (test_normal_launch_controls.RunnerGuards.test_secondary_path_attestation_failure_is_not_cleanup_success)",
+        "traceback": [
+          "Traceback (most recent call last):",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 742, in test_secondary_path_attestation_failure_is_not_cleanup_success",
+          "    self.finish(lane)",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 498, in finish",
+          "    lane.finalize()",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\", line 832, in finalize",
+          "    if self.lifecycle is not None:",
+          "       ^^^^^^^^^^^^^^",
+          "AttributeError: 'Lane' object has no attribute 'lifecycle'",
+          ""
+        ]
+      },
+      {
+        "header": "ERROR: test_source_drift_invalidates_overall_result (test_normal_launch_controls.RunnerGuards.test_source_drift_invalidates_overall_result)",
+        "traceback": [
+          "Traceback (most recent call last):",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 782, in test_source_drift_invalidates_overall_result",
+          "    lane.finalize()",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\", line 832, in finalize",
+          "    if self.lifecycle is not None:",
+          "       ^^^^^^^^^^^^^^",
+          "AttributeError: 'Lane' object has no attribute 'lifecycle'",
+          ""
+        ]
+      },
+      {
+        "header": "ERROR: test_timed_out_xcode_attempt_immediately_stops_gradle (test_normal_launch_controls.RunnerGuards.test_timed_out_xcode_attempt_immediately_stops_gradle)",
+        "traceback": [
+          "Traceback (most recent call last):",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 705, in test_timed_out_xcode_attempt_immediately_stops_gradle",
+          "    lane.run_xctest()",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\", line 436, in run_xctest",
+          "    if self.lifecycle is not None:",
+          "       ^^^^^^^^^^^^^^",
+          "AttributeError: 'Lane' object has no attribute 'lifecycle'",
+          ""
+        ]
+      },
+      {
+        "header": "ERROR: test_unexecuted_notice_verification_cannot_be_overall_pass (test_normal_launch_controls.RunnerGuards.test_unexecuted_notice_verification_cannot_be_overall_pass)",
+        "traceback": [
+          "Traceback (most recent call last):",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 688, in test_unexecuted_notice_verification_cannot_be_overall_pass",
+          "    self.finish(lane)",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 498, in finish",
+          "    lane.finalize()",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\", line 832, in finalize",
+          "    if self.lifecycle is not None:",
+          "       ^^^^^^^^^^^^^^",
+          "AttributeError: 'Lane' object has no attribute 'lifecycle'",
+          ""
+        ]
+      },
+      {
+        "header": "ERROR: test_unknown_holders_preserve_allocation_and_fail_cleanup (test_normal_launch_controls.RunnerGuards.test_unknown_holders_preserve_allocation_and_fail_cleanup)",
+        "traceback": [
+          "Traceback (most recent call last):",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 735, in test_unknown_holders_preserve_allocation_and_fail_cleanup",
+          "    self.finish(lane)",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\", line 498, in finish",
+          "    lane.finalize()",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\", line 832, in finalize",
+          "    if self.lifecycle is not None:",
+          "       ^^^^^^^^^^^^^^",
+          "AttributeError: 'Lane' object has no attribute 'lifecycle'",
+          ""
+        ]
+      },
+      {
+        "header": "FAIL: test_run_keeps_original_failure_and_all_finalization_even_when_diagnostics_succeed (test_image_diagnostic_orchestration.ImageDiagnosticOrchestrationTests.test_run_keeps_original_failure_and_all_finalization_even_when_diagnostics_succeed)",
+        "traceback": [
+          "Traceback (most recent call last):",
+          "  File \"/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_image_diagnostic_orchestration.py\", line 330, in test_run_keeps_original_failure_and_all_finalization_even_when_diagnostics_succeed",
+          "    self.assertEqual('PASS', lane.receipt['cleanup_status'])",
+          "AssertionError: 'PASS' != 'FAIL'",
+          "- PASS",
+          "+ FAIL",
+          "",
+          ""
+        ]
+      }
+    ],
+    "subsequent_source_change_boundary": {
+      "held_original_test_sha256": "af5c912dbc9655468d5d428b18f5a7c16d7b0f2fa421e14cf559ee674eaceb76",
+      "later_observed_test_sha256": "3da543bd92beecda95bdfbd53632a3a49ca95a6054f47a17dd03dff6460d6a5c",
+      "rationale": "Root authorized only the separately authored/reviewed legacy fixture initializer after this reviewer captured all255 held hashes. Original-source method enumeration used matching git700243 bytes when the current fixture changed; that recovery matched the recorded af5c digest exactly.",
+      "source_recovery": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+          "sha256": "af5c912dbc9655468d5d428b18f5a7c16d7b0f2fa421e14cf559ee674eaceb76",
+          "current_sha256": "3da543bd92beecda95bdfbd53632a3a49ca95a6054f47a17dd03dff6460d6a5c"
+        }
+      ],
+      "not_an_upgrade": "The fixture correction and affected normal187 recheck have separate authors, review and evidence. Neither is imported into this old failed result; their outcome requires its own independent postrun review."
+    }
+  },
+  "binding_reconciliation": {
+    "initial_held_snapshot": {
+      "recorded_at": "2026-09-08T18:52:00.399648+00:00",
+      "receipt_sha256": "0e0cfaf79422d1627622ab0cae21b535a923e77d270d638cfacb8ea0f2f72e05",
+      "input_count": 255,
+      "unique_input_count": 255,
+      "before_after_inputs_equal": true,
+      "current_input_mismatches": [],
+      "pin_count": 87,
+      "pin_mismatches": [],
+      "source_before_after_equal": true,
+      "source_count": 828,
+      "source_current_mismatches": [],
+      "runner_before_after_equal": true,
+      "runner_current_mismatches": [],
+      "runner_manifest": {
+        "manifest": [
+          [
+            "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+            "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc"
+          ]
+        ],
+        "manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912"
+      },
+      "source_metadata": {
+        "commit": "700243c3426db2da3855a9d3a3df58ada607ffc5",
+        "tree": "bd93099fe19ccf46e27eb67f22d694cc1ae074aa",
+        "branch": "fix/local-readiness-2026-09-07",
+        "tracked_status": "M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py\n M remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py\n M scripts/ci/NATIVE_CONTINUATION.md\n M scripts/ci/native_continuation.py\n M scripts/release/tests/test_native_continuation.py\n M scripts/release/tests/test_native_process_probe.py\n M scripts/verification/ios-readiness/test_foundation_toolchain_binding.py\n M scripts/verification/ios-readiness/test_native_command_failures.py\n M scripts/verification/ios-readiness/test_toolchain_profiles.py",
+        "diff_sha256": "6c6e32a20e6d6b404d197634ff40e27424b070e01248334bfddca6a5b6542190",
+        "source_manifest_sha256": "6fc7298b3b927aee32359326ef68f75a0a3d9928e73e47b7d5a3f82c4828fe15"
+      },
+      "packet_command_matches": true,
+      "current_git": [
+        "700243c3426db2da3855a9d3a3df58ada607ffc5",
+        "bd93099fe19ccf46e27eb67f22d694cc1ae074aa"
+      ]
+    },
+    "later_complete_git_metadata_observation": {
+      "at": "2026-09-08T18:53:28.203708+00:00",
+      "current_diff_sha256": "6c6e32a20e6d6b404d197634ff40e27424b070e01248334bfddca6a5b6542190",
+      "recorded_diff_sha256": "6c6e32a20e6d6b404d197634ff40e27424b070e01248334bfddca6a5b6542190",
+      "diff_equal": true,
+      "tracked_status_equal": true
+    },
+    "input_manifests": "Both raw before/after files are48,524bytes SHA8d1fb2104c9e7768ec1a81aa2bf8238d0ee38fb4e8392ecbfc206388528524a7;255unique rows exactly equal. All87 reviewed pins matched and all255 current files matched at18:52:00Z before authorized correction.",
+    "full_source_manifest_count": 828,
+    "full_source_unique": true,
+    "source_manifest_digest_verified": true,
+    "runner_manifest_digest_verified": true,
+    "source_scope": "Reopened actual outer identity() and runner_identity() implementation. Entire recorded source identity—not only commit/tree—matches before/after. It includes commit/tree/branch/tracked status/full diff hash/828 source rows, with archived remediation excluded and separately covered by the255-input control closure. Runner manifest binds actual run_gradle_cycle.py1b9e8825….",
+    "no_clean_source_inference": "Evidence is working-tree bound. Historical tree/commit and retained current source match do not make the source frozen or qualify later edits."
+  },
+  "external_cleanup": {
+    "result": "CLEARED_FOR_THIS_COMPLETED_FAILED_CYCLE_ONLY",
+    "original_required_state_preserved": {
+      "status": "REQUIRED_EXTERNAL_POSTRUN_RECONCILIATION",
+      "clearance": "NOT_GRANTED_BY_THIS_PACKET_OR_ORDINARY_LANE_PASS",
+      "required_on_every_outcome": true,
+      "automatic_marker_parsing": false,
+      "blocks": "Source/inventory freeze and native/final CI dispatch until additive independent reconciliation closes actual process/allocation evidence"
+    },
+    "clearance_message_to_root": "At19:03:14Z verified prior-cycle external/ordinary cleanup and permitted only the independently approved affected normal187 recheck. No source freeze/native/final CI authorization granted.",
+    "parser_scope": "Enumerated every marker occurrence anywhere in each raw log, not startswith-only. Allfive stand-in markers are after unittest progress prefixes; one nested composition allocation is also mid-line. No extra/missing/ambiguous allocation or cleanup rows.",
+    "cardinality": {
+      "simulator-lifecycle": {
+        "HARNESS_SUBPROCESS_CONTROL": 5,
+        "PARLOR_APP_FOUNDATION_CONTROL_ALLOCATION": 0,
+        "PARLOR_APP_FOUNDATION_CONTROL_CLEANUP": 0,
+        "PARLOR_APP_FOUNDATION_CONTROL_RESULTS": 0
+      },
+      "foundation-profile": {
+        "HARNESS_SUBPROCESS_CONTROL": 0,
+        "PARLOR_APP_FOUNDATION_CONTROL_ALLOCATION": 1,
+        "PARLOR_APP_FOUNDATION_CONTROL_CLEANUP": 1,
+        "PARLOR_APP_FOUNDATION_CONTROL_RESULTS": 0
+      },
+      "composition": {
+        "HARNESS_SUBPROCESS_CONTROL": 0,
+        "PARLOR_APP_FOUNDATION_CONTROL_ALLOCATION": 4,
+        "PARLOR_APP_FOUNDATION_CONTROL_CLEANUP": 4,
+        "PARLOR_APP_FOUNDATION_CONTROL_RESULTS": 1
+      }
+    },
+    "standin_test_ids_exact": true,
+    "standin_test_ids_unique": true,
+    "standin_pids_unique": true,
+    "standin_closed_values": true,
+    "standins": [
+      {
+        "line": 42,
+        "column": 189,
+        "record": {
+          "arguments": [
+            "-B",
+            "-c",
+            "<fixed-stand-in>"
+          ],
+          "cleanup_errors": [],
+          "fallback_retirement": false,
+          "helper_reaped": true,
+          "interpreter": "/usr/bin/python3",
+          "native_runtime_proof": false,
+          "pid": 22538,
+          "reaped": true,
+          "return_code": 0,
+          "temporary": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/scratch/tmp/parlor-lifecycle-unit-dfo60t2p",
+          "test": "test_simulator_lifecycle.HarnessSubprocessControls.test_harness_exit_zero_with_real_diagnostic_stderr_remains_failed"
+        },
+        "clear_conditions": true,
+        "exact_current_path_exists": false,
+        "exact_current_path_is_symlink": false,
+        "exact_current_path_absent": true
+      },
+      {
+        "line": 44,
+        "column": 253,
+        "record": {
+          "arguments": [
+            "-B",
+            "-c",
+            "<fixed-stand-in>"
+          ],
+          "cleanup_errors": [],
+          "fallback_retirement": false,
+          "helper_reaped": true,
+          "interpreter": "/usr/bin/python3",
+          "native_runtime_proof": false,
+          "pid": 22539,
+          "reaped": true,
+          "return_code": -15,
+          "temporary": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/scratch/tmp/parlor-lifecycle-unit-nc838mo5",
+          "test": "test_simulator_lifecycle.HarnessSubprocessControls.test_harness_injected_wait_cancellation_retires_closed_pipe_sleeping_handle_without_global_signal"
+        },
+        "clear_conditions": true,
+        "exact_current_path_exists": false,
+        "exact_current_path_is_symlink": false,
+        "exact_current_path_absent": true
+      },
+      {
+        "line": 46,
+        "column": 237,
+        "record": {
+          "arguments": [
+            "-B",
+            "-c",
+            "<fixed-stand-in>"
+          ],
+          "cleanup_errors": [],
+          "fallback_retirement": false,
+          "helper_reaped": true,
+          "interpreter": "/usr/bin/python3",
+          "native_runtime_proof": false,
+          "pid": 22540,
+          "reaped": true,
+          "return_code": -15,
+          "temporary": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/scratch/tmp/parlor-lifecycle-unit-374li_6s",
+          "test": "test_simulator_lifecycle.HarnessSubprocessControls.test_harness_injected_wait_deadline_retires_closed_pipe_sleeping_handle_without_long_wait"
+        },
+        "clear_conditions": true,
+        "exact_current_path_exists": false,
+        "exact_current_path_is_symlink": false,
+        "exact_current_path_absent": true
+      },
+      {
+        "line": 48,
+        "column": 203,
+        "record": {
+          "arguments": [
+            "-B",
+            "-c",
+            "<fixed-stand-in>"
+          ],
+          "cleanup_errors": [],
+          "fallback_retirement": false,
+          "helper_reaped": true,
+          "interpreter": "/usr/bin/python3",
+          "native_runtime_proof": false,
+          "pid": 22541,
+          "reaped": true,
+          "return_code": -15,
+          "temporary": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/scratch/tmp/parlor-lifecycle-unit-hfyyq6ic",
+          "test": "test_simulator_lifecycle.HarnessSubprocessControls.test_harness_real_stdout_flood_is_bounded_and_the_exact_writer_is_reaped"
+        },
+        "clear_conditions": true,
+        "exact_current_path_exists": false,
+        "exact_current_path_is_symlink": false,
+        "exact_current_path_absent": true
+      },
+      {
+        "line": 50,
+        "column": 195,
+        "record": {
+          "arguments": [
+            "-B",
+            "-c",
+            "<fixed-stand-in>"
+          ],
+          "cleanup_errors": [],
+          "fallback_retirement": false,
+          "helper_reaped": true,
+          "interpreter": "/usr/bin/python3",
+          "native_runtime_proof": false,
+          "pid": 22542,
+          "reaped": true,
+          "return_code": 0,
+          "temporary": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/scratch/tmp/parlor-lifecycle-unit-axvo6lax",
+          "test": "test_simulator_lifecycle.HarnessSubprocessControls.test_harness_real_success_drains_both_streams_and_reaps_exact_handle"
+        },
+        "clear_conditions": true,
+        "exact_current_path_exists": false,
+        "exact_current_path_is_symlink": false,
+        "exact_current_path_absent": true
+      }
+    ],
+    "standin_interpretation": "Five actual Linux Python -B -c stand-ins only, bound to reviewed source2f7c957e…. All helper_reaped/reaped true, fallback_retirement false, cleanup_errors empty, native_runtime_proof false, exact temp absent. Return codes0, -15, -15, -15,0 are actual source-bound direct-handle outcomes; negative codes belong to expected helper retirement. TimeoutExpired and KeyboardInterrupt were injected at wait, not observed native failures or global signal tests. Sanitized <fixed-stand-in> is not a full argv trace.",
+    "foundation_paths_unique": true,
+    "foundation_closed_types": true,
+    "foundation_parent_pairs": [
+      {
+        "log": "foundation-profile",
+        "path": "/tmp/parlor-app-foundation-controls-zxj24xhs",
+        "allocation_line": 1,
+        "allocation_column": 0,
+        "allocation": {
+          "path": "/tmp/parlor-app-foundation-controls-zxj24xhs",
+          "device": 27,
+          "inode": 668660,
+          "uid": 0
+        },
+        "matching_cleanup_count": 1,
+        "cleanup": [
+          {
+            "line": 27,
+            "column": 0,
+            "record": {
+              "status": "PASS",
+              "parent": "/tmp/parlor-app-foundation-controls-zxj24xhs",
+              "workers_started": 0,
+              "parent_removed": true,
+              "custody": {
+                "device": 27,
+                "inode": 668660,
+                "uid": 0
+              }
+            }
+          }
+        ],
+        "custody_match": true,
+        "cleanup_pass": true,
+        "exact_current_path_exists": false,
+        "exact_current_path_is_symlink": false,
+        "exact_current_path_absent": true
+      },
+      {
+        "log": "composition",
+        "path": "/tmp/parlor-app-foundation-controls-b67fryuu",
+        "allocation_line": 1,
+        "allocation_column": 0,
+        "allocation": {
+          "path": "/tmp/parlor-app-foundation-controls-b67fryuu",
+          "device": 27,
+          "inode": 669368,
+          "uid": 0
+        },
+        "matching_cleanup_count": 1,
+        "cleanup": [
+          {
+            "line": 69,
+            "column": 0,
+            "record": {
+              "status": "PASS",
+              "parent": "/tmp/parlor-app-foundation-controls-b67fryuu",
+              "workers_started": 0,
+              "parent_removed": true,
+              "custody": {
+                "device": 27,
+                "inode": 669368,
+                "uid": 0
+              }
+            }
+          }
+        ],
+        "custody_match": true,
+        "cleanup_pass": true,
+        "exact_current_path_exists": false,
+        "exact_current_path_is_symlink": false,
+        "exact_current_path_absent": true
+      },
+      {
+        "log": "composition",
+        "path": "/tmp/parlor-app-foundation-controls-9otc2_m2",
+        "allocation_line": 45,
+        "allocation_column": 237,
+        "allocation": {
+          "path": "/tmp/parlor-app-foundation-controls-9otc2_m2",
+          "device": 27,
+          "inode": 669985,
+          "uid": 0
+        },
+        "matching_cleanup_count": 1,
+        "cleanup": [
+          {
+            "line": 46,
+            "column": 0,
+            "record": {
+              "status": "PASS",
+              "parent": "/tmp/parlor-app-foundation-controls-9otc2_m2",
+              "workers_started": 0,
+              "parent_removed": true,
+              "custody": {
+                "device": 27,
+                "inode": 669985,
+                "uid": 0
+              }
+            }
+          }
+        ],
+        "custody_match": true,
+        "cleanup_pass": true,
+        "exact_current_path_exists": false,
+        "exact_current_path_is_symlink": false,
+        "exact_current_path_absent": true
+      },
+      {
+        "log": "composition",
+        "path": "/tmp/parlor-app-foundation-controls-79m1unub",
+        "allocation_line": 47,
+        "allocation_column": 0,
+        "allocation": {
+          "path": "/tmp/parlor-app-foundation-controls-79m1unub",
+          "device": 27,
+          "inode": 669988,
+          "uid": 0
+        },
+        "matching_cleanup_count": 1,
+        "cleanup": [
+          {
+            "line": 48,
+            "column": 0,
+            "record": {
+              "status": "PASS",
+              "parent": "/tmp/parlor-app-foundation-controls-79m1unub",
+              "workers_started": 0,
+              "parent_removed": true,
+              "custody": {
+                "device": 27,
+                "inode": 669988,
+                "uid": 0
+              }
+            }
+          }
+        ],
+        "custody_match": true,
+        "cleanup_pass": true,
+        "exact_current_path_exists": false,
+        "exact_current_path_is_symlink": false,
+        "exact_current_path_absent": true
+      },
+      {
+        "log": "composition",
+        "path": "/tmp/parlor-app-foundation-controls-y02lpodj",
+        "allocation_line": 49,
+        "allocation_column": 0,
+        "allocation": {
+          "path": "/tmp/parlor-app-foundation-controls-y02lpodj",
+          "device": 27,
+          "inode": 669991,
+          "uid": 0
+        },
+        "matching_cleanup_count": 1,
+        "cleanup": [
+          {
+            "line": 50,
+            "column": 0,
+            "record": {
+              "status": "PASS",
+              "parent": "/tmp/parlor-app-foundation-controls-y02lpodj",
+              "workers_started": 0,
+              "parent_removed": true,
+              "custody": {
+                "device": 27,
+                "inode": 669991,
+                "uid": 0
+              }
+            }
+          }
+        ],
+        "custody_match": true,
+        "cleanup_pass": true,
+        "exact_current_path_exists": false,
+        "exact_current_path_is_symlink": false,
+        "exact_current_path_absent": true
+      }
+    ],
+    "foundation_interpretation": "One Foundation-profile parent plus four composition parents: outer parent and three source-declared None/ValueError/KeyboardInterrupt callback fixtures. Exact path/device/inode/uid pairing; every cleanup PASS,parent_removed true,workers_started integer0; each exact parent freshly absent. Synthetic callbacks are not OS signal proof. No adoption, deletion, prefix scan or shared-process authority used by this reviewer.",
+    "composition_result": "Actual RESULTS55distinct discovered IDs,55executed,0failures/errors,skipped[],native_execution false, and exact current two test-source hashes reconcile with raw verbose outcomes."
+  },
+  "ordinary_cleanup": {
+    "started_at": "2026-09-08T18:30:19.063003+00:00",
+    "status": "FAIL",
+    "exit_code": 1,
+    "finished_at": "2026-09-08T18:30:49.758263+00:00",
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-08T18:30:50.457576+00:00",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "artifact_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "outputs_before": [],
+    "removed_outputs": [],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "cleanup_completed_at": "2026-09-08T18:30:50.549665+00:00",
+    "cleanup_errors": [],
+    "deferred_signals": [],
+    "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership.",
+    "stop_log": "No Gradle daemons are running.\n",
+    "stop_completed_seconds_after_child": 0.699313,
+    "fresh_observation": {
+      "at": "2026-09-08T19:03:14.499788+00:00",
+      "scratch_absent": true,
+      "live_output_paths_checked": 16,
+      "present_outputs": []
+    },
+    "stop_order": "Reopened actual outer finally: Gradle stop is first cleanup action after recording finished_at, before simulator/worker/report/output cleanup. Raw stop.log says No Gradle daemons are running.; actual stop exited0 and completed0.699313s after child finish. No Gradle clean/build task or new native operation was invoked by the control packet.",
+    "jdk21": {
+      "home": "/usr/lib/jvm/java-21-openjdk-amd64",
+      "specification_version": "21",
+      "javac_version": "21.0.12",
+      "java_log_sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+      "javac_log_sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755"
+    },
+    "jdk_probe_logs_match_recorded_hashes": true,
+    "other_processes": "Both cycle-owned worker censuses retained empty termination/remaining lists. No unrelated process or global cache was touched by this reviewer. No PID absence used as authority to adopt or signal a resource.",
+    "scope_limit": "Ordinary scratch cleanup is not substituted for the separate external Foundation/stand-in clearance above."
+  },
+  "retained_artifact_identities": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/artifact-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3,
+      "uid": 0,
+      "links": 1,
+      "canonical_regular_single_link": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/composition.log",
+      "sha256": "818a3de073f3c79e1d037372627b7c9704b03acef97e1a532e8431075c2eae0c",
+      "bytes": 19632,
+      "uid": 0,
+      "links": 1,
+      "canonical_regular_single_link": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/foundation-profile.log",
+      "sha256": "42082044dcaa16f228383c655d53b034859d451f4bd65ee1cea2c02c96bf7891",
+      "bytes": 4149,
+      "uid": 0,
+      "links": 1,
+      "canonical_regular_single_link": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/functional-copy.log",
+      "sha256": "0d7d7eff25a88141614c231a899802b4b492ea5ed3ac88bae879719a53ed664f",
+      "bytes": 2543,
+      "uid": 0,
+      "links": 1,
+      "canonical_regular_single_link": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/gradle.log",
+      "sha256": "903ab483932b21790b955d45f2a2e3e72efc6a022f0db2cf75bbb676a8243da0",
+      "bytes": 19647,
+      "uid": 0,
+      "links": 1,
+      "canonical_regular_single_link": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/java-toolchain.log",
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+      "bytes": 2026,
+      "uid": 0,
+      "links": 1,
+      "canonical_regular_single_link": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/javac-toolchain.log",
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755",
+      "bytes": 14,
+      "uid": 0,
+      "links": 1,
+      "canonical_regular_single_link": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/lifecycle-integration.log",
+      "sha256": "af4d1503e796df44647932a60d70a08b5440bdf0fc6d4d7b279c6d8d9b8dc5e5",
+      "bytes": 7483,
+      "uid": 0,
+      "links": 1,
+      "canonical_regular_single_link": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/native-adapter.log",
+      "sha256": "9e7cfd954921bc197091a2e10022cf54e155b52c61a85465f72763404210e152",
+      "bytes": 8604,
+      "uid": 0,
+      "links": 1,
+      "canonical_regular_single_link": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/native-lifecycle-command-exits.json",
+      "sha256": "038dc5e91953b5828a470e0bc0f4804329cf3eefdf7b84e4c7eecd7d4d3aa9e3",
+      "bytes": 3357,
+      "uid": 0,
+      "links": 1,
+      "canonical_regular_single_link": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/native-lifecycle-inputs-after.json",
+      "sha256": "8d1fb2104c9e7768ec1a81aa2bf8238d0ee38fb4e8392ecbfc206388528524a7",
+      "bytes": 48524,
+      "uid": 0,
+      "links": 1,
+      "canonical_regular_single_link": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/native-lifecycle-inputs-before.json",
+      "sha256": "8d1fb2104c9e7768ec1a81aa2bf8238d0ee38fb4e8392ecbfc206388528524a7",
+      "bytes": 48524,
+      "uid": 0,
+      "links": 1,
+      "canonical_regular_single_link": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/native-lifecycle-log-identities.json",
+      "sha256": "91e53e7dcc6a18ec46569ce79d972d46b7c6e11f53c1846308f489df5c467273",
+      "bytes": 2590,
+      "uid": 0,
+      "links": 1,
+      "canonical_regular_single_link": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/native-lifecycle-results.json",
+      "sha256": "1c9e01a72a4a5283e76c554a711c9c2b55e5bf94806a43475a710ed3c432a09c",
+      "bytes": 17199,
+      "uid": 0,
+      "links": 1,
+      "canonical_regular_single_link": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/normal.log",
+      "sha256": "6371a4a2b780b0bd3775ec0322357cb3882bea798951f5cf4c5731e06374d6d4",
+      "bytes": 131207,
+      "uid": 0,
+      "links": 1,
+      "canonical_regular_single_link": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/primary-errors.log",
+      "sha256": "649bb10000b0b28d01ede1364c40ad2374e77f816df6d71f9b755156905f77c8",
+      "bytes": 5259,
+      "uid": 0,
+      "links": 1,
+      "canonical_regular_single_link": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/probe-cycle-guard.log",
+      "sha256": "b6c42af9add74670e9e1abdb64cdd0e27199b7cc8768d73977200e4636fca6e0",
+      "bytes": 326,
+      "uid": 0,
+      "links": 1,
+      "canonical_regular_single_link": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/receipt.json",
+      "sha256": "0e0cfaf79422d1627622ab0cae21b535a923e77d270d638cfacb8ea0f2f72e05",
+      "bytes": 347060,
+      "uid": 0,
+      "links": 1,
+      "canonical_regular_single_link": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/simulator-lifecycle.log",
+      "sha256": "1b52c07a34c978abc2ea98031079d203cd624900a9c7625735c8037933a0572d",
+      "bytes": 14098,
+      "uid": 0,
+      "links": 1,
+      "canonical_regular_single_link": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31,
+      "uid": 0,
+      "links": 1,
+      "canonical_regular_single_link": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/test-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3,
+      "uid": 0,
+      "links": 1,
+      "canonical_regular_single_link": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/toolchain-profile.log",
+      "sha256": "4e317da79580be161f95988829550bcd3a260c9bef7fcaa4091bea9d08b79418",
+      "bytes": 2139,
+      "uid": 0,
+      "links": 1,
+      "canonical_regular_single_link": true
+    }
+  ],
+  "controller_record_review": {
+    "identity": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-lifecycle-controls-01-controller-reconciliation.json",
+      "sha256": "f3865028920ec98fb258832efbf20f24c8a8abe8079b579176204158639aba73",
+      "bytes": 25764
+    },
+    "status": "FAILED_CONTROLS_PRESERVED_EXTERNAL_CLEANUP_RECONCILED",
+    "counts_match": true,
+    "scope_counts_match": true,
+    "log_identities_match": true,
+    "standin_records_match": true,
+    "external_parent_records_match": true,
+    "normal_failing_ids_match": true,
+    "normal_error_ids_match": true,
+    "limitations": [
+      "Original lane/controller/result remains FAIL; no freeze/native/CI authorization here.",
+      "Current fixture-only correction is separately reviewed and requires affected recheck; this audit never relabels failed old input bytes.",
+      "Recorded handle reaping is source-bound to fixed Python stand-ins. Read-only PID absence does not confer authority over reused/unrelated processes."
+    ]
+  },
+  "findings": [
+    {
+      "severity": "EXECUTION_FAILURE_PRESERVED",
+      "scope": "normal187",
+      "detail": "1failure+20errors at old fixture; exact IDs and tracebacks retained. Aggregate must remain FAIL. A separate reviewed fixture-only correction and affected recheck are required."
+    }
+  ],
+  "postrun_clearance_limits": [
+    "This additive report closes the mandatory original-cycle process/external-allocation reconciliation without modifying original packet/result/receipt REQUIRED states or FAIL statuses.",
+    "No successful harness/test count is normal Debug Parlor libproc, Apple ABI, L08 functional-storage/retained-host or strict-protection runtime evidence.",
+    "A19 failed runtimeNOT_RUN/cleanupFAIL and B20NOT_RUN remain preserved; physical-device, LAN/keybag/backup/restore/accessibility, Store identity/signing/publication, and separate owner/legal/privacy/editorial requirements remain unresolved/outside scope.",
+    "No source/inventory freeze or native/final CI execution is authorized by this failed packet or cleanup clearance. Corrective recheck, current evidence reconciliation and fresh frozen-source/control/platform bindings remain separate."
+  ],
+  "readiness": "NOT_READY"
+}

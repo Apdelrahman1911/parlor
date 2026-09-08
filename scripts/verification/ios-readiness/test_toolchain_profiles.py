@@ -144,7 +144,7 @@ class RunnerProfileControls(unittest.TestCase):
                 selected = dict(device, udid='22222222-2222-3333-4444-555555555555') if changed_uuid else device
                 def require(_args, _label, **options):
                     options['output'].write_text(json.dumps(dict(devices={runtime: [selected]})))
-                lane = SimpleNamespace(temporary=temporary, destination=evidence, uuid=DEVICE,
+                lane = SimpleNamespace(temporary=temporary, destination=evidence, uuid=DEVICE, lifecycle=None,
                     receipt={'owned_device_name': device['name']}, toolchain=profiles.profile(profiles.QUALIFIED),
                     require=require)
                 if runtime.endswith('26-2') and not changed_uuid:
@@ -164,7 +164,7 @@ class RunnerProfileControls(unittest.TestCase):
                     name='owned-name', udid=DEVICE, state='Shutdown')]})).encode(), b'')
                 process = SimpleNamespace(Popen=Mock(return_value=child), PIPE=-1)
                 owner = Mock()
-                namespace = dict(subprocess=process, json=json, re=re, ROOT=ROOT, env={}, uuid=DEVICE,
+                namespace = dict(subprocess=process, json=json, re=re, ROOT=ROOT, env={}, uuid=DEVICE, lifecycle=None,
                     toolchain=profiles.profile(profiles.QUALIFIED), receipt={'commands': [], 'owned_device_name': 'owned-name'},
                     dest=destination, owner=owner, now=lambda: 'synthetic-time', save=lambda: None,
                     defer_parent_signals=nullcontext, write_json=lambda _path, _data: None)
@@ -188,7 +188,7 @@ class RunnerProfileControls(unittest.TestCase):
                 self.assertIn("toolchain['runtime']", text)
                 self.assertIn('developer_environment(', text)
                 self.assertIn('selected_toolchain(', text)
-        self.assertIn('[TOOLCHAIN_HELPER, BINDING]', companion)
+        self.assertIn('[TOOLCHAIN_HELPER, LIFECYCLE_HELPER, *LIFECYCLE_TESTS, BINDING]', companion)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,3106 @@
+{
+  "schema_version": 1,
+  "kind": "POST700243_REVIEWED_LIFECYCLE_SOURCE_AND_COMPLETED_EVIDENCE_EXACT_PRIMARY_DELIVERY_ALLOWLIST",
+  "author": "/root/evidence_audit",
+  "started_at": "2026-09-08T19:19:31.219682+00:00",
+  "recorded_at": "2026-09-08T19:19:32.527532+00:00",
+  "status": "PRIMARY_EXACT_DELIVERY_CONTENT_HELD_REQUIRES_INDEPENDENT_SAFETY_REVIEW_AND_FINAL_ADDITIVE_LEDGER_CLOSURE",
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "700243c3426db2da3855a9d3a3df58ada607ffc5",
+    "tree": "bd93099fe19ccf46e27eb67f22d694cc1ae074aa",
+    "meaning": "700243 is prior evidence-only delivery, not this future source/inventory freeze. Root owns normal push and remote confirmation; no remote request performed by this auditor.",
+    "prior_delivery_receipts": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/post5f35-evidence-delivery-controller-01.json",
+        "bytes": 2648,
+        "sha256": "fd55d188fd3e0f423e14dfde14b896602a2ea5f42a8e1289f38706bdcf275bce"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/post5f35-evidence-delivery-independent-01.json",
+        "bytes": 12173,
+        "sha256": "e7d4edbeb557ddaccf9ddf11462fe9ea8014b012148f910f6f91c6f770107011"
+      }
+    ]
+  },
+  "scope": {
+    "exact_paths_only": true,
+    "selected_source_control_doc_test_inputs": 18,
+    "directory_expansion_cutoffs": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04",
+        "files": 29
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01",
+        "files": 22
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01",
+        "files": 7
+      }
+    ],
+    "future_files_under_these_directories_not_automatically_allowed": true,
+    "self_excluded": "remediation-runs/2026-09-08-continuation/reviews/post700243-lifecycle-delivery-safety-01.json",
+    "final_pending_ledger_and_postrun_closures_not_implicitly_approved": true,
+    "source_cutoff": "Current18 exact independently reviewed inputs including one-line normal legacy fixture3da543bd after actual187 recheck. Historical V2 holds and failed436 remain unchanged.",
+    "other_tracked_changes_observed_and_not_selected": [],
+    "no_staging_or_git_mutation_performed": true
+  },
+  "totals": {
+    "payload_files": 107,
+    "payload_bytes": 2835097,
+    "tracked_modified": 14,
+    "untracked": 93,
+    "required_ignored_evidence_files": 47,
+    "manifest_sha256": "1a5e4520ee6f593d54a8f91da102bd70f6a9983057a62eb28b55ca1eae6159ea",
+    "manifest_encoding": "Rows in files-array whole-path string order, each[path,git_mode,sha256,bytes], compact ensure_ascii UTF-8 JSON without newline; report itself excluded."
+  },
+  "groups": [
+    {
+      "group": "completed-linux-cycle:continuation-native-lifecycle-controls-01",
+      "files": 22,
+      "bytes": 684418,
+      "required_ignored_files": 14
+    },
+    {
+      "group": "completed-linux-cycle:continuation-normal-lifecycle-recheck-01",
+      "files": 7,
+      "bytes": 419878,
+      "required_ignored_files": 4
+    },
+    {
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "files": 29,
+      "bytes": 445903,
+      "required_ignored_files": 26
+    },
+    {
+      "group": "held-source-control-or-evidence-review",
+      "files": 25,
+      "bytes": 557437,
+      "required_ignored_files": 0
+    },
+    {
+      "group": "prior700243-delivery-receipt",
+      "files": 2,
+      "bytes": 14821,
+      "required_ignored_files": 0
+    },
+    {
+      "group": "retained-coordinator-controller-log",
+      "files": 3,
+      "bytes": 46833,
+      "required_ignored_files": 3
+    },
+    {
+      "group": "reviewed-control-source-tests-docs",
+      "files": 17,
+      "bytes": 654421,
+      "required_ignored_files": 0
+    },
+    {
+      "group": "reviewed-runtime-control-input-not-merely-report",
+      "files": 1,
+      "bytes": 2956,
+      "required_ignored_files": 0
+    },
+    {
+      "group": "superseded-historical-draft-not-current-ledger",
+      "files": 1,
+      "bytes": 8430,
+      "required_ignored_files": 0
+    }
+  ],
+  "source_independent_review_coverage": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "before_sha256": "a56f47787c5abbda301cdfcafa5c8ac4ad7eb505d21d560e86063f93453a36f7",
+      "before_bytes": 72609,
+      "after_sha256": "b0f3794fe89537d5108a2c24c22c33ed94d9330ee220e7fa257bfb2c4a7b1e29",
+      "after_bytes": 76990,
+      "independent_exact_current_pin_reviews": [
+        "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-implementation-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-lifecycle-controls-independent-01.json"
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md",
+      "before_sha256": "e934ab0834cbe9776fbd410bac6f51147919c718bb8e274fb56103d087dc369e",
+      "before_bytes": 10614,
+      "after_sha256": "ab3e78c11a796e2122f666ca8522d0eeea44da5b0c180292140ba28c645a300b",
+      "after_bytes": 12318,
+      "independent_exact_current_pin_reviews": [
+        "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-implementation-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-lifecycle-controls-independent-01.json"
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+      "before_sha256": "288c412456e130ec640f40042133ef4686554b4f63abecc097602999f2d20b18",
+      "before_bytes": 21106,
+      "after_sha256": "cf41c413d321d87689b97b86e4fe7981052dab6b629c8ffcd57b15a00be6555c",
+      "after_bytes": 21878,
+      "independent_exact_current_pin_reviews": [
+        "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-implementation-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-lifecycle-controls-independent-01.json"
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+      "before_sha256": "0df57639ed7bdef3fd4df62e73489dc85f4006dd587ce82cf9077e4262e1b068",
+      "before_bytes": 13449,
+      "after_sha256": "241bc0e199be2699fe49b1552d993e7389de79ff8fb88f2d1fe53bed99847840",
+      "after_bytes": 13449,
+      "independent_exact_current_pin_reviews": [
+        "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-implementation-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-lifecycle-controls-independent-01.json"
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+      "before_sha256": "f1d77ff98814e515461f9d91f0e3c640638552b26990227c6d5069181f588e88",
+      "before_bytes": 21350,
+      "after_sha256": "16ae9dbdaf680add4eeb965dee0b96910d8ecf3ef6bb89c3b8afead1a8975451",
+      "after_bytes": 23054,
+      "independent_exact_current_pin_reviews": [
+        "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-implementation-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-lifecycle-controls-independent-01.json"
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "before_sha256": "98334625a01adbe3c8b2fb1573895a5056c95e430cb9d857142809d8ef4db454",
+      "before_bytes": 56767,
+      "after_sha256": "5524d839202211270ec1c97776f0d350b9802ecf0d1c5e6eb3d28cd960629302",
+      "after_bytes": 59858,
+      "independent_exact_current_pin_reviews": [
+        "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-implementation-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-lifecycle-controls-independent-01.json"
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+      "before_sha256": "af5c912dbc9655468d5d428b18f5a7c16d7b0f2fa421e14cf559ee674eaceb76",
+      "before_bytes": 42841,
+      "after_sha256": "3da543bd92beecda95bdfbd53632a3a49ca95a6054f47a17dd03dff6460d6a5c",
+      "after_bytes": 42919,
+      "independent_exact_current_pin_reviews": [
+        "remediation-runs/2026-09-08-continuation/reviews/normal-legacy-lifecycle-fixture-independent-01.json"
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-draft-freeze-01.json",
+      "before_sha256": null,
+      "before_bytes": null,
+      "after_sha256": "4a18e36224c895581515d538f995e6f8a1bd7016a3cf6eba3328712e5535bd08",
+      "after_bytes": 2956,
+      "independent_exact_current_pin_reviews": [
+        "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-implementation-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-lifecycle-controls-independent-01.json"
+      ]
+    },
+    {
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "before_sha256": "e2e5f62f4a8d876585120e32ff73e91f7c3d992963c80346e94e54f906eec846",
+      "before_bytes": 10879,
+      "after_sha256": "b5ae13ab4f6158d3d5d067445286098f1aab72b177591bdb0e5252a1e2d06709",
+      "after_bytes": 14826,
+      "independent_exact_current_pin_reviews": [
+        "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-implementation-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-lifecycle-controls-independent-01.json"
+      ]
+    },
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "before_sha256": "d5c6faf5a33187a9bed855f8d82b17ea2c90d72c3b22df0a041975f7a6bc7b21",
+      "before_bytes": 42095,
+      "after_sha256": "3c974b93e202359c12aa2647984b624024986676eb058ace9ecdf4e7663200bb",
+      "after_bytes": 57512,
+      "independent_exact_current_pin_reviews": [
+        "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-implementation-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-lifecycle-controls-independent-01.json"
+      ]
+    },
+    {
+      "path": "scripts/release/tests/test_native_continuation.py",
+      "before_sha256": "7113f5cf5283fb9cb44dcf18c885c6c8dcf4a14ed2a948cac3ff4a173fcb1337",
+      "before_bytes": 37634,
+      "after_sha256": "dac139c779e33b795aa6f36fc0f853ee071099b927c901a9b993323c6f6edb35",
+      "after_bytes": 55155,
+      "independent_exact_current_pin_reviews": [
+        "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-implementation-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-lifecycle-controls-independent-01.json"
+      ]
+    },
+    {
+      "path": "scripts/release/tests/test_native_process_probe.py",
+      "before_sha256": "707f394e34d8234f4617963af32a865b3620aaec7a16ee6e0c166c0e1090ef39",
+      "before_bytes": 43371,
+      "after_sha256": "2730119da9d074d490a259669d3e9f9b4fec655da2045bfd9401ee44dc91e4ea",
+      "after_bytes": 43371,
+      "independent_exact_current_pin_reviews": [
+        "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-implementation-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-lifecycle-controls-independent-01.json"
+      ]
+    },
+    {
+      "path": "scripts/verification/ios-readiness/simulator_lifecycle.py",
+      "before_sha256": null,
+      "before_bytes": null,
+      "after_sha256": "8d799475f1e92fc7943ca05b2d1e59655cbb8b0973031029440662059e65f248",
+      "after_bytes": 37085,
+      "independent_exact_current_pin_reviews": [
+        "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-implementation-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-lifecycle-controls-independent-01.json"
+      ]
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py",
+      "before_sha256": "df030e500c035fc65ede190a8c11b795f7b4a40e2933a86a4b8529b4bdac4c13",
+      "before_bytes": 24389,
+      "after_sha256": "613f255556f052d553a2e85dc7d84e4f137957f47732356449e22d6991f7fc53",
+      "after_bytes": 24627,
+      "independent_exact_current_pin_reviews": [
+        "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-implementation-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-lifecycle-controls-independent-01.json"
+      ]
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_native_command_failures.py",
+      "before_sha256": "7ea11e97a11cc07ba85d09c1366fe4198b95b8ee59414979fa7801122be981be",
+      "before_bytes": 12002,
+      "after_sha256": "2dae0e77803d5c6b98bd3d4bc1ee4f84a366b799da7e21c16e2068312e0d9b8c",
+      "after_bytes": 27564,
+      "independent_exact_current_pin_reviews": [
+        "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-implementation-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-lifecycle-controls-independent-01.json"
+      ]
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_simulator_lifecycle.py",
+      "before_sha256": null,
+      "before_bytes": null,
+      "after_sha256": "2f7c957e47aa63804866a71e3b5a8566342c6f7deca2f80e57f0cd42af1a5a46",
+      "after_bytes": 75257,
+      "independent_exact_current_pin_reviews": [
+        "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-lifecycle-controls-independent-01.json"
+      ]
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_simulator_lifecycle_integration.py",
+      "before_sha256": null,
+      "before_bytes": null,
+      "after_sha256": "93d88840fcef436dbf45cc20de071e784daa4c6bc0e7683b623da8df7197100c",
+      "after_bytes": 56392,
+      "independent_exact_current_pin_reviews": [
+        "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-lifecycle-controls-independent-01.json"
+      ]
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+      "before_sha256": "77ee3b78862c23bee045ff9ca049f312a20b45bff1257768b13e2c5f2ca6bf4a",
+      "before_bytes": 12098,
+      "after_sha256": "aee9e30948813929393acedfaad5767fee2a47eb896a7eddd81db96208f14672",
+      "after_bytes": 12166,
+      "independent_exact_current_pin_reviews": [
+        "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-implementation-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-lifecycle-controls-independent-01.json"
+      ]
+    }
+  ],
+  "source_scope_recheck": {
+    "reference": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/source-scope-before-lifecycle-freeze-01.json",
+      "bytes": 28886,
+      "sha256": "bb6298c3f2a417c72679e05bf5924818c1d14f469f6616ed5f09de20fd1504ae"
+    },
+    "reference_kept_as_historical_pre_fixture_V2_snapshot": true,
+    "fresh648_file_recheck_against5f35_700243_and_current": true,
+    "files": 648,
+    "manifest_sha256": "a046fbad1dee5cf448ffa7f1d11168aef0aecc19650db96c6274c410a8dbfb2b",
+    "all_raw_Git_blob_modes_and_current_file_bytes_equal": true,
+    "source_change_count": 18,
+    "new_fixture_delta_bytes": 78,
+    "new_fixture_delta": "Only explicit legacy lifecycle_mode/lifecycle initialization in existing synthetic factory. No test-method/assertion change. Existing normal runner constructor/default and direct ownership barriers unchanged.",
+    "qualification_limit": "Byte/compatibility scope equality is not a test rerun or final clean-SHA qualification. The828 lane source manifest excludes the archived fixture file; actual Git diff and93/255 control manifests bind that archived input separately."
+  },
+  "retained_execution_evidence": [
+    {
+      "cycle": "continuation-transport-contracts-04",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/receipt.json",
+        "bytes": 308099,
+        "sha256": "03ade63d4dcaff14da734fd8ccf79732538bdb87c0ca542a902d6dd3e30f07af"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at": "2026-09-08T18:11:04.027642+00:00",
+      "finished_at": "2026-09-08T18:11:49.265905+00:00",
+      "source_commit": "700243c3426db2da3855a9d3a3df58ada607ffc5",
+      "source_tree": "bd93099fe19ccf46e27eb67f22d694cc1ae074aa",
+      "source_manifest_count": 828,
+      "source_manifest_sha256": "6fc7298b3b927aee32359326ef68f75a0a3d9928e73e47b7d5a3f82c4828fe15",
+      "tracked_diff_sha256": "6c6e32a20e6d6b404d197634ff40e27424b070e01248334bfddca6a5b6542190",
+      "source_and_runner_unchanged_within_cycle": true,
+      "stop_exit_code": 0,
+      "stopped_at": "2026-09-08T18:11:50.118009+00:00",
+      "cleanup_completed_at": "2026-09-08T18:11:50.304473+00:00",
+      "cleanup_errors": [],
+      "remaining_owned_workers": [],
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "exact_cycle_scratch_absent_at_audit": true,
+      "retained_cycle_files": 29,
+      "retained_cycle_bytes": 445903,
+      "tests": 277,
+      "passed": 274,
+      "failures": 0,
+      "errors": 0,
+      "skips": 3,
+      "skip_reason_limit": "Three P2pKitRoomTransportLoopbackTest XML skips have empty reason fields; no observed reason invented.",
+      "independent_review": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/transport-contracts-04-evidence-independent-01.json",
+        "bytes": 37536,
+        "sha256": "241e5770752472de8ee84cf4e8eb804f4c84687f0f45ec399746eaed72c35147"
+      },
+      "scope": "Actual focused Linux :shared:transport-p2p:desktopTest, not final clean-SHA/native qualification."
+    },
+    {
+      "cycle": "continuation-native-lifecycle-controls-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/receipt.json",
+        "bytes": 347060,
+        "sha256": "0e0cfaf79422d1627622ab0cae21b535a923e77d270d638cfacb8ea0f2f72e05"
+      },
+      "status": "FAIL",
+      "exit_code": 1,
+      "started_at": "2026-09-08T18:30:19.063003+00:00",
+      "finished_at": "2026-09-08T18:30:49.758263+00:00",
+      "source_commit": "700243c3426db2da3855a9d3a3df58ada607ffc5",
+      "source_tree": "bd93099fe19ccf46e27eb67f22d694cc1ae074aa",
+      "source_manifest_count": 828,
+      "source_manifest_sha256": "6fc7298b3b927aee32359326ef68f75a0a3d9928e73e47b7d5a3f82c4828fe15",
+      "tracked_diff_sha256": "6c6e32a20e6d6b404d197634ff40e27424b070e01248334bfddca6a5b6542190",
+      "source_and_runner_unchanged_within_cycle": true,
+      "stop_exit_code": 0,
+      "stopped_at": "2026-09-08T18:30:50.457576+00:00",
+      "cleanup_completed_at": "2026-09-08T18:30:50.549665+00:00",
+      "cleanup_errors": [],
+      "remaining_owned_workers": [],
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "exact_cycle_scratch_absent_at_audit": true,
+      "retained_cycle_files": 22,
+      "retained_cycle_bytes": 684418,
+      "tests": 436,
+      "passed": 415,
+      "failures": 1,
+      "errors": 20,
+      "skips": 0,
+      "commands": [
+        {
+          "name": "primary-errors",
+          "tests": 26,
+          "passed": 26,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        },
+        {
+          "name": "simulator-lifecycle",
+          "tests": 51,
+          "passed": 51,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        },
+        {
+          "name": "lifecycle-integration",
+          "tests": 32,
+          "passed": 32,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        },
+        {
+          "name": "toolchain-profile",
+          "tests": 12,
+          "passed": 12,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        },
+        {
+          "name": "foundation-profile",
+          "tests": 20,
+          "passed": 20,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        },
+        {
+          "name": "functional-copy",
+          "tests": 12,
+          "passed": 12,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        },
+        {
+          "name": "composition",
+          "tests": 55,
+          "passed": 55,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        },
+        {
+          "name": "normal",
+          "tests": 187,
+          "passed": 166,
+          "failures": 1,
+          "errors": 20,
+          "skips": 0
+        },
+        {
+          "name": "native-adapter",
+          "tests": 40,
+          "passed": 40,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        },
+        {
+          "name": "probe-cycle-guard",
+          "tests": 1,
+          "passed": 1,
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        }
+      ],
+      "input_manifest_count": 255,
+      "input_manifests_before_after_equal": true,
+      "current_control_drift": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+          "recorded_sha256": "af5c912dbc9655468d5d428b18f5a7c16d7b0f2fa421e14cf559ee674eaceb76",
+          "current_sha256": "3da543bd92beecda95bdfbd53632a3a49ca95a6054f47a17dd03dff6460d6a5c"
+        }
+      ],
+      "controller_reconciliation": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-lifecycle-controls-01-controller-reconciliation.json",
+        "bytes": 25764,
+        "sha256": "f3865028920ec98fb258832efbf20f24c8a8abe8079b579176204158639aba73"
+      },
+      "independent_postrun": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-lifecycle-controls-postrun-independent-01.json",
+        "bytes": 83166,
+        "sha256": "ce9e68960dc161c4199deb3186dd5d940d8e1c587c7f5e5918ed1d5522b5abfa"
+      },
+      "scope": "Original FAIL is immutable. Nine unchanged scopes total249 PASS; normal187 has166 PASS/1failure/20errors.51 low-level controls include five bounded Python stand-ins, not Apple/app/native timing/runtime. Formal postrun review independently clears only external/ordinary cleanup, not the test failure."
+    },
+    {
+      "cycle": "continuation-normal-lifecycle-recheck-01",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01/receipt.json",
+        "bytes": 307719,
+        "sha256": "3e0e95d184bf832225286fe9424ae2e98e61f9a0de95ec3fda35a620758f1b6e"
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "started_at": "2026-09-08T19:03:53.239649+00:00",
+      "finished_at": "2026-09-08T19:03:55.461103+00:00",
+      "source_commit": "700243c3426db2da3855a9d3a3df58ada607ffc5",
+      "source_tree": "bd93099fe19ccf46e27eb67f22d694cc1ae074aa",
+      "source_manifest_count": 828,
+      "source_manifest_sha256": "6fc7298b3b927aee32359326ef68f75a0a3d9928e73e47b7d5a3f82c4828fe15",
+      "tracked_diff_sha256": "64d20511dd19955a8e503845a020760cf94739c8bc4a9bc53073faf45831c1c0",
+      "source_and_runner_unchanged_within_cycle": true,
+      "stop_exit_code": 0,
+      "stopped_at": "2026-09-08T19:03:56.150544+00:00",
+      "cleanup_completed_at": "2026-09-08T19:03:56.219181+00:00",
+      "cleanup_errors": [],
+      "remaining_owned_workers": [],
+      "remaining_outputs": [],
+      "retained_outputs": [],
+      "exact_cycle_scratch_absent_at_audit": true,
+      "retained_cycle_files": 7,
+      "retained_cycle_bytes": 419878,
+      "tests": 187,
+      "passed": 187,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "actual_imports": 36,
+      "input_manifest_count": 93,
+      "input_manifests_before_after_and_current_equal": true,
+      "declared_and_discovered_distinct_ids": 187,
+      "independent_source_delta_review": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/normal-legacy-lifecycle-fixture-independent-01.json",
+        "bytes": 17609,
+        "sha256": "edc77bc8051485c2256c6f2b7f43fbc80f8995e0d25c579ea5869a598a0d45e3"
+      },
+      "independent_postrun_at_this_cutoff": "PENDING_SEPARATE_HELD_REPORT_AND_ADDITIVE_ALLOWLIST",
+      "scope": "Actual corrected Linux normal-control187 execution, not Parlor normal Debug-image/libproc runtime.Only the affected187 rerun; the original436 failure is not reclassified."
+    }
+  ],
+  "normal_recheck_control_bindings": {
+    "rechecked_control_count": 93,
+    "current_and_before_after_equal": true,
+    "new_fixture": {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+      "bytes": 42919,
+      "sha256": "3da543bd92beecda95bdfbd53632a3a49ca95a6054f47a17dd03dff6460d6a5c"
+    },
+    "source_delta_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/normal-legacy-lifecycle-fixture-independent-01.json",
+      "bytes": 17609,
+      "sha256": "edc77bc8051485c2256c6f2b7f43fbc80f8995e0d25c579ea5869a598a0d45e3"
+    },
+    "failed_aggregate_not_reclassified": true,
+    "no_single_all436_PASS_execution_claimed": true
+  },
+  "historical_and_preparation_classifications": {
+    "superseded_draft": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/post0607-ledger-notes-01.md",
+      "bytes": 8430,
+      "sha256": "c2cf2446a1240250ca437978147df1328df067a7431e7ff87d4b6927b6752bf7",
+      "classification": "SUPERSEDED_HISTORICAL_DRAFT_NOT_CURRENT_LEDGER_OR_APPROVAL",
+      "retained_byte_for_byte": true,
+      "authority": "Original author/l08_fixture and coordinator explicitly requested preservation; pending statuses reflect its old cutoff."
+    },
+    "author_source01": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-source-01.json",
+      "bytes": 10413,
+      "sha256": "bc35e4b89fc48129dc60c176806753fe8a8b0ba2047638bfeb8770d6a5bc8ab2",
+      "classification": "SUPERSEDED_V1_HELD_SNAPSHOT_RETAINED"
+    },
+    "author_source02": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-source-02.json",
+      "bytes": 11177,
+      "sha256": "0e3ef86e9e66708be391630e864f01bfeb9f03bbfa183a0a027bec4a12f951ec",
+      "classification": "V2_PRE_EXECUTION_SNAPSHOT_RETAINED; factual count38 corrected additively to44 unchanged of45; later fixture correction is separately bound"
+    },
+    "source_count_and_review_closures": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-count-addendum-01.json",
+        "bytes": 3425,
+        "sha256": "6c34261e6903cf7f4d27fbd2ccaa1e44de9ce4c3981a625ee0cc66d89ebe003b"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-count-independent-01.json",
+        "bytes": 4011,
+        "sha256": "30a6cc2bceb26fb1d70b68a5cc6d30351802212df76c2d90b8e7720df8c8044f"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-review-closure-01.json",
+        "bytes": 6330,
+        "sha256": "d23443bc888ee08ac004565b29d2bf13b2bf57667fc4b513e1169a1617bf77cd"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-review-closure-independent-01.json",
+        "bytes": 7916,
+        "sha256": "fc3ee3477673f0b3734913cda1159f085198236a3babac44636cb9fd604ebbdd"
+      }
+    ],
+    "runtime_control_despite_review_path": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-draft-freeze-01.json",
+      "bytes": 2956,
+      "sha256": "4a18e36224c895581515d538f995e6f8a1bd7016a3cf6eba3328712e5535bd08",
+      "classification": "ACTUAL_COMPOSITION_DRAFT_INPUT_FREEZE_CONTROL_NOT_PASSIVE_EVIDENCE"
+    },
+    "C03_preparation": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/dependency-chain-afterfreeze-execution-03.json",
+        "bytes": 11784,
+        "sha256": "cd931693d9a4a6ce957a5474d4c2f26827c0425b645953a0c98f497c52a935b1"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/dependency-chain-afterfreeze-execution-independent-03.json",
+        "bytes": 9488,
+        "sha256": "0fd0cadbd7d224dc5a3d05a368fa5b58cba9ab4fe3ccaca6afddb21d4e6c4930"
+      }
+    ],
+    "full_preparation": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/full-qualification-afterfreeze-01.json",
+        "bytes": 45031,
+        "sha256": "1c455d0dfc2405a9c3205782efbc31acf0fbd9ee356aeade25a74eeaa3c1aad5"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/full-qualification-afterfreeze-independent-01.json",
+        "bytes": 10869,
+        "sha256": "2d49153881be3dc9ddc2ef9a9f08768ea288a921435d450cbc09fbea15aeb36c"
+      }
+    ],
+    "preparation_limit": "Future frozen SHA/run/artifact binding and actual export/render/consumer/full/native execution remain separate. Full ignores frozen_source_sha and needs external actual run/job/checkout SHA-tree agreement. Preparation neither dispatches nor qualifies anything."
+  },
+  "filesystem_safety": {
+    "all_selected_regular_single_link_current_uid_files": true,
+    "canonical_paths_and_nonsymlink_ancestors": true,
+    "leaf_NOFOLLOW_open_and_pre_post_fstat_lstat_custody_stable": true,
+    "all_selected_bytes_modes_and_identity_rechecked_after_scan": true,
+    "unexpected_executable_or_Git_mode_changes": [],
+    "per_raw_file_byte_limit": 16777216,
+    "per_decoded_surface_byte_limit": 33554432,
+    "no_global_or_unrelated_paths_read": true
+  },
+  "sensitive_signature_scan": {
+    "policy_reference": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/frozen25b1-delivery-safety-01.json",
+      "bytes": 415876,
+      "sha256": "8f9b7dfb5db35b8cc3045c11d5b95d9297d81fd41fde8b5e62cc1ec1572db679"
+    },
+    "pattern_set_sha256": "cd8804d59686f0125274263748aaf99e143653370e55d97f72968496c26a6c7d",
+    "patterns_reused": 14,
+    "method": "Standard-library bounded raw byte regex scan of every exact file, decoded JSON keys/string values, parseable JSON records embedded in logs, and decoded XML tags/attributes/text. ZIP/gzip inspection available without extraction; no selected archives present. No project scanner/module/control/test imported or executed. Matched literal content never printed or retained.",
+    "surface_counts": {
+      "raw-file": 107,
+      "decoded-log-json-string-or-key": 2785,
+      "decoded-json-string-or-key": 24350,
+      "decoded-xml-text-or-attribute": 2755
+    },
+    "surface_bytes_including_duplicate_representations": {
+      "raw-file": 2835097,
+      "decoded-log-json-string-or-key": 155020,
+      "decoded-json-string-or-key": 1365881,
+      "decoded-xml-text-or-attribute": 49747
+    },
+    "json_documents": 42,
+    "xml_documents": 22,
+    "embedded_log_json_records": 30,
+    "signature_matches_without_content": [
+      {
+        "path": "scripts/release/tests/test_native_continuation.py",
+        "surface": "raw-file",
+        "signature": "url_user_password",
+        "count": 1,
+        "line_numbers": [
+          262
+        ],
+        "matched_content_retained": false
+      }
+    ],
+    "classified_synthetic_negative_test_matches": [
+      {
+        "path": "scripts/release/tests/test_native_continuation.py",
+        "surface": "raw-file",
+        "signature": "url_user_password",
+        "count": 1,
+        "line_numbers": [
+          262
+        ],
+        "matched_content_retained": false,
+        "classification": "FIXED_COMMON_PLACEHOLDER_NEGATIVE_TEST_LITERAL_NOT_LIVE_CREDENTIAL",
+        "containing_test": "test_download_rejects_untrusted_or_plaintext_redirects",
+        "complete_test_AST_identical_to_700243": true,
+        "constant_literal_only": true,
+        "common_placeholder_username_and_password": true,
+        "rejecting_assertRaises_present": true,
+        "runtime_secret_source": false,
+        "literal_contents_not_echoed": true
+      }
+    ],
+    "classification_prior_reference": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/post4b8-source-delivery-safety-01.json",
+      "bytes": 89974,
+      "sha256": "d0a7d25e9f4a2706995e364662cc96d90bd86da2ef3049920407fa84d2cba795"
+    },
+    "unclassified_matches": [],
+    "sensitive_actual_path_matches": [],
+    "binary_keystore_header_matches": [],
+    "nonempty_sensitive_XML_fields": [],
+    "limitations": "No unclassified signature is not universal absence-of-secret proof. Unknown encoded formats or arbitrary low-entropy secrets cannot be ruled out. No private credentials/global caches/unrelated work inspected."
+  },
+  "archive_integrity": {
+    "zip_archives": [],
+    "gzip_records": [],
+    "status": "NO_SELECTED_ZIP_OR_GZIP_ARCHIVES"
+  },
+  "ignored_required_evidence": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/composition.log",
+      "bytes": 19632,
+      "sha256": "818a3de073f3c79e1d037372627b7c9704b03acef97e1a532e8431075c2eae0c",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/foundation-profile.log",
+      "bytes": 4149,
+      "sha256": "42082044dcaa16f228383c655d53b034859d451f4bd65ee1cea2c02c96bf7891",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/functional-copy.log",
+      "bytes": 2543,
+      "sha256": "0d7d7eff25a88141614c231a899802b4b492ea5ed3ac88bae879719a53ed664f",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/gradle.log",
+      "bytes": 19647,
+      "sha256": "903ab483932b21790b955d45f2a2e3e72efc6a022f0db2cf75bbb676a8243da0",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/java-toolchain.log",
+      "bytes": 2026,
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/javac-toolchain.log",
+      "bytes": 14,
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/lifecycle-integration.log",
+      "bytes": 7483,
+      "sha256": "af4d1503e796df44647932a60d70a08b5440bdf0fc6d4d7b279c6d8d9b8dc5e5",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/native-adapter.log",
+      "bytes": 8604,
+      "sha256": "9e7cfd954921bc197091a2e10022cf54e155b52c61a85465f72763404210e152",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/normal.log",
+      "bytes": 131207,
+      "sha256": "6371a4a2b780b0bd3775ec0322357cb3882bea798951f5cf4c5731e06374d6d4",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/primary-errors.log",
+      "bytes": 5259,
+      "sha256": "649bb10000b0b28d01ede1364c40ad2374e77f816df6d71f9b755156905f77c8",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/probe-cycle-guard.log",
+      "bytes": 326,
+      "sha256": "b6c42af9add74670e9e1abdb64cdd0e27199b7cc8768d73977200e4636fca6e0",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/simulator-lifecycle.log",
+      "bytes": 14098,
+      "sha256": "1b52c07a34c978abc2ea98031079d203cd624900a9c7625735c8037933a0572d",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/toolchain-profile.log",
+      "bytes": 2139,
+      "sha256": "4e317da79580be161f95988829550bcd3a260c9bef7fcaa4091bea9d08b79418",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01/gradle.log",
+      "bytes": 110082,
+      "sha256": "e68f19d0716199d355b9c7bd4a549994dd3b08bd4e1120f93293421f10a197de",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01/java-toolchain.log",
+      "bytes": 2026,
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01/javac-toolchain.log",
+      "bytes": 14,
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/gradle.log",
+      "bytes": 4844,
+      "sha256": "3d5ae9254b8f1c4b58c0bba7feb744bf8ac6f9555cf0d62fc9141f9364f6ef47",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/java-toolchain.log",
+      "bytes": 2026,
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/javac-toolchain.log",
+      "bytes": 14,
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidManifestLanPermissionTest.xml",
+      "bytes": 690,
+      "sha256": "9bb75a47fe049db0096f1aa6c312f400853b25ab58e1a20badf72bcbdb8698a6",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidReleaseLintContractTest.xml",
+      "bytes": 1743,
+      "sha256": "8c9e0280c604bd3495d562710a6a1090a614c2affa66e774895f24981b3249cb",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomCoordinatorTest.xml",
+      "bytes": 709,
+      "sha256": "f7e8f51241d1273806e8f6fa780fb91e680ce103becf3c9f7953c346b0d01e7a",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+      "bytes": 844,
+      "sha256": "00aaad528eadae2aaa94db356526f0b129ede344f78bd2028a0d7d910092b863",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DesktopDependencyVerificationContractTest.xml",
+      "bytes": 926,
+      "sha256": "f1dc035a37fc51b6e12c49e66fa253a075677360960f70dc76c6f0101cf77914",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest.xml",
+      "bytes": 2687,
+      "sha256": "79eede86d3facae7ede117533112ef262b400b7270bbbebe11fcc1e46199cbf7",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.HostOpeningCancellationTest.xml",
+      "bytes": 1144,
+      "sha256": "add000aa783cef2d56a83ae24019ae9f83cea51ed9b06786cf3d40b9486e5fa9",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.IosInfoPlistBonjourTest.xml",
+      "bytes": 490,
+      "sha256": "dfcb5b37c66ee07b9630937edacde09501dd1c8000700dc31dbfd0721d40aeae",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+      "bytes": 504,
+      "sha256": "8b50cf57afc49bddbf323b03fda1ac70d5909bee941c0ba410d338d21bd2fd80",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.LoopbackFixtureContractTest.xml",
+      "bytes": 1225,
+      "sha256": "79c40ccca540ad039f23d3520413234ef29d076666181db6bf2b4cc4ddcb57da",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.MultiplayerDocumentationContractTest.xml",
+      "bytes": 2311,
+      "sha256": "7ad0db8e55f32e30c1b0a4e60c34131fc90cdba551f4068258388602ea400c88",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pDiagnosticsTest.xml",
+      "bytes": 1095,
+      "sha256": "05b73e6ff69de79469121cc42f547c8cc9cf26cf121be0c9948d854a32b48293",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitCreationTest.xml",
+      "bytes": 1724,
+      "sha256": "3e0ee6a827a6937817adc0eaaa610eead04fc8c10ce316baee60be7bbc315b8c",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitMavenProvenanceContractTest.xml",
+      "bytes": 689,
+      "sha256": "caadb8c54806fb2b05c75fe5e84c6cb714a8c59042975814bb49c8b1f1c1c194",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.xml",
+      "bytes": 23991,
+      "sha256": "75aaa43fef29feb69db5121307517889812af831f85c308465a6f3d2317ebf17",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+      "bytes": 1263,
+      "sha256": "8a74b6ad2bc9c8410529a939c046d57b766e1c71f6a6995aafe6776dbf50bc73",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pTrafficPolicyTest.xml",
+      "bytes": 1503,
+      "sha256": "c6b858e2a9858356f54d6fbfcc26d048a997eaf3d0c30eb0a39f94ccb96bc364",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.PeerOpeningCancellationTest.xml",
+      "bytes": 2380,
+      "sha256": "9a874acc983c8a9a87018ac81af9ca276795341724ce3f7bf931ab7c0ecf75ba",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+      "bytes": 2116,
+      "sha256": "5a7a75fb20d3c037d4fb9c9f84c56fc02ba8f4791208f1576cc7bea31d4d6277",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ResumableCredentialStoreTest.xml",
+      "bytes": 4420,
+      "sha256": "ee486dcb8b0781913ed9de37c64fb61d9a63c75869f40b2ca87ce478dda2c9d0",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.TestTransportIsolationContractTest.xml",
+      "bytes": 1058,
+      "sha256": "e1ea3dbf435849b473ad4b090a9e1acff84c2bfe51eb3ef2de6c72bd349803ea",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.VerificationMetadataAssertionsTest.xml",
+      "bytes": 3575,
+      "sha256": "342f3078a7660859718244f7d6ea6970141fdc64ac8120ae72f0fa3032abd81d",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-lifecycle-controls-01-controller.log",
+      "bytes": 41789,
+      "sha256": "43b6c55f49ab95e5f496bf5eb4eb99bc19da18b18c53f1a94f2b258d0149152f",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/normal-lifecycle-recheck-01-controller.log",
+      "bytes": 2216,
+      "sha256": "49038f028b2405c55765310c98c5072973ef6ba5086ab03ed7c17dff3f6b6741",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/transport-contracts-04-controller.log",
+      "bytes": 2828,
+      "sha256": "7bc733e100e96fe0a914a402784d423b556125c2f85f62517662361fc8a64f31",
+      "git_mode": "100644",
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      }
+    }
+  ],
+  "earlier_delivery_preservation": {
+    "immutable_committed_safety_reports": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/post5f35-completed-evidence-safety-01.json",
+        "bytes": 263525,
+        "sha256": "a7e2e135e6de044fa26a3e67db1799e74e17d96c7538488dc8df56367b374779"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/post5f35-a19-ledger-safety-addendum-01.json",
+        "bytes": 49800,
+        "sha256": "af01ad90bbc28b5f5952207ba095780bda69b92724044aefda098eddebefd663"
+      }
+    ],
+    "current_bytes_equal700243_blobs": true,
+    "prior_payload_not_reinventoried_or_restaged_by_this_auditor": true,
+    "prior700243_push_confirmation_authority": "Retained root controller; independent delivery review confirms local exact616-file commit. No new network operation."
+  },
+  "exclusions_and_preservation": {
+    "lock": {
+      "path": "remediation-runs/2026-09-07-local-readiness/build-lane.lock",
+      "bytes": 0,
+      "preserved_locally": true,
+      "not_staged_or_deleted": true
+    },
+    "ledger": {
+      "path": "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md",
+      "status": "New ledger/current-binding snapshot and its independent review are pending separate held additive scope; existing committed ledger is preserved and not selected here."
+    },
+    "remaining_postrun_closure": "Corrected normal187 independent postrun report is pending separate release/additive safety; source-control PASS alone is not freeze/dispatch authorization.",
+    "other_exclusions": [
+      "This safety report itself and its future independent review are separate Git-bound deliverables, not self-hashed payload.",
+      "Any new current-binding/final-ledger/postrun-review files written after this exact cutoff require explicit additive selection.",
+      "Live generated outputs, temporary workers/scratch, unrelated source/user work, caches, signing/config/credentials and unrelated stashes are not selected or removed.",
+      "Historical failed receipts, old preparatory packets, ignored logs, superseded draft and prior delivery evidence remain byte-for-byte retained."
+    ]
+  },
+  "staging_notes": {
+    "root_only": true,
+    "exact_manifest": true,
+    "force_add_only_listed_ignored_required_evidence": true,
+    "no_blanket_force_add": true,
+    "index_was_empty_at_inspection": true,
+    "tracked_source_scoped_diff_check": {
+      "exit_code": 0,
+      "output_bytes": 0,
+      "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "raw_historical_log_whitespace_not_modified": "Retain raw formatting; no blanket diff-check waiver for source/control/ledger."
+  },
+  "next_freeze_contract": [
+    "Obtain different-agent independent review of this primary exact delivery allowlist.",
+    "Add final held normal postrun/current-binding/ledger/ledger-review identities through exact additive safety selection; do not silently append or rewrite this held packet.",
+    "Root commits reviewed source/control/evidence, then mechanically regenerates and commits inventory only; obtain fresh exact source/control/native/C/full bindings after the inventory commit.",
+    "No prior700243/5f35/V2 aggregate source binding or failed436 packet is reused as fresh native source qualification.",
+    "One coordinator controls local lane and selective Actions; no Store publication/promotion, merge, force push, issue mutation, private signing or physical devices."
+  ],
+  "files": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/artifact-receipts.json",
+      "group": "completed-linux-cycle:continuation-native-lifecycle-controls-01",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/composition.log",
+      "group": "completed-linux-cycle:continuation-native-lifecycle-controls-01",
+      "bytes": 19632,
+      "sha256": "818a3de073f3c79e1d037372627b7c9704b03acef97e1a532e8431075c2eae0c",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/foundation-profile.log",
+      "group": "completed-linux-cycle:continuation-native-lifecycle-controls-01",
+      "bytes": 4149,
+      "sha256": "42082044dcaa16f228383c655d53b034859d451f4bd65ee1cea2c02c96bf7891",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/functional-copy.log",
+      "group": "completed-linux-cycle:continuation-native-lifecycle-controls-01",
+      "bytes": 2543,
+      "sha256": "0d7d7eff25a88141614c231a899802b4b492ea5ed3ac88bae879719a53ed664f",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/gradle.log",
+      "group": "completed-linux-cycle:continuation-native-lifecycle-controls-01",
+      "bytes": 19647,
+      "sha256": "903ab483932b21790b955d45f2a2e3e72efc6a022f0db2cf75bbb676a8243da0",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/java-toolchain.log",
+      "group": "completed-linux-cycle:continuation-native-lifecycle-controls-01",
+      "bytes": 2026,
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/javac-toolchain.log",
+      "group": "completed-linux-cycle:continuation-native-lifecycle-controls-01",
+      "bytes": 14,
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/lifecycle-integration.log",
+      "group": "completed-linux-cycle:continuation-native-lifecycle-controls-01",
+      "bytes": 7483,
+      "sha256": "af4d1503e796df44647932a60d70a08b5440bdf0fc6d4d7b279c6d8d9b8dc5e5",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/native-adapter.log",
+      "group": "completed-linux-cycle:continuation-native-lifecycle-controls-01",
+      "bytes": 8604,
+      "sha256": "9e7cfd954921bc197091a2e10022cf54e155b52c61a85465f72763404210e152",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/native-lifecycle-command-exits.json",
+      "group": "completed-linux-cycle:continuation-native-lifecycle-controls-01",
+      "bytes": 3357,
+      "sha256": "038dc5e91953b5828a470e0bc0f4804329cf3eefdf7b84e4c7eecd7d4d3aa9e3",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/native-lifecycle-inputs-after.json",
+      "group": "completed-linux-cycle:continuation-native-lifecycle-controls-01",
+      "bytes": 48524,
+      "sha256": "8d1fb2104c9e7768ec1a81aa2bf8238d0ee38fb4e8392ecbfc206388528524a7",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/native-lifecycle-inputs-before.json",
+      "group": "completed-linux-cycle:continuation-native-lifecycle-controls-01",
+      "bytes": 48524,
+      "sha256": "8d1fb2104c9e7768ec1a81aa2bf8238d0ee38fb4e8392ecbfc206388528524a7",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/native-lifecycle-log-identities.json",
+      "group": "completed-linux-cycle:continuation-native-lifecycle-controls-01",
+      "bytes": 2590,
+      "sha256": "91e53e7dcc6a18ec46569ce79d972d46b7c6e11f53c1846308f489df5c467273",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/native-lifecycle-results.json",
+      "group": "completed-linux-cycle:continuation-native-lifecycle-controls-01",
+      "bytes": 17199,
+      "sha256": "1c9e01a72a4a5283e76c554a711c9c2b55e5bf94806a43475a710ed3c432a09c",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/normal.log",
+      "group": "completed-linux-cycle:continuation-native-lifecycle-controls-01",
+      "bytes": 131207,
+      "sha256": "6371a4a2b780b0bd3775ec0322357cb3882bea798951f5cf4c5731e06374d6d4",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/primary-errors.log",
+      "group": "completed-linux-cycle:continuation-native-lifecycle-controls-01",
+      "bytes": 5259,
+      "sha256": "649bb10000b0b28d01ede1364c40ad2374e77f816df6d71f9b755156905f77c8",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/probe-cycle-guard.log",
+      "group": "completed-linux-cycle:continuation-native-lifecycle-controls-01",
+      "bytes": 326,
+      "sha256": "b6c42af9add74670e9e1abdb64cdd0e27199b7cc8768d73977200e4636fca6e0",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/receipt.json",
+      "group": "completed-linux-cycle:continuation-native-lifecycle-controls-01",
+      "bytes": 347060,
+      "sha256": "0e0cfaf79422d1627622ab0cae21b535a923e77d270d638cfacb8ea0f2f72e05",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/simulator-lifecycle.log",
+      "group": "completed-linux-cycle:continuation-native-lifecycle-controls-01",
+      "bytes": 14098,
+      "sha256": "1b52c07a34c978abc2ea98031079d203cd624900a9c7625735c8037933a0572d",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/stop.log",
+      "group": "completed-linux-cycle:continuation-native-lifecycle-controls-01",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/test-receipts.json",
+      "group": "completed-linux-cycle:continuation-native-lifecycle-controls-01",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/toolchain-profile.log",
+      "group": "completed-linux-cycle:continuation-native-lifecycle-controls-01",
+      "bytes": 2139,
+      "sha256": "4e317da79580be161f95988829550bcd3a260c9bef7fcaa4091bea9d08b79418",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01/artifact-receipts.json",
+      "group": "completed-linux-cycle:continuation-normal-lifecycle-recheck-01",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01/gradle.log",
+      "group": "completed-linux-cycle:continuation-normal-lifecycle-recheck-01",
+      "bytes": 110082,
+      "sha256": "e68f19d0716199d355b9c7bd4a549994dd3b08bd4e1120f93293421f10a197de",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01/java-toolchain.log",
+      "group": "completed-linux-cycle:continuation-normal-lifecycle-recheck-01",
+      "bytes": 2026,
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01/javac-toolchain.log",
+      "group": "completed-linux-cycle:continuation-normal-lifecycle-recheck-01",
+      "bytes": 14,
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01/receipt.json",
+      "group": "completed-linux-cycle:continuation-normal-lifecycle-recheck-01",
+      "bytes": 307719,
+      "sha256": "3e0e95d184bf832225286fe9424ae2e98e61f9a0de95ec3fda35a620758f1b6e",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01/stop.log",
+      "group": "completed-linux-cycle:continuation-normal-lifecycle-recheck-01",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01/test-receipts.json",
+      "group": "completed-linux-cycle:continuation-normal-lifecycle-recheck-01",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/artifact-receipts.json",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/gradle.log",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 4844,
+      "sha256": "3d5ae9254b8f1c4b58c0bba7feb744bf8ac6f9555cf0d62fc9141f9364f6ef47",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/java-toolchain.log",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 2026,
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/javac-toolchain.log",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 14,
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/receipt.json",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 308099,
+      "sha256": "03ade63d4dcaff14da734fd8ccf79732538bdb87c0ca542a902d6dd3e30f07af",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidManifestLanPermissionTest.xml",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 690,
+      "sha256": "9bb75a47fe049db0096f1aa6c312f400853b25ab58e1a20badf72bcbdb8698a6",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidReleaseLintContractTest.xml",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 1743,
+      "sha256": "8c9e0280c604bd3495d562710a6a1090a614c2affa66e774895f24981b3249cb",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomCoordinatorTest.xml",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 709,
+      "sha256": "f7e8f51241d1273806e8f6fa780fb91e680ce103becf3c9f7953c346b0d01e7a",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 844,
+      "sha256": "00aaad528eadae2aaa94db356526f0b129ede344f78bd2028a0d7d910092b863",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DesktopDependencyVerificationContractTest.xml",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 926,
+      "sha256": "f1dc035a37fc51b6e12c49e66fa253a075677360960f70dc76c6f0101cf77914",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest.xml",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 2687,
+      "sha256": "79eede86d3facae7ede117533112ef262b400b7270bbbebe11fcc1e46199cbf7",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.HostOpeningCancellationTest.xml",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 1144,
+      "sha256": "add000aa783cef2d56a83ae24019ae9f83cea51ed9b06786cf3d40b9486e5fa9",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.IosInfoPlistBonjourTest.xml",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 490,
+      "sha256": "dfcb5b37c66ee07b9630937edacde09501dd1c8000700dc31dbfd0721d40aeae",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 504,
+      "sha256": "8b50cf57afc49bddbf323b03fda1ac70d5909bee941c0ba410d338d21bd2fd80",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.LoopbackFixtureContractTest.xml",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 1225,
+      "sha256": "79c40ccca540ad039f23d3520413234ef29d076666181db6bf2b4cc4ddcb57da",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.MultiplayerDocumentationContractTest.xml",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 2311,
+      "sha256": "7ad0db8e55f32e30c1b0a4e60c34131fc90cdba551f4068258388602ea400c88",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pDiagnosticsTest.xml",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 1095,
+      "sha256": "05b73e6ff69de79469121cc42f547c8cc9cf26cf121be0c9948d854a32b48293",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitCreationTest.xml",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 1724,
+      "sha256": "3e0ee6a827a6937817adc0eaaa610eead04fc8c10ce316baee60be7bbc315b8c",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitMavenProvenanceContractTest.xml",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 689,
+      "sha256": "caadb8c54806fb2b05c75fe5e84c6cb714a8c59042975814bb49c8b1f1c1c194",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.xml",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 23991,
+      "sha256": "75aaa43fef29feb69db5121307517889812af831f85c308465a6f3d2317ebf17",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 1263,
+      "sha256": "8a74b6ad2bc9c8410529a939c046d57b766e1c71f6a6995aafe6776dbf50bc73",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pTrafficPolicyTest.xml",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 1503,
+      "sha256": "c6b858e2a9858356f54d6fbfcc26d048a997eaf3d0c30eb0a39f94ccb96bc364",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.PeerOpeningCancellationTest.xml",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 2380,
+      "sha256": "9a874acc983c8a9a87018ac81af9ca276795341724ce3f7bf931ab7c0ecf75ba",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 2116,
+      "sha256": "5a7a75fb20d3c037d4fb9c9f84c56fc02ba8f4791208f1576cc7bea31d4d6277",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ResumableCredentialStoreTest.xml",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 4420,
+      "sha256": "ee486dcb8b0781913ed9de37c64fb61d9a63c75869f40b2ca87ce478dda2c9d0",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.TestTransportIsolationContractTest.xml",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 1058,
+      "sha256": "e1ea3dbf435849b473ad4b090a9e1acff84c2bfe51eb3ef2de6c72bd349803ea",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.VerificationMetadataAssertionsTest.xml",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 3575,
+      "sha256": "342f3078a7660859718244f7d6ea6970141fdc64ac8120ae72f0fa3032abd81d",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 2,
+        "pattern": "build/"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/stop.log",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/test-receipts.json",
+      "group": "completed-linux-cycle:continuation-transport-contracts-04",
+      "bytes": 73799,
+      "sha256": "fe86c3c907d1421200a4698e45c55f739077549939f4efdcfbe98b40ff51e5f1",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "group": "reviewed-control-source-tests-docs",
+      "bytes": 76990,
+      "sha256": "b0f3794fe89537d5108a2c24c22c33ed94d9330ee220e7fa257bfb2c4a7b1e29",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": " M",
+      "base_git_mode": "100644",
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md",
+      "group": "reviewed-control-source-tests-docs",
+      "bytes": 12318,
+      "sha256": "ab3e78c11a796e2122f666ca8522d0eeea44da5b0c180292140ba28c645a300b",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": " M",
+      "base_git_mode": "100644",
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+      "group": "reviewed-control-source-tests-docs",
+      "bytes": 21878,
+      "sha256": "cf41c413d321d87689b97b86e4fe7981052dab6b629c8ffcd57b15a00be6555c",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": " M",
+      "base_git_mode": "100644",
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+      "group": "reviewed-control-source-tests-docs",
+      "bytes": 13449,
+      "sha256": "241bc0e199be2699fe49b1552d993e7389de79ff8fb88f2d1fe53bed99847840",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": " M",
+      "base_git_mode": "100644",
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+      "group": "reviewed-control-source-tests-docs",
+      "bytes": 23054,
+      "sha256": "16ae9dbdaf680add4eeb965dee0b96910d8ecf3ef6bb89c3b8afead1a8975451",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": " M",
+      "base_git_mode": "100644",
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "group": "reviewed-control-source-tests-docs",
+      "bytes": 59858,
+      "sha256": "5524d839202211270ec1c97776f0d350b9802ecf0d1c5e6eb3d28cd960629302",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": " M",
+      "base_git_mode": "100644",
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+      "group": "reviewed-control-source-tests-docs",
+      "bytes": 42919,
+      "sha256": "3da543bd92beecda95bdfbd53632a3a49ca95a6054f47a17dd03dff6460d6a5c",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": " M",
+      "base_git_mode": "100644",
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/dependency-chain-afterfreeze-execution-03.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 11784,
+      "sha256": "cd931693d9a4a6ce957a5474d4c2f26827c0425b645953a0c98f497c52a935b1",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/dependency-chain-afterfreeze-execution-independent-03.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 9488,
+      "sha256": "0fd0cadbd7d224dc5a3d05a368fa5b58cba9ab4fe3ccaca6afddb21d4e6c4930",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-count-addendum-01.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 3425,
+      "sha256": "6c34261e6903cf7f4d27fbd2ccaa1e44de9ce4c3981a625ee0cc66d89ebe003b",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-count-independent-01.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 4011,
+      "sha256": "30a6cc2bceb26fb1d70b68a5cc6d30351802212df76c2d90b8e7720df8c8044f",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-review-closure-01.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 6330,
+      "sha256": "d23443bc888ee08ac004565b29d2bf13b2bf57667fc4b513e1169a1617bf77cd",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-review-closure-independent-01.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 7916,
+      "sha256": "fc3ee3477673f0b3734913cda1159f085198236a3babac44636cb9fd604ebbdd",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-source-01.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 10413,
+      "sha256": "bc35e4b89fc48129dc60c176806753fe8a8b0ba2047638bfeb8770d6a5bc8ab2",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-source-02.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 11177,
+      "sha256": "0e3ef86e9e66708be391630e864f01bfeb9f03bbfa183a0a027bec4a12f951ec",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-draft-freeze-01.json",
+      "group": "reviewed-runtime-control-input-not-merely-report",
+      "bytes": 2956,
+      "sha256": "4a18e36224c895581515d538f995e6f8a1bd7016a3cf6eba3328712e5535bd08",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-feasibility-independent-01.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 23873,
+      "sha256": "0ec23368c007b3896c5d3953a8d098dd86623cfef0d3ed7176c15e8c3d9e36f6",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-implementation-independent-01.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 28603,
+      "sha256": "44239859c10b762b6447234eddbc993ac1e9e65982a0e149250e943941194bdf",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-persistence-policy-independent-01.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 5567,
+      "sha256": "756a549e40145cb659c7ac2829974413f179bdd588c5a9f5a41d599531a02f0e",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-integration-author-01.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 11679,
+      "sha256": "a457352a93dd8875ff1f306797a8f56cceed7b063142acc404f54d8bc2a729ae",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-lifecycle-controls-independent-01.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 41645,
+      "sha256": "719427b07d3cad552bf638e3c424f09c3e1f334c8aaea855b98e1559913791f7",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-qualification-afterfreeze-01.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 45031,
+      "sha256": "1c455d0dfc2405a9c3205782efbc31acf0fbd9ee356aeade25a74eeaa3c1aad5",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-qualification-afterfreeze-independent-01.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 10869,
+      "sha256": "2d49153881be3dc9ddc2ef9a9f08768ea288a921435d450cbc09fbea15aeb36c",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-lifecycle-control-command-01.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 56759,
+      "sha256": "2ce09a989775c8a99b4b4a98b68859fbd6c9eda926c1f56eae302318ef1c18cc",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-lifecycle-control-command-independent-01.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 34873,
+      "sha256": "59bb266cb18fc37d0f055ef788e7bb6d3dcae8fcb79cd78140faf063bcc7b835",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-lifecycle-controls-01-controller-reconciliation.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 25764,
+      "sha256": "f3865028920ec98fb258832efbf20f24c8a8abe8079b579176204158639aba73",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-lifecycle-controls-01-controller.log",
+      "group": "retained-coordinator-controller-log",
+      "bytes": 41789,
+      "sha256": "43b6c55f49ab95e5f496bf5eb4eb99bc19da18b18c53f1a94f2b258d0149152f",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-lifecycle-controls-postrun-independent-01.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 83166,
+      "sha256": "ce9e68960dc161c4199deb3186dd5d940d8e1c587c7f5e5918ed1d5522b5abfa",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-metadata-error-preservation-independent-01.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 7983,
+      "sha256": "e8dd16bbd4a2f062bde7a8bdd81b6ea3742f4affe0f84b566e761c29fbec34b7",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-metadata-primary-repair-author-01.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 28590,
+      "sha256": "292a61f891dc7820628a45e7a8ad8e92a87da3a48f41ba4f57ca4aa9a24904d6",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/normal-legacy-lifecycle-fixture-author-01.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 4460,
+      "sha256": "7f5a37426b674436843cdc6e57b201199c856aafe60ddb1d80bed8aeb528619a",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/normal-legacy-lifecycle-fixture-independent-01.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 17609,
+      "sha256": "edc77bc8051485c2256c6f2b7f43fbc80f8995e0d25c579ea5869a598a0d45e3",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/normal-lifecycle-recheck-01-controller.log",
+      "group": "retained-coordinator-controller-log",
+      "bytes": 2216,
+      "sha256": "49038f028b2405c55765310c98c5072973ef6ba5086ab03ed7c17dff3f6b6741",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/post0607-ledger-notes-01.md",
+      "group": "superseded-historical-draft-not-current-ledger",
+      "bytes": 8430,
+      "sha256": "c2cf2446a1240250ca437978147df1328df067a7431e7ff87d4b6927b6752bf7",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/post5f35-evidence-delivery-controller-01.json",
+      "group": "prior700243-delivery-receipt",
+      "bytes": 2648,
+      "sha256": "fd55d188fd3e0f423e14dfde14b896602a2ea5f42a8e1289f38706bdcf275bce",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/post5f35-evidence-delivery-independent-01.json",
+      "group": "prior700243-delivery-receipt",
+      "bytes": 12173,
+      "sha256": "e7d4edbeb557ddaccf9ddf11462fe9ea8014b012148f910f6f91c6f770107011",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/source-scope-before-lifecycle-freeze-01.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 28886,
+      "sha256": "bb6298c3f2a417c72679e05bf5924818c1d14f469f6616ed5f09de20fd1504ae",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/transport-contracts-04-controller.log",
+      "group": "retained-coordinator-controller-log",
+      "bytes": 2828,
+      "sha256": "7bc733e100e96fe0a914a402784d423b556125c2f85f62517662361fc8a64f31",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": {
+        "source": ".gitignore",
+        "line": 26,
+        "pattern": "*.log"
+      },
+      "force_stage_reviewed_ignored_evidence": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/transport-contracts-04-evidence-independent-01.json",
+      "group": "held-source-control-or-evidence-review",
+      "bytes": 37536,
+      "sha256": "241e5770752472de8ee84cf4e8eb804f4c84687f0f45ec399746eaed72c35147",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "group": "reviewed-control-source-tests-docs",
+      "bytes": 14826,
+      "sha256": "b5ae13ab4f6158d3d5d067445286098f1aab72b177591bdb0e5252a1e2d06709",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": " M",
+      "base_git_mode": "100644",
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "group": "reviewed-control-source-tests-docs",
+      "bytes": 57512,
+      "sha256": "3c974b93e202359c12aa2647984b624024986676eb058ace9ecdf4e7663200bb",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": " M",
+      "base_git_mode": "100644",
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "scripts/release/tests/test_native_continuation.py",
+      "group": "reviewed-control-source-tests-docs",
+      "bytes": 55155,
+      "sha256": "dac139c779e33b795aa6f36fc0f853ee071099b927c901a9b993323c6f6edb35",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": " M",
+      "base_git_mode": "100644",
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "scripts/release/tests/test_native_process_probe.py",
+      "group": "reviewed-control-source-tests-docs",
+      "bytes": 43371,
+      "sha256": "2730119da9d074d490a259669d3e9f9b4fec655da2045bfd9401ee44dc91e4ea",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": " M",
+      "base_git_mode": "100644",
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "scripts/verification/ios-readiness/simulator_lifecycle.py",
+      "group": "reviewed-control-source-tests-docs",
+      "bytes": 37085,
+      "sha256": "8d799475f1e92fc7943ca05b2d1e59655cbb8b0973031029440662059e65f248",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py",
+      "group": "reviewed-control-source-tests-docs",
+      "bytes": 24627,
+      "sha256": "613f255556f052d553a2e85dc7d84e4f137957f47732356449e22d6991f7fc53",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": " M",
+      "base_git_mode": "100644",
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_native_command_failures.py",
+      "group": "reviewed-control-source-tests-docs",
+      "bytes": 27564,
+      "sha256": "2dae0e77803d5c6b98bd3d4bc1ee4f84a366b799da7e21c16e2068312e0d9b8c",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": " M",
+      "base_git_mode": "100644",
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_simulator_lifecycle.py",
+      "group": "reviewed-control-source-tests-docs",
+      "bytes": 75257,
+      "sha256": "2f7c957e47aa63804866a71e3b5a8566342c6f7deca2f80e57f0cd42af1a5a46",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_simulator_lifecycle_integration.py",
+      "group": "reviewed-control-source-tests-docs",
+      "bytes": 56392,
+      "sha256": "93d88840fcef436dbf45cc20de071e784daa4c6bc0e7683b623da8df7197100c",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": "??",
+      "base_git_mode": null,
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+      "group": "reviewed-control-source-tests-docs",
+      "bytes": 12166,
+      "sha256": "aee9e30948813929393acedfaad5767fee2a47eb896a7eddd81db96208f14672",
+      "git_mode": "100644",
+      "filesystem_mode": "0600",
+      "type": "regular",
+      "link_count": 1,
+      "uid": 0,
+      "git_status_code": " M",
+      "base_git_mode": "100644",
+      "ignore_rule": null,
+      "force_stage_reviewed_ignored_evidence": false
+    }
+  ],
+  "auditor_calculation_note": "An earlier read-only diagnostic assumed input manifest rows were arrays and raised KeyError before any report write; corrected to path/sha256 objects. No project code/test execution or evidence bytes changed.",
+  "work_and_cleanup": {
+    "method": "Read-only Git/raw hash/AST/JSON/XML inspection and this uniquely named report creation only.",
+    "tests_run": 0,
+    "builds_run": 0,
+    "native_runs": 0,
+    "workflow_dispatches": 0,
+    "project_imports_or_project_functions_executed": 0,
+    "source_edits": 0,
+    "staging_commits_pushes": 0,
+    "cleanup": "No reviewer-created build/test cycle, fixture, worker or temporary output. No Gradle/cleanup command executed; root cycle cleanup receipts retained and independently reviewed within stated scope."
+  },
+  "findings": [],
+  "readiness": "NOT READY. Primary safety/independent source controls and focused Linux results are not iOS L08 functional/retained-host/strict Complete, real normal Parlor libproc provenance, freshC03/full frozen qualification, physical-device, Store-operation, owner/legal/editorial/privacy approval."
+}

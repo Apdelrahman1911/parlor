@@ -1,0 +1,422 @@
+{"name": "primary-errors", "command": ["/usr/bin/python3", "-B", "-m", "unittest", "discover", "-v", "-s", "scripts/verification/ios-readiness", "-p", "test_native_command_failures.py"], "log": "primary-errors.log", "status": "PASS", "exit_code": 0}
+{"name": "simulator-lifecycle", "command": ["/usr/bin/python3", "-B", "-m", "unittest", "discover", "-v", "-s", "scripts/verification/ios-readiness", "-p", "test_simulator_lifecycle.py"], "log": "simulator-lifecycle.log", "status": "PASS", "exit_code": 0}
+{"name": "lifecycle-integration", "command": ["/usr/bin/python3", "-B", "-m", "unittest", "discover", "-v", "-s", "scripts/verification/ios-readiness", "-p", "test_simulator_lifecycle_integration.py"], "log": "lifecycle-integration.log", "status": "PASS", "exit_code": 0}
+{"name": "toolchain-profile", "command": ["/usr/bin/python3", "-B", "scripts/verification/ios-readiness/test_toolchain_profiles.py", "-v"], "log": "toolchain-profile.log", "status": "PASS", "exit_code": 0}
+{"name": "foundation-profile", "command": ["/usr/bin/python3", "-B", "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py"], "log": "foundation-profile.log", "status": "PASS", "exit_code": 0}
+{"name": "functional-copy", "command": ["/usr/bin/python3", "-B", "-m", "unittest", "discover", "-v", "-s", "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02", "-p", "test_l08_functional_copy.py"], "log": "functional-copy.log", "status": "PASS", "exit_code": 0}
+{"name": "composition", "command": ["/usr/bin/python3", "-B", "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py"], "log": "composition.log", "status": "PASS", "exit_code": 0}
+{"name": "normal", "command": ["/usr/bin/python3", "-B", "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py"], "log": "normal.log", "status": "FAIL", "exit_code": 1}
+{"name": "native-adapter", "command": ["/usr/bin/python3", "-B", "-m", "unittest", "-v", "scripts/release/tests/test_native_continuation.py"], "log": "native-adapter.log", "status": "PASS", "exit_code": 0}
+{"name": "probe-cycle-guard", "command": ["/usr/bin/python3", "-B", "-m", "unittest", "-v", "scripts.release.tests.test_native_process_probe.ProbeSourceContractTest.test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels"], "log": "probe-cycle-guard.log", "status": "PASS", "exit_code": 0}
+{
+  "schema_version": 1,
+  "cycle": "continuation-native-lifecycle-controls-01",
+  "status": "FAIL",
+  "scope": "Working-tree-bound synthetic controls plus exactly five reviewed local Python stand-ins; NOT Apple/application/simulator/libproc ABI/strict protection/Store proof",
+  "pass_scope": "Only fixed child exits, exact unskipped test counts, reviewed input pins, before/after input stability and retained log identities; external process/allocation clearance is separately REQUIRED",
+  "commands": [
+    {
+      "name": "primary-errors",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-v",
+        "-s",
+        "scripts/verification/ios-readiness",
+        "-p",
+        "test_native_command_failures.py"
+      ],
+      "log": "primary-errors.log",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "simulator-lifecycle",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-v",
+        "-s",
+        "scripts/verification/ios-readiness",
+        "-p",
+        "test_simulator_lifecycle.py"
+      ],
+      "log": "simulator-lifecycle.log",
+      "status": "PASS",
+      "exit_code": 0,
+      "external_cleanup_requires_independent_inspection": true
+    },
+    {
+      "name": "lifecycle-integration",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-v",
+        "-s",
+        "scripts/verification/ios-readiness",
+        "-p",
+        "test_simulator_lifecycle_integration.py"
+      ],
+      "log": "lifecycle-integration.log",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "toolchain-profile",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+        "-v"
+      ],
+      "log": "toolchain-profile.log",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "foundation-profile",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py"
+      ],
+      "log": "foundation-profile.log",
+      "status": "PASS",
+      "exit_code": 0,
+      "external_cleanup_requires_independent_inspection": true
+    },
+    {
+      "name": "functional-copy",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-v",
+        "-s",
+        "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02",
+        "-p",
+        "test_l08_functional_copy.py"
+      ],
+      "log": "functional-copy.log",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "composition",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py"
+      ],
+      "log": "composition.log",
+      "status": "PASS",
+      "exit_code": 0,
+      "external_cleanup_requires_independent_inspection": true
+    },
+    {
+      "name": "normal",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py"
+      ],
+      "log": "normal.log",
+      "status": "FAIL",
+      "exit_code": 1
+    },
+    {
+      "name": "native-adapter",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "scripts/release/tests/test_native_continuation.py"
+      ],
+      "log": "native-adapter.log",
+      "status": "PASS",
+      "exit_code": 0
+    },
+    {
+      "name": "probe-cycle-guard",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "scripts.release.tests.test_native_process_probe.ProbeSourceContractTest.test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels"
+      ],
+      "log": "probe-cycle-guard.log",
+      "status": "PASS",
+      "exit_code": 0
+    }
+  ],
+  "summaries": {
+    "primary-errors": {
+      "expected_tests": 26,
+      "reported_counts": [
+        "26"
+      ],
+      "unskipped_success_summary": true
+    },
+    "simulator-lifecycle": {
+      "expected_tests": 51,
+      "reported_counts": [
+        "51"
+      ],
+      "unskipped_success_summary": true
+    },
+    "lifecycle-integration": {
+      "expected_tests": 32,
+      "reported_counts": [
+        "32"
+      ],
+      "unskipped_success_summary": true
+    },
+    "toolchain-profile": {
+      "expected_tests": 12,
+      "reported_counts": [
+        "12"
+      ],
+      "unskipped_success_summary": true
+    },
+    "foundation-profile": {
+      "expected_tests": 20,
+      "reported_counts": [
+        "20"
+      ],
+      "unskipped_success_summary": true
+    },
+    "functional-copy": {
+      "expected_tests": 12,
+      "reported_counts": [
+        "12"
+      ],
+      "unskipped_success_summary": true
+    },
+    "composition": {
+      "expected_tests": 55,
+      "reported_counts": [
+        "55"
+      ],
+      "unskipped_success_summary": true
+    },
+    "normal": {
+      "expected_tests": 187,
+      "reported_counts": [
+        "187"
+      ],
+      "unskipped_success_summary": false
+    },
+    "native-adapter": {
+      "expected_tests": 40,
+      "reported_counts": [
+        "40"
+      ],
+      "unskipped_success_summary": true
+    },
+    "probe-cycle-guard": {
+      "expected_tests": 1,
+      "reported_counts": [
+        "1"
+      ],
+      "unskipped_success_summary": true
+    }
+  },
+  "log_identities": {
+    "primary-errors": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/primary-errors.log",
+      "sha256": "649bb10000b0b28d01ede1364c40ad2374e77f816df6d71f9b755156905f77c8",
+      "bytes": 5259
+    },
+    "simulator-lifecycle": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/simulator-lifecycle.log",
+      "sha256": "1b52c07a34c978abc2ea98031079d203cd624900a9c7625735c8037933a0572d",
+      "bytes": 14098
+    },
+    "lifecycle-integration": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/lifecycle-integration.log",
+      "sha256": "af4d1503e796df44647932a60d70a08b5440bdf0fc6d4d7b279c6d8d9b8dc5e5",
+      "bytes": 7483
+    },
+    "toolchain-profile": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/toolchain-profile.log",
+      "sha256": "4e317da79580be161f95988829550bcd3a260c9bef7fcaa4091bea9d08b79418",
+      "bytes": 2139
+    },
+    "foundation-profile": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/foundation-profile.log",
+      "sha256": "42082044dcaa16f228383c655d53b034859d451f4bd65ee1cea2c02c96bf7891",
+      "bytes": 4149
+    },
+    "functional-copy": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/functional-copy.log",
+      "sha256": "0d7d7eff25a88141614c231a899802b4b492ea5ed3ac88bae879719a53ed664f",
+      "bytes": 2543
+    },
+    "composition": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/composition.log",
+      "sha256": "818a3de073f3c79e1d037372627b7c9704b03acef97e1a532e8431075c2eae0c",
+      "bytes": 19632
+    },
+    "normal": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/normal.log",
+      "sha256": "6371a4a2b780b0bd3775ec0322357cb3882bea798951f5cf4c5731e06374d6d4",
+      "bytes": 131207
+    },
+    "native-adapter": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/native-adapter.log",
+      "sha256": "9e7cfd954921bc197091a2e10022cf54e155b52c61a85465f72763404210e152",
+      "bytes": 8604
+    },
+    "probe-cycle-guard": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/probe-cycle-guard.log",
+      "sha256": "b6c42af9add74670e9e1abdb64cdd0e27199b7cc8768d73977200e4636fca6e0",
+      "bytes": 326
+    }
+  },
+  "input_manifest_identities": {
+    "before": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/native-lifecycle-inputs-before.json",
+      "sha256": "8d1fb2104c9e7768ec1a81aa2bf8238d0ee38fb4e8392ecbfc206388528524a7",
+      "bytes": 48524
+    },
+    "after": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/native-lifecycle-inputs-after.json",
+      "sha256": "8d1fb2104c9e7768ec1a81aa2bf8238d0ee38fb4e8392ecbfc206388528524a7",
+      "bytes": 48524
+    }
+  },
+  "inputs_unchanged": true,
+  "expected_input_pins_match": true,
+  "source_and_runner_binding": "Actual complete source/runner before-and-after bindings and ordinary cleanup are owned by the enclosing receipt.json; no historical SHA or clean-source assertion is substituted here",
+  "unattempted_commands": [],
+  "external_postrun_reconciliation": {
+    "status": "REQUIRED_EXTERNAL_POSTRUN_RECONCILIATION",
+    "clearance": "NOT_GRANTED_BY_THIS_PACKET_OR_ORDINARY_LANE_PASS",
+    "required_on_every_outcome": true,
+    "owner": "Coordinator /root plus a different independent reviewer",
+    "blocks": "Source/inventory freeze and native/final CI dispatch until additive independent reconciliation closes actual process/allocation evidence",
+    "automatic_marker_parsing": false,
+    "obligations": [
+      "On every outcome, root and a different reviewer reopen each attempted raw driver log and its retained SHA/size, all child exit/error/shutdown records, both input manifests, and the enclosing lane source/runner/cleanup receipt.",
+      "Enumerate every actual allocation and cleanup marker even when embedded after a unittest progress prefix. Pair exact path/device/inode/uid; never assume line-start or exactly one pair, never prefix-delete or substitute ordinary lane scratch cleanup.",
+      "Confirm all exact allocated parents/stand-in temporary paths are absent after the cycle using fresh no-adoption inspection; unresolved absence, missing rows, ambiguity, cleanup FAIL, timeout, interruption or escalation withholds clearance and requires owned follow-up evidence.",
+      "Reconcile composition RESULTS discovered IDs/count/failures/errors/skips/native_execution and its two exact input-test hashes; verify all five distinct stand-in audit records, helper-owned exact-handle reaping, fallback/error state and current temporary absence.",
+      "The packet and ordinary lane PASS are deliberately NOT process/external-allocation clearance. Additive independent reconciliation must close this non-upgradeable REQUIRED state before source/inventory freeze and native/final CI dispatch. Preserve original native-repair-control01 FAIL and its reconciliations byte-for-byte."
+    ],
+    "targets": [
+      {
+        "name": "simulator-lifecycle",
+        "attempted": true,
+        "child_status": "PASS",
+        "log_identity": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/simulator-lifecycle.log",
+          "sha256": "1b52c07a34c978abc2ea98031079d203cd624900a9c7625735c8037933a0572d",
+          "bytes": 14098
+        },
+        "required_review": {
+          "expected_marker_count": 5,
+          "expected_test_ids": [
+            "test_simulator_lifecycle.HarnessSubprocessControls.test_harness_real_success_drains_both_streams_and_reaps_exact_handle",
+            "test_simulator_lifecycle.HarnessSubprocessControls.test_harness_exit_zero_with_real_diagnostic_stderr_remains_failed",
+            "test_simulator_lifecycle.HarnessSubprocessControls.test_harness_real_stdout_flood_is_bounded_and_the_exact_writer_is_reaped",
+            "test_simulator_lifecycle.HarnessSubprocessControls.test_harness_injected_wait_deadline_retires_closed_pipe_sleeping_handle_without_long_wait",
+            "test_simulator_lifecycle.HarnessSubprocessControls.test_harness_injected_wait_cancellation_retires_closed_pipe_sleeping_handle_without_global_signal"
+          ],
+          "kind": "FIVE_LOCAL_PYTHON_STANDINS_NOT_APP_OR_NATIVE_RUNTIME",
+          "marker": "HARNESS_SUBPROCESS_CONTROL",
+          "required": [
+            "Reopen all five distinct source-bound marker records, including any mid-line marker; bind fixed Python code through this reviewed source, not the sanitized <fixed-stand-in> display as an actual full argv trace.",
+            "Confirm the original inventory request was asserted before fixed sys.executable -B -c substitution; no simctl/native/build/app command was launched.",
+            "Require helper_reaped=True, reaped=True, integer return_code (negative expected failure-path exits may be valid), fallback_retirement=False, cleanup_errors=[] and native_runtime_proof=False for clean clearance; preserve and investigate every contrary/missing record.",
+            "Verify exact temporary paths are absent and enclosing worker/scratch cleanup is safe; injected TimeoutExpired/KeyboardInterrupt are synthetic triggers, not observed native timeout, OS signal delivery or cancellation proof."
+          ],
+          "source": {
+            "bytes": 75257,
+            "path": "scripts/verification/ios-readiness/test_simulator_lifecycle.py",
+            "sha256": "2f7c957e47aa63804866a71e3b5a8566342c6f7deca2f80e57f0cd42af1a5a46"
+          }
+        }
+      },
+      {
+        "name": "foundation-profile",
+        "attempted": true,
+        "child_status": "PASS",
+        "log_identity": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/foundation-profile.log",
+          "sha256": "42082044dcaa16f228383c655d53b034859d451f4bd65ee1cea2c02c96bf7891",
+          "bytes": 4149
+        },
+        "required_review": {
+          "allocation_marker": "PARLOR_APP_FOUNDATION_CONTROL_ALLOCATION",
+          "cleanup_marker": "PARLOR_APP_FOUNDATION_CONTROL_CLEANUP",
+          "expected_allocation_cleanup_pairs_from_current_source": 1,
+          "kind": "EXTERNAL_SYNTHETIC_FOUNDATION_FIXTURE_PARENT",
+          "required": [
+            "Bind every actual exact parent/custody allocation-cleanup pair and require PASS,parent_removed=True,matching device/inode/uid and workers_started=0.",
+            "Freshly verify each exact external parent is absent without adoption/deletion; the ordinary lane scratch receipt alone is insufficient."
+          ]
+        }
+      },
+      {
+        "name": "composition",
+        "attempted": true,
+        "child_status": "PASS",
+        "log_identity": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/composition.log",
+          "sha256": "818a3de073f3c79e1d037372627b7c9704b03acef97e1a532e8431075c2eae0c",
+          "bytes": 19632
+        },
+        "required_review": {
+          "allocation_marker": "PARLOR_APP_FOUNDATION_CONTROL_ALLOCATION",
+          "cleanup_marker": "PARLOR_APP_FOUNDATION_CONTROL_CLEANUP",
+          "expected_allocation_cleanup_pairs_from_current_source": 4,
+          "expected_input_tests": [
+            {
+              "bytes": 34661,
+              "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py",
+              "sha256": "c04c7d4b1bb99207415beab77ae3b40bb3d5f59709970f7d844d5d14beab0fe5"
+            },
+            {
+              "bytes": 28101,
+              "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+              "sha256": "1ee5d5889d50b94a11d3e3d2ce881899c2434eb97489e953f546a2b7d344afd5"
+            }
+          ],
+          "expected_results": {
+            "errors": 0,
+            "failures": 0,
+            "native_execution": false,
+            "skipped": [],
+            "tests_run": 55
+          },
+          "kind": "EXTERNAL_SYNTHETIC_FOUNDATION_COMPOSITION_FIXTURE_PARENTS",
+          "pair_explanation": "One outer parent plus three nested None/ValueError/KeyboardInterrupt callback parents; synthetic callbacks are not OS signal tests. Reconcile every actual row, not a startswith/exactly-one parser.",
+          "required": [
+            "Bind all actual allocation/cleanup pairs and exact custody, including mid-prefix nested output; require cleanup PASS,parent_removed=True,matching device/inode/uid and workers_started=0.",
+            "Verify every exact external parent is absent. Reopen RESULTS for55 distinct discovered IDs, zero failures/errors, empty skips, native_execution=False and exact two current test-source hashes."
+          ],
+          "results_marker": "PARLOR_APP_FOUNDATION_CONTROL_RESULTS"
+        }
+      }
+    ]
+  },
+  "native_or_ci_dispatch_authorized": false,
+  "errors": [],
+  "pending_signals": [],
+  "deferred_signals": []
+}

@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_SOURCE_REVIEW_CLARIFICATION_LATE_CLEANUP_RECEIPT_PERSISTENCE",
+  "recorded_at": "2026-09-08T17:50:05.186392+00:00",
+  "reviewer": "/root/portability_review",
+  "status": "ACCEPTABLE_JOURNAL_BACKED_SAFE_CLEANUP_NOT_SUCCESS_OR_EXECUTION_AUTHORIZATION",
+  "parent_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-implementation-independent-01.json",
+    "sha256": "44239859c10b762b6447234eddbc993ac1e9e65982a0e149250e943941194bdf"
+  },
+  "held_helper": {
+    "path": "scripts/verification/ios-readiness/simulator_lifecycle.py",
+    "sha256": "8d799475f1e92fc7943ca05b2d1e59655cbb8b0973031029440662059e65f248",
+    "bytes": 37085
+  },
+  "coordinator_question": "prepare_cleanup returns True when its later _publish(cleanup=True) catches a receipt-save failure; _destructive_authority checks the journal but not evidence_failed. Is independent resource destruction acceptable after this later receipt persistence failure?",
+  "conclusion": "Yes under the narrowly reviewed distinction below. No source change is requested. It does not bypass the required raw-retention acknowledgement or strict durable journal authority and cannot authorize cleanup PASS or another lane.",
+  "reasoning": [
+    {
+      "scope": "Required raw evidence acknowledgement",
+      "source": "companion/run_ios_readiness.py:742-806; normal/run_normal_ios_launch.py:444-464; compose_runner.py:118-133; simulator_lifecycle.py:595-609",
+      "detail": "Acknowledgement is set only after the existing required raw retention block completed and its save succeeded. Failure of that acknowledgement save resets False; composed Foundation stage failure or staged acknowledgement persistence failure also resets False. This prerequisite is checked before postbuild owner stop/refresh/reap and is distinct from a later summary checkpoint. No claim that the raw-record save itself gains a new fsync guarantee."
+    },
+    {
+      "scope": "Destructive barrier is independently journaled before the later summary save",
+      "source": "simulator_lifecycle.py:199-262,587-625",
+      "detail": "prepare_cleanup must validate live source/control/temp/evidence custody and current journal bytes, establish original strict worker/direct-handle quiescence and append the barrier through the non-suppressing _append path. That path verifies exact inode/link/mode/bytes, writes/fsyncs the journal and fsyncs its directory. Only afterward does _publish(cleanup=True) write the main receipt. An _append or journal/binding failure raises, marks failed state and prevents the barrier from returning True."
+    },
+    {
+      "scope": "Later summary save failure permits only independently attested cleanup",
+      "source": "simulator_lifecycle.py:286-295,325-342,425-435,520-527,621-670",
+      "detail": "_publish catches the late save exception, sets both failed and evidence_failed and preserves a bounded diagnostic. Noncleanup _capture/boot/build work is refused. Cleanup does not acquire new PID/group/resource authority: shutdown/delete still retire exact handles, check live custody/source/control and journal, read fresh strict device inventory, and journal their own intents/results non-suppressingly. A later receipt checkpoint is not the only durable record of those cleanup actions."
+    },
+    {
+      "scope": "No successful cleanup/runtime qualification can follow the failure",
+      "source": "simulator_lifecycle.py:269-284,672-689; scripts/ci/native_continuation.py:369-444,447-611,854-868",
+      "detail": "The evidence_failed latch is never cleared. finish explicitly requires summary cleanup_status PASS, which is impossible with evidence_failed. Wrapper stage/error reporting therefore fails even if device retirement itself succeeds; the outer adapter also requires evidence_failed=False, a complete matching raw journal/custody/receipt and all prior cleanup guards. Missing, malformed or unwritable main receipt prevents admission. No recovery converts the original runtime result to PASS."
+    },
+    {
+      "scope": "Evidence and failed resources remain honestly scoped",
+      "source": "companion/run_ios_readiness.py:989-1086; normal/run_normal_ios_launch.py:829-909; scripts/ci/native_continuation.py:840-868",
+      "detail": "Required retained raw files and the lifecycle journal are in the evidence directory, not the temporary copy being retired. With the earlier required acknowledgement intact, later safe temp retirement may occur after original strict holder checks, while receipt persistence failure remains failure and raw outer preservation precedes parsing. This is not permission to delete when acknowledgement is missing/failed, to suppress journal write failure, to reroute build/AppHost queries or to report an ended hosted runner as cleanup proof."
+    }
+  ],
+  "limits": [
+    "Strict _append/binding failure remains a denial, not a permissive cleanup fallback.",
+    "This distinction approves source policy only. Focused low-level/integration controls and separate execution binding remain coordinator obligations.",
+    "No tests, native tools, Python child stand-ins, builds, Actions, signals, cleanup, source edits, staging, commit or push executed by this reviewer.",
+    "Original failed A19 simulator retirement and B20 NOT_RUN remain unchanged; strict L08 and real Parlor libproc are not qualified."
+  ],
+  "cleanup": "Only this new additive review note was written; the original review/hash is preserved. No build/test resources were allocated."
+}

@@ -1,0 +1,893 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_DIRECT_SIMULATOR_LIFECYCLE_REGRESSION_INTEGRATION_AND_CONTROL_CLOSURE_REVIEW",
+  "recorded_at": "2026-09-08T17:55:26.944Z",
+  "reviewer": "/root/fixture_review",
+  "authors": {
+    "implementation_and_adapter": "/root/ci_workflow",
+    "low_level_tests": "/root/lifecycle_controls",
+    "actual_wrapper_integration_tests": "/root/native_ci"
+  },
+  "status": "APPROVED_EXACT_HELD_CONTROL_SOURCE_AND_ORACLES_NOT_EXECUTED_NOT_NATIVE_AUTHORIZATION",
+  "repository": {
+    "root": "/root/projects/Parlor/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "observed_head": "700243c3426db2da3855a9d3a3df58ada607ffc5",
+    "observed_tree": "bd93099fe19ccf46e27eb67f22d694cc1ae074aa",
+    "comparison_source": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+    "worktree": "Held reviewed source remains uncommitted; source/inventory freeze and fresh platform bindings are not supplied by this review."
+  },
+  "scope": "Independent review of actual regression oracles, helper boundaries, normal/companion/composer CLI and cleanup glue, adapter journal admission, immutable clone/ownership contracts and exact control closure. Full implementation/ownership approval is separately recorded by portability_review. No author summary substituted for reopening source, changed regions, actual assertions and static bytes.",
+  "findings": [],
+  "held_source_files": [
+    {
+      "path": "scripts/verification/ios-readiness/simulator_lifecycle.py",
+      "sha256": "8d799475f1e92fc7943ca05b2d1e59655cbb8b0973031029440662059e65f248",
+      "bytes": 37085,
+      "report_match": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "sha256": "b0f3794fe89537d5108a2c24c22c33ed94d9330ee220e7fa257bfb2c4a7b1e29",
+      "bytes": 76990,
+      "report_match": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/README.md",
+      "sha256": "69afd6136fdeecf9cca3426a523e130de01389b463db60ffd25254de87294142",
+      "bytes": 11891,
+      "report_match": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "sha256": "5524d839202211270ec1c97776f0d350b9802ecf0d1c5e6eb3d28cd960629302",
+      "bytes": 59858,
+      "report_match": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+      "sha256": "16ae9dbdaf680add4eeb965dee0b96910d8ecf3ef6bb89c3b8afead1a8975451",
+      "bytes": 23054,
+      "report_match": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+      "sha256": "cf41c413d321d87689b97b86e4fe7981052dab6b629c8ffcd57b15a00be6555c",
+      "bytes": 21878,
+      "report_match": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md",
+      "sha256": "ab3e78c11a796e2122f666ca8522d0eeea44da5b0c180292140ba28c645a300b",
+      "bytes": 12318,
+      "report_match": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+      "sha256": "241bc0e199be2699fe49b1552d993e7389de79ff8fb88f2d1fe53bed99847840",
+      "bytes": 13449,
+      "report_match": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-draft-freeze-01.json",
+      "sha256": "4a18e36224c895581515d538f995e6f8a1bd7016a3cf6eba3328712e5535bd08",
+      "bytes": 2956,
+      "report_match": true
+    },
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "sha256": "3c974b93e202359c12aa2647984b624024986676eb058ace9ecdf4e7663200bb",
+      "bytes": 57512,
+      "report_match": true
+    },
+    {
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "sha256": "b5ae13ab4f6158d3d5d067445286098f1aab72b177591bdb0e5252a1e2d06709",
+      "bytes": 14826,
+      "report_match": true
+    },
+    {
+      "path": "scripts/release/tests/test_native_continuation.py",
+      "sha256": "dac139c779e33b795aa6f36fc0f853ee071099b927c901a9b993323c6f6edb35",
+      "bytes": 55155,
+      "report_match": true
+    },
+    {
+      "path": "scripts/release/tests/test_native_process_probe.py",
+      "sha256": "2730119da9d074d490a259669d3e9f9b4fec655da2045bfd9401ee44dc91e4ea",
+      "bytes": 43371,
+      "report_match": true
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_native_command_failures.py",
+      "sha256": "2dae0e77803d5c6b98bd3d4bc1ee4f84a366b799da7e21c16e2068312e0d9b8c",
+      "bytes": 27564,
+      "report_match": true
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+      "sha256": "aee9e30948813929393acedfaad5767fee2a47eb896a7eddd81db96208f14672",
+      "bytes": 12166,
+      "report_match": true
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py",
+      "sha256": "613f255556f052d553a2e85dc7d84e4f137957f47732356449e22d6991f7fc53",
+      "bytes": 24627,
+      "report_match": true
+    }
+  ],
+  "held_new_tests": [
+    {
+      "path": "scripts/verification/ios-readiness/test_simulator_lifecycle.py",
+      "sha256": "2f7c957e47aa63804866a71e3b5a8566342c6f7deca2f80e57f0cd42af1a5a46",
+      "count": 51,
+      "classes": {
+        "SyntheticPipe": 0,
+        "SyntheticChild": 0,
+        "SyntheticSelector": 0,
+        "LifecycleFixture": 0,
+        "SelectionAndInventoryControls": 5,
+        "ConstructionAndClosedCommandControls": 4,
+        "DurableCreationAndRecoveryControls": 10,
+        "CaptureAndPersistenceControls": 11,
+        "CustodyAndPostbuildBarrierControls": 8,
+        "CleanupAndReceiptControls": 8,
+        "WaitOnceAdapter": 0,
+        "HarnessSubprocessControls": 5
+      }
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_simulator_lifecycle_integration.py",
+      "sha256": "93d88840fcef436dbf45cc20de071e784daa4c6bc0e7683b623da8df7197100c",
+      "count": 32,
+      "classes": {
+        "LifecycleRouteIntegration": 9,
+        "LifecycleBuildBoundaryIntegration": 6,
+        "LifecycleFinalizerIntegration": 14,
+        "LifecycleCompositionClosureIntegration": 3
+      }
+    }
+  ],
+  "declarations_only": [
+    {
+      "path": "scripts/verification/ios-readiness/test_simulator_lifecycle.py",
+      "sha256": "2f7c957e47aa63804866a71e3b5a8566342c6f7deca2f80e57f0cd42af1a5a46",
+      "count": 51,
+      "classes": {
+        "SyntheticPipe": 0,
+        "SyntheticChild": 0,
+        "SyntheticSelector": 0,
+        "LifecycleFixture": 0,
+        "SelectionAndInventoryControls": 5,
+        "ConstructionAndClosedCommandControls": 4,
+        "DurableCreationAndRecoveryControls": 10,
+        "CaptureAndPersistenceControls": 11,
+        "CustodyAndPostbuildBarrierControls": 8,
+        "CleanupAndReceiptControls": 8,
+        "WaitOnceAdapter": 0,
+        "HarnessSubprocessControls": 5
+      }
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_simulator_lifecycle_integration.py",
+      "sha256": "93d88840fcef436dbf45cc20de071e784daa4c6bc0e7683b623da8df7197100c",
+      "count": 32,
+      "classes": {
+        "LifecycleRouteIntegration": 9,
+        "LifecycleBuildBoundaryIntegration": 6,
+        "LifecycleFinalizerIntegration": 14,
+        "LifecycleCompositionClosureIntegration": 3
+      }
+    },
+    {
+      "path": "scripts/release/tests/test_native_continuation.py",
+      "sha256": "dac139c779e33b795aa6f36fc0f853ee071099b927c901a9b993323c6f6edb35",
+      "count": 40,
+      "classes": {
+        "NativeScopeTest": 4,
+        "NativeArtifactTest": 12,
+        "NativeCleanupTest": 17,
+        "NativePreflightTest": 2,
+        "DirectLifecycleAdapterTest": 5
+      }
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_native_command_failures.py",
+      "sha256": "2dae0e77803d5c6b98bd3d4bc1ee4f84a366b799da7e21c16e2068312e0d9b8c",
+      "count": 26,
+      "classes": {
+        "NativeCommandFailureControls": 12,
+        "NativeSimulatorMetadataFailureControls": 14
+      }
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+      "sha256": "aee9e30948813929393acedfaad5767fee2a47eb896a7eddd81db96208f14672",
+      "count": 12,
+      "classes": {
+        "ProfileControls": 8,
+        "RunnerProfileControls": 4
+      }
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py",
+      "sha256": "613f255556f052d553a2e85dc7d84e4f137957f47732356449e22d6991f7fc53",
+      "count": 20,
+      "classes": {
+        "FoundationToolchainControls": 13,
+        "FoundationToolchainHookControls": 7
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+      "sha256": "1ee5d5889d50b94a11d3e3d2ce881899c2434eb97489e953f546a2b7d344afd5",
+      "count": 22,
+      "classes": {
+        "SourceControls": 9,
+        "OwnedFixtures": 0,
+        "IntegrationControls": 10,
+        "LauncherControls": 3
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py",
+      "sha256": "c04c7d4b1bb99207415beab77ae3b40bb3d5f59709970f7d844d5d14beab0fe5",
+      "count": 33,
+      "classes": {
+        "SchemaControls": 16,
+        "SourceControls": 9,
+        "OwnedCopyControls": 8
+      }
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+      "sha256": "b58d9761b7c199f0ab7fd01c2c6614d2f49e0a71102fd54ff3f6783acfede7f0",
+      "count": 12,
+      "classes": {
+        "L08FunctionalCopyTests": 12
+      }
+    },
+    {
+      "path": "scripts/release/tests/test_native_process_probe.py",
+      "sha256": "2730119da9d074d490a259669d3e9f9b4fec655da2045bfd9401ee44dc91e4ea",
+      "count": 45,
+      "classes": {
+        "Clock": 0,
+        "Child": 0,
+        "Selector": 0,
+        "ProbeSourceContractTest": 6,
+        "ProbeBoundedCaptureTest": 17,
+        "ProbePrivacyAndCustodyTest": 8,
+        "ProbeLifecycleTest": 7,
+        "ProbeSimulatorGlueTest": 3,
+        "NativeMetadataObservationTest": 4
+      }
+    }
+  ],
+  "declaration_correction": {
+    "probe_total": 45,
+    "changed_selector": "ProbeSourceContractTest.test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels",
+    "selected_for_delta": 1,
+    "unchanged": 44,
+    "source_snapshot": {
+      "baseline_sha256": "707f394e34d8234f4617963af32a865b3620aaec7a16ee6e0c166c0e1090ef39",
+      "current_sha256": "2730119da9d074d490a259669d3e9f9b4fec655da2045bfd9401ee44dc91e4ea",
+      "baseline_count": 45,
+      "changed": [
+        "test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels"
+      ]
+    },
+    "disposition": "Author source02 stale probe_other_38 label is corrected by the preserved additive count report6c34261e…. Independently counted old/current45 and exactly one changed method. No rerun of44 unchanged probe methods requested; declarations are not executed counts."
+  },
+  "resolved_review_findings": [
+    {
+      "issue": "Dispatched partial-create recovery lacked actual negative-path controls.",
+      "resolution": "Held low-level tests invoke the real create/recover/delete code with registered dispatched create, then missing/cloned/suffixed/wrong runtime/type/unavailable inventory. Recovery retains resources, UUID remains unset and no destructive command is dispatched."
+    },
+    {
+      "issue": "Baseline UUID rejection was previously covered only by pure identity validation.",
+      "resolution": "Actual create stdout returning a preexisting baseline UUID and subsequent attempted recovery cannot adopt or destroy it; foreign directory remains and no successful create receipt is fabricated."
+    },
+    {
+      "issue": "Destructive identity checks needed a public-method oracle, not only _owned tests.",
+      "resolution": "Actual delete with renamed/wrong-UUID/clone/runtime fresh metadata performs inventory only, never dispatches delete; cleanup remains failed and exact device is retained."
+    },
+    {
+      "issue": "Real stand-in test fallback could skip kill/wait after terminate failure.",
+      "resolution": "Bounded exact-Popen wait0/terminate5/kill5 fallback continues across action/wait failures, closes pipes and prints cleanup_errors; unreaped/errors cannot yield a passing test, and an existing primary receives an additive note instead of replacement. No PID/group/global signals."
+    },
+    {
+      "issue": "Integration fixture could fail from absent namespace members instead of the intended barrier.",
+      "resolution": "Foundation restrict_final is inert FAIL-preserving; actual extracted prepare_cleanup has its cleanup-start seam. Negative ack tests require the exact RuntimeError direct-simulator-postbuild-evidence-not-preserved and postbuild-quiescence-barrier error. A positive actual barrier test separately proves stop/refresh/handle-wait and destruction/removal order."
+    },
+    {
+      "issue": "New composed acknowledgement save could bypass worker/FIFO retirement or leave stale True.",
+      "resolution": "Source uses staged acknowledgement persistence; save failure revokes True while workers/FIFO/final census continue. Actual-finalizer tests assert both simulator and temporary fixture retention, not only receipt flags."
+    },
+    {
+      "issue": "Adapter initially lacked full journal custody and event chronology.",
+      "resolution": "Held gate/tests bind actual raw journal/source/control/temp/evidence, exactly one allocation, before-create plan, matched launch/result, matching create outcome, full fresh exact Shutdown metadata immediately before delete and final absence. Rehashed mutation controls cannot rely only on stale hash rejection."
+    },
+    {
+      "issue": "Companion README edit violated the immutable clone allowlist.",
+      "resolution": "Author V2 restored exact69afd613… bytes. Static65 canonical hashes/75-member directory/protected clone hashes, existing Mafia literal strip and exact copied_sources import transform all reconcile; no clone guard or allowlist edit."
+    },
+    {
+      "issue": "Author source02 probe unchanged count was inaccurate.",
+      "resolution": "Additive count report corrects38 to44 unchanged of45 declared methods; independent AST/Git comparison confirms only the cycle-label selector changed."
+    }
+  ],
+  "low_level_oracle_review": {
+    "result": "APPROVED_SOURCE_ONLY",
+    "methods": 51,
+    "synthetic_methods": 46,
+    "real_python_standin_methods": 5,
+    "resource_model": "Fresh test-owned repository/temp/evidence/home directories. Popen denied by default; synthetic launch queue validates exact closed original argv, cwd, env and stream options. Actual helper journal/custody/recovery/command/barrier paths are exercised when root runs them; no shared simulator or build ownership.",
+    "coverage": [
+      "Legacy default and exact qualified opt-in selector; duplicate/unknown/local rejection before allocation; inert constructor and closed environment/command forms.",
+      "Bounded full inventory schema, UUID normalization, diagnostic privacy, exclusive/fsynced intent and hashed complete baseline before dispatched create.",
+      "Intent fsync/receipt failure, existing journal/symlink/hardlink, registered failed/interrupted create recovery, never-issued create refusal, preexisting UUID refusal and exact resource identity.",
+      "Separate stream bounds, actual exit/elapsed/hash/reap rows, timeout/cancellation/launch/PID/selector/read/pipe/retirement/persistence failures and sticky primary errors.",
+      "Journal short writes/limits, inode/link/mode/byte/source/control/custody substitution; launch-inclusive deadlines, cleanup allowance and signal-handler restoration.",
+      "Sticky build marker, exact Boolean raw-retention ack, original strict stop/fresh include_outputs census/exact build-handle wait0; missing owner, live/unknown/error holders, bad handles and direct lifecycle unreaped negatives.",
+      "Fresh shutdown state before delete; real helper public-method no-destructive-dispatch negatives; zero exit alone is not metadata/directory/symlink absence; finish/persistence failures cannot report PASS."
+    ],
+    "standins": [
+      "Real Python success drains both streams and reaps exact handle.",
+      "Real diagnostic stderr with exit0 remains failure.",
+      "Real bounded stdout flood rejects and reaps exact writer.",
+      "Injected TimeoutExpired at real wait for closed-pipe sleeping Python child retires exact handle; this is not an observed native timeout.",
+      "Injected KeyboardInterrupt at real wait for closed-pipe sleeping Python child retires exact handle; this is not an observed native cancellation."
+    ],
+    "standin_limits": "Only root may run these five explicitly authorized Linux harness stand-ins. Exact interpreter Popen handles, fixed -B -c scripts and validated closed original request; no simctl, AppHost, app/libproc, Xcode, Gradle, process/group adoption or global signals. Raw HARNESS_SUBPROCESS_CONTROL audit lines must later show helper_reaped, fallback_retirement, return_code, cleanup_errors and reaped. Any fallback/errors/unreaped result requires honest reconciliation; no application-runtime credit."
+  },
+  "integration_oracle_review": {
+    "result": "APPROVED_SOURCE_ONLY",
+    "methods": 32,
+    "coverage": [
+      "Actual isolated AST CLI/wrapper call paths: default legacy, explicit qualified direct and early nonqualified denial; exact receipt selector and live source/control callback only in direct mode.",
+      "Actual direct/legacy wrapper routing and failure no-fallback; app container and normal launch expressions retain generic ownership; composer forwards exact arguments without executing native runner.",
+      "Actual Xcode try/finally boundary marks before build and performs immediate Gradle stop after marker or builder failure while preserving original errors.",
+      "Normal actual three-view raw XCResult extraction and companion/composed actual two-view plus bounded container/operation/native/Foundation retention; extraction/copy/storage/functional/native/Foundation/save failures cannot acknowledge.",
+      "Actual complete finalizers use presence-bearing owned fixtures. Exact True gates simulator destruction; helper finish precedes temporary removal; no UUID/recovery failure/Foundation failure/ack persistence failure retains resources while workers/FIFO/final census still run.",
+      "Actual extracted helper barrier positive control requires original stop, fresh include_outputs census and exact direct build handle wait0; negative ack cases assert exact error provenance, barrier FAIL and both device/temp retention, so namespace errors cannot masquerade as gate coverage.",
+      "Final strict census/copied-input/source/control/secondary errors remain failures; successful synthetic cleanup never upgrades synthetic app statusFAIL.",
+      "Actual static manifests include helper and both lifecycle tests at current hashes; canonical runner/owned_lane/FIFO bytes immutable; actual generated wrapper functions remain AST-identical."
+    ],
+    "limits": "AST isolation executes only under the coordinator's later test command; this reviewer performed ast.parse/literal inspection only. Synthetic files/mocks are not Apple native or Parlor runtime evidence."
+  },
+  "adapter_oracle_review": {
+    "result": "APPROVED_SOURCE_ONLY",
+    "current_methods": 40,
+    "preexisting_methods": 35,
+    "new_methods": 5,
+    "preexisting_method_comparison": {
+      "count": 35,
+      "missing_or_changed": []
+    },
+    "coverage": [
+      "Valid complete synthetic cleanup remains distinct from runtime PASS; legacy cleanup fixtures do not authorize explicitly selected direct mode.",
+      "Mode/source/control/build marker/retention ack/barrier/identity/child reap/command shape and cleanup error mutations refuse admission.",
+      "Actual raw rehashed journal mutations cover source/temp/evidence custody, single allocation, intent/launch/result ordering, fresh before-delete full metadata, create outcome, baseline exclusion and final absence.",
+      "Actual Continuation.evidence -> run_native -> preserve -> journal gate with a synthetic producer runs A+B only for complete safe cleanup, while malformed/missing journal/mode/barrier stops after A and preserves evidence. Even safe synthetic A+B remains NOT_READY."
+    ],
+    "gate_change": "cleanup_is_safe intentionally adds optional direct-mode checks and actual run_native passes direct-owned-v1. Its AST differs by reviewed additive gate; all35 preexisting test method ASTs remain identical. Generic adapter command AST remains unchanged.",
+    "late_checkpoint_policy": "Reopened helper prepare_cleanup/_destructive_authority/finish and portability persistence note. Earlier successful raw-evidence ack plus independently fsynced strict journal barrier can authorize safe cleanup after a later summary-save failure; evidence_failed remains sticky and finish/adapter admission cannot PASS. This is distinct from missing/failed raw ack, which denies both device and temporary destruction."
+  },
+  "static_control_closure": {
+    "method": "Read-only stdlib JSON/SHA/AST inspection and in-memory exact literal replacement, never project imports, compile/exec, discovery or schema engines.",
+    "clone_contract": {
+      "manifest_path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-functional-companion-clone-manifest-01.json",
+      "sha256": "3036231a1bcfc9d567b8381ee33d89cd381377bea2b10790ddde0f90baf682fb",
+      "expected_sha256": "3036231a1bcfc9d567b8381ee33d89cd381377bea2b10790ddde0f90baf682fb",
+      "original_count": 65,
+      "allowed_count": 75,
+      "actual_count": 75,
+      "permitted_changed": [
+        "copied_sources.py",
+        "run_ios_readiness.py"
+      ],
+      "canonical_mismatches": [],
+      "protected_clone_mismatches": [],
+      "unexpected": [],
+      "missing": [],
+      "all_regular_nonsymlink": true,
+      "mafia_transform_counts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "mafia_strip_equals_canonical": true,
+      "copied_sources_anchor_count": 1,
+      "copied_sources_exact_clone": true,
+      "companion_readme_sha256": "69afd6136fdeecf9cca3426a523e130de01389b463db60ffd25254de87294142"
+    },
+    "draft_freeze": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-draft-freeze-01.json",
+      "sha256": "4a18e36224c895581515d538f995e6f8a1bd7016a3cf6eba3328712e5535bd08",
+      "previous_sha256": "2905ce996bad3d6e1d3d45e9fd7594cbe54cc93380e608781a7f34d73b0784a0",
+      "previous_matches": true,
+      "rows": [
+        {
+          "path": "L08AppFoundation.m.in",
+          "sha256": "f7b0e515b580f4bd9c49857ad4a49a3ab925218e8e52c260eb14cc75e410cba7",
+          "matches": true,
+          "changed_from_previous": false
+        },
+        {
+          "path": "L08AppFoundationBridge.h.in",
+          "sha256": "b65a86e26170b313ba00d875910da7499685736240a5cb644b6f916ec71e7d08",
+          "matches": true,
+          "changed_from_previous": false
+        },
+        {
+          "path": "L08AppFoundationLaunch.swift.in",
+          "sha256": "76e37762006d912e40b18508414dc55384aaa89be9212f7fd172b55a30edabb0",
+          "matches": true,
+          "changed_from_previous": false
+        },
+        {
+          "path": "L08AppFoundationUITests.swift.in",
+          "sha256": "5f3f136ec7c5925ed82f277c2ca60e6f22ba81e42e97cc22ef7bdc3954ef2e07",
+          "matches": true,
+          "changed_from_previous": false
+        },
+        {
+          "path": "README.md",
+          "sha256": "0854ffec41d4eafcbfc8269b2c199d4d681e79576e4d53b77716ff0080249cc1",
+          "matches": true,
+          "changed_from_previous": false
+        },
+        {
+          "path": "ROOT_INTEGRATION.md",
+          "sha256": "e3009bfe096930dbde969f239dd162da15a25d407e4b39a99f8bf4fab22d8dcb",
+          "matches": true,
+          "changed_from_previous": false
+        },
+        {
+          "path": "app_foundation_copy.py",
+          "sha256": "241bc0e199be2699fe49b1552d993e7389de79ff8fb88f2d1fe53bed99847840",
+          "matches": true,
+          "changed_from_previous": true
+        },
+        {
+          "path": "app_foundation_receipts.py",
+          "sha256": "db69c16b7d8abfb5998f92db886a8b8c77bcbb3e72fdd1d806f0ea3dd05f1fb6",
+          "matches": true,
+          "changed_from_previous": false
+        },
+        {
+          "path": "test_app_foundation.py",
+          "sha256": "c04c7d4b1bb99207415beab77ae3b40bb3d5f59709970f7d844d5d14beab0fe5",
+          "matches": true,
+          "changed_from_previous": false
+        }
+      ],
+      "copy_pins": [
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+          "sha256": "b0f3794fe89537d5108a2c24c22c33ed94d9330ee220e7fa257bfb2c4a7b1e29",
+          "matches": true
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/copied_sources.py",
+          "sha256": "ba1dbbd9fabc23e43060663ff6051617f1fe3119979e60df7a1db3c13fe950d6",
+          "matches": true
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/NativeReadinessUITests.swift.in",
+          "sha256": "fa2dc7dbc97c576262ad14cd85b22f65aa908b1629ab1a205b22aa4873f5c0dc",
+          "matches": true
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/NativeReadinessLaunch.swift.in",
+          "sha256": "df8f0cce3f45bedbfea47df3ca0b2e56c6a777383395fc170f0f07b83f8d143a",
+          "matches": true
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01Probe.swift.in",
+          "sha256": "1c4b113ec8695d8da2115e4f386fdaf8820411879af6ff9492109b62c7770746",
+          "matches": true
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_functional_copy.py",
+          "sha256": "417865a86daca8c09e1d650abc2d46b20920a128d95d2021ad365e38e7a207a4",
+          "matches": true
+        }
+      ]
+    },
+    "composition": {
+      "driver_pin_matches": true,
+      "freeze_pin_matches": true,
+      "transform_counts": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "generated_sha256": "23c29b8a5eedbfc345ab34d4c90c7bd82cdd3c7c917b3f5eb87af1be883463bc",
+      "ast_parse": "STATIC_ONLY",
+      "protected_functions": [
+        {
+          "name": "AppHostOwnership",
+          "unchanged": true,
+          "matches": 1
+        },
+        {
+          "name": "command",
+          "unchanged": true,
+          "matches": 1
+        },
+        {
+          "name": "verify_workers",
+          "unchanged": true,
+          "matches": 1
+        },
+        {
+          "name": "simulator_command",
+          "unchanged": true,
+          "matches": 1
+        },
+        {
+          "name": "own_simulator_metadata",
+          "unchanged": true,
+          "matches": 1
+        },
+        {
+          "name": "shutdown_owned_device",
+          "matches": 1,
+          "unchanged": true,
+          "current_ast_sha256": [
+            "ab1913237de9e095cb12acc7b8abe6fb682ed76982413d6b2a6bdef1a864dcbf"
+          ]
+        },
+        {
+          "name": "delete_owned_device",
+          "matches": 1,
+          "unchanged": true,
+          "current_ast_sha256": [
+            "b1aa2a38510fb3e3f02476a28c00c0976319778e553215b5f35a902568305609"
+          ]
+        }
+      ],
+      "reference_pins": [
+        {
+          "path": "run_control.py",
+          "sha256": "58e8daf875eaf8061ed017e10cc8c8065eb49292866b6741227814282a1b8e9f",
+          "matches": true
+        },
+        {
+          "path": "FoundationProtectionControl.m",
+          "sha256": "a6b025d7b77c3b1b1de57b93869d0beff6b4cc9e365eb5672ffd2be9d52013f2",
+          "matches": true
+        }
+      ]
+    },
+    "known_members": {
+      "companion": {
+        "count": 79,
+        "unique_count": 79,
+        "all_regular_canonical": true,
+        "required_present": true,
+        "known_rows_sha256": "3000ac06dae7f6ea7374effb0c81bb652fc687fa70af4b4eb49c61d9a17d049a",
+        "lifecycle_members": [
+          {
+            "path": "scripts/verification/ios-readiness/simulator_lifecycle.py",
+            "sha256": "8d799475f1e92fc7943ca05b2d1e59655cbb8b0973031029440662059e65f248"
+          },
+          {
+            "path": "scripts/verification/ios-readiness/test_simulator_lifecycle.py",
+            "sha256": "2f7c957e47aa63804866a71e3b5a8566342c6f7deca2f80e57f0cd42af1a5a46"
+          },
+          {
+            "path": "scripts/verification/ios-readiness/test_simulator_lifecycle_integration.py",
+            "sha256": "93d88840fcef436dbf45cc20de071e784daa4c6bc0e7683b623da8df7197100c"
+          }
+        ]
+      },
+      "normal": {
+        "count": 93,
+        "unique_count": 93,
+        "all_regular_canonical": true,
+        "required_present": true,
+        "known_rows_sha256": "1f1e85d0b57e83bd802583dbb64e4faef831c21eeead854e5e0f8ae4896301d8",
+        "lifecycle_members": [
+          {
+            "path": "scripts/verification/ios-readiness/simulator_lifecycle.py",
+            "sha256": "8d799475f1e92fc7943ca05b2d1e59655cbb8b0973031029440662059e65f248"
+          },
+          {
+            "path": "scripts/verification/ios-readiness/test_simulator_lifecycle.py",
+            "sha256": "2f7c957e47aa63804866a71e3b5a8566342c6f7deca2f80e57f0cd42af1a5a46"
+          },
+          {
+            "path": "scripts/verification/ios-readiness/test_simulator_lifecycle_integration.py",
+            "sha256": "93d88840fcef436dbf45cc20de071e784daa4c6bc0e7683b623da8df7197100c"
+          }
+        ]
+      },
+      "composed": {
+        "count": 98,
+        "unique_count": 98,
+        "all_regular_canonical": true,
+        "required_present": true,
+        "known_rows_sha256": "c62c9b3f77b3254355e43f79731b65fb64f574d86db46126ed05bff6c5e76452",
+        "lifecycle_members": [
+          {
+            "path": "scripts/verification/ios-readiness/simulator_lifecycle.py",
+            "sha256": "8d799475f1e92fc7943ca05b2d1e59655cbb8b0973031029440662059e65f248"
+          },
+          {
+            "path": "scripts/verification/ios-readiness/test_simulator_lifecycle.py",
+            "sha256": "2f7c957e47aa63804866a71e3b5a8566342c6f7deca2f80e57f0cd42af1a5a46"
+          },
+          {
+            "path": "scripts/verification/ios-readiness/test_simulator_lifecycle_integration.py",
+            "sha256": "93d88840fcef436dbf45cc20de071e784daa4c6bc0e7683b623da8df7197100c"
+          }
+        ]
+      }
+    },
+    "binding_limit": "Known member counts/hashes deliberately EXCLUDE the mandatory future source-binding leaf. They are not approved runtime control hashes, platform bindings, source freezes or new runtime evidence. All three actual functions still require/include their binding as appropriate.",
+    "guard_comparisons": [
+      {
+        "path": "scripts/verification/ios-readiness/owned_lane.py",
+        "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+        "raw_unchanged": true,
+        "guards": {
+          "snapshot_processes": {
+            "unchanged": true,
+            "current_ast_sha256": [
+              "15197d1688ae138540b8429f0edca1295ce81c246f7c8c53779e2efa2d3fa27a"
+            ]
+          },
+          "lsof_pids": {
+            "unchanged": true,
+            "current_ast_sha256": [
+              "312225b559d21aef78d23f802279d221a8980ea95682b5757dbdd3b05fd5cf84"
+            ]
+          },
+          "owns_java_tmp_argument": {
+            "unchanged": true,
+            "current_ast_sha256": [
+              "6f142791115129dd200fcab467dbff613df6ffd9d88aa393d2e3e76a816237ea"
+            ]
+          },
+          "Ownership": {
+            "unchanged": true,
+            "current_ast_sha256": [
+              "a36bb0d0bafa2e58370ec8339c85a9e326c9f1bd0d5e1e82b4ac9904574364da"
+            ]
+          }
+        }
+      },
+      {
+        "path": "scripts/verification/ios-readiness/secondary_fifo.py",
+        "sha256": "170586ec941b02866acfa4b8e54aa3dd0842dbc7bc9c4b50410bca4b1149440a",
+        "raw_unchanged": true,
+        "guards": {}
+      },
+      {
+        "path": "scripts/verification/ios-readiness/run_ios_readiness.py",
+        "sha256": "85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8",
+        "raw_unchanged": true,
+        "guards": {
+          "AppHostOwnership": {
+            "unchanged": true,
+            "current_ast_sha256": [
+              "e83a325056e57904428696e66b2fc3c3bef3947db6d8a80f4d4a9be2c7e88f20"
+            ]
+          },
+          "command": {
+            "unchanged": true,
+            "current_ast_sha256": [
+              "be4c5a1fb7d946144c291896ae19f9957fc8b31144ebe5578b364c9f0af8e61f"
+            ]
+          },
+          "verify_workers": {
+            "unchanged": true,
+            "current_ast_sha256": [
+              "b8472affaf33a1b1f8e8eb826fe376df976bddab0e301b075f17273ef0e25cd2"
+            ]
+          }
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/owned_lane.py",
+        "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+        "raw_unchanged": true,
+        "guards": {
+          "snapshot_processes": {
+            "unchanged": true,
+            "current_ast_sha256": [
+              "15197d1688ae138540b8429f0edca1295ce81c246f7c8c53779e2efa2d3fa27a"
+            ]
+          },
+          "lsof_pids": {
+            "unchanged": true,
+            "current_ast_sha256": [
+              "312225b559d21aef78d23f802279d221a8980ea95682b5757dbdd3b05fd5cf84"
+            ]
+          },
+          "owns_java_tmp_argument": {
+            "unchanged": true,
+            "current_ast_sha256": [
+              "6f142791115129dd200fcab467dbff613df6ffd9d88aa393d2e3e76a816237ea"
+            ]
+          },
+          "Ownership": {
+            "unchanged": true,
+            "current_ast_sha256": [
+              "a36bb0d0bafa2e58370ec8339c85a9e326c9f1bd0d5e1e82b4ac9904574364da"
+            ]
+          }
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/secondary_fifo.py",
+        "sha256": "170586ec941b02866acfa4b8e54aa3dd0842dbc7bc9c4b50410bca4b1149440a",
+        "raw_unchanged": true,
+        "guards": {}
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+        "sha256": "b0f3794fe89537d5108a2c24c22c33ed94d9330ee220e7fa257bfb2c4a7b1e29",
+        "raw_unchanged": false,
+        "guards": {
+          "AppHostOwnership": {
+            "unchanged": true,
+            "current_ast_sha256": [
+              "e83a325056e57904428696e66b2fc3c3bef3947db6d8a80f4d4a9be2c7e88f20"
+            ]
+          },
+          "command": {
+            "unchanged": true,
+            "current_ast_sha256": [
+              "20a6aed1edfb66351c100e8481dcabb3fb595bf73d19f1cc3141e050d262eda9"
+            ]
+          },
+          "verify_workers": {
+            "unchanged": true,
+            "current_ast_sha256": [
+              "b8472affaf33a1b1f8e8eb826fe376df976bddab0e301b075f17273ef0e25cd2"
+            ]
+          }
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+        "sha256": "5524d839202211270ec1c97776f0d350b9802ecf0d1c5e6eb3d28cd960629302",
+        "raw_unchanged": false,
+        "guards": {
+          "command": {
+            "unchanged": true,
+            "current_ast_sha256": [
+              "c3608e3ac102dcc37dce2ffecc3e2a8deb721aa38a79fd97a1d22bacaaef1a0f"
+            ]
+          },
+          "verify_workers": {
+            "unchanged": true,
+            "current_ast_sha256": [
+              "5bf8e6ae9dc78a3e7c47314a58bc133260bb203274790ca1e58c472ccbd1e270"
+            ]
+          }
+        }
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+        "sha256": "cf41c413d321d87689b97b86e4fe7981052dab6b629c8ffcd57b15a00be6555c",
+        "raw_unchanged": false,
+        "guards": {}
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+        "sha256": "1ee5d5889d50b94a11d3e3d2ce881899c2434eb97489e953f546a2b7d344afd5",
+        "raw_unchanged": true,
+        "guards": {
+          "command": {
+            "unchanged": true,
+            "current_ast_sha256": [
+              "2f67c5c76a4ba3ef8d37e6a60a9243fb9e3996440b7a9db25678870d65440b03"
+            ]
+          }
+        }
+      },
+      {
+        "path": "scripts/ci/native_continuation.py",
+        "sha256": "3c974b93e202359c12aa2647984b624024986676eb058ace9ecdf4e7663200bb",
+        "raw_unchanged": false,
+        "guards": {
+          "command": {
+            "unchanged": true,
+            "current_ast_sha256": [
+              "a42a3a7ccf917ce4943901613dd9712924ca96a251cedefe097389b9511b4744"
+            ]
+          },
+          "cleanup_is_safe": {
+            "unchanged": false,
+            "current_ast_sha256": [
+              "6b7989d49578031b8df89e45faa3b27693f70d552b4425757b5ced77e21d5eaf"
+            ]
+          }
+        }
+      },
+      {
+        "path": "scripts/release/tests/test_native_continuation.py",
+        "sha256": "dac139c779e33b795aa6f36fc0f853ee071099b927c901a9b993323c6f6edb35",
+        "raw_unchanged": false,
+        "guards": {}
+      }
+    ],
+    "documentation": "Read actual V2 shared CI and permitted normal/composition documentation diff. Legacy default, explicit opt-in, unchanged AppHost authority, persistence distinction, cleanup ceiling limitations, failed A19/B20 history and no runtime credit are stated. Forbidden companion README addition was restored rather than admitted."
+  },
+  "review_references": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-source-02.json",
+      "sha256": "0e3ef86e9e66708be391630e864f01bfeb9f03bbfa183a0a027bec4a12f951ec",
+      "bytes": 11177
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-count-addendum-01.json",
+      "sha256": "6c34261e6903cf7f4d27fbd2ccaa1e44de9ce4c3981a625ee0cc66d89ebe003b",
+      "bytes": 3425
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-integration-author-01.json",
+      "sha256": "a457352a93dd8875ff1f306797a8f56cceed7b063142acc404f54d8bc2a729ae",
+      "bytes": 11679
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-implementation-independent-01.json",
+      "sha256": "44239859c10b762b6447234eddbc993ac1e9e65982a0e149250e943941194bdf",
+      "bytes": 28603
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-persistence-policy-independent-01.json",
+      "sha256": "756a549e40145cb659c7ac2829974413f179bdd588c5a9f5a41d599531a02f0e",
+      "bytes": 5567
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-metadata-error-preservation-independent-01.json",
+      "sha256": "e8dd16bbd4a2f062bde7a8bdd81b6ea3742f4affe0f84b566e761c29fbec34b7",
+      "bytes": 7983
+    }
+  ],
+  "execution": {
+    "project_imports": 0,
+    "project_compile_or_exec": 0,
+    "test_discovery": 0,
+    "tests_run": 0,
+    "python_standins_run": 0,
+    "builds": 0,
+    "native_tools": 0,
+    "actions_dispatched": 0,
+    "observed_tests_status": "NOT_RUN_AT_THIS_REVIEW",
+    "execution_packet": "A separate coordinator-owned focused invocation/cleanup packet and independent invocation review must bind these held bytes. This report alone does not execute or schedule tests.",
+    "native_authorization": "NOT_GRANTED. Reviewed source/control commit, mechanical inventory commit, remote equality, fresh source/control/platform preflight and separate approval are required before fresh A21/B22."
+  },
+  "cleanup": "This reviewer used read-only source/Git/AST/JSON/hash inspection and wrote only this uniquely named review. No test/build lane, generated project output, Python worker, simulator, Gradle process or temporary fixture was created; no cleanup cycle was required or executed. Existing lock, retained evidence, failed receipts, untracked work and unrelated stashes were not altered.",
+  "readiness": "NOT_READY. A19 runtimeNOT_RUN/cleanupFAIL and B20NOT_RUN remain preserved. L08 functional-storage/retained-host/strict file protection, actual normal Debug Parlor libproc and final frozen combined qualification remain real-runtime work. Even passing harness controls cannot provide those proofs. Physical-device/LAN/keybag/backup/restore/accessibility checks, Store operations/identity collision and separate owner/legal/privacy/editorial obligations remain outside this approval."
+}

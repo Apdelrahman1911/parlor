@@ -326,3 +326,30 @@ fresh owned copy; Gradle build/configuration caching remains disabled. Never
 remove global caches or infer runtime execution from cache hits. Each native lane
 must finish its immediate Gradle stop, owned simulator/workers/FIFOs and temporary
 copy/DerivedData cleanup before the next lane starts.
+
+
+## Explicit hosted lifecycle continuation (2026-09-08)
+
+The default lifecycle remains the legacy AppHost path. The separately reviewed
+`--simulator-lifecycle=direct-owned-v1` requires `--toolchain=qualified-xcode-26.3`;
+it is never selected after a process-query failure. It separates only exact
+simulator lifecycle commands into direct-child plus durable UUID-journal custody.
+All build/app/container/image commands, ps/lsof/FIFO controls and source/copy gates
+remain under the original authority. The shared helper and both new regression
+files are explicit control inputs; composition also retains a new additive exact
+draft/driver pin chain without rewriting historical freezes.
+
+Postbuild destructive cleanup additionally requires persisted raw-evidence
+retention acknowledgement, then strict original worker quiescence and direct
+build-child reaping. Missing/failed acknowledgement (including composed Foundation
+retention) preserves the simulator and copy/DerivedData/XCResult, reports cleanup
+failure and still attempts worker/FIFO/final-holder retirement. Prebuild direct
+UUID cleanup does not depend on global ps; final file deletion still does.
+
+The helper retains45/120/300s operation allowances and a480s lifecycle finalizer
+ceiling inside the unchanged600s outer grace. Insufficient full command plus10s
+retirement allowance is an explicit cleanup failure, not a shorter timeout/pass.
+See `scripts/ci/NATIVE_CONTINUATION.md` for exact authority, evidence and retry
+conditions. Future A21/B22 execution requires a new source freeze and reviewed
+preflight. A19 remains FAIL, B20 NOT_RUN; helper/stand-in tests are not Parlor,
+Apple/AppHost, strict L08 protection, or libproc runtime proof.

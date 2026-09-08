@@ -1,0 +1,280 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_NORMAL_LEGACY_FIXTURE_CORRECTION_AND_FOCUSED_RECHECK_REVIEW",
+  "recorded_at": "2026-09-08T19:00:51.249062+00:00",
+  "reviewer": "/root/native_ci",
+  "author": "/root/ci_workflow",
+  "status": "APPROVED_EXACT_FIXTURE_DELTA_AND_CONDITIONAL_ROOT_ONLY_NORMAL187_RECHECK_NOT_EXECUTED",
+  "findings": [],
+  "repository": {
+    "root": "/root/projects/Parlor/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "700243c3426db2da3855a9d3a3df58ada607ffc5",
+    "tree": "bd93099fe19ccf46e27eb67f22d694cc1ae074aa",
+    "context": "Reviewed held working-tree controls; not a final source/inventory freeze or native execution binding."
+  },
+  "reviewed_author_report": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/normal-legacy-lifecycle-fixture-author-01.json",
+    "sha256": "7f5a37426b674436843cdc6e57b201199c856aafe60ddb1d80bed8aeb528619a",
+    "bytes": 4460
+  },
+  "raw_failed_evidence": {
+    "log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/normal.log",
+      "sha256": "6371a4a2b780b0bd3775ec0322357cb3882bea798951f5cf4c5731e06374d6d4",
+      "bytes": 131207
+    },
+    "results": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/native-lifecycle-results.json",
+      "sha256": "1c9e01a72a4a5283e76c554a711c9c2b55e5bf94806a43475a710ed3c432a09c",
+      "bytes": 17199
+    },
+    "lane_receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/receipt.json",
+      "sha256": "0e0cfaf79422d1627622ab0cae21b535a923e77d270d638cfacb8ea0f2f72e05",
+      "bytes": 347060
+    },
+    "status": "FAIL_PRESERVED_NOT_RECLASSIFIED",
+    "tests": 187,
+    "errors": 20,
+    "failures": 1,
+    "skips": 0,
+    "source_unchanged_in_actual_driver": true,
+    "error_sites": {
+      "finalize:832": 17,
+      "run_xctest:436": 3
+    },
+    "errors_read": [
+      {
+        "test": "test_allocation_canonicalizes_parent_before_mkdtemp_and_retains_exact_identity (test_normal_launch_controls.RunnerGuards.test_allocation_canonicalizes_parent_before_mkdtemp_and_retains_exact_identity)",
+        "raw_heading_line": 191,
+        "failure_site": "finalize:832"
+      },
+      {
+        "test": "test_allocation_receipt_failure_does_not_strand_owned_directory (test_normal_launch_controls.RunnerGuards.test_allocation_receipt_failure_does_not_strand_owned_directory)",
+        "raw_heading_line": 204,
+        "failure_site": "finalize:832"
+      },
+      {
+        "test": "test_cache_link_cleanup_does_not_remove_dependency_cache (test_normal_launch_controls.RunnerGuards.test_cache_link_cleanup_does_not_remove_dependency_cache)",
+        "raw_heading_line": 217,
+        "failure_site": "finalize:832"
+      },
+      {
+        "test": "test_changed_cache_link_preserves_allocation (test_normal_launch_controls.RunnerGuards.test_changed_cache_link_preserves_allocation)",
+        "raw_heading_line": 230,
+        "failure_site": "finalize:832"
+      },
+      {
+        "test": "test_control_drift_invalidates_overall_result (test_normal_launch_controls.RunnerGuards.test_control_drift_invalidates_overall_result)",
+        "raw_heading_line": 243,
+        "failure_site": "finalize:832"
+      },
+      {
+        "test": "test_deferred_interrupt_after_mkdtemp_keeps_finalizer_ownership (test_normal_launch_controls.RunnerGuards.test_deferred_interrupt_after_mkdtemp_keeps_finalizer_ownership)",
+        "raw_heading_line": 254,
+        "failure_site": "finalize:832"
+      },
+      {
+        "test": "test_existing_allocation_cannot_be_replaced (test_normal_launch_controls.RunnerGuards.test_existing_allocation_cannot_be_replaced)",
+        "raw_heading_line": 267,
+        "failure_site": "finalize:832"
+      },
+      {
+        "test": "test_failed_gradle_stop_does_not_skip_device_workers_and_file_cleanup (test_normal_launch_controls.RunnerGuards.test_failed_gradle_stop_does_not_skip_device_workers_and_file_cleanup)",
+        "raw_heading_line": 280,
+        "failure_site": "finalize:832"
+      },
+      {
+        "test": "test_failed_xcode_attempt_immediately_stops_gradle (test_normal_launch_controls.RunnerGuards.test_failed_xcode_attempt_immediately_stops_gradle)",
+        "raw_heading_line": 293,
+        "failure_site": "run_xctest:436"
+      },
+      {
+        "test": "test_finalization_removes_only_exact_task_allocation (test_normal_launch_controls.RunnerGuards.test_finalization_removes_only_exact_task_allocation)",
+        "raw_heading_line": 304,
+        "failure_site": "finalize:832"
+      },
+      {
+        "test": "test_interrupted_xcode_attempt_immediately_stops_gradle (test_normal_launch_controls.RunnerGuards.test_interrupted_xcode_attempt_immediately_stops_gradle)",
+        "raw_heading_line": 317,
+        "failure_site": "run_xctest:436"
+      },
+      {
+        "test": "test_mkdtemp_failure_has_no_allocation_or_cleanup_target (test_normal_launch_controls.RunnerGuards.test_mkdtemp_failure_has_no_allocation_or_cleanup_target)",
+        "raw_heading_line": 328,
+        "failure_site": "finalize:832"
+      },
+      {
+        "test": "test_owned_name_failure_retains_preowner_cleanup_identity (test_normal_launch_controls.RunnerGuards.test_owned_name_failure_retains_preowner_cleanup_identity)",
+        "raw_heading_line": 341,
+        "failure_site": "finalize:832"
+      },
+      {
+        "test": "test_owner_constructor_failure_retains_preworker_cleanup_identity (test_normal_launch_controls.RunnerGuards.test_owner_constructor_failure_retains_preworker_cleanup_identity)",
+        "raw_heading_line": 354,
+        "failure_site": "finalize:832"
+      },
+      {
+        "test": "test_preexisting_original_output_is_preserved_not_deleted (test_normal_launch_controls.RunnerGuards.test_preexisting_original_output_is_preserved_not_deleted)",
+        "raw_heading_line": 367,
+        "failure_site": "finalize:832"
+      },
+      {
+        "test": "test_secondary_path_attestation_failure_is_not_cleanup_success (test_normal_launch_controls.RunnerGuards.test_secondary_path_attestation_failure_is_not_cleanup_success)",
+        "raw_heading_line": 380,
+        "failure_site": "finalize:832"
+      },
+      {
+        "test": "test_source_drift_invalidates_overall_result (test_normal_launch_controls.RunnerGuards.test_source_drift_invalidates_overall_result)",
+        "raw_heading_line": 393,
+        "failure_site": "finalize:832"
+      },
+      {
+        "test": "test_timed_out_xcode_attempt_immediately_stops_gradle (test_normal_launch_controls.RunnerGuards.test_timed_out_xcode_attempt_immediately_stops_gradle)",
+        "raw_heading_line": 404,
+        "failure_site": "run_xctest:436"
+      },
+      {
+        "test": "test_unexecuted_notice_verification_cannot_be_overall_pass (test_normal_launch_controls.RunnerGuards.test_unexecuted_notice_verification_cannot_be_overall_pass)",
+        "raw_heading_line": 415,
+        "failure_site": "finalize:832"
+      },
+      {
+        "test": "test_unknown_holders_preserve_allocation_and_fail_cleanup (test_normal_launch_controls.RunnerGuards.test_unknown_holders_preserve_allocation_and_fail_cleanup)",
+        "raw_heading_line": 428,
+        "failure_site": "finalize:832"
+      }
+    ],
+    "failure": {
+      "raw_heading_line": 441,
+      "test": "ImageDiagnosticOrchestrationTests.test_run_keeps_original_failure_and_all_finalization_even_when_diagnostics_succeed",
+      "assertion_source_line": 330,
+      "observed": "AssertionError: 'PASS' != 'FAIL'"
+    }
+  },
+  "independent_diagnosis": {
+    "category": "INCOMPLETE_SYNTHETIC_FIXTURE_INITIALIZATION_NOT_DEMONSTRATED_NATIVE_IMPLEMENTATION_FAILURE",
+    "mechanism": "RunnerGuards.lane intentionally uses object.__new__(runner.Lane), bypasses the actual __init__, and its old bytes never define lifecycle or lifecycle_mode. All20 raw errors reach the new actual lifecycle read before their existing cleanup/build-error oracles complete.",
+    "diagnostic_finalization": "The lone orchestration failure reuses that exact shared factory at test_image_diagnostic_orchestration.py:31. Its run_xctest and prepare are inert Mock objects; actual Lane.run reaches finalize, reads the absent lifecycle attribute, catches the finalizer exception at904-906, and marks cleanupFAIL. The raw log directly observes the failed cleanupPASS assertion, while the common missing-state causal path follows from the reopened source; no diagnostic/app/libproc failure is inferred.",
+    "actual_constructor": "run_normal_ios_launch.py:141-144 already validates explicit selection and initializes lifecycle_mode/lifecycle to the selected mode/None before allocations. Legacy is its actual default. Constructor/default changes or getattr fallback would be unjustified.",
+    "correction": "One shared factory initializer makes that intentionally synthetic legacy instance match the real default. It also covers ImageDiagnosticOrchestrationTests without altering its assertions or source."
+  },
+  "exact_delta": {
+    "before": {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+      "sha256": "af5c912dbc9655468d5d428b18f5a7c16d7b0f2fa421e14cf559ee674eaceb76",
+      "bytes": 42841
+    },
+    "after": {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+      "sha256": "3da543bd92beecda95bdfbd53632a3a49ca95a6054f47a17dd03dff6460d6a5c",
+      "bytes": 42919
+    },
+    "added_bytes": 78,
+    "added_line": 460,
+    "added_statement": "value.lifecycle_mode, value.lifecycle = runner.LEGACY_LIFECYCLE, None",
+    "before_equals_after_with_exact_added_line_removed": true,
+    "diff": "diff --git a/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py b/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\nindex d2bf8612..a34b854e 100644\n--- a/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\n+++ b/remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py\n@@ -457,6 +457,7 @@ class RunnerGuards(unittest.TestCase):\n \n     def lane(self):\n         value = object.__new__(runner.Lane)\n+        value.lifecycle_mode, value.lifecycle = runner.LEGACY_LIFECYCLE, None\n         value.temporary = self.root / 'owned'\n         value.temporary.mkdir()\n         state = value.temporary.stat()\n",
+    "unchanged_test_method_asts": 78,
+    "changed_test_method_asts": [],
+    "added_or_removed_test_methods": [],
+    "static_declared_normal_methods": 187,
+    "methods_by_file": {
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_header_diagnostics.py": 8,
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_image_diagnostic_orchestration.py": 18,
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_image_diagnostics.py": 25,
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_kernel_image_regions.py": 10,
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py": 78,
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_owned_tool_paths.py": 21,
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_sample_literal_star.py": 7,
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_vmmap_command_failure.py": 7,
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_xcode26_repetitions.py": 13
+    },
+    "git_diff_check": "PASS_SCOPED_READ_ONLY"
+  },
+  "control_closure": {
+    "failed_input_manifests": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/native-lifecycle-inputs-before.json",
+        "sha256": "8d1fb2104c9e7768ec1a81aa2bf8238d0ee38fb4e8392ecbfc206388528524a7",
+        "bytes": 48524
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/native-lifecycle-inputs-after.json",
+        "sha256": "8d1fb2104c9e7768ec1a81aa2bf8238d0ee38fb4e8392ecbfc206388528524a7",
+        "bytes": 48524
+      }
+    ],
+    "equal_failed_manifests": true,
+    "input_count": 255,
+    "current_changes": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+        "before_sha256": "af5c912dbc9655468d5d428b18f5a7c16d7b0f2fa421e14cf559ee674eaceb76",
+        "after_sha256": "3da543bd92beecda95bdfbd53632a3a49ca95a6054f47a17dd03dff6460d6a5c"
+      }
+    ],
+    "unchanged_inputs": 254,
+    "unchanged_runtime_and_inherited_fixture": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+        "sha256": "5524d839202211270ec1c97776f0d350b9802ecf0d1c5e6eb3d28cd960629302",
+        "bytes": 59858
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_image_diagnostic_orchestration.py",
+        "sha256": "133fbc769d331581d7ad6e1154d5d1c6bf35bf9a853e28fc56bafa25049e5a8d",
+        "bytes": 22696
+      }
+    ],
+    "normal_driver": {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+      "sha256": "0aa080c52ff3f30bb159bc59f728084ff92d6ad4f340b1ec051dfc55dd317f2e",
+      "bytes": 2837
+    },
+    "outer_lane": {
+      "path": "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "sha256": "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc",
+      "bytes": 25106
+    },
+    "preserved_assertions": "All78 test method ASTs in the edited file and the complete orchestration file are byte/AST unchanged. This includes original-error identity/text, cleanupPASS versus app/provenanceFAIL, stop/shutdown/delete/owner/FIFO calls, exact temp removal, watcher clearing, and save assertions. Unknown-holder, cache-link/inode/source/control/notice and cancellation tests retain their existing failure oracles.",
+    "preserved_authority": "No runtime/default/selector changes, no getattr fallback, no fabricated postbuild acknowledgement, no direct-gate or ownership relaxation. Explicit fixture legacy mode does not authorize direct mode. Existing source/control/runtime assertions remain intact.",
+    "validity_limit": "This one leaf invalidates any aggregate control digest containing it. Reuse the other249 completed controls only for their unchanged scopes and original actual evidence; do not relabel packet01 PASS or reuse its aggregate pins as current. Subsequent exact bindings must include3da543bd\u2026."
+  },
+  "approved_next_invocation": {
+    "owner": "/root",
+    "cycle": "continuation-normal-lifecycle-recheck-01",
+    "cycle_absent_at_review": true,
+    "argv": [
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "continuation-normal-lifecycle-recheck-01",
+      "--command",
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py"
+    ],
+    "working_directory": "/root/projects/Parlor/parlor",
+    "scope": "Only existing normal187 controls through the unchanged ordinary owned lane; no new packet, other249 rerun, native mode or GH dispatch.",
+    "preconditions": [
+      "Prior lifecycle-controls01 lane and its external temporary workers/fixtures are finalized, preserved and independently reconciled; no competing lane.",
+      "Exact author/reviewed file, all254 other old input hashes, driver/outer-lane hashes remain held and source is not concurrently edited.",
+      "Retain actual normal driver before/after control manifests, declared/discovered IDs, imports,187 tests, errors/failures/skips and exit; compare new before manifest to reviewed new fixture hash and unchanged closure.",
+      "Outer lane retains actual app source/runner identities, enforces JDK21/lock/output/daemon preflights and performs mandatory immediate Gradle stop, owned worker/custody cleanup and cleanup evidence.",
+      "Only187 executed with0 failures/errors/skips, matching before/after manifests, safe cleanup and independent postrun evidence review can establish a corrected normal-control PASS. No native/app/libproc evidence is produced."
+    ]
+  },
+  "review_activity": {
+    "project_modules_imported": 0,
+    "project_functions_executed": 0,
+    "tests_run": 0,
+    "builds_run": 0,
+    "native_tools_run": 0,
+    "actions_dispatched": 0,
+    "method": "Read raw retained logs and current/baseline source; stdlib AST/hash/JSON and read-only Git delta/count comparison. Wrote only this uniquely named review; no source edit.",
+    "cleanup": "No reviewer-created build/test cycle, fixture or worker. No cleanup operation performed; coordinator owns prior and prospective cycle cleanup."
+  },
+  "readiness": "NOT_READY_UNCHANGED; the failed normal suite is not yet a corrected pass, and even future normal-control PASS is not actual Parlor libproc/Apple/runtime/L08/Store evidence."
+}

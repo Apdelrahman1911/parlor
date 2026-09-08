@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "kind": "AUTHOR_NARROW_METADATA_PRIMARY_ERROR_PRESERVATION",
+  "recorded_at": "2026-09-08T16:11:00.205195+00:00",
+  "author": "/root/native_ci",
+  "status": "IMPLEMENTED_PENDING_INDEPENDENT_SOURCE_REVIEW_AND_COORDINATED_EXECUTION",
+  "execution": "NO_TEST_BUILD_NATIVE_OR_CI_EXECUTION_BY_AUTHOR",
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+    "tree": "e0e7abfff89975682a96a884cb745bcbc12e7238"
+  },
+  "authorization": "Root assigned only the mutable companion own_simulator_metadata error-preservation defect and a narrowly scoped regression file. Coordinator retains pin integration, all execution, cleanup, source freeze, bindings, commits and pushes.",
+  "edited_files": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "sha256": "030e15b39d728195a1f331aa28dbfa4eef3fa8e55e352e22febebc57f827ddb8",
+      "bytes": 73458,
+      "baseline_sha256": "a56f47787c5abbda301cdfcafa5c8ac4ad7eb505d21d560e86063f93453a36f7",
+      "scope": "Only own_simulator_metadata except handler; +14/-2 lines"
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_native_command_failures.py",
+      "sha256": "6073cc0bad157bfed8cde4d9a94f38953e6d51a8f84d138042f00f0244efde2e",
+      "bytes": 27548,
+      "baseline_sha256": "7ea11e97a11cc07ba85d09c1366fe4198b95b8ee59414979fa7801122be981be",
+      "scope": "Add re import and one 14-method metadata handler class; existing generic-command12 methods remain unchanged"
+    }
+  ],
+  "diff": "diff --git a/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py b/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py\nindex e4fbc855..e1e1d609 100644\n--- a/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py\n+++ b/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py\n@@ -462,9 +462,21 @@ def main():\n                     raise RuntimeError('Synthetic simulator identity changed')\n                 write_json(dest / (label + '.json'), dict(matches=matches))\n                 return matches[0] if matches else None\n-            except BaseException:\n+            except BaseException as error:\n+                entry['interrupted_or_failed'] = True\n+                entry['primary_error'] = dict(type=type(error).__name__, message=str(error)[:800])\n                 if child is not None:\n-                    owner.stop(lambda item: item['role'] == 'command')\n+                    cleanup_stage = 'stop-owned-command-workers'\n+                    try:\n+                        owner.stop(lambda item: item['role'] == 'command')\n+                        # communicate may already have established the exit before\n+                        # metadata validation failed. Never replace that observation.\n+                        if 'exit_code' not in entry:\n+                            cleanup_stage = 'read-owned-command-exit'\n+                            entry['exit_code'] = child.poll()\n+                    except BaseException as cleanup_error:\n+                        entry['command_cleanup_error'] = dict(stage=cleanup_stage,\n+                            type=type(cleanup_error).__name__, message=str(cleanup_error)[:800])\n                 raise\n             finally:\n                 entry['finished_at'] = now(); save()\ndiff --git a/scripts/verification/ios-readiness/test_native_command_failures.py b/scripts/verification/ios-readiness/test_native_command_failures.py\nindex 8ae14705..a040e319 100644\n--- a/scripts/verification/ios-readiness/test_native_command_failures.py\n+++ b/scripts/verification/ios-readiness/test_native_command_failures.py\n@@ -4,6 +4,7 @@ from contextlib import nullcontext\n import copy\n import json\n from pathlib import Path\n+import re\n import subprocess\n import tempfile\n from types import SimpleNamespace\n@@ -218,5 +219,264 @@ class NativeCommandFailureControls(unittest.TestCase):\n                                  {'command', 'started_at', 'log', 'exit_code', 'finished_at'})\n \n \n+class NativeSimulatorMetadataFailureControls(unittest.TestCase):\n+    DEVICE = '11111111-2222-3333-4444-555555555555'\n+    RUNTIME = 'com.apple.CoreSimulator.SimRuntime.iOS-26-2'\n+    NAME = 'parlor-audit-owned-metadata-control'\n+    ARGS = ['xcrun', 'simctl', 'list', 'devices', '-j']\n+\n+    def fixture(self, *, primary=None, secondary=None, failure_at='communicate', cleanup_at='stop',\n+                observed_exit=0, stopped_exit=-15, stdout=None, stderr=b''):\n+        receipt, saved, at_stop = {'commands': [], 'owned_device_name': self.NAME}, [], []\n+        child = Mock(returncode=observed_exit)\n+        child.poll.return_value = stopped_exit\n+        device = dict(udid=self.DEVICE, name=self.NAME, state='Shutdown')\n+        if stdout is None:\n+            stdout = json.dumps(dict(devices={self.RUNTIME: [device, dict(\n+                udid='PRIVATE-UNRELATED-UUID', name='PRIVATE-UNRELATED-NAME', state='Booted',\n+                dataPath='PRIVATE-UNRELATED-CONTAINER')]})).encode()\n+        child.communicate.return_value = (stdout, stderr)\n+        owner = Mock()\n+\n+        def stop(_selector):\n+            at_stop.append(copy.deepcopy(receipt['commands'][-1]))\n+            if secondary is not None and cleanup_at == 'stop':\n+                raise secondary\n+\n+        owner.stop.side_effect = stop\n+        if secondary is not None and cleanup_at == 'poll':\n+            child.poll.side_effect = secondary\n+        process = SimpleNamespace(Popen=Mock(return_value=child), PIPE=-1)\n+        write = Mock()\n+        decoder = SimpleNamespace(loads=Mock(side_effect=json.loads))\n+        if primary is not None:\n+            if failure_at == 'popen':\n+                process.Popen.side_effect = primary\n+            elif failure_at == 'register':\n+                owner.register.side_effect = primary\n+            elif failure_at == 'parse':\n+                decoder.loads.side_effect = primary\n+            elif failure_at == 'write':\n+                write.side_effect = primary\n+            else:\n+                child.communicate.side_effect = primary\n+        environment = {'SECRET_ENV': 'PRIVATE-UNRETAINED-ENVIRONMENT'}\n+        destination = Path('/synthetic-owned-evidence')\n+        namespace = dict(ROOT=ROOT, subprocess=process, re=re, json=decoder, env=environment,\n+            uuid=self.DEVICE, toolchain={'runtime': self.RUNTIME}, receipt=receipt, dest=destination,\n+            owner=owner, now=lambda: 'synthetic-time', defer_parent_signals=nullcontext,\n+            save=lambda: saved.append(copy.deepcopy(receipt)), write_json=write)\n+        functions = [node for node in ast.walk(ast.parse(RUNNERS['companion'].read_text()))\n+                     if isinstance(node, ast.FunctionDef) and node.name == 'own_simulator_metadata']\n+        if len(functions) != 1:\n+            raise RuntimeError('Ambiguous simulator metadata extraction')\n+        exec(compile(ast.Module(body=functions, type_ignores=[]), '<isolated-owned-metadata>', 'exec'), namespace)\n+        return SimpleNamespace(invoke=lambda: namespace['own_simulator_metadata']('owned-metadata'),\n+            receipt=receipt, saved=saved, at_stop=at_stop, child=child, owner=owner, process=process,\n+            environment=environment, destination=destination, write=write, decoder=decoder, device=device)\n+\n+    def assert_primary(self, fixture, error, *, stage=None, secondary=None):\n+        with self.assertRaises(type(error)) as caught:\n+            fixture.invoke()\n+        self.assertIs(caught.exception, error)\n+        self.assertEqual(len(fixture.receipt['commands']), 1)\n+        entry = fixture.receipt['commands'][0]\n+        expected = dict(type=type(error).__name__, message=str(error)[:800])\n+        self.assertIs(entry['interrupted_or_failed'], True)\n+        self.assertEqual(entry['primary_error'], expected)\n+        self.assertEqual(entry['finished_at'], 'synthetic-time')\n+        self.assertEqual(fixture.saved[-1]['commands'][0], entry)\n+        for before_stop in fixture.at_stop:\n+            self.assertIs(before_stop['interrupted_or_failed'], True)\n+            self.assertEqual(before_stop['primary_error'], expected)\n+            self.assertNotIn('command_cleanup_error', before_stop)\n+        if secondary is None:\n+            self.assertNotIn('command_cleanup_error', entry)\n+        else:\n+            self.assertEqual(entry['command_cleanup_error'], dict(stage=stage,\n+                type=type(secondary).__name__, message=str(secondary)[:800]))\n+        return entry\n+\n+    def assert_command_only_stop(self, fixture):\n+        fixture.owner.stop.assert_called_once()\n+        self.assertEqual(len(fixture.at_stop), 1)\n+        select = fixture.owner.stop.call_args.args[0]\n+        for role in ('command', 'gradle', 'app', 'xcode', 'foreign', ''):\n+            self.assertEqual(select({'role': role}), role == 'command')\n+\n+    def assert_no_raw_metadata(self, fixture):\n+        retained = json.dumps(fixture.saved)\n+        for private in ('PRIVATE-UNRELATED-UUID', 'PRIVATE-UNRELATED-NAME', 'PRIVATE-UNRELATED-CONTAINER',\n+                        'PRIVATE-RAW-STDOUT', 'PRIVATE-RAW-STDERR', 'SECRET_ENV',\n+                        'PRIVATE-UNRETAINED-ENVIRONMENT'):\n+            self.assertNotIn(private, retained)\n+\n+    def test_success_keeps_existing_closed_metadata_and_command_contract(self):\n+        fixture = self.fixture()\n+        expected = dict(fixture.device, runtime=self.RUNTIME)\n+        self.assertEqual(fixture.invoke(), expected)\n+        fixture.write.assert_called_once_with(fixture.destination / 'owned-metadata.json', dict(matches=[expected]))\n+        fixture.process.Popen.assert_called_once_with(self.ARGS, cwd=ROOT, env=fixture.environment,\n+            stdout=-1, stderr=-1, start_new_session=True)\n+        fixture.owner.register.assert_called_once_with(fixture.child, 'command')\n+        fixture.child.communicate.assert_called_once_with(timeout=45)\n+        fixture.owner.stop.assert_not_called()\n+        fixture.child.poll.assert_not_called()\n+        self.assertEqual(set(fixture.receipt['commands'][0]),\n+                         {'command', 'started_at', 'log', 'retention', 'exit_code', 'finished_at'})\n+        self.assertEqual(fixture.receipt['commands'][0]['exit_code'], 0)\n+        self.assertEqual(fixture.saved[-1], fixture.receipt)\n+        self.assert_no_raw_metadata(fixture)\n+\n+    def test_no_owned_match_is_still_absent_not_a_failure(self):\n+        fixture = self.fixture(stdout=json.dumps(dict(devices={self.RUNTIME: [dict(\n+            udid='PRIVATE-UNRELATED-UUID', name='PRIVATE-UNRELATED-NAME', state='Booted')]})).encode())\n+        self.assertIsNone(fixture.invoke())\n+        fixture.write.assert_called_once_with(fixture.destination / 'owned-metadata.json', dict(matches=[]))\n+        fixture.owner.stop.assert_not_called()\n+        fixture.child.poll.assert_not_called()\n+        self.assert_no_raw_metadata(fixture)\n+\n+    def test_popen_failure_never_stops_or_invents_an_exit(self):\n+        primary = OSError('owned metadata spawn failed')\n+        fixture = self.fixture(primary=primary, failure_at='popen')\n+        entry = self.assert_primary(fixture, primary)\n+        self.assertNotIn('exit_code', entry)\n+        fixture.owner.stop.assert_not_called()\n+        fixture.owner.register.assert_not_called()\n+        fixture.child.communicate.assert_not_called()\n+        fixture.child.poll.assert_not_called()\n+        fixture.write.assert_not_called()\n+\n+    def test_registration_primary_is_recorded_before_fallible_stop(self):\n+        primary = subprocess.TimeoutExpired(['ps', '-axo', 'pid=,ppid=,pgid=,lstart=,command='], 15)\n+        secondary = subprocess.TimeoutExpired(['/usr/sbin/lsof', '-nP', '-t', '+w', '+D', '/owned-copy'], 30)\n+        fixture = self.fixture(primary=primary, secondary=secondary, failure_at='register')\n+        entry = self.assert_primary(fixture, primary, stage='stop-owned-command-workers', secondary=secondary)\n+        self.assertNotIn('exit_code', entry)\n+        fixture.child.communicate.assert_not_called()\n+        fixture.child.poll.assert_not_called()\n+        self.assert_command_only_stop(fixture)\n+\n+    def test_communicate_timeout_and_stop_error_do_not_retain_raw_output(self):\n+        primary = subprocess.TimeoutExpired(self.ARGS, 45, output=b'PRIVATE-RAW-STDOUT',\n+                                            stderr=b'PRIVATE-RAW-STDERR')\n+        secondary = subprocess.TimeoutExpired(['owned-stop-command'], 30, output=b'PRIVATE-RAW-STDOUT',\n+                                              stderr=b'PRIVATE-RAW-STDERR')\n+        fixture = self.fixture(primary=primary, secondary=secondary)\n+        entry = self.assert_primary(fixture, primary, stage='stop-owned-command-workers', secondary=secondary)\n+        self.assertNotIn('exit_code', entry)\n+        fixture.child.communicate.assert_called_once_with(timeout=45)\n+        fixture.child.poll.assert_not_called()\n+        self.assert_command_only_stop(fixture)\n+        self.assert_no_raw_metadata(fixture)\n+\n+    def test_successful_stop_records_actual_negative_exit_without_swallowing_primary(self):\n+        primary = RuntimeError('metadata communicate failed')\n+        fixture = self.fixture(primary=primary)\n+        entry = self.assert_primary(fixture, primary)\n+        self.assertEqual(entry['exit_code'], -15)\n+        fixture.child.poll.assert_called_once_with()\n+        self.assert_command_only_stop(fixture)\n+\n+    def test_unobserved_exit_after_stop_is_not_invented_as_zero(self):\n+        primary = RuntimeError('metadata communicate failed')\n+        fixture = self.fixture(primary=primary, stopped_exit=None)\n+        entry = self.assert_primary(fixture, primary)\n+        self.assertIsNone(entry['exit_code'])\n+        fixture.child.poll.assert_called_once_with()\n+        self.assert_command_only_stop(fixture)\n+\n+    def test_post_stop_poll_error_is_secondary_and_keeps_same_primary(self):\n+        primary, secondary = RuntimeError('metadata communicate failed'), RuntimeError('exit read failed')\n+        fixture = self.fixture(primary=primary, secondary=secondary, cleanup_at='poll')\n+        entry = self.assert_primary(fixture, primary, stage='read-owned-command-exit', secondary=secondary)\n+        self.assertNotIn('exit_code', entry)\n+        fixture.child.poll.assert_called_once_with()\n+        self.assert_command_only_stop(fixture)\n+\n+    def test_base_exception_primaries_and_secondaries_are_not_swallowed_or_substituted(self):\n+        for primary, secondary, cleanup_at in (\n+            (KeyboardInterrupt('metadata interrupt'), SystemExit('stop interrupt'), 'stop'),\n+            (SystemExit('metadata exit'), KeyboardInterrupt('poll interrupt'), 'poll'),\n+        ):\n+            with self.subTest(cleanup_at=cleanup_at):\n+                fixture = self.fixture(primary=primary, secondary=secondary, cleanup_at=cleanup_at)\n+                stage = 'stop-owned-command-workers' if cleanup_at == 'stop' else 'read-owned-command-exit'\n+                self.assert_primary(fixture, primary, stage=stage, secondary=secondary)\n+                self.assert_command_only_stop(fixture)\n+\n+    def test_primary_and_secondary_messages_remain_bounded(self):\n+        primary, secondary = RuntimeError('p' * 4096), RuntimeError('s' * 4096)\n+        fixture = self.fixture(primary=primary, secondary=secondary)\n+        entry = self.assert_primary(fixture, primary, stage='stop-owned-command-workers', secondary=secondary)\n+        self.assertEqual(len(entry['primary_error']['message']), 800)\n+        self.assertEqual(len(entry['command_cleanup_error']['message']), 800)\n+\n+    def test_raw_command_rejections_keep_observed_exit_despite_stop_failure(self):\n+        secondary = RuntimeError('stop failed')\n+        for options in (dict(observed_exit=23), dict(stderr=b'PRIVATE-RAW-STDERR'),\n+                        dict(stdout=b'PRIVATE-RAW-STDOUT' + b'x' * (2 * 1024 * 1024))):\n+            with self.subTest(options=list(options)):\n+                fixture = self.fixture(secondary=secondary, **options)\n+                with self.assertRaisesRegex(RuntimeError, 'raw unrelated data not retained') as caught:\n+                    fixture.invoke()\n+                entry = fixture.receipt['commands'][0]\n+                self.assertEqual(entry['primary_error'], dict(type='RuntimeError', message=str(caught.exception)))\n+                self.assertEqual(entry['exit_code'], options.get('observed_exit', 0))\n+                self.assertEqual(entry['command_cleanup_error'], dict(stage='stop-owned-command-workers',\n+                    type='RuntimeError', message='stop failed'))\n+                self.assertEqual(fixture.saved[-1]['commands'][0], entry)\n+                fixture.child.poll.assert_not_called()\n+                fixture.decoder.loads.assert_not_called()\n+                fixture.write.assert_not_called()\n+                self.assert_command_only_stop(fixture)\n+                self.assert_no_raw_metadata(fixture)\n+\n+    def test_parser_primary_is_not_replaced_and_observed_zero_remains_command_only(self):\n+        primary = json.JSONDecodeError('malformed metadata', 'PRIVATE-RAW-STDOUT', 0)\n+        secondary = RuntimeError('stop failed')\n+        fixture = self.fixture(primary=primary, secondary=secondary, failure_at='parse')\n+        entry = self.assert_primary(fixture, primary, stage='stop-owned-command-workers', secondary=secondary)\n+        self.assertEqual(entry['exit_code'], 0)\n+        fixture.child.poll.assert_not_called()\n+        fixture.write.assert_not_called()\n+        self.assert_command_only_stop(fixture)\n+        self.assert_no_raw_metadata(fixture)\n+\n+    def test_observed_exit_is_not_repolled_or_overwritten_after_successful_stop(self):\n+        primary = OSError('owned evidence write failed')\n+        fixture = self.fixture(primary=primary, failure_at='write', stopped_exit=None)\n+        entry = self.assert_primary(fixture, primary)\n+        self.assertEqual(entry['exit_code'], 0)\n+        fixture.child.poll.assert_not_called()\n+        self.assert_command_only_stop(fixture)\n+\n+    def test_exact_metadata_identity_guards_still_fail_closed_without_raw_retention(self):\n+        device = dict(udid=self.DEVICE, name=self.NAME, state='Shutdown')\n+        wrong_uuid = dict(device, udid='22222222-2222-3333-4444-555555555555')\n+        secondary = RuntimeError('stop failed')\n+        for runtime, rows, message in (\n+            (self.RUNTIME, [device, device], 'Ambiguous synthetic simulator identity'),\n+            (self.RUNTIME, [dict(device, udid='PRIVATE-UNRELATED-UUID')], 'Unexpected synthetic simulator UUID'),\n+            ('com.apple.CoreSimulator.SimRuntime.iOS-26-5', [device], 'runtime differs'),\n+            (self.RUNTIME, [wrong_uuid], 'Synthetic simulator identity changed'),\n+        ):\n+            with self.subTest(message=message):\n+                fixture = self.fixture(stdout=json.dumps(dict(devices={runtime: rows})).encode(), secondary=secondary)\n+                with self.assertRaisesRegex(RuntimeError, message) as caught:\n+                    fixture.invoke()\n+                entry = fixture.receipt['commands'][0]\n+                self.assertEqual(entry['primary_error'], dict(type='RuntimeError', message=str(caught.exception)))\n+                self.assertEqual(entry['exit_code'], 0)\n+                self.assertEqual(entry['command_cleanup_error'], dict(stage='stop-owned-command-workers',\n+                    type='RuntimeError', message='stop failed'))\n+                self.assertEqual(fixture.saved[-1]['commands'][0], entry)\n+                fixture.child.poll.assert_not_called()\n+                fixture.write.assert_not_called()\n+                self.assert_command_only_stop(fixture)\n+                self.assert_no_raw_metadata(fixture)\n+\n+\n if __name__ == '__main__':\n     unittest.main()\n",
+  "underlying_evidence": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-ps-timeout-diagnosis-02.json",
+      "sha256": "db299fa48618a0c2232961c4ac50e8c94c2ae8bafa982cff7706994cb8b7785e",
+      "bytes": 36743
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-ps-timeout-diagnosis-independent-02.json",
+      "sha256": "3a0c2a12a7e57458fd34057afcf663ae08d40d7a57c49bf17b8b244da7eb2cc6",
+      "bytes": 4004
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-evidence-34244902185-independent-01.json",
+      "sha256": "cab3c048a245f5dfba84ce1e652005d05b47e1a5ad620181d2ca92a54f534413",
+      "bytes": 17595
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34244902185/native-evidence/ios-readiness-19/receipt.json",
+      "sha256": "872ba1e34987928fbe8981f6abe39cab8bd6b517d6f1bcd8fca2dc4f9bdb65c1",
+      "bytes": 322627
+    }
+  ],
+  "exact_delta": [
+    "Record interrupted_or_failed=true and the original exception type/message (at most800 characters) before calling the existing owned command-only stop.",
+    "Catch secondary BaseException from that stop or the subsequent exit observation, retaining its bounded type/message and exact stop-owned-command-workers/read-owned-command-exit stage.",
+    "After a successful owned stop, poll only when communicate has not already recorded exit_code. Preserve any known zero/nonzero exit as command status, not metadata success; unknown poll stays null and unobserved exit remains absent when stop/poll fails.",
+    "Bare-raise the triggering exception object after secondary handling. Existing finally records finished_at/save; no retry or swallowed primary exception."
+  ],
+  "static_author_inspection": {
+    "runner_bytes_outside_exact_handler_replacement_unchanged": true,
+    "existing_generic_command_test_class_ast_unchanged": true,
+    "current_runner_and_test_file_ast_parse_only": "PARSED; no source module imports, compiled function execution, test discovery or tests",
+    "new_declared_test_methods": [
+      "test_success_keeps_existing_closed_metadata_and_command_contract",
+      "test_no_owned_match_is_still_absent_not_a_failure",
+      "test_popen_failure_never_stops_or_invents_an_exit",
+      "test_registration_primary_is_recorded_before_fallible_stop",
+      "test_communicate_timeout_and_stop_error_do_not_retain_raw_output",
+      "test_successful_stop_records_actual_negative_exit_without_swallowing_primary",
+      "test_unobserved_exit_after_stop_is_not_invented_as_zero",
+      "test_post_stop_poll_error_is_secondary_and_keeps_same_primary",
+      "test_base_exception_primaries_and_secondaries_are_not_swallowed_or_substituted",
+      "test_primary_and_secondary_messages_remain_bounded",
+      "test_raw_command_rejections_keep_observed_exit_despite_stop_failure",
+      "test_parser_primary_is_not_replaced_and_observed_zero_remains_command_only",
+      "test_observed_exit_is_not_repolled_or_overwritten_after_successful_stop",
+      "test_exact_metadata_identity_guards_still_fail_closed_without_raw_retention"
+    ],
+    "existing_declared_methods": 12,
+    "new_declared_methods": 14,
+    "total_declared_methods": 26
+  },
+  "preserved_guards": [
+    "Exact command xcrun simctl list devices -j, deferred-parent-signals Popen, start_new_session, owner.register(command), and command-only owned stop selection.",
+    "45-second communicate deadline, original2MiB stdout limit, nonzero/stderr rejection, raw stdout/stderr not retained.",
+    "Only exact synthetic name matches retained; multiple matches, malformed UUID, wrong selected runtime and UUID drift remain failures.",
+    "No canonical owned_lane edit, no process-enumeration/UID/PPID/PGID/lsof/FIFO changes, no timeout relaxation, no stale/PID-only fallback, no unowned signal.",
+    "No simulator lifecycle restructuring, application/copy transform/protection-validation change or provenance change.",
+    "No immutable original controls, clone manifest, historical freeze, historical receipt or approved failed diagnosis changed."
+  ],
+  "mechanical_integration_pending": {
+    "file": {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+      "sha256": "288c412456e130ec640f40042133ef4686554b4f63abecc097602999f2d20b18",
+      "bytes": 21106
+    },
+    "field": "DRIVER_SHA256",
+    "current_line": 21,
+    "old_sha256": "a56f47787c5abbda301cdfcafa5c8ac4ad7eb505d21d560e86063f93453a36f7",
+    "required_sha256": "030e15b39d728195a1f331aa28dbfa4eef3fa8e55e352e22febebc57f827ddb8",
+    "changed_by_author": false,
+    "consequence": "Composition intentionally remains fail-closed on companion-driver-drift until coordinator integrates the exact reviewed pin. Do not dispatch or call composition tests passing before that integration.",
+    "support_binding": "Existing SUPPORT_CONTROLS already includes test_native_command_failures.py, so this scoped test addition needs no new support file or allowlist entry.",
+    "historical_freeze": "hosted-native-repair-01/draft-freeze-relative.json expected_support_tests.primary_error12 is preserved creation-time metadata, not the fresh declaration/execution count. No draft source change in this patch."
+  },
+  "unchanged_ownership_files": [
+    {
+      "path": "scripts/verification/ios-readiness/owned_lane.py",
+      "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+      "bytes": 10446
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/owned_lane.py",
+      "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+      "bytes": 10446
+    }
+  ],
+  "proposed_focused_commands": [
+    {
+      "command": "python3 -B -m unittest discover -v -s scripts/verification/ios-readiness -p test_native_command_failures.py",
+      "expected_declared_tests": 26,
+      "status": "NOT_RUN_BY_AUTHOR",
+      "scope": "Real extracted generic and metadata handlers, all subprocesses/ownership/write calls stubbed; not app runtime"
+    },
+    {
+      "command": "python3 -B -m unittest discover -v -s scripts/verification/ios-readiness -p test_toolchain_profiles.py",
+      "expected_declared_tests": 12,
+      "status": "NOT_RUN_BY_AUTHOR",
+      "scope": "Existing metadata profile guards affected by handler"
+    },
+    {
+      "command": "python3 -B remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py",
+      "status": "NOT_RUN_BY_AUTHOR; integrate independently reviewed new DRIVER_SHA256 first",
+      "scope": "Original55 composition/draft controls, with source pin still enforced"
+    },
+    {
+      "command": "python3 -B -m unittest discover -v -s remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02 -p test_l08_functional_copy.py",
+      "expected_declared_tests": 12,
+      "status": "NOT_RUN_BY_AUTHOR",
+      "scope": "Immutable original control/clone allowlist and functional-copy guard scope"
+    }
+  ],
+  "review_request": "Different agent /root/ci_review: review actual two-file delta, exact exception identity and bounded primary/secondary records, known/unknown exit truth, unchanged selection/time/privacy guards and inert tests. Pin integration requires a separate exact-byte review when coordinator changes it.",
+  "limits": [
+    "This repair diagnoses future failures without resolving hosted ps/lsof latency or granting another native attempt.",
+    "Current A19 remains prebuildFAIL with canonical simulator cleanupFAIL and outer custody cleanupFAIL; B20 remainsNOT_RUN.",
+    "Prior A19 row11/12 masked triggers cannot be recovered retroactively. No simctl45 timeout, OOM or migration root cause is inferred.",
+    "No application-runtime, storage/retained-host, strict file-protection, normal Parlor libproc or readiness claim follows from this source change or prospective harness tests.",
+    "No test/build cycle was opened by this author; therefore no task-owned build outputs/workers, cleanup command or stop receipt was produced. Existing root lane lock and all unrelated work/evidence remain untouched."
+  ]
+}

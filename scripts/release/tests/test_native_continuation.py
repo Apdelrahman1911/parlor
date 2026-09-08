@@ -603,5 +603,262 @@ class NativePreflightTest(unittest.TestCase):
                 lane.bootstrap_cache_directories.assert_not_called()
 
 
+
+# Synthetic direct-lifecycle records exercise the actual adapter gates below.
+# They are not simulator, AppHost, build or application observations.
+def direct_fixture(root, *, cycle=None, attempted=True):
+    cycle = native.CYCLES['l08'] if cycle is None else cycle
+    destination = root / native.CAMPAIGN / 'evidence' / cycle
+    destination.mkdir(parents=True, exist_ok=True)
+    temporary = root / ('parlor-audit-' + cycle + '-synthetic')
+    temporary.mkdir(mode=0o700)
+    temporary_custody = dict(path=str(temporary), **native.custody(temporary))
+    temporary.rmdir()  # This synthetic fixture owns precisely this empty directory.
+    uuid = '11111111-2222-3333-4444-555555555555'
+    name = 'Parlor-Audit-' + temporary.name
+    value = cleanup_fixture()
+    value.update(cycle=cycle, signing_mode='adhoc', image_observer='libproc', toolchain_profile=native.PROFILE,
+                 simulator_lifecycle_mode=native.LIFECYCLE_MODE, owned_uuid=uuid, owned_device_name=name,
+                 owned_temporary_directory=str(temporary), build_attempted=attempted,
+                 postbuild_evidence_preserved=attempted)
+    if not attempted:
+        value.pop('xcodebuild_exit_code')
+        value.update(gradle_stops=[], commands=[])
+    evidence_custody = dict(path=str(destination), **native.custody(destination))
+    header = dict(schema_version=1, mode=native.LIFECYCLE_MODE, cycle=cycle, nonce='f' * 64,
+                  repository=str(root), source_sha256=native.canonical_sha(source_fixture()), control_sha256='d' * 64,
+                  temporary=temporary_custody, evidence=evidence_custody, name=name,
+                  runtime='com.apple.CoreSimulator.SimRuntime.iOS-26-2',
+                  device_type='com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro',
+                  developer_dir='/Applications/Xcode_26.3.app/Contents/Developer')
+    events, rows = [dict(event='allocation', intent=header)], []
+
+    def command(operation, cleanup=False):
+        args = (['list', 'devices', '-j'] if operation == 'inventory' else
+                ['create', name, header['device_type'], header['runtime']] if operation == 'create' else
+                [operation, uuid] + (['-b'] if operation == 'bootstatus' else []))
+        row = dict(ordinal=len(rows) + 1, operation=operation, command=['/usr/bin/xcrun', 'simctl', *args],
+                   timeout_seconds=45 if operation == 'inventory' else 300 if operation == 'bootstatus' else 120,
+                   started_at='2026-09-08T00:00:00+00:00', finished_at='2026-09-08T00:00:01+00:00',
+                   elapsed_seconds=1.0, stdout_bytes=0, stderr_bytes=0, stdout_sha256=native.sha(b''),
+                   stderr_sha256=native.sha(b''), status='EXITED0', cleanup=cleanup,
+                   handle_registered=True, reaped=True, exit_code=0, owned_pid=1000 + len(rows), secondary_errors=[])
+        rows.append(row)
+        intent = {key: item for key, item in row.items() if key not in {
+            'finished_at', 'elapsed_seconds', 'stdout_bytes', 'stderr_bytes', 'stdout_sha256', 'stderr_sha256',
+            'exit_code', 'owned_pid'}}
+        intent.update(status='RUNNING', reaped=False, handle_registered=False)
+        events.extend([dict(event='command-intent', row=intent),
+                       dict(event='command-launched', ordinal=row['ordinal'], owned_pid=row['owned_pid']),
+                       dict(event='command-result', row=copy.deepcopy(row))])
+
+    def metadata(label, state):
+        item = None if state is None else dict(udid=uuid, name=name, state=state, runtime=header['runtime'],
+                                              device_type=header['device_type'], available=True)
+        events.append(dict(event='metadata', label=label, match=item))
+
+    command('inventory')
+    events.append(dict(event='pre-create-intent', baseline_uuid_sha256=[], name=name,
+                       runtime=header['runtime'], device_type=header['device_type']))
+    command('create')
+    command('inventory')
+    metadata('owned-device-after-create', 'Shutdown')
+    events.append(dict(event='create-outcome', status='EXITED0_AND_IDENTITY_VERIFIED', uuid=uuid))
+    command('boot')
+    command('bootstatus')
+    if attempted:
+        events.append(dict(event='build-attempted'))
+    command('inventory', True)
+    metadata('owned-device-recovery', 'Booted')
+    barrier = (dict(status='PASS', build_attempted=True, evidence_preserved=True, strict_stop=True,
+                    fresh_strict_refresh=True, direct_build_handles=1, direct_build_handles_reaped=1) if attempted else
+               dict(status='NOT_REQUIRED_PREBUILD', build_attempted=False))
+    events.append(dict(event='destructive-cleanup-barrier', result=barrier))
+    command('inventory', True)
+    metadata('owned-device-before-shutdown', 'Booted')
+    command('shutdown', True)
+    command('inventory', True)
+    metadata('owned-device-after-shutdown', 'Shutdown')
+    events.append(dict(event='shutdown-verified', uuid=uuid))
+    command('inventory', True)
+    metadata('owned-device-before-delete', 'Shutdown')
+    command('delete', True)
+    command('inventory', True)
+    metadata('owned-device-after-delete', None)
+    events.append(dict(event='delete-and-absence-verified', uuid=uuid, metadata_absent=True, directory_absent=True))
+    events.append(dict(event='lifecycle-finalized', owned_uuid=uuid, owned_device_absent=True,
+                       postbuild_barrier=barrier, direct_children_reaped=len(rows), commands_sha256=native.canonical_sha(rows)))
+    value['commands'] += copy.deepcopy(rows)
+    value['simulator_lifecycle'] = dict(schema_version=1, mode=native.LIFECYCLE_MODE, cycle=cycle,
+        source_sha256=header['source_sha256'], control_sha256=header['control_sha256'],
+        temporary_custody=temporary_custody, evidence_custody=evidence_custody,
+        journal=dict(path='simulator-lifecycle.jsonl', sha256='', bytes=0, identity=[]),
+        creation_intent=True, creation_dispatched=True, creation_outcome='EXITED0_AND_IDENTITY_VERIFIED',
+        owned_uuid=uuid, build_attempted=attempted, postbuild_barrier=barrier, commands=rows,
+        direct_children=dict(started=len(rows), reaped=len(rows), unreaped=0, status='PASS'),
+        owned_device_absent=True, evidence_failed=False, errors=[], cleanup_budget_seconds=480, cleanup_status='PASS')
+    raw = direct_journal_bytes(events, value)
+    journal = destination / 'simulator-lifecycle.jsonl'
+    native.write_new(journal, raw)
+    info = journal.lstat()
+    value['simulator_lifecycle']['journal']['identity'] = [info.st_dev, info.st_ino, info.st_uid]
+    return value, events, raw, destination
+
+
+def direct_journal_bytes(events, value):
+    raw = b''.join(json.dumps(row, sort_keys=True, separators=(',', ':')).encode() + b'\n' for row in events)
+    value['simulator_lifecycle']['journal'].update(sha256=native.sha(raw), bytes=len(raw))
+    return raw
+
+
+class DirectLifecycleAdapterTest(unittest.TestCase):
+    def test_complete_synthetic_cleanup_is_not_runtime_pass_and_legacy_is_not_new_authority(self):
+        with TemporaryDirectory() as raw:
+            root = Path(raw).resolve()
+            value, _, journal, destination = direct_fixture(root)
+            self.assertTrue(native.cleanup_is_safe(value, 'd' * 64, source_fixture(), lifecycle_mode=native.LIFECYCLE_MODE))
+            self.assertTrue(native.lifecycle_journal_matches(journal, value, root, destination))
+            self.assertEqual(value['status'], 'PARTIALLY_VERIFIED')
+            self.assertTrue(native.cleanup_is_safe(cleanup_fixture(), 'd' * 64, source_fixture()))
+            self.assertFalse(native.cleanup_is_safe(cleanup_fixture(), 'd' * 64, source_fixture(),
+                                                   lifecycle_mode=native.LIFECYCLE_MODE))
+
+    def test_schema_malformed_missing_mode_reap_barrier_identity_and_preservation_fail_closed(self):
+        mutations = [
+            lambda r: r.pop('simulator_lifecycle'),
+            lambda r: r.update(simulator_lifecycle_mode='legacy-apphost'),
+            lambda r: r.update(build_attempted=False),
+            lambda r: r.update(postbuild_evidence_preserved=False),
+            lambda r: r.update(owned_uuid='booted'),
+            lambda r: r.update(commands=[None]),
+            lambda r: r.update(finalization_stages=[None]),
+        ]
+        for field, replacement in (('mode', 'legacy-apphost'), ('schema_version', True), ('cycle', 'ios-readiness-19'),
+                ('source_sha256', '0' * 64), ('control_sha256', '0' * 64), ('cleanup_status', 'BLOCKED'),
+                ('creation_intent', False), ('creation_dispatched', False), ('evidence_failed', True),
+                ('owned_device_absent', False), ('commands', []), ('direct_children', {}), ('postbuild_barrier', {})):
+            mutations.append(lambda r, field=field, replacement=replacement: r['simulator_lifecycle'].update({field: replacement}))
+        mutations += [
+            lambda r: r['simulator_lifecycle']['postbuild_barrier'].update(status='FAIL'),
+            lambda r: r['simulator_lifecycle']['postbuild_barrier'].update(direct_build_handles_reaped=0),
+            lambda r: r['simulator_lifecycle']['postbuild_barrier'].update(fresh_strict_refresh=False),
+            lambda r: r['simulator_lifecycle']['journal'].update(sha256='missing'),
+            lambda r: r['simulator_lifecycle']['journal'].update(identity=[1, 0, 0]),
+            lambda r: r['simulator_lifecycle']['commands'][0].update(reaped=False),
+            lambda r: r['simulator_lifecycle']['commands'][0].update(exit_code=True),
+            lambda r: r['simulator_lifecycle']['commands'][0].pop('stdout_sha256'),
+            lambda r: r['simulator_lifecycle']['commands'][0].update(stdout_bytes=999999999),
+            lambda r: r['simulator_lifecycle']['commands'][0].update(elapsed_seconds=float('nan')),
+            lambda r: r['simulator_lifecycle']['commands'][0].update(secondary_errors=[{'stage': 'pipe-close'}]),
+            lambda r: r['simulator_lifecycle']['commands'][-1].update(status='FAILED', primary_error={'type': 'RuntimeError'}),
+        ]
+        with TemporaryDirectory() as raw:
+            value, _, _, _ = direct_fixture(Path(raw).resolve())
+            for ordinal, mutation in enumerate(mutations):
+                changed = copy.deepcopy(value)
+                mutation(changed)
+                with self.subTest(mutation=ordinal):
+                    self.assertFalse(native.cleanup_is_safe(changed, 'd' * 64, source_fixture(),
+                                                           lifecycle_mode=native.LIFECYCLE_MODE))
+
+    def test_prebuild_cleanup_requires_explicit_matching_no_build_marker_not_missing_log_inference(self):
+        with TemporaryDirectory() as raw:
+            root = Path(raw).resolve()
+            value, _, journal, destination = direct_fixture(root, attempted=False)
+            self.assertTrue(native.cleanup_is_safe(value, 'd' * 64, source_fixture(), lifecycle_mode=native.LIFECYCLE_MODE))
+            self.assertTrue(native.lifecycle_journal_matches(journal, value, root, destination))
+            value['commands'].append(dict(command=['xcodebuild', 'test']))
+            self.assertFalse(native.cleanup_is_safe(value, 'd' * 64, source_fixture(), lifecycle_mode=native.LIFECYCLE_MODE))
+
+    def test_rehashed_journal_cannot_change_custody_intent_order_source_or_absence(self):
+        def move_after_create(events):
+            plan = next(item for item in events if item['event'] == 'pre-create-intent')
+            events.remove(plan)
+            events.insert(next(i for i, item in enumerate(events) if item['event'] == 'command-result' and
+                               item['row']['operation'] == 'create') + 1, plan)
+        def move_barrier_last(events):
+            barrier = next(item for item in events if item['event'] == 'destructive-cleanup-barrier')
+            events.remove(barrier)
+            events.insert(-1, barrier)
+        def remove_launch(events):
+            events.remove(next(item for item in events if item['event'] == 'command-launched'))
+        def stale_delete_metadata(events):
+            item = next(row for row in events if row['event'] == 'metadata' and row['label'] == 'owned-device-before-delete')
+            events.remove(item)
+            events.insert(next(i for i, row in enumerate(events) if row['event'] == 'command-intent' and
+                               row['row']['operation'] == 'shutdown'), item)
+        mutations = [move_after_create, move_barrier_last, remove_launch, stale_delete_metadata,
+            lambda e: e.insert(-1, copy.deepcopy(e[0])),
+            lambda e: e[0]['intent'].update(repository='/different/root'),
+            lambda e: e[0]['intent']['evidence'].update(inode=0),
+            lambda e: e[0]['intent']['temporary'].update(path='/another/task'),
+            lambda e: e[0]['intent']['temporary'].update(uid=-1),
+            lambda e: e[0]['intent'].update(source_sha256='0' * 64),
+            lambda e: e[-1].update(owned_device_absent=False),
+            lambda e: e[-1].update(commands_sha256='0' * 64),
+            lambda e: next(item for item in e if item['event'] == 'metadata' and
+                           item['label'] == 'owned-device-before-delete')['match'].update(state='Booted'),
+            lambda e: next(item for item in e if item['event'] == 'metadata' and
+                           item['label'] == 'owned-device-before-delete')['match'].update(name='different-owned-name'),
+            lambda e: next(item for item in e if item['event'] == 'metadata' and
+                           item['label'] == 'owned-device-before-delete')['match'].update(runtime='wrong-runtime'),
+            lambda e: next(item for item in e if item['event'] == 'metadata' and
+                           item['label'] == 'owned-device-before-delete')['match'].update(device_type='wrong-type'),
+            lambda e: next(item for item in e if item['event'] == 'metadata' and
+                           item['label'] == 'owned-device-before-delete')['match'].update(available=False),
+            lambda e: next(item for item in e if item['event'] == 'create-outcome').update(status='FAILED'),
+            lambda e: next(item for item in e if item['event'] == 'pre-create-intent')['baseline_uuid_sha256'].append(
+                           native.sha(b'11111111-2222-3333-4444-555555555555')),
+        ]
+        with TemporaryDirectory() as raw:
+            root = Path(raw).resolve()
+            value, events, journal, destination = direct_fixture(root)
+            self.assertTrue(native.lifecycle_journal_matches(journal, value, root, destination))
+            for ordinal, mutation in enumerate(mutations):
+                changed, new_events = copy.deepcopy(value), copy.deepcopy(events)
+                mutation(new_events)
+                new_raw = direct_journal_bytes(new_events, changed)  # Digest alone is deliberately kept consistent.
+                with self.subTest(mutation=ordinal):
+                    self.assertFalse(native.lifecycle_journal_matches(new_raw, changed, root, destination))
+
+    def test_actual_run_native_requests_mode_and_refuses_unsafe_evidence_before_a_second_lane(self):
+        mutations = [None, lambda value, journal: value.update(simulator_lifecycle_mode='legacy-apphost'),
+                     lambda value, journal: value['simulator_lifecycle']['postbuild_barrier'].update(status='FAIL'),
+                     lambda value, journal: value['simulator_lifecycle']['journal'].update(sha256='0' * 64),
+                     lambda value, journal: journal.unlink()]
+        for index, mutation in enumerate(mutations):
+            with self.subTest(mutation=index), TemporaryDirectory() as raw:
+                root = Path(raw).resolve()
+                lane = object.__new__(native.Continuation)
+                lane.root, lane.binding = root, root / native.CAMPAIGN / native.BINDING_NAME
+                lane.bundle = root / 'bundle'; lane.bundle.mkdir()
+                lane.state = dict(runs={}, files={}, directories={})
+                lane.save = Mock()
+                invoked = []
+                def invoke(arguments, log, entry):
+                    invoked.append(arguments)
+                    value, _, _, destination = direct_fixture(root, cycle=entry['cycle'])
+                    journal = destination / 'simulator-lifecycle.jsonl'
+                    if mutation is not None:
+                        mutation(value, journal)
+                    native.write_new(destination / 'receipt.json', native.json_bytes(value))
+                    entry['exit_code'] = 2
+                lane.invoke_native = invoke
+                lane.fetch_preflight = Mock(return_value=({'l08_sha256': 'd' * 64, 'normal_sha256': 'd' * 64}, source_fixture()))
+                lane.bootstrap_cache_directories = Mock()
+                if mutation is None:
+                    self.assertEqual(lane.evidence(), 2)
+                    self.assertEqual(len(invoked), 2)
+                    self.assertEqual(lane.state['status'], 'NOT_READY')
+                else:
+                    with self.assertRaises((RuntimeError, OSError)):
+                        lane.evidence()
+                    self.assertEqual(len(invoked), 1)
+                    self.assertFalse(lane.state['cleanup_safe'])
+                for args in invoked:
+                    self.assertEqual(args.count('--simulator-lifecycle=direct-owned-v1'), 1)
+                self.assertTrue((lane.bundle / native.CYCLES['l08'] / 'receipt.json').is_file())
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -51,21 +51,76 @@ absolute checkout path and recomputes both control manifests before native work.
 
 The canonical runners execute serially on independently owned fresh simulators:
 
-1. A: composed L08, next cycle `ios-readiness-19`;
+1. A: composed L08, next cycle `ios-readiness-21`;
 2. B: normal-source eight launches plus separate image observation, cycle
-   `ios-readiness-20`, explicit `--image-observer=libproc`.
+   `ios-readiness-22`, explicit `--image-observer=libproc`.
 
-The failed `ios-readiness-17/18` evidence from run `34216788568` remains
-historical evidence, not an overwritten/reclassified attempt. New labels do not
-authorize another application run; the independent process diagnostic below
-precedes any proposed retry.
+The failed `ios-readiness-17/18` evidence from run `34216788568` and failed
+A19 from `34244902185` remain historical failures. A19's simulator cleanup was
+not proven; B20 was **NOT_RUN**. The separate diagnostic `34239707887` did retire
+its own journaled simulator, but failed other observations and did not run Parlor.
+Its direct-child lifecycle precedent is not AppHost/build/provenance proof.
 
-Both use explicit `--simulator-signing=adhoc` and
-`--toolchain=qualified-xcode-26.3`. No private signing or Store operation occurs.
+Both next runners explicitly select `--simulator-signing=adhoc`,
+`--toolchain=qualified-xcode-26.3` and `--simulator-lifecycle=direct-owned-v1`.
+New labels or successful Linux controls do not authorize a native retry: reviewed
+source/control commits, a mechanical-inventory freeze, fresh same-source preflight
+and independent approval remain required. No private signing or Store operation occurs.
 A's strict protection failure/partial result does not suppress B, **provided A's
 actual source/control/worker/device/Gradle cleanup receipts are safe**. Failed,
 missing or contradictory cleanup stops the chain. No successful harness result
 is upgraded to application runtime or file-protection enforcement proof.
+
+## Explicit lifecycle authority (not an AppHost replacement)
+
+The wrappers' **default remains `legacy-apphost`**. The exact optional
+`--simulator-lifecycle=direct-owned-v1` is parsed before allocation; unknown,
+duplicate or nonqualified-profile selection fails. There is no ps/lsof-triggered
+fallback. The helper is stdlib-only and its module, isolated controls and actual
+wrapper integration controls are in all three native control manifests. The
+composed draft adaptor's exact driver pin and a new additive nine-file freeze
+bind the final companion; earlier immutable freezes are preserved.
+
+Direct mode can issue only `/usr/bin/xcrun simctl` inventory, exact named create,
+UUID boot/bootstatus and dedicated journal-authorized shutdown/delete. Each CLI
+is captured through its unreaped direct `Popen` handle, with separately live-
+bounded stdout/stderr, strict diagnostic-stderr rejection, closed error codes,
+actual exit/reap evidence and bounded termination. No numeric-PID/group/name
+fallback, shared-service signals, or unrelated inventory retention is introduced.
+The exclusive fsynced append-only journal records exact source/control and
+allocation/evidence custody, a nonce, pre-create UUID hashes, issued-create proof,
+command intents/results and final retirement. Intent alone or a printed UUID
+cannot authorize partial-create recovery. A fresh exact Shutdown observation,
+successful delete, and both metadata and directory absence are mandatory.
+
+Command allowances remain metadata45s, ordinary lifecycle120s and bootstatus300s;
+original AppHost ps15s/lsof30s are untouched. Lifecycle finalization has a separate
+480s ceiling within the unchanged outer600s cancellation grace. A new lifecycle
+command starts only if its **full** allowance plus10s direct-child retirement fits;
+otherwise cleanup is explicitly failed, never shortened, silently skipped or
+accepted. This is not a promise every worst-case global scan plus device cleanup
+fits the outer grace. Exhaustion retains resources/failed receipts and stops B.
+
+Xcode, Gradle, app launch/container queries, XCResult extraction and image/libproc
+observations still use the original strict AppHost authority. Before Xcode
+`Popen`, direct mode latches a durable build-attempt marker. Following any build
+attempt, device destruction additionally requires an explicit acknowledgement
+that the existing bounded raw XCTest/container evidence was retained (plus the
+composed Foundation retention stage), **then** original `owner.stop()`, fresh
+strict refresh, no unknown/FIFO-attestation errors, and all direct build handles
+reaped. Missing/failed preservation acknowledgement or its persistence blocks
+simulator destruction **and** temporary copy/DerivedData/XCResult deletion, while
+worker/FIFO/final-holder retirement checks still run. This deliberately preserves
+exceptional-path resources rather than inventing a no-app/no-evidence success.
+Prebuild journal cleanup is independent of global ps, but final file cleanup
+still requires all original worker/holder/FIFO/source/custody guards.
+
+The adapter requests and validates this same mode, checks nonvacuous lifecycle
+rows/build barrier and reconciles the actual bounded journal bytes, inode/custody,
+source/control bindings, intent ordering and final result before another lane.
+Legacy cleanup schema controls remain readable; they do not authorize this path.
+Neither this helper nor its tests repairs or qualifies the separately unresolved
+build-era global process observations, strict L08 protection, or normal-app libproc.
 
 ## Custody and cleanup
 

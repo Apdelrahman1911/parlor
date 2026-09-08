@@ -39,7 +39,8 @@ RUNNERS = {
     "l08": OLD_CAMPAIGN + "/native/l08-app-foundation-composition-01/compose_runner.py",
     "normal": OLD_CAMPAIGN + "/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
 }
-CYCLES = {"l08": "ios-readiness-19", "normal": "ios-readiness-20"}
+CYCLES = {"l08": "ios-readiness-21", "normal": "ios-readiness-22"}
+LIFECYCLE_MODE = "direct-owned-v1"
 PREFLIGHT_FILES = {"preflight.json", BINDING_NAME, "l08-controls.json", "normal-controls.json"}
 HEX40 = re.compile(r"[0-9a-f]{40}\Z")
 HEX64 = re.compile(r"[0-9a-f]{64}\Z")
@@ -361,16 +362,239 @@ def validate_package(files, expected, current, root=ROOT):
     return preflight
 
 
-def cleanup_is_safe(receipt, approved, source):
+def canonical_sha(value):
+    return sha(json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False).encode())
+
+
+def direct_lifecycle_is_safe(receipt, approved, source):
+    """Closed cleanup schema, not a new runtime verdict or legacy reclassification."""
+    try:
+        value = receipt["simulator_lifecycle"]
+        journal, children, rows = value["journal"], value["direct_children"], value["commands"]
+        uuid = receipt["owned_uuid"]
+        name = receipt["owned_device_name"]
+        if not (receipt["simulator_lifecycle_mode"] == value["mode"] == LIFECYCLE_MODE and
+                type(value["schema_version"]) is int and value["schema_version"] == 1 and
+                value["cycle"] == receipt["cycle"] in CYCLES.values() and
+                value["source_sha256"] == canonical_sha(source) and value["control_sha256"] == approved and
+                value["cleanup_status"] == "PASS" and value["evidence_failed"] is False and
+                value["creation_intent"] is True and value["creation_dispatched"] is True and
+                value["creation_outcome"] in {"EXITED0_AND_IDENTITY_VERIFIED", "INTERRUPTED_OR_FAILED"} and
+                re.fullmatch(r"[A-F0-9]{8}(?:-[A-F0-9]{4}){3}-[A-F0-9]{12}", uuid) and
+                re.fullmatch(r"Parlor-Audit-parlor-audit-ios-readiness-[0-9]{2}-[A-Za-z0-9_-]{1,64}", name) and
+                value["owned_uuid"] == uuid and value["owned_device_absent"] is receipt["owned_device_absent"] is True and
+                journal["path"] == "simulator-lifecycle.jsonl" and HEX64.fullmatch(journal["sha256"]) and
+                type(journal["bytes"]) is int and 0 < journal["bytes"] <= 1024 * 1024 and
+                isinstance(journal["identity"], list) and len(journal["identity"]) == 3 and
+                all(type(part) is int and part >= 0 for part in journal["identity"]) and journal["identity"][1] > 0 and
+                type(value["cleanup_budget_seconds"]) is int and value["cleanup_budget_seconds"] == 480 and
+                isinstance(rows, list) and 4 <= len(rows) <= 96 and
+                type(receipt["build_attempted"]) is bool and value["build_attempted"] is receipt["build_attempted"]):
+            return False
+        started, operations = 0, []
+        for index, row in enumerate(rows, 1):
+            operation = row["operation"]
+            if operation == "inventory":
+                expected = ["list", "devices", "-j"]
+            elif operation == "create":
+                expected = ["create", name, "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+                            "com.apple.CoreSimulator.SimRuntime.iOS-26-2"]
+            elif operation in {"boot", "bootstatus", "shutdown", "delete"}:
+                expected = [operation, uuid] + (["-b"] if operation == "bootstatus" else [])
+            else:
+                return False
+            if not (type(row["ordinal"]) is int and row["ordinal"] == index and
+                    row["command"] == ["/usr/bin/xcrun", "simctl"] + expected and
+                    type(row["timeout_seconds"]) is int and
+                    row["timeout_seconds"] == (45 if operation == "inventory" else 300 if operation == "bootstatus" else 120) and
+                    type(row["cleanup"]) is bool and type(row["handle_registered"]) is bool and
+                    row["secondary_errors"] == [] and row["status"] in {"EXITED0", "FAILED"}):
+                return False
+            if not (all(isinstance(row[key], str) and 0 < len(row[key]) <= 64 for key in ("started_at", "finished_at")) and
+                    type(row["elapsed_seconds"]) in (int, float) and 0 <= row["elapsed_seconds"] <= 6600 and
+                    all(type(row[key]) is int and 0 <= row[key] <= 2 * 1024 * 1024 + 65536
+                        for key in ("stdout_bytes", "stderr_bytes")) and
+                    all(isinstance(row[key], str) and HEX64.fullmatch(row[key]) for key in ("stdout_sha256", "stderr_sha256"))):
+                return False
+            if row["handle_registered"]:
+                started += 1
+                if not (row["reaped"] is True and type(row["exit_code"]) is int and
+                        type(row["owned_pid"]) is int and row["owned_pid"] > 0):
+                    return False
+            if row["status"] == "EXITED0":
+                if not row["handle_registered"] or row["exit_code"] != 0 or row.get("primary_error"):
+                    return False
+            elif row["cleanup"] or not isinstance(row.get("primary_error"), dict):
+                return False
+            operations.append(operation)
+        if not (started >= 4 and children == dict(started=started, reaped=started, unreaped=0, status="PASS") and
+                operations.count("create") == operations.count("delete") == 1 and
+                operations.count("shutdown") <= 1 and rows[-1]["operation"] == "inventory" and
+                [row for row in receipt["commands"] if row.get("operation") is not None] == rows):
+            return False
+        barrier = value["postbuild_barrier"]
+        if value["build_attempted"]:
+            count = barrier["direct_build_handles"]
+            return (barrier["status"] == "PASS" and barrier["build_attempted"] is True and
+                    receipt["postbuild_evidence_preserved"] is True and barrier["evidence_preserved"] is True and
+                    barrier["strict_stop"] is True and barrier["fresh_strict_refresh"] is True and
+                    type(count) is int and 0 <= count <= 4096 and barrier["direct_build_handles_reaped"] == count)
+        return barrier == dict(status="NOT_REQUIRED_PREBUILD", build_attempted=False)
+    except (KeyError, TypeError, ValueError, AttributeError):
+        return False
+
+
+def lifecycle_journal_matches(raw, receipt, root, evidence):
+    """Bind the actual retained journal, including intent, result and final event."""
+    try:
+        value = receipt["simulator_lifecycle"]
+        if len(raw) != value["journal"]["bytes"] or sha(raw) != value["journal"]["sha256"]:
+            return False
+        lines = raw.splitlines()
+        if not 5 <= len(lines) <= 512:
+            return False
+        events = [decode(line) for line in lines]
+        if sum(item.get("event") == "allocation" for item in events) != 1:
+            return False
+        header = events[0]["intent"]
+        temporary = header["temporary"]
+        temporary_path = Path(receipt["owned_temporary_directory"])
+        if not (events[0]["event"] == "allocation" and header["schema_version"] == 1 and
+                header["mode"] == LIFECYCLE_MODE and header["cycle"] == receipt["cycle"] and
+                header["control_sha256"] == value["control_sha256"] and header["source_sha256"] == value["source_sha256"] and
+                header["name"] == receipt["owned_device_name"] and HEX64.fullmatch(header["nonce"]) and
+                header["repository"] == str(root) and header["evidence"] == value["evidence_custody"] ==
+                dict(path=str(evidence), **custody(evidence)) and
+                temporary == value["temporary_custody"] and isinstance(temporary, dict) and
+                set(temporary) == {"path", "device", "inode", "uid"} and
+                all(type(temporary[key]) is int and temporary[key] >= 0 for key in ("device", "inode", "uid")) and
+                temporary["inode"] > 0 and temporary["uid"] == os.getuid() and
+                temporary["path"] == str(temporary_path) and temporary_path.is_absolute() and
+                temporary_path.resolve() == temporary_path and
+                header["name"] == "Parlor-Audit-" + temporary_path.name and
+                temporary_path.name.startswith("parlor-audit-" + receipt["cycle"] + "-") and
+                header["runtime"] == "com.apple.CoreSimulator.SimRuntime.iOS-26-2" and
+                header["device_type"] == "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro" and
+                header["developer_dir"] == "/Applications/Xcode_26.3.app/Contents/Developer"):
+            return False
+        plans = [item for item in events if item["event"] == "pre-create-intent"]
+        finals = [item for item in events if item["event"] == "lifecycle-finalized"]
+        deleted = [item for item in events if item["event"] == "delete-and-absence-verified"]
+        if not (len(plans) == len(finals) == len(deleted) == 1 and finals[0] == events[-1] and
+                finals[0]["owned_uuid"] == deleted[0]["uuid"] == value["owned_uuid"] and
+                finals[0]["owned_device_absent"] is deleted[0]["metadata_absent"] is deleted[0]["directory_absent"] is True and
+                finals[0]["postbuild_barrier"] == value["postbuild_barrier"] and
+                finals[0]["direct_children_reaped"] == value["direct_children"]["reaped"] and
+                finals[0]["commands_sha256"] == canonical_sha(value["commands"])):
+            return False
+        baseline = plans[0]["baseline_uuid_sha256"]
+        if not (isinstance(baseline, list) and len(baseline) <= 2048 and
+                all(isinstance(item, str) and HEX64.fullmatch(item) for item in baseline) and
+                baseline == sorted(set(baseline)) and sha(value["owned_uuid"].encode()) not in baseline and
+                plans[0]["name"] == header["name"] and plans[0]["runtime"] == header["runtime"] and
+                plans[0]["device_type"] == header["device_type"]):
+            return False
+        intents = [item["row"] for item in events if item["event"] == "command-intent"]
+        results = [item["row"] for item in events if item["event"] == "command-result"]
+        launched = [item for item in events if item["event"] == "command-launched"]
+        if len(intents) != len(value["commands"]) or results != value["commands"]:
+            return False
+        for row, intent in zip(value["commands"], intents):
+            if any(row[key] != intent[key] for key in ("ordinal", "operation", "command", "timeout_seconds", "cleanup")):
+                return False
+        expected_launched = [dict(event="command-launched", ordinal=row["ordinal"], owned_pid=row["owned_pid"])
+                             for row in value["commands"] if row["handle_registered"]]
+        if launched != expected_launched:
+            return False
+        outcomes = [event for event in events if event["event"] == "create-outcome"]
+        expected_outcomes = ([dict(event="create-outcome", status="EXITED0_AND_IDENTITY_VERIFIED", uuid=value["owned_uuid"])]
+                             if value["creation_outcome"] == "EXITED0_AND_IDENTITY_VERIFIED" else [])
+        if outcomes != expected_outcomes:
+            return False
+        # A reordered journal with a newly computed digest must not turn a
+        # post-hoc intent or stale state observation into destructive authority.
+        allowed = {"allocation", "pre-create-intent", "command-intent", "command-launched", "command-result",
+                   "metadata", "create-outcome", "recovered-for-cleanup-only", "build-attempted",
+                   "destructive-cleanup-barrier", "shutdown-verified", "delete-and-absence-verified", "lifecycle-finalized"}
+        active, ordinal, plan_seen, barrier_seen, build_seen = None, 0, False, False, False
+        latest_metadata = None
+        for position, event in enumerate(events):
+            kind = event["event"]
+            if kind not in allowed:
+                return False
+            if kind == "pre-create-intent":
+                if plan_seen or active is not None:
+                    return False
+                plan_seen = True
+            elif kind == "build-attempted":
+                if build_seen or barrier_seen:
+                    return False
+                build_seen = True
+            elif kind == "destructive-cleanup-barrier":
+                if barrier_seen or active is not None or event["result"] != value["postbuild_barrier"]:
+                    return False
+                if build_seen is not value["build_attempted"]:
+                    return False
+                barrier_seen = True
+            elif kind == "metadata":
+                if active is not None:
+                    return False
+                latest_metadata = event
+            elif kind == "command-intent":
+                row = event["row"]
+                if active is not None or row["ordinal"] != ordinal + 1:
+                    return False
+                ordinal += 1
+                active = row["ordinal"]
+                if row["operation"] == "create" and not plan_seen:
+                    return False
+                if row["operation"] in {"shutdown", "delete"} and not barrier_seen:
+                    return False
+                if row["operation"] == "delete" and not (position >= 2 and latest_metadata and
+                        events[position - 1] == latest_metadata and
+                        events[position - 2]["event"] == "command-result" and
+                        events[position - 2]["row"]["operation"] == "inventory" and
+                        events[position - 2]["row"]["status"] == "EXITED0" and
+                        latest_metadata["label"] == "owned-device-before-delete" and
+                        latest_metadata["match"] == dict(udid=value["owned_uuid"], name=header["name"],
+                            state="Shutdown", runtime=header["runtime"], device_type=header["device_type"], available=True)):
+                    return False
+            elif kind == "command-launched":
+                if event["ordinal"] != active:
+                    return False
+            elif kind == "command-result":
+                if event["row"]["ordinal"] != active:
+                    return False
+                active = None
+            elif kind == "delete-and-absence-verified":
+                if not (latest_metadata and latest_metadata["label"] == "owned-device-after-delete" and
+                        latest_metadata["match"] is None):
+                    return False
+        return active is None and barrier_seen and build_seen is value["build_attempted"]
+    except (KeyError, TypeError, ValueError, AttributeError, RuntimeError, OSError):
+        return False
+
+
+def cleanup_is_safe(receipt, approved, source, *, lifecycle_mode=None):
     if not isinstance(receipt, dict):
         return False
     stops = receipt.get("gradle_stops", [])
-    attempted = ("xcodebuild_exit_code" in receipt or any(
+    commands = receipt.get("commands", [])
+    stages = receipt.get("finalization_stages", [])
+    if (not isinstance(commands, list) or any(not isinstance(row, dict) or
+            not isinstance(row.get("command"), list) or not all(isinstance(arg, str) for arg in row["command"])
+            for row in commands) or not isinstance(stages, list) or any(not isinstance(row, dict) for row in stages)):
+        return False
+    attempted = (receipt.get("build_attempted") is True or "xcodebuild_exit_code" in receipt or any(
         row.get("command") and Path(str(row["command"][0])).name == "xcodebuild" and
         any(arg in {"test", "build"} for arg in row["command"][1:])
         for row in receipt.get("commands", [])))
     if (not isinstance(stops, list) or any(not isinstance(row, dict) or row.get("exit_code") != 0 for row in stops) or
             attempted and (len(stops) != 2 or {row.get("label") for row in stops} != {"stop-xcode-immediate", "stop-final"})):
+        return False
+    if lifecycle_mode is not None and (lifecycle_mode != LIFECYCLE_MODE or
+            not direct_lifecycle_is_safe(receipt, approved, source) or
+            receipt.get("build_attempted") is not attempted):
         return False
     return (isinstance(receipt, dict) and receipt.get("cleanup_status") == "PASS" and
             receipt.get("cleanup_errors") == [] and not receipt.get("finalizer_error") and
@@ -605,7 +829,8 @@ class Continuation:
         destination = self.root / CAMPAIGN / "evidence" / cycle
         require(not destination.exists() and not destination.is_symlink(), "never-reuse-a-native-cycle")
         arguments = ["/usr/bin/python3", "-B", str(self.root / RUNNERS[label]), cycle, str(self.binding), approved,
-                     "--simulator-signing=adhoc", "--toolchain=" + PROFILE]
+                     "--simulator-signing=adhoc", "--toolchain=" + PROFILE,
+                     "--simulator-lifecycle=" + LIFECYCLE_MODE]
         if label == "normal":
             arguments.append("--image-observer=libproc")
         entry = dict(cycle=cycle, command=arguments, started_at=now(), status="RUNNING")
@@ -628,7 +853,13 @@ class Continuation:
             self.save()
         require(preserved["status"] == "COMPLETE", "native-evidence-not-fully-preserved-retain-canonical-files")
         receipt = decode(file_bytes(destination / "receipt.json", 8 * 1024 * 1024))
-        safe = cleanup_is_safe(receipt, approved, source)
+        safe = cleanup_is_safe(receipt, approved, source, lifecycle_mode=LIFECYCLE_MODE)
+        if safe:
+            journal = destination / "simulator-lifecycle.jsonl"
+            raw = file_bytes(journal, 1024 * 1024)
+            info = journal.lstat()
+            safe = (lifecycle_journal_matches(raw, receipt, self.root, destination) and
+                    receipt["simulator_lifecycle"]["journal"]["identity"] == [info.st_dev, info.st_ino, info.st_uid])
         entry.update(receipt_status=receipt.get("status"), cleanup_safe=safe,
                      receipt_sha256=sha(file_bytes(destination / "receipt.json", 8 * 1024 * 1024)))
         self.state["cleanup_safe"] = safe
@@ -637,6 +868,7 @@ class Continuation:
         require(safe, "native-cleanup-or-source-identity-unsafe-do-not-start-another-cycle")
         require(receipt.get("cycle") == cycle and receipt.get("signing_mode") == "adhoc" and
                 receipt.get("toolchain_profile") == PROFILE and
+                receipt.get("simulator_lifecycle_mode") == LIFECYCLE_MODE and
                 (label != "normal" or receipt.get("image_observer") == "libproc"), "native-cycle-mode-profile-mismatch")
         return entry["exit_code"], receipt.get("status")
 

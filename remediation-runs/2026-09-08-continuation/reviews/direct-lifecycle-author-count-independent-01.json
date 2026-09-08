@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_STATIC_PROBE_DECLARATION_COUNT_ADDENDUM_REVIEW",
+  "reviewer": "/root/evidence_audit",
+  "author": "/root/ci_workflow",
+  "recorded_at": "2026-09-08T17:52:16.299983+00:00",
+  "decision": "APPROVED_FACTUAL_COUNT_CORRECTION_ONLY_NO_EXECUTION_OR_SOURCE_FREEZE_APPROVAL",
+  "reviewed_addendum": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-count-addendum-01.json",
+    "bytes": 3425,
+    "sha256": "6c34261e6903cf7f4d27fbd2ccaa1e44de9ce4c3981a625ee0cc66d89ebe003b"
+  },
+  "held_source_reports_preserved": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-source-01.json",
+      "bytes": 10413,
+      "sha256": "bc35e4b89fc48129dc60c176806753fe8a8b0ba2047638bfeb8770d6a5bc8ab2"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-source-02.json",
+      "bytes": 11177,
+      "sha256": "0e3ef86e9e66708be391630e864f01bfeb9f03bbfa183a0a027bec4a12f951ec"
+    }
+  ],
+  "direct_inspection": {
+    "source_path": "scripts/release/tests/test_native_process_probe.py",
+    "historical_snapshots": [
+      "5f35a20d3c9c846cd98b38a16881997ecf577497",
+      "700243c3426db2da3855a9d3a3df58ada607ffc5"
+    ],
+    "historical_bytes": 43371,
+    "historical_sha256": "707f394e34d8234f4617963af32a865b3620aaec7a16ee6e0c166c0e1090ef39",
+    "current_bytes": 43371,
+    "current_sha256": "2730119da9d074d490a259669d3e9f9b4fec655da2045bfd9401ee44dc91e4ea",
+    "all_three_snapshots_declared_methods": 45,
+    "class_counts": {
+      "ProbeSourceContractTest": 6,
+      "ProbeBoundedCaptureTest": 17,
+      "ProbePrivacyAndCustodyTest": 8,
+      "ProbeLifecycleTest": 7,
+      "ProbeSimulatorGlueTest": 3,
+      "NativeMetadataObservationTest": 4
+    },
+    "duplicate_qualified_methods": 0,
+    "added_methods": [],
+    "removed_methods": [],
+    "changed_method_ast": [
+      "ProbeSourceContractTest.test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels"
+    ],
+    "unchanged_method_ast_count": 44,
+    "whole_file_byte_delta": "Exactly one expected native.CYCLES assertion replaces ios-readiness-19/20 with ios-readiness-21/22; no other byte changes.",
+    "method": "Read actual git-show bytes at both commits and current file; ast.parse only, direct top-level unittest.TestCase test_ methods, qualified-name/AST comparison excluding location metadata and exact one-line whole-byte substitution. No test discovery, project import or execution."
+  },
+  "correction_conclusion": "The held source02 field probe_other_38 is superseded by this bound addendum correct field probe_other_44 and unchanged value UNCHANGED_NOT_REQUESTED_FOR_THIS_DELTA. 1 affected +44 unchanged =45 declarations; none are claimed newly executed or passed.",
+  "scope": "Count correction only. Earlier held source reports and all source/control/test bytes remain unchanged. No expansion of the coordinator proposed one-selector probe check and no repeated unchanged45-method suite requested.",
+  "findings": [],
+  "authorization_boundary": "No test/build, native/Actions execution, cleanup, source-control freeze, source-safety approval, staging/commit/push or readiness authorization. Parent coordinator owns future evidence and final exact delivery allowlist.",
+  "activity": {
+    "tests": 0,
+    "builds": 0,
+    "project_imports": 0,
+    "native_tools": 0,
+    "network": 0,
+    "workflow_dispatches": 0,
+    "source_edits": 0,
+    "existing_evidence_edits": 0,
+    "only_created_file": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-author-count-independent-01.json",
+    "cleanup": "No lane, generated worker/live output or fixture created. Read-only Python -B/Git and this new report only; no Gradle stop/clean or other cleanup performed."
+  },
+  "readiness": "NOT READY unchanged; factual source declarations do not complete A/B/D or supersede historical native failures and separate physical/Store/owner requirements."
+}

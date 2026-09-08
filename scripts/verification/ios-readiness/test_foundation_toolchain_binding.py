@@ -204,7 +204,10 @@ class FoundationToolchainControls(unittest.TestCase):
         self.assertEqual(keywords['toolchain'].id, 'toolchain_name')
         self.assertIn('toolchain_profile=toolchain_name', source)
         expected = {Path(__file__).resolve(), Path(__file__).with_name('test_native_command_failures.py'),
-                    Path(__file__).with_name('test_toolchain_profiles.py')}
+                    Path(__file__).with_name('test_toolchain_profiles.py'),
+                    Path(__file__).with_name('simulator_lifecycle.py'),
+                    Path(__file__).with_name('test_simulator_lifecycle.py'),
+                    Path(__file__).with_name('test_simulator_lifecycle_integration.py')}
         self.assertEqual(set(composition.SUPPORT_CONTROLS), expected)
         # Execute only this script's entry block with inert signal/test/allocation
         # substitutes. The separate existing launcher tests cover interrupted cleanup.

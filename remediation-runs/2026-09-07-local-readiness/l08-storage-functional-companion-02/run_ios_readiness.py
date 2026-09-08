@@ -60,6 +60,14 @@ if TOOLCHAIN_HELPER.is_symlink() or TOOLCHAIN_HELPER.resolve(strict=True) != TOO
 _toolchain_spec = importlib.util.spec_from_file_location('parlor_l08_toolchain_profiles', TOOLCHAIN_HELPER)
 toolchains = importlib.util.module_from_spec(_toolchain_spec)
 _toolchain_spec.loader.exec_module(toolchains)
+LIFECYCLE_HELPER = TOOLCHAIN_HELPER.parent / 'simulator_lifecycle.py'
+LIFECYCLE_TESTS = [TOOLCHAIN_HELPER.parent / name for name in (
+    'test_simulator_lifecycle.py', 'test_simulator_lifecycle_integration.py')]
+if LIFECYCLE_HELPER.is_symlink() or LIFECYCLE_HELPER.resolve(strict=True) != LIFECYCLE_HELPER:
+    raise RuntimeError('Redirected simulator lifecycle helper')
+_lifecycle_spec = importlib.util.spec_from_file_location('parlor_l08_simulator_lifecycle', LIFECYCLE_HELPER)
+simulator_lifecycle = importlib.util.module_from_spec(_lifecycle_spec)
+_lifecycle_spec.loader.exec_module(simulator_lifecycle)
 
 OUT = None
 BINDING = None
@@ -83,7 +91,7 @@ def control_files():
     if BINDING is None:
         raise RuntimeError('An explicit campaign source binding is required')
     return sorted([path for path in HERE.iterdir() if path.is_file() and
-                   (path.suffix in {'.py', '.in', '.md'} or path.name == 'inherited-controls.json')]) + [TOOLCHAIN_HELPER, BINDING]
+                   (path.suffix in {'.py', '.in', '.md'} or path.name == 'inherited-controls.json')]) + [TOOLCHAIN_HELPER, LIFECYCLE_HELPER, *LIFECYCLE_TESTS, BINDING]
 
 
 def control_manifest():
@@ -344,9 +352,10 @@ def main():
         BINDING = checked_binding_path(sys.argv[2])
         print(json.dumps(dict(control_sha256=control_hash(), files=control_manifest()), indent=2))
         return 0  # Read-only; never allocates a simulator or build workspace.
-    if len(sys.argv) not in (4, 5, 6) or not re.fullmatch(r'ios-readiness-[0-9]{2}', sys.argv[1]):
-        raise SystemExit('Usage: run_ios_readiness.py ios-readiness-NN CAMPAIGN_SOURCE_BINDING_JSON INDEPENDENTLY_REVIEWED_CONTROL_SHA256 [--simulator-signing=adhoc] [--toolchain=qualified-xcode-26.3]')
-    toolchain_name, signing_arguments = toolchains.selected_toolchain(sys.argv[4:])
+    if len(sys.argv) not in (4, 5, 6, 7) or not re.fullmatch(r'ios-readiness-[0-9]{2}', sys.argv[1]):
+        raise SystemExit('Usage: run_ios_readiness.py ios-readiness-NN CAMPAIGN_SOURCE_BINDING_JSON INDEPENDENTLY_REVIEWED_CONTROL_SHA256 [--simulator-signing=adhoc] [--toolchain=qualified-xcode-26.3] [--simulator-lifecycle=direct-owned-v1]')
+    toolchain_name, remaining = toolchains.selected_toolchain(sys.argv[4:])
+    lifecycle_mode, signing_arguments = simulator_lifecycle.selected_lifecycle(remaining, toolchain_name)
     toolchain = toolchains.profile(toolchain_name)
     mode = selected_mode(signing_arguments)
     NAME = sys.argv[1]
@@ -364,10 +373,11 @@ def main():
         dest.mkdir(exist_ok=False)
         receipt = dict(cycle=NAME, started_at=now(), status='RUNNING',
                        execution_kind='manifest-owned-copy-ios-l08-storage-functional-companion', signing_mode=mode, commands=[],
-                       toolchain_profile=toolchain_name,
+                       toolchain_profile=toolchain_name, simulator_lifecycle_mode=lifecycle_mode, build_attempted=False,
+                       postbuild_evidence_preserved=False,
                        runtime_evidence_status='NOT_RUN', cleanup_status='BLOCKED',
                        scope='Four actual production-container UIKit tests; actual Settings/restart; direct Compose and actual LocalUIViewController direction; stable outer/child/window identities and full-bounds safe-area geometry in EN/AR portrait/landscape; local Whodunit/Mafia controller/flow/value continuity under synthetic real-store language setters and actual background/foreground; actual OS Arabic per-app preference; eight current-build cold launches; exact rerun credential OSStatus and synthetic storage durability; complete embedded Mach-O inventory and observed loaded-image binding. Separate L08 functional companion: thirteen full GameSnapshot/real Home resume and damaged-record boots with all Complete comparisons retained separately, never original strict L08 PASS; three ControlledStartRoom host locale/lifecycle fixtures; no physical LAN, full-UI-game, signed-release, Store or leak-free claim.', approved_control_sha256=approved)
-        temp, owner, env, uuid = None, None, None, None
+        temp, owner, env, uuid, lifecycle = None, None, None, None, None
         # This iteration compiles only inside temp/copy. Original-repository
         # outputs are never task-owned and must never be deleted by this run.
         original_outputs = owned_outputs() + [ROOT / 'iosApp/build']
@@ -425,6 +435,11 @@ def main():
                     entry['finished_at'] = now(); save()
             return entry['exit_code']
 
+        def simulator_command(args, filename, timeout=120):
+            if lifecycle is None:
+                return command(args, filename, timeout)
+            return lifecycle.command(args, filename, timeout)  # Never fallback after a direct failure.
+
         def stop_gradle(label):
             code = command(['./gradlew', '--stop'], label + '.log', 90)
             receipt.setdefault('gradle_stops', []).append(dict(label=label, exit_code=code, at=now()))
@@ -432,6 +447,8 @@ def main():
                 raise RuntimeError('Required isolated Gradle stop failed')
 
         def own_simulator_metadata(label):
+            if lifecycle is not None:
+                return lifecycle.metadata(label)
             # Device names/UUIDs are non-player metadata, but retain ONLY our
             # unique name. Never log unrelated simulator metadata or containers.
             args = ['xcrun', 'simctl', 'list', 'devices', '-j']
@@ -462,14 +479,28 @@ def main():
                     raise RuntimeError('Synthetic simulator identity changed')
                 write_json(dest / (label + '.json'), dict(matches=matches))
                 return matches[0] if matches else None
-            except BaseException:
+            except BaseException as error:
+                entry['interrupted_or_failed'] = True
+                entry['primary_error'] = dict(type=type(error).__name__, message=str(error)[:800])
                 if child is not None:
-                    owner.stop(lambda item: item['role'] == 'command')
+                    cleanup_stage = 'stop-owned-command-workers'
+                    try:
+                        owner.stop(lambda item: item['role'] == 'command')
+                        # communicate may already have established the exit before
+                        # metadata validation failed. Never replace that observation.
+                        if 'exit_code' not in entry:
+                            cleanup_stage = 'read-owned-command-exit'
+                            entry['exit_code'] = child.poll()
+                    except BaseException as cleanup_error:
+                        entry['command_cleanup_error'] = dict(stage=cleanup_stage,
+                            type=type(cleanup_error).__name__, message=str(cleanup_error)[:800])
                 raise
             finally:
                 entry['finished_at'] = now(); save()
 
         def shutdown_owned_device():
+            if lifecycle is not None:
+                return lifecycle.shutdown()
             info = own_simulator_metadata('owned-device-before-shutdown')
             if info is None or info['state'] == 'Shutdown':
                 receipt['shutdown_disposition'] = 'already_absent' if info is None else 'already_shutdown'
@@ -481,6 +512,8 @@ def main():
                 raise RuntimeError('Owned simulator shutdown did not complete successfully')
 
         def delete_owned_device():
+            if lifecycle is not None:
+                return lifecycle.delete()
             info = own_simulator_metadata('owned-device-before-delete')
             if info is not None:
                 if info['state'] != 'Shutdown':
@@ -669,8 +702,13 @@ def main():
             receipt['copied_source_diff_sha256'] = digest(dest / 'copied-source.diff')
             receipt['copied_source_manifest_sha256'] = digest(dest / 'copied-source-manifest.json')
             receipt['copy_only_build_root'] = str(temp / 'copy')
+            if lifecycle_mode == simulator_lifecycle.DIRECT:
+                lifecycle = simulator_lifecycle.OwnedSimulatorLifecycle(root=ROOT, temporary=temp, evidence=dest,
+                    cycle=NAME, name=receipt['owned_device_name'], toolchain=toolchain_name,
+                    source=receipt['source_before'], approved=approved, receipt=receipt, save=save,
+                    current_bindings=lambda: (normalized_identity(), control_hash()), environment=env)
             receipt['simulator_creation_attempted'] = True; save()
-            if command(['xcrun', 'simctl', 'create', receipt['owned_device_name'],
+            if simulator_command(['xcrun', 'simctl', 'create', receipt['owned_device_name'],
                         'com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro',
                         toolchain['runtime']], 'create.log'):
                 raise RuntimeError('New simulator creation failed')
@@ -678,15 +716,18 @@ def main():
             if not re.fullmatch(r'[A-Fa-f0-9]{8}(?:-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12}', uuid):
                 uuid = None; raise RuntimeError('Simulator ownership UUID not available')
             receipt['owned_uuid'] = uuid; save()
-            if command(['xcrun', 'simctl', 'boot', uuid], 'boot.log') or command(['xcrun', 'simctl', 'bootstatus', uuid, '-b'], 'bootstatus.log', 300):
+            if simulator_command(['xcrun', 'simctl', 'boot', uuid], 'boot.log') or simulator_command(['xcrun', 'simctl', 'bootstatus', uuid, '-b'], 'bootstatus.log', 300):
                 raise RuntimeError('Owned simulator boot failed')
             results = temp / 'Results.xcresult'
             gradle_attempted = True
+            receipt['build_attempted'] = True
             receipt['temporary_artifact_retention_reason'] = 'Only current-cycle framework outputs needed during copied Swift link/runtime; remove after result extraction.'
             receipt['runtime_evidence_status'] = 'RUNNING'
             receipt['runtime_attempted_at'] = now()
             save()
             try:
+                if lifecycle is not None:
+                    lifecycle.mark_build_attempted()
                 xcode = command(['xcodebuild', '-project', project.parent, '-scheme', 'iosApp',
                     '-configuration', 'Debug', '-sdk', env['SDK_NAME'], '-destination', 'id=' + uuid,
                     '-derivedDataPath', temp / 'DerivedData', '-resultBundlePath', results,
@@ -754,6 +795,15 @@ def main():
                             output.write(json.dumps(failure_record, sort_keys=True) + '\n')
                         receipt.setdefault('native_diagnostic_failures', []).append(failure_record)
                         save()
+                # Retention acknowledgment only, not XCTest/runtime success.
+                # An exceptional extraction/container path never reaches this.
+                receipt['postbuild_evidence_preserved'] = receipt.get('xcresult_extraction_exit_codes') == {
+                    'summary': 0, 'tests': 0}
+                try:
+                    save()
+                except BaseException:
+                    receipt['postbuild_evidence_preserved'] = False
+                    raise
             derived = temp / 'DerivedData'
             if derived.is_dir():
                 generated_entitlements = inspect_generated_app_entitlements(derived, temp)
@@ -939,15 +989,20 @@ def main():
             try:
                 if gradle_attempted and owner is not None:
                     stage('final-isolated-gradle-stop', lambda: stop_gradle('stop-final'))
+                if lifecycle is not None:
+                    recovered = stage('recover-journaled-owned-simulator-identity', lifecycle.recover)
+                    if isinstance(recovered, dict):
+                        uuid = recovered['udid']; receipt['owned_uuid'] = uuid
+                # Legacy recovery remains unchanged; it never activates the new authority.
                 # Recover a successfully printed UUID even if interrupted between command/assignment.
-                if uuid is None and (dest / 'create.log').exists():
+                if lifecycle is None and uuid is None and (dest / 'create.log').exists():
                     value = (dest / 'create.log').read_text().strip()
                     if re.fullmatch(r'[A-Fa-f0-9]{8}(?:-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12}', value):
                         uuid = value; receipt['owned_uuid'] = uuid
                 # A killed/interrupted create may register the unique device
                 # before printing its UUID. Query only that synthetic name and
                 # retain no metadata belonging to other simulator owners.
-                if uuid is None and receipt.get('simulator_creation_attempted'):
+                if lifecycle is None and uuid is None and receipt.get('simulator_creation_attempted'):
                     recovered = stage('recover-owned-simulator-identity',
                                       lambda: own_simulator_metadata('owned-device-recovery'))
                     if isinstance(recovered, dict):
@@ -956,8 +1011,13 @@ def main():
                     # XCTest itself defers app.terminate(). Shutting down the
                     # exact owned simulator also stops apps after test failure;
                     # no misleading nonzero 'nothing to terminate' success.
-                    stage('shutdown-owned-simulator-and-app', shutdown_owned_device)
-                    stage('delete-owned-simulator', delete_owned_device)
+                    device_cleanup_allowed = lifecycle is None or stage('authorize-journaled-device-cleanup',
+                        lambda: lifecycle.prepare_cleanup(owner, gradle_attempted)) is True
+                    if device_cleanup_allowed:
+                        stage('shutdown-owned-simulator-and-app', shutdown_owned_device)
+                        stage('delete-owned-simulator', delete_owned_device)
+                if lifecycle is not None:
+                    stage('finalize-direct-simulator-lifecycle', lifecycle.finish)
                 if owner is not None:
                     stage('stop-owned-command-workers', owner.stop)
                     receipt['secondary_cleanup'] = stage('cleanup-attested-secondary-fifos', owner.secondary.cleanup)
@@ -976,6 +1036,7 @@ def main():
                         raise RuntimeError('Owned/unknown file holders remain; retain outputs for targeted cleanup')
                     return True
                 safe = stage('verify-workers-before-file-removal', verify_workers) is True
+                preservation_safe = lifecycle is None or not gradle_attempted or receipt.get('postbuild_evidence_preserved') is True
                 receipt['copied_sources_unchanged'] = False
                 if copied_source_manifest is not None and temp is not None and safe:
                     def verify_copied_inputs():
@@ -988,13 +1049,13 @@ def main():
                         return True
                     stage('verify-copied-input-identity-after-workers-stop', verify_copied_inputs)
                 removed = []
-                if safe and eligible and gradle_attempted:
+                if safe and preservation_safe and eligible and gradle_attempted:
                     for output in outputs:
                         def remove(output=output):
                             if output.is_symlink(): raise RuntimeError('Refuse output symlink cleanup')
                             if output.exists(): shutil.rmtree(output); removed.append(str(output.relative_to(ROOT)))
                         stage('remove-' + str(output.relative_to(ROOT)), remove)
-                if temp is not None and safe:
+                if temp is not None and safe and preservation_safe:
                     def remove_temp():
                         if temp.is_symlink(): raise RuntimeError('Refuse temp symlink cleanup')
                         for item in links:

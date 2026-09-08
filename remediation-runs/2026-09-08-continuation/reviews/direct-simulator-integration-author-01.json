@@ -1,0 +1,151 @@
+{
+  "schema_version": 1,
+  "kind": "AUTHOR_INERT_SIMULATOR_LIFECYCLE_WRAPPER_INTEGRATION_CONTROLS",
+  "recorded_at": "2026-09-08T17:34:33.513083+00:00",
+  "author": "/root/native_ci",
+  "status": "IMPLEMENTED_HELD_NOT_RUN_PENDING_INDEPENDENT_REVIEW_AND_COORDINATED_EXECUTION",
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "700243c3426db2da3855a9d3a3df58ada607ffc5",
+    "tree": "bd93099fe19ccf46e27eb67f22d694cc1ae074aa"
+  },
+  "authorization": "ci_workflow delegated only the new test_simulator_lifecycle_integration.py; parent root alone owns tests/build lanes, Gradle stop/cleanup, native/Actions execution, source freeze, execution bindings, commits and pushes.",
+  "authored_files": [
+    {
+      "path": "scripts/verification/ios-readiness/test_simulator_lifecycle_integration.py",
+      "sha256": "93d88840fcef436dbf45cc20de071e784daa4c6bc0e7683b623da8df7197100c",
+      "bytes": 56392,
+      "lines": 936,
+      "declared_test_methods": 32
+    }
+  ],
+  "source_snapshot": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "sha256": "b0f3794fe89537d5108a2c24c22c33ed94d9330ee220e7fa257bfb2c4a7b1e29",
+      "bytes": 76990
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "sha256": "5524d839202211270ec1c97776f0d350b9802ecf0d1c5e6eb3d28cd960629302",
+      "bytes": 59858
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+      "sha256": "cf41c413d321d87689b97b86e4fe7981052dab6b629c8ffcd57b15a00be6555c",
+      "bytes": 21878
+    },
+    {
+      "path": "scripts/verification/ios-readiness/simulator_lifecycle.py",
+      "sha256": "8d799475f1e92fc7943ca05b2d1e59655cbb8b0973031029440662059e65f248",
+      "bytes": 37085
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-draft-freeze-01.json",
+      "sha256": "4a18e36224c895581515d538f995e6f8a1bd7016a3cf6eba3328712e5535bd08",
+      "bytes": 2956
+    },
+    {
+      "path": "scripts/verification/ios-readiness/toolchain_profiles.py",
+      "sha256": "8adacaf4c59ed823aa088ecb70ad5c6c1e3f76e7ca3520d8abf0563341591313",
+      "bytes": 3358
+    },
+    {
+      "path": "scripts/verification/ios-readiness/simulator_signing.py",
+      "sha256": "89524b777694f8504008a83b60299725cae01e8b642c10754283d79ce1974d1e",
+      "bytes": 10652
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_regions.py",
+      "sha256": "4b87bf30ab492bf45554b2952ef52982343d5f16c66dce247412a45801b0287b",
+      "bytes": 3821
+    }
+  ],
+  "source_snapshot_scope": "Observed held wrapper/helper/composition controls only; not a frozen-source execution binding or review of their complete implementation. Composer companion and additive draft-freeze pins statically match the held files; all nine draft rows also match current raw hashes. Other agents own those source files and the low-level tests.",
+  "static_inspection": {
+    "owned_file_ast_parse": "PASS_STATIC_PARSE_ONLY",
+    "declared_methods": {
+      "LifecycleRouteIntegration": [
+        "test_normal_main_passes_default_legacy_and_exact_explicit_mode_without_native_execution",
+        "test_companion_main_parses_and_retains_mode_before_entering_its_build_lock",
+        "test_actual_cli_rejects_direct_mode_on_local_profile_before_any_lock_or_lane",
+        "test_normal_constructor_records_exact_selected_mode_without_constructing_helper",
+        "test_actual_command_routes_default_and_direct_result_with_no_fallback_on_error",
+        "test_direct_metadata_shutdown_delete_wrappers_never_enter_legacy_paths_on_failure",
+        "test_selected_helper_constructor_receives_live_bindings_only_in_direct_mode",
+        "test_non_lifecycle_app_and_provenance_simctl_calls_keep_generic_owner_routing",
+        "test_composer_forwards_explicit_lifecycle_arguments_without_executing_generated_runner"
+      ],
+      "LifecycleBuildBoundaryIntegration": [
+        "test_real_build_boundary_marks_before_launch_and_always_stops_after_spawn_failure",
+        "test_durable_marker_failure_prevents_builder_but_keeps_immediate_gradle_stop",
+        "test_legacy_build_path_has_no_helper_marker_and_retains_immediate_stop",
+        "test_normal_ack_requires_all_three_actual_extraction_results_not_runtime_success",
+        "test_normal_failed_ack_save_revokes_authority_and_preserves_original_error",
+        "test_companion_ack_requires_closed_extraction_pair_and_completed_retention_path"
+      ],
+      "LifecycleFinalizerIntegration": [
+        "test_only_exact_true_barrier_authorizes_real_wrapper_shutdown_and_delete_glue",
+        "test_failed_postbuild_barrier_cannot_be_reopened_by_later_successful_owner_cleanup",
+        "test_prebuild_resource_cleanup_still_runs_final_strict_census_and_retains_its_failure",
+        "test_direct_recovery_failure_never_falls_back_to_legacy_inventory_or_log_adoption",
+        "test_missing_owned_uuid_never_authorizes_destructive_calls",
+        "test_foundation_retention_precedes_failed_barrier_and_does_not_bypass_it",
+        "test_real_barrier_with_true_ack_requires_strict_stop_census_and_reaping_before_removal",
+        "test_missing_or_malformed_ack_blocks_real_barrier_and_temporary_removal",
+        "test_failed_foundation_preservation_denies_device_and_temporary_cleanup",
+        "test_failed_composed_ack_save_revokes_authority_without_skipping_workers_or_fifo",
+        "test_lifecycle_finishes_before_actual_wrapper_owned_temporary_removal",
+        "test_failed_final_strict_census_prevents_owned_temporary_removal",
+        "test_actual_copied_input_check_failure_cannot_become_cleanup_pass",
+        "test_source_control_secondary_and_final_census_checks_are_retained_after_direct_cleanup"
+      ],
+      "LifecycleCompositionClosureIntegration": [
+        "test_original_strict_runner_and_ownership_fifo_controls_are_immutable",
+        "test_companion_composed_and_normal_manifests_bind_helper_and_both_test_files",
+        "test_composition_preserves_actual_lifecycle_and_primary_error_wrappers"
+      ]
+    },
+    "distinct_method_names_per_class": true,
+    "trailing_whitespace_lines": 0,
+    "source_modules_imported_or_executed": false,
+    "test_discovery_or_unittest_executed": false,
+    "low_level_test_file_scope": "Manifest closure requires current exact hashes; this integration file neither imports nor executes the lower-level tests. Their final declaration count/hash/review belongs to lifecycle_controls."
+  },
+  "coverage": [
+    "Execute selected actual normal/companion CLI selector glue with inert Lane, lock, binding checker and receipt; qualified explicit direct selector, legacy default, local-profile rejection before allocation; constructor receipt starts lifecycle/build acknowledgement false.",
+    "Execute actual normal/companion/hash-bound composed simulator command, metadata, shutdown and delete wrappers. Explicit direct path delegates only to helper; same helper exception propagates with no generic fallback. Actual helper constructor gets live source/control callback only in selected direct mode.",
+    "Execute isolated actual get_app_container and normal separate-launch call expressions with inert generic/helper sentinels; nonlifecycle application and provenance calls remain under generic owner. Actual composer main forwards explicit arguments; an inert exec sentinel prevents all generated runner module/main execution.",
+    "Execute the exact Xcode attempted/save/helper-marker/build/finally-stop AST blocks in all three wrappers; synthetic builder or marker exceptions retain original identity and the immediate Gradle stop. Legacy path has no helper marker.",
+    "Execute actual normal three-view XCResult extraction acknowledgement block in a synthetic TemporaryDirectory. Any extraction failure or ack-save exception denies/revokes acknowledgement; no runtime PASS is inferred.",
+    "Execute exact companion/composed container-retention block in a synthetic private home/device/container/evidence tree. Closed summary/tests pair and completed raw/operation/native copy paths required; generic container, raw copy, storage, functional, native copy, Foundation or acknowledgement-save failures do not acknowledge retention.",
+    "Execute complete actual normal finalizer or exact companion/composed finalization body with inert effects: exact True authorization, no fallback or unknown-resource adoption, Foundation before barrier, lifecycle finish before custody removal, strict final census/FIFO/source/control/copy checks retained, failed strict census prevents temp deletion.",
+    "Execute actual helper prepare_cleanup decision inside actual wrapper finalizers with only resource-journal/direct-child I/O seams inert. Missing/malformed acknowledgement must yield exact RuntimeError direct-simulator-postbuild-evidence-not-preserved, not arbitrary fixture failure; resource/temp retained while ordinary worker/FIFO/final census runs.",
+    "Positive actual prepare_cleanup control requires strict owner stop, fresh include_outputs census, exact direct-build-handle wait(timeout=0), PASS barrier and acknowledgement before actual destruction/removal glue; app status remains FAIL because fixture has no runtime proof.",
+    "Static immutable strict original runner/owned_lane/secondary_fifo hashes; actual three control manifests include helper and both lifecycle test files with exact current hashes. AGENTS.md supplies manifest shape only, never an execution binding. Actual composed wrappers remain AST-equal and original_strict_l08 remains UNCHANGED_NOT_SATISFIED."
+  ],
+  "independent_feedback_already_addressed": [
+    "Inert composed finalizer now supplies actual restrict_final callback without allowing original FAIL upgrade.",
+    "Fixtures now own a presence-bearing synthetic custody object and copied-input verification seam, rather than only None paths.",
+    "Generic nonlifecycle control executes actual AST call expressions instead of only classifying their source.",
+    "Real helper prepare_cleanup fixture includes _start_cleanup. Ack denial asserts its exact original error and positive companion/composed/normal control exercises successful strict barrier, preventing unrelated namespace errors from satisfying rejection tests."
+  ],
+  "execution": {
+    "status": "NOT_RUN",
+    "proposed_command": "python3 -B -m unittest discover -v -s scripts/verification/ios-readiness -p test_simulator_lifecycle_integration.py",
+    "working_directory": "/root/projects/Parlor/parlor",
+    "owner": "/root",
+    "meaning": "Synthetic regression controls only; never application/libproc/XCTest/simulator execution evidence.",
+    "review_owner": "/root/fixture_review",
+    "review_status": "PENDING_HELD_HASH_REVIEW"
+  },
+  "safety": {
+    "no_runner_module_import_in_tests": true,
+    "no_real_helper_subprocess_in_tests": true,
+    "no_native_execution_by_author": true,
+    "no_build_or_gradle_invocation_by_author": true,
+    "no_actions_or_commit_by_author": true,
+    "cleanup": "No test/build cycle or synthetic fixture was executed by author. Only authored source and this new report were written; no cleanup needed or attempted. Coordinator must preserve execution evidence and follow mandatory cleanup after its future cycle."
+  },
+  "readiness": "NOT_READY_UNCHANGED; implementation and synthetic control authoring do not resolve failed A19 cleanup or unexecuted A storage/retained-host/strict-protection and B normal Parlor libproc scopes."
+}

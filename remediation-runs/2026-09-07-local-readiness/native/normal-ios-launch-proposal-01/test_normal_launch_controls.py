@@ -457,6 +457,7 @@ class RunnerGuards(unittest.TestCase):
 
     def lane(self):
         value = object.__new__(runner.Lane)
+        value.lifecycle_mode, value.lifecycle = runner.LEGACY_LIFECYCLE, None
         value.temporary = self.root / 'owned'
         value.temporary.mkdir()
         state = value.temporary.stat()
