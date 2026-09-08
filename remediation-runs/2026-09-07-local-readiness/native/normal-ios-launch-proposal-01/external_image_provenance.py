@@ -21,7 +21,9 @@ LIMITATION = ('Separate ninth launch via public simctl, after the eight XCTest o
               'sample and matched to dwarf/file inventories, not independently read from mapped '
               'Mach-O headers. Pre/post kernel audit-token/lifetime checks, matching tool PID/path '
               'headers and mapped addresses fail closed, but numeric-PID tools do not reserve a '
-              'process generation atomically. No hash of every mapped page, physical-device or Store proof.')
+              'process generation atomically. An explicitly enabled USER-only path is a lossy tool '
+              'presentation alias for an approved current-user device artifact, not independently '
+              'kernel-attested non-launcher image-path proof. No hash of every mapped page, physical-device or Store proof.')
 
 
 def parse_launch_pid(output):
@@ -71,13 +73,79 @@ def validate_artifacts(artifacts):
     return artifacts
 
 
-def verify_header(raw, pid, executable, budget=16 * 1024 * 1024):
+class OwnedToolPaths:
+    """Explicit, bounded lookup; never a wildcard or substitution on tool input.
+
+    The caller supplies the OS account home and exact owned device UUID only
+    after kernel-attesting the new launcher. Artifact inventory/canonical paths
+    must already be bound to that run. These are presentation aliases, not new
+    filesystem or process ownership grants.
+    """
+    def __init__(self, artifacts, current_user_home, device_uuid, installed_app):
+        validate_artifacts(artifacts)
+        home = str(current_user_home)
+        app = str(installed_app)
+        if (not self.safe_path(home) or not self.safe_path(app) or re.fullmatch(UUID, str(device_uuid)) is None):
+            raise RuntimeError('Invalid independent account/device path context')
+        self.artifacts = {path: dict(row) for path, row in artifacts.items()}
+        self.aliases = {path: path for path in artifacts}
+        prefix = home + '/Library/Developer/CoreSimulator/Devices/' + str(device_uuid) + '/data/Containers/Bundle/Application/'
+        suffix = app[len(prefix):].split('/') if app.startswith(prefix) else []
+        if len(suffix) != 2 or re.fullmatch(UUID, suffix[0]) is None or suffix[1] != 'Parlor.app':
+            raise RuntimeError('Installed app is not in the independently owned device/container')
+        launcher = artifacts.get(app + '/Parlor')
+        if launcher is None or any(launcher[key] != value for key, value in {
+                'origin': 'installed-app', 'kind': 'launcher', 'relative_path': 'Parlor'}.items()):
+            raise RuntimeError('Owned installed app lacks its exact attested launcher')
+        redact_home = len(Path(home).parts) == 3 and Path(home).parts[:2] == ('/', 'Users')
+        for path, row in artifacts.items():
+            if not self.safe_path(path):
+                raise RuntimeError('Noncanonical artifact path cannot gain an alias')
+            if row['origin'] != 'installed-app':
+                continue  # Copied-build/DerivedData paths remain exact.
+            if not path.startswith(app + '/') or path[len(app) + 1:] != row['relative_path']:
+                raise RuntimeError('Installed artifact does not match its complete app-container path')
+            if redact_home:
+                alias = '/Users/USER' + path[len(home):]
+                if alias in self.aliases and self.aliases[alias] != path:
+                    raise RuntimeError('Ambiguous exact or USER-only artifact presentation')
+                self.aliases[alias] = path
+
+    @staticmethod
+    def safe_path(path):
+        return (isinstance(path, str) and path.startswith('/') and not path.startswith('//') and
+                0 < len(path.encode()) <= 4096 and str(Path(path)) == path and
+                not any(part in {'.', '..'} for part in Path(path).parts) and
+                not any(ord(char) < 32 or ord(char) == 127 for char in path))
+
+    def resolve(self, raw):
+        return self.aliases.get(raw)
+
+    def forms(self, canonical):
+        return tuple(raw for raw, path in self.aliases.items() if path == canonical)
+
+    def require_inventory(self, artifacts):
+        if artifacts != self.artifacts:
+            raise RuntimeError('Tool aliases are not bound to this exact artifact inventory')
+
+
+def resolve_tool_path(raw, tool_paths):
+    if tool_paths is None:
+        return raw
+    if not isinstance(tool_paths, OwnedToolPaths):
+        raise RuntimeError('Tool path policy was not built from owned artifact inputs')
+    return tool_paths.resolve(raw)
+
+
+def verify_header(raw, pid, executable, budget=16 * 1024 * 1024, *, tool_paths=None):
     if not isinstance(raw, str) or not 0 < len(raw.encode()) <= budget:
         raise RuntimeError('Empty or unbounded external process observation')
     process = re.findall(r'^Process:\s+[^\r\n]+ \[([0-9]+)\]\s*$', raw, flags=re.MULTILINE)
     paths = re.findall(r'^Path:\s+([^\r\n]+?)\s*$', raw, flags=re.MULTILINE)
-    if process != [str(pid)] or paths != [str(executable)]:
+    if (process != [str(pid)] or len(paths) != 1 or
+            resolve_tool_path(paths[0], tool_paths) != str(executable)):
         raise RuntimeError('External tool did not report the exact attested app PID/path')
+    return 'exact' if paths[0] == str(executable) else 'owned-USER-only-presentation'
 
 
 def header_diagnostic(raw, pid, executable, budget=16 * 1024 * 1024):
@@ -123,31 +191,38 @@ def header_diagnostic(raw, pid, executable, budget=16 * 1024 * 1024):
                 decoded_text_sha256=hashlib.sha256(raw.encode()).hexdigest())
 
 
-def parse_sample(raw, pid, executable, artifacts):
+def parse_sample(raw, pid, executable, artifacts, *, tool_paths=None):
     validate_artifacts(artifacts)
-    verify_header(raw, pid, executable)
+    if tool_paths is not None:
+        if not isinstance(tool_paths, OwnedToolPaths):
+            raise RuntimeError('Unknown tool path policy')
+        tool_paths.require_inventory(artifacts)
+    header_kind = verify_header(raw, pid, executable, tool_paths=tool_paths)
     if raw.count('\nBinary Images:\n') != 1:
         raise RuntimeError('Actual sample result lacks one unambiguous binary-image table')
     table = raw.split('\nBinary Images:\n', 1)[1]
     selected = {}
+    owned_forms = artifacts if tool_paths is None else tool_paths.aliases
     for line in table.splitlines():
         match = SAMPLE_ROW.fullmatch(line)
         if match is None:
-            if any(path in line for path in artifacts):
+            if any(path in line for path in owned_forms):
                 raise RuntimeError('Unrecognized owned binary-image row; parser review required')
             continue
-        path = match[4]
+        reported_path = match[4]
+        path = resolve_tool_path(reported_path, tool_paths)
         if path not in artifacts:
             # Do not retain paths to unrelated images. A second, unexpected
             # Parlor/Compose image cannot silently stand in for the owned one.
-            if Path(path).name in {'Parlor', 'Parlor.debug.dylib', 'ComposeApp'}:
+            if Path(reported_path).name in {'Parlor', 'Parlor.debug.dylib', 'ComposeApp'}:
                 raise RuntimeError('Runtime contains an unbound application/framework image')
             continue
         start, end = int(match[1], 16), int(match[2], 16)
         if path in selected or not 0 < start <= end < 2**64 or match[3].lower() != artifacts[path]['uuid'].lower():
             raise RuntimeError('Duplicate, invalid or wrong-UUID owned mapped image')
         selected[path] = dict(**artifacts[path], sample_start=start, sample_end_inclusive=end,
-                              observed_tool_uuid=match[3].lower())
+                              observed_tool_uuid=match[3].lower(), sample_header_path_kind=header_kind,
+                              sample_path_kind='exact' if path == reported_path else 'owned-USER-only-presentation')
     kinds = [row['kind'] for row in selected.values()]
     if any(kinds.count(kind) != 1 for kind in ('launcher', 'debug-dylib', 'compose-framework')):
         raise RuntimeError('One launcher, one debug dylib and one actual Compose framework must be observed')
@@ -162,20 +237,26 @@ def parse_sample(raw, pid, executable, artifacts):
     return selected
 
 
-def bind_vmmap(raw, pid, executable, selected):
-    verify_header(raw, pid, executable)
+def bind_vmmap(raw, pid, executable, selected, *, tool_paths=None):
+    header_kind = verify_header(raw, pid, executable, tool_paths=tool_paths)
+    forms = {path: (path,) if tool_paths is None else tool_paths.forms(path) for path in selected}
+    if tool_paths is not None and any(
+            path not in tool_paths.artifacts or any(row.get(key) != value for key, value in tool_paths.artifacts[path].items())
+            for path, row in selected.items()):
+        raise RuntimeError('Selected image differs from its alias-bound artifact')
     seen = {}
     for line in raw.splitlines():
         if not re.match(r'^\s*__TEXT\s+', line):
             continue
-        matches = [path for path in selected if line.rstrip().endswith(' ' + path)]
+        matches = [(path, form) for path, aliases in forms.items() for form in aliases
+                   if line.rstrip().endswith(' ' + form)]
         if not matches:
             if any(name in line for name in ('/Parlor.app/', '/ComposeApp.framework/ComposeApp')):
                 raise RuntimeError('vmmap contains an app text mapping absent from the bound sample')
             continue
-        if len(matches) != 1 or matches[0] in seen:
+        if len(matches) != 1 or matches[0][0] in seen:
             raise RuntimeError('Ambiguous or duplicate owned executable text mapping')
-        path = matches[0]
+        path, reported_path = matches[0]
         address = re.match(r'^\s*__TEXT\s+([0-9a-fA-F]+)-([0-9a-fA-F]+)\s+', line)
         if address is None:
             raise RuntimeError('Unknown vmmap __TEXT row format; retain no unrelated mapping data')
@@ -183,10 +264,12 @@ def bind_vmmap(raw, pid, executable, selected):
         image = selected[path]
         if start != image['sample_start'] or not start < end <= image['sample_end_inclusive'] + 1:
             raise RuntimeError('vmmap text address is not the same sampled image mapping')
-        seen[path] = dict(**image, vmmap_text_start=start, vmmap_text_end_exclusive=end)
+        seen[path] = dict(**image, vmmap_text_start=start, vmmap_text_end_exclusive=end,
+                         vmmap_path_kind='exact' if path == reported_path else 'owned-USER-only-presentation')
     if set(seen) != set(selected):
         raise RuntimeError('Every sampled owned image needs a matching actual executable mapping')
-    return dict(status='PASS', images=[dict(path=path, **row) for path, row in sorted(seen.items())],
+    return dict(status='PASS', vmmap_header_path_kind=header_kind,
+                images=[dict(path=path, **row) for path, row in sorted(seen.items())],
                 method='sample reported image path/UUID and vmmap executable-region address, '
                        'bound to built/installed current-cycle file hashes and dwarfdump UUIDs',
                 limitation=LIMITATION)

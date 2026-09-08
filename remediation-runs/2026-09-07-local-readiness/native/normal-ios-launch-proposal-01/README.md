@@ -1,10 +1,11 @@
 # Normal-source iOS launch observation — campaign controls
 
 The original controls had independent source review and **78 passing synthetic
-tests** in `evidence/package-controls-01/` (2026-09-07). The current pure suite has
-**99 tests**, including a sanitized actual Xcode 26.5 repetition receipt,
-failure-only header diagnostics, and adversarial variants. The additional tests
-need their own execution receipt; test-control success is not app-runtime evidence.
+tests** in `evidence/package-controls-01/` (2026-09-07). The subsequent **99** controls
+passed in `evidence/normal-after-native10-controls-01/`. The current suite declares
+**120 tests**, adding explicit USER-only presentation binding and adversarial
+cases. The additional tests need their own execution receipt; test-control success
+is not app-runtime evidence.
 
 `ios-readiness-06` executed eight successful XCTest repetitions but then failed
 report parsing, before the separate ninth-launch provenance observation. Its
@@ -22,6 +23,23 @@ header counts, equality flags, public redaction markers and expected-path compon
 indexes; unknown components/process names are hashed. Raw stacks, mappings and
 unknown paths still are not retained. Diagnostics cannot satisfy provenance or
 relax any existing PID/path, UUID, artifact, mapping or process-lifetime assertion.
+
+`ios-readiness-10` also passed eight repetitions and notices, then failed the
+separate provenance observation. Its retained diagnostic established that only the
+username component became literal `USER`; every other installed-launcher path
+component and PID matched. That original **FAIL** remains unchanged; `vmmap` did
+not run. The new explicit policy maps only exact, complete `/Users/USER/...` aliases
+for artifacts in the current OS-account home, fresh owned Simulator UUID and exact
+installed `Parlor.app` container. It is enabled only after kernel launcher
+attestation; environment `HOME` and tool text cannot authorize it. Non-`/Users`
+account homes stay exact-only. Build/DerivedData paths get no aliases. Collisions,
+malformed owned rows, raw/alias duplicates, wrong UUIDs and mapping ranges still
+fail. Other callers keep strict exact matching by default.
+
+This presentation map is deliberately lossy, not independent kernel attestation
+of each loaded non-launcher image's full path or mapped-memory bytes. Actual
+Binary Images and `vmmap` support remain unverified until a new approved native
+cycle exercises them; synthetic fixtures do not prove those tool formats.
 
 ## What this runner does
 
@@ -119,7 +137,7 @@ by guesswork; cleanup fails with evidence for targeted follow-up.
 ## Root review and execution
 
 Do not execute while another lane is active. Independent review must examine all
-new source and the referenced approved helper hashes, then run the **99** synthetic
+new source and the referenced approved helper hashes, then run the **120** synthetic
 control tests (not Swift compilation or app runtime):
 
 ```sh

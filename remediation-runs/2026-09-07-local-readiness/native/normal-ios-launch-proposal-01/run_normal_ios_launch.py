@@ -13,6 +13,7 @@ import importlib.util
 import json
 import os
 from pathlib import Path
+import pwd
 import re
 import shlex
 import shutil
@@ -41,11 +42,24 @@ from artifact_inventory import inventory_bundle, parse_dwarfdump_uuids, FRAMEWOR
 from normal_source_copy import transform_copy, inventory_copy, CHANGED, PROJECT
 from normal_launch_receipts import read_json, verify_markers, verify_xctest, METHOD, SELECTOR, UUID
 from external_image_provenance import (APP_ID, parse_launch_pid, attest_target, unchanged_target,
-                                       parse_sample, bind_vmmap, header_diagnostic, LIMITATION)
+                                       parse_sample, bind_vmmap, header_diagnostic, OwnedToolPaths, LIMITATION)
 
 
 def now():
     return datetime.datetime.now(datetime.timezone.utc).isoformat()
+
+
+def owned_tool_paths(artifacts, executable, device_uuid, attested_launcher):
+    # This context comes from the OS account database, the lane's fresh device,
+    # and a kernel-attested launcher, never the tool's lossy display or HOME.
+    uid = os.getuid()
+    if uid != os.geteuid():
+        raise RuntimeError('Elevated account context cannot authorize a tool path alias')
+    account = pwd.getpwuid(uid)
+    if (account.pw_uid != uid or attested_launcher.uid != uid or
+            attested_launcher.command != str(executable) or executable.name != 'Parlor'):
+        raise RuntimeError('Alias context does not match the kernel-attested current-user launcher')
+    return OwnedToolPaths(artifacts, account.pw_dir, device_uuid, executable.parent)
 
 
 def normalized_identity():
@@ -477,6 +491,7 @@ class Lane:
         pid = parse_launch_pid((self.destination / 'public-launch.log').read_text())
         before = attest_target(backend.read(pid), pid, executable, (begin, end), self.baseline)
         self.receipt['external_launch_identity'] = unchanged_target(before, backend.read(pid))
+        tool_paths = owned_tool_paths(artifacts, executable, self.uuid, before)
         # Permit a bounded ordinary launch interval, not an app-internal latch.
         # This launch is not credited as an additional passing UI repetition.
         for _ in range(48):
@@ -491,12 +506,12 @@ class Lane:
                     not 0 < raw_sample.stat().st_size <= 16 * 1024 * 1024):
                 raise RuntimeError('Missing or unbounded public sample image evidence')
             selected = self.parse_external_observation('sample', raw_sample, pid, executable,
-                lambda raw: parse_sample(raw, pid, executable, artifacts))
+                lambda raw: parse_sample(raw, pid, executable, artifacts, tool_paths=tool_paths))
             self.require(['/usr/bin/vmmap', '-w', str(pid)], 'vmmap', timeout=45,
                          output=raw_vmmap, limit=16 * 1024 * 1024)
             after = unchanged_target(before, backend.read(pid))
             bound = self.parse_external_observation('vmmap', raw_vmmap, pid, executable,
-                lambda raw: bind_vmmap(raw, pid, executable, selected))
+                lambda raw: bind_vmmap(raw, pid, executable, selected, tool_paths=tool_paths))
             self.check_watched_outputs()
             # File bytes remain tied to the prior installed/current-build image
             # inventory. This does not claim the mapped pages were rehashed.
