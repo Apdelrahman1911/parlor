@@ -9,9 +9,10 @@ before a new native cycle. This tooling adoption is not app-runtime evidence.
 The original controls had independent source review and **78 passing synthetic
 tests** in `evidence/package-controls-01/` (2026-09-07). The subsequent **99** controls
 passed in `evidence/normal-after-native10-controls-01/`. The current suite declares
-**163 tests** (43 added failure-only diagnostic, negative, orchestration and
-mutation controls beyond the previous 120). Existing assertions and test
-signatures are preserved. Test-control success is not app-runtime evidence.
+**187 tests**: the original 177 (actually passed in
+`evidence/normal-star-vmmap-controls-01/`) plus 10 new explicit-libproc observer
+controls. The 10 additions await execution and independent review. Existing
+test methods are unchanged. Test-control success is not app-runtime evidence.
 
 `ios-readiness-06` executed eight successful XCTest repetitions but then failed
 report parsing, before the separate ninth-launch provenance observation. Its
@@ -42,10 +43,23 @@ account homes stay exact-only. Build/DerivedData paths get no aliases. Collision
 malformed owned rows, raw/alias duplicates, wrong UUIDs and mapping ranges still
 fail. Other callers keep strict exact matching by default.
 
-This presentation map is deliberately lossy, not independent kernel attestation
-of each loaded non-launcher image's full path or mapped-memory bytes. Actual
-Binary Images and `vmmap` support remain unverified until a new approved native
-cycle exercises them; synthetic fixtures do not prove those tool formats.
+`ios-readiness-13` passed eight repetitions, notices and cleanup, but failed the
+separate image observation. Its retained diagnostics established a `USER` header
+and literal `*` in the username component of three Binary Images paths: launcher,
+debug dylib and Compose framework. Each other component and UUID matched its
+unique installed artifact. That original **FAIL** remains unchanged. The finite
+exact-string policy now additionally recognizes `/Users/*/...` for **sample
+Binary Images only**. This is not glob matching: other components must match in
+full, headers and `vmmap` still accept exact/`USER` only, and copied-build/DerivedData
+origins remain exact-only. Literal-star observations receive a distinct lossy
+presentation label. Existing origin, collision, UUID, address and lifetime checks
+remain strict.
+
+These presentation maps are deliberately lossy, not independent kernel attestation
+of each loaded non-launcher image's full path or mapped-memory bytes. The new
+sample-table policy and successful app `vmmap` binding remain unverified until
+a fresh approved native cycle exercises them; synthetic fixtures do not prove
+actual provenance or tool support.
 
 ## Failure-only image diagnostics
 
@@ -89,6 +103,30 @@ diagnostic failures are recorded separately by type. Normal successful-sample
 Failure-only records never substitute for the provenance document. Original raw
 file deletion, process ownership, simulator cleanup, copied-input validation,
 source/control binding and final PASS predicates remain unchanged.
+
+### Completed nonzero `vmmap` commands
+
+Native13 actually ran `/usr/bin/vmmap -w` against the attested app and exited
+**255**. Its raw output was deleted without command diagnostics; the cause is
+**unknown**, not retrospectively inferred. The separate harmless-child capability
+probe passed, but is not application provenance or mapping evidence.
+
+The existing command boundary now preserves `vmmap-command-failure.json` only
+after an actual completed nonzero `vmmap -w PID` command. Both the normal and
+sample-rejection paths use this boundary. The owned, single-link, regular temporary
+file is checked before/after a no-follow bounded read, then removed by the existing
+finalizer. At most eight lines, 512 bytes and 32 tokens per line are considered.
+A closed generic-error vocabulary and the `REQUESTED_PID` marker are retained;
+unknown text, paths, addresses and numeric codes are hashed with lengths. Input
+is bounded to 16 MiB and serialized diagnostics to 64 KiB. Full-output and line
+hashes, lengths, truncation flags and the actual exit status are retained.
+
+The result is explicitly failure-only, `proves_provenance=false`, with **no
+inferred failure cause**. Empty output stays explicitly empty. Successful commands,
+timeouts, interruptions and output-budget failures cannot become completed
+nonzero-command evidence. Diagnostic errors preserve the original failure and
+record only their type. No command retry, extra native invocation, entitlement
+change or provenance waiver is introduced.
 
 ## What this runner does
 
@@ -153,9 +191,10 @@ source/control binding and final PASS predicates remain unchanged.
   Store-qualified Xcode26.3/17C529. Read-only host observation on2026-09-07 found
   macOS26.2/25C56, Darwin25.2.0. An earlier helper's “Darwin26” prose must not be
   interpreted as the actual kernel release; its approved implementation is reused.
-- The actual app `sample` invocation succeeded in native08, but its header failed
-  validation before image binding; app `vmmap` remains unexecuted. A
-  denial/unknown format remains a failed or blocked evidence gate, not an app
+- The actual app `sample` invocation succeeded in native13, but sample-table
+  validation failed. Its app `vmmap` invocation exited 255; the cause is unknown
+  because raw output was deleted. A denial/unknown format remains a failed or
+  blocked evidence gate, not an app
   defect and not authorization to change entitlements, attach by name, or use sudo.
 
 ## Cleanup and resource ownership
@@ -186,7 +225,7 @@ by guesswork; cleanup fails with evidence for targeted follow-up.
 ## Root review and execution
 
 Do not execute while another lane is active. Independent review must examine all
-new source and the referenced approved helper hashes, then run the **163** synthetic
+new source and the referenced approved helper hashes, then run the **187** synthetic
 control tests (not Swift compilation or app runtime):
 
 ```sh
@@ -223,3 +262,39 @@ the installed Xcode repetition manpage and xcresult0.1.0 schemas, installed
 `sample(1)`/`vmmap(1)`, Apple vmmap documentation, installed LLDB help, and current
 LLVM command mapping were considered. LLDB was researched but is **not** used as
 an unreviewed automatic fallback in this bounded runner.
+
+## Explicit alternate selected-image observer
+
+Native15 passed the eight normal-source repetitions and package/notices checks,
+but **failed provenance**: vmmap returned 255 with a DYLD-info acquisition error.
+Its installed public diagnostic says “Assuming … minimal corpse”; that is not
+proof of a crash, OOM, or permission denial. The original FAIL is unchanged.
+Research: `../../reviews/normal-native15-vmmap-libproc-review-01/review.md`.
+
+A separately selected `--image-observer=libproc` uses a host-only C executable
+compiled against the installed macOS SDK. It is never injected into Parlor, never
+uses private credentials, and never falls back to another observer on failure.
+Default vmmap behavior is preserved. Both methods retain the exact same source,
+artifact, signature, sample UUID/path, process-lifetime and cleanup checks.
+
+After the strict sample parser selects images, the new method queries **every**
+selected start using `proc_pidinfo(PROC_PIDREGIONPATHINFO)`. The kernel can advance
+past address holes, so the returned region must start at exactly that address.
+It must fit the sampled image range, be readable/executable/nonwritable with zero
+offset, and supply the exact canonical path plus matching vnode device, inode and
+file size. Partial returns, empty/unbounded paths, changed files/process lifetimes,
+unknown JSON fields, rejected observations and helper changes fail closed. A
+bounded numeric/boolean receipt retains no unbound path or app-memory contents.
+The one task-owned helper and its compile output are removed by existing cleanup.
+
+This is **selected executable-region/backing-file corroboration**, not a second
+Mach-O UUID reader or whole-address-space enumeration. UUIDs still come from
+sample, bound to file UUIDs/hashes. Unlike full vmmap output, per-address queries
+do not enumerate extra mappings absent from sample; sample's rejection of unbound
+application images remains necessary. Zero-offset RX is a narrow contract for
+this run's thin ARM64 Debug images, not a universal Mach-O rule. Numeric-PID
+identity brackets are not atomic reservations; mapped pages are not hashed.
+
+The libproc mode is unexecuted until a separately bound native run succeeds. A
+control test, compiler success or harmless-process result cannot establish actual
+Parlor provenance, physical-device validation, or Store readiness.

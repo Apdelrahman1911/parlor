@@ -43,7 +43,8 @@ from normal_source_copy import transform_copy, inventory_copy, CHANGED, PROJECT
 from normal_launch_receipts import read_json, verify_markers, verify_xctest, METHOD, SELECTOR, UUID
 from external_image_provenance import (APP_ID, parse_launch_pid, attest_target, unchanged_target,
                                        parse_sample, bind_vmmap, header_diagnostic, OwnedToolPaths, LIMITATION)
-from external_image_diagnostics import image_diagnostic
+from external_image_diagnostics import image_diagnostic, vmmap_command_diagnostic
+from kernel_image_regions import bind_regions, selected_observer, LIMITATION as KERNEL_LIMITATION
 
 
 def now():
@@ -132,7 +133,10 @@ def isolated_environment(parent, java, temporary, android_sdk, mode):
 
 
 class Lane:
-    def __init__(self, name, binding, approved, mode):
+    def __init__(self, name, binding, approved, mode, image_observer='vmmap'):
+        if image_observer not in {'vmmap', 'libproc'}:
+            raise RuntimeError('Unknown explicit image observer')
+        self.image_observer = image_observer
         self.name, self.binding, self.approved, self.mode = name, binding, approved, mode
         self.destination = binding.parent / 'evidence' / name
         parent = self.destination.parent
@@ -142,7 +146,7 @@ class Lane:
         self.destination.mkdir(exist_ok=False)
         self.receipt = dict(schema_version=1, cycle=name, started_at=now(), status='RUNNING',
             execution_kind='normal-source-fixed-eight-plus-separate-public-tool-provenance',
-            signing_mode=mode, approved_control_sha256=approved, commands=[], gradle_stops=[],
+            signing_mode=mode, image_observer=image_observer, approved_control_sha256=approved, commands=[], gradle_stops=[],
             runtime_evidence_status='NOT_RUN', provenance_status='NOT_RUN',
             notice_package_status='NOT_RUN', cleanup_status='BLOCKED',
             scope='Eight fixed English XCTest repetitions observing unchanged production app source '
@@ -207,7 +211,39 @@ class Lane:
             finally:
                 entry['finished_at'] = now()
                 self.save()
+        if (entry['exit_code'] != 0 and len(entry['command']) == 3 and
+                entry['command'][:2] == ['/usr/bin/vmmap', '-w']):
+            try:
+                self.collect_vmmap_command_failure(path, int(entry['command'][2]), entry['exit_code'])
+            except BaseException as diagnostic_error:
+                # The command already failed. Keep its nonzero result and only
+                # the closed diagnostic error type, including interruptions.
+                self.receipt['vmmap_command_diagnostic_error_type'] = type(diagnostic_error).__name__
         return entry['exit_code']
+
+    def collect_vmmap_command_failure(self, path, pid, exit_code):
+        if path != self.temporary / 'owned-app.vmmap.txt' or path.resolve() != path:
+            raise RuntimeError('Failed-vmmap output is not the exact owned temporary file')
+        before = path.lstat()
+        if (not stat.S_ISREG(before.st_mode) or before.st_uid != os.getuid() or before.st_nlink != 1 or
+                not 0 <= before.st_size <= 16 * 1024 * 1024):
+            raise RuntimeError('Failed-vmmap output changed type, owner or bound')
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+        try:
+            opened = os.fstat(fd)
+            if (opened.st_dev, opened.st_ino, opened.st_size) != (before.st_dev, before.st_ino, before.st_size):
+                raise RuntimeError('Failed-vmmap output was replaced')
+            with os.fdopen(fd, 'rb', closefd=False) as source:
+                raw = source.read(16 * 1024 * 1024 + 1)
+            after = os.fstat(fd)
+            if (len(raw) != opened.st_size or opened.st_size != after.st_size or
+                    opened.st_mtime_ns != after.st_mtime_ns):
+                raise RuntimeError('Failed-vmmap output changed while reading')
+        finally:
+            os.close(fd)
+        name = 'vmmap-command-failure.json'
+        write_json(self.destination / name, vmmap_command_diagnostic(raw, pid, exit_code))
+        self.receipt['vmmap_command_failure_sha256'] = digest(self.destination / name)
 
     def check_watched_outputs(self):
         for path, maximum in self.watched_outputs:
@@ -475,10 +511,42 @@ class Lane:
         write_json(self.destination / 'external-image-artifact-bindings.json', artifacts)
         return installed / executable, artifacts
 
+    def prepare_region_helper(self):
+        helper = self.temporary / 'kernel-image-region'
+        if helper.exists() or helper.is_symlink():
+            raise RuntimeError('Refuse stale region observer output')
+        self.require(['xcrun', '--sdk', 'macosx', 'clang', '-x', 'c', '-std=c11', '-Wall', '-Wextra',
+                      '-Werror', '-arch', 'arm64', HERE / 'kernel_image_region.c.in', '-lproc', '-o', helper],
+                     'region-helper-compile.log', timeout=60, limit=262144)
+        if (helper.is_symlink() or helper.resolve(strict=True) != helper or not helper.is_file() or
+                not 0 < helper.stat().st_size <= 1024 * 1024):
+            raise RuntimeError('Invalid task-owned region observer executable')
+        self.receipt['kernel_region_helper_sha256'] = digest(helper)
+        return helper
+
+    def observe_kernel_regions(self, helper, before, backend, pid, selected):
+        observations = {}
+        for ordinal, (path, row) in enumerate(sorted(selected.items()), 1):
+            unchanged_target(before, backend.read(pid))
+            if (helper.is_symlink() or helper.resolve(strict=True) != helper or not helper.is_file() or
+                    digest(helper) != self.receipt['kernel_region_helper_sha256']):
+                raise RuntimeError('Region observer changed after compilation')
+            filename = 'kernel-region-' + str(ordinal).zfill(2) + '.json'
+            self.require([helper, str(pid), str(row['sample_start']), str(row['sample_end_inclusive'] + 1), path],
+                         filename, timeout=10, limit=4096)
+            unchanged_target(before, backend.read(pid))
+            if (helper.is_symlink() or helper.resolve(strict=True) != helper or not helper.is_file() or
+                    digest(helper) != self.receipt['kernel_region_helper_sha256']):
+                raise RuntimeError('Region observer changed during query')
+            observations[path] = read_json((self.destination / filename).read_text(), maximum=4096)
+        return bind_regions(pid, selected, observations)
+
     def observe_external_images(self):
         executable, artifacts = self.artifact_inventory()
         backend = darwin_backend()  # Actual host capability must work; no guessed entitlements/fallback.
         self.receipt['provenance_status'] = 'RUNNING'
+        observer = getattr(self, 'image_observer', 'vmmap')
+        helper = self.prepare_region_helper() if observer == 'libproc' else None
         raw_sample = self.temporary / 'owned-app.sample.txt'
         raw_vmmap = self.temporary / 'owned-app.vmmap.txt'
         stdout, stderr = self.temporary / 'owned-app.stdout', self.temporary / 'owned-app.stderr'
@@ -515,18 +583,24 @@ class Lane:
                 # A rejected sample never supplies selected images. The one
                 # sibling tool attempt is diagnostic-only and cannot rescue it.
                 self.receipt['provenance_status'] = 'FAIL'
+                if observer == 'libproc':
+                    raise  # Explicit observer never falls back to another method.
                 try:
                     self.observe_failure_only_vmmap(before, backend, pid, executable,
                                                     artifacts, tool_paths, raw_vmmap)
                 except BaseException as diagnostic_error:
                     self.receipt['failure_only_vmmap_error_type'] = type(diagnostic_error).__name__
                 raise  # Preserve the original sample exception, including its identity.
-            self.require(['/usr/bin/vmmap', '-w', str(pid)], 'vmmap', timeout=45,
-                         output=raw_vmmap, limit=16 * 1024 * 1024)
-            after = unchanged_target(before, backend.read(pid))
-            bound = self.parse_external_observation('vmmap', raw_vmmap, pid, executable,
-                lambda raw: bind_vmmap(raw, pid, executable, selected, tool_paths=tool_paths),
-                artifacts=artifacts, tool_paths=tool_paths, selected=selected)
+            if observer == 'libproc':
+                bound = self.observe_kernel_regions(helper, before, backend, pid, selected)
+                after = unchanged_target(before, backend.read(pid))
+            else:
+                self.require(['/usr/bin/vmmap', '-w', str(pid)], 'vmmap', timeout=45,
+                             output=raw_vmmap, limit=16 * 1024 * 1024)
+                after = unchanged_target(before, backend.read(pid))
+                bound = self.parse_external_observation('vmmap', raw_vmmap, pid, executable,
+                    lambda raw: bind_vmmap(raw, pid, executable, selected, tool_paths=tool_paths),
+                    artifacts=artifacts, tool_paths=tool_paths, selected=selected)
             self.check_watched_outputs()
             # File bytes remain tied to the prior installed/current-build image
             # inventory. This does not claim the mapped pages were rehashed.
@@ -536,7 +610,11 @@ class Lane:
                         target.stat().st_size != row['bytes'] or digest(target) != row['sha256']):
                     raise RuntimeError('An observed owned artifact changed during external inspection')
             bound.update(attestations=[self.receipt['external_launch_identity'], middle, after],
-                         temporary_sample_sha256=digest(raw_sample), temporary_vmmap_sha256=digest(raw_vmmap))
+                         temporary_sample_sha256=digest(raw_sample), image_observer=observer)
+            if observer == 'vmmap':
+                bound['temporary_vmmap_sha256'] = digest(raw_vmmap)
+            else:
+                bound['kernel_region_helper_sha256'] = self.receipt['kernel_region_helper_sha256']
             write_json(self.destination / 'separate-external-image-provenance.json', bound)
             self.receipt['provenance_sha256'] = digest(self.destination / 'separate-external-image-provenance.json')
             self.receipt['provenance_status'] = 'PASS'
@@ -545,7 +623,7 @@ class Lane:
                 if path.is_file() and not path.is_symlink():
                     path.unlink()
             self.receipt['raw_external_stack_mapping_files_removed'] = all(not path.exists() for path in (raw_sample, raw_vmmap))
-            self.receipt['external_provenance_limitation'] = LIMITATION
+            self.receipt['external_provenance_limitation'] = KERNEL_LIMITATION if observer == 'libproc' else LIMITATION
 
     def parse_external_observation(self, tool, path, pid, executable, parse, *,
                                    artifacts=None, tool_paths=None, selected=None):
@@ -777,15 +855,16 @@ def main(arguments=None):
         binding = checked_binding_path(arguments[1])
         print(json.dumps(dict(control_sha256=control_hash(binding), files=control_manifest(binding)), indent=2))
         return 0  # Source/control observation only. No allocation or native execution.
-    if len(arguments) not in (3, 4) or re.fullmatch(r'ios-readiness-[0-9]{2}', arguments[0]) is None:
-        raise SystemExit('Usage: run_normal_ios_launch.py ios-readiness-NN SOURCE_BINDING REVIEWED_CONTROL_SHA [--simulator-signing=adhoc]')
+    if len(arguments) not in (3, 4, 5) or re.fullmatch(r'ios-readiness-[0-9]{2}', arguments[0]) is None:
+        raise SystemExit('Usage: run_normal_ios_launch.py ios-readiness-NN SOURCE_BINDING REVIEWED_CONTROL_SHA [--simulator-signing=adhoc] [--image-observer=libproc]')
     name, binding, approved = arguments[0], checked_binding_path(arguments[1]), arguments[2]
-    mode = selected_mode(arguments[3:])
+    observer, signing = selected_observer(arguments[3:])
+    mode = selected_mode(signing)
     if re.fullmatch(r'[a-f0-9]{64}', approved) is None or approved != control_hash(binding):
         raise RuntimeError('Control bytes differ from the explicit independent execution review')
     with (binding.parent / 'build-lane.lock').open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        return Lane(name, binding, approved, mode).run()
+        return Lane(name, binding, approved, mode, observer).run()
 
 
 if __name__ == '__main__':

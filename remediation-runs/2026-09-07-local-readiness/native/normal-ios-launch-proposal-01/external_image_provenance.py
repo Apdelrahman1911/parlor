@@ -21,8 +21,8 @@ LIMITATION = ('Separate ninth launch via public simctl, after the eight XCTest o
               'sample and matched to dwarf/file inventories, not independently read from mapped '
               'Mach-O headers. Pre/post kernel audit-token/lifetime checks, matching tool PID/path '
               'headers and mapped addresses fail closed, but numeric-PID tools do not reserve a '
-              'process generation atomically. An explicitly enabled USER-only path is a lossy tool '
-              'presentation alias for an approved current-user device artifact, not independently '
+              'process generation atomically. An explicitly enabled USER-only path, or a sample-table-only '
+              'literal-star user component, is a lossy tool presentation alias for an approved current-user device artifact, not independently '
               'kernel-attested non-launcher image-path proof. No hash of every mapped page, physical-device or Store proof.')
 
 
@@ -89,6 +89,7 @@ class OwnedToolPaths:
             raise RuntimeError('Invalid independent account/device path context')
         self.artifacts = {path: dict(row) for path, row in artifacts.items()}
         self.aliases = {path: path for path in artifacts}
+        self.sample_aliases = dict(self.aliases)
         prefix = home + '/Library/Developer/CoreSimulator/Devices/' + str(device_uuid) + '/data/Containers/Bundle/Application/'
         suffix = app[len(prefix):].split('/') if app.startswith(prefix) else []
         if len(suffix) != 2 or re.fullmatch(UUID, suffix[0]) is None or suffix[1] != 'Parlor.app':
@@ -106,10 +107,14 @@ class OwnedToolPaths:
             if not path.startswith(app + '/') or path[len(app) + 1:] != row['relative_path']:
                 raise RuntimeError('Installed artifact does not match its complete app-container path')
             if redact_home:
-                alias = '/Users/USER' + path[len(home):]
-                if alias in self.aliases and self.aliases[alias] != path:
-                    raise RuntimeError('Ambiguous exact or USER-only artifact presentation')
-                self.aliases[alias] = path
+                # Literal full-string keys only. Native13 observed '*' solely
+                # in sample Binary Images, not headers or vmmap mappings.
+                for marker, aliases in (('USER', self.aliases), ('USER', self.sample_aliases),
+                                        ('*', self.sample_aliases)):
+                    alias = '/Users/' + marker + path[len(home):]
+                    if alias in aliases and aliases[alias] != path:
+                        raise RuntimeError('Ambiguous exact or user-component artifact presentation')
+                    aliases[alias] = path
 
     @staticmethod
     def safe_path(path):
@@ -118,23 +123,33 @@ class OwnedToolPaths:
                 not any(part in {'.', '..'} for part in Path(path).parts) and
                 not any(ord(char) < 32 or ord(char) == 127 for char in path))
 
-    def resolve(self, raw):
-        return self.aliases.get(raw)
+    def resolve(self, raw, *, sample=False):
+        return (self.sample_aliases if sample else self.aliases).get(raw)
 
-    def forms(self, canonical):
-        return tuple(raw for raw, path in self.aliases.items() if path == canonical)
+    def forms(self, canonical, *, sample=False):
+        aliases = self.sample_aliases if sample else self.aliases
+        return tuple(raw for raw, path in aliases.items() if path == canonical)
+
+    def path_kind(self, raw, *, sample=False):
+        canonical = self.resolve(raw, sample=sample)
+        if canonical is None:
+            return None
+        if canonical == raw:
+            return 'exact'
+        return ('owned-literal-star-user-presentation' if raw.startswith('/Users/*/') else
+                'owned-USER-only-presentation')
 
     def require_inventory(self, artifacts):
         if artifacts != self.artifacts:
             raise RuntimeError('Tool aliases are not bound to this exact artifact inventory')
 
 
-def resolve_tool_path(raw, tool_paths):
+def resolve_tool_path(raw, tool_paths, *, sample=False):
     if tool_paths is None:
         return raw
     if not isinstance(tool_paths, OwnedToolPaths):
         raise RuntimeError('Tool path policy was not built from owned artifact inputs')
-    return tool_paths.resolve(raw)
+    return tool_paths.resolve(raw, sample=sample)
 
 
 def verify_header(raw, pid, executable, budget=16 * 1024 * 1024, *, tool_paths=None):
@@ -202,7 +217,7 @@ def parse_sample(raw, pid, executable, artifacts, *, tool_paths=None):
         raise RuntimeError('Actual sample result lacks one unambiguous binary-image table')
     table = raw.split('\nBinary Images:\n', 1)[1]
     selected = {}
-    owned_forms = artifacts if tool_paths is None else tool_paths.aliases
+    owned_forms = artifacts if tool_paths is None else tool_paths.sample_aliases
     for line in table.splitlines():
         match = SAMPLE_ROW.fullmatch(line)
         if match is None:
@@ -210,7 +225,7 @@ def parse_sample(raw, pid, executable, artifacts, *, tool_paths=None):
                 raise RuntimeError('Unrecognized owned binary-image row; parser review required')
             continue
         reported_path = match[4]
-        path = resolve_tool_path(reported_path, tool_paths)
+        path = resolve_tool_path(reported_path, tool_paths, sample=True)
         if path not in artifacts:
             # Do not retain paths to unrelated images. A second, unexpected
             # Parlor/Compose image cannot silently stand in for the owned one.
@@ -222,7 +237,7 @@ def parse_sample(raw, pid, executable, artifacts, *, tool_paths=None):
             raise RuntimeError('Duplicate, invalid or wrong-UUID owned mapped image')
         selected[path] = dict(**artifacts[path], sample_start=start, sample_end_inclusive=end,
                               observed_tool_uuid=match[3].lower(), sample_header_path_kind=header_kind,
-                              sample_path_kind='exact' if path == reported_path else 'owned-USER-only-presentation')
+                              sample_path_kind='exact' if tool_paths is None else tool_paths.path_kind(reported_path, sample=True))
     kinds = [row['kind'] for row in selected.values()]
     if any(kinds.count(kind) != 1 for kind in ('launcher', 'debug-dylib', 'compose-framework')):
         raise RuntimeError('One launcher, one debug dylib and one actual Compose framework must be observed')

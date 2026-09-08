@@ -27,6 +27,38 @@ PUBLIC_MARKERS = frozenset({'USER', '*', '...', '…', '~', '<redacted>'})
 ABSOLUTE_TAIL = re.compile(r'(?:^|[ \t])(/[^\r\n]*?)\s*$')
 SAMPLE_ADDRESS = re.compile(r'^\s*(0x[0-9a-fA-F]+)\s*-\s*(0x[0-9a-fA-F]+)\s+')
 VMMAP_ADDRESS = re.compile(r'^\s*__TEXT\s+([0-9a-fA-F]+)-([0-9a-fA-F]+)\s+')
+COMMAND_WORDS = frozenset(('vmmap process pid task port for could cannot not obtain get failed failure error '
+    'operation permitted permission denied is because it no longer appears to be running examine the target '
+    'this often protected debuggable a an requested access invalid argument resource shortage kernel mach '
+    'rights unavailable unable read memory map of must run as root sudo insufficient privilege privileges '
+    'entitlement entitlements requires unsupported supported architecture architectures rosetta translated '
+    '(os/kern) (os/errno)').split())
+
+
+def vmmap_command_diagnostic(raw, pid, exit_code):
+    """Closed failure tokens only; never raw paths/mappings or an inferred cause."""
+    if (not isinstance(raw, bytes) or len(raw) > MAX_INPUT_BYTES or type(pid) is not int or not 1 < pid <= 0x7fffffff or
+            type(exit_code) is not int or not -255 <= exit_code <= 255 or exit_code == 0):
+        raise RuntimeError('Invalid bounded failed-vmmap command context')
+    lines = []
+    for line in raw.split(b'\n', 8)[:8]:
+        tokens = []
+        for token in line[:512].split()[:32]:
+            word = token.decode('ascii', errors='replace').lower().rstrip('.,:;')
+            if word.strip('[]()') == str(pid):
+                tokens.append('REQUESTED_PID')
+            elif word in COMMAND_WORDS:
+                tokens.append(word)
+            else:
+                tokens.append(dict(sha256=hashlib.sha256(token).hexdigest(), bytes=len(token)))
+        lines.append(dict(bytes=len(line), sha256=hashlib.sha256(line).hexdigest(), tokens=tokens,
+                          truncated=len(line) > 512 or len(line[:512].split()) > 32))
+    result = dict(schema_version=1, kind='FAILURE_ONLY_VMMAP_COMMAND', proves_provenance=False,
+        exit_code=exit_code, bytes=len(raw), sha256=hashlib.sha256(raw).hexdigest(), lines=lines,
+        line_limit_reached=raw.count(b'\n') >= 8, interpretation='TOKEN_DIAGNOSTIC_ONLY_NO_INFERRED_FAILURE_CAUSE')
+    if len((json.dumps(result, indent=2) + '\n').encode()) > 65536:
+        raise RuntimeError('Failed-vmmap diagnostic output budget exceeded')
+    return result
 
 
 def _context(artifacts, tool_paths, selected):
@@ -54,14 +86,14 @@ def _context(artifacts, tool_paths, selected):
     return paths, components
 
 
-def _path_shape(value, paths, components, tool_paths):
+def _path_shape(value, paths, components, tool_paths, *, sample=False):
     if not isinstance(value, str) or not 0 < len(value.encode()) <= MAX_PATH_BYTES:
         raise RuntimeError('Diagnostic candidate path budget exceeded')
     parts = value.split('/')
     if len(parts) > MAX_COMPONENTS:
         raise RuntimeError('Diagnostic candidate component budget exceeded')
     exact = [index for index, path in enumerate(paths) if value == path]
-    canonical = value if tool_paths is None else tool_paths.resolve(value)
+    canonical = value if tool_paths is None else tool_paths.resolve(value, sample=sample)
     aliases = [index for index, path in enumerate(paths) if canonical == path and value != path]
     shape, relationships = [], 0
     for part in parts:
@@ -78,9 +110,11 @@ def _path_shape(value, paths, components, tool_paths):
             shape.append(dict(public_marker=part))
         else:
             shape.append(dict(unknown_sha256=hashlib.sha256(part.encode()).hexdigest(), bytes=len(part.encode())))
+    literal_star = bool(aliases) and tool_paths.path_kind(value, sample=sample) == 'owned-literal-star-user-presentation'
     return dict(bytes=len(value.encode()), component_shape=shape,
                 exact_artifact_indexes=exact, owned_presentation_artifact_indexes=aliases,
-                classification='EXACT_BOUND' if exact else 'OWNED_USER_PRESENTATION' if aliases else 'UNBOUND')
+                classification='EXACT_BOUND' if exact else 'OWNED_LITERAL_STAR_USER_PRESENTATION' if literal_star else
+                               'OWNED_USER_PRESENTATION' if aliases else 'UNBOUND')
 
 
 def _interval(line, tool):
@@ -141,7 +175,8 @@ def image_diagnostic(raw, tool, artifacts, *, tool_paths=None, selected=None,
             not isinstance(raw, str) or not 0 < len(raw.encode()) <= budget):
         raise RuntimeError('Empty or unbounded failure-only image diagnostic')
     paths, components = _context(artifacts, tool_paths, selected)
-    forms = {path: path for path in paths} if tool_paths is None else tool_paths.aliases
+    forms = ({path: path for path in paths} if tool_paths is None else
+             tool_paths.sample_aliases if tool == 'sample' else tool_paths.aliases)
     value = dict(schema_version=1, kind='FAILURE_ONLY_EXTERNAL_IMAGE_FORMAT', proves_provenance=False,
         tool=tool, decoded_input_bytes=len(raw.encode()),
         inventory_value_sha256=hashlib.sha256(json.dumps(artifacts, sort_keys=True, separators=(',', ':')).encode()).hexdigest(),
@@ -168,13 +203,13 @@ def image_diagnostic(raw, tool, artifacts, *, tool_paths=None, selected=None,
         tail = ABSOLUTE_TAIL.search(line)
         reported = strict[4] if strict is not None else tail[1] if tail is not None else None
         contains = sorted({paths.index(path) for form, path in forms.items() if form in line})
-        resolved = (reported if tool_paths is None else tool_paths.resolve(reported)) if reported is not None else None
+        resolved = (reported if tool_paths is None else tool_paths.resolve(reported, sample=tool == 'sample')) if reported is not None else None
         name = Path(reported).name if reported is not None else None
         if name not in IMAGE_NAMES and resolved not in artifacts and not contains:
             continue  # No unrelated system row or arbitrary symbol is retained.
         if len(value['candidates']) >= MAX_CANDIDATES:
             raise RuntimeError('Failure-only image candidate budget exceeded')
-        shape = _path_shape(reported, paths, components, tool_paths) if reported is not None else None
+        shape = _path_shape(reported, paths, components, tool_paths, sample=tool == 'sample') if reported is not None else None
         indexes = [] if shape is None else shape['exact_artifact_indexes'] + shape['owned_presentation_artifact_indexes']
         interval = _interval(line, tool)
         row = dict(table_line=ordinal, bytes=len(line.encode()),
