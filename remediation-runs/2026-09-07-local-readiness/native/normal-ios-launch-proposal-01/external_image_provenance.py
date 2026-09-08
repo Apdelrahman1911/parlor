@@ -80,6 +80,49 @@ def verify_header(raw, pid, executable, budget=16 * 1024 * 1024):
         raise RuntimeError('External tool did not report the exact attested app PID/path')
 
 
+def header_diagnostic(raw, pid, executable, budget=16 * 1024 * 1024):
+    """Failure-only format evidence; never a substitute for verify_header.
+
+    Unknown header text/path components are hashed, not retained. Indexes refer
+    only to components of the already-attested executable path. Recognizing a
+    public redaction marker diagnoses a format; it does not accept that format.
+    """
+    if not isinstance(raw, str) or not 0 < len(raw.encode()) <= budget:
+        raise RuntimeError('Empty or unbounded external header diagnostic')
+    processes = re.findall(r'^Process:[ \t]*([^\r\n]*)$', raw, flags=re.MULTILINE)
+    paths = re.findall(r'^Path:[ \t]*([^\r\n]*)$', raw, flags=re.MULTILINE)
+    if len(processes) > 8 or len(paths) > 8 or any(len(value.encode()) > 4096 for value in processes + paths):
+        raise RuntimeError('External diagnostic header budget exceeded')
+    expected = str(executable).split('/')
+    path_rows = []
+    for value in paths:
+        value = value.strip()
+        parts = value.split('/')
+        if len(parts) > 128:
+            raise RuntimeError('External diagnostic component budget exceeded')
+        shape = []
+        for part in parts:
+            matches = [index for index, known in enumerate(expected) if part == known]
+            if matches:
+                shape.append(dict(expected_component_indexes=matches))
+            elif part in {'USER', '*', '...', '…', '~', '<redacted>'}:
+                shape.append(dict(public_marker=part))
+            else:
+                shape.append(dict(unknown_sha256=hashlib.sha256(part.encode()).hexdigest(),
+                                  bytes=len(part.encode())))
+        path_rows.append(dict(exact_attested_path=value == str(executable), bytes=len(value.encode()),
+                              component_shape=shape))
+    parsed_pids = re.findall(r'^Process:\s+[^\r\n]+ \[([0-9]+)\]\s*$', raw, flags=re.MULTILINE)
+    parsed_paths = re.findall(r'^Path:\s+([^\r\n]+?)\s*$', raw, flags=re.MULTILINE)
+    return dict(schema_version=1, kind='FAILURE_ONLY_EXTERNAL_HEADER_FORMAT', proves_provenance=False,
+                original_header_predicate_matches=parsed_pids == [str(pid)] and parsed_paths == [str(executable)],
+                process_headers=len(processes), parsed_pid_count=len(parsed_pids),
+                parsed_pids_match_exact_target=parsed_pids == [str(pid)],
+                process_header_sha256=[hashlib.sha256(value.encode()).hexdigest() for value in processes],
+                path_headers=len(paths), paths=path_rows,
+                decoded_text_sha256=hashlib.sha256(raw.encode()).hexdigest())
+
+
 def parse_sample(raw, pid, executable, artifacts):
     validate_artifacts(artifacts)
     verify_header(raw, pid, executable)

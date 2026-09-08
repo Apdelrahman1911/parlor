@@ -2,8 +2,9 @@
 
 The original controls had independent source review and **78 passing synthetic
 tests** in `evidence/package-controls-01/` (2026-09-07). The current pure suite has
-**91 tests**, including a sanitized actual Xcode 26.5 repetition receipt and
-adversarial variants. Test-control success is not app-runtime evidence.
+**99 tests**, including a sanitized actual Xcode 26.5 repetition receipt,
+failure-only header diagnostics, and adversarial variants. The additional tests
+need their own execution receipt; test-control success is not app-runtime evidence.
 
 `ios-readiness-06` executed eight successful XCTest repetitions but then failed
 report parsing, before the separate ninth-launch provenance observation. Its
@@ -12,6 +13,15 @@ one-method summary from eight destination executions, cross-checking eight
 identified leaf repetitions in both XCResult queries. A complete native PASS
 still requires a fresh binding, independent exact-control approval and execution.
 Root owns the single execution lane; application source is not instrumented here.
+
+`ios-readiness-08` subsequently passed all eight repetitions and packaged-notice
+checks, but the separate ninth-launch `sample` header did not match the attested
+PID/path predicate. Its raw headers were not retained; `vmmap` was not executed.
+That overall **FAIL** remains unchanged. New failure-only diagnostics preserve
+header counts, equality flags, public redaction markers and expected-path component
+indexes; unknown components/process names are hashed. Raw stacks, mappings and
+unknown paths still are not retained. Diagnostics cannot satisfy provenance or
+relax any existing PID/path, UUID, artifact, mapping or process-lifetime assertion.
 
 ## What this runner does
 
@@ -76,7 +86,8 @@ Root owns the single execution lane; application source is not instrumented here
   Store-qualified Xcode26.3/17C529. Read-only host observation on2026-09-07 found
   macOS26.2/25C56, Darwin25.2.0. An earlier helper's “Darwin26” prose must not be
   interpreted as the actual kernel release; its approved implementation is reused.
-- Public-tool permissions and actual result formats are not yet exercised. A
+- The actual app `sample` invocation succeeded in native08, but its header failed
+  validation before image binding; app `vmmap` remains unexecuted. A
   denial/unknown format remains a failed or blocked evidence gate, not an app
   defect and not authorization to change entitlements, attach by name, or use sudo.
 
@@ -108,7 +119,7 @@ by guesswork; cleanup fails with evidence for targeted follow-up.
 ## Root review and execution
 
 Do not execute while another lane is active. Independent review must examine all
-new source and the referenced approved helper hashes, then run the **91** synthetic
+new source and the referenced approved helper hashes, then run the **99** synthetic
 control tests (not Swift compilation or app runtime):
 
 ```sh

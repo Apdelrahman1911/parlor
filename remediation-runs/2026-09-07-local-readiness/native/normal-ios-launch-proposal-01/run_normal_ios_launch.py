@@ -41,7 +41,7 @@ from artifact_inventory import inventory_bundle, parse_dwarfdump_uuids, FRAMEWOR
 from normal_source_copy import transform_copy, inventory_copy, CHANGED, PROJECT
 from normal_launch_receipts import read_json, verify_markers, verify_xctest, METHOD, SELECTOR, UUID
 from external_image_provenance import (APP_ID, parse_launch_pid, attest_target, unchanged_target,
-                                       parse_sample, bind_vmmap, LIMITATION)
+                                       parse_sample, bind_vmmap, header_diagnostic, LIMITATION)
 
 
 def now():
@@ -490,11 +490,13 @@ class Lane:
             if (not raw_sample.is_file() or raw_sample.is_symlink() or
                     not 0 < raw_sample.stat().st_size <= 16 * 1024 * 1024):
                 raise RuntimeError('Missing or unbounded public sample image evidence')
-            selected = parse_sample(raw_sample.read_text(), pid, executable, artifacts)
+            selected = self.parse_external_observation('sample', raw_sample, pid, executable,
+                lambda raw: parse_sample(raw, pid, executable, artifacts))
             self.require(['/usr/bin/vmmap', '-w', str(pid)], 'vmmap', timeout=45,
                          output=raw_vmmap, limit=16 * 1024 * 1024)
             after = unchanged_target(before, backend.read(pid))
-            bound = bind_vmmap(raw_vmmap.read_text(), pid, executable, selected)
+            bound = self.parse_external_observation('vmmap', raw_vmmap, pid, executable,
+                lambda raw: bind_vmmap(raw, pid, executable, selected))
             self.check_watched_outputs()
             # File bytes remain tied to the prior installed/current-build image
             # inventory. This does not claim the mapped pages were rehashed.
@@ -514,6 +516,24 @@ class Lane:
                     path.unlink()
             self.receipt['raw_external_stack_mapping_files_removed'] = all(not path.exists() for path in (raw_sample, raw_vmmap))
             self.receipt['external_provenance_limitation'] = LIMITATION
+
+    def parse_external_observation(self, tool, path, pid, executable, parse):
+        if tool not in {'sample', 'vmmap'}:
+            raise RuntimeError('Unknown external diagnostic producer')
+        raw = path.read_text()
+        try:
+            return parse(raw)
+        except RuntimeError:
+            # A failed parser keeps its original failure. Preserve closed format
+            # metadata before the existing finalizer destroys raw stacks/maps.
+            # Do not retain an unknown native path, process name, stack or symbol.
+            try:
+                name = tool + '-header-failure.json'
+                write_json(self.destination / name, header_diagnostic(raw, pid, executable))
+                self.receipt[tool + '_header_failure_sha256'] = digest(self.destination / name)
+            except Exception as diagnostic_error:
+                self.receipt[tool + '_header_diagnostic_error'] = type(diagnostic_error).__name__
+            raise
 
     def shutdown_device(self):
         info = self.simulator_metadata('owned-device-before-shutdown')
