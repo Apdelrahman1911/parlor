@@ -259,6 +259,7 @@ class ProbeBoundedCaptureTest(unittest.TestCase):
 
     def test_required_reconciliation_commands_fit_twenty_second_cleanup_stage(self):
         lane = probe.Commands({}, 20)
+        lane.finalizing = True
         result = ({"status": "EXITED", "exit_code": 0, "direct_child_reaped": True}, b"bound", b"")
         with patch.object(probe.time, "monotonic", return_value=0), patch.object(lane, "capture", return_value=result) as capture:
             self.assertEqual(lane.execute(["git", "rev-parse", "HEAD"]), b"bound")
@@ -269,6 +270,114 @@ class ProbeBoundedCaptureTest(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "budget-exhausted"):
                 lane.execute(["git", "status"])
         capture.assert_not_called()
+
+    def test_only_exact_qualified_simulator_enumerations_restore_one_hundred_twenty_seconds(self):
+        expected = {
+            ("/usr/bin/xcrun", "simctl", "list", "runtimes", "--json"): 120,
+            ("/usr/bin/xcrun", "simctl", "list", "devicetypes", "--json"): 120,
+        }
+        self.assertEqual(probe.PLATFORM_ENUMERATION_SECONDS, expected)
+        ordinary = [
+            ("/usr/bin/xcrun", "simctl", "list", "devices", "--json"),
+            ("/usr/bin/xcrun", "simctl", "list", "runtimes", "--json", "available"),
+            ("/usr/bin/xcodebuild", "-version"), ("git", "status"),
+        ]
+        result = ({"status": "EXITED", "exit_code": 0, "direct_child_reaped": True}, b"bound", b"")
+        for command, seconds in [*expected.items(), *((item, 20) for item in ordinary)]:
+            with self.subTest(command=command):
+                lane = probe.Commands({}, 300)
+                with patch.object(lane, "capture", return_value=result) as capture:
+                    self.assertEqual(lane.execute(command), b"bound")
+                capture.assert_called_once_with(list(command), "binding-or-platform", seconds, root=probe.ROOT)
+        self.assertEqual(probe.ORIGINAL_PS_SECONDS, 15)
+        self.assertEqual(probe.OBSERVATION_SECONDS, 300)
+
+    def test_explicit_command_timeout_is_honored_or_rejected_not_silently_capped(self):
+        lane = probe.Commands({}, 300)
+        command = ["/usr/bin/xcrun", "simctl", "list", "runtimes", "--json"]
+        result = ({"status": "EXITED", "exit_code": 0, "direct_child_reaped": True}, b"bound", b"")
+        for seconds in (10, 120):
+            with patch.object(lane, "capture", return_value=result) as capture:
+                self.assertEqual(lane.execute(command, timeout=seconds), b"bound")
+            self.assertEqual(capture.call_args.args[2], seconds)
+        for args, seconds in ((command, 121), (["git", "status"], 120), (command, 0),
+                              (command, True), (command, float("nan")), (command, float("inf"))):
+            with self.subTest(args=args, seconds=seconds), patch.object(lane, "capture") as capture:
+                with self.assertRaisesRegex(RuntimeError, "unreviewed-probe-command-timeout"):
+                    lane.execute(args, timeout=seconds)
+                capture.assert_not_called()
+
+    def test_qualified_enumeration_without_full_budget_is_skipped_not_shortened_or_retried(self):
+        for command in probe.PLATFORM_ENUMERATION_SECONDS:
+            lane = probe.Commands({}, 123.9)  # 120s query plus the existing 4s retirement reserve cannot fit.
+            with self.subTest(command=command), patch.object(probe.time, "monotonic", return_value=0), \
+                    patch.object(probe.subprocess, "Popen") as launch:
+                with self.assertRaisesRegex(RuntimeError, "required-probe-command-failed"):
+                    lane.execute(command)
+            launch.assert_not_called()
+            self.assertEqual(len(lane.rows), 1)
+            self.assertEqual(lane.rows[0]["status"], "SKIPPED_BUDGET")
+            self.assertEqual(lane.rows[0]["timeout_seconds"], 120)
+
+    def test_qualified_enumeration_timeout_with_partial_bytes_stays_failed_without_retry(self):
+        lane = probe.Commands({}, 300)
+        result = ({"status": "TIMEOUT", "exit_code": 0, "direct_child_reaped": True}, b'{"runtimes":[]}', b"")
+        with patch.object(lane, "capture", return_value=result) as capture:
+            with self.assertRaisesRegex(RuntimeError, "required-probe-command-failed"):
+                lane.execute(["/usr/bin/xcrun", "simctl", "list", "runtimes", "--json"])
+        capture.assert_called_once()
+
+    def test_real_qualifier_routes_both_enumeration_budgets_and_rejects_timeout_at_either_seam(self):
+        developer = Path("/Applications/Xcode_26.3.app/Contents/Developer")
+        sdk = developer / "Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk"
+        runtime = ("/usr/bin/xcrun", "simctl", "list", "runtimes", "--json")
+        types = ("/usr/bin/xcrun", "simctl", "list", "devicetypes", "--json")
+        original_is_dir = Path.is_dir
+        with TemporaryDirectory() as raw:
+            home, java = Path(raw).resolve() / "home", Path(raw).resolve() / "jdk/Home"
+            (home / "Library/Android/sdk").mkdir(parents=True)
+            (java / "bin").mkdir(parents=True)
+            (java / "bin/java").touch()
+            output = {
+                ("/usr/bin/xcodebuild", "-version"): b"Xcode 26.3\nBuild version 17C529\n",
+                ("/usr/bin/xcrun", "--sdk", "iphonesimulator", "--show-sdk-version"): b"26.2\n",
+                ("/usr/bin/xcode-select", "-p"): str(developer).encode(),
+                ("/usr/bin/xcrun", "--sdk", "iphoneos", "--show-sdk-version"): b"26.2\n",
+                ("/usr/bin/xcrun", "--sdk", "iphonesimulator", "--show-sdk-path"): str(sdk).encode(),
+                runtime: json.dumps({"runtimes": [{"identifier": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+                    "isAvailable": True, "version": "26.2", "buildversion": "23C54"}]}).encode(),
+                types: json.dumps({"devicetypes": [{"identifier": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro"}]}).encode(),
+                ("/usr/libexec/java_home", "-v", "21"): str(java).encode(),
+            }
+            for failed in (None, runtime, types):
+                lane = probe.Commands({}, 300)
+                def captured(args, _label, timeout, **_kwargs):
+                    command = tuple(args)
+                    self.assertEqual(timeout, 120 if command in (runtime, types) else 20)
+                    # Even complete-looking retained bytes cannot rescue a timeout.
+                    return {"status": "TIMEOUT" if command == failed else "EXITED", "exit_code": 0,
+                            "direct_child_reaped": True}, output[command], b""
+                with self.subTest(failed=failed), patch.object(native.platform, "system", return_value="Darwin"), \
+                        patch.object(native.platform, "machine", return_value="arm64"), \
+                        patch.object(Path, "home", return_value=home), \
+                        patch.object(Path, "is_dir", lambda path: path == sdk or original_is_dir(path)), \
+                        patch.object(lane, "capture", side_effect=captured) as capture, \
+                        patch.object(native, "command", side_effect=AssertionError("default executor forbidden")) as default, \
+                        patch.object(probe.subprocess, "Popen") as launch:
+                    if failed is None:
+                        value = native.qualified_platform(execute=lane.execute, environment={"DEVELOPER_DIR": str(developer)})
+                        self.assertEqual(value["runtime_build"], "23C54")
+                        self.assertIn("no application/ABI/protection/runtime claim", value["runtime_scope"])
+                    else:
+                        with self.assertRaisesRegex(RuntimeError, "required-probe-command-failed"):
+                            native.qualified_platform(execute=lane.execute, environment={"DEVELOPER_DIR": str(developer)})
+                    calls = [tuple(call.args[0]) for call in capture.call_args_list]
+                    self.assertEqual(calls.count(runtime), 1)
+                    self.assertEqual(calls.count(types), 0 if failed == runtime else 1)
+                    if failed is not None:
+                        self.assertEqual(calls[-1], failed)
+                    default.assert_not_called()
+                    launch.assert_not_called()
 
 
 class ProbePrivacyAndCustodyTest(unittest.TestCase):
@@ -359,7 +468,7 @@ class ProbePrivacyAndCustodyTest(unittest.TestCase):
 
 
 class ProbeLifecycleTest(unittest.TestCase):
-    def synthetic_run(self, parent, *, save_failure=None, partial=False):
+    def synthetic_run(self, parent, *, save_failure=None, partial=False, qualification_failure=False):
         lane = object.__new__(probe.Probe)
         lane.root, home = parent / "repo", parent / "home"
         lane.root.mkdir()
@@ -390,7 +499,8 @@ class ProbeLifecycleTest(unittest.TestCase):
             for target, name, kwargs in (
                 (probe.Path, "home", {"return_value": home}),
                 (probe, "original_seam", {"return_value": {"timeout_seconds": 15}}),
-                (native, "qualified_platform", {"return_value": {"java_home": "/public/Home"}}),
+                (native, "qualified_platform", {"side_effect": RuntimeError("synthetic-platform-failure")}
+                    if qualification_failure else {"return_value": {"java_home": "/public/Home"}}),
                 (native, "context", {"side_effect": lambda *a, **k: events.append("source") or lane.context}),
                 (probe, "controls", {"return_value": lane.control}),
                 (lane, "save", {"side_effect": save}),
@@ -429,6 +539,17 @@ class ProbeLifecycleTest(unittest.TestCase):
             self.assertEqual(events, ["simulator", "resources", "source"])
             self.assertFalse(lane.resources.exists())
 
+    def test_failed_qualification_is_named_and_blocks_all_observations_without_skipping_cleanup(self):
+        with TemporaryDirectory() as raw:
+            lane, code, events = self.synthetic_run(Path(raw), qualification_failure=True)
+            self.assertEqual(code, 2)
+            self.assertEqual(events, ["stop-immediate", "simulator", "stop-final", "resources", "source"])
+            self.assertEqual([(row["label"], row["status"]) for row in lane.state["stages"]], [("qualified-platform", "FAILED")])
+            self.assertNotIn("toolchain", lane.state)
+            self.assertEqual(lane.commands.rows, [])
+            self.assertTrue(lane.state["cleanup_safe"])
+            self.assertEqual(lane.state["status"], "OBSERVATIONS_WITH_FAILURES_NOT_RUNTIME_EVIDENCE")
+
     def test_partial_metadata_deliberately_fails_even_with_all_commands_and_cleanup_complete(self):
         with TemporaryDirectory() as raw:
             lane, code, _ = self.synthetic_run(Path(raw), partial=True)
@@ -443,6 +564,7 @@ class ProbeLifecycleTest(unittest.TestCase):
             self.assertEqual(code, 0)
             self.assertEqual(events, ["stop-immediate", "simulator", "stop-final", "resources", "source"])
             self.assertEqual(lane.state["status"], "OBSERVATIONS_COLLECTED_NOT_RUNTIME_EVIDENCE")
+            self.assertEqual(lane.state["stages"][0]["label"], "qualified-platform")
             self.assertEqual(lane.commands.preservation, {"failures": 0, "errors": []})
             self.assertFalse(lane.resources.exists())
 

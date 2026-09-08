@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-08T13:37:20.035414+00:00",
+  "status": "PASS_DOWNLOAD_AND_INTEGRITY_NOT_DIAGNOSTIC_PASS",
+  "run_id": 34232325670,
+  "attempt": 1,
+  "head_sha": "1efed50cbc7856c11867e4cb088ba3b68716c8fc",
+  "run_conclusion": "failure",
+  "commands": [
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34232325670"
+      ],
+      "file": "run.json",
+      "exit_code": 0,
+      "bytes": 12689,
+      "sha256": "bf153f69813dda9e42af61c981e96d2be490455543d70ae3313dfcedbeb7f977"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34232325670/attempts/1"
+      ],
+      "file": "attempt.json",
+      "exit_code": 0,
+      "bytes": 12711,
+      "sha256": "5033b0d9e301b7700a2ddb3e3522403b5166ef10b60d44d306a9998d19f0091a"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34232325670/attempts/1/jobs?per_page=100"
+      ],
+      "file": "jobs.json",
+      "exit_code": 0,
+      "bytes": 10561,
+      "sha256": "f7c6c283d0a699b8b5fbe6b6d3a2f999dfd35635c9145b6934cce5a723fbe1a7"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/workflows/335554528"
+      ],
+      "file": "workflow.json",
+      "exit_code": 0,
+      "bytes": 533,
+      "sha256": "8345984073768616fd6aff6682c95051f186881c5fa4727b120c80e019841ece"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34232325670/artifacts?per_page=100"
+      ],
+      "file": "artifacts.json",
+      "exit_code": 0,
+      "bytes": 1500,
+      "sha256": "985b8b409d79c708a9e3ef42d8857a769a333b944b456209d2ce6f4cc63e956d"
+    },
+    {
+      "command": [
+        "gh",
+        "run",
+        "view",
+        "34232325670",
+        "--repo",
+        "Apdelrahman1911/parlor",
+        "--attempt",
+        "1",
+        "--log"
+      ],
+      "file": "run.log",
+      "exit_code": 0,
+      "bytes": 61167,
+      "sha256": "ba93d5f458fe4cd3e32debc827423134f09643520af5c900c8ed7ab860dcbaa5"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/artifacts/10058342975/zip"
+      ],
+      "file": "native-process-probe-cleanup.zip",
+      "exit_code": 0,
+      "bytes": 786,
+      "sha256": "4acbc5e2cdeb23c897412ac7437b75b3d920c525db2fe3511514a9776cbc321c"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/artifacts/10058341166/zip"
+      ],
+      "file": "native-process-probe.zip",
+      "exit_code": 0,
+      "bytes": 3347,
+      "sha256": "123a83ba96d901d13ad10c4b06b53c3f394c79e6d458ee53a102d85b63b3bbcb"
+    }
+  ],
+  "artifacts": [
+    {
+      "artifact_id": 10058342975,
+      "artifact_name": "native-process-probe-cleanup-34232325670-1",
+      "archive": "native-process-probe-cleanup.zip",
+      "sha256": "4acbc5e2cdeb23c897412ac7437b75b3d920c525db2fe3511514a9776cbc321c",
+      "api_digest_matches": true,
+      "members": [
+        {
+          "path": "native-process-probe-cleanup/parlor-process-probe-34232325670-1-cleanup.json",
+          "bytes": 913,
+          "sha256": "567e5b06e6f99edd4a857872e0497ff54287a354252164198de188e9b37fdd84"
+        }
+      ]
+    },
+    {
+      "artifact_id": 10058341166,
+      "artifact_name": "native-process-probe-34232325670-1",
+      "archive": "native-process-probe.zip",
+      "sha256": "123a83ba96d901d13ad10c4b06b53c3f394c79e6d458ee53a102d85b63b3bbcb",
+      "api_digest_matches": true,
+      "members": [
+        {
+          "path": "native-process-probe/probe.json",
+          "bytes": 18477,
+          "sha256": "31a911983e53ae2095738e84ccd37f5e36c4d85975707b78f6e5511f95abd10c"
+        }
+      ]
+    }
+  ]
+}

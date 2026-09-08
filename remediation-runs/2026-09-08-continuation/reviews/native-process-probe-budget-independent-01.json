@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_NATIVE_PROCESS_PROBE_BUDGET_SOURCE_AND_TEST_REVIEW",
+  "reviewer": "/root/portability_review",
+  "author": "/root/ci_workflow",
+  "recorded_at": "2026-09-08T13:58:06.729651+00:00",
+  "decision": "APPROVED_FOR_FOCUSED_LINUX_CONTROL_EXECUTION_NOT_NATIVE_OR_APPLICATION_SUCCESS",
+  "blocking_findings": [],
+  "checkpoint": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "1efed50cbc7856c11867e4cb088ba3b68716c8fc",
+    "tree": "bcabd2fd29eaea276bee31ec4ff6b74b63a79366",
+    "reviewed_scope": "Three author-owned changed files only. Concurrent CONTINUE_LATEST.md edit and retained evidence are outside this source approval; no unrelated work was altered."
+  },
+  "author_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-platform-budget-author-01.json",
+    "sha256": "58a7b0224d6ee5e1937e55340340692412f268c22b218800bb56b4ad45cd271d",
+    "bytes": 7578
+  },
+  "reviewed_files": [
+    {
+      "path": "scripts/ci/native_process_probe.py",
+      "sha256": "c87f6d1289ee50a7387988bd85953d451dac9e1b7b88a4d60f7b4848f86516da",
+      "bytes": 44789,
+      "before_sha256": "b5bfc4a18eb75ecceb1cc4807e2715bc15edd52ffd101a81f6c4d6fb4affb3e4"
+    },
+    {
+      "path": "scripts/release/tests/test_native_process_probe.py",
+      "sha256": "707f394e34d8234f4617963af32a865b3620aaec7a16ee6e0c166c0e1090ef39",
+      "bytes": 43371,
+      "before_sha256": "f7c7a9c23f6426cdcb3feaeabfa6d6fab28922387e8fb247b4040231058dacb1"
+    },
+    {
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "sha256": "e2e5f62f4a8d876585120e32ff73e91f7c3d992963c80346e94e54f906eec846",
+      "bytes": 10879,
+      "before_sha256": "1d3b4fa1f8fed36598fc423948acf9c633c24e058076418315e4b59a30b1721e"
+    }
+  ],
+  "underlying_failure": {
+    "run_id": 34232325670,
+    "attempt": 1,
+    "probe": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe/probe.json",
+      "sha256": "31a911983e53ae2095738e84ccd37f5e36c4d85975707b78f6e5511f95abd10c",
+      "bytes": 18477
+    },
+    "cleanup": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe-cleanup/parlor-process-probe-34232325670-1-cleanup.json",
+      "sha256": "567e5b06e6f99edd4a857872e0497ff54287a354252164198de188e9b37fdd84",
+      "bytes": 913
+    },
+    "log": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/run.log",
+      "sha256": "ba93d5f458fe4cd3e32debc827423134f09643520af5c900c8ed7ab860dcbaa5",
+      "bytes": 61167
+    },
+    "diagnosis": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-platform-diagnosis-01.json",
+      "sha256": "7437cee01eb25eb854890fad9a19052a25b73d632900109a693fe0aa007c6998",
+      "bytes": 18787
+    },
+    "independently_reopened_facts": "Exact runtime enumeration timed out20.003s into its20s allowance, exit-15, directly reaped, zero output. stages=[] and no toolchain object: no ps identity/process, simulator boot, metadata or app observations. All13 retained control hashes match executed Git source. All five internal finalizers and outer uploaded-custody cleanup completed; diagnostic FAIL remains FAIL. Log292-293 records observation failure/exit2. Why the query exceeded20s is unknown; no OS cold-start cause or absent runtime is established."
+  },
+  "source_findings": [
+    "Shared native_continuation.command defaults120s and qualified_platform supplies no timeout for its exact runtime/devicetype queries. The former injected execute default/cap20 shortened that seam. Current execute selects120 only for the two exact absolute xcrun simctl list runtimes/devicetypes --json tuples; all other adapter operations retain20.",
+    "Explicit timeout validation requires exact int/float type and0<value<=operation ceiling. Bool, NaN, infinities, negative, zero, nonnumeric and excessive values reject before capture; valid explicit smaller bounds are honored, never silently capped.",
+    "During observations execute no longer squeezes an allowance to fit remaining time. Unchanged capture records SKIPPED_BUDGET and launches nothing unless the whole timeout plus4s retirement reserve fits. Required execution rejects TIMEOUT/SKIPPED/nonzero/unreaped results, including complete-looking partial bytes, with no retry.",
+    "Only finalizing Git reconciliation retains its existing min(requested<=20, remaining-4.1) allowance. The observation300s and separate cleanup225s budgets remain unchanged. The actual original ps command/15s limit, sample reservation and ownership implementation are untouched.",
+    "Named qualified-platform stage records failure before any toolchain publication/process observations if qualification fails. Actual strict Darwin/arm64, exact Xcode26.3/build17C529/SDK26.2/developer/runtime availability/device/JDK checks remain in the unchanged shared qualifier/profile.",
+    "Static function comparison finds only Commands.execute and Probe.run changed among32 functions; Probe.run finalbody is AST-identical. Direct-child retirement, all five independent finalizers, privacy/output limits, source/control binding, metadata ABI observer, simulator custody and upload-before-evidence-deletion are unchanged. No application/protocol/storage validation or ownership backend changes."
+  ],
+  "unchanged_key_controls": [
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "sha256": "d5c6faf5a33187a9bed855f8d82b17ea2c90d72c3b22df0a041975f7a6bc7b21",
+      "bytes": 42095
+    },
+    {
+      "path": "scripts/ci/native_process_metadata.py",
+      "sha256": "6497e55c6c4a7f0922486d58ce47bc9ad05b987e8cca9bc5c60adf2b13cd9256",
+      "bytes": 4131
+    },
+    {
+      "path": "scripts/verification/ios-readiness/owned_lane.py",
+      "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+      "bytes": 10446
+    },
+    {
+      "path": "scripts/verification/ios-readiness/toolchain_profiles.py",
+      "sha256": "8adacaf4c59ed823aa088ecb70ad5c6c1e3f76e7ca3520d8abf0563341591313",
+      "bytes": 3358
+    },
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "sha256": "d347a4cd3e22181b37e5aec91203d3aa37779cb7bb7976fb74ed01cc29ba328d",
+      "bytes": 40414
+    }
+  ],
+  "test_source_review": {
+    "declared_before": 39,
+    "declared_after": 45,
+    "removed_methods": [],
+    "new_methods": [
+      "ProbeBoundedCaptureTest.test_explicit_command_timeout_is_honored_or_rejected_not_silently_capped",
+      "ProbeBoundedCaptureTest.test_only_exact_qualified_simulator_enumerations_restore_one_hundred_twenty_seconds",
+      "ProbeBoundedCaptureTest.test_qualified_enumeration_timeout_with_partial_bytes_stays_failed_without_retry",
+      "ProbeBoundedCaptureTest.test_qualified_enumeration_without_full_budget_is_skipped_not_shortened_or_retried",
+      "ProbeBoundedCaptureTest.test_real_qualifier_routes_both_enumeration_budgets_and_rejects_timeout_at_either_seam",
+      "ProbeLifecycleTest.test_failed_qualification_is_named_and_blocks_all_observations_without_skipping_cleanup"
+    ],
+    "existing_method_changes": "Reconciliation fixture now explicitly sets finalizing=True; positive lifecycle adds assertion that qualified-platform is first. Existing39 methods retained. Lifecycle helper adds an inert qualifier-failure option.",
+    "meaningful_paths": "New bridge calls real native.qualified_platform -> actual Commands.execute -> mocked capture, with real strict profile inputs. It verifies120/20 forwarding, success and runtime/devicetype TIMEOUT rejection; default executor and Popen are forbidden. Separate actual execute/capture budget-refusal test verifies one SKIPPED_BUDGET row/full120/no Popen/no retry. Named-failure lifecycle verifies no toolchain or observations and all finalizers. These are synthetic controls, not actual platform evidence.",
+    "execution_status": "NOT_EXECUTED_BY_REVIEWER;45 is an AST declaration count, not a pass count."
+  },
+  "approved_next_local_command": {
+    "required_environment": "Explicit validated JAVA_HOME21; existing coordinator-owned single build lane and cleanup policy.",
+    "argv": [
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "continuation-process-probe-budget-controls-01",
+      "--command",
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "-v",
+      "scripts.release.tests.test_native_process_probe"
+    ],
+    "scope": "Focused45-method module only. Separate affected transport-p2p documentation/hash gate is coordinator-owned. No need to rerun unchanged187 normal controls for this isolated diagnostic delta."
+  },
+  "before_any_native_dispatch": "Reconcile actual focused results/cleanup, commit reviewed source and regenerated mechanical inventory, then derive and independently approve fresh frozen source/control bindings. Historical0b60d421... control approval is stale for these changed bytes. This review does not authorize A/B dispatch or claim that original ps15s failure is fixed.",
+  "review_activity": {
+    "performed": "Read source, diffs and retained JSON/logs; read-only Git/hash/stdlib AST inspection; git diff --check on the three owned paths; write only this new append-only report.",
+    "tests": 0,
+    "builds": 0,
+    "project_imports": 0,
+    "platform_commands": 0,
+    "workflow_dispatches": 0,
+    "source_edits": 0,
+    "cleanup": "No reviewer build/test cycle, simulator, temporary worker or generated output was created. No Gradle/global-cache cleanup or evidence deletion performed."
+  },
+  "readiness": "NOT_READY. Actual A functional/retained-host, strict protection, B application libproc provenance and final qualification remain unproven; new diagnostic controls require execution and cannot supply those results."
+}

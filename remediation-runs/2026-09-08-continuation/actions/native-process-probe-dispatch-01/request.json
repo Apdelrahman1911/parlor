@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "requested_at": "2026-09-08T13:29:53.472513+00:00",
+  "repository": "Apdelrahman1911/parlor",
+  "workflow": ".github/workflows/production-verification.yml",
+  "ref": "fix/local-readiness-2026-09-07",
+  "inputs": {
+    "verification_scope": "native-process-probe",
+    "frozen_source_sha": "1efed50cbc7856c11867e4cb088ba3b68716c8fc",
+    "approved_probe_control_sha256": "0b60d4219b279c1022232d18a261a21ac7c577357cafbac2d695e58fbcf92a87"
+  },
+  "approval": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-dispatch-independent-01.json",
+    "sha256": "61d0d98068c6bcaca454909f99a0fbf016b80566bba9024d9a7c4b34498cf9ee"
+  },
+  "remote_before": "1efed50cbc7856c11867e4cb088ba3b68716c8fc\trefs/heads/fix/local-readiness-2026-09-07",
+  "prior_run_ids": [
+    34216788568,
+    34214410629,
+    34152138368,
+    34143924756,
+    34112913001
+  ],
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=native-process-probe",
+    "-f",
+    "frozen_source_sha=1efed50cbc7856c11867e4cb088ba3b68716c8fc",
+    "-f",
+    "approved_probe_control_sha256=0b60d4219b279c1022232d18a261a21ac7c577357cafbac2d695e58fbcf92a87"
+  ],
+  "scope": "ONE_INITIAL_NON_APP_DIAGNOSTIC_ONLY; no A/B or Store workflows"
+}

@@ -115,6 +115,18 @@ or editing the canonical runner. Child environments are a closed public-tool
 allowlist: no GitHub/Actions/tracking token, signing credential, DYLD/Python hook,
 or arbitrary Gradle/Java option is inherited.
 
+Platform qualification has its own named stage. Only the exact
+`/usr/bin/xcrun simctl list runtimes --json` and `... list devicetypes --json`
+queries receive the shared qualifier's120s allowance; other adapter commands
+retain their20s ceiling. The first runtime query in diagnostic `34232325670`
+timed out at the probe's introduced20s cap before any process observation; that
+failed receipt is retained and does not establish an OS cold-start cause.
+The corrected enumeration budget is operation-specific, not a `ps` timeout
+increase or retry. Within the unchanged300s observation budget, a query whose
+complete allowance plus direct-child retirement reserve cannot fit is skipped
+and qualification fails, never shortened or accepted from partial output.
+Bounded Git reconciliation during cleanup retains its existing adaptive budget.
+
 The bounded sequence records:
 
 1. Actual PATH-selected, root-owned `ps` resolved path, SHA256, file identity,
@@ -139,7 +151,7 @@ unreaped Popen PID; only bounded call-graph symbols survive, not headers, argv
 or image paths. `-file /dev/stdout` prevents a default sample file elsewhere.
 The timeout remains failed even if the process exits during sampling. Only the
 owned direct handle may be terminated/reaped. No broad kill, lookup/adoption,
-timeout increase, fallback, or production observer change is authorized.
+original-`ps` timeout increase, fallback, or production observer change is authorized.
 
 Libproc result-size/field offsets and self PID/PPID/PGID/UID are actual metadata
 observations, **not B's application-image ABI/provenance evidence**. Other-UID

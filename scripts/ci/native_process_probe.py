@@ -30,6 +30,10 @@ SCOPE = "native-process-probe"
 MAX_OUTPUT = 2 * 1024 * 1024
 OBSERVATION_SECONDS = 300
 ORIGINAL_PS_SECONDS = 15
+PLATFORM_ENUMERATION_SECONDS = {
+    ("/usr/bin/xcrun", "simctl", "list", "runtimes", "--json"): 120,
+    ("/usr/bin/xcrun", "simctl", "list", "devicetypes", "--json"): 120,
+}
 CONTROL_PATHS = (
     ".github/workflows/production-verification.yml", "scripts/ci/native_process_probe.py",
     "scripts/ci/native_process_metadata.py", "scripts/ci/native_continuation.py",
@@ -276,10 +280,22 @@ class Commands:
             self.checkpoint()
         return row, bytes(buffers[0]), bytes(buffers[1])
 
-    def execute(self, arguments, root=ROOT, timeout=20):
-        timeout = min(timeout, 20, self.deadline - time.monotonic() - 4.1)
-        native.require(timeout > 0, "probe-command-budget-exhausted")
-        row, out, _ = self.capture(arguments, "binding-or-platform", timeout, root=root)
+    def execute(self, arguments, root=ROOT, timeout=None):
+        command = list(map(str, arguments))
+        # Restore the shared qualifier's 120s allowance only for these exact
+        # simulator enumerations. Run34232325670 exposed the injected 20s cap;
+        # it did not establish why the first runtime listing exceeded 20s.
+        ceiling = PLATFORM_ENUMERATION_SECONDS.get(tuple(command), 20)
+        timeout = ceiling if timeout is None else timeout
+        native.require(type(timeout) in (int, float) and 0 < timeout <= ceiling,
+                       "unreviewed-probe-command-timeout")
+        if self.finalizing and command and command[0] == "git":
+            # Preserve the existing bounded source-reconciliation cleanup lane.
+            timeout = min(timeout, self.deadline - time.monotonic() - 4.1)
+            native.require(timeout > 0, "probe-command-budget-exhausted")
+        # capture refuses a launch when the complete allowance plus retirement
+        # cannot fit; observation/platform deadlines are never shortened to fit.
+        row, out, _ = self.capture(command, "binding-or-platform", timeout, root=root)
         native.require(row["status"] == "EXITED" and row.get("exit_code") == 0 and
                        row.get("direct_child_reaped"), "required-probe-command-failed")
         return out
@@ -540,7 +556,9 @@ class Probe:
             (self.resources / "gradle-home/wrapper").symlink_to(cache, target_is_directory=True)
             self.state["public_wrapper_cache"] = dict(path=str(cache), created=created, policy="Retain global distribution cache; isolated daemon registry.")
             initialized = True
-            self.platform = native.qualified_platform(self.root, execute=self.commands.execute, environment=self.commands.environment)
+            self.platform = self.stage("qualified-platform", lambda: native.qualified_platform(
+                self.root, execute=self.commands.execute, environment=self.commands.environment))
+            native.require(self.platform is not None, "qualified-platform-not-complete")
             self.state["toolchain"] = self.platform
             self.commands.environment["JAVA_HOME"] = self.platform["java_home"]
             for key, option in (("os_version", "-productVersion"), ("os_build", "-buildVersion")):

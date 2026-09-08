@@ -1,0 +1,631 @@
+{
+  "schema_version": 1,
+  "kind": "NATIVE_PROCESS_PROBE_NOT_APP_EVIDENCE",
+  "context": {
+    "repository": "Apdelrahman1911/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "head_sha": "1efed50cbc7856c11867e4cb088ba3b68716c8fc",
+    "tree": "bcabd2fd29eaea276bee31ec4ff6b74b63a79366",
+    "workflow": ".github/workflows/production-verification.yml",
+    "root": "/Users/runner/work/parlor/parlor",
+    "run_id": 34232325670,
+    "run_attempt": 1
+  },
+  "control_manifest": {
+    "files": [
+      {
+        "path": ".github/workflows/production-verification.yml",
+        "sha256": "d347a4cd3e22181b37e5aec91203d3aa37779cb7bb7976fb74ed01cc29ba328d"
+      },
+      {
+        "path": "gradle/wrapper/gradle-wrapper.jar",
+        "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f"
+      },
+      {
+        "path": "gradle/wrapper/gradle-wrapper.properties",
+        "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2"
+      },
+      {
+        "path": "gradlew",
+        "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933"
+      },
+      {
+        "path": "scripts/ci/NATIVE_CONTINUATION.md",
+        "sha256": "1d3b4fa1f8fed36598fc423948acf9c633c24e058076418315e4b59a30b1721e"
+      },
+      {
+        "path": "scripts/ci/darwin_worker_identity.py",
+        "sha256": "939ac6c98628046f9f45547135cbc439f217403e60c7e4033db5f541ab017ecc"
+      },
+      {
+        "path": "scripts/ci/native_continuation.py",
+        "sha256": "d5c6faf5a33187a9bed855f8d82b17ea2c90d72c3b22df0a041975f7a6bc7b21"
+      },
+      {
+        "path": "scripts/ci/native_process_metadata.py",
+        "sha256": "6497e55c6c4a7f0922486d58ce47bc9ad05b987e8cca9bc5c60adf2b13cd9256"
+      },
+      {
+        "path": "scripts/ci/native_process_probe.py",
+        "sha256": "b5bfc4a18eb75ecceb1cc4807e2715bc15edd52ffd101a81f6c4d6fb4affb3e4"
+      },
+      {
+        "path": "scripts/ci/owned_ci_simulator.py",
+        "sha256": "717c8c02dc06e4eac175c5dde5c7f9bdd6ebbd5e7028cc94c6ba4f84b44388af"
+      },
+      {
+        "path": "scripts/ci/verification_hygiene.py",
+        "sha256": "9eab427aeb3d810c033a3827aa44f7201cbb261345a2e6667a8d085df2fbd603"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/owned_lane.py",
+        "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/toolchain_profiles.py",
+        "sha256": "8adacaf4c59ed823aa088ecb70ad5c6c1e3f76e7ca3520d8abf0563341591313"
+      }
+    ],
+    "control_sha256": "0b60d4219b279c1022232d18a261a21ac7c577357cafbac2d695e58fbcf92a87"
+  },
+  "approved_control_sha256": "0b60d4219b279c1022232d18a261a21ac7c577357cafbac2d695e58fbcf92a87",
+  "base_custody": {
+    "device": 16777228,
+    "inode": 3514179,
+    "uid": 501
+  },
+  "resources_custody": {
+    "device": 16777228,
+    "inode": 3514181,
+    "uid": 501
+  },
+  "claim": {
+    "task": {
+      "repository": "Apdelrahman1911/parlor",
+      "branch": "fix/local-readiness-2026-09-07",
+      "head_sha": "1efed50cbc7856c11867e4cb088ba3b68716c8fc",
+      "tree": "bcabd2fd29eaea276bee31ec4ff6b74b63a79366",
+      "workflow": ".github/workflows/production-verification.yml",
+      "root": "/Users/runner/work/parlor/parlor",
+      "run_id": 34232325670,
+      "run_attempt": 1
+    },
+    "cycle": "native-process-probe",
+    "nonce": "a436e31840664381b80693dfa9ade219"
+  },
+  "status": "OBSERVATIONS_WITH_FAILURES_NOT_RUNTIME_EVIDENCE",
+  "started_at": "2026-09-08T13:30:21.691092+00:00",
+  "stages": [],
+  "cleanup_stages": [
+    {
+      "label": "stop-immediate",
+      "status": "COMPLETE",
+      "started_at": "2026-09-08T13:30:45.513944+00:00",
+      "result": {
+        "exit_code": 0,
+        "isolated_registry": true,
+        "no_build_or_test_task": true
+      },
+      "finished_at": "2026-09-08T13:30:52.075603+00:00"
+    },
+    {
+      "label": "owned-simulator-retirement",
+      "status": "COMPLETE",
+      "started_at": "2026-09-08T13:30:52.076378+00:00",
+      "result": {
+        "result": "NOT_CREATED",
+        "reason": "No create intent was written"
+      },
+      "finished_at": "2026-09-08T13:30:52.077192+00:00"
+    },
+    {
+      "label": "stop-final",
+      "status": "COMPLETE",
+      "started_at": "2026-09-08T13:30:52.077975+00:00",
+      "result": {
+        "exit_code": 0,
+        "isolated_registry": true,
+        "no_build_or_test_task": true
+      },
+      "finished_at": "2026-09-08T13:30:52.707471+00:00"
+    },
+    {
+      "label": "exact-owned-resource-cleanup",
+      "status": "COMPLETE",
+      "started_at": "2026-09-08T13:30:52.709331+00:00",
+      "result": {
+        "resources_removed": true,
+        "global_cache_deleted": false
+      },
+      "finished_at": "2026-09-08T13:30:53.086067+00:00"
+    },
+    {
+      "label": "source-control-reconciliation",
+      "status": "COMPLETE",
+      "started_at": "2026-09-08T13:30:53.087331+00:00",
+      "result": {
+        "source_unchanged": true,
+        "controls_unchanged": true
+      },
+      "finished_at": "2026-09-08T13:30:53.521840+00:00"
+    }
+  ],
+  "commands": [
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "rev-parse",
+        "--show-toplevel"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T13:30:20.965434+00:00",
+      "owned_pid": 3333,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.007,
+      "finished_at": "2026-09-08T13:30:20.978520+00:00",
+      "stdout_bytes": 33,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T13:30:20.978570+00:00",
+      "owned_pid": 3336,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.006,
+      "finished_at": "2026-09-08T13:30:20.986475+00:00",
+      "stdout_bytes": 41,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T13:30:20.986538+00:00",
+      "owned_pid": 3339,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.008,
+      "finished_at": "2026-09-08T13:30:20.999073+00:00",
+      "stdout_bytes": 31,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "rev-parse",
+        "--is-shallow-repository"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T13:30:20.999134+00:00",
+      "owned_pid": 3342,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.008,
+      "finished_at": "2026-09-08T13:30:21.009897+00:00",
+      "stdout_bytes": 6,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=no"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T13:30:21.009964+00:00",
+      "owned_pid": 3346,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.575,
+      "finished_at": "2026-09-08T13:30:21.587601+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T13:30:21.587708+00:00",
+      "owned_pid": 3374,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.012,
+      "finished_at": "2026-09-08T13:30:21.601924+00:00",
+      "stdout_bytes": 41,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=all"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T13:30:21.605178+00:00",
+      "owned_pid": 3375,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.084,
+      "finished_at": "2026-09-08T13:30:21.690602+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "/usr/bin/xcodebuild",
+        "-version"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T13:30:21.694888+00:00",
+      "owned_pid": 3376,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.091,
+      "finished_at": "2026-09-08T13:30:21.789989+00:00",
+      "stdout_bytes": 32,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "/usr/bin/xcrun",
+        "--sdk",
+        "iphonesimulator",
+        "--show-sdk-version"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T13:30:21.790835+00:00",
+      "owned_pid": 3377,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 1.945,
+      "finished_at": "2026-09-08T13:30:23.738649+00:00",
+      "stdout_bytes": 5,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "/usr/bin/xcode-select",
+        "-p"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T13:30:23.739911+00:00",
+      "owned_pid": 3385,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.005,
+      "finished_at": "2026-09-08T13:30:23.749823+00:00",
+      "stdout_bytes": 48,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "/usr/bin/xcrun",
+        "--sdk",
+        "iphoneos",
+        "--show-sdk-version"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T13:30:23.750827+00:00",
+      "owned_pid": 3386,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 1.716,
+      "finished_at": "2026-09-08T13:30:25.470908+00:00",
+      "stdout_bytes": 5,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "/usr/bin/xcrun",
+        "--sdk",
+        "iphonesimulator",
+        "--show-sdk-path"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T13:30:25.472107+00:00",
+      "owned_pid": 3394,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.011,
+      "finished_at": "2026-09-08T13:30:25.488532+00:00",
+      "stdout_bytes": 122,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "list",
+        "runtimes",
+        "--json"
+      ],
+      "status": "TIMEOUT",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T13:30:25.489644+00:00",
+      "owned_pid": 3395,
+      "ownership": "direct-unreaped-Popen",
+      "timeout_observed_at": "2026-09-08T13:30:45.494598+00:00",
+      "observation_elapsed_seconds": 20.003,
+      "exit_code": -15,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 20.017,
+      "finished_at": "2026-09-08T13:30:45.509360+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "stop-immediate",
+      "command": [
+        "/Users/runner/work/parlor/parlor/gradlew",
+        "--stop"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 65,
+      "started_at": "2026-09-08T13:30:45.515035+00:00",
+      "owned_pid": 3831,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 6.549,
+      "finished_at": "2026-09-08T13:30:52.073848+00:00",
+      "stdout_bytes": 544,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "stop-final",
+      "command": [
+        "/Users/runner/work/parlor/parlor/gradlew",
+        "--stop"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 30,
+      "started_at": "2026-09-08T13:30:52.078562+00:00",
+      "owned_pid": 3985,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.62,
+      "finished_at": "2026-09-08T13:30:52.705801+00:00",
+      "stdout_bytes": 31,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "resource-holders",
+      "command": [
+        "/usr/sbin/lsof",
+        "-nP",
+        "-t",
+        "+w",
+        "+D",
+        "/Users/runner/work/_temp/parlor-process-probe-34232325670-1/resources"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 10,
+      "started_at": "2026-09-08T13:30:52.711397+00:00",
+      "owned_pid": 4003,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 1,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.361,
+      "finished_at": "2026-09-08T13:30:53.080219+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "rev-parse",
+        "--show-toplevel"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 15.897640916999999,
+      "started_at": "2026-09-08T13:30:53.089680+00:00",
+      "owned_pid": 4007,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.039,
+      "finished_at": "2026-09-08T13:30:53.147964+00:00",
+      "stdout_bytes": 33,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 15.837622167000001,
+      "started_at": "2026-09-08T13:30:53.149695+00:00",
+      "owned_pid": 4008,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.01,
+      "finished_at": "2026-09-08T13:30:53.162736+00:00",
+      "stdout_bytes": 41,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 15.823581292000002,
+      "started_at": "2026-09-08T13:30:53.163736+00:00",
+      "owned_pid": 4009,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.007,
+      "finished_at": "2026-09-08T13:30:53.174366+00:00",
+      "stdout_bytes": 31,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "rev-parse",
+        "--is-shallow-repository"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 15.812007000000003,
+      "started_at": "2026-09-08T13:30:53.175310+00:00",
+      "owned_pid": 4010,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.008,
+      "finished_at": "2026-09-08T13:30:53.185164+00:00",
+      "stdout_bytes": 6,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=no"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 15.801108958999999,
+      "started_at": "2026-09-08T13:30:53.186210+00:00",
+      "owned_pid": 4011,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.191,
+      "finished_at": "2026-09-08T13:30:53.380138+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 15.605880292000004,
+      "started_at": "2026-09-08T13:30:53.381439+00:00",
+      "owned_pid": 4012,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.008,
+      "finished_at": "2026-09-08T13:30:53.391904+00:00",
+      "stdout_bytes": 41,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "binding-or-platform",
+      "command": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=all"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 15.588496584,
+      "started_at": "2026-09-08T13:30:53.398823+00:00",
+      "owned_pid": 4013,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.119,
+      "finished_at": "2026-09-08T13:30:53.520700+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    }
+  ],
+  "preservation": {
+    "failures": 0,
+    "errors": []
+  },
+  "original_process_source_seam": {
+    "path": "scripts/verification/ios-readiness/owned_lane.py",
+    "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03",
+    "command": [
+      "ps",
+      "-axo",
+      "pid=,ppid=,pgid=,lstart=,command="
+    ],
+    "timeout_seconds": 15,
+    "source_imported_or_modified": false
+  },
+  "observation_budget_seconds": 300,
+  "cleanup_budget_seconds": 225,
+  "scope": "No application build, XCTest, A/B libproc provenance, protection, Store or device qualification.",
+  "public_wrapper_cache": {
+    "path": "/Users/runner/.gradle/wrapper",
+    "created": [
+      "/Users/runner/.gradle/wrapper"
+    ],
+    "policy": "Retain global distribution cache; isolated daemon registry."
+  },
+  "primary_error_type": "RuntimeError",
+  "finished_at": "2026-09-08T13:30:53.522776+00:00",
+  "signals": [],
+  "cleanup_safe": true
+}

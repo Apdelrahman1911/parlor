@@ -1,0 +1,682 @@
+{
+  "schema_version": 1,
+  "kind": "POST_1EFED50_COMPLETED_EVIDENCE_DELIVERY_SAFETY",
+  "reviewer": "/root/evidence_audit",
+  "started_at": "2026-09-08T13:48:18.930540+00:00",
+  "recorded_at": "2026-09-08T13:48:20.052102+00:00",
+  "status": "PASS_SCOPED_DELIVERY_SAFETY_ONLY_NOT_EXECUTION_PASS",
+  "baseline": {
+    "commit": "1efed50cbc7856c11867e4cb088ba3b68716c8fc",
+    "tree": "bcabd2fd29eaea276bee31ec4ff6b74b63a79366",
+    "branch": "fix/local-readiness-2026-09-07",
+    "remote_observation": "No new network/remote query performed; hosted-freeze/request/independent approval retain their original remote observations.",
+    "index_probe_exit": 0,
+    "index_state": "EMPTY_AT_THIS_OBSERVATION",
+    "source_control_changes_outside_scope_observed": [
+      "scripts/ci/NATIVE_CONTINUATION.md",
+      "scripts/ci/native_process_probe.py",
+      "scripts/release/tests/test_native_process_probe.py"
+    ]
+  },
+  "scope": "Exact28-file completed-evidence allowlist only: release-validator02, hosted-probe freeze/control/dispatch approval records and matching stdout, one initial dispatch request, and actual downloaded Actions34232325670 attempt1. No new/future source/control correction, updated ledger or later review automatically included.",
+  "totals": {
+    "files": 28,
+    "bytes": 530991,
+    "ordinarily_untracked": 19,
+    "git_ignored_required_evidence": 9,
+    "original_zip_archives": 2,
+    "exact_extracted_json_members": 2,
+    "manifest_sha256": "3cce498b1cb1d0a7727cec82e3537ff52bbc1961dcbe709ee6f5afae3f21dfdc",
+    "manifest_encoding": "compact UTF-8 JSON, ensure_ascii=true, sorted rows [path, git_mode, sha256, bytes]",
+    "report_itself_excluded": true
+  },
+  "groups": {
+    "frozen_linux_release_validator_02": {
+      "files": 7,
+      "bytes": 387781,
+      "paths": [
+        "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/artifact-receipts.json",
+        "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/gradle.log",
+        "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/java-toolchain.log",
+        "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/javac-toolchain.log",
+        "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/receipt.json",
+        "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/stop.log",
+        "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/test-receipts.json"
+      ]
+    },
+    "actual_failed_hosted_diagnostic_34232325670": {
+      "files": 11,
+      "bytes": 126530,
+      "paths": [
+        "remediation-runs/2026-09-08-continuation/actions/34232325670/artifacts.json",
+        "remediation-runs/2026-09-08-continuation/actions/34232325670/attempt.json",
+        "remediation-runs/2026-09-08-continuation/actions/34232325670/download-receipt.json",
+        "remediation-runs/2026-09-08-continuation/actions/34232325670/jobs.json",
+        "remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe/probe.json",
+        "remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe-cleanup/parlor-process-probe-34232325670-1-cleanup.json",
+        "remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe-cleanup.zip",
+        "remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe.zip",
+        "remediation-runs/2026-09-08-continuation/actions/34232325670/run.json",
+        "remediation-runs/2026-09-08-continuation/actions/34232325670/run.log",
+        "remediation-runs/2026-09-08-continuation/actions/34232325670/workflow.json"
+      ]
+    },
+    "one_initial_diagnostic_dispatch_request": {
+      "files": 4,
+      "bytes": 2451,
+      "paths": [
+        "remediation-runs/2026-09-08-continuation/actions/native-process-probe-dispatch-01/dispatch-result.json",
+        "remediation-runs/2026-09-08-continuation/actions/native-process-probe-dispatch-01/dispatch.log",
+        "remediation-runs/2026-09-08-continuation/actions/native-process-probe-dispatch-01/prior-runs.json",
+        "remediation-runs/2026-09-08-continuation/actions/native-process-probe-dispatch-01/request.json"
+      ]
+    },
+    "hosted_freeze_controls_and_independent_approval": {
+      "files": 6,
+      "bytes": 14229,
+      "paths": [
+        "remediation-runs/2026-09-08-continuation/reviews/hosted-probe-freeze-01-inventory-generate.log",
+        "remediation-runs/2026-09-08-continuation/reviews/hosted-probe-freeze-01-push.log",
+        "remediation-runs/2026-09-08-continuation/reviews/hosted-probe-freeze-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-dispatch-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-frozen-controls-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/release-validator-02-controller.log"
+      ]
+    }
+  },
+  "files": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/artifact-receipts.json",
+      "group": "frozen_linux_release_validator_02",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "?? remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/artifact-receipts.json\n",
+      "status_exit": 0,
+      "check_ignore_stdout": "",
+      "check_ignore_exit": 1,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/gradle.log",
+      "group": "frozen_linux_release_validator_02",
+      "bytes": 81344,
+      "sha256": "20f6c5be38524930a00335ea8765b4c6274c41926618fcd26ab957211cc1e196",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "!! remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/gradle.log\n",
+      "status_exit": 0,
+      "check_ignore_stdout": ".gitignore:26:*.log\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/gradle.log\n",
+      "check_ignore_exit": 0,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/java-toolchain.log",
+      "group": "frozen_linux_release_validator_02",
+      "bytes": 2026,
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "!! remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/java-toolchain.log\n",
+      "status_exit": 0,
+      "check_ignore_stdout": ".gitignore:26:*.log\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/java-toolchain.log\n",
+      "check_ignore_exit": 0,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/javac-toolchain.log",
+      "group": "frozen_linux_release_validator_02",
+      "bytes": 14,
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "!! remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/javac-toolchain.log\n",
+      "status_exit": 0,
+      "check_ignore_stdout": ".gitignore:26:*.log\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/javac-toolchain.log\n",
+      "check_ignore_exit": 0,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/receipt.json",
+      "group": "frozen_linux_release_validator_02",
+      "bytes": 304360,
+      "sha256": "1c538a25c7fdb6da3a6b0b6a72ce5d87047f7cf18e30963f8f061c07413bff6b",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "?? remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/receipt.json\n",
+      "status_exit": 0,
+      "check_ignore_stdout": "",
+      "check_ignore_exit": 1,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/stop.log",
+      "group": "frozen_linux_release_validator_02",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "!! remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/stop.log\n",
+      "status_exit": 0,
+      "check_ignore_stdout": ".gitignore:26:*.log\tremediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/stop.log\n",
+      "check_ignore_exit": 0,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/test-receipts.json",
+      "group": "frozen_linux_release_validator_02",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "?? remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/test-receipts.json\n",
+      "status_exit": 0,
+      "check_ignore_stdout": "",
+      "check_ignore_exit": 1,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/artifacts.json",
+      "group": "actual_failed_hosted_diagnostic_34232325670",
+      "bytes": 1500,
+      "sha256": "985b8b409d79c708a9e3ef42d8857a769a333b944b456209d2ce6f4cc63e956d",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "?? remediation-runs/2026-09-08-continuation/actions/34232325670/artifacts.json\n",
+      "status_exit": 0,
+      "check_ignore_stdout": "",
+      "check_ignore_exit": 1,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/attempt.json",
+      "group": "actual_failed_hosted_diagnostic_34232325670",
+      "bytes": 12711,
+      "sha256": "5033b0d9e301b7700a2ddb3e3522403b5166ef10b60d44d306a9998d19f0091a",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "?? remediation-runs/2026-09-08-continuation/actions/34232325670/attempt.json\n",
+      "status_exit": 0,
+      "check_ignore_stdout": "",
+      "check_ignore_exit": 1,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/download-receipt.json",
+      "group": "actual_failed_hosted_diagnostic_34232325670",
+      "bytes": 3846,
+      "sha256": "7ec4795e201e40c396988b5c635946d35994ad1831d6b4d23e389ed85f52180c",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "?? remediation-runs/2026-09-08-continuation/actions/34232325670/download-receipt.json\n",
+      "status_exit": 0,
+      "check_ignore_stdout": "",
+      "check_ignore_exit": 1,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/jobs.json",
+      "group": "actual_failed_hosted_diagnostic_34232325670",
+      "bytes": 10561,
+      "sha256": "f7c6c283d0a699b8b5fbe6b6d3a2f999dfd35635c9145b6934cce5a723fbe1a7",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "?? remediation-runs/2026-09-08-continuation/actions/34232325670/jobs.json\n",
+      "status_exit": 0,
+      "check_ignore_stdout": "",
+      "check_ignore_exit": 1,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe/probe.json",
+      "group": "actual_failed_hosted_diagnostic_34232325670",
+      "bytes": 18477,
+      "sha256": "31a911983e53ae2095738e84ccd37f5e36c4d85975707b78f6e5511f95abd10c",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "?? remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe/probe.json\n",
+      "status_exit": 0,
+      "check_ignore_stdout": "",
+      "check_ignore_exit": 1,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe-cleanup/parlor-process-probe-34232325670-1-cleanup.json",
+      "group": "actual_failed_hosted_diagnostic_34232325670",
+      "bytes": 913,
+      "sha256": "567e5b06e6f99edd4a857872e0497ff54287a354252164198de188e9b37fdd84",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "?? remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe-cleanup/parlor-process-probe-34232325670-1-cleanup.json\n",
+      "status_exit": 0,
+      "check_ignore_stdout": "",
+      "check_ignore_exit": 1,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe-cleanup.zip",
+      "group": "actual_failed_hosted_diagnostic_34232325670",
+      "bytes": 786,
+      "sha256": "4acbc5e2cdeb23c897412ac7437b75b3d920c525db2fe3511514a9776cbc321c",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "?? remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe-cleanup.zip\n",
+      "status_exit": 0,
+      "check_ignore_stdout": "",
+      "check_ignore_exit": 1,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe.zip",
+      "group": "actual_failed_hosted_diagnostic_34232325670",
+      "bytes": 3347,
+      "sha256": "123a83ba96d901d13ad10c4b06b53c3f394c79e6d458ee53a102d85b63b3bbcb",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "?? remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe.zip\n",
+      "status_exit": 0,
+      "check_ignore_stdout": "",
+      "check_ignore_exit": 1,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/run.json",
+      "group": "actual_failed_hosted_diagnostic_34232325670",
+      "bytes": 12689,
+      "sha256": "bf153f69813dda9e42af61c981e96d2be490455543d70ae3313dfcedbeb7f977",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "?? remediation-runs/2026-09-08-continuation/actions/34232325670/run.json\n",
+      "status_exit": 0,
+      "check_ignore_stdout": "",
+      "check_ignore_exit": 1,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/run.log",
+      "group": "actual_failed_hosted_diagnostic_34232325670",
+      "bytes": 61167,
+      "sha256": "ba93d5f458fe4cd3e32debc827423134f09643520af5c900c8ed7ab860dcbaa5",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "!! remediation-runs/2026-09-08-continuation/actions/34232325670/run.log\n",
+      "status_exit": 0,
+      "check_ignore_stdout": ".gitignore:26:*.log\tremediation-runs/2026-09-08-continuation/actions/34232325670/run.log\n",
+      "check_ignore_exit": 0,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/workflow.json",
+      "group": "actual_failed_hosted_diagnostic_34232325670",
+      "bytes": 533,
+      "sha256": "8345984073768616fd6aff6682c95051f186881c5fa4727b120c80e019841ece",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "?? remediation-runs/2026-09-08-continuation/actions/34232325670/workflow.json\n",
+      "status_exit": 0,
+      "check_ignore_stdout": "",
+      "check_ignore_exit": 1,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-process-probe-dispatch-01/dispatch-result.json",
+      "group": "one_initial_diagnostic_dispatch_request",
+      "bytes": 104,
+      "sha256": "4dc3789b27261770925ab3477e0c4c0c83c1f8440bda40b243d6d37a71429a44",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "?? remediation-runs/2026-09-08-continuation/actions/native-process-probe-dispatch-01/dispatch-result.json\n",
+      "status_exit": 0,
+      "check_ignore_stdout": "",
+      "check_ignore_exit": 1,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-process-probe-dispatch-01/dispatch.log",
+      "group": "one_initial_diagnostic_dispatch_request",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "!! remediation-runs/2026-09-08-continuation/actions/native-process-probe-dispatch-01/dispatch.log\n",
+      "status_exit": 0,
+      "check_ignore_stdout": ".gitignore:26:*.log\tremediation-runs/2026-09-08-continuation/actions/native-process-probe-dispatch-01/dispatch.log\n",
+      "check_ignore_exit": 0,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-process-probe-dispatch-01/prior-runs.json",
+      "group": "one_initial_diagnostic_dispatch_request",
+      "bytes": 937,
+      "sha256": "27ef8bb88fc63c4e3d3d28c084900f7ed23860101a811085d2836f285d65b522",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "?? remediation-runs/2026-09-08-continuation/actions/native-process-probe-dispatch-01/prior-runs.json\n",
+      "status_exit": 0,
+      "check_ignore_stdout": "",
+      "check_ignore_exit": 1,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-process-probe-dispatch-01/request.json",
+      "group": "one_initial_diagnostic_dispatch_request",
+      "bytes": 1410,
+      "sha256": "c111afe28f23b4a395109270f9abc87bd396228f99e75b4dd3bc2ac94b8b7b74",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "?? remediation-runs/2026-09-08-continuation/actions/native-process-probe-dispatch-01/request.json\n",
+      "status_exit": 0,
+      "check_ignore_stdout": "",
+      "check_ignore_exit": 1,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-probe-freeze-01-inventory-generate.log",
+      "group": "hosted_freeze_controls_and_independent_approval",
+      "bytes": 103,
+      "sha256": "80af3006a52093c5b1b81f7bdd1c4cc08dd39c3c39788acd1a8e0e28affd96e0",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "!! remediation-runs/2026-09-08-continuation/reviews/hosted-probe-freeze-01-inventory-generate.log\n",
+      "status_exit": 0,
+      "check_ignore_stdout": ".gitignore:26:*.log\tremediation-runs/2026-09-08-continuation/reviews/hosted-probe-freeze-01-inventory-generate.log\n",
+      "check_ignore_exit": 0,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-probe-freeze-01-push.log",
+      "group": "hosted_freeze_controls_and_independent_approval",
+      "bytes": 111,
+      "sha256": "b92a019340612e714227f9177d5750ef010c31fb91891b68951f80a559787001",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "!! remediation-runs/2026-09-08-continuation/reviews/hosted-probe-freeze-01-push.log\n",
+      "status_exit": 0,
+      "check_ignore_stdout": ".gitignore:26:*.log\tremediation-runs/2026-09-08-continuation/reviews/hosted-probe-freeze-01-push.log\n",
+      "check_ignore_exit": 0,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-probe-freeze-01.json",
+      "group": "hosted_freeze_controls_and_independent_approval",
+      "bytes": 2372,
+      "sha256": "7b4f526bd800d9228d5caa5351cc904de4fb27780ebc82d6233c44de23387bd8",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "?? remediation-runs/2026-09-08-continuation/reviews/hosted-probe-freeze-01.json\n",
+      "status_exit": 0,
+      "check_ignore_stdout": "",
+      "check_ignore_exit": 1,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-dispatch-independent-01.json",
+      "group": "hosted_freeze_controls_and_independent_approval",
+      "bytes": 7452,
+      "sha256": "61d0d98068c6bcaca454909f99a0fbf016b80566bba9024d9a7c4b34498cf9ee",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "?? remediation-runs/2026-09-08-continuation/reviews/native-process-probe-dispatch-independent-01.json\n",
+      "status_exit": 0,
+      "check_ignore_stdout": "",
+      "check_ignore_exit": 1,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-frozen-controls-01.json",
+      "group": "hosted_freeze_controls_and_independent_approval",
+      "bytes": 2058,
+      "sha256": "f01e05a1cb0ed3dae54d6bbf980d806e5114e0600d4be69a4f3b2b45784be3a8",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "?? remediation-runs/2026-09-08-continuation/reviews/native-process-probe-frozen-controls-01.json\n",
+      "status_exit": 0,
+      "check_ignore_stdout": "",
+      "check_ignore_exit": 1,
+      "identity_stable_across_read": true
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/release-validator-02-controller.log",
+      "group": "hosted_freeze_controls_and_independent_approval",
+      "bytes": 2133,
+      "sha256": "167ad3ae0e5092d3ab2c6773c8f237c88159dbf1ed3b5d61ed9e25d14e81251c",
+      "git_mode": "100644",
+      "filesystem_mode": "0o600",
+      "status_stdout": "!! remediation-runs/2026-09-08-continuation/reviews/release-validator-02-controller.log\n",
+      "status_exit": 0,
+      "check_ignore_stdout": ".gitignore:26:*.log\tremediation-runs/2026-09-08-continuation/reviews/release-validator-02-controller.log\n",
+      "check_ignore_exit": 0,
+      "identity_stable_across_read": true
+    }
+  ],
+  "required_ignored_evidence": {
+    "paths": [
+      "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/gradle.log",
+      "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/java-toolchain.log",
+      "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/javac-toolchain.log",
+      "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-02/stop.log",
+      "remediation-runs/2026-09-08-continuation/actions/34232325670/run.log",
+      "remediation-runs/2026-09-08-continuation/actions/native-process-probe-dispatch-01/dispatch.log",
+      "remediation-runs/2026-09-08-continuation/reviews/hosted-probe-freeze-01-inventory-generate.log",
+      "remediation-runs/2026-09-08-continuation/reviews/hosted-probe-freeze-01-push.log",
+      "remediation-runs/2026-09-08-continuation/reviews/release-validator-02-controller.log"
+    ],
+    "ignore_rule": ".gitignore:26:*.log",
+    "reason": "Original validator/JDK/stop/controller stdout, inventory generation and normal-push stdout, initial dispatch empty stdout and downloaded failed Actions raw log. Preserve and deliberately stage exact files; never broadly force-add ignored directories.",
+    "archived_build_directory_reports_in_this_payload": 0,
+    "xml_reports_in_this_payload": 0,
+    "no_invented_reports": "Validator artifact/test receipt arrays are explicitly empty. Actual426-test evidence is the raw unittest output, not an invented XML/application runtime report."
+  },
+  "filesystem_safety": {
+    "all_regular_files": true,
+    "symlinks_or_symlinked_ancestors": [],
+    "special_files": [],
+    "executables": [],
+    "large_threshold_bytes": 1048576,
+    "large_files": [],
+    "all_reads_identity_stable": true,
+    "all_scoped_payload_bytes_stable_on_final_reopen": true,
+    "only_binary_payloads": "Two bounded original GitHub artifact ZIPs; each contains exactly one independently matched regular nonencrypted JSON evidence file."
+  },
+  "sensitive_signature_scan": {
+    "policy_reference": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/frozen25b1-delivery-safety-01.json",
+      "bytes": 415876,
+      "sha256": "8f9b7dfb5db35b8cc3045c11d5b95d9297d81fd41fde8b5e62cc1ec1572db679",
+      "pattern_set_sha256": "cd8804d59686f0125274263748aaf99e143653370e55d97f72968496c26a6c7d"
+    },
+    "method": "Every exact raw payload byte, all decoded JSON strings/keys and both decompressed ZIP members plus decoded member JSON strings inspected with the committed bounded byte-regex signatures. Actual paths and JKS/JCEKS headers checked; matching literal content never retained. No project scanner or test program executed.",
+    "surfaces_by_type": {
+      "raw-file": 28,
+      "decoded-json-strings": 17,
+      "zip-member": 2,
+      "decoded-zip-json-strings": 2
+    },
+    "surface_bytes_by_type_including_duplicate_representations": {
+      "raw-file": 530991,
+      "decoded-json-strings": 301892,
+      "zip-member": 19390,
+      "decoded-zip-json-strings": 12026
+    },
+    "matches_without_content": [],
+    "sensitive_actual_path_matches": [],
+    "binary_keystore_header_matches": [],
+    "structured_sensitive_key_check": {
+      "matches": [
+        {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/attempt.json",
+          "key": ".repository.private",
+          "classification": "PUBLIC_GITHUB_REPOSITORY_VISIBILITY_FALSE_NOT_PLAYER_DATA"
+        },
+        {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/attempt.json",
+          "key": ".head_repository.private",
+          "classification": "PUBLIC_GITHUB_REPOSITORY_VISIBILITY_FALSE_NOT_PLAYER_DATA"
+        },
+        {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/run.json",
+          "key": ".repository.private",
+          "classification": "PUBLIC_GITHUB_REPOSITORY_VISIBILITY_FALSE_NOT_PLAYER_DATA"
+        },
+        {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/run.json",
+          "key": ".head_repository.private",
+          "classification": "PUBLIC_GITHUB_REPOSITORY_VISIBILITY_FALSE_NOT_PLAYER_DATA"
+        }
+      ],
+      "classification": "Only four false public-repository-visibility booleans; no player/session/room/snapshot/credential/signing payload field."
+    },
+    "limitations": "No matching signature is not universal proof that arbitrary encoded, unknown-format or low-entropy secrets are absent. No global caches, credentials or unrelated user work were inspected."
+  },
+  "privacy_and_payload_scope": {
+    "observed_contents": "Frozen file/hash manifests, Linux synthetic control-test descriptors and controlled fixtures, read-only GitHub run/job/artifact metadata, workflow stdout and command metadata, exact probe/custody JSON, public repository publisher/commit metadata and hosted runner filesystem/ownership identifiers.",
+    "application_player_state_payload_observed": false,
+    "live_credential_or_private_signing_payload_observed": false,
+    "global_cache_payload_included": false,
+    "global_cache_reference": "Probe explicitly retains public Gradle wrapper cache; a path/reference is not copied cache content or authorization to delete it.",
+    "unrelated_file_payload_included": false,
+    "source_path_strings_are_not_payload_files": true
+  },
+  "archive_integrity": {
+    "archives": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe-cleanup.zip",
+        "bytes": 786,
+        "sha256": "4acbc5e2cdeb23c897412ac7437b75b3d920c525db2fe3511514a9776cbc321c",
+        "artifact_id": 10058342975,
+        "artifact_name": "native-process-probe-cleanup-34232325670-1",
+        "api_digest_matches": true,
+        "api_size_matches": true,
+        "download_receipt_matches": true,
+        "members": [
+          {
+            "name": "parlor-process-probe-34232325670-1-cleanup.json",
+            "bytes": 913,
+            "compressed_bytes": 578,
+            "sha256": "567e5b06e6f99edd4a857872e0497ff54287a354252164198de188e9b37fdd84",
+            "mode": "0o100600",
+            "encrypted": false,
+            "regular_file": true,
+            "path_traversal_or_symlink": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe-cleanup/parlor-process-probe-34232325670-1-cleanup.json",
+            "exact_extracted_bytes_match": true
+          }
+        ]
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe.zip",
+        "bytes": 3347,
+        "sha256": "123a83ba96d901d13ad10c4b06b53c3f394c79e6d458ee53a102d85b63b3bbcb",
+        "artifact_id": 10058341166,
+        "artifact_name": "native-process-probe-34232325670-1",
+        "api_digest_matches": true,
+        "api_size_matches": true,
+        "download_receipt_matches": true,
+        "members": [
+          {
+            "name": "probe.json",
+            "bytes": 18477,
+            "compressed_bytes": 3213,
+            "sha256": "31a911983e53ae2095738e84ccd37f5e36c4d85975707b78f6e5511f95abd10c",
+            "mode": "0o100600",
+            "encrypted": false,
+            "regular_file": true,
+            "path_traversal_or_symlink": false,
+            "crc_verified_by_read": true,
+            "extracted_path": "remediation-runs/2026-09-08-continuation/actions/34232325670/native-process-probe/probe.json",
+            "exact_extracted_bytes_match": true
+          }
+        ]
+      }
+    ],
+    "download_command_records_rehashed": 8,
+    "all_download_bytes_and_hashes_match": true,
+    "no_archive_extraction_or_original_file_mutation_performed": true
+  },
+  "cross_record_bindings": {
+    "request_matches_independent_allowed_inputs": true,
+    "request_approval_sha256_rehashed": true,
+    "freeze_validator_control_and_push_log_hashes_rehashed": true,
+    "probe_control_manifest_exactly_matches_fresh_control_artifact": true,
+    "run_attempt_probe_and_cleanup_same_frozen_source": true,
+    "cleanup_binds_actual_uploaded_probe_archive_id_and_sha256": true,
+    "current_unfrozen_source_files_not_rehashed_or_approved_by_this_report": true
+  },
+  "retained_execution_status": {
+    "linux_validator_02": {
+      "status": "PASS",
+      "actual_unittests": 426,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "test_count_source": "Raw Ran426 / OK unittest summary; preserved synthetic failure fixtures are negative-test output, not erased.",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "source_manifest_entries": 825,
+      "source_manifest_sha256": "9aafa1d908884f2c083d75c2959be625806ea7984da4c72e07b0f2e60f45ff4c",
+      "source_and_runner_before_after_identical": true,
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "scope": "Linux release-system synthetic controls only; not fresh native/app runtime or combined qualification."
+    },
+    "actions_34232325670": {
+      "run_id": 34232325670,
+      "attempt": 1,
+      "head_sha": "1efed50cbc7856c11867e4cb088ba3b68716c8fc",
+      "run_and_attempt_conclusion": "failure",
+      "jobs": {
+        "failed": 1,
+        "skipped": 4
+      },
+      "probe_status": "OBSERVATIONS_WITH_FAILURES_NOT_RUNTIME_EVIDENCE",
+      "probe_observation_stages": [],
+      "primary_timeout_command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "list",
+        "runtimes",
+        "--json"
+      ],
+      "primary_timeout_seconds": 20,
+      "timeout_exit_code": -15,
+      "direct_child_reaped": true,
+      "diagnostic_step_exit_code": 2,
+      "cleanup_safe": true,
+      "cleanup_stage_labels": [
+        "stop-immediate",
+        "owned-simulator-retirement",
+        "stop-final",
+        "exact-owned-resource-cleanup",
+        "source-control-reconciliation"
+      ],
+      "custody_status": "COMPLETE",
+      "simulator_retirement": "NOT_CREATED: no create intent written",
+      "actual_parlor_libproc_runtime_established": false,
+      "ps_baseline_or_bounded_process_observation_established": false,
+      "application_build_xctest_or_protection_established": false,
+      "preserve_failure": "Download integrity, two stop0 receipts and successful custody cleanup DO NOT make the failed diagnostic or application runtime PASS."
+    }
+  },
+  "exclusions_and_preservation": {
+    "exact_excluded_lock": "remediation-runs/2026-09-07-local-readiness/build-lane.lock",
+    "active_source_control_corrections": "All current/future tracked or untracked source/control changes owned by ci_workflow and reviewers are excluded until frozen and independently reviewed.",
+    "future_evidence": "Any later validator/test/build/Actions run, later review report or updated ledger requires a separate final safety manifest/addendum; no wildcard future arrivals included.",
+    "historical_evidence": "Previously committed evidence and original failed receipts are unchanged, outside this exact new-payload audit and not reclassified.",
+    "unrelated_work": "No source/configuration/signing files, global caches, unrelated stashes/work, owned native/Linux cleanup targets or live build directories staged/edited/deleted."
+  },
+  "work_and_cleanup": {
+    "writes": [
+      "this new safety report only"
+    ],
+    "staging_commits_pushes": false,
+    "builds_tests_native_execution_actions_dispatch": false,
+    "network_queries": false,
+    "inventory_generator": false,
+    "archive_extraction": false,
+    "generated_workers_or_build_outputs": false,
+    "gradle_stop_or_cleanup": "Not applicable: read-only Git/data/ZIP inspection and explicitly assigned report write only; no build lane or other agent outputs touched."
+  },
+  "readiness": "NOT READY. This is narrowly scoped delivery safety, not application recovery/protection, actual Parlor Debug libproc provenance, new-source candidate-consumer verification, final combined qualification, physical-device/Store operation or owner/legal approval. Failed diagnostics and prior failures remain preserved."
+}

@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/ci_review",
+  "recorded_at": "2026-09-08T13:49:21.730999+00:00",
+  "status": "FAILED_DIAGNOSTIC_BEFORE_PROCESS_OBSERVATIONS_SCOPED_CLEANUP_VERIFIED",
+  "scope": "Independent read/hash/ZIP/API/raw-log/source reconciliation only. No author summaries substitute for underlying evidence; no tests, native commands, downloads, dispatch or retry by reviewer.",
+  "run": {
+    "id": 34232325670,
+    "attempt": 1,
+    "repository": "Apdelrahman1911/parlor",
+    "workflow": ".github/workflows/production-verification.yml",
+    "workflow_id": 335554528,
+    "branch": "fix/local-readiness-2026-09-07",
+    "head_sha": "1efed50cbc7856c11867e4cb088ba3b68716c8fc",
+    "tree": "bcabd2fd29eaea276bee31ec4ff6b74b63a79366",
+    "event": "workflow_dispatch",
+    "conclusion": "failure",
+    "ios_job_id": 102081312949,
+    "ios_job_seconds": 56,
+    "other_jobs_skipped": 4
+  },
+  "bindings": {
+    "source_control_matches": true,
+    "control_sha256": "0b60d4219b279c1022232d18a261a21ac7c577357cafbac2d695e58fbcf92a87",
+    "control_files": 13,
+    "verification": "All13 artifact control hashes independently match frozen Git blobs, approved manifest and canonical closure. Run/attempt/API/artifact/context/input/log identities agree. Initial approval is consumed; no further attempt is authorized.",
+    "approval_reference": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-dispatch-independent-01.json",
+    "approval_sha256": "61d0d98068c6bcaca454909f99a0fbf016b80566bba9024d9a7c4b34498cf9ee"
+  },
+  "artifact_integrity": [
+    {
+      "id": 10058342975,
+      "name": "native-process-probe-cleanup-34232325670-1",
+      "zip": "native-process-probe-cleanup.zip",
+      "bytes": 786,
+      "sha256": "4acbc5e2cdeb23c897412ac7437b75b3d920c525db2fe3511514a9776cbc321c",
+      "member": "native-process-probe-cleanup/parlor-process-probe-34232325670-1-cleanup.json",
+      "member_sha256": "567e5b06e6f99edd4a857872e0497ff54287a354252164198de188e9b37fdd84"
+    },
+    {
+      "id": 10058341166,
+      "name": "native-process-probe-34232325670-1",
+      "zip": "native-process-probe.zip",
+      "bytes": 3347,
+      "sha256": "123a83ba96d901d13ad10c4b06b53c3f394c79e6d458ee53a102d85b63b3bbcb",
+      "member": "native-process-probe/probe.json",
+      "member_sha256": "31a911983e53ae2095738e84ccd37f5e36c4d85975707b78f6e5511f95abd10c"
+    }
+  ],
+  "evidence_directory": "remediation-runs/2026-09-08-continuation/actions/34232325670",
+  "evidence_sha256": {
+    "artifacts.json": "985b8b409d79c708a9e3ef42d8857a769a333b944b456209d2ce6f4cc63e956d",
+    "attempt.json": "5033b0d9e301b7700a2ddb3e3522403b5166ef10b60d44d306a9998d19f0091a",
+    "download-receipt.json": "7ec4795e201e40c396988b5c635946d35994ad1831d6b4d23e389ed85f52180c",
+    "jobs.json": "f7c6c283d0a699b8b5fbe6b6d3a2f999dfd35635c9145b6934cce5a723fbe1a7",
+    "native-process-probe-cleanup.zip": "4acbc5e2cdeb23c897412ac7437b75b3d920c525db2fe3511514a9776cbc321c",
+    "native-process-probe-cleanup/parlor-process-probe-34232325670-1-cleanup.json": "567e5b06e6f99edd4a857872e0497ff54287a354252164198de188e9b37fdd84",
+    "native-process-probe.zip": "123a83ba96d901d13ad10c4b06b53c3f394c79e6d458ee53a102d85b63b3bbcb",
+    "native-process-probe/probe.json": "31a911983e53ae2095738e84ccd37f5e36c4d85975707b78f6e5511f95abd10c",
+    "run.json": "bf153f69813dda9e42af61c981e96d2be490455543d70ae3313dfcedbeb7f977",
+    "run.log": "ba93d5f458fe4cd3e32debc827423134f09643520af5c900c8ed7ab860dcbaa5",
+    "workflow.json": "8345984073768616fd6aff6682c95051f186881c5fa4727b120c80e019841ece"
+  },
+  "execution": {
+    "failed_probe_step_exit_code": 2,
+    "actual_command_count": 23,
+    "exited_commands": 22,
+    "timed_out_commands": 1,
+    "failed_command": {
+      "label": "binding-or-platform",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "list",
+        "runtimes",
+        "--json"
+      ],
+      "status": "TIMEOUT",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-08T13:30:25.489644+00:00",
+      "owned_pid": 3395,
+      "ownership": "direct-unreaped-Popen",
+      "timeout_observed_at": "2026-09-08T13:30:45.494598+00:00",
+      "observation_elapsed_seconds": 20.003,
+      "exit_code": -15,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 20.017,
+      "finished_at": "2026-09-08T13:30:45.509360+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    "observation_stages": [],
+    "not_executed": [
+      "Installed ps identity/signature/entitlements",
+      "Original ps15s query or metadata ps comparison",
+      "libproc metadata/ABI observations",
+      "sample stack collection",
+      "Owned simulator creation/boot",
+      "Nonbuilding showBuildSettings overlap",
+      "Any Parlor app/XCTest/A/B/libproc provenance/protection/functional-retained-host execution"
+    ],
+    "partial_qualification": "xcodebuild -version and SDK/developer-path queries returned exit0 and control flow reached runtime enumeration. Full qualified_platform did not return: no toolchain/runtime/device record was persisted. Do not assert runtime availability or successful platform qualification.",
+    "advertised_host": "Actions job log: macOS15.7.9 build24G830; image macos-15-arm64 version20260829.0321.1; DEVELOPER_DIR /Applications/Xcode_26.3.app/Contents/Developer. Probe sw_vers and full qualified-toolchain observation were not reached.",
+    "workflow_scoping": "Only ios diagnostic branch attempted; other4 jobs and full iOS/native-evidence/A/B steps skipped as intended. Both uploads and custody-cleanup step succeeded despite diagnostic failure."
+  },
+  "cleanup": {
+    "status": "VERIFIED_SCOPED_RESOURCE_AND_EVIDENCE_RETIREMENT_NOT_DIAGNOSTIC_PASS",
+    "stages_complete": 5,
+    "preservation_errors": 0,
+    "signals": [],
+    "timed_out_inventory_child": "Exact unreaped Popen PID3395 terminated and reaped, exit-15; no secondary child/pipe/selector cleanup error.",
+    "gradle_stops": [
+      {
+        "label": "stop-immediate",
+        "exit_code": 0,
+        "elapsed_seconds": 6.549,
+        "isolated_registry": true
+      },
+      {
+        "label": "stop-final",
+        "exit_code": 0,
+        "elapsed_seconds": 0.62,
+        "isolated_registry": true
+      }
+    ],
+    "simulator": "NOT_CREATED; no create intent or simulator fixture existed to delete.",
+    "resource_holders": "lsof EXITED/exit1, stdout0/stderr0, direct child reaped. Exact custody-gated resources root removed; no global cache deletion.",
+    "source_control_reconciliation": "Complete and unchanged at finalization.",
+    "post_upload_custody": "COMPLETE; exact successful main artifact ID/digest matched; owned staging removed only after uploaded bundle/custody validation; original failed probe status retained.",
+    "limit": "Remote cleanup evidence from exact bound runner/receipts, not reviewer filesystem observation or a system-wide no-worker assertion. Public wrapper distribution cache was retained by policy. No app/DerivedData build existed."
+  },
+  "findings": [
+    "The observed failure is runtime-inventory enumeration exceeding the probe20s deadline, before any process observation. It neither reproduces nor resolves the prior native ps15 timeout.",
+    "Output was empty and the child was reaped after TERM. There is no stack, native error, denied-operation evidence or completed runtime inventory identifying an OS-level cause.",
+    "Source-visible budget mismatch merits bounded investigation: native_continuation.command defaults120s for qualified_platform inventory; the probe injected execute caps all binding/platform commands at20s. This identifies the enforced deadline, not proof that increasing it succeeds.",
+    "Earlier preflight34214410629 on the same advertised image completed in~30s total with the120s helper default. Per-command timing is absent; do not infer its inventory exceeded20s or reuse its old source/control binding."
+  ],
+  "further_native_path": "A narrow source/control review of inventory qualification budgeting and failure-preservation is justified before another non-app diagnostic. Preserve exact toolchain/runtime/device validation, original ps15s comparison, total/cleanup admission budgets, ownership, environment/privacy and upload custody. Any correction requires different-author review, focused actual controls, source+inventory freeze and fresh dispatch binding; no unchanged retry or A/B approval follows from this report.",
+  "new_dispatch_or_retry_approved": false,
+  "readiness": "NOT READY. No new ps/libproc/application/protection/retained-host evidence; remaining A/B/C/D qualification stays incomplete. Store/device/owner-legal exclusions unchanged.",
+  "preservation": "All original API observations, logs, ZIPs, extracted receipts and failed status were read/hash checked without modification. This is the sole new reviewer file.",
+  "supporting_diagnosis_independent_crosscheck": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-process-probe-platform-diagnosis-01.json",
+    "sha256": "7437cee01eb25eb854890fad9a19052a25b73d632900109a693fe0aa007c6998",
+    "result": "MATCHES_DIRECTLY_REVIEWED_RAW_EVIDENCE_NO_FINDINGS",
+    "checked": "Entire diagnosis read; exact failure, cleanup stages, raw evidence references, historical preflight identity and120s helper defaults at25b1/1efed50 agree. No OS root-cause, missing-runtime, new qualification or automatic-retry claim.",
+    "boundary": "Its closed inventory-budget correction proposal is a justified source/control investigation, not approval of unreviewed replacement bytes, executed controls, a new dispatch or A/B. Original failed artifact/status remains unchanged."
+  }
+}
