@@ -6,7 +6,7 @@ import hashlib
 import importlib.util
 import json
 import os
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 import re
 import stat
 import sys
@@ -18,9 +18,10 @@ CAMPAIGN = ROOT / 'remediation-runs/2026-09-07-local-readiness'
 COMPANION = CAMPAIGN / 'l08-storage-functional-companion-02'
 DRAFT = CAMPAIGN / 'native/l08-app-foundation-draft-01'
 DRIVER = COMPANION / 'run_ios_readiness.py'
-DRIVER_SHA256 = '1af5e430a1589491406e5347f4d50941cc590b421a0c51694b505e82968b62e0'
-DRAFT_FREEZE = CAMPAIGN / 'reviews/l08-native14-followup-01/draft-freeze.json'
-DRAFT_FREEZE_SHA256 = '1a803df85b6acab0ad4ca38fa9d43a5be0b47d95bd42bd77970f57b5c26c401c'
+DRIVER_SHA256 = 'fdae88cf835f4b0f5f5271b882641b7284db7ea5e5bdc135870754db7f61fb21'
+DRAFT_FREEZE = CAMPAIGN / 'reviews/hosted-native-portability-01/draft-freeze-relative.json'
+DRAFT_FREEZE_SHA256 = '64c02554e7ddec05b85f533c05733e0f8bbedcc843843245d82cfd1ffd98564a'
+TOOLCHAIN_HELPER = ROOT / 'scripts/verification/ios-readiness/toolchain_profiles.py'
 REFERENCE_PINS = {
     'run_control.py': '58e8daf875eaf8061ed017e10cc8c8065eb49292866b6741227814282a1b8e9f',
     'FoundationProtectionControl.m': 'a6b025d7b77c3b1b1de57b93869d0beff6b4cc9e365eb5672ffd2be9d52013f2',
@@ -37,7 +38,7 @@ TRANSFORMS = (
     if BINDING is None:
         raise RuntimeError('An explicit campaign source binding is required')
     return sorted([path for path in HERE.iterdir() if path.is_file() and
-                   (path.suffix in {'.py', '.in', '.md'} or path.name == 'inherited-controls.json')]) + [BINDING]
+                   (path.suffix in {'.py', '.in', '.md'} or path.name == 'inherited-controls.json')]) + [TOOLCHAIN_HELPER, BINDING]
 ''', '''def control_files():
     return foundation.control_files(BINDING)
 '''),
@@ -163,24 +164,37 @@ def render_source(original):
     return original
 
 
+def frozen_draft_files(freeze):
+    require(isinstance(freeze, dict) and freeze.get('schema_version') == 2 and
+            freeze.get('directory') == str(DRAFT.relative_to(ROOT)), 'draft-freeze-root')
+    records = freeze.get('source_files')
+    require(isinstance(records, list) and len(records) == 9, 'draft-freeze-inventory')
+    draft_files = []
+    for row in records:
+        require(isinstance(row, dict) and isinstance(row.get('path'), str) and
+                bool(row['path']) and PurePosixPath(row['path']).parts == (row['path'],) and
+                '\\' not in row['path'] and row['path'] not in ('.', '..') and
+                isinstance(row.get('sha256'), str) and re.fullmatch(r'[a-f0-9]{64}', row['sha256']),
+                'draft-freeze-relative-path')
+        path = DRAFT / row['path']
+        require(path.parent == DRAFT and digest(raw_file(path, 131072)) == row['sha256'], 'frozen-draft-drift')
+        draft_files.append(path)
+    require(len(set(draft_files)) == 9, 'draft-freeze-inventory')
+    return draft_files
+
+
 def control_files(binding):
     require(binding is not None, 'explicit-source-binding-required')
     require(digest(raw_file(DRIVER, 131072)) == DRIVER_SHA256, 'companion-driver-drift')
     freeze_bytes = raw_file(DRAFT_FREEZE, 65536)
     require(digest(freeze_bytes) == DRAFT_FREEZE_SHA256, 'draft-freeze-drift')
-    records = json.loads(freeze_bytes)['source_files']
-    require(len(records) == 9 and len({row['path'] for row in records}) == 9, 'draft-freeze-inventory')
-    draft_files = []
-    for row in records:
-        path = Path(row['path'])
-        require(path.parent == DRAFT and digest(raw_file(path, 131072)) == row['sha256'], 'frozen-draft-drift')
-        draft_files.append(path)
+    draft_files = frozen_draft_files(json.loads(freeze_bytes))
     references = [CAMPAIGN / 'reviews/l08-native-foundation-control-03' / name for name in REFERENCE_PINS]
     for path in references:
         require(digest(raw_file(path, 131072)) == REFERENCE_PINS[path.name], 'reference-drift')
     inherited = [p for p in COMPANION.iterdir() if p.is_file() and
                  (p.suffix in {'.py', '.in', '.md'} or p.name == 'inherited-controls.json')]
-    files = inherited + draft_files + references + [DRAFT_FREEZE, Path(binding)] + [HERE / name for name in OWN_FILES]
+    files = inherited + draft_files + references + [TOOLCHAIN_HELPER, DRAFT_FREEZE, Path(binding)] + [HERE / name for name in OWN_FILES]
     require(len(set(files)) == len(files), 'duplicate-control-input')
     return sorted(files)
 
@@ -321,7 +335,7 @@ def load_frozen_module(name, path):
 
 def main():
     manifest_only = len(sys.argv) == 3 and sys.argv[1] == '--control-manifest'
-    require(manifest_only or (len(sys.argv) in (4, 5) and re.fullmatch(r'ios-readiness-[0-9]{2}', sys.argv[1])), 'usage')
+    require(manifest_only or (len(sys.argv) in (4, 5, 6) and re.fullmatch(r'ios-readiness-[0-9]{2}', sys.argv[1])), 'usage')
     binding = checked_binding(sys.argv[2])
     manifest = control_manifest(binding)
     approved = digest(json.dumps(manifest, separators=(',', ':')).encode())

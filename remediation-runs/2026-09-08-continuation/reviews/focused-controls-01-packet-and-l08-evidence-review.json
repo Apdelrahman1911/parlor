@@ -1,0 +1,410 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_FOCUSED_CONTROLS01_PACKET_AND_L08_POSTRUN_RECONCILIATION",
+  "recorded_at": "2026-09-08T09:54:15.834339+00:00",
+  "reviewer": "/root/fixture_review",
+  "execution_coordinator": "/root",
+  "classification": "FAILED_OUTER_CYCLE_PRESERVED; PACKET16_CONTROL_EXECUTION_PASS; L08_SCANNER_CORRECTION_REQUIRES_FRESH_RUN",
+  "evidence": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/receipt.json",
+      "bytes": 305416,
+      "sha256": "32d1d5a0459b64d493b78f7c61b423c6967391eabe46026895cfe13bf642ae77"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/focused-command-results.json",
+      "bytes": 2944,
+      "sha256": "5ec10cab6f870932eee6ad72752ab432f919758bd932c57066568e19272974ec"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/control-inputs-before.json",
+      "bytes": 39641,
+      "sha256": "58e37406363c01b52c9ebe080d12030c90e90886001653ed452798986f7ad37f"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/control-inputs-after.json",
+      "bytes": 39641,
+      "sha256": "58e37406363c01b52c9ebe080d12030c90e90886001653ed452798986f7ad37f"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/java-toolchain.log",
+      "bytes": 2026,
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/javac-toolchain.log",
+      "bytes": 14,
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755"
+    }
+  ],
+  "actual_execution": {
+    "platform": "Linux; no Apple or application execution by this packet",
+    "source_commit": "ec0de52a2c7ff9077482a291dc4fd2591fdea01f",
+    "source_tree": "48b099f3cd002a3253f21d2b06a4ece5787e62cb",
+    "branch": "fix/local-readiness-2026-09-07",
+    "dirty_source_diff_sha256": "7556edc910e117709b63ffb24f9effe82625af9d525cab143789e1eb58d3948a",
+    "started_at": "2026-09-08T09:44:52.869406+00:00",
+    "finished_at": "2026-09-08T09:45:11.376493+00:00",
+    "outer_status": "FAIL",
+    "exit_code": 1,
+    "commands": [
+      {
+        "name": "packet",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "remediation-runs/2026-09-08-continuation/controls/test_continuation_packet.py"
+        ],
+        "log": "packet.log",
+        "status": "PASS",
+        "exit_code": 0,
+        "test_count": 16,
+        "reported_seconds": "0.082",
+        "raw_log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/packet.log",
+          "bytes": 2749,
+          "sha256": "b9fe8203cf2b48f2321ebfa38fcba89316323defc53a5f5db1c8561557ef4e0e"
+        },
+        "unittest_summary": [
+          "OK"
+        ],
+        "skips_in_raw_log": 0
+      },
+      {
+        "name": "lane",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "remediation-runs/2026-09-08-continuation/controls/test_gradle_lane_portability.py"
+        ],
+        "log": "lane.log",
+        "status": "PASS",
+        "exit_code": 0,
+        "test_count": 21,
+        "reported_seconds": "0.060",
+        "raw_log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/lane.log",
+          "bytes": 3206,
+          "sha256": "3b75709456473da1aac4d13b42c5e3ee9988eff8e353c61ca4c968a9184e37ef"
+        },
+        "unittest_summary": [
+          "OK"
+        ],
+        "skips_in_raw_log": 0
+      },
+      {
+        "name": "single-tap",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py"
+        ],
+        "log": "single-tap.log",
+        "status": "FAIL",
+        "exit_code": 1,
+        "test_count": 13,
+        "reported_seconds": "1.061",
+        "raw_log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/single-tap.log",
+          "bytes": 3406,
+          "sha256": "752e376073d021f26a5c47e992c3e57cb734d2f45b51b5699924b3742d3dd53a"
+        },
+        "unittest_summary": [
+          "FAILED (errors=1)"
+        ],
+        "skips_in_raw_log": 0
+      },
+      {
+        "name": "schema-bootstrap",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "remediation-runs/2026-09-08-continuation/controls/test_schema_base_bootstrap.py"
+        ],
+        "log": "schema-bootstrap.log",
+        "status": "PASS",
+        "exit_code": 0,
+        "test_count": 26,
+        "reported_seconds": "0.285",
+        "raw_log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/schema-bootstrap.log",
+          "bytes": 4403,
+          "sha256": "88d5b62da6bb3675b2b94003a86cb5747d06196a6f2fafc38e6699a299f892f1"
+        },
+        "unittest_summary": [
+          "OK"
+        ],
+        "skips_in_raw_log": 0
+      },
+      {
+        "name": "toolchain",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+          "-v"
+        ],
+        "log": "toolchain.log",
+        "status": "PASS",
+        "exit_code": 0,
+        "test_count": 12,
+        "reported_seconds": "0.100",
+        "raw_log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/toolchain.log",
+          "bytes": 2139,
+          "sha256": "22490b9d9395f70797a3dc1e01647c1c2fbdabdf157a106c26c188cf1b8eb3d4"
+        },
+        "unittest_summary": [
+          "OK"
+        ],
+        "skips_in_raw_log": 0
+      },
+      {
+        "name": "functional-copy",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02",
+          "-p",
+          "test_l08_functional_copy.py",
+          "-v"
+        ],
+        "log": "functional-copy.log",
+        "status": "FAIL",
+        "exit_code": 1,
+        "test_count": 12,
+        "reported_seconds": "0.097",
+        "raw_log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/functional-copy.log",
+          "bytes": 3744,
+          "sha256": "c5149707a2a4beff5bad62431aa519a8fb54a04da7fe936aa3edd09775d36bd2"
+        },
+        "unittest_summary": [
+          "FAILED (failures=1)"
+        ],
+        "skips_in_raw_log": 0
+      },
+      {
+        "name": "composition",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py"
+        ],
+        "log": "composition.log",
+        "status": "PASS",
+        "exit_code": 0,
+        "test_count": 55,
+        "reported_seconds": "5.002",
+        "raw_log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/composition.log",
+          "bytes": 19632,
+          "sha256": "d32f6967e03f1157bcd5b1a0497bd057cf5d95cdbae0c2152aa9662ee9c3e8e4"
+        },
+        "unittest_summary": [
+          "OK"
+        ],
+        "skips_in_raw_log": 0
+      },
+      {
+        "name": "normal",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py"
+        ],
+        "log": "normal.log",
+        "status": "PASS",
+        "exit_code": 0,
+        "test_count": 187,
+        "reported_seconds": "0.775",
+        "raw_log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/normal.log",
+          "bytes": 108389,
+          "sha256": "3b1d45a4e4dcdda380f0ebe7ce1b16d82bdea96f3e74547f3da618b800f8695f"
+        },
+        "unittest_summary": [
+          "OK"
+        ],
+        "skips_in_raw_log": 0
+      },
+      {
+        "name": "schema-closure",
+        "command": [
+          "/usr/bin/python3",
+          "-B",
+          "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py",
+          "--controls"
+        ],
+        "log": "schema-closure.log",
+        "status": "PASS",
+        "exit_code": 0,
+        "test_count": 16,
+        "reported_seconds": "1.147",
+        "raw_log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/schema-closure.log",
+          "bytes": 3240,
+          "sha256": "d17537dd20adb47a54ecf8d2f9e603de034650f3c99a693a9ca10a2c7b2d222a"
+        },
+        "unittest_summary": [
+          "OK"
+        ],
+        "skips_in_raw_log": 0
+      }
+    ],
+    "total_tests_reported": 358,
+    "failed_child_commands": [
+      "single-tap",
+      "functional-copy"
+    ],
+    "skips": 0
+  },
+  "input_bindings": {
+    "explicit_control_manifest_rows": 204,
+    "before_after_bytes_identical": true,
+    "explicit_inputs_unchanged": true,
+    "outer_source_manifest_sha256": "b3614749ea6ed13c68dd78d676587ee476a6ffb83e21dd752f42a178bd6bcfea",
+    "outer_source_changed": false,
+    "outer_runner_manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912",
+    "outer_runner_changed": false,
+    "postflight_manifest_error": null,
+    "packet_sources_still_exact": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/controls/run_continuation_controls.py",
+        "sha256": "1896d5a309e8802b691bfc9a37db2c0ac92dcfb6173d4cee564e5dcfcc234627"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/controls/test_continuation_packet.py",
+        "sha256": "3229ee84a80ec116a172b725b3005b24cb6c252ef1b11ca907109d4301af1d47"
+      }
+    ],
+    "limits": "This is a dirty-checkout focused control cycle, not committed frozen-source combined qualification."
+  },
+  "packet16_conclusion": {
+    "status": "PASS at independently approved exact control bytes",
+    "actual_unique_method_names": [
+      "test_actual_main_preserves_child_failure_when_postflight_manifest_also_fails",
+      "test_actual_main_writes_both_manifests_and_all_command_results",
+      "test_destination_and_cli_reject_redirect_or_argument_bypass",
+      "test_destination_requires_existing_uid_and_exact_running_receipt",
+      "test_fixed_packet_has_only_declared_control_entries",
+      "test_launch_failure_keeps_attempt_and_raw_partial_log",
+      "test_manifest_records_sorted_bytes_and_rejects_redirects_or_bad_types",
+      "test_nonzero_child_alone_cannot_pass_outer_packet",
+      "test_preflight_failure_retains_closed_results_without_launching_children",
+      "test_shutdown_timeout_stays_error_and_does_not_lose_attempt",
+      "test_signal_during_launch_still_retires_returned_child",
+      "test_signal_handler_defers_only_launch_shutdown_and_finalization",
+      "test_source_drift_alone_cannot_pass_outer_packet",
+      "test_stubborn_composition_child_records_unproven_external_cleanup",
+      "test_success_and_failed_exit_keep_distinct_attempt_rows_and_logs",
+      "test_timeout_attempt_gets_graceful_termination_before_escalation"
+    ],
+    "declared_and_observed_names_identical": true,
+    "raw_summary": "Ran16 tests;OK;no failures/errors/skips",
+    "source_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/control-packet-tests-independent-01.json",
+      "bytes": 3237,
+      "sha256": "bb47a464d292f23a67a69ff1ca4c1e242701c06ab30f865d388ab83c5c648b90"
+    },
+    "driver_source_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-control-driver-independent-01.json",
+      "bytes": 10570,
+      "sha256": "8a32871a42d6d88848f057d4a0e833307d78bd1659fc501b4e2c2dd02cb4261e"
+    },
+    "scope": "Actual Python execution of synthetic Popen/signal/source-manifest/finalizer controls. Mocked signal/child outcomes are not actual OS signal, native ABI, simulator or application-runtime proof."
+  },
+  "l08_failure_conclusion": {
+    "actual": "13 tests;1ERROR;positive actual-Swift contract rejected with No hidden activation retry loop. The whole child and outer packet correctly failed.",
+    "cause": "Scanner counted the XCTWaiter.wait(for:) argument label as a second for-loop. Swift remained the independently approved5d81dfb0...bytes; no new Swift/app runtime observation occurred.",
+    "mutation_caveat": "Individual negative testok lines are not accepted as mutation-specific proof because the unmodified baseline also failed. A new baseline-first requirement prevents this masking.",
+    "preserved_failed_control": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/l08-single-tap-scanner-correction-01/test_single_tap_fixture_review.before.py",
+      "bytes": 23449,
+      "sha256": "e0300c3d339798b4224d81f0e21b4043b78eca8145c98523abdc7110c76b68aa"
+    },
+    "correction_author_notes": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/l08-single-tap-scanner-correction-01/author-notes.json",
+      "bytes": 3264,
+      "sha256": "74a3996549c5f5c237186146b07cfe36b2cd98e214970f5aa6fe4f42691fa377"
+    },
+    "independent_correction_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/l08-single-tap-scanner-correction-independent-01.json",
+      "bytes": 5100,
+      "sha256": "f63242eb367d6b227c2bc2b38391a3963b50672821e20c1617cce8c0c9b65083"
+    },
+    "current_correction_status": "14-method scanner source independently reviewed but NOT_YET_EXECUTED at this review. No retroactive change to failed13-test evidence or prior source review."
+  },
+  "other_failure": "functional-copy12 failed one README.md original-byte pin. Raw log retained; correction/review assigned to native portability agents, not approved by this report.",
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-08T09:45:12.018204+00:00",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "artifact_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "removed_outputs": [],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "cleanup_completed_at": "2026-09-08T09:45:12.102762+00:00",
+    "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership."
+  },
+  "cleanup_observation": {
+    "stop_log": "No Gradle daemons are running.",
+    "cycle_scratch_absent": true,
+    "composition_external_allocations": [
+      {
+        "path": "/tmp/parlor-app-foundation-controls-1c9si35e",
+        "device": 27,
+        "inode": 122458,
+        "uid": 0,
+        "absent_at_review": true
+      },
+      {
+        "path": "/tmp/parlor-app-foundation-controls-o53lu1az",
+        "device": 27,
+        "inode": 123075,
+        "uid": 0,
+        "absent_at_review": true
+      },
+      {
+        "path": "/tmp/parlor-app-foundation-controls-5m2r7tq4",
+        "device": 27,
+        "inode": 123078,
+        "uid": 0,
+        "absent_at_review": true
+      },
+      {
+        "path": "/tmp/parlor-app-foundation-controls-jd6mxxil",
+        "device": 27,
+        "inode": 123081,
+        "uid": 0,
+        "absent_at_review": true
+      }
+    ],
+    "pending_signals": [],
+    "packet_deferred_signals": [],
+    "outer_deferred_signals": [],
+    "reviewer_cleanup": "Only new retained review documentation written. No reviewer test/build/native worker or generated output was allocated; required evidence and unrelated files were not modified."
+  },
+  "readiness_limits": [
+    "No completed functional13boot or retained-host scenario proof.",
+    "Historical strictComplete failures remain failures, not relaxed by the scanner correction or synthetic controls.",
+    "Normal187 pure controls passed here; actual Parlor libproc runtime still unexecuted by this packet.",
+    "No physical-device, signing/Store operation, owner/legal/content or identity collision clearance."
+  ]
+}

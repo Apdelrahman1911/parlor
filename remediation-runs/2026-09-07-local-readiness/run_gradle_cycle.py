@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import signal
 import subprocess
@@ -23,6 +24,68 @@ DEFERRED_SIGNALS = []
 OWNED_PROCESSES = {}
 OWNED_GROUPS = set()
 CYCLE_MARKER = ''
+
+def jdk21_home(env):
+    """Select an explicit JDK without guessing a Linux PATH installation."""
+    if sys.platform == 'darwin':
+        candidate = subprocess.check_output(['/usr/libexec/java_home','-v','21'], text=True, timeout=15).strip()
+    elif sys.platform == 'linux':
+        candidate = env.get('JAVA_HOME', '')
+    else:
+        raise RuntimeError('Build lane supports only reviewed Linux and macOS hosts')
+    if not candidate or not Path(candidate).is_absolute():
+        raise RuntimeError('An explicit absolute JDK21 JAVA_HOME is required')
+    home = Path(candidate).resolve(strict=True)
+    release = home/'release'
+    if not release.is_file() or release.stat().st_size > 65536:
+        raise RuntimeError('JDK release identity is missing or oversized')
+    versions = re.findall(r'^JAVA_VERSION="([^"\r\n]+)"$', release.read_text(), re.MULTILINE)
+    if len(versions) != 1 or re.fullmatch(r'21(?:[.\-+][0-9A-Za-z._+\-]+)?', versions[0]) is None:
+        raise RuntimeError('Selected JAVA_HOME is not a JDK21 release')
+    if any(not (home/'bin'/name).is_file() or not os.access(home/'bin'/name, os.X_OK)
+           for name in ('java', 'javac')):
+        raise RuntimeError('Selected JAVA_HOME does not provide executable java and javac')
+    return str(home)
+
+def verify_jdk21(home, dest, env):
+    """Run toolchain probes only inside the owned invocation/finalization lane."""
+    java_log, javac_log = dest/'java-toolchain.log', dest/'javac-toolchain.log'
+    if invoke([str(Path(home)/'bin/java'), '-XshowSettings:properties', '-version'], java_log, env, timeout=30) != 0:
+        raise RuntimeError('Selected Java runtime probe failed')
+    if java_log.stat().st_size > 65536:
+        raise RuntimeError('Java runtime probe output exceeds bound')
+    java_output = java_log.read_text()
+    versions = re.findall(r'^\s*java\.specification\.version = (\S+)\s*$', java_output, re.MULTILINE)
+    homes = re.findall(r'^\s*java\.home = ([^\r\n]+)$', java_output, re.MULTILINE)
+    if versions != ['21'] or len(homes) != 1 or Path(homes[0].strip()).resolve(strict=True) != Path(home):
+        raise RuntimeError('Actual Java runtime does not match the selected JDK21')
+    if invoke([str(Path(home)/'bin/javac'), '-version'], javac_log, env, timeout=30) != 0:
+        raise RuntimeError('Selected Java compiler probe failed')
+    if javac_log.stat().st_size > 65536:
+        raise RuntimeError('Java compiler probe output exceeds bound')
+    compilers = re.findall(r'^javac (\S+)\s*$', javac_log.read_text(), re.MULTILINE)
+    if len(compilers) != 1 or re.fullmatch(r'21(?:[.\-+][0-9A-Za-z._+\-]+)?', compilers[0]) is None:
+        raise RuntimeError('Actual Java compiler is not JDK21')
+    return {'home':home, 'specification_version':'21', 'javac_version':compilers[0],
+            'java_log_sha256':hashlib.sha256(java_log.read_bytes()).hexdigest(),
+            'javac_log_sha256':hashlib.sha256(javac_log.read_bytes()).hexdigest()}
+
+def android_dexdump(env):
+    """Honor explicit, agreeing SDK roots; never guess a different tool version."""
+    roots = []
+    for key in ('ANDROID_HOME', 'ANDROID_SDK_ROOT'):
+        if env.get(key):
+            path = Path(env[key])
+            if not path.is_absolute(): raise RuntimeError('Android SDK root must be absolute')
+            roots.append(path.resolve(strict=True))
+    if len(set(roots)) > 1: raise RuntimeError('Android SDK roots disagree')
+    if not roots:
+        if sys.platform != 'darwin': raise RuntimeError('Explicit Android SDK root required on Linux')
+        roots = [(Path.home()/'Library/Android/sdk').resolve(strict=True)]
+    tool = roots[0]/'build-tools/36.0.0/dexdump'
+    if not tool.is_file() or not os.access(tool, os.X_OK):
+        raise RuntimeError('Pinned Android build-tools36.0.0 dexdump is unavailable')
+    return str(tool)
 
 def processes():
     completed = subprocess.run(['ps','-axo','pid=,ppid=,pgid=,lstart=,command='], text=True, capture_output=True, check=True)
@@ -169,7 +232,7 @@ def inspect_android_package(path, dest, index, env):
         if report.exists() or report.is_symlink(): raise RuntimeError('Refusing pre-existing package report')
         code=invoke(['/usr/bin/python3','-B',str(ROOT/'scripts/verification/android_release_artifacts.py'),
             '--root',str(ROOT),'--package',str(path),'--bundletool',str(tool),
-            '--dexdump',str(Path.home()/'Library/Android/sdk/build-tools/36.0.0/dexdump')],
+            '--dexdump',android_dexdump(env)],
             report,env,timeout=600)
         if code or report.stat().st_size>4*1024*1024:
             raise RuntimeError('Required full AAB inspection failed; retain artifact and report')
@@ -242,11 +305,13 @@ def main():
         before=processes()
         conflicts=[v['pid'] for v in before.values() if 'org.gradle.launcher.daemon.bootstrap.GradleDaemon 8.13' in v['command']]
         if conflicts: raise SystemExit(f'Unowned Gradle 8.13 daemon(s): {conflicts}; will not stop or compete with another task')
-        dest.mkdir(parents=True)
         env=os.environ.copy()
         for key in list(env):
             if key.startswith(('PARLOR_ANDROID_', 'MOBILE_RELEASE_')): env.pop(key)
-        env['JAVA_HOME']=subprocess.check_output(['/usr/libexec/java_home','-v','21'],text=True).strip()
+        # Static toolchain preflight precedes allocating outputs. Actual runtime
+        # probes below are tracked and finalized just like the selected command.
+        env['JAVA_HOME']=jdk21_home(env)
+        dest.mkdir(parents=True)
         env['PYTHONDONTWRITEBYTECODE']='1'
         env['PATH']=env['JAVA_HOME']+'/bin:/usr/bin:'+env.get('PATH','')
         scratch=dest/'scratch'; scratch.mkdir()
@@ -263,12 +328,13 @@ def main():
         if native:
             command.extend(['-I',str(OUT/'owned_ios_simulator.init.gradle')])
         if not command: raise SystemExit('Missing command')
-        receipt={'cycle':name,'started_at':now(),'source_before':identity(),'runner_before':runner_identity(native),'command':command,'env_policy':'JDK21, system Python, strict verification, signing env removed/empty Gradle signing props, cycle-owned TMPDIR/pycache','outputs_before':existing,'status':'RUNNING'}
+        receipt={'cycle':name,'started_at':now(),'source_before':identity(),'runner_before':runner_identity(native),'command':command,'env_policy':'Explicit JDK21 release and owned runtime/compiler probes, system Python, strict verification, signing env removed/empty Gradle signing props, cycle-owned TMPDIR/pycache','outputs_before':existing,'status':'RUNNING'}
         def save(): (dest/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
         save()
         error=None
         simulator=None
         try:
+            receipt['jdk21']=verify_jdk21(env['JAVA_HOME'],dest,env)
             if native:
                 from owned_ios_simulator import OwnedIosSimulator
                 simulator=OwnedIosSimulator(dest,name,env,invoke)

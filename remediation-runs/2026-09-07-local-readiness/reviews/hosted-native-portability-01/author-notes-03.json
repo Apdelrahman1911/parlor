@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "author": "/root/native_ci",
+  "recorded_at": "2026-09-08T09:49:13.467976+00:00",
+  "status": "IMPLEMENTED_AWAITING_INDEPENDENT_REVIEW_AND_ROOT_EXECUTION",
+  "files": [
+    {
+      "path": "scripts/verification/ios-readiness/toolchain_profiles.py",
+      "bytes": 3262,
+      "sha256": "65ffab3c3f13785a5574b6018c61ec23f8b36c8ecd5528737a1bfb88fd21cce0"
+    },
+    {
+      "path": "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+      "bytes": 12098,
+      "sha256": "77ee3b78862c23bee045ff9ca049f312a20b45bff1257768b13e2c5f2ca6bf4a"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "bytes": 72070,
+      "sha256": "fdae88cf835f4b0f5f5271b882641b7284db7ea5e5bdc135870754db7f61fb21"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/README.md",
+      "bytes": 11891,
+      "sha256": "69afd6136fdeecf9cca3426a523e130de01389b463db60ffd25254de87294142"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "bytes": 56256,
+      "sha256": "b9fa9b43ed7a422dd54adbb8b8f14ae313a2aab2f82d081d70dc32b8583af698"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+      "bytes": 21350,
+      "sha256": "f1d77ff98814e515461f9d91f0e3c640638552b26990227c6d5069181f588e88"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+      "bytes": 20532,
+      "sha256": "28e0dc259096eba2b5d065710d19b83fbe15b1ee4682306277ad2450fbb6f9ec"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py",
+      "bytes": 5918,
+      "sha256": "03c115d45474ee082204d38c6315e19909108148b2de8804898dd66c40c14dbf"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+      "bytes": 27965,
+      "sha256": "ed10ea8bba376cbe7ddac47c25d888c6d708b1a808b2ce2cacc9a45d398d18ce"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md",
+      "bytes": 8201,
+      "sha256": "2522dbd4cc64412c8095c06bcafde98d84ee025c245b639ac308938dcf12136e"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+      "bytes": 12292,
+      "sha256": "07ae34ff3e6059e83ac041c55d0f380e21106666e867b1842534982c7450be08"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/hosted-native-portability-01/draft-freeze-relative.json",
+      "bytes": 2425,
+      "sha256": "64c02554e7ddec05b85f533c05733e0f8bbedcc843843245d82cfd1ffd98564a"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08_FUNCTIONAL_README.md",
+      "bytes": 11038,
+      "sha256": "ef7d79b8180a0aa7b412d1257b0948adcf41f602f5fdc8bb576e41ed3731aa0b"
+    }
+  ],
+  "execution": {
+    "builds": 0,
+    "native_runs": 0,
+    "tests": 0,
+    "workflow_dispatches": 0,
+    "commits": 0,
+    "only_static_ast_source_inspection": true,
+    "note": "Author performed no build/test/native execution. Root separately reported profile12,composition55,normal187 PASS and failed functional-copy12; only retained functional-copy.log was read for this correction. Fresh root functional-copy verification is required after independent review; no rerun result is claimed."
+  },
+  "scope": [
+    "Explicit qualified-xcode-26.3 selection, exact inherited Developer propagation, actual retained Xcode26.3/17C529 + simulator SDK26.2 + arm64 validation; default local26.5 retained.",
+    "Normal and companion simulator creation/ownership metadata use exact selected runtime; no fallback, signing, protection or provenance guard changed.",
+    "New direct-child relative nine-file draft freeze, preserving old absolute freeze; only original driver hash updated in app_foundation_copy.py.",
+    "Linux/Darwin control temporary parent canonicalized before allocation, original inode/device/UID/private-mode custody and exact cleanup retained.",
+    "Documentation-only corrective relocation preserves the original clone inventory and all exact-hash assertions unchanged; no new companion directory entry."
+  ],
+  "declared_controls": {
+    "profile_and_stubbed_runtime": 12,
+    "composition": 22,
+    "foundation_draft": 33,
+    "composition_aggregate": 55,
+    "normal_existing": 187
+  },
+  "strict_l08_hypothesis": {
+    "name": "runtime-host-specific-versus-reproduced-on-qualified-environment",
+    "old": "iOS26.5/Foundation UUID2cc9fce0-08f9-3a0d-8a2f-6db229462de5 on macOS26.2",
+    "new": "Required same-fixture A run on iOS26.2 under Xcode26.3/macOS15.7.9, actual image identity still to obtain",
+    "unchanged_inputs": [
+      "L08AppFoundation.m.in native operation/query sequence",
+      "Foundation Complete assertions",
+      "No new direct syscall probe"
+    ],
+    "prediction": "Compare sixteen exact ordered Foundation rows with native16. Different Complete observation suggests environment-specific behavior; identical missing/UntilFirstAuthentication metadata reproduces across the distinct host/runtime and still fails strict L08. Neither result proves universal Simulator capability or hardware enforcement."
+  },
+  "cleanup": "Only short-lived source/hash/AST and gh read-only commands. No build/runtime workers or temporary generated outputs created; no global caches, source outside owned paths or unrelated work deleted.",
+  "predecessor": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/hosted-native-portability-01/author-notes-02.json",
+    "sha256": "e96b53d0adc080888503ec5604eda5c20aeef62c79f1e930123beffad5b5304b",
+    "preserved": true
+  },
+  "revision_reason": "Coordinator pure-control cycle exposed a valid immutable-clone README guard. Move exactly the appended qualified-profile section to existing allowlisted L08_FUNCTIONAL_README.md; restore guarded README to exact canonical/HEAD bytes. Do not edit clone/test/manifest guards or executable source.",
+  "retained_failure": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/functional-copy.log",
+    "sha256": "c5149707a2a4beff5bad62431aa519a8fb54a04da7fe936aa3edd09775d36bd2",
+    "observed": "12 tests executed;1 README subtest failure. Actual appended README911f1b73 differs from original required69afd613. Guard correctly failed. Historical failure remains FAIL."
+  },
+  "static_restoration_proof": {
+    "restored_companion_readme_equal_to_head_and_canonical": true,
+    "functional_original_prefix_unchanged": true,
+    "moved_section_bytes": 1128,
+    "reconstructed_prior_reviewed_readme_sha256": "911f1b73bba672da8b344c1523723d4b9ced77b0ca200901230a48ad1aca448f",
+    "required_prior_reviewed_readme_sha256": "911f1b73bba672da8b344c1523723d4b9ced77b0ca200901230a48ad1aca448f",
+    "functional_doc_original_sha256": "66cc129781125196bca34ec7bb287869dfaa080741296d6d77af3d02cff5ce89",
+    "companion_directory_entries": 75,
+    "clone_guard_sha256": "b58d9761b7c199f0ab7fd01c2c6614d2f49e0a71102fd54ff3f6783acfede7f0",
+    "clone_manifest_sha256": "3036231a1bcfc9d567b8381ee33d89cd381377bea2b10790ddde0f90baf682fb"
+  }
+}

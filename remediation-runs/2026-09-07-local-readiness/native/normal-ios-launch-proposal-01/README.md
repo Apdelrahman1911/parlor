@@ -298,3 +298,31 @@ identity brackets are not atomic reservations; mapped pages are not hashed.
 The libproc mode is unexecuted until a separately bound native run succeeds. A
 control test, compiler success or harmless-process result cannot establish actual
 Parlor provenance, physical-device validation, or Store readiness.
+
+## Explicit qualified hosted profile (2026-09-08 continuation)
+
+The original local default remains Xcode26.5/17F42, SDK/runtime26.5. The only
+additional profile is selected explicitly with
+`--toolchain=qualified-xcode-26.3`; it also requires the inherited
+`DEVELOPER_DIR` to be exactly
+`/Applications/Xcode_26.3.app/Contents/Developer`. The retained actual tool outputs
+must identify Xcode26.3/17C529, simulator SDK26.2 and arm64. Creation and all owned
+simulator metadata checks use `com.apple.CoreSimulator.SimRuntime.iOS-26-2`.
+Xcode version26.3 does **not** imply an iOS26.3 SDK. An unknown/duplicate profile,
+missing Developer selection, wrong tool output or wrong runtime fails closed.
+
+The pure shared helper `scripts/verification/ios-readiness/toolchain_profiles.py`
+is bound by the existing support control manifest. Native code, libproc guards,
+eight-repetition/ninth-observation scope, ad-hoc-only signing and exact finalizer
+are unchanged. The published official image inventory and immutable source URL
+are retained under `../../reviews/hosted-native-portability-01/`; they are not
+actual host/runtime evidence. A fresh actual-runner source binding and separately
+approved control hash remain mandatory after the source/inventory freeze.
+
+Hosted cache prerequisites are the existing public
+`$HOME/Library/Android/sdk` and `$GRADLE_USER_HOME/{caches,wrapper}` (or the existing
+`$HOME/.gradle` default). Only dependency/distribution caches are shared into the
+fresh owned copy; Gradle build/configuration caching remains disabled. Never
+remove global caches or infer runtime execution from cache hits. Each native lane
+must finish its immediate Gradle stop, owned simulator/workers/FIFOs and temporary
+copy/DerivedData cleanup before the next lane starts.

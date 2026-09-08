@@ -23,6 +23,7 @@ import signal
 import subprocess
 import sys
 import hashlib
+import importlib.util
 import tempfile
 import time
 
@@ -53,6 +54,13 @@ from simulator_signing import (selected_mode, signing_overrides, render_owned_ko
 from simulator_entitlements import (inspect_bundle_entitlements, inspect_generated_app_entitlements,
                                     inspect_sdk_signing_defaults)
 
+TOOLCHAIN_HELPER = ROOT / 'scripts/verification/ios-readiness/toolchain_profiles.py'
+if TOOLCHAIN_HELPER.is_symlink() or TOOLCHAIN_HELPER.resolve(strict=True) != TOOLCHAIN_HELPER:
+    raise RuntimeError('Redirected native toolchain profile helper')
+_toolchain_spec = importlib.util.spec_from_file_location('parlor_l08_toolchain_profiles', TOOLCHAIN_HELPER)
+toolchains = importlib.util.module_from_spec(_toolchain_spec)
+_toolchain_spec.loader.exec_module(toolchains)
+
 OUT = None
 BINDING = None
 
@@ -75,7 +83,7 @@ def control_files():
     if BINDING is None:
         raise RuntimeError('An explicit campaign source binding is required')
     return sorted([path for path in HERE.iterdir() if path.is_file() and
-                   (path.suffix in {'.py', '.in', '.md'} or path.name == 'inherited-controls.json')]) + [BINDING]
+                   (path.suffix in {'.py', '.in', '.md'} or path.name == 'inherited-controls.json')]) + [TOOLCHAIN_HELPER, BINDING]
 
 
 def control_manifest():
@@ -336,9 +344,11 @@ def main():
         BINDING = checked_binding_path(sys.argv[2])
         print(json.dumps(dict(control_sha256=control_hash(), files=control_manifest()), indent=2))
         return 0  # Read-only; never allocates a simulator or build workspace.
-    if len(sys.argv) not in (4, 5) or not re.fullmatch(r'ios-readiness-[0-9]{2}', sys.argv[1]):
-        raise SystemExit('Usage: run_ios_readiness.py ios-readiness-NN CAMPAIGN_SOURCE_BINDING_JSON INDEPENDENTLY_REVIEWED_CONTROL_SHA256 [--simulator-signing=adhoc]')
-    mode = selected_mode(sys.argv[4:])
+    if len(sys.argv) not in (4, 5, 6) or not re.fullmatch(r'ios-readiness-[0-9]{2}', sys.argv[1]):
+        raise SystemExit('Usage: run_ios_readiness.py ios-readiness-NN CAMPAIGN_SOURCE_BINDING_JSON INDEPENDENTLY_REVIEWED_CONTROL_SHA256 [--simulator-signing=adhoc] [--toolchain=qualified-xcode-26.3]')
+    toolchain_name, signing_arguments = toolchains.selected_toolchain(sys.argv[4:])
+    toolchain = toolchains.profile(toolchain_name)
+    mode = selected_mode(signing_arguments)
     NAME = sys.argv[1]
     BINDING = checked_binding_path(sys.argv[2])
     OUT = BINDING.parent
@@ -354,6 +364,7 @@ def main():
         dest.mkdir(exist_ok=False)
         receipt = dict(cycle=NAME, started_at=now(), status='RUNNING',
                        execution_kind='manifest-owned-copy-ios-l08-storage-functional-companion', signing_mode=mode, commands=[],
+                       toolchain_profile=toolchain_name,
                        runtime_evidence_status='NOT_RUN', cleanup_status='BLOCKED',
                        scope='Four actual production-container UIKit tests; actual Settings/restart; direct Compose and actual LocalUIViewController direction; stable outer/child/window identities and full-bounds safe-area geometry in EN/AR portrait/landscape; local Whodunit/Mafia controller/flow/value continuity under synthetic real-store language setters and actual background/foreground; actual OS Arabic per-app preference; eight current-build cold launches; exact rerun credential OSStatus and synthetic storage durability; complete embedded Mach-O inventory and observed loaded-image binding. Separate L08 functional companion: thirteen full GameSnapshot/real Home resume and damaged-record boots with all Complete comparisons retained separately, never original strict L08 PASS; three ControlledStartRoom host locale/lifecycle fixtures; no physical LAN, full-UI-game, signed-release, Store or leak-free claim.', approved_control_sha256=approved)
         temp, owner, env, uuid = None, None, None, None
@@ -438,6 +449,8 @@ def main():
                     raise RuntimeError('Ambiguous synthetic simulator identity; no deletion authorized')
                 if matches and not re.fullmatch(r'[A-Fa-f0-9]{8}(?:-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12}', matches[0]['udid']):
                     raise RuntimeError('Unexpected synthetic simulator UUID')
+                if matches and matches[0]['runtime'] != toolchain['runtime']:
+                    raise RuntimeError('Synthetic simulator runtime differs from the reviewed profile')
                 if matches and uuid is not None and matches[0]['udid'] != uuid:
                     raise RuntimeError('Synthetic simulator identity changed')
                 write_json(dest / (label + '.json'), dict(matches=matches))
@@ -517,6 +530,7 @@ def main():
                        LANG='en_US.UTF-8', LC_ALL='C', GRADLE_USER_HOME=str(temp / 'gradle-home'),
                        TMPDIR=str(temp / 'tmp') + '/', PYTHONDONTWRITEBYTECODE='1',
                        CONFIGURATION='Debug')
+            env.update(toolchains.developer_environment(toolchain_name, os.environ))
             configured_signing = signing_overrides(mode)
             env.update(configured_signing)
             # KGP2.4.10 treats even an empty EXPANDED_CODE_SIGN_IDENTITY as an
@@ -545,8 +559,19 @@ def main():
                 raise RuntimeError('Unexpected SDK version')
             env['SDK_NAME'] = 'iphonesimulator' + sdk_version
             receipt['sdk_name'] = env['SDK_NAME']
-            if command(['xcode-select', '-p'], 'selected-developer.log') or command(
-                    ['xcrun', '--sdk', 'iphonesimulator', '--show-sdk-path'], 'selected-sdk-path.log'):
+            if (command(['xcodebuild', '-version'], 'xcode-version.log') or
+                    command(['/usr/bin/sw_vers'], 'macos-version.log') or
+                    command(['/usr/bin/uname', '-sr'], 'darwin-version.log') or
+                    command(['/usr/bin/uname', '-m'], 'host-architecture.log') or
+                    command([java + '/bin/java', '-version'], 'java-version.log') or
+                    command(['xcode-select', '-p'], 'selected-developer.log') or command(
+                    ['xcrun', '--sdk', 'iphonesimulator', '--show-sdk-path'], 'selected-sdk-path.log')):
+                raise RuntimeError('Cannot observe exact selected native toolchain')
+            receipt['toolchain_observation'] = toolchains.validate_observation(toolchain_name,
+                (dest / 'xcode-version.log').read_text(), (dest / 'sdk-version.log').read_text(),
+                (dest / 'selected-developer.log').read_text(), (dest / 'host-architecture.log').read_text())
+            receipt['toolchain_scope'] = toolchain['scope']
+            if receipt['toolchain_observation']['sdk_name'] != env['SDK_NAME']:
                 raise RuntimeError('Cannot bind public installed SDK signing defaults')
             receipt['signing_configuration_observations'] = inspect_sdk_signing_defaults(
                 Path((dest / 'selected-developer.log').read_text().strip()),
@@ -640,7 +665,7 @@ def main():
             receipt['simulator_creation_attempted'] = True; save()
             if command(['xcrun', 'simctl', 'create', receipt['owned_device_name'],
                         'com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro',
-                        'com.apple.CoreSimulator.SimRuntime.iOS-26-5'], 'create.log'):
+                        toolchain['runtime']], 'create.log'):
                 raise RuntimeError('New simulator creation failed')
             uuid = (dest / 'create.log').read_text().strip()
             if not re.fullmatch(r'[A-Fa-f0-9]{8}(?:-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12}', uuid):

@@ -27,6 +27,10 @@ ALLOWED_ACTIONS = {
     "actions/attest-build-provenance",
 }
 DISABLED_STORE_JOB_CONDITION = "if: ${{ always() && false }}"
+FULL_VERIFICATION_SCOPE = "github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'"
+FULL_VERIFICATION_FINALIZER = "always() && (" + FULL_VERIFICATION_SCOPE + ")"
+NATIVE_VERIFICATION_SCOPE = ("github.event_name == 'workflow_dispatch' && "
+                             "(inputs.verification_scope == 'native-preflight' || inputs.verification_scope == 'native-evidence')")
 
 
 def fail(message: str) -> None:
@@ -126,13 +130,64 @@ def verify_owned_ios_app_launch(text: str) -> None:
         for token in required:
             if token not in block:
                 fail(f"validation workflow owned iOS app-launch lifecycle lacks {token!r}")
-    if re.findall(r"(?m)^        if: (.*)$", finish) != ["always()"]:
-        fail("validation workflow owned iOS app-launch finalizer must always run")
+    if re.findall(r"(?m)^        if: (.*)$", finish) != [FULL_VERIFICATION_FINALIZER]:
+        fail("validation workflow owned iOS app-launch finalizer must always run in full verification")
     if text.index(f"- name: {prepare_name}\n") >= text.index(f"- name: {launch_name}\n"):
         fail("validation workflow must claim iOS app-launch ownership before launch")
     next_step = text.split(f"\n      - name: {launch_name}\n", 1)[1].split("\n      - ", 1)[1]
     if not next_step.startswith(f"name: {finish_name}\n"):
         fail("validation workflow must finalize owned iOS resources immediately after app-launch")
+
+
+def verify_verification_scopes(text: str) -> None:
+    """Only two explicit dispatch modes may bypass the unchanged five-job gate."""
+    jobs_text = text.split("\njobs:\n", 1)[-1]
+    jobs = re.findall(r"(?m)^  ([a-z][a-z0-9-]+):$", jobs_text)
+    expected = ["desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64", "ios"]
+    if jobs != expected:
+        fail("verification scope contract requires exactly the five reviewed jobs")
+    for name in expected[:-1]:
+        block = jobs_text.split("  " + name + ":\n", 1)[1].split("\n  " + expected[expected.index(name) + 1] + ":\n", 1)[0]
+        if re.findall(r"(?m)^    if: (.*)$", block) != [FULL_VERIFICATION_SCOPE]:
+            fail("verification scope must retain every non-Apple job for default/push/PR/full")
+    ios = jobs_text.split("\n  ios:\n", 1)[1]
+    if re.findall(r"(?m)^    if: (.*)$", ios):
+        fail("verification scope validation must not be skipped by an iOS job condition")
+    for token in ("        default: full\n", "        options: [full, native-preflight, native-evidence]\n"):
+        if token not in text.split("\nconcurrency:", 1)[0]:
+            fail("verification scope must default to full with only the two reviewed focused modes")
+    validator = validation_step(ios, "Validate verification scope")
+    if (re.findall(r"(?m)^        if: (.*)$", validator) or
+            "run: /usr/bin/python3 -B scripts/ci/native_continuation.py validate-scope\n" not in validator or
+            ios.index("- name: Validate verification scope\n") > ios.index("- name: Run focused native continuation\n")):
+        fail("verification scope must reject unknown values before any native execution")
+    full_steps = (
+        "Claim fresh verification output ownership", "Claim apple-aggregate native resource ownership",
+        "Record Xcode toolchain and exact source", "Run iOS simulator tests, Apple static analysis, and release linkage gates",
+        "Validate iOS plist and privacy manifest", "Claim apple-ui native resource ownership",
+        "Verify effective Debug and Release application identities", "Launch Swift host and Compose root on iOS Simulator",
+        "Claim apple-wrapper native resource ownership", "Build unsigned Swift Release wrapper",
+    )
+    finalizers = (
+        "Stop Gradle after apple-aggregate and retire owned Apple resources",
+        "Stop Gradle after apple-ui and retire owned Apple resources",
+        "Stop Gradle after apple-wrapper and retire owned Apple resources", "Upload Apple verification evidence",
+        "Clean only attested verification outputs", "Upload verification cleanup receipt",
+    )
+    for name in (*full_steps, *finalizers):
+        required = FULL_VERIFICATION_FINALIZER if name in finalizers else FULL_VERIFICATION_SCOPE
+        if re.findall(r"(?m)^        if: (.*)$", validation_step(ios, name)) != [required]:
+            fail("verification scope must retain full Apple gates/finalizers and skip them only in focused modes")
+    inspection = validation_step(ios, "Inspect complete unsigned iOS Release package")
+    if re.findall(r"(?m)^        if: (.*)$", inspection) != [
+            "success() && steps.apple_wrapper_run.outcome == 'success' && steps.apple_wrapper_finish.outcome == 'success' && (" + FULL_VERIFICATION_SCOPE + ")"]:
+        fail("verification scope must retain full unsigned package qualification")
+    focused_steps = ("Run focused native continuation", "Upload focused native evidence",
+                     "Verify focused native cleanup and uploaded custody", "Upload native continuation cleanup receipt")
+    for name in focused_steps:
+        required = NATIVE_VERIFICATION_SCOPE if name == focused_steps[0] else "always() && (" + NATIVE_VERIFICATION_SCOPE + ")"
+        if re.findall(r"(?m)^        if: (.*)$", validation_step(ios, name)) != [required]:
+            fail("verification scope must restrict native execution and always preserve focused evidence/cleanup")
 
 
 def verify_validation(text: str) -> None:
@@ -209,6 +264,7 @@ def verify_validation(text: str) -> None:
         fail("validation workflow can confuse the Mac Catalyst derivation flag with the Bundle ID")
     if text.count('key == "PRODUCT_BUNDLE_IDENTIFIER"') != 2:
         fail("validation workflow does not parse the exact Xcode Bundle-ID build setting")
+    verify_verification_scopes(text)
     required_apple_toolchain = (
         "/Applications/Xcode_26.3.app/Contents/Developer",
         'test "$(sed -n \'1p\' build/ci-evidence/xcode-version.txt)" = "Xcode 26.3"',

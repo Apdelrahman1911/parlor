@@ -135,15 +135,40 @@ class SourceControls(unittest.TestCase):
         files = composition.control_files(binding)  # No binding read/native import or execution.
         inherited = {p for p in composition.COMPANION.iterdir() if p.is_file() and
                      (p.suffix in {'.py', '.in', '.md'} or p.name == 'inherited-controls.json')}
-        frozen = {Path(row['path']) for row in json.loads(composition.DRAFT_FREEZE.read_text())['source_files']}
+        frozen = {composition.DRAFT / row['path'] for row in json.loads(composition.DRAFT_FREEZE.read_text())['source_files']}
         references = {composition.CAMPAIGN / 'reviews/l08-native-foundation-control-03' / name
                       for name in composition.REFERENCE_PINS}
         own = {HERE / name for name in composition.OWN_FILES}
-        self.assertEqual(set(files), inherited | frozen | references | own | {binding, composition.DRAFT_FREEZE})
+        self.assertEqual(set(files), inherited | frozen | references | own |
+                         {binding, composition.DRAFT_FREEZE, composition.TOOLCHAIN_HELPER})
         self.assertEqual(len(files), len(set(files)))
         self.assertTrue(all(p.is_file() for p in own))
         with self.assertRaisesRegex(RuntimeError, 'explicit-source-binding-required'):
             composition.control_files(None)
+
+    def test_relative_freeze_preserves_exact_nine_owned_draft_inputs(self):
+        freeze = json.loads(composition.DRAFT_FREEZE.read_text())
+        paths = composition.frozen_draft_files(freeze)
+        self.assertEqual(len(paths), 9)
+        self.assertEqual({path.parent for path in paths}, {composition.DRAFT})
+        self.assertEqual({row['path'] for row in freeze['source_files']}, {path.name for path in paths})
+        self.assertEqual(freeze['previous_freeze']['sha256'],
+                         composition.digest((composition.ROOT / freeze['previous_freeze']['path']).read_bytes()))
+
+    def test_relative_freeze_rejects_wrong_root_escapes_duplicate_and_hash_changes(self):
+        original_freeze = json.loads(composition.DRAFT_FREEZE.read_text())
+        for name in ('/tmp/foreign', '../foreign', 'sub/file', './alias', 'sub\\file', '.', '..', ''):
+            changed = copy.deepcopy(original_freeze)
+            changed['source_files'][0]['path'] = name
+            with self.subTest(path=name), self.assertRaisesRegex(RuntimeError, 'draft-freeze-relative-path'):
+                composition.frozen_draft_files(changed)
+        for change in ('root', 'duplicate', 'hash'):
+            changed = copy.deepcopy(original_freeze)
+            if change == 'root': changed['directory'] = 'other/native'
+            elif change == 'duplicate': changed['source_files'][-1] = changed['source_files'][0]
+            else: changed['source_files'][0]['sha256'] = '0' * 64
+            with self.subTest(change=change), self.assertRaises(RuntimeError):
+                composition.frozen_draft_files(changed)
 
 
 class OwnedFixtures(unittest.TestCase):
@@ -373,7 +398,8 @@ class LauncherControls(unittest.TestCase):
                     def work(scratch):
                         parent = scratch.parent; identity = parent.lstat()
                         allocations.append(parent)
-                        self.assertEqual(parent.parent, Path('/private/tmp'))
+                        expected_parent = Path('/private/tmp' if sys.platform == 'darwin' else '/tmp').resolve(strict=True)
+                        self.assertEqual(parent.parent, expected_parent)
                         self.assertEqual(identity.st_uid, os.getuid())
                         self.assertEqual(stat.S_IMODE(identity.st_mode), 0o700)
                         self.assertEqual(os.environ['TMPDIR'], str(scratch) + '/')
@@ -393,10 +419,26 @@ class LauncherControls(unittest.TestCase):
             else: os.environ['TMPDIR'] = previous_env
             tempfile.tempdir = previous_cache
 
+    def test_external_parent_rejects_unreviewed_platform_before_allocation(self):
+        with patch.object(launcher.sys, 'platform', 'win32'), patch.object(launcher.tempfile, 'mkdtemp') as allocate:
+            with self.assertRaisesRegex(RuntimeError, 'reviewed Darwin/Linux'):
+                launcher.with_external_tmp(lambda _: self.fail('callback must not execute'))
+            allocate.assert_not_called()
+
+    def test_external_parent_canonicalizes_exact_platform_path_before_allocation(self):
+        for platform, raw_path in (('darwin', '/private/tmp'), ('linux', '/tmp')):
+            canonical = Path('/tmp').resolve(strict=True)
+            with self.subTest(platform=platform), patch.object(launcher.sys, 'platform', platform), \
+                    patch.object(launcher, 'Path') as constructor:
+                constructor.return_value.resolve.return_value = canonical
+                self.assertEqual(launcher.external_parent(), canonical)
+                constructor.assert_called_once_with(raw_path)
+                constructor.return_value.resolve.assert_called_once_with(strict=True)
+
 
 def load_tests(_loader, tests, _pattern):
-    if tests.countTestCases() != 18:
-        raise RuntimeError('Composition synthetic discovery differs from reviewed 18')
+    if tests.countTestCases() != 22:
+        raise RuntimeError('Composition synthetic discovery differs from reviewed 22')
     return tests
 
 

@@ -14,7 +14,17 @@ import unittest
 
 HERE = Path(__file__).resolve().parent
 DRAFT = HERE.parent / 'l08-app-foundation-draft-01'
-EXPECTED_TESTS = 51
+EXPECTED_TESTS = 55
+
+
+def external_parent():
+    if sys.platform not in ('darwin', 'linux'):
+        raise RuntimeError('Only reviewed Darwin/Linux pure-control hosts are supported')
+    path = Path('/private/tmp' if sys.platform == 'darwin' else '/tmp')
+    canonical = path.resolve(strict=True)
+    if not canonical.is_dir() or HERE.parents[3] == canonical or HERE.parents[3] in canonical.parents:
+        raise RuntimeError('Pure-control temporary parent must be an external directory')
+    return canonical
 
 
 def with_external_tmp(work):
@@ -22,10 +32,11 @@ def with_external_tmp(work):
     parent = None
     custody = None
     previous_env, previous_cache = os.environ.get('TMPDIR'), tempfile.tempdir
+    selected_parent = external_parent()
     try:
         mask = signal.pthread_sigmask(signal.SIG_BLOCK, {signal.SIGINT, signal.SIGTERM})
         try:
-            parent = Path(tempfile.mkdtemp(prefix='parlor-app-foundation-controls-', dir='/private/tmp'))
+            parent = Path(tempfile.mkdtemp(prefix='parlor-app-foundation-controls-', dir=selected_parent))
             value = parent.lstat()  # Immediately after exclusive allocation, before any further work.
             custody = dict(device=value.st_dev, inode=value.st_ino, uid=value.st_uid)
             if not stat.S_ISDIR(value.st_mode) or value.st_uid != os.getuid() or stat.S_IMODE(value.st_mode) != 0o700:
@@ -54,7 +65,7 @@ def with_external_tmp(work):
             if parent is not None:
                 value = parent.lstat()
                 if (custody is None or parent.is_symlink() or parent.resolve() != parent or
-                        parent.parent != Path('/private/tmp') or not parent.name.startswith('parlor-app-foundation-controls-') or
+                        parent.parent != selected_parent or not parent.name.startswith('parlor-app-foundation-controls-') or
                         not stat.S_ISDIR(value.st_mode) or stat.S_IMODE(value.st_mode) != 0o700 or
                         dict(device=value.st_dev, inode=value.st_ino, uid=value.st_uid) != custody):
                     raise RuntimeError('Control-parent ownership changed; retain rather than adopt/delete')
@@ -87,7 +98,7 @@ def run(_scratch):
         return [identifier for test in node for identifier in (identifiers(test) if isinstance(test, unittest.TestSuite) else [test.id()])]
     discovered = identifiers(suite)
     if len(discovered) != EXPECTED_TESTS or len(set(discovered)) != EXPECTED_TESTS:
-        raise RuntimeError('Frozen Foundation/composition discovery differs from reviewed 51')
+        raise RuntimeError('Frozen Foundation/composition discovery differs from reviewed 55')
     result = unittest.TextTestRunner(verbosity=2).run(suite)
     print('PARLOR_APP_FOUNDATION_CONTROL_RESULTS ' + json.dumps(dict(
         discovered=discovered, tests_run=result.testsRun, failures=len(result.failures), errors=len(result.errors),

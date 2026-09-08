@@ -14,6 +14,32 @@ import workflow_contract  # noqa: E402
 
 
 class WorkflowContractTest(unittest.TestCase):
+    def test_focused_native_modes_do_not_weaken_full_verification(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+        workflow_contract.verify_verification_scopes(workflow)
+        for original, replacement in (
+            ("default: full", "default: native-preflight"),
+            ("options: [full, native-preflight, native-evidence]", "options: [full, skip]"),
+            ("  desktop-linux-arm64:\n", "  unreviewed-sixth-job:\n    runs-on: ubuntu-latest\n  desktop-linux-arm64:\n"),
+            ("    if: " + workflow_contract.FULL_VERIFICATION_SCOPE, "    if: false"),
+            ("scripts/ci/native_continuation.py validate-scope", "true"),
+        ):
+            with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(workflow.replace(original, replacement, 1))
+
+    def test_scoped_full_finalizers_reject_every_nonexact_predicate(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+        original = "if: " + workflow_contract.FULL_VERIFICATION_FINALIZER
+        for name in ("Stop Gradle after apple-aggregate and retire owned Apple resources",
+                     "Stop Gradle after apple-ui and retire owned Apple resources",
+                     "Stop Gradle after apple-wrapper and retire owned Apple resources"):
+            block = workflow_contract.validation_step(workflow, name)
+            for replacement in ("if: always()", "if: success()", "if: always() && false",
+                                "if: always() && inputs.verification_scope == 'full'"):
+                broken = workflow.replace(block, block.replace(original, replacement), 1)
+                with self.subTest(name=name, replacement=replacement), self.assertRaises(RuntimeError):
+                    workflow_contract.verify_validation(broken)
+
     def test_repository_workflows_satisfy_release_contract(self) -> None:
         self.assertEqual(workflow_contract.main(), 0)
 

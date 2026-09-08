@@ -100,7 +100,8 @@ extension IOSAppLaunchUITests {
                 XCTAssertLessThanOrEqual(query.count, 1)
                 let target = query.firstMatch
                 try l08PublicControlObservation(app, identifier: identifier, attempt: attempt)
-                if target.exists && target.isEnabled && target.isHittable { break }
+                if target.exists && target.isEnabled && target.isHittable &&
+                    l08HomeGeometry(app, identifier: identifier) != nil { break }
                 XCTAssertTrue(list.exists && list.isEnabled && list.isHittable)
                 list.swipeUp() // No coordinates, alternate selector, or direct application callback.
             }
@@ -116,7 +117,22 @@ extension IOSAppLaunchUITests {
         // assertion can stop the XCTest; never retain labels or private state.
         try l08PublicControlObservation(app, identifier: identifier, attempt: 8)
         XCTAssertEqual(result, .completed)
+        if isHome {
+            // Sample zero AFTER every list gesture, then settle geometry after
+            // the real Observe tap. No other gesture precedes the card activation.
+            try l08RequireHomeZeroBeforeTap(app, identifier: identifier)
+            let settled = try l08WaitStableHomeGeometry(app, identifier: identifier)
+            let current = l08HomeGeometry(app, identifier: identifier)
+            try l08HomeActivationDiagnostic(identifier: identifier, phase: "before-tap", attempt: 0,
+                                            frames: current)
+            guard let current, l08HomeGeometryNear(settled, current),
+                  dsc01CatalogNear(target.frame, current[0]), target.isEnabled, target.isHittable else {
+                XCTFail("L08 Home target moved before its single activation")
+                throw NSError(domain: "L08HomeActivation", code: 1)
+            }
+        }
         target.tap() // No alternate selector, coordinate fallback, or repeat activation.
+        if isHome { try l08WaitHomeOneAfterTap(app, identifier: identifier) }
     }
 
     @MainActor private func l08PublicControlObservation(_ app: XCUIApplication,
@@ -166,5 +182,129 @@ extension IOSAppLaunchUITests {
         }
         XCTFail("Original resume coordinator did not retain the expected failed-recovery route")
         throw NSError(domain: "L08RecoveryObservation", code: 1)
+    }
+
+    @MainActor private func l08HomeGeometry(_ app: XCUIApplication, identifier: String) -> [CGRect]? {
+        let targets = app.descendants(matching: .any).matching(identifier: identifier)
+        let lists = app.descendants(matching: .any).matching(identifier: "l08-home-list")
+        let overlays = app.descendants(matching: .any).matching(identifier: "parlor-dsc01-overlay")
+        guard targets.count == 1, lists.count == 1, overlays.count == 1,
+              app.state == .runningForeground, !app.alerts.firstMatch.exists,
+              !app.keyboards.firstMatch.exists else { return nil }
+        let target = targets.firstMatch, list = lists.firstMatch, overlay = overlays.firstMatch
+        guard target.exists, target.isEnabled, target.isHittable,
+              list.exists, list.isEnabled, list.isHittable, overlay.exists else { return nil }
+        // frame is in screen coordinates. tap() chooses its own hittable point;
+        // require the WHOLE card clear, never assume tap() means center-point.
+        let frames = [target.frame, list.frame, app.frame, overlay.frame]
+        guard frames.allSatisfy(dsc01CatalogFinite), frames[2].contains(frames[1]),
+              frames[2].contains(frames[3]), frames[1].contains(frames[0]),
+              !frames[0].intersects(frames[3].insetBy(dx: -8, dy: -8)) else { return nil }
+        return frames
+    }
+
+    private func l08HomeGeometryNear(_ first: [CGRect], _ second: [CGRect]) -> Bool {
+        first.count == 4 && second.count == 4 &&
+            zip(first, second).allSatisfy { dsc01CatalogNear($0.0, $0.1) }
+    }
+
+    @MainActor private func l08WaitStableHomeGeometry(_ app: XCUIApplication,
+                                                     identifier: String) throws -> [CGRect] {
+        var anchor: [CGRect]? = nil
+        var consecutive = 0
+        // Six consecutive samples relative to the FIRST sample (not adjacent
+        // drift), bounded to 24 observations. No gesture or activation here.
+        for attempt in 0..<24 {
+            let frames = l08HomeGeometry(app, identifier: identifier)
+            if let frames {
+                if let anchor, l08HomeGeometryNear(anchor, frames) { consecutive += 1 }
+                else { anchor = frames; consecutive = 1 }
+            } else { anchor = nil; consecutive = 0 }
+            try l08HomeActivationDiagnostic(identifier: identifier, phase: "geometry", attempt: attempt,
+                                            frames: frames, stableSamples: consecutive)
+            if consecutive == 6, let frames { return frames }
+            if attempt < 23 { try catalogSamplingInterval() }
+        }
+        try l08PublicControlObservation(app, identifier: identifier, attempt: 8)
+        XCTFail("L08 Home target did not reach bounded stable visible geometry")
+        throw NSError(domain: "L08HomeActivation", code: 2)
+    }
+
+    @MainActor private func l08RequireHomeZeroBeforeTap(_ app: XCUIApplication,
+                                                      identifier: String) throws {
+        let query = app.staticTexts.matching(identifier: "l08-ui-result")
+        let untouched = query.count == 1 && query.firstMatch.value as? String == "{}"
+        try l08HomeActivationDiagnostic(identifier: identifier, phase: "before-observer", attempt: 0)
+        guard untouched else {
+            XCTFail("L08 Home observer must be untouched on this process boot")
+            throw NSError(domain: "L08HomeActivation", code: 3)
+        }
+        try l08TapExactPublicControl(app, identifier: "l08-ui-observe")
+        let published = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            guard query.count == 1, let text = query.firstMatch.value as? String else { return false }
+            return text != "{}"
+        }, object: nil)
+        let result = XCTWaiter.wait(for: [published], timeout: 5)
+        let counters = try l08ReadHomeCounters(app, identifier: identifier, phase: "before-zero", attempt: 0)
+        guard result == .completed, counters.values.allSatisfy({ $0 == 0 }) else {
+            XCTFail("L08 Home callback counters were not freshly observed as zero")
+            throw NSError(domain: "L08HomeActivation", code: 4)
+        }
+    }
+
+    @MainActor private func l08WaitHomeOneAfterTap(_ app: XCUIApplication,
+                                                  identifier: String) throws {
+        // Repeated READ-ONLY observation, never another Home activation. An old
+        // zero sample may delay acknowledgement but can never produce PASS.
+        for attempt in 0..<24 {
+            try l08TapExactPublicControl(app, identifier: "l08-ui-observe")
+            let counters = try l08ReadHomeCounters(app, identifier: identifier, phase: "after-tap", attempt: attempt)
+            guard (0...1).contains(counters["resume_taps"]!), counters["retry_taps"] == 0,
+                  counters["discard_taps"] == 0, (0...1).contains(counters["recovery_shows"]!),
+                  app.state == .runningForeground, !app.alerts.firstMatch.exists else {
+                XCTFail("L08 Home callback acknowledgement violated its exact counter contract")
+                throw NSError(domain: "L08HomeActivation", code: 5)
+            }
+            if counters["resume_taps"] == 1 { return }
+            if attempt < 23 { try catalogSamplingInterval() }
+        }
+        try l08PublicControlObservation(app, identifier: identifier, attempt: 8)
+        XCTFail("One L08 Home activation did not acknowledge its expected callback")
+        throw NSError(domain: "L08HomeActivation", code: 6)
+    }
+
+    @MainActor private func l08ReadHomeCounters(_ app: XCUIApplication, identifier: String,
+                                               phase: String, attempt: Int) throws -> [String: Int] {
+        let query = app.staticTexts.matching(identifier: "l08-ui-result")
+        var counters: [String: Int]? = nil
+        if query.count == 1, let text = query.firstMatch.value as? String,
+           let data = text.data(using: .utf8), data.count <= 1024,
+           let decoded = try? JSONDecoder().decode([String: Int].self, from: data),
+           Set(decoded.keys) == Set(["resume_taps", "retry_taps", "discard_taps", "recovery_shows"]),
+           decoded.values.allSatisfy({ (0...2).contains($0) }) { counters = decoded }
+        try l08HomeActivationDiagnostic(identifier: identifier, phase: phase, attempt: attempt, counters: counters)
+        guard let counters else {
+            XCTFail("L08 Home observer did not publish the closed counter schema")
+            throw NSError(domain: "L08HomeActivation", code: 7)
+        }
+        return counters
+    }
+
+    private func l08HomeActivationDiagnostic(identifier: String, phase: String, attempt: Int,
+                                             frames: [CGRect]? = nil, stableSamples: Int = 0,
+                                             counters: [String: Int]? = nil) throws {
+        let allowed = ["l08-home-wc", "l08-home-we", "l08-home-mon", "l08-home-moff",
+                       "l08-home-legacy", "l08-home-damaged", "l08-home-dual"]
+        guard allowed.contains(identifier), (0..<24).contains(attempt), (0...6).contains(stableSamples),
+              ["before-observer", "before-zero", "geometry", "before-tap", "after-tap"].contains(phase) else {
+            throw NSError(domain: "L08HomeDiagnostic", code: 1)
+        }
+        let row: [String: Any] = ["schema_version": 1, "identifier": identifier, "phase": phase, "attempt": attempt,
+            "geometry_valid": frames != nil, "frames": (frames ?? []).map { [$0.minX, $0.minY, $0.width, $0.height] },
+            "stable_samples": stableSamples, "counters_valid": counters != nil, "counters": counters ?? [:],
+            "proves_recovery": false]
+        let data = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
+        guard data.count <= 2048 else { throw NSError(domain: "L08HomeDiagnostic", code: 2) }
+        print("PARLOR_L08_HOME_ACTIVATION " + String(decoding: data, as: UTF8.self))
     }
 }

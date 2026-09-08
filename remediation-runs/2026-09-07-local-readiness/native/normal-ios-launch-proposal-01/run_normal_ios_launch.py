@@ -38,6 +38,8 @@ from run_ios_readiness import AppHostOwnership, checked_binding_path, defer_pare
 from copied_sources import create_source_copy, inspect_copied_inputs_after_build, owned_simulator_name
 from simulator_signing import (selected_mode, signing_overrides, render_owned_kotlin_phase,
                                read_phase_receipt, RECEIPT_NAME)
+from toolchain_profiles import (LOCAL as LOCAL_TOOLCHAIN, profile as toolchain_profile,
+                                selected_toolchain, developer_environment, validate_observation)
 from artifact_inventory import inventory_bundle, parse_dwarfdump_uuids, FRAMEWORK_PATH
 from normal_source_copy import transform_copy, inventory_copy, CHANGED, PROJECT
 from normal_launch_receipts import read_json, verify_markers, verify_xctest, METHOD, SELECTOR, UUID
@@ -112,7 +114,7 @@ def xcode_arguments(project, sdk, uuid, temporary, signing):
             'ONLY_ACTIVE_ARCH=YES', 'COMPILER_INDEX_STORE_ENABLE=NO', 'test']
 
 
-def isolated_environment(parent, java, temporary, android_sdk, mode):
+def isolated_environment(parent, java, temporary, android_sdk, mode, toolchain=LOCAL_TOOLCHAIN):
     if (not Path(java).is_absolute() or '\n' in java or '\r' in java or
             Path(java).name != 'Home' or not temporary.is_absolute() or not android_sdk.is_absolute()):
         raise RuntimeError('Unexpected public JDK/owned workspace/SDK location')
@@ -121,6 +123,7 @@ def isolated_environment(parent, java, temporary, android_sdk, mode):
         LANG='en_US.UTF-8', LC_ALL='C', GRADLE_USER_HOME=str(temporary / 'gradle-home'),
         TMPDIR=str(temporary / 'tmp') + '/', PYTHONDONTWRITEBYTECODE='1', CONFIGURATION='Debug',
         ANDROID_HOME=str(android_sdk), ANDROID_SDK_ROOT=str(android_sdk))
+    environment.update(developer_environment(toolchain, parent))
     environment.update(signing_overrides(mode))
     jvm = '-Xmx6g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Djava.io.tmpdir=' + str(temporary / 'tmp')
     options = ['-Dorg.gradle.jvmargs=' + jvm, '-Dorg.gradle.parallel=false', '-Dorg.gradle.workers.max=1',
@@ -133,10 +136,11 @@ def isolated_environment(parent, java, temporary, android_sdk, mode):
 
 
 class Lane:
-    def __init__(self, name, binding, approved, mode, image_observer='vmmap'):
+    def __init__(self, name, binding, approved, mode, image_observer='vmmap', toolchain=LOCAL_TOOLCHAIN):
         if image_observer not in {'vmmap', 'libproc'}:
             raise RuntimeError('Unknown explicit image observer')
         self.image_observer = image_observer
+        self.toolchain = toolchain_profile(toolchain)
         self.name, self.binding, self.approved, self.mode = name, binding, approved, mode
         self.destination = binding.parent / 'evidence' / name
         parent = self.destination.parent
@@ -147,6 +151,7 @@ class Lane:
         self.receipt = dict(schema_version=1, cycle=name, started_at=now(), status='RUNNING',
             execution_kind='normal-source-fixed-eight-plus-separate-public-tool-provenance',
             signing_mode=mode, image_observer=image_observer, approved_control_sha256=approved, commands=[], gradle_stops=[],
+            toolchain_profile=self.toolchain['name'],
             runtime_evidence_status='NOT_RUN', provenance_status='NOT_RUN',
             notice_package_status='NOT_RUN', cleanup_status='BLOCKED',
             scope='Eight fixed English XCTest repetitions observing unchanged production app source '
@@ -273,7 +278,7 @@ class Lane:
                        if item.get('name') == self.receipt['owned_device_name']]
             if (len(matches) > 1 or (matches and
                     (UUID.fullmatch(matches[0]['udid']) is None or
-                     matches[0]['runtime'] != 'com.apple.CoreSimulator.SimRuntime.iOS-26-5' or
+                     matches[0]['runtime'] != self.toolchain['runtime'] or
                      self.uuid is not None and matches[0]['udid'] != self.uuid))):
                 raise RuntimeError('Ambiguous or changed synthetic simulator identity')
             write_json(self.destination / (label + '.json'), dict(matches=matches))
@@ -333,23 +338,30 @@ class Lane:
         # No inherited app-probe, loader, signing, credential or Gradle options.
         self.environment = {key: os.environ[key] for key in ('HOME', 'USER', 'LOGNAME') if key in os.environ}
         self.environment.update(PATH='/usr/bin:/bin:/usr/sbin:/sbin', LC_ALL='C')
+        self.environment.update(developer_environment(self.toolchain['name'], os.environ))
         self.require(['/usr/libexec/java_home', '-v', '21'], 'java-home.log', timeout=15)
         java = (self.destination / 'java-home.log').read_text().strip()
         sdk = Path.home() / 'Library/Android/sdk'
         if not sdk.is_dir():
             raise RuntimeError('Public SDK installation absent; never copy private local.properties')
-        self.environment = isolated_environment(os.environ, java, self.temporary, sdk, self.mode)
+        self.environment = isolated_environment(os.environ, java, self.temporary, sdk, self.mode,
+                                                self.toolchain['name'])
         self.signing = signing_overrides(self.mode)
         self.require(['xcodebuild', '-version'], 'xcode-version.log')
         self.require(['/usr/bin/sw_vers'], 'macos-version.log')
         self.require(['/usr/bin/uname', '-sr'], 'darwin-version.log')
+        self.require(['/usr/bin/uname', '-m'], 'host-architecture.log')
+        self.require(['xcode-select', '-p'], 'selected-developer.log')
         self.require([java + '/bin/java', '-version'], 'java-version.log')
         self.require(['xcrun', '--sdk', 'iphonesimulator', '--show-sdk-version'], 'sdk-version.log')
-        if ((self.destination / 'xcode-version.log').read_text() != 'Xcode 26.5\nBuild version 17F42\n' or
-                (self.destination / 'sdk-version.log').read_text().strip() != '26.5'):
-            raise RuntimeError('Toolchain differs from the reviewed local Debug observation tools')
-        self.environment['SDK_NAME'] = 'iphonesimulator26.5'
-        self.receipt['toolchain_scope'] = 'Xcode26.5/17F42 Debug simulator; not Store-qualified26.3/17C529'
+        observation = validate_observation(self.toolchain['name'],
+            (self.destination / 'xcode-version.log').read_text(),
+            (self.destination / 'sdk-version.log').read_text(),
+            (self.destination / 'selected-developer.log').read_text(),
+            (self.destination / 'host-architecture.log').read_text())
+        self.environment['SDK_NAME'] = observation['sdk_name']
+        self.receipt['toolchain_observation'] = observation
+        self.receipt['toolchain_scope'] = observation['scope']
         self.receipt['sdk_name'] = self.environment['SDK_NAME']
         write_json(self.destination / 'input-manifest.json', dict(source=self.receipt['source_before'],
                    controls=control_manifest(self.binding), approved_control_sha256=self.approved))
@@ -374,7 +386,7 @@ class Lane:
         self.save()
         self.require(['xcrun', 'simctl', 'create', self.receipt['owned_device_name'],
                       'com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro',
-                      'com.apple.CoreSimulator.SimRuntime.iOS-26-5'], 'create.log')
+                      self.toolchain['runtime']], 'create.log')
         value = (self.destination / 'create.log').read_text().strip()
         if UUID.fullmatch(value) is None:
             raise RuntimeError('New simulator did not return an exact UUID')
@@ -855,16 +867,17 @@ def main(arguments=None):
         binding = checked_binding_path(arguments[1])
         print(json.dumps(dict(control_sha256=control_hash(binding), files=control_manifest(binding)), indent=2))
         return 0  # Source/control observation only. No allocation or native execution.
-    if len(arguments) not in (3, 4, 5) or re.fullmatch(r'ios-readiness-[0-9]{2}', arguments[0]) is None:
-        raise SystemExit('Usage: run_normal_ios_launch.py ios-readiness-NN SOURCE_BINDING REVIEWED_CONTROL_SHA [--simulator-signing=adhoc] [--image-observer=libproc]')
+    if len(arguments) not in (3, 4, 5, 6) or re.fullmatch(r'ios-readiness-[0-9]{2}', arguments[0]) is None:
+        raise SystemExit('Usage: run_normal_ios_launch.py ios-readiness-NN SOURCE_BINDING REVIEWED_CONTROL_SHA [--simulator-signing=adhoc] [--image-observer=libproc] [--toolchain=qualified-xcode-26.3]')
     name, binding, approved = arguments[0], checked_binding_path(arguments[1]), arguments[2]
-    observer, signing = selected_observer(arguments[3:])
+    toolchain, remaining = selected_toolchain(arguments[3:])
+    observer, signing = selected_observer(remaining)
     mode = selected_mode(signing)
     if re.fullmatch(r'[a-f0-9]{64}', approved) is None or approved != control_hash(binding):
         raise RuntimeError('Control bytes differ from the explicit independent execution review')
     with (binding.parent / 'build-lane.lock').open('a') as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        return Lane(name, binding, approved, mode, observer).run()
+        return Lane(name, binding, approved, mode, observer, toolchain).run()
 
 
 if __name__ == '__main__':

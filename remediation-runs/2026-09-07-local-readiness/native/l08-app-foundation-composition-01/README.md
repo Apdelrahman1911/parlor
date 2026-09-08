@@ -52,12 +52,14 @@ B=remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composit
 /usr/bin/python3 -B "$B/run_controls.py"
 ```
 
-The launcher requires exactly **51 discovered/executed, unique, unskipped
-controls**: revised draft 33 plus unchanged composition 18. The three additions
+The launcher now requires exactly **55 discovered/executed, unique, unskipped
+controls**: revised draft 33 plus composition 22. The prior three additions
 check exact launcher-selection source, closed errors and unchanged UUID rejection;
 they are not native dyld tests. The original composition controls cover seven
 source/ordering guards, ten synthetic custody/preservation/binding scenarios,
-and one launcher success/failure/cancellation test. They execute only parsers,
+and one launcher success/failure/cancellation test. Four portability additions
+cover exact relative-freeze binding/rejection and canonical external temporary
+parent selection on Linux/macOS. They execute only parsers,
 copy adapters, and the isolated inherited `stage` function—not the full runner,
 Objective-C, Swift, XCTest, or a device command.
 
@@ -98,7 +100,7 @@ not evidence of the same installed image.
 
 ## Evidence and limitations
 
-The revised draft freeze is `../../reviews/l08-native14-followup-01/draft-freeze.json`.
+The prior draft freeze is `../../reviews/l08-native14-followup-01/draft-freeze.json`.
 Native14's main-image UUID mismatch is addressed only by exact executable selection,
 never by weakening the binder. Its boot10 continuation failure still has an unknown
 cause; companion02 now supplies closed per-check stages without changing any game
@@ -111,3 +113,32 @@ all controls. Static AST parsing and declared test counts are not executed test
 discovery. Parent/root must record actual counts, exit codes, source/control
 hashes, and cleanup after each cycle. No processes or build outputs were started
 by the author of this draft.
+
+## Explicit qualified hosted profile (2026-09-08 continuation)
+
+Native16 remains FAIL with partial functional coverage; its Foundation collection
+was successfully bound, but every retained strict Complete comparison still
+failed. Neither this portability change nor the new single-tap fixture is native
+runtime proof. The default remains the original local Xcode26.5/SDK26.5 profile.
+
+On the reviewed `macos-15` arm64 image, add
+`--toolchain=qualified-xcode-26.3` and explicitly set
+`DEVELOPER_DIR=/Applications/Xcode_26.3.app/Contents/Developer`. The closed shared
+helper requires Xcode26.3/build17C529, **SDK/runtime26.2**, and arm64; no fallback to
+a newer/default toolchain is permitted. The fresh owned simulator's metadata
+must agree with that profile. No signing or ownership rule is changed.
+
+`../../reviews/hosted-native-portability-01/draft-freeze-relative.json` replaces
+machine-specific absolute paths with exactly nine direct draft-child names.
+The original freeze remains immutable. Of those nine inputs, only the exact
+companion-driver hash in `app_foundation_copy.py` changes; the native Foundation
+fixture/validator bytes are unchanged. The shared helper is included in the
+combined control manifest. After all source changes and the inventory commit,
+create a fresh actual-runner source binding and obtain independent control-hash
+approval before execution. Do not transplant an absolute-path source binding.
+
+The qualified run also discriminates runtime/host-specific protection behavior
+without another new probe: compare the unchanged Foundation fixture's ordered
+sixteen rows and new Foundation/runtime image identities to native16. Repeated
+missing metadata is still failure, not a universal Simulator-incapability proof;
+different metadata is environment-specific evidence, not hardware enforcement.

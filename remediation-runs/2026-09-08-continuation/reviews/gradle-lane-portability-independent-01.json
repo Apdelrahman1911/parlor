@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/portability_review",
+  "author": "/root/dependency_chain",
+  "classification": "SOURCE_APPROVED_FOR_COORDINATOR_OWNED_FOCUSED_CONTROLS_NOT_EXECUTION_PROOF",
+  "baseline_commit": "ec0de52a2c7ff9077482a291dc4fd2591fdea01f",
+  "scope": "Linux/macOS JDK21 selection, owned runtime/compiler verification, and explicit fixed-version Android dexdump selection in the existing ordinary lane. No application or native iOS execution approval.",
+  "inputs": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "sha256": "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc",
+      "lines": 410,
+      "reviewed": "Full baseline lane and full delta; AST comparison of every preexisting function."
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/controls/test_gradle_lane_portability.py",
+      "sha256": "27283e41eb10bfdd9f9fdab1908d45575da75ce9322936d19ced11cd3de3eb33",
+      "lines": 227,
+      "reviewed": "Complete synthetic fixture and all 21 statically declared test methods; no test execution by reviewer."
+    }
+  ],
+  "reopened_contracts": [
+    "AGENTS.md",
+    "CONTINUE_HERE.md",
+    "docs/AGENT_CONTINUATION_2026-09-08.md",
+    "handoffs/2026-09-08-agent-transfer/DELIVERY_MANIFEST.json",
+    "docs/PRODUCTION_ARCHITECTURE.md",
+    "docs/RELEASE_GATES.md",
+    "docs/HOW_TO_ADD_A_GAME.md",
+    "docs/adr/0001-game-module-registration.md",
+    "docs/adr/0002-manual-endpoint-connection.md",
+    "remediation-runs/2026-09-07-local-readiness/reviews/final-current-sha-verification-preparation-02.md",
+    "remediation-runs/2026-09-07-local-readiness/reviews/candidate-input-adapter-independent-01.json"
+  ],
+  "findings": [
+    {
+      "boundary": "Explicit JDK selection",
+      "result": "Darwin retains /usr/libexec/java_home -v 21 with a 15-second bound. Linux requires absolute JAVA_HOME, canonicalizes it, validates a unique major21 release declaration and executable java/javac. No PATH search or unknown-host fallback. Static preflight occurs before evidence/scratch allocation."
+    },
+    {
+      "boundary": "Actual toolchain verification and finalization",
+      "result": "Both actual runtime/compiler commands use the existing invoke process-ownership path with 30-second timeouts, inside the existing try/finally. Runtime requires exactly specification version21 and canonical matching java.home; compiler requires unique major21. Nonzero, oversized, missing, duplicate, or mismatched output fails closed. Successful receipt binds both raw logs by SHA256; failure still reaches Gradle stop and exact scratch/output finalization."
+    },
+    {
+      "boundary": "Android SDK inspection",
+      "result": "Explicit ANDROID_HOME/ANDROID_SDK_ROOT must be absolute and agree after canonicalization. Only Darwin may use the historical home-directory fallback. Fixed build-tools36.0.0 executable dexdump remains mandatory. This selector runs only when actual AAB inspection needs it; ordinary JVM/command lanes do not acquire an unnecessary SDK prerequisite. Artifact validation and digest equality are unchanged."
+    },
+    {
+      "boundary": "Preserved guards",
+      "result": "AST-identical preexisting functions: collect_reports, identity, inspect_generated_artifacts, invoke, now, owned_outputs, processes, runner_identity, stop_owned_workers, track_processes. Main retains the same nonblocking lock, preexisting-output/daemon refusals, strict verification/no-daemon/no-parallel/one-worker flags, source/control equality, mandatory stop and exact cleanup/status predicates. No cache deletion, signing credential access, publication or protocol/application change."
+    },
+    {
+      "boundary": "Regression validity",
+      "result": "Synthetic executable placeholders are never launched; module import only defines the lane. Tests cover no-fallback selection, explicit aliases, major17/210/garbage/duplicate rejection, bounded matching runtime/compiler, conflicting SDK roots, fixed tool version, and actual main control flow for static rejection before allocation and runtime-probe rejection reaching stop/cleanup. Main integration test mocks process/tool execution, not the finally block. These are control tests, not JDK/application-runtime evidence."
+    }
+  ],
+  "corrections_during_review": [
+    "Author initially described 22 tests; independent AST count is 21 unique test_ methods. Author/coordinator informed before execution; no source change required."
+  ],
+  "actual_validation": {
+    "source_ast_parse": "PASS",
+    "git_diff_check": "PASS",
+    "synthetic_test_discovery": "NOT_RUN",
+    "synthetic_test_execution": "NOT_RUN",
+    "java_or_gradle_execution": "NOT_RUN_BY_REVIEWER",
+    "native_or_ci_execution": "NOT_RUN_BY_REVIEWER"
+  },
+  "limitations": [
+    "Existing malformed-heap/missing-command failures after scratch allocation but before the main try were not introduced or altered. Coordinator should use the reviewed valid CLI/heap. This scoped review is not an assertion that every historical lane edge case is repaired.",
+    "Actual focused execution must independently reconcile all 21 discovered/executed tests and no failures/errors/skips, source/control equality, stop exit0 and exact owned cleanup.",
+    "This modified lane needs a fresh exact lane hash in later candidate/export bindings. Historical outer receipts are not relabeled as execution of these bytes.",
+    "Actual Android AAB inspection on Linux and hosted macOS/iOS work are not established by this source approval."
+  ],
+  "reviewer_hygiene": "Read-only Git/source/JSON/hash/AST inspection and this additive report only. No repository module execution, builds/tests/native tools, process termination, CI dispatch, commits, cache modifications or generated build outputs. Coordinator retains the sole build lane."
+}

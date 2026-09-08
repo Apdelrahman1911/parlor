@@ -164,3 +164,21 @@ pre-existing source, audits, credentials and user work are preserved.
 Actual Simulator metadata, runtime limits, command receipts and cleanup must be
 reconciled after execution. This harness neither waives strict L08 nor grants
 physical-device, Store, release, publication or production-readiness approval.
+
+## Explicit qualified hosted profile (2026-09-08 continuation)
+
+The existing Xcode26.5/17F42, iOS26.5 local default is preserved. An additional
+closed profile is selected only by `--toolchain=qualified-xcode-26.3`, with the
+explicit inherited `DEVELOPER_DIR` exactly
+`/Applications/Xcode_26.3.app/Contents/Developer`. Retained actual commands must
+report Xcode26.3/17C529, simulator SDK26.2 and arm64; newly created simulator
+metadata must report runtime `com.apple.CoreSimulator.SimRuntime.iOS-26-2`.
+Neither unknown tools nor a missing Developer selection can trigger fallback.
+
+The shared `scripts/verification/ios-readiness/toolchain_profiles.py` is included
+in this runner's controls and the Foundation composition control union. Public
+Android SDK/cache locations and all existing source, single-lane ownership,
+signature, privacy, image, strict-storage and cleanup guards remain intact.
+Preflight/source binding and separately reviewed exact control hashes must be
+fresh for the actual hosted checkout, after source and inventory commits. This
+adaptation supplies no runtime PASS and does not waive native16's failures.

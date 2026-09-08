@@ -1,0 +1,232 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_L08_SINGLE_TAP_COPY_ONLY_SOURCE_AND_GUARD_REVIEW",
+  "recorded_at": "2026-09-08T09:06:46.176860+00:00",
+  "reviewer": "/root/fixture_review",
+  "source_author": "/root/l08_fixture",
+  "classification": "SOURCE_APPROVED_FOR_FOCUSED_CONTROLS; NATIVE_EXECUTION_AND_RUNTIME_PROOF_PENDING",
+  "checkout": {
+    "commit": "ec0de52a2c7ff9077482a291dc4fd2591fdea01f",
+    "tree": "48b099f3cd002a3253f21d2b06a4ece5787e62cb",
+    "branch": "fix/local-readiness-2026-09-07",
+    "scope": "Dirty continuation checkout. This source review is not a frozen-source execution approval or same-SHA qualification."
+  },
+  "reviewed_delta": {
+    "before_sha256": "30ea69c2e8537b4e8dd451972342b3a2ac16c4759b8b77fb329637f4a3407d02",
+    "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in",
+    "sha256": "5d81dfb0b5accc127a4f5510a23d610ba73efd2fc8b19a0ff12395912e2d0c59",
+    "reviewed_lines": [
+      [
+        87,
+        136
+      ],
+      [
+        187,
+        311
+      ]
+    ],
+    "git_diff_sha256": "df83c38dcf7ad473f7b26b9cc66a99c5fd36346306779e197aa24ce151779809",
+    "shipping_source_changes": false,
+    "scope": "One copy-only Swift fixture template: measured readiness and observed callback acknowledgement around the existing single Home activation. No shipping code, Kotlin observer, counter, storage policy, snapshot, reducer or navigation callback changes."
+  },
+  "historical_failure_reopened": {
+    "independent_review": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ios-readiness-16-independent-postrun-review-01.json",
+      "sha256": "f54fa06059d5711f640232ef486d067bb51ce8b6dd5d1788c6b6a9e569948d0f"
+    },
+    "raw_failure": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/parlor-l08-storage-functional-10-continue.json",
+      "sha256": "5026dce2c3ff30f510f9018eb9ae5fae23517e25cc563a1faea6b3f3268e0221"
+    },
+    "outer_receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/receipt.json",
+      "sha256": "56094f40132dd9beaeda52fdc737c61c242e897e0356b2722c4b50ad75bbf576"
+    },
+    "observed_failure": "continue-home-counters; matching expected Home resume count stayed zero and discard stayed zero. Controller attachment and Mafia continuation were not reached. No Mafia recovery defect inferred.",
+    "geometry_reopened": "Raw xcodebuild.log: prior four Home cases stable at y376; legacy moved from y911.67 offscreen through y494.33 to y285 before its one tap. Final y285 card was below overlay y134..273; overlay interception was not established.",
+    "historical_status_preserved": "FAIL; 15 functional operations (14 PASS, one FAIL), only 10/13 boots observed, three host boots unexecuted, all 24 retained Complete comparisons unsuccessful."
+  },
+  "findings": [
+    {
+      "id": "F01",
+      "severity": "medium",
+      "status": "RESOLVED_BEFORE_EXECUTION",
+      "before": "Initial author draft sampled zero before list swipe gestures, so a callback caused by another gesture could theoretically be misattributed to the later target tap.",
+      "requested": "Move zero-before observation after all scrolling/readiness, then settle geometry after the observer interaction; allow no intervening gesture before the one target tap.",
+      "after": "Invocation now at Swift123 after list.swipeUp loop and original readiness. Stable geometry and final resample follow it; target.tap is outside every retry loop. Current source hash binds the corrected order."
+    }
+  ],
+  "source_conclusions": [
+    "Home specialization uses a fixed alias list and exact accessibility identifiers; targets, list and overlay must each be unique. Ordinary controls retain existing behavior.",
+    "Finite positive target/list/app/overlay rectangles share screen coordinates. The entire list and overlay must lie in the app rectangle; the entire card must lie in the list; the card must not intersect the overlay expanded by eight points. Foreground, no alert and no keyboard are required.",
+    "At most 24 geometry samples, six consecutive samples relative to the first retained anchor, all four frames within existing 0.5-point tolerance. Invalid or moving observations reset the streak. Existing nonblocking 0.25-second runloop intervals separate samples. Final current geometry and actual target frame are rechecked before tapping.",
+    "After all scroll gestures, the observer display must start at exactly {}; one real l08-ui-observe tap must publish a nonempty closed four-key Int dictionary and all counters must be zero. No direct Kotlin callback or property injection supplies the observation.",
+    "The existing target.tap occurs exactly once. Afterward at most 24 real read-only l08-ui-observe taps may poll; resume and recovery counters must be 0..1, retry/discard must remain zero, and success returns only on resume_taps == 1. A stale zero can delay or fail but cannot pass. Unchanged monotonic private-set counters prevent stale preactivation one acceptance.",
+    "JSONDecoder enforces Int values; input is <=1024 bytes with exact known keys. Invalid or missing counters produce a bounded closed failure diagnostic before failure, never defaults. Six-sample geometry and postactivation timeout fail closed.",
+    "New diagnostics expose only closed aliases/phases, public geometry, bounded counters and validity flags; each row is <=2048 bytes. They explicitly state proves_recovery=false. No labels, private player state, exception descriptions, screenshots or arbitrary UI dumps are added.",
+    "The existing 13-boot storage method, storage assertions, retry/discard flow, three retained-host fixture callers, Kotlin seam/observer, production Home callback, card, and strict storage comparisons are not changed by this fixture correction.",
+    "Host-only authority, protocol 4.2, deterministic seeds, privacy boundaries, Doctor ON/OFF behavior, strict snapshot/content validation and Leave-confirmation timing remain untouched."
+  ],
+  "source_ledger": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08UiSeam.kt.in",
+      "sha256": "22d9e352ba6c4b8e161b2e69f1aae208a0c9a654ed85284ef4a34c2ea63399e4",
+      "reviewed_lines": [
+        [
+          1,
+          71
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalProbe.kt.in",
+      "sha256": "55d9ccb998831b07a43429249fc335189227bcd344f252dbcd4dbdbda963463c",
+      "reviewed_lines": [
+        [
+          104,
+          149
+        ],
+        [
+          210,
+          310
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalLaunch.swift.in",
+      "sha256": "cc61c02ceae5b5144cdc66dd12927dd31475ac3fac76be7732151582a1d777a6",
+      "reviewed_lines": [
+        [
+          1,
+          71
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_copy.py",
+      "sha256": "c2bf28bf0efd9449d646c451d7b8e665000e8d11a3a6eea76de95e1fb4a55a5f",
+      "reviewed_lines": [
+        [
+          1,
+          166
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_functional_copy.py",
+      "sha256": "417865a86daca8c09e1d650abc2d46b20920a128d95d2021ad365e38e7a207a4",
+      "reviewed_lines": [
+        [
+          1,
+          55
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01CatalogSelection.swift.in",
+      "sha256": "2649fb97fe27e74539dfd9867f6677c6a390e722129f8e2434231f44b1d91465",
+      "reviewed_lines": [
+        [
+          1,
+          177
+        ]
+      ]
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08HostUITests.swift.in",
+      "sha256": "0156fdbb6210f1257c49eba9eee7fc7ac42fce2ad85870525131a7adf9ea99a9",
+      "reviewed_lines": [
+        [
+          1,
+          152
+        ]
+      ]
+    },
+    {
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt",
+      "sha256": "ae11eb3dd97c28520205237b95c28766ccd6ce8dd0e005f82a0d63866323e152",
+      "reviewed_lines": [
+        [
+          281,
+          366
+        ]
+      ]
+    },
+    {
+      "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorCard.kt",
+      "sha256": "e764e6c7e09dc72464ad3eb14b41328a609a7d47475941054fb7af292f7a9d51",
+      "reviewed_lines": [
+        [
+          1,
+          55
+        ]
+      ]
+    }
+  ],
+  "pin_boundary": {
+    "finding": "The Swift template is already read into the copied XCTest and included dynamically by companion/composition control manifests. Its edit does not require changing the separate pinned companion Python DRIVER bytes, literal composition transforms, or immutable Foundation draft freeze.",
+    "separate_work": "Concurrent hosted-platform portability edits to runner/composition source and affected pins are outside this fixture authorship/review and need their independent review. Fresh aggregate control bindings remain mandatory after all changes and inventory commits."
+  },
+  "focused_controls": {
+    "source": {
+      "path": "remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py",
+      "sha256": "e0300c3d339798b4224d81f0e21b4043b78eca8145c98523abdc7110c76b68aa"
+    },
+    "reviewer_authored": true,
+    "independent_guard_reviewer": "/root/l08_fixture",
+    "guard_source_review": "APPROVED by separate agent at exact recorded source hash; no source scanner/mutation validity or ownership blocker identified. This does not self-approve that agent's Swift implementation.",
+    "declared_test_methods": 13,
+    "in_memory_mutation_variants": 36,
+    "execution_status": "NOT_RUN_BY_REVIEWER; COORDINATOR_LANE_QUEUED",
+    "execution_receipts": [],
+    "limit": "Read-only structural source/mutation controls, not a Swift parser/typechecker, XCTest execution, application callback or native ABI/runtime proof. Mutations only touch in-memory strings; no source fixture rewrite, subprocess or worker is started by the tests."
+  },
+  "official_api_research": [
+    {
+      "access_date": "2026-09-08",
+      "url": "https://developer.apple.com/tutorials/data/documentation/xcuiautomation/xcuielement/tap().json",
+      "http": 200,
+      "bytes": 14702,
+      "sha256": "bc49772beb3e08c609840c26ab831bde35cfbce7d3aa8bae316cdfa24e74a88a",
+      "claim": "tap sends an event to a system-computed hittable point; it may scroll an offscreen target. It does not attest delivery of the application callback or promise the rectangle center."
+    },
+    {
+      "access_date": "2026-09-08",
+      "url": "https://developer.apple.com/tutorials/data/documentation/xcuiautomation/xcuielement/ishittable.json",
+      "http": 200,
+      "bytes": 21267,
+      "sha256": "a425383b2660acbb1529b1653dc46b691fb266e1c33d2379b4396ffeb27fe6f1",
+      "claim": "isHittable reflects whether the system can compute a hit point now, not a promise of future geometry stability."
+    },
+    {
+      "access_date": "2026-09-08",
+      "url": "https://developer.apple.com/tutorials/data/documentation/xcuiautomation/xcuielement/frame.json",
+      "http": 404,
+      "claim": "Initial frame endpoint unavailable; no successful research claim at this URL."
+    },
+    {
+      "access_date": "2026-09-08",
+      "url": "https://developer.apple.com/tutorials/data/documentation/xcuiautomation/xcuielementattributes/frame.json",
+      "http": 200,
+      "bytes": 12972,
+      "sha256": "339a16886726159e7ada4605dfb859f5881b7163d5bfeb3f8ce55a559c8ac3ec",
+      "claim": "XCUIElementAttributes.frame is in screen coordinate space."
+    }
+  ],
+  "remaining_obligations": [
+    "Focused control execution and raw-results reconciliation in coordinator-owned lane.",
+    "Independent fresh frozen source/control approval and actual Apple simulator execution.",
+    "Finish all 13 functional boots, three retained-host boots and later Settings/System/lifecycle scenarios.",
+    "Strict Complete observations remain failed/unresolved; functional success cannot satisfy original strict L08.",
+    "Physical-device lock/backup/LAN, private signing/Store operations and separate owner/legal/content/identity obligations remain excluded or unverified."
+  ],
+  "reviewer_operations_and_cleanup": {
+    "operations": "Read-only Git/source/evidence inspection and bounded public Apple documentation fetches; authored only this review and one new control source file. No Gradle, Xcode, simulator, compiler, application or test worker was started by reviewer.",
+    "owned_generated_outputs": [],
+    "required_source_outputs": [
+      "remediation-runs/2026-09-08-continuation/reviews/l08-single-tap-independent-01.json",
+      "remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py"
+    ],
+    "cleanup": "No reviewer-owned generated outputs or temporary workers to clean. Coordinator remains owner of subsequent execution/finalizer receipts."
+  }
+}

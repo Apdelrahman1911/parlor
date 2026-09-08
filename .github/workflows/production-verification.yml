@@ -12,6 +12,33 @@ on:
       - testing
       - release
   workflow_dispatch:
+    inputs:
+      verification_scope:
+        description: Full qualification (default), or focused native continuation only
+        type: choice
+        default: full
+        options: [full, native-preflight, native-evidence]
+      frozen_source_sha:
+        description: Exact reviewed source/inventory SHA (required for either native mode)
+        type: string
+      preflight_run_id:
+        description: Successful native-preflight run ID (native-evidence only)
+        type: string
+      preflight_run_attempt:
+        description: Exact successful preflight attempt (native-evidence only)
+        type: string
+      preflight_artifact_id:
+        description: Exact preflight artifact ID (native-evidence only)
+        type: string
+      preflight_artifact_sha256:
+        description: Independently verified preflight ZIP SHA256 (native-evidence only)
+        type: string
+      approved_l08_control_sha256:
+        description: Independently approved composed L08 control hash (native-evidence only)
+        type: string
+      approved_normal_control_sha256:
+        description: Independently approved normal libproc control hash (native-evidence only)
+        type: string
 
 concurrency:
   group: production-verification-${{ github.ref }}
@@ -28,6 +55,7 @@ env:
 
 jobs:
   desktop-android:
+    if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
     name: Common, desktop, and Android release
     runs-on: ubuntu-24.04
     timeout-minutes: 90
@@ -177,6 +205,7 @@ jobs:
           path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
 
   desktop-linux-arm64:
+    if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
     name: Desktop strict verification (Linux arm64)
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 45
@@ -262,6 +291,7 @@ jobs:
           path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
 
   desktop-macos-x64:
+    if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
     name: Desktop and Kotlin Native strict verification (macOS x64)
     runs-on: macos-15-intel
     timeout-minutes: 45
@@ -347,6 +377,7 @@ jobs:
           path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
 
   desktop-windows-x64:
+    if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
     name: Desktop, Kotlin Native, and Android resources strict verification (Windows x64)
     runs-on: windows-2025
     timeout-minutes: 60
@@ -445,6 +476,9 @@ jobs:
     name: iOS tests, release frameworks, and Swift wrapper
     runs-on: macos-15
     timeout-minutes: 120
+    permissions:
+      contents: read
+      actions: read
     env:
       # macos-15 installs this reviewed GA toolchain alongside newer Xcodes.
       # Apple has required the iOS 26 SDK for uploads since 2026-04-28.
@@ -456,8 +490,14 @@ jobs:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          fetch-depth: 1
+          fetch-depth: ${{ github.event_name == 'workflow_dispatch' && inputs.verification_scope != 'full' && '0' || '1' }}
           persist-credentials: false
+
+      - name: Validate verification scope
+        shell: bash
+        env:
+          PARLOR_DISPATCH_SCOPE: ${{ inputs.verification_scope }}
+        run: /usr/bin/python3 -B scripts/ci/native_continuation.py validate-scope
 
       - name: Set up JDK 21
         uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
@@ -466,7 +506,57 @@ jobs:
           java-version: "21"
           check-latest: false
 
+      # These opt-in modes are evidence-only. They never replace the five-job full gate.
+      # Preflight and execution are separate dispatches so a different reviewer can
+      # approve the exact source-bound A/B control hashes before any application build.
+      - name: Run focused native continuation
+        id: native_continuation
+        if: github.event_name == 'workflow_dispatch' && (inputs.verification_scope == 'native-preflight' || inputs.verification_scope == 'native-evidence')
+        shell: bash
+        env:
+          PARLOR_DISPATCH_SCOPE: ${{ inputs.verification_scope }}
+          PARLOR_FROZEN_SOURCE_SHA: ${{ inputs.frozen_source_sha }}
+          PARLOR_PREFLIGHT_RUN_ID: ${{ inputs.preflight_run_id }}
+          PARLOR_PREFLIGHT_RUN_ATTEMPT: ${{ inputs.preflight_run_attempt }}
+          PARLOR_PREFLIGHT_ARTIFACT_ID: ${{ inputs.preflight_artifact_id }}
+          PARLOR_PREFLIGHT_ARTIFACT_SHA256: ${{ inputs.preflight_artifact_sha256 }}
+          PARLOR_APPROVED_L08_CONTROL_SHA256: ${{ inputs.approved_l08_control_sha256 }}
+          PARLOR_APPROVED_NORMAL_CONTROL_SHA256: ${{ inputs.approved_normal_control_sha256 }}
+          PARLOR_ACTIONS_READ_TOKEN: ${{ github.token }}
+        run: /usr/bin/python3 -B scripts/ci/native_continuation.py run
+
+      - name: Upload focused native evidence
+        id: native_artifact
+        if: always() && (github.event_name == 'workflow_dispatch' && (inputs.verification_scope == 'native-preflight' || inputs.verification_scope == 'native-evidence'))
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ${{ inputs.verification_scope }}-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-native-${{ github.run_id }}-${{ github.run_attempt }}/bundle/
+
+      - name: Verify focused native cleanup and uploaded custody
+        if: always() && (github.event_name == 'workflow_dispatch' && (inputs.verification_scope == 'native-preflight' || inputs.verification_scope == 'native-evidence'))
+        shell: bash
+        env:
+          PARLOR_DISPATCH_SCOPE: ${{ inputs.verification_scope }}
+          PARLOR_FROZEN_SOURCE_SHA: ${{ inputs.frozen_source_sha }}
+          PARLOR_NATIVE_UPLOAD_OUTCOME: ${{ steps.native_artifact.outcome }}
+          PARLOR_NATIVE_ARTIFACT_ID: ${{ steps.native_artifact.outputs.artifact-id }}
+          PARLOR_NATIVE_ARTIFACT_DIGEST: ${{ steps.native_artifact.outputs.artifact-digest }}
+        run: /usr/bin/python3 -B scripts/ci/native_continuation.py cleanup
+
+      - name: Upload native continuation cleanup receipt
+        if: always() && (github.event_name == 'workflow_dispatch' && (inputs.verification_scope == 'native-preflight' || inputs.verification_scope == 'native-evidence'))
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: native-cleanup-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-native-${{ github.run_id }}-${{ github.run_attempt }}-cleanup.json
+
       - name: Claim fresh verification output ownership
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
         id: verification_ownership
         shell: python
         run: |
@@ -475,11 +565,13 @@ jobs:
           runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
 
       - name: Claim apple-aggregate native resource ownership
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
         id: apple_aggregate_prepare
         shell: bash
         run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene prepare apple-aggregate
 
       - name: Record Xcode toolchain and exact source
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
         shell: bash
         run: |
           set -euo pipefail
@@ -497,6 +589,7 @@ jobs:
           test -z "$(git status --porcelain)"
 
       - name: Run iOS simulator tests, Apple static analysis, and release linkage gates
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
         id: apple_aggregate_run
         shell: bash
         run: |
@@ -506,7 +599,7 @@ jobs:
 
       - name: Stop Gradle after apple-aggregate and retire owned Apple resources
         id: apple_aggregate_finish
-        if: always()
+        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')
         env:
           PARLOR_APPLE_PREPARE_OUTCOME: ${{ steps.apple_aggregate_prepare.outcome }}
           PARLOR_APPLE_RUN_OUTCOME: ${{ steps.apple_aggregate_run.outcome }}
@@ -514,6 +607,7 @@ jobs:
         run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene finish apple-aggregate
 
       - name: Validate iOS plist and privacy manifest
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
         shell: bash
         run: |
           set -euo pipefail
@@ -521,11 +615,13 @@ jobs:
           plutil -lint iosApp/iosApp/PrivacyInfo.xcprivacy
 
       - name: Claim apple-ui native resource ownership
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
         id: apple_ui_prepare
         shell: bash
         run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene prepare apple-ui
 
       - name: Verify effective Debug and Release application identities
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
         shell: bash
         run: |
           set -euo pipefail
@@ -543,6 +639,7 @@ jobs:
           [[ "$release_bundle" == com.parlor.app ]]
 
       - name: Launch Swift host and Compose root on iOS Simulator
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
         id: apple_ui_run
         shell: bash
         run: |
@@ -565,7 +662,7 @@ jobs:
 
       - name: Stop Gradle after apple-ui and retire owned Apple resources
         id: apple_ui_finish
-        if: always()
+        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')
         env:
           PARLOR_APPLE_PREPARE_OUTCOME: ${{ steps.apple_ui_prepare.outcome }}
           PARLOR_APPLE_RUN_OUTCOME: ${{ steps.apple_ui_run.outcome }}
@@ -573,11 +670,13 @@ jobs:
         run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene finish apple-ui
 
       - name: Claim apple-wrapper native resource ownership
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
         id: apple_wrapper_prepare
         shell: bash
         run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene prepare apple-wrapper
 
       - name: Build unsigned Swift Release wrapper
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
         id: apple_wrapper_run
         shell: bash
         run: |
@@ -606,7 +705,7 @@ jobs:
 
       - name: Stop Gradle after apple-wrapper and retire owned Apple resources
         id: apple_wrapper_finish
-        if: always()
+        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')
         env:
           PARLOR_APPLE_PREPARE_OUTCOME: ${{ steps.apple_wrapper_prepare.outcome }}
           PARLOR_APPLE_RUN_OUTCOME: ${{ steps.apple_wrapper_run.outcome }}
@@ -614,7 +713,7 @@ jobs:
         run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene finish apple-wrapper
 
       - name: Inspect complete unsigned iOS Release package
-        if: success() && steps.apple_wrapper_run.outcome == 'success' && steps.apple_wrapper_finish.outcome == 'success'
+        if: success() && steps.apple_wrapper_run.outcome == 'success' && steps.apple_wrapper_finish.outcome == 'success' && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')
         shell: bash
         run: |
           set -euo pipefail
@@ -624,7 +723,7 @@ jobs:
 
       - name: Upload Apple verification evidence
         id: verification_artifact
-        if: always()
+        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ios-verification
@@ -643,7 +742,7 @@ jobs:
 
       # A successful nonempty upload must precede deletion of the last local evidence copy.
       - name: Clean only attested verification outputs
-        if: always()
+        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')
         env:
           PARLOR_VERIFICATION_PREPARE_OUTCOME: ${{ steps.verification_ownership.outcome }}
           PARLOR_APPLE_CYCLE_OUTCOMES: >-
@@ -660,7 +759,7 @@ jobs:
           runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
 
       - name: Upload verification cleanup receipt
-        if: always()
+        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: verification-cleanup-${{ github.job }}

@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_NATIVE_DOCUMENTATION_GUARD_CORRECTION",
+  "reviewer": "/root/portability_review",
+  "author": "/root/native_ci",
+  "recorded_at": "2026-09-08T09:51:12.174493+00:00",
+  "status": "APPROVED_DOCUMENTATION_ONLY_SOURCE_CORRECTION_PENDING_FOCUSED_EXECUTION",
+  "prior_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-portability-independent-01.json",
+    "sha256": "f6b77fac3047368fe8aec883a6f8a0daf82416e8f0b16a0e8b5d9a05a852724f",
+    "preserved": true
+  },
+  "author_manifest": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/hosted-native-portability-01/author-notes-03.json",
+    "sha256": "78463147d542cba4c3872691759a6bbdb1c118aa49aca5c885b6ca42d8626d75"
+  },
+  "retained_failure": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01/functional-copy.log",
+    "sha256": "c5149707a2a4beff5bad62431aa519a8fb54a04da7fe936aa3edd09775d36bd2",
+    "outcome": "12 methods executed;11 passed and1 failed README subtest. Original required69afd613... differed from authored911f1b73...; failure retained unchanged."
+  },
+  "finding": {
+    "id": "NP02",
+    "status": "CORRECTED_AND_SOURCE_RECHECKED",
+    "finding": "The qualified-profile section was appended to an immutable inherited README. The original clone-hash test correctly rejected it. The earlier independent source review missed this documentation-clone incompatibility; it is not a false failure or justification to weaken the guard.",
+    "correction": "Restore inherited README byte-for-byte; move exactly the already reviewed1128-byte section to the existing allowlisted L08_FUNCTIONAL_README.md. No new directory entry, test, manifest or executable edit."
+  },
+  "files": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/README.md",
+      "bytes": 11891,
+      "sha256": "69afd6136fdeecf9cca3426a523e130de01389b463db60ffd25254de87294142"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08_FUNCTIONAL_README.md",
+      "bytes": 11038,
+      "sha256": "ef7d79b8180a0aa7b412d1257b0948adcf41f602f5fdc8bb576e41ed3731aa0b"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+      "bytes": 25344,
+      "sha256": "b58d9761b7c199f0ab7fd01c2c6614d2f49e0a71102fd54ff3f6783acfede7f0"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-functional-companion-clone-manifest-01.json",
+      "bytes": 11870,
+      "sha256": "3036231a1bcfc9d567b8381ee33d89cd381377bea2b10790ddde0f90baf682fb"
+    }
+  ],
+  "static_proof": {
+    "restored_readme_equals_head_and_canonical": true,
+    "restored_readme_sha256": "69afd6136fdeecf9cca3426a523e130de01389b463db60ffd25254de87294142",
+    "functional_original_prefix_unchanged": true,
+    "functional_original_sha256": "66cc129781125196bca34ec7bb287869dfaa080741296d6d77af3d02cff5ce89",
+    "appended_bytes": 1128,
+    "appended_sha256": "5fd5fbd7d481fcf5b5df9e349b3bb92b795af07a48aa36c278ecfa76df28dc3a",
+    "reconstructed_prior_readme_sha256": "911f1b73bba672da8b344c1523723d4b9ced77b0ca200901230a48ad1aca448f",
+    "existing_clone_entries": 65,
+    "complete_existing_allowlist_entries": 75,
+    "all_directory_entries_equal_allowlist": true,
+    "functional_doc_already_permitted": true,
+    "guard_and_clone_manifest_byte_identical_to_head": true,
+    "other_eleven_author_manifest_files_unchanged": true,
+    "all_thirteen_author_manifest_files_current_match": true
+  },
+  "scope_preservation": [
+    "Exact qualified toolchain/build/sdk/runtime path prose moved unchanged. No fallback, ownership, strict Complete or provenance rule changed.",
+    "All original65 clone expectations, exactly two permitted changed clone names, exact75 total-directory check and no-symlink controls remain unchanged.",
+    "No companion-driver, composition freeze/pin, normal-runner, Foundation source or test source changed by this correction. Future control manifests must use new actual document hashes; old runtime/control bindings may not be silently refreshed."
+  ],
+  "required_execution": "Coordinator must rerun unchanged functional-copy12 with fresh before/after maps. Other failed single-tap scanner is independently owned/reviewed separately. Earlier successful focused subgate receipts remain scoped to their actual recorded inputs; this source report creates no new runtime or current-binding PASS.",
+  "historical_records_preserved": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/hosted-native-portability-01/author-notes-01.json",
+      "sha256": "92d74aa76b06768b4d95aa8b729e5735cc5ee17ca80a595f8b955b21d6d5ca90"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/hosted-native-portability-01/author-notes-02.json",
+      "sha256": "e96b53d0adc080888503ec5604eda5c20aeef62c79f1e930123beffad5b5304b"
+    }
+  ],
+  "review_execution": {
+    "tests": 0,
+    "builds": 0,
+    "gradle": 0,
+    "native_commands": 0,
+    "ci": 0,
+    "performed": "Read failing raw log, original guard/manifest, diffs and docs; independently compare old/canonical bytes, section relocation, hashes and allowlist membership; create this unique report."
+  },
+  "cleanup": "No build/native workers or generated build outputs created; source and other task resources untouched by reviewer."
+}

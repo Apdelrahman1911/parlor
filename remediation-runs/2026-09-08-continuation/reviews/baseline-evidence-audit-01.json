@@ -1,0 +1,1021 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-08T08:52:51.956595+00:00",
+  "reviewer": "/root/evidence_audit",
+  "status": "BASELINE_TRANSFER_AND_HISTORICAL_EVIDENCE_RECONCILED_NOT_READINESS_PASS",
+  "scope": "Independent read-only baseline audit. This does not rerun application/harness tests, approve unreviewed continuation edits, approve native execution, or certify Store readiness.",
+  "baseline": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "ec0de52a2c7ff9077482a291dc4fd2591fdea01f",
+    "tree": "48b099f3cd002a3253f21d2b06a4ece5787e62cb",
+    "initial_git_status_short": "",
+    "full_history": true,
+    "remote_confirmation": "Coordinator-owned; this reviewer did not issue a network/GitHub request.",
+    "concurrent_edits": "The initial complete manifest check was performed before team edits. run_gradle_cycle.py is subsequently being changed by another owner; historical lane approvals are not approval for those new bytes."
+  },
+  "delivery": {
+    "manifest": {
+      "path": "handoffs/2026-09-08-agent-transfer/DELIVERY_MANIFEST.json",
+      "bytes": 5382177,
+      "sha256": "4507179267c0ea7efc9d4eecb20a3415fa3d8488ffbf6217ff2803e966cb1aa5"
+    },
+    "listed_files": 14710,
+    "listed_bytes": 251055182,
+    "sha256_and_size_matches": 14710,
+    "mismatches": [],
+    "git_index_mode_matches": 14710,
+    "git_index_mode_mismatches": [],
+    "mechanical_inventory": {
+      "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "explicitly_deferred_by_manifest": true,
+      "listed_in_payload": false,
+      "at_baseline_sha256": "377689ddaa4e38db24ccbc27abf7807ce722a829bf3f7938433fe3225a4753fb",
+      "policy": "Inventory regenerated in ec0de52 after source/evidence commits. This audit does not re-execute inventory freshness and does not call it source review."
+    },
+    "self_reference_exclusion": "handoffs/2026-09-08-agent-transfer/ is intentionally outside payload hash list and bound by Git.",
+    "preserved_exclusions": "Nine explicit exclusions include machine .DS_Store, empty lane locks and two old synthetic-signed APKs; missing excluded bytes are not transfer corruption. Existing unrelated stash is not implicitly applied or delivered."
+  },
+  "contracts_read": [
+    "AGENTS.md",
+    "CONTINUE_HERE.md",
+    "docs/AGENT_CONTINUATION_2026-09-08.md",
+    "docs/PRODUCTION_ARCHITECTURE.md",
+    "docs/RELEASE_GATES.md",
+    "docs/HOW_TO_ADD_A_GAME.md",
+    "docs/adr/0001-game-module-registration.md",
+    "docs/adr/0002-manual-endpoint-connection.md"
+  ],
+  "review_inputs": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ios-readiness-16-independent-postrun-review-01.json",
+      "bytes": 37159,
+      "sha256": "f54fa06059d5711f640232ef486d067bb51ce8b6dd5d1788c6b6a9e569948d0f"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/independent-review-03.json",
+      "bytes": 6203,
+      "sha256": "a13eb3f7ca9d77af2bc5ff28a5283b1d3abaa71eca0a225065da29438fd84ece"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/normal-libproc-control-reconciliation-02.json",
+      "bytes": 10321,
+      "sha256": "64472e0b52d8d7819ca0f5d640b606cf7cee3817f263c53657438fcc0c76997e"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/final-readiness-residual-reconciliation-02.json",
+      "bytes": 27465,
+      "sha256": "b4be11e7263b2f183690896d93502e9f2f59033b5d9ff5828e455e7c23868e9c"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/original16-timer-commit-evidence-map-01.json",
+      "bytes": 145466,
+      "sha256": "82cc49b33044b27c1be99115847a04bfa505fa5ee28706ccfd7e30f4f0e6f0ff"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/original16-timer-regression-descriptors-01.json",
+      "bytes": 150391,
+      "sha256": "b2fee80c8d9210fb44ab8b226a97912d30f381bc3eeea7ec9d4cb1a0e8d7e7af"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/candidate-input-adapter-independent-01.json",
+      "bytes": 6568,
+      "sha256": "69fb1b858e6a040384653662dfe4314f6fcb7c3244727ec1e862101f5e330f98"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/final-current-sha-verification-preparation-02.md",
+      "bytes": 12517,
+      "sha256": "b77a9c396e42a174a41a412c0c1b4e9e76425da80ed99d6a622af6d9483721ae"
+    }
+  ],
+  "reference_rehash": {
+    "scope": "Recursive explicit path+sha256 records in native16 postrun, libproc source/control reconciliation, residual reconciliation, original16 map and candidate adapter review; resolve historical absolute root to checkout and native16 operation basenames to the exact evidence directory.",
+    "records_checked": 248,
+    "unique_paths": 209,
+    "mismatches": [],
+    "not_a_general_stale_reference_waiver": "Historical reports may explicitly bind superseded bytes; this claim is limited to the selected records checked before continuation edits."
+  },
+  "original16_and_timer": {
+    "map": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/original16-timer-commit-evidence-map-01.json",
+      "bytes": 145466,
+      "sha256": "82cc49b33044b27c1be99115847a04bfa505fa5ee28706ccfd7e30f4f0e6f0ff"
+    },
+    "primary_repair_commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+    "original_repair_ids": 16,
+    "timer_policy_commit": "b4f0ece464aa44819044dd78d2f2fd137d88c91d",
+    "timer_policy": "Whodunit Leave Confirmation time excluded for organizer/host; peer gains no clock authority; other pauses retained. Not a seventeenth original defect.",
+    "raw_descriptor_rows": 49,
+    "xml_rows": 45,
+    "raw_python_log_groups": 4,
+    "selected_outcomes": {
+      "PASS": 352,
+      "FAIL": 0,
+      "SKIP": 3
+    },
+    "selected_source_references_rehashed": 49,
+    "source_hash_mismatches": [],
+    "raw_evidence_mismatches": [],
+    "timer_execution": "Six local and four host methods appear in actual historical raw XML.",
+    "skip_scope": "Three physical P2pKit loopback methods remain skipped, not passed. Platform repeats are separate observations, not extra unique defects.",
+    "executed_commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+    "executed_run_id": 34152138368,
+    "attempt": 1,
+    "descriptor_summary": [
+      {
+        "key": "C01:com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+        "outcomes": {
+          "PASS": 8,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.games.mafia.multidevice.MafiaDoctorLanTest",
+        "outcomes": {
+          "PASS": 2,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+        "outcomes": {
+          "PASS": 15,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.games.mafia.ui.components.MafiaCoverContrastTest",
+        "outcomes": {
+          "PASS": 8,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLanguageContinuityTest",
+        "outcomes": {
+          "PASS": 2,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.games.mafia.ui.screens.MafiaTallyLayoutTest",
+        "outcomes": {
+          "PASS": 8,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest",
+        "outcomes": {
+          "PASS": 2,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest",
+        "outcomes": {
+          "PASS": 6,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest",
+        "outcomes": {
+          "PASS": 2,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.games.mafia.ui.screens.setup.MafiaSetupReadOnlyCountLayoutTest",
+        "outcomes": {
+          "PASS": 4,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.games.mafia.ui.screens.setup.MafiaSetupStepperLayoutTest",
+        "outcomes": {
+          "PASS": 4,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.games.mafia.ui.screens.setup.MafiaSetupToggleLayoutTest",
+        "outcomes": {
+          "PASS": 4,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.content.TestingStoryChronologyTest",
+        "outcomes": {
+          "PASS": 5,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.content.TestingStoryCompatibilityTest",
+        "outcomes": {
+          "PASS": 4,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.content.TestingStoryFollowupChronologyTest",
+        "outcomes": {
+          "PASS": 13,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.content.TestingStoryGameTraceTest",
+        "outcomes": {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.content.TestingStoryRemainingChronologyTest",
+        "outcomes": {
+          "PASS": 3,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest",
+        "outcomes": {
+          "PASS": 9,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.snapshot.WhodunitSnapshotValidationTest",
+        "outcomes": {
+          "PASS": 46,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.ui.flow.PeerPausedCoverContrastTest",
+        "outcomes": {
+          "PASS": 4,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest",
+        "outcomes": {
+          "PASS": 12,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+        "outcomes": {
+          "PASS": 6,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest",
+        "outcomes": {
+          "PASS": 9,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLanguageContinuityTest",
+        "outcomes": {
+          "PASS": 2,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+        "outcomes": {
+          "PASS": 4,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.designsystem.components.ParlorToastConcurrencyTest",
+        "outcomes": {
+          "PASS": 2,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.designsystem.components.ParlorToastLifetimeTest",
+        "outcomes": {
+          "PASS": 3,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.designsystem.components.ParlorToastStateTest",
+        "outcomes": {
+          "PASS": 4,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.designsystem.components.RecoveryActionContrastTest",
+        "outcomes": {
+          "PASS": 3,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.designsystem.localization.ProvideAppLanguageDesktopTest",
+        "outcomes": {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+        "outcomes": {
+          "PASS": 9,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+        "outcomes": {
+          "PASS": 3,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.transport.p2p.HostOpeningCancellationTest",
+        "outcomes": {
+          "PASS": 5,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.transport.p2p.JupiterDiscoveryContractTest",
+        "outcomes": {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.transport.p2p.P2pKitCreationTest",
+        "outcomes": {
+          "PASS": 9,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest",
+        "outcomes": {
+          "PASS": 8,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "outcomes": {
+          "PASS": 1,
+          "FAIL": 0,
+          "SKIP": 3
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:com.parlor.transport.p2p.PeerOpeningCancellationTest",
+        "outcomes": {
+          "PASS": 12,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C05:com.parlor.app.storage.IosLegacySnapshotBackupTest",
+        "outcomes": {
+          "PASS": 14,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C05:com.parlor.app.storage.IosStorageSafetyTest",
+        "outcomes": {
+          "PASS": 6,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C05:com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+        "outcomes": {
+          "PASS": 8,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C05:com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+        "outcomes": {
+          "PASS": 15,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C05:com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest",
+        "outcomes": {
+          "PASS": 11,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C05:com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+        "outcomes": {
+          "PASS": 9,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C05:com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+        "outcomes": {
+          "PASS": 3,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "raw XML testcase elements"
+      },
+      {
+        "key": "C01:test_xcode_framework_phase",
+        "outcomes": {
+          "PASS": 5,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "exact raw CI log line and recorded line number"
+      },
+      {
+        "key": "C01:test_android_artifact_size",
+        "outcomes": {
+          "PASS": 7,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "exact raw CI log line and recorded line number"
+      },
+      {
+        "key": "C01:test_android_upload_signature",
+        "outcomes": {
+          "PASS": 21,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "exact raw CI log line and recorded line number"
+      },
+      {
+        "key": "C01:test_google_promotion_edit",
+        "outcomes": {
+          "PASS": 9,
+          "FAIL": 0,
+          "SKIP": 0
+        },
+        "method": "exact raw CI log line and recorded line number"
+      }
+    ],
+    "reuse": "Scoped committed mechanism/regression proof remains valid for byte-equal source/test paths. Not final current-SHA combined qualification."
+  },
+  "native16": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/receipt.json",
+      "bytes": 450903,
+      "sha256": "56094f40132dd9beaeda52fdc737c61c242e897e0356b2722c4b50ad75bbf576"
+    },
+    "xcresult_summary": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/xcresult-summary.json",
+      "bytes": 1575,
+      "sha256": "6e8c73ea2a90265cbccf2a98968f78747878efe755608c9d9d92751795e9c493"
+    },
+    "status": "FAIL",
+    "runtime_status": "FAIL",
+    "xcode_exit": 65,
+    "xctest_methods": {
+      "pass": 4,
+      "fail": 1,
+      "skip": 0
+    },
+    "functional_operations": 15,
+    "functional_pass": 14,
+    "functional_fail": 1,
+    "process_boots": 10,
+    "completed_xctest_boot_markers": 9,
+    "strict_complete_comparisons": 24,
+    "strict_complete_failures": 24,
+    "first_failure": "Boot10 continue-home-counters; expected resumeTaps stayed zero. Successful legacy-load preceded it; Mafia controller attachment and continuation were not reached.",
+    "cause_limit": "Target motion is observable, not proven sole cause. Final card below overlay does not establish interception. No application recovery defect established by missing activation.",
+    "operation_evidence": [
+      {
+        "file": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/parlor-l08-storage-functional-1-save.json",
+          "bytes": 2075,
+          "sha256": "efee0b3694db22d6a34bb72df85a37edd9c681156e698662d72a438af53e1342"
+        },
+        "boot": 1,
+        "process_boot": "15DA4124-8924-4E9C-9EB5-2ABA8FD75D06",
+        "action": "save",
+        "functional_status": "PASS",
+        "stage": null,
+        "complete_comparisons": 2,
+        "complete_failures": 2
+      },
+      {
+        "file": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/parlor-l08-storage-functional-10-continue.json",
+          "bytes": 1467,
+          "sha256": "5026dce2c3ff30f510f9018eb9ae5fae23517e25cc563a1faea6b3f3268e0221"
+        },
+        "boot": 10,
+        "process_boot": "5E630B3A-568C-4D0B-8230-F40739D849FE",
+        "action": "continue",
+        "functional_status": "FAIL",
+        "stage": "continue-home-counters",
+        "complete_comparisons": 0,
+        "complete_failures": 0
+      },
+      {
+        "file": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/parlor-l08-storage-functional-10-legacy-load.json",
+          "bytes": 2798,
+          "sha256": "3380950b2bae18c351bb2aeeebc033d47f027ec7c31e3cd618381c3b5488071c"
+        },
+        "boot": 10,
+        "process_boot": "5E630B3A-568C-4D0B-8230-F40739D849FE",
+        "action": "legacy-load",
+        "functional_status": "PASS",
+        "stage": null,
+        "complete_comparisons": 4,
+        "complete_failures": 4
+      },
+      {
+        "file": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/parlor-l08-storage-functional-2-continue.json",
+          "bytes": 1594,
+          "sha256": "6dde45c841d652bdd7e149664de3516e34e09a47b773655c80cfe7bf55d00d79"
+        },
+        "boot": 2,
+        "process_boot": "33608767-35B3-412B-939B-26F51D7823FC",
+        "action": "continue",
+        "functional_status": "PASS",
+        "stage": null,
+        "complete_comparisons": 0,
+        "complete_failures": 0
+      },
+      {
+        "file": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/parlor-l08-storage-functional-2-load.json",
+          "bytes": 2078,
+          "sha256": "c0615961e229560df2e1601fbe6940fe597a33a6b4d8f70a661a5b6afddb40b3"
+        },
+        "boot": 2,
+        "process_boot": "33608767-35B3-412B-939B-26F51D7823FC",
+        "action": "load",
+        "functional_status": "PASS",
+        "stage": null,
+        "complete_comparisons": 2,
+        "complete_failures": 2
+      },
+      {
+        "file": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/parlor-l08-storage-functional-3-save.json",
+          "bytes": 2075,
+          "sha256": "475faf120b424bca74b6d709c31312f49a6a2ddbb1a05f684b13779a48a5ff77"
+        },
+        "boot": 3,
+        "process_boot": "54F4A0AA-5A22-48FE-9D2F-C990546D7D5D",
+        "action": "save",
+        "functional_status": "PASS",
+        "stage": null,
+        "complete_comparisons": 2,
+        "complete_failures": 2
+      },
+      {
+        "file": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/parlor-l08-storage-functional-4-continue.json",
+          "bytes": 1594,
+          "sha256": "b84eec96dee1726458c33337b84cac97701a88147ef4142d82f557c2b35ad203"
+        },
+        "boot": 4,
+        "process_boot": "312677D7-D21B-47CA-8D33-D7EFA8FBBD77",
+        "action": "continue",
+        "functional_status": "PASS",
+        "stage": null,
+        "complete_comparisons": 0,
+        "complete_failures": 0
+      },
+      {
+        "file": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/parlor-l08-storage-functional-4-load.json",
+          "bytes": 2078,
+          "sha256": "982a1491f56d4aa873cfd1f7f9d65d6ca3d9fbb35af02977a07cea88f599ca08"
+        },
+        "boot": 4,
+        "process_boot": "312677D7-D21B-47CA-8D33-D7EFA8FBBD77",
+        "action": "load",
+        "functional_status": "PASS",
+        "stage": null,
+        "complete_comparisons": 2,
+        "complete_failures": 2
+      },
+      {
+        "file": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/parlor-l08-storage-functional-5-save.json",
+          "bytes": 2077,
+          "sha256": "4f57dd1631fd4c20f9078db99410ef39edab5beb3482c45b678548afc7d4cbcf"
+        },
+        "boot": 5,
+        "process_boot": "DD682740-D3EF-4358-92AB-2A8F7F243303",
+        "action": "save",
+        "functional_status": "PASS",
+        "stage": null,
+        "complete_comparisons": 2,
+        "complete_failures": 2
+      },
+      {
+        "file": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/parlor-l08-storage-functional-6-continue.json",
+          "bytes": 1594,
+          "sha256": "46c5cfcd3fedfa908d266a2b45f98df0b553174d17c68f6d2fe37014bee10ec7"
+        },
+        "boot": 6,
+        "process_boot": "217B45C9-3E7E-49F8-9152-1D6F14513CD5",
+        "action": "continue",
+        "functional_status": "PASS",
+        "stage": null,
+        "complete_comparisons": 0,
+        "complete_failures": 0
+      },
+      {
+        "file": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/parlor-l08-storage-functional-6-load.json",
+          "bytes": 2080,
+          "sha256": "8a2c56437c1c292bce044ab8ffb8a342d7c35b0b5dbda3f0b590256ce24b3922"
+        },
+        "boot": 6,
+        "process_boot": "217B45C9-3E7E-49F8-9152-1D6F14513CD5",
+        "action": "load",
+        "functional_status": "PASS",
+        "stage": null,
+        "complete_comparisons": 2,
+        "complete_failures": 2
+      },
+      {
+        "file": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/parlor-l08-storage-functional-7-save.json",
+          "bytes": 2079,
+          "sha256": "170409e0783e6d1964c3f86280a36d25eabf2cef281267133f7a7b1c6f9ee1cd"
+        },
+        "boot": 7,
+        "process_boot": "C17A4065-4E2C-4E65-8F09-DA41CC55AAE4",
+        "action": "save",
+        "functional_status": "PASS",
+        "stage": null,
+        "complete_comparisons": 2,
+        "complete_failures": 2
+      },
+      {
+        "file": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/parlor-l08-storage-functional-8-continue.json",
+          "bytes": 1594,
+          "sha256": "60d7423d071e8aba3b7dbdf953fca32e144952d7626076db8c6a7c2ca7172b37"
+        },
+        "boot": 8,
+        "process_boot": "B7DD73C1-C1AD-44B0-8BBB-2474AFB34C1A",
+        "action": "continue",
+        "functional_status": "PASS",
+        "stage": null,
+        "complete_comparisons": 0,
+        "complete_failures": 0
+      },
+      {
+        "file": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/parlor-l08-storage-functional-8-load.json",
+          "bytes": 2082,
+          "sha256": "85db52e5cd6bfaa4451ad20903015a882c9c9d3cf11b9e7f6dc51bbe1a643f07"
+        },
+        "boot": 8,
+        "process_boot": "B7DD73C1-C1AD-44B0-8BBB-2474AFB34C1A",
+        "action": "load",
+        "functional_status": "PASS",
+        "stage": null,
+        "complete_comparisons": 2,
+        "complete_failures": 2
+      },
+      {
+        "file": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/parlor-l08-storage-functional-9-legacy-seed.json",
+          "bytes": 2747,
+          "sha256": "0285380d7f1c4eb5c6848c6e3a7ad05dd7f3dacc635fd988447c10c95753e5e8"
+        },
+        "boot": 9,
+        "process_boot": "FC19F84B-338D-4D05-BF96-35CC71CE4E77",
+        "action": "legacy-seed",
+        "functional_status": "PASS",
+        "stage": null,
+        "complete_comparisons": 4,
+        "complete_failures": 4
+      }
+    ],
+    "unfinished": [
+      "Boot10 actual resumed Mafia continuation",
+      "Boot11 retained malformed neighbor Retry/Discard",
+      "Boot12 damaged recognized-current plus legacy Retry/Discard",
+      "Boot13 restarted final absence",
+      "Three retained-host fixtures / 42 operations",
+      "Later Settings/OS/active-game lifecycle scenarios in this invocation"
+    ],
+    "foundation": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-16/parlor-l08-app-foundation.json",
+        "bytes": 7826,
+        "sha256": "e656f929fd9c96a58ecf7430bd3f74b5d33be2cf3c8dcb4f15d446aeb6b42d35"
+      },
+      "classification": "COLLECTION_VALIDATED_NOT_L08_PASS",
+      "operations": 8,
+      "operation_errors": 0,
+      "observation_rows": 8,
+      "missing_fm_protection_keys": 8,
+      "regular_file_url_until_first_authentication": 5,
+      "built_installed_inventory_equal": true,
+      "hardware_enforcement_verified": false
+    },
+    "cleanup": "Raw receipt records stop-xcode-immediate=0 and stop-final=0; temp removed, device absent, source/control unchanged, empty owned-process/unknown-holder/output/cleanup-error lists. Original Mac absence is historical receipt proof, not a fresh Linux observation."
+  },
+  "normal_provenance": {
+    "native15_receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-15/receipt.json",
+      "bytes": 378246,
+      "sha256": "7b4235bc8d869db573ffbdf65a246be7d25ac1ebefb81b7affe01ffd97818c50"
+    },
+    "native15_observations": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/ios-readiness-15/normal-launch-observations.json",
+      "bytes": 14859,
+      "sha256": "b4d40fd24105a7f97690f0dbed62894e9a071d455d33b0512045ce815c35705b"
+    },
+    "native15_runtime": "PASS: one XCTest method executed eight real repetitions, 48 observation samples; no continuous liveness or per-repetition image claim.",
+    "native15_provenance": "FAIL: separate ninth vmmap observation exited255. Neither app crash nor OOM/entitlement/permissions cause established.",
+    "native15_package_notices": "PASS",
+    "native15_cleanup": "PASS, both Gradle stops0, unchanged source/control, no owned residuals recorded.",
+    "libproc_controls": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-libproc-controls-01/receipt.json",
+        "bytes": 297167,
+        "sha256": "ec7599bd2c1e73fb48db664edf85189d0fc1b4b628bc2431b7d2d28d32d3fa25"
+      },
+      "raw_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-libproc-controls-01/gradle.log",
+        "bytes": 96541,
+        "sha256": "48bd252289ba3355598d6772e4933d3e49592925183c5a6528c3c217cb55a7a6"
+      },
+      "unique_raw_ok_ids": 187,
+      "declared_discovered_executed_current_ast_sets_equal": true,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "bound_control_files": 86,
+      "before_after_equal": true,
+      "current_hash_mismatches": [],
+      "six_canonical_adopted_files_match_approved_freeze03": true,
+      "source_and_outer_runner_stable_during_historical_cycle": true,
+      "stop_exit": 0,
+      "cleanup_errors": []
+    },
+    "compiler_and_mutation": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-libproc-validation-01/receipt.json",
+        "bytes": 300538,
+        "sha256": "819e5daa3c1308d72daca722ff4f0b9cf3b342a21454ad5794a650f7d16e66dd"
+      },
+      "raw_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/normal-libproc-validation-01/gradle.log",
+        "bytes": 3241,
+        "sha256": "7ce3412759db9f8ed2c58876d0c6a9942fab9d8a1a75e4d179bbca3cc559cf9a"
+      },
+      "expected_isolated_mutation_failures": 1,
+      "actual_c_compilation_exit": 0,
+      "malformed_request_smokes": 5,
+      "smokes_enter_native_region_query": false,
+      "stop_exit": 0,
+      "cleanup_errors": []
+    },
+    "actual_parlor_libproc_query": "NOT_RUN at delivered baseline. Synthetic1328/native C compile are not ABI/runtime proof.",
+    "fresh_proof": "Independent source/control freeze and exact-hash approval, normal-source eight UI repetitions plus separate ninth real libproc-selected-region evidence, artifact/signature/notices bindings, native sizeof/return values and cleanup. Explicit libproc only; no fallback/entitlement bypass."
+  },
+  "dependency_candidate": {
+    "adapter": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/run_candidate_input_01.py",
+      "bytes": 4319,
+      "sha256": "2a306819fb41b1883139fb42355d493f02e1d93a687f54d06f43ffbb758afa60"
+    },
+    "consumer": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/candidate_consumer.py",
+      "bytes": 23404,
+      "sha256": "eb6e2baaac22739b4652bc63c6b57a24374ee57fb81d4711b981b872e8ac1c7f"
+    },
+    "synthetic_control_receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-consumer-controls-04/receipt.json",
+      "bytes": 296083,
+      "sha256": "53cbefb51d0f9903c894fb150ddf93642e0139ebfe47f7a4cde7a0cb5d74ff2e"
+    },
+    "synthetic_control_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/dependency-consumer-controls-04/gradle.log",
+      "bytes": 2103,
+      "sha256": "903b4ebe5b26a4c38f5e158c840f00a679e164cad9ae28f0f7eff1594acd9acd"
+    },
+    "actual_synthetic_methods": 16,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "historical_control_cleanup": "PASS, stop0, source/runner equal, ephemeral parser cleanup true; no candidate runtime claim.",
+    "final_candidate_execution": "NOT_RUN at delivered baseline.",
+    "required": "Frozen-source strict four-graph export, production rendering, reviewed binding, actual candidate consumer. Conjunction: consumer scoped PASS; prerequisites scoped PASS/exit0/no error/ephemeral cleanup; outer lane PASS/exit0/stop0/source equality/complete cleanup. Adapter/helper/lane portability changes require new independent approval.",
+    "notice_source_byte_checks": [
+      {
+        "platform": "android",
+        "producer_receipt": {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/build/ci-evidence/android-release-notices.json",
+          "bytes": 10256,
+          "sha256": "aa9d81fc220f24be8bf0b3a45cd3e9ecb1f4f1e25a161d6cff6f0feca3adcf03"
+        },
+        "notice_files": 26,
+        "current_source_mismatches": [],
+        "cleaned_binary_reinspected": false
+      },
+      {
+        "platform": "ios",
+        "producer_receipt": {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/ios-verification/parlor/parlor/build/ci-evidence/ios-release-notices.json",
+          "bytes": 10407,
+          "sha256": "c93389a737fd210660da444522e0d126e06f51c18106b4a6ec2d2563f98d59f7"
+        },
+        "notice_files": 26,
+        "current_source_mismatches": [],
+        "cleaned_binary_reinspected": false
+      }
+    ]
+  },
+  "historical_ci": {
+    "run_observation": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/run-observation-02.json",
+      "bytes": 12632,
+      "sha256": "ab9c93893928fc53b485e303c5481fa4142cad698769c54ffdffb24a646ec2f3"
+    },
+    "jobs_observation": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/jobs-observation-02.json",
+      "bytes": 18811,
+      "sha256": "b0ca6709dd3a2cc22a47260c250d5bd11a6346469e63fba13cf071da4000da58"
+    },
+    "head_sha": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+    "run_id": 34152138368,
+    "attempt": 1,
+    "jobs": [
+      {
+        "id": 101836438876,
+        "name": "Desktop and Kotlin Native strict verification (macOS x64)",
+        "conclusion": "success"
+      },
+      {
+        "id": 101836438981,
+        "name": "iOS tests, release frameworks, and Swift wrapper",
+        "conclusion": "success"
+      },
+      {
+        "id": 101836439010,
+        "name": "Desktop strict verification (Linux arm64)",
+        "conclusion": "success"
+      },
+      {
+        "id": 101836439040,
+        "name": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+        "conclusion": "success"
+      },
+      {
+        "id": 101836439057,
+        "name": "Common, desktop, and Android release",
+        "conclusion": "success"
+      }
+    ],
+    "apple_raw_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/101836438981.log",
+      "bytes": 538242,
+      "sha256": "1a0fe5199142cba9a90ee7b87272805c01a220c301bc87b93a6226ad7f84689c"
+    },
+    "raw_apple_toolchain_lines": [
+      229,
+      230
+    ],
+    "raw_release_link_lines": [
+      973,
+      981,
+      982
+    ],
+    "scope": "Qualified Xcode26.3/17C529 and real all-three Release linkage are historical facts, not new final-SHA evidence. Linkage is not device/x64 runtime. Do not invent general platform unavailability or a mandatory full rebuild only for cleaned nonpackaged raw framework hashes.",
+    "fresh_requirement": "All five production-verification jobs at the same frozen SHA/attempt; preserve actual task/cache/skipped descriptors and five main/five cleanup artifacts. Separate A/B/C evidence still required."
+  },
+  "readiness": "NOT READY / local verification unfinished at delivered baseline. Four remaining workstreams remain A interaction/recovery + strict mismatch, B real Debug libproc provenance, C fresh export/render/candidate chain, D same frozen-source combined CI/review/evidence reconciliation/commit-push.",
+  "preserved_boundaries": [
+    "Host-only multiplayer reducer authority and exact protocol4.2",
+    "Deterministic session seed, strict content/snapshot validation and public/own-private/host-only privacy",
+    "Existing Doctor ON/OFF/self-protection semantics and modal timing policy",
+    "Pinned Maven Central P2pKit0.7.0-rc3; no alternate repository, composite, publication or identity change"
+  ],
+  "residual_requirements": [
+    "Physical Android/iOS same-LAN, real device accessibility/privacy/lifecycle and lock/keybag/backup/power-loss evidence remain separate. Strict locally observed protection metadata failure is NOT reclassified as physical-only.",
+    "No Store/private signing/publication performed or authorized. Known com.parlor.app collision and disabled publication are preserved.",
+    "Owner legal/license/content rights, production editorial approval, actual privacy URLs/questionnaires and Store declarations remain outstanding."
+  ],
+  "reviewer_execution_and_cleanup": {
+    "executed": "Only read-only Git identity/history/index inspection, source/contract reads, stdlib SHA256/JSON/XML/AST/raw-log parsing. No repository module imports, tests/builds/native/CI dispatch, global installs or process control.",
+    "exploratory_parser_failure": "One read-only audit snippet used raw_line instead of actual raw_log_line and raised KeyError; corrected parser checked all four exact raw-log groups successfully. Not an application/test failure.",
+    "generated_outputs": "Only this additive JSON report; no scratch, build, native helper or background worker generated. Coordinator owns Gradle lane/cleanup; reviewer did not stop another agent's lane."
+  }
+}

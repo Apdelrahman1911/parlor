@@ -1,0 +1,404 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_LINUX_TRANSPORT_EXECUTION_EVIDENCE_RECONCILIATION",
+  "reviewer": "/root/portability_review",
+  "executor": "/root",
+  "recorded_at": "2026-09-08T09:48:50.817947+00:00",
+  "status": "PASS_WITH_THREE_EXISTING_EXPLICIT_SKIPS",
+  "evidence": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-01",
+  "receipt_sha256": "74d7445fd6d60f39bb19a971f73f54c5a292b591963ff2175b65ef5a4d24d0db",
+  "execution": {
+    "command": [
+      "./gradlew",
+      ":shared:transport-p2p:desktopTest",
+      "--no-daemon",
+      "--no-parallel",
+      "--max-workers=1",
+      "--no-configuration-cache",
+      "--dependency-verification=strict",
+      "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=continuation-transport-contracts-01",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-Pparlor.android.signing.storeFile=",
+      "-Pparlor.android.signing.storePassword=",
+      "-Pparlor.android.signing.keyAlias=",
+      "-Pparlor.android.signing.keyPassword="
+    ],
+    "started_at": "2026-09-08T09:39:20.344196+00:00",
+    "finished_at": "2026-09-08T09:44:05.795394+00:00",
+    "exit_code": 0,
+    "outer_status": "PASS",
+    "host": "Linux amd64",
+    "jdk_home": "/usr/lib/jvm/java-21-openjdk-amd64",
+    "java_version": "21.0.12",
+    "javac_version": "21.0.12",
+    "gradle_version": "8.13",
+    "summary": "BUILD SUCCESSFUL in4m43s;21 actionable tasks:21 executed; target desktopTest actually ran, no UP-TO-DATE/FROM-CACHE target result.",
+    "not_run": [
+      "Apple native tasks (host-incompatible warnings, not this invocation scope)",
+      "Two-/three-device LAN membership or message-delivery fixtures",
+      "iOS application/libproc/Foundation runtime",
+      "Final combined frozen-source production qualification"
+    ]
+  },
+  "test_results": {
+    "suites": 22,
+    "discovered_xml_cases": 277,
+    "unique_case_ids": 277,
+    "executed_passes": 274,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3,
+    "summary_json_matches_all_raw_xml_headers_and_children": true,
+    "all_suite_timestamps_within_cycle": true,
+    "case_ids_sha256": "5f75aac959aca074b7c5223b8ca64682ac14b53a617a634141434b1838b0d702",
+    "skipped_ids": [
+      "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]",
+      "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+      "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.host_broadcast_reaches_every_peer()[desktop]"
+    ],
+    "skip_source": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+    "skip_source_sha256": "21451bf407d791ec85066227a2670ccf61d3506efaae47375c0bba557fe3be73",
+    "skip_source_unchanged_from_head": true,
+    "skip_reasons": "Existing @Ignore at lines104,131,177: peer membership/roundtrip needs two physical devices, broadcast needs three; single-JVM mDNS loopback unreliable. No ignore was added by this cycle. XML retains empty skipped elements; source supplies the reasons.",
+    "real_kit_smoke": "host_advertises_a_room_code_that_join_resolves_to()[desktop] actually passed in4.783s using existing real P2pKit JVM adapter fixture. This is advertising/RoomInfo smoke, not physical-device or peer-message delivery proof."
+  },
+  "source_binding": {
+    "commit": "ec0de52a2c7ff9077482a291dc4fd2591fdea01f",
+    "tree": "48b099f3cd002a3253f21d2b06a4ece5787e62cb",
+    "branch": "fix/local-readiness-2026-09-07",
+    "dirty": true,
+    "diff_sha256": "7556edc910e117709b63ffb24f9effe82625af9d525cab143789e1eb58d3948a",
+    "source_manifest_rows": 820,
+    "source_manifest_sha256": "b3614749ea6ed13c68dd78d676587ee476a6ffb83e21dd752f42a178bd6bcfea",
+    "manifest_digest_independently_recomputed": true,
+    "before_after_full_objects_equal": true,
+    "current_all_820_file_hashes_equal": true,
+    "caveat": "This focused regression runs reviewed dirty/untracked continuation source, not the later frozen-source final qualification. Source inventory omits remediation archives by design; this command directly executes repository Gradle/test sources, whose bytes are bound. The approved outer runner is separately bound."
+  },
+  "runner_binding": {
+    "path": "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+    "sha256": "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc",
+    "manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912",
+    "before_after_equal": true,
+    "current_matches": true,
+    "source_review": "remediation-runs/2026-09-08-continuation/reviews/gradle-lane-portability-independent-01.json"
+  },
+  "related_independent_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-continuation-source-independent-01.json",
+    "sha256": "ff5b4cc4a6362f9199458ada427bda4ca9f0a7dfe1d579fe1618be32c069253d",
+    "reviewer": "/root/ci_review",
+    "scope": "Workflow/orchestrator/release contract source changes; this review does not replace that source review. Current bound workflow SHAaf0a96cf... is the separately approved one. Nine ProductionVerificationWorkflowContractTest methods actually passed; no Actions execution implied."
+  },
+  "raw_xml": [
+    {
+      "file": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidManifestLanPermissionTest.xml",
+      "sha256": "be92192a7744c339f392af7e5c4642f4bed691918a56409cd107f34173288ce8",
+      "suite": "com.parlor.transport.p2p.AndroidManifestLanPermissionTest",
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "tests": 2
+    },
+    {
+      "file": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AndroidReleaseLintContractTest.xml",
+      "sha256": "2faf8f19610c7f279b1efb1d07fcb58701d848508182b863720fcaf06a21fbc5",
+      "suite": "com.parlor.transport.p2p.AndroidReleaseLintContractTest",
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "tests": 8
+    },
+    {
+      "file": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomCoordinatorTest.xml",
+      "sha256": "b9558f4de4e4e5034db24d0221d673c526acd59e84582b4d783a19f4b379d45f",
+      "suite": "com.parlor.transport.p2p.AppLifecycleRoomCoordinatorTest",
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "tests": 2
+    },
+    {
+      "file": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+      "sha256": "f4b2f3566f56fefebfd650a80341041a4b53355bf227ab8a714279cf10d543f2",
+      "suite": "com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "tests": 3
+    },
+    {
+      "file": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DesktopDependencyVerificationContractTest.xml",
+      "sha256": "b911e17ba3ef02059b0c33e9c861193732cec08dc89d8c0429ef053943c74292",
+      "suite": "com.parlor.transport.p2p.DesktopDependencyVerificationContractTest",
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "tests": 3
+    },
+    {
+      "file": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest.xml",
+      "sha256": "cd3d69c616523123f68815d9a652698268e23947c0e4ed09f9eade9cd20bb2e7",
+      "suite": "com.parlor.transport.p2p.DiscoveryCandidateSchedulerTest",
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "tests": 13
+    },
+    {
+      "file": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.HostOpeningCancellationTest.xml",
+      "sha256": "b57213d5a362bf80a1ae9dd71ac4b87d136b5ea236f863b476eab0be28e32393",
+      "suite": "com.parlor.transport.p2p.HostOpeningCancellationTest",
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "tests": 5
+    },
+    {
+      "file": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.IosInfoPlistBonjourTest.xml",
+      "sha256": "afe28756183d74ddd49991e22734ac76c9b3641bfb7e7be9469f38efb53e7da5",
+      "suite": "com.parlor.transport.p2p.IosInfoPlistBonjourTest",
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "tests": 1
+    },
+    {
+      "file": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+      "sha256": "08ab7c45dac65e6c625860ca6ed874b75144a9b5faafdfd743d70020bf064d2a",
+      "suite": "com.parlor.transport.p2p.JupiterDiscoveryContractTest",
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "tests": 1
+    },
+    {
+      "file": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.LoopbackFixtureContractTest.xml",
+      "sha256": "3af5c462d9cfa2c08cb5068dc1e06f577598ffd5c4abbcb5a8863db81c138f39",
+      "suite": "com.parlor.transport.p2p.LoopbackFixtureContractTest",
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "tests": 5
+    },
+    {
+      "file": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.MultiplayerDocumentationContractTest.xml",
+      "sha256": "447f4faf9095f6271b4c0152ddcb0a784ffcea4cee8b08a3d5c364e7c02aee07",
+      "suite": "com.parlor.transport.p2p.MultiplayerDocumentationContractTest",
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "tests": 11
+    },
+    {
+      "file": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pDiagnosticsTest.xml",
+      "sha256": "993d468e2ddeaef04131402dc75d55c776bba05468d53c47883866c078fef8ab",
+      "suite": "com.parlor.transport.p2p.P2pDiagnosticsTest",
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "tests": 5
+    },
+    {
+      "file": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitCreationTest.xml",
+      "sha256": "4aa194454eb5ae1b39d3107cca5e07c3d157768fdf4d51907b930694b40fcce3",
+      "suite": "com.parlor.transport.p2p.P2pKitCreationTest",
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "tests": 9
+    },
+    {
+      "file": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitMavenProvenanceContractTest.xml",
+      "sha256": "7bc1d7fba030132e936771b98fed28ade74bf6f7573a599cede9c49bdadb72ee",
+      "suite": "com.parlor.transport.p2p.P2pKitMavenProvenanceContractTest",
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "tests": 2
+    },
+    {
+      "file": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.xml",
+      "sha256": "73659603381d98c88b8bfa519954b2469e8327c3d2230891358088ec6b7296f7",
+      "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest",
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "tests": 130
+    },
+    {
+      "file": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+      "sha256": "fd12bc065698af0f3614b6ddca17210ac70fbf20a1a57dc757183fda5ca8d226",
+      "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+      "skipped": 3,
+      "failures": 0,
+      "errors": 0,
+      "tests": 4
+    },
+    {
+      "file": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pTrafficPolicyTest.xml",
+      "sha256": "08d3dbeb2ed0ae3fed2c5dd5782673b5264d923b5d7038c8c9b1f9eb0428d3b5",
+      "suite": "com.parlor.transport.p2p.P2pTrafficPolicyTest",
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "tests": 7
+    },
+    {
+      "file": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.PeerOpeningCancellationTest.xml",
+      "sha256": "36b795dda05c634c058ab67e32f5b6821c0c7550f072192d070e9843a617562c",
+      "suite": "com.parlor.transport.p2p.PeerOpeningCancellationTest",
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "tests": 12
+    },
+    {
+      "file": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+      "sha256": "ea1d171b768d6dac2ddde077036a8be53ebc0c39786f9c9d535399c22e68ab72",
+      "suite": "com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest",
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "tests": 9
+    },
+    {
+      "file": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ResumableCredentialStoreTest.xml",
+      "sha256": "c728c4d28cada93ced9419f7d4fd258a67c272d3a17d64fe41fb8120ce614b18",
+      "suite": "com.parlor.transport.p2p.ResumableCredentialStoreTest",
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "tests": 23
+    },
+    {
+      "file": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.TestTransportIsolationContractTest.xml",
+      "sha256": "d1805b2dbca8e48744a53d9911172e918fb9c2394cf826c42025bc67e3860290",
+      "suite": "com.parlor.transport.p2p.TestTransportIsolationContractTest",
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "tests": 4
+    },
+    {
+      "file": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.VerificationMetadataAssertionsTest.xml",
+      "sha256": "3bd02887736188ebca9fbf39eb6ffb30f5911a0bf8f1271868fc07b68458adac",
+      "suite": "com.parlor.transport.p2p.VerificationMetadataAssertionsTest",
+      "skipped": 0,
+      "failures": 0,
+      "errors": 0,
+      "tests": 18
+    }
+  ],
+  "retained_files": [
+    {
+      "path": "receipt.json",
+      "sha256": "74d7445fd6d60f39bb19a971f73f54c5a292b591963ff2175b65ef5a4d24d0db",
+      "bytes": 306059
+    },
+    {
+      "path": "gradle.log",
+      "sha256": "5d32f5fa9501c395ecb97fd7187c0529fd9fe765aa2e81f4ebd9ab7b1b75c82d",
+      "bytes": 4690
+    },
+    {
+      "path": "test-receipts.json",
+      "sha256": "fe86c3c907d1421200a4698e45c55f739077549939f4efdcfbe98b40ff51e5f1",
+      "bytes": 73799
+    },
+    {
+      "path": "artifact-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "path": "java-toolchain.log",
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+      "bytes": 2026
+    },
+    {
+      "path": "javac-toolchain.log",
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755",
+      "bytes": 14
+    },
+    {
+      "path": "stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    }
+  ],
+  "warnings": [
+    "Experimental Android lint9.1.1 option and existing Gradle8.13/Kotlin future-deprecation advisory; no suppressions or toolchain changes introduced.",
+    "iOS native tests disabled on Linux reported at configuration, never counted as executed.",
+    "Real-kit smoke XML stderr reports SLF4J no-provider/NOP logging; no test failure or private-state output observed."
+  ],
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-08T09:44:06.890033+00:00",
+    "seconds_after_command_finish": 1.094639,
+    "stop_log": "No Gradle daemons are running.",
+    "outputs_before": [],
+    "outputs": [
+      {
+        "path": "shared/networking/build",
+        "recorded_removed": true,
+        "independently_absent": true
+      },
+      {
+        "path": "shared/transport-p2p/build",
+        "recorded_removed": true,
+        "independently_absent": true
+      },
+      {
+        "path": "shared/core/build",
+        "recorded_removed": true,
+        "independently_absent": true
+      },
+      {
+        "path": "shared/storage/build",
+        "recorded_removed": true,
+        "independently_absent": true
+      },
+      {
+        "path": "shared/engine/build",
+        "recorded_removed": true,
+        "independently_absent": true
+      },
+      {
+        "path": "build",
+        "recorded_removed": true,
+        "independently_absent": true
+      },
+      {
+        "path": "build-logic/convention/build",
+        "recorded_removed": true,
+        "independently_absent": true
+      }
+    ],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "artifact_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "errors": [],
+    "deferred_signals": [],
+    "completed_at": "2026-09-08T09:44:07.125601+00:00",
+    "scratch_independently_absent": true,
+    "method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership.",
+    "retained_archived_build_reports_untouched": true,
+    "limitations": "Recorded cycle-owned worker ledger is empty; reviewer did not take or act on a new process snapshot because coordinator owns a subsequent lane."
+  },
+  "review_execution": {
+    "tests": 0,
+    "builds": 0,
+    "gradle": 0,
+    "ci": 0,
+    "source_edits": 0,
+    "performed": "Read/hash retained logs/receipts/XML, recompute all counts and input hashes, inspect existing skip source and separately approved workflow review, verify exact removed paths absent, write this unique report."
+  },
+  "conclusion": "Evidence supports successful fresh focused Linux transport/documentation/dependency/workflow-contract regression on these bound bytes:274 executed passes plus3 honest existing skips. It does not qualify iOS runtime, complete LAN/device operation, Store/legal ownership, or final combined frozen-source readiness."
+}

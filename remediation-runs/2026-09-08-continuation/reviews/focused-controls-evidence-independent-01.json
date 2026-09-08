@@ -1,0 +1,657 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_FOCUSED_CONTROL_EVIDENCE_RECONCILIATION_NOT_RUNTIME",
+  "reviewer": "/root/portability_review",
+  "executor": "/root",
+  "recorded_at": "2026-09-08T09:59:15.503263+00:00",
+  "status": "AGGREGATE_FAIL_SEVEN_SUCCESSFUL_SUBGATES_RECONCILED",
+  "evidence": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-focused-controls-01",
+  "receipt_sha256": "32d1d5a0459b64d493b78f7c61b423c6967391eabe46026895cfe13bf642ae77",
+  "aggregate": {
+    "outer_status": "FAIL",
+    "outer_exit_code": 1,
+    "packet_exit_code": 1,
+    "total_test_methods": 358,
+    "passed": 356,
+    "failures": 1,
+    "errors": 1,
+    "skips": 0,
+    "fully_passing_commands": 7,
+    "tests_in_fully_passing_commands": 333,
+    "partial_passes_in_failed_commands": 23,
+    "inputs_unchanged": true,
+    "postflight_error": null,
+    "error_type": null,
+    "pending_signals": [],
+    "deferred_signals": [],
+    "started_at": "2026-09-08T09:44:52.869406+00:00",
+    "finished_at": "2026-09-08T09:45:11.376493+00:00"
+  },
+  "commands": [
+    {
+      "name": "packet",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-08-continuation/controls/test_continuation_packet.py"
+      ],
+      "log": "packet.log",
+      "status": "PASS",
+      "exit_code": 0,
+      "sha256": "b9fe8203cf2b48f2321ebfa38fcba89316323defc53a5f5db1c8561557ef4e0e",
+      "tests_run": 16,
+      "unique_logged_ids": 16,
+      "passed": 16,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 0.082,
+      "logged_ids_sha256": "72a53ab53601ea601f9124523e99eb1e273946d422335f9996a87659190b2af3"
+    },
+    {
+      "name": "lane",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-08-continuation/controls/test_gradle_lane_portability.py"
+      ],
+      "log": "lane.log",
+      "status": "PASS",
+      "exit_code": 0,
+      "sha256": "3b75709456473da1aac4d13b42c5e3ee9988eff8e353c61ca4c968a9184e37ef",
+      "tests_run": 21,
+      "unique_logged_ids": 21,
+      "passed": 21,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 0.06,
+      "logged_ids_sha256": "57c733f2038501e3fcb852699fd01889f8945ee3a7396130c78e73bb8c8f97ad"
+    },
+    {
+      "name": "single-tap",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py"
+      ],
+      "log": "single-tap.log",
+      "status": "FAIL",
+      "exit_code": 1,
+      "sha256": "752e376073d021f26a5c47e992c3e57cb734d2f45b51b5699924b3742d3dd53a",
+      "tests_run": 13,
+      "unique_logged_ids": 13,
+      "passed": 12,
+      "failures": 0,
+      "errors": 1,
+      "skips": 0,
+      "seconds": 1.061,
+      "logged_ids_sha256": "207b11712d9801fafe0ea975ed4af2d16539535259696fb75d65f8d915ed2292"
+    },
+    {
+      "name": "schema-bootstrap",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-08-continuation/controls/test_schema_base_bootstrap.py"
+      ],
+      "log": "schema-bootstrap.log",
+      "status": "PASS",
+      "exit_code": 0,
+      "sha256": "88d5b62da6bb3675b2b94003a86cb5747d06196a6f2fafc38e6699a299f892f1",
+      "tests_run": 26,
+      "unique_logged_ids": 26,
+      "passed": 26,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 0.285,
+      "logged_ids_sha256": "dce83ed6477993ea74832011c4d2d9e9bebd6a0e0438c3b6311d15fce0b270ca"
+    },
+    {
+      "name": "toolchain",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+        "-v"
+      ],
+      "log": "toolchain.log",
+      "status": "PASS",
+      "exit_code": 0,
+      "sha256": "22490b9d9395f70797a3dc1e01647c1c2fbdabdf157a106c26c188cf1b8eb3d4",
+      "tests_run": 12,
+      "unique_logged_ids": 12,
+      "passed": 12,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 0.1,
+      "logged_ids_sha256": "1f67d7adbf95513e82ada106eed888c76238e8af0e2006b1beb0982358f6c02e"
+    },
+    {
+      "name": "functional-copy",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02",
+        "-p",
+        "test_l08_functional_copy.py",
+        "-v"
+      ],
+      "log": "functional-copy.log",
+      "status": "FAIL",
+      "exit_code": 1,
+      "sha256": "c5149707a2a4beff5bad62431aa519a8fb54a04da7fe936aa3edd09775d36bd2",
+      "tests_run": 12,
+      "unique_logged_ids": 12,
+      "passed": 11,
+      "failures": 1,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 0.097,
+      "logged_ids_sha256": "b19c5822fe8eb83962656559b4173555a4d84318cf69a62715f046b0a39b1b8b"
+    },
+    {
+      "name": "composition",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py"
+      ],
+      "log": "composition.log",
+      "status": "PASS",
+      "exit_code": 0,
+      "sha256": "d32f6967e03f1157bcd5b1a0497bd057cf5d95cdbae0c2152aa9662ee9c3e8e4",
+      "tests_run": 55,
+      "unique_logged_ids": 55,
+      "passed": 55,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 5.002,
+      "logged_ids_sha256": "fae71116e2866024685f570a55bdd88da8246e96e834e545bc8d4385e55b0ef8"
+    },
+    {
+      "name": "normal",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py"
+      ],
+      "log": "normal.log",
+      "status": "PASS",
+      "exit_code": 0,
+      "sha256": "3b1d45a4e4dcdda380f0ebe7ce1b16d82bdea96f3e74547f3da618b800f8695f",
+      "tests_run": 187,
+      "unique_logged_ids": 187,
+      "passed": 187,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 0.775,
+      "logged_ids_sha256": "0d3c8eea247b0f7d2c789ea1574655b22ebcd1117b64752690d83fe60f1f6851"
+    },
+    {
+      "name": "schema-closure",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py",
+        "--controls"
+      ],
+      "log": "schema-closure.log",
+      "status": "PASS",
+      "exit_code": 0,
+      "sha256": "d17537dd20adb47a54ecf8d2f9e603de034650f3c99a693a9ca10a2c7b2d222a",
+      "tests_run": 16,
+      "unique_logged_ids": 16,
+      "passed": 16,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "seconds": 1.147,
+      "logged_ids_sha256": "652b852574027f2afc8712350eac0072f32bd2753285eecd0db54b14aed05680"
+    }
+  ],
+  "failures_preserved": [
+    {
+      "command": "single-tap",
+      "test": "__main__.SingleTapFixtureContractTests.test_actual_swift_matches_independently_reviewed_contract",
+      "classification": "ERROR",
+      "actual": "ValueError: No hidden activation retry loop",
+      "source_sha256": "e0300c3d339798b4224d81f0e21b4043b78eca8145c98523abdc7110c76b68aa",
+      "disposition": "Separate fixture-review author/scanner correction; this review records original failure only, no corrected-run result."
+    },
+    {
+      "command": "functional-copy",
+      "test": "test_l08_functional_copy.L08FunctionalCopyTests.test_all_original_controls_and_exact_clone_allowlist_are_preserved",
+      "subtest": "path='README.md'",
+      "classification": "FAILURE",
+      "actual_readme_sha256": "911f1b73bba672da8b344c1523723d4b9ced77b0ca200901230a48ad1aca448f",
+      "required_readme_sha256": "69afd6136fdeecf9cca3426a523e130de01389b463db60ffd25254de87294142",
+      "disposition": "Valid immutable clone guard. Later documentation-only fix separately independently approved in native-portability-doc-correction-independent-01.json; original failed cycle remains FAIL."
+    }
+  ],
+  "binding": {
+    "explicit_control_files": 204,
+    "unique_paths": 204,
+    "before_after_maps_equal": true,
+    "before_after_map_file_sha256": "58e37406363c01b52c9ebe080d12030c90e90886001653ed452798986f7ad37f",
+    "map_compact_json_sha256": "2a9d8c6ad01b6327a6834d74db480ae5e23723f16757363b75266527e5291a1f",
+    "source_before_after_full_objects_equal": true,
+    "source_manifest_rows": 820,
+    "source_manifest_sha256": "b3614749ea6ed13c68dd78d676587ee476a6ffb83e21dd752f42a178bd6bcfea",
+    "source_head": "ec0de52a2c7ff9077482a291dc4fd2591fdea01f",
+    "source_tree": "48b099f3cd002a3253f21d2b06a4ece5787e62cb",
+    "source_branch": "fix/local-readiness-2026-09-07",
+    "source_dirty_diff_sha256": "7556edc910e117709b63ffb24f9effe82625af9d525cab143789e1eb58d3948a",
+    "runner_before_after_equal": true,
+    "runner_sha256": "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc",
+    "packet_driver_sha256": "1896d5a309e8802b691bfc9a37db2c0ac92dcfb6173d4cee564e5dcfcc234627",
+    "supersession_note": "This run closes the earlier lane21 execution-time test-file-hash caveat for these fresh21 controls. Earlier continuation-linux-lane-controls-01 and its caveat remain preserved, not retroactively strengthened.",
+    "post_cycle_current_control_differences": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08_FUNCTIONAL_README.md",
+        "executed_sha256": "66cc129781125196bca34ec7bb287869dfaa080741296d6d77af3d02cff5ce89",
+        "current_sha256": "ef7d79b8180a0aa7b412d1257b0948adcf41f602f5fdc8bb576e41ed3731aa0b"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/README.md",
+        "executed_sha256": "911f1b73bba672da8b344c1523723d4b9ced77b0ca200901230a48ad1aca448f",
+        "current_sha256": "69afd6136fdeecf9cca3426a523e130de01389b463db60ffd25254de87294142"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py",
+        "executed_sha256": "e0300c3d339798b4224d81f0e21b4043b78eca8145c98523abdc7110c76b68aa",
+        "current_sha256": "6443de2ea249c74a945aee5513e74eedadc077a68c43089201b89e9c90695298"
+      }
+    ],
+    "difference_scope": "Only the subsequently corrected two companion docs and single-tap scanner currently differ. This report binds the actual recorded old inputs and does not relabel failed commands or old combined manifests as current/final execution."
+  },
+  "normal_controls": {
+    "tests": 187,
+    "declared_discovered_and_logged_ids_exact": true,
+    "unittest_failures": 0,
+    "unittest_errors": 0,
+    "skips": 0,
+    "manifest_files": 88,
+    "before_after_exact": true,
+    "entire_normal_manifest_present_in_outer_map": true,
+    "actual_imported_modules": 35,
+    "all_import_paths_in_normal_manifest": true,
+    "original_test_files_unchanged_from_review": true,
+    "meaning": "Pure mocked/public-tool parser/control tests. No actual Parlor app launch, libproc ABI/runtime query or image provenance observation occurred."
+  },
+  "composition_controls": {
+    "tests": 55,
+    "draft_tests": 33,
+    "composition_tests": 22,
+    "declared_discovered_and_logged_ids_exact": true,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "listed_input_test_hashes_match_outer_map": true,
+    "native_execution": false,
+    "external_allocations": [
+      {
+        "path": "/tmp/parlor-app-foundation-controls-1c9si35e",
+        "device": 27,
+        "inode": 122458,
+        "uid": 0,
+        "cleanup_status": "PASS",
+        "workers_started": 0,
+        "parent_removed": true,
+        "independently_absent": true
+      },
+      {
+        "path": "/tmp/parlor-app-foundation-controls-o53lu1az",
+        "device": 27,
+        "inode": 123075,
+        "uid": 0,
+        "cleanup_status": "PASS",
+        "workers_started": 0,
+        "parent_removed": true,
+        "independently_absent": true
+      },
+      {
+        "path": "/tmp/parlor-app-foundation-controls-5m2r7tq4",
+        "device": 27,
+        "inode": 123078,
+        "uid": 0,
+        "cleanup_status": "PASS",
+        "workers_started": 0,
+        "parent_removed": true,
+        "independently_absent": true
+      },
+      {
+        "path": "/tmp/parlor-app-foundation-controls-jd6mxxil",
+        "device": 27,
+        "inode": 123081,
+        "uid": 0,
+        "cleanup_status": "PASS",
+        "workers_started": 0,
+        "parent_removed": true,
+        "independently_absent": true
+      }
+    ],
+    "meaning": "Pure parser/copy/ownership and isolated staged-function controls only; Foundation/Swift/native assertions were not executed."
+  },
+  "lane_and_profile_controls": {
+    "lane21": 21,
+    "profile12": 12,
+    "exact_source_declared_ids_equal_logged_ok_ids": true,
+    "approval_hashes_present_in_before_after_maps": true,
+    "meaning": "Actual Linux control execution, with native toolchain/simulator behavior stubbed. Outer actual JDK probes reportJava/Javac21.0.12 on Linuxamd64, not Apple qualification."
+  },
+  "schema_controls": {
+    "bootstrap_synthetic_guards": 26,
+    "exact_guard_source_ids_equal_logged_ok_ids": true,
+    "actual_fixed_schema_consumer_controls": 16,
+    "exact_consumer_source_discovered_and_logged_ids": true,
+    "consumer_status": "PASS_SYNTHETIC_CONTROLS",
+    "base_prerequisite_status": "PASS_OWNED_SCHEMA_PREREQUISITES",
+    "mode": "controls",
+    "inner_exit_code": 0,
+    "base_controls_before_after_equal": true,
+    "base_control_files": 6,
+    "base_controls_present_in_outer_map": true,
+    "consumer_controls_before_after_equal": true,
+    "base_package_cleanup": true,
+    "optional_package_cleanup": true,
+    "base_packages": [
+      {
+        "distribution": "jsonschema",
+        "version": "4.25.1",
+        "bytes": 90040,
+        "sha256": "3fba0169e345c7175110351d456342c364814cfcf3b964ba4587f22915230a63",
+        "members": 42,
+        "expanded_bytes": 475270,
+        "matches_literal_approved_pin": true
+      },
+      {
+        "distribution": "referencing",
+        "version": "0.36.2",
+        "bytes": 26775,
+        "sha256": "e8699adbbf8b5c7de96d8ffa0eb5c158b3beafce084968e2ea8bb08c6794dcd0",
+        "members": 19,
+        "expanded_bytes": 115431,
+        "matches_literal_approved_pin": true
+      },
+      {
+        "distribution": "attrs",
+        "version": "25.3.0",
+        "bytes": 63815,
+        "sha256": "427318ce031701fea540783410126f03899a97ffc6f61596ad581ac2e40e3bc3",
+        "members": 35,
+        "expanded_bytes": 219126,
+        "matches_literal_approved_pin": true
+      },
+      {
+        "distribution": "jsonschema-specifications",
+        "version": "2025.4.1",
+        "bytes": 18437,
+        "sha256": "4653bffbd6584f7de83a67e0d620ef16900b390ddc7939d56684d6c81e33f1af",
+        "members": 28,
+        "expanded_bytes": 47261,
+        "matches_literal_approved_pin": true
+      },
+      {
+        "distribution": "rpds-py",
+        "version": "0.27.1",
+        "bytes": 386883,
+        "sha256": "466bfe65bd932da36ff279ddd92de56b042f2266d752719beb97b08526268ec5",
+        "members": 8,
+        "expanded_bytes": 1046710,
+        "matches_literal_approved_pin": true
+      },
+      {
+        "distribution": "typing-extensions",
+        "version": "4.15.0",
+        "bytes": 44614,
+        "sha256": "f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548",
+        "members": 5,
+        "expanded_bytes": 178133,
+        "matches_literal_approved_pin": true
+      }
+    ],
+    "optional_packages": [
+      {
+        "distribution": "rfc3987-syntax",
+        "version": "1.1.0",
+        "bytes": 8046,
+        "sha256": "6c3d97604e4c5ce9f714898e05401a0445a641cfa276432b0a648c80856f6a3f",
+        "members": 9,
+        "expanded_bytes": 18424,
+        "matches_literal_approved_pin": true
+      },
+      {
+        "distribution": "lark",
+        "version": "1.2.2",
+        "bytes": 111036,
+        "sha256": "c2276486b02f0f1b90be155f2c8ba4a8e194d42775786db622faccd652d8e80c",
+        "members": 46,
+        "expanded_bytes": 350066,
+        "matches_literal_approved_pin": true
+      }
+    ],
+    "base_member_count": 137,
+    "base_expanded_bytes": 2081931,
+    "imported_modules": {
+      "jsonschema": {
+        "path": "jsonschema/__init__.py",
+        "sha256": "a7e470e134bfd0e3c76482722260d6b1d5a099de823d61cc5cbabb06e4314c67"
+      },
+      "referencing": {
+        "path": "referencing/__init__.py",
+        "sha256": "e4864a5da007fc55b20894646939f55dca6d2df83d72f78b6fdbb99d853124ab"
+      },
+      "attr": {
+        "path": "attr/__init__.py",
+        "sha256": "7ce608bedd5e192a90adee2e092dec256299d26c00b82f140faa9b6b9392f7f5"
+      },
+      "attrs": {
+        "path": "attrs/__init__.py",
+        "sha256": "a9e4096783b4f327334a7f38d2ff5b60e699c9113cd56b158be402ad8de4ac25"
+      },
+      "jsonschema_specifications": {
+        "path": "jsonschema_specifications/__init__.py",
+        "sha256": "aa84c1d83298eeabcdac684c3c7ea0b6600944b8a599543e7c56704faaf2ab0d"
+      },
+      "rpds": {
+        "path": "rpds/__init__.py",
+        "sha256": "c373205d6ee5a530880b0d0a5dbc36d105f9ef7fe46ec12758878cb0202e82f3"
+      },
+      "typing_extensions": {
+        "path": "typing_extensions.py",
+        "sha256": "433d11d170d3a24d2eb065ebc1bfe848cea7e3d7ce68567ab52bea2d4c2f7ed8"
+      },
+      "rpds.rpds": {
+        "path": "rpds/rpds.cpython-312-x86_64-linux-gnu.so",
+        "sha256": "1a5acf297faad922c1335dc00cc2ae6e24dd907f77576bef0e200bd07e0f0e5c"
+      }
+    },
+    "imported_hashes_all_match_extracted_member_records": true,
+    "meaning": "Six real pinned base wheels and two real pinned optional checker wheels were fetched/loaded in coordinator-owned scratch under the closed Linuxx86_64/CPython3.12/glibc guard. Existing16 synthetic candidate tests actually ran with real schema/checker APIs, including native rpds import. This is NOT a fresh export/rendering/candidate-consumer cycle; mode=controls and no real candidate binding was provided."
+  },
+  "packet_controls": {
+    "tests": 16,
+    "source_declared_ids_equal_logged_ok_ids": true,
+    "source_review": "continuation-control-driver-independent-01.json by fixture_review",
+    "test_source_review": "control-packet-tests-independent-01.json by coordinator",
+    "scope": "Control packet and signal/timeout/receipt behavior simulated; no actual timeout/signal/worker intervention in this cycle."
+  },
+  "related_reviews": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/gradle-lane-portability-independent-01.json",
+      "sha256": "c6a1940f6fcbdd28fa60b69f48724e948964ef9ef74437f3e26ae20af4695b0a"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/schema-base-bootstrap-independent-01.json",
+      "sha256": "65dfcfdb2c9531f7ae2588f1d128d52d425584b4ca19ef3269cdc7abc7222e99"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-portability-independent-01.json",
+      "sha256": "f6b77fac3047368fe8aec883a6f8a0daf82416e8f0b16a0e8b5d9a05a852724f"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-control-driver-independent-01.json",
+      "sha256": "8a32871a42d6d88848f057d4a0e833307d78bd1659fc501b4e2c2dd02cb4261e"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/control-packet-tests-independent-01.json",
+      "sha256": "bb47a464d292f23a67a69ff1ca4c1e242701c06ab30f865d388ab83c5c648b90"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-portability-doc-correction-independent-01.json",
+      "sha256": "f14a23ae25e24946c73d0ec93f7d8e901be667c80ad1aab8f8cdddd80ec82588"
+    }
+  ],
+  "retained_files": [
+    {
+      "path": "artifact-receipts.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "composition.log",
+      "bytes": 19632,
+      "sha256": "d32f6967e03f1157bcd5b1a0497bd057cf5d95cdbae0c2152aa9662ee9c3e8e4"
+    },
+    {
+      "path": "control-inputs-after.json",
+      "bytes": 39641,
+      "sha256": "58e37406363c01b52c9ebe080d12030c90e90886001653ed452798986f7ad37f"
+    },
+    {
+      "path": "control-inputs-before.json",
+      "bytes": 39641,
+      "sha256": "58e37406363c01b52c9ebe080d12030c90e90886001653ed452798986f7ad37f"
+    },
+    {
+      "path": "focused-command-results.json",
+      "bytes": 2944,
+      "sha256": "5ec10cab6f870932eee6ad72752ab432f919758bd932c57066568e19272974ec"
+    },
+    {
+      "path": "functional-copy.log",
+      "bytes": 3744,
+      "sha256": "c5149707a2a4beff5bad62431aa519a8fb54a04da7fe936aa3edd09775d36bd2"
+    },
+    {
+      "path": "gradle.log",
+      "bytes": 1965,
+      "sha256": "b156044d687f976bb468a1e9b29b80bd90cdbd79e43726faf3248d6b39097043"
+    },
+    {
+      "path": "java-toolchain.log",
+      "bytes": 2026,
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c"
+    },
+    {
+      "path": "javac-toolchain.log",
+      "bytes": 14,
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755"
+    },
+    {
+      "path": "lane.log",
+      "bytes": 3206,
+      "sha256": "3b75709456473da1aac4d13b42c5e3ee9988eff8e353c61ca4c968a9184e37ef"
+    },
+    {
+      "path": "normal.log",
+      "bytes": 108389,
+      "sha256": "3b1d45a4e4dcdda380f0ebe7ce1b16d82bdea96f3e74547f3da618b800f8695f"
+    },
+    {
+      "path": "packet.log",
+      "bytes": 2749,
+      "sha256": "b9fe8203cf2b48f2321ebfa38fcba89316323defc53a5f5db1c8561557ef4e0e"
+    },
+    {
+      "path": "receipt.json",
+      "bytes": 305416,
+      "sha256": "32d1d5a0459b64d493b78f7c61b423c6967391eabe46026895cfe13bf642ae77"
+    },
+    {
+      "path": "schema-base-prerequisites.json",
+      "bytes": 28589,
+      "sha256": "5a7f3f75bd546487fd8d087009c7a194b79b36a99b02055d84363c073932be9d"
+    },
+    {
+      "path": "schema-bootstrap.log",
+      "bytes": 4403,
+      "sha256": "88d5b62da6bb3675b2b94003a86cb5747d06196a6f2fafc38e6699a299f892f1"
+    },
+    {
+      "path": "schema-closure.log",
+      "bytes": 3240,
+      "sha256": "d17537dd20adb47a54ecf8d2f9e603de034650f3c99a693a9ca10a2c7b2d222a"
+    },
+    {
+      "path": "schema-consumer-controls.json",
+      "bytes": 12127,
+      "sha256": "a73982ce832bbcc1adb2d7be4a227ba5b673171f20fee9e51888c1a1701c5a1f"
+    },
+    {
+      "path": "single-tap.log",
+      "bytes": 3406,
+      "sha256": "752e376073d021f26a5c47e992c3e57cb734d2f45b51b5699924b3742d3dd53a"
+    },
+    {
+      "path": "stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "test-receipts.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "toolchain.log",
+      "bytes": 2139,
+      "sha256": "22490b9d9395f70797a3dc1e01647c1c2fbdabdf157a106c26c188cf1b8eb3d4"
+    }
+  ],
+  "cleanup": {
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-08T09:45:12.018204+00:00",
+    "seconds_after_command_finish": 0.641711,
+    "stop_log": "No Gradle daemons are running.",
+    "outputs_before": [],
+    "removed_outputs": [],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "artifact_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "errors": [],
+    "deferred_signals": [],
+    "scratch_independently_absent": true,
+    "all_four_external_composition_allocations_independently_absent": true,
+    "base_and_optional_installs_scoped_under_removed_scratch": true,
+    "completed_at": "2026-09-08T09:45:12.102762+00:00",
+    "preserved_python_logs_not_empty_junit_receipts_are_authority": true,
+    "detail": "No Gradle build/generated app outputs in this Python-only packet. Empty test-receipts/artifact-receipts are expected; actual unittest stdout and dedicated prerequisite receipts preserve execution. Global caches, archived reports and other task resources untouched."
+  },
+  "review_execution": {
+    "tests": 0,
+    "builds": 0,
+    "gradle": 0,
+    "native": 0,
+    "ci": 0,
+    "source_edits": 0,
+    "performed": "Read/hash/parse raw logs/receipts, compare declared AST IDs without importing/executing controls, compare hashes/pins/import/member records and exact cleanup paths, write this unique report."
+  },
+  "readiness": "Successful source/control scopes are independently reconciled; aggregateFAIL retained. Corrected scanner/README need fresh focused execution, and actual iOS recovery/protection/libproc, fresh dependency export/rendering/candidate and final frozen qualification remain separate required evidence. No physical-device, Store, owner/legal or all-project readiness claim."
+}

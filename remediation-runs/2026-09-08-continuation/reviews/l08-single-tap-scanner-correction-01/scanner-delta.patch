@@ -1,0 +1,40 @@
+--- remediation-runs/2026-09-08-continuation/reviews/l08-single-tap-scanner-correction-01/test_single_tap_fixture_review.before.py
++++ remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py
+@@ -138,8 +138,12 @@
+     require(fragment(main, "guard let current, l08HomeGeometryNear(settled, current), "
+                      "dsc01CatalogNear(target.frame, current[0]), target.isEnabled, target.isHittable else {"),
+             "Final geometry and the actual activation element must agree")
+-    require(main_tokens.count("for") == 1 and "while" not in main_tokens and "repeat" not in main_tokens,
+-            "No hidden activation retry loop")
++    # Swift's XCTWaiter.wait(for: ...) argument label is not a for-loop.
++    # An actual for-loop cannot have ':' immediately after its keyword.
++    loops = [token for index, token in enumerate(main_tokens)
++             if token in {"for", "while", "repeat"} and
++             not (token == "for" and main_tokens[index + 1:index + 2] == [":"])]
++    require(loops == ["for"], "No hidden activation retry loop")
+     require(fragment(main, "if isHome { try l08WaitHomeOneAfterTap(app, identifier: identifier) }"),
+             "Home success requires actual callback acknowledgement")
+ 
+@@ -255,9 +259,22 @@
+ class SingleTapFixtureContractTests(unittest.TestCase):
+     def setUp(self):
+         self.source = SWIFT.read_text()
++        # A broken baseline must not make every negative mutation appear valid.
++        assert_fixture_contract(self.source)
+ 
+     def test_actual_swift_matches_independently_reviewed_contract(self):
+         assert_fixture_contract(self.source)
++
++    def test_swift_for_argument_label_is_not_an_activation_loop(self):
++        main = function(self.source, "l08TapExactPublicControl")
++        self.assertEqual(tokens(main).count("for"), 2)
++        self.assertTrue(fragment(main, "XCTWaiter.wait(for: [ready], timeout: 15)"))
++        for loop in ("for ignored in 0..<2 { target.tap() }",
++                     "while true { target.tap() }", "repeat { target.tap() } while true"):
++            with self.subTest(loop=loop):
++                altered = self.source.replace("target.tap()", loop, 1)
++                with self.assertRaisesRegex(ValueError, "No hidden activation retry loop"):
++                    assert_fixture_contract(altered)
+ 
+     def test_all_thirteen_boot_callers_and_storage_assertions_are_unchanged(self):
+         prefix = self.source.split("    @MainActor private func l08TapExactPublicControl(", 1)[0]

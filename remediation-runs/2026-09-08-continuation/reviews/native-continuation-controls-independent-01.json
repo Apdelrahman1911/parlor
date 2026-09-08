@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_RECONCILIATION_OF_EXECUTED_LINUX_NATIVE_CONTINUATION_CONTROLS",
+  "reviewer": "/root/ci_review",
+  "executor": "/root",
+  "author_of_controls": "/root/ci_workflow",
+  "recorded_at": "2026-09-08T09:41:36.799150+00:00",
+  "status": "PASS_FOR_FOCUSED_LINUX_CONTROL_SCOPE_ONLY",
+  "cycle": "continuation-ci-controls-01",
+  "command": [
+    "/usr/bin/python3",
+    "-B",
+    "-m",
+    "unittest",
+    "scripts.release.tests.test_native_continuation",
+    "scripts.release.tests.test_workflow_contract",
+    "-v"
+  ],
+  "started_at": "2026-09-08T09:38:32.532829+00:00",
+  "finished_at": "2026-09-08T09:38:34.184208+00:00",
+  "exit_code": 0,
+  "evidence": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-ci-controls-01/artifact-receipts.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-ci-controls-01/gradle.log",
+      "bytes": 15820,
+      "sha256": "8ca3562785376355c3035f6122a4145f8ade4cdd45a6e5d6d80b55d8557ed07e"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-ci-controls-01/java-toolchain.log",
+      "bytes": 2026,
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-ci-controls-01/javac-toolchain.log",
+      "bytes": 14,
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-ci-controls-01/receipt.json",
+      "bytes": 305467,
+      "sha256": "68f651a32b4781f80fa1b9d25252c5bf4687d5e861ca5cd41269311ff3b9f23c"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-ci-controls-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-ci-controls-01/test-receipts.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    }
+  ],
+  "source_approval": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-continuation-source-independent-01.json",
+    "sha256": "ff5b4cc4a6362f9199458ada427bda4ca9f0a7dfe1d579fe1618be32c069253d"
+  },
+  "controls": [
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "sha256": "af0a96cf33c950818546024627641fa842d4c1336b64c67467b01f7384c6f2e6",
+      "current_matches_prior_source_approval": true,
+      "bound_in_both_cycle_source_manifests": true
+    },
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "sha256": "1a79be62a223747d9a704819bf5bacac0bed512292a556afd9f2f8ddee66bed2",
+      "current_matches_prior_source_approval": true,
+      "bound_in_both_cycle_source_manifests": true
+    },
+    {
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "sha256": "c3f4f0e9b9f4d606a567f78c8a9c3678485ce947fde157396b9d33ade91fbf9f",
+      "current_matches_prior_source_approval": true,
+      "bound_in_both_cycle_source_manifests": true
+    },
+    {
+      "path": "scripts/release/workflow_contract.py",
+      "sha256": "55ad26a933eb1c2b3e8fbedaf1e35dc42875c6d1d13897d43263c71c7080ce9a",
+      "current_matches_prior_source_approval": true,
+      "bound_in_both_cycle_source_manifests": true
+    },
+    {
+      "path": "scripts/release/tests/test_native_continuation.py",
+      "sha256": "ad0aa309b90eaf39b26f1c6638acde335100a0a4a76c5b73afda0b54d5fc0479",
+      "current_matches_prior_source_approval": true,
+      "bound_in_both_cycle_source_manifests": true
+    },
+    {
+      "path": "scripts/release/tests/test_workflow_contract.py",
+      "sha256": "36c89b71edbf9d56ba743f86f3ed11c64a6eaacc58116130e3e6941094e4408e",
+      "current_matches_prior_source_approval": true,
+      "bound_in_both_cycle_source_manifests": true
+    }
+  ],
+  "tests": {
+    "executed": 79,
+    "unique_raw_ids": 79,
+    "raw_statuses": {
+      "ok": 79
+    },
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "current_declared_ids_equal_executed_ids": true,
+    "by_module": {
+      "scripts.release.tests.test_native_continuation": 34,
+      "scripts.release.tests.test_workflow_contract": 45
+    },
+    "sorted_ids_sha256": "4b857146985c7cf29432bb3a4cc45c7020dfb1f2f52c591b2ede83fae195bde3",
+    "unittest_summary": "Ran 79 tests in 0.162s; OK",
+    "workflow_contract_stdout": "release workflow contract: PASS",
+    "xml_and_artifact_receipt_arrays": "Both empty, appropriate for Python controls; raw unittest output is the executed-test evidence."
+  },
+  "source_binding": {
+    "commit": "ec0de52a2c7ff9077482a291dc4fd2591fdea01f",
+    "tree": "48b099f3cd002a3253f21d2b06a4ece5787e62cb",
+    "branch": "fix/local-readiness-2026-09-07",
+    "diff_sha256": "7556edc910e117709b63ffb24f9effe82625af9d525cab143789e1eb58d3948a",
+    "source_manifest_sha256": "b3614749ea6ed13c68dd78d676587ee476a6ffb83e21dd752f42a178bd6bcfea",
+    "source_manifest_rows": 820,
+    "full_before_after_equal": true,
+    "manifest_digest_independently_recomputed": true,
+    "runner_manifest": {
+      "manifest": [
+        [
+          "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+          "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc"
+        ]
+      ],
+      "manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912"
+    },
+    "runner_before_after_equal": true,
+    "runner_hash_matches_current": true,
+    "limitation": "Focused execution on the known dirty reviewed worktree, not final frozen-source/native qualification. All six scoped files are directly bound in both source manifests, including new untracked scripts/tests."
+  },
+  "actual_small_toolchain_probes": {
+    "java_home": "/usr/lib/jvm/java-21-openjdk-amd64",
+    "java_specification_version": "21",
+    "javac_version": "21.0.12",
+    "log_hashes_match_receipt": true,
+    "platform": "Linux amd64, Java log os.version6.1.72; not Apple or application execution."
+  },
+  "cleanup": {
+    "stop_command": [
+      "./gradlew",
+      "--stop"
+    ],
+    "stop_exit_code": 0,
+    "stop_stdout": "No Gradle daemons are running.",
+    "stopped_at": "2026-09-08T09:38:35.033226+00:00",
+    "cleanup_completed_at": "2026-09-08T09:38:35.126124+00:00",
+    "source_of_stop_command": "Reopened the exact hash-bound lane finally block; wrapper stop precedes report collection/owned cleanup.",
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "artifact_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "outputs_before": [],
+    "removed_outputs": [],
+    "retained_outputs": [],
+    "remaining_outputs": [],
+    "cleanup_errors": [],
+    "deferred_signals": [],
+    "scratch_absence_independently_checked": true
+  },
+  "conclusions": [
+    "The retained raw log contains exactly all79 approved/current declared IDs with ok status once each; no failure, error, skip, duplication or source/runner drift was found.",
+    "New preservation, descriptor-custody, signal-registration, cancellation grace, API/artifact and full/default workflow-scope regressions executed successfully in Linux synthetic controls.",
+    "No app build, simulator, XCTest, libproc query, native ABI, real file-protection enforcement or final five-job qualification is proved by this control cycle.",
+    "Full release validator/actionlint/ShellCheck, frozen source+mechanical inventory, fresh actual-host preflight and independent run-specific native control approval remain required before focused native execution."
+  ],
+  "native_execution_approved": false,
+  "reviewer_activity": {
+    "tests_or_builds_run": 0,
+    "gradle_or_native_commands": 0,
+    "workflow_dispatches": 0,
+    "performed": [
+      "Read raw logs/receipt and exact lane cleanup source",
+      "Recompute receipt/source/runner/file digests",
+      "Compare raw IDs to AST declarations",
+      "Check owned scratch absent",
+      "Write this new retained report"
+    ]
+  },
+  "reviewer_cleanup": {
+    "needed": false,
+    "detail": "No reviewer test/build workers or scratch created. Only this report was written; existing evidence and source files were preserved."
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "kind": "RELOCATABLE_EXACT_DRAFT_FREEZE_WITH_QUALIFIED_DRIVER_PIN",
+  "author": "/root/native_ci",
+  "recorded_at": "2026-09-08T09:03:12.500043+00:00",
+  "execution": "NOT_EXECUTED",
+  "directory": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01",
+  "previous_freeze": {
+    "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-native14-followup-01/draft-freeze.json",
+    "sha256": "1a803df85b6acab0ad4ca38fa9d43a5be0b47d95bd42bd77970f57b5c26c401c"
+  },
+  "source_files": [
+    {
+      "path": "L08AppFoundation.m.in",
+      "sha256": "f7b0e515b580f4bd9c49857ad4a49a3ab925218e8e52c260eb14cc75e410cba7",
+      "lines": 539
+    },
+    {
+      "path": "L08AppFoundationBridge.h.in",
+      "sha256": "b65a86e26170b313ba00d875910da7499685736240a5cb644b6f916ec71e7d08",
+      "lines": 7
+    },
+    {
+      "path": "L08AppFoundationLaunch.swift.in",
+      "sha256": "76e37762006d912e40b18508414dc55384aaa89be9212f7fd172b55a30edabb0",
+      "lines": 74
+    },
+    {
+      "path": "L08AppFoundationUITests.swift.in",
+      "sha256": "5f3f136ec7c5925ed82f277c2ca60e6f22ba81e42e97cc22ef7bdc3954ef2e07",
+      "lines": 49
+    },
+    {
+      "path": "README.md",
+      "sha256": "0854ffec41d4eafcbfc8269b2c199d4d681e79576e4d53b77716ff0080249cc1",
+      "lines": 95
+    },
+    {
+      "path": "ROOT_INTEGRATION.md",
+      "sha256": "a8396d7a9c222b12191d1fd48daf2e0082af3647210c882776e5a221d5c00790",
+      "lines": 102
+    },
+    {
+      "path": "app_foundation_copy.py",
+      "sha256": "07ae34ff3e6059e83ac041c55d0f380e21106666e867b1842534982c7450be08",
+      "lines": 203
+    },
+    {
+      "path": "app_foundation_receipts.py",
+      "sha256": "0d6c5415522ec5a4645abe4839ab7865c89e916e7c752c73035d0fea1b4e6a3c",
+      "lines": 266
+    },
+    {
+      "path": "test_app_foundation.py",
+      "sha256": "b9b4cec8c93a25769a178040f5fbfb2d3002cbe1b42df33b0c09405c92e2a691",
+      "lines": 552
+    }
+  ],
+  "expected_draft_tests": 33,
+  "limitations": [
+    "Old absolute-path freeze preserved byte-for-byte. Only app_foundation_copy.py driver pin changed among the nine draft inputs; no Foundation metadata/write/query/cleanup logic changed.",
+    "New relative entries name only direct draft children; hashes, UID, inode, nonsymlink and size guards remain enforced.",
+    "This mechanical byte binding does not authorize native execution or claim tests passed."
+  ]
+}
