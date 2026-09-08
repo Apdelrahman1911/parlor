@@ -3,6 +3,7 @@
 No simctl, Gradle, Xcode, preference access or process termination is invoked.
 Every FIFO/file is under unittest TemporaryDirectory; symlink target is synthetic.
 """
+from copy import deepcopy
 import os
 from pathlib import Path
 import tempfile
@@ -243,6 +244,157 @@ class SecondaryFifoSafetyTest(unittest.TestCase):
         self.ledger.current_processes = lambda: after
         with self.assertRaises(UnsafeSecondaryPath): self.attest()
         self.assertFalse(self.ledger.records)
+
+
+    def partial_pair(self):
+        self.paths[0].unlink()
+        self.attest()
+        self.assertEqual({str(self.paths[1])}, set(self.ledger.records))
+        self.assertEqual({str(self.paths[0])}, set(self.ledger.pending))
+
+    def test_partial_pair_reuses_its_completed_live_identity_without_requerying_uid(self):
+        queried = []
+        def uid(pid):
+            queried.append(pid)
+            return os.getuid()
+        self.ledger.uid_of = uid
+        self.partial_pair()
+        self.assertEqual([1235, 1234], queried)
+        os.mkfifo(self.paths[0])
+        self.ledger.uid_of = self.fail_uid_query
+        self.attest()
+        self.assertEqual(2, len(self.ledger.records))
+        self.assertFalse(self.ledger.pending)
+        self.assertFalse(self.ledger._partial_pair_proofs)
+        self.stop_fixture_processes()
+        self.assertEqual('PASS', self.ledger.cleanup()['status'])
+        self.assertFalse(self.directory.parent.exists())
+
+    def test_partial_pair_new_inode_requires_identity_still_live_after_metadata(self):
+        self.partial_pair(); os.mkfifo(self.paths[0])
+        before = deepcopy(self.ledger.dump())
+        self.ledger.uid_of = self.fail_uid_query
+        self.ledger.current_processes = lambda: {}
+        with self.assertRaisesRegex(UnsafeSecondaryPath, 'new FIFO inode attestation'):
+            self.attest()
+        self.assertEqual(before, self.ledger.dump())
+        self.stop_fixture_processes()
+        with self.assertRaises(UnsafeSecondaryPath): self.ledger.cleanup()
+        self.assertTrue(all(path.exists() for path in self.paths))
+
+    def test_partial_pair_cannot_attest_a_leaf_first_seen_after_worker_exit(self):
+        self.partial_pair(); self.stop_fixture_processes(); os.mkfifo(self.paths[0])
+        before = deepcopy(self.ledger.dump())
+        with self.assertRaises(UnsafeSecondaryPath): self.attest()
+        self.assertEqual(before, self.ledger.dump())
+        with self.assertRaises(UnsafeSecondaryPath): self.ledger.cleanup()
+
+    def test_partial_pair_changed_child_or_parent_command_needs_fresh_identity(self):
+        self.partial_pair(); os.mkfifo(self.paths[0])
+        before = deepcopy(self.ledger.dump())
+        self.ledger.uid_of = self.fail_uid_query
+        for pid in (1234, 1235):
+            with self.subTest(pid=pid):
+                original = self.current[pid]
+                self.current[pid] = {**original, 'command': original['command'] + ' --changed'}
+                with self.assertRaisesRegex(RuntimeError, 'synthetic worker exited'):
+                    self.attest()
+                self.assertEqual(before, self.ledger.dump())
+                self.current[pid] = original
+
+    def test_partial_pair_record_or_claim_mutation_cannot_reuse_its_proof(self):
+        self.partial_pair(); os.mkfifo(self.paths[0])
+        before = deepcopy(self.ledger.dump())
+        self.ledger.uid_of = self.fail_uid_query
+        for kind in ('missing-record', 'nested-metadata', 'malformed-pending'):
+            with self.subTest(kind=kind):
+                if kind == 'missing-record': self.ledger.records.clear()
+                elif kind == 'nested-metadata': self.ledger.records[str(self.paths[1])]['metadata'][-1]['inode'] += 1
+                else: self.ledger.pending[str(self.paths[0])] = {'path': str(self.paths[0])}
+                with self.assertRaisesRegex(RuntimeError, 'synthetic worker exited'):
+                    self.attest()
+                self.ledger.records = {item['path']: deepcopy(item) for item in before['records']}
+                self.ledger.pending = {item['path']: deepcopy(item) for item in before['pending']}
+
+    def test_partial_pair_initial_uid_or_post_uid_failure_never_creates_cached_proof(self):
+        self.paths[0].unlink()
+        self.ledger.uid_of = self.fail_uid_query
+        with self.assertRaises(RuntimeError): self.attest()
+        self.assertFalse(self.ledger._partial_pair_proofs)
+        self.assertFalse(self.ledger.records); self.assertFalse(self.ledger.pending)
+        self.ledger.uid_of = lambda pid: os.getuid()
+        self.ledger.current_processes = lambda: {}
+        with self.assertRaises(UnsafeSecondaryPath): self.attest()
+        self.assertFalse(self.ledger._partial_pair_proofs)
+        self.assertFalse(self.ledger.records); self.assertFalse(self.ledger.pending)
+
+    def test_partial_pair_bad_sibling_does_not_publish_new_leaf(self):
+        self.partial_pair(); os.mkfifo(self.paths[0])
+        before = deepcopy(self.ledger.dump())
+        original = secondary_fifo.metadata
+        def bad_sibling(path):
+            value = original(path)
+            return {**value, 'uid': os.getuid() + 1} if path == self.paths[1] else value
+        with patch('secondary_fifo.metadata', side_effect=bad_sibling):
+            with self.assertRaises(UnsafeSecondaryPath): self.attest()
+        self.assertEqual(before, self.ledger.dump())
+
+    def test_partial_pair_replaced_parent_is_not_accepted_from_cached_identity(self):
+        self.partial_pair(); os.mkfifo(self.paths[0])
+        before = deepcopy(self.ledger.dump())
+        original = secondary_fifo.metadata
+        def changed_parent(path):
+            value = original(path)
+            return {**value, 'inode': value['inode'] + 1} if path == self.directory else value
+        with patch('secondary_fifo.metadata', side_effect=changed_parent):
+            with self.assertRaises(UnsafeSecondaryPath): self.attest()
+        self.assertEqual(before, self.ledger.dump())
+
+    def test_partial_pair_interrupted_metadata_keeps_pending_unpromoted(self):
+        self.partial_pair(); os.mkfifo(self.paths[0])
+        before = deepcopy(self.ledger.dump())
+        original = secondary_fifo.metadata
+        def interrupted(path):
+            if path == self.paths[1]: raise KeyboardInterrupt('synthetic interruption')
+            return original(path)
+        with patch('secondary_fifo.metadata', side_effect=interrupted):
+            with self.assertRaises(KeyboardInterrupt): self.attest()
+        self.assertEqual(before, self.ledger.dump())
+        self.assertTrue(all(path.exists() for path in self.paths))
+
+    def test_partial_pair_failed_publication_keeps_pending_unpromoted(self):
+        self.partial_pair(); os.mkfifo(self.paths[0])
+        before = deepcopy(self.ledger.dump())
+        def unavailable(value):
+            raise RuntimeError('synthetic durable publication failure')
+        self.ledger.persist = unavailable
+        with self.assertRaisesRegex(RuntimeError, 'durable publication failure'):
+            self.attest()
+        self.assertEqual(before, self.ledger.dump())
+        self.stop_fixture_processes()
+        with self.assertRaises(UnsafeSecondaryPath): self.ledger.cleanup()
+
+    def test_fresh_metadata_failure_retains_claims_without_publishing_inode_ownership(self):
+        original = secondary_fifo.metadata
+        def interrupted(path):
+            if path == self.paths[1]: raise KeyboardInterrupt('synthetic interruption')
+            return original(path)
+        with patch('secondary_fifo.metadata', side_effect=interrupted):
+            with self.assertRaises(KeyboardInterrupt): self.attest()
+        self.assertFalse(self.ledger.records)
+        self.assertEqual(set(map(str, self.paths)), set(self.ledger.pending))
+        self.assertFalse(self.ledger._partial_pair_proofs)
+        self.stop_fixture_processes()
+        with self.assertRaises(UnsafeSecondaryPath): self.ledger.cleanup()
+
+    def test_partial_identity_proof_ledger_is_bounded_without_promoting_paths(self):
+        self.paths[0].unlink()
+        self.ledger._partial_pair_proofs = {('unrelated-' + str(index),): {} for index in range(128)}
+        with self.assertRaisesRegex(UnsafeSecondaryPath, 'identity ledger bound'):
+            self.attest()
+        self.assertFalse(self.ledger.records)
+        self.assertEqual(set(map(str, self.paths)), set(self.ledger.pending))
+        self.assertEqual(128, len(self.ledger._partial_pair_proofs))
 
 
 if __name__ == '__main__':

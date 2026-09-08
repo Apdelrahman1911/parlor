@@ -4,6 +4,7 @@ Caller supplies already PID/start/ancestry-attested task processes. Directory na
 or open files alone NEVER authorize process ownership/termination. This module
 only unlinks individually attested FIFOs then rmdirs empty attested directories.
 """
+from copy import deepcopy
 import os
 from pathlib import Path
 import re
@@ -48,11 +49,28 @@ class SecondaryFifoLedger:
         self.records = {}
         self.pending = {}
         self.removed = []
+        # Runtime-only completed identity proofs; NEVER rebuilt from pending names.
+        self._partial_pair_proofs = {}
+
+    def _snapshot(self, records, pending):
+        return dict(schema_version=1, cycle_started=self.started,
+                    records=list(records.values()), pending=list(pending.values()),
+                    removed=list(self.removed))
 
     def dump(self):
-        return dict(schema_version=1, cycle_started=self.started,
-                    records=list(self.records.values()), pending=list(self.pending.values()),
-                    removed=list(self.removed))
+        return self._snapshot(self.records, self.pending)
+
+    @staticmethod
+    def _pair_state(keys, records, pending):
+        return deepcopy([(records.get(key), pending.get(key)) for key in keys])
+
+    @staticmethod
+    def _same_live_identity(current, identity):
+        pid, started, parent_id, parent_started, command, parent_command = identity
+        child, parent = current.get(pid, {}), current.get(parent_id, {})
+        return (child.get('start') == started and child.get('command') == command and
+                child.get('ppid') == parent_id and parent.get('start') == parent_started and
+                parent.get('command') == parent_command)
 
     def canonical_argument(self, raw):
         # macOS's system-owned /var alias is the only normalization allowed.
@@ -110,30 +128,45 @@ class SecondaryFifoLedger:
             self.records[str(path)]['parent'] == expected_parent
             for path in paths
         )
-        if not fully_attested_pair:
-            # A new, incomplete, or changed pair still needs full live UID and
-            # post-query process/argv attestation. Cache reuse never adopts paths.
+        identity = (pid, process['start'], parent_id, parent['start'],
+                    live['command'], current[parent_id]['command'])
+        pair_key = tuple(str(path) for path in paths) if not primary_pair else ()
+        proof = self._partial_pair_proofs.get(pair_key)
+        partial_identity_attested = (proof is not None and proof['identity'] == identity and
+            proof['state'] == self._pair_state(pair_key, self.records, self.pending))
+        if not fully_attested_pair and not partial_identity_attested:
+            # A partial pair may reuse ONLY its own completed live UID/argv proof,
+            # with identical current identities and unmodified recorded state.
             if self.uid_of(pid) != os.getuid() or self.uid_of(parent_id) != os.getuid():
                 raise UnsafeSecondaryPath('Apple worker UID differs from owned user')
             after = self.current_processes()
-            if (after.get(pid, {}).get('start') != process['start'] or
-                    after.get(pid, {}).get('command') != live['command'] or
-                    after.get(pid, {}).get('ppid') != parent_id or
-                    after.get(parent_id, {}).get('start') != parent['start'] or
-                    after.get(parent_id, {}).get('command') != current[parent_id]['command']):
+            if not self._same_live_identity(after, identity):
                 raise UnsafeSecondaryPath('Apple process changed during UID verification')
         if primary_pair:
             return  # Exact primary-task-root cleanup owns these, not this ledger.
-        # A fully attested exact pair need not re-query a possibly exiting
-        # worker's UID. Its inode/type/UID/creation metadata is STILL checked
-        # below, and cleanup retains every prior live-PID/holder/path guard.
+        # Remember validated path claims even if later metadata/persistence fails.
+        # Pending claims are NOT inode ownership; cleanup still refuses late paths.
+        claims = dict(self.pending)
         for path in paths:
             key = str(path)
-            if len(self.pending) + len(self.records) >= 256 and key not in self.pending and key not in self.records:
+            if key not in self.records:
+                if len(claims) + len(self.records) >= 256 and key not in claims:
+                    raise UnsafeSecondaryPath('Secondary path ledger bound exceeded')
+                claims[key] = dict(path=key, process=dict(expected_process), parent=dict(expected_parent))
+        if claims != self.pending:
+            self.pending = claims
+            self.persist(self.dump())
+        # Stage inode promotions: interruption, bad sibling metadata or failed
+        # durable publication must not promote an unverified pending leaf.
+        records, pending = dict(self.records), dict(self.pending)
+        new_inode = False
+        for path in paths:
+            key = str(path)
+            if len(pending) + len(records) >= 256 and key not in pending and key not in records:
                 raise UnsafeSecondaryPath('Secondary path ledger bound exceeded')
             claim = dict(path=key, process=dict(pid=pid, start=process['start']),
                          parent=dict(pid=parent_id, start=parent['start']))
-            self.pending[key] = claim
+            pending[key] = claim
             if not path.exists():
                 continue  # Capture early claim; finalization fails if an unattested path later appears.
             relatives = [path.parent.parent, path.parent, path]
@@ -144,12 +177,26 @@ class SecondaryFifoLedger:
                         value['birth_at'] < self.started or value['birth_at'] > time.time() + 1):
                     raise UnsafeSecondaryPath('Secondary inode/type/UID/birthtime is not task-owned')
             record = {**claim, 'metadata': [dict(path=str(item), **value) for item, value in zip(relatives, values)]}
-            existing = self.records.get(key)
+            existing = records.get(key)
             if existing is not None and existing != record:
                 raise UnsafeSecondaryPath('Secondary inode or owner was replaced')
-            self.records[key] = record
-            self.pending.pop(key, None)
-        self.persist(self.dump())  # Durable path/inode proof BEFORE workers may exit.
+            new_inode = new_inode or existing is None
+            records[key] = record
+            pending.pop(key, None)
+        if new_inode and not self._same_live_identity(self.current_processes(), identity):
+            raise UnsafeSecondaryPath('Apple process changed during new FIFO inode attestation')
+        recorded = {key for key in pair_key if key in records}
+        awaiting = {key for key in pair_key if key in pending}
+        partial = len(recorded) == len(awaiting) == 1 and recorded.isdisjoint(awaiting)
+        if partial and pair_key not in self._partial_pair_proofs and len(self._partial_pair_proofs) >= 128:
+            raise UnsafeSecondaryPath('Partial pair identity ledger bound exceeded')
+        self.persist(self._snapshot(records, pending))  # Durable proof before publishing new ownership.
+        self.records, self.pending = records, pending
+        if partial:
+            self._partial_pair_proofs[pair_key] = dict(identity=identity,
+                state=self._pair_state(pair_key, records, pending))
+        else:
+            self._partial_pair_proofs.pop(pair_key, None)
 
     def cleanup(self):
         current = self.current_processes()
