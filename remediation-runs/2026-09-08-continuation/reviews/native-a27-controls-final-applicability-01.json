@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/fixture_review",
+  "recorded_at": "2026-09-09T09:36:08.777920+00:00",
+  "status": "APPROVED_CONTROL_SCOPE_APPLICABILITY_ACROSS_TWO_CYCLES_NOT_NEW_COMBINED_RUN",
+  "recheck": {
+    "directory": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a27-runner-guard-recheck-01",
+    "receipt_sha256": "9ec0aadea02fda3543bb9f61fc7ad0c102daaeda7e2d30aef2b36df62e3bf7f5",
+    "log": "test_l08_functional_runner.log",
+    "log_sha256": "88a739553ad5be9ee64cfbfef49b0aab16bab1ec7b36e42d519e68454d7e3a63",
+    "tests": 11,
+    "passed": 11,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "lane_exit": 0,
+    "control_rows": 216,
+    "before_after_manifest_sha256": "d9ef06fbd4ebd79980675559d97defed7c52fea14540c81962fdaee094478cee",
+    "source": "828 entries; before/after source objects equal, manifest8e8cfcd1605a8ac89b628de95a39d4875c973c73462799f8eb8e337f6f30bd7a.",
+    "cleanup": "Immediate Gradle stop0. No owned workers, artifact workers, outputs or cleanup errors; exact scratch paths absent. Cycle09:31:31\u201309:31:34UTC. No cleanup owed by reviewer."
+  },
+  "only_cross_cycle_control_change": {
+    "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_runner.py",
+    "before": "a80376da97e2b1c480c770ab5394fb279d8db3814819736a04b9d9c14fa61003",
+    "after": "2c4f59e4ab2f1f18fda25a20898129c73d920ff98fa00b60d3d2d7b9e5e2e29d",
+    "checks": "Same216 paths,215 hashes unchanged. Both recheck manifests byte-equal; all216 current files match. Actual new frozen-source guard plus10 unchanged methods executed PASS.",
+    "adoption_receipt_sha256": "84989bd894327fd603ae58b93b04f923bc3cda09360b20a1ba27f484512b3e23"
+  },
+  "applicability": {
+    "A149": "138 unchanged A controls PASS in controls01 plus11 corrected runner controls PASS in recheck. No omitted A control remains failed at this reviewed source scope.",
+    "combined211_case_accounting": "200 other controls PASS in controls01 plus11 runner controls PASS in recheck. Do not count the10 repeated runner methods twice or call this a newly executed211-test cycle. B implementation assessment remains separately owned.",
+    "basis": "The sole changed file is the independently reviewed test-only repair. All application/fixture/runner/parser/native/support implementations are unchanged between cycles; no direct source pin or filename inventory changes. The functional-copy syntax scan reads this test file; fresh successful import/recheck and independent AST inspection establish its new syntax without rerunning unrelated suites. Aggregate inventory hashes differ honestly because this test changed.",
+    "limitations": "Reuse is scoped control evidence, not fresh frozen-source/native execution. Later source/control edits require a new applicability decision and fresh native bindings."
+  },
+  "preserved_failure": {
+    "directory": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a27-b28-controls-01",
+    "receipt_sha256": "0a8e3b772985068a4eb9d9e600293a91467657f91bd0927569c214db843803da",
+    "status": "FAIL;210PASS/1FAIL/0errors/skips. Historical stale canonical-versus-companion guard failure is not rewritten."
+  },
+  "prior_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-a27-functional-runner-controls01-independent-01.json",
+    "sha256": "b1acee79fa9ed6dc542fdc15de482d748699b13b1e6e7e90eb5b551519b55014"
+  },
+  "activity": "Read-only raw logs, receipts, hashes and source references. No project imports, tests, builds, native/network actions or canonical edits; only this authorized report written.",
+  "readiness": "NOT_READY. A25/B26 actual native failures, strict protection26FAIL and physical-device/Store/owner/legal requirements remain unchanged."
+}

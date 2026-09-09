@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_B28_FAILURE_ONLY_LAYOUT_CONTROL_SOURCE_REVIEW",
+  "reviewer": "/root/portability_review",
+  "author": "/root/lifecycle_controls",
+  "coordinator": "/root",
+  "recorded_at": "2026-09-09T09:16:06.646Z",
+  "status": "APPROVED_EXACT_DRAFT02_SOURCE_FOR_ADOPTION_AND_FOCUSED_CHECKS_NOT_RUNTIME_PROOF",
+  "open_source_findings": [],
+  "scope": "Review of four held replacement files against canonical B26 controls and actual B26 failure. No production-app, C region acceptance, Python bind_regions acceptance, new observer mode or workflow dispatch approved. Root owns adoption, actual tests, source freeze/bindings and later native execution.",
+  "approved_files": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b26-region-followup-01/draft-02/image_text_layout_diagnostic.py",
+      "bytes": 9747,
+      "sha256": "026184d084bb62b50768e1c100ea366f3bbf90afaa8007b7e440ee97954a1cbd"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b26-region-followup-01/draft-02/run_normal_ios_launch.py",
+      "bytes": 67346,
+      "sha256": "9e71c7b654b70de5a97b6817af4eecc920e45f6d7986ffbdadc396482a49b6d3"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b26-region-followup-01/draft-02/test_image_text_layout_diagnostic.py",
+      "bytes": 27196,
+      "sha256": "dfc6630c89df234d0348ea8f789c9051e121f983524afd9c1ebaa8158a429458"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b26-region-followup-01/draft-02/run_control_tests.py",
+      "bytes": 2932,
+      "sha256": "3779d70a5c5b099f2612bfe451bf9688b54c4b33abc938da36177bb920af8842"
+    }
+  ],
+  "author_report": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-b26-region-followup-01/implementation-report-02.json",
+    "bytes": 4205,
+    "sha256": "58a4ae8a4dd3405d6295630f46d73b8c47b18237167b8a618503917c2faacd56"
+  },
+  "preserved_rejected_draft": {
+    "report": "remediation-runs/2026-09-08-continuation/reviews/native-b26-region-followup-01/implementation-report.json",
+    "sha256": "c15d1779c8500cb873f035893c19317640add7e466185b8b83f36a25a7d5ce0f",
+    "caller_sha256": "e7735bb7f846a49d5e39a7e9e59ff49656a6241ac2ac8969b94131586b239f10",
+    "tests_sha256": "0164036d70e62a312e73ec818caa120c120accaf423f9aa5e91cd38586c3ac58",
+    "disposition": "Not approved/adopted. Original draft directory and report remain byte-identical; findings fixed only in separate draft-02."
+  },
+  "findings_resolved_in_source": [
+    {
+      "id": "B28-CUSTODY-01",
+      "initial_finding": "The first draft used finished_at to authorize raw-file deletion, but Lane.command sets finished_at even after a failed worker stop or unresolved exit. The original tests raised before a child existed and did not exercise this case.",
+      "correction": "Cleanup now requires the exact single command/log, a finished record, no command_cleanup_error and type(exit_code) is int. Failed/interrupted stops, unresolved exits and no-child outcomes retain raw for the existing outer finalizer, with raw_removed=false.",
+      "source_negative_controls": "New mocked post-launch tests exercise actual Lane.command timeout handling with owner.stop failure/KeyboardInterrupt, unresolved poll, and successful reaping. A completed leader plus output-budget/stop-error case also preserves raw. All continue to assert identical original region exception/no diagnostic result.",
+      "verification_state": "Statically reviewed; root must execute controls."
+    },
+    {
+      "id": "B28-CUSTODY-02",
+      "initial_finding": "The first draft's current-user/type/path checks could decode or unlink a replacement ordinary file at the output path without proving it was the command-created inode.",
+      "correction": "An opt-in descriptor snapshot records device/inode/UID/file type immediately after exclusive xb open, before Popen. Captured raw-read identity must match before decoding/publishing; current canonical non-symlink regular-file identity must match again before unlink.",
+      "source_negative_controls": "A same-UID replacement containing otherwise-valid native text must not call make_diagnostic, publish a result or unlink either replacement/original. Normal completed output removal explicitly asserts the descriptor identity.",
+      "verification_state": "Statically reviewed; root must execute controls."
+    }
+  ],
+  "source_review": {
+    "baseline_caller": {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "sha256": "5524d839202211270ec1c97776f0d350b9802ecf0d1c5e6eb3d28cd960629302"
+    },
+    "unchanged_acceptance": {
+      "kernel_image_region.c.in": {
+        "bytes": 4625,
+        "sha256": "e98501da6bec44050e2dc9aab75da13c6d34e3733019789df74efad7774d6eb8"
+      },
+      "kernel_image_regions.py": {
+        "bytes": 3821,
+        "sha256": "4b87bf30ab492bf45554b2952ef52982343d5f16c66dce247412a45801b0287b"
+      }
+    },
+    "caller_delta": "AST comparison finds only existing command/observe_kernel_regions changes, one collect_kernel_region_layout_failure method and one module import. All other caller AST, source/copy/signing/ownership/finalization paths remain identical.",
+    "ordinary_command_compatibility": "capture_output_identity is a default-false keyword-only internal parameter, enabled only for the diagnostic. Removing that parameter and its one guarded fstat block yields the exact prior command AST. Ordinary command receipts do not gain output_file_identity. Reopened test_native_command_failures.py confirms why its isolated globals/exact ordinary fields must remain unchanged.",
+    "trigger": "Only a normally completed exact helper command exit1, with no interruption/primary/cleanup-error flags, enters collection. Closed failure fields must show exact selected start/end, full native return, errno0, zero offset, RX, allowed max protection, non-submap, and only an oversized span. Unexpected/error/timeout cases never start otool.",
+    "ownership_and_identity": "Collector rechecks watched outputs and target lifetime, descriptor-binds/hash-checks the original failure/helper/artifact, and verifies source/control context. Artifact size is bounded512MiB, helper1MiB, original failure4096B; reads are nonfollowing, regular-file/current-UID, descriptor/inode/size/mtime/ctime checked and bounded.",
+    "native_operation": "Exactly one existing owned xcrun otool -arch arm64 -l call on the selected artifact;10second tool timeout,256KiB output cap. No task-memory read, privilege/entitlement change, broad mapping scan, extra app launch or fallback.",
+    "parser": "Bounded UTF-8 output, exact artifact header, consecutive load-command framing, one __TEXT segment and one matching LC_UUID. Retains only closed numeric vmaddr/vmsize/fileoff/filesize/maxprot/initprot/nsects/flags plus UUID and native-output hash/length. Section/unrelated-command fields cannot replace the selected segment. Numeric extremes or unusual protection are diagnostic observations, not accepted geometry.",
+    "page_size_scope": "os.sysconf(SC_PAGE_SIZE) is explicitly labeled host measurement with target_page_size_proven=false. No hardcoded16KiB, inferred target page size, interval rounding or automatic acceptance.",
+    "failure_and_privacy": "Original region failure is rethrown with bare raise; diagnostic exceptions add only exception type. Kernel acceptance/output schemas stay byte-identical. Raw native output stays temporary and is removed only with custody proof; retained JSON excludes raw paths/symbols, source code or app memory.",
+    "source_control_binding": "Existing closed .py control discovery includes the new decoder/test automatically after adoption; fresh whole-control bindings still required after all coordinated changes. This review is exact four-file approval, not a future closure hash.",
+    "python39_syntax": "All held original/revised Python files independently parsed using stdlib AST feature_version(3,9); no project function/import execution."
+  },
+  "declared_control_scope": {
+    "existing_tests": 204,
+    "new_tests": 22,
+    "projected_aggregate": 226,
+    "count_basis": "Unique class/test-method AST declarations, not unittest discovery or executed results.",
+    "driver": "Only EXPECTED_COUNT204→226 changes relative to canonical driver; discovery/import-closure/count/no-skips/source-unchanged checks unchanged.",
+    "new_cleanup_methods": [
+      "test_image_text_layout_diagnostic.ImageTextLayoutDiagnosticTests.test_postlaunch_timeout_stop_failure_retains_raw_for_outer_finalizer",
+      "test_image_text_layout_diagnostic.ImageTextLayoutDiagnosticTests.test_postlaunch_timeout_unresolved_exit_retains_raw_for_outer_finalizer",
+      "test_image_text_layout_diagnostic.ImageTextLayoutDiagnosticTests.test_postlaunch_timeout_reaped_child_removes_exact_owned_raw",
+      "test_image_text_layout_diagnostic.ImageTextLayoutDiagnosticTests.test_same_uid_regular_replacement_is_neither_decoded_nor_unlinked"
+    ],
+    "other_coverage": "Retained18-method scope covers sole-size eligibility, native framing/UUID/numeric bounds, no rounding/provenance PASS, artifact/helper/failure mutation, pre/post unsafe target, invalid host page size, stale output, ordinary failures/interruption/budget, and exact C/Python acceptance pins. One existing test renamed/updated for conservative prelaunch retention.",
+    "execution": "No tests, compilers, native tools or application runtime executed by author/reviewer for this held revision. Synthetic native text deliberately does not represent actual B26 Mach-O layout."
+  },
+  "actual_B26_limit": {
+    "independent_review": "remediation-runs/2026-09-08-continuation/reviews/native-b26-actual-independent-01.json",
+    "sha256": "b73673872a085ada2b780641150699224bc033c59873c46b9739a8d2281cb7c4",
+    "observed_failure": "Actual full1272-byte libproc response has region42729472B versus sample42717984B, excess11488B; no retained exact Mach-O layout/target page size or successful vnode/post-query provenance. This patch does not change that historical FAIL.",
+    "future_scope": "A successful diagnostic would add fresh artifact metadata only. It cannot retroactively supply B26 data or itself pass the C/Python provenance gate."
+  },
+  "reviewer_actions": "Read-only source/diff/Git-evidence/AST/JSON/SHA inspection; sole owned write is this review. No tests, project imports or extracted-function execution, build/compiler/native commands, network/API/Actions, canonical edits, process signals or cleanup. No reviewer fixture/worker allocation; no cleanup cycle owed.",
+  "conclusion": "Approve exact draft-02 adoption and coordinated focused controls. Both reported cleanup defects are corrected in source with targeted unexecuted regressions. Actual tests and fresh platform evidence remain required; B provenance remains FAIL/incomplete."
+}

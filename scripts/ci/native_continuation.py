@@ -40,7 +40,7 @@ RUNNERS = {
     "l08": OLD_CAMPAIGN + "/native/l08-app-foundation-composition-01/compose_runner.py",
     "normal": OLD_CAMPAIGN + "/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
 }
-CYCLES = {"l08": "ios-readiness-25", "normal": "ios-readiness-26"}
+CYCLES = {"l08": "ios-readiness-27", "normal": "ios-readiness-28"}
 LIFECYCLE_MODE = "direct-owned-v1"
 NATIVE_JOB_SECONDS = 240 * 60
 NATIVE_WAIT_SECONDS = 6000

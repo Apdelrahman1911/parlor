@@ -51,9 +51,9 @@ absolute checkout path and recomputes both control manifests before native work.
 
 The canonical runners execute serially on independently owned fresh simulators:
 
-1. A: composed L08, next cycle `ios-readiness-25`;
+1. A: composed L08, next cycle `ios-readiness-27`;
 2. B: normal-source eight launches plus separate image observation, cycle
-   `ios-readiness-26`, explicit `--image-observer=libproc`.
+   `ios-readiness-28`, explicit `--image-observer=libproc`.
 
 The failed `ios-readiness-17/18` evidence from run `34216788568` and failed
 A19 from `34244902185` remain historical failures. A19's simulator cleanup was

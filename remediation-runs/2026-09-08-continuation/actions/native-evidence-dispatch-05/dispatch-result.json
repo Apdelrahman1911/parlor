@@ -1,0 +1,187 @@
+{
+  "kind": "EXACT_NATIVE_A25_B26_DISPATCH_RESULT",
+  "started_at": "2026-09-09T06:53:14.627354+00:00",
+  "finished_at": "2026-09-09T06:53:16.655021+00:00",
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD",
+        "HEAD^{tree}"
+      ],
+      "started_at": "2026-09-09T06:53:10.919011+00:00",
+      "finished_at": "2026-09-09T06:53:10.927853+00:00",
+      "exit_code": 0,
+      "stdout": "source-immediate.txt",
+      "stdout_sha256": "7c7898ed58bd36f57bc6520640bdd8b57c26b2d26d4bf13a14d734376231ef26",
+      "stderr": "source-immediate.txt.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "started_at": "2026-09-09T06:53:10.928089+00:00",
+      "finished_at": "2026-09-09T06:53:10.931954+00:00",
+      "exit_code": 0,
+      "stdout": "branch-immediate.txt",
+      "stdout_sha256": "1c1c717d880304c7c17517f6d21c918e2d035438b7c843525b049a2f050c4692",
+      "stderr": "branch-immediate.txt.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "--is-shallow-repository"
+      ],
+      "started_at": "2026-09-09T06:53:10.932056+00:00",
+      "finished_at": "2026-09-09T06:53:10.935833+00:00",
+      "exit_code": 0,
+      "stdout": "history-immediate.txt",
+      "stdout_sha256": "2ed27c1421e6928dbe13dbfdb5c59e1045b30341fe7ebe05700006bc5ac572c0",
+      "stderr": "history-immediate.txt.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=no"
+      ],
+      "started_at": "2026-09-09T06:53:10.935925+00:00",
+      "finished_at": "2026-09-09T06:53:11.000592+00:00",
+      "exit_code": 0,
+      "stdout": "tracked-status-immediate.txt",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": "tracked-status-immediate.txt.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "ls-remote",
+        "origin",
+        "refs/heads/fix/local-readiness-2026-09-07"
+      ],
+      "started_at": "2026-09-09T06:53:11.000906+00:00",
+      "finished_at": "2026-09-09T06:53:11.619692+00:00",
+      "exit_code": 0,
+      "stdout": "remote-immediate.txt",
+      "stdout_sha256": "b5640a48736aa952592d355d30f813e9ec8675f44a4955f6c0ba4737416f5fee",
+      "stderr": "remote-immediate.txt.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/workflows/production-verification.yml"
+      ],
+      "started_at": "2026-09-09T06:53:11.620233+00:00",
+      "finished_at": "2026-09-09T06:53:12.188079+00:00",
+      "exit_code": 0,
+      "stdout": "workflow-immediate.json",
+      "stdout_sha256": "8345984073768616fd6aff6682c95051f186881c5fa4727b120c80e019841ece",
+      "stderr": "workflow-immediate.json.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34318962397"
+      ],
+      "started_at": "2026-09-09T06:53:12.188442+00:00",
+      "finished_at": "2026-09-09T06:53:12.706267+00:00",
+      "exit_code": 0,
+      "stdout": "preflight-run-immediate.json",
+      "stdout_sha256": "96dbd3300cf5b435bd93422c650bd2c0177ce4d4a3497c6088e94dc8cfa751a2",
+      "stderr": "preflight-run-immediate.json.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34318962397/attempts/1"
+      ],
+      "started_at": "2026-09-09T06:53:12.707148+00:00",
+      "finished_at": "2026-09-09T06:53:13.224333+00:00",
+      "exit_code": 0,
+      "stdout": "preflight-attempt-immediate.json",
+      "stdout_sha256": "b0429aa1ea7576764107ff3a4bb6f391997595b1d4f686d08c66de20358b9259",
+      "stderr": "preflight-attempt-immediate.json.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/artifacts/10091130552"
+      ],
+      "started_at": "2026-09-09T06:53:13.225094+00:00",
+      "finished_at": "2026-09-09T06:53:13.692691+00:00",
+      "exit_code": 0,
+      "stdout": "preflight-artifact-immediate.json",
+      "stdout_sha256": "c4693e52d0f86c6f6d8be5de12ee5a278483f495c40ab7bee6a334052a528764",
+      "stderr": "preflight-artifact-immediate.json.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "--paginate",
+        "repos/Apdelrahman1911/parlor/actions/workflows/production-verification.yml/runs?branch=fix/local-readiness-2026-09-07&per_page=100"
+      ],
+      "started_at": "2026-09-09T06:53:13.693293+00:00",
+      "finished_at": "2026-09-09T06:53:14.613195+00:00",
+      "exit_code": 0,
+      "stdout": "runs-immediate-before.raw.json-stream",
+      "stdout_sha256": "6c111855c19fca946cb33f31ded0b7ea6d861b5d383e5ffebd230def4e7235be",
+      "stderr": "runs-immediate-before.raw.json-stream.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "gh",
+        "workflow",
+        "run",
+        "production-verification.yml",
+        "--repo",
+        "Apdelrahman1911/parlor",
+        "--ref",
+        "fix/local-readiness-2026-09-07",
+        "-f",
+        "verification_scope=native-evidence",
+        "-f",
+        "frozen_source_sha=0303a76771794c52ea96a7d7f47eb689f5b236ba",
+        "-f",
+        "preflight_run_id=34318962397",
+        "-f",
+        "preflight_run_attempt=1",
+        "-f",
+        "preflight_artifact_id=10091130552",
+        "-f",
+        "preflight_artifact_sha256=36c3a564a15cd3d07fa89ce7cb193706e39f9dd9dcf32763b9528b73f0a17faf",
+        "-f",
+        "approved_l08_control_sha256=e948215a6c725dcef47d1461045320ecd4d6f454f7354fc0be31c7c48fa1b83b",
+        "-f",
+        "approved_normal_control_sha256=5660d813d41f3e1dc2a86a932b8f3fca3bcdf214ca7dbd372da7197820e5f73a"
+      ],
+      "started_at": "2026-09-09T06:53:14.628650+00:00",
+      "finished_at": "2026-09-09T06:53:16.654720+00:00",
+      "exit_code": 0,
+      "stdout": "dispatch.log",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": "dispatch.log.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "runtime": "PENDING_NOT_PASS"
+}

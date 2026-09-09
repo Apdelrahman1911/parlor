@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "kind": "EXACT_NONBUILDING_NATIVE_PREFLIGHT05_REQUEST",
+  "coordinator": "/root",
+  "created_at": "2026-09-09T06:16:31.528241+00:00",
+  "status": "PENDING_INDEPENDENT_FREEZE_FOCUSED_CHECKS_AND_SINGLE_PREFLIGHT_APPROVAL",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "frozen_source_sha": "0303a76771794c52ea96a7d7f47eb689f5b236ba",
+  "frozen_source_tree": "4d2364b41a5a29b3c66a3ccc5307a9d84c4f5900",
+  "inputs": {
+    "verification_scope": "native-preflight",
+    "frozen_source_sha": "0303a76771794c52ea96a7d7f47eb689f5b236ba"
+  },
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=native-preflight",
+    "-f",
+    "frozen_source_sha=0303a76771794c52ea96a7d7f47eb689f5b236ba"
+  ],
+  "source_freeze": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/a25-b26-source-freeze-01.json",
+    "sha256": "9e3440e2c2f2bb6f42144162f916c9c2f6f5cd7b2c3ab367c6e71d4297c85461"
+  },
+  "focused_linux_checks": {
+    "receipt_path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-b26-frozen-focused-01/receipt.json",
+    "receipt_sha256": "84c8354259faa9d79acb5e97eff78e4331c4e8289f1f164e8b156d79ed047e98",
+    "log_path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-b26-frozen-focused-01/gradle.log",
+    "log_sha256": "853acc99bbfd76b864b92b1facd79fb804ef06f1f48197ef786980763ce368bd",
+    "scope": "One changed CYCLES assertion and workflow_contract PASS; separate just-generated inventory --check PASS bound in freeze receipt. Full464 interim validator intentionally not repeated: unchanged release behavior and final D includes it."
+  },
+  "scope_assessment": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/post-08d-source-trigger-assessment-01.json",
+    "sha256": "2ab9a439c4ebbb0de9edb3e33aa5cc046a6609e0558fb868d9d9fce2b1467674"
+  },
+  "screening": {
+    "workflow_id": 335554528,
+    "workflow_path": ".github/workflows/production-verification.yml",
+    "all_same_ref_runs_count": 13,
+    "active_run_ids": [],
+    "commands": [
+      {
+        "argv": [
+          "git",
+          "rev-parse",
+          "HEAD",
+          "HEAD^{tree}"
+        ],
+        "started_at": "2026-09-09T06:16:29.229251+00:00",
+        "finished_at": "2026-09-09T06:16:29.238097+00:00",
+        "exit_code": 0,
+        "stdout": "source-before.txt",
+        "stdout_sha256": "7c7898ed58bd36f57bc6520640bdd8b57c26b2d26d4bf13a14d734376231ef26",
+        "stderr": "source-before.txt.stderr",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "argv": [
+          "git",
+          "status",
+          "--porcelain=v1",
+          "--untracked-files=no"
+        ],
+        "started_at": "2026-09-09T06:16:29.238271+00:00",
+        "finished_at": "2026-09-09T06:16:29.303267+00:00",
+        "exit_code": 0,
+        "stdout": "tracked-status-before.txt",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr": "tracked-status-before.txt.stderr",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "argv": [
+          "git",
+          "ls-remote",
+          "origin",
+          "refs/heads/fix/local-readiness-2026-09-07"
+        ],
+        "started_at": "2026-09-09T06:16:29.303630+00:00",
+        "finished_at": "2026-09-09T06:16:29.922648+00:00",
+        "exit_code": 0,
+        "stdout": "remote-before.txt",
+        "stdout_sha256": "b5640a48736aa952592d355d30f813e9ec8675f44a4955f6c0ba4737416f5fee",
+        "stderr": "remote-before.txt.stderr",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "argv": [
+          "gh",
+          "api",
+          "repos/Apdelrahman1911/parlor/actions/workflows/production-verification.yml"
+        ],
+        "started_at": "2026-09-09T06:16:29.923092+00:00",
+        "finished_at": "2026-09-09T06:16:30.441303+00:00",
+        "exit_code": 0,
+        "stdout": "workflow-before.json",
+        "stdout_sha256": "8345984073768616fd6aff6682c95051f186881c5fa4727b120c80e019841ece",
+        "stderr": "workflow-before.json.stderr",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "argv": [
+          "gh",
+          "api",
+          "--paginate",
+          "repos/Apdelrahman1911/parlor/actions/workflows/production-verification.yml/runs?branch=fix/local-readiness-2026-09-07&per_page=100"
+        ],
+        "started_at": "2026-09-09T06:16:30.441936+00:00",
+        "finished_at": "2026-09-09T06:16:31.512127+00:00",
+        "exit_code": 0,
+        "stdout": "runs-before.raw.json-stream",
+        "stdout_sha256": "54f40faa061de2e9d177eed736cdf5fc4b614d2463352f07aa744bb97eb66f73",
+        "stderr": "runs-before.raw.json-stream.stderr",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ]
+  },
+  "required_independent_review": "remediation-runs/2026-09-08-continuation/reviews/native-preflight-a25-b26-freeze-independent-01.json",
+  "maximum_new_dispatches": 1,
+  "runtime": "NOT_RUN: nonbuilding hosted source/control/platform binding only. No app/XCTest/libproc/Store execution authorized by this request.",
+  "cleanup": "No build/test/extraction/worker generated by API collection; focused local lane already stopped and cleaned. Only required evidence retained."
+}

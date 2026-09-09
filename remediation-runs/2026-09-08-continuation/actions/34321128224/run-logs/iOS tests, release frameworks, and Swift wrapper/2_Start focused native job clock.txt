@@ -1,0 +1,18 @@
+﻿2026-09-09T06:53:25.8834670Z ##[group]Run /usr/bin/python3 -B - <<'PY' >> "$GITHUB_ENV"
+2026-09-09T06:53:25.8835330Z [36;1m/usr/bin/python3 -B - <<'PY' >> "$GITHUB_ENV"[0m
+2026-09-09T06:53:25.8835800Z [36;1mimport json[0m
+2026-09-09T06:53:25.8836170Z [36;1mimport os[0m
+2026-09-09T06:53:25.8836520Z [36;1mimport time[0m
+2026-09-09T06:53:25.8836960Z [36;1mvalue = time.clock_gettime_ns(time.CLOCK_MONOTONIC_RAW)[0m
+2026-09-09T06:53:25.8837520Z [36;1mif type(value) is not int or value <= 0:[0m
+2026-09-09T06:53:25.8838070Z [36;1m    raise RuntimeError("invalid-native-job-kernel-clock")[0m
+2026-09-09T06:53:25.8838680Z [36;1mclock = dict(clock="CLOCK_MONOTONIC_RAW", start_ns=value,[0m
+2026-09-09T06:53:25.8839420Z [36;1m             run_id=int(os.environ["GITHUB_RUN_ID"]), run_attempt=int(os.environ["GITHUB_RUN_ATTEMPT"]),[0m
+2026-09-09T06:53:25.8840210Z [36;1m             job=os.environ["GITHUB_JOB"], head_sha=os.environ["GITHUB_SHA"])[0m
+2026-09-09T06:53:25.8840920Z [36;1mprint("PARLOR_NATIVE_JOB_CLOCK=" + json.dumps(clock, separators=(",", ":")))[0m
+2026-09-09T06:53:25.8841540Z [36;1mPY[0m
+2026-09-09T06:53:25.8874880Z shell: /bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-09T06:53:25.8875630Z env:
+2026-09-09T06:53:25.8876190Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-09T06:53:25.8876930Z   DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+2026-09-09T06:53:25.8877440Z ##[endgroup]

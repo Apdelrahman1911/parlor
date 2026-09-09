@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_ACTUAL_NATIVE_CUSTODY_RECONCILIATION",
+  "reviewer": "/root/ci_workflow",
+  "recorded_at": "2026-09-09T08:19:23.031Z",
+  "status": "CUSTODY_AND_SCOPED_CLEANUP_RECONCILED",
+  "findings": [],
+  "scope": "Dispatch, actual source/control/platform binding, artifacts, upload and inner/outer cleanup only. No duplicate A/B semantic review and no new execution approval.",
+  "evidence_base": "remediation-runs/2026-09-08-continuation/actions/34321128224",
+  "run": {
+    "id": 34321128224,
+    "attempt": 1,
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "0303a76771794c52ea96a7d7f47eb689f5b236ba",
+    "tree": "4d2364b41a5a29b3c66a3ccc5307a9d84c4f5900",
+    "workflow": ".github/workflows/production-verification.yml",
+    "workflow_id": 335554528,
+    "event": "workflow_dispatch",
+    "conclusion": "failure",
+    "ios_job": 102367788075,
+    "ios_steps": {
+      "success": 11,
+      "failure": 1,
+      "skipped": 21
+    },
+    "other_jobs": "4 skipped; no full-D qualification"
+  },
+  "dispatch": {
+    "request_sha256": "a5ffb85724b96f0cc5993ae994109dcaa55696b6103c300588dc2771cde45af5",
+    "admission_sha256": "726b4e7060f1c80c0ef9aa0fffa6431a7b26d97d3757b15f94ad85f7951bd42e",
+    "result_sha256": "fd2e41d808ca9bce6dd4efe1757697308b338c8083435f6b1e6329a4765475cc",
+    "association_sha256": "7554d9d905d1022104dae2313f7ab061793757c19f6dae3d8517cfcb6ffbf291",
+    "base": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-05",
+    "conclusion": "The exact paired request is associated with one run/attempt; actual logged inputs and child command controls agree. Admission recorded no active same-ref runs immediately before this dispatch. This is not fresh admission for another run."
+  },
+  "input_binding": {
+    "preflight_run": 34318962397,
+    "attempt": 1,
+    "artifact": 10091130552,
+    "artifact_sha256": "36c3a564a15cd3d07fa89ce7cb193706e39f9dd9dcf32763b9528b73f0a17faf",
+    "reviewed_preflight_files_byte_identical": 4,
+    "source_manifest_rows": 828,
+    "source_manifest_sha256": "9bad44488e54241069555bd4a38ac95eed99132df76820dbccf1ba378cdb4b5b",
+    "normalized_source_sha256": "6e81dc9b839413851de307152e876f671cc3b5e9178bbdc25db237dfd872f57a",
+    "source_binding_sha256": "ba80d3edcba9132488636068d06e37e5d6f5742e2e1ba506390f20dce12dfc93",
+    "copy_only_rows": 753,
+    "unique_control_rows_including_binding": 186,
+    "conclusion": "Both actual input manifests match the reviewed preflight control lists and recomputed control hashes (99 A / 95 B). Both complete source-before/after observations equal the bound 828-row source identity; A generated-runner digest matches the reviewed preflight. No unchanged source-review campaign was rerun.",
+    "reused_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-preflight34318962397-a25-b26-dispatch-independent-01.json",
+      "sha256": "d4945878c3fc98c824a4e62236bbdb3b3059a1ef90791f29a178d96628f53df8"
+    }
+  },
+  "platform": {
+    "host": "macos-15 arm64",
+    "macos": "15.7.9/24G830",
+    "xcode": "26.3/17C529",
+    "sdk": "26.2",
+    "runtime": "iOS-26-2/23C54",
+    "device": "iPhone-17-Pro"
+  },
+  "platform_basis": "Actual per-lane xcode/version/SDK/architecture/developer/macOS logs match receipts; full qualified platform observation exactly matches preflight. Simulator-only, ad-hoc Debug; no physical-device, signing or Store claim.",
+  "collection": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/download-receipt-01.json",
+      "bytes": 62207,
+      "sha256": "ebbb2d1051b471725a7ea1d82149982318b470b7053dbb27302c280e8957581f"
+    },
+    "collector_commands": 13,
+    "independently_rehashed_command_streams": 26,
+    "archives": [
+      {
+        "file": "artifact-10093878877.zip",
+        "sha256": "2d7bc514685a03cd09dece303be87aa385342e0b080c6fe7a5ade1925b312fb1",
+        "bytes": 1392,
+        "members": 1,
+        "expanded_bytes": 3280
+      },
+      {
+        "file": "artifact-10093877853.zip",
+        "sha256": "12d80ca4cd335b583799dd1ec8e9f76970163b49a2403b54b9540ed5e813562d",
+        "bytes": 983974,
+        "members": 148,
+        "expanded_bytes": 4759054
+      },
+      {
+        "file": "run-attempt-1-logs.zip",
+        "sha256": "573c1a67d4d911777da643ad6c2aeeb091cbbd9415e997af03ce4f36bc208d6c",
+        "bytes": 25386,
+        "members": 14,
+        "expanded_bytes": 82340
+      }
+    ],
+    "conclusion": "Every ZIP member was independently read (CRC checked), checked against original ZIP bytes and extracted-file SHA/length, with exact member sets and no link/traversal/duplicate/encrypted members. API metadata and upload logs agree on artifact/run/source/name/size/digest; downloaded job log equals the archived whole-job log."
+  },
+  "artifact_uploads": [
+    {
+      "id": 10093877853,
+      "name": "native-evidence-34321128224-1",
+      "sha256": "12d80ca4cd335b583799dd1ec8e9f76970163b49a2403b54b9540ed5e813562d",
+      "bytes": 983974,
+      "uploaded_at": "2026-09-09T07:54:51Z"
+    },
+    {
+      "id": 10093878877,
+      "name": "native-cleanup-34321128224-1",
+      "sha256": "2d7bc514685a03cd09dece303be87aa385342e0b080c6fe7a5ade1925b312fb1",
+      "bytes": 1392,
+      "uploaded_at": "2026-09-09T07:54:53Z"
+    }
+  ],
+  "continuation": {
+    "file": "native-evidence/continuation.json",
+    "sha256": "c03b82d3c28deb7eb8ed07c29965b2b1821d96584bfcd7beb200f5e227df7c9b",
+    "status": "NOT_READY",
+    "outer_exit_code": 2
+  },
+  "inner_lanes": [
+    {
+      "cycle": "ios-readiness-25",
+      "status": "FAIL",
+      "receipt_sha256": "bb26e097e37c54cf2b66fae405595c302bad8df11901d27c8a22ec8cef2f51fd",
+      "control_sha256": "e948215a6c725dcef47d1461045320ecd4d6f454f7354fc0be31c7c48fa1b83b",
+      "control_rows": 99,
+      "copied_inputs_unchanged": 767,
+      "preserved_files": 89,
+      "journal_sha256": "1ab171975ed8e5a05275f361288a56d8c1095df0289c39a35e90c597eee9fda9",
+      "journal_events": 50,
+      "owned_simulator": "DBE16F0A-C09D-4A59-821A-9DD8933794E2",
+      "simulator_children_reaped": 12,
+      "build_handles_reaped": 31,
+      "finalization_stages_pass": 14,
+      "gradle_stop_exit_codes": [
+        0,
+        0
+      ],
+      "owned_fifo_records": 2,
+      "secondary_paths_removed": 4,
+      "cleanup": "PASS",
+      "owned_workers_remaining": 0,
+      "unknown_holders": 0,
+      "admission_remaining_seconds": 14379,
+      "finished_at": "2026-09-09T07:33:44.770187+00:00"
+    },
+    {
+      "cycle": "ios-readiness-26",
+      "status": "FAIL",
+      "receipt_sha256": "a3224c9db87e28b9099b5ffa424fe8c2667c9dcf38b80eb870b03b401a80caf9",
+      "control_sha256": "5660d813d41f3e1dc2a86a932b8f3fca3bcdf214ca7dbd372da7197820e5f73a",
+      "control_rows": 95,
+      "copied_inputs_unchanged": 753,
+      "preserved_files": 51,
+      "journal_sha256": "811d032cf81ee33033db6e77c93c226da64b3d3fe647c451d7348a16dbf19712",
+      "journal_events": 58,
+      "owned_simulator": "DD00A7A9-26B0-4E0A-A3F0-C2B8DEFDE0CF",
+      "simulator_children_reaped": 14,
+      "build_handles_reaped": 33,
+      "finalization_stages_pass": 15,
+      "gradle_stop_exit_codes": [
+        0,
+        0
+      ],
+      "owned_fifo_records": 2,
+      "secondary_paths_removed": 4,
+      "cleanup": "PASS",
+      "owned_workers_remaining": 0,
+      "unknown_holders": 0,
+      "admission_remaining_seconds": 11983,
+      "finished_at": "2026-09-09T07:54:49.089911+00:00"
+    }
+  ],
+  "inner_basis": [
+    "Actual lifecycle journals bind allocation/evidence custody, original source/control, create intent and nonbaseline UUID, exact per-child command/PID/result/reap records, fresh pre-delete Shutdown metadata, post-delete metadata and directory absence, and final command digest.",
+    "Both postbuild barriers require preserved evidence, strict stop and fresh strict refresh. A's 31 and B's 33 build-command handles reconcile with command inventories; all 12/14 simulator children were reaped. Original 480-second cleanup bound remains.",
+    "Both lanes retain immediate/final ./gradlew --stop exits0 and raw 'No Gradle daemons are running.' logs; embedded build/stop exits0. All 14/15 finalization stages PASS; empty error/worker/unknown-holder/output fields agree with exact copy-input and FIFO ledgers.",
+    "Each lane's two FIFO owners/parents match observed PID/start identities; exact born-in-cycle FIFO/parent paths, metadata and four removed paths reconcile. No global-cache deletion is credited.",
+    "All 89/51 retained lane files match both preservation and custody directory manifests. B compressed xcode log decompresses to its receipt's original digest. Cleanup PASS does not erase either lane's FAIL status.",
+    "Both admissions use the same actual first-step RAW clock, exact source/run/attempt and unchanged 14400-second job, 6000-second wait plus 600-second grace plus 600-second preservation reserve. A finished and was safely preserved before B started; no negative/signaled command exit or interrupted finalizer is recorded."
+  ],
+  "outer_cleanup": {
+    "file": "native-cleanup/parlor-native-34321128224-1-cleanup.json",
+    "sha256": "4ef6365e0a68e89e1c4b0757e566cb439aab75a8fb3cf9e1d8af1a594c15f22e",
+    "status": "PASS",
+    "exact_removed": [
+      "remediation-runs/2026-09-08-continuation/evidence/ios-readiness-25",
+      "remediation-runs/2026-09-08-continuation/evidence/ios-readiness-26",
+      "remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json",
+      "remediation-runs/2026-09-08-continuation/build-lane.lock"
+    ],
+    "uploaded_artifact": 10093877853,
+    "uploaded_sha256": "12d80ca4cd335b583799dd1ec8e9f76970163b49a2403b54b9540ed5e813562d",
+    "source_unchanged": true,
+    "stdout_equals_uploaded_receipt": true,
+    "conclusion": "Main evidence upload finalized before cleanup. Cleanup retained exact source/run and both failed inner receipts, verified ownership/manifests, removed only the two owned evidence directories plus binding/lock and owned staging, and attested clean checkout. Cleanup receipt was then independently uploaded. Errors empty."
+  },
+  "continuation_conclusion": "No custody or task-owned cleanup blocker found for continuing correction/analysis from this terminal failed run. Preserve all failure evidence; do not rerun merely to obtain cleanup proof. No new platform run is authorized here; any later dispatch needs the coordinator's fresh no-overlap/source/control admission.",
+  "limits": [
+    "Application failures remain FAIL and overall continuation NOT_READY. This review does not adjudicate A functional/retained-host/protection semantics or B numeric-bounds/provenance.",
+    "Cleanup is corroborated from source-bound on-host receipts/journals and independently checked uploaded evidence; Linux cannot now re-lstat the retired hosted Mac. It is not a global-host or unrelated-resource cleanliness guarantee.",
+    "Full C/D qualification, physical-device and separate Store/owner/legal requirements remain unwaived."
+  ],
+  "reviewer_execution": {
+    "method": "Read-only standard-library JSON/ZIP/gzip/AST-independent source and hash inspection; no project modules imported or project functions executed.",
+    "tests": [],
+    "builds": [],
+    "network_calls": [],
+    "workflow_dispatches": 0,
+    "source_or_git_mutations": [],
+    "cleanup": "No build/simulator/worker resources allocated; all preexisting evidence and locks preserved. Only this assigned report written.",
+    "inspection_corrections": "Two reviewer-only inspection assumptions were corrected from raw files (distinct_ids is an integer count; stop logs end with one newline). Final comparisons passed; neither was an application or cleanup failure."
+  }
+}

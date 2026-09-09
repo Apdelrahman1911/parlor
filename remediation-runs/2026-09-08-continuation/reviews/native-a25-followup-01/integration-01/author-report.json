@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "author": "/root/l08_fixture",
+  "recorded_at": "2026-09-09T08:58:31.129454+00:00",
+  "status": "HELD_MECHANICAL_PIN_CLOSURE_REQUIRES_DIFFERENT_AGENT_REVIEW",
+  "trigger": "Independent A27 reviewer found the direct immutable Foundation adapter pin still names the previous functional transform. The adapter itself is pinned by the composition nine-file draft freeze.",
+  "reviewer": "/root/fixture_review",
+  "tests_executed": false,
+  "project_modules_imported": false,
+  "canonical_paths_written": [],
+  "historical_freezes_modified": [],
+  "source_inputs": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+      "sha256": "399151fef8743c2553bf72f40affb07842a00f643dd34fed1aa3703c0efcec09",
+      "bytes": 13449
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+      "sha256": "7d99de87082cda02d1e003ca8cad35835dec5fb34afd58c41ee3c9b7e30c8bdf",
+      "bytes": 21848
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a23-budget-preservation-draft-freeze-01.json",
+      "sha256": "f73bd3be82522dd4a3404bc68c4c0093d7af7b7b7f9d37bfd87a993c4aebb618",
+      "bytes": 5076
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/revision-02/l08_functional_copy.py",
+      "sha256": "a73cc7b21e702a0ed8cb01da4582fc2fd5d99a69f48d2c43fb24ca37aeb29267",
+      "bytes": 3171
+    }
+  ],
+  "proposed_outputs": [
+    {
+      "held_path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/integration-01/app_foundation_copy.py",
+      "canonical_path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+      "sha256": "fadb54247e3ec7a1c1d025d954a4c31161881a81e08197826da994ff606b044c",
+      "bytes": 13449,
+      "new_canonical_file": false
+    },
+    {
+      "held_path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/integration-01/a27-failfast-foundation-draft-freeze-01.json",
+      "canonical_path": "remediation-runs/2026-09-08-continuation/reviews/a27-failfast-foundation-draft-freeze-01.json",
+      "sha256": "72aaebc7d11c9ce04141919976d8b49d77daa16eacf6f3a55c9870385c7104fd",
+      "bytes": 5465,
+      "new_canonical_file": true
+    },
+    {
+      "held_path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/integration-01/compose_runner.py",
+      "canonical_path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+      "sha256": "0a97dee59d90a15d90c80ac32401fac4e4061987f08e0db2fb5ad6c34f7fdf6a",
+      "bytes": 21848,
+      "new_canonical_file": false
+    }
+  ],
+  "reversal_proofs": {
+    "app_foundation_copy": "One64hexPINS value substitution only; reversing it restores complete399151fef8743c2553bf72f40affb07842a00f643dd34fed1aa3703c0efcec09 source.",
+    "compose_runner": "Two literal assignment substitutions only: DRAFT_FREEZE path and SHA. Reversing both restores complete7d99de87082cda02d1e003ca8cad35835dec5fb34afd58c41ee3c9b7e30c8bdf source. All12transforms, validators, closure/cleanup functions and reference pins are identical.",
+    "freeze": "New additive schema2manifest has exactly9uniquebasenames. Only app_foundation_copy.py digest changes from the prior9rows; other8rows equal. Previousfreeze path/SHA remains oldf73bd3, whose canonical bytes are preserved."
+  },
+  "resolved_direct_pins": [
+    {
+      "path": "run_ios_readiness.py",
+      "sha256": "9580071ecec4abc8ba375ca01e722eee4245f36132e6a5b8790f5d8bb8456687",
+      "held_projection": false
+    },
+    {
+      "path": "copied_sources.py",
+      "sha256": "ba1dbbd9fabc23e43060663ff6051617f1fe3119979e60df7a1db3c13fe950d6",
+      "held_projection": false
+    },
+    {
+      "path": "NativeReadinessUITests.swift.in",
+      "sha256": "fa2dc7dbc97c576262ad14cd85b22f65aa908b1629ab1a205b22aa4873f5c0dc",
+      "held_projection": false
+    },
+    {
+      "path": "NativeReadinessLaunch.swift.in",
+      "sha256": "df8f0cce3f45bedbfea47df3ca0b2e56c6a777383395fc170f0f07b83f8d143a",
+      "held_projection": false
+    },
+    {
+      "path": "DSC01Probe.swift.in",
+      "sha256": "1c4b113ec8695d8da2115e4f386fdaf8820411879af6ff9492109b62c7770746",
+      "held_projection": false
+    },
+    {
+      "path": "l08_functional_copy.py",
+      "sha256": "a73cc7b21e702a0ed8cb01da4582fc2fd5d99a69f48d2c43fb24ca37aeb29267",
+      "held_projection": true
+    }
+  ],
+  "source_scan": {
+    "roots": [
+      "scripts",
+      ".github",
+      "remediation-runs/2026-09-07-local-readiness/native",
+      "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02",
+      "remediation-runs/2026-09-08-continuation/controls"
+    ],
+    "file_suffixes": [
+      ".py",
+      ".sh",
+      ".yml",
+      ".yaml",
+      ".in"
+    ],
+    "searched_hashes": [
+      "417865a86daca8c09e1d650abc2d46b20920a128d95d2021ad365e38e7a207a4",
+      "399151fef8743c2553bf72f40affb07842a00f643dd34fed1aa3703c0efcec09",
+      "7d99de87082cda02d1e003ca8cad35835dec5fb34afd58c41ee3c9b7e30c8bdf"
+    ],
+    "only_executable_direct_hit": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py:29",
+    "freeze_dependency": "compose_runner.py:22-23 selects the hash-bound prior9filefreeze; frozen_draft_files170-188 checks adapter digest. This is why newfreeze+composer repin are required.",
+    "historical_json_scope": "Historical run manifests, input identities, reviews and freezes remain unchanged. Root must produce fresh source/control bindings only after all reviewed changes and mechanical inventory are committed."
+  },
+  "controls": {
+    "foundation_declared_test_methods": 33,
+    "composition_declared_test_methods": 22,
+    "new_tests": 0,
+    "counts_from": "stdlibAST read-only census, not execution",
+    "existing_regressions_reopened": [
+      "test_copy_adapter_adds_only_two_files_and_three_exact_changes (calls real pin_dependencies through apply_owned_adapter)",
+      "test_source_custody_hash_drift_and_extra_inputs_fail_before_any_addition",
+      "test_control_union_keeps_every_inherited_and_new_input",
+      "test_relative_freeze_preserves_exact_nine_owned_draft_inputs",
+      "test_relative_freeze_rejects_wrong_root_escapes_duplicate_and_hash_changes"
+    ],
+    "guard_policy": "Do not bypass mismatch, extend accepted pins, or remove control inputs. New adapter expects only the exact a73functionaltransform; composer expects only the exact newfreeze."
+  },
+  "integration": {
+    "coadopt": "Revision02fourfiles plus these3outputs form the proposed A27source/controlclosure. No standalone pin-only runtime attempt is valid.",
+    "independent_review_pending": true,
+    "fresh_control_manifest_required": true,
+    "fresh_frozen_source_binding_required": true,
+    "application_provenance_or_runtime_claims": false
+  },
+  "cleanup": {
+    "test_build_cycle_started": false,
+    "worker_or_native_outputs_created": false,
+    "gradle_stop": "not run: no owned build/test cycle",
+    "cleanup_owed": false,
+    "held_files_preserved": true
+  },
+  "readiness": "UNCHANGED_NOT_READY; diagnostic and order controls plus mechanical pins are not native runtime proof."
+}

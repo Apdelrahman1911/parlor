@@ -1,0 +1,73 @@
+--- a/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_runner.py
++++ b/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_runner.py
+@@ -1,6 +1,7 @@
+ """Synthetic companion orchestration tests; no Gradle, Xcode or Simulator execution."""
+ import ast
+ import copy
++import hashlib
+ import importlib
+ import json
+ from pathlib import Path
+@@ -228,24 +229,30 @@
+         self.assertTrue(any('storage-health' in item for item in result['remaining_obligations']))
+         self.assertTrue(any('OS-managed' in item for item in result['remaining_obligations']))
+ 
+-    def test_original_ownership_build_stop_and_cleanup_implementations_are_unchanged(self):
+-        original = (CANONICAL / 'run_ios_readiness.py').read_text()
+-        candidate = (HERE / 'run_ios_readiness.py').read_text()
+-        left, right = ast.parse(original), ast.parse(candidate)
+-        def functions(tree):
+-            return {node.name: ast.dump(node, include_attributes=False) for node in ast.walk(tree)
+-                    if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.name != 'main'}
+-        self.assertEqual(functions(left), functions(right))
+-        # Full unchanged finalizer region through source/cleanup calculation, not just a stop substring.
+-        first = '        finally:\n            deferred = []'
+-        last = "                receipt['status'] = 'PASS' if receipt.get('runtime_evidence_status')"
+-        end = '                receipt.update(classify_final_companion(receipt))'
+-        self.assertEqual(original[original.index(first):original.index(last)],
+-                         candidate[candidate.index(first):candidate.index(end)])
++    def test_reviewed_ownership_build_stop_and_cleanup_implementations_are_frozen(self):
++        original_raw = (CANONICAL / 'run_ios_readiness.py').read_bytes()
++        candidate_raw = (HERE / 'run_ios_readiness.py').read_bytes()
++        def frozen(raw, expected):
++            self.assertEqual(hashlib.sha256(raw).hexdigest(), expected)
++        frozen(original_raw, '85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8')
++        reviewed = '9580071ecec4abc8ba375ca01e722eee4245f36132e6a5b8790f5d8bb8456687'
++        frozen(candidate_raw, reviewed)
++        # Commits 4276854 and 347eccc intentionally changed lifecycle/retention.
++        # Pin every byte, including added helpers and the full changed finalizer;
++        # no function or cleanup region is exempted from the reviewed-source guard.
++        original, candidate = original_raw.decode('utf-8'), candidate_raw.decode('utf-8')
++        def functions(text):
++            return {node.name: ast.dump(node, include_attributes=False) for node in ast.walk(ast.parse(text))
++                    if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))}
++        left, right = functions(original), functions(candidate)
++        for name in ('__init__', 'refresh', 'stop_gradle', 'verify_workers', 'verify_copied_inputs', 'remove_temp'):
++            self.assertEqual(left[name], right[name], name)
+         build = candidate.index("xcode = command(['xcodebuild'")
+         stop = candidate.index("stop_gradle('stop-xcode-immediate')", build)
+         self.assertIn('finally:', candidate[build:stop])
+-        preserve = candidate.index('preserve_functional_evidence(container, dest)')
++        self.assertIn('finish_xcode_attempt(receipt, xcode_error,', candidate[build:stop])
++        preserve = candidate.index('preserve_postbuild_raw(receipt, dest, temp, uuid, command, save)', stop)
++        self.assertIn("for label, action in (('stop-xcode-immediate', stop), ('preserve-raw-postbuild', preserve)):", candidate)
+         inventory = candidate.index('available_records = available_run_records(dest, mode)')
+         binding = candidate.index("receipt['available_observation_image_binding'] = bind_available_images(")
+         outcome = candidate.index("receipt['xctest'] = verify_xctest(")
+@@ -258,6 +265,16 @@
+         self.assertIn("if owner.secondary_errors:", candidate)
+         self.assertIn("'cleanup-attested-secondary-fifos', owner.secondary.cleanup", candidate)
+         self.assertIn('RuntimeError(\'Explicit simulator ad-hoc artifact signature inspection failed', candidate)
++        self.assertIn('if safe and preservation_safe and eligible and gradle_attempted:', candidate)
++        self.assertIn('if temp is not None and safe and preservation_safe:', candidate)
++        # The actual pinned sources above pass first; old code and unsafe edits
++        # must not become accepted baselines. These checks do not execute a driver.
++        with self.assertRaises(AssertionError): frozen(original_raw, reviewed)
++        for before, after in (
++                ("code = command(['./gradlew', '--stop'], label + '.log', 90)", 'code = 0'),
++                ('if safe and preservation_safe and eligible and gradle_attempted:', 'if eligible and gradle_attempted:')):
++            self.assertEqual(candidate.count(before), 1)
++            with self.assertRaises(AssertionError): frozen(candidate.replace(before, after, 1).encode('utf-8'), reviewed)
+ 
+ 
+ if __name__ == '__main__': unittest.main()

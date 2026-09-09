@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_FROZEN_A25_B26_SINGLE_NONBUILDING_PREFLIGHT_ADMISSION",
+  "reviewer": "/root/ci_review",
+  "coordinator": "/root",
+  "status": "APPROVED_ONE_EXACT_NATIVE_PREFLIGHT_DISPATCH_ONLY",
+  "findings": [],
+  "readiness": "NOT_READY",
+  "authorization": {
+    "maximum_new_dispatches": 1,
+    "repository": "Apdelrahman1911/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "workflow": ".github/workflows/production-verification.yml",
+    "workflow_id": 335554528,
+    "inputs": {
+      "verification_scope": "native-preflight",
+      "frozen_source_sha": "0303a76771794c52ea96a7d7f47eb689f5b236ba"
+    },
+    "request": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-05/request.json",
+      "bytes": 5668,
+      "sha256": "e3e230369bc363f5bb71e0a3a6c38d617d54fd000dea4a74daefa93dc398cf2c"
+    },
+    "command": [
+      "gh",
+      "workflow",
+      "run",
+      "production-verification.yml",
+      "--repo",
+      "Apdelrahman1911/parlor",
+      "--ref",
+      "fix/local-readiness-2026-09-07",
+      "-f",
+      "verification_scope=native-preflight",
+      "-f",
+      "frozen_source_sha=0303a76771794c52ea96a7d7f47eb689f5b236ba"
+    ],
+    "permitted": "Generate fresh hosted source/control/platform binding package only; root alone dispatches. No app build, XCTest, libproc query, A25/B26 execution, fullD, Store operation or physical-device test authorized.",
+    "immediate_conditions": "Root rechecks exact local/remote0303 source, clean tracked state and same-ref active runs immediately before dispatch; preserve raw screening. Shared workflow concurrency cancels same-ref runs, so do not dispatch over another active run. Any source/control/request change requires scoped reconsideration, not blind retries."
+  },
+  "frozen_source": {
+    "source_commit": "49a4e2317d56e887f36149601d77dfd5af1b8c3f",
+    "source_tree": "44b4f6b58321391cf5d6880744bebcadbb5d64cb",
+    "frozen_commit": "0303a76771794c52ea96a7d7f47eb689f5b236ba",
+    "frozen_tree": "4d2364b41a5a29b3c66a3ccc5307a9d84c4f5900",
+    "freeze_receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a25-b26-source-freeze-01.json",
+      "bytes": 143093,
+      "sha256": "9e3440e2c2f2bb6f42144162f916c9c2f6f5cd7b2c3ab367c6e71d4297c85461"
+    },
+    "whitelist": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/post-08d-delivery-whitelist-01.json",
+      "bytes": 431036,
+      "sha256": "085f1795c83ab903fc8d4e25253e8e967df02e8bb0963ac308838d436987b033"
+    },
+    "verification": "Read actual Git parent chain08d->49a4->0303. Independently compared exact921 changed paths and19,755,273 frozen Git blob bytes, SHA256/sizes/modes against920-row independently screened whitelist plus its exact self-report pin; all match. Ten canonical adopted hashes match their existing independent source/adoption reviews. No review/inventory helper executed.",
+    "tracked_clean": true,
+    "full_history": true,
+    "inventory": {
+      "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "bytes": 11170713,
+      "sha256": "08750062e000203db6362b957fc73e68bbeedfa99a02670ccdcebc297eb2d59f",
+      "parsed_rows": 17948,
+      "check_rerun_by_reviewer": false,
+      "generator_record": "Root freeze receipt records actual generator exit0 followed by inventory-only commit, then actual --check exit0 verifying17,948 rows at06:12:17.628604. Mechanical freshness is not source-review attestation."
+    },
+    "remote_confirmation": "Retained root normal push/ls-remote returned0303a76771794c52ea96a7d7f47eb689f5b236ba; fresh request06:16 remote-before exact match independently reopened. Reviewer did not make a network request.",
+    "whitespace": "Unfiltered raw-evidence staged check exit2 is retained as403921B/b5df96ccafddee3605bf692c25109baff02f5cd23c67f971f829665eb1bafbe5, not PASS or normalized. Separate exact10 canonical source/control/ledger whitespace check exit0 is recorded.",
+    "held_ledger": "Canonical remains104922B/77b1369d historical ledger. Later held A25/B26 dated snapshot and follow-up reports are excluded from freeze; do not adopt them midrun."
+  },
+  "source_and_control_review_reuse": {
+    "source_delta": "Outside remediation evidence/control roots the source commit changes only the three reviewed25/26-label files. Entire workflow84888fae and native budget/ownership/admission/cleanup behavior remain unchanged; native_continuation21d5f2ba differs from08d solely in CYCLES. Inventory-only0303 changes only the CSV.",
+    "references": {
+      "label_integration": "native-a25-label-integration-independent-01.json /8e8ffb3253eaf8adf04e18075ab53d0db8c3ea47c07fca6c5bd1ec4778323451",
+      "fixture_actual": "native-a25-fixture-controls-independent-01.json /3eaecc86617e4044ac6f35bb40bd894d4d29b0ff7b1134ac12becb8bb79a0d43",
+      "corrected12_actual": "native-a25-functional-copy-controls02-independent-01.json /e5fe832eb87dc2f26855c95872da449f8eef586c615cc511c93aba668b11fb76",
+      "B204_actual": "native-b26-normal-controls-independent-01.json /e49183ac4074715fff3d3a63d7695d5f141b4cb817f7340a5b2b8eb4ee1f76eb",
+      "trigger_assessment": "post-08d-source-trigger-assessment-01.json /2ab9a439c4ebbb0de9edb3e33aa5cc046a6609e0558fb868d9d9fce2b1467674"
+    },
+    "actual_prior_scope": "25PASS/55PASS/204PASS and corrected12PASS retain exact original dirty08d source/control dates/scope and independent reviews. Original12 remains10PASS/1FAIL/1ERROR. They are not newly run0303 tests or actual Apple/runtime evidence; complete frozen source includes exactly reviewed adopted bytes.",
+    "minimal_checks": "Confirmed exact label-only delta and declared transport inputs. No changed transport/source/docs-md/workflow input is present; inventoryCSV is not a docs-md trigger. One affected label test plus workflow_contract and already executed inventory freshness check are adequate for this interim nonbuilding preflight. No full464 validator repetition required here; stable final fullD remains required.",
+    "fresh_binding": "Composition control_files includes changed companion Swift/guard; normal control_manifest includes C template/new17-method test/driver and fresh binding. Reopened canonical manifest selection; earlier control hashes cannot be reused for new source. No future control digest is invented."
+  },
+  "actual_focused_checks": {
+    "cycle": "continuation-a25-b26-frozen-focused-01",
+    "receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-b26-frozen-focused-01/receipt.json",
+      "bytes": 305600,
+      "sha256": "84c8354259faa9d79acb5e97eff78e4331c4e8289f1f164e8b156d79ed047e98"
+    },
+    "log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-b26-frozen-focused-01/gradle.log",
+      "bytes": 358,
+      "sha256": "853acc99bbfd76b864b92b1facd79fb804ef06f1f48197ef786980763ce368bd"
+    },
+    "actual_test": "scripts.release.tests.test_native_process_probe.ProbeSourceContractTest.test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels",
+    "test_counts": {
+      "executed": 1,
+      "passed": 1,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "workflow_contract": "PASS from actual358-byte log, after test in set-euo-pipefail shell; exit0, not cached compilation.",
+    "source_manifest_rows": 828,
+    "source_manifest_sha256": "9bad44488e54241069555bd4a38ac95eed99132df76820dbccf1ba378cdb4b5b",
+    "source_runner_before_after_exact": true,
+    "binding_review": "Raw828-row source digest recomputed; changed labels, workflow, workflow_contract and inventory current hashes match recorded rows. Runner hash/manifest independently recomputed. No repeated whole-source/control execution or whole828 current-file audit claimed.",
+    "finished_at": "2026-09-09T06:13:20.994589+00:00",
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-09T06:13:21.690594+00:00",
+    "cleanup_completed_at": "2026-09-09T06:13:21.780029+00:00",
+    "cleanup": "Raw receipt lists remaining outputs/owned workers/artifact workers/errors/deferred signals empty; stop.log says no Gradle daemons. Exact scratch checked absent. No application build output requiring clean/second stop; evidence retained. Scoped cleanup only, not global leak proof."
+  },
+  "retained_request_screening": {
+    "raw_run_pages": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-05/runs-before.raw.json-stream",
+      "bytes": 164770,
+      "sha256": "54f40faa061de2e9d177eed736cdf5fc4b614d2463352f07aa744bb97eb66f73"
+    },
+    "normalized_pages": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-05/runs-before.json",
+      "bytes": 205739,
+      "sha256": "d5d6ca5b03e511a2efa314afd3af1f75ada650d412ee3d937dfa69a89a594340"
+    },
+    "raw_normalized_equal": true,
+    "pages": 1,
+    "unique_same_ref_runs": 13,
+    "all_completed": true,
+    "workflow_active_exact_id_path": true,
+    "request_source_tree_remote_exact": true,
+    "ten_command_stream_hashes_checked": true,
+    "limit": "API observations are06:16 snapshots, not a reservation. Root performs promised fresh same-ref/remote check at dispatch; reviewer performed no API call."
+  },
+  "preflight_platform_and_next_boundary": {
+    "contract": "Existing macos-15/Darwinarm64 qualified Xcode26.3/17C529, iOS26.2 simulator/device SDK/runtime and public JDK21/Android paths remain mandatory. Full history, exact branch/frozen HEAD/GITHUB_SHA/GITHUB_WORKFLOW_SHA and clean tracked source checks remain enforced. No toolchain/ownership/cleanup bypass.",
+    "output": "Require exact fresh four-member package preflight.json,ios-readiness-source-ci.json,l08-controls.json,normal-controls.json with actual run/attempt/artifactID/ZIP digest and cleanup custody.",
+    "separate_admission": "Successful preflight is REVIEW_REQUIRED_NOT_RUNTIME_EVIDENCE. Before native-evidence, independently review actual package source/control hashes, generated runner, platform, safe member set and cleanup; use control_sha256, not JSON-file SHA. This report grants no native execution.",
+    "remaining": "A23 actual partial/strict-protection failure and B24 actual libproc failure remain. C04 scoped08dPASS stays historical; fresh C05 is required at eventual stable final qualification source, not every interim diagnostic freeze. FullD, physical-device, Store identity/operations and separate owner/legal obligations remain open."
+  },
+  "reviewer_operations": {
+    "allowed": "Read-only Git/file/stdlib JSON/hash/CSV/text inspection and this sole authorized report.",
+    "project_imports_tests_builds_workers_API_dispatch_or_canonical_index_edits": false,
+    "cleanup": "No reviewer build/test cycle, worker, extraction or generated build output; no reviewer Gradle stop/clean owed. Root owns all lane/dispatch/cleanup.",
+    "inspection_note": "A verbose inspection exceeded output budget and JSON display parsing failed; compact reinspection completed. This was not a test/project failure and changed no input."
+  },
+  "conclusion": "Exact reviewed frozen source plus focused actual controls justify one nonbuilding native-preflight request only. No meaningful finding; fresh actual binding review remains the required boundary before native execution.",
+  "reviewed_at": "2026-09-09T06:22:44.446832+00:00",
+  "final_reference_rehash": "7 exact request/freeze/check/API artifacts and5 reused independent report pins unchanged; actualHEAD0303 and clean tracked status reconfirmed."
+}

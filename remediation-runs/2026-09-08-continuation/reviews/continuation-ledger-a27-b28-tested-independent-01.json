@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_TESTED_CONTROL_LEDGER_DELTA_REVIEW",
+  "reviewer": "/root/ci_workflow",
+  "author": "/root/evidence_audit",
+  "recorded_at": "2026-09-09T09:48:46.734722+00:00",
+  "status": "APPROVED_EXACT_REVIEWED_CONTROL_CUTOFF_DELTA",
+  "findings": [],
+  "candidate": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-ledger-a27-b28-tested-01/CONTINUE_LATEST.md",
+    "bytes": 111531,
+    "sha256": "dfa9ac54fcfb7c894c43738575850420a858e9901914c19c7e1f670c791b5e0e"
+  },
+  "author_report": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-ledger-a27-b28-tested-01/author-report.json",
+    "sha256": "ef4584240671a80d23376d79113d6b27d28e2f603bf27ae2162bea0efc14c997"
+  },
+  "base_sha256": "c88310b7baf58058e63177f7405cdd6ee54f6ab4e52f9e4b87302bf8f942ddaf",
+  "cutoff": "2026-09-09T09:36:08.777920+00:00",
+  "preservation": {
+    "heading_bytes": 48,
+    "historical_bytes": 108899,
+    "historical_sha256": "29499a2d65842b631c34a545cd80d11e027dc83f916d55e5ae07f23db497f84e",
+    "historical_byte_identical": true,
+    "latest_replacement_bytes": 686,
+    "appendix_bytes": 1898,
+    "appendix_sha256": "7d1e4450e655b5a47d0d4de0b84ea69321a8975e3d49a69fe84a98135d3166cd",
+    "canonical_unmodified": true
+  },
+  "evidence": {
+    "reference_hashes_checked": 13,
+    "original_actual": "211 executed:210PASS/1FAIL,0errors/skips; raw11command exits and terminal counts agree; FAIL preserved.",
+    "corrected_actual": "11 actual method linesPASS; corrected guard plus10 unchanged methods. Not a freshly executed211PASS and no double-counting.",
+    "raw_receipts": [
+      {
+        "cycle": "continuation-a27-b28-controls-01",
+        "receipt_sha256": "0a8e3b772985068a4eb9d9e600293a91467657f91bd0927569c214db843803da",
+        "status": "FAIL",
+        "exit_code": 1,
+        "stop_exit_code": 0,
+        "packet_sha256": "137af9f6d5dbe97cdac840c073b6605bc8d6aa2780eb8dd524f05fa7576f78e9"
+      },
+      {
+        "cycle": "continuation-a27-runner-guard-recheck-01",
+        "receipt_sha256": "9ec0aadea02fda3543bb9f61fc7ad0c102daaeda7e2d30aef2b36df62e3bf7f5",
+        "status": "PASS",
+        "exit_code": 0,
+        "stop_exit_code": 0,
+        "packet_sha256": "d9ef06fbd4ebd79980675559d97defed7c52fea14540c81962fdaee094478cee"
+      }
+    ],
+    "only_cross_cycle_packet_change": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_runner.py",
+    "packet_rows": 216
+  },
+  "conclusions": [
+    "Changed Latest and1898-byte appendix accurately supersede the prior held/untested status. Exact A/B source and actual-control applicability reviews are completed, not still pending.",
+    "The two216-input packets are individually before/after byte-identical; their sole difference is the reviewed A test-only guard. Scoped200 other controls plus11 corrected methods is consistent with independent A149/B61/label1 accounting; B61 and label1 were not rerun.",
+    "Both actual receipts show stop0, no residual owned/artifact workers, outputs or cleanup errors, and unchanged within-cycle source/runner. Dirty0303-based worktrees are disclosed rather than described as pristine frozen-source tests.",
+    "A27/B28 remainNOT_RUN; old A25/B26 native failures and history are intact. No application/provenance/nativePASS, new freeze/preflight, fullD/C05 execution or Store/physical/owner/legal readiness is claimed."
+  ],
+  "scope_limit": "Approves these exact held handoff bytes at the stated09:36 cutoff for coordinator adoption. Not a new source review, test execution, runtime qualification or workflow dispatch approval; later changes need truthful later status.",
+  "reviewer_actions": "Only read-only standard-library raw JSON/log/byte/hash inspection and this authorized report write. No canonical/source/Git mutation, project imports/tests/builds, network/CI, or allocated cleanup resources."
+}

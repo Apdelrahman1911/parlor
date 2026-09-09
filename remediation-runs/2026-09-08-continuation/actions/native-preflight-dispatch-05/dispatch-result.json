@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "kind": "ROOT_SINGLE_APPROVED_PREFLIGHT05_DISPATCH",
+  "started_at": "2026-09-09T06:25:00.395267+00:00",
+  "request_sha256": "e3e230369bc363f5bb71e0a3a6c38d617d54fd000dea4a74daefa93dc398cf2c",
+  "independent_review_sha256": "afeb038e8dc6241b0c0ba0a5e93e1d4b79c586008a37671a66b6f366f6bcae9e",
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD",
+        "HEAD^{tree}"
+      ],
+      "started_at": "2026-09-09T06:25:00.399286+00:00",
+      "finished_at": "2026-09-09T06:25:00.408121+00:00",
+      "exit_code": 0,
+      "stdout": "source-immediate.txt",
+      "sha256": "7c7898ed58bd36f57bc6520640bdd8b57c26b2d26d4bf13a14d734376231ef26",
+      "stderr": "source-immediate.txt.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=no"
+      ],
+      "started_at": "2026-09-09T06:25:00.408320+00:00",
+      "finished_at": "2026-09-09T06:25:00.472919+00:00",
+      "exit_code": 0,
+      "stdout": "tracked-status-immediate.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": "tracked-status-immediate.txt.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "git",
+        "ls-remote",
+        "origin",
+        "refs/heads/fix/local-readiness-2026-09-07"
+      ],
+      "started_at": "2026-09-09T06:25:00.473320+00:00",
+      "finished_at": "2026-09-09T06:25:01.141384+00:00",
+      "exit_code": 0,
+      "stdout": "remote-immediate.txt",
+      "sha256": "b5640a48736aa952592d355d30f813e9ec8675f44a4955f6c0ba4737416f5fee",
+      "stderr": "remote-immediate.txt.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/workflows/production-verification.yml"
+      ],
+      "started_at": "2026-09-09T06:25:01.141738+00:00",
+      "finished_at": "2026-09-09T06:25:01.659531+00:00",
+      "exit_code": 0,
+      "stdout": "workflow-immediate.json",
+      "sha256": "8345984073768616fd6aff6682c95051f186881c5fa4727b120c80e019841ece",
+      "stderr": "workflow-immediate.json.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "--paginate",
+        "repos/Apdelrahman1911/parlor/actions/workflows/production-verification.yml/runs?branch=fix/local-readiness-2026-09-07&per_page=100"
+      ],
+      "started_at": "2026-09-09T06:25:01.660110+00:00",
+      "finished_at": "2026-09-09T06:25:02.630129+00:00",
+      "exit_code": 0,
+      "stdout": "runs-immediate-before.raw.json-stream",
+      "sha256": "54f40faa061de2e9d177eed736cdf5fc4b614d2463352f07aa744bb97eb66f73",
+      "stderr": "runs-immediate-before.raw.json-stream.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "gh",
+        "workflow",
+        "run",
+        "production-verification.yml",
+        "--repo",
+        "Apdelrahman1911/parlor",
+        "--ref",
+        "fix/local-readiness-2026-09-07",
+        "-f",
+        "verification_scope=native-preflight",
+        "-f",
+        "frozen_source_sha=0303a76771794c52ea96a7d7f47eb689f5b236ba"
+      ],
+      "started_at": "2026-09-09T06:25:02.640457+00:00",
+      "finished_at": "2026-09-09T06:25:04.763722+00:00",
+      "exit_code": 0,
+      "stdout": "dispatch.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": "dispatch.log.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "gh",
+        "api",
+        "--paginate",
+        "repos/Apdelrahman1911/parlor/actions/workflows/production-verification.yml/runs?branch=fix/local-readiness-2026-09-07&per_page=100"
+      ],
+      "started_at": "2026-09-09T06:25:09.764234+00:00",
+      "finished_at": "2026-09-09T06:25:10.633491+00:00",
+      "exit_code": 0,
+      "stdout": "runs-after-dispatch.raw.json-stream",
+      "sha256": "f48d5d02f5573d14a250780819cb3d9585b15d6cf40cd34f345a445713508c9b",
+      "stderr": "runs-after-dispatch.raw.json-stream.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "status": "ONE_PREFLIGHT_RUN_ASSOCIATED_NOT_RUNTIME_EVIDENCE",
+  "workflow_dispatch_calls": 1,
+  "dispatch_started_at": "2026-09-09T06:25:02.640408+00:00",
+  "dispatch_exit_code": 0,
+  "dispatch_finished_at": "2026-09-09T06:25:04.763924+00:00",
+  "run_id": 34318962397,
+  "run_attempt": 1,
+  "run_url": "https://github.com/Apdelrahman1911/parlor/actions/runs/34318962397",
+  "actual_actor": "Apdelrahman1911",
+  "frozen_source_sha": "0303a76771794c52ea96a7d7f47eb689f5b236ba",
+  "finished_at": "2026-09-09T06:25:10.645002+00:00"
+}

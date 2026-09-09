@@ -1,0 +1,521 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_A25_ACTUAL_NATIVE_SUBTRACE_AND_FAILURE_REVIEW",
+  "reviewed_at": "2026-09-09T08:12:33.542285+00:00",
+  "reviewer": "/root/fixture_review",
+  "executor": "GitHub Actions34321128224 attempt1; /root coordinated",
+  "status": "A25_FAIL_FUNCTIONAL20_AND13BOOTS_COMPLETE_HOST_PREPARE_FAIL_STRICT26_FAIL",
+  "readiness": "NOT_READY",
+  "scope": "Actual A25 raw XCTest, functional operations, boot/Home markers, host failure, protection observations and scoped source/control/cleanup evidence. Independent read-only review, not a test rerun or executable verifier invocation. B26 and final combined qualification are outside this report.",
+  "run": {
+    "id": 34321128224,
+    "attempt": 1,
+    "url": "https://github.com/Apdelrahman1911/parlor/actions/runs/34321128224",
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "0303a76771794c52ea96a7d7f47eb689f5b236ba",
+    "tree": "4d2364b41a5a29b3c66a3ccc5307a9d84c4f5900",
+    "cycle": "ios-readiness-25",
+    "toolchain": "macOS15.7.9/24G830 arm64; Xcode26.3/17C529; iOS26.2 Simulator23C54 iPhone17Pro; Debug adhoc, not Store",
+    "started_at": "2026-09-09T06:53:49.576177+00:00",
+    "finished_at": "2026-09-09T07:33:44.770187+00:00",
+    "runner_exit_code": 1,
+    "xcodebuild_exit_code": 65,
+    "runtime_status": "FAIL",
+    "cleanup_status": "PASS"
+  },
+  "actual_xctest": {
+    "tests": 5,
+    "passed": 4,
+    "failed": 1,
+    "skipped": 0,
+    "result": "Failed",
+    "passed_methods": [
+      "ComposeContainerViewControllerTests/testChildUsesFullBoundsAcrossSizesAndOpposingSemanticDirections()",
+      "ComposeContainerViewControllerTests/testDefaultAppearanceForwardingReachesTheSameChildExactlyOnce()",
+      "ComposeContainerViewControllerTests/testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView()",
+      "ComposeContainerViewControllerTests/testSystemDecorationAndOrientationPoliciesStillBelongToTheChild()"
+    ],
+    "failed_method": "IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSWithL08FunctionalObservation()",
+    "failure": "XCTAssertEqual failed: Optional(FAIL) is not equal to Optional(PASS)",
+    "actual_location": "GeneratedIOSAppLaunchUITests.swift:2735; xcodebuild.log:7754; bound L08HostUITests.swift.in:86.",
+    "runner_failure": "Actual XCTest summary is not exactly five successful, unskipped tests",
+    "limits": "0 skipped XCTest methods does not mean later internal scenarios executed. Four UIKit passes are not complete L08/application qualification."
+  },
+  "functional_storage": {
+    "conclusion": "All20 planned functional operation receipts and all13 distinct process boots completed in this run; no functional operation failure or missing planned operation.",
+    "operations": {
+      "planned": 20,
+      "reached": 20,
+      "passed": 20,
+      "failed": 0,
+      "unreached": 0
+    },
+    "boots": {
+      "planned": 13,
+      "observed": 13,
+      "distinct": 13,
+      "completed_markers": 13,
+      "unreached": 0
+    },
+    "probe": {
+      "completed": true,
+      "observations": 41,
+      "complete_events": 1,
+      "contiguous_ordinals": true
+    },
+    "independent_reconciliation": "AST/literal-read STORAGE_PLAN and STORAGE_CHECKS; checked every operation's exact action/boot/command/token/process, functional check-key set with every boolean true, metadata site/alias/target/ordinal, and each raw completed-boot marker against the13 before_main rows. No project functions executed.",
+    "boot_table": [
+      {
+        "boot": 1,
+        "actions": [
+          "save"
+        ],
+        "completed_log_line": 3603
+      },
+      {
+        "boot": 2,
+        "actions": [
+          "load",
+          "continue"
+        ],
+        "completed_log_line": 4101
+      },
+      {
+        "boot": 3,
+        "actions": [
+          "save"
+        ],
+        "completed_log_line": 4166
+      },
+      {
+        "boot": 4,
+        "actions": [
+          "load",
+          "continue"
+        ],
+        "completed_log_line": 4664
+      },
+      {
+        "boot": 5,
+        "actions": [
+          "save"
+        ],
+        "completed_log_line": 4729
+      },
+      {
+        "boot": 6,
+        "actions": [
+          "load",
+          "continue"
+        ],
+        "completed_log_line": 5227
+      },
+      {
+        "boot": 7,
+        "actions": [
+          "save"
+        ],
+        "completed_log_line": 5292
+      },
+      {
+        "boot": 8,
+        "actions": [
+          "load",
+          "continue"
+        ],
+        "completed_log_line": 5790
+      },
+      {
+        "boot": 9,
+        "actions": [
+          "legacy-seed"
+        ],
+        "completed_log_line": 5855
+      },
+      {
+        "boot": 10,
+        "actions": [
+          "legacy-load",
+          "continue"
+        ],
+        "completed_log_line": 6501
+      },
+      {
+        "boot": 11,
+        "actions": [
+          "legacy-neighbor",
+          "discard-observed"
+        ],
+        "completed_log_line": 7053
+      },
+      {
+        "boot": 12,
+        "actions": [
+          "dual-preserved",
+          "discard-observed"
+        ],
+        "completed_log_line": 7605
+      },
+      {
+        "boot": 13,
+        "actions": [
+          "final-absence"
+        ],
+        "completed_log_line": 7670
+      }
+    ],
+    "coverage": "Five actual Home resume/controller continuations (Whodunit Classic/Elimination, Mafia DoctorON/OFF and migrated legacy), two failed-recovery Retry/Discard paths, valid-legacy/malformed-neighbor and retained-damaged-dual-copy behavior, then final restart absence are supported by the bound functional receipts.",
+    "former_failure": "Boot10legacy continue nowPASS, including actual_home_tap/actual_resumed_controller/restored_state_equal/legal_continuation/terminal_winner/actual_terminal_writer_delete. OldA23/earlier failure receipts remain historical failures.",
+    "important": "This is an independently reconciled completed functional SUBTRACE, not an emitted harness FUNCTIONAL_MATRIX_VERIFIED result. The runner stopped at verify_xctest (run_ios_readiness.py:1120) before its later l08_storage_functional verifier at1162. Strict-protection and full main-test gates remain failed."
+  },
+  "home_interaction": {
+    "aliases": 7,
+    "exact_raw_taps": 7,
+    "evidence": "For each alias: one fresh all-zero counter record, six valid anchored geometry observations with stable counts1..6, one before-tap marker, one actual XCTest Tap and one acknowledgement with resume_taps1. No second activation observed.",
+    "rows": [
+      {
+        "alias": "wc",
+        "zero_line": 3935,
+        "tap_line": 4058,
+        "ack_line": 4079,
+        "resume_taps": 1,
+        "recovery_shows": 0
+      },
+      {
+        "alias": "we",
+        "zero_line": 4498,
+        "tap_line": 4621,
+        "ack_line": 4642,
+        "resume_taps": 1,
+        "recovery_shows": 0
+      },
+      {
+        "alias": "mon",
+        "zero_line": 5061,
+        "tap_line": 5184,
+        "ack_line": 5205,
+        "resume_taps": 1,
+        "recovery_shows": 0
+      },
+      {
+        "alias": "moff",
+        "zero_line": 5624,
+        "tap_line": 5747,
+        "ack_line": 5768,
+        "resume_taps": 1,
+        "recovery_shows": 0
+      },
+      {
+        "alias": "legacy",
+        "zero_line": 6335,
+        "tap_line": 6458,
+        "ack_line": 6479,
+        "resume_taps": 1,
+        "recovery_shows": 0
+      },
+      {
+        "alias": "damaged",
+        "zero_line": 6833,
+        "tap_line": 6956,
+        "ack_line": 6977,
+        "resume_taps": 1,
+        "recovery_shows": 1
+      },
+      {
+        "alias": "dual",
+        "zero_line": 7385,
+        "tap_line": 7508,
+        "ack_line": 7529,
+        "resume_taps": 1,
+        "recovery_shows": 1
+      }
+    ],
+    "actual_list_swipes": {
+      "up": 1,
+      "down": 0,
+      "up_log_line": 6034
+    },
+    "recovery_controls": {
+      "retry": 2,
+      "discard": 2
+    },
+    "limits": "The new interaction fixture has real positive evidence on reached paths. Bidirectional fallback exists in reviewed source but no down gesture executed in this run. Geometry/counters alone do not prove recovery; the separate PASS functional operations supply that evidence."
+  },
+  "host_failure": {
+    "planned_variants": [
+      "whodunit-classic",
+      "mafia-doctor-on",
+      "mafia-doctor-off"
+    ],
+    "actions_per_variant": 14,
+    "total_planned_actions": 42,
+    "attempted_actions": 1,
+    "passed_actions": 0,
+    "failed_actions": 1,
+    "unreached_actions": 41,
+    "boots_started": 1,
+    "boots_completed": 0,
+    "boots_not_started": 2,
+    "first_failure": {
+      "boot": 1,
+      "variant": "whodunit-classic",
+      "action": "prepare",
+      "stage": "prepare",
+      "reason": "fixture_or_boundary_failure",
+      "status": "FAIL",
+      "process_boot": "ACE93F1F-D030-40EC-93CD-7B6BCB80F9B6",
+      "receipt_sha256": "f1f29488d0c2cd05d7185ec7dc06924c70297ae9defe0f73fd3cfacebb93eae9"
+    },
+    "probe": {
+      "completed": false,
+      "observations": 4,
+      "last_sequence": 4,
+      "operation_sequence_matches": true,
+      "completed_host_markers": 0
+    },
+    "unreached": "Host1capture/language-en/cycle1/resume1/language-ar/cycle2/resume2/remount/language-system/cycle3/resume3/active-ack/leave, and all14 actions in each Mafia host variant.",
+    "cause_limit": "L08HostProbe.kt.in:151-216 keeps one broad prepare stage across mount, DI/Settings/owner/content, acquisition/admissions and start barriers. Catch140-143 collapses any ordinary Exception to this reason. Raw receipt cannot identify which condition failed or prove the owner/session/flow was reached. No production fix or specific cause is established.",
+    "coordination": "Sent exact receipt/log boundary to /root/l08_fixture for independent bounded hostprepare source investigation. No source correction is authored or approved by this runtime report."
+  },
+  "later_unreached": {
+    "scenarios": [
+      "actual local Whodunit locale/lifecycle scenario",
+      "actual local Mafia locale/lifecycle scenario",
+      "actualOS multilingual prerequisite and per-app language investigation"
+    ],
+    "basis": "Copied-source.diff:1254-1259 orders storage, hosts, localWhodunit, localMafia, OS. Hostprepare is the first failed assertion; later durable whodunit/mafia/os probe files are absent.",
+    "interpretation": "Internal scenarios not reached, not XCTest skips and not failed executed local/OS tests."
+  },
+  "strict_protection": {
+    "required_comparisons": 26,
+    "executed": 26,
+    "passed": 0,
+    "failed": 26,
+    "unreached": 0,
+    "by_site": {
+      "save": 8,
+      "load": 10,
+      "dual-before-legacy-seed": 2,
+      "dual-after-tag-damage": 2,
+      "legacy-load-dual": 2,
+      "retained-dual": 2
+    },
+    "all_readbacks": {
+      "query": "returned",
+      "dictionary_present": true,
+      "key_present": false,
+      "value": "missing",
+      "native_error": {
+        "present": false,
+        "domain": "none",
+        "code": 0
+      }
+    },
+    "new_scope": "Compared with the prior24 reached comparisons, boot12 adds the retained-dual directory/file pair. All26 still fail the unchanged Complete equality.",
+    "source": "L08StorageFunctionalProbe.kt.in:500-563 keeps actual attributesOfItemAtPath getter and value==NSFileProtectionComplete, with closed PASS/FAIL comparison recording. Functional success never changes these failures.",
+    "foundation": {
+      "collection_status": "COLLECTION_VALIDATED_NOT_L08_PASS",
+      "operations": 8,
+      "operations_returned_true": 8,
+      "checkpoints": 8,
+      "filemanager_protection_missing": 8,
+      "file_url_until_first_authentication": 5,
+      "volume_protection_unsupported": 8,
+      "hardware_protection_verified": false,
+      "l08_requirements_waived": false,
+      "fixture_cleanup": "REMOVED",
+      "limit": "Direct app-container Foundation observations support the simulator-specific discrepancy but do not establish physical protection enforcement, public Foundation-source provenance, or a diagnosis that permits waiving strict validation."
+    },
+    "strict_gate": "NOT_SATISFIED_BY_COMPANION"
+  },
+  "source_control_binding": {
+    "source": {
+      "commit": "0303a76771794c52ea96a7d7f47eb689f5b236ba",
+      "tree": "4d2364b41a5a29b3c66a3ccc5307a9d84c4f5900",
+      "tracked_status": "",
+      "manifest_rows": 828,
+      "manifest_sha256": "9bad44488e54241069555bd4a38ac95eed99132df76820dbccf1ba378cdb4b5b",
+      "hash_recomputed": true,
+      "current_mismatches": [],
+      "before_after_exact": true
+    },
+    "controls": {
+      "rows": 99,
+      "sha256": "e948215a6c725dcef47d1461045320ecd4d6f454f7354fc0be31c7c48fa1b83b",
+      "fresh_manifest_matches_retained_preflight": true,
+      "hash_recomputed": true,
+      "current_mismatches": [],
+      "explicit_archived_mapping": [
+        {
+          "manifest_path": "remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json",
+          "retained_path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/reviewed-preflight/ios-readiness-source-ci.json"
+        }
+      ]
+    },
+    "copy_rows": 767,
+    "post_build_rows": 767,
+    "all_post_build_hashes_equal_prebuild_copy_hashes": true,
+    "unexpected_or_missing_copy_inputs": 0,
+    "bound_templates": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in",
+        "sha256": "750dbb70d879ba4cc41908103699457557e8723e4d67d2c27cbab133b202cac3",
+        "bytes": 26023,
+        "entire_template_as_added_patch_block": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalProbe.kt.in",
+        "sha256": "55d9ccb998831b07a43429249fc335189227bcd344f252dbcd4dbdbda963463c",
+        "bytes": 30638,
+        "entire_template_as_added_patch_block": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08HostUITests.swift.in",
+        "sha256": "0156fdbb6210f1257c49eba9eee7fc7ac42fce2ad85870525131a7adf9ea99a9",
+        "bytes": 9077,
+        "entire_template_as_added_patch_block": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08HostProbe.kt.in",
+        "sha256": "62dfce06e71cf84f9e80c710f02a1fcb54308104af583d3d9d3033cf41b4bd79",
+        "bytes": 22619,
+        "entire_template_as_added_patch_block": true
+      }
+    ],
+    "scope": "All828 current ordinary source rows and99 control rows independently rehashed. The sole dynamic source-ci control was checked at its retained preflight path. Source before=after, control hash before=after; all four relevant templates occur byte-for-byte as added blocks in retained copied-source.diff. No claim that historical Linux controls newly executed here."
+  },
+  "available_image_scope": {
+    "status": "AVAILABLE_OBSERVATIONS_IMAGE_BOUND",
+    "matrix_verified": false,
+    "observation_rows": 29,
+    "process_groups": 22,
+    "independent_crosscheck": "Built and installed bundle inventories are equal. Every functional operation's reported loaded framework bytes/SHA/UUID/path matches the separate executed-framework inventory, with exact Parlor/Parlor.debug.dylib image names.",
+    "loaded_framework": {
+      "origin": "owned-copy-build",
+      "path": "xcode-frameworks/Debug/iphonesimulator26.2/ComposeApp.framework/ComposeApp",
+      "bytes": 84030776,
+      "sha256": "7fbd6116e2cb9e57c5cfb6e86f1c22d93f11be4cd6e447867a2392314c8019c6",
+      "uuid": "801565ce-ee73-3745-8135-4105e7f1517a"
+    },
+    "embedded_framework": {
+      "bytes": 84048928,
+      "sha256": "41e6f98d5e60bf7b6fe6b52d3e6a829fed3586cfcdb5545f7f466e287c98e5e2",
+      "same_bytes_as_loaded": false
+    },
+    "limit": "Equal UUIDs do not imply equal bytes. The actual owned-build product must not be relabeled as the installed framework. Available-observation/file-fingerprint binding is not a full matrix, hash of every mapped page, normal-binary libproc proof or Store evidence."
+  },
+  "cleanup": {
+    "inner": "PASS",
+    "embedded_gradle": {
+      "build_exit": 0,
+      "stop_exit": 0
+    },
+    "isolated_stops": [
+      {
+        "label": "stop-xcode-immediate",
+        "exit": 0,
+        "at": "2026-09-09T07:32:30.122224+00:00"
+      },
+      {
+        "label": "stop-final",
+        "exit": 0,
+        "at": "2026-09-09T07:32:41.850885+00:00"
+      }
+    ],
+    "raw_stop_logs": "Both report No Gradle daemons are running.",
+    "hosted_receipts_attest": "Owned simulator shutdown/delete exit0 and absent; temporary copy/DerivedData removed; secondaryFIFO cleanupPASS; no remaining owned processes, unknown holders, outputs, cleanup errors or deferred signals.14 finalization stagesPASS.",
+    "inner_completed_at": "2026-09-09T07:33:44.382237+00:00",
+    "outer_upload_custody": "Cleanup receipt binds main artifact10093877853 and its digest, A25receiptbb26e097, cleanup_safetrue and source_unchangedtrue; outerstatusPASS. Only task-owned remote files removed after upload.",
+    "verification_limit": "These are reopened hosted command/cleanup receipts, not a new Linux check of the former macOS filesystem. Reviewer ran no build/test/native/API/cleanup commands."
+  },
+  "custody": {
+    "download_receipt_sha256": "ebbb2d1051b471725a7ea1d82149982318b470b7053dbb27302c280e8957581f",
+    "artifact_id": 10093877853,
+    "archive": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/artifact-10093877853.zip",
+      "sha256": "12d80ca4cd335b583799dd1ec8e9f76970163b49a2403b54b9540ed5e813562d",
+      "bytes": 983974
+    },
+    "archive_digest_matches_recorded_API": true,
+    "selected_raw_members_independently_equal_archive": true,
+    "scope": "Rehashed main archive and compared nine directly reviewed A25 extracted members against it. Root's complete download manifest is referenced rather than duplicating an archive-wide audit."
+  },
+  "conclusion": "A25 advances functional storage to20PASS/13completed boots with real single-tap acknowledgements, but native qualification remainsFAIL: first retained-hostprepare fails,41 host actions and later local/OS scenarios are unreached, and26 required Complete comparisons fail. Preserve this run; investigate the bounded hostprepare uncertainty without changing privacy/authority/strict checks. OverallNOT_READY.",
+  "references": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/download-receipt-01.json",
+      "sha256": "ebbb2d1051b471725a7ea1d82149982318b470b7053dbb27302c280e8957581f",
+      "bytes": 62207
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/artifact-10093877853.json",
+      "sha256": "f877245ddaa8038fc3778564cdaf294ca826cb34c9b3499decef264267fc2acc",
+      "bytes": 727
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/receipt.json",
+      "sha256": "bb26e097e37c54cf2b66fae405595c302bad8df11901d27c8a22ec8cef2f51fd",
+      "bytes": 530294
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/xcresult-summary.json",
+      "sha256": "19eebf802e270810f879d533d818886bb77b4f412636f8398a56036e33d53dec",
+      "bytes": 1577
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/xcresult-tests.json",
+      "sha256": "c40bbedafa707eb07ce226e317b3c6587314fd3d79113e96cc33ce9df9d0d839",
+      "bytes": 5003
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/xcodebuild.log",
+      "sha256": "99644bd519173eeae92688c1de2e1f3f2932a939080e73d25eb0f32dce193694",
+      "bytes": 721006
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/probe-l08-storage-functional-result.json",
+      "sha256": "40cc5e642e746e8c0876c2f268c6fc135cc8bd518441c1e8953250f4571dbf8b",
+      "bytes": 55205
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/probe-l08-host-result.json",
+      "sha256": "fa78f17c48702c18d33391ed03ea2cec2e944dbb6e2b09f3829d330d33dd5a7a",
+      "bytes": 5719
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/parlor-l08-host-1-prepare.json",
+      "sha256": "f1f29488d0c2cd05d7185ec7dc06924c70297ae9defe0f73fd3cfacebb93eae9",
+      "bytes": 1329
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/parlor-l08-app-foundation.json",
+      "sha256": "4adbc1139dbd9986d428033584a4b3f75365781559596447147ed21d081680d5",
+      "bytes": 7841
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/input-manifest.json",
+      "sha256": "f0ae970dfb9fb9b7d1787ad356ea453f3187bbc4c45b438a84ceccce88b5187b",
+      "bytes": 172945
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/copied-source.diff",
+      "sha256": "dfa69f00aed6d156eea1dc3e713a9e88ccf3a21250ff2f0ff686581b67aa1c8b",
+      "bytes": 431906
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/copied-source-inputs-after-build.json",
+      "sha256": "ad7b820bde6accecd1b689358be9807e864df21a27fbd5233f246f56ea192f52",
+      "bytes": 248822
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-evidence/ios-readiness-25/executed-framework-inventory.json",
+      "sha256": "959779212e72d05eb141c827892809b92e0030ab16d6a212b50b1a08ff6771e8",
+      "bytes": 806
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34321128224/native-cleanup/parlor-native-34321128224-1-cleanup.json",
+      "sha256": "4ef6365e0a68e89e1c4b0757e566cb439aab75a8fb3cf9e1d8af1a594c15f22e",
+      "bytes": 3280
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_HELD_ADDITIVE_CONTINUATION_LEDGER_REVIEW",
+  "reviewer": "/root/ci_workflow",
+  "author": "/root/evidence_audit",
+  "recorded_at": "2026-09-09T08:48:15.572946+00:00",
+  "status": "APPROVED_EXACT_HELD_CUTOFF_SNAPSHOT_ONLY",
+  "findings": [],
+  "candidate": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-ledger-a27-b28-01/CONTINUE_LATEST.md",
+    "bytes": 109792,
+    "sha256": "c88310b7baf58058e63177f7405cdd6ee54f6ab4e52f9e4b87302bf8f942ddaf"
+  },
+  "author_report": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-ledger-a27-b28-01/author-report.json",
+    "sha256": "771aa33b7c9cbdbabd94d4c8cad99ebefdb7f84b0f444515c626e25b24354f9d"
+  },
+  "cutoff": "2026-09-09T08:30:47.071Z",
+  "base": {
+    "path": "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md",
+    "bytes": 104922,
+    "sha256": "77b1369d29384dcfb0ada0439350ecc3e8405c1487812c9d649a3910f9f09800"
+  },
+  "preservation": {
+    "heading_bytes": 48,
+    "historical_bytes": 104014,
+    "historical_sha256": "010d73a5d43d8180b32cf2abc1291cdafa5934d3ab867745066efe898e9ba163",
+    "historical_byte_identical": true,
+    "replacement_latest_bytes": 845,
+    "appended_checkpoint_bytes": 4885,
+    "appended_sha256": "8fc07a0b56b96b633f5b57c03ea4edc3b7d78cd463b28ab114b7d7744e6c79ed",
+    "all_referenced_evidence_hashes_matched": 14
+  },
+  "conclusions": [
+    "Only the Latest replacement and4885-byte append were semantically reviewed; the104014-byte historical region and heading were compared byte-for-byte, not re-audited or rewritten.",
+    "Raw A receipt/XCResult/operation/probe data support4PASS/1FAIL/0skip,20 functionalPASS operations,13 distinct boots,26 strictFAIL comparisons and first hostprepareFAIL. The ledger correctly credits a reviewed functional subtrace, not an emitted complete matrix;42 planned host actions/41unreached, completed-boot and tap details match the pinned independent A review.",
+    "Raw B XCResult/observations/kernel payload support8 repetitions/48PASS periodic samples and provenanceFAIL:1272-byte return,42729472-byte kernel region versus42717984-byte selected span,11488-byte excess. No path/vnode, page geometry or final provenance PASS is invented;64markers are not64samples.",
+    "Frozen0303 source/control/platform and uploaded/inner/outer cleanup agree with the already independently reviewed custody. Scoped cleanupPASS does not erase native or historical failures.",
+    "At the stated cutoff labels27/28 alone are reviewed working-tree changes; diagnostics/reorder remain held/in progress and untested. C05/fullD remainNOT_RUN. No new freeze, dispatch, current remote confirmation, Store/physical/owner/legal clearance or readiness promotion is claimed."
+  ],
+  "adoption_limit": "Approved as this exact dated held snapshot, not automatic canonical adoption or authority for a new run. Root must reconcile later source/test state before presenting it as current; do not retroactively alter this cutoff or historical receipts.",
+  "operations": "Read-only stdlib JSON/hash and selected raw-evidence inspection; no canonical/source/Git edits, project import/test/build, network/CI or cleanup resources. Only this independent report written."
+}
