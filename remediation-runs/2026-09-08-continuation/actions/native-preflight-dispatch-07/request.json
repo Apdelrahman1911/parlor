@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "kind": "ONE_NONBUILDING_FRESH_NATIVE_PREFLIGHT_DISPATCH",
+  "coordinator": "/root",
+  "created_at": "2026-09-09T13:46:22.791444+00:00",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "frozen_source_sha": "360fc797a85e1e494334fd8cc11b4e739981cea8",
+  "tree": "8bfe56a21074ba51a4b668bad0728e42007a7593",
+  "remote_before": "360fc797a85e1e494334fd8cc11b4e739981cea8\trefs/heads/fix/local-readiness-2026-09-07",
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=native-preflight",
+    "-f",
+    "frozen_source_sha=360fc797a85e1e494334fd8cc11b4e739981cea8"
+  ],
+  "maximum_dispatches": 1,
+  "source_freeze": "remediation-runs/2026-09-08-continuation/reviews/a29-b30-source-freeze-01.json",
+  "source_freeze_sha256": "8aa27322bc63e1abe667a355bb9bcb75ecca3a308df51b40190e8fb7c5213c95",
+  "scope": "Fresh official hosted source/control/toolchain binding only; no app build, simulator allocation, native query or Store operation. Actual independent source/control/evidence reviews committed. A29/B30 still NOT_RUN; actual preflight archive must receive independent binding approval before native execution."
+}

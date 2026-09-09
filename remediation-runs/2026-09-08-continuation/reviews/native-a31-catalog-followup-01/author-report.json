@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "author": "/root/l08_fixture",
+  "status": "HELD_SOURCE_ONLY_NOT_ADOPTED_OR_EXECUTED_PENDING_INDEPENDENT_REVIEW",
+  "scope": "A31 companion-only post-tap catalogue diagnostic/query race; no production source or canonical strict-template edits.",
+  "actual_A29": {
+    "github_run_id": 34362984912,
+    "attempt": 1,
+    "cycle": "ios-readiness-29",
+    "source": {
+      "commit": "360fc797a85e1e494334fd8cc11b4e739981cea8",
+      "tree": "8bfe56a21074ba51a4b668bad0728e42007a7593",
+      "branch": "fix/local-readiness-2026-09-07",
+      "tracked_status": "",
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_manifest_sha256": "f7fba4adbed9cd963c53486ee57300a940f3f3fe4e61cc6d661159a706c125f8"
+    },
+    "control_sha256": "04b915fc1390e909d7075ee46deede1a1eadb1e8faa24c0e5a8753b88ac71acf",
+    "evidence": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34362984912/native-evidence/ios-readiness-29/receipt.json",
+        "bytes": 519155,
+        "sha256": "bc0bf25113a9399d2491ffd2f33770815468a7aabb418d921137528e683ec30f"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34362984912/native-evidence/ios-readiness-29/input-manifest.json",
+        "bytes": 173163,
+        "sha256": "65e1236acbfb927242e7058ff657401840ef611a2d3eed33278e1ecd83236baa"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34362984912/native-evidence/ios-readiness-29/xcodebuild.log",
+        "bytes": 937220,
+        "sha256": "640d8f5d530796d06427d4bfb966e918f8007e0667ae31216fae30a3d74042cb"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34362984912/native-evidence/ios-readiness-29/xcresult-summary.json",
+        "bytes": 1742,
+        "sha256": "c35a94bad1e33ecfe3aa6f5b1029712750ba9568fc5cb7fc40808ee7c56616e7"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34362984912/native-evidence/ios-readiness-29/copied-source.diff",
+        "bytes": 433715,
+        "sha256": "b3ff5c373503bc777c12f70ee0afe4eef2f5fabaa2a7fd43b9baf3fcac68730b"
+      }
+    ],
+    "result": "Xcode65;5XCTest methods:4PASS/1FAIL/0SKIP. Overall/runtime FAIL and strict_l08_gate NOT_SATISFIED_BY_COMPANION.",
+    "failure": "xcodebuild.log10614 reports generated IOSAppLaunchUITests.swift840: no matching Whodunit-prefix Button snapshot. That source line dereferences target hittability/enabled after a prior count1 and frame read; a count is not a lease on element lifetime.",
+    "trace": "Six Whodunit search rows, before-activation ordinal7, one coordinate tap at t1928.49s, then public count queries followed by failing target-property resolution. No after-activation or successor metadata was emitted.",
+    "limit": "No tap success, picker navigation success, overall functional companion PASS or strict protection PASS established. A29 host English-ownership receipt timing finding is separately assigned to lifecycle_controls; raw operation PASS counts are not complete host qualification.",
+    "cleanup": {
+      "cleanup_status": "PASS",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "owned_processes_remaining": [],
+      "controls_unchanged": true,
+      "source_unchanged": true,
+      "copied_sources_unchanged": true
+    }
+  },
+  "inputs": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01CatalogSelection.swift.in",
+      "bytes": 16447,
+      "sha256": "2649fb97fe27e74539dfd9867f6677c6a390e722129f8e2434231f44b1d91465"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+      "bytes": 51343,
+      "sha256": "3ae0b2315586afd5b2d891347f4c277cf087d6304add9be73b98c09c0ee952ed"
+    }
+  ],
+  "held_outputs": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a31-catalog-followup-01/DSC01CatalogSelection.swift.in",
+      "bytes": 18356,
+      "sha256": "917240a629aed65b9fb3a85d3573be366b62760a202c7766aa3a3b18f161e468",
+      "destination": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01CatalogSelection.swift.in"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a31-catalog-followup-01/test_l08_functional_copy.py",
+      "bytes": 56217,
+      "sha256": "651c535c3022b8575bbb83d5bbd6d4310ae6413bf71ccb905dfcd4926bab07ab",
+      "destination": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py"
+    }
+  ],
+  "correction": {
+    "addition_type": {
+      "name": "DSC01CatalogPresence",
+      "bytes": 641,
+      "sha256": "60895aab57a28d2c56c66e51ae81f87c675f0e3ca88e73e9f8a508a458235024"
+    },
+    "addition_reader": {
+      "name": "catalogPublicPresence",
+      "bytes": 1260,
+      "sha256": "e2ca0cfd314e0eb238d50c929c758edb1bfba4daefad3cbc0e10c3e5b83efbb1"
+    },
+    "sites": [
+      "after-activation metadata",
+      "successor predicate observation",
+      "final successor observation",
+      "catch metadata"
+    ],
+    "behavior": "Only fixed public query counts, app state and alert/keyboard exists are read after activation or on failure. No target/tab/overlay frame, hittability or enabled resolution occurs on those paths. Fields explicitly mark public-counts-state scope and omit unobserved geometry rather than fabricate it.",
+    "unchanged": "Every other source byte: complete strict preactivation finite/safe-hit geometry and6sample/14window readiness; unique/hittable/enabled measured target and coordinate check; one actual tap; successor disappearance+tababsence+exacttopology+foreground+noalert predicates in waiter and final guard;15s timeout; failure append/XCTFail/rethrow; bounded closed metadata envelope;14executedSwiftgeometrycases.",
+    "source_reversal": "Removing the two exact reviewed additions and reversing the four exact call replacements restores complete canonical/companion2649fb97fe27e74539dfd9867f6677c6a390e722129f8e2434231f44b1d91465.",
+    "not_claimed": "Public counts are asynchronous independent observations, not an atomic snapshot or observed scroll-physics proof. Presence alone is not accepted as navigation success; unchanged full successor checks remain mandatory."
+  },
+  "controls": {
+    "existing_suite": "test_l08_functional_copy.py grows21->23test definitions; no new test framework/imports.",
+    "regressions": "Two source-only methods require exact patch restoration and reject the actual old helper;12negative source mutations cover each of4fullsample restorations, target hittability/frame requery, fabricated geometry scope, removed preactivation hittability, duplicate tap, weakened waiter/final successor, and swallowed failure. Tests have NOT been executed by author.",
+    "clone_guard": "One exact DSC01CatalogSelection.swift.in exception applies the full-source reversal plus two complete addition hashes. Immutable3036231clone manifest,65original rows,75filenames, canonical original hash and all other guards remain unchanged. Pristine original companion clones59->58 for this catalogue delta alone; host-language work may separately alter that count.",
+    "parser": "verify_catalog_receipts is unchanged and remains compatible with the count-only final fields. Required14case contract, complete6sample windows, exactbefore/after/successororder, bothgames, noextraactivation, finaltopology/foreground/noalert checks remain required."
+  },
+  "composition_pin_impact": {
+    "driver": {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "bytes": 87139,
+      "sha256": "9580071ecec4abc8ba375ca01e722eee4245f36132e6a5b8790f5d8bb8456687"
+    },
+    "driver_pin_unchanged": "9580071ecec4abc8ba375ca01e722eee4245f36132e6a5b8790f5d8bb8456687",
+    "composer": {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+      "bytes": 21848,
+      "sha256": "0a97dee59d90a15d90c80ac32401fac4e4061987f08e0db2fb5ad6c34f7fdf6a"
+    },
+    "draft_adapter": {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+      "bytes": 13449,
+      "sha256": "fadb54247e3ec7a1c1d025d954a4c31161881a81e08197826da994ff606b044c"
+    },
+    "six_literal_adapter_pins": {
+      "run_ios_readiness.py": "9580071ecec4abc8ba375ca01e722eee4245f36132e6a5b8790f5d8bb8456687",
+      "copied_sources.py": "ba1dbbd9fabc23e43060663ff6051617f1fe3119979e60df7a1db3c13fe950d6",
+      "NativeReadinessUITests.swift.in": "fa2dc7dbc97c576262ad14cd85b22f65aa908b1629ab1a205b22aa4873f5c0dc",
+      "NativeReadinessLaunch.swift.in": "df8f0cce3f45bedbfea47df3ca0b2e56c6a777383395fc170f0f07b83f8d143a",
+      "DSC01Probe.swift.in": "1c4b113ec8695d8da2115e4f386fdaf8820411879af6ff9492109b62c7770746",
+      "l08_functional_copy.py": "a73cc7b21e702a0ed8cb01da4582fc2fd5d99a69f48d2c43fb24ca37aeb29267"
+    },
+    "none_of_six_changed_by_catalogue": true,
+    "draft_freeze": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a27-failfast-foundation-draft-freeze-01.json",
+      "bytes": 5465,
+      "sha256": "72aaebc7d11c9ce04141919976d8b49d77daa16eacf6f3a55c9870385c7104fd"
+    },
+    "nine_frozen_rows": [
+      {
+        "path": "L08AppFoundation.m.in",
+        "sha256": "f7b0e515b580f4bd9c49857ad4a49a3ab925218e8e52c260eb14cc75e410cba7",
+        "current_matches": true
+      },
+      {
+        "path": "L08AppFoundationBridge.h.in",
+        "sha256": "b65a86e26170b313ba00d875910da7499685736240a5cb644b6f916ec71e7d08",
+        "current_matches": true
+      },
+      {
+        "path": "L08AppFoundationLaunch.swift.in",
+        "sha256": "76e37762006d912e40b18508414dc55384aaa89be9212f7fd172b55a30edabb0",
+        "current_matches": true
+      },
+      {
+        "path": "L08AppFoundationUITests.swift.in",
+        "sha256": "5f3f136ec7c5925ed82f277c2ca60e6f22ba81e42e97cc22ef7bdc3954ef2e07",
+        "current_matches": true
+      },
+      {
+        "path": "README.md",
+        "sha256": "0854ffec41d4eafcbfc8269b2c199d4d681e79576e4d53b77716ff0080249cc1",
+        "current_matches": true
+      },
+      {
+        "path": "ROOT_INTEGRATION.md",
+        "sha256": "e3009bfe096930dbde969f239dd162da15a25d407e4b39a99f8bf4fab22d8dcb",
+        "current_matches": true
+      },
+      {
+        "path": "app_foundation_copy.py",
+        "sha256": "fadb54247e3ec7a1c1d025d954a4c31161881a81e08197826da994ff606b044c",
+        "current_matches": true
+      },
+      {
+        "path": "app_foundation_receipts.py",
+        "sha256": "db69c16b7d8abfb5998f92db886a8b8c77bcbb3e72fdd1d806f0ea3dd05f1fb6",
+        "current_matches": true
+      },
+      {
+        "path": "test_app_foundation.py",
+        "sha256": "c04c7d4b1bb99207415beab77ae3b40bb3d5f59709970f7d844d5d14beab0fe5",
+        "current_matches": true
+      }
+    ],
+    "mechanism": "Companion driver FIXTURE=HERE appends DSC01CatalogSelection.swift.in at937. Composer control_files194-208 dynamically includes companion .in/.py files. Thus both proposed files enter fresh actual control manifests; no driver/transform/adapter/composer/nine-file draft freeze literal pin needs changing for this delta.",
+    "historical_metadata": "inherited-controls.json contains old catalogue hashes as provenance/UNCHANGED_STARTING_BYTES metadata, not an executable pin consumer. Preserve it and old input manifests/freeze receipts; do not rewrite historical source identities.",
+    "required_fresh_bindings": "After different-agent approval and root integration of any separately reviewed host/workflow deltas: execute focused existing controls, stop/cleanup/stop, commit reviewed source/control changes, regenerate+commit inventory, create new frozen-source/control bindings for any justified native A31 run. Never reuse A29 controls or claim catalogue source qualifies a prior run."
+  },
+  "author_activity": "Held files only. Reopened actual evidence/current source and performed stdlib JSON/hash/AST/source-diff/exact-reversal/anchor inspection. No project imports, test execution, builds, native tools, network, canonical edits or Git writes; no author build/test cleanup cycle owed.",
+  "required_next": "Independent fixture_review approval, root canonical integration and existing-suite execution/cleanup. Root coordinates any disjoint host-language test-file merge. Native runtime remains NOT_RUN for the correction. Preserve all failed receipts; no readiness, physical-device, Store or owner/legal gate upgrade."
+}

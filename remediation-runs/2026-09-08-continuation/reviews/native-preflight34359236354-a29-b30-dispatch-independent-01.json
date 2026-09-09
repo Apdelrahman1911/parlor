@@ -1,0 +1,223 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/native_ci",
+  "recorded_at": "2026-09-09T14:04:43.371227+00:00",
+  "status": "APPROVED_ONE_A29_B30_NATIVE_EVIDENCE_DISPATCH_SUBJECT_TO_IMMEDIATE_ROOT_GUARDS",
+  "findings": [],
+  "scope": "Bounded independent frozen-source, existing approval/applicable local evidence, actual nonbuilding hosted preflight and exact single native request review. No repeated source-correctness campaign or test execution. Not application qualification.",
+  "source": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "source_commit": "b8683056ff1e312acf5571d231e13a7643f43686",
+    "frozen_commit": "360fc797a85e1e494334fd8cc11b4e739981cea8",
+    "tree": "8bfe56a21074ba51a4b668bad0728e42007a7593",
+    "full_history": true,
+    "tracked_status": "",
+    "freeze_receipt_sha256": "8aa27322bc63e1abe667a355bb9bcb75ecca3a308df51b40190e8fb7c5213c95",
+    "source_commit_paths": 296,
+    "inventory": {
+      "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "sha256": "e4de3805ce7aba2babf39e083893bf3505b8dc10a8a86ee7d080eca3ad460bcb",
+      "bytes": 11570147,
+      "rows": 18627,
+      "audit": "Only inventory changed in360fc797, whose parent is sourceb8683056, whose parent is52f60924. CSV18627 unique paths equal current tracked set; every status explicitly says mechanical inventory, independent review not attested. Root generator/check exits0 and normal push/remote equality are retained in freeze receipt; no reviewer network observation."
+    },
+    "source_manifest_sha256": "f7fba4adbed9cd963c53486ee57300a940f3f3fe4e61cc6d661159a706c125f8",
+    "source_rows": 829,
+    "copy_rows": 754,
+    "copy_rows_compact_json_sha256": "b56027f19ea83786e736d17ba43f90d191cc02049ad41e6e94572b1d4eb56fa6",
+    "audit": "Independently reconstructed Git-selected source/copy sets without importing project functions; exact hosted source829/copy754 set/digest equality, all source files rehashed, no symlinks. All17 adopted A/B/label rows match both canonical and committed held bytes. Regression e65dacf6 is committed. Unadopted normal-only draft stays untracked/excluded; new A29/B30 evidence destinations absent at inspection."
+  },
+  "applicable_local_evidence": {
+    "A_review_sha256": "ed924058075686d799d8b31f6af0262f25c1073f5b134a2459855ff6656b9d6d",
+    "B_review_sha256": "6ff42680dee601dac00252aa48e9802dec6dcead89ea2a61425650ffe58ed8f8",
+    "controls": {
+      "executed_descriptors": 338,
+      "A": 94,
+      "B_normal": 243,
+      "label": 1,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "scope": "Six actual commands; canonical/companion methods overlap, so338 is not a unique-behavior count. All six raw log hashes and exit0 records, before/after217 control rows, unchanged runner and stop0/empty cleanup-error receipt reopened. Synthetic compiler/control execution is not a Darwin query or Parlor runtime."
+    },
+    "jvm": "Existing exact red1FAIL (Commit preceded this peer's Ready) and green283PASS/3existing loopback SKIP evidence retained and previously reconciled; no rerun. New JVM test uses actual nonshipping fixture, not iOS runtime.",
+    "source_applicability": "All217 local control rows still match current files. The current829 source path set equals local execution set; its only changed digest is the required mechanical inventory. Existing A/B semantic/source approvals are reused at exact committed hashes, not inferred from inventory."
+  },
+  "preflight": {
+    "run_id": 34359236354,
+    "run_attempt": 1,
+    "run_number": 172,
+    "workflow_id": 335554528,
+    "repository_id": 1247560518,
+    "event": "workflow_dispatch",
+    "conclusion": "success",
+    "ios_job_id": 102491653385,
+    "ios_steps": {
+      "success": 11,
+      "skipped": 22
+    },
+    "other_jobs_skipped": 4,
+    "producer": "Captured run and exact-attempt responses agree on repository/head repository, branch, SHA, workflow path/id, event and success. Complete5-job and2-artifact sets checked; dispatch07 receipt and single new-run association match. Raw checkout proves fetch-depth0 and exact head; raw focused step proves native-preflight/PREFLIGHT_REVIEW_REQUIRED, cleanup_safe true and no error. Full/native-process-probe/build/test steps skipped.",
+    "binding_sha256": "c3e7a371207d387d5e24d2b94b682004f0603624de7722b50431dc5514f5c7be",
+    "preflight_json_sha256": "946856c3a384a5bbd1748bac5da30d20855289c04f4f79cd27b37c2cba9a60bf",
+    "binding": "Closed four-file archive; preflight member hashes exact. Official schema3 REVIEW_REQUIRED_BOUND at /Users/runner/work/parlor/parlor has exact360fc797/tree/branch, clean tracked status/empty-diff hash and independently matched source/copy sets. Toolchain/source observation only; no app build, XCTest, native ABI/libproc query or protection check ran."
+  },
+  "controls": {
+    "l08": {
+      "rows": 99,
+      "control_sha256": "04b915fc1390e909d7075ee46deede1a1eadb1e8faa24c0e5a8753b88ac71acf",
+      "file_sha256": "4000f6ccbb257cf1c9de55d3a7a6a678b2d660b0ef98e71d5580f4ad9e60d886",
+      "generated_runner_sha256": "dcb1f6ce32da3fc83b24bf2b2b868de68ac7fb35ca1539fc31140ce2589e60d7"
+    },
+    "normal": {
+      "rows": 99,
+      "control_sha256": "fdf7e4a73ca22cb43f3490d545d787d51dda9b3048d10fc1c31e566701f88ac0",
+      "file_sha256": "38acea4c500414b621c9d0c61e6f8a374673807b12ebc68ba5db253e012b3a5a"
+    },
+    "audit": "Closed schemas, safe unique rows, compact-JSON aggregates and exactly one fresh binding row per manifest checked.190 distinct rows including binding; all189 nonbinding files rehashed.188 match the executed217-row local manifest; remaining a27-failfast-foundation-draft-freeze-01.json is unchanged historical approval data (72aaebc7...), exact prior frozen/preflight bytes, not claimed executed.",
+    "delta": "Against reviewed preflight34338494052: A path set/generated runner unchanged, only adopted companion fixture/guard plus fresh binding hashes differ. B adds exactly2 approved files and changes exactly8 approved B files, the approved canonical fixture template and fresh binding. No unexpected control delta or normal-only selection. Current orchestrator is exactly the independently approved paired-label replacement."
+  },
+  "toolchain": {
+    "observation": {
+      "name": "qualified-xcode-26.3",
+      "xcode": "26.3",
+      "build": "17C529",
+      "sdk": "26.2",
+      "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-26-2",
+      "runtime_version": [
+        26,
+        2,
+        0
+      ],
+      "developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+      "scope": "Xcode26.3/17C529 qualified compiler; Debug iOS26.2 simulator observation only, not Store-signing or physical-device evidence",
+      "selected_developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+      "architecture": "arm64",
+      "sdk_name": "iphonesimulator26.2",
+      "runtime_build": "23C54",
+      "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro",
+      "simulator_sdk_path": "/Applications/Xcode_26.3.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk",
+      "android_sdk": "/Users/runner/Library/Android/sdk",
+      "java_home": "/Users/runner/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-101.0/arm64/Contents/Home",
+      "runtime_scope": "Toolchain observation only; no application/ABI/protection/runtime claim"
+    },
+    "runner_image": "macos-15-arm64",
+    "runner_image_version": "20260829.0321.1",
+    "host_macos": "15.7.9",
+    "host_build": "24G830",
+    "audit": "Bound successful qualified-platform validation and raw hosted setup/JDK/focused-step logs agree. Xcode26.3/17C529, simulator/device SDK26.2, available iOS26.2 runtime23C54, arm64 and expected public paths. No separate raw xcode/sdk query captures or native runtime are claimed. Native fetch must require exact current toolchain equality again."
+  },
+  "custody": {
+    "collection_receipt_sha256": "1c80bfb35da6d38fe34e81acbe2245eb585b4b68232ede44c8d1967f8a02473e",
+    "command_captures": 7,
+    "archives": [
+      {
+        "artifact_id": 10107170807,
+        "name": "native-cleanup-34359236354-1",
+        "zip": "native-cleanup.zip",
+        "bytes": 765,
+        "sha256": "f31b028ab7702ca495b6792e07f993026e783d082151222c1ae473b9190d452f",
+        "members": 1,
+        "expanded_bytes": 977
+      },
+      {
+        "artifact_id": 10107169576,
+        "name": "native-preflight-34359236354-1",
+        "zip": "native-preflight.zip",
+        "bytes": 94308,
+        "sha256": "15cd7dc5aaba0b594d9a21ab6e116d5e97d957ec461c4406317d5f9bb9409cfa",
+        "members": 4,
+        "expanded_bytes": 343465
+      }
+    ],
+    "logs": {
+      "zip": "run-attempt-1-logs.zip",
+      "bytes": 21306,
+      "sha256": "f3f2be80d026616126e77a44d1e1534a975ff5f8e31f67657a1586872bb8ef09",
+      "members": 13,
+      "expanded_bytes": 69535,
+      "extracted_by_reviewer": false
+    },
+    "audit": "All18 ZIP members fully read with CRC/length/SHA checks, unique safe names, regular modes/no links/traversal/encryption and bounded totals. Five extracted artifact files exactly match archived bytes. Both API artifact digests/owners/size/nonexpired identities match archives and same-attempt upload logs; upload-before-cleanup ordering reconciled. All7 command exits0, empty stderr and stdout hashes match (4 metadata GETs+3 ZIP GETs). Artifact-ID JSONs are exact projections of captured artifact-list rows, not separately claimed GETs.",
+    "cleanup": {
+      "status": "PASS",
+      "receipt_sha256": "1ad9e9d03cdba6d7477ebf9122965ceba89c20ef98bd893cd881b10f1fcaa7a2",
+      "removed": [
+        "remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json"
+      ],
+      "errors": [],
+      "native_runs": {},
+      "source_unchanged": true,
+      "audit": "Retained cleanup JSON exactly matches parsed raw cleanup-step JSON; same source/run context and successful main artifact identity. No preflight builds, simulator allocation or Gradle stop is claimed. Cleanup artifact upload also matches raw log."
+    }
+  },
+  "dispatch": {
+    "request": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-07/request.json",
+    "request_sha256": "1bfd7c4213a84bc54cbbdc3c2df427d85316de759b0475c33bb401eb9a2300e3",
+    "maximum_dispatches": 1,
+    "inputs": {
+      "verification_scope": "native-evidence",
+      "frozen_source_sha": "360fc797a85e1e494334fd8cc11b4e739981cea8",
+      "preflight_run_id": "34359236354",
+      "preflight_run_attempt": "1",
+      "preflight_artifact_id": "10107169576",
+      "preflight_artifact_sha256": "15cd7dc5aaba0b594d9a21ab6e116d5e97d957ec461c4406317d5f9bb9409cfa",
+      "approved_l08_control_sha256": "04b915fc1390e909d7075ee46deede1a1eadb1e8faa24c0e5a8753b88ac71acf",
+      "approved_normal_control_sha256": "fdf7e4a73ca22cb43f3490d545d787d51dda9b3048d10fc1c31e566701f88ac0"
+    },
+    "cycles": {
+      "l08": "ios-readiness-29",
+      "normal": "ios-readiness-30"
+    },
+    "audit": "Exact command targets existing production-verification.yml, correct repository/ref, native-evidence only and all eight approved inputs. Current source preserves paired A then B, ad-hoc dedicated simulators, qualified toolchain, direct-owned-v1 lifecycle, normal libproc, fresh destinations, source/control/API guards and canonical cleanup. B only follows completed noninterrupted safe A cleanup and separate remaining-job-budget admission (6000s child+600s finalizer+600s reserve within240min job). Strict A failures remain failures even if safe B proceeds.",
+    "required_root_guards": [
+      "Immediately verify exact local HEAD/tree, tracked cleanliness, direct remote branch SHA360fc797a85e1e494334fd8cc11b4e739981cea8 and unchanged source/control/request/review bytes. No intervening commit or control edit.",
+      "Immediately recheck exact preflight34359236354/1 success, unexpired unchanged artifact10107169576/digest, active expected workflow335554528/path and complete same-ref no-overlap. These live checks are root responsibility; reviewer used retained evidence only. Do not cancel unrelated/needed runs.",
+      "Root alone dispatches this exact request at most once. Preserve receipts/artifacts/cleanup on success, failure or interruption; B requires the existing safe-A and clock-budget guards. Inspect failures before considering any new request; no blind retries or Store operations."
+    ]
+  },
+  "pins": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a29-b30-source-freeze-01.json",
+      "sha256": "8aa27322bc63e1abe667a355bb9bcb75ecca3a308df51b40190e8fb7c5213c95"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a29-host-correction-independent-01.json",
+      "sha256": "ed924058075686d799d8b31f6af0262f25c1073f5b134a2459855ff6656b9d6d"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-controls-actual-independent-01.json",
+      "sha256": "6ff42680dee601dac00252aa48e9802dec6dcead89ea2a61425650ffe58ed8f8"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-text-extent-independent-01.json",
+      "sha256": "dfcfb82f20c070c66af35396aa3f973c9ae6565fad32ca42242a4fe2d85f9260"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-text-extent-tests-independent-01.json",
+      "sha256": "4a8c3d1c98f48928259bbfe5db6d6f7b9101a780df1b8b0216655a7e6f0b7084"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a29-b30-label-independent-01.json",
+      "sha256": "af4e715044b03ed6a8f51df0f0b4f2918d7c86d1bf86386d5cd576e05fcaf5ce"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a29-source-label-adoption-01.json",
+      "sha256": "9d11bdef12d98796b6e1f83da5053c524ab657ad4c2d7b1be8903c668c94a7d4"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/b30-source-adoption-01.json",
+      "sha256": "5946af2c76872677bd41d1ca0288a80e18112b2dc89f3cfa795687320d68463e"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34359236354/download-receipt.json",
+      "sha256": "1c80bfb35da6d38fe34e81acbe2245eb585b4b68232ede44c8d1967f8a02473e"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-07/request.json",
+      "sha256": "1bfd7c4213a84bc54cbbdc3c2df427d85316de759b0475c33bb401eb9a2300e3"
+    }
+  ],
+  "limits": "A29/B30 actual platform execution NOT_RUN at this review. Historical A27/B28 and strict Complete failures preserved; host/recovery/provenance qualification remains pending. Local controls/preflight/inventory are not app runtime, Store readiness or mapped-memory hashing. C05/fullD, physical-device, Store/signing/publication, identity collision and separate owner/legal requirements remain unwaived. Verdict NOT_READY.",
+  "activity": "Read-only Git/stdlib source/hash/CSV/JSON/ZIP/text inspection and this exclusive admission report write. No project imports/functions/tests/builds/network/native queries/dispatch/source edits. No reviewer workers, scratch or build outputs created; no reviewer build cleanup owed. Initial assumption that every preflight row belongs to local execution manifest was narrowed to188 executed-bound files plus1 unchanged historical approval record; no application/test failure was relabeled."
+}

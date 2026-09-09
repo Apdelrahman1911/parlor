@@ -1,0 +1,240 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_HELD_L08_ONLY_SELECTOR_SOURCE_TEST_AND_FULL_D_APPLICABILITY_REVIEW",
+  "reviewer": "/root/ci_review",
+  "author_reviewed": "/root/ci_workflow",
+  "coordinator": "/root",
+  "recorded_at": "2026-09-09T16:24:43.927783+00:00",
+  "status": "APPROVED_EXACT_HELD_SEVEN_FILES_PENDING_ROOT_ADOPTION_AND_ACTUAL_LOCAL_CHECKS",
+  "findings": [],
+  "baseline": {
+    "commit": "360fc797a85e1e494334fd8cc11b4e739981cea8",
+    "tree": "8bfe56a21074ba51a4b668bad0728e42007a7593",
+    "branch": "fix/local-readiness-2026-09-07",
+    "canonical_seven_files_unchanged_by_author": true
+  },
+  "author_report": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-l08-only-selection-01/author-report.json",
+    "bytes": 10499,
+    "sha256": "b3a36d1956b7bd707d2e94100d2e47961e9569fdef8a28c2da8452da29fc3411"
+  },
+  "diff": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-l08-only-selection-01/change.diff",
+    "bytes": 38823,
+    "sha256": "dee8d5dc9e98b91cc731c9cc5133a75f9997dbffc6203585a47eebbfe1de1516"
+  },
+  "file_bindings": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-l08-only-selection-01/file-bindings.json",
+    "bytes": 2242,
+    "sha256": "9e5cf3f97f11d681a56542dcb70bbc259d553125f2b217f3d0bbaf47d1913b00"
+  },
+  "exact_adoption_files": [
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "source_sha256": "84888fae00e1add37dd8f39c5a86a9600c2a95b5e3bca794133c3fc28147b46c",
+      "source_bytes": 41331,
+      "held_sha256": "5895ce4e80000b205302a987f8b603ac21380764f36e3711064029c3b1af62bc",
+      "held_bytes": 41722,
+      "git_mode": "100644"
+    },
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "source_sha256": "d6d70592d10b4cb71c42c6b5dab07de1ea58fc8b2fb044eb9dc89e6a4b2b799e",
+      "source_bytes": 64697,
+      "held_sha256": "cac70087f29356074f7a6870ede578ca4e8a4cd765b7c895e95381fb1a2c7a00",
+      "held_bytes": 66688,
+      "git_mode": "100644"
+    },
+    {
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "source_sha256": "02d9dc8b547f9c8b367e05cf1bead6a4f51d47a4bb4849af01fa34c579b38570",
+      "source_bytes": 18880,
+      "held_sha256": "2f7556f9c0e901fbd07df722429fc96ea617b33afc83d11508b64dcabe3b4233",
+      "held_bytes": 20415,
+      "git_mode": "100644"
+    },
+    {
+      "path": "scripts/release/workflow_contract.py",
+      "source_sha256": "fa142d3bbfb3dd18e0f3dc9aba2f388a3ce634ee7fdd16612b2d9bbf2df1f429",
+      "source_bytes": 47465,
+      "held_sha256": "aeeb5fb01a228f9ef5419c2aae4e4e78326b39b0e62846591b184168756d7c6e",
+      "held_bytes": 48478,
+      "git_mode": "100755"
+    },
+    {
+      "path": "scripts/release/tests/test_native_continuation.py",
+      "source_sha256": "366cd58febbe2f91f7cc287af8942948dd15d5372de2cec750dcbde9f9539465",
+      "source_bytes": 80771,
+      "held_sha256": "824a95f46b21f6b679b85cd211913a37906c041668a18d9be94967d51e525605",
+      "held_bytes": 95171,
+      "git_mode": "100644"
+    },
+    {
+      "path": "scripts/release/tests/test_workflow_contract.py",
+      "source_sha256": "695a513b227d1aa3bde6adb49f886713ccdde4f684d9e8478b476cb0c6d8c4ae",
+      "source_bytes": 39774,
+      "held_sha256": "b2a6a09ef5091788081bd1383e75cda188859b67001ecd376519408aa7d03d97",
+      "held_bytes": 42277,
+      "git_mode": "100644"
+    },
+    {
+      "path": "scripts/release/tests/test_native_process_probe.py",
+      "source_sha256": "460c04643aca548e528a8b2fc7fd7037b99e82959aaf9f5c48c50e8027e6f64c",
+      "source_bytes": 43371,
+      "held_sha256": "ecef057e4d90b532d74eb002ee53ebfe1699ab75e084ffb1eafe22388b75f1ff",
+      "held_bytes": 43371,
+      "git_mode": "100644"
+    }
+  ],
+  "independent_byte_AST_review": {
+    "canonical_files_still_match_HEAD": true,
+    "seven_file_diff_reconstructed_from_actual_bytes": true,
+    "Python_AST_parse_only_not_execution": [
+      "scripts/ci/native_continuation.py",
+      "scripts/release/workflow_contract.py",
+      "scripts/release/tests/test_native_continuation.py",
+      "scripts/release/tests/test_workflow_contract.py",
+      "scripts/release/tests/test_native_process_probe.py"
+    ],
+    "native_existing_definitions_unchanged": 39,
+    "native_existing_definitions_modified": [
+      "Continuation.__init__",
+      "Continuation.admit_native",
+      "Continuation.run_native",
+      "Continuation.evidence",
+      "Continuation.run",
+      "Continuation.cleanup",
+      "main"
+    ],
+    "native_new_definitions": [
+      "Continuation.selected_lanes",
+      "Continuation.unselected_lanes",
+      "effective_native_selection"
+    ],
+    "admit_and_run_native": "After removing exactly the new selected-lane require, both existing function ASTs are identical to baseline; timeout/grace/admission/journal/receipt/cleanup/profile/signing/source guards retained.",
+    "workflow_validator": "Only verify_verification_scopes adds closed header/default and exact3env binding guards; no existing check removed.",
+    "mode_requirement": "Adopt exact bytes without mode changes: workflow_contract.py100755, other6files100644."
+  },
+  "source_semantics": [
+    "Selection closes paired(default) to A-then-B and l08-only to A; None/empty resolve paired, all other non-string/unknown values reject. L08-only rejects outside effective native-evidence before context/native allocation. Push/PR effective full and normal full dispatch with omitted selection remain paired.",
+    "Preflight stays paired/nonbuilding and unchanged. fetch_preflight still requires both independent control hashes and exact API repository/workflow/head/attempt/artifact/ZIP/source/toolchain bindings, writes the bound source only after package checks and recomputes both live control manifests even for A-only.",
+    "run_native and admit_native reject unselected B before budget/state/allocation. The selectedA retains complete original wait/grace/clock admission, actual runner argv/direct lifecycle/adhoc/profile and postrun source/lifecycle/custody/failure cleanup checks. Paired A-then-B and abort-after-unsafe/interruptedA behavior unchanged.",
+    "State/continuation/result and cleanup retain selection plus unselected_lanes.normal=NOT_RUN_THIS_RUN, including A exceptions. Normal A-only outcomes L08_ONLY_PASS or L08_ONLY_NOT_READY cannot become combinedPASS; exceptionsFAIL. No B child, admission, preserved output, canonical receipt or B success synthesized.",
+    "Cleanup cross-checks exact context/custody plus scope/selection/unselected marker; rejects runs/admissions/preservation keys outside selected lanes and directory claims outside selected cycles before any deletion. Existing upload success/digest/nonempty IDs, bundle hashes, source ownership, all-path validation and exact file allowlists unchanged. Both preexisting A/B output checks remain.",
+    "Cycle31/32 updates are coherent in runner/guide/probe label test; on A-only B32 is NOT_RUN_THIS_RUN. EarlierB30 remains actual original360fc scope and requires separate independent reuse applicability; this selector is not that approval."
+  ],
+  "test_review": {
+    "declared_only_not_executed": {
+      "native_continuation": {
+        "before": 63,
+        "after": 71,
+        "new": 8
+      },
+      "workflow_contract": {
+        "before": 52,
+        "after": 54,
+        "new": 2
+      },
+      "native_process_probe": {
+        "before": 45,
+        "after": 45,
+        "label_only_changed": 1
+      }
+    },
+    "new_test_ids": {
+      "scripts/release/tests/test_native_continuation.py": [
+        "DirectLifecycleAdapterTest.test_l08_only_uses_actual_a_adapter_guards_without_b_claim_or_directory",
+        "NativeCleanupTest.test_l08_only_cleanup_binds_selection_and_removes_only_its_exact_a_directory",
+        "NativeCleanupTest.test_l08_only_status_never_synthesizes_combined_pass_or_invokes_b",
+        "NativeCleanupTest.test_unselected_b_claims_or_scope_selection_status_drift_refuse_all_cleanup_deletion",
+        "NativeJobBudgetAdmissionTest.test_l08_only_never_admits_unselected_b_or_bypasses_a_budget",
+        "NativeScopeTest.test_invalid_selection_is_rejected_by_cli_and_constructor_before_native_resources",
+        "NativeScopeTest.test_l08_only_selection_and_b_not_run_are_bound_even_when_a_fails",
+        "NativeScopeTest.test_native_selection_defaults_to_paired_and_is_closed"
+      ],
+      "scripts/release/tests/test_workflow_contract.py": [
+        "WorkflowContractTest.test_native_selection_is_closed_paired_default_and_cannot_be_duplicated",
+        "WorkflowContractTest.test_native_selection_validation_execution_and_cleanup_use_identical_input"
+      ]
+    },
+    "validity": [
+      "New selection defaults/closed-domain and invalid CLI/constructor controls assert context/mkdir/command never called on rejection; actual run() state writes cover A success and exception with explicit B NOT_RUN.",
+      "Status table exercises exit/status conjunction, including zero exit with partial status and nonzero exit withPASS; requires exactly oneA invocation, then confirms paired executesA,B and retainscombinedPASS.",
+      "Direct-lifecycle test drives actual evidence()/run_native()/admit_native() with inert receipt-writing invocation, not a mockedrun_native; checks real Aargv/profile/adhoc/direct lifecycle/no libproc flag and rejects unsafe cleanup, inner timeout, wrong profile. Popen forbidden; onlyA runs/admissions/preservation/directories allowed.",
+      "Unselected B run/admission reject before state mutation/invocation; missing/insufficientA clock produces DENIED_NOT_RUN without children. Existing paired budget/finalizer controls remain.",
+      "Cleanup positive control removes only exactA/binding; eight negative cases include realB directory/claims and scope/selection/NOT_RUN drift. They assert no rmtree, no removed entries, preserved B sentinel and source binding.",
+      "Preflight ZIP/live-drift test expanded to paired/l08-only times ZIP/A-control/B-control: even unselectedB manifest drift rejects before native/cache invocation. Existing old tests retained.",
+      "Workflow mutation tests use current real workflow, positive baseline, assert mutatedtext differs, and reject type/default/option/domain/order/duplicate/missing choices; all3env sites tested for removal/wronginput/literal/duplication and extra externaloverride."
+    ],
+    "limitation": "These are synthetic source/orchestration controls, not Swift/app/native execution. Positive full-main no-allocation also verified directly from the unchanged-return branch AST; runtime fullD still required."
+  },
+  "minimum_root_local_checks": {
+    "after_adoption_only": true,
+    "unit_command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "-v",
+      "scripts.release.tests.test_native_continuation",
+      "scripts.release.tests.test_workflow_contract",
+      "scripts.release.tests.test_native_process_probe.ProbeSourceContractTest.test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels"
+    ],
+    "expected_declared_selected_methods": 126,
+    "count_rule": "71+54+1 includes all10new; reconcile actual discovery/execution/failure/skip identities rather than crediting declarations. Do not also run10new separately.",
+    "workflow_contract_command": [
+      "/usr/bin/python3",
+      "-B",
+      "scripts/release/workflow_contract.py"
+    ],
+    "affected_Gradle_task": ":shared:transport-p2p:desktopTest",
+    "transport_reason": "AGENTS and shared/transport-p2p/build.gradle.kts41,98 bind changed workflow as repositoryContractFiles. ProductionVerificationWorkflowContractTest and AndroidReleaseLintContractTest read it; run this one module suite with strict reviewed lane/cleanup, not unrelated project aggregates.",
+    "not_required": "Do not repeat unrelated already-successful338 A/Bcontrols or broad release validator/inventory check before source+inventory freeze. Existing fullD supplies final complete release-tool/actionlint/ShellCheck graph; a pinned already-available focused actionlint of changed workflow may be grouped now without another whole-validator campaign.",
+    "coordination": "Root alone groups these checks with separately reviewed A31 fixture checks in one coordinated environment lane. Preserveactuallogs/receipts; immediately stop Gradle after everycycle, exactownedcleanup/workerabsence; no competing builds."
+  },
+  "full_D_recipe_applicability": {
+    "status": "SOURCE_RECIPE_REMAINS_APPLICABLE_FOR_EXACT_HELD_DELTAS_NOT_EXECUTION_OR_FUTURE_FREEZE_APPROVAL",
+    "workflow_proof": "Removing only native_selection choice block and three literal env lines restores all41331 baseline workflow bytes exactly. Full scope/default job predicates,5jobs,tools/timeouts,clock isolation,commands/artifacts/upload/finalizers/concurrency are unchanged.",
+    "main_proof": "validate-scope resolves effective full, validates absent/defaultpaired, prints full and returns0 without constructingContinuation. Fullrun must not setl08-only.",
+    "prior_17_control_packet_matches": 15,
+    "reviewed_changed_controls": [
+      {
+        "path": ".github/workflows/production-verification.yml",
+        "bytes": 41722,
+        "sha256": "5895ce4e80000b205302a987f8b603ac21380764f36e3711064029c3b1af62bc",
+        "matches_prior_packet": false
+      },
+      {
+        "path": "scripts/ci/native_continuation.py",
+        "bytes": 66688,
+        "sha256": "cac70087f29356074f7a6870ede578ca4e8a4cd765b7c895e95381fb1a2c7a00",
+        "matches_prior_packet": false
+      }
+    ],
+    "prior_packet": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-qualification-afterfreeze-02.json",
+      "bytes": 73611,
+      "sha256": "feba34720798a3a70608dcf81b6239a2357c21fb53e94214601390b5febc8403"
+    },
+    "independent_packet": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-qualification-afterfreeze-independent-02.json",
+      "bytes": 38384,
+      "sha256": "10c0acc986adf9175ca4c3a10acb798206a46ea9f6a6920f80c7e6c24267b716"
+    },
+    "reusable_recipe": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/c05-full-d-recipe-review-01.json",
+      "bytes": 5215,
+      "sha256": "c828654fd6f391e30e1c75022562e33231fabc656a869d6069b298d5246efcdb"
+    },
+    "full_dispatch_command": "gh workflow run production-verification.yml --repo Apdelrahman1911/parlor --ref fix/local-readiness-2026-09-07 -f verification_scope=full",
+    "conditions": "After successful actual localchecks/adoption/sourcecommit/inventorycommit, final frozen admission needs exact reviewed byte equality plus actualsource/tree/remote/run/attempt and nooverlap, not another semantic-review loop. Omitfocusedinputs and leave native_selectiondefaultpaired. Fullmode still does not enforcefrozen_source_sha; root must bindactualcheckout. Retain5main+5cleanup artifacts/rawruntime-vs-cache evidence and existing platform/cleanup limits. No native/C/fullD or B-reuse credit from thissource review."
+  },
+  "next_boundary": "Root adopts or rejects exact7files after separately reviewingA31; nevereditcontrols midnativeexecution. Fresh paired preflight must bindfinalsource/control manifests before explicit l08-only request approval. C06 exact-source policy remains separately documented; selector neither waives strictA failures nor createsB32runtime.",
+  "activity_cleanup": {
+    "tests_builds_project_imports_network_dispatch": 0,
+    "canonical_edits": 0,
+    "only_write": "remediation-runs/2026-09-08-continuation/reviews/native-l08-only-selection-independent-01.json",
+    "no_workers_build_outputs_or_native_resources_allocated": true,
+    "cleanup": "No reviewer Gradle stop/clean owed. Preserved existing locks,drafts,failedreceipts and unrelatedwork."
+  }
+}

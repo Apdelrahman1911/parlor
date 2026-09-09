@@ -1,9 +1,10 @@
 # Continuation execution ledger — 2026-09-08
 
-**Latest: frozen52f60924 native34339916129/1 FAILED: A27 first host
-prepare-await-started FAIL; B28 Home8/48 PASS but provenanceFAIL. The fixture
-has Linux red1FAIL then green283PASS/3SKIP, not native recovery proof.
-B30 source adopted;338 controls PASS, Linux postrun reviews approved. Native A29/B30, C05/fullD NOT_RUN. NOT READY.** Read `AGENTS.md`,
+**Latest: B30 actual Debug launch/libproc PASS; C05 chain PASS at360fc.
+A29 still FAIL (catalogue/three bound host-ownership rows/26 strict comparisons).
+A31 copy-only fixture and L08-only selector corrections adopted with independent
+source approval; focused Linux216 controls +274 JVM PASS/3 existing SKIP.
+Fresh freeze/preflight/A31, final-source C06 and fullD remain NOT_RUN. NOT READY.** Read `AGENTS.md`,
 [`CONTINUE_HERE.md`](../../CONTINUE_HERE.md), the
 [Linux handoff](../../docs/AGENT_CONTINUATION_2026-09-08_LINUX.md) and the preserved
 [transfer handoff](../../docs/AGENT_CONTINUATION_2026-09-08.md).
@@ -1697,3 +1698,88 @@ Post-cutoff review closure: `reviews/native-a29-host-correction-independent-01.j
 (`6ff42680`) independently approve the exact corrections, local results and cleanup.
 No findings; no new native execution or readiness approval. Source/inventory freeze
 and fresh Apple bindings remain next.
+
+
+## 2026-09-09 actual A29/B30/C05 — 16:39:43UTC checkpoint
+
+Normally pushed source `b8683056ff1e312acf5571d231e13a7643f43686`, then
+inventory/execution `360fc797a85e1e494334fd8cc11b4e739981cea8`, tree
+`8bfe56a21074ba51a4b668bad0728e42007a7593`. Retained freeze receipt records
+exact remote360fc; this author did no network query. Native34362984912/1
+FAILED; four other jobs skipped. Fresh829-source/99-control-per-lane bindings;
+Xcode26.3/17C529, arm64 iOS26.2/23C54 ad-hoc Debug simulator, not device.
+
+- **A29 FAIL:** 4/5 XCTest PASS,1FAIL,0skip. Generated Swift840 rereads the
+  missing catalog button in a post-tap diagnostic. One coordinate tap is
+  observed; navigation is not proved. Functional20/20 operations/13boots,
+  seven Home activations and two Retry/Discard pairs reconcile.
+  **26/26 Complete comparisons FAIL:** absent key/no NSError.
+  Host42/42 operation statuses and156 flags PASS across three variants, but
+  bound EN sequences8/39/70 have `ownerInstalled=none,appLanguages=[]`, not
+  required en/['en']; later9/40/71 cannot replace them. **Host NOT_ACCEPTED.**
+  Final semantic verifiers were not reached. Whodunit local retention,
+  Mafia-local and OS scenarios remain uncompleted.
+- **B30 scoped PASS:** one normal test8/8 repetitions,48/48 periodic
+  Home/foreground/no-alert samples. Separate ninth launch:3/3 actual libproc
+  calls1272/1272 bytes; exact file __TEXT extent/kernel path/vnode/lifetime
+  corroboration and final provenance PASS.26 built/installed notices match.
+  Not mapped-memory hashing, exhaustive mappings, LAN/device or Store proof.
+- **C05 PASS3/3 lanes at360fc:** strict export, render and candidate/schema
+  actually executed;4graphs,511 consumed files,26 source notices. Producer
+  compile FROM-CACHE/NO-SOURCE/configuration-task SKIPPED stay explicit;
+  no app tests ran in C. This is not final-package or legal completeness.
+
+Raw native evidence: `actions/34362984912/`; C:
+`C/evidence/final-{dependency-export,dependency-render,candidate-input}-linux-05/`.
+Independent actual A/B/custody/C05 reviews and full evidence hashes:
+`reviews/continuation-ledger-a29-b30-c05-01/author-report.json`.
+Both native finalizers and outer cleanup PASS; immediate/final stops0.
+C's three cycles stop0/cleanup PASS. Owned simulators/copies/DerivedData/temp
+and workers were cleared per receipts, not a fresh retired-host inspection.
+All failures and historical ledger bytes remain preserved.
+
+The catalogue diagnostic remains held; host acknowledgement correction is
+separate. Seven selector files match independently approved bytes,
+now adopted but unexecuted. New local tests and A31/B32 native are NOT_RUN. Require different-agent review,
+focused controls/cleanup, reviewed source then inventory commits and fresh
+bindings/preflight before another authorized native run. B30 remains at360fc;
+reuse needs explicit applicability. C05 remains complete at360fc; execute C06
+once the different final source settles, per
+`reviews/c05-after-a31-applicability-policy-01.json`. **Full D NOT_RUN:0/5 full-mode jobs**, not a focused-run credit.
+
+Progress denominators above are scoped, not Store completion percentages.
+Conditional ETA after correction/controls/freeze: roughly a one-hour A lane
+plus queue/preflight/review, based on actual A29 duration, not a success
+guarantee; new failures invalidate that estimate. Strict/D/Store ETA unknown.
+**NOT READY:** integrated/host/strict gates and physical/signed-candidate,
+identity/Store-operation and separate owner/legal requirements remain.
+
+
+## A31 focused adoption/checkpoint — 2026-09-09T16:49:43Z
+
+After the preceding16:39 cutoff, root adopted the exact three fixture replacements
+approved by `reviews/native-a31-fixtures-independent-01.json` (a109645e…) and the
+seven selector files approved by `reviews/native-l08-only-selection-independent-01.json`
+(59cdc22e…). No production game, strict parser or protection policy was changed.
+The combined26-method fixture test supersedes the held catalogue-only23-method test;
+both author packets remain immutable. Earlier normal-only selector draft stays
+unadopted historical work, not runtime wiring.
+
+`C/evidence/native-a31-focused-controls-linux-01/` actually completed at360fc plus
+these reviewed working-tree changes:9 companion,26 functional-copy,55 composition,
+71 native selector,54 workflow-contract and1 cycle-label tests all PASS (216 total,
+no failures/errors/skips); standalone workflow contract PASS. Affected strict
+`:shared:transport-p2p:desktopTest` executed274 PASS/3 existing loopback SKIP in22 XML
+suites; Gradle reports14 executed tasks/7 cache hits, not21 newly executed tests.
+Receipt87ca4ba6d44a5fb2e41be6ac2163a95b9ea3323c218cfc51cd97faeae6066e44;
+before/after control-input JSON1490036a6f8c5de04b94093a975a9da6763b1b43701519439881ee684f6da9a5
+matches exactly. The3GiB, no-parallel, in-process compiler lane stopped Gradle
+immediately (exit0), preserved reports, removed7 owned output directories/scratch,
+and found no remaining owned workers, outputs or cleanup errors. No native work ran.
+Independent actual fixture/selector evidence review is pending at this checkpoint.
+Then commit reviewed source/controls, refresh and separately commit inventory;
+fresh paired nonbuilding preflight must bind both manifests before explicit A31-only
+execution. B30 remains attributed to360fc and needs a bounded applicability review,
+not another unchanged native run. C06 waits for the final source to settle; fullD
+must not overlap A31. Strict metadata remains unresolved, never a physical-only
+waiver. Existing physical/Store/identity/owner/legal residuals remain unchanged.

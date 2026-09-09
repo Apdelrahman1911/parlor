@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/fixture_review",
+  "reviewed_at": "2026-09-09T17:02:12.099671+00:00",
+  "status": "APPROVED_SCOPED_LINUX_FIXTURE_CONTROLS_90_PASS",
+  "findings": [],
+  "scope": "Independent inspection of existing root-executed 9 companion +26 functional-copy +55 Foundation/composition Python controls. No reruns, project imports, extracted-function execution, builds, native/network commands, canonical edits or Git writes. Selector/workflow/transport semantics belong to ci_review.",
+  "evidence": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/native-a31-focused-controls-linux-01/receipt.json",
+    "sha256": "87ca4ba6d44a5fb2e41be6ac2163a95b9ea3323c218cfc51cd97faeae6066e44"
+  },
+  "source_review_reused": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-a31-fixtures-independent-01.json",
+    "sha256": "a109645ebbf94d0a96156a135bb76a0377135166a61a15b36edeb8d87515b2f1"
+  },
+  "bindings": {
+    "base_commit": "360fc797a85e1e494334fd8cc11b4e739981cea8",
+    "base_tree": "8bfe56a21074ba51a4b668bad0728e42007a7593",
+    "branch": "fix/local-readiness-2026-09-07",
+    "qualification_boundary": "Dirty reviewed adoption, NOT clean frozen-source/native qualification. Entire recorded source_before equals source_after and runner_before equals runner_after. Current 829 source rows,221 unique control rows and runner rehashed independently with zero mismatch. Fixture paths are excluded from application manifest but explicitly present in both control manifests.",
+    "source_manifest_sha256": "7484356cf1fae26a5da1e2461c4594f7e150c5001707296ecc0b1fc266caf302",
+    "recorded_diff_sha256": "ddf5e0d455c45c74de35f150068860c77218eacededa324d16b5ee24e42a6b54",
+    "control_files": [
+      "control-inputs-before.json",
+      "control-inputs-after.json"
+    ],
+    "control_files_each_bytes": 42624,
+    "control_files_byte_identical_sha256": "1490036a6f8c5de04b94093a975a9da6763b1b43701519439881ee684f6da9a5",
+    "runner": {
+      "path": "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "sha256": "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc"
+    },
+    "runner_manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912",
+    "adopted": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01CatalogSelection.swift.in",
+        "sha256": "917240a629aed65b9fb3a85d3573be366b62760a202c7766aa3a3b18f161e468",
+        "bytes": 18356
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08HostLaunch.swift.in",
+        "sha256": "036f9788924af6b80b93aed5129ad5fa6202ff0fc31f4755a2bc71ad180ce263",
+        "bytes": 7980
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+        "sha256": "b7a760577d86b7cc1c5a192fb20164afc21e06b8fa74e63c1f7dfb2bd58ec75e",
+        "bytes": 64859
+      }
+    ],
+    "adoption_check": "All three canonical files equal approved held bytes and both221-row control snapshots. No new source review campaign; exact-byte equality carries source-reviewa109 conclusions."
+  },
+  "actual_results": {
+    "executed": 90,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "commands_and_logs": [
+      {
+        "command": "/usr/bin/python3 -B -m unittest discover -s remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02 -p test_l08_copy.py -v",
+        "tests": 9,
+        "seconds": 0.048,
+        "log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/native-a31-focused-controls-linux-01/companion_l08_copy.log",
+          "sha256": "b1bec047a5a588404359567f94d3eace2d1469f3b9c038a4fdab1afa816b58f2"
+        }
+      },
+      {
+        "command": "/usr/bin/python3 -B -m unittest discover -s remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02 -p test_l08_functional_copy.py -v",
+        "tests": 26,
+        "seconds": 1.517,
+        "log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/native-a31-focused-controls-linux-01/functional_l08_copy.log",
+          "sha256": "cafdfc6003ae0a6c9597f4d2a112de5bc5afff12f0224f4a92f17b71384d5888"
+        }
+      },
+      {
+        "command": "/usr/bin/python3 -B remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py",
+        "tests": 55,
+        "seconds": 6.423,
+        "log": {
+          "path": "remediation-runs/2026-09-07-local-readiness/evidence/native-a31-focused-controls-linux-01/composition.log",
+          "sha256": "89b96120072b2c84be314fbf662f4b062a0dae52066307deccce132d60776a06"
+        }
+      }
+    ],
+    "discovery": "Every actual named method is unique and matches AST method sets exactly:9;26(classes14+3+9);55(draft33+composition22). All raw statuses ok and footers OK. Composition structured discovery matches all55 raw/AST identifiers; tests_run55,failures0,errors0,skipped[],native_execution=false. Its two recorded input-test hashes match current files and both control snapshots.",
+    "new_case_accounting": "All five added methods actually ran: two catalogue reversal/mutation methods and three host exact-binding/mutation/stale-English methods. Source review established12 catalogue+25 host literal mutation edits;37 edits are within methods, NOT37 separately reported tests. Synthetic stale-bound-English baseline and three negative witnesses use unchanged host verifier with image binder mocked, NOT application runtime.",
+    "execution_chain": {
+      "command_exits": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/native-a31-focused-controls-linux-01/command-exits.tsv",
+        "sha256": "645d7a05d5164ed83ba15242be6fdf9476265874c3b994992b3d95396ffeabf6"
+      },
+      "serial_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/native-a31-focused-controls-linux-01/gradle.log",
+        "sha256": "7fbcaffa42f6ae4a5ed948118dd3d21a2de412aa7fe42c76000c416e9e409a3a"
+      },
+      "conclusion": "All eight recorded commands exited0; three fixture commands independently agree with raw test results. Other five semantics are outside this review. Per-command timeout600s/TERM/kill30s; no timeout or interruption recorded."
+    }
+  },
+  "cleanup": {
+    "finished_at": "2026-09-09T16:49:42.462692+00:00",
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-09T16:49:43.255342+00:00",
+    "cleanup_completed_at": "2026-09-09T16:49:43.445948+00:00",
+    "stop_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/native-a31-focused-controls-linux-01/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    "stop_observation": "No Gradle daemons are running.",
+    "recorded": "Before outputs[],retained[],remaining[],cleanup_errors[],deferred_signals[]. Both worker finalizers record no remaining owned workers. Evidence retained before exact owned-output removal; no Gradle clean restart/global-cache deletion.",
+    "live_paths_now_absent": [
+      "shared/networking/build",
+      "shared/transport-p2p/build",
+      "shared/core/build",
+      "shared/storage/build",
+      "shared/engine/build",
+      "build",
+      "build-logic/convention/build",
+      "remediation-runs/2026-09-07-local-readiness/evidence/native-a31-focused-controls-linux-01/scratch"
+    ],
+    "composition": "Four allocation/cleanup pairs independently reconciled by exact path+device/inode/uid, including allocation embedded in unittest line. Each PASS,parent_removed=true,workers_started0. All four paths absent now; fixture/composition/evidence trees contain no __pycache__ or.pyc.",
+    "composition_paths_now_absent": [
+      "/tmp/parlor-app-foundation-controls-g10z0xi_",
+      "/tmp/parlor-app-foundation-controls-vsl1jjoi",
+      "/tmp/parlor-app-foundation-controls-xa6a5m5_",
+      "/tmp/parlor-app-foundation-controls-mbq3mygb"
+    ],
+    "reviewer_cleanup_execution": "None; inspection only. Retained archived reports were not deleted."
+  },
+  "limits_and_next": {
+    "native": "Python control/copy compatibility only. No Swift compilation, ownership scheduling, A31 XCTest, strict-protection PASS or final combined qualification claim. Root still owns reviewed commit/inventory freeze, fresh bindings and selective native admission.",
+    "preserved_failure": {
+      "review": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-a29-actual-independent-01.json",
+        "sha256": "64a5dc0eb85decfaf0595f8fac0da05f84dadb25152ab968e5d9572ddf9e46e0"
+      },
+      "conclusion": "A29 remains NOT_READY:5 XCTest/4PASS/1FAIL;42 host PASS statuses do not satisfy ownership of exact sequences8/39/70; later9/40/71 cannot replace them;26 strict Complete comparisons fail. Functional statuses and Foundation observations do not waive protection validation."
+    },
+    "external_gates": "Physical-device, Store/publication and separate owner/legal requirements remain outside this review."
+  }
+}

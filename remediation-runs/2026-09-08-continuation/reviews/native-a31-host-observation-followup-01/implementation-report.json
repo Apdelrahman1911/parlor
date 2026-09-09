@@ -1,0 +1,331 @@
+{
+  "acknowledgement_contract": {
+    "bounds": {
+      "maximum_poll_checks": 200,
+      "monotonic_deadline_seconds": 5,
+      "poll_spacing_milliseconds": 25
+    },
+    "durable_binding": "After acknowledgement take exactly one fresh sample, require prior ordinal+1/same captured boot/sample phase, and recheck full ownership on that saved row before write-once operation receipt. Any mismatch fails; no resample or later-row selection.",
+    "eligibility": "Only the original Kotlin PASS for language-en, language-ar or language-system. No repeated Kotlin command and no mutation of its JSON.",
+    "explicit": "Require current setting/preferredLanguage equal requested tag, ownerPresent, exact ownerInstalled, hasAppOverride, appLanguages == [tag], ownerPreviousPresent == original.hasAppOverride and ownerPrevious == original.appLanguages.",
+    "failures_and_cleanup": "Original Kotlin FAIL bypasses acknowledgement and preserves its receipt through the original sample/write path. Parsing/polling/receipt errors expose bounded-receipt-failed, never a fabricated PASS. Timeout schedules no further work and no retry/new command is submitted. Original Kotlin cancellation/emergency cleanup/final Leave code and outer XCTest/owned-process retirement remain unchanged; this observer adds no cleanup authority.",
+    "lifetime": "Main queue only; one pending asyncAfter tick, weak probe references, captured boot/index and incomplete-report guard. One callback claim; duplicate during wait fails, duplicate after advance retires. Busy/terminal-state activation is ignored so an old pending tick cannot be revived for a retry of the same index.",
+    "read_only": "Poll existing preferences() only. No direct preferences write, synchronize, semantic-direction fixup, resource poke or lifecycle invocation.",
+    "scope_limit": "Process-visible ownership acknowledgement, not native preferences durable-write or cross-process transaction proof. Unsupported pre-existing identical unowned override remains unclaimed and cannot be made to pass by this observer.",
+    "system": "Require complete DSC01Preferences equality with this process beforeMain System baseline; require original baseline unowned with no owner previous metadata."
+  },
+  "author": "/root/lifecycle_controls",
+  "author_execution_and_writes": {
+    "not_performed": [
+      "project imports",
+      "unit/source-contract test execution",
+      "validators",
+      "compilation/builds",
+      "Swift/native tools",
+      "CI/network",
+      "Git writes",
+      "canonical adoption",
+      "historical evidence edits"
+    ],
+    "performed": [
+      "read source and existing JSON evidence",
+      "stdlib JSON/hash/diff/AST-count/source-segment inspection",
+      "edit only held files in this packet",
+      "read-only git rev-parse HEAD"
+    ],
+    "root_only_next_steps": "Independent combined fixture source review, root adoption and one root-selected test batch; native dispatch/admission remains root-owned. No blind A31 rerun authorized by this author packet."
+  },
+  "authored_controls": {
+    "catalog_base_method_count": 23,
+    "combined_test_method_count": 26,
+    "execution_status": "NOT_RUN_BY_AUTHOR",
+    "new_host_test_methods": [
+      "test_exact_host_acknowledgement_delta_keeps_original_parser_and_one_command_sample",
+      "test_acknowledgement_contract_rejects_ownership_timeout_lifetime_and_row_substitutions",
+      "test_unowned_bound_english_still_fails_despite_immediately_later_owned_sample"
+    ],
+    "parser_witness": "Existing real Python verify_host is exercised by authored synthetic tests: all-PASS baseline then each of three boots with A29-shaped unowned EN at the original bound row while the immediately following synthetic cycle row is owned EN. Require exact ownership error, not an earlier schema/direction failure. Historical evidence is not read or changed by this test.",
+    "runtime_limit": "Source hashes and mutation controls are not Swift scheduling/native execution proof.",
+    "source_guard": "Hash exact reviewed acknowledgement/wait/command regions and restore complete original plan/controls outside the change; retain immutable clone manifest and original canonical template.",
+    "source_mutation_count": 25
+  },
+  "catalog_combination": {
+    "adoption_instruction": "After independent review, root adopts the combined held test once together with both separately authored Swift templates. Do not adopt/remerge the older catalog-only test over the combined test.",
+    "catalog_packet_was_not_modified": true,
+    "catalog_source_sections_preserved": {
+      "assert_catalog_presence_contract": true,
+      "test_catalog_presence_contract_rejects_requery_fabrication_retry_and_weakened_proof": true,
+      "test_catalog_presence_replaces_only_four_postactivation_or_failure_reads": true
+    },
+    "host_only_diff_against_catalog_test": {
+      "bytes": 9919,
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a31-host-observation-followup-01/host-only-test.diff",
+      "sha256": "b14b09987da04251496b3e20eb5639c23f68dcc9b614519b1e6eca39e170cf34"
+    },
+    "sealed_catalog_base_test": {
+      "bytes": 56217,
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a31-catalog-followup-01/test_l08_functional_copy.py",
+      "sha256": "651c535c3022b8575bbb83d5bbd6d4310ae6413bf71ccb905dfcd4926bab07ab"
+    },
+    "separately_authored_catalog_template": {
+      "bytes": 18356,
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a31-catalog-followup-01/DSC01CatalogSelection.swift.in",
+      "sha256": "917240a629aed65b9fb3a85d3573be366b62760a202c7766aa3a3b18f161e468"
+    }
+  },
+  "finding": {
+    "a29_status": "FAIL remains unchanged; no original receipt or later observation is rewritten/rebound",
+    "causal_chain": [
+      "L08HostProbe.kt.in:256-266 invokes the real Koin SettingsStore setter but waits only for the expected layout direction; System EN and explicit EN both already resolve LTR.",
+      "PersistentSettingsStore.kt:56-62 writes backing state and publishes _language; setter completion is not a Compose effect acknowledgement.",
+      "App.kt:62 collects the language flow; LocalAppLocale.ios.kt:41-49 applies/relinquishes the actual ownership in DisposableEffect.",
+      "IosLanguageOverrideOwner.kt:16-33 legitimately installs process-visible owner/AppleLanguages metadata; existing identical unowned platform values are deliberately not claimed.",
+      "Original L08HostLaunch.swift.in immediately samples after callback and binds the durable ordinal. Original L08HostUITests.swift.in then makes another observe call before asserting ownership, explaining later success without acceptance of the earlier binding.",
+      "l08_receipts.py verify_host correctly verifies the exact bound event, native/Compose direction and ownership; it remains byte-for-byte unchanged in this correction."
+    ],
+    "classification": "Premature copy-only host operation observation; no production correction justified by this evidence",
+    "observations": 95,
+    "probe": {
+      "bytes": 150205,
+      "path": "remediation-runs/2026-09-08-continuation/actions/34362984912/native-evidence/ios-readiness-29/probe-l08-host-result.json",
+      "sha256": "7a2b4f6b857f1260b0e97f643ea73be5b45d233420bd3c96d00406c7eb4b67c1"
+    },
+    "raw_host_operation_count": 42,
+    "raw_host_status_counts": {
+      "PASS": 42
+    },
+    "raw_pass_is_not_verify_host_acceptance": true,
+    "three_boot_language_en_pairs": [
+      {
+        "boot_ordinal": 1,
+        "bound": {
+          "boot": "BE6C9BAE-6330-4204-90C5-F28B4298478D",
+          "nativeDirection": "force_ltr",
+          "ordinal": 8,
+          "phase": "sample",
+          "preferences": {
+            "appLanguages": [],
+            "hasAppOverride": false,
+            "ownerInstalled": "none",
+            "ownerPresent": false,
+            "ownerPrevious": [],
+            "ownerPreviousPresent": false,
+            "preferredLanguage": "en",
+            "setting": "en"
+          }
+        },
+        "bound_observation_sequence": 8,
+        "later_diagnostic_only": {
+          "boot": "BE6C9BAE-6330-4204-90C5-F28B4298478D",
+          "nativeDirection": "force_ltr",
+          "ordinal": 9,
+          "phase": "sample",
+          "preferences": {
+            "appLanguages": [
+              "en"
+            ],
+            "hasAppOverride": true,
+            "ownerInstalled": "en",
+            "ownerPresent": true,
+            "ownerPrevious": [],
+            "ownerPreviousPresent": false,
+            "preferredLanguage": "en",
+            "setting": "en"
+          }
+        },
+        "later_row_is_not_a_replacement_binding": true,
+        "operation_status": "PASS",
+        "receipt": {
+          "bytes": 1689,
+          "path": "remediation-runs/2026-09-08-continuation/actions/34362984912/native-evidence/ios-readiness-29/parlor-l08-host-1-language-en.json",
+          "sha256": "338e40ae75d68d698a932a6c4f048c1d5ceac9b849a8c482a448c41dc8baf060"
+        }
+      },
+      {
+        "boot_ordinal": 2,
+        "bound": {
+          "boot": "DF8879E1-16D0-45C1-9249-32A16B100D00",
+          "nativeDirection": "force_ltr",
+          "ordinal": 39,
+          "phase": "sample",
+          "preferences": {
+            "appLanguages": [],
+            "hasAppOverride": false,
+            "ownerInstalled": "none",
+            "ownerPresent": false,
+            "ownerPrevious": [],
+            "ownerPreviousPresent": false,
+            "preferredLanguage": "en",
+            "setting": "en"
+          }
+        },
+        "bound_observation_sequence": 39,
+        "later_diagnostic_only": {
+          "boot": "DF8879E1-16D0-45C1-9249-32A16B100D00",
+          "nativeDirection": "force_ltr",
+          "ordinal": 40,
+          "phase": "sample",
+          "preferences": {
+            "appLanguages": [
+              "en"
+            ],
+            "hasAppOverride": true,
+            "ownerInstalled": "en",
+            "ownerPresent": true,
+            "ownerPrevious": [],
+            "ownerPreviousPresent": false,
+            "preferredLanguage": "en",
+            "setting": "en"
+          }
+        },
+        "later_row_is_not_a_replacement_binding": true,
+        "operation_status": "PASS",
+        "receipt": {
+          "bytes": 1689,
+          "path": "remediation-runs/2026-09-08-continuation/actions/34362984912/native-evidence/ios-readiness-29/parlor-l08-host-2-language-en.json",
+          "sha256": "7454164ba8dc054c55654f9a24af30ec19b08a421e92a2c6b3cf65b23437b11b"
+        }
+      },
+      {
+        "boot_ordinal": 3,
+        "bound": {
+          "boot": "5F0790F8-B1DE-4548-9DBD-53B0C420B7BC",
+          "nativeDirection": "force_ltr",
+          "ordinal": 70,
+          "phase": "sample",
+          "preferences": {
+            "appLanguages": [],
+            "hasAppOverride": false,
+            "ownerInstalled": "none",
+            "ownerPresent": false,
+            "ownerPrevious": [],
+            "ownerPreviousPresent": false,
+            "preferredLanguage": "en",
+            "setting": "en"
+          }
+        },
+        "bound_observation_sequence": 70,
+        "later_diagnostic_only": {
+          "boot": "5F0790F8-B1DE-4548-9DBD-53B0C420B7BC",
+          "nativeDirection": "force_ltr",
+          "ordinal": 71,
+          "phase": "sample",
+          "preferences": {
+            "appLanguages": [
+              "en"
+            ],
+            "hasAppOverride": true,
+            "ownerInstalled": "en",
+            "ownerPresent": true,
+            "ownerPrevious": [],
+            "ownerPreviousPresent": false,
+            "preferredLanguage": "en",
+            "setting": "en"
+          }
+        },
+        "later_row_is_not_a_replacement_binding": true,
+        "operation_status": "PASS",
+        "receipt": {
+          "bytes": 1690,
+          "path": "remediation-runs/2026-09-08-continuation/actions/34362984912/native-evidence/ios-readiness-29/parlor-l08-host-3-language-en.json",
+          "sha256": "63fb69c0f2f4697536a357aaa10110aba0099c48673776e8557b9025d4a25683"
+        }
+      }
+    ]
+  },
+  "held_replacements": [
+    {
+      "adoption_base": {
+        "bytes": 3706,
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08HostLaunch.swift.in",
+        "sha256": "debfe4c2cee191443bb3a2f480b61ae075d181fc4bca139e2ed77c57870fffc3"
+      },
+      "file": {
+        "bytes": 7980,
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-a31-host-observation-followup-01/L08HostLaunch.swift.in",
+        "sha256": "036f9788924af6b80b93aed5129ad5fa6202ff0fc31f4755a2bc71ad180ce263"
+      },
+      "root_adoption_target": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08HostLaunch.swift.in"
+    },
+    {
+      "adoption_base": {
+        "bytes": 51343,
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+        "sha256": "3ae0b2315586afd5b2d891347f4c277cf087d6304add9be73b98c09c0ee952ed"
+      },
+      "file": {
+        "bytes": 64859,
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-a31-host-observation-followup-01/test_l08_functional_copy.py",
+        "sha256": "b7a760577d86b7cc1c5a192fb20164afc21e06b8fa74e63c1f7dfb2bd58ec75e"
+      },
+      "root_adoption_target": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py"
+    }
+  ],
+  "kind": "A31_HOST_LANGUAGE_ACKNOWLEDGEMENT_HELD_SOURCE_IMPLEMENTATION",
+  "related_local_scenario_inspection": {
+    "decision": "No local helper/production change or new investigation campaign in this packet; do not substitute local later observations for invalid host operation bindings.",
+    "finding": "The synthetic local waiter also acknowledges setter applied plus persisted setting, not the ownership effect. Its later direction waiter could be satisfied before same-direction ownership work (notably explicit EN to System EN). However the local flow asserts ownership/System on that returned ready snapshot and initial EN is through actual Settings UI, not the host command receipt binding. This is direct source relevance, not a demonstrated new local runtime failure.",
+    "source": "IOSAppLaunchUITests.swift.in:115-126,128-204 and DSC01InvocationBridge.kt.in:18-21"
+  },
+  "repository_state_scope": "Not a full-repository clean/freeze assertion. Root concurrently owns the separately reviewed CI selector changes; this packet does not modify them.",
+  "schema_version": 1,
+  "source_evidence_read": [
+    {
+      "bytes": 23947,
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08HostProbe.kt.in",
+      "sha256": "a1ee0677b9e3f013a887a52e32f5bdf183a4c15ede6e497a9960d1306826014f"
+    },
+    {
+      "bytes": 3706,
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08HostLaunch.swift.in",
+      "sha256": "debfe4c2cee191443bb3a2f480b61ae075d181fc4bca139e2ed77c57870fffc3"
+    },
+    {
+      "bytes": 9077,
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08HostUITests.swift.in",
+      "sha256": "0156fdbb6210f1257c49eba9eee7fc7ac42fce2ad85870525131a7adf9ea99a9"
+    },
+    {
+      "bytes": 24831,
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01Probe.swift.in",
+      "sha256": "1c4b113ec8695d8da2115e4f386fdaf8820411879af6ff9492109b62c7770746"
+    },
+    {
+      "bytes": 34928,
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_receipts.py",
+      "sha256": "b3f50e4e1359d9e1dfe424add35f0bd2d20ec3d3d6101d4aee6047349be98bed"
+    },
+    {
+      "bytes": 41636,
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/IOSAppLaunchUITests.swift.in",
+      "sha256": "9bdfa70f43074569a8699dda01864496188562b117289c994ea4f4e8c844bf60"
+    },
+    {
+      "bytes": 3898,
+      "path": "shared/storage/src/commonMain/kotlin/com/parlor/storage/settings/PersistentSettingsStore.kt",
+      "sha256": "179e00506a2f3c7083d9f9231aa683e8bb73220a807ef6f1f5b04bb5496dac10"
+    },
+    {
+      "bytes": 17384,
+      "path": "composeApp/src/commonMain/kotlin/com/parlor/app/App.kt",
+      "sha256": "622b679a2ef023fab17bf6c8ed8eb38c1fbc2b76a391f5f9a8298d59da9dda59"
+    },
+    {
+      "bytes": 3016,
+      "path": "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/LocalAppLocale.ios.kt",
+      "sha256": "0e0783ca3e38634bd3469760f5dbfa5ade8509b976d0ec676202f4513cd8e098"
+    },
+    {
+      "bytes": 2604,
+      "path": "shared/design-system/src/iosMain/kotlin/com/parlor/designsystem/localization/IosLanguageOverrideOwner.kt",
+      "sha256": "959ab1a8cb955e484c806c8ce5af65ca841a20cfcd9b1f205443a1cfe768da20"
+    },
+    {
+      "bytes": 2873,
+      "path": "scripts/verification/ios-readiness/DSC01InvocationBridge.kt.in",
+      "sha256": "fc27547c977ed48d55c2254ed6779dc22fcd64f6cc214c8f4121b9f3e110a330"
+    }
+  ],
+  "source_head_observed": "360fc797a85e1e494334fd8cc11b4e739981cea8",
+  "status": "HELD_FOR_INDEPENDENT_SOURCE_REVIEW_AND_ROOT_ADOPTION"
+}

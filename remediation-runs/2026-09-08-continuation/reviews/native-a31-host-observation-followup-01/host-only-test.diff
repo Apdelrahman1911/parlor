@@ -1,0 +1,143 @@
+--- sealed-catalog/test_l08_functional_copy.py
++++ combined-host-and-catalog/test_l08_functional_copy.py
+@@ -140,6 +140,35 @@
+     restored = restored.replace(call, 'catalogPublicSample(app, prefix: prefix)')
+     require(restored == original,
+             'Catalog preactivation geometry, single tap, successor and failure behavior must remain exact')
++
++
++def assert_host_language_ack_contract(candidate, original):
++    """Exact source-only correction; no claim of executing Swift queue/lifecycle behavior."""
++    acknowledgement = section(candidate, 'private final class L08HostCallbackClaim {',
++                              'extension DSC01Probe {')
++    waiter = section(candidate, '    private func l08HostPending(',
++                     '    func nextL08HostCommand() {')
++    command_start, command_end = '    func nextL08HostCommand() {', '\nprivate struct L08HostControls: View {'
++    command = section(candidate, command_start, command_end)
++    # Bind complete reviewed additions, not a bag of potentially dead guard strings.
++    # Ownership is read-only and exact, including previous-value presence and System restoration.
++    require(hashlib.sha256(acknowledgement.encode()).hexdigest() ==
++            'e86acac315b31bee505c8afd9a1655208606bd61279f91bc6c9098aeced6b81a',
++            'Host acknowledgement must preserve exact real language ownership')
++    # One pending main-queue chain, boot/index/completion binding, count and monotonic deadline.
++    require(hashlib.sha256(waiter.encode()).hexdigest() ==
++            'fc7e74b8b3ca67010f64d5f0daa885ddcee8339277e566b0dce185104d2e8c70',
++            'Host acknowledgement must remain bounded read-only pending work')
++    # One actual command/callback/sample; a PASS language wait precedes the fresh bound
++    # row and rechecks THAT row, while original FAIL and write-once receipts remain intact.
++    require(hashlib.sha256(command.encode()).hexdigest() ==
++            '20ff81ef6b318bb7884cdfbab1576fd8ff5150bda2820b98dcaca71a1b522ac9',
++            'Host command must preserve single invocation and fresh exact receipt binding')
++    restored = strict.once(candidate, acknowledgement, '')
++    restored = strict.once(restored, waiter, '')
++    restored = strict.once(restored, command, section(original, command_start, command_end))
++    require(restored == original,
++            'Host plan and public controls outside the acknowledgement correction must remain exact')
+ 
+ 
+ def strip_mafia_continuation_stages(candidate):
+@@ -442,6 +471,9 @@
+                 if row['path'] == 'DSC01CatalogSelection.swift.in':
+                     assert_catalog_presence_contract((HERE / row['path']).read_text(),
+                                                      (CANONICAL / row['path']).read_text())
++                elif row['path'] == 'L08HostLaunch.swift.in':
++                    assert_host_language_ack_contract((HERE / row['path']).read_text(),
++                                                      (CANONICAL / row['path']).read_text())
+                 elif row['path'] == 'L08MafiaSnapshots.kt.in':
+                     self.assertEqual(strip_mafia_continuation_stages((HERE / row['path']).read_text()),
+                                      (CANONICAL / row['path']).read_text())
+@@ -658,6 +690,94 @@
+             ast.parse((HERE / name).read_text(), filename=name)
+ 
+ 
++class L08HostLanguageAcknowledgementTests(unittest.TestCase):
++    """Source and synthetic strict-parser controls only; no Simulator or scheduling proof."""
++
++    def test_exact_host_acknowledgement_delta_keeps_original_parser_and_one_command_sample(self):
++        candidate = (HERE / 'L08HostLaunch.swift.in').read_text()
++        original = (CANONICAL / 'L08HostLaunch.swift.in').read_text()
++        assert_host_language_ack_contract(candidate, original)
++        self.assertEqual(candidate.count('MainViewControllerKt.L08HostCommand(action: action)'), 1)
++        self.assertEqual(candidate.count('self.sample()'), 1)
++        self.assertEqual(candidate.count('DispatchQueue.main.asyncAfter('), 1)
++        self.assertNotIn('UserDefaults', candidate)
++        self.assertNotIn('Thread.sleep', candidate)
++        self.assertEqual(section((HERE / 'l08_receipts.py').read_text(),
++                                 'def verify_host(', 'def preserve_l08_evidence('),
++                         section((CANONICAL / 'l08_receipts.py').read_text(),
++                                 'def verify_host(', 'def preserve_l08_evidence('))
++        with self.assertRaisesRegex(RuntimeError, '^Ambiguous source section$'):
++            assert_host_language_ack_contract(original, original)
++
++    def test_acknowledgement_contract_rejects_ownership_timeout_lifetime_and_row_substitutions(self):
++        candidate = (HERE / 'L08HostLaunch.swift.in').read_text()
++        original = (CANONICAL / 'L08HostLaunch.swift.in').read_text()
++        assert_host_language_ack_contract(candidate, original)
++        mutations = (
++            ('!original.ownerPresent, original.ownerInstalled == "none",', 'true,'),
++            ('current.ownerPresent && current.ownerInstalled == language', 'current.ownerInstalled == language'),
++            ('current.ownerInstalled == language', 'current.ownerInstalled == "none"'),
++            ('current.appLanguages == [language]', 'current.appLanguages.isEmpty'),
++            ('current.ownerPreviousPresent == original.hasAppOverride', 'true'),
++            ('current.ownerPrevious == original.appLanguages', 'current.ownerPrevious.isEmpty'),
++            ('return current == original', 'return current.setting == "system"'),
++            ('if action == "language-system" {', 'UserDefaults.standard.set(["en"], forKey: "AppleLanguages"); if action == "language-system" {'),
++            ('boot == expectedBoot && l08HostIndex == index', 'l08HostIndex == index'),
++            ('boot == expectedBoot && l08HostIndex == index', 'boot == expectedBoot'),
++            ('l08HostDisplay == "running" && report?.completed == false', 'l08HostDisplay == "running"'),
++            ('remaining > 0, ProcessInfo.processInfo.systemUptime <= deadline', 'remaining > 0'),
++            ('remaining: remaining - 1', 'remaining: remaining'),
++            ('remaining: 200, publish: publish', 'remaining: 201, publish: publish'),
++            ('deadline: .now() + .milliseconds(25)', 'deadline: .now()'),
++            ('guard !["running", "invalid-context", "duplicate-callback", "bounded-receipt-failed"]',
++             'guard !["running"]'),
++            ('guard !callback.received else', 'guard true else'),
++            ('observation["status"] as? String == "PASS"', 'observation["status"] as? String != "PASS"'),
++            ('self.sample()', 'self.sample(); self.sample()'),
++            ('last.ordinal == beforeOrdinal + 1', 'last.ordinal >= beforeOrdinal'),
++            ('last.boot == expectedBoot', 'last.boot == self.boot'),
++            ('l08HostLanguageAcknowledged(action, last.preferences, original)',
++             'l08HostLanguageAcknowledged(action, try self.preferences(), original)'),
++            ('try publish() // Preserve a failed Kotlin result immediately, without an ownership wait.', 'return'),
++            ('options: [.withoutOverwriting]', 'options: [.atomic]'),
++            ('self?.awaitL08HostLanguage(action, index: index, expectedBoot: expectedBoot,',
++             'self?.nextL08HostCommand(); self?.awaitL08HostLanguage(action, index: index, expectedBoot: expectedBoot,'),
++        )
++        for before, after in mutations:
++            with self.subTest(mutation=before):
++                self.assertEqual(candidate.count(before), 1)
++                altered = candidate.replace(before, after, 1)
++                self.assertNotEqual(altered, candidate)
++                with self.assertRaises(RuntimeError):
++                    assert_host_language_ack_contract(altered, original)
++
++    @mock.patch.object(host_receipts, 'bind_loaded_images')
++    def test_unowned_bound_english_still_fails_despite_immediately_later_owned_sample(self, _binding):
++        records, scenario, log = host_matrix()
++        self.assertEqual(host_receipts.verify_host(records, scenario, TOKEN, log, 'disabled', {}, {},
++            [framework_inventory()])['status'], 'PASS')
++        for record in (row for row in records if row['action'] == 'language-en'):
++            changed = copy.deepcopy(scenario)
++            sequence = record['observation_sequence']
++            bound = changed['observations'][sequence - 1]
++            following = changed['observations'][sequence]
++            self.assertEqual(following['ordinal'], sequence + 1)
++            self.assertEqual(following['boot'], bound['boot'])
++            self.assertEqual(following['preferences']['ownerInstalled'], 'en')
++            self.assertEqual(following['preferences']['appLanguages'], ['en'])
++            # A29-shaped premature System-EN -> explicit-EN ownership, not an
++            # edit to historical evidence. The next synthetic cycle row is owned.
++            bound['preferences'].update(setting='en', preferredLanguage='en', ownerInstalled='none',
++                ownerPresent=False, hasAppOverride=False, appLanguages=[],
++                ownerPreviousPresent=False, ownerPrevious=[])
++            self.assertEqual(bound['nativeDirection'], 'force_ltr')
++            self.assertEqual(record['observation']['host']['direction'], 'ltr')
++            with self.subTest(boot=record['boot_ordinal']), self.assertRaisesRegex(
++                    RuntimeError, '^Explicit host language stole System ownership$'):
++                host_receipts.verify_host(records, changed, TOKEN, log, 'disabled', {}, {}, [framework_inventory()])
++            self.assertEqual(record['observation_sequence'], sequence)
++
++
+ class L08HostPrepareDiagnosticTests(unittest.TestCase):
+     """Synthetic source/sanitizer controls only, not Kotlin or Simulator runtime."""
+ 
