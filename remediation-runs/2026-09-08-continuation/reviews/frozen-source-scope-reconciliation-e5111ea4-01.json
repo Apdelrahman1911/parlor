@@ -1,0 +1,683 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_FROZEN_SOURCE_COMPATIBILITY_AND_HISTORICAL_APPLICABILITY_RECONCILIATION",
+  "reviewer": "/root/portability_review",
+  "recorded_at": "2026-09-08T20:42:04.962080+00:00",
+  "classification": "SOURCE_SCOPE_RECONCILED_NOT_RUNTIME_FULL_D_READINESS_OR_DISPATCH_APPROVAL",
+  "findings": [],
+  "scope": "Bounded current Git/source comparison extending the prior648-path review and original16/timer maps. Reopened actual frozen blobs, current files and selected raw historical evidence. No repeated remediation campaign, implementation re-review, exact delivery115/inventory-custody audit, native/preflight verdict, dependencyC03 review or workflow authorization.",
+  "frozen_source": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+    "tree": "a88872673bd4cfc366236362f287c1db0a04a5cd",
+    "source_control_commit": "4276854c19afafdfd109be063a02dd5534fa86d0",
+    "source_control_tree": "60e3f5eb0af63a72a397b03da8cdc99c7fd398f8",
+    "prior_evidence_delivery_commit": "700243c3426db2da3855a9d3a3df58ada607ffc5",
+    "HEAD_same_at_start_and_end": true,
+    "tracked_status_empty_at_start_and_end": true,
+    "worktree_scope_limit": "Task-owned untracked evidence and lane lock exist; this is not a globally clean checkout assertion and no such files were modified.",
+    "full_history": true,
+    "remote_confirmation": "NOT_QUERIED_BY_THIS_REVIEWER"
+  },
+  "references": {
+    "prior648_scope": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/source-scope-before-lifecycle-freeze-01.json",
+      "bytes": 28886,
+      "sha256": "bb6298c3f2a417c72679e05bf5924818c1d14f469f6616ed5f09de20fd1504ae"
+    },
+    "prior_frozen_scope": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/frozen-source-scope-reconciliation-5f35a20d-01.json",
+      "bytes": 33746,
+      "sha256": "c22bce87856e880b1f0f27a2410a8b385746f2885016b1495f4f50a237babcf0"
+    },
+    "original16_map": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/original16-timer-commit-evidence-map-01.json",
+      "bytes": 145466,
+      "sha256": "82cc49b33044b27c1be99115847a04bfa505fa5ee28706ccfd7e30f4f0e6f0ff"
+    },
+    "regression_descriptor_map": {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/original16-timer-regression-descriptors-01.json",
+      "bytes": 150391,
+      "sha256": "b2fee80c8d9210fb44ab8b226a97912d30f381bc3eeea7ec9d4cb1a0e8d7e7af"
+    },
+    "reviewed_control_sources": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-implementation-independent-01.json",
+        "bytes": 28603,
+        "sha256": "44239859c10b762b6447234eddbc993ac1e9e65982a0e149250e943941194bdf"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/direct-owned-simulator-lifecycle-persistence-policy-independent-01.json",
+        "bytes": 5567,
+        "sha256": "756a549e40145cb659c7ac2829974413f179bdd588c5a9f5a41d599531a02f0e"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/direct-simulator-lifecycle-controls-independent-01.json",
+        "bytes": 41645,
+        "sha256": "719427b07d3cad552bf638e3c424f09c3e1f334c8aaea855b98e1559913791f7"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/normal-legacy-lifecycle-fixture-independent-01.json",
+        "bytes": 17609,
+        "sha256": "edc77bc8051485c2256c6f2b7f43fbc80f8995e0d25c579ea5869a598a0d45e3"
+      }
+    ]
+  },
+  "source_byte_comparison": {
+    "selected_files": 648,
+    "shipping_build_subtree_files": 632,
+    "other_root_contract_ADR_workflow_files": 16,
+    "total_bytes": 8739228,
+    "manifest_sha256": "a046fbad1dee5cf448ffa7f1d11168aef0aecc19650db96c6274c410a8dbfb2b",
+    "manifest_encoding": "compact UTF-8 ensure_ascii JSON without newline; whole-path string lexically sorted rows[path,git_mode,git_blob_oid,sha256,bytes]",
+    "raw_combined_git_ls_tree_sha256": "acce8cc048ada37da0808fdc83b33c249e1c266002f551285552da1bf801f21b",
+    "method": "GIT_OPTIONAL_LOCKS=0 read-only Git: git ls-tree -r -z <commit> -- <explicit9 subtrees+10 standalone paths>; compare exact path/mode/type/blob maps; git cat-file --batch reads every current frozen blob; compare regular nonsymlink current bytes and executable mode; SHA256 each blob and canonical manifest. This is not inference only from subtree IDs, git status or prior reports.",
+    "subtrees": [
+      {
+        "path": "composeApp",
+        "files": 121,
+        "git_tree_oid": "27e88880f97d3148184c80c1fa40bae958530a22",
+        "nul_git_ls_tree_sha256": "530cbcbee413bd11a6c70992a627264c5c753efa24fa166ce47fb3b0e06f4e68"
+      },
+      {
+        "path": "shared",
+        "files": 239,
+        "git_tree_oid": "d585faaa02fa681ddb5b60b2a43d1d51d4a10ce3",
+        "nul_git_ls_tree_sha256": "e6091ab34b38870e54a042171d7626c5832b75406f3f6eb3bb7c6e103d5cd5a8"
+      },
+      {
+        "path": "game-modes",
+        "files": 238,
+        "git_tree_oid": "d56b07334d549c3a6d4d3819f2bff645c149aa50",
+        "nul_git_ls_tree_sha256": "b2ac350063b503585a5ca2f33a1a6acfd3e6872375bb5a600c6580a7c4b20bd1"
+      },
+      {
+        "path": "iosApp",
+        "files": 19,
+        "git_tree_oid": "da6d918bb46c4c29640b8ce5c4484ca57fc5101e",
+        "nul_git_ls_tree_sha256": "272a4cccfefc0a2dd534fc064296769c4e3e03ae594ebdee73282fa62535e7f2"
+      },
+      {
+        "path": "build-logic",
+        "files": 5,
+        "git_tree_oid": "3fa3848246aa0204b6daf067617b0aed69c7510c",
+        "nul_git_ls_tree_sha256": "ed84ec392767420e47a7ce9b3905f36d279f3def3404f7d0dee20a4ef5bf4c9a"
+      },
+      {
+        "path": "config",
+        "files": 6,
+        "git_tree_oid": "3081d67d7c14ca8ffc7b30824dc5b1a81c0f0fd4",
+        "nul_git_ls_tree_sha256": "44c98de7f682048130f2122463a85a2c90ef9efca039965be6cce5ea76a17cc9"
+      },
+      {
+        "path": "gradle",
+        "files": 4,
+        "git_tree_oid": "56fe4ae6668625c7cd9f357c52bb7ba9c684a8c9",
+        "nul_git_ls_tree_sha256": "3ef8e5d248362d02c9c4c3127fa3a1e9996d20540f9b6ec5442a636639447348"
+      },
+      {
+        "path": "docs/adr",
+        "files": 2,
+        "git_tree_oid": "9bb751a77d90dad34b838d9a046a2471d1232a7b",
+        "nul_git_ls_tree_sha256": "d6227388455d19ede8eb07352c6638d4116f2629aa8791ac27af513a8b52b78e"
+      },
+      {
+        "path": ".github/workflows",
+        "files": 4,
+        "git_tree_oid": "38d2a1e7e535a1fb31c2330f214065aa91d8f837",
+        "nul_git_ls_tree_sha256": "45d0d7fc912d5d8b3ba50a68ca515d6778c3fbef49885205b959c0a14848ed3b"
+      }
+    ],
+    "standalone_paths": [
+      "AGENTS.md",
+      "build.gradle.kts",
+      "settings.gradle.kts",
+      "gradle.properties",
+      "gradlew",
+      "gradlew.bat",
+      "docs/PRODUCTION_ARCHITECTURE.md",
+      "docs/RELEASE_GATES.md",
+      "docs/HOW_TO_ADD_A_GAME.md",
+      "docs/P2PKIT_MAVEN_PROVENANCE.md"
+    ],
+    "checkpoint_comparisons": [
+      {
+        "commit": "ec0de52a2c7ff9077482a291dc4fd2591fdea01f",
+        "tree": "48b099f3cd002a3253f21d2b06a4ece5787e62cb",
+        "selected_files": 648,
+        "different_mode_type_or_blob_paths": [
+          ".github/workflows/production-verification.yml"
+        ]
+      },
+      {
+        "commit": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+        "tree": "629a5d2b699cddb62d61849de3bd185fd4c01378",
+        "selected_files": 648,
+        "different_mode_type_or_blob_paths": [
+          ".github/workflows/production-verification.yml"
+        ]
+      },
+      {
+        "commit": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+        "tree": "e0e7abfff89975682a96a884cb745bcbc12e7238",
+        "selected_files": 648,
+        "different_mode_type_or_blob_paths": []
+      },
+      {
+        "commit": "700243c3426db2da3855a9d3a3df58ada607ffc5",
+        "tree": "bd93099fe19ccf46e27eb67f22d694cc1ae074aa",
+        "selected_files": 648,
+        "different_mode_type_or_blob_paths": []
+      },
+      {
+        "commit": "4276854c19afafdfd109be063a02dd5534fa86d0",
+        "tree": "60e3f5eb0af63a72a397b03da8cdc99c7fd398f8",
+        "selected_files": 648,
+        "different_mode_type_or_blob_paths": []
+      },
+      {
+        "commit": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "tree": "a88872673bd4cfc366236362f287c1db0a04a5cd",
+        "selected_files": 648,
+        "different_mode_type_or_blob_paths": []
+      }
+    ],
+    "all648_actual_frozen_and_current_bytes_match_prior_manifest": true,
+    "mismatched_paths": [],
+    "interpretation": "All648 files are identical through5f35,700243,4276854c,e511. Against ec0de/25b1,647 match and the sole difference is earlier verification-workflow configuration. All632 shipping/build subtree files and the root/architecture/release/ADR contracts remain unchanged. No new shipping, identity, resource, build-graph, architecture, protocol, privacy, game-rule or timer delta is introduced by the lifecycle freeze."
+  },
+  "older_workflow_exception": {
+    "path": ".github/workflows/production-verification.yml",
+    "current_sha256": "d347a4cd3e22181b37e5aec91203d3aa37779cb7bb7976fb74ed01cc29ba328d",
+    "transfer_sha256": "f823182501d7a28dd20d117781b59dd46bc5103baef5b016316a5a672a18258f",
+    "transfer_to_frozen_diff_sha256": "4d650146fcf3f5e29379c835cbba73908c855472a4bd27f1a520b0e5321fa19b",
+    "classification": "EARLIER_REVIEWED_VERIFICATION_ONLY_CHANGE_NOT_A_NEW_LIFECYCLE_DELTA",
+    "changed_commits": [
+      "160824e17caa384fa1802a82760638de1f71f2af",
+      "22467846fbd48934226de5f06026b511d15c1b63"
+    ],
+    "summary": "Earlier opt-in focused native/preflight/non-app probe routing and receipt/cleanup custody; full remains default. Workflow is unchanged from5f35 through this freeze. The other three publication/promotion workflow files are unchanged from the transfer; none was enabled or dispatched by this reviewer.",
+    "limit": "No reapproval or actual Actions result is supplied; ci_review owns current preflight/full authorization."
+  },
+  "preserved_invariant_applicability": [
+    "Host-only multiplayer reducer authority, peer command-only updates and recipient-specific public/own-private projections remain byte-identical; no host-only/private leakage boundary or deterministic seed implementation changed.",
+    "Protocol.kt still declares major4/minor2 and isCompatibleWith uses exact object equality. Protocol4.2, strict snapshots/content and current bundled story identities are unchanged.",
+    "Existing Doctor flag remains defaultOFF; reducer rejects a previous target only when repeats are OFF, retains self-protection/eligibility and one-submission guards. No new game rule, timer or serialized flag was introduced.",
+    "Whodunit local/host Leave Confirmation still replaces game presentation, cancelling its ticker without wall-clock catch-up or releasing unrelated pauses; peer never gains clock authority.",
+    "AGENTS/current architecture/release/ADRs, KMP graph, application identities, Xcode/plist/privacy resources and dependency pins match historical scope. P2pKit remains0.7.0-rc3 Maven Central with common version aliases and no sibling/mavenLocal replacement.",
+    "These are preserved-source/applicability conclusions grounded in exact-byte comparisons and reopened anchors, not new exhaustive functional, platform, device, privacy/legal or Store verification."
+  ],
+  "original16_and_timer_applicability": {
+    "actual_historical_run_id": 34152138368,
+    "actual_historical_source": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+    "actual_historical_tree": "c65463bdf1f3656f90dfe6e6dbe1d94b3c588dac",
+    "map_author_checkout": "b6e1947c62661631d0593038db7f64dbf25f720e",
+    "ancestry": [
+      {
+        "commit": "85ded00435b4f8327ce32d3b7f5062c4438ae174",
+        "is_ancestor_of_frozen_source": true
+      },
+      {
+        "commit": "b4f0ece464aa44819044dd78d2f2fd137d88c91d",
+        "is_ancestor_of_frozen_source": true
+      },
+      {
+        "commit": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+        "is_ancestor_of_frozen_source": true
+      },
+      {
+        "commit": "4276854c19afafdfd109be063a02dd5534fa86d0",
+        "is_ancestor_of_frozen_source": true
+      }
+    ],
+    "original16": {
+      "reference_count": 51,
+      "unique_paths": 50,
+      "manifest_encoding": "Compact ensure_ascii UTF-8 JSON without newline; whole-path-sorted rows[path,sha256,bytes]",
+      "manifest_sha256": "791369be2eefd931b0ab65efbdf00c1d51ea81e16ffce1af61c9368dfe1ff496",
+      "all_current_worktree_and_frozen_Git_blobs_equal_historical_CI_and_map": true,
+      "mismatched_paths": [],
+      "outside648": [
+        {
+          "path": "docs/PRE_RELEASE_COMPATIBILITY.md",
+          "sha256": "32ae112de9fd761636191c3308faf28fa5a3a8f3fd694064bbeaf3f2ffe69060"
+        },
+        {
+          "path": "docs/WHODUNIT_TEST_CONTENT.md",
+          "sha256": "e10fc5f4d8d5024c5a9f1fcf51d1bf30a9a1fda410843ed51e42d66186cd5a33"
+        },
+        {
+          "path": "scripts/release/PrepareAndroidUploadTrust.java",
+          "sha256": "a74b92902839047353aa4b5816bc226e43526960da7c4d2df117e25c9375c211"
+        },
+        {
+          "path": "scripts/release/store_api.py",
+          "sha256": "95ba5a18b5e78d85eb15c8764f011db76293d0bdcf8ee088151321ad5d6b7012"
+        },
+        {
+          "path": "scripts/release/tests/test_xcode_framework_phase.py",
+          "sha256": "3033307b0a029d87ab9c8c14d3b3b4d3a0d4db9d183012d6da58fb1e8b5c4a73"
+        },
+        {
+          "path": "scripts/release/validate_android_artifact.sh",
+          "sha256": "e0100ed6274e41113e18d1cdaa5310242f749d2f337fdb0c5b85920a011cece6"
+        }
+      ]
+    },
+    "per_original_ID": [
+      [
+        "ST-C1",
+        1,
+        2
+      ],
+      [
+        "SN-C1",
+        1,
+        2
+      ],
+      [
+        "SN-C2",
+        6,
+        5
+      ],
+      [
+        "WD-C1",
+        1,
+        1
+      ],
+      [
+        "IOS-B1",
+        2,
+        1
+      ],
+      [
+        "ROOT-T3",
+        3,
+        3
+      ],
+      [
+        "MF-C1",
+        12,
+        7
+      ],
+      [
+        "WD-C3",
+        1,
+        2
+      ],
+      [
+        "M-C03",
+        1,
+        1
+      ],
+      [
+        "DS-C01",
+        5,
+        4
+      ],
+      [
+        "DS-C02",
+        1,
+        3
+      ],
+      [
+        "DS-C03",
+        3,
+        1
+      ],
+      [
+        "WD-C2",
+        10,
+        6
+      ],
+      [
+        "RL-C1",
+        1,
+        1
+      ],
+      [
+        "RL-C2",
+        2,
+        1
+      ],
+      [
+        "RL-C3",
+        1,
+        1
+      ]
+    ],
+    "timer_document": {
+      "reference_count": 1,
+      "unique_paths": 1,
+      "manifest_encoding": "Compact ensure_ascii UTF-8 JSON without newline; whole-path-sorted rows[path,sha256,bytes]",
+      "manifest_sha256": "7db006fb331500c07b1fa8328f64afb49435b122d2bd79c6a1ec3f307376ba97",
+      "all_current_worktree_and_frozen_Git_blobs_equal_historical_CI_and_map": true,
+      "mismatched_paths": [],
+      "outside648": [
+        {
+          "path": "docs/WHODUNIT_DISCUSSION_TIMING.md",
+          "sha256": "877084e47d0e823278057da1f0881fbab0a52e5a8e57aa48eec5fbabc49cece1"
+        }
+      ]
+    },
+    "timer_policy_commit": "b4f0ece464aa44819044dd78d2f2fd137d88c91d",
+    "timer_nine_changed_paths_current_equal_CI": true,
+    "timer_nine_path_manifest_sha256": "8cdfa51a246d4335bf36a57e1e59a2ba7f3fa20f988317d5e078867e314a54b0",
+    "later_UI_manifestations": {
+      "reference_count": 6,
+      "unique_paths": 5,
+      "manifest_encoding": "Compact ensure_ascii UTF-8 JSON without newline; whole-path-sorted rows[path,sha256,bytes]",
+      "manifest_sha256": "befffa41b1e34576678dbfc7f762d823f16bb4e422b814ab988d7e90523a5bdf",
+      "all_current_worktree_and_frozen_Git_blobs_equal_historical_CI_and_map": true,
+      "mismatched_paths": [],
+      "outside648": []
+    },
+    "all_seven_content_inventory_resource_hashes_and_versions_equal": true,
+    "selected_regression_sources": {
+      "reference_count": 49,
+      "unique_paths": 45,
+      "manifest_encoding": "Compact ensure_ascii UTF-8 JSON without newline; whole-path-sorted rows[path,sha256,bytes]",
+      "manifest_sha256": "09f3c93dff6d7a976a91c49f04cfd3fcdc10546f053c21dbdb21980c84d440dd",
+      "all_current_worktree_and_frozen_Git_blobs_equal_historical_CI_and_map": true,
+      "mismatched_paths": [],
+      "outside648": [
+        {
+          "path": "scripts/release/tests/test_android_artifact_size.py",
+          "sha256": "1bdf6fe45be629ed8ea6d435727e88d87644319257127732b61a529f1ce1a0b1"
+        },
+        {
+          "path": "scripts/release/tests/test_android_upload_signature.py",
+          "sha256": "fd9723397cd3ae4336371cd6fdd93164d225919d1ed615d5fd48f75055b3eade"
+        },
+        {
+          "path": "scripts/release/tests/test_google_promotion_edit.py",
+          "sha256": "b6ed5e950782ef5581f86cabd7a263937da52d3dfcf7c84cc45df5bcc2d147db"
+        },
+        {
+          "path": "scripts/release/tests/test_xcode_framework_phase.py",
+          "sha256": "3033307b0a029d87ab9c8c14d3b3b4d3a0d4db9d183012d6da58fb1e8b5c4a73"
+        }
+      ]
+    },
+    "counting": "One original16-repair commit85ded004; MF-C1/M-C01 are one finding. WD-C4 is separately settled timer policy, not a17th original defect.49 descriptor rows/45 unique test-source paths include repeated platform observations, not49 unique test methods or a new execution.",
+    "raw_reference_rehash": {
+      "files": 47,
+      "bytes": 1050033,
+      "manifest_sha256": "4e38a2afaace94f8b2adfb943365b7e9019bc80f62fe1cc990770e9528cb6b32",
+      "manifest_encoding": "Compact ensure_ascii UTF-8 JSON without newline; whole-path-sorted rows[path,sha256,bytes]",
+      "all_hashes_match_recorded_map": true,
+      "scope": "Rehashed45 referenced XMLs and two task/Python logs; did not repeat the complete historical CI audit."
+    },
+    "selected_raw_XML_inspection": [
+      {
+        "key": "C01:com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest.xml",
+        "sha256": "fa0859c8e52124189fccba6e4110bc83acf4370d176a3ec68d5f3e83410683c8",
+        "raw_counts": {
+          "tests": 6,
+          "skipped": 0,
+          "failures": 0,
+          "errors": 0
+        },
+        "all_recorded_descriptors_and_outcomes_match_raw": true,
+        "execution_source": "89dbe8aeaf4e2c83f491521629982be09706cf67"
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest.xml",
+        "sha256": "447cade9cde6142ab2979c5d450bb6efd807876ee9dd47ed648fb017a776bdb8",
+        "raw_counts": {
+          "tests": 4,
+          "skipped": 0,
+          "failures": 0,
+          "errors": 0
+        },
+        "all_recorded_descriptors_and_outcomes_match_raw": true,
+        "execution_source": "89dbe8aeaf4e2c83f491521629982be09706cf67"
+      },
+      {
+        "key": "C01:com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/retained/desktop-android-verification/parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+        "sha256": "fb0663cdcf618579dbc887ee1c6e5d2a19f55317be96b930157f97fce2cc586e",
+        "raw_counts": {
+          "tests": 4,
+          "skipped": 3,
+          "failures": 0,
+          "errors": 0
+        },
+        "all_recorded_descriptors_and_outcomes_match_raw": true,
+        "execution_source": "89dbe8aeaf4e2c83f491521629982be09706cf67"
+      }
+    ],
+    "historical_release_Python_descriptors_reconciled": 42,
+    "applicability_limit": "Unchanged mechanisms and45 test-source files retain scoped historical relevance. CI34152138368 actually ran at89dbe8, not e511. No current-SHA aggregate, Apple/libproc runtime, strict-protection closure, physical LAN or Store operation is inferred. Timer6local+4host are virtual Compose-time/synthetic-transport tests; three physical loopback descriptors remain SKIP, notPASS.",
+    "all_mapped_mechanism_test_later_and_timer_modes_types_blob_ids_equal_CI": true,
+    "combined_unique_mapped_source_paths": 99,
+    "per_original_ID_columns": [
+      "finding_id",
+      "mechanism_references",
+      "historical_descriptor_rows"
+    ]
+  },
+  "verification_control_delta": {
+    "source_commit": "4276854c19afafdfd109be063a02dd5534fa86d0",
+    "changed_control_doc_test_inputs": 18,
+    "classification_counts": {
+      "VERIFICATION_RUNNER_OR_LIFECYCLE_SOURCE": 6,
+      "VERIFICATION_DOCUMENTATION": 3,
+      "REGRESSION_SOURCE": 8,
+      "RUNTIME_CONTROL_FREEZE_INPUT_NOT_ORDINARY_EVIDENCE": 1
+    },
+    "all18_frozen_blobs_and_current_bytes_equal_exact_reviewed_pins": true,
+    "manifest_sha256": "d22f78b382b554746a870517749800897243ed2d7b1d64a2766bcfea791ee620",
+    "manifest_encoding": "compact UTF-8 ensure_ascii JSON without newline; whole-path string lexically sorted rows[path,git_mode,git_blob_oid,sha256,bytes]",
+    "inputs": [
+      [
+        "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+        "VERIFICATION_RUNNER_OR_LIFECYCLE_SOURCE",
+        "b0f3794fe89537d5108a2c24c22c33ed94d9330ee220e7fa257bfb2c4a7b1e29",
+        76990
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/README.md",
+        "VERIFICATION_DOCUMENTATION",
+        "ab3e78c11a796e2122f666ca8522d0eeea44da5b0c180292140ba28c645a300b",
+        12318
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+        "VERIFICATION_RUNNER_OR_LIFECYCLE_SOURCE",
+        "cf41c413d321d87689b97b86e4fe7981052dab6b629c8ffcd57b15a00be6555c",
+        21878
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+        "VERIFICATION_RUNNER_OR_LIFECYCLE_SOURCE",
+        "241bc0e199be2699fe49b1552d993e7389de79ff8fb88f2d1fe53bed99847840",
+        13449
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/README.md",
+        "VERIFICATION_DOCUMENTATION",
+        "16ae9dbdaf680add4eeb965dee0b96910d8ecf3ef6bb89c3b8afead1a8975451",
+        23054
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+        "VERIFICATION_RUNNER_OR_LIFECYCLE_SOURCE",
+        "5524d839202211270ec1c97776f0d350b9802ecf0d1c5e6eb3d28cd960629302",
+        59858
+      ],
+      [
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+        "REGRESSION_SOURCE",
+        "3da543bd92beecda95bdfbd53632a3a49ca95a6054f47a17dd03dff6460d6a5c",
+        42919
+      ],
+      [
+        "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-draft-freeze-01.json",
+        "RUNTIME_CONTROL_FREEZE_INPUT_NOT_ORDINARY_EVIDENCE",
+        "4a18e36224c895581515d538f995e6f8a1bd7016a3cf6eba3328712e5535bd08",
+        2956
+      ],
+      [
+        "scripts/ci/NATIVE_CONTINUATION.md",
+        "VERIFICATION_DOCUMENTATION",
+        "b5ae13ab4f6158d3d5d067445286098f1aab72b177591bdb0e5252a1e2d06709",
+        14826
+      ],
+      [
+        "scripts/ci/native_continuation.py",
+        "VERIFICATION_RUNNER_OR_LIFECYCLE_SOURCE",
+        "3c974b93e202359c12aa2647984b624024986676eb058ace9ecdf4e7663200bb",
+        57512
+      ],
+      [
+        "scripts/release/tests/test_native_continuation.py",
+        "REGRESSION_SOURCE",
+        "dac139c779e33b795aa6f36fc0f853ee071099b927c901a9b993323c6f6edb35",
+        55155
+      ],
+      [
+        "scripts/release/tests/test_native_process_probe.py",
+        "REGRESSION_SOURCE",
+        "2730119da9d074d490a259669d3e9f9b4fec655da2045bfd9401ee44dc91e4ea",
+        43371
+      ],
+      [
+        "scripts/verification/ios-readiness/simulator_lifecycle.py",
+        "VERIFICATION_RUNNER_OR_LIFECYCLE_SOURCE",
+        "8d799475f1e92fc7943ca05b2d1e59655cbb8b0973031029440662059e65f248",
+        37085
+      ],
+      [
+        "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py",
+        "REGRESSION_SOURCE",
+        "613f255556f052d553a2e85dc7d84e4f137957f47732356449e22d6991f7fc53",
+        24627
+      ],
+      [
+        "scripts/verification/ios-readiness/test_native_command_failures.py",
+        "REGRESSION_SOURCE",
+        "2dae0e77803d5c6b98bd3d4bc1ee4f84a366b799da7e21c16e2068312e0d9b8c",
+        27564
+      ],
+      [
+        "scripts/verification/ios-readiness/test_simulator_lifecycle.py",
+        "REGRESSION_SOURCE",
+        "2f7c957e47aa63804866a71e3b5a8566342c6f7deca2f80e57f0cd42af1a5a46",
+        75257
+      ],
+      [
+        "scripts/verification/ios-readiness/test_simulator_lifecycle_integration.py",
+        "REGRESSION_SOURCE",
+        "93d88840fcef436dbf45cc20de071e784daa4c6bc0e7683b623da8df7197100c",
+        56392
+      ],
+      [
+        "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+        "REGRESSION_SOURCE",
+        "aee9e30948813929393acedfaad5767fee2a47eb896a7eddd81db96208f14672",
+        12166
+      ]
+    ],
+    "protected_unchanged_sources": [
+      {
+        "path": "scripts/verification/ios-readiness/owned_lane.py",
+        "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/owned_lane.py",
+        "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/run_ios_readiness.py",
+        "sha256": "85283be9681be14c18b76ef1657b596e837b4f97f978917f25ac693ae72d0ca8"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/secondary_fifo.py",
+        "sha256": "170586ec941b02866acfa4b8e54aa3dd0842dbc7bc9c4b50410bca4b1149440a"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/secondary_fifo.py",
+        "sha256": "170586ec941b02866acfa4b8e54aa3dd0842dbc7bc9c4b50410bca4b1149440a"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/toolchain_profiles.py",
+        "sha256": "8adacaf4c59ed823aa088ecb70ad5c6c1e3f76e7ca3520d8abf0563341591313"
+      },
+      {
+        "path": "scripts/ci/native_process_probe.py",
+        "sha256": "c87f6d1289ee50a7387988bd85953d451dac9e1b7b88a4d60f7b4848f86516da"
+      },
+      {
+        "path": "scripts/ci/owned_ci_simulator.py",
+        "sha256": "717c8c02dc06e4eac175c5dde5c7f9bdd6ebbd5e7028cc94c6ba4f84b44388af"
+      }
+    ],
+    "all8_protected_sources_equal5f35_700243_frozen_and_current": true,
+    "adapter_toplevel_AST": {
+      "changed_existing": [
+        "cleanup_is_safe"
+      ],
+      "added": [
+        "canonical_sha",
+        "direct_lifecycle_is_safe",
+        "lifecycle_journal_matches"
+      ],
+      "removed": [],
+      "unchanged_full_entrypoints": {
+        "main": true,
+        "context": true,
+        "effective_scope": true
+      }
+    },
+    "interpretation": [
+      "17 reviewed pre-freeze inputs match exactly; the18th is the independently reviewed78-byte normal legacy fixture state initialization. No shipping source is in this delta.",
+      "The direct-lifecycle-draft-freeze JSON under N/reviews is an actual runtime-control input, not ordinary evidence. Runner/composer helpers under remediation-runs likewise remain verification source, not excluded merely by archive location.",
+      "Explicit direct-owned-v1 adds durable exact-resource/unreaped-child simulator lifecycle custody, with default legacy-apphost unchanged and no fallback. Generic build/app ownership remains the original strict ps/lsof path.",
+      "Required raw-retention acknowledgement, journal/source/custody and postbuild gates remain strict. Late summary persistence failure never authorizesPASS/new work; only separately journal-authorized safe retirement remains possible. No runtime success is claimed from this source distinction.",
+      "Normal fixture initialization changes no assertion or runtime selector. Current source pin closure and exact old receipt applicability must remain distinguished; historical failed aggregate receipts are not rewrittenPASS.",
+      "Earlier source reviews approve exact controls/oracles, not runtime. Actual control outcomes, preflight34273018746, A/B execution and cleanup, and C03 custody are owned by their designated independent reviewers, not re-adjudicated here."
+    ],
+    "input_columns": [
+      "path",
+      "classification",
+      "sha256",
+      "bytes"
+    ]
+  },
+  "mechanical_inventory_separation": {
+    "commit": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+    "parent": "4276854c19afafdfd109be063a02dd5534fa86d0",
+    "only_name_status_delta": "M\tdocs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+    "inventory": {
+      "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "bytes": 10181341,
+      "sha256": "c876f976881b70a3c4aaba9d2d2785f397ebbedcbef66a5ea632c5a05d9139a4"
+    },
+    "meaning": "e511 differs from4276854c only in the mechanical inventory; no source/control bytes changed in this commit. Generation correctness, exact delivery custody and inventory row semantics are evidence_audit-owned and are not re-audited by this report. The separately updated continuation ledger is documentation, not an app/control execution result."
+  },
+  "full_D_decision_boundary": [
+    "No new application/source compatibility finding prevents using the preserved original16/timer mapping as scoped historical context for the later full-D decision.",
+    "This report is not a preflight/native/full dispatch approval or combined qualification receipt. Full qualification requires actual frozen-source execution evidence with applicable source/control/platform/cleanup bindings; old aggregate receipts cannot be relabeled current.",
+    "Readiness, completion ofA/B/C, strict file-protection observations and final evidence delivery decisions remain separate. No old blocked label is carried forward and no new platform result is inferred from unchanged source.",
+    "Physical-device LAN/lifecycle/a11y, signed-artifact Store/signing/distribution, identity ownership and separate product/editorial/legal/privacy requirements remain outside this review. No publication/promotion permission is granted."
+  ],
+  "reviewer_activity": {
+    "builds": 0,
+    "tests_or_project_discovery": 0,
+    "project_imports": 0,
+    "native_commands": 0,
+    "network_or_Actions_calls": 0,
+    "source_edits": 0,
+    "staging_commits_pushes": 0,
+    "cleanup_or_signaling_actions": 0,
+    "written_paths": [
+      "remediation-runs/2026-09-08-continuation/reviews/frozen-source-scope-reconciliation-e5111ea4-01.json"
+    ],
+    "method": "Read-only Git/raw files, stdlib SHA256/JSON/AST and selected historical XML parsing only.",
+    "cleanup": "No build/test/process/fixture cycle was started; no cleanup cycle is owed by this reviewer. Locks, live lane outputs, retained reports and other agents' work were left untouched."
+  },
+  "verdict": "COMPATIBILITY_AND_HISTORICAL_APPLICABILITY_SCOPE_RECONCILED; no blocking source-delta findings within the stated scope. NOT runtime, dispatch, full-D, device or Store readiness approval."
+}

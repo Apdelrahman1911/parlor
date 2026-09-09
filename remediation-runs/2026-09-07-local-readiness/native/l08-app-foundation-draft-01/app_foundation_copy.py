@@ -21,7 +21,7 @@ MODIFIED = (PROJECT, CONTENT, TESTS)
 HASH = re.compile(r'[0-9a-f]{64}\Z')
 TEMP = re.compile(r'parlor-audit-ios-readiness-[0-9]{2}-[A-Za-z0-9_-]{1,64}\Z')
 PINS = {
-    'run_ios_readiness.py': 'b0f3794fe89537d5108a2c24c22c33ed94d9330ee220e7fa257bfb2c4a7b1e29',
+    'run_ios_readiness.py': '9580071ecec4abc8ba375ca01e722eee4245f36132e6a5b8790f5d8bb8456687',
     'copied_sources.py': 'ba1dbbd9fabc23e43060663ff6051617f1fe3119979e60df7a1db3c13fe950d6',
     'NativeReadinessUITests.swift.in': 'fa2dc7dbc97c576262ad14cd85b22f65aa908b1629ab1a205b22aa4873f5c0dc',
     'NativeReadinessLaunch.swift.in': 'df8f0cce3f45bedbfea47df3ca0b2e56c6a777383395fc170f0f07b83f8d143a',

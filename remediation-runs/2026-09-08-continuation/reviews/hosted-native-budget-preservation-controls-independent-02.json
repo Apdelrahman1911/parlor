@@ -1,0 +1,221 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_HELD_BUDGET_PRESERVATION_REGRESSION_FINAL_OVERSIZE_ORACLE_CORRECTION",
+  "reviewer": "/root/fixture_review",
+  "correction_author": "/root/lifecycle_controls",
+  "recorded_at": "2026-09-08T23:38:21.518Z",
+  "status": "APPROVED_EXACT_FINAL_HELD_REGRESSION_SOURCE_ONLY_ROOT_286_EXECUTION_PENDING",
+  "findings": [],
+  "authorization": "Root authorized this additive02 after the narrowly scoped oversize-oracle confound was confirmed. Source correction is test-only and authored by a different agent.",
+  "previous_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-native-budget-preservation-controls-independent-01.json",
+    "sha256": "d6b40bf7c2179e702a162caffe47a21a11eb4718f0ce92dce6c90e7eb46ce969",
+    "bytes": 47506,
+    "status": "APPROVED_EXACT_HELD_REGRESSION_SOURCE_ONLY_ROOT_EXECUTION_PENDING"
+  },
+  "supersession": {
+    "retained_unchanged": true,
+    "replaces_prior_final_approval_for_integration_667bcdf5": true,
+    "final_integration_sha256": "c5601e2dbc64956fa70310add4f8f25841e2d6e82af2f2e09798d38f93f7c09a",
+    "reason": "Immediately after01 was persisted and before packet closure/execution, the author identified that sparse NUL oversize fixtures could fail JSON parsing even if the size upper bound regressed. Root held286. The prior broad approval is not a final approval for the old oversize oracles.",
+    "provisional_identity_7c595f3": "7c595f3de39cb2eb8e26afd3e24191fb47be72202a63a04d267e8136eeb9b0c6",
+    "provisional_identity_not_final_approved_hold": true,
+    "inherited_review": "All other consolidated source/call-path/mutation/applicability reasoning and explicit execution/runtime limits from01 remains applicable. Final approval uses02 plus01, never01 alone.",
+    "no_historical_evidence_rewritten": true
+  },
+  "source": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "head_at_review": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+    "head_tree": "a88872673bd4cfc366236362f287c1db0a04a5cd",
+    "uncommitted_held_controls": true,
+    "final_six_test_file_identities": [
+      {
+        "path": "scripts/verification/ios-readiness/test_native_command_failures.py",
+        "sha256": "ea2f6d7b9acbeede8d36596539813b86a1fe68e2d7b293cb5d995c5bcecf1223",
+        "bytes": 35980,
+        "declared_methods": 29,
+        "selected_methods": 29
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_simulator_lifecycle_integration.py",
+        "sha256": "c5601e2dbc64956fa70310add4f8f25841e2d6e82af2f2e09798d38f93f7c09a",
+        "bytes": 98369,
+        "declared_methods": 54,
+        "selected_methods": 54
+      },
+      {
+        "path": "scripts/release/tests/test_native_continuation.py",
+        "sha256": "366cd58febbe2f91f7cc287af8942948dd15d5372de2cec750dcbde9f9539465",
+        "bytes": 80771,
+        "declared_methods": 63,
+        "selected_methods": 63
+      },
+      {
+        "path": "scripts/release/tests/test_workflow_contract.py",
+        "sha256": "695a513b227d1aa3bde6adb49f886713ccdde4f684d9e8478b476cb0c6d8c4ae",
+        "bytes": 39774,
+        "declared_methods": 52,
+        "selected_methods": 52
+      },
+      {
+        "path": "scripts/release/tests/test_native_process_probe.py",
+        "sha256": "513e45a9c4b46b8e58ef3058abc0da6148223bd5175d1b784a190b8153de9c8d",
+        "bytes": 43371,
+        "declared_methods": 45,
+        "selected_methods": 1
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+        "sha256": "9cbc54882717a4c441b51e953c883579976cdd1c299d9a57099a713c36823464",
+        "bytes": 34551,
+        "declared_methods": 22,
+        "selected_methods": 55
+      }
+    ],
+    "unchanged_separately_reviewed_held_implementation_inputs": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+        "sha256": "9580071ecec4abc8ba375ca01e722eee4245f36132e6a5b8790f5d8bb8456687",
+        "bytes": 87139
+      },
+      {
+        "path": "scripts/ci/native_continuation.py",
+        "sha256": "e41186dc13dd94e851b449079d73b98cc4655bb6234ebcd76adc61942bb12feb",
+        "bytes": 64697
+      },
+      {
+        "path": ".github/workflows/production-verification.yml",
+        "sha256": "84888fae00e1add37dd8f39c5a86a9600c2a95b5e3bca794133c3fc28147b46c",
+        "bytes": 41331
+      },
+      {
+        "path": "scripts/release/workflow_contract.py",
+        "sha256": "fa142d3bbfb3dd18e0f3dc9aba2f388a3ce634ee7fdd16612b2d9bbf2df1f429",
+        "bytes": 47465
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+        "sha256": "7d99de87082cda02d1e003ca8cad35835dec5fb34afd58c41ee3c9b7e30c8bdf",
+        "bytes": 21848
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+        "sha256": "399151fef8743c2553bf72f40affb07842a00f643dd34fed1aa3703c0efcec09",
+        "bytes": 13449
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/a23-budget-preservation-draft-freeze-01.json",
+        "sha256": "f73bd3be82522dd4a3404bc68c4c0093d7af7b7b7f9d37bfd87a993c4aebb618",
+        "bytes": 5076
+      }
+    ]
+  },
+  "finding_and_correction": {
+    "id": "OVERSIZE-JSON-ALTERNATE-REJECTION",
+    "actual_call_path": "Both original negative methods call self.assert_denied -> actual preserve_postbuild_raw -> read_stable_owned_file -> raw_json_object. They do not call only the bounded-reader function. The old generic denial accepted RuntimeError/OSError/ValueError, so malformed JSON was a genuine alternate rejection after a size-guard regression.",
+    "original_fixture": "truncate(262145) and truncate(4*1024*1024+1) created sparse NUL payloads rather than valid otherwise-preservable JSON.",
+    "final_fixture": "Each oversize branch now pads its original valid JSON object bytes with JSON whitespace to exactly maximum+1; explicit length and json.loads equality assertions establish the object is unchanged and parseable. No new unknown/private field is introduced.",
+    "exact_denial": "Both existing methods capture the actual assert_denied exception. Only their oversize subcase requires exact RuntimeError type and the exact reader message Raw evidence is not a bounded owned regular file. Existing symlink/hardlink/directory checks and later-safe-record retention assertions remain unchanged.",
+    "source_size": 262145,
+    "source_maximum": 262144,
+    "extraction_size": 4194305,
+    "extraction_maximum": 4194304,
+    "no_new_helper_test_method_or_subcase": true,
+    "application_or_runner_source_changed": false,
+    "independently_reopened_final_methods": [
+      {
+        "name": "RawPostbuildPreservationIntegration.test_symlink_hardlink_directory_and_oversize_source_records_cannot_ack_or_block_other_safe_files",
+        "line": 854,
+        "last_line": 879,
+        "body": "def test_symlink_hardlink_directory_and_oversize_source_records_cannot_ack_or_block_other_safe_files(self):\n        for kind in ('symlink', 'hardlink', 'directory', 'oversize'):\n            fixture = self.fixture()\n            name = 'parlor-dsc01-settings-result.json'\n            path = fixture.parent / name\n            raw = path.read_bytes(); path.unlink()\n            protected = fixture.root / 'unowned-control.json'; protected.write_bytes(raw)\n            if kind == 'symlink':\n                path.symlink_to(protected)\n            elif kind == 'hardlink':\n                os.link(protected, path)\n            elif kind == 'directory':\n                path.mkdir()\n            else:\n                oversized = raw + b' ' * (262145 - len(raw))\n                self.assertEqual(262145, len(oversized))\n                self.assertEqual(json.loads(raw), json.loads(oversized))\n                path.write_bytes(oversized)\n            with self.subTest(kind=kind):\n                error = self.assert_denied(fixture)\n                if kind == 'oversize':\n                    self.assertIs(type(error), RuntimeError)\n                    self.assertEqual('Raw evidence is not a bounded owned regular file', str(error))\n                self.assertEqual(raw, protected.read_bytes())\n                self.assertFalse((fixture.dest / 'probe-settings-result.json').exists())\n                self.assertTrue((fixture.dest / 'parlor-native-readiness-boot-8.json').is_file())"
+      },
+      {
+        "name": "RawPostbuildPreservationIntegration.test_required_extraction_symlink_hardlink_and_oversize_do_not_grant_ack",
+        "line": 881,
+        "last_line": 904,
+        "body": "def test_required_extraction_symlink_hardlink_and_oversize_do_not_grant_ack(self):\n        for kind in ('symlink', 'hardlink', 'oversize'):\n            fixture = self.fixture()\n            label = 'xcresult-summary.json'\n            fixture.outputs[label] = None\n            target = fixture.dest / label\n            original = fixture.root / 'unowned-summary.json'; original.write_bytes(b'{}')\n            if kind == 'symlink':\n                target.symlink_to(original)\n            elif kind == 'hardlink':\n                os.link(original, target)\n            else:\n                raw = original.read_bytes()\n                oversized = raw + b' ' * (4194305 - len(raw))\n                self.assertEqual(4194305, len(oversized))\n                self.assertEqual(json.loads(raw), json.loads(oversized))\n                target.write_bytes(oversized)\n            with self.subTest(kind=kind):\n                error = self.assert_denied(fixture)\n                if kind == 'oversize':\n                    self.assertIs(type(error), RuntimeError)\n                    self.assertEqual('Raw evidence is not a bounded owned regular file', str(error))\n                self.assertNotIn(label, fixture.receipt['raw_postbuild_preservation']['files'])\n                self.assertTrue((fixture.dest / 'parlor-native-readiness-boot-8.json').is_file())"
+      }
+    ],
+    "narrow_delta_proof": {
+      "reversed_to_prior_held_sha256": "667bcdf53c001ee3a098fda3f53a2eac0eea5457cee8b1ebc781bfd90a418c1d",
+      "reverse_anchor_counts": [
+        1,
+        1,
+        2
+      ],
+      "outside_narrow_changes_byte_identical": true,
+      "static_single_guard_witness": {
+        "unique_guard_count": 1,
+        "original": "0 < before.st_size <= maximum",
+        "mutant": "0 < before.st_size <= maximum + 1",
+        "witnesses": [
+          {
+            "kind": "source",
+            "maximum": 262144,
+            "bytes": 262145,
+            "original_and_padded_JSON_object_equal": true,
+            "original_upper_bound_accepts": false,
+            "only_upper_bound_plus_one_accepts": true,
+            "read_maximum_plus_one_can_include_every_byte": true,
+            "not_an_executed_project_mutant": true
+          },
+          {
+            "kind": "extraction",
+            "maximum": 4194304,
+            "bytes": 4194305,
+            "original_and_padded_JSON_object_equal": true,
+            "original_upper_bound_accepts": false,
+            "only_upper_bound_plus_one_accepts": true,
+            "read_maximum_plus_one_can_include_every_byte": true,
+            "not_an_executed_project_mutant": true
+          }
+        ],
+        "execution": false
+      },
+      "current_sha256": "c5601e2dbc64956fa70310add4f8f25841e2d6e82af2f2e09798d38f93f7c09a",
+      "bytes": 98369
+    },
+    "exact_remaining_bytes": "Reversing only the two payload blocks and the two exact-exception assertion blocks in memory reproduces the entire prior667bcdf5 file SHA. No unreviewed edit elsewhere in integration.",
+    "static_guard_reasoning": "The unique actual reader comparison is 0 < before.st_size <= maximum. Widening only its upper comparator to maximum+1 permits these two exact boundary payloads. The unchanged stream.read(maximum+1) can then read all bytes, the unchanged len(raw)==before.st_size check is satisfied, JSON remains valid, and the writer checks retained bytes with len(raw). There is no NUL parse error left to masquerade as size rejection.",
+    "mutant_execution_limit": "Only an in-memory AST edit and stdlib literal-data/JSON/arithmetic witness were inspected. No actual reader/collector or mutant was executed by this reviewer. Root made an added executable size-mutant test optional; none was added. This is not an executed mutation-kill result."
+  },
+  "packet_applicability": {
+    "exact_proposed_commands": 8,
+    "expected_methods": 286,
+    "arithmetic": "29+54+63+52+1+55+20+12=286",
+    "integration_count_unchanged": 54,
+    "supplemental_unchanged": "The20 Foundation-toolchain and12 functional-copy controls retain the exact identities recorded in01. Composition remains22 own plus33 loaded draft declarations; probe selection remains the sole cycle/scope method, not the other44.",
+    "root_exact_manifest_required": true,
+    "no_test_execution_results_claimed": true,
+    "earlier_root_cycles": "Root reported standalone workflow/transport cycles executed with their own prior667bcdf5-containing bindings. Those actual binding bytes must remain intact; this later test-only change is not retroactive execution againstc5601e2. Their applicability/results are for the assigned root/postrun reviewers, not inferred here."
+  },
+  "invariants_and_evidence": {
+    "main_profile_wiring_correction_retained": true,
+    "postread_phase_correction_retained": true,
+    "independent_kind_and_code_oracles_retained": true,
+    "all_implementation_source_hashes_unchanged": true,
+    "all_other_five_reviewed_test_hashes_unchanged": true,
+    "A21_timeout_failure_unknown_holder_cleanup_failure_and_B22_not_run_unchanged": true,
+    "strict_protection_observations_not_waived": true,
+    "C03_scoped_success_not_relabelled_as_runtime_or_final_binary": true,
+    "no_Store_or_physical_device_operation": true
+  },
+  "review_execution_and_cleanup": {
+    "project_imports_or_extracted_function_execution": 0,
+    "tests_discovered_or_executed": 0,
+    "builds_native_tools_network_or_actions": 0,
+    "active_cycle_artifacts_opened": false,
+    "reads": "Current held test/source text, standard-library AST/JSON/hash and in-memory literal reversal only.",
+    "resources": "No build/native/process/simulator/FIFO or generated project resource allocated.",
+    "cleanup": "NOT_APPLICABLE; no cleanup commands or deletions performed.",
+    "sole_authorized_new_write": "remediation-runs/2026-09-08-continuation/reviews/hosted-native-budget-preservation-controls-independent-02.json",
+    "prior_report_preserved": true
+  },
+  "conclusion": {
+    "approval": "Final held regression source is approved for closing the exact focused packet. Current integration is c5601e2dbc64956fa70310add4f8f25841e2d6e82af2f2e09798d38f93f7c09a; every other held identity remains as recorded above.",
+    "execution": "Root286 results, descriptor reconciliation and cleanup receipts still required; no pass count asserted here.",
+    "next_freeze": "Commit reviewed source/control changes, regenerate/commit mechanical inventory, then create fresh source/control bindings before necessary native/combined qualification.",
+    "readiness": "NOT_READY",
+    "pending": "Strict L08 completion/protection, normal Debug libproc application-runtime proof, final frozen combined qualification and separate physical-device/Store/owner/legal obligations remain. No everything-works or Store-ready claim."
+  }
+}

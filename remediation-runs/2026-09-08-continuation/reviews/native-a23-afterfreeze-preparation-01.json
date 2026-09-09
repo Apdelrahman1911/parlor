@@ -1,0 +1,747 @@
+{
+  "schema_version": 1,
+  "kind": "NATIVE_A23_B24_POSTFREEZE_PREFLIGHT_AND_ONE_RUN_PREPARATION",
+  "author": "/root/native_ci",
+  "recorded_at": "2026-09-08T23:39:18.871909+00:00",
+  "status": "PREPARATION_ONLY_NOT_AUTHORIZATION",
+  "scope": {
+    "purpose": "Exact preparation for one new nonbuilding native-preflight, then a separately and independently authorized single native-evidence attempt containing serial A23/B24. This packet neither approves nor launches either workflow.",
+    "authorized_write": "remediation-runs/2026-09-08-continuation/reviews/native-a23-afterfreeze-preparation-01.json",
+    "coordinator": "/root exclusively owns builds/tests, cleanup lanes, GitHub API/Actions calls, inventory generation, commits and pushes.",
+    "independent_preparation_reviewer": "/root/ci_review; a separate held-packet review is required.",
+    "local_activity": "Read-only source/evidence/Git/stdlib JSON, AST and hash inspection, followed by this one additive JSON report. No project import, test discovery/execution, build, native tool, API call, dispatch, inventory generation, commit, push or resource deletion.",
+    "exclusions": [
+      "No C dependency-chain execution authorization.",
+      "No full D five-job dispatch authorization.",
+      "No non-app process-probe dispatch.",
+      "No Store publication/promotion, private credentials/signing, physical-device testing, identity change, force-push, merge, issue mutation or unrelated repository clone."
+    ]
+  },
+  "pending_fresh_bindings": {
+    "reviewed_source_control_commit": null,
+    "mechanical_inventory_only_commit": null,
+    "final_frozen_source_sha": null,
+    "final_frozen_source_tree": null,
+    "final_inventory_sha256": null,
+    "final_source_manifest_sha256": null,
+    "final_copy_source_manifest_sha256": null,
+    "fresh_hosted_binding_sha256": null,
+    "actual_focused_regression_receipt": null,
+    "independent_regression_postrun_review": null,
+    "independent_frozen_source_review": null,
+    "remote_equality_receipt": null,
+    "preflight_run_id": null,
+    "preflight_run_attempt": null,
+    "preflight_artifact_id": null,
+    "preflight_artifact_sha256": null,
+    "approved_l08_control_sha256": null,
+    "approved_normal_control_sha256": null,
+    "independent_fresh_preflight_review": null,
+    "single_native_attempt_authorization": null,
+    "native_run_id": null,
+    "native_run_attempt": null,
+    "actual_A23_result": null,
+    "actual_B24_result": null,
+    "actual_native_cleanup_result": null,
+    "not_placeholders_to_infer": "Every null requires separate fresh evidence and independent review where applicable. Do not substitute e511, an old preflight, a JSON-file digest or a partial control-row digest."
+  },
+  "inspected_source": {
+    "baseline_only": {
+      "branch": "fix/local-readiness-2026-09-07",
+      "head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+      "tree": "a88872673bd4cfc366236362f287c1db0a04a5cd",
+      "not_a_future_frozen_source": true
+    },
+    "held_changes": "Reviewed source/control working-tree changes and concurrent evidence exist. They are not committed/frozen by this report. Existing untracked evidence, old campaign locks and user work are preserved.",
+    "critical_current_inputs": [
+      {
+        "path": ".github/workflows/production-verification.yml",
+        "bytes": 41331,
+        "sha256": "84888fae00e1add37dd8f39c5a86a9600c2a95b5e3bca794133c3fc28147b46c"
+      },
+      {
+        "path": "scripts/ci/native_continuation.py",
+        "bytes": 64697,
+        "sha256": "e41186dc13dd94e851b449079d73b98cc4655bb6234ebcd76adc61942bb12feb"
+      },
+      {
+        "path": "scripts/ci/NATIVE_CONTINUATION.md",
+        "bytes": 18880,
+        "sha256": "70dfb3286a5a005f79bdfbfb116c179ef81a7e7054e337758de9dafb0539dbb8"
+      },
+      {
+        "path": "scripts/release/workflow_contract.py",
+        "bytes": 47465,
+        "sha256": "fa142d3bbfb3dd18e0f3dc9aba2f388a3ce634ee7fdd16612b2d9bbf2df1f429"
+      },
+      {
+        "path": "scripts/release/tests/test_native_continuation.py",
+        "bytes": 80771,
+        "sha256": "366cd58febbe2f91f7cc287af8942948dd15d5372de2cec750dcbde9f9539465"
+      },
+      {
+        "path": "scripts/release/tests/test_workflow_contract.py",
+        "bytes": 39774,
+        "sha256": "695a513b227d1aa3bde6adb49f886713ccdde4f684d9e8478b476cb0c6d8c4ae"
+      },
+      {
+        "path": "scripts/release/tests/test_native_process_probe.py",
+        "bytes": 43371,
+        "sha256": "513e45a9c4b46b8e58ef3058abc0da6148223bd5175d1b784a190b8153de9c8d"
+      },
+      {
+        "path": "scripts/generate_review_inventory.py",
+        "bytes": 16541,
+        "sha256": "c65ec66aa1ea18e91ddae521de4feda15a08ecffa024f06b8dbde0c1999c5a52"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/bind_source.py",
+        "bytes": 2983,
+        "sha256": "0954f5c24eb61c4f09c365efe6b3ab1fdb9f8342f86bad3e7654795464b53347"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/owned_lane.py",
+        "bytes": 10446,
+        "sha256": "949091403ac669429f962120e9873a09897a87bdcae10702720ede0c68342f03"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/copied_sources.py",
+        "bytes": 13079,
+        "sha256": "d52f4f7904d1481fee00796a1c0775ee3512934639dac45fee44704fa9b74e62"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/toolchain_profiles.py",
+        "bytes": 3358,
+        "sha256": "8adacaf4c59ed823aa088ecb70ad5c6c1e3f76e7ca3520d8abf0563341591313"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/simulator_lifecycle.py",
+        "bytes": 37085,
+        "sha256": "8d799475f1e92fc7943ca05b2d1e59655cbb8b0973031029440662059e65f248"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_native_command_failures.py",
+        "bytes": 35980,
+        "sha256": "ea2f6d7b9acbeede8d36596539813b86a1fe68e2d7b293cb5d995c5bcecf1223"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_simulator_lifecycle.py",
+        "bytes": 75257,
+        "sha256": "2f7c957e47aa63804866a71e3b5a8566342c6f7deca2f80e57f0cd42af1a5a46"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_simulator_lifecycle_integration.py",
+        "bytes": 98369,
+        "sha256": "c5601e2dbc64956fa70310add4f8f25841e2d6e82af2f2e09798d38f93f7c09a"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py",
+        "bytes": 24627,
+        "sha256": "613f255556f052d553a2e85dc7d84e4f137957f47732356449e22d6991f7fc53"
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+        "bytes": 12166,
+        "sha256": "aee9e30948813929393acedfaad5767fee2a47eb896a7eddd81db96208f14672"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+        "bytes": 87139,
+        "sha256": "9580071ecec4abc8ba375ca01e722eee4245f36132e6a5b8790f5d8bb8456687"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+        "bytes": 21848,
+        "sha256": "7d99de87082cda02d1e003ca8cad35835dec5fb34afd58c41ee3c9b7e30c8bdf"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+        "bytes": 34551,
+        "sha256": "9cbc54882717a4c441b51e953c883579976cdd1c299d9a57099a713c36823464"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+        "bytes": 13449,
+        "sha256": "399151fef8743c2553bf72f40affb07842a00f643dd34fed1aa3703c0efcec09"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_receipts.py",
+        "bytes": 18855,
+        "sha256": "db69c16b7d8abfb5998f92db886a8b8c77bcbb3e72fdd1d806f0ea3dd05f1fb6"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/a23-budget-preservation-draft-freeze-01.json",
+        "bytes": 5076,
+        "sha256": "f73bd3be82522dd4a3404bc68c4c0093d7af7b7b7f9d37bfd87a993c4aebb618"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+        "bytes": 59858,
+        "sha256": "5524d839202211270ec1c97776f0d350b9802ecf0d1c5e6eb3d28cd960629302"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_normal_launch_controls.py",
+        "bytes": 42919,
+        "sha256": "3da543bd92beecda95bdfbd53632a3a49ca95a6054f47a17dd03dff6460d6a5c"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+        "bytes": 2837,
+        "sha256": "0aa080c52ff3f30bb159bc59f728084ff92d6ad4f340b1ec051dfc55dd317f2e"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_regions.py",
+        "bytes": 3821,
+        "sha256": "4b87bf30ab492bf45554b2952ef52982343d5f16c66dce247412a45801b0287b"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_region.c.in",
+        "bytes": 3773,
+        "sha256": "d42aa932e5fe83defab173670aeea6f59507fa1b10029159efc04e1bbd67fdfc"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_kernel_image_regions.py",
+        "bytes": 12776,
+        "sha256": "92c6218d227ec93e50d5e6df7a21274e8f1b469ddf14839e51c050c1d0f196e4"
+      }
+    ],
+    "current_test_binding_scope": "Integration test c5601e2d/98,369 bytes is the final author-held inspection snapshot, source-reviewed in controls-independent-02. That is source-only approval; actual 286-control execution and its independently reconciled cleanup remain pending. No test result is inferred.",
+    "superseded_informational_snapshots": [
+      {
+        "sha256": "53e0c89ade0d977e7aaeff694c9de3f498bc34df806cf0d467374399b7ad7a2a",
+        "scope": "Explicitly provisional support snapshot in the unchanged composition source review, not its test validity approval."
+      },
+      {
+        "sha256": "667bcdf53c001ee3a098fda3f53a2eac0eea5457cee8b1ebc781bfd90a418c1d",
+        "scope": "Initial preparation snapshot; later fixture corrections were independently reviewed separately."
+      },
+      {
+        "sha256": "7c595f3de39cb2eb8e26afd3e24191fb47be72202a63a04d267e8136eeb9b0c6",
+        "scope": "Intermediate rehash observation only; not a dispatch control or final validity approval."
+      }
+    ],
+    "current_contract_references": [
+      {
+        "path": "AGENTS.md",
+        "bytes": 5834,
+        "sha256": "1e8cbc4f414819f47908e1a3be9f717792a0401fb4fb35b7272c053c00e2f609"
+      },
+      {
+        "path": "docs/PRODUCTION_ARCHITECTURE.md",
+        "bytes": 16988,
+        "sha256": "279e3287ab49d8889f9f9450a6a6769cc1dd9f72cbfa8c5ff559d2fa1884ca99"
+      },
+      {
+        "path": "docs/RELEASE_GATES.md",
+        "bytes": 9623,
+        "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+      },
+      {
+        "path": "docs/HOW_TO_ADD_A_GAME.md",
+        "bytes": 5627,
+        "sha256": "4e516e4340fff99813ad78d3508cfbdb55173d8e789fd12d7bd30978f3f8c356"
+      }
+    ],
+    "review_references": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-native-budget-admission-source-independent-01.json",
+        "bytes": 28096,
+        "sha256": "579614bf2bb71a8440acaa811e7b63a20d058576fe1579fb29bc940868e281a8"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-native-budget-admission-source-precision-01.json",
+        "bytes": 2312,
+        "sha256": "34c374048e169531a34380dda00f57ee2b84b8408054311bdabc277bfe627711"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-native-budget-preservation-author-01.json",
+        "bytes": 14351,
+        "sha256": "32a9f88799ef499cc2c1a6478d2df89096cab3017335960db7694b0c6c09ad5f"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-l08-exception-budget-source-independent-01.json",
+        "bytes": 24624,
+        "sha256": "ec35843efe93b07879ce581dde38f0f1add9abb183f9ac2e6a17bb2bb2f09e2e"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/a23-budget-preservation-composition-independent-01.json",
+        "bytes": 37708,
+        "sha256": "9c4d3345f00e50e5902f8501269119b2bc538ea54db289e72cfbd8d62d784055"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-preflight-after-lifecycle-freeze-independent-01.json",
+        "bytes": 14775,
+        "sha256": "d764aa4e6be1587009ae405d6b8b27f0013865160cc033665ea25b46e23f2b61"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-preflight-34273018746-independent-01.json",
+        "bytes": 21480,
+        "sha256": "fce841a029d8874d88d6aec24d772cd7ca2f34b0dc1495eb002285ac87e4875f"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-34275491965-postrun-independent-01.json",
+        "bytes": 34488,
+        "sha256": "85ca368c5ee2850cc8fdad3449eca87c1a057e5d3adbad89585e525d608adc31"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-native-budget-preservation-controls-independent-01.json",
+        "bytes": 47506,
+        "sha256": "d6b40bf7c2179e702a162caffe47a21a11eb4718f0ce92dce6c90e7eb46ce969"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-native-budget-preservation-controls-independent-02.json",
+        "bytes": 15580,
+        "sha256": "2ef2bd8ce85db1e900dedfce1ad283fbdbf7c3eb1da68e0e75a0c27081af54af"
+      }
+    ],
+    "review_precision": [
+      "Read budget-admission-source-independent-01 together with source-precision-01: decode() rejects duplicate keys, but json.loads permits nonfinite constants; exact clock schema/type/context checks reject those values before arithmetic. This is not strict nonfinite JSON decoding.",
+      "Regression source report02 precisely supersedes report01 only for the corrected integration-reader witnesses; neither is test execution or native runtime evidence.",
+      "The composition/pin/additive-freeze review remains source-only and its historical bytes are not rewritten.",
+      "Any relevant held-file change after this inspection requires affected source/test review and new frozen bindings; this packet is not portable authorization across later source revisions."
+    ]
+  },
+  "current_structural_control_expectations": {
+    "method": "Independent stdlib directory/JSON/literal-path enumeration and per-file hashing only; no project control-manifest import or invocation.",
+    "l08": {
+      "current_rows_excluding_pending_source_binding": 98,
+      "expected_total_with_one_fresh_source_binding": 99,
+      "sha256_of_compact_rows_without_pending_binding": "07aba26e7552599f121622a338f49166e7ede712a25074fc0349fb9eeca1c49a",
+      "not_an_approved_control_sha256": true
+    },
+    "normal": {
+      "current_rows_excluding_pending_source_binding": 93,
+      "expected_total_with_one_fresh_source_binding": 94,
+      "sha256_of_compact_rows_without_pending_binding": "d503eccdd9ef3f0232759bd144402069d34dcbfb1721506b550f012d51eb3b49",
+      "not_an_approved_control_sha256": true
+    },
+    "incomplete_hash_warning": "These compact-row hashes exclude the pending fresh hosted binding and are NOT approved control_sha256 values. Expected final row counts are structural checks, not permission to waive any new/different path.",
+    "generated_l08": {
+      "bytes": 88916,
+      "sha256": "dcb1f6ce32da3fc83b24bf2b2b868de68ac7fb35ca1539fc31140ce2589e60d7",
+      "composed_diff_bytes": 8850,
+      "composed_diff_sha256": "252859418eb7464186e44cec5d8bab489a8dbeb0952ff2a9802f8c841489ae61",
+      "scope": "Previously independently reconstructed in memory; exact driver/composer/draft inputs were rehashed unchanged. Fresh actual preflight must reproduce this rendered hash for these same held source bytes."
+    },
+    "final_gate": "Fresh schema3 binding must be the one additional row in each complete manifest. Verify every row and compact-list hash, including final support-test bytes, pinned driver, additive draft freeze, Foundation references, lifecycle helpers and normal libproc sources. Workflow/adapter and ordinary source identity must independently match the frozen commit."
+  },
+  "preserved_historical_evidence": {
+    "records": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34273018746/native-preflight.zip",
+        "bytes": 93951,
+        "sha256": "ef09855f3ac458341a810eb4bc6353d07996c2c8883d2f0a9bd0902ec6b1175d"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34273018746/native-cleanup.zip",
+        "bytes": 766,
+        "sha256": "2de989069a3fcb8cbafc6e6f1cfebe710799e35ee7ac3eb4ca2d5620fdbadb69"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34273018746/native-preflight/preflight.json",
+        "bytes": 2703,
+        "sha256": "6dcfd9a4bcf817f664dba411be5b38277d94bff4aa165621fcb960013f798751"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34273018746/native-preflight/ios-readiness-source-ci.json",
+        "bytes": 300363,
+        "sha256": "833e389a3b8b5cfe426e4788684c1919a4c5ce4d8faa3295b9da8c5440b52a07"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34273018746/native-preflight/l08-controls.json",
+        "bytes": 21423,
+        "sha256": "9ea444a129f54b872621b3f9becbb1bdc5649e60f20b014c9f66c082978780b6"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34273018746/native-preflight/normal-controls.json",
+        "bytes": 17395,
+        "sha256": "c57c53070bb79f201b28a8c4c344245bfa75f65e3b95d0085c65f6761de4c631"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34273018746/native-cleanup/parlor-native-34273018746-1-cleanup.json",
+        "bytes": 977,
+        "sha256": "fd714590b322280b845ce41223369ccea196659c762c2f3f3c64ec2ca72cffa5"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34273018746/run.json",
+        "bytes": 12686,
+        "sha256": "38851521da513131a88dd6b312a5f6c58e4a73b5686664831c2755bd36beee49"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34273018746/attempt.json",
+        "bytes": 12708,
+        "sha256": "030f7db29e8b4aaa3d805029a3c9ed3c43d21fd736e99247c36724e84cfc13fa"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34273018746/workflow.json",
+        "bytes": 533,
+        "sha256": "8345984073768616fd6aff6682c95051f186881c5fa4727b120c80e019841ece"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34273018746/jobs.json",
+        "bytes": 10561,
+        "sha256": "9b1a6acae865a32d88dbf4a6e3ef381430a3b4eefd164457fa81e639503cdd97"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34273018746/artifacts.json",
+        "bytes": 1483,
+        "sha256": "dbfc3bcd56c5c52462c41ad5992cbbfcb2be0e705906d3a18fee4cdc771518f0"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34273018746/download-receipt.json",
+        "bytes": 2597,
+        "sha256": "c1f091d357fbc71b52f851e20a21d73693fec5f5f8a8ec0a9e4dd2f30ef8193a"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34273018746/run.log",
+        "bytes": 64097,
+        "sha256": "28ef34b68427fb3e5e113a81ba5f0824d2bebb4c8449b068ec8759145f3923c0"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-03/request.json",
+        "bytes": 2811,
+        "sha256": "dc6adffb84c91a79edc9d115086f6878538b611b763647c2c3b7211c13612612"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-03/dispatch-result.json",
+        "bytes": 74,
+        "sha256": "e0b1ae394e8ad4cc6eb5356f93ca203a0ec50cff6eec46237122e02c7c71942c"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-03/run-association.json",
+        "bytes": 414,
+        "sha256": "e4c836c2f6c79be1e70b6ab31b9531a78993333f259c202e79ee7f44efb7ec5f"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-03/prior-runs.raw.json-stream",
+        "bytes": 126721,
+        "sha256": "36137b9df45bec916e0cd28d0b19ae3a89bfa0278d2bd00f48f81cc6ad3bcedd"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-03/prior-runs.pages.json",
+        "bytes": 153478,
+        "sha256": "9b2351fcb0c9f42c14435849ed5e86da408fbbe336138a370b2e03182c359853"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-03/runs-after-dispatch.raw.json-stream",
+        "bytes": 139400,
+        "sha256": "8d09b35f8f83adeb5917e10dd3389741299d48df3026e560b2279e1649664a41"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-03/runs-after-dispatch.pages.json",
+        "bytes": 168830,
+        "sha256": "c0277b5c13f36d70f702d1f53f308486f11069bf4a9fac59a53abfc339c666fa"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-03/request.json",
+        "bytes": 1485,
+        "sha256": "3389c597001c3d1ad525b8f521eb3981b5cbaf1b21b15719ac73973ce4b8b1be"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-03/run-association.json",
+        "bytes": 415,
+        "sha256": "07c05de7d21842b359f748515ca6df4922c4a6d77d6ae65cdde69cf1b3de171a"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-03/prior-runs.json",
+        "bytes": 2000,
+        "sha256": "b74e8403ae13716fb484c22b3dacff2f22fa96d1462e19da7cfd750134448a05"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-03/runs-after-dispatch.json",
+        "bytes": 2212,
+        "sha256": "62169df956312e0bee7f9f0c2a2f30461725796111a530cd7ebc4abf7bdeb632"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-03-preparation-failure.json",
+        "bytes": 1464,
+        "sha256": "c50339374284170f800687540a349245da74c349e33ed721b47d4a2c6e3b9e4e"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/receipt.json",
+        "bytes": 425426,
+        "sha256": "2d8168608c71fbc4bbed03cc23f595eafc95473e7e4fa3ec1277f61961ed18a3"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/continuation.json",
+        "bytes": 9741,
+        "sha256": "92d0128851378a445ab8ecccc779539adfa4b58a8c6a93172b00c990c5cbe07d"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/download-receipt.json",
+        "bytes": 12564,
+        "sha256": "c0d6a30522d0cd643d59cd258c639bf96f531d5b9bada0cc3f27f7413ccc4fbb"
+      }
+    ],
+    "prior_preflight": {
+      "run_id": 34273018746,
+      "attempt": 1,
+      "head_sha": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+      "status": "SUCCESS_NONBUILDING_HISTORICAL_ONLY_CONSUMED",
+      "workflow_id": 335554528,
+      "repository_id": 1247560518,
+      "ios_job_id": 102219109665,
+      "native_preflight_artifact_id": 10074652767,
+      "native_cleanup_artifact_id": 10074653879,
+      "personally_reopened": "Original preflight and cleanup ZIPs, member inventory/CRC, extracted-byte equality, API metadata/digests, requests and association receipts were reopened. Exactly four preflight files; prior cleanup PASS with native_runs={} and no native build.",
+      "not_reusable": "The newer source/control changes require a fresh same-freeze preflight. Old successful preflight did not call the new first-step clock API, allocate an application simulator or execute Parlor/libproc."
+    },
+    "A21": {
+      "run_id": 34275491965,
+      "attempt": 1,
+      "cycle": "ios-readiness-21",
+      "head_sha": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+      "runtime_evidence_status": "FAIL",
+      "cleanup_status": "FAIL",
+      "observations": "Four UIKit methods passed before the whole Xcode command timed out during the unfinished combined functional test. Eight instrumented A launches are not normal B repetitions. General raw postbuild collection was skipped; Foundation/readiness fallback alone did not complete application provenance or preservation.",
+      "postbuild_evidence_preserved": false,
+      "unknown_holders": 1,
+      "temporary_directory_removed": false,
+      "source_and_controls": "Reconciled unchanged. Copied-source inspection was blocked; that is neither successful copy verification nor proof of mutation.",
+      "strict_protection": "Unresolved metadata failures remain. Do not weaken comparisons or infer universal Simulator incapability from this platform observation.",
+      "immutable_review": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-34275491965-postrun-independent-01.json",
+        "bytes": 34488,
+        "sha256": "85ca368c5ee2850cc8fdad3449eca87c1a057e5d3adbad89585e525d608adc31"
+      }
+    },
+    "B22": {
+      "cycle": "ios-readiness-22",
+      "status": "NOT_RUN",
+      "actual_Parlor_libproc_runtime_queries": 0
+    },
+    "old_failures": "Preserve A17/B18, A19/B20, A21/B22, earlier source bindings, failed cleanup receipts, prior failed preparation and archived build/report directories. Later controls or cleanup do not repair their historical results.",
+    "cli_portability_failure": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-03-preparation-failure.json",
+        "bytes": 1464,
+        "sha256": "c50339374284170f800687540a349245da74c349e33ed721b47d4a2c6e3b9e4e"
+      },
+      "cause": "Retained installed gh2.45.0 rejected --slurp before dispatch.",
+      "next_path": "Use the already reviewed gh api --paginate path without --slurp, preserve its concatenated JSON stream, and fully decode all pages using stdlib JSONDecoder.raw_decode. Do not silently keep only the first page.",
+      "filename_precision": "native-evidence-dispatch-03 uses prior-runs.raw.json-stream/prior-runs.pages.json and runs-after-dispatch.raw.json-stream/runs-after-dispatch.pages.json; it has no prior-runs.json/runs-after-dispatch.json. The separate preflight03 directory uses the latter names."
+    }
+  },
+  "frozen_source_gate": [
+    "Finish the exact reviewed focused-control packet and required affected local regression scopes in the root-owned lane; retain actual commands, bound inputs, individual outcomes/skips and all cleanup receipts. Independently review results, not merely source test counts.",
+    "Commit reviewed source/control/documentation/evidence changes first. Root alone regenerates the mechanical inventory, makes the separate inventory-only commit, and runs the inventory freshness check at that final SHA.",
+    "Independent freeze review must establish exact final commit/tree, intended diff, full history, source/control hashes, fresh expected inventory and no pending completed task-owned tracked changes. Inventory pass is not native runtime evidence.",
+    "Push normally to the continuation branch and retain an actual remote ls-remote equality observation. A changed remote/source is investigated, never reset or force-pushed.",
+    "Do not edit relevant source/controls during the preflight/native pair. Any correction requires re-review, new commits/inventory freeze and new hosted preflight. Do not treat an evidence-only later commit as an earlier run's execution SHA.",
+    "Local preserved unrelated untracked files/old locks are not deleted to imitate hosted cleanliness. Focused hosted run() requires an entirely clean fresh checkout and absent new binding, N/build-lane.lock and A23/B24 destinations."
+  ],
+  "coordinator_command_templates": {
+    "executed_by_this_author": false,
+    "substitution_rules": "Commands below are inert preparation text. Root supplies explicit values only from independently accepted fresh evidence. FROZEN_SHA must not be populated by blindly accepting moving HEAD. Fresh exclusive record directories, noclobber output and request/exit/status receipts are required; never overwrite earlier attempts.",
+    "frozen_source_checks": [
+      "REPO=Apdelrahman1911/parlor; BRANCH=fix/local-readiness-2026-09-07",
+      "FROZEN_SHA=<independently-reviewed-final-40-hex-SHA>; FROZEN_TREE=<independently-reviewed-final-40-hex-tree>",
+      "git status --short; git rev-parse HEAD HEAD^{tree}; git branch --show-current; git rev-parse --is-shallow-repository",
+      "test \"$(git rev-parse HEAD)\" = \"$FROZEN_SHA\"; test \"$(git rev-parse HEAD^{tree})\" = \"$FROZEN_TREE\"; test \"$(git branch --show-current)\" = \"$BRANCH\"; test \"$(git rev-parse --is-shallow-repository)\" = false",
+      "test -z \"$(git status --porcelain=v1 --untracked-files=no)\"",
+      "python3 -B scripts/generate_review_inventory.py --check",
+      "git ls-remote origin refs/heads/fix/local-readiness-2026-09-07"
+    ],
+    "before_each_dispatch": [
+      "gh api \"repos/$REPO/actions/workflows/production-verification.yml\"",
+      "gh api --paginate \"repos/$REPO/actions/workflows/production-verification.yml/runs?branch=$BRANCH&per_page=100\""
+    ],
+    "pagination_validation": "Capture exact stdout as *.raw.json-stream and normalized complete pages separately. JSONDecoder.raw_decode must consume every nonwhitespace byte; reject malformed/duplicate-key/nonfinite API input, nonobject pages, inconsistent or nonintegral total_count, duplicate run IDs, and incomplete total_count coverage. Require each run's exact branch/workflow/repository identity and historical workflow335554528/repository1247560518 continuity against fresh API metadata. Do not add an event filter: all same-branch workflow events are relevant. Only statuses completed are terminal for no-overlap admission; queued/in_progress/requested/waiting/pending/action_required or unknown/malformed statuses deny dispatch. If pagination changes during capture or cannot prove completeness, inspect and recapture the read-only GET; do not dispatch from partial history.",
+    "concurrency_guard": "Workflow concurrency is production-verification-${github.ref}, cancel-in-progress:true. Root is the sole dispatcher. Require no nonterminal conflicting same-ref full/focused/probe run immediately before each dispatch. Never cancel another owner's run. No new dispatch merely to retry or cancel an uncertain previous request.",
+    "preflight_once": "gh workflow run production-verification.yml --repo \"$REPO\" --ref \"$BRANCH\" -f verification_scope=native-preflight -f frozen_source_sha=\"$FROZEN_SHA\"",
+    "preflight_input_guard": "Only these two dispatch inputs; omit every native-evidence and probe approval input. This template is not current permission to dispatch.",
+    "after_dispatch_association": "Retain request timestamp, exact inputs, before-run IDs, command exit/stdout/stderr, complete after-run pages, and a unique association receipt. Require exactly one new eligible workflow_dispatch run absent from the prior complete set, created no earlier than the recorded request, matching repository/workflow/path/branch/explicit head SHA and initial attempt1. CLI exit0 alone is not association proof. Ambiguous/no association requires investigation, not blind resubmission.",
+    "independent_pause": "Collect and independently review the actual fresh preflight and cleanup evidence before considering native-evidence authorization. Recheck remote/frozen source and no-overlap immediately before the separately approved attempt.",
+    "native_once": "gh workflow run production-verification.yml --repo \"$REPO\" --ref \"$BRANCH\" -f verification_scope=native-evidence -f frozen_source_sha=\"$FROZEN_SHA\" -f preflight_run_id=\"$PREFLIGHT_RUN_ID\" -f preflight_run_attempt=\"$PREFLIGHT_ATTEMPT\" -f preflight_artifact_id=\"$PREFLIGHT_ARTIFACT_ID\" -f preflight_artifact_sha256=\"$PREFLIGHT_ZIP_SHA256\" -f approved_l08_control_sha256=\"$APPROVED_L08_CONTROL_SHA256\" -f approved_normal_control_sha256=\"$APPROVED_NORMAL_CONTROL_SHA256\"",
+    "native_input_guard": "Same frozen SHA as the separate successful preflight, plus exactly its six freshly independently approved identity/digest/control inputs. approved_* values are manifest control_sha256, not SHA256 of the JSON files. No approved_probe_control_sha256 input.",
+    "optional_responsible_monitor": "gh run watch \"$RUN_ID\" --repo \"$REPO\" --interval 60 --exit-status",
+    "monitor_limit": "Preserve a nonzero watcher/workflow result as evidence; do not convert it into automatic retry. No overlapping expensive runs. An evidence-only/partial native run can legitimately conclude failure."
+  },
+  "external_collection_and_reconciliation": {
+    "commands_not_executed": [
+      "gh api \"repos/$REPO/actions/runs/$RUN_ID\"",
+      "gh api \"repos/$REPO/actions/runs/$RUN_ID/attempts/$ATTEMPT\"",
+      "gh api \"repos/$REPO/actions/workflows/production-verification.yml\"",
+      "gh api --paginate \"repos/$REPO/actions/runs/$RUN_ID/attempts/$ATTEMPT/jobs?per_page=100\"",
+      "gh api --paginate \"repos/$REPO/actions/runs/$RUN_ID/artifacts?per_page=100\"",
+      "gh api \"repos/$REPO/actions/artifacts/$ARTIFACT_ID\"",
+      "gh api \"repos/$REPO/actions/artifacts/$ARTIFACT_ID/zip\"",
+      "gh api \"repos/$REPO/actions/runs/$RUN_ID/attempts/$ATTEMPT/logs\""
+    ],
+    "preservation": "Root captures immutable API JSON/page streams, actual original artifact ZIPs and attempt logs, command exit/error receipts, download sizes/SHA256, request and association records. Use fresh owned N/actions/<run-id>/ and dispatch receipt locations. Retain no tokens, private signing data or signed redirect URLs; do not enable verbose/header credential logging.",
+    "artifact_identity": "Match exact producer and attempt, repository/head-repository IDs, workflow ID/path/state, head SHA/branch, artifact workflow_run ownership, unique expected name/ID, not-expired state, reported byte size and API sha256 digest to actual downloaded bytes. Reconcile cleanup upload ID/digest and workflow upload outputs to the same artifact. Original ZIP digest is distinct from every extracted member/file/control-list digest.",
+    "archive_checks": "Before extraction/acceptance, validate complete unique bounded member inventory, safe relative paths, no traversal/absolute/backslash/symlink/special/encrypted members, CRC and every retained byte hash. Preflight is exactly four nonempty regular members, ZIP and aggregate uncompressed limit8MiB, each member<=4MiB; inspect the cleanup ZIP separately. Reconcile native bundle manifest and bounded raw artifact members rather than copying whole XCResult/DerivedData.",
+    "job_checks": "Collect all paginated jobs for the exact attempt. Focused modes run only existing ios job; other four jobs and all full/probe-only steps must be skipped. Inspect named steps and their conditions/timestamps, not old numeric step/log filenames: the new first-step clock shifts ordinals. A job compilation/skip/cache hit is not a newly executed runtime test.",
+    "failed_collection": "Preserve any failed API/download/association/extraction receipt and partial owned bytes without treating them as accepted evidence. Re-fetch only a justified read-only collection failure after inspection; no automatic native rerun."
+  },
+  "fresh_preflight_acceptance": {
+    "status": "PENDING_ACTUAL_FROZEN_PREFLIGHT_AND_INDEPENDENT_REVIEW",
+    "required": [
+      "Producer and attempt API records are completed success, event workflow_dispatch, attempt1 and explicitly approved frozen SHA/branch/workflow/repository; focused ios job successful, all other four jobs skipped. No app build, XCTest, libproc query, non-app diagnostic or full build step ran.",
+      "The exact four-member native-preflight-<run>-<attempt> ZIP and native-cleanup-<run>-<attempt> ZIP are independently downloaded and digest/ownership/CRC/byte reconciled. preflight.json is schema1 NATIVE_CONTINUATION_PREFLIGHT / REVIEW_REQUIRED_NOT_RUNTIME_EVIDENCE.",
+      "Official source binding is schema3 REVIEW_REQUIRED_BOUND at the actual hosted absolute checkout path; preflight context/root and source identity exactly match the frozen commit/tree, branch, empty tracked status/diff and individual ordinary/copy-source manifest rows. Recompute counts and hashes; do not reuse e511's828/753 row counts as future values.",
+      "Both complete control manifests include exactly one fresh binding row with its actual byte hash and all required final controls. For the held structure expect99 L08 and94 normal rows; investigate any difference. Independently hash every row and compact JSON list, and verify the composed runner hash against held/reviewed source.",
+      "Actual qualified platform must be Darwin arm64, Xcode26.3/17C529, qualified simulator/device SDK26.2 and available exact iOS26.2 runtime, iPhone17Pro device type, required developer/SDK/JDK21/Android public paths. Inspect every field, including runtime build. The later execution job must reobserve and equal the entire preflight toolchain object, including paths; mismatch fails closed, with no toolchain substitution.",
+      "Cleanup PASS follows successful artifact upload, removes only owned binding/staging, leaves clean checkout, native_runs={} and no fabricated native Gradle stop/runtime evidence. Check artifact-upload custody and exact removal receipts.",
+      "Preflight skips Start focused native job clock. It does not exercise CLOCK_MONOTONIC_RAW availability; the first actual evidence step must independently succeed. No preflight pass is clock/runtime authorization.",
+      "A different reviewer records exact fresh preflight run/attempt/artifact/ZIP digest, source/control values and any limitations before a separate one-attempt native authorization is issued."
+    ]
+  },
+  "held_workflow_and_adapter_contract": {
+    "workflow": ".github/workflows/production-verification.yml",
+    "focused_job": "ios on macos-15; actual Darwin/arm64/toolchain guards remain mandatory.",
+    "source": "Full-history focused checkout with persist-credentials:false; context requires explicit frozen_source_sha == GITHUB_SHA == GITHUB_WORKFLOW_SHA == GitHEAD, correct repo/branch/workflow/job/run/attempt. Native child environment excludes PARLOR_ACTIONS_READ_TOKEN.",
+    "permissions": "contents:read and actions:read only for focused ios; no Store/private signing/publication.",
+    "clean_allocation": "Fully clean hosted checkout; absent fresh binding, N/build-lane.lock and both new canonical cycle destinations. No existing simulator/copy adoption. Legacy failed campaign locks/evidence in the coordinator checkout remain untouched.",
+    "source_scope_limit": "Full mode does not enforce frozen_source_sha; separate D must reconcile actual source itself. This focused preparation does not approve full mode.",
+    "cycles": [
+      {
+        "label": "A",
+        "cycle": "ios-readiness-23",
+        "runner": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+        "args": [
+          "--simulator-signing=adhoc",
+          "--toolchain=qualified-xcode-26.3",
+          "--simulator-lifecycle=direct-owned-v1"
+        ]
+      },
+      {
+        "label": "B",
+        "cycle": "ios-readiness-24",
+        "runner": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+        "args": [
+          "--simulator-signing=adhoc",
+          "--toolchain=qualified-xcode-26.3",
+          "--simulator-lifecycle=direct-owned-v1",
+          "--image-observer=libproc"
+        ]
+      }
+    ],
+    "serial_rule": "A then B only, independently owned fresh simulator and copy per lane. The strict default legacy-apphost mode is not silently changed; explicit direct-owned-v1 uses its journaled lifecycle authority while original Xcode/Gradle/app/provenance ownership guards remain.",
+    "clock": {
+      "evidence_only_job_ceiling_minutes": 240,
+      "preflight_and_full_minutes": 120,
+      "probe_minutes": 10,
+      "first_step_before_checkout": "/usr/bin/python3 time.clock_gettime_ns(time.CLOCK_MONOTONIC_RAW) -> PARLOR_NATIVE_JOB_CLOCK",
+      "exact_token_fields": [
+        "clock",
+        "start_ns",
+        "run_id",
+        "run_attempt",
+        "job",
+        "head_sha"
+      ],
+      "consumer": "Same kernel API; no time.monotonic(), wall-clock or unavailable-clock fallback.",
+      "per_child_wait_seconds": 6000,
+      "per_child_finalizer_grace_seconds": 600,
+      "finish_reserve_seconds": 600,
+      "minimum_remaining_before_each_lane_seconds": 7200,
+      "comparison": "Use nanoseconds against14400s ceiling; each lane needs full7200s remaining, including boundary equality. Admission never shortens waits. Missing/malformed/duplicate-key/nonintegral/cross-context/future/expired/unavailable clocks deny before child/run ownership reset.",
+      "B_denial": "Durable native_admissions.normal status DENIED_NOT_RUN; no B child, runner log or canonical receipt/destination created by admission. Independently established A cleanup safety is not reset merely by denied B.",
+      "limitations": "Clock starts at first step, not runner/job startup; unmeasured overhead is excluded.600s finish reserve is nominal. Finite ceiling/admission is not a worst-case duration guarantee for all setup, process scans, extraction, upload and cleanup."
+    },
+    "nested_budgets": {
+      "A_qualified": {
+        "whole_xcode_seconds": 5400,
+        "default_test_seconds": 3000,
+        "maximum_test_seconds": 3300
+      },
+      "A_local_unchanged": {
+        "whole_xcode_seconds": 2700,
+        "default_test_seconds": 1200,
+        "maximum_test_seconds": 1500
+      },
+      "B_unchanged": {
+        "whole_xcode_seconds": 2700,
+        "default_test_seconds": 120,
+        "maximum_test_seconds": 240
+      },
+      "A_raw_collector_seconds": 420,
+      "raw_command_allowance_seconds": 120,
+      "raw_new_command_admission_seconds": 130,
+      "direct_lifecycle_finalization_seconds": 480,
+      "interpretation": "Budgets are recorded in actual receipt/argv/command timeout fields. No XCTest split/filter reduction/retry, production timing change or sum-of-budgets completion promise. Original AppHost ps15/lsof30 and direct lifecycle full allowances remain intact."
+    }
+  },
+  "actual_A_to_B_and_runtime_checklist": {
+    "independent_safety_gates": [
+      "Admission first; unchanged6000/600 direct child wait/finalizer grace. Signals forward to the exact unreaped child; no SIGKILL/group/name/PID-adoption bypass.",
+      "Copy complete bounded raw canonical native evidence before parsing receipt, including failures/malformed receipts. Partial preservation denies deletion and another cycle.",
+      "Require actual cleanup/source/control/copy equality, both immediate/final isolated Gradle stops after build, zero unknown holders/owned workers/FIFO errors and nonvacuous direct-lifecycle records.",
+      "Reconcile exact lifecycle journal bytes, identity/custody/source/control/nonce, issued-create and bounded command-result ordering, durable build barrier, fresh Shutdown, successful exact UUID delete and metadata+directory absence. Printed UUID or intent alone cannot authorize retirement.",
+      "Independently reject outer/inner timeout, cancellation, negative exit, deferred signal or malformed primary/secondary error/marker structures even if cleanup itself is safe.",
+      "Only ordinary noninterrupted strict/assertion failure may leave B eligible, and only when every independent preservation/ownership/source/cleanup/mode/profile guard passes plus B has a full admitted budget. Safe cleanup never becomes runtime success.",
+      "No B after unsafe/interrupted A; record honest NOT_RUN reason. No automatic replacement lane/run on failure."
+    ],
+    "A_required_observations": [
+      "Distinguish actual UI, functional-storage, retained-host and strict protection results from framework linkage or harness controls.",
+      "Complete all13 functional boots /20 operations /26 protection comparisons and all3 retained-host fixtures /42 operations, plus required Settings/OS/lifecycle/image paths; verify exact identities/counters/scenario membership from original records, not aggregate labels.",
+      "Retain single-tap zero-before/one-after Home-card callback and exact operation outcomes. Missing downstream boots/host rows are unfinished, not skipped successes.",
+      "Reconcile FileManager and URL protection metadata, Foundation control/callback/path/support observations and application artifact/probe binding. Preserve missing/contradictory/unsupported observations and exact strict failures; no universal Simulator waiver.",
+      "The functional companion/composed collection cannot establish original strict L08 PASS; A status is at most PARTIALLY_VERIFIED under these controls. Strict metadata failure and functional success, if separately demonstrated, must remain distinct."
+    ],
+    "B_required_real_runtime": [
+      "Normal-source Debug copy must actually execute eight XCTest iterations with relaunch, fixed EN, at least10seconds after Home. Retain all summary/tests/test-details and markers; no cached compilation or instrumented A launch is credited.",
+      "A separate ninth public launch supports external image observation only, never an eighth UI repetition substitute.",
+      "Compile current arm64 C helper against actual host libproc; retain region-helper-compile.log and helper hash. ABI/return-size and actual requested kernel queries must execute, not only tests or compile.",
+      "Retain real kernel-region-XX.json for every selected image,3..16: kernel byte count equals native sizeof, exact requested region start, executable nonwritable zero-offset bounded region and exact kernel vnode path/device/inode/file-size, with target audit/lifetime checks before/after every query.",
+      "Reconcile separate-external-image-provenance.json, built/installed inventories, Mach-O UUID/dwarfdump/hash/package-notices, source/copy/control bindings, sample parser prerequisite and cleanup. libproc has no vmmap fallback.",
+      "Existing187 synthetic controls are not an application query. Successful observation does not prove mapped-page hashes, entire address-space enumeration, atomic PID reservation, injection capability, physical-device behavior or Store readiness."
+    ],
+    "workflow_verdict": "A strict partial/failure can legitimately make native-evidence fail/NOT_READY even if A functional paths and B real provenance later finish safely. Reconcile component status, execution completion, preservation and cleanup independently."
+  },
+  "retention_and_cleanup": {
+    "hosted_staging": "$RUNNER_TEMP/parlor-native-<run>-<attempt>/bundle/",
+    "hosted_cleanup_receipt": "$RUNNER_TEMP/parlor-native-<run>-<attempt>-cleanup.json",
+    "artifacts": {
+      "main": "native-preflight-<run>-<attempt> or native-evidence-<run>-<attempt>",
+      "cleanup": "native-cleanup-<run>-<attempt>",
+      "retention_days": 14,
+      "missing_files": "error"
+    },
+    "raw_bounds": {
+      "max_directories": 256,
+      "max_files": 4096,
+      "max_each_file_bytes": 67108864,
+      "max_total_bytes": 268435456
+    },
+    "custody": "Canonical same-UID nonsymlink single-link stable regular files, bounded traversal, exact byte manifests; preserve before interpreting success. No arbitrary container/screenshot/attachment/wholeXCResult/DerivedData export.",
+    "expected_native_bundle": [
+      "continuation.json",
+      "reviewed-preflight/preflight.json",
+      "reviewed-preflight/ios-readiness-source-ci.json",
+      "reviewed-preflight/l08-controls.json",
+      "reviewed-preflight/normal-controls.json",
+      "preflight-api-binding.json",
+      "A23/B24 raw receipt/log/transform diff/manifests/lifecycle journal and allowlisted runtime evidence if the lane actually starts",
+      "failure.json when emitted"
+    ],
+    "A_retention_barrier": "After every actual Xcode attempt, immediate isolated Gradle stop precedes the one-shot raw collector on success/exception. Original Xcode exception remains sticky. Allowlisted XCResult summary/tests, owned-container records, native failures, Foundation callback and per-stage missing/error outcomes must survive. Both structured XCResult extraction commands, complete available-container retention and successful durable acknowledgement are required before destruction; Foundation acknowledgement is conjunctive, not a replacement.",
+    "failed_acknowledgment": "Missing/failed general or Foundation preservation/ack save blocks simulator destruction and temporary copy/DerivedData/XCResult deletion. Worker/FIFO/final-holder retirement attempts still run. Unknown actual holders are not adopted or falsely cleared by raw copying.",
+    "exact_finalization": "Original immediate/final isolated Gradle stops, reaped direct handles, exact PID/start/FIFO custody, no unknown holders, source/control/copied-input equality, owned simulator shutdown/delete and metadata/directory absence, owned temporary/copy/DerivedData outputs removal all remain required. Preserve failures before cleanup. Root must not run a broad global cleaner to convert failure into PASS.",
+    "post_upload": "Only successful nonempty upload with exact artifact ID/digest precedes custody/hash-checked removal of exact canonical A/B evidence, new binding/lock and adapter staging. Failed upload/unsafe cleanup/custody mismatch retains the last local evidence. Verify cleanup artifact independently. Ephemeral runner termination is not proof those resources were retired.",
+    "caches": "Global dependency/distribution caches are never deleted. Any missing allowed hosted cache directories created by the adapter are recorded; preflight starts no build and fabricates no Gradle stops.",
+    "report_rule": "Report actual cleanup failures/skips independently of test/runtime verdicts, retain compact logs and all immutable failed receipts; do not delete archived evidence build/ directories."
+  },
+  "postrun_required_work": [
+    "Independently review actual fresh A23/B24 component/runtime and cleanup evidence at its real SHA, including any NOT_RUN reason, before considering another native attempt. This report grants no retry.",
+    "Reconcile any remaining strict protection or functional/host failure with original source/evidence. Do not weaken validators or replace missing application proof with harness success.",
+    "Root separately completes fresh affected C source-bound chain and final D five-job qualification under their own reviewed frozen-source contracts; this packet does not imply either is done.",
+    "Update handoff with exact executed commits/runs/artifact identities/tests/failures/skips/cleanup and nonexecution limits. Commit/push reviewed completed changes normally and confirm actual remote SHA. Later evidence delivery needs explicit scope reconciliation, not relocation of old execution.",
+    "Physical-device/LAN/accessibility evidence, Store identity/credentials/signing/publication operations and separate owner/legal/editorial/privacy approvals remain excluded and unwaived."
+  ],
+  "author_activity_and_cleanup": {
+    "execution": "NO_BUILD_TEST_API_DISPATCH_OR_NATIVE_EXECUTION",
+    "read_only_reopened": "Current workflow/adapter, driver/composer/draft pins, normal/libproc controls, preparation/dispatch/API/raw native evidence and independent reports. Final73 source/evidence/report identities are covered across the72-file rehash plus final regression02 report read.",
+    "inspection_error": "One earlier read-only hash inventory guessed nonexistent native-evidence-dispatch-03/prior-runs.json and raised FileNotFoundError before any write. Directory inspection corrected only the requested filename list to the real raw-stream/pages files. This is not a test, API or dispatch failure and no historical evidence was rewritten.",
+    "only_written": "remediation-runs/2026-09-08-continuation/reviews/native-a23-afterfreeze-preparation-01.json",
+    "resource_allocation": "No project outputs, build worker, simulator, FIFO, native temporary copy or cache allocation.",
+    "cleanup_status": "NOT_APPLICABLE_READ_ONLY_PREPARATION_PLUS_ADDITIVE_REPORT",
+    "gradle_stop_or_clean": "Not run by this author; no build/test cycle was started. Root's actual cycles retain their independent mandatory cleanup evidence."
+  },
+  "readiness": {
+    "verdict": "NOT_READY",
+    "actual_native_authorization": false,
+    "reason": "A21 FAIL/cleanupFAIL and B22 NOT_RUN remain. New source/regression controls, freeze, actual preflight and any A23/B24 execution require separate completed evidence; C and full D remain separately governed. This preparation is not proof everything works or that Parlor is Store-ready."
+  }
+}

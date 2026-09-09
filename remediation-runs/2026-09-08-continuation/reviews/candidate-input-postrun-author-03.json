@@ -1,0 +1,486 @@
+{
+  "schema_version": 1,
+  "kind": "C03_ACTUAL_CANDIDATE_POSTRUN_AUTHOR_RECONCILIATION",
+  "author": "/root/dependency_chain",
+  "started_at": "2026-09-08T20:31:07.262285+00:00",
+  "recorded_at": "2026-09-08T20:31:08.594733+00:00",
+  "status": "PASS_SCOPED_C03_CHAIN_AT_E511_AUTHOR_RECONCILED_PENDING_INDEPENDENT_POSTRUN_REVIEW",
+  "source": {
+    "commit": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+    "tree": "a88872673bd4cfc366236362f287c1db0a04a5cd",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "6e313ce760d840aa08b617229c03263ce90eda715cb6c442cbe9738045a63e8e"
+  },
+  "binding": {
+    "path": "remediation-runs/2026-09-08-continuation/candidate-input-binding-03.json",
+    "sha256": "f2cb3be23bd20b5a2ff2bc1411561bc291c74cb04a0970a1a274e5db7f81bd01",
+    "bytes": 1517
+  },
+  "independent_pre_execution_approval": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-independent-03.json",
+    "sha256": "19e67054888e1ed633125e93f88d8630d920d208333ba57e2e4e778958bd346d",
+    "bytes": 26424
+  },
+  "author_preflight": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-author-inspection-03.json",
+    "sha256": "5742297c0d1e82c0d846bf95e226bd78e49f87b8a6d97cdd17ef29d25cfd0ada",
+    "bytes": 20550
+  },
+  "coupled_receipts": [
+    {
+      "role": "outer",
+      "status": "PASS",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/receipt.json",
+        "sha256": "753d4aa0c45152344b65cb77eba9ec1eebc11ad744eecbe71173aea2461e7063",
+        "bytes": 305572
+      }
+    },
+    {
+      "role": "consumer",
+      "status": "PASS_SCOPED_CANDIDATE_INPUTS",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/candidate-input-verification.json",
+        "sha256": "298168f6a8dcacce81d0a8fee13ce832d08c68a6ac5cdd858c97c2cf059a1b85",
+        "bytes": 8078
+      }
+    },
+    {
+      "role": "adapter",
+      "status": "PASS_SCOPED_CANDIDATE_INPUT_EXECUTION",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/candidate-prerequisites.json",
+        "sha256": "69d4ae97bc28526327090f9a105e9f3dc2e6bfabe3bf143d5b1bf2ac94db5cf5",
+        "bytes": 9943
+      }
+    },
+    {
+      "role": "base",
+      "status": "PASS_OWNED_SCHEMA_PREREQUISITES",
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/schema-base-prerequisites.json",
+        "sha256": "c96b86014a895d81b0af413fb968dc476df321a4d236971b960aa588554bdc9b",
+        "bytes": 28590
+      }
+    }
+  ],
+  "actual_command": [
+    "/usr/bin/python3",
+    "-B",
+    "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py",
+    "remediation-runs/2026-09-08-continuation/candidate-input-binding-03.json",
+    "f2cb3be23bd20b5a2ff2bc1411561bc291c74cb04a0970a1a274e5db7f81bd01"
+  ],
+  "raw_log": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/gradle.log",
+    "sha256": "1366576e7c5a743d9620e0d1849edc379e1dcc369335c2c0176c80d87d0a20b8",
+    "bytes": 289
+  },
+  "all_three_logged_nested_successes_match_receipts": true,
+  "source_and_controls": {
+    "current_source_manifest_entries": 828,
+    "all_current_source_bytes_match": true,
+    "all_three_cycles_before_after_equal_current_frozen_source": true,
+    "current_runner_equals_all_cycle_runner_snapshots": true,
+    "binding_exact_hash_current": true,
+    "base_six_control_pins_before_after_current_equal": true,
+    "all_preflight_fixed_control_pins_current": 11,
+    "tracked_worktree_clean": true
+  },
+  "producer_receipts": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-03/receipt.json",
+      "sha256": "2a5462f3092a9313cc32e4fe86a80cdbcdf2cfdb502467fca72fc47d7c426571",
+      "bytes": 306150
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-03/receipt.json",
+      "sha256": "2385794da9181199763be4d47c7b1ef2b6c589bd8c0807d83d52d649ea33a428",
+      "bytes": 305621
+    }
+  ],
+  "candidate_results": {
+    "graphs": [
+      {
+        "graph": "androidRelease",
+        "graph_sha256": "4b1ce6b841519c163b40ae3854af10caa8ef35c932ba0fa6443adfd88b070db4",
+        "sbom_sha256": "4dbc3b0826725cca1dc68fcb955bba6e56407551c0da5895204abe9195404f35",
+        "components": 239,
+        "artifacts": 129,
+        "status": "PASS"
+      },
+      {
+        "graph": "iosArm64",
+        "graph_sha256": "d029615f46439f218b432a682606e8ba205cd2bc34e04b8966b3416eb997649e",
+        "sbom_sha256": "af5d7679895880e29a03a41adf1d67d82ffe65f2ea9c41ac6228ef3c10ff3f4c",
+        "components": 167,
+        "artifacts": 81,
+        "status": "PASS"
+      },
+      {
+        "graph": "iosSimulatorArm64",
+        "graph_sha256": "3560d22e3af1e0f2a4e702289da253dc56eb551a5001237ce8023202a5b4c2bc",
+        "sbom_sha256": "ef0334af827f7310a015fdcd0d960fa14e3780a02d5544ad115e3f549f946b44",
+        "components": 167,
+        "artifacts": 81,
+        "status": "PASS"
+      },
+      {
+        "graph": "iosX64",
+        "graph_sha256": "396db269a60beabe29faf49eecc9f72a4ceeeffbf051e4d93eb782e04ce33558",
+        "sbom_sha256": "9198d252a56324234fb7429962ad66b48c1fc8d7a874b98a23769f680233da4d",
+        "components": 167,
+        "artifacts": 81,
+        "status": "PASS"
+      }
+    ],
+    "maven_components": 456,
+    "publisher_poms": 459,
+    "metadata_bytes": 1507794,
+    "unresolved": [],
+    "source_notice": {
+      "status": "PASS",
+      "resource_count": 26,
+      "total_bytes": 99515,
+      "manifest_sha256": "4b501223b3841017477a226515d3758bc60848fe00d579fac3152a81928d6406",
+      "catalog_sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "catalog_raw_sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "catalog_hash_policy": "CRLF_TO_LF"
+    },
+    "consumed_file_count": 511,
+    "consumed_manifest_sha256": "19512563acee499b327948c1f564797cfa90ec180354cb4cedeb75979e9e3eb6",
+    "consumed_total_bytes": 5567850,
+    "independent_closure_recomputed": true,
+    "closure_scope": "Sorted compact JSON [relative path,sha256,bytes] freshly reconstructed from binding/consumer/lane/2producer receipts/exporter/renderer/5graph files/all report+metadata files/3schemas/verification XML/notices validator/manifest/catalog/build/all26resources. Count and digest derived from actual new bytes, not copied from C02."
+  },
+  "schema": {
+    "status": "Four actual C03 candidate BOMs passed official offline CycloneDX validation through coordinator-run reviewed consumer",
+    "jsonschema_version": "4.25.1",
+    "referencing_version": "0.36.2",
+    "formats": {
+      "registered": [
+        "date",
+        "email",
+        "idn-email",
+        "ipv4",
+        "ipv6",
+        "iri",
+        "iri-reference",
+        "regex",
+        "time",
+        "uuid"
+      ],
+      "encountered": [
+        "iri-reference"
+      ],
+      "missing": []
+    },
+    "schemas": {
+      "bom-1.6.schema.json": "3e92dddbc30cf7f6a02b80f0942b1a4cfd4fb1c26f1dfc4310afa9d613cafb93",
+      "spdx.schema.json": "baa9d3bd1ed57b6751b0887edead6b5063ff53ff7429cf85d476c6c94af0166e",
+      "jsf-0.82.schema.json": "8bae002c25e723db7ee1f26afde680ae1a2b1a8f6b4b4b0fd65dc3becb090aae"
+    },
+    "no_missing_encountered_format": true,
+    "author_executed_schema_engine": false
+  },
+  "base_prerequisites": {
+    "mode": "candidate",
+    "status": "PASS_OWNED_SCHEMA_PREREQUISITES",
+    "inner_exit_code": 0,
+    "versions": {
+      "jsonschema": "4.25.1",
+      "referencing": "0.36.2",
+      "attrs": "25.3.0",
+      "jsonschema-specifications": "2025.4.1",
+      "rpds-py": "0.27.1",
+      "typing-extensions": "4.15.0"
+    },
+    "packages": [
+      {
+        "distribution": "jsonschema",
+        "version": "4.25.1",
+        "bytes": 90040,
+        "sha256": "3fba0169e345c7175110351d456342c364814cfcf3b964ba4587f22915230a63",
+        "members": 42,
+        "expanded_bytes": 475270,
+        "member_ledger_sha256": "dd1266e10b6535be4d63a9e86c084977fead488355726a47295240205477be7b"
+      },
+      {
+        "distribution": "referencing",
+        "version": "0.36.2",
+        "bytes": 26775,
+        "sha256": "e8699adbbf8b5c7de96d8ffa0eb5c158b3beafce084968e2ea8bb08c6794dcd0",
+        "members": 19,
+        "expanded_bytes": 115431,
+        "member_ledger_sha256": "e7b36da69b3b643fa83388e9017e816adda8f4a32c4b934595724a3250b0e4df"
+      },
+      {
+        "distribution": "attrs",
+        "version": "25.3.0",
+        "bytes": 63815,
+        "sha256": "427318ce031701fea540783410126f03899a97ffc6f61596ad581ac2e40e3bc3",
+        "members": 35,
+        "expanded_bytes": 219126,
+        "member_ledger_sha256": "8be2c5e364e65aeb1f21931bee4f192b1f6960c690e5051979f0c0ea1d306aad"
+      },
+      {
+        "distribution": "jsonschema-specifications",
+        "version": "2025.4.1",
+        "bytes": 18437,
+        "sha256": "4653bffbd6584f7de83a67e0d620ef16900b390ddc7939d56684d6c81e33f1af",
+        "members": 28,
+        "expanded_bytes": 47261,
+        "member_ledger_sha256": "bf9b8193bfdcd0e3e8a3e65e74116e87c75df3f573f81c98b04e767e4daad36f"
+      },
+      {
+        "distribution": "rpds-py",
+        "version": "0.27.1",
+        "bytes": 386883,
+        "sha256": "466bfe65bd932da36ff279ddd92de56b042f2266d752719beb97b08526268ec5",
+        "members": 8,
+        "expanded_bytes": 1046710,
+        "member_ledger_sha256": "697c5ff8394a644831ac96871591b4459dbc439d57d0c36a8eb37007e08cd55a"
+      },
+      {
+        "distribution": "typing-extensions",
+        "version": "4.15.0",
+        "bytes": 44614,
+        "sha256": "f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548",
+        "members": 5,
+        "expanded_bytes": 178133,
+        "member_ledger_sha256": "904902592e917247263bca8d345c3f320d266568f655d8707a0210f68c925b76"
+      }
+    ],
+    "downloaded_bytes": 630564,
+    "expanded_bytes": 2081931,
+    "member_rows": 137,
+    "all_package_source_and_official_research_identity_and_member_rows_match": true,
+    "imported_modules": {
+      "jsonschema": {
+        "path": "jsonschema/__init__.py",
+        "sha256": "a7e470e134bfd0e3c76482722260d6b1d5a099de823d61cc5cbabb06e4314c67"
+      },
+      "referencing": {
+        "path": "referencing/__init__.py",
+        "sha256": "e4864a5da007fc55b20894646939f55dca6d2df83d72f78b6fdbb99d853124ab"
+      },
+      "attr": {
+        "path": "attr/__init__.py",
+        "sha256": "7ce608bedd5e192a90adee2e092dec256299d26c00b82f140faa9b6b9392f7f5"
+      },
+      "attrs": {
+        "path": "attrs/__init__.py",
+        "sha256": "a9e4096783b4f327334a7f38d2ff5b60e699c9113cd56b158be402ad8de4ac25"
+      },
+      "jsonschema_specifications": {
+        "path": "jsonschema_specifications/__init__.py",
+        "sha256": "aa84c1d83298eeabcdac684c3c7ea0b6600944b8a599543e7c56704faaf2ab0d"
+      },
+      "rpds": {
+        "path": "rpds/__init__.py",
+        "sha256": "c373205d6ee5a530880b0d0a5dbc36d105f9ef7fe46ec12758878cb0202e82f3"
+      },
+      "typing_extensions": {
+        "path": "typing_extensions.py",
+        "sha256": "433d11d170d3a24d2eb065ebc1bfe848cea7e3d7ce68567ab52bea2d4c2f7ed8"
+      },
+      "rpds.rpds": {
+        "path": "rpds/rpds.cpython-312-x86_64-linux-gnu.so",
+        "sha256": "1a5acf297faad922c1335dc00cc2ae6e24dd907f77576bef0e200bd07e0f0e5c"
+      }
+    },
+    "all8_imported_module_hashes_match_recorded_extracted_members": true,
+    "native_rpds_member_present": true,
+    "research": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/schema-base-prerequisites-research-01.json",
+      "sha256": "54c9f96db0ead50008cab5c8c960c0540351922f949757e03dc91b8c5328b13e",
+      "bytes": 55180
+    },
+    "base_package_cleanup": true
+  },
+  "optional_prerequisites": {
+    "status": "PASS_SCOPED_CANDIDATE_INPUT_EXECUTION",
+    "consumer_exit_code": 0,
+    "versions": {
+      "jsonschema": "4.25.1",
+      "referencing": "0.36.2",
+      "rfc3987-syntax": "1.1.0",
+      "lark": "1.2.2"
+    },
+    "packages": [
+      {
+        "distribution": "rfc3987-syntax",
+        "version": "1.1.0",
+        "bytes": 8046,
+        "sha256": "6c3d97604e4c5ce9f714898e05401a0445a641cfa276432b0a648c80856f6a3f",
+        "members": 9,
+        "expanded_bytes": 18424,
+        "member_ledger_sha256": "d755408c62289047d31750fb7e2d0e765709937f3e13b0acb1094d3d2729cacf"
+      },
+      {
+        "distribution": "lark",
+        "version": "1.2.2",
+        "bytes": 111036,
+        "sha256": "c2276486b02f0f1b90be155f2c8ba4a8e194d42775786db622faccd652d8e80c",
+        "members": 46,
+        "expanded_bytes": 350066,
+        "member_ledger_sha256": "22aac0857831066f6242f0f41ea47e766352d1d8d68cdda8971a493a36e1201a"
+      }
+    ],
+    "downloaded_bytes": 119082,
+    "expanded_bytes": 368490,
+    "member_rows": 55,
+    "current_url_size_sha_match_bound_source": true,
+    "current_member_rows_match_prior_fixed_tool_byte_ledger": true,
+    "prior_tool_ledger": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-02/candidate-prerequisites.json",
+      "sha256": "19b71c5964dea1719c720fd21f9b8ed3757b549d35ae322fb24e88ffdd4272f5",
+      "bytes": 9943
+    },
+    "comparison_is_tool_bytes_not_reused_execution": true,
+    "explicit_optional_import_hash_map_present": false,
+    "owned_module_origin_enforced_by_bound_helper": true,
+    "ephemeral_parser_cleanup": true
+  },
+  "chronology": {
+    "nested_times": [
+      "2026-09-08T20:24:05.856075+00:00",
+      "2026-09-08T20:24:06.794602+00:00",
+      "2026-09-08T20:24:08.310360+00:00",
+      "2026-09-08T20:24:27.153137+00:00",
+      "2026-09-08T20:24:27.155231+00:00",
+      "2026-09-08T20:24:27.178423+00:00",
+      "2026-09-08T20:24:27.315628+00:00",
+      "2026-09-08T20:24:27.964541+00:00",
+      "2026-09-08T20:24:28.044916+00:00"
+    ],
+    "approval_precedes_actual_candidate": true,
+    "producer_cleanup_precedes_next_cycle": true
+  },
+  "cleanup": {
+    "stop": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    "stop_exit_code": 0,
+    "base_package_cleanup": true,
+    "ephemeral_parser_cleanup": true,
+    "remaining_owned_workers": [],
+    "remaining_artifact_workers": [],
+    "remaining_outputs": [],
+    "retained_outputs": [],
+    "cleanup_errors": [],
+    "deferred_signals": [],
+    "current_exact_absence": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-03/scratch",
+        "method": "exact lstat",
+        "result": "ENOENT"
+      },
+      {
+        "path": "build",
+        "method": "exact lstat",
+        "result": "ENOENT"
+      },
+      {
+        "path": "build-logic/convention/build",
+        "method": "exact lstat",
+        "result": "ENOENT"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-03/scratch",
+        "method": "exact lstat",
+        "result": "ENOENT"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/scratch",
+        "method": "exact lstat",
+        "result": "ENOENT"
+      }
+    ],
+    "no_author_cleanup_actions": true
+  },
+  "original_candidate_evidence": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/receipt.json",
+      "sha256": "753d4aa0c45152344b65cb77eba9ec1eebc11ad744eecbe71173aea2461e7063",
+      "bytes": 305572
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/candidate-input-verification.json",
+      "sha256": "298168f6a8dcacce81d0a8fee13ce832d08c68a6ac5cdd858c97c2cf059a1b85",
+      "bytes": 8078
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/candidate-prerequisites.json",
+      "sha256": "69d4ae97bc28526327090f9a105e9f3dc2e6bfabe3bf143d5b1bf2ac94db5cf5",
+      "bytes": 9943
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/schema-base-prerequisites.json",
+      "sha256": "c96b86014a895d81b0af413fb968dc476df321a4d236971b960aa588554bdc9b",
+      "bytes": 28590
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/gradle.log",
+      "sha256": "1366576e7c5a743d9620e0d1849edc379e1dcc369335c2c0176c80d87d0a20b8",
+      "bytes": 289
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/java-toolchain.log",
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+      "bytes": 2026
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/javac-toolchain.log",
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755",
+      "bytes": 14
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/artifact-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-03/test-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    }
+  ],
+  "preservation": {
+    "all_read_original_evidence_and_current_controls_reopened_unchanged": true,
+    "all_observed_directory_inventories_unchanged": true
+  },
+  "historical_boundary": "C01 remains source25b1 and C02 remains source5f35. Their original receipts and any historical failed receipts are unchanged; this additive C03 record binds only actual e511 execution.",
+  "independent_postrun_review": {
+    "reviewer": "/root/fixture_review",
+    "status": "REQUIRED_PENDING",
+    "must_reopen_actual_raw_receipts_and_consumed_closure": true
+  },
+  "activity": {
+    "tests": 0,
+    "builds": 0,
+    "candidate_runs": 0,
+    "schema_engine_runs": 0,
+    "network_downloads": 0,
+    "workflow_dispatches": 0,
+    "source_control_edits": 0,
+    "cleanup_actions": 0,
+    "commits": 0,
+    "project_imports": "Only hash-verified ordinary lane module identity()/runner_identity(False); AST literals and retained JSON/raw hashes for all other code and prerequisites",
+    "new_report_only": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-postrun-author-03.json"
+  },
+  "limits": [
+    "Author reconciliation is not independent approval. Different-agent postrun review is required.",
+    "Actual schema/consumer and package execution occurred in root-owned candidate03; this author performed read-only evidence reconciliation, not reruns.",
+    "Optional helper enforces owned imports but does not retain a separate optional-import hash map; no fabricated map is added.",
+    "Fixed-tool ledger comparison is not reused C02 candidate execution.",
+    "Resolved-input/source-notice integrity only; not final-binary completeness, application runtime, combined qualification, physical-device, Store-operation, or owner/legal approval."
+  ]
+}

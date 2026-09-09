@@ -1,0 +1,500 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_HELD_NATIVE_BUDGET_CLOCK_AND_INNER_ADMISSION_SOURCE_REVIEW",
+  "reviewer": "/root/ci_review",
+  "implementation_author": "/root/ci_workflow",
+  "recorded_at": "2026-09-08T22:50:17.135Z",
+  "status": "APPROVED_EXACT_FOUR_HELD_FILES_SOURCE_ONLY_NOT_TEST_EXECUTION_OR_DISPATCH_APPROVAL",
+  "branch": "fix/local-readiness-2026-09-07",
+  "baseline_commit": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+  "baseline_tree": "a88872673bd4cfc366236362f287c1db0a04a5cd",
+  "held_is_uncommitted_source": true,
+  "owned_scope": "Adapter, production-verification workflow, workflow-contract validator and native-continuation documentation only. Companion implementation is independently owned by portability_review; composer and regression validity require their separate exact reviews.",
+  "reviewed_files": [
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "held": {
+        "bytes": 64697,
+        "sha256": "e41186dc13dd94e851b449079d73b98cc4655bb6234ebcd76adc61942bb12feb"
+      },
+      "baseline": {
+        "commit": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "bytes": 57512,
+        "sha256": "3c974b93e202359c12aa2647984b624024986676eb058ace9ecdf4e7663200bb"
+      },
+      "diff": {
+        "bytes": 10814,
+        "sha256": "e73d197b2cd8e2b7f3613cc422ca060e855822a0ee3428d87503f23b1f06318e"
+      }
+    },
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "held": {
+        "bytes": 41331,
+        "sha256": "84888fae00e1add37dd8f39c5a86a9600c2a95b5e3bca794133c3fc28147b46c"
+      },
+      "baseline": {
+        "commit": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "bytes": 40414,
+        "sha256": "d347a4cd3e22181b37e5aec91203d3aa37779cb7bb7976fb74ed01cc29ba328d"
+      },
+      "diff": {
+        "bytes": 1783,
+        "sha256": "d28d1480d4b8b77e71067309bc7f9dc7d3cd2d7d2e2813bdc4e7b9a6499c6c0f"
+      }
+    },
+    {
+      "path": "scripts/release/workflow_contract.py",
+      "held": {
+        "bytes": 47465,
+        "sha256": "fa142d3bbfb3dd18e0f3dc9aba2f388a3ce634ee7fdd16612b2d9bbf2df1f429"
+      },
+      "baseline": {
+        "commit": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "bytes": 46085,
+        "sha256": "30357f2ac67567f65a5e3af316b44497a6a08b6faf370f56161f642f6e5788a9"
+      },
+      "diff": {
+        "bytes": 2591,
+        "sha256": "3de7cacfddd5322a6876d582bba716143c59367af0c785de2a1e53c54be5fad2"
+      }
+    },
+    {
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "held": {
+        "bytes": 18880,
+        "sha256": "70dfb3286a5a005f79bdfbfb116c179ef81a7e7054e337758de9dafb0539dbb8"
+      },
+      "baseline": {
+        "commit": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "bytes": 14826,
+        "sha256": "b5ae13ab4f6158d3d5d067445286098f1aab72b177591bdb0e5252a1e2d06709"
+      },
+      "diff": {
+        "bytes": 7773,
+        "sha256": "99ba2131d629db1d4ac73ef36a7d5b89d4943ea3cc629bcf8b8729ddc8972c6e"
+      }
+    }
+  ],
+  "findings": [],
+  "resolved_prehold_findings": [
+    {
+      "id": "CLOCK-EXACT-01",
+      "finding": "Earlier validator tested clock-script substring inclusion, which could accept an appended/injected step body while retaining the declared clock script.",
+      "resolution": "Held validator compares the entire if/shell/run body for exact equality except surrounding newlines, requires this to be the first iOS step and requires one clock-output assignment. Literal body independently matched the actual workflow.",
+      "test_boundary": "Different regression author was asked for appended/injected-script and key/order mutations; final regression approval and execution are separate, not claimed by this source report."
+    },
+    {
+      "id": "INNER-SIGNAL-01",
+      "finding": "An externally signaled command may return a negative exit without raising in its wrapper or emitting a primary_error; checking only timeout/cancellation exception fields would miss it.",
+      "resolution": "Held inner classifier rejects negative or malformed command exits; run_native also rejects negative or malformed outer exits. Positive ordinary XCTest65 remains eligible only with every independent original cleanup/source/control/journal guard.",
+      "test_boundary": "Different test reviewer identified a provisional confounded oracle where negative exit short-circuited type/code checking. Separate positive-exit type/code controls are being finalized; this report does not certify unheld regression bytes."
+    }
+  ],
+  "source_inspection": {
+    "method": "Reopened full current four-file diffs, surrounding source, actual historical evidence, official clock documentation retained by root, and companion interface. Standard-library hashing/JSON/AST only; no project code imported or executed.",
+    "adapter_ast": {
+      "changed_existing_methods": [
+        "Continuation.invoke_native",
+        "Continuation.run_native"
+      ],
+      "added_methods": [
+        "Continuation.admit_native",
+        "inner_execution_completed",
+        "native_job_clock_ns"
+      ],
+      "critical_unchanged_methods": [
+        "cleanup_is_safe",
+        "direct_lifecycle_is_safe",
+        "lifecycle_journal_matches",
+        "effective_scope",
+        "main",
+        "context",
+        "validate_package",
+        "validate_producer",
+        "Continuation.__init__",
+        "Continuation.fetch_preflight",
+        "Continuation.preflight",
+        "Continuation.cleanup",
+        "Continuation.evidence"
+      ],
+      "python39_syntax_parse_only": true,
+      "constants": {
+        "CYCLES": {
+          "l08": "ios-readiness-23",
+          "normal": "ios-readiness-24"
+        },
+        "NATIVE_WAIT_SECONDS": 6000,
+        "NATIVE_GRACE_SECONDS": 600,
+        "NATIVE_FINISH_RESERVE_SECONDS": 600,
+        "JOB_CLOCK_ENV": "PARLOR_NATIVE_JOB_CLOCK"
+      }
+    },
+    "workflow": {
+      "exact_baseline_restored_by_only_clock_block_and_timeout_reversal": true,
+      "new_step_exact_contract_literal": true,
+      "first_ios_step": true,
+      "clock_producer_python39_parse_only": true,
+      "clock_api_identical_explicit_kernel": "time.clock_gettime_ns(time.CLOCK_MONOTONIC_RAW)",
+      "job_minutes_truth_table": {
+        "full": 120,
+        "native-preflight": 120,
+        "native-evidence": 240,
+        "native-process-probe": 10,
+        "non_dispatch_default": 120
+      }
+    },
+    "whitespace": "git diff --check for the exact four files exited0 with no diagnostics, including a final held-byte recheck.",
+    "shipping_source_boundary": "These four files are controls/documentation only. Host-only authority, exact protocol4.2, deterministic seed, privacy/snapshot/content validation, Doctor behavior and Whodunit Leave timing are not edited. Existing full/probe/preflight/artifact/Store guards were preserved byte-for-byte outside the exact clock step and conditional job timeout change."
+  },
+  "budget_and_clock": {
+    "cumulative_A_interface": {
+      "qualified": {
+        "whole_command_seconds": 5400,
+        "default_test_execution_seconds": 3000,
+        "maximum_test_execution_seconds": 3300
+      },
+      "local_unchanged": {
+        "whole_command_seconds": 2700,
+        "default_test_execution_seconds": 1200,
+        "maximum_test_execution_seconds": 1500
+      },
+      "normal_B_unchanged": {
+        "whole_command_seconds": 2700,
+        "default_test_execution_seconds": 120,
+        "maximum_test_execution_seconds": 240
+      },
+      "receipt_fields": [
+        "xcode_time_budget",
+        "commands[xcodebuild].timeout_seconds",
+        "actual Xcode allowance argv"
+      ],
+      "review_boundary": "Companion implementation independently approved by portability_review at exact9580071e; these are cumulative build-plus-test limits, not separate build and test allocations. No test split/filter/retry introduced."
+    },
+    "job_minutes": {
+      "full": 120,
+      "native-preflight": 120,
+      "native-evidence": 240,
+      "native-process-probe": 10,
+      "non_dispatch_default": 120
+    },
+    "native_children": {
+      "wait_seconds": 6000,
+      "finalizer_grace_seconds": 600,
+      "finish_reserve_seconds": 600,
+      "lifecycle_cleanup_seconds_unchanged": 480
+    },
+    "clock": {
+      "producer_and_consumer": "time.clock_gettime_ns(time.CLOCK_MONOTONIC_RAW)",
+      "output": "PARLOR_NATIVE_JOB_CLOCK",
+      "exact_keys": [
+        "clock",
+        "start_ns",
+        "run_id",
+        "run_attempt",
+        "job",
+        "head_sha"
+      ],
+      "position": "First iOS step before checkout; conditional on workflow_dispatch and native-evidence only.",
+      "validation": "Bounded1024-character exact JSON object; strict duplicate/nonfinite decoding, positive bounded exact-int start, exact-int current context run/attempt, ios job and current source SHA, exact clock ID, available positive kernel value, no future origin, and full remaining allowance.",
+      "compatibility_evidence": {
+        "source": "https://docs.python.org/3/library/time.html",
+        "html": {
+          "path": "remediation-runs/2026-09-08-continuation/reviews/a23-clock-research-01/python-time.html",
+          "bytes": 128613,
+          "sha256": "0b6df7794ee5eca796ad97b55f12d1e73f1145a6e1861b1cf3c44deaf2f1c904"
+        },
+        "receipt": {
+          "path": "remediation-runs/2026-09-08-continuation/reviews/a23-clock-research-01/receipt.json",
+          "bytes": 1938,
+          "sha256": "53a3cab728d63bfcca54d8065e5d8b9941816bffaaf46042da71f2817fd4a5cf"
+        },
+        "verified_sections": {
+          "time.monotonic": "id=\"time.monotonic\"> time. monotonic ( ) → float ¶ Return the value (in fractional seconds) of a monotonic clock, i.e. a clock that cannot go backwards. The clock is not affected by system clock updates. The reference point of the returned value is undefined, so that only the difference between the results of two calls is valid. Clock: On Windows, call QueryPerformanceCounter() and QueryPerformanceFrequency() . On macOS, call mach_absolute_time() and mach_timebase_info() . On HP-UX, call gethrtime() . Call clock_gettime(CLOCK_HIGHRES) if available. Otherwise, call clock_gettime(CLOCK_MONOTONIC) . Use monotonic_ns() to avoid the precision loss caused by the float type. Added in version 3.3. Changed in version 3.5: The function is now always available and the clock is now the same for all processes. Changed in version 3.10: On macOS, the clock is now the same for all processes.",
+          "time.clock_gettime_ns": "id=\"time.clock_gettime_ns\"> time. clock_gettime_ns ( clk_id , / ) → int ¶ Similar to clock_gettime() but return time as nanoseconds. Availability : Unix. Added in version 3.7.",
+          "time.CLOCK_MONOTONIC_RAW": "id=\"time.CLOCK_MONOTONIC_RAW\"> time. CLOCK_MONOTONIC_RAW ¶ Similar to CLOCK_MONOTONIC , but provides access to a raw hardware-based time that is not subject to NTP adjustments. Availability : Linux >= 2.6.28, macOS >= 10.12. Added in version 3.3."
+        },
+        "limit": "Official current documentation compatibility rationale only; actual hosted Python3.9 callable/constant availability still must be observed fail-closed before native execution."
+      },
+      "limitations": [
+        "Official Python documentation establishes rationale: older macOS Python monotonic is not promised common across processes until3.10; explicit clock_gettime_ns is Unix since3.7 and CLOCK_MONOTONIC_RAW is documented on macOS>=10.12.",
+        "No hosted interpreter/API call was performed by this reviewer. Actual absence of the constant/API must fail closed in the first clock step or adapter, not silently fall back.",
+        "Token begins at the first workflow step, not job startup. The600-second reserve is nominal and does not certify all setup, global ps/lsof scans, preservation, filesystem IO, uploads or finalizers fit."
+      ]
+    },
+    "admission": {
+      "arithmetic": {
+        "job_seconds": 14400,
+        "full_child_plus_grace_plus_reserve": 7200,
+        "new_lane_admitted_only_at_or_before_elapsed_seconds": 7200,
+        "comparison": "integer nanoseconds, remaining>=7200e9; printed remaining is floor only",
+        "exception_cleanup_safety": "Admission before run entry/cleanup_safe reset; current A canonical cleanup state preserved on B denial"
+      },
+      "behavior": [
+        "One separate admission before each A23/B24 child; full6000+600+600=7200 seconds required from the nominal14400-second clock. Timeouts are never shortened to fit.",
+        "Admission uses integer nanoseconds; flooring only affects the displayed remaining_seconds. Equality at7200 seconds is admitted; less is denied.",
+        "Missing, malformed, cross-context, future, unavailable or insufficient clocks record DENIED_NOT_RUN before rethrow.",
+        "Admission occurs before creating the run entry and before cleanup_safe=False. A deniedB therefore creates no B child/canonical receipt and does not erase safely established A cleanup or uploaded-custody eligibility.",
+        "Native cycle reuse/source/control/ownership checks and actual safe-A cleanup gate remain independent."
+      ]
+    }
+  },
+  "inner_admission_review": {
+    "purpose": "Separate negative admission guard for interruption/timeout; not runtime success, complete testcase/scenario evidence, or a replacement cleanup authority.",
+    "accepted_error_shapes": [
+      "exact {type,message}",
+      "exact {type,code}",
+      "corresponding secondary shape plus bounded nonempty stage"
+    ],
+    "rejected": [
+      "Malformed type/message/code/stage, nonlist or oversized secondary errors, malformed command/marker shapes and negative/noninteger observed command exits.",
+      "TimeoutExpired, TimeoutError, KeyboardInterrupt, SystemExit, CancelledError, NativeInterrupted.",
+      "Direct lifecycle RuntimeError with command-timeout or cancelled code, and exact closed direct-simulator-command-timeout/direct-simulator-cancelled messages.",
+      "True/malformed interruption or timeout markers, nonempty/malformed deferred signals, mismatched interrupted_or_failed/primary_error shape.",
+      "Timeout/cancellation in top error, command primary_error, command_persistence_error, command_cleanup_error, secondary_errors, postbuild_secondary_errors or raw_postbuild_preservation.errors."
+    ],
+    "compatibility": [
+      "Current AppHost type/message and direct-lifecycle type/code forms were reopened. The companion's fixed command-persistence, staged postbuild-finalization and raw-preservation diagnostics fit the reviewed schema.",
+      "Recognized raw preservation status is not itself runtime completion. Missing operations or ordinary strict/assertion failures never become PASS through this helper.",
+      "Ordinary non-timeout RuntimeError/AssertionError or positive XCTest65 is not automatically interruption. Only separate exact cleanup/source/control/bindings plus lifecycle journal/custody guards can permit B.",
+      "Existing cleanup_is_safe, direct_lifecycle_is_safe, lifecycle_journal_matches and context/package/producer/evidence/cleanup methods are AST-unchanged. Safely retired timeout still cannot startB."
+    ]
+  },
+  "companion_interface": {
+    "driver": {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "bytes": 87139,
+      "sha256": "9580071ecec4abc8ba375ca01e722eee4245f36132e6a5b8790f5d8bb8456687"
+    },
+    "independent_report": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-l08-exception-budget-source-independent-01.json",
+      "bytes": 24624,
+      "sha256": "ec35843efe93b07879ce581dde38f0f1add9abb183f9ac2e6a17bb2bb2f09e2e",
+      "status": "APPROVED_EXACT_HELD_COMPANION_SOURCE_AND_HOOK_INTERFACE_NOT_TESTED_NOT_EXECUTION_OR_DISPATCH_APPROVAL",
+      "reviewer": "/root/portability_review"
+    },
+    "checked_fields": [
+      "xcode_time_budget explicit closed profile selector and actual command timeout metadata",
+      "raw_postbuild_preservation recognized status and staged {type,message} errors",
+      "postbuild_secondary_errors staged fixed error messages",
+      "command_persistence_error exact {type,message}",
+      "postbuild_evidence_preserved remains false on collection/save failure and Foundation remains conjunctive"
+    ],
+    "limits": "Companion420-second collector is admission/accounting, not an asynchronous hard cutoff for filesystem or owner finalization. Existing120-second commands require130 seconds before admission. No compound duration guarantee. This interface review does not approve unrendered composer hooks/pins or replace portability_review's underlying implementation inspection."
+  },
+  "actual_historical_basis": {
+    "proposal": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a21-qualified-budget-proposal-01.json",
+      "bytes": 14395,
+      "sha256": "434a4dcbccfa56852ac99f7393804ef049987040a5ffc894f80c32291776c660",
+      "status": "PROPOSAL_ONLY_NOT_SOURCE_REVIEW_EXECUTION_OR_DISPATCH_APPROVAL",
+      "reviewer": null
+    },
+    "independent_proposal_audit": {
+      "proposal_sha256": "434a4dcbccfa56852ac99f7393804ef049987040a5ffc894f80c32291776c660",
+      "proposal_bytes": 14395,
+      "verified_historical_evidence_bindings": 6,
+      "verified_frozen_source_bindings": 7,
+      "actual_A21_pre_first_suite": 2061.720921,
+      "old_remaining_s": 638.2790789999999,
+      "new_remaining_s": 3338.279079,
+      "new_remaining_after_default3000_s": 338.2790789999999,
+      "new_remaining_after_maximum3300_s": 38.27907899999991,
+      "ci_arithmetic": {
+        "two_6000_plus_600_children_s": 13200,
+        "job240min_s": 14400,
+        "nominal_reserve_s": 1200
+      },
+      "historical16_xcode_seconds": 1119.842416,
+      "historical15_xcode_seconds": 297.213697,
+      "scope": "READ_ONLY_PROPOSAL_EVIDENCE_AND_FINITE_ARITHMETIC_RECONCILIATION_NOT_BUDGET_EXECUTION_OR_DISPATCH_APPROVAL",
+      "reviewer_diagnostic": "One initial read-only scratch assertion expected a normal15 literal ending seconds; actual log uses elapsed -- Testing started completed. Matcher corrected against retained raw line. No evidence/source edits or project test failure."
+    },
+    "actual_postrun_report": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-34275491965-postrun-independent-01.json",
+      "bytes": 34488,
+      "sha256": "85ca368c5ee2850cc8fdad3449eca87c1a057e5d3adbad89585e525d608adc31",
+      "status": null,
+      "reviewer": "/root/native_ci"
+    },
+    "raw_custody_audit": {
+      "run": {
+        "id": 34275491965,
+        "run_attempt": 1,
+        "run_number": 165,
+        "status": "completed",
+        "conclusion": "failure",
+        "head_sha": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "created_at": "2026-09-08T20:33:28Z",
+        "updated_at": "2026-09-08T21:24:11Z"
+      },
+      "jobs": [
+        {
+          "id": 102227367061,
+          "name": "iOS tests, release frameworks, and Swift wrapper",
+          "conclusion": "failure",
+          "steps": 32
+        },
+        {
+          "id": 102227368313,
+          "name": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+          "conclusion": "skipped",
+          "steps": 0
+        },
+        {
+          "id": 102227368359,
+          "name": "Common, desktop, and Android release",
+          "conclusion": "skipped",
+          "steps": 0
+        },
+        {
+          "id": 102227368476,
+          "name": "Desktop strict verification (Linux arm64)",
+          "conclusion": "skipped",
+          "steps": 0
+        },
+        {
+          "id": 102227368894,
+          "name": "Desktop and Kotlin Native strict verification (macOS x64)",
+          "conclusion": "skipped",
+          "steps": 0
+        }
+      ],
+      "archives": [
+        {
+          "identity": {
+            "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-cleanup.zip",
+            "bytes": 683,
+            "sha256": "440f1a2d744d691e5566f38921279f1bfc1a985c2a80f41223d8f58155b8dee9"
+          },
+          "members": 1,
+          "expanded_bytes": 814,
+          "crc_names_types_bounds_extraction": true
+        },
+        {
+          "identity": {
+            "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence.zip",
+            "bytes": 546033,
+            "sha256": "ea22338008d089a93ab7baa2c3a86dfb4cc090e6bb885306597f797a8fec442c"
+          },
+          "members": 36,
+          "expanded_bytes": 2587815,
+          "crc_names_types_bounds_extraction": true
+        },
+        {
+          "identity": {
+            "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/run-logs.zip",
+            "bytes": 21715,
+            "sha256": "68b6641b77939459c034771e23c8ef2d8c54eac475563323c2859adf17f96a03"
+          },
+          "members": 13,
+          "expanded_bytes": 70189,
+          "crc_names_types_bounds_extraction": true
+        }
+      ],
+      "canonical_retained_files": 28,
+      "failure_boundary": {
+        "A": "FAIL_RUNTIME_ATTEMPTED_INCOMPLETE",
+        "canonical_cleanup": "FAIL_NO_SIMULATOR_OR_TEMP_REMOVAL",
+        "B": "NOT_RUN_UNSAFE_A_GATE",
+        "outer_cleanup": "FAIL_RETAIN_OWNED_EVIDENCE",
+        "canonical_preservation_COMPLETE_scope": "Only complete copy of existing28canonical files; not successful missing XCResult/raw extraction"
+      },
+      "reference_identities": [
+        {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/api-collection-receipt.json",
+          "bytes": 2774,
+          "sha256": "177d5cf653a68879ee0126cf24c000afe232bb11b079a70cbdf8e68b403446b7"
+        },
+        {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/download-receipt.json",
+          "bytes": 12564,
+          "sha256": "c0d6a30522d0cd643d59cd258c639bf96f531d5b9bada0cc3f27f7413ccc4fbb"
+        },
+        {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/receipt.json",
+          "bytes": 425426,
+          "sha256": "2d8168608c71fbc4bbed03cc23f595eafc95473e7e4fa3ec1277f61961ed18a3"
+        },
+        {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/xcodebuild.log",
+          "bytes": 408545,
+          "sha256": "dd68f0f5ee696408953e9b3dcdc11bf6a9c9a70d2593ea4c57c13333b48ac468"
+        },
+        {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/simulator-lifecycle.jsonl",
+          "bytes": 17105,
+          "sha256": "e0eb8557f09729282db2df60ae8ede6e8ad82ecd33abf7d5d82a6636724a3739"
+        },
+        {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/continuation.json",
+          "bytes": 9741,
+          "sha256": "92d0128851378a445ab8ecccc779539adfa4b58a8c6a93172b00c990c5cbe07d"
+        },
+        {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-cleanup/parlor-native-34275491965-1-cleanup.json",
+          "bytes": 814,
+          "sha256": "841a2ef0c1cb4d3ccb9fa930625e230c6bb85df1234f36339aad0f9b18c26bed"
+        }
+      ]
+    },
+    "interpretation": [
+      "A21 really cold-built (Gradle BUILD SUCCESSFUL in30m47s), reached four passing UIKit methods and began the combined method. Observed pre-first-suite2061.720921s left638.279079s of the old2700s whole command.",
+      "At the observed first-suite point5400s would leave3338.279079s; after3000s default only338.279079s, after3300s max only38.279079s. Finite headroom is justified by the observed cutoff, not a measured complete-matrix duration or success guarantee.",
+      "A21 outer Xcode timeout/exit-15 occurred during boot2 before its target Home tap, not a demonstrated testcase assertion. Normal structured extraction was skipped; Foundation fallback alone did not make the main raw acknowledgement true.",
+      "A21 unknown live app holder, failed cleanup and B22NOT_RUN remain immutable. Canonical preservation COMPLETE meant copying the existing28 canonical files, not completion of missing raw/XCResult collection.",
+      "Strict file-protection observations remain unsatisfied; actual normal Debug libproc has not been established by these controls or historic local normal15 timing."
+    ]
+  },
+  "references": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-native-budget-preservation-author-01.json",
+      "bytes": 14351,
+      "sha256": "32a9f88799ef499cc2c1a6478d2df89096cab3017335960db7694b0c6c09ad5f",
+      "status": "HELD_FOR_INDEPENDENT_SOURCE_AND_REGRESSION_REVIEW_NOT_EXECUTION_AUTHORIZATION",
+      "reviewer": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-l08-exception-budget-source-independent-01.json",
+      "bytes": 24624,
+      "sha256": "ec35843efe93b07879ce581dde38f0f1add9abb183f9ac2e6a17bb2bb2f09e2e",
+      "status": "APPROVED_EXACT_HELD_COMPANION_SOURCE_AND_HOOK_INTERFACE_NOT_TESTED_NOT_EXECUTION_OR_DISPATCH_APPROVAL",
+      "reviewer": "/root/portability_review"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a21-qualified-budget-proposal-01.json",
+      "bytes": 14395,
+      "sha256": "434a4dcbccfa56852ac99f7393804ef049987040a5ffc894f80c32291776c660",
+      "status": "PROPOSAL_ONLY_NOT_SOURCE_REVIEW_EXECUTION_OR_DISPATCH_APPROVAL",
+      "reviewer": null
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-34275491965-postrun-independent-01.json",
+      "bytes": 34488,
+      "sha256": "85ca368c5ee2850cc8fdad3449eca87c1a057e5d3adbad89585e525d608adc31",
+      "status": null,
+      "reviewer": "/root/native_ci"
+    }
+  ],
+  "pending_separate_approvals_and_execution": [
+    "Final held regression source and independent validity report; root-owned focused control command packet exact bindings and separate independent packet approval.",
+    "Actual rendered composition hook, Foundation final AND, driver dependency pins and additive draft freeze must be independently reviewed.",
+    "Root-only focused control execution/cleanup; no test counts in this report are newly executed pass claims.",
+    "Reviewed source/control commit, regenerated and committed mechanical inventory, exact remote freeze confirmation, then fresh same-source platform/control/preflight bindings and separate dispatch approval.",
+    "A23/B24 remain NOT_RUN at this review. Actual platform execution and full all-five-job frozen-source qualification remain distinct; full qualification cannot close missing A/B runtime scopes by implication."
+  ],
+  "activity_and_cleanup": {
+    "builds": 0,
+    "tests_or_discovery": 0,
+    "project_imports_or_calls": 0,
+    "Apple_or_simulator_execution": 0,
+    "network_or_Actions_calls": 0,
+    "source_or_existing_evidence_edits": 0,
+    "staging_commits_pushes": 0,
+    "process_signals_or_cleanup": 0,
+    "only_written_path": "remediation-runs/2026-09-08-continuation/reviews/hosted-native-budget-admission-source-independent-01.json",
+    "cleanup": "No build/process/simulator cycle initiated by this reviewer. Only read-only source/Git/JSON/AST/hash inspection and this additive report; existing lane lock, outputs, archived failures, source and other agents' files left untouched.",
+    "scratch_diagnostic": "One initial read-only scratch assertion expected a normal15 literal ending seconds; actual log uses elapsed -- Testing started completed. Matcher corrected against retained raw line. No evidence/source edits or project test failure."
+  },
+  "readiness": "NOT_READY. Source-only approval at exact held identities; no regression execution, corrected native runtime, cleanup success, final qualification, physical-device, Store or owner/legal approval. Physical-device LAN/lifecycle/accessibility/keybag/backup/power-loss, Store signing/publication and known identity collision, plus separate owner/editorial/privacy/legal obligations remain excluded and unwaived."
+}

@@ -1,6 +1,7 @@
 """Linux-executable orchestration controls, NOT Apple/application runtime proof."""
 from __future__ import annotations
 
+import ast
 import copy
 import importlib.util
 import io
@@ -11,6 +12,7 @@ import stat
 import struct
 import subprocess
 from tempfile import TemporaryDirectory
+from types import SimpleNamespace
 import unittest
 from unittest.mock import Mock, patch
 import urllib.error
@@ -37,6 +39,19 @@ def cleanup_fixture():
                 finalization_stages=[dict(status="PASS")], copied_sources_unchanged=True,
                 xcodebuild_exit_code=65, commands=[dict(command=["xcodebuild", "test"])],
                 gradle_stops=[dict(label=label, exit_code=0) for label in ("stop-xcode-immediate", "stop-final")])
+
+
+SYNTHETIC_JOB_START_NS = 1_000_000_000_000
+
+
+def native_clock_fixture(lane):
+    """A source/run-bound inert kernel-clock token, never the host's real clock."""
+    lane.scope = 'native-evidence'
+    lane.context = dict(run_id=200, run_attempt=1, head_sha='a' * 40)
+    token = dict(clock='CLOCK_MONOTONIC_RAW', start_ns=SYNTHETIC_JOB_START_NS,
+                 job='ios', **lane.context)
+    lane.env = {native.JOB_CLOCK_ENV: json.dumps(token)}
+    return token
 
 
 def package_fixture(root=ROOT):
@@ -355,6 +370,7 @@ class NativeCleanupTest(unittest.TestCase):
             lane.binding.parent.mkdir(parents=True)
             lane.state = dict(runs={}, files={}, directories={}, cleanup_safe=True)
             lane.save = Mock()
+            native_clock_fixture(lane)
             def invalid_run(arguments, log, entry):
                 destination = root / native.CAMPAIGN / "evidence" / native.CYCLES["l08"]
                 destination.mkdir(parents=True)
@@ -363,7 +379,8 @@ class NativeCleanupTest(unittest.TestCase):
                 log.write_bytes(b"native exit failure")
                 entry["exit_code"] = 1
             lane.invoke_native = invalid_run
-            with self.assertRaises(json.JSONDecodeError):
+            with patch.object(native, 'native_job_clock_ns', return_value=SYNTHETIC_JOB_START_NS), \
+                    self.assertRaises(json.JSONDecodeError):
                 lane.run_native("l08", "d" * 64, source_fixture())
             saved = lane.bundle / native.CYCLES["l08"]
             self.assertEqual((saved / "receipt.json").read_bytes(), b"{malformed native failure")
@@ -606,7 +623,9 @@ class NativePreflightTest(unittest.TestCase):
 
 # Synthetic direct-lifecycle records exercise the actual adapter gates below.
 # They are not simulator, AppHost, build or application observations.
-def direct_fixture(root, *, cycle=None, attempted=True):
+def direct_fixture(root, *, cycle=None, attempted=True, bootstatus_error=None):
+    if bootstatus_error is not None and attempted:
+        raise ValueError('A failed prebuild bootstatus fixture cannot claim a later app build')
     cycle = native.CYCLES['l08'] if cycle is None else cycle
     destination = root / native.CAMPAIGN / 'evidence' / cycle
     destination.mkdir(parents=True, exist_ok=True)
@@ -643,10 +662,12 @@ def direct_fixture(root, *, cycle=None, attempted=True):
                    elapsed_seconds=1.0, stdout_bytes=0, stderr_bytes=0, stdout_sha256=native.sha(b''),
                    stderr_sha256=native.sha(b''), status='EXITED0', cleanup=cleanup,
                    handle_registered=True, reaped=True, exit_code=0, owned_pid=1000 + len(rows), secondary_errors=[])
+        if operation == 'bootstatus' and bootstatus_error is not None:
+            row.update(status='FAILED', exit_code=-15, primary_error=copy.deepcopy(bootstatus_error))
         rows.append(row)
         intent = {key: item for key, item in row.items() if key not in {
             'finished_at', 'elapsed_seconds', 'stdout_bytes', 'stderr_bytes', 'stdout_sha256', 'stderr_sha256',
-            'exit_code', 'owned_pid'}}
+            'exit_code', 'owned_pid', 'primary_error'}}
         intent.update(status='RUNNING', reaped=False, handle_registered=False)
         events.extend([dict(event='command-intent', row=intent),
                        dict(event='command-launched', ordinal=row['ordinal'], owned_pid=row['owned_pid']),
@@ -834,6 +855,7 @@ class DirectLifecycleAdapterTest(unittest.TestCase):
                 lane.bundle = root / 'bundle'; lane.bundle.mkdir()
                 lane.state = dict(runs={}, files={}, directories={})
                 lane.save = Mock()
+                native_clock_fixture(lane)
                 invoked = []
                 def invoke(arguments, log, entry):
                     invoked.append(arguments)
@@ -846,18 +868,387 @@ class DirectLifecycleAdapterTest(unittest.TestCase):
                 lane.invoke_native = invoke
                 lane.fetch_preflight = Mock(return_value=({'l08_sha256': 'd' * 64, 'normal_sha256': 'd' * 64}, source_fixture()))
                 lane.bootstrap_cache_directories = Mock()
-                if mutation is None:
-                    self.assertEqual(lane.evidence(), 2)
-                    self.assertEqual(len(invoked), 2)
-                    self.assertEqual(lane.state['status'], 'NOT_READY')
-                else:
-                    with self.assertRaises((RuntimeError, OSError)):
-                        lane.evidence()
-                    self.assertEqual(len(invoked), 1)
-                    self.assertFalse(lane.state['cleanup_safe'])
+                with patch.object(native, 'native_job_clock_ns', return_value=SYNTHETIC_JOB_START_NS):
+                    if mutation is None:
+                        self.assertEqual(lane.evidence(), 2)
+                        self.assertEqual(len(invoked), 2)
+                        self.assertEqual(lane.state['status'], 'NOT_READY')
+                    else:
+                        with self.assertRaises((RuntimeError, OSError)):
+                            lane.evidence()
+                        self.assertEqual(len(invoked), 1)
+                        self.assertFalse(lane.state['cleanup_safe'])
                 for args in invoked:
                     self.assertEqual(args.count('--simulator-lifecycle=direct-owned-v1'), 1)
                 self.assertTrue((lane.bundle / native.CYCLES['l08'] / 'receipt.json').is_file())
+
+
+class NativeJobBudgetAdmissionTest(unittest.TestCase):
+    """Actual pre-spawn admission; all clocks, native launches and saves are inert."""
+    def lane(self, root):
+        lane = object.__new__(native.Continuation)
+        lane.root, lane.bundle = root, root / 'bundle'
+        lane.bundle.mkdir()
+        lane.binding = root / native.CAMPAIGN / native.BINDING_NAME
+        lane.state = dict(runs={}, files={}, directories={}, cleanup_safe=True)
+        lane.save = Mock()
+        lane.invoke_native = Mock(side_effect=AssertionError('Denied budget must never invoke a child'))
+        native_clock_fixture(lane)
+        return lane
+
+    def denied(self, change, *, label='l08', current=SYNTHETIC_JOB_START_NS):
+        with TemporaryDirectory(prefix='parlor-native-budget-denied-') as raw:
+            lane = self.lane(Path(raw).resolve())
+            if label == 'normal':
+                lane.state['runs']['l08'] = dict(status='FINISHED', cleanup_safe=True,
+                    cycle=native.CYCLES['l08'], exit_code=2)
+            change(lane)
+            before = copy.deepcopy(lane.state)
+            with patch.object(native, 'native_job_clock_ns', return_value=current), \
+                    patch.object(native.subprocess, 'Popen', side_effect=AssertionError('No native process permitted')):
+                with self.assertRaises((RuntimeError, ValueError)):
+                    lane.run_native(label, 'd' * 64, source_fixture())
+            lane.invoke_native.assert_not_called()
+            self.assertEqual(before['runs'], lane.state['runs'])
+            self.assertIs(lane.state['cleanup_safe'], True)
+            self.assertEqual(before['files'], lane.state['files'])
+            self.assertEqual(before['directories'], lane.state['directories'])
+            self.assertNotIn('preservation', lane.state)
+            self.assertEqual([], list(lane.bundle.iterdir()))
+            self.assertFalse((lane.root / native.CAMPAIGN / 'evidence' / native.CYCLES[label]).exists())
+            admission = lane.state['native_admissions'][label]
+            self.assertEqual('DENIED_NOT_RUN', admission['status'])
+            self.assertTrue(admission['reason'])
+            lane.save.assert_called_once_with()
+            return admission
+
+    def test_actual_consumer_uses_shared_raw_kernel_clock_not_python_process_or_wall_clock(self):
+        raw_clock = object()
+        clock = SimpleNamespace(CLOCK_MONOTONIC_RAW=raw_clock,
+                                clock_gettime_ns=Mock(return_value=SYNTHETIC_JOB_START_NS))
+        with patch.object(native, 'time', clock):
+            self.assertEqual(SYNTHETIC_JOB_START_NS, native.native_job_clock_ns())
+        clock.clock_gettime_ns.assert_called_once_with(raw_clock)
+        for invalid in (True, 0, -1, None, 1.0, '1000'):
+            clock.clock_gettime_ns.reset_mock(side_effect=True)
+            clock.clock_gettime_ns.return_value = invalid
+            with self.subTest(value=invalid), patch.object(native, 'time', clock), \
+                    self.assertRaisesRegex(RuntimeError, 'invalid-native-job-kernel-clock'):
+                native.native_job_clock_ns()
+
+    def test_fresh_a_and_b_require_complete_unchanged_child_grace_and_cleanup_reserve(self):
+        self.assertEqual((14400, 6000, 600, 600), (native.NATIVE_JOB_SECONDS, native.NATIVE_WAIT_SECONDS,
+                         native.NATIVE_GRACE_SECONDS, native.NATIVE_FINISH_RESERVE_SECONDS))
+        for label in ('l08', 'normal'):
+            with self.subTest(label=label), TemporaryDirectory(prefix='parlor-native-budget-fresh-') as raw:
+                lane = self.lane(Path(raw).resolve())
+                with patch.object(native, 'native_job_clock_ns', return_value=SYNTHETIC_JOB_START_NS):
+                    lane.admit_native(label)
+                expected = dict(cycle=native.CYCLES[label], status='ADMITTED', job_budget_seconds=14400,
+                    child_wait_seconds=6000, finalizer_grace_seconds=600, evidence_cleanup_reserve_seconds=600,
+                    required_seconds=7200, clock=json.loads(lane.env[native.JOB_CLOCK_ENV]),
+                    observed_ns=SYNTHETIC_JOB_START_NS, remaining_seconds=14400)
+                self.assertEqual(expected, lane.state['native_admissions'][label])
+                self.assertEqual({}, lane.state['runs'])
+                self.assertIs(lane.state['cleanup_safe'], True)
+                lane.invoke_native.assert_not_called()
+                lane.save.assert_called_once_with()
+
+    def test_full_budget_boundary_is_nanosecond_exact_without_shrinking_wait_or_grace(self):
+        for remainder in (7200 * 10**9, 7200 * 10**9 + 1):
+            with self.subTest(remainder=remainder), TemporaryDirectory(prefix='parlor-native-budget-boundary-') as raw:
+                lane = self.lane(Path(raw).resolve())
+                current = SYNTHETIC_JOB_START_NS + 14400 * 10**9 - remainder
+                with patch.object(native, 'native_job_clock_ns', return_value=current):
+                    lane.admit_native('normal')
+                self.assertEqual('ADMITTED', lane.state['native_admissions']['normal']['status'])
+                self.assertEqual(7200, lane.state['native_admissions']['normal']['required_seconds'])
+        for remainder in (7200 * 10**9 - 1, 0, -1):
+            with self.subTest(remainder=remainder):
+                admission = self.denied(lambda _lane: None, label='normal',
+                    current=SYNTHETIC_JOB_START_NS + 14400 * 10**9 - remainder)
+                self.assertEqual('insufficient-complete-native-lane-budget', admission['reason'])
+
+    def test_missing_malformed_duplicated_or_unbounded_clock_denies_before_any_ownership_reset(self):
+        for raw in (None, '', {}, b'{}', 'not JSON', 'null', '[]', '{}', 'x' * 1025,
+                    '{"clock":"CLOCK_MONOTONIC_RAW","clock":"CLOCK_MONOTONIC_RAW"}',
+                    '{"clock":"CLOCK_MONOTONIC_RAW","start_ns":NaN}'):
+            for label in ('l08', 'normal'):
+                with self.subTest(raw=repr(raw)[:80], label=label):
+                    self.denied(lambda lane: lane.env.update({native.JOB_CLOCK_ENV: raw}), label=label)
+        self.denied(lambda lane: lane.env.pop(native.JOB_CLOCK_ENV))
+
+    def test_clock_context_schema_and_start_are_exact_not_coercible(self):
+        mutations = [('clock', 'monotonic'), ('clock', 'CLOCK_MONOTONIC'), ('clock', None),
+                     ('start_ns', True), ('start_ns', 0), ('start_ns', -1), ('start_ns', 10**20),
+                     ('start_ns', 1.0), ('start_ns', '1000'), ('run_id', 201), ('run_id', True),
+                     ('run_attempt', 2), ('run_attempt', True), ('job', 'desktop'),
+                     ('head_sha', 'b' * 40), ('extra', 'unreviewed')]
+        for key, value in mutations:
+            def change(lane):
+                token = json.loads(lane.env[native.JOB_CLOCK_ENV])
+                token[key] = value
+                lane.env[native.JOB_CLOCK_ENV] = json.dumps(token)
+            with self.subTest(key=key, value=value):
+                self.denied(change)
+        for key in ('clock', 'start_ns', 'run_id', 'run_attempt', 'job', 'head_sha'):
+            def change(lane):
+                token = json.loads(lane.env[native.JOB_CLOCK_ENV])
+                token.pop(key)
+                lane.env[native.JOB_CLOCK_ENV] = json.dumps(token)
+            with self.subTest(missing=key):
+                self.denied(change)
+
+    def test_future_clock_and_non_evidence_scope_fail_closed(self):
+        admission = self.denied(lambda _lane: None, current=SYNTHETIC_JOB_START_NS - 1)
+        self.assertEqual('native-job-clock-is-in-the-future', admission['reason'])
+        for scope in ('full', 'native-preflight', 'native-process-probe'):
+            with self.subTest(scope=scope):
+                admission = self.denied(lambda lane: setattr(lane, 'scope', scope))
+                self.assertEqual('job-budget-is-native-evidence-only', admission['reason'])
+
+    def test_unavailable_kernel_clock_is_durably_denied_without_creating_a_run(self):
+        with TemporaryDirectory(prefix='parlor-native-clock-unavailable-') as raw:
+            lane = self.lane(Path(raw).resolve())
+            primary = OSError('synthetic unavailable kernel clock')
+            with patch.object(native, 'native_job_clock_ns', side_effect=primary), self.assertRaises(OSError) as caught:
+                lane.run_native('l08', 'd' * 64, source_fixture())
+            self.assertIs(primary, caught.exception)
+            self.assertEqual({}, lane.state['runs'])
+            self.assertIs(lane.state['cleanup_safe'], True)
+            self.assertEqual('DENIED_NOT_RUN', lane.state['native_admissions']['l08']['status'])
+            lane.invoke_native.assert_not_called()
+            lane.save.assert_called_once_with()
+
+    def test_preownership_denial_oracle_detects_mutant_that_skips_budget_admission(self):
+        with patch.object(native.Continuation, 'admit_native', return_value=None), \
+                self.assertRaisesRegex(AssertionError, 'Denied budget must never invoke a child'):
+            self.denied(lambda lane: lane.env.clear())
+
+
+class NativeInnerFailureAdmissionTest(unittest.TestCase):
+    """Real adapter A/B decision with complete synthetic custody, never a runner."""
+    def exercise(self, mutation, *, admitted, cleanup_safe=True, bootstatus_error=None, admission_times=None, outer_exit=2):
+        with TemporaryDirectory(prefix='parlor-inner-failure-admission-') as raw:
+            root = Path(raw).resolve()
+            lane = object.__new__(native.Continuation)
+            lane.root, lane.binding = root, root / native.CAMPAIGN / native.BINDING_NAME
+            lane.bundle = root / 'bundle'
+            lane.bundle.mkdir()
+            lane.state = dict(runs={}, files={}, directories={})
+            lane.save = Mock()
+            native_clock_fixture(lane)
+            invoked, originals = [], {}
+
+            def invoke(arguments, log, entry):
+                invoked.append(entry['cycle'])
+                selected_error = bootstatus_error if entry['cycle'] == native.CYCLES['l08'] else None
+                value, _, journal_raw, destination = direct_fixture(root, cycle=entry['cycle'],
+                    attempted=selected_error is None, bootstatus_error=selected_error)
+                if entry['cycle'] == native.CYCLES['l08']:
+                    mutation(value)
+                    # Timeout/cancellation policy is independent of retirement:
+                    # these fixtures still satisfy the actual cleanup predicate.
+                    self.assertIs(native.cleanup_is_safe(value, 'd' * 64, source_fixture(),
+                        lifecycle_mode=native.LIFECYCLE_MODE), cleanup_safe)
+                    if cleanup_safe:
+                        self.assertTrue(native.lifecycle_journal_matches(journal_raw, value, root, destination))
+                encoded = native.json_bytes(value)
+                originals[entry['cycle']] = encoded
+                native.write_new(destination / 'receipt.json', encoded)
+                log.write_bytes(b'synthetic failed native invocation, not runtime evidence\n')
+                entry['exit_code'] = outer_exit
+
+            lane.invoke_native = invoke
+            lane.fetch_preflight = Mock(return_value=({'l08_sha256': 'd' * 64, 'normal_sha256': 'd' * 64},
+                                                      source_fixture()))
+            lane.bootstrap_cache_directories = Mock()
+            with patch.object(native.subprocess, 'Popen', side_effect=AssertionError('No native process allowed')), \
+                    patch.object(native, 'native_job_clock_ns', side_effect=admission_times,
+                                 return_value=SYNTHETIC_JOB_START_NS):
+                if admitted:
+                    self.assertEqual(2, lane.evidence())
+                    self.assertEqual([native.CYCLES['l08'], native.CYCLES['normal']], invoked)
+                    self.assertEqual('NOT_READY', lane.state['status'])
+                else:
+                    rejection = ('insufficient-complete-native-lane-budget' if admission_times else
+                                 'native-run-interrupted-or-timed-out' if type(outer_exit) is not int or outer_exit < 0 else
+                                 'native-inner-run-interrupted-timed-out-or-malformed')
+                    with self.assertRaisesRegex(RuntimeError, rejection):
+                        lane.evidence()
+                    self.assertEqual([native.CYCLES['l08']], invoked)
+                    self.assertNotIn('normal', lane.state['runs'])
+            saved = lane.bundle / native.CYCLES['l08'] / 'receipt.json'
+            self.assertEqual(originals[native.CYCLES['l08']], saved.read_bytes())
+            self.assertEqual('COMPLETE', lane.state['preservation']['l08']['status'])
+            self.assertFalse(lane.state['runs']['l08'].get('timed_out', False))
+            self.assertFalse(lane.state['runs']['l08'].get('interrupted', False))
+            self.assertIs(lane.state['cleanup_safe'], cleanup_safe)
+            if admission_times:
+                self.assertEqual('ADMITTED', lane.state['native_admissions']['l08']['status'])
+                self.assertEqual('DENIED_NOT_RUN', lane.state['native_admissions']['normal']['status'])
+                self.assertNotIn('normal', lane.state['preservation'])
+                self.assertFalse((lane.bundle / 'normal-runner.log').exists())
+                self.assertFalse((lane.root / native.CAMPAIGN / 'evidence' / native.CYCLES['normal']).exists())
+
+    def test_inner_receipt_timeout_or_cancellation_refuses_b_despite_complete_cleanup_and_no_outer_signal(self):
+        for kind in ('TimeoutExpired', 'TimeoutError', 'KeyboardInterrupt', 'SystemExit', 'CancelledError', 'NativeInterrupted'):
+            with self.subTest(kind=kind):
+                self.exercise(lambda value: value.update(error=dict(type=kind, message='synthetic inner primary')),
+                              admitted=False)
+
+    def test_inner_command_timeout_or_cancellation_refuses_b_even_when_top_error_is_ordinary(self):
+        for kind in ('TimeoutExpired', 'TimeoutError', 'KeyboardInterrupt', 'SystemExit', 'CancelledError', 'NativeInterrupted'):
+            def mutate(value):
+                value['error'] = dict(type='RuntimeError', message='ordinary later strict validation failure')
+                value.pop('xcodebuild_exit_code')
+                # A late observed positive exit cannot erase an earlier primary;
+                # use it here so the separate negative-exit guard cannot mask this oracle.
+                value['commands'][0].update(primary_error=dict(type=kind, message='synthetic original inner primary'),
+                                             interrupted_or_failed=True, exit_code=65)
+            with self.subTest(kind=kind):
+                self.exercise(mutate, admitted=False)
+
+    def test_a21_shaped_timeout_negative_exit_and_unreached_xcode_exit_assignment_still_block_b(self):
+        def mutate(value):
+            value.pop('xcodebuild_exit_code')  # Actual A21 stopped before this assignment.
+            value['commands'][0].update(primary_error=dict(type='TimeoutExpired', message='synthetic A21-shaped timeout'),
+                                         interrupted_or_failed=True, exit_code=-15)
+        self.exercise(mutate, admitted=False)
+
+    def test_direct_runtimeerror_timeout_code_refuses_b_after_truthful_prebuild_cleanup(self):
+        for error in (dict(type='RuntimeError', code='command-timeout'),
+                      dict(type='RuntimeError', code='cancelled'),
+                      dict(type='KeyboardInterrupt', code='cancelled'),
+                      dict(type='SystemExit', code='cancelled')):
+            with self.subTest(error=error):
+                self.exercise(lambda value: value.update(error=dict(type='RuntimeError',
+                    message='ordinary outer wrapper diagnostic')), admitted=False, bootstatus_error=error)
+
+    def test_signaled_or_malformed_command_exit_without_a_python_primary_cannot_admit_b(self):
+        for code in (-15, -2, -9, None, True, False, '0', 0.0):
+            with self.subTest(code=code):
+                self.exercise(lambda value: value['commands'][0].update(exit_code=code), admitted=False)
+
+    def test_outer_signaled_or_malformed_exit_denies_b_even_when_inner_execution_and_cleanup_are_valid(self):
+        for code in (-15, None, False, '0'):
+            with self.subTest(code=repr(code)):
+                self.exercise(lambda _value: None, admitted=False, outer_exit=code)
+
+    def test_inner_markers_and_deferred_signal_shapes_are_exact_not_truthy(self):
+        for location in ('receipt', 'command'):
+            for key in ('interrupted', 'timed_out'):
+                for flag in (True, None, 0, 1, '', [], 'false'):
+                    def mutate(value):
+                        target = value if location == 'receipt' else value['commands'][0]
+                        target[key] = flag
+                    with self.subTest(location=location, key=key, flag=repr(flag)):
+                        self.exercise(mutate, admitted=False)
+        for flag in (True, None, 0, 1, '', [], 'false'):
+            with self.subTest(marker=repr(flag)):
+                self.exercise(lambda value: value['commands'][0].update(interrupted_or_failed=flag), admitted=False)
+        for deferred in (None, 0, False, {}, '', [15]):
+            with self.subTest(deferred=repr(deferred)):
+                self.exercise(lambda value: value.update(deferred_signals=deferred), admitted=False)
+
+    def test_secondary_and_raw_preservation_interruptions_or_bad_shapes_deny_b_separately(self):
+        errors = [dict(stage='preserve-raw-postbuild', type='TimeoutError', message='redacted')]
+        mutations = [lambda value: value.update(postbuild_secondary_errors=errors),
+                     lambda value: value.update(postbuild_secondary_errors={}),
+                     lambda value: value.update(raw_postbuild_preservation=[]),
+                     lambda value: value.update(raw_postbuild_preservation=dict(status=[])),
+                     lambda value: value.update(raw_postbuild_preservation=dict(status='FAIL', errors=errors)),
+                     lambda value: value['commands'][0].update(command_persistence_error=dict(
+                         type='KeyboardInterrupt', message='redacted')),
+                     lambda value: value['commands'][0].update(command_cleanup_error=dict(
+                         stage='stop-owned-command-workers', type='SystemExit', message='redacted')),
+                     lambda value: value['commands'][0].update(secondary_errors=errors)]
+        for index, mutation in enumerate(mutations):
+            with self.subTest(mutation=index):
+                self.exercise(mutation, admitted=False)
+
+    def test_semantic_direct_timeout_codes_are_rejected_independently_of_negative_exit_guard(self):
+        for error in (dict(type='RuntimeError', code='command-timeout'),
+                      dict(type='RuntimeError', code='cancelled'),
+                      dict(type='RuntimeError', message='direct-simulator-command-timeout'),
+                      dict(type='RuntimeError', message='direct-simulator-cancelled')):
+            value = cleanup_fixture()
+            value['commands'][0].update(exit_code=65, primary_error=error, interrupted_or_failed=True)
+            with self.subTest(error=error):
+                self.assertFalse(native.inner_execution_completed(value))
+            value['commands'][0]['primary_error'] = dict(type='RuntimeError', message='ordinary assertion')
+            self.assertTrue(native.inner_execution_completed(value))
+
+    def test_present_malformed_inner_error_shapes_never_become_absent_error_success(self):
+        malformed = (None, '', [], {}, {'type': None, 'message': 'failure'},
+                     {'type': 'RuntimeError', 'message': []}, {'type': 'RuntimeError', 'message': 'x' * 801})
+        for location in ('receipt', 'command'):
+            for error in malformed:
+                def mutate(value):
+                    if location == 'receipt':
+                        value['error'] = error
+                    else:
+                        value['commands'][0]['primary_error'] = error
+                with self.subTest(location=location, error=repr(error)[:100]):
+                    self.exercise(mutate, admitted=False)
+
+    def test_malformed_command_collections_are_refused_before_b_and_preserved_raw(self):
+        for commands in (None, {}, [None], [{'command': 'xcodebuild test'}]):
+            with self.subTest(commands=commands):
+                self.exercise(lambda value: value.update(commands=commands), admitted=False, cleanup_safe=False)
+
+    def test_ordinary_strict_failure_still_admits_independent_b_without_reclassifying_a(self):
+        for location in ('absent', 'receipt', 'command', 'explicit-false-markers'):
+            def mutate(value):
+                error = dict(type='RuntimeError', message='ordinary strict XCTest assertion, not cancellation')
+                if location == 'receipt':
+                    value['error'] = error
+                elif location == 'command':
+                    value['commands'][0].update(primary_error=error, interrupted_or_failed=True, exit_code=65)
+                elif location == 'explicit-false-markers':
+                    value.update(interrupted=False, timed_out=False, deferred_signals=[])
+                    value['commands'][0].update(interrupted=False, timed_out=False, interrupted_or_failed=False,
+                                                 exit_code=65)
+            with self.subTest(location=location):
+                self.exercise(mutate, admitted=True, outer_exit=65 if location == 'explicit-false-markers' else 2)
+
+    def test_b_budget_denial_after_actual_safe_a_keeps_a_cleanup_authority_and_has_no_b_child_or_receipt(self):
+        self.exercise(lambda _value: None, admitted=False,
+            admission_times=[SYNTHETIC_JOB_START_NS, SYNTHETIC_JOB_START_NS + 7200 * 10**9 + 1])
+
+    def test_b_admission_oracle_detects_a_mutant_that_ignores_inner_execution_failure(self):
+        # A whole-predicate substitution is one deliberate semantic mutant:
+        # complete cleanup alone would admit B, and the real-callpath oracle must fail.
+        with patch.object(native, 'inner_execution_completed', return_value=True):
+            with self.assertRaisesRegex(AssertionError, 'RuntimeError not raised'):
+                self.exercise(lambda value: value.update(error=dict(type='TimeoutExpired',
+                    message='synthetic inner watchdog')), admitted=False)
+
+    def test_independent_command_type_and_code_oracles_kill_only_their_actual_classifier_guard_mutant(self):
+        source = (ROOT / 'scripts/ci/native_continuation.py').read_text()
+        for field, error in (('kind', dict(type='TimeoutExpired', message='synthetic typed primary')),
+                             ('code', dict(type='RuntimeError', code='command-timeout'))):
+            node = next(item for item in ast.parse(source).body if isinstance(item, ast.FunctionDef) and
+                        item.name == 'inner_execution_completed')
+            matches = [item for item in ast.walk(node) if isinstance(item, ast.Compare) and
+                       isinstance(item.left, ast.Name) and item.left.id == field and
+                       len(item.comparators) == 1 and isinstance(item.comparators[0], ast.Set)]
+            self.assertEqual(1, len(matches))
+            original = ast.dump(node)
+            matches[0].comparators[0] = ast.Set(elts=[])
+            self.assertNotEqual(original, ast.dump(node))
+            namespace = dict(re=native.re)
+            exec(compile(ast.fix_missing_locations(ast.Module(body=[node], type_ignores=[])),
+                         '<single-inner-guard-semantic-mutant>', 'exec'), namespace)
+
+            def mutate(value):
+                value['commands'][0].update(primary_error=error, interrupted_or_failed=True, exit_code=65)
+
+            with self.subTest(field=field):
+                self.exercise(mutate, admitted=False)  # Unmutated actual A/B chain rejects.
+                with patch.object(native, 'inner_execution_completed', namespace['inner_execution_completed']), \
+                        self.assertRaisesRegex(AssertionError, 'RuntimeError not raised'):
+                    self.exercise(mutate, admitted=False)
 
 
 if __name__ == "__main__":

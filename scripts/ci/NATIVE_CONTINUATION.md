@@ -51,15 +51,21 @@ absolute checkout path and recomputes both control manifests before native work.
 
 The canonical runners execute serially on independently owned fresh simulators:
 
-1. A: composed L08, next cycle `ios-readiness-21`;
+1. A: composed L08, next cycle `ios-readiness-23`;
 2. B: normal-source eight launches plus separate image observation, cycle
-   `ios-readiness-22`, explicit `--image-observer=libproc`.
+   `ios-readiness-24`, explicit `--image-observer=libproc`.
 
 The failed `ios-readiness-17/18` evidence from run `34216788568` and failed
 A19 from `34244902185` remain historical failures. A19's simulator cleanup was
 not proven; B20 was **NOT_RUN**. The separate diagnostic `34239707887` did retire
 its own journaled simulator, but failed other observations and did not run Parlor.
 Its direct-child lifecycle precedent is not AppHost/build/provenance proof.
+Run `34275491965` reached four passing UIKit methods, then A21's whole Xcode
+command timed out during the monolithic functional test. General XCResult/storage
+retention was skipped; only the separate Foundation fallback retained raw records,
+not validated application provenance. A21's preservation acknowledgement stayed
+false and an unknown app holder independently remained: cleanup **FAIL**, B22
+**NOT_RUN**. Neither the correction below nor a later run repairs that receipt.
 
 Both next runners explicitly select `--simulator-signing=adhoc`,
 `--toolchain=qualified-xcode-26.3` and `--simulator-lifecycle=direct-owned-v1`.
@@ -67,9 +73,43 @@ New labels or successful Linux controls do not authorize a native retry: reviewe
 source/control commits, a mechanical-inventory freeze, fresh same-source preflight
 and independent approval remain required. No private signing or Store operation occurs.
 A's strict protection failure/partial result does not suppress B, **provided A's
-actual source/control/worker/device/Gradle cleanup receipts are safe**. Failed,
-missing or contradictory cleanup stops the chain. No successful harness result
+actual source/control/worker/device/Gradle cleanup receipts are safe and its
+execution was not interrupted or timed out**. Admission separately checks both
+outer execution and canonical inner top-level/command errors, including lifecycle
+`RuntimeError`/`command-timeout`, cancellation codes/types, negative command exits,
+deferred signals and malformed error/marker shapes. Ordinary strict/assertion
+failure is not relabelled interruption; safe cleanup is not relabelled runtime
+success. Failed, missing or contradictory cleanup stops the chain. No successful harness result
 is upgraded to application runtime or file-protection enforcement proof.
+
+### Explicit A and job budgets
+
+Only A's explicitly selected `qualified-xcode-26.3` profile uses a whole existing
+`xcodebuild test` allowance of5400s, default test execution3000s and maximum3300s.
+The local26.5 profile remains2700/1200/1500s; unknown profiles fail before allocation.
+The selected values are recorded in `xcode_time_budget`, the actual Xcode argv
+and that command's `timeout_seconds`. B's2700s whole command and120/240s XCTest
+allowances are unchanged. No XCTest split, test-filter reduction, retry, app or
+production timing change is introduced.
+
+Only `native-evidence` has a240-minute job ceiling. Full and native-preflight
+remain120 minutes; the non-app process probe remains10. The first evidence-only
+job step, before checkout, records `CLOCK_MONOTONIC_RAW` via
+`time.clock_gettime_ns(time.CLOCK_MONOTONIC_RAW)`, bound to source SHA, job and
+run/attempt in `PARLOR_NATIVE_JOB_CLOCK`. The adapter uses the identical shared
+kernel clock, not cross-process `time.monotonic()` assumptions on older macOS
+Python. No unavailable-clock fallback exists.
+
+Before either A or B starts, a separate durable admission record requires at
+least the full unchanged6000s native-child wait,600s finalizer grace and600s
+evidence/upload/cleanup reserve within that240-minute clock. Missing, malformed,
+cross-source/run, future or expired clocks deny the new lane; a denied B remains
+**NOT_RUN** and does not invalidate A's honestly established cleanup safety.
+Waits are never shortened to fit. The recorded clock starts at the first step,
+not before job/runner startup; that unmeasured overhead is not certified by this
+token. The600s reserve is nominal, and the finite ceiling/admission is **not a
+guarantee** every setup, global scan, preservation, upload or finalizer worst case
+fits, nor permission to repeat an expensive run blindly.
 
 ## Explicit lifecycle authority (not an AppHost replacement)
 
@@ -104,14 +144,32 @@ fits the outer grace. Exhaustion retains resources/failed receipts and stops B.
 Xcode, Gradle, app launch/container queries, XCResult extraction and image/libproc
 observations still use the original strict AppHost authority. Before Xcode
 `Popen`, direct mode latches a durable build-attempt marker. Following any build
-attempt, device destruction additionally requires an explicit acknowledgement
-that the existing bounded raw XCTest/container evidence was retained (plus the
-composed Foundation retention stage), **then** original `owner.stop()`, fresh
+attempt, A's one-shot raw collector runs after the immediate isolated Gradle stop
+on both normal and exceptional paths. Xcode's original exception is sticky even
+if stop, extraction or receipt persistence also fails. Summary/tests extraction,
+the exact owned container query and allowlisted file attempts are independently
+recorded; a failure does not discard another already-written safe observation.
+Only bounded stable owned regular-file JSON is copied; storage/host/functional
+operations and native failures keep their closed sanitization schemas. Missing
+operations remain explicitly missing. Exclusive writes are never retried or
+overwritten. No screenshots, automatic attachments, whole XCResult/container or
+DerivedData dump is exported. The collector has a420s admission ceiling; each
+new tool still requires its full120s AppHost allowance plus10s reserve, never a
+shortened extraction. Budget exhaustion is failure, not an accepted skip.
+
+Device destruction still requires the exact prior retention acknowledgement:
+both structured XCResult views exited0, the entire safe available-container
+retention path completed and its acknowledgement save succeeded. The composed
+Foundation result is still conjunctive, never a replacement for the main
+acknowledgement. These are retention outcomes, not scenario/runtime success.
+Only **then** may original `owner.stop()`, fresh
 strict refresh, no unknown/FIFO-attestation errors, and all direct build handles
-reaped. Missing/failed preservation acknowledgement or its persistence blocks
+reaping authorize destruction. Missing/failed preservation acknowledgement or its persistence blocks
 simulator destruction **and** temporary copy/DerivedData/XCResult deletion, while
 worker/FIFO/final-holder retirement checks still run. This deliberately preserves
-exceptional-path resources rather than inventing a no-app/no-evidence success.
+resources after incomplete exceptional retention rather than inventing a
+no-app/no-evidence success. Stable raw copying never adopts, signals or clears
+an unknown live app holder; such a holder remains a separate cleanup denial.
 Prebuild journal cleanup is independent of global ps, but final file cleanup
 still requires all original worker/holder/FIFO/source/custody guards.
 

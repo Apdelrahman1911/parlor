@@ -29,6 +29,30 @@ def isolated_command(path, namespace):
     return namespace['command']
 
 
+def isolated_xcode_boundary(path, namespace):
+    """Execute the actual A build try/finally, never main or its allocation path."""
+    tree = ast.parse(path.read_text())
+    matches = [node for node in ast.walk(tree) if isinstance(node, ast.Try) and node.finalbody and
+               any(isinstance(part, ast.Constant) and part.value == 'stop-xcode-immediate'
+                   for part in ast.walk(ast.Module(body=node.finalbody, type_ignores=[])))]
+    if len(matches) != 1:
+        raise RuntimeError('Ambiguous actual Xcode finalizer')
+    target = matches[0]
+    blocks = [value for node in ast.walk(tree) for _, value in ast.iter_fields(node)
+              if isinstance(value, list) and any(item is target for item in value)]
+    if len(blocks) != 1:
+        raise RuntimeError('Ambiguous actual Xcode statement block')
+    block = blocks[0]
+    stop = next(index for index, item in enumerate(block) if item is target)
+    starts = [index for index, node in enumerate(block[:stop]) if isinstance(node, ast.Assign) and
+              isinstance(node.value, ast.Constant) and node.value.value is True and any(
+                  isinstance(left, ast.Name) and left.id == 'gradle_attempted' for left in node.targets)]
+    if not starts:
+        raise RuntimeError('Actual build marker missing')
+    exec(compile(ast.Module(body=block[starts[-1]:stop + 1], type_ignores=[]),
+                 '<isolated-xcode-finally>', 'exec'), namespace)
+
+
 class NativeCommandFailureControls(unittest.TestCase):
     def setUp(self):
         self.temporary = tempfile.TemporaryDirectory(prefix='parlor-command-control-')
@@ -36,8 +60,8 @@ class NativeCommandFailureControls(unittest.TestCase):
         self.root = Path(self.temporary.name).resolve()
 
     def fixture(self, name, *, primary=None, secondary=None, failure_at='refresh', cleanup_at='stop',
-                exit_code=-15):
-        destination = self.root / name
+                exit_code=-15, tag=None):
+        destination = self.root / (tag or name)
         destination.mkdir()
         receipt, saved = {'commands': []}, []
         save = lambda: saved.append(copy.deepcopy(receipt))
@@ -71,7 +95,7 @@ class NativeCommandFailureControls(unittest.TestCase):
         invoke = (lambda: command(receiver, ['owned-public-command'], 'command.log')) if name == 'normal' else (
                   lambda: command(['owned-public-command'], 'command.log'))
         return SimpleNamespace(invoke=invoke, receipt=receipt, saved=saved, child=child,
-                               owner=owner, process=process, receiver=receiver)
+                               owner=owner, process=process, receiver=receiver, namespace=namespace)
 
     def assert_primary(self, fixture, error, *, stage=None, secondary=None):
         with self.assertRaises(type(error)) as caught:
@@ -217,6 +241,104 @@ class NativeCommandFailureControls(unittest.TestCase):
                 fixture.owner.stop.assert_not_called()
                 self.assertEqual(set(fixture.receipt['commands'][1]),
                                  {'command', 'started_at', 'log', 'exit_code', 'finished_at'})
+
+    def test_actual_xcode_watchdog_and_interrupt_keep_primary_through_immediate_stop_and_preservation(self):
+        for kind in ('watchdog', 'keyboard', 'system-exit'):
+            for secondary in ('none', 'stop', 'preservation', 'both'):
+                with self.subTest(primary=kind, secondary=secondary):
+                    error = {'watchdog': None, 'keyboard': KeyboardInterrupt('synthetic build interruption'),
+                             'system-exit': SystemExit('synthetic build cancellation')}[kind]
+                    fixture = self.fixture('companion', primary=error, tag=kind + '-' + secondary)
+                    namespace, trace = fixture.namespace, []
+                    if kind == 'watchdog':
+                        # Advance the actual command loop's injected clock; no
+                        # 2700/5400-second wait and no Popen implementation runs.
+                        namespace['time'].monotonic.side_effect = [0, 5401]
+                    stop_error = RuntimeError('synthetic immediate stop secondary')
+                    retention_error = OSError('synthetic raw preservation secondary')
+
+                    def stop(label):
+                        trace.append(label)
+                        if secondary in {'stop', 'both'}:
+                            raise stop_error
+
+                    def preserve(*args, **kwargs):
+                        trace.append('raw-preservation')
+                        if secondary in {'preservation', 'both'}:
+                            raise retention_error
+                        return True
+
+                    namespace.update(project=self.root / 'copy/iosApp/iosApp.xcodeproj/project.pbxproj',
+                        temp=self.root / 'owned-copy', results=self.root / 'owned-copy/Results.xcresult',
+                        uuid='11111111-2222-3333-4444-555555555555', signing_arguments=[],
+                        toolchain_name='qualified-xcode-26.3',
+                        toolchains=SimpleNamespace(QUALIFIED='qualified-xcode-26.3', LOCAL='local-xcode-26.5'),
+                        lifecycle=SimpleNamespace(mark_build_attempted=Mock(side_effect=lambda: trace.append('mark'))),
+                        stop_gradle=Mock(side_effect=stop), preserve_postbuild_raw=Mock(side_effect=preserve))
+                    namespace['env']['SDK_NAME'] = 'iphonesimulator26.2'
+                    helpers = [node for node in ast.parse(RUNNERS['companion'].read_text()).body
+                               if isinstance(node, ast.FunctionDef) and
+                               node.name in {'xcode_time_budget', 'finish_xcode_attempt'}]
+                    self.assertEqual(2, len(helpers))
+                    exec(compile(ast.Module(body=helpers, type_ignores=[]), '<actual-xcode-helpers>', 'exec'), namespace)
+                    namespace['xcode_budget'] = namespace['xcode_time_budget'](namespace['toolchain_name'])
+                    expected = subprocess.TimeoutExpired if kind == 'watchdog' else type(error)
+                    with self.assertRaises(expected) as caught:
+                        isolated_xcode_boundary(RUNNERS['companion'], namespace)
+                    if error is not None:
+                        self.assertIs(error, caught.exception)
+                    else:
+                        self.assertEqual(5400, caught.exception.timeout)
+                    entry = fixture.receipt['commands'][0]
+                    self.assertEqual(1, len(fixture.receipt['commands']))
+                    self.assertEqual('xcodebuild.log', entry['log'])
+                    self.assertEqual(dict(type=expected.__name__, message=str(caught.exception)[:800]), entry['primary_error'])
+                    self.assertEqual(-15, entry['exit_code'])
+                    self.assertEqual(5400, entry['timeout_seconds'])
+                    self.assertNotIn('xcodebuild_exit_code', fixture.receipt)
+                    self.assert_command_only_stop(fixture)
+                    namespace['stop_gradle'].assert_called_once_with('stop-xcode-immediate')
+                    namespace['preserve_postbuild_raw'].assert_called_once()
+                    self.assertEqual(['mark', 'stop-xcode-immediate', 'raw-preservation'], trace)
+                    expected_secondary = []
+                    if secondary in {'stop', 'both'}:
+                        expected_secondary.append(dict(stage='stop-xcode-immediate', type='RuntimeError',
+                                                       message='postbuild-finalization-failed'))
+                    if secondary in {'preservation', 'both'}:
+                        expected_secondary.append(dict(stage='preserve-raw-postbuild', type='OSError',
+                                                       message='postbuild-finalization-failed'))
+                    self.assertEqual(expected_secondary, fixture.receipt.get('postbuild_secondary_errors', []))
+                    for redacted in (str(stop_error), str(retention_error)):
+                        self.assertNotIn(redacted, json.dumps(fixture.receipt))
+
+    def test_companion_failed_receipt_save_cannot_replace_an_existing_command_primary(self):
+        for primary in (subprocess.TimeoutExpired(['owned-public-command'], 120),
+                        KeyboardInterrupt('original interrupt'), RuntimeError('original failure')):
+            with self.subTest(primary=type(primary).__name__):
+                fixture = self.fixture('companion', primary=primary, tag=type(primary).__name__)
+                persistence = OSError('PRIVATE-PERSISTENCE-DIAGNOSTIC')
+                fixture.namespace['save'] = Mock(side_effect=[None, persistence])
+                with self.assertRaises(type(primary)) as caught:
+                    fixture.invoke()
+                self.assertIs(primary, caught.exception)
+                entry = fixture.receipt['commands'][0]
+                self.assertEqual(dict(type=type(primary).__name__, message=str(primary)[:800]), entry['primary_error'])
+                self.assertEqual(dict(type='OSError', message='command-receipt-persistence-failed'),
+                                 entry['command_persistence_error'])
+                self.assertNotIn(str(persistence), json.dumps(fixture.receipt))
+                self.assert_command_only_stop(fixture)
+
+    def test_companion_receipt_save_failure_without_command_primary_is_not_swallowed(self):
+        fixture = self.fixture('companion', exit_code=0)
+        fixture.child.poll.side_effect = None
+        fixture.child.poll.return_value = 0
+        persistence = OSError('synthetic successful-command receipt save failed')
+        fixture.namespace['save'] = Mock(side_effect=[None, persistence])
+        with self.assertRaises(OSError) as caught:
+            fixture.invoke()
+        self.assertIs(persistence, caught.exception)
+        self.assertNotIn('command_persistence_error', fixture.receipt['commands'][0])
+        fixture.owner.stop.assert_not_called()
 
 
 class NativeSimulatorMetadataFailureControls(unittest.TestCase):

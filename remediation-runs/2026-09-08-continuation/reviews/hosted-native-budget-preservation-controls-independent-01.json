@@ -1,0 +1,829 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_HELD_HOSTED_NATIVE_BUDGET_PRESERVATION_REGRESSION_VALIDITY_REVIEW",
+  "reviewer": "/root/fixture_review",
+  "implementation_authors": [
+    "/root/lifecycle_controls",
+    "/root/l08_fixture"
+  ],
+  "recorded_at": "2026-09-08T23:29:19.471Z",
+  "status": "APPROVED_EXACT_HELD_REGRESSION_SOURCE_ONLY_ROOT_EXECUTION_PENDING",
+  "findings": [],
+  "scope": "Regression validity and actual call-path/oracle effectiveness for six held changed test files, including the sole owned probe method. This approval does not execute controls, approve an uncommitted source freeze or authorize native dispatch. Companion, adapter/workflow and composition source correctness have separate independent reviews.",
+  "source": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "baseline_commit": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+    "baseline_tree": "a88872673bd4cfc366236362f287c1db0a04a5cd",
+    "head_at_final_identity_inspection": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+    "held_is_uncommitted_source": true,
+    "remote_not_queried_by_reviewer": true,
+    "reviewed_tests": [
+      {
+        "path": "scripts/verification/ios-readiness/test_native_command_failures.py",
+        "sha256": "ea2f6d7b9acbeede8d36596539813b86a1fe68e2d7b293cb5d995c5bcecf1223",
+        "bytes": 35980,
+        "base_sha256": "2dae0e77803d5c6b98bd3d4bc1ee4f84a366b799da7e21c16e2068312e0d9b8c",
+        "base_bytes": 27564,
+        "matches_held": true,
+        "base_methods": 26,
+        "current_methods": 29,
+        "added": [
+          {
+            "name": "NativeCommandFailureControls.test_actual_xcode_watchdog_and_interrupt_keep_primary_through_immediate_stop_and_preservation",
+            "line": 245,
+            "last_line": 312
+          },
+          {
+            "name": "NativeCommandFailureControls.test_companion_failed_receipt_save_cannot_replace_an_existing_command_primary",
+            "line": 314,
+            "last_line": 329
+          },
+          {
+            "name": "NativeCommandFailureControls.test_companion_receipt_save_failure_without_command_primary_is_not_swallowed",
+            "line": 331,
+            "last_line": 341
+          }
+        ],
+        "removed": [],
+        "changed": []
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_simulator_lifecycle_integration.py",
+        "sha256": "667bcdf53c001ee3a098fda3f53a2eac0eea5457cee8b1ebc781bfd90a418c1d",
+        "bytes": 97632,
+        "base_sha256": "93d88840fcef436dbf45cc20de071e784daa4c6bc0e7683b623da8df7197100c",
+        "base_bytes": 56392,
+        "matches_held": true,
+        "base_methods": 32,
+        "current_methods": 54,
+        "added": [
+          {
+            "name": "LifecycleBuildBoundaryIntegration.test_actual_finish_requires_exact_true_and_preserves_first_finalization_failure",
+            "line": 420,
+            "last_line": 448
+          },
+          {
+            "name": "LifecycleFinalizerIntegration.test_failed_actual_xcode_boundary_preserves_raw_before_real_barrier_and_never_skips_worker_fifo_cleanup",
+            "line": 1353,
+            "last_line": 1430
+          },
+          {
+            "name": "LifecycleFinalizerIntegration.test_raw_ack_does_not_bypass_actual_unknown_holder_barrier_or_delete_owned_copy",
+            "line": 1432,
+            "last_line": 1445
+          },
+          {
+            "name": "RawPostbuildPreservationIntegration.test_actual_collector_retains_every_safe_plan_and_closed_failure_without_claiming_runtime_success",
+            "line": 714,
+            "last_line": 745
+          },
+          {
+            "name": "RawPostbuildPreservationIntegration.test_additional_composed_retention_is_independent_and_cannot_skip_remaining_records",
+            "line": 988,
+            "last_line": 999
+          },
+          {
+            "name": "RawPostbuildPreservationIntegration.test_aggregate_budget_keeps_all_120_second_commands_and_refuses_a_shortened_late_attempt",
+            "line": 1001,
+            "last_line": 1012
+          },
+          {
+            "name": "RawPostbuildPreservationIntegration.test_changing_open_descriptor_or_postread_path_is_rejected_by_actual_identity_checks",
+            "line": 895,
+            "last_line": 936
+          },
+          {
+            "name": "RawPostbuildPreservationIntegration.test_completed_or_failed_collector_is_one_shot_with_no_second_command_or_write",
+            "line": 1014,
+            "last_line": 1032
+          },
+          {
+            "name": "RawPostbuildPreservationIntegration.test_existing_or_symlink_destination_is_never_overwritten",
+            "line": 963,
+            "last_line": 977
+          },
+          {
+            "name": "RawPostbuildPreservationIntegration.test_extraction_exit_codes_are_exact_integers_and_each_failure_still_attempts_later_stages",
+            "line": 772,
+            "last_line": 780
+          },
+          {
+            "name": "RawPostbuildPreservationIntegration.test_failed_ack_persistence_revokes_authority_after_safe_files_were_retained",
+            "line": 979,
+            "last_line": 986
+          },
+          {
+            "name": "RawPostbuildPreservationIntegration.test_malformed_duplicate_nonfinite_nonobject_or_empty_json_is_not_preservable",
+            "line": 782,
+            "last_line": 796
+          },
+          {
+            "name": "RawPostbuildPreservationIntegration.test_missing_optional_operation_is_recorded_as_absent_not_fabricated_or_runtime_pass",
+            "line": 798,
+            "last_line": 806
+          },
+          {
+            "name": "RawPostbuildPreservationIntegration.test_missing_required_results_views_or_container_log_never_grants_an_ack",
+            "line": 759,
+            "last_line": 770
+          },
+          {
+            "name": "RawPostbuildPreservationIntegration.test_native_failure_context_validator_is_real_and_failures_do_not_stop_later_retention",
+            "line": 840,
+            "last_line": 852
+          },
+          {
+            "name": "RawPostbuildPreservationIntegration.test_raw_stage_failures_are_independent_and_original_primary_is_never_replaced",
+            "line": 747,
+            "last_line": 757
+          },
+          {
+            "name": "RawPostbuildPreservationIntegration.test_real_operation_validators_reject_unknown_private_fields_but_preserve_later_scenarios",
+            "line": 808,
+            "last_line": 825
+          },
+          {
+            "name": "RawPostbuildPreservationIntegration.test_required_extraction_symlink_hardlink_and_oversize_do_not_grant_ack",
+            "line": 876,
+            "last_line": 893
+          },
+          {
+            "name": "RawPostbuildPreservationIntegration.test_symlink_hardlink_directory_and_oversize_source_records_cannot_ack_or_block_other_safe_files",
+            "line": 854,
+            "last_line": 874
+          },
+          {
+            "name": "RawPostbuildPreservationIntegration.test_valid_operation_cannot_be_retained_under_another_planned_filename",
+            "line": 827,
+            "last_line": 838
+          },
+          {
+            "name": "RawPostbuildPreservationIntegration.test_wrong_container_scope_or_redirected_result_directory_never_authorizes_copying",
+            "line": 938,
+            "last_line": 961
+          },
+          {
+            "name": "XcodeBudgetIntegration.test_actual_a_and_b_build_argv_budget_test_selection_and_serialism_are_unchanged_except_qualified_a",
+            "line": 502,
+            "last_line": 558
+          },
+          {
+            "name": "XcodeBudgetIntegration.test_actual_a_budget_function_is_closed_and_qualified_only",
+            "line": 490,
+            "last_line": 500
+          }
+        ],
+        "removed": [
+          "LifecycleBuildBoundaryIntegration.test_companion_ack_requires_closed_extraction_pair_and_completed_retention_path"
+        ],
+        "changed": [
+          "LifecycleRouteIntegration.test_companion_main_parses_and_retains_mode_before_entering_its_build_lock",
+          "LifecycleRouteIntegration.test_non_lifecycle_app_and_provenance_simctl_calls_keep_generic_owner_routing"
+        ]
+      },
+      {
+        "path": "scripts/release/tests/test_native_continuation.py",
+        "sha256": "366cd58febbe2f91f7cc287af8942948dd15d5372de2cec750dcbde9f9539465",
+        "bytes": 80771,
+        "base_sha256": "dac139c779e33b795aa6f36fc0f853ee071099b927c901a9b993323c6f6edb35",
+        "base_bytes": 55155,
+        "matches_held": true,
+        "base_methods": 40,
+        "current_methods": 63,
+        "added": [
+          {
+            "name": "NativeInnerFailureAdmissionTest.test_a21_shaped_timeout_negative_exit_and_unreached_xcode_exit_assignment_still_block_b",
+            "line": 1112,
+            "last_line": 1117
+          },
+          {
+            "name": "NativeInnerFailureAdmissionTest.test_b_admission_oracle_detects_a_mutant_that_ignores_inner_execution_failure",
+            "line": 1219,
+            "last_line": 1225
+          },
+          {
+            "name": "NativeInnerFailureAdmissionTest.test_b_budget_denial_after_actual_safe_a_keeps_a_cleanup_authority_and_has_no_b_child_or_receipt",
+            "line": 1215,
+            "last_line": 1217
+          },
+          {
+            "name": "NativeInnerFailureAdmissionTest.test_direct_runtimeerror_timeout_code_refuses_b_after_truthful_prebuild_cleanup",
+            "line": 1119,
+            "last_line": 1126
+          },
+          {
+            "name": "NativeInnerFailureAdmissionTest.test_independent_command_type_and_code_oracles_kill_only_their_actual_classifier_guard_mutant",
+            "line": 1227,
+            "last_line": 1251
+          },
+          {
+            "name": "NativeInnerFailureAdmissionTest.test_inner_command_timeout_or_cancellation_refuses_b_even_when_top_error_is_ordinary",
+            "line": 1100,
+            "last_line": 1110
+          },
+          {
+            "name": "NativeInnerFailureAdmissionTest.test_inner_markers_and_deferred_signal_shapes_are_exact_not_truthy",
+            "line": 1138,
+            "last_line": 1152
+          },
+          {
+            "name": "NativeInnerFailureAdmissionTest.test_inner_receipt_timeout_or_cancellation_refuses_b_despite_complete_cleanup_and_no_outer_signal",
+            "line": 1094,
+            "last_line": 1098
+          },
+          {
+            "name": "NativeInnerFailureAdmissionTest.test_malformed_command_collections_are_refused_before_b_and_preserved_raw",
+            "line": 1195,
+            "last_line": 1198
+          },
+          {
+            "name": "NativeInnerFailureAdmissionTest.test_ordinary_strict_failure_still_admits_independent_b_without_reclassifying_a",
+            "line": 1200,
+            "last_line": 1213
+          },
+          {
+            "name": "NativeInnerFailureAdmissionTest.test_outer_signaled_or_malformed_exit_denies_b_even_when_inner_execution_and_cleanup_are_valid",
+            "line": 1133,
+            "last_line": 1136
+          },
+          {
+            "name": "NativeInnerFailureAdmissionTest.test_present_malformed_inner_error_shapes_never_become_absent_error_success",
+            "line": 1182,
+            "last_line": 1193
+          },
+          {
+            "name": "NativeInnerFailureAdmissionTest.test_secondary_and_raw_preservation_interruptions_or_bad_shapes_deny_b_separately",
+            "line": 1154,
+            "last_line": 1168
+          },
+          {
+            "name": "NativeInnerFailureAdmissionTest.test_semantic_direct_timeout_codes_are_rejected_independently_of_negative_exit_guard",
+            "line": 1170,
+            "last_line": 1180
+          },
+          {
+            "name": "NativeInnerFailureAdmissionTest.test_signaled_or_malformed_command_exit_without_a_python_primary_cannot_admit_b",
+            "line": 1128,
+            "last_line": 1131
+          },
+          {
+            "name": "NativeJobBudgetAdmissionTest.test_actual_consumer_uses_shared_raw_kernel_clock_not_python_process_or_wall_clock",
+            "line": 925,
+            "last_line": 937
+          },
+          {
+            "name": "NativeJobBudgetAdmissionTest.test_clock_context_schema_and_start_are_exact_not_coercible",
+            "line": 981,
+            "last_line": 1000
+          },
+          {
+            "name": "NativeJobBudgetAdmissionTest.test_fresh_a_and_b_require_complete_unchanged_child_grace_and_cleanup_reserve",
+            "line": 939,
+            "last_line": 955
+          },
+          {
+            "name": "NativeJobBudgetAdmissionTest.test_full_budget_boundary_is_nanosecond_exact_without_shrinking_wait_or_grace",
+            "line": 957,
+            "last_line": 970
+          },
+          {
+            "name": "NativeJobBudgetAdmissionTest.test_future_clock_and_non_evidence_scope_fail_closed",
+            "line": 1002,
+            "last_line": 1008
+          },
+          {
+            "name": "NativeJobBudgetAdmissionTest.test_missing_malformed_duplicated_or_unbounded_clock_denies_before_any_ownership_reset",
+            "line": 972,
+            "last_line": 979
+          },
+          {
+            "name": "NativeJobBudgetAdmissionTest.test_preownership_denial_oracle_detects_mutant_that_skips_budget_admission",
+            "line": 1023,
+            "last_line": 1026
+          },
+          {
+            "name": "NativeJobBudgetAdmissionTest.test_unavailable_kernel_clock_is_durably_denied_without_creating_a_run",
+            "line": 1010,
+            "last_line": 1021
+          }
+        ],
+        "removed": [],
+        "changed": [
+          "DirectLifecycleAdapterTest.test_actual_run_native_requests_mode_and_refuses_unsafe_evidence_before_a_second_lane",
+          "NativeCleanupTest.test_malformed_native_receipt_is_preserved_before_parsing"
+        ]
+      },
+      {
+        "path": "scripts/release/tests/test_workflow_contract.py",
+        "sha256": "695a513b227d1aa3bde6adb49f886713ccdde4f684d9e8478b476cb0c6d8c4ae",
+        "bytes": 39774,
+        "base_sha256": "525574c073695dd6d5ea50685573827039bd0b9ecd359fefe48c1025765c2a38",
+        "base_bytes": 33008,
+        "matches_held": true,
+        "base_methods": 48,
+        "current_methods": 52,
+        "added": [
+          {
+            "name": "WorkflowContractTest.test_actual_first_step_clock_producer_emits_exact_shared_kernel_and_run_source_token",
+            "line": 92,
+            "last_line": 120
+          },
+          {
+            "name": "WorkflowContractTest.test_native_clock_cannot_be_restarted_later_or_moved_after_checkout",
+            "line": 150,
+            "last_line": 162
+          },
+          {
+            "name": "WorkflowContractTest.test_native_clock_step_rejects_unshared_clocks_extra_code_fields_and_context_weakening",
+            "line": 122,
+            "last_line": 148
+          },
+          {
+            "name": "WorkflowContractTest.test_native_evidence_only_job_budget_and_all_other_scope_ceilings_are_exact",
+            "line": 70,
+            "last_line": 90
+          }
+        ],
+        "removed": [],
+        "changed": [
+          "WorkflowContractTest.test_probe_cleanup_binding_timeout_and_artifact_paths_are_exact"
+        ]
+      },
+      {
+        "path": "scripts/release/tests/test_native_process_probe.py",
+        "sha256": "513e45a9c4b46b8e58ef3058abc0da6148223bd5175d1b784a190b8153de9c8d",
+        "bytes": 43371,
+        "base_sha256": "2730119da9d074d490a259669d3e9f9b4fec655da2045bfd9401ee44dc91e4ea",
+        "base_bytes": 43371,
+        "matches_held": true,
+        "base_methods": 45,
+        "current_methods": 45,
+        "added": [],
+        "removed": [],
+        "changed": [
+          "ProbeSourceContractTest.test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels"
+        ],
+        "outside_owned_method_ast_equal": true,
+        "outside_owned_method_ast_sha256": "075d97a1f3090e7967912674ff7595fe7b7ede0f0c37975ae406eec3694c3ec2"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+        "sha256": "9cbc54882717a4c441b51e953c883579976cdd1c299d9a57099a713c36823464",
+        "bytes": 34551,
+        "base_sha256": "1ee5d5889d50b94a11d3e3d2ce881899c2434eb97489e953f546a2b7d344afd5",
+        "base_bytes": 28101,
+        "matches_held": true,
+        "base_methods": 22,
+        "current_methods": 22,
+        "added": [],
+        "removed": [],
+        "changed": [
+          "SourceControls.test_preservation_binding_and_required_gate_do_not_replace_original_gates"
+        ],
+        "outside_owned_method_ast_equal": true,
+        "outside_owned_method_ast_sha256": "630e9cd938dedd8c1e846aa16573ab0513e85963deaa981e71a95847ec1b8910"
+      }
+    ],
+    "related_held_implementation_inputs": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+        "sha256": "9580071ecec4abc8ba375ca01e722eee4245f36132e6a5b8790f5d8bb8456687",
+        "bytes": 87139
+      },
+      {
+        "path": "scripts/ci/native_continuation.py",
+        "sha256": "e41186dc13dd94e851b449079d73b98cc4655bb6234ebcd76adc61942bb12feb",
+        "bytes": 64697
+      },
+      {
+        "path": ".github/workflows/production-verification.yml",
+        "sha256": "84888fae00e1add37dd8f39c5a86a9600c2a95b5e3bca794133c3fc28147b46c",
+        "bytes": 41331
+      },
+      {
+        "path": "scripts/release/workflow_contract.py",
+        "sha256": "fa142d3bbfb3dd18e0f3dc9aba2f388a3ce634ee7fdd16612b2d9bbf2df1f429",
+        "bytes": 47465
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+        "sha256": "7d99de87082cda02d1e003ca8cad35835dec5fb34afd58c41ee3c9b7e30c8bdf",
+        "bytes": 21848
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+        "sha256": "399151fef8743c2553bf72f40affb07842a00f643dd34fed1aa3703c0efcec09",
+        "bytes": 13449
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/a23-budget-preservation-draft-freeze-01.json",
+        "sha256": "f73bd3be82522dd4a3404bc68c4c0093d7af7b7b7f9d37bfd87a993c4aebb618",
+        "bytes": 5076
+      }
+    ],
+    "separate_independent_source_reviews": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-l08-exception-budget-source-independent-01.json",
+        "sha256": "ec35843efe93b07879ce581dde38f0f1add9abb183f9ac2e6a17bb2bb2f09e2e",
+        "bytes": 24624
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-native-budget-admission-source-independent-01.json",
+        "sha256": "579614bf2bb71a8440acaa811e7b63a20d058576fe1579fb29bc940868e281a8",
+        "bytes": 28096
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/a23-budget-preservation-composition-independent-01.json",
+        "sha256": "9c4d3345f00e50e5902f8501269119b2bc538ea54db289e72cfbd8d62d784055",
+        "bytes": 37708
+      }
+    ]
+  },
+  "inspection_method": {
+    "actual_actions": "Reopened current source and test diffs, relevant full method bodies, inherited source contracts and completed historical evidence. Read-only Git plus standard-library AST/literal/JSON/hash/filesystem inspection; one authorized additive report write.",
+    "baseline_comparison": "Compared actual method ASTs against git show e5111ea4:path. For probe/composition, removed only the owned method from both module ASTs and compared the entire remaining ast.dump(include_attributes=False) output. Their outside-method hashes in reviewed_tests use that exact method, not a different author serialization.",
+    "project_imports": 0,
+    "extracted_project_functions_executed": 0,
+    "tests_discovered_or_executed": 0,
+    "project_compile_or_exec_calls": 0,
+    "native_tools_or_builds": 0,
+    "network_or_actions_dispatches": 0,
+    "root_build_lane_untouched": true,
+    "count_semantics": "All counts in this report are AST declarations and proposed selectors, not discovery or execution results.",
+    "actual_results_boundary": "Root reported separate standalone workflow/transport checks completed before this report. This reviewer has not opened or adjudicated those artifacts. Execution and postrun evidence for the selected 286-control packet remain separate."
+  },
+  "resolved_review_findings": [
+    {
+      "id": "INNER-TYPE-CODE-ORACLE-INDEPENDENCE",
+      "original_issue": "Provisional type/code rejection controls used negative command exits; the earlier negative-exit guard could reject before the intended type/code predicate, leaving those controls confounded.",
+      "held_resolution": "Typed command controls now use positive exit65, ordinary top-level RuntimeError and no xcodebuild_exit_code assignment. Semantic direct-code controls use positive65 plus a positive ordinary-error twin. Exact A21-shaped negative15/unreached-assignment rejection is separate.",
+      "mutation_validity": "The held test locates the unique actual kind or code set-comparison AST node, changes only that deny set to empty, asserts the mutation occurred, and exercises the real A/B Continuation.evidence/run_native chain. The unmutated chain must reject; each mutant must cause precisely AssertionError matching RuntimeError not raised. This does not pass merely because any assertion failed.",
+      "status": "SOURCE_REVIEW_RESOLVED_EXECUTION_PENDING"
+    },
+    {
+      "id": "RAW-POSTREAD-IDENTITY-PHASE",
+      "original_issue": "The provisional second-path-lstat hook was not the postread phase: retain() first performs its own existence lstat.",
+      "held_resolution": "Held mutation records the target device/inode and wraps actual descriptor fstat checks. The path mutation arms only after both reader descriptor checks, then asserts exactly two descriptor checks and that the postread mutation actually happened. A separate before-open replacement remains.",
+      "oracle": "Actual read_stable_owned_file must reject the changed postread pathname identity; target destination must remain absent while a later safe record is still retained.",
+      "status": "SOURCE_REVIEW_RESOLVED_EXECUTION_PENDING"
+    },
+    {
+      "id": "ACTUAL-MAIN-PROFILE-BUDGET-WIRING",
+      "original_issue": "Calling xcode_time_budget(profile) only from the fixture would not detect an incorrect profile wired by actual main.",
+      "held_resolution": "Final integration667bcdf5 executes actual pre-lock main parsing for both selected profiles and asserts its xcode_budget plus the actual initialized receipt xcode_time_budget. Both companion and composed argv controls extract and execute the unique actual main xcode_budget assignment with the selected toolchain_name; they no longer supply a fixture-authored budget call.",
+      "limits": "The normal runner budget remains2700/120/240 and is independently asserted unchanged. Companion local remains2700/1200/1500; only qualified A uses5400/3000/3300.",
+      "status": "SOURCE_REVIEW_RESOLVED_EXECUTION_PENDING",
+      "superseded_integration_hold": "53e0c89ade0d977e7aaeff694c9de3f498bc34df806cf0d467374399b7ad7a2a",
+      "final_integration_hold": "667bcdf53c001ee3a098fda3f53a2eac0eea5457cee8b1ebc781bfd90a418c1d"
+    }
+  ],
+  "cleared_static_question": {
+    "issue": "The cross-boundary finalizer test borrows RawPostbuildPreservationIntegration.fixture using a LifecycleFinalizerIntegration TestCase receiver.",
+    "resolution": "Reopened final667bcdf5 bytes use RawPostbuildPreservationIntegration.SCENARIOS explicitly at line633, not self.SCENARIOS. Other receiver dependencies are TestCase assertions/addCleanup. The tentative borrowed-class AttributeError concern is not present in these bytes and was not reported as an executed failure.",
+    "author_change_requested": false
+  },
+  "regression_validity": {
+    "command_primary_29": {
+      "actual_path": "Selected actual command loop and actual main Xcode try/except/finally with actual finish_xcode_attempt; only child/process/time effects and raw collector boundary are inert.",
+      "new_oracles": [
+        "An injected clock transition0 to5401 triggers the actual5400-second watchdog and retains the identical TimeoutExpired object and observed negative15 exit; no xcodebuild_exit_code assignment is fabricated.",
+        "Interrupt, immediate-stop and raw-preservation secondaries cannot replace the primary; stop precedes preservation even on error. Secondary diagnostics use bounded closed stage/type/fixed-message shapes.",
+        "A final receipt-save failure cannot mask a command primary; when no command primary exists the save failure propagates rather than being swallowed."
+      ],
+      "baseline": "All26 original test-method ASTs unchanged; three added. Synthetic commands are not real Xcode or app runtime."
+    },
+    "integration_54": {
+      "actual_path": "Actual selected companion/composed/normal source AST functions and actual build/finalizer blocks; actual raw collector, identity reader/writer, plans and validators; actual lifecycle prepare_cleanup barrier with inert worker/device operations.",
+      "raw_validation_sources": [
+        "artifact_inventory.py framework/loader validators and closed constants",
+        "l08_receipts.py storage/host plans, protection metadata and preservable-operation validator",
+        "l08_functional_receipts.py functional plan/comparison and preservable-operation validator",
+        "native_failure_receipts.py native diagnostic failure validator",
+        "run_ios_readiness.py read_stable_owned_file, raw_json_object, write_raw_owned_file, preserve_postbuild_raw, finish_xcode_attempt and xcode_time_budget"
+      ],
+      "positive_fixture_truth": "All-plans retention intentionally uses synthetic XCTest views and FAIL storage/host/functional observations. Real validators are wrapped with Mock(wraps=actual), not replaced by acceptance stubs. Every planned safe operation and eight native-failure receipts can be retained while runtime staysFAIL and the original TimeoutExpired receipt remains unchanged. Raw COMPLETE means bounded preservation only.",
+      "negative_oracles": [
+        "Missing required xcresult views or container; malformed, duplicate-key, nonfinite, nonobject or empty JSON; exact-integer command exits.",
+        "Source and extraction symlink/hardlink/directory/oversize refusal, before-open replacement, actual postread identity changes, foreign container and redirected temporary/results paths.",
+        "No overwrite of existing or symlink destinations; real unknown/private-field, planned-filename and native-failure-context validator rejection.",
+        "Earlier failure does not suppress later safe records; absent optional operations are listed rather than fabricated.",
+        "Full120-second extraction commands remain unchanged; the420-second aggregate refuses a late command instead of shortening its allowed timeout.",
+        "Failed durable acknowledgement save revokes authority; COMPLETE and FAIL replay controls assert no second command or write.",
+        "ExactTrue finisher acknowledgement, independent composed callback preservation and original-primary preservation under secondary failure."
+      ],
+      "actual_cross_boundary": "The new finalizer integration uses one live receipt for actual Xcode boundary -> actual raw collector -> actual prepare_cleanup -> actual wrapper finalizer. Timeout, interrupt and immediate-stop-primary variants each run with raw success/failure. Tests require stop-immediate then raw extraction then stop-final then barrier. Raw failure blocks simulator shutdown/delete and owned-copy removal, but the secondary/FIFO worker cleanup and lifecycle finish still run. Raw success permits cleanup only after the real barrier and never changes runtimeFAIL.",
+      "unknown_holder": "A separate true-raw-ack fixture sets an unknown holder and exercises the actual barrier; device destruction and owned-copy deletion must remain denied. Preservation is not process custody.",
+      "replaced_old_control": {
+        "removed": "LifecycleBuildBoundaryIntegration.test_companion_ack_requires_closed_extraction_pair_and_completed_retention_path",
+        "rationale": "The source no longer uses that inline acknowledgement region. Its intended closed-extraction/completed-retention semantics are now tested through the actual one-shot collector and durable save, plus the actual build-to-barrier cross-boundary path, rather than retaining a dead-source fragment.",
+        "replacement_classes": [
+          "RawPostbuildPreservationIntegration",
+          "LifecycleFinalizerIntegration"
+        ],
+        "unchanged_normal_extraction_controls": "The normal three-view extraction acknowledgement and failed-save tests remain unchanged."
+      },
+      "baseline": "23 added methods, one replaced inline companion-ack method removed, two existing route methods adapted, all other pre-existing test-method ASTs unchanged.",
+      "explicit_coverage_limit": "There is no dedicated RUNNING-state replay mutation in these54 methods. The source one-shot guard also rejects RUNNING, but this report does not claim an executed RUNNING replay control."
+    },
+    "adapter_clock_and_admission_63": {
+      "actual_path": "Actual Continuation.evidence and run_native admission plus raw preservation, cleanup_is_safe and lifecycle_journal_matches. Each refusal fixture first asserts the independent cleanup and journal predicates really accept its complete synthetic custody, so policy refusal is not attributed to a fabricated unsafe fixture.",
+      "oracles": [
+        "Typed receipt/command timeout or cancellation, exact direct type/code timeout forms, malformed markers and deferred-signal shapes, signaled/malformed command and outer exits, malformed errors and secondary/raw interruption structures each deny B.",
+        "Actual A21-shaped timeout negative15 and absent xcodebuild_exit_code retained as a distinct case.",
+        "Direct bootstatus-timeout fixture remains truthfully prebuild; it does not invent a later build or positive postbuild barrier.",
+        "Raw A bytes are preserved COMPLETE before admission refuses B. Ordinary positive65 strict A failure may admit independent B without relabeling A as runtimePASS.",
+        "ExplicitFalse markers and empty deferred-signals positive twin prevent a deny-everything oracle.",
+        "B budget denial after independently safe A preserves A cleanup authority and leaves no B child, log, receipt or ownership-reset state.",
+        "Actual clock consumer selects shared CLOCK_MONOTONIC_RAW; no Python-process-relative or wall clock substitution.",
+        "Exact run/source/attempt/job/schema bindings, positive integral start, duplicate/malformed/unavailable/future clocks fail before RUNNING or ownership reset.",
+        "14400-second job budget minus the unchanged6000 child wait,600 finalizer grace and600 finish reserve requires7200 seconds remaining, with nanosecond boundary coverage and no shrunk wait/grace.",
+        "A mutant that skips preownership budget admission fails specifically at forbidden child invocation; separate whole-classifier and individual kind/code guard mutants are nonvacuous."
+      ],
+      "baseline": "23 added methods; only two old methods adapted to provide the required actual clock fixture/patch. Other existing test-method ASTs unchanged."
+    },
+    "workflow_52": {
+      "actual_path": "Actual workflow first-step Python clock heredoc is parsed and, only when root runs these tests, executed with inert clock/context/file globals; no real shell, environment write or native tool is part of that control.",
+      "oracles": [
+        "Exact native-evidence240/probe10/default120 job timeout expression, without widening unrelated scope ceilings.",
+        "First-step shared raw kernel clock and exact source/run/attempt/job token, before checkout or expensive setup.",
+        "Nonvacuous clock/context/budget mutations; appended code retaining the original heredoc fails the exact-step validator.",
+        "Extra env or continue-on-error fields and moved/duplicated clock steps fail; the unique actual iOS checkout block is used by the move mutation."
+      ],
+      "baseline": "Four added methods. The old timeout-literal mutation moved from the existing probe cleanup test into the new exact expression control rather than being dropped."
+    },
+    "selected_probe_1": {
+      "actual_path": "The sole changed method asserts actual effective_scope semantics, exact CYCLES23/24 and refusal to construct app continuation for the non-app probe scope.",
+      "edit": "Only21/22 ->23/24 expected cycle literals changed. Entire module AST outside this method and the other44 test methods equal baseline.",
+      "not_claimed": "No execution or renewed review of the other44 probe methods; no app/libproc runtime inference from this scope assertion."
+    },
+    "composition_55": {
+      "changed_method": "SourceControls.test_preservation_binding_and_required_gate_do_not_replace_original_gates",
+      "approval": "The sole changed composition method is source-contract testing of actual regions, not a handwritten replacement implementation. All outside-method module AST is unchanged.",
+      "actual_path_oracles": [
+        "The unique actual xcode = command assignment is selected, not xcodebuild-version. Its exact BaseException handler, initial xcode_error and unconditional finally invoke actual finish_xcode_attempt.",
+        "Stop and collector lambdas are exact; a single composed Foundation preservation callback is threaded to the actual collector.",
+        "Actual finisher invokes action() and rethrows the primary. Actual collector calls the callback only after the validated container gate and under deferred signals, then saves, before later records and acknowledgement.",
+        "Actual main ordering remains inventories -> Foundation binding -> available records -> XCTest -> required collection -> runtime classification.",
+        "Before cleanup, actual Foundation/raw exactTrue conjunction is durably saved before prepare_cleanup/shutdown/delete; source/runtime checks are not bypassed."
+      ],
+      "independent_static_reconstruction": {
+        "added_methods": [],
+        "anchor_occurrences": [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "changed_methods": [
+          "SourceControls.test_preservation_binding_and_required_gate_do_not_replace_original_gates"
+        ],
+        "comparison_is_static_not_control_execution": true,
+        "exact_body_oracle_matches": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "exact_body_oracles": 9,
+        "files": [
+          {
+            "bytes": 34551,
+            "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+            "sha256": "9cbc54882717a4c441b51e953c883579976cdd1c299d9a57099a713c36823464"
+          },
+          {
+            "bytes": 21848,
+            "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+            "sha256": "7d99de87082cda02d1e003ca8cad35835dec5fb34afd58c41ee3c9b7e30c8bdf"
+          },
+          {
+            "bytes": 87139,
+            "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+            "sha256": "9580071ecec4abc8ba375ca01e722eee4245f36132e6a5b8790f5d8bb8456687"
+          }
+        ],
+        "literal_reconstructed_source_sha256": "dcb1f6ce32da3fc83b24bf2b2b868de68ac7fb35ca1539fc31140ce2589e60d7",
+        "literal_transform_count": 12,
+        "main_call_counts": {
+          "finish_xcode_attempt": 1,
+          "foundation.preserve": 1,
+          "preserve_postbuild_raw": 1
+        },
+        "method": "Independent stdlib literal-data reconstruction plus AST/hash inspection only; no project import, render_source invocation, compile, exec or test discovery",
+        "outside_changed_method_ast_equal": true,
+        "protected_companion_definitions_equal": true,
+        "removed_methods": [],
+        "xcode_assignments": 1
+      },
+      "loaded_controls": {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py",
+        "sha256": "c04c7d4b1bb99207415beab77ae3b40bb3d5f59709970f7d844d5d14beab0fe5",
+        "bytes": 34661,
+        "declared_methods": 33,
+        "bytes_unchanged_from_e511": true
+      },
+      "count": "22 own declarations plus33 draft declarations loaded by load_tests =55 expected methods, not executed results."
+    }
+  },
+  "selective_execution_applicability": {
+    "status": "PROPOSED_EXACT_FOCUSED_PACKET_NOT_EXECUTED_BY_REVIEWER",
+    "selected_commands": 8,
+    "expected_selected_methods": 286,
+    "arithmetic": "29+54+63+52+1+55+20+12=286",
+    "selections": [
+      {
+        "path": "scripts/verification/ios-readiness/test_native_command_failures.py",
+        "selected_methods": 29
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_simulator_lifecycle_integration.py",
+        "selected_methods": 54
+      },
+      {
+        "path": "scripts/release/tests/test_native_continuation.py",
+        "selected_methods": 63
+      },
+      {
+        "path": "scripts/release/tests/test_workflow_contract.py",
+        "selected_methods": 52
+      },
+      {
+        "path": "scripts/release/tests/test_native_process_probe.py",
+        "selected_methods": 1,
+        "selector": "scripts.release.tests.test_native_process_probe.ProbeSourceContractTest.test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels",
+        "remaining_44_methods_not_selected": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+        "selected_methods": 55,
+        "own_declarations": 22,
+        "loaded_draft_declarations": 33,
+        "loaded_draft": {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py",
+          "sha256": "c04c7d4b1bb99207415beab77ae3b40bb3d5f59709970f7d844d5d14beab0fe5",
+          "bytes": 34661,
+          "declared_methods": 33,
+          "bytes_unchanged_from_e511": true
+        }
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py",
+        "selected_methods": 20
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+        "selected_methods": 12
+      }
+    ],
+    "unchanged_supplemental_controls": [
+      {
+        "path": "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py",
+        "sha256": "613f255556f052d553a2e85dc7d84e4f137957f47732356449e22d6991f7fc53",
+        "bytes": 24627,
+        "declared_methods": 20,
+        "bytes_unchanged_from_e511": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+        "sha256": "b58d9761b7c199f0ab7fd01c2c6614d2f49e0a71102fd54ff3f6783acfede7f0",
+        "bytes": 25344,
+        "declared_methods": 12,
+        "bytes_unchanged_from_e511": true
+      }
+    ],
+    "rationale": "Foundation20 and functional12 are unchanged source/copy controls included because current composer/adapter/companion pins and collector interfaces rebind their actual closure. This review does not replace prior unchanged-control semantic reviews; it independently confirms their current identities/declaration counts and relevance.",
+    "command_authority": "Root and dependency_chain own the exact executable command manifest and frozen input closure. Proposed count must be reconciled against actual descriptors/results; this JSON is not a runner manifest or source binding.",
+    "excluded_from_this_focused_packet": [
+      {
+        "name": "normal provenance187",
+        "reason": "Already reviewed unchanged normal control body; no new normal-runner behavior edit in this packet. Historical187 success is not actual Parlor libproc runtime and is not renewed here."
+      },
+      {
+        "name": "low-level lifecycle51",
+        "reason": "Helper and test bytes unchanged from e511; wrapper/barrier integration is selected and exercises actual prepare_cleanup. Do not repeat unchanged low-level success merely to inflate counts."
+      },
+      {
+        "name": "single-tap14",
+        "reason": "Previously corrected copy-only interaction fixture is unchanged by this budget/preservation packet; its historical control success does not prove unfinished L08 runtime."
+      },
+      {
+        "name": "toolchain12",
+        "reason": "Profile helper/test bytes and actual companion selected_toolchain/profile/developer_environment/validate_observation call ASTs remain unchanged. Validation stays before simulator creation. New budget/profile/receipt/argv wiring is covered by the selected controls."
+      },
+      {
+        "name": "other probe44",
+        "reason": "Whole module AST outside the sole owned cycle/scope method equals e511 and probe implementation is not changed by this packet."
+      }
+    ],
+    "unchanged_helper_identities": [
+      {
+        "path": "scripts/verification/ios-readiness/toolchain_profiles.py",
+        "sha256": "8adacaf4c59ed823aa088ecb70ad5c6c1e3f76e7ca3520d8abf0563341591313",
+        "bytes": 3358,
+        "bytes_unchanged_from_e511": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_toolchain_profiles.py",
+        "sha256": "aee9e30948813929393acedfaad5767fee2a47eb896a7eddd81db96208f14672",
+        "bytes": 12166,
+        "declared_methods": 12,
+        "bytes_unchanged_from_e511": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/simulator_lifecycle.py",
+        "sha256": "8d799475f1e92fc7943ca05b2d1e59655cbb8b0973031029440662059e65f248",
+        "bytes": 37085,
+        "bytes_unchanged_from_e511": true
+      },
+      {
+        "path": "scripts/verification/ios-readiness/test_simulator_lifecycle.py",
+        "sha256": "2f7c957e47aa63804866a71e3b5a8566342c6f7deca2f80e57f0cd42af1a5a46",
+        "bytes": 75257,
+        "declared_methods": 51,
+        "bytes_unchanged_from_e511": true
+      }
+    ],
+    "exclusions_not_global_waivers": true
+  },
+  "historical_evidence_reconciliation": {
+    "A21": {
+      "run_id": "34275491965",
+      "source_commit": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+      "receipt": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/receipt.json",
+        "sha256": "2d8168608c71fbc4bbed03cc23f595eafc95473e7e4fa3ec1277f61961ed18a3",
+        "bytes": 425426
+      },
+      "xcode_log": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/native-evidence/ios-readiness-21/xcodebuild.log",
+        "sha256": "dd68f0f5ee696408953e9b3dcdc11bf6a9c9a70d2593ea4c57c13333b48ac468",
+        "bytes": 408545
+      },
+      "independent_postrun_review": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-34275491965-postrun-independent-01.json",
+        "sha256": "85ca368c5ee2850cc8fdad3449eca87c1a057e5d3adbad89585e525d608adc31",
+        "bytes": 34488
+      },
+      "reopened_underlying_evidence": true,
+      "observations": [
+        "Actual2700-second whole-command watchdog raised TimeoutExpired, with observed exit-15 and no xcodebuild_exit_code assignment reached.",
+        "About2061.721 seconds elapsed before first XCTest; the Gradle portion took30m47s. Four UIKit tests passed; fifth was incomplete after639.75s, before the Home tap required by functional storage.",
+        "Ordinary raw postbuild collection was skipped; acknowledgementFalse. Partial Foundation raw data does not establish complete collection.",
+        "CleanupFAIL retained an unknown actual Parlor holderPID22519; simulator shutdown/delete was not authorized. Tests must not adopt that PID or fake quiescence.",
+        "B22 wasNOT_RUN, not normal Debug libproc application-runtime evidence.",
+        "Strict runtime26.2 observations retain eight FileManager missing values, five URL until-first-user-authentication values and eight volumeUNSUPPORTED values. Historical native16 on26.5 reported volumeSUPPORTED, so no universal simulator waiver is justified."
+      ],
+      "new_controls_do_not_relabel_run": true
+    },
+    "C03": {
+      "independent_scoped_review": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-postrun-independent-03.json",
+        "sha256": "6e6d21a6fb9b085fbbcbcf3cba8d74bde392ee09f45085e59c17a84b926b5df3",
+        "bytes": 24875
+      },
+      "status": "Previously accepted scoped resolved-input/source-notice chain at e511; not rerun or relabeled by this review.",
+      "limit": "No app runtime, final-binary notice, Store/legal or later-frozen-source qualification inference."
+    }
+  },
+  "invariants": {
+    "no_application_or_rule_edits_by_reviewer": true,
+    "strict_protection_and_content_validation_not_waived": true,
+    "source_controls_platform_ownership_and_cleanup_guards_not_waived": true,
+    "host_only_protocol_4_2_seed_privacy_doctor_and_leave_timer_policies_unmodified_by_review": true,
+    "failed_receipts_and_archived_reports_preserved": true,
+    "no_Store_publication_or_promotion": true
+  },
+  "execution_and_cleanup": {
+    "controls_result": "PENDING_ROOT_EXECUTION_FOR_THIS_HELD_PACKET",
+    "native_runtime_result": "NOT_EXECUTED_BY_THIS_REVIEW",
+    "root_postrun_review_required": true,
+    "no_active_cycle_artifacts_opened": true,
+    "review_resource_allocation": "No build, project interpreter import, native process, simulator, FIFO worker or generated project output allocated.",
+    "cleanup": "NOT_APPLICABLE_FOR_READ_ONLY_REVIEW; no Gradle stop/clean, process termination or resource deletion attempted. The sole filesystem write is this authorized additive report.",
+    "wrote_only": "remediation-runs/2026-09-08-continuation/reviews/hosted-native-budget-preservation-controls-independent-01.json"
+  },
+  "next_gate": "Root may close the exact selective packet against these held bytes. After actual results and coordinated cleanup are independently reconciled, reviewed source/control changes must be committed, mechanical inventory regenerated and committed, then fresh frozen-source/control bindings established before justified native/combined qualification. Any reviewed-file byte change requires scoped re-review.",
+  "readiness": {
+    "verdict": "NOT_READY",
+    "reason": "This is regression-source approval only. Strict L08 functional-storage/retained-host runtime, unresolved protection observations, normal Debug libproc runtime and final frozen combined qualification are not passed by these controls.",
+    "separate_external_requirements": [
+      "Physical-device/LAN/accessibility evidence",
+      "Store identity/credentials/signing/publication operations",
+      "Owner/legal/privacy approvals"
+    ],
+    "no_everything_works_or_Store_ready_claim": true
+  }
+}

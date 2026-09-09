@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "requested_at": "2026-09-08T20:33:25.295290+00:00",
+  "repository": "Apdelrahman1911/parlor",
+  "workflow": ".github/workflows/production-verification.yml",
+  "ref": "fix/local-readiness-2026-09-07",
+  "inputs": {
+    "verification_scope": "native-evidence",
+    "frozen_source_sha": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+    "preflight_run_id": "34273018746",
+    "preflight_run_attempt": "1",
+    "preflight_artifact_id": "10074652767",
+    "preflight_artifact_sha256": "ef09855f3ac458341a810eb4bc6353d07996c2c8883d2f0a9bd0902ec6b1175d",
+    "approved_l08_control_sha256": "840467f0656642c46bdef61c9c48e6355d2b78ac7dee1d00b302a61d4c798c3a",
+    "approved_normal_control_sha256": "427b30f1ec821438cf6ecc8a2fbe0e01e5509220a0adde26ecd3b5da6e662983"
+  },
+  "approval": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-preflight-34273018746-independent-01.json",
+    "sha256": "fce841a029d8874d88d6aec24d772cd7ca2f34b0dc1495eb002285ac87e4875f"
+  },
+  "collection_correction": {
+    "reviewer": "/root/ci_review",
+    "scope": "Approved identical --paginate read-only API with complete raw_decode page/count/ID/branch/workflow checks, no --slurp; exact workflow dispatch command unchanged",
+    "retained_failure": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-03-preparation-failure.json"
+  },
+  "source_before": {
+    "commit": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+    "tree": "a88872673bd4cfc366236362f287c1db0a04a5cd",
+    "full_history": true,
+    "tracked_diff_empty": true
+  },
+  "remote_before": "e5111ea49113c3f12cb577058c3f926dfebdc325\trefs/heads/fix/local-readiness-2026-09-07",
+  "prior_run_ids": [
+    34273018746,
+    34244902185,
+    34242374948,
+    34239707887,
+    34232325670,
+    34216788568,
+    34214410629,
+    34152138368,
+    34143924756,
+    34112913001
+  ],
+  "prior_total_count": 10,
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=native-evidence",
+    "-f",
+    "frozen_source_sha=e5111ea49113c3f12cb577058c3f926dfebdc325",
+    "-f",
+    "preflight_run_id=34273018746",
+    "-f",
+    "preflight_run_attempt=1",
+    "-f",
+    "preflight_artifact_id=10074652767",
+    "-f",
+    "preflight_artifact_sha256=ef09855f3ac458341a810eb4bc6353d07996c2c8883d2f0a9bd0902ec6b1175d",
+    "-f",
+    "approved_l08_control_sha256=840467f0656642c46bdef61c9c48e6355d2b78ac7dee1d00b302a61d4c798c3a",
+    "-f",
+    "approved_normal_control_sha256=427b30f1ec821438cf6ecc8a2fbe0e01e5509220a0adde26ecd3b5da6e662983"
+  ],
+  "scope": "ONE_REVIEWED_A21_THEN_B22_NATIVE_EVIDENCE_INITIAL_ATTEMPT_ONLY_B_GATED_SAFE_A; no full/probe/Store authorization"
+}

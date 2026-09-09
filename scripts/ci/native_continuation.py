@@ -19,6 +19,7 @@ import signal
 import stat
 import subprocess
 import sys
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -39,8 +40,13 @@ RUNNERS = {
     "l08": OLD_CAMPAIGN + "/native/l08-app-foundation-composition-01/compose_runner.py",
     "normal": OLD_CAMPAIGN + "/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
 }
-CYCLES = {"l08": "ios-readiness-21", "normal": "ios-readiness-22"}
+CYCLES = {"l08": "ios-readiness-23", "normal": "ios-readiness-24"}
 LIFECYCLE_MODE = "direct-owned-v1"
+NATIVE_JOB_SECONDS = 240 * 60
+NATIVE_WAIT_SECONDS = 6000
+NATIVE_GRACE_SECONDS = 600
+NATIVE_FINISH_RESERVE_SECONDS = 600
+JOB_CLOCK_ENV = "PARLOR_NATIVE_JOB_CLOCK"
 PREFLIGHT_FILES = {"preflight.json", BINDING_NAME, "l08-controls.json", "normal-controls.json"}
 HEX40 = re.compile(r"[0-9a-f]{40}\Z")
 HEX64 = re.compile(r"[0-9a-f]{64}\Z")
@@ -611,6 +617,91 @@ def cleanup_is_safe(receipt, approved, source, *, lifecycle_mode=None):
             (not attempted or receipt.get("copied_sources_unchanged") is True))
 
 
+def inner_execution_completed(receipt):
+    """Admission is separate from cleanup: a safely retired timeout is still a timeout.
+
+    AppHost emits type/message; the direct lifecycle emits type/code. Its timeout
+    can be RuntimeError/command-timeout, not just subprocess.TimeoutExpired.
+    Ordinary strict/assertion failure may advance B, but interruption may not.
+    """
+    if not isinstance(receipt, dict):
+        return False
+
+    def ordinary_error(value, staged=False):
+        if not isinstance(value, dict):
+            return False
+        keys = set(value) - ({"stage"} if staged else set())
+        if keys not in ({"type", "message"}, {"type", "code"}):
+            return False
+        if staged and (not isinstance(value.get("stage"), str) or not 1 <= len(value["stage"]) <= 256):
+            return False
+        kind = value.get("type")
+        if (not isinstance(kind, str) or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]{0,127}", kind) or
+                kind in {"TimeoutExpired", "TimeoutError", "KeyboardInterrupt", "SystemExit",
+                         "CancelledError", "NativeInterrupted"}):
+            return False
+        if "code" in value:
+            code = value["code"]
+            return (isinstance(code, str) and re.fullmatch(r"[a-z][a-z-]{0,95}", code) is not None and
+                    code not in {"command-timeout", "cancelled"})
+        message = value["message"]
+        return (isinstance(message, str) and len(message) <= 800 and
+                message not in {"direct-simulator-command-timeout", "direct-simulator-cancelled"})
+
+    def error_list(value):
+        return (isinstance(value, list) and len(value) <= 256 and
+                all(ordinary_error(row, staged=True) for row in value))
+
+    if "error" in receipt and not ordinary_error(receipt["error"]):
+        return False
+    for key in ("interrupted", "timed_out"):
+        if key in receipt and receipt[key] is not False:
+            return False
+    if "deferred_signals" in receipt and receipt["deferred_signals"] != []:
+        return False
+    if "postbuild_secondary_errors" in receipt and not error_list(receipt["postbuild_secondary_errors"]):
+        return False
+    if "raw_postbuild_preservation" in receipt:
+        state = receipt["raw_postbuild_preservation"]
+        if (not isinstance(state, dict) or not isinstance(state.get("status"), str) or
+                state["status"] not in {"NOT_RUN", "RUNNING", "COMPLETE", "FAIL"} or
+                "errors" in state and not error_list(state["errors"])):
+            return False
+    commands = receipt.get("commands")
+    if not isinstance(commands, list) or len(commands) > 4096:
+        return False
+    for row in commands:
+        if (not isinstance(row, dict) or not isinstance(row.get("command"), list) or not row["command"] or
+                not all(isinstance(argument, str) for argument in row["command"])):
+            return False
+        if "exit_code" in row and (type(row["exit_code"]) is not int or row["exit_code"] < 0):
+            return False  # A signaled child need not have raised in its command wrapper.
+        for key in ("interrupted", "timed_out"):
+            if key in row and row[key] is not False:
+                return False
+        if "interrupted_or_failed" in row:
+            marker = row["interrupted_or_failed"]
+            if (type(marker) is not bool or marker and "primary_error" not in row or
+                    not marker and "primary_error" in row):
+                return False
+        for key in ("primary_error", "command_persistence_error"):
+            if key in row and not ordinary_error(row[key]):
+                return False
+        if "command_cleanup_error" in row and not ordinary_error(row["command_cleanup_error"], staged=True):
+            return False
+        if "secondary_errors" in row and not error_list(row["secondary_errors"]):
+            return False
+    return True
+
+
+def native_job_clock_ns():
+    # Unlike time.monotonic() on older macOS Python, this is the same explicit
+    # kernel clock in the workflow's first step and this separate process.
+    value = time.clock_gettime_ns(time.CLOCK_MONOTONIC_RAW)
+    require(type(value) is int and value > 0, "invalid-native-job-kernel-clock")
+    return value
+
+
 def walk_failure(error):
     raise error  # os.walk's default silently omits failed directory reads.
 
@@ -809,13 +900,13 @@ class Continuation:
                         stdout=output, stderr=subprocess.STDOUT)
                     if entry.get("interrupted"):
                         raise NativeInterrupted()
-                    entry["exit_code"] = child.wait(timeout=6000)
+                    entry["exit_code"] = child.wait(timeout=NATIVE_WAIT_SECONDS)
                 except (subprocess.TimeoutExpired, NativeInterrupted) as error:
                     finishing = True
                     entry["timed_out"] = isinstance(error, subprocess.TimeoutExpired)
                     child.send_signal(signal.SIGTERM)
                     try:
-                        entry["exit_code"] = child.wait(timeout=600)
+                        entry["exit_code"] = child.wait(timeout=NATIVE_GRACE_SECONDS)
                     except subprocess.TimeoutExpired:
                         self.save()
                         raise RuntimeError("native-finalizer-did-not-finish-retain-all-custody")
@@ -824,10 +915,45 @@ class Continuation:
                 signal.signal(item, handler)
         entry.update(status="FINISHED", finished_at=now())
 
+    def admit_native(self, label):
+        """Do not start a child unless its full unchanged wait/grace can fit."""
+        required = NATIVE_WAIT_SECONDS + NATIVE_GRACE_SECONDS + NATIVE_FINISH_RESERVE_SECONDS
+        admission = dict(cycle=CYCLES[label], status="DENIED_NOT_RUN", job_budget_seconds=NATIVE_JOB_SECONDS,
+                         child_wait_seconds=NATIVE_WAIT_SECONDS, finalizer_grace_seconds=NATIVE_GRACE_SECONDS,
+                         evidence_cleanup_reserve_seconds=NATIVE_FINISH_RESERVE_SECONDS, required_seconds=required)
+        self.state.setdefault("native_admissions", {})[label] = admission
+        try:
+            require(self.scope == "native-evidence", "job-budget-is-native-evidence-only")
+            raw = self.env.get(JOB_CLOCK_ENV)
+            require(isinstance(raw, str) and 0 < len(raw) <= 1024, "missing-or-unbounded-native-job-clock")
+            clock = decode(raw.encode())
+            require(isinstance(clock, dict) and set(clock) == {
+                "clock", "start_ns", "run_id", "run_attempt", "job", "head_sha"}, "malformed-native-job-clock")
+            require(clock["clock"] == "CLOCK_MONOTONIC_RAW" and type(clock["start_ns"]) is int and
+                    0 < clock["start_ns"] < 10 ** 20 and type(clock["run_id"]) is int and
+                    type(clock["run_attempt"]) is int and clock["run_id"] == self.context["run_id"] and
+                    clock["run_attempt"] == self.context["run_attempt"] and clock["job"] == "ios" and
+                    clock["head_sha"] == self.context["head_sha"], "unbound-native-job-clock")
+            current = native_job_clock_ns()
+            require(current >= clock["start_ns"], "native-job-clock-is-in-the-future")
+            remaining = NATIVE_JOB_SECONDS * 10 ** 9 - (current - clock["start_ns"])
+            admission.update(clock=clock, observed_ns=current, remaining_seconds=remaining // 10 ** 9)
+            require(remaining >= required * 10 ** 9, "insufficient-complete-native-lane-budget")
+            admission["status"] = "ADMITTED"
+        except BaseException as error:
+            admission["error_type"] = type(error).__name__
+            admission["reason"] = str(error)[:200] if type(error) is RuntimeError else "native-job-clock-unavailable-or-invalid"
+            self.save()
+            raise
+        self.save()
+
     def run_native(self, label, approved, source):
         cycle = CYCLES[label]
         destination = self.root / CAMPAIGN / "evidence" / cycle
         require(not destination.exists() and not destination.is_symlink(), "never-reuse-a-native-cycle")
+        # A denied B has no child/canonical receipt and must not overwrite A's
+        # honestly established cleanup safety or prevent uploaded-custody cleanup.
+        self.admit_native(label)
         arguments = ["/usr/bin/python3", "-B", str(self.root / RUNNERS[label]), cycle, str(self.binding), approved,
                      "--simulator-signing=adhoc", "--toolchain=" + PROFILE,
                      "--simulator-lifecycle=" + LIFECYCLE_MODE]
@@ -864,7 +990,9 @@ class Continuation:
                      receipt_sha256=sha(file_bytes(destination / "receipt.json", 8 * 1024 * 1024)))
         self.state["cleanup_safe"] = safe
         self.save()
-        require(not entry.get("interrupted") and not entry.get("timed_out"), "native-run-interrupted-or-timed-out")
+        require(not entry.get("interrupted") and not entry.get("timed_out") and
+                type(entry.get("exit_code")) is int and entry["exit_code"] >= 0, "native-run-interrupted-or-timed-out")
+        require(inner_execution_completed(receipt), "native-inner-run-interrupted-timed-out-or-malformed")
         require(safe, "native-cleanup-or-source-identity-unsafe-do-not-start-another-cycle")
         require(receipt.get("cycle") == cycle and receipt.get("signing_mode") == "adhoc" and
                 receipt.get("toolchain_profile") == PROFILE and

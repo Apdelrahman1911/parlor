@@ -478,7 +478,7 @@ jobs:
   ios:
     name: iOS tests, release frameworks, and Swift wrapper
     runs-on: macos-15
-    timeout-minutes: ${{ inputs.verification_scope == 'native-process-probe' && 10 || 120 }}
+    timeout-minutes: ${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}
     permissions:
       contents: read
       actions: read
@@ -490,6 +490,23 @@ jobs:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
 
     steps:
+      - name: Start focused native job clock
+        if: github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'native-evidence'
+        shell: bash
+        run: |
+          /usr/bin/python3 -B - <<'PY' >> "$GITHUB_ENV"
+          import json
+          import os
+          import time
+          value = time.clock_gettime_ns(time.CLOCK_MONOTONIC_RAW)
+          if type(value) is not int or value <= 0:
+              raise RuntimeError("invalid-native-job-kernel-clock")
+          clock = dict(clock="CLOCK_MONOTONIC_RAW", start_ns=value,
+                       run_id=int(os.environ["GITHUB_RUN_ID"]), run_attempt=int(os.environ["GITHUB_RUN_ATTEMPT"]),
+                       job=os.environ["GITHUB_JOB"], head_sha=os.environ["GITHUB_SHA"])
+          print("PARLOR_NATIVE_JOB_CLOCK=" + json.dumps(clock, separators=(",", ":")))
+          PY
+
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:

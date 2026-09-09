@@ -18,9 +18,9 @@ CAMPAIGN = ROOT / 'remediation-runs/2026-09-07-local-readiness'
 COMPANION = CAMPAIGN / 'l08-storage-functional-companion-02'
 DRAFT = CAMPAIGN / 'native/l08-app-foundation-draft-01'
 DRIVER = COMPANION / 'run_ios_readiness.py'
-DRIVER_SHA256 = 'b0f3794fe89537d5108a2c24c22c33ed94d9330ee220e7fa257bfb2c4a7b1e29'
-DRAFT_FREEZE = ROOT / 'remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-draft-freeze-01.json'
-DRAFT_FREEZE_SHA256 = '4a18e36224c895581515d538f995e6f8a1bd7016a3cf6eba3328712e5535bd08'
+DRIVER_SHA256 = '9580071ecec4abc8ba375ca01e722eee4245f36132e6a5b8790f5d8bb8456687'
+DRAFT_FREEZE = ROOT / 'remediation-runs/2026-09-08-continuation/reviews/a23-budget-preservation-draft-freeze-01.json'
+DRAFT_FREEZE_SHA256 = 'f73bd3be82522dd4a3404bc68c4c0093d7af7b7b7f9d37bfd87a993c4aebb618'
 TOOLCHAIN_HELPER = ROOT / 'scripts/verification/ios-readiness/toolchain_profiles.py'
 SUPPORT_CONTROLS = tuple(TOOLCHAIN_HELPER.parent / name for name in (
     'test_toolchain_profiles.py', 'test_native_command_failures.py', 'test_foundation_toolchain_binding.py',
@@ -97,11 +97,9 @@ TRANSFORMS = (
             (dest / 'copied-source.diff').write_text(diff)
             write_json(dest / 'copied-source-manifest.json', copied_source_manifest)
 '''),
-    ('''                receipt['l08_preserved_operation_files'] = preserve_l08_evidence(container, dest)
-''', '''                with defer_parent_signals():
-                    foundation.preserve(receipt, dest, uuid, container)
-                save()
-                receipt['l08_preserved_operation_files'] = preserve_l08_evidence(container, dest)
+    ('''                    lambda: preserve_postbuild_raw(receipt, dest, temp, uuid, command, save))
+''', '''                    lambda: preserve_postbuild_raw(receipt, dest, temp, uuid, command, save,
+                        extra_container=lambda container: foundation.preserve(receipt, dest, uuid, container)))
 '''),
     ('''            available_records = available_run_records(dest, mode)
 ''', '''            foundation.bind_available(receipt, dest, uuid, built_inventory, installed_inventory)

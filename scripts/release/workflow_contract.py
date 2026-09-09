@@ -155,8 +155,30 @@ def verify_verification_scopes(text: str) -> None:
     if re.findall(r"(?m)^    if: (.*)$", ios):
         fail("verification scope validation must not be skipped by an iOS job condition")
     if re.findall(r"(?m)^    timeout-minutes: (.*)$", ios) != [
-            "${{ inputs.verification_scope == 'native-process-probe' && 10 || 120 }}"]:
-        fail("verification scope must bound the diagnostic to ten minutes without shortening full qualification")
+            "${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}"]:
+        fail("verification scope must keep full/preflight120, probe10 and focused native-evidence240 minute bounds")
+    clock_name = "Start focused native job clock"
+    clock = validation_step(ios, clock_name)
+    clock_script = '''        run: |
+          /usr/bin/python3 -B - <<'PY' >> "$GITHUB_ENV"
+          import json
+          import os
+          import time
+          value = time.clock_gettime_ns(time.CLOCK_MONOTONIC_RAW)
+          if type(value) is not int or value <= 0:
+              raise RuntimeError("invalid-native-job-kernel-clock")
+          clock = dict(clock="CLOCK_MONOTONIC_RAW", start_ns=value,
+                       run_id=int(os.environ["GITHUB_RUN_ID"]), run_attempt=int(os.environ["GITHUB_RUN_ATTEMPT"]),
+                       job=os.environ["GITHUB_JOB"], head_sha=os.environ["GITHUB_SHA"])
+          print("PARLOR_NATIVE_JOB_CLOCK=" + json.dumps(clock, separators=(",", ":")))
+          PY
+'''
+    expected_clock = ("        if: github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'native-evidence'\n"
+                      "        shell: bash\n" + clock_script)
+    if (clock.strip("\n") != expected_clock.strip("\n") or
+            re.findall(r"(?m)^      - name: (.*)$", ios)[0] != clock_name or
+            ios.count("PARLOR_NATIVE_JOB_CLOCK=") != 1):
+        fail("focused native job clock must be fresh, source/run-bound, RAW kernel time before checkout and evidence-only")
     for token in ("        default: full\n", "        options: [full, native-preflight, native-evidence, native-process-probe]\n"):
         if token not in text.split("\nconcurrency:", 1)[0]:
             fail("verification scope must default to full with only the three reviewed focused modes")

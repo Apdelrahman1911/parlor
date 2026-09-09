@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "coordinator": "/root",
+  "recorded_at": "2026-09-08T22:09:11.228394+00:00",
+  "url": "https://docs.python.org/3/library/time.html",
+  "http_status": 200,
+  "content_type": "text/html",
+  "bytes": 128613,
+  "sha256": "0b6df7794ee5eca796ad97b55f12d1e73f1145a6e1861b1cf3c44deaf2f1c904",
+  "selected_sections": {
+    "time.monotonic": "id=\"time.monotonic\"> time. monotonic ( ) &#x2192; float \u00b6 Return the value (in fractional seconds) of a monotonic clock, i.e. a clock that cannot go backwards. The clock is not affected by system clock updates. The reference point of the returned value is undefined, so that only the difference between the results of two calls is valid. Clock: On Windows, call QueryPerformanceCounter() and QueryPerformanceFrequency() . On macOS, call mach_absolute_time() and mach_timebase_info() . On HP-UX, call gethrtime() . Call clock_gettime(CLOCK_HIGHRES) if available. Otherwise, call clock_gettime(CLOCK_MONOTONIC) . Use monotonic_ns() to avoid the precision loss caused by the float type. Added in version 3.3. Changed in version 3.5: The function is now always available and the clock is now the same for all processes. Changed in version 3.10: On macOS, the clock is now the same for all processes. ",
+    "time.clock_gettime_ns": "id=\"time.clock_gettime_ns\"> time. clock_gettime_ns ( clk_id , / ) &#x2192; int \u00b6 Similar to clock_gettime() but return time as nanoseconds. Availability : Unix. Added in version 3.7. ",
+    "time.CLOCK_MONOTONIC_RAW": "id=\"time.CLOCK_MONOTONIC_RAW\"> time. CLOCK_MONOTONIC_RAW \u00b6 Similar to CLOCK_MONOTONIC , but provides access to a raw hardware-based time that is not subject to NTP adjustments. Availability : Linux &gt;= 2.6.28, macOS &gt;= 10.12. Added in version 3.3. "
+  },
+  "scope": "Official documentation inspection only; no actual macOS clock observation or availability proof. No system or application build/test."
+}

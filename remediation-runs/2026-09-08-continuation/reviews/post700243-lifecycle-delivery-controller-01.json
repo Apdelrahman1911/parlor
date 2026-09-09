@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "coordinator": "/root",
+  "recorded_at": "2026-09-08T20:00:41.527724+00:00",
+  "kind": "POST700243_EXACT_SOURCE_CONTROL_EVIDENCE_DELIVERY_CONTROLLER",
+  "approval": {
+    "primary": "b6e96c3ea346f4bb36c4faaf649cfb7d73f986230d0bac5e32cdd0b97cadd2f5",
+    "primary_independent": "68dfff94c0f8453facc9fbfd09570901f075950c25ca04b0afd32d0d803a4139",
+    "addendum": "467ebc087909710f8c668560c038ffb420e676a06a92dabf2282ef702fe49a36",
+    "addendum_independent": "a05c7fe883c03e14ca3f5295ed320edb30ff2f164e2059865e0a26e3a440b370"
+  },
+  "staging": {
+    "status": "EXACT115_STAGED_BLOBS_AND_MODES_VERIFIED",
+    "files": 115,
+    "bytes": 3298753,
+    "stage115_manifest_sha256": "016761214b434c584c5a35cbf4e178bee7e5aed5928a5189bc294c8cf936c2a5",
+    "unfiltered_diff_check": {
+      "exit_code": 2,
+      "diagnostics": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/java-toolchain.log:4: trailing whitespace.\n+    java.class.path = \nremediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/java-toolchain.log:34: trailing whitespace.\n+    line.separator = \\n \nremediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01/java-toolchain.log:4: trailing whitespace.\n+    java.class.path = \nremediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01/java-toolchain.log:34: trailing whitespace.\n+    line.separator = \\n \nremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/gradle.log:2: trailing whitespace.\n+Daemon will be stopped at the end of the build \nremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/java-toolchain.log:4: trailing whitespace.\n+    java.class.path = \nremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/java-toolchain.log:34: trailing whitespace.\n+    line.separator = \\n \n",
+      "classification": "Seven original raw log whitespace lines in four files preserved; no byte normalization"
+    },
+    "other_files_diff_check": {
+      "files": 111,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    "unstaged_tracked": []
+  },
+  "retained_preparation_failures": [
+    {
+      "scope": "First staging script",
+      "exit_code": 1,
+      "output": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/java-toolchain.log:4: trailing whitespace.\n+    java.class.path = \nremediation-runs/2026-09-07-local-readiness/evidence/continuation-native-lifecycle-controls-01/java-toolchain.log:34: trailing whitespace.\n+    line.separator = \\n \nremediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01/java-toolchain.log:4: trailing whitespace.\n+    java.class.path = \nremediation-runs/2026-09-07-local-readiness/evidence/continuation-normal-lifecycle-recheck-01/java-toolchain.log:34: trailing whitespace.\n+    line.separator = \\n \nremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/gradle.log:2: trailing whitespace.\n+Daemon will be stopped at the end of the build \nremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/java-toolchain.log:4: trailing whitespace.\n+    java.class.path = \nremediation-runs/2026-09-07-local-readiness/evidence/continuation-transport-contracts-04/java-toolchain.log:34: trailing whitespace.\n+    line.separator = \\n \nTraceback (most recent call last):\n  File \"<stdin>\", line 49, in <module>\n  File \"/usr/lib/python3.12/subprocess.py\", line 571, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['git', 'diff', '--cached', '--check']' returned non-zero exit status 2.\n",
+      "conclusion": "All115 selected/staged path/mode/blob/bytes assertions completed before unfiltered whitespace check2. Raw log whitespace remains unchanged, not a source/test failure."
+    },
+    {
+      "scope": "First inline diagnostic-classification script",
+      "exit_code": 1,
+      "output": "Traceback (most recent call last):\n  File \"<stdin>\", line 17, in <module>\nAssertionError\n",
+      "conclusion": "Coordinator incorrectly asserted three lines per Git whitespace warning instead of actual two. Read-only preparation failed; changed no file, test, source or staged content. Corrected parser matched exact seven warnings and full diagnostic output."
+    }
+  ],
+  "independent_whitespace_classification": {
+    "reviewer": "/root/portability_review",
+    "actual_unfiltered_exit": 2,
+    "diagnostic_bytes": 1140,
+    "diagnostic_sha256": "b298288f1fb21a9b9b208c5ad199eba7956fcbdf0cbac224f2cf1aed6f81d0dc",
+    "warnings": 7,
+    "raw_log_files": 4,
+    "source_control_ledger_paths_check": 19,
+    "other_staged_paths_check": 111,
+    "scoped_exit": 0,
+    "conclusion": "Approved exact raw logs retain original trailing whitespace. Do not normalize evidence or call unfiltered --check PASS."
+  },
+  "commit": {
+    "source_control_evidence": "4276854c19afafdfd109be063a02dd5534fa86d0",
+    "tree": "60e3f5eb0af63a72a397b03da8cdc99c7fd398f8",
+    "inventory_only": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+    "freeze_receipt": "remediation-runs/2026-09-08-continuation/reviews/direct-lifecycle-freeze-01.json"
+  },
+  "cleanup": {
+    "builds_tests_native_actions_in_this_delivery": 0,
+    "generated_live_outputs": 0,
+    "gradle_started": false,
+    "lock_preserved": "remediation-runs/2026-09-07-local-readiness/build-lane.lock",
+    "scope": "No new build/test lifecycle. Prior passing local cleanup and failed A19 cleanup remain distinct."
+  },
+  "readiness": "NOT_READY. Delivery source/inventory freeze is not application-runtime, native/libproc, strict-protection, C03/D, physical-device, Store or owner/legal approval."
+}

@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+import ast
 import json
 import re
+import textwrap
+from types import SimpleNamespace
 import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 import sys
 
@@ -63,9 +66,100 @@ class WorkflowContractTest(unittest.TestCase):
             changed = workflow.replace(block, block.replace(original, replacement, 1), 1)
             with self.subTest(name=name, original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
                 workflow_contract.verify_verification_scopes(changed)
-        changed = workflow.replace("'native-process-probe' && 10 || 120", "'native-process-probe' && 30 || 120", 1)
-        with self.assertRaisesRegex(RuntimeError, "verification scope"):
-            workflow_contract.verify_verification_scopes(changed)
+
+    def test_native_evidence_only_job_budget_and_all_other_scope_ceilings_are_exact(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+        expression = ("${{ inputs.verification_scope == 'native-process-probe' && 10 || "
+                      "inputs.verification_scope == 'native-evidence' && 240 || 120 }}")
+        ios = workflow.split("\n  ios:\n", 1)[1]
+        self.assertEqual([expression], re.findall(r"(?m)^    timeout-minutes: (.*)$", ios))
+        workflow_contract.verify_verification_scopes(workflow)
+        for replacement in (
+            expression.replace("&& 10", "&& 30"),
+            expression.replace("&& 240", "&& 120"),
+            expression.replace("&& 240", "&& 241"),
+            expression.replace("|| 120", "|| 240"),
+            expression.replace("'native-evidence'", "'native-preflight'"),
+            expression.replace("'native-evidence'", "'full'"),
+            "${{ inputs.verification_scope == 'native-process-probe' && 10 || 120 }}",
+            "${{ inputs.native_timeout_minutes || 240 }}",
+        ):
+            changed = workflow.replace(expression, replacement, 1)
+            self.assertNotEqual(workflow, changed)  # No vacuous mutation witness after expression drift.
+            with self.subTest(replacement=replacement), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+
+    def test_actual_first_step_clock_producer_emits_exact_shared_kernel_and_run_source_token(self) -> None:
+        workflow = (workflow_contract.ROOT / '.github/workflows/production-verification.yml').read_text(encoding='utf-8')
+        block = workflow_contract.validation_step(workflow, 'Start focused native job clock')
+        body = block.split("<<'PY' >> \"$GITHUB_ENV\"\n", 1)[1].split('\n          PY', 1)[0]
+        tree = ast.parse(textwrap.dedent(body))
+        self.assertEqual(['json', 'os', 'time'], [node.names[0].name for node in tree.body if isinstance(node, ast.Import)])
+        # Compile only the actual Python heredoc with inert clock/environment/output;
+        # no workflow shell, real clock, runner, build, or GITHUB_ENV write executes.
+        tree.body = [node for node in tree.body if not isinstance(node, ast.Import)]
+        raw_clock = object()
+        for observed in (123456789012345, True, 0, -1, None, 1.0, '1000'):
+            output = Mock()
+            clock = SimpleNamespace(CLOCK_MONOTONIC_RAW=raw_clock, clock_gettime_ns=Mock(return_value=observed))
+            namespace = dict(json=json, time=clock, print=output, os=SimpleNamespace(environ=dict(
+                GITHUB_RUN_ID='201', GITHUB_RUN_ATTEMPT='3', GITHUB_JOB='ios', GITHUB_SHA='a' * 40)))
+            with self.subTest(observed=observed):
+                if type(observed) is int and observed > 0:
+                    exec(compile(tree, '<isolated-workflow-clock-producer>', 'exec'), namespace)
+                    output.assert_called_once()
+                    text = output.call_args.args[0]
+                    self.assertTrue(text.startswith('PARLOR_NATIVE_JOB_CLOCK='))
+                    self.assertEqual(dict(clock='CLOCK_MONOTONIC_RAW', start_ns=observed, run_id=201,
+                                          run_attempt=3, job='ios', head_sha='a' * 40),
+                                     json.loads(text.split('=', 1)[1]))
+                else:
+                    with self.assertRaisesRegex(RuntimeError, 'invalid-native-job-kernel-clock'):
+                        exec(compile(tree, '<isolated-workflow-clock-producer>', 'exec'), namespace)
+                    output.assert_not_called()
+                clock.clock_gettime_ns.assert_called_once_with(raw_clock)
+
+    def test_native_clock_step_rejects_unshared_clocks_extra_code_fields_and_context_weakening(self) -> None:
+        workflow = (workflow_contract.ROOT / '.github/workflows/production-verification.yml').read_text(encoding='utf-8')
+        name = 'Start focused native job clock'
+        block = workflow_contract.validation_step(workflow, name)
+        workflow_contract.verify_verification_scopes(workflow)
+        mutations = [
+            block.replace('time.clock_gettime_ns(time.CLOCK_MONOTONIC_RAW)', 'time.monotonic_ns()', 1),
+            block.replace('time.CLOCK_MONOTONIC_RAW', 'time.CLOCK_MONOTONIC', 1),
+            block.replace('start_ns=value', 'start_ns=1', 1),
+            block.replace('run_id=int(os.environ["GITHUB_RUN_ID"])', 'run_id=1', 1),
+            block.replace('run_attempt=int(os.environ["GITHUB_RUN_ATTEMPT"])', 'run_attempt=1', 1),
+            block.replace('job=os.environ["GITHUB_JOB"]', 'job="ios"', 1),
+            block.replace('head_sha=os.environ["GITHUB_SHA"]', 'head_sha="unbound"', 1),
+            block.replace("inputs.verification_scope == 'native-evidence'", "inputs.verification_scope != 'full'", 1),
+            block.replace('        shell: bash\n', '        shell: bash\n        continue-on-error: true\n', 1),
+            block.replace('        shell: bash\n', '        shell: bash\n        env:\n          UNREVIEWED: yes\n', 1),
+            # Preserve the entire old allowed heredoc then append executable code:
+            # an inclusion-only checker would incorrectly accept these variants.
+            block + '          printf unreviewed >> "$GITHUB_ENV"\n',
+            block + "          /usr/bin/python3 -B -c 'print(1)' >> \"$GITHUB_ENV\"\n",
+            block.replace('          PY\n', '          value = 0\n          PY\n', 1),
+        ]
+        for index, replacement in enumerate(mutations):
+            changed = workflow.replace(block, replacement, 1)
+            self.assertNotEqual(workflow, changed)
+            with self.subTest(mutation=index), self.assertRaisesRegex(RuntimeError, 'clock'):
+                workflow_contract.verify_verification_scopes(changed)
+
+    def test_native_clock_cannot_be_restarted_later_or_moved_after_checkout(self) -> None:
+        workflow = (workflow_contract.ROOT / '.github/workflows/production-verification.yml').read_text(encoding='utf-8')
+        clock = '\n      - name: Start focused native job clock\n' + workflow_contract.validation_step(
+            workflow, 'Start focused native job clock')
+        checkout = '\n      - name: Check out source\n' + workflow_contract.validation_step(
+            workflow.split('\n  ios:\n', 1)[1], 'Check out source')
+        moved = workflow.replace(clock, '\nSYNTHETIC_CLOCK_HOLE\n', 1).replace(checkout, checkout + clock, 1).replace(
+            '\nSYNTHETIC_CLOCK_HOLE\n', '', 1)
+        duplicated = workflow.replace(clock, clock + clock, 1)
+        for changed in (moved, duplicated):
+            self.assertNotEqual(workflow, changed)
+            with self.subTest(duplicate=changed == duplicated), self.assertRaisesRegex(RuntimeError, 'clock'):
+                workflow_contract.verify_verification_scopes(changed)
 
     def test_probe_cannot_precede_scope_validation_or_upload(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")

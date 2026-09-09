@@ -112,20 +112,121 @@ class SourceControls(unittest.TestCase):
 
     def test_preservation_binding_and_required_gate_do_not_replace_original_gates(self):
         text = rendered()
-        order = [text.index(fragment) for fragment in (
-            'foundation.preserve(receipt, dest, uuid, container)',
-            'preserve_l08_evidence(container, dest)',
-            "receipt['native_uuid_inventory'] = uuids",
-            "receipt['installed_app_linker_entitlements_sha256']",
-            'foundation.bind_available(receipt, dest, uuid, built_inventory, installed_inventory)',
-            'available_records = available_run_records(dest, mode)',
-            "receipt['xctest'] = verify_xctest(",
-            'foundation.require_collection(receipt)',
-            "'FUNCTIONAL_COMPANION_VERIFIED' if runtime_complete(receipt, xcode) else 'FAIL'")]
+        functions = {n.name: n for n in ast.parse(text).body if isinstance(n, ast.FunctionDef)}
+        main = functions['main']
+
+        def only(items):
+            items = list(items)
+            self.assertEqual(len(items), 1)
+            return items[0]
+
+        def calls(scope, name):
+            return [n for n in ast.walk(scope) if isinstance(n, ast.Call) and ast.unparse(n.func) == name]
+
+        def exact_body(body, expected):
+            self.assertEqual(ast.dump(ast.Module(body=body, type_ignores=[]), include_attributes=False),
+                             ast.dump(ast.parse(expected), include_attributes=False))
+
+        def statement_index(body, node):
+            return only(index for index, statement in enumerate(body)
+                        if any(candidate is node for candidate in ast.walk(statement)))
+
+        # Locate the actual Xcode invocation and its unconditional finally, not
+        # a matching helper definition or a preservation-only finalizer fallback.
+        xcode_call = only(n.value for n in ast.walk(main) if isinstance(n, ast.Assign) and
+                          [ast.unparse(target) for target in n.targets] == ['xcode'] and
+                          isinstance(n.value, ast.Call) and ast.unparse(n.value.func) == 'command')
+        self.assertIsInstance(xcode_call.args[0], ast.List)
+        self.assertEqual(ast.literal_eval(xcode_call.args[0].elts[0]), 'xcodebuild')
+        xcode_attempt = only(n for n in ast.walk(main) if isinstance(n, ast.Try) and
+                             any(isinstance(s, ast.Assign) and s.value is xcode_call for s in n.body))
+        exact_body(xcode_attempt.finalbody,
+            "finish_xcode_attempt(receipt, xcode_error,\n"
+            "    lambda: stop_gradle('stop-xcode-immediate'),\n"
+            "    lambda: preserve_postbuild_raw(receipt, dest, temp, uuid, command, save,\n"
+            "        extra_container=lambda container: foundation.preserve(receipt, dest, uuid, container)))\n")
+        self.assertEqual(len(calls(main, 'finish_xcode_attempt')), 1)
+        self.assertEqual(len(calls(main, 'preserve_postbuild_raw')), 1)
+        self.assertEqual(len(calls(main, 'foundation.preserve')), 1)
+        handler = only(xcode_attempt.handlers)
+        self.assertEqual((ast.unparse(handler.type), handler.name), ('BaseException', 'error'))
+        exact_body(handler.body, 'xcode_error = error\n')
+        self.assertEqual(xcode_attempt.orelse, [])
+
+        finisher = functions['finish_xcode_attempt']
+        actions = only(n for n in finisher.body if isinstance(n, ast.For))
+        self.assertEqual(ast.unparse(actions.iter),
+                         "(('stop-xcode-immediate', stop), ('preserve-raw-postbuild', preserve))")
+        action_attempt = only(actions.body)
+        self.assertIsInstance(action_attempt, ast.Try)
+        exact_body(action_attempt.body[:1], 'value = action()\n')
+        exact_body(finisher.body[-1:], 'if primary is not None:\n    raise primary\n')
+
+        # The protected-definition equality test keeps the whole collector
+        # unchanged. Also inspect its invocation of the injected callback:
+        # defer/signals -> callback -> save, after probes and before operations.
+        collector = functions['preserve_postbuild_raw']
+        container_gate = only(n for n in collector.body if isinstance(n, ast.If) and
+                              ast.unparse(n.test) == 'container_ok')
+        extra_gate = only(n for n in container_gate.body if isinstance(n, ast.If) and
+                          ast.unparse(n.test) == 'extra_container is not None')
+        exact_body(extra_gate.body,
+            'def retain_extra():\n'
+            '    with defer_parent_signals():\n'
+            '        extra_container(container)\n'
+            '    save()\n'
+            "attempt('additional-owned-container-records', retain_extra)\n")
+        self.assertEqual(len(calls(collector, 'extra_container')), 1)
+        probes = only(n for n in container_gate.body if isinstance(n, ast.For) and
+                      ast.unparse(n.target) == 'scenario')
+        operations = only(n for n in container_gate.body if isinstance(n, ast.For) and
+                          ast.unparse(n.iter) == 'plans')
+        positions = [container_gate.body.index(n) for n in (probes, extra_gate, operations)]
+        self.assertEqual(positions, sorted(positions))
+        exact_body(operations.body[-1:], 'attempt(name, preserve_operation)\n')
+        ack = only(n for n in calls(collector, 'attempt') if n.args and
+                   isinstance(n.args[0], ast.Constant) and n.args[0].value == 'persist-raw-preservation-ack')
+        self.assertLess(collector.body.index(container_gate), statement_index(collector.body, ack))
+        exact_body([collector.body[statement_index(collector.body, ack)]],
+                   "saved, _ = attempt('persist-raw-preservation-ack', save)\n")
+
+        main_attempt = only(n for n in ast.walk(main) if isinstance(n, ast.Try) and xcode_attempt in n.body)
+        exact_body([main_attempt.body[main_attempt.body.index(xcode_attempt) - 1]], 'xcode_error = None\n')
+
+        def receipt_assignment(key):
+            return only(n for n in ast.walk(main_attempt) if isinstance(n, ast.Assign) and
+                        any(ast.unparse(target) == 'receipt[' + repr(key) + ']' for target in n.targets))
+
+        order = [statement_index(main_attempt.body, n) for n in (
+            xcode_attempt, receipt_assignment('native_uuid_inventory'),
+            receipt_assignment('installed_app_linker_entitlements_sha256'),
+            only(calls(main, 'foundation.bind_available')), only(calls(main, 'available_run_records')),
+            receipt_assignment('xctest'), only(calls(main, 'foundation.require_collection')),
+            only(calls(main, 'runtime_complete')))]
         self.assertEqual(order, sorted(order))
-        fallback = text.index("stage('preserve-app-foundation-before-device-cleanup'")
-        self.assertLess(fallback, text.index("stage('shutdown-owned-simulator-and-app'"))
-        self.assertLess(fallback, text.index("stage('delete-owned-simulator'"))
+        self.assertEqual(len(set(order)), len(order))
+
+        finalizer = ast.Module(body=main_attempt.finalbody, type_ignores=[])
+        cleanup_gate = only(n for n in ast.walk(finalizer) if isinstance(n, ast.If) and
+                            ast.unparse(n.test) == 'uuid is not None')
+        # Both raw AND Foundation retention and the invoked durable save must
+        # precede the unchanged authorization/shutdown/delete sequence.
+        exact_body(cleanup_gate.body,
+            'if gradle_attempted:\n'
+            "    foundation_preserved = stage('preserve-app-foundation-before-device-cleanup',\n"
+            '        lambda: foundation.preserve_before_cleanup(receipt, dest, uuid, command)) is True\n'
+            "    receipt['postbuild_evidence_preserved'] = (\n"
+            "        receipt.get('postbuild_evidence_preserved') is True and foundation_preserved)\n"
+            '    def persist_preservation_ack():\n'
+            '        save()\n'
+            '        return True\n'
+            "    if stage('persist-postbuild-evidence-ack', persist_preservation_ack) is not True:\n"
+            "        receipt['postbuild_evidence_preserved'] = False\n"
+            "device_cleanup_allowed = lifecycle is None or stage('authorize-journaled-device-cleanup',\n"
+            '    lambda: lifecycle.prepare_cleanup(owner, gradle_attempted)) is True\n'
+            'if device_cleanup_allowed:\n'
+            "    stage('shutdown-owned-simulator-and-app', shutdown_owned_device)\n"
+            "    stage('delete-owned-simulator', delete_owned_device)\n")
         self.assertIn("receipt.update(classify_final_companion(receipt))\n                foundation.restrict_final(receipt)", text)
         self.assertEqual(text.count('totalTestCount=5, passedTests=5'), 1)
         self.assertEqual(text.count('for ordinal in range(1, 9):'), original().count('for ordinal in range(1, 9):'))

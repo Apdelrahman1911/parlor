@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "coordinator": "/root",
+  "recorded_at": "2026-09-08T20:31:41.941889+00:00",
+  "classification": "LOCAL_READ_ONLY_CLI_PREPARATION_FAILURE_NOT_WORKFLOW_EXECUTION",
+  "frozen_source_sha": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+  "command": [
+    "gh",
+    "api",
+    "--paginate",
+    "--slurp",
+    "repos/Apdelrahman1911/parlor/actions/workflows/production-verification.yml/runs?branch=fix/local-readiness-2026-09-07&per_page=100"
+  ],
+  "exit_code": 1,
+  "selected_original_stderr": "unknown flag: --slurp",
+  "python_caller_result": "subprocess.CalledProcessError propagated; inline script exited1 before creating dispatch directory or issuing workflow run",
+  "cli_version": "gh version 2.45.0 (2025-07-18 Ubuntu 2.45.0-1ubuntu0.3)\nhttps://github.com/cli/cli/releases/tag/v2.45.0",
+  "workflow_run_command_reached": false,
+  "dispatch_directory_absent": true,
+  "source_control_changes": false,
+  "one_runtime_approval_consumed": false,
+  "proposed_correction": "Same read-only API --paginate without unsupported --slurp; decode the complete concatenated JSON stream using stdlib raw_decode, retain original stdout and every normalized page; strict page/unique-ID/total-count/source/no-active-run checks unchanged. Different-agent collection review requested before use.",
+  "scope": "No native action, test, build or runtime retry occurred. Exact native-evidence workflow command and eight approved inputs remain unchanged."
+}

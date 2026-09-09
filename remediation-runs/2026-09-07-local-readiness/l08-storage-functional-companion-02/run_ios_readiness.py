@@ -20,6 +20,7 @@ import re
 import shlex
 import shutil
 import signal
+import stat
 import subprocess
 import sys
 import hashlib
@@ -41,11 +42,11 @@ from artifact_inventory import (inventory_bundle, bind_loaded_images, parse_dwar
                                 inventory_owned_framework, validate_framework_observation,
                                 render_owned_native_launch, FRAMEWORK_PATH)
 from native_readiness_receipts import verify_native_readiness, read_synthetic_seed_cleanup
-from native_failure_receipts import read_failure
+from native_failure_receipts import validate_failure
 from l08_functional_copy import instrument_probe_swift, instrument_ui_test
-from l08_receipts import (preserve_l08_evidence, host_result_names,
+from l08_receipts import (storage_result_names, host_result_names, validate_preservable_operation,
                           read_owned_result, verify_host, framework_subset)
-from l08_functional_receipts import (preserve_functional_evidence, functional_result_names,
+from l08_functional_receipts import (functional_result_names, validate_preservable_functional_operation,
                                      verify_storage_functional)
 from l08_functional_runner import (available_run_records, bind_available_images,
                                    runtime_complete, classify_final_companion)
@@ -118,6 +119,267 @@ def process_uid(pid):
 
 def now():
     return datetime.datetime.now(datetime.timezone.utc).isoformat()
+
+
+def xcode_time_budget(profile_name):
+    """Explicit cumulative build-plus-test command and per-test allowances for A."""
+    if profile_name == 'qualified-xcode-26.3':
+        whole, default, maximum = 5400, 3000, 3300
+    elif profile_name == 'local-xcode-26.5':
+        whole, default, maximum = 2700, 1200, 1500
+    else:
+        raise RuntimeError('Unknown explicit L08 Xcode budget profile')
+    return dict(toolchain_profile=profile_name, whole_command_seconds=whole,
+                default_test_execution_seconds=default, maximum_test_execution_seconds=maximum)
+
+
+def read_stable_owned_file(path, parent, maximum):
+    """Read an exact bounded regular file, not a symlink or a changing live view."""
+    path, parent = Path(path).absolute(), Path(parent).absolute()
+    directory = parent.lstat()
+    if (parent.resolve(strict=True) != parent or not stat.S_ISDIR(directory.st_mode) or
+            directory.st_uid != os.getuid() or path.parent != parent):
+        raise RuntimeError('Raw evidence parent is not the exact owned directory')
+    before = path.lstat()
+    identity = lambda item: (item.st_dev, item.st_ino, item.st_size, item.st_mtime_ns,
+                             item.st_ctime_ns, item.st_mode, item.st_uid, item.st_nlink)
+    if (path.resolve(strict=True) != path or not stat.S_ISREG(before.st_mode) or
+            before.st_uid != os.getuid() or before.st_nlink != 1 or not 0 < before.st_size <= maximum):
+        raise RuntimeError('Raw evidence is not a bounded owned regular file')
+    descriptor = os.open(path, os.O_RDONLY | os.O_NOFOLLOW)
+    with os.fdopen(descriptor, 'rb') as stream:
+        opened = os.fstat(stream.fileno())
+        if identity(opened) != identity(before):
+            raise RuntimeError('Raw evidence changed before open')
+        raw = stream.read(maximum + 1)
+        if identity(os.fstat(stream.fileno())) != identity(opened):
+            raise RuntimeError('Raw evidence changed during read')
+    after_parent = parent.lstat()
+    if (identity(path.lstat()) != identity(before) or len(raw) != before.st_size or
+            parent.resolve(strict=True) != parent or
+            (after_parent.st_dev, after_parent.st_ino, after_parent.st_mode, after_parent.st_uid) !=
+            (directory.st_dev, directory.st_ino, directory.st_mode, directory.st_uid)):
+        raise RuntimeError('Raw evidence or its owned parent was replaced')
+    return raw
+
+
+def raw_json_object(raw):
+    def unique(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise RuntimeError('Duplicate raw evidence JSON field')
+            result[key] = value
+        return result
+    def nonfinite(_value):
+        raise RuntimeError('Nonfinite raw evidence JSON value')
+    value = json.loads(raw, object_pairs_hook=unique, parse_constant=nonfinite)
+    if not isinstance(value, dict):
+        raise RuntimeError('Raw evidence JSON is not an object')
+    return value
+
+
+def write_raw_owned_file(path, raw):
+    path = Path(path).absolute()
+    parent = path.parent.lstat()
+    if (path.parent.resolve(strict=True) != path.parent or not stat.S_ISDIR(parent.st_mode) or
+            parent.st_uid != os.getuid()):
+        raise RuntimeError('Raw evidence destination is not the exact owned directory')
+    descriptor = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
+    with os.fdopen(descriptor, 'wb') as output:
+        output.write(raw)
+        output.flush()
+        os.fsync(output.fileno())
+    after_parent = path.parent.lstat()
+    if ((after_parent.st_dev, after_parent.st_ino, after_parent.st_mode, after_parent.st_uid) !=
+            (parent.st_dev, parent.st_ino, parent.st_mode, parent.st_uid) or
+            read_stable_owned_file(path, path.parent, len(raw)) != raw):
+        raise RuntimeError('Raw evidence write did not preserve exact bytes')
+
+
+def preserve_postbuild_raw(receipt, dest, temp, uuid, command, save, extra_container=None):
+    """One-shot retention only, including exceptions; never runtime/cleanup proof.
+
+    Keep every safe available allowlisted record even when a different extraction
+    fails. An absent operation is recorded as absent, not manufactured. No private
+    XCTest attachments, screenshot, whole XCResult/container or DerivedData export.
+    """
+    state = receipt.setdefault('raw_postbuild_preservation', dict(status='NOT_RUN'))
+    if state.get('status') != 'NOT_RUN':
+        if state.get('status') == 'COMPLETE':
+            return True
+        raise RuntimeError('Raw postbuild preservation is one-shot; do not retry partial writes')
+    state.update(status='RUNNING', started_at=now(), budget_seconds=420, stages=[], errors=[], files=[], missing=[])
+    receipt['postbuild_evidence_preserved'] = False
+    deadline = time.monotonic() + state['budget_seconds']
+    first_error = None
+    dest, temp = Path(dest).absolute(), Path(temp).absolute()
+
+    def within_budget(allowance=0):
+        if deadline - time.monotonic() < allowance:
+            raise TimeoutError('Raw postbuild preservation budget exhausted; no shortened command')
+
+    def attempt(label, action):
+        nonlocal first_error
+        try:
+            within_budget()
+            result = action()
+            within_budget()
+            state['stages'].append(dict(stage=label, status='PASS'))
+            return True, result
+        except BaseException as error:
+            if first_error is None:
+                first_error = error
+            # Closed stage names/type only; no exception output, private state or
+            # automatic XCTest attachment content enters these failure records.
+            diagnostic = dict(stage=label, type=type(error).__name__, message='raw-preservation-failed')
+            state['errors'].append(diagnostic)
+            state['stages'].append(dict(stage=label, status='FAIL'))
+            return False, None
+
+    def raw_command(arguments, label):
+        # Preserve the original 120-second AppHost allowance, with a small
+        # admission reserve, rather than silently shortening a late extraction.
+        within_budget(130)
+        return command(arguments, label, 120)
+
+    results = temp / 'Results.xcresult'
+    receipt['xcresult_extraction_exit_codes'] = {}
+    for view in ('summary', 'tests'):
+        def extract(view=view):
+            info = results.lstat()
+            if (results.resolve(strict=True) != results or not stat.S_ISDIR(info.st_mode) or
+                    info.st_uid != os.getuid()):
+                raise RuntimeError('XCResult is not the exact owned directory')
+            label = 'xcresult-' + view + '.json'
+            code = raw_command(['xcrun', 'xcresulttool', 'get', 'test-results', view, '--path', results], label)
+            receipt['xcresult_extraction_exit_codes'][view] = code
+            if type(code) is not int or code != 0:
+                raise RuntimeError('Structured XCResult extraction failed')
+            raw_json_object(read_stable_owned_file(dest / label, dest, 4 * 1024 * 1024))
+            state['files'].append(label)
+        attempt('xcresult-' + view, extract)
+
+    def query_container():
+        code = raw_command(['xcrun', 'simctl', 'get_app_container', uuid, APP_ID, 'data'], 'owned-container.log')
+        if type(code) is not int or code != 0:
+            raise RuntimeError('Owned app container is unavailable')
+        raw = read_stable_owned_file(dest / 'owned-container.log', dest, 4096).decode().strip()
+        if not raw.startswith('/') or '\n' in raw or '\r' in raw:
+            raise RuntimeError('Owned app container query is malformed')
+        container = Path(raw)
+        prefix = Path.home() / 'Library/Developer/CoreSimulator/Devices' / uuid / 'data/Containers/Data/Application'
+        shape = r'[A-Fa-f0-9]{8}(?:-[A-Fa-f0-9]{4}){3}-[A-Fa-f0-9]{12}'
+        if (not re.fullmatch(shape, uuid) or container.parent != prefix or
+                not re.fullmatch(shape, container.name) or container.resolve(strict=True) != container or
+                not container.is_dir() or container.stat().st_uid != os.getuid()):
+            raise RuntimeError('Container does not belong to the exact owned simulator')
+        result_parent = container / 'tmp'
+        info = result_parent.lstat()
+        if (result_parent.resolve(strict=True) != result_parent or not stat.S_ISDIR(info.st_mode) or
+                info.st_uid != os.getuid()):
+            raise RuntimeError('App result directory is not the exact owned directory')
+        return container
+
+    container_ok, container = attempt('owned-app-container', query_container)
+    if container_ok:
+        parent = container / 'tmp'
+
+        def retain(name, destination, maximum, validator=None, canonical=False):
+            try:
+                (parent / name).lstat()
+            except FileNotFoundError:
+                state['missing'].append(name)
+                return None
+            raw = read_stable_owned_file(parent / name, parent, maximum)
+            value = raw_json_object(raw)
+            if validator is not None:
+                validator(value)
+            within_budget()
+            output = (json.dumps(value, sort_keys=True, allow_nan=False) + '\n').encode() if canonical else raw
+            write_raw_owned_file(dest / destination, output)
+            state['files'].append(destination)
+            return value
+
+        for scenario in ('settings', 'whodunit', 'mafia', 'os', 'readiness', 'l08-storage-functional', 'l08-host'):
+            attempt('probe-' + scenario, lambda scenario=scenario: retain(
+                'parlor-dsc01-' + scenario + '-result.json', 'probe-' + scenario + '-result.json', 262144))
+
+        if extra_container is not None:
+            def retain_extra():
+                with defer_parent_signals():
+                    extra_container(container)
+                save()
+            attempt('additional-owned-container-records', retain_extra)
+
+        receipt['l08_preserved_operation_files'] = []
+        receipt['l08_functional_preserved_operation_files'] = []
+        plans = [(name, 16384, 'l08-storage') for name in storage_result_names()] + [
+            (name, 24576, 'l08-host') for name in host_result_names()] + [
+            (name, 16384, 'l08-storage-functional') for name in functional_result_names()]
+        for name, maximum, scenario in plans:
+            def preserve_operation(name=name, maximum=maximum, scenario=scenario):
+                def validate(value):
+                    if scenario == 'l08-storage-functional':
+                        validate_preservable_functional_operation(value)
+                    else:
+                        validate_preservable_operation(value, scenario)
+                    if name != 'parlor-%s-%d-%s.json' % (scenario, value['boot_ordinal'], value['action']):
+                        raise RuntimeError('Operation does not belong to its exact planned filename')
+                value = retain(name, name, maximum, validate, canonical=True)
+                if value is not None:
+                    key = ('l08_functional_preserved_operation_files' if scenario == 'l08-storage-functional'
+                           else 'l08_preserved_operation_files')
+                    receipt[key].append(name)
+            attempt(name, preserve_operation)
+
+        attempt('synthetic-seed-cleanup', lambda: retain('parlor-native-synthetic-seed-cleanup.json',
+            'parlor-native-synthetic-seed-cleanup.json', 1024))
+        for ordinal in range(1, 9):
+            name = 'parlor-native-readiness-boot-' + str(ordinal) + '.json'
+            attempt(name, lambda name=name: retain(name, name, 49152))
+            name = 'parlor-native-readiness-failure-' + str(ordinal) + '.json'
+            def preserve_failure(name=name, ordinal=ordinal):
+                def validate(value):
+                    context = raw_json_object(read_stable_owned_file(dest / 'probe-readiness-result.json', dest, 262144))
+                    validate_failure(value, ordinal, context, receipt['signing_mode'])
+                value = retain(name, name, 1024, validate, canonical=True)
+                if value is not None:
+                    receipt.setdefault('native_diagnostic_failures', []).append(value)
+            attempt(name, preserve_failure)
+
+    complete = (container_ok and not state['errors'] and
+                receipt.get('xcresult_extraction_exit_codes') == {'summary': 0, 'tests': 0})
+    state.update(status='COMPLETE' if complete else 'FAIL', finished_at=now())
+    # Exact original retention contract, not acceptance of a completed scenario.
+    # Foundation still conjunctively checks its own retention outcome afterward.
+    receipt['postbuild_evidence_preserved'] = complete
+    saved, _ = attempt('persist-raw-preservation-ack', save)
+    if not saved:
+        receipt['postbuild_evidence_preserved'] = False
+        state['status'] = 'FAIL'
+    if first_error is not None:
+        raise first_error
+    if receipt['postbuild_evidence_preserved'] is not True:
+        raise RuntimeError('Raw postbuild preservation did not complete')
+    return True
+
+
+def finish_xcode_attempt(receipt, primary, stop, preserve):
+    """Always stop first and retain raw evidence, without replacing a primary."""
+    for label, action in (('stop-xcode-immediate', stop), ('preserve-raw-postbuild', preserve)):
+        try:
+            value = action()
+            if label == 'preserve-raw-postbuild' and value is not True:
+                raise RuntimeError('Raw preservation did not acknowledge completion')
+        except BaseException as error:
+            if primary is None:
+                primary = error
+            else:
+                receipt.setdefault('postbuild_secondary_errors', []).append(
+                    dict(stage=label, type=type(error).__name__, message='postbuild-finalization-failed'))
+    if primary is not None:
+        raise primary
 
 
 def verify_catalog_receipts(log):
@@ -357,6 +619,7 @@ def main():
     toolchain_name, remaining = toolchains.selected_toolchain(sys.argv[4:])
     lifecycle_mode, signing_arguments = simulator_lifecycle.selected_lifecycle(remaining, toolchain_name)
     toolchain = toolchains.profile(toolchain_name)
+    xcode_budget = xcode_time_budget(toolchain_name)
     mode = selected_mode(signing_arguments)
     NAME = sys.argv[1]
     BINDING = checked_binding_path(sys.argv[2])
@@ -374,7 +637,8 @@ def main():
         receipt = dict(cycle=NAME, started_at=now(), status='RUNNING',
                        execution_kind='manifest-owned-copy-ios-l08-storage-functional-companion', signing_mode=mode, commands=[],
                        toolchain_profile=toolchain_name, simulator_lifecycle_mode=lifecycle_mode, build_attempted=False,
-                       postbuild_evidence_preserved=False,
+                       postbuild_evidence_preserved=False, xcode_time_budget=xcode_budget,
+                       raw_postbuild_preservation=dict(status='NOT_RUN'),
                        runtime_evidence_status='NOT_RUN', cleanup_status='BLOCKED',
                        scope='Four actual production-container UIKit tests; actual Settings/restart; direct Compose and actual LocalUIViewController direction; stable outer/child/window identities and full-bounds safe-area geometry in EN/AR portrait/landscape; local Whodunit/Mafia controller/flow/value continuity under synthetic real-store language setters and actual background/foreground; actual OS Arabic per-app preference; eight current-build cold launches; exact rerun credential OSStatus and synthetic storage durability; complete embedded Mach-O inventory and observed loaded-image binding. Separate L08 functional companion: thirteen full GameSnapshot/real Home resume and damaged-record boots with all Complete comparisons retained separately, never original strict L08 PASS; three ControlledStartRoom host locale/lifecycle fixtures; no physical LAN, full-UI-game, signed-release, Store or leak-free claim.', approved_control_sha256=approved)
         temp, owner, env, uuid, lifecycle = None, None, None, None, None
@@ -402,9 +666,11 @@ def main():
 
         def command(args, filename, timeout=120):
             entry = dict(command=[str(a) for a in args], started_at=now(), log=filename)
+            if filename == 'xcodebuild.log':
+                entry['timeout_seconds'] = timeout
             receipt['commands'].append(entry); save()
             with (dest / filename).open('w') as log:
-                child = None
+                child, primary = None, None
                 try:
                     with defer_parent_signals():
                         child = subprocess.Popen(entry['command'], cwd=ROOT, env=env, stdout=log,
@@ -418,6 +684,7 @@ def main():
                         time.sleep(0.25)
                     entry['exit_code'] = child.returncode
                 except BaseException as error:
+                    primary = error
                     # All direct command groups are task-owned; no global pkill.
                     entry['interrupted_or_failed'] = True
                     entry['primary_error'] = dict(type=type(error).__name__, message=str(error)[:800])
@@ -432,7 +699,14 @@ def main():
                                 type=type(cleanup_error).__name__, message=str(cleanup_error)[:800])
                     raise
                 finally:
-                    entry['finished_at'] = now(); save()
+                    entry['finished_at'] = now()
+                    try:
+                        save()
+                    except BaseException as persistence_error:
+                        if primary is None:
+                            raise
+                        entry['command_persistence_error'] = dict(type=type(persistence_error).__name__,
+                            message='command-receipt-persistence-failed')
             return entry['exit_code']
 
         def simulator_command(args, filename, timeout=120):
@@ -725,6 +999,7 @@ def main():
             receipt['runtime_evidence_status'] = 'RUNNING'
             receipt['runtime_attempted_at'] = now()
             save()
+            xcode_error = None
             try:
                 if lifecycle is not None:
                     lifecycle.mark_build_attempted()
@@ -733,77 +1008,18 @@ def main():
                     '-derivedDataPath', temp / 'DerivedData', '-resultBundlePath', results,
                     '-parallel-testing-enabled', 'NO', '-maximum-concurrent-test-simulator-destinations', '1',
                     '-disable-concurrent-destination-testing', '-jobs', '1', '-test-timeouts-enabled', 'YES',
-                    '-default-test-execution-time-allowance', '1200', '-maximum-test-execution-time-allowance', '1500',
+                    '-default-test-execution-time-allowance', str(xcode_budget['default_test_execution_seconds']),
+                    '-maximum-test-execution-time-allowance', str(xcode_budget['maximum_test_execution_seconds']),
                     *signing_arguments,
-                    'ONLY_ACTIVE_ARCH=YES', 'COMPILER_INDEX_STORE_ENABLE=NO', 'test'], 'xcodebuild.log', 2700)
+                    'ONLY_ACTIVE_ARCH=YES', 'COMPILER_INDEX_STORE_ENABLE=NO', 'test'],
+                    'xcodebuild.log', xcode_budget['whole_command_seconds'])
                 receipt['xcodebuild_exit_code'] = xcode
+            except BaseException as error:
+                xcode_error = error
             finally:
-                stop_gradle('stop-xcode-immediate')
-            if results.exists():
-                receipt['xcresult_extraction_exit_codes'] = {}
-                for view in ('summary', 'tests'):
-                    receipt['xcresult_extraction_exit_codes'][view] = command(
-                        ['xcrun', 'xcresulttool', 'get', 'test-results', view, '--path', results],
-                        'xcresult-' + view + '.json')
-                # No screenshot/debug-description export: this settings-only matrix
-                # retains structured XCTest + bounded preference observations only.
-            # Preserve all available, bounded results before validating any one
-            # outcome. A failed XCTest must not discard an already-written probe
-            # result when mandatory simulator cleanup runs.
-            if command(['xcrun', 'simctl', 'get_app_container', uuid, APP_ID, 'data'], 'owned-container.log') == 0:
-                container = Path((dest / 'owned-container.log').read_text().strip()).resolve()
-                owned_device = Path.home() / 'Library/Developer/CoreSimulator/Devices' / uuid
-                container.relative_to(owned_device.resolve())
-                for scenario in ('settings', 'whodunit', 'mafia', 'os', 'readiness', 'l08-storage-functional', 'l08-host'):
-                    result = container / ('tmp/parlor-dsc01-' + scenario + '-result.json')
-                    if result.is_symlink() or result.resolve().parent != (container / 'tmp').resolve():
-                        raise RuntimeError('Unexpected synthetic result path; refuse to read')
-                    if result.is_file():
-                        if result.stat().st_size > 262144:
-                            raise RuntimeError('Oversized synthetic result; refuse to copy')
-                        shutil.copyfile(result, dest / ('probe-' + scenario + '-result.json'))
-                receipt['l08_preserved_operation_files'] = preserve_l08_evidence(container, dest)
-                receipt['l08_functional_preserved_operation_files'] = preserve_functional_evidence(container, dest)
-                save()
-                cleanup_result = container / 'tmp/parlor-native-synthetic-seed-cleanup.json'
-                if cleanup_result.is_symlink() or cleanup_result.resolve().parent != (container / 'tmp').resolve():
-                    raise RuntimeError('Unexpected task-owned synthetic cleanup result path')
-                if cleanup_result.is_file():
-                    with cleanup_result.open('rb') as source:
-                        cleanup_bytes = source.read(1025)
-                    if not 0 < len(cleanup_bytes) <= 1024:
-                        raise RuntimeError('Unbounded synthetic cleanup result; refuse to retain')
-                    with (dest / cleanup_result.name).open('xb') as output:
-                        output.write(cleanup_bytes)
-                for ordinal in range(1, 9):
-                    result = container / ('tmp/parlor-native-readiness-boot-' + str(ordinal) + '.json')
-                    if result.is_symlink() or result.resolve().parent != (container / 'tmp').resolve():
-                        raise RuntimeError('Unexpected task-owned native result path')
-                    if result.is_file():
-                        if result.stat().st_size > 49152:
-                            raise RuntimeError('Oversized task-owned native result')
-                        shutil.copyfile(result, dest / result.name)
-                    failure = container / ('tmp/parlor-native-readiness-failure-' + str(ordinal) + '.json')
-                    if failure.is_symlink() or failure.resolve().parent != (container / 'tmp').resolve():
-                        raise RuntimeError('Unexpected task-owned diagnostic failure path')
-                    if failure.exists():
-                        context_path = dest / 'probe-readiness-result.json'
-                        if not context_path.is_file():
-                            raise RuntimeError('Diagnostic failure lacks owned readiness-launch context')
-                        failure_record = read_failure(failure, ordinal, json.loads(context_path.read_text()), mode)
-                        with (dest / failure.name).open('x') as output:
-                            output.write(json.dumps(failure_record, sort_keys=True) + '\n')
-                        receipt.setdefault('native_diagnostic_failures', []).append(failure_record)
-                        save()
-                # Retention acknowledgment only, not XCTest/runtime success.
-                # An exceptional extraction/container path never reaches this.
-                receipt['postbuild_evidence_preserved'] = receipt.get('xcresult_extraction_exit_codes') == {
-                    'summary': 0, 'tests': 0}
-                try:
-                    save()
-                except BaseException:
-                    receipt['postbuild_evidence_preserved'] = False
-                    raise
+                finish_xcode_attempt(receipt, xcode_error,
+                    lambda: stop_gradle('stop-xcode-immediate'),
+                    lambda: preserve_postbuild_raw(receipt, dest, temp, uuid, command, save))
             derived = temp / 'DerivedData'
             if derived.is_dir():
                 generated_entitlements = inspect_generated_app_entitlements(derived, temp)

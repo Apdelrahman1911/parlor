@@ -123,7 +123,7 @@ class ProbeSourceContractTest(unittest.TestCase):
     def test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels(self):
         self.assertEqual(native.effective_scope("workflow_dispatch", probe.SCOPE), probe.SCOPE)
         self.assertEqual(native.effective_scope("pull_request", probe.SCOPE), "full")
-        self.assertEqual(native.CYCLES, {"l08": "ios-readiness-21", "normal": "ios-readiness-22"})
+        self.assertEqual(native.CYCLES, {"l08": "ios-readiness-23", "normal": "ios-readiness-24"})
         with self.assertRaisesRegex(RuntimeError, "not-an-app-native-continuation"):
             native.Continuation(dict(GITHUB_EVENT_NAME="workflow_dispatch", PARLOR_DISPATCH_SCOPE=probe.SCOPE))
 

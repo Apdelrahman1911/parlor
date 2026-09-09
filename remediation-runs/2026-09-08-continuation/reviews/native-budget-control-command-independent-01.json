@@ -1,0 +1,469 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_EXACT_NATIVE_BUDGET_CONTROL_COMMAND_REVIEW",
+  "reviewer": "/root/ci_review",
+  "packet_author": "/root/dependency_chain",
+  "recorded_at": "2026-09-08T23:50:38.433Z",
+  "status": "APPROVED_EXACT_ROOT_COORDINATED_LINUX_INVOCATION_ONLY_EXECUTION_AND_EXTERNAL_RECONCILIATION_PENDING",
+  "packet": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-budget-control-command-01.json",
+    "sha256": "333afd6636ee2e41d3f9b780ea7b58554e199e5685131db0f5133e3abf103986",
+    "bytes": 65376
+  },
+  "inline": {
+    "sha256": "2ad11e3430a74524c9287b6daa13fdec0e0e199f8eda99d1331b55e3db5617b5",
+    "bytes": 40848
+  },
+  "branch": "fix/local-readiness-2026-09-07",
+  "observed_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+  "observed_tree": "a88872673bd4cfc366236362f287c1db0a04a5cd",
+  "scope": "The exact eight-child synthetic control packet through the existing root-owned Linux lane. This is permission for that fixed invocation, not executed test results, process/allocation clearance, a source freeze or native/CI/Store authorization.",
+  "blocking_findings": [],
+  "nonblocking_precision": [
+    {
+      "field": "finalization.unchanged_count_parser.body_delta",
+      "packet_phrase": "All eight defined helper/finalization/parser function source segments are byte-identical.",
+      "precise_result": "There are NINE defined function segments including nested observe_log; all nine are byte-identical to the predecessor. Eight is the correct number of child commands, not the total defined-function count.",
+      "functions": [
+        "require",
+        "read",
+        "write_new",
+        "manifest",
+        "interrupted",
+        "attempt",
+        "evidence_identity",
+        "observe_log",
+        "summarize"
+      ],
+      "author_acknowledgement": "dependency_chain confirmed this prose-only precision and requested retaining exact333afd66 packet. Full reversible-tail inspection already covered observe_log. No executable guard, parser, test count, selector or packet byte changed."
+    }
+  ],
+  "invocation": {
+    "outer_command_prefix": [
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "continuation-native-budget-controls-01",
+      "--command"
+    ],
+    "instruction": "Root concatenates this exact packet's outer_command_prefix + command without rewriting, from /root/projects/Parlor/parlor. Packet command is exactly /usr/bin/python3 -B -c <reviewed40848-byte inline source>.",
+    "commands": [
+      [
+        "primary-errors",
+        [
+          "-m",
+          "unittest",
+          "discover",
+          "-v",
+          "-s",
+          "scripts/verification/ios-readiness",
+          "-p",
+          "test_native_command_failures.py"
+        ],
+        29
+      ],
+      [
+        "lifecycle-integration",
+        [
+          "-m",
+          "unittest",
+          "discover",
+          "-v",
+          "-s",
+          "scripts/verification/ios-readiness",
+          "-p",
+          "test_simulator_lifecycle_integration.py"
+        ],
+        54
+      ],
+      [
+        "foundation-profile",
+        [
+          "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py"
+        ],
+        20
+      ],
+      [
+        "functional-copy",
+        [
+          "-m",
+          "unittest",
+          "discover",
+          "-v",
+          "-s",
+          "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02",
+          "-p",
+          "test_l08_functional_copy.py"
+        ],
+        12
+      ],
+      [
+        "composition",
+        [
+          "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py"
+        ],
+        55
+      ],
+      [
+        "native-adapter",
+        [
+          "-m",
+          "unittest",
+          "-v",
+          "scripts/release/tests/test_native_continuation.py"
+        ],
+        63
+      ],
+      [
+        "workflow-contract",
+        [
+          "-m",
+          "unittest",
+          "-v",
+          "scripts/release/tests/test_workflow_contract.py"
+        ],
+        52
+      ],
+      [
+        "probe-cycle-guard",
+        [
+          "-m",
+          "unittest",
+          "-v",
+          "scripts.release.tests.test_native_process_probe.ProbeSourceContractTest.test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels"
+        ],
+        1
+      ]
+    ],
+    "expected_children": 8,
+    "expected_methods": 286,
+    "counts_are": "Static declarations/proposed selections only. Actual complete unskipped results must be independently reconciled after root execution.",
+    "new_cycle_destination_absent_at_inspection": true,
+    "guard_review": [
+      "Linux,-B and sys.argv==['-c']; canonical owned exact scratch/tmp and evidence destination; matching RUNNING outer cycle receipt and whole packet command==receipt.command==sys.orig_argv before children.",
+      "Exact reviewed helper hash and ROOT match before calling its existing manifest()/run_command(). No helper main()/owned_destination(), native runner, build entrypoint or extra selectable child is called.",
+      "One real helper module object is used; signal handlers and finalization modify its actual FINALIZING/LAUNCHING/STOPPING_CHILD/PENDING_SIGNALS/DEFERRED_SIGNALS globals.",
+      "Existing child wait600s, exact direct-handle terminate20s/kill5s retirement and outer coordinated cleanup are unchanged. No global process adoption/signaling or cache deletion added.",
+      "All eight selectors are fixed literals. workflow-contract runs the52-method unittest module, not an extra standalone library command. That library main reads the bound workflows/config/scripts only; no Store script or workflow is executed."
+    ]
+  },
+  "input_binding_review": {
+    "supplemental_pins": 110,
+    "supplemental_paths": 110,
+    "all_pins_rehashed_and_match": true,
+    "duplicate_pin_keys_or_extra_paths": false,
+    "exact_pin_set_equals_extra_inputs": true,
+    "pins_manifest_sha256": "50490a9bb5f14cf9a8666f276c8f9a8a19d6802ca88bc0fdac10d2c38e0e9dfd",
+    "pins_manifest_encoding": "SHA256(json.dumps([{path,sha256,bytes} in packet BOUND_PINS insertion order],sort_keys=True,separators=(',',':')).encode())",
+    "helper_inherited_paths": 209,
+    "union_before_packet": 277,
+    "union_with_packet": 278,
+    "closure_manifest_sha256": "1c1b41ff0a4ca366336e39dac2649efc31695f11d3bf338f6d10ae01a5134796",
+    "closure_manifest_encoding": "SHA256(json.dumps([{path,sha256} sorted by relative path for277 inherited/supplemental paths],sort_keys=True,separators=(',',':')).encode())",
+    "method": "Independently parsed helper's static Path/C/N directory and extra-file data; walked only its declared extensions and augmented the exact110 packet paths. Did not import the helper or call manifest(). Every277 path was reopened as canonical same-UID bounded regular bytes; source identities checked stable around reads.",
+    "self_binding": "The packet is an additional actual input in both runtime manifests, without a circular self-pin. Independent review report is not substituted for the packet or source manifest.",
+    "source_binding": "Actual outer lane must retain current commit/tree/diff/source_manifest and exact runner before/after. The observed e511 HEAD is review context, not a hardcoded execution result or clean working-tree claim.",
+    "approvals": {
+      "author": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-native-budget-preservation-author-01.json",
+        "sha256": "32a9f88799ef499cc2c1a6478d2df89096cab3017335960db7694b0c6c09ad5f",
+        "bytes": 14351,
+        "declared_status": "HELD_FOR_INDEPENDENT_SOURCE_AND_REGRESSION_REVIEW_NOT_EXECUTION_AUTHORIZATION"
+      },
+      "companion": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-l08-exception-budget-source-independent-01.json",
+        "sha256": "ec35843efe93b07879ce581dde38f0f1add9abb183f9ac2e6a17bb2bb2f09e2e",
+        "bytes": 24624,
+        "declared_status": "APPROVED_EXACT_HELD_COMPANION_SOURCE_AND_HOOK_INTERFACE_NOT_TESTED_NOT_EXECUTION_OR_DISPATCH_APPROVAL"
+      },
+      "adapter_workflow": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-native-budget-admission-source-independent-01.json",
+        "sha256": "579614bf2bb71a8440acaa811e7b63a20d058576fe1579fb29bc940868e281a8",
+        "bytes": 28096,
+        "declared_status": "APPROVED_EXACT_FOUR_HELD_FILES_SOURCE_ONLY_NOT_TEST_EXECUTION_OR_DISPATCH_APPROVAL"
+      },
+      "adapter_precision": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-native-budget-admission-source-precision-01.json",
+        "sha256": "34c374048e169531a34380dda00f57ee2b84b8408054311bdabc277bfe627711",
+        "bytes": 2312,
+        "declared_status": "CORRECTED_REPORT_MECHANISM_ONLY_EXACT_SOURCE_APPROVAL_UNCHANGED"
+      },
+      "composition": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/a23-budget-preservation-composition-independent-01.json",
+        "sha256": "9c4d3345f00e50e5902f8501269119b2bc538ea54db289e72cfbd8d62d784055",
+        "bytes": 37708,
+        "declared_status": "APPROVED_EXACT_HELD_COMPOSITION_PIN_AND_ADDITIVE_DRAFT_FREEZE_SOURCE_ONLY_NOT_EXECUTION_APPROVAL"
+      },
+      "regression": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-native-budget-preservation-controls-independent-01.json",
+        "sha256": "d6b40bf7c2179e702a162caffe47a21a11eb4718f0ce92dce6c90e7eb46ce969",
+        "bytes": 47506,
+        "declared_status": "APPROVED_EXACT_HELD_REGRESSION_SOURCE_ONLY_ROOT_EXECUTION_PENDING"
+      },
+      "regression_final": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/hosted-native-budget-preservation-controls-independent-02.json",
+        "sha256": "2ef2bd8ce85db1e900dedfce1ad283fbdbf7c3eb1da68e0e75a0c27081af54af",
+        "bytes": 15580,
+        "declared_status": "APPROVED_EXACT_FINAL_HELD_REGRESSION_SOURCE_ONLY_ROOT_286_EXECUTION_PENDING"
+      }
+    },
+    "correction_reconciliation": [
+      "Regression02 2ef2bd8c plus preserved01 d6b40bf7 authorizes final integrationc5601e2/98369 bytes. Neither superseded667bcdf5 nor intermediate7c595f3 is accepted as the final test identity.",
+      "Source review579614bf is read with precision34c37404: duplicate keys reject in decode; nonfinite clock values reject through exact field-type/equality schema. No claim of a strict parse_constant decoder.",
+      "Composition source review9c4d3345 approves exact composer7d99de87/adapter399151fe/freezef73bd3be. Its earlier support-test snapshot is not a final integration-test approval; currentc560 is independently bound by regression02 and this packet.",
+      "All seven actual author/reviewer reports, their declared statuses, the14 explicit held-source/control rows, current draft freeze, helper and prior packet identities were rehashed and matched."
+    ]
+  },
+  "declaration_audit": [
+    {
+      "name": "primary-errors",
+      "path": "scripts/verification/ios-readiness/test_native_command_failures.py",
+      "sha256": "ea2f6d7b9acbeede8d36596539813b86a1fe68e2d7b293cb5d995c5bcecf1223",
+      "bytes": 35980,
+      "declared": 29,
+      "selected": 29,
+      "class_counts": {
+        "NativeCommandFailureControls": 15,
+        "NativeSimulatorMetadataFailureControls": 14
+      },
+      "skip_decorators": []
+    },
+    {
+      "name": "lifecycle-integration",
+      "path": "scripts/verification/ios-readiness/test_simulator_lifecycle_integration.py",
+      "sha256": "c5601e2dbc64956fa70310add4f8f25841e2d6e82af2f2e09798d38f93f7c09a",
+      "bytes": 98369,
+      "declared": 54,
+      "selected": 54,
+      "class_counts": {
+        "LifecycleRouteIntegration": 9,
+        "LifecycleBuildBoundaryIntegration": 6,
+        "XcodeBudgetIntegration": 2,
+        "RawPostbuildPreservationIntegration": 18,
+        "LifecycleFinalizerIntegration": 16,
+        "LifecycleCompositionClosureIntegration": 3
+      },
+      "skip_decorators": []
+    },
+    {
+      "name": "native-adapter",
+      "path": "scripts/release/tests/test_native_continuation.py",
+      "sha256": "366cd58febbe2f91f7cc287af8942948dd15d5372de2cec750dcbde9f9539465",
+      "bytes": 80771,
+      "declared": 63,
+      "selected": 63,
+      "class_counts": {
+        "NativeScopeTest": 4,
+        "NativeArtifactTest": 12,
+        "NativeCleanupTest": 17,
+        "NativePreflightTest": 2,
+        "DirectLifecycleAdapterTest": 5,
+        "NativeJobBudgetAdmissionTest": 8,
+        "NativeInnerFailureAdmissionTest": 15
+      },
+      "skip_decorators": []
+    },
+    {
+      "name": "workflow-contract",
+      "path": "scripts/release/tests/test_workflow_contract.py",
+      "sha256": "695a513b227d1aa3bde6adb49f886713ccdde4f684d9e8478b476cb0c6d8c4ae",
+      "bytes": 39774,
+      "declared": 52,
+      "selected": 52,
+      "class_counts": {
+        "WorkflowContractTest": 52
+      },
+      "skip_decorators": []
+    },
+    {
+      "name": "probe-cycle-guard",
+      "path": "scripts/release/tests/test_native_process_probe.py",
+      "sha256": "513e45a9c4b46b8e58ef3058abc0da6148223bd5175d1b784a190b8153de9c8d",
+      "bytes": 43371,
+      "declared": 45,
+      "selected": 1,
+      "class_counts": {
+        "Clock": 0,
+        "Child": 0,
+        "Selector": 0,
+        "ProbeSourceContractTest": 6,
+        "ProbeBoundedCaptureTest": 17,
+        "ProbePrivacyAndCustodyTest": 8,
+        "ProbeLifecycleTest": 7,
+        "ProbeSimulatorGlueTest": 3,
+        "NativeMetadataObservationTest": 4
+      },
+      "skip_decorators": []
+    },
+    {
+      "name": "foundation-profile",
+      "path": "scripts/verification/ios-readiness/test_foundation_toolchain_binding.py",
+      "sha256": "613f255556f052d553a2e85dc7d84e4f137957f47732356449e22d6991f7fc53",
+      "bytes": 24627,
+      "declared": 20,
+      "class_counts": {
+        "FoundationToolchainControls": 13,
+        "FoundationToolchainHookControls": 7
+      },
+      "skip_decorators": []
+    },
+    {
+      "name": "functional-copy",
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+      "sha256": "b58d9761b7c199f0ab7fd01c2c6614d2f49e0a71102fd54ff3f6783acfede7f0",
+      "bytes": 25344,
+      "declared": 12,
+      "class_counts": {
+        "L08FunctionalCopyTests": 12
+      },
+      "skip_decorators": []
+    },
+    {
+      "name": "composition-own",
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+      "sha256": "9cbc54882717a4c441b51e953c883579976cdd1c299d9a57099a713c36823464",
+      "bytes": 34551,
+      "declared": 22,
+      "class_counts": {
+        "SourceControls": 9,
+        "OwnedFixtures": 0,
+        "IntegrationControls": 10,
+        "LauncherControls": 3
+      },
+      "skip_decorators": []
+    },
+    {
+      "name": "composition-loaded",
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py",
+      "sha256": "c04c7d4b1bb99207415beab77ae3b40bb3d5f59709970f7d844d5d14beab0fe5",
+      "bytes": 34661,
+      "declared": 33,
+      "class_counts": {
+        "SchemaControls": 16,
+        "SourceControls": 9,
+        "OwnedCopyControls": 8
+      },
+      "skip_decorators": []
+    }
+  ],
+  "selection_and_exclusions": {
+    "composition": "Reopened unchanged run_controls.py: it loads actual draft and composition modules, assembles33+22 declarations, requires55 distinct IDs before running and emits exact discovered/results/input-test hashes. This is not merely an assumed count from a summary.",
+    "probe": "Independently removed only the selected cycle/scope method from current and e511 module ASTs; all remaining AST is identical. Exactly one dotted method is requested; other44 are neither skipped nor passed.",
+    "toolchain12": "Reopened helper/tests and actual isolated metadata/profile/environment/source-token seams. They are unchanged from e511; new closed budget and main/argv/receipt wiring is selected in integration54. Whole changed driver hash alone is not a reason to repeat the unaffected12.",
+    "normal187_and_lowlevel51": "Normal runner/control driver and low-level helper/test files are byte-identical to e511. No normal provenance suite or five Python stand-in methods selected. Hashing/importing supporting pure controls is not execution of their excluded test suites or app runtime.",
+    "other_exclusions": "Unchanged single-tap14, other44 probe, schema/bootstrap/consumer/lane suites remain unrequested, not skipped. Standalone workflow library invocation is not one of these eight children; its real validation is exercised by selected52 tests and any separate root-owned lane retains its own evidence.",
+    "current_affected_scope": "Qualified A budget/raw-preservation/primary and finalizer wiring; companion/composer pins and actual rendered callback; adapter clock/inner admission; exact workflow timeout/first clock step; sole future-cycle probe guard. This is a concrete changed-input scope, not a rerun campaign."
+  },
+  "unchanged_execution_controls": {
+    "helper": {
+      "path": "remediation-runs/2026-09-08-continuation/controls/run_continuation_controls.py",
+      "sha256": "1896d5a309e8802b691bfc9a37db2c0ac92dcfb6173d4cee564e5dcfcc234627",
+      "bytes": 8796
+    },
+    "outer_lane": {
+      "path": "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "sha256": "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc",
+      "bytes": 25106,
+      "equal_e511": true
+    },
+    "prior_packet": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-lifecycle-control-command-01.json",
+      "sha256": "2ce09a989775c8a99b4b4a98b68859fbd6c9eda926c1f56eae302318ef1c18cc",
+      "bytes": 56759,
+      "status": "Original native-lifecycle-controls01 remains FAIL (415 PASS/one failure/20 errors of436); later normal187 recheck is separate. Original native-repair-control01 outer/controller FAIL and additive reconciliations also remain unchanged. This packet does not rewrite failed execution labels."
+    },
+    "nine_function_segments_exactly_unchanged": [
+      "require",
+      "read",
+      "write_new",
+      "manifest",
+      "interrupted",
+      "attempt",
+      "evidence_identity",
+      "observe_log",
+      "summarize"
+    ],
+    "count_parser_sha256": "dc88dc7835f2ab0e888df1aaafb8f5873b918f0fadfb09f86228f9a9aa0ebdd6",
+    "whole_post_constant_body_reversible": true,
+    "permitted_tail_changes": "Output/cycle prefix native-lifecycle->native-budget, external target list removes the unrequested stand-in suite, and synthetic-only scope prose. Reversing those exact literals reproduces the full prior tail byte-for-byte.",
+    "summary_contract": "Exactly one expected 'Ran N test(s) in ...' line and one bare OK; FAILED or OK(skipped...) cannot qualify a passing child. Raw logs, exit/status and errors remain authoritative.",
+    "evidence_and_failure": [
+      "Attempted rows exist before allocation/Popen; original exit/error/shutdown fields are retained before postflight. Available logs are bounded-read and identified by SHA256/bytes; both full input manifests and their identities are retained.",
+      "Nonzero/missing child, timeout/interruption, pending/deferred signals, pin drift, input drift, missing log, count/skip mismatch or evidence-write error cannot produce successful aggregate exit.",
+      "Every attempted external-allocation target is marked for independent inspection on success as well as failure. No automatic marker parser or successful lane return grants clearance.",
+      "Final JSON-write failure forces nonzero exit and printed FAIL where possible. A stale/partial file or apparent PASS in one channel cannot override outer exit/errors or missing evidence. This is not a crash-proof filesystem-durability guarantee."
+    ]
+  },
+  "mandatory_external_postrun": {
+    "state": "REQUIRED_ON_EVERY_OUTCOME_NOT_CLOSED_BY_THIS_APPROVAL",
+    "owner": "/root and a different independent reviewer",
+    "blocks": [
+      "Source/inventory freeze",
+      "Native focused dispatch",
+      "Final combined CI dispatch"
+    ],
+    "actual_targets": {
+      "composition": {
+        "allocation_marker": "PARLOR_APP_FOUNDATION_CONTROL_ALLOCATION",
+        "cleanup_marker": "PARLOR_APP_FOUNDATION_CONTROL_CLEANUP",
+        "expected_allocation_cleanup_pairs_from_current_source": 4,
+        "expected_input_tests": [
+          {
+            "bytes": 34661,
+            "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py",
+            "sha256": "c04c7d4b1bb99207415beab77ae3b40bb3d5f59709970f7d844d5d14beab0fe5"
+          },
+          {
+            "bytes": 34551,
+            "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+            "sha256": "9cbc54882717a4c441b51e953c883579976cdd1c299d9a57099a713c36823464"
+          }
+        ],
+        "expected_results": {
+          "errors": 0,
+          "failures": 0,
+          "native_execution": false,
+          "skipped": [],
+          "tests_run": 55
+        },
+        "kind": "EXTERNAL_SYNTHETIC_FOUNDATION_COMPOSITION_FIXTURE_PARENTS",
+        "pair_explanation": "One outer parent plus three nested None/ValueError/KeyboardInterrupt callback parents; synthetic callbacks are not OS signal tests. Reconcile every actual row, not a startswith/exactly-one parser.",
+        "required": [
+          "Bind all actual allocation/cleanup pairs and exact custody, including mid-prefix nested output; require cleanup PASS,parent_removed=True,matching device/inode/uid and workers_started=0.",
+          "Verify every exact external parent is absent. Reopen RESULTS for55 distinct discovered IDs, zero failures/errors, empty skips, native_execution=False and exact two current test-source hashes."
+        ],
+        "results_marker": "PARLOR_APP_FOUNDATION_CONTROL_RESULTS"
+      },
+      "foundation-profile": {
+        "allocation_marker": "PARLOR_APP_FOUNDATION_CONTROL_ALLOCATION",
+        "cleanup_marker": "PARLOR_APP_FOUNDATION_CONTROL_CLEANUP",
+        "expected_allocation_cleanup_pairs_from_current_source": 1,
+        "kind": "EXTERNAL_SYNTHETIC_FOUNDATION_FIXTURE_PARENT",
+        "required": [
+          "Bind every actual exact parent/custody allocation-cleanup pair and require PASS,parent_removed=True,matching device/inode/uid and workers_started=0.",
+          "Freshly verify each exact external parent is absent without adoption/deletion; the ordinary lane scratch receipt alone is insufficient."
+        ]
+      }
+    },
+    "reconciliation": [
+      "Reopen each attempted raw log, identities, original exits/errors/shutdown data, before/after manifests, final report and actual outer source/runner/cleanup receipt. Preserve all unattempted children as NOT_RUN.",
+      "Foundation-profile expects one external allocation/cleanup pair; composition expects four. Enumerate every actual marker including one embedded after unittest text, and pair exact path/device/inode/uid rather than assuming startswith or one pair.",
+      "Require cleanup PASS,parent_removed=True,workers_started=0 and matching custody for every actual pair; freshly observe every exact external parent absent without adopting/deleting it.",
+      "Composition RESULTS must contain55 distinct discovered IDs, tests_run55, failures0,errors0,skipped[],native_execution=False and exact c04c7d4b/9cbc5488 test-source hashes.",
+      "Missing/contradictory/ambiguous allocation rows, unknown remaining resources, timeout/interruption/escalation or cleanup failure withhold clearance. Ordinary scratch cleanup and packet PASS cannot close this separate obligation.",
+      "Root preserves evidence and runs immediate/final Gradle stops plus precise owned worker/output/scratch cleanup through the unchanged lane. No global caches, historical evidence or unrelated work may be removed."
+    ]
+  },
+  "activity": {
+    "project_imports_or_extracted_functions_executed": 0,
+    "tests_or_discovery": 0,
+    "builds_native_tools_network_or_Actions": 0,
+    "code_or_existing_evidence_edits": 0,
+    "staging_commits_pushes_or_cleanup": 0,
+    "only_written_path": "remediation-runs/2026-09-08-continuation/reviews/native-budget-control-command-independent-01.json",
+    "operations": "Read-only Git/source/hash/stat/JSON/AST/literal-data inspection and this additive review only. No inline command or project helper called.",
+    "cleanup": "No build/test/process/fixture cycle was initiated by this reviewer. Existing lane lock, live outputs and archived failures left untouched."
+  },
+  "decision": "Root may execute exactly packet333afd6636ee2e41d3f9b780ea7b58554e199e5685131db0f5133e3abf103986 once in its coordinated Linux lane, provided current pins/ownership still match. Actual results and external cleanup remain pending. Changes to packet/held source require scoped re-review.",
+  "readiness": "NOT_READY. This approval supplies no corrected A23/B24 runtime, strict-protection pass, actual normal Parlor libproc, final combined qualification, physical-device, Store or separate owner/legal proof."
+}

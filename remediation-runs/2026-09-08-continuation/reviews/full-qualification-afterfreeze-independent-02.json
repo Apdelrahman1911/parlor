@@ -1,0 +1,643 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_FULL_QUALIFICATION_AFTERFREEZE_PACKET02_PREPARATION_AND_COLLECTION_SOURCE_REVIEW",
+  "reviewer": "/root/evidence_audit",
+  "packet_author": "/root/ci_workflow",
+  "status": "APPROVED_EXACT_PACKET_PREPARATION_ONLY_NO_FUTURE_FREEZE_OR_DISPATCH_APPROVAL",
+  "findings": [],
+  "author_corrections_requested": [],
+  "scope": "Independent read-only review of the complete held additive full02 preparation packet, current complete workflow, native full-scope entry and current full cleanup/task/XCTest wiring, original CLI failure receipts, retained pagination/REST evidence and the embedded future Linux collection normalizer. This is not implementation/admission approval, normalizer execution, application verification, current-source freeze approval, API authorization or D dispatch approval.",
+  "reviewed_packet": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/full-qualification-afterfreeze-02.json",
+    "bytes": 73611,
+    "sha256": "feba34720798a3a70608dcf81b6239a2357c21fb53e94214601390b5febc8403"
+  },
+  "current_observation": {
+    "head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+    "tree": "a88872673bd4cfc366236362f287c1db0a04a5cd",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_source_control_edits_present": true,
+    "head_is_not_approval_of_drafts": true,
+    "remote_query_by_this_reviewer": false
+  },
+  "independence": {
+    "prior_packet01_author": "/root/evidence_audit",
+    "prior_packet01_independent_reviewer": "/root/ci_review",
+    "new_packet02_author": "/root/ci_workflow",
+    "new_delta_reviewed_by_different_agent": true,
+    "prior_approval_not_extended_to_new_bytes_without_inspection": true,
+    "held_implementation_review_not_substituted_for_packet_review": true
+  },
+  "preserved_prior_packet": {
+    "packet": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-qualification-afterfreeze-01.json",
+      "bytes": 45031,
+      "sha256": "1c455d0dfc2405a9c3205782efbc31acf0fbd9ee356aeade25a74eeaa3c1aad5"
+    },
+    "independent_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-qualification-afterfreeze-independent-01.json",
+      "bytes": 10869,
+      "sha256": "2d49153881be3dc9ddc2ef9a9f08768ea288a921435d450cbc09fbea15aeb36c"
+    },
+    "preserved_unchanged": true,
+    "limited_supersession": "Use02 only for later separately approved preparation after its independent review. Old01 remains a historical approved preparation at its own byte/control baseline, including its now-inapplicable8-skip count and unsupported --slurp templates. Neither packet authorizes execution."
+  },
+  "current_control_binding_audit": {
+    "count": 17,
+    "all_current_sizes_and_sha256_match": true,
+    "all_claimed_head_blob_equalities_match": true,
+    "equal_prior_packet01": 15,
+    "changed_from_prior_packet01": [
+      ".github/workflows/production-verification.yml",
+      "scripts/ci/native_continuation.py"
+    ],
+    "current_bindings": [
+      {
+        "path": ".github/workflows/production-verification.yml",
+        "bytes": 41331,
+        "sha256": "84888fae00e1add37dd8f39c5a86a9600c2a95b5e3bca794133c3fc28147b46c",
+        "bytes_origin": "current_worktree",
+        "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "equal_observed_head_blob": false,
+        "equal_packet01_committed_reference": false
+      },
+      {
+        "path": "scripts/ci/verification_hygiene.py",
+        "bytes": 13802,
+        "sha256": "9eab427aeb3d810c033a3827aa44f7201cbb261345a2e6667a8d085df2fbd603",
+        "bytes_origin": "current_worktree",
+        "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "equal_observed_head_blob": true,
+        "equal_packet01_committed_reference": true
+      },
+      {
+        "path": "scripts/ci/apple_verification_hygiene.py",
+        "bytes": 14908,
+        "sha256": "d9c554781750d3cbbf2a4adce3b040edb83d0de5fec4c04eac700c526fca1c3c",
+        "bytes_origin": "current_worktree",
+        "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "equal_observed_head_blob": true,
+        "equal_packet01_committed_reference": true
+      },
+      {
+        "path": "scripts/ci/owned_ci_simulator.py",
+        "bytes": 11229,
+        "sha256": "717c8c02dc06e4eac175c5dde5c7f9bdd6ebbd5e7028cc94c6ba4f84b44388af",
+        "bytes_origin": "current_worktree",
+        "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "equal_observed_head_blob": true,
+        "equal_packet01_committed_reference": true
+      },
+      {
+        "path": "scripts/ci/darwin_worker_identity.py",
+        "bytes": 12894,
+        "sha256": "939ac6c98628046f9f45547135cbc439f217403e60c7e4033db5f541ab017ecc",
+        "bytes_origin": "current_worktree",
+        "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "equal_observed_head_blob": true,
+        "equal_packet01_committed_reference": true
+      },
+      {
+        "path": "scripts/ci/native_continuation.py",
+        "bytes": 64697,
+        "sha256": "e41186dc13dd94e851b449079d73b98cc4655bb6234ebcd76adc61942bb12feb",
+        "bytes_origin": "current_worktree",
+        "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "equal_observed_head_blob": false,
+        "equal_packet01_committed_reference": false
+      },
+      {
+        "path": "scripts/android/run_release_managed_device_smoke.sh",
+        "bytes": 1511,
+        "sha256": "5b6dc8fcdd7b11c9cefd39da3adb8783321b647cd9a8459ff761ef7fa031262d",
+        "bytes_origin": "current_worktree",
+        "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "equal_observed_head_blob": true,
+        "equal_packet01_committed_reference": true
+      },
+      {
+        "path": "scripts/verification/android_release_artifacts.py",
+        "bytes": 16937,
+        "sha256": "55d6b3ddbe4877956c383225ea8bc8b203a2b023206be60eeac519b2555e98cb",
+        "bytes_origin": "current_worktree",
+        "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "equal_observed_head_blob": true,
+        "equal_packet01_committed_reference": true
+      },
+      {
+        "path": "scripts/verification/ios_release_artifacts.py",
+        "bytes": 19655,
+        "sha256": "e1b597f6513d18a1e35ea293e08a99d6ff7a3baefb383bb100f24988e5e83938",
+        "bytes_origin": "current_worktree",
+        "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "equal_observed_head_blob": true,
+        "equal_packet01_committed_reference": true
+      },
+      {
+        "path": "scripts/verification/third_party_notices.py",
+        "bytes": 30079,
+        "sha256": "d5a9e8e0cafd9c2d0de9ecd8dfcb040053fa52d25d798abd9998e84ab6676bdf",
+        "bytes_origin": "current_worktree",
+        "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "equal_observed_head_blob": true,
+        "equal_packet01_committed_reference": true
+      },
+      {
+        "path": "build.gradle.kts",
+        "bytes": 8766,
+        "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+        "bytes_origin": "current_worktree",
+        "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "equal_observed_head_blob": true,
+        "equal_packet01_committed_reference": true
+      },
+      {
+        "path": "config/release-policy.json",
+        "bytes": 4481,
+        "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+        "bytes_origin": "current_worktree",
+        "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "equal_observed_head_blob": true,
+        "equal_packet01_committed_reference": true
+      },
+      {
+        "path": "iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
+        "bytes": 1097,
+        "sha256": "e903278fc8defcac9a4d03a52495c1364a361222e5f369059c5d6b6416fb6eb7",
+        "bytes_origin": "current_worktree",
+        "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "equal_observed_head_blob": true,
+        "equal_packet01_committed_reference": true
+      },
+      {
+        "path": "iosApp/iosApp.xcodeproj/project.pbxproj",
+        "bytes": 21657,
+        "sha256": "625103b4676a017beb4619c61b705efc84c2be47b71603bddd840c1d3856ea9d",
+        "bytes_origin": "current_worktree",
+        "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "equal_observed_head_blob": true,
+        "equal_packet01_committed_reference": true
+      },
+      {
+        "path": "iosApp/iosApp.xcodeproj/xcshareddata/xcschemes/iosApp.xcscheme",
+        "bytes": 3880,
+        "sha256": "b883fb73d15c7cf4faf868d2cdc8c2fb921c7ffe3606893733b1f89a33747312",
+        "bytes_origin": "current_worktree",
+        "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "equal_observed_head_blob": true,
+        "equal_packet01_committed_reference": true
+      },
+      {
+        "path": "iosApp/iosApp/ComposeContainerViewController.swift",
+        "bytes": 2150,
+        "sha256": "9bdeeaf67a569f4016bc5359ae865b6df9eeaa2a9f6ee36e01041bf79000a903",
+        "bytes_origin": "current_worktree",
+        "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "equal_observed_head_blob": true,
+        "equal_packet01_committed_reference": true
+      },
+      {
+        "path": "iosApp/iosAppUITests/ComposeContainerViewControllerTests.swift",
+        "bytes": 4899,
+        "sha256": "a4730b77ad93d01df60a4b6fde558bfea264f71b19ee5aa6c4a08d33480eacc8",
+        "bytes_origin": "current_worktree",
+        "observed_git_head": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "equal_observed_head_blob": true,
+        "equal_packet01_committed_reference": true
+      }
+    ],
+    "claim_scope": "Current worktree identities only, not a future clean/inventory freeze. Every future relevant source/control/contract delta requires fresh applicability and rehash review."
+  },
+  "file_reference_audit": {
+    "missing": [],
+    "size_or_sha256_mismatches": [],
+    "conflicting_duplicate_references": [],
+    "inherited_eight_reference_payload_limit": "All eight inherited report identity pins rehashed; no new claim of reopening their complete historical underlying evidence. Prior packet01 independent review read completely; current packet02 and changed source/collection areas reopened directly.",
+    "reference_occurrences_inspected": 38,
+    "unique_path_byte_sha256_references": 34,
+    "collector": "Recursive collection of every nested object containing path, bytes and sha256, without an existence filter; all 38 occurrences across 34 unique paths matched, including duplicate pins. Missing references and conflicting duplicate identities are explicit failures.",
+    "rechecked_at_report_write": true
+  },
+  "workflow_reconciliation": {
+    "path": ".github/workflows/production-verification.yml",
+    "bytes": 41331,
+    "sha256": "84888fae00e1add37dd8f39c5a86a9600c2a95b5e3bca794133c3fc28147b46c",
+    "complete_lines_read": 830,
+    "branch_trigger": "Push/PR filters are main/testing/release, not this continuation branch; a later separately authorized workflow_dispatch remains necessary.",
+    "concurrency": "One production-verification-${{ github.ref }} group with cancel-in-progress true; all same-ref full/focused/probe scopes share it. All-event same-ref no-overlap inspection is required before the one approved call.",
+    "permissions": "Workflow contents:read; ios contents:read/actions:read, unchanged. No Store/signing credentials or publication workflow introduced by the packet.",
+    "full_required_jobs": 5,
+    "expected_main_artifacts": 5,
+    "expected_cleanup_artifacts": 5,
+    "artifact_counts_are_not_observed_results": true,
+    "focused_only_steps_condition_false_for_full": [
+      "Start focused native job clock",
+      "Run focused native continuation",
+      "Upload focused native evidence",
+      "Verify focused native cleanup and uploaded custody",
+      "Upload native continuation cleanup receipt",
+      "Observe hosted native processes without an app build",
+      "Upload bounded process-probe evidence",
+      "Verify process-probe cleanup and uploaded custody",
+      "Upload process-probe cleanup receipt"
+    ],
+    "focused_only_step_lines": [
+      493,
+      532,
+      548,
+      558,
+      569,
+      579,
+      589,
+      599,
+      611
+    ],
+    "focused_only_count": 9,
+    "validate_scope": {
+      "line": 516,
+      "runs_in_full": true,
+      "not_a_focused_skip": true,
+      "only_validates_and_selects_scope": true
+    },
+    "ios_timeout_expression": "${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}",
+    "full_ios_minutes": 120,
+    "focused_native_evidence_minutes": 240,
+    "process_probe_minutes": 10,
+    "full_clock_boundary": "Start focused native job clock is false in full. Full does not set/use PARLOR_NATIVE_JOB_CLOCK, create the focused roots, or get any source binding from the native admission clock.",
+    "checkout_depths": {
+      "desktop-android": 0,
+      "desktop-linux-arm64": 1,
+      "desktop-macos-x64": 1,
+      "desktop-windows-x64": 1,
+      "ios": 1
+    },
+    "source_binding_limit": "Full ignores frozen_source_sha: full build steps do not set PARLOR_FROZEN_SOURCE_SHA and checkout ref does not derive from that input. Exact future source attribution requires actual run/attempt/head plus five checkout/ownership head/tree/task records and before/after direct remote/local equality. Git identity on Windows is not a Linux-identical normalized byte manifest.",
+    "jobs": [
+      {
+        "job_key": "desktop-android",
+        "name": "Common, desktop, and Android release",
+        "runs_on": "ubuntu-24.04",
+        "full_timeout_minutes": 90,
+        "source_lines": [
+          60,
+          209
+        ],
+        "commands_compared_to_current_source": [
+          "./gradlew productionCheck productionStaticAnalysis productionReleaseAutomationCheck allTests --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+          "scripts/android/run_release_managed_device_smoke.sh"
+        ],
+        "main_artifact": "desktop-android-verification",
+        "cleanup_artifact": "verification-cleanup-desktop-android",
+        "upload_source_paths": [
+          "build/ci-evidence/",
+          "**/build/reports/detekt/",
+          "**/build/reports/tests/",
+          "**/build/test-results/**/*.xml",
+          "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-ownership.json",
+          "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-stop-*.json",
+          "**/build/reports/androidTests/managedDevice/",
+          "**/build/outputs/androidTest-results/managedDevice/",
+          "**/build/reports/lint-results-*",
+          "composeApp/build/outputs/mapping/release/",
+          "composeApp/build/outputs/bundle/release/*.aab"
+        ],
+        "required_stop_labels": [
+          "common-android",
+          "managed-device"
+        ],
+        "cleanup_upload_path": "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-desktop-android-cleanup.json"
+      },
+      {
+        "job_key": "desktop-linux-arm64",
+        "name": "Desktop strict verification (Linux arm64)",
+        "runs_on": "ubuntu-24.04-arm",
+        "full_timeout_minutes": 45,
+        "source_lines": [
+          210,
+          295
+        ],
+        "commands_compared_to_current_source": [
+          "./gradlew productionDesktopCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain"
+        ],
+        "main_artifact": "desktop-verification-desktop-linux-arm64",
+        "cleanup_artifact": "verification-cleanup-desktop-linux-arm64",
+        "upload_source_paths": [
+          "**/build/reports/tests/",
+          "**/build/test-results/**/*.xml",
+          "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-ownership.json",
+          "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-stop-*.json"
+        ],
+        "required_stop_labels": [
+          "linux-arm64"
+        ],
+        "cleanup_upload_path": "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-desktop-linux-arm64-cleanup.json"
+      },
+      {
+        "job_key": "desktop-macos-x64",
+        "name": "Desktop and Kotlin Native strict verification (macOS x64)",
+        "runs_on": "macos-15-intel",
+        "full_timeout_minutes": 45,
+        "source_lines": [
+          296,
+          381
+        ],
+        "commands_compared_to_current_source": [
+          "./gradlew productionDesktopCheck :composeApp:downloadKotlinNativeDistribution --dependency-verification=strict --no-daemon --stacktrace --console=plain"
+        ],
+        "main_artifact": "desktop-verification-desktop-macos-x64",
+        "cleanup_artifact": "verification-cleanup-desktop-macos-x64",
+        "upload_source_paths": [
+          "**/build/reports/tests/",
+          "**/build/test-results/**/*.xml",
+          "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-ownership.json",
+          "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-stop-*.json"
+        ],
+        "required_stop_labels": [
+          "macos-x64"
+        ],
+        "cleanup_upload_path": "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-desktop-macos-x64-cleanup.json"
+      },
+      {
+        "job_key": "desktop-windows-x64",
+        "name": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+        "runs_on": "windows-2025",
+        "full_timeout_minutes": 60,
+        "source_lines": [
+          382,
+          477
+        ],
+        "commands_compared_to_current_source": [
+          ".\\gradlew.bat productionDesktopCheck :composeApp:downloadKotlinNativeDistribution :composeApp:processDebugResources --dependency-verification=strict --no-daemon --stacktrace --console=plain"
+        ],
+        "main_artifact": "desktop-verification-desktop-windows-x64",
+        "cleanup_artifact": "verification-cleanup-desktop-windows-x64",
+        "upload_source_paths": [
+          "**/build/reports/tests/",
+          "**/build/test-results/**/*.xml",
+          "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-ownership.json",
+          "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-stop-*.json"
+        ],
+        "required_stop_labels": [
+          "windows-x64"
+        ],
+        "cleanup_upload_path": "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-desktop-windows-x64-cleanup.json"
+      },
+      {
+        "job_key": "ios",
+        "name": "iOS tests, release frameworks, and Swift wrapper",
+        "runs_on": "macos-15",
+        "full_timeout_minutes": 120,
+        "source_lines": [
+          478,
+          830
+        ],
+        "commands_compared_to_current_source": [
+          "./gradlew productionIosSimulatorRuntimeTests productionAppleCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+          "/usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene create-simulator apple-ui",
+          "xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -configuration Debug -sdk iphonesimulator -destination \"platform=iOS Simulator,id=$simulator_udid\" -parallel-testing-enabled NO -maximum-concurrent-test-simulator-destinations 1 -destination-timeout 120 -derivedDataPath build/xcode-derived-data -resultBundlePath build/ci-evidence/ios-ui-tests.xcresult test | tee build/ci-evidence/xcode-ui-test.log",
+          "xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -configuration Release -sdk iphonesimulator -destination \"generic/platform=iOS Simulator\" -derivedDataPath build/xcode-derived-data ARCHS=arm64 ONLY_ACTIVE_ARCH=YES CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build | tee build/ci-evidence/xcode-release-build.log"
+        ],
+        "main_artifact": "ios-verification",
+        "cleanup_artifact": "verification-cleanup-ios",
+        "upload_source_paths": [
+          "build/ci-evidence/",
+          "build/xcode-derived-data/Build/Products/Release-iphonesimulator/Parlor.app.dSYM/",
+          "**/build/reports/detekt/",
+          "**/build/reports/tests/",
+          "**/build/test-results/**/*.xml",
+          "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-ownership.json",
+          "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-stop-*.json",
+          "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-apple-*-ownership.json",
+          "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-${JOB}-apple-ui-simulator-*.json"
+        ],
+        "required_stop_labels": [
+          "apple-aggregate",
+          "apple-ui",
+          "apple-wrapper"
+        ],
+        "cleanup_upload_path": "${RUNNER_TEMP}/parlor-verification-${RUN_ID}-${ATTEMPT}-ios-cleanup.json"
+      }
+    ]
+  },
+  "native_full_entry_source": {
+    "path": "scripts/ci/native_continuation.py",
+    "bytes": 64697,
+    "sha256": "e41186dc13dd94e851b449079d73b98cc4655bb6234ebcd76adc61942bb12feb",
+    "comparison_commit": "700243c3426db2da3855a9d3a3df58ada607ffc5",
+    "functions": [
+      {
+        "name": "effective_scope",
+        "lines": [
+          136,
+          140
+        ],
+        "ast_equal_700243": true,
+        "ast_sha256": "4d9b6ffb8917d64137087c5153d88eae912c2deb9b4ddcd46357fa308d0bf6a9"
+      },
+      {
+        "name": "main",
+        "lines": [
+          1092,
+          1099
+        ],
+        "ast_equal_700243": true,
+        "ast_sha256": "9b12dcda9eb8f8cab741174ed7ff598be2e4fa8534ad855d91de068c31566ab1"
+      },
+      {
+        "name": "context",
+        "lines": [
+          143,
+          165
+        ],
+        "ast_equal_700243": true,
+        "ast_sha256": "ec089abd4bfd9ca78d832e75b1d300cb887f5c95a68da5c5f7526f69ace696b1"
+      }
+    ],
+    "method": "stdlib ast.parse/ast.dump(include_attributes=False) over source and git-show blobs only; no project import or function execution.",
+    "conclusion": "main(validate-scope) prints effective_scope and returns before constructing Continuation or invoking focused context. Global setup defines paths/constants/classes/functions; no focused lane is acquired for this full validate-scope invocation.",
+    "implementation_limit": "The rest of the changed adapter/admission and companion are owned by their distinct source/test reviews, not approved by this packet review. The current ci_review source report must be read with its additive decoder-mechanism precision note."
+  },
+  "cli_and_collection_review": {
+    "observed_cli_basis": "Original gh2.45.0 failure receipts, not a new version/help/API probe.",
+    "retained_failures": {
+      "observed_client_from_retained_receipt": "gh version 2.45.0 (2025-07-18 Ubuntu 2.45.0-1ubuntu0.3)",
+      "new_client_probe_executed": false,
+      "unsupported_paginate_flag": {
+        "receipt": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-03-preparation-failure.json",
+          "bytes": 1464,
+          "sha256": "c50339374284170f800687540a349245da74c349e33ed721b47d4a2c6e3b9e4e"
+        },
+        "diagnostic": "unknown flag: --slurp",
+        "correction": "Same gh api --paginate without --slurp; preserve the original concatenated JSON stream and completely decode every page. The recorded failure reached no workflow dispatch."
+      },
+      "unsupported_view_field": {
+        "receipt": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34275491965/collection-preparation-01.json",
+          "bytes": 2467,
+          "sha256": "b3a2fa2655fd4ab2512e7441c5ca9214b9b66537cca7f97547189a06d026dfdf"
+        },
+        "diagnostic": "Unknown JSON field: \"attempt\"",
+        "correction": "Read run_attempt from the raw REST run/attempt response. The documented failure is --json attempt, not proof that gh run view --attempt is unsupported. This packet avoids gh run view entirely and selects log attempt through the REST /attempts/1/logs endpoint."
+      },
+      "limitations": "These are retained local collection/preparation failures, not new tests, app runtime failures or permission for another Actions run. Old receipts and packet remain untouched; all replacement commands/parser code remain unexecuted by this author."
+    },
+    "approved_preparation_only_dispatch_template": "gh workflow run production-verification.yml --repo Apdelrahman1911/parlor --ref fix/local-readiness-2026-09-07 -f verification_scope=full",
+    "dispatch_inputs": {
+      "verification_scope": "full"
+    },
+    "no_overwrite": "Exclusive coordinator captures with exact argv, UTC timestamps, exit and raw stdout/stderr; signed URLs/auth/debug headers excluded. Failed/partial records remain immutable and do not authorize retry.",
+    "pre_run_list": "gh api --paginate for this workflow+branch without an event filter, so full/focused/probe and any other same-ref runs are included in the no-overlap check. Raw complete stream is retained.",
+    "post_run_list": "Same workflow+branch plus event=workflow_dispatch for association; compare pre/post IDs, source/ref/actor/timing and require exactly one new initial run.",
+    "run_attempt_source": "REST raw run/attempt run_attempt exact integer1, not unsupported gh run view --json attempt. No assertion that gh run view --attempt is unsupported.",
+    "attempt_log_command": "gh api \"repos/$REPO/actions/runs/$RUN_ID/attempts/1/logs\" > \"$PACKET_DIR/run-attempt-1-logs.zip\"",
+    "job_log_command": "gh api \"repos/$REPO/actions/jobs/$JOB_ID/logs\" > \"$PACKET_DIR/job-$JOB_ID.log\"",
+    "artifact_endpoint_limit": "Run-level artifact pages are not attempt-scoped. Initial attempt1 must remain unchanged, and each of ten future IDs/digests must match exact job upload logs/inner task claims. Job IDs must first belong to the exact attempt's five-job list.",
+    "normalizer_invocation_template": "python3 -B \"$PACKET_DIR/normalize_gh_pages.py\" \"$PACKET_DIR/workflow-runs-before.pages.raw.json\" workflow_runs \"$PACKET_DIR/workflow-runs-before.pages.json\" \"$RECORDED_API_EXIT_CODE\"",
+    "all_four_paginated_derivatives": [
+      {
+        "raw": "workflow-runs-before.pages.raw.json",
+        "key": "workflow_runs",
+        "normalized": "workflow-runs-before.pages.json"
+      },
+      {
+        "raw": "workflow-runs-after.pages.raw.json",
+        "key": "workflow_runs",
+        "normalized": "workflow-runs-after.pages.json"
+      },
+      {
+        "raw": "jobs-attempt-1.pages.raw.json",
+        "key": "jobs",
+        "normalized": "jobs-attempt-1.pages.json"
+      },
+      {
+        "raw": "artifacts.pages.raw.json",
+        "key": "artifacts",
+        "normalized": "artifacts.pages.json"
+      }
+    ],
+    "raw_streams_reopened": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-03/prior-runs.raw.json-stream",
+        "bytes": 126721,
+        "sha256": "36137b9df45bec916e0cd28d0b19ae3a89bfa0278d2bd00f48f81cc6ad3bcedd",
+        "actual_pages": 1,
+        "total_count": 10,
+        "actual_items": 10,
+        "complete_raw_consumption": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-03/runs-after-dispatch.raw.json-stream",
+        "bytes": 139400,
+        "sha256": "8d09b35f8f83adeb5917e10dd3389741299d48df3026e560b2279e1649664a41",
+        "actual_pages": 1,
+        "total_count": 11,
+        "actual_items": 11,
+        "complete_raw_consumption": true
+      }
+    ],
+    "raw_inspection_limit": "Read-only stdlib decoding of existing captures confirms their actual JSON-object stream shape; this is not execution or regression coverage of the new embedded helper, nor proof of a new paginated API operation.",
+    "retry_limit": "One later separately approved initial full call only; network ambiguity is reconciled without dispatching again. Any incomplete pagination, cap/drift, failed download, source mismatch, unexpected skip/cache gap or failed cleanup remains a recorded gap, not a blind matrix retry."
+  },
+  "embedded_normalizer_static_review": {
+    "bytes": 5548,
+    "sha256": "48ca12d9ec8a02410ac4ea645716902efc37842b23050e450c60074aabbdd270",
+    "hash_matches_packet_materialization_pin": true,
+    "ast_syntax_valid": true,
+    "executed": false,
+    "imported": false,
+    "materialized": false,
+    "regression_tests_run": 0,
+    "platform": "Linux-only collection helper; uses POSIX UID and O_NOFOLLOW, not a claimed Windows/native runner.",
+    "inputs": "Exactly raw-path/known collection/output-path/recorded API-exit arguments; accepts only literal exit0 and workflow_runs/jobs/artifacts. API status must come from the real captured command, not an assumed0.",
+    "read_ownership": "Absolute raw/output paths, equal canonical same-owner parent; non-symlink nofollow raw open; regular UID-owned nlink1 file; positive size <=64MiB. fstat before/after plus path lstat device/inode/UID/mode/linkcount/size/mtime/ctime and exact read length prevent acceptance of an observed changed stream.",
+    "decode": "UTF-8; only JSON whitespace skipped between every raw_decode object; consumes to end. object_pairs_hook rejects duplicate keys, parse_constant rejects NaN/Infinity and finite_float rejects overflow to nonfinite. No page/trailing garbage is discarded.",
+    "page_identity": "At most64 pages and100 items each; exact-int total_count 0..6400 remains stable; list items are dictionaries with exact positive-int unique IDs across all pages. Nonempty page sequence and total_count == distinct ID count required. Failure/cap/partial/trailing/missing records stay failures.",
+    "write_ownership": "Parent device/inode/UID rechecked before output; encoded derivative carries raw filename/bytes/SHA/actual accepted exit0 and complete pages. Exclusive nofollow create0600; flush+fsync; no replacement of a prior raw/derivative, and a partial failed output is retained.",
+    "side_effect_boundary": "Source imports only stdlib. No network/subprocess/cleanup/removal/Git mutation/dynamic project import or embedded API dispatch. Its only prospective write is the explicit new derivative; stdout is a compact identity record.",
+    "semantic_limit": "Completeness decoding is not repository/ref/source/actor/workflow/attempt validation, active-run absence, dispatch association, artifact custody or readiness. The packet separately retains all such gates and future authorization requirements.",
+    "static_review_limit": "No normalizer inputs, fixtures, mutation tests or future commands were executed. Approval is for the held preparation source, not a successful parser execution receipt."
+  },
+  "full_cleanup_reconciliation": {
+    "general_source": "scripts/ci/verification_hygiene.py:28-39,57-67,78-91,95-111,114-119,122-167,170-238,241-271",
+    "apple_source": "scripts/ci/apple_verification_hygiene.py:23-32,44-109,112-202,205-249,252-278",
+    "source_and_task": "Preparation claims exact root/head/tree/task/output roots from tracked build/Python paths, refuses preexisting outputs and dirty source. Final cleanup compares current authority and checks all paths before deletion.",
+    "immediate_stops": "POSIX repository ./gradlew --stop and Windows COMSPEC /d /c gradlew.bat --stop with90s bound; every configured cycle has its own receipt. No stop/clean was executed by this reviewer.",
+    "custody": "Final cleanup stops Gradle first, requires prepare success, current source/task authority, successful upload with positive numeric ID and64hex digest, and Apple checks when ios; then deletes only attested output roots. RUNNER_TEMP receipts survive checkout-output deletion and are uploaded separately.",
+    "apple": "Three aggregate/UI/wrapper finish receipts must match actual prepare/run/finish outcomes, source/task/claim hash, stop0 and bounded worker checks before/after exact owned UI simulator cleanup. NOT_RUN requires both earlier steps skipped and no resource claim; it is never a test pass.",
+    "nonapple": "Gradle/in-process Kotlin cleanup is not emulator/native/other worker retirement proof. Missing required independent worker/device evidence remains a limit.",
+    "preservation": "Same-job follow-on builds/inspection legitimately retain required output under preparation retention_reason until main upload. No collector deletes caches, archived evidence build directories, signing/source/configuration, unrelated work, task locks or the original ZIPs.",
+    "artifact_paths": "Verified all main and cleanup upload-source paths against workflow. ZIP member prefixes may reflect workspace/RUNNER_TEMP common ancestry; packet requires exact safe member inventories, not flattening or invented roots.",
+    "archive_policy": "All future originals, API/upload IDs/digests/sizes/expiry/source/attempt bindings and safe regular-member inventories must be retained. Warn-on-missing/14-day upload behavior means green upload/name/count cannot certify evidence completeness."
+  },
+  "runtime_scope_review": {
+    "root_tasks": "productionDesktopCheck registration and productionIosSimulatorRuntimeTests include real matching KMP test tasks; productionAppleCheck is type-aware analysis and three release linkage targets. strict verification and repository wrapper unchanged.",
+    "android": "Managed smoke script delegates to productionAndroidRuntimeCheck with strict/no-daemon/max-workers2 and task-owned synthetic signing. Resource processing/distribution downloads/unsigned package checks are not instrumentation or Store signing.",
+    "ios": {
+      "scheme": "iosApp/iosApp.xcodeproj/xcshareddata/xcschemes/iosApp.xcscheme",
+      "testable": "iosAppUITests",
+      "testable_skipped": false,
+      "testable_parallelizable": false,
+      "only_testing_selector": null,
+      "declaration_count": 5,
+      "declarations_not_executed_results": [
+        "IOSAppLaunchUITests.testColdLaunchRendersComposeHomeWithoutUnexpectedAlert",
+        "ComposeContainerViewControllerTests.testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView",
+        "ComposeContainerViewControllerTests.testChildUsesFullBoundsAcrossSizesAndOpposingSemanticDirections",
+        "ComposeContainerViewControllerTests.testSystemDecorationAndOrientationPoliciesStillBelongToTheChild",
+        "ComposeContainerViewControllerTests.testDefaultAppearanceForwardingReachesTheSameChildExactlyOnce"
+      ],
+      "wiring": "PBX iosAppUITests Sources compiles IOSAppLaunchUITests.swift, the production ComposeContainerViewController.swift and ComposeContainerViewControllerTests.swift. This is source/wiring inspection only; runtime counts remain unknown until actual execution and descriptor reconciliation."
+    },
+    "xcode_actual_methods_executed_by_this_review": 0,
+    "full_vs_A_B": "Five declared Home/UIKit methods in full are not A's13 storage boots/retained hosts/strict-protection matrix, B's eight normal repetitions or ninth actual Parlor libproc query.",
+    "cache_and_skip": "Actual task outcomes and unique job/platform/task/suite/testcase descriptors must distinguish executed, FROM-CACHE, UP-TO-DATE, NO-SOURCE, SKIPPED, failed, aborted/NOT_RUN and unknown. Declaration/XML/XCResult/aggregate/linkage alone cannot create new runtime evidence.",
+    "A_B_C_cutoff": "Retained A21 is FAIL with partial app observations and cleanupFAIL; B22 NOT_RUN; C03 scoped PASS at e511 only. Current/future A23/B24/C applicability/D remain separate. These facts were checked against exact already inspected raw evidence and current pinned reports, not newly executed."
+  },
+  "authorization": {
+    "exact_unbound_preparation_approved": true,
+    "any_current_or_future_source_sha_approved_for_execution": false,
+    "new_normalizer_execution_or_materialization_approved_now": false,
+    "api_network_downloads_or_workflow_dispatches_authorized_now": false,
+    "test_build_native_runtime_or_cleanup_authorized_now": false,
+    "retry_cancellation_store_publication_or_promotion_authorized": false,
+    "future_binding_values": {
+      "source_control_commit": null,
+      "inventory_execution_commit": null,
+      "frozen_source_sha": null,
+      "frozen_source_tree": null,
+      "frozen_workflow_sha256": null,
+      "source_control_manifest_sha256": null,
+      "inventory_sha256": null,
+      "scope_reconciliation_receipt": null,
+      "independent_packet_review": null,
+      "independent_dispatch_approval": null,
+      "dispatch_time_utc": null,
+      "run_id": null,
+      "run_attempt": null,
+      "execution_status": "NOT_EXECUTED"
+    },
+    "all_future_job_artifact_run_values_remain_null": true,
+    "required_later": "Reviewed source/control/regression closures; source commit then separate fresh mechanical inventory commit; actual clean freeze and rehash/applicability review including A/B/C; direct remote/local source confirmation; independent frozen packet/one-initial-run dispatch approval; no same-ref overlap. No historical observed e511 or workflow ID serves as future authorization.",
+    "D_status": "NOT_RUN",
+    "readiness": "NOT_READY"
+  },
+  "activity_and_cleanup": {
+    "tests": 0,
+    "builds": 0,
+    "project_imports": 0,
+    "normalizer_or_template_executions": 0,
+    "native_commands": 0,
+    "network_API_Actions": 0,
+    "source_edits": 0,
+    "staging_commits_pushes": 0,
+    "cleanup_or_worker_signaling": 0,
+    "inspection": "Read-only Git show/status/diff --check, ordinary byte reads, stdlib JSON/SHA256/AST/XML parsing. Read complete packet/workflow and current relevant task/cleanup/scope/test wiring. No broad remediation campaign or expensive check repeated.",
+    "written_files": [
+      "remediation-runs/2026-09-08-continuation/reviews/full-qualification-afterfreeze-independent-02.json"
+    ],
+    "cleanup": "No build/test cycle, temporary runtime fixture or worker was allocated. No Gradle stop/clean is owed or claimed; lock, existing live lane outputs, all failed evidence and other agents' files untouched."
+  },
+  "remaining_boundaries": "Physical-device/LAN/accessibility/keybag/backup/restore/power-loss tests, private signing and Store operations/publication, known com.parlor.app identity collision and separate owner/legal/editorial/privacy requirements remain excluded, unperformed and unwaived.",
+  "recorded_at": "2026-09-08T23:54:21.691584Z"
+}

@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "coordinator": "/root",
+  "recorded_at": "2026-09-08T20:50:27.668481+00:00",
+  "scope": "Additive local read-only preparation observations; no dispatch, build, test, or runtime claim.",
+  "cli_failure": {
+    "command": [
+      "gh",
+      "run",
+      "view",
+      "34275491965",
+      "--repo",
+      "Apdelrahman1911/parlor",
+      "--json",
+      "status,conclusion,headSha,attempt,jobs,updatedAt"
+    ],
+    "exit_code": 1,
+    "diagnostic": "Unknown JSON field: \"attempt\"",
+    "cause": "Installed gh2.45.0 view JSON field set lacks attempt; not an Actions failure.",
+    "corrected_observation_command": [
+      "gh",
+      "api",
+      "repos/Apdelrahman1911/parlor/actions/runs/34275491965",
+      "--jq",
+      "{id,run_attempt,head_sha,status,conclusion,created_at,updated_at}"
+    ],
+    "corrected_observation": {
+      "id": 34275491965,
+      "run_attempt": 1,
+      "head_sha": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+      "status": "in_progress",
+      "conclusion": null,
+      "created_at": "2026-09-08T20:33:28Z",
+      "updated_at": "2026-09-08T20:33:39Z"
+    },
+    "corrected_exit_code": 0,
+    "no_retry_or_new_dispatch": true
+  },
+  "resource_observation": {
+    "disk": {
+      "command": [
+        "df",
+        "-h",
+        "/",
+        "/tmp"
+      ],
+      "exit_code": 0,
+      "stdout": "Filesystem      Size  Used Avail Use% Mounted on\noverlay          94G   74G   15G  84% /\ntmpfs            32G   14G   18G  43% /tmp\n",
+      "stderr": ""
+    },
+    "ram": {
+      "command": [
+        "free",
+        "-h"
+      ],
+      "exit_code": 0,
+      "stdout": "               total        used        free      shared  buff/cache   available\nMem:            62Gi        25Gi        18Gi        13Gi        33Gi        37Gi\nSwap:             0B          0B          0B\n",
+      "stderr": ""
+    },
+    "head_tree": {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD",
+        "HEAD^{tree}"
+      ],
+      "exit_code": 0,
+      "stdout": "e5111ea49113c3f12cb577058c3f926dfebdc325\na88872673bd4cfc366236362f287c1db0a04a5cd\n",
+      "stderr": ""
+    },
+    "tracked_status": {
+      "command": [
+        "git",
+        "status",
+        "--short",
+        "--untracked-files=no"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  },
+  "native_run_state": "Still running at preparation cutoff; watcher30011 is required; no terminal outcome inferred."
+}

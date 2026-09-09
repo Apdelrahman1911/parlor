@@ -1,10 +1,14 @@
 # Continuation execution ledger — 2026-09-08
 
-**Latest: reviewed lifecycle/metadata controls implemented; transport04 PASS;
-lifecycle436 FAIL preserved, affected normal187 recheck PASS. HEAD700243 is an
-evidence delivery, not a new source freeze. At frozen5f35: A19 FAIL / runtime
-NOT_RUN / cleanup FAIL; B20 NOT_RUN; C02 PASS. Future A21/B22/C03/full D NOT_RUN;
-new source/inventory freeze pending. NOT READY.** Read `AGENTS.md`,
+**Latest: HEAD/remote still e511; the post-A21 qualified-budget, exceptional raw
+retention and strict B-admission corrections are independently source-reviewed.
+The affected286 Linux controls, standalone workflow contract and transport05
+have actually passed, with independently reconciled cleanup; delivery review and
+reviewed source/inventory commits are next. These are dirty-checkout control
+executions, not a new native qualification. At clean e511, historical A21 remains
+FAIL/cleanup FAIL, B22 NOT_RUN and C03 scoped PASS. A23/B24/C04/full D NOT_RUN;
+fresh frozen-source bindings and specific execution approval remain required.
+NOT READY.** Read `AGENTS.md`,
 [`CONTINUE_HERE.md`](../../CONTINUE_HERE.md), the
 [Linux handoff](../../docs/AGENT_CONTINUATION_2026-09-08_LINUX.md) and the preserved
 [transfer handoff](../../docs/AGENT_CONTINUATION_2026-09-08.md).
@@ -95,15 +99,39 @@ evidence-delivery or inventory commit.
   results are below; B20 did not start and full D has not run. The subsequent
   metadata/lifecycle correction and affected Linux evidence are recorded below;
   neither relocates these historical executions or authorizes another native run.
-- Latest normally pushed **evidence-only delivery**:
+- Earlier normally pushed **evidence-only delivery**:
   `700243c3426db2da3855a9d3a3df58ada607ffc5`; tree
   `bd93099fe19ccf46e27eb67f22d694cc1ae074aa`, parent5f35. Its616 paths comprise614
   evidence payloads plus two safety reports, with no source/control/inventory
   change. `reviews/post5f35-evidence-delivery-controller-01.json` records push0
   and the coordinator's direct exact-remote observation; independently approved
   by `reviews/post5f35-evidence-delivery-independent-01.json`. This ledger author
-  did not repeat that network check. The current reviewed source/control changes
-  remain uncommitted: **no new source/inventory freeze or native binding exists**.
+  did not repeat that network check. It remains a historical delivery, not the
+  later source/control freeze.
+- Reviewed source/control/evidence delivery:
+  `4276854c19afafdfd109be063a02dd5534fa86d0`; tree
+  `60e3f5eb0af63a72a397b03da8cdc99c7fd398f8`, parent700243,
+  `fix(verification): bind direct-owned simulator lifecycle controls`.
+  The exact115-file /3,298,753-byte delivery commits the reviewed metadata,
+  lifecycle and legacy-fixture corrections and their evidence.
+- Following inventory-only commit, **A21/C03 execution HEAD**:
+  `e5111ea49113c3f12cb577058c3f926dfebdc325`; tree
+  `a88872673bd4cfc366236362f287c1db0a04a5cd`,
+  `chore(review): freeze direct-owned lifecycle source inventory`.
+  Inventory16,343 rows /10,181,341 bytes, SHA-256
+  `c876f976881b70a3c4aaba9d2d2785f397ebbedcbef66a5ea632c5a05d9139a4`;
+  source828 manifest SHA-256
+  `6e313ce760d840aa08b617229c03263ce90eda715cb6c442cbe9738045a63e8e`,
+  empty tracked-diff hash as above. Both commits were normally pushed;
+  `reviews/direct-lifecycle-freeze-01.json`, SHA-256
+  `18a502b32cf1349e06bc5efbc33fdc90bc1dc3bd7389c3a87f4e1ba77a82b3ad`,
+  retains push0/query0 and the coordinator's exact direct remote e511 observation.
+  Independent delivery/freeze approval:
+  `reviews/post700243-lifecycle-delivery-freeze-independent-01.json`, SHA-256
+  `d4176aa25c2d8244fc4631fb6bb74e4cb306c7ed31b0623de919a6c1db8f9ba7`.
+  This ledger author reopened those receipts, not another network query.
+  Preflight34273018746, A21 and C03 actually executed at this freeze. The new
+  post-A21 corrections are not a later frozen execution or dispatch approval.
 
 Aliases: `C=remediation-runs/2026-09-07-local-readiness`,
 `N=remediation-runs/2026-09-08-continuation`.
@@ -115,7 +143,7 @@ raw logs and stop/cleanup evidence. The first five are working-tree-bound cycles
 the sixth actually executed at clean25b1; the next two bind4b8 plus reviewed
 working-tree changes; validator02 executed at clean1efed50. The next two bind1efed50
 plus the reviewed budget correction and then-held ledger; validator03 actually
-executed at clean5f35. The latest three bind700243 plus held working-tree changes,
+executed at clean5f35. The last three listed bind700243 plus held working-tree changes,
 not a clean freeze. None qualifies a future SHA; repeated counts are not unique coverage.
 
 | Cycle | Result and scope | Independent review under `$N/reviews/` |
@@ -267,7 +295,7 @@ Cleanup completed at `2026-09-08T13:59:04.319495+00:00` and
 `2026-09-08T14:00:25.079678+00:00`, respectively. This later ledger update is
 outside those execution bindings, not a new frozen qualification.
 
-### Latest lifecycle controls — failed packet retained, affected recheck passed
+### Lifecycle controls at700243 — failed packet retained, affected recheck passed
 
 Transport04 re-executed the affected documentation/hash gate: **21 actionable
 tasks, 14 executed, seven compilation cache hits**; `desktopTest` actually ran.
@@ -300,7 +328,7 @@ confirms corrected fixture bytes, stable93 controls/36 actual imports and cleanu
 The249 unchanged passing controls did not rerun; this is not a new436-PASS cycle
 or actual Parlor libproc evidence.
 
-All three latest cycles bindHEAD700243 and source828 manifest SHA-256
+Those three cycles bindHEAD700243 and source828 manifest SHA-256
 `6fc7298b3b927aee32359326ef68f75a0a3d9928e73e47b7d5a3f82c4828fe15`.
 Transport04/lifecycle01 bind tracked diff
 `6c6e32a20e6d6b404d197634ff40e27424b070e01248334bfddca6a5b6542190`;
@@ -320,9 +348,10 @@ generated directories. This later ledger edit is outside those execution binding
 All fifteen outer receipts record source/runner stability, **stop0**, no remaining
 owned workers/live outputs and no outer cleanup errors, including all three failed
 cycles. Their failed test/postflight outcomes and additive external reconciliations
-remain separate above. The six C01/C02 cycles below satisfy the same outer cleanup
-conditions: **21 Linux outer receipts**, not21 application-runtime passes.
-This Linux cleanup conclusion does **not** apply to A19's failed native cleanup.
+remain separate above. The nine C01–C03 cycles below satisfy the same outer cleanup
+conditions: **24 Linux outer receipts**, not24 application-runtime passes.
+This Linux cleanup conclusion does **not** apply to A19's or A21's failed native
+cleanup.
 Required evidence and failed receipts remain retained. This ledger update ran
 no build/test/native worker and did not start or clean another agent's lane.
 
@@ -557,6 +586,127 @@ receipts and download receipts are under `$N/actions/<run-id>/`.
   `3a0c2a12a7e57458fd34057afcf663ae08d40d7a57c49bf17b8b244da7eb2cc6`.
   That addendum authorizes no source edit, test/build or further native dispatch.
 
+### Fresh binding-only preflight at e511 — actual SUCCESS, approval consumed
+
+- Run **34273018746**, attempt1, `native-preflight`: API/run and iOS job
+  **SUCCESS** at clean e511. Raw `actions/34273018746/native-preflight/preflight.json`,
+  SHA-256 `6dcfd9a4bcf817f664dba411be5b38277d94bff4aa165621fcb960013f798751`,
+  remains `REVIEW_REQUIRED_NOT_RUNTIME_EVIDENCE`. No build, simulator allocation,
+  XCTest or Parlor libproc query occurred. Cleanup PASS/errors `[]`; the binding
+  was removed after confirmed upload.
+- Fresh manifest `control_sha256` values:
+  L08 `840467f0656642c46bdef61c9c48e6355d2b78ac7dee1d00b302a61d4c798c3a`;
+  normal `427b30f1ec821438cf6ecc8a2fbe0e01e5509220a0adde26ecd3b5da6e662983`.
+  Main artifact **10074652767**, ZIP SHA-256
+  `ef09855f3ac458341a810eb4bc6353d07996c2c8883d2f0a9bd0902ec6b1175d`.
+  Independent `reviews/native-preflight-34273018746-independent-01.json`, SHA-256
+  `fce841a029d8874d88d6aec24d772cd7ca2f34b0dc1495eb002285ac87e4875f`,
+  approved exactly one dispatch. **A21 run34275491965 consumed it; no retry or
+  later-source permission remains.**
+
+### A21 at e511 — FAIL with partial application observations; B22 NOT_RUN
+
+- Run **34275491965**, attempt1, `native-evidence`: workflow/run and iOS
+  job102227367061 **FAILURE**. Native execution and custody cleanup failed;
+  both evidence uploads succeeded. Four other jobs and full Apple steps were
+  skipped by focused mode, not passed. Actual platform: macOS15.7.9/24G830 arm64,
+  Xcode26.3/17C529, iOS26.2/23C54; copied Debug `com.parlor.app.debug`, ad-hoc,
+  `direct-owned-v1`. All canonical A files below are under
+  `actions/34275491965/native-evidence/ios-readiness-21/`.
+- Raw `receipt.json`, SHA-256
+  `2d8168608c71fbc4bbed03cc23f595eafc95473e7e4fa3ec1277f61961ed18a3`,
+  retains **FAIL**, `runtime_evidence_status: FAIL`, `cleanup_status: FAIL`,
+  `strict_l08_gate: NOT_SATISFIED_BY_COMPANION`. Source/control before-after
+  bindings match clean e511. Postbuild copied-source verification was **not
+  completed**; its initialized false flag is not observed proof of mutation.
+- Actual cold compilation occurred: raw `xcodebuild.log`, SHA-256
+  `dd68f0f5ee696408953e9b3dcdc11bf6a9c9a70d2593ea4c57c13333b48ac468`,
+  records embedded Gradle **BUILD SUCCESSFUL in30m47s;138 actionable/138 executed**.
+  Four `ComposeContainerViewControllerTests` actually passed (raw suite4/0failures).
+  The fifth combined Settings/local-session/OS/L08 test began21:12:19.843Z;
+  last activity **t639.75** was followed by `BUILD INTERRUPTED`, not completion.
+  No xcresult summary/test
+  extraction exists; do not infer full-suite PASS or complete failure/skip counts.
+- The2700s **whole xcodebuild command** deadline expired:2061.720921s elapsed
+  before the first XCTest, leaving638.279079s. The primary `TimeoutExpired` and
+  exit-15 are not a per-test allowance failure, an app crash, a new ps/lsof
+  timeout, or a demonstrated storage defect. Build success is not qualification.
+- Eight actual copy-instrumented cold-launch markers /eight unique boots /
+  **48 samples** were retained. `probe-readiness-result.json`, SHA-256
+  `b5f51e1025e6fe7c84b7e1a1e9b224cf16ebadd9b73495fe2d4d5d1d9f8e1ca3`,
+  records completedtrue/74 observations. These are partial **A** observations,
+  not normal-source B repetitions or libproc queries; final boot-health,
+  built/installed artifact/signature and full-matrix reports are absent.
+- Functional-storage boot1/save completed; boot2 launched and read load state.
+  Its first Home preparation recorded observer setup, fresh zero counters and
+  two stable valid geometry samples. **Zero target taps or callback observations**
+  occurred before interruption; boot2 has no completed marker and corrected
+  boot10 was not reached. The required13 boots /20 operations /26 Complete
+  comparisons remain incomplete. Retained hosts: **0/3 fixtures,0/42 operations**;
+  later local-game/OS paths were not reached. Partial logs do not qualify the
+  Settings/storage/recovery matrix.
+- Outer `actions/34275491965/native-evidence/continuation.json`, SHA-256
+  `92d0128851378a445ab8ecccc779539adfa4b58a8c6a93172b00c990c5cbe07d`,
+  is FAIL with only `runs.l08` and `cleanup_safe: false`. **B22 NOT_RUN**:
+  zero actual normal repetitions, ninth launch, Parlor libproc queries or native
+  return/structure-size observations. The serial guard correctly denied B.
+
+#### A21 strict-protection observations — preserved raw data, collection NOT_RUN
+
+`parlor-l08-app-foundation.json`, SHA-256
+`c21e69e3ea4e5cce3bc005d25d35dd3b499c9885758bf24095ad13a410c4ec2b`,
+has raw status `OBSERVATIONS_COMPLETE`, preservation `PRESERVED`, but final
+collection **NOT_RUN**. On runtime26.2/Foundation UUID
+`c153116f-dd31-3fa9-89bb-04b47c1fa83d`, all eight operations returnedtrue/resulttrue
+without an exception or NSError. All eight FileManager dictionaries lacked the
+protection key (`missing`); five regular-file URL observations reported
+`until-first-authentication`; all eight volume observations reported `unsupported`.
+Historical native16/runtime26.5 reported volume `supported`, with the same
+FileManager/URL values. The fixture's own root was removed; hardware protection
+and requirement waivers remainfalse. These are real new native observations,
+**not**26 application Complete comparisons, qualified collection, strict L08
+acceptance or proof of universal simulator incapability/physical-only blocking.
+
+#### A21 native cleanup — FAIL, not repaired by artifact upload
+
+Immediate and final Gradle stops actually exited0 (both `No Gradle daemons are
+running.`). The direct lifecycle journal records six successful/reaped commands:
+three inventories and create/boot/bootstatus. Exact owned UUID
+`86A86790-96CE-4E95-8132-3EEAE7731A2E` remained last-observed **Booted**;
+there are **no shutdown/delete commands or destructive cleanup barrier**.
+
+`postbuild_evidence_preserved: false`: the timeout skipped ordinary raw xcresult/
+app-result preservation and its required acknowledgement. Composer finalization
+retained Foundation/readiness observations but ANDed the earlier false value;
+successfully saving that false value is not successful required preservation.
+The missing raw acknowledgement correctly denied both device destruction and
+temporary-copy/results removal. This is distinct from the reviewed policy for a
+later summary-save failure after successful barriers.
+
+Owned processes remaining were empty, but an installed Parlor **unknown holder
+PID22519** remained. An app-looking path is not PID/start ownership or kill/adoption
+authority. The strict stop/fresh-census/direct-build-handle barrier was not reached;
+six reaped lifecycle handles do not prove it. The copy/DerivedData/results were
+not retired (`temporary_directory_removed: false`); copied-source inspection
+was prevented, not a demonstrated source mutation. FIFO, worker, fixture-root and
+Gradle successes do not erase these failures. Linux artifact review cannot
+retroactively establish hosted device/process retirement.
+
+Outer `actions/34275491965/native-cleanup/parlor-native-34275491965-1-cleanup.json`,
+SHA-256 `841a2ef0c1cb4d3ccb9fa930625e230c6bb85df1234f36339aad0f9b18c26bed`,
+retains **FAIL**, `removed: []`, `native-cleanup-unsafe-retain-owned-evidence`.
+Main artifact **10077343585**, ZIP SHA-256
+`ea22338008d089a93ab7baa2c3a86dfb4cc090e6bb885306597f797a8fec442c`;
+cleanup artifact **10077346157**, ZIP SHA-256
+`440f1a2d744d691e5566f38921279f1bfc1a985c2a80f41223d8f58155b8dee9`.
+Complete transfer of28 canonical files is not complete required application
+evidence or safe native cleanup. Raw API/logs/ZIPs/receipts remain retained.
+
+Formal independent postrun: `reviews/native-34275491965-postrun-independent-01.json`,
+SHA-256 `85ca368c5ee2850cc8fdad3449eca87c1a057e5d3adbad89585e525d608adc31`,
+decision **`CONFIRMED_A21_FAIL_WITH_PARTIAL_APPLICATION_OBSERVATIONS_B22_NOT_RUN_AND_CLEANUP_FAIL`**.
+This reconciles actual evidence; it does not approve corrections or another run.
+
 ### Remaining A/B work and safe next-operation gates
 
 Use [`scripts/ci/NATIVE_CONTINUATION.md`](../../scripts/ci/NATIVE_CONTINUATION.md),
@@ -570,8 +720,9 @@ cancel earlier runs, so do not overlap focused/full executions.
   The bounded investigation itself is independently approved in
   `reviews/l08-strict-protection-investigation-independent-02.json`. A17/B18 never
   reached this guard; it is **not their observed ps failure cause**. A19 reached
-  no app/Foundation execution either. Public Foundation-source observations do
-  not waive the original strict gate or make its simulator failures physical-only.
+  no app/Foundation execution either. A21 now adds the actual26.2 raw observations
+  above, not a completed qualified collection. Public Foundation-source or these
+  raw observations do not waive the strict gate or make failures physical-only.
 
 1. Source approval is recorded in
    `reviews/native-command-and-runtime-repair-independent-correction-02.json`
@@ -584,8 +735,8 @@ cancel earlier runs, so do not overlap focused/full executions.
    PASS; committed0607, frozen5f35 and fresh validator432 are now recorded above.
    The copy-only single-tap geometry/zero-counter fixture correction is also
    already reviewed (`reviews/l08-single-tap-independent-01.json`) and committed;
-   do not add retaps or redo it as an unimplemented repair. Its application
-   interaction still has no new runtime proof. These
+   do not add retaps or redo it as an unimplemented repair. A21 reached only
+   pre-tap preparation in boot2, not the corrected boot10 callback. These
    completed source/control changes do not approve later changes or retries.
    Do not blindly repeat successful controls or erase retained failures.
 2. A19 exposes a separate mutable-companion seam at frozen5f35
@@ -596,8 +747,10 @@ cancel earlier runs, so do not overlap focused/full executions.
    passed within the26 primary-error controls**
    (`reviews/native-metadata-error-preservation-independent-01.json` plus
    lifecycle-controls01 above). It preserves bounded primary/secondary
-   reporting, timestamps and canonical ownership clones. It is uncommitted and
-   platform-unverified, not an OS-timeout or simulator-retirement fix.
+   reporting, timestamps and canonical ownership clones. It was committed4276854
+   and frozen e511. A21 exercised the new bound controls, but did not reproduce
+   the old metadata fault; it is not proof of that fault's OS cause or successful
+   simulator retirement.
 3. The opt-in `--simulator-lifecycle=direct-owned-v1` implementation and controls
    are now independently reviewed; default remains `legacy-apphost`, with no
    automatic fallback. See `reviews/direct-owned-simulator-lifecycle-implementation-independent-01.json`,
@@ -616,35 +769,169 @@ cancel earlier runs, so do not overlap focused/full executions.
    failure stays latched, cannot yield cleanup/runtime PASS or admit another lane.
    Required raw-ack or journal-append failure still denies destruction; see
    `reviews/direct-owned-simulator-lifecycle-persistence-policy-independent-01.json`.
-   Actual Linux controls above are **not native verification or dispatch approval**.
+   Committed4276854/frozen e511, A21 actually completed six direct lifecycle
+   commands, but failed the postbuild barrier and never reached shutdown/delete.
+   The Linux controls alone are **not native verification or dispatch approval**.
    Prior active-boot overlap remains a hypothesis, not a proven common failure
    cause. No unchanged retry, global-process authority, stale rows, privilege
-   increase or larger ps/Xcode/lsof timeout is justified.
+   increase or larger ps/lsof timeout is justified.
 4. Any approved next native scope requires separate source/control review,
    focused affected checks, committed reviewed changes, separately regenerated
    and committed mechanical inventory, exact normal push/remote confirmation and
    fresh bindings/independent dispatch approval. This ledger authorizes none.
-   Never overwrite A17/B18/A19, reuse consumed one-run approvals, or start B after
+   Never overwrite A17/B18/A19/A21, reuse consumed one-run approvals, or start B after
    unsafe A merely because the process exited. Preserve new outcomes and inspect
-   them before another cycle; a full matrix is not a repair for prebuild ownership
-   failure. A21/B22 are selected future identities only: **NOT_RUN**, with no
-   fresh native bindings or dispatch approval claimed here.
+   them before another cycle; a full matrix is not a repair for ownership or
+   preservation failure. **A23/B24 are future identities only: NOT_RUN**; no
+   fresh post-A21 freeze, native bindings or dispatch approval is claimed here.
 5. A still needs 13 functional boots / 20 operations / 26 protection comparisons,
    three retained-host fixtures / 42 operations, Settings/OS/lifecycle/image paths.
    Historical native16 remains FAIL: 14/15 observed functional operations passed,
    boot10 Home callback stayed zero, boots11–13 and retained-host paths were not
    reached; all24 strict Complete comparisons failed. A17/A19 add no new protection
-   observations. The companion never proves original strict L08 PASS. Preserve
-   and separately report functional outcomes and strict metadata mismatches.
+   observations. A21 completed only boot1/save and part of boot2, with zero target
+   taps; its new raw Foundation26.2 observations do not satisfy the26 application
+   comparisons or qualify collection. The companion never proves original strict
+   L08 PASS. Preserve and separately report functional outcomes and strict
+   metadata mismatches.
 6. B still needs eight genuine normal-source launches plus a separate ninth native
    libproc image query, actual native return/structure sizes, artifact/signature/
    notices bindings and cleanup. Historical native15's eight launches/48 samples
    passed but ninth vmmap provenance failed; 187 controls and diagnostic metadata
-   do not query Parlor. B18 failed before that scope and B20 never started.
+   do not query Parlor. B18 failed before that scope; B20/B22 never started.
+   A21's eight copy-instrumented launches are not normal-source B evidence.
    A partial/failure permits B only when A's full ownership/source/control/cleanup
    receipts are safe, not merely because its process exited.
 
-## C — historical C01 at25b1; fresh C02 completed at5f35 only
+#### Historical post-A21 proposal cutoff — no execution or retry approval
+
+`reviews/a21-qualified-budget-proposal-01.json`, SHA-256
+`434a4dcbccfa56852ac99f7393804ef049987040a5ffc894f80c32291776c660`,
+is **PROPOSAL_ONLY_NOT_SOURCE_REVIEW_EXECUTION_OR_DISPATCH_APPROVAL**. At the
+preserved proposal cutoff, the assigned authors reported implementation in progress,
+not held final source or independent approval:
+
+- Qualified A-only proposal: command5400s, XCTest default3000s/max3300s; local A
+  stays2700/1200/1500, normal B stays2700/120/240. The focused `native-evidence`
+  job ceiling is proposed240min, with a conservative full-allowance guard;
+  full/preflight120min and probe10min remain. Inner6000s/finalizer600s, AppHost
+  ps/lsof and lifecycle budgets are not enlarged. These numbers are proposed
+  control changes, not assurance that the complete hosted scenario will fit.
+- The companion driver correction is a one-shot bounded exceptional raw collector
+  **after immediate Gradle stop**, preserving primary/secondary errors and exact
+  custody. It must not fabricate acknowledgement or bypass unknown holders.
+- The separate adapter correction must deny B after inner timeout/cancellation
+  even if cleanup appears safe. Workflow/contract and
+  `scripts/ci/NATIVE_CONTINUATION.md` changes, tests, composer/pins and a new
+  draft-freeze record need final different-agent review and affected execution.
+
+No retaps, reduced scenario selection, protection/ownership/census weakening or
+path-based process adoption is authorized. Final driver/composer pins are not
+approved by the proposal. Complete the held source reviews and focused checks,
+then reviewed commit, regenerated inventory commit, normal push/exact remote,
+fresh preflight/bindings and independent one-run approval before A23/B24.
+Historical A21 FAIL/cleanup FAIL and B22 NOT_RUN remain immutable.
+
+#### Post-A21 implementation and actual affected Linux checks
+
+The later source/control closure supersedes the proposal's pending-implementation
+state, not any historical execution result. No application/gameplay/protocol,
+privacy, protection, content or timer rule changed.
+
+- Qualified A selects the existing single Xcode command's5400s whole allowance
+  and3000/3300s per-test allowances; local A and normal B retain their old budgets.
+  No test filter, split, retap or shortened wait was introduced.
+- Exceptional and normal Xcode completion now both perform immediate Gradle stop
+  followed by one bounded, allowlisted raw collector. The original exception is
+  sticky. Missing/corrupt required evidence keeps acknowledgement false; the
+  Foundation result remains conjunctive. This does not authorize unknown-holder
+  adoption or destruction after incomplete retention.
+- Only focused native-evidence has240min. Its first step creates the exact
+  source/run/attempt/job-bound `CLOCK_MONOTONIC_RAW` token, using the same API in
+  producer and consumer. Each lane must have full6000+600+600s remaining. The
+  clock begins at the first step, not runner startup, and its nominal reserve
+  is not a worst-case completion guarantee. Hosted execution remains unproven.
+- B admission rejects canonical inner timeouts/cancellation/malformed receipts
+  and negative command exits, even when outer cleanup appears safe. Ordinary
+  strict/assertion failure may admit B only with all existing safety guards.
+- The composition has12 reversible transforms; only retention seam8 changed.
+  Six pins and the new nine-file freeze match;17 protected definitions and18
+  historical freezes remain unchanged. The new rendered runner hashes to
+  `dcb1f6ce32da3fc83b24bf2b2b868de68ac7fb35ca1539fc31140ce2589e60d7`.
+
+Independent source reviews, all under `$N/reviews/`:
+
+| Scope | Exact report / SHA-256 |
+|---|---|
+| Companion and retention interface | `hosted-l08-exception-budget-source-independent-01.json` / `ec35843efe93b07879ce581dde38f0f1add9abb183f9ac2e6a17bb2bb2f09e2e` |
+| Adapter, workflow, contract and guide | `hosted-native-budget-admission-source-independent-01.json` / `579614bf2bb71a8440acaa811e7b63a20d058576fe1579fb29bc940868e281a8`; additive precision `hosted-native-budget-admission-source-precision-01.json` / `34c374048e169531a34380dda00f57ee2b84b8408054311bdabc277bfe627711` |
+| Composer, pins and additive freeze | `a23-budget-preservation-composition-independent-01.json` / `9c4d3345f00e50e5902f8501269119b2bc538ea54db289e72cfbd8d62d784055` |
+| Final regression source | `hosted-native-budget-preservation-controls-independent-02.json` / `2ef2bd8ce85db1e900dedfce1ad283fbdbf7c3eb1da68e0e75a0c27081af54af`, together with preserved01 |
+| Exact eight-command packet | `native-budget-control-command-independent-01.json` / `4e2e46e86b6a48096aa4ae2084e1e77fa3b746917d118cceb197febc76e84b1f` |
+
+Before execution, regression review corrected actual-main budget wiring, a
+postread mutation phase, timeout-oracle negative-exit confounding and two
+oversize fixtures. The last pair now uses valid JSON+whitespace at exactly
+maximum+1 and requires the bounded reader's exact error, rather than accepting
+a later JSON failure. Report01 is retained and superseded for those two oracles
+by02. The optional size-guard mutant was only a static witness, not an executed
+extra test. The final integration file is
+`c5601e2dbc64956fa70310add4f8f25841e2d6e82af2f2e09798d38f93f7c09a`.
+
+Actual completed cycles under `$C/evidence/`:
+
+| Cycle | Actual result / outer receipt SHA-256 |
+|---|---|
+| `continuation-workflow-contract-01` | Static production workflow contract PASS, exit0; not the full release validator. `2de079b549c5c643e9330e2749d55b0a5d01d54eea84871e14b9f8b364e6dcef` |
+| `continuation-transport-contracts-05` | Strict desktopTest actually executed:22 XML suites,277 cases,274 PASS,three existing physical multi-device loopback skips,zero failures/errors.49s,21 actionable tasks:14 executed/seven prerequisites from cache. `66cfc67cbdcc80576d5eb9fbd09b08a92a0e01fcc09fceba65ec592d03dcd0c2` |
+| `continuation-native-budget-controls-01` | Eight actual commands and286 PASS,zero failures/errors/skips: primary29, integration54, Foundation-profile20, functional-copy12, composition55, adapter63, workflow52, sole probe-cycle guard1. `49294736ee15693a49c0728c52d1e04d733ddd058d12e12b042d3aa2f7e54dc3` |
+
+The286 packet `native-budget-control-command-01.json` is bound at
+`333afd6636ee2e41d3f9b780ea7b58554e199e5685131db0f5133e3abf103986`.
+All110 pins and278 before/after control inputs match. Its eight child commands
+reuse nine unchanged function definitions; the packet's narrower eight-function
+prose is precisely corrected by its independent review, not by changing the
+command or test count. Unchanged normal187, low-level lifecycle51, single-tap14,
+toolchain12 and the other44 probe methods were unrequested, not reported skipped
+or newly executed. Their source applicability was independently inspected.
+
+Each cycle's complete before/after source and runner objects match. All ran at
+e511 plus held working-tree edits, not a clean/future freeze. The earlier static
+contract and transport runs bind integration667bcdf5; only the two reviewed
+oversize-test fixtures changed afterward to finalc560 before286. Do not relabel
+those earlier whole-source bindings as the later one.
+
+All three immediate Gradle stops returned0, with no remaining owned workers,
+outputs or cleanup errors. Transport's seven exact live build directories and
+every cycle's scratch were removed; archived reports were retained. Root also
+reconciled all five external Foundation/composition allocation-cleanup pairs,
+including a marker embedded after the unittest prefix, and freshly observed all
+five exact parents absent. The composition's55 distinct IDs and two test hashes
+match its raw result marker; `native_execution` is false. Independent actual
+postrun review `reviews/native-budget-controls-postrun-independent-01.json`,
+SHA-256 `fb3c0a104850a2f2a0a60b26503ec526243e2f86cb80482b9e8b1c58eb536c68`,
+has now accepted these scoped results and separately cleared all five external
+custody/absence pairs. The packet's pending-external-review field is preserved;
+this additive review closes it, not outer PASS alone. Neither is native proof
+or dispatch approval.
+
+Current source-based strict-protection context has independent review
+`strict-protection-a23-investigation-context-independent-01.json`, SHA-256
+`805f2da84ce7811a6cd27c325d66be2b74c570100a9e4afcd35e51e35834cd39`.
+A16/A21's16 raw Foundation rows differ only in eight volume values; neither
+comparison establishes SDK causality. A21 collection is still NOT_RUN. The
+prospective26 production comparisons include the final boot12 retained-dual
+pair; these are not Foundation's13 FileManager/URL query observations. No
+strict failure is waived or reclassified as physical-only.
+
+Next: close independent delivery review, commit source/control,
+regenerate and separately commit inventory, check and push with exact remote
+equality. At that frozen source run the full local release validator04, including
+fresh inventory and pinned ShellCheck/actionlint, then fresh nonbuilding native
+preflight and independent exact bindings before one justified A23/B24 run.
+Preserve every old failure. This ledger itself is not execution authorization.
+
+## C — C01 at25b1, C02 at5f35; fresh C03 completed at e511 only
 
 ### Historical C01 — preserve its25b1 execution binding
 
@@ -734,25 +1021,105 @@ A further source/control/inventory freeze requires fresh applicability/binding
 review; do not claim that these checks executed at an untested future SHA.
 The C03 packet `reviews/dependency-chain-afterfreeze-execution-03.json` and
 `reviews/dependency-chain-afterfreeze-execution-independent-03.json` are reviewed
-**preparation only**. C03 remains NOT_RUN; future frozen bindings and execution
-must be obtained rather than copying C02's status.
+**historical preparation only**. The separately bound and executed C03 below
+supersedes their pending-execution state without relabeling either packet or C02.
+
+### Fresh C03 — actual export/render/candidate consumption at clean e511
+
+| Cycle under `$C/evidence/` | Actual result and outer receipt SHA-256 |
+|---|---|
+| `final-dependency-export-linux-03` | PASS/exit0/stop0; strict `writeResolvedDependencyInventory` executed. Five actionable tasks: four executed, one convention compilation task from cache. androidRelease239 components/129 artifacts; each iOS graph167/81. `2a5462f3092a9313cc32e4fe86a80cdbcdf2cfdb502467fca72fc47d7c426571` |
+| `final-dependency-render-linux-03` | PASS/exit0/stop0; actual renderer: four graphs,456 Maven components, unresolved `[]`. `2385794da9181199763be4d47c7b1ef2b6c589bd8c0807d83d52d649ea33a428` |
+| `final-candidate-input-linux-03` | PASS/exit0/stop0; actual owned-schema candidate consumer, not synthetic controls or application runtime. `753d4aa0c45152344b65cb77eba9ec1eebc11ad744eecbe71173aea2461e7063` |
+
+Fresh `$N/candidate-input-binding-03.json`, SHA-256
+`f2cb3be23bd20b5a2ff2bc1411561bc291c74cb04a0970a1a274e5db7f81bd01`,
+received pre-execution independent approval in
+`reviews/candidate-input-binding-independent-03.json`, SHA-256
+`19e67054888e1ed633125e93f88d8630d920d208333ba57e2e4e778958bd346d`.
+All four coupled C03 receipts actually passed:
+
+- Consumer `candidate-input-verification.json`:
+  `PASS_SCOPED_CANDIDATE_INPUTS`, SHA-256
+  `298168f6a8dcacce81d0a8fee13ce832d08c68a6ac5cdd858c97c2cf059a1b85`.
+- Adapter `candidate-prerequisites.json`:
+  `PASS_SCOPED_CANDIDATE_INPUT_EXECUTION`, consumer0, optional-package cleanuptrue,
+  SHA-256 `69d4ae97bc28526327090f9a105e9f3dc2e6bfabe3bf143d5b1bf2ac94db5cf5`.
+- Base `schema-base-prerequisites.json`: `PASS_OWNED_SCHEMA_PREREQUISITES`,
+  inner0, base-package cleanuptrue, SHA-256
+  `c96b86014a895d81b0af413fb968dc476df321a4d236971b960aa588554bdc9b`.
+- Outer `receipt.json`: PASS/exit0/stop0, no cleanup errors.
+
+The actual consumer validated **four BOMs with three pinned official schemas**:
+456 Maven components,459 publisher POMs,1,507,794 metadata bytes,26 source-notice
+resources /99,515 bytes,511 consumed files /5,567,850 bytes. Consumed-manifest
+SHA-256 `19512563acee499b327948c1f564797cfa90ec180354cb4cedeb75979e9e3eb6`.
+Actual `iri-reference` was encountered and checked, missing formats `[]`; other
+registered formats are not claimed exercised. The owned base records retain
+six packages /137 members /eight actual module hashes; optional records retain
+two packages /55 members, **not** a separate optional-import hash map or random
+temporary child paths that were never retained.
+
+All three complete source/runner before-after objects match clean e511/source828;
+held-current full bindings are independently captured in
+`reviews/candidate-input-current-bindings-independent-03.json`, SHA-256
+`5c0fd556e06f2f9b7ae909b06ae5d7c540ac913cd7029838c7608bfccff1ad99`.
+Each immediate stop exited0, with no workers/live outputs/cleanup errors; owned
+parser/scratch directories were removed. Cleanup completed at
+`2026-09-08T20:04:20.370714+00:00`, `2026-09-08T20:08:39.237197+00:00` and
+`2026-09-08T20:24:28.044916+00:00`. These Linux results do not supersede A21's
+later failed native cleanup.
+
+Author postrun `reviews/candidate-input-postrun-author-03.json`, SHA-256
+`3f326b55875ca10f42b65a35e39ee624d0a21c233bee1b8e81410fa324355e52`,
+has independent raw-evidence approval in
+`reviews/candidate-input-postrun-independent-03.json`, SHA-256
+`6e6d21a6fb9b085fbbcbcf3cba8d74bde392ee09f45085e59c17a84b926b5df3`:
+**`PASS_SCOPED_C03_CHAIN_AT_E511_INDEPENDENTLY_ACCEPTED`**, findings `[]`.
+This completes scoped C03 **at e511 only**, not a later source freeze or A/B/D,
+final-package, owner/legal, physical-device, signing or Store readiness.
 
 Strict consumer binding keys remain exactly `schema_version, source,
 export_receipt, render_receipt, graphs, report, schemas, lane, consumer`;
 `source` binds commit/tree/diff/source-manifest hashes. Do not add bootstrap keys
 or loosen schemas. Ordinary Linux cycle evidence remains under `$C/evidence/`.
 
+Fresh C04 preparation is now separately reviewed in
+`reviews/dependency-chain-afterfreeze-execution-04.json` (SHA-256
+`48cc66b28c3016c2e0f7c85dc9b7a929fe2c861ce90c177802757ac1f4c7e049`) and
+`reviews/dependency-chain-afterfreeze-execution-independent-04.json` (SHA-256
+`7c9990b816096d63963bdd794cd8c316cbc94daf10343fbdf2d333d3de6d3fb8`).
+The three commands change only cycle suffixes;11 control and three schema pins
+remain unchanged. This is preparation only: C04 producers/consumer are NOT_RUN
+and binding04 must be freshly created/reviewed after actual frozen producers.
+
 ## D — still unexecuted: combined qualification and final reconciliation
 
 The packet `reviews/full-qualification-afterfreeze-01.json` and
 `reviews/full-qualification-afterfreeze-independent-01.json` are reviewed
-preparation only, not a dispatch approval. D remains **NOT_RUN**.
-After the independently reviewed new freeze, run existing workflow `full`
-at that frozen SHA; obtain all five jobs and
+historical preparation only, not a dispatch approval. D remains **NOT_RUN** and
+is held while the post-A21 corrections/reviews/freeze are unfinished; do not
+launch the stale prepared expensive matrix. After the independently reviewed
+new source/inventory freeze and fresh scope/binding approval, run existing workflow
+`full` at that frozen SHA; obtain all five jobs and
 five main/five cleanup artifacts. Inspect raw executed tasks/tests, cache hits,
 skips, Apple linkage versus runtime and artifact digests. Independently reconcile
 A–D, original16/timer evidence and any changed scope; record actual commits/run
 identities here; commit/push completed evidence and verify remote equality.
+
+The additive current packet `reviews/full-qualification-afterfreeze-02.json`
+(`feba34720798a3a70608dcf81b6239a2357c21fb53e94214601390b5febc8403`) has
+independent preparation-only approval
+`reviews/full-qualification-afterfreeze-independent-02.json`
+(`10c0acc986adf9175ca4c3a10acb798206a46ea9f6a6920f80c7e6c24267b716`).
+It binds current held controls, not a future approved SHA. Full remains five
+jobs/ten main+cleanup artifacts and120min Apple; its nine focused-only steps
+are intentionally skipped, including the new clock. Full ignores the focused
+`frozen_source_sha` input: reconcile all five actual checkout/claim identities.
+Use the reviewed gh2.45-compatible raw `--paginate` collection with complete JSON
+decoding, REST `run_attempt` and attempt-specific logs; do not repeat unsupported
+`--slurp` or `gh run view --json attempt`. Inspect A/B/C before a fresh one-run
+full approval. No Store workflow is enabled or dispatched by either packet.
 
 The prior reconciliation `reviews/frozen-source-reconciliation-prep-01.json`
 remains a preserved earlier-cutoff audit, not the actual later A/B/C result.
