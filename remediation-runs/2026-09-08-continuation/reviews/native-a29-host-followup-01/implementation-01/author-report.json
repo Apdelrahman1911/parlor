@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "author": "/root/l08_fixture",
+  "status": "HELD_MINIMAL_NONSHIPPING_REENTRANCY_FIX_AND_PIN_CLOSURE",
+  "finding": "ControlledStartRoom.ready published Ready through Channel.trySend before recording readyPeers. Synchronous host receipt of the final Ready can deliver the validated commit back to its peer collector before that bookkeeping, tripping Commit preceded this peer's Ready. Queued desktop fixtures masked this ordering; the copy-only native fixture uses Main.immediate.",
+  "actual_linux_reproduction": {
+    "executed_by": "/root",
+    "test": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a29-host-followup-01/reproduction-01/ControlledStartRoomReentrancyTest.kt",
+      "sha256": "e65dacf6fd0c2d25f6abdaf1dd51d98dfd0f7c198ca5be6f7faae0554a573f01",
+      "bytes": 5804
+    },
+    "receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-host-reentrancy-red-01/receipt.json",
+      "sha256": "d9acdb5ee72929fb73b4c74fb13014bb3c63ae37735dd1e2c84dac7d5cb31b68",
+      "bytes": 306541
+    },
+    "xml": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-host-reentrancy-red-01/reports/shared/networking-testing/build/test-results/desktopTest/TEST-com.parlor.networking.testing.ControlledStartRoomReentrancyTest.xml",
+      "sha256": "85c10f97a0352cc421f61cae93c83dcf8dc464fbbe6e17be2df6b1707145012b",
+      "bytes": 4617
+    },
+    "result": "1 executed/1 FAIL/0 errors/0 skips; exact captured failure Commit preceded this peer's Ready; .147s. stop0, stable source/runner, no cleanup errors, outputs or owned workers remaining."
+  },
+  "native_limit": "A27 run34339916129 at52f60924 has firstprepare FAIL at prepare-await-started within about4s, generic fixture_or_boundary_failure. Its built fixture is exact147692 old source. The reproduced source hazard is consistent with this observation, NOT a captured native exception/conjunct diagnosis or new native PASS.",
+  "fixture": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-a29-host-followup-01/implementation-01/ControlledStartRoom.kt",
+    "sha256": "1de4cad503f42fc3e9cb198a8df04b7613eab303a3cafd6b31cfabd14e142ab9",
+    "bytes": 9447
+  },
+  "fixture_destinations": [
+    "shared/networking-testing/src/commonMain/kotlin/com/parlor/networking/testing/ControlledStartRoom.kt",
+    "scripts/verification/ios-readiness/ControlledStartRoom.kt.in",
+    "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/ControlledStartRoom.kt.in"
+  ],
+  "fixture_delta": "Only ready send block: all original protocol/roster/game validation first, reserve readyPeers before transport, retain original message/result check, finally roll back only newly added id unless send succeeded. Exact block reversal restores complete147692e570bcc0e8c191a6373c61fd4f636c62891b604fdc1c5fee52990861f0. Exceptions/cancellation propagate; prior Ready retained on failed duplicate. No dispatcher, timeout, validation, ACK, snapshot, payload or production transport change.",
+  "analogous_order": "Commit/snapshot handlers execute in each peer's one sequential collector. Immediate ACK/request-triggered snapshots queue until the commit handler records committedPeers; no second bookkeeping repair justified. The same regression exercises immediate snapshot response and requires all5 committed/snapshotted peers.",
+  "guard": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-a29-host-followup-01/implementation-01/test_l08_functional_copy.py",
+    "sha256": "3ae0b2315586afd5b2d891347f4c277cf087d6304add9be73b98c09c0ee952ed",
+    "bytes": 51343
+  },
+  "guard_delta": "10lines in existing21method suite: immutable original manifest stays pinned; exact ControlledStartRoom original row147692 plus all3complete replacement inputs must match1de4cad. Other64rows unchanged.75companion names unchanged; pristine original clones60->59. No blanket exclusion or new helper/matrix. Strict VERBATIM_FIXTURES mappings and driver/transform/Foundation pins unchanged.",
+  "author_activity": "Held files only; stdlib source/hash/AST/diff/JSON and actual evidence inspection. No author project imports, tests/builds, native/network, canonical edits or Git writes; no author cleanup cycle owed.",
+  "required_next": "Different-agent pinclosure review, root adoption of all3identical fixture copies and guard; root green regression and affected strict/functional copy suites plus cleanup. Preserve red/A27 receipts; reviewed source/inventory/fresh native bindings still required. No readiness, physical-device, Store or owner/legal requirement upgrade."
+}

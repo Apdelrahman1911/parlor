@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "kind": "ONE_FRESH_A27_B28_EXECUTION06_REQUEST",
+  "coordinator": "/root",
+  "created_at": "2026-09-09T10:11:30.622838+00:00",
+  "status": "PENDING_INDEPENDENT_ACTUAL_PREFLIGHT_BINDING_REVIEW",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "frozen_source_sha": "52f60924a89f788aab78c826096f34a32af40292",
+  "tree": "02afb528b429eecb9c1afe58217490b07f4eb190",
+  "inputs": {
+    "verification_scope": "native-evidence",
+    "frozen_source_sha": "52f60924a89f788aab78c826096f34a32af40292",
+    "preflight_run_id": "34338494052",
+    "preflight_run_attempt": "1",
+    "preflight_artifact_id": "10098716114",
+    "preflight_artifact_sha256": "bd58d7d8a8847a4556d322210c737f19f980456b500b49f079b546cb4758c148",
+    "approved_l08_control_sha256": "ee7a09246fa0fdd40adbfba936c7d26da5ffa9000ce29121ddc40b23fd2f79b5",
+    "approved_normal_control_sha256": "342bed59c3d058976b8097e095a8b877c25507c833aab1bd48be24bce6a62769"
+  },
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=native-evidence",
+    "-f",
+    "frozen_source_sha=52f60924a89f788aab78c826096f34a32af40292",
+    "-f",
+    "preflight_run_id=34338494052",
+    "-f",
+    "preflight_run_attempt=1",
+    "-f",
+    "preflight_artifact_id=10098716114",
+    "-f",
+    "preflight_artifact_sha256=bd58d7d8a8847a4556d322210c737f19f980456b500b49f079b546cb4758c148",
+    "-f",
+    "approved_l08_control_sha256=ee7a09246fa0fdd40adbfba936c7d26da5ffa9000ce29121ddc40b23fd2f79b5",
+    "-f",
+    "approved_normal_control_sha256=342bed59c3d058976b8097e095a8b877c25507c833aab1bd48be24bce6a62769"
+  ],
+  "maximum_dispatches": 1,
+  "cycles": {
+    "l08": "ios-readiness-27",
+    "normal": "ios-readiness-28"
+  },
+  "preflight_collection": {
+    "path": "remediation-runs/2026-09-08-continuation/actions/34338494052/download-receipt.json",
+    "sha256": "8ccccc4219bc167b28c1e47edc9a63269ad2021f33d132742f24ad14d7d53fa2"
+  },
+  "freeze_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-preflight-a27-b28-freeze-independent-01.json",
+    "sha256": "b63ded419e5177865b8e5ed6b4f54c5b4e80286b202efa300cf375c297fa518d"
+  },
+  "required_review": "remediation-runs/2026-09-08-continuation/reviews/native-preflight34338494052-a27-b28-dispatch-independent-01.json",
+  "purpose": "A: retained-host fail-fast diagnostics and remaining integrated recovery scenarios, retaining strict protection failures. B: normal Debug repetitions and real libproc provenance; collect bounded exact-artifact __TEXT load-command evidence only on the specifically admitted failure, without accepting it.",
+  "immediate_conditions": "Fresh exact local/remote source/tree, unchanged controls, complete no-overlap same-ref run check and unchanged successful preflight attempt/artifact. One dispatch, no blind retry.",
+  "safety": "Existing toolchain/source/control/lifetime/ownership/budget/cleanup guards retained. B requires actual safe A admission. No private Store/signing/publication or physical-device operation.",
+  "scope": "A27/B28 NOT_RUN at request. Preflight success is not application/runtime evidence; fullD and C05 remain NOT_RUN. Prior native failures remain unchanged."
+}

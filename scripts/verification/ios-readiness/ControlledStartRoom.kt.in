@@ -142,15 +142,24 @@ class ControlledStartRoom(
         check(offer.validateFor(expected) == ProtocolValidation.Valid) { "Start protocol binding failed" }
         check(offer.players == players) { "Start roster differs from the frozen roster" }
         check(checkNotNull(acceptOffer).invoke(offer)) { "Game-specific start validation failed" }
-        val result = peer.sendToHost(
-            PeerMessage.SessionStartReady(
-                header = offer.header.copy(messageId = "ready-${id.raw}-012345678901234", sequence = 0L),
-                actor = id,
-                startId = offer.startId,
-            ),
-        )
-        check(result is Result.Success) { "Synthetic Ready send failed" }
-        readyPeers += id
+        // Publishing Ready can synchronously resume the host and deliver its
+        // commit. Record that validated transition before crossing the bus;
+        // failed/cancelled sends must not leave a newly ready peer behind.
+        val newlyReady = readyPeers.add(id)
+        var delivered = false
+        try {
+            val result = peer.sendToHost(
+                PeerMessage.SessionStartReady(
+                    header = offer.header.copy(messageId = "ready-${id.raw}-012345678901234", sequence = 0L),
+                    actor = id,
+                    startId = offer.startId,
+                ),
+            )
+            check(result is Result.Success) { "Synthetic Ready send failed" }
+            delivered = true
+        } finally {
+            if (newlyReady && !delivered) readyPeers -= id
+        }
     }
 
     fun requireNoDrops() {

@@ -1,0 +1,339 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_B28_ACTUAL_NATIVE_FAILURE_AND_LAYOUT_RECONCILIATION",
+  "reviewer": "/root/portability_review",
+  "coordinator": "/root",
+  "recorded_at": "2026-09-09T12:03:23.394Z",
+  "status": "NORMAL_HOME_EIGHT_PASS_LIBPROC_PROVENANCE_FAIL_EXACT_ARTIFACT_LAYOUT_OBSERVED",
+  "findings": [],
+  "outcome": {
+    "workflow": "failure",
+    "normal_lane": "FAIL",
+    "runtime_evidence": "PASS: one normal Home XCTest method executed eight times",
+    "libproc_query": "ACTUALLY_EXECUTED_FAIL: complete native reply rejected by existing sample-span bound",
+    "provenance": "FAIL",
+    "failure_only_layout": "OBSERVED_NOT_PROVENANCE",
+    "notice_delivery": "PASS",
+    "cleanup": "PASS",
+    "readiness": "Workstream B remains incomplete; neither this failure nor its successful diagnostic is provenance PASS."
+  },
+  "scope": "Independent review of retained actual run34339916129 attempt1 B28 evidence. No application/native execution, project imports, tests, network, dispatch, canonical changes or cleanup by reviewer. A27 application/storage conclusions are outside this report.",
+  "execution": {
+    "run_id": 34339916129,
+    "run_attempt": 1,
+    "url": "https://github.com/Apdelrahman1911/parlor/actions/runs/34339916129",
+    "branch": "fix/local-readiness-2026-09-07",
+    "source_commit": "52f60924a89f788aab78c826096f34a32af40292",
+    "source_tree": "02afb528b429eecb9c1afe58217490b07f4eb190",
+    "ios_job_id": 102428033669,
+    "runner_label": "macos-15",
+    "platform": "ARM64 hosted macOS15.7.9; qualified Xcode26.3/17C529, iOS26.2 Simulator23C54, iPhone17Pro, Debug ad-hoc signing.",
+    "cycle": "ios-readiness-28",
+    "owned_uuid": "F84065D6-48D1-4543-A26B-2B0915C2F412",
+    "separate_public_launch_pid": 5139,
+    "flags": [
+      "--simulator-signing=adhoc",
+      "--toolchain=qualified-xcode-26.3",
+      "--simulator-lifecycle=direct-owned-v1",
+      "--image-observer=libproc"
+    ],
+    "skips": "Four other matrix jobs skipped. Generic Apple aggregate/release-wrapper/package qualification steps were skipped by focused scope. No Store workflow ran.",
+    "receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34339916129/native-evidence/ios-readiness-28/receipt.json",
+      "bytes": 441552,
+      "sha256": "b6e0f313b787bc4063ce760805224932cce251bd82a261ac2426674d327b1f00"
+    }
+  },
+  "collection": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34339916129/download-receipt.json",
+      "bytes": 32015,
+      "sha256": "caa0e87c87f96d37e1f28e63a7a470e71336a954dc4904838fc30a7be2fd0710"
+    },
+    "archives": [
+      {
+        "artifact_id": 10101916347,
+        "artifact_name": "native-cleanup-34339916129-1",
+        "path": "remediation-runs/2026-09-08-continuation/actions/34339916129/native-cleanup.zip",
+        "bytes": 1386,
+        "sha256": "aefa4dbbb465b8a9c36076887924c1221f3ca94577c88f858f7100d7b8b1069d",
+        "members_byte_reconciled": 1
+      },
+      {
+        "artifact_id": 10101914512,
+        "artifact_name": "native-evidence-34339916129-1",
+        "path": "remediation-runs/2026-09-08-continuation/actions/34339916129/native-evidence.zip",
+        "bytes": 931563,
+        "sha256": "d42c0be0afff16282110f6e47bf67d343f1b075af7d6e42c3887e9163bf925cf",
+        "members_byte_reconciled": 128
+      }
+    ],
+    "binding_preflight_run": 34338494052,
+    "preflight_archive": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34338494052/native-preflight.zip",
+      "bytes": 94105,
+      "sha256": "bd58d7d8a8847a4556d322210c737f19f980456b500b49f079b546cb4758c148"
+    },
+    "independently_reconciled": "Both downloaded ZIP digests match retained API artifact metadata; all128 native-evidence members and the cleanup member byte-match extracted files and collection hashes. All52 B28 files also match continuation preservation/directory manifests. Run/attempt/job/source metadata and cleanup upload identity agree.",
+    "underlying_evidence_policy": "Raw receipts, XCTest JSON, compressed executed log and retained diagnostic inspected directly; no coordinator summary substituted for them."
+  },
+  "source_and_control_binding": {
+    "source_manifest_entries": 828,
+    "source_manifest_sha256": "eddd7e04b98f519fc0da26b0f1f305825409ed7c2a4e36fbf07ef7c8aa3c049c",
+    "source_before_after_equal": true,
+    "tracked_status": "",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "all828_source_rows_rehashed_from_frozen_git_blobs": true,
+    "control_manifest_entries": 97,
+    "approved_control_sha256": "342bed59c3d058976b8097e095a8b877c25507c833aab1bd48be24bce6a62769",
+    "input_manifest": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34339916129/native-evidence/ios-readiness-28/input-manifest.json",
+      "bytes": 169712,
+      "sha256": "cda8eec61fb1a28d3447af8e9a939d42a83a132c72b6a29a46b3d9dfd15c24b4"
+    },
+    "ci_binding": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34338494052/native-preflight/ios-readiness-source-ci.json",
+      "bytes": 300363,
+      "sha256": "9b1dde804d22d93a9a9f7c66e6b4bdc042565b17ebb04a52d38fd3824d3fb24c"
+    },
+    "controls": "All96 committed controls rehashed from frozen Git blobs; remaining control is exact fresh CI binding. Input controls equal downloaded preflight normal-controls and final control digest. Reviewed B28 four-file adoption and unchanged C/Python acceptance are included exactly.",
+    "copied_source_entries": 753,
+    "copy_changes": [
+      {
+        "path": "iosApp/iosApp.xcodeproj/project.pbxproj",
+        "copied_sha256": "62c9b37d97069ce425d58403fe303503133bb655bc57314b5675231de7f11897"
+      },
+      {
+        "path": "iosApp/iosAppUITests/IOSAppLaunchUITests.swift",
+        "copied_sha256": "c3d5cd42d60371cffee6ec4e8cdc462165f953dbef352bcdbf0f3f2d2a5a4ed2"
+      }
+    ],
+    "independent_copy_check": "All753 original hashes match bound frozen source. Retained unified diff independently applied in memory; copied hashes match. Swift copy equals reviewed normal-launch template; PBX file differs only in its one isolated shell phase. All753 post-worker copied-input rows equal expected hashes, with no missing/extra inputs or source symlinks. Application sources remain byte-identical.",
+    "copied_manifest": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34339916129/native-evidence/ios-readiness-28/copied-source-manifest.json",
+      "bytes": 216169,
+      "sha256": "d89c00d3e23a354aa7d9d80401d944afed46a185237cf6a57ed3e223e02703ed"
+    },
+    "copied_diff": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34339916129/native-evidence/ios-readiness-28/copied-source.diff",
+      "bytes": 6917,
+      "sha256": "91e3d6cf824f6e33ce3b026c35aa791ca0eb0b7ec3423219df53ea9961c56614"
+    },
+    "copied_postbuild": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34339916129/native-evidence/ios-readiness-28/copied-inputs-after-build.json",
+      "bytes": 244340,
+      "sha256": "7b5e4e6bbc6383d657ca1d58d678fb7030e86ba8223760fc80c9ca93f3c63ec3"
+    }
+  },
+  "actual_runtime": {
+    "method": "IOSAppLaunchUITests/testColdLaunchRendersComposeHomeWithoutUnexpectedAlert()",
+    "executed_repetitions": 8,
+    "distinct_test_methods": 1,
+    "failures": 0,
+    "skips": 0,
+    "expected_failures": 0,
+    "periodic_samples": 48,
+    "raw_marker_count": 64,
+    "post_home_completion_elapsed_seconds": [
+      11.006407124999896,
+      13.086319750000257
+    ],
+    "verification": "XCResult summary reports one method and destination8 passes. Test tree has exactly eight identified passing repetition leaves; test-details leaves/durations match those and lane receipt. Executed log independently contains eight XCTest PASS lines plus64 markers; markers exactly match8 begin/6-sample/complete sequences and all48 compact samples. Each sample is foreground/Home-present/no-alert, and each final sample/completion exceeds10seconds.",
+    "evidence": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34339916129/native-evidence/ios-readiness-28/xcresult-summary.json",
+        "bytes": 1107,
+        "sha256": "54e0757788e1e27c87ab4134af3935005b871166aad58311a185ee1c7306c7b0"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34339916129/native-evidence/ios-readiness-28/xcresult-tests.json",
+        "bytes": 4468,
+        "sha256": "497e0338b060c5a5fe189712bff677e70ce0a8ffeec9e90fc96de087ed5eca0e"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34339916129/native-evidence/ios-readiness-28/xcresult-test-details.json",
+        "bytes": 2726,
+        "sha256": "27c2421920fbed8d6707f92a64124881ab607a5593df3e8d63d37d6e500250d6"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34339916129/native-evidence/ios-readiness-28/normal-launch-observations.json",
+        "bytes": 14855,
+        "sha256": "3df0136ab512826e7a2e78e7893fb6071dd55facb687ca4456a1783ac36bcbfe"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34339916129/native-evidence/ios-readiness-28/xcodebuild.log.gz",
+        "bytes": 27791,
+        "sha256": "dfc0538b97993338914459f4b6c4ece66aa89df5d158de2c344a6d314444f49e"
+      }
+    ],
+    "uncompressed_log_sha256": "087714ca764a1595538a1e6ec87f5fce85559e3e8d5bb35829536364b9a01d71",
+    "limitation": "Periodic XCTest-side observations, not continuous liveness, eight PID identities, absence of every intervening restart, game/session behavior or mapped-image capture. Ninth public-tool launch is separate and not an additional XCTest pass."
+  },
+  "artifact_and_notice_binding": {
+    "inventory": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34339916129/native-evidence/ios-readiness-28/built-installed-binary-inventory.json",
+      "bytes": 1565,
+      "sha256": "59d2d1817943b3f0d76bc2ed1f8e80ff4e99cf41edfd2412615770e752c4d912"
+    },
+    "external_bindings": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34339916129/native-evidence/ios-readiness-28/external-image-artifact-bindings.json",
+      "bytes": 4719,
+      "sha256": "480ee386ea381b60224b49f3b6b96c9ba58c54a8467eec93d89f830bb0c49950"
+    },
+    "queried_artifact": {
+      "origin": "installed-app",
+      "relative_path": "Frameworks/ComposeApp.framework/ComposeApp",
+      "sha256": "f66190b75670c3387dd1001161f0beb8fb7b818694e8ba07430c22633bbeec2a",
+      "bytes": 82428752,
+      "uuid": "778d39b8-c432-3c5a-b597-8e95cca2d559",
+      "kind": "compose-framework"
+    },
+    "inventory_verification": "Four built/installed thin Mach-O images have exact corresponding byte counts/hashes. All10 dwarfdump logs independently match bound ARM64 UUID/path records. Two earlier Gradle framework outputs have the same Compose UUID but their own82410600-byte/b13a599b… hash, not the signed installed82428752-byte hash; these distinctions remain explicit.",
+    "signature_scope": "Both retained strict built/installed ad-hoc codesign verification commands exited0; this is not Store signing or credential authorization.",
+    "notices": {
+      "count": 26,
+      "bytes": 99515,
+      "built_installed_byte_identical": true
+    },
+    "notice_limit": "Built/installed notice receipts are byte-identical and list26 exact matching resources. Delivery verification is not legal completeness."
+  },
+  "actual_native_failure": {
+    "original_failure": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34339916129/native-evidence/ios-readiness-28/kernel-region-01.json",
+      "bytes": 373,
+      "sha256": "096127c5f9aad53c95061257d05191ae2209839ac13f9a5594117be202006e08"
+    },
+    "layout_diagnostic": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34339916129/native-evidence/ios-readiness-28/kernel-region-01-layout.json",
+      "bytes": 2535,
+      "sha256": "fa4ccc69344bec64d9a40850156eef945e1e696144e1e983856f71fb53efbf00"
+    },
+    "region": {
+      "requested_start": 4461772800,
+      "requested_end_exclusive": 4504490784,
+      "pri_address": 4461772800,
+      "pri_size": 42729472,
+      "pri_offset": 0,
+      "pri_protection": 5,
+      "pri_max_protection": 7,
+      "pri_flags": 2,
+      "native_structure_bytes": 1272,
+      "native_return_bytes": 1272,
+      "query_errno": 0
+    },
+    "only_failed_original_C_predicate": "pri_size > requested_end_exclusive - requested_start",
+    "kernel_helper_sha256": "2b5737a3b95d5b0fa9d8b1895d092835de366b54f86ee390108f48da6e614354",
+    "helper_execution": "Actual host ARM64 helper compiled with -Wall -Wextra -Werror and -lproc, then queried PID5139 at the unchanged selected sample start. Exactly one helper query exited1; full native return/sizeof1272 and query_errno0 are retained. It did not time out or fall back.",
+    "raw_native_layout": {
+      "uuid": "778d39b8-c432-3c5a-b597-8e95cca2d559",
+      "text_segment": {
+        "vmaddr": 0,
+        "vmsize": 42729472,
+        "fileoff": 0,
+        "filesize": 42729472,
+        "maxprot": 5,
+        "initprot": 5,
+        "nsects": 24,
+        "flags": 0
+      }
+    },
+    "original_sample": {
+      "start": 4461772800,
+      "end_inclusive": 4504490783,
+      "observed_tool_uuid": "778d39b8-c432-3c5a-b597-8e95cca2d559"
+    },
+    "exact_geometry": {
+      "sample_span": 42717984,
+      "extent": 42729472,
+      "excess": 11488,
+      "runtime_text_end_exclusive": 4504502272,
+      "sample_span_equals_filesize": false,
+      "sample_interval_strictly_contained_same_start": true
+    },
+    "host_page_size": {
+      "value": 16384,
+      "api": "os.sysconf(SC_PAGE_SIZE)",
+      "target_page_size_proven": false
+    },
+    "otool": {
+      "command": "xcrun otool -arch arm64 -l <same installed ComposeApp artifact>",
+      "exit_code": 0,
+      "started_at": "2026-09-09T11:35:48.704073+00:00",
+      "finished_at": "2026-09-09T11:35:50.490216+00:00",
+      "output_file_identity": {
+        "device": 16777229,
+        "inode": 3675034,
+        "uid": 501,
+        "file_type": 32768
+      },
+      "bytes": 19242,
+      "sha256": "1f115133ef9cad46cb608f24714d51a62ca6c93a7d786e55967cfd4fa2e696b0"
+    },
+    "diagnostic_binding": "Same artifact SHA/size/UUID, original failure SHA, helper SHA, frozen source/control hashes and sample start/end agree across native receipt, original failure, diagnostic, inventory and UUID outputs. Reviewed collector records artifact/helper stability and target-lifetime checks before/after. Raw-output descriptor custody is present; no primary/cleanup/interruption flags appear.",
+    "privacy_and_reparse_limit": "Raw otool text and sample stacks were deliberately removed by the reviewed collector/finalizer; no vmmap command/output was used. Retained native-output hash/length and closed parsed metadata are runtime evidence; the reviewer cannot independently reparse the removed19242-byte otool text or reread the removed exact binary.",
+    "not_reached": "Original C failure occurs before kernel path/vnode/device/inode/size/final-lstat corroboration. Normal success post-query loop checks, all remaining selected-image queries, final selected-artifact loop and separate-external-image-provenance.json were not reached. Diagnostic-specific checks do not replace those gates.",
+    "preservation": "Original RuntimeError and provenanceFAIL remain; only failure-only metadata was added."
+  },
+  "corrected_interpretation_and_followup": {
+    "falsified_hypothesis": "sample_span==__TEXT.filesize is FALSE here:42717984 !=42729472. Both __TEXT filesize and vmsize equal kernel size42729472. This is not evidence of filesize/vmsize divergence or proof of target-page rounding.",
+    "supported_observation": "The unchanged selected sample interval and native region start coincide, while its reported end lies11488bytes inside this exact artifact's __TEXT extent. The first-image sample end therefore does not describe the complete __TEXT file/VM extent on this observed build.",
+    "bounded_alternative": "An explicitly artifact-hash/UUID-bound __TEXT extent can legitimately be investigated as an alternate corroboration bound while preserving the original sample interval. The exact extent comes from this artifact, not a tolerance, rounded sample end, host page size or arbitrary caller scalar. B28 itself remains FAIL and does not establish the later positive gate.",
+    "source_design_constraints_sent_to_author": [
+      "Independently parse the selected owned artifact's bounded thin little-endian ARM64 Mach-O header/load commands in C and hash-bound Python; unique __TEXT/LC_UUID, exact framing/count/section-size/file bounds, no fat/wrong-architecture/duplicate/truncated/overflow acceptance.",
+      "Preserve original sample start/end. Require positive sample span contained in the exact __TEXT extent, fileoff0, overflow-safe file/VM/runtime bounds; current evidence supports narrow filesize==vmsize and flags0 rather than unobserved zero-fill expansion.",
+      "Retain original bounded-prefix branch unless explicitly reviewed otherwise; any oversized alternative must equal the independently observed __TEXT vmsize exactly. Reject intermediate oversized values and unbound/mismatched reported bound kinds.",
+      "Keep separate checked protection domains: observed __TEXT init/max5 differs from kernel protection5/max7. Kernel flags2 is non-submap under the existing bit guard, not segment flags0.",
+      "Validate every selected image individually and reject overlapping claimed native intervals; no first-image exemption or guessed main-executable vmaddr0.",
+      "Retain exact path/vnode/device/inode/file-size/descriptor stability and all target/helper/artifact/lifetime checks. Requery after reviewed implementation; never promote the saved pre-vnode B28 failure."
+    ],
+    "review_boundary": "Design concerns delivered to lifecycle_controls; this actual-evidence report does not approve any held B30 implementation or future control count. Fresh independent source review, focused executed controls, frozen bindings and native execution are still required."
+  },
+  "cleanup": {
+    "status": "PASS_AS_RECORDED_AND_INDEPENDENTLY_RECONCILED",
+    "immediate_stop_delay_after_xcode_seconds": 0.049334,
+    "final_stop_delay_after_layout_tool_seconds": 0.091403,
+    "gradle": "Embedded build_exit0/stop_exit0; immediate and final isolated ./gradlew --stop both exit0 with no Gradle daemons running. Stops immediately follow Xcode and final diagnostic respectively in the command ledger.",
+    "native_commands": 48,
+    "lifecycle_commands": 14,
+    "direct_lifecycle_children_reaped": 14,
+    "journal_events": 58,
+    "postbuild_barrier": {
+      "status": "PASS",
+      "build_attempted": true,
+      "evidence_preserved": true,
+      "strict_stop": true,
+      "fresh_strict_refresh": true,
+      "direct_build_handles": 34,
+      "direct_build_handles_reaped": 34
+    },
+    "finalization_stages": 15,
+    "journal": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34339916129/native-evidence/ios-readiness-28/simulator-lifecycle.jsonl",
+      "bytes": 27257,
+      "sha256": "9c100a41c6399b05de8cedbcfd5d6ba1496c3d4222ecfe9932242a4fc1ca1507"
+    },
+    "retirement": "Fourteen lifecycle command-result rows exactly match lane receipt and journal final digest; all exited0/reaped. Both metadata and directory absence after deleting owned simulator are journaled. All15 finalization stages PASS, no cleanup errors, remaining owned workers, unknown holders or secondary-attestation errors.",
+    "owned_outputs": "Two attested secondary FIFOs and their two parent directories removed. Exact owned copy/build/DerivedData/temp, raw layout/sample files and shared-cache pointers retired; global cache targets not deleted. These are Apple receipt assertions corroborated by ledgers, not misleading Linux path-absence claims.",
+    "outer_cleanup": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34339916129/native-cleanup/parlor-native-34339916129-1-cleanup.json",
+      "bytes": 3280,
+      "sha256": "83d96614a546095196231363c25e7e1e398fe8f33b021d1b6af97cc53f461888"
+    },
+    "upload_then_cleanup": "Outer cleanupPASS refers to matching uploaded native artifact ID/digest before removing owned evidence directories, fresh source binding and lane lock. Archived evidence remains preserved.",
+    "reviewer": "No reviewer build, fixture, worker, native execution or cleanup allocation."
+  },
+  "prior_evidence": {
+    "B26_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b26-actual-independent-01.json",
+      "bytes": 19907,
+      "sha256": "b73673872a085ada2b780641150699224bc033c59873c46b9739a8d2281cb7c4"
+    },
+    "B28_source_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b28-layout-diagnostic-independent-01.json",
+      "bytes": 10973,
+      "sha256": "8ea71b9070bf891340277e2f06086d8181c574239a0ff2c83f80708fc3d273ff"
+    },
+    "relation": "B26 and B28 remain distinct failed provenance runs. B28 has a fresh artifact UUID/hash and layout observation; it neither repairs B26 evidence nor converts historical Linux controls into native success."
+  },
+  "conclusion": "Accept eight fresh normal Home repetitions, the actual failed libproc observation, same-artifact failure-only __TEXT metadata, and cleanup evidence at their stated scope. Reject any provenancePASS or Store-readiness claim. Pursue only the independently reviewed exact-artifact containment correction; preserve all failed receipts."
+}

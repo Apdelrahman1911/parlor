@@ -1,0 +1,133 @@
+--- remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py
++++ in-memory/composed-run_ios_readiness.py
+@@ -89,10 +89,7 @@
+ 
+ 
+ def control_files():
+-    if BINDING is None:
+-        raise RuntimeError('An explicit campaign source binding is required')
+-    return sorted([path for path in HERE.iterdir() if path.is_file() and
+-                   (path.suffix in {'.py', '.in', '.md'} or path.name == 'inherited-controls.json')]) + [TOOLCHAIN_HELPER, LIFECYCLE_HELPER, *LIFECYCLE_TESTS, BINDING]
++    return foundation.control_files(BINDING)
+ 
+ 
+ def control_manifest():
+@@ -635,7 +632,7 @@
+         dest.parent.mkdir(exist_ok=True)
+         dest.mkdir(exist_ok=False)
+         receipt = dict(cycle=NAME, started_at=now(), status='RUNNING',
+-                       execution_kind='manifest-owned-copy-ios-l08-storage-functional-companion', signing_mode=mode, commands=[],
++                       execution_kind='manifest-owned-copy-ios-l08-app-foundation-composition', signing_mode=mode, commands=[],
+                        toolchain_profile=toolchain_name, simulator_lifecycle_mode=lifecycle_mode, build_attempted=False,
+                        postbuild_evidence_preserved=False, xcode_time_budget=xcode_budget,
+                        raw_postbuild_preservation=dict(status='NOT_RUN'),
+@@ -647,6 +644,8 @@
+         original_outputs = owned_outputs() + [ROOT / 'iosApp/build']
+         links, errors, outputs = [], [], []
+         copied_source_manifest = None
++        receipt['app_foundation_preservation'] = dict(status='NOT_RUN', files=[])
++        receipt['app_foundation_collection'] = dict(status='NOT_RUN')
+         eligible, gradle_attempted = False, False
+ 
+         def save():
+@@ -804,6 +803,8 @@
+ 
+         try:
+             save()  # Durable incomplete receipt before any allocation/native work.
++            foundation.record_transform(dest, receipt)
++            save()
+             receipt['source_before'] = normalized_identity()
+             if any(p.exists() or p.is_symlink() for p in original_outputs):
+                 raise RuntimeError('Pre-existing outputs; ownership review required')
+@@ -815,12 +816,15 @@
+             with defer_parent_signals():
+                 raw_temp = tempfile.mkdtemp(prefix='parlor-audit-' + NAME + '-')
+                 temp = Path(raw_temp)
++                receipt['app_foundation_raw_custody'] = foundation.capture_custody(temp)
+                 receipt['allocated_temporary_path'] = raw_temp
+                 receipt['owned_temporary_directory'] = str(temp)
+                 save()
+             # If canonicalization fails, temp and its durable raw-path receipt
+             # already exist, so the finalizer still owns the allocation.
+             temp = temp.resolve()
++            receipt['app_foundation_copy_custody'] = foundation.canonical_custody(
++                temp, receipt['app_foundation_raw_custody'])
+             receipt['owned_temporary_directory'] = str(temp)
+             receipt['owned_device_name'] = owned_simulator_name(temp)
+             save()
+@@ -963,15 +967,21 @@
+             pbx = pbx[:candidate.start()] + 'shellScript = ' + json.dumps(phase) + ';' + pbx[candidate.end():]
+             project.write_text(pbx)
+             changed = ['iosApp/iosApp/iOSApp.swift', 'iosApp/iosApp/ContentView.swift', 'iosApp/iosAppUITests/IOSAppLaunchUITests.swift', 'iosApp/iosApp.xcodeproj/project.pbxproj']
++            copied_source_manifest = inspect_copied_manifest(temp / 'copy', manifest, changed)
++            copied_source_manifest, app_foundation_binding = foundation.copy.apply_owned_adapter(
++                temp / 'copy', copied_source_manifest, receipt['app_foundation_copy_custody'],
++                receipt['source_before'], approved, mode,
++                Path.home() / 'Library/Developer/CoreSimulator/Devices', toolchain=toolchain_name)
++            receipt['app_foundation_copy_binding'] = app_foundation_binding
++            write_json(dest / 'app-foundation-copy-binding.json', app_foundation_binding)
+             changes = changed + list(MODIFIED_KOTLIN)
+             diff = ''.join(''.join(difflib.unified_diff((ROOT / path).read_text().splitlines(True),
+                 (temp / 'copy' / path).read_text().splitlines(True),
+                 fromfile='original/' + path, tofile='audit-copy/' + path)) for path in changes)
+-            for addition in ADDITIONS:
++            for addition in (*ADDITIONS, *foundation.copy.ADDITIONS):
+                 diff += ''.join(difflib.unified_diff([], (temp / 'copy' / addition).read_text().splitlines(True),
+                               fromfile='/dev/null', tofile='audit-copy/' + addition))
+             (dest / 'copied-source.diff').write_text(diff)
+-            copied_source_manifest = inspect_copied_manifest(temp / 'copy', manifest, changed)
+             write_json(dest / 'copied-source-manifest.json', copied_source_manifest)
+             receipt['copied_source_diff_sha256'] = digest(dest / 'copied-source.diff')
+             receipt['copied_source_manifest_sha256'] = digest(dest / 'copied-source-manifest.json')
+@@ -1019,7 +1029,8 @@
+             finally:
+                 finish_xcode_attempt(receipt, xcode_error,
+                     lambda: stop_gradle('stop-xcode-immediate'),
+-                    lambda: preserve_postbuild_raw(receipt, dest, temp, uuid, command, save))
++                    lambda: preserve_postbuild_raw(receipt, dest, temp, uuid, command, save,
++                        extra_container=lambda container: foundation.preserve(receipt, dest, uuid, container)))
+             derived = temp / 'DerivedData'
+             if derived.is_dir():
+                 generated_entitlements = inspect_generated_app_entitlements(derived, temp)
+@@ -1079,6 +1090,8 @@
+                 write_json(dest / 'installed-app-linker-entitlements.json',
+                            inspect_bundle_entitlements(installed, installed_inventory, owned_device))
+                 receipt['installed_app_linker_entitlements_sha256'] = digest(dest / 'installed-app-linker-entitlements.json')
++            foundation.bind_available(receipt, dest, uuid, built_inventory, installed_inventory)
++            save()
+             available_records = available_run_records(dest, mode)
+             framework_inventory = []
+             if available_records:
+@@ -1185,6 +1198,7 @@
+             receipt['os_settings_gate'] = receipt['dsc01_matrix']['os_settings_gate']
+             if owner.secondary_errors:
+                 raise RuntimeError('Apple secondary-path attestation incomplete; inspect exact ledger, never claim cleanup success')
++            foundation.require_collection(receipt)
+             receipt['runtime_evidence_status'] = (
+                 'FUNCTIONAL_COMPANION_VERIFIED' if runtime_complete(receipt, xcode) else 'FAIL')
+             if receipt['runtime_evidence_status'] != 'FUNCTIONAL_COMPANION_VERIFIED':
+@@ -1224,6 +1238,16 @@
+                     if isinstance(recovered, dict):
+                         uuid = recovered['udid']; receipt['owned_uuid'] = uuid
+                 if uuid is not None:
++                    if gradle_attempted:
++                        foundation_preserved = stage('preserve-app-foundation-before-device-cleanup', lambda:
++                              foundation.preserve_before_cleanup(receipt, dest, uuid, command)) is True
++                        receipt['postbuild_evidence_preserved'] = (
++                            receipt.get('postbuild_evidence_preserved') is True and foundation_preserved)
++                        def persist_preservation_ack():
++                            save()
++                            return True
++                        if stage('persist-postbuild-evidence-ack', persist_preservation_ack) is not True:
++                            receipt['postbuild_evidence_preserved'] = False
+                     # XCTest itself defers app.terminate(). Shutting down the
+                     # exact owned simulator also stops apps after test failure;
+                     # no misleading nonzero 'nothing to terminate' success.
+@@ -1290,6 +1314,7 @@
+                 receipt['source_unchanged'] = receipt.get('source_after') is not None and receipt.get('source_after') == receipt.get('source_before')
+                 receipt['cleanup_status'] = 'PASS' if safe and not errors and not receipt['remaining_outputs'] and receipt['temporary_directory_removed'] else 'FAIL'
+                 receipt.update(classify_final_companion(receipt))
++                foundation.restrict_final(receipt)
+                 receipt['unexpected_original_outputs_preserved'] = [str(p.relative_to(ROOT)) for p in original_outputs
+                                                                     if p.exists() or p.is_symlink()]
+                 if receipt['unexpected_original_outputs_preserved']:

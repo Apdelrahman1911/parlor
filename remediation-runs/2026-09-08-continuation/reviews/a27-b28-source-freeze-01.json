@@ -1,0 +1,279 @@
+{
+  "schema_version": 1,
+  "kind": "REVIEWED_A27_B28_SOURCE_AND_MECHANICAL_INVENTORY_FREEZE",
+  "coordinator": "/root",
+  "started_at": "2026-09-09T09:55:23.072768+00:00",
+  "baseline": "0303a76771794c52ea96a7d7f47eb689f5b236ba",
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "0303a76771794c52ea96a7d7f47eb689f5b236ba\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "exit_code": 0,
+      "stdout": "fix/local-readiness-2026-09-07\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "--is-shallow-repository"
+      ],
+      "exit_code": 0,
+      "stdout": "false\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "--literal-pathspecs",
+        "add",
+        "--pathspec-from-file=-",
+        "--pathspec-file-nul"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "--literal-pathspecs",
+        "add",
+        "-f",
+        "--pathspec-from-file=-",
+        "--pathspec-file-nul"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--cached",
+        "--check",
+        "--",
+        "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08HostProbe.kt.in",
+        "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_functional_copy.py",
+        "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_receipts.py",
+        "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+        "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_runner.py",
+        "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+        "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/image_text_layout_diagnostic.py",
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+        "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_image_text_layout_diagnostic.py",
+        "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md",
+        "scripts/ci/NATIVE_CONTINUATION.md",
+        "scripts/ci/native_continuation.py",
+        "scripts/release/tests/test_native_process_probe.py"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "commit",
+        "-q",
+        "-m",
+        "fix(verification): diagnose retained-host and native image boundaries"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "fe9a1427eeed5455e11ec60cf04cc75423c79529\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "exit_code": 0,
+      "stdout": "a0c484fdd1654bb44999ee2fac251d705e31c3a4\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=no"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/generate_review_inventory.py"
+      ],
+      "exit_code": 0,
+      "stdout": "Wrote 18347 inventory rows to docs/review/INDEPENDENT_REVIEW_INVENTORY.csv; source review not attested\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "add",
+        "--",
+        "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "commit",
+        "-q",
+        "-m",
+        "chore(review): freeze A27 B28 qualification inventory"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/generate_review_inventory.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "stdout": "Verified freshness of 18347 inventory rows in docs/review/INDEPENDENT_REVIEW_INVENTORY.csv; source review not attested\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "52f60924a89f788aab78c826096f34a32af40292\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "exit_code": 0,
+      "stdout": "02afb528b429eecb9c1afe58217490b07f4eb190\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=no"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/verification/ios-readiness/bind_source.py",
+        "--describe"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"branch\": \"fix/local-readiness-2026-09-07\",\n  \"commit\": \"52f60924a89f788aab78c826096f34a32af40292\",\n  \"tree\": \"02afb528b429eecb9c1afe58217490b07f4eb190\",\n  \"diff_sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n  \"source_manifest_sha256\": \"eddd7e04b98f519fc0da26b0f1f305825409ed7c2a4e36fbf07ef7c8aa3c049c\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "push",
+        "origin",
+        "HEAD:refs/heads/fix/local-readiness-2026-09-07"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "To https://github.com/Apdelrahman1911/parlor.git\n   0303a767..52f60924  HEAD -> fix/local-readiness-2026-09-07\n"
+    },
+    {
+      "argv": [
+        "git",
+        "ls-remote",
+        "origin",
+        "refs/heads/fix/local-readiness-2026-09-07"
+      ],
+      "exit_code": 0,
+      "stdout": "52f60924a89f788aab78c826096f34a32af40292\trefs/heads/fix/local-readiness-2026-09-07\n",
+      "stderr": ""
+    }
+  ],
+  "status": "SOURCE_COMMITTED_INVENTORY_COMMITTED_PUSHED_REMOTE_EQUAL_PENDING_FRESH_NATIVE_BINDING",
+  "readiness": "NOT_READY; controls/source freeze are not native runtime proof.",
+  "whitelist": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/post-0303-delivery-whitelist-02.json",
+    "sha256": "23bebdd2b9bb3c73189467247cbc23362342768e0260e18105b321a9abe1f34c"
+  },
+  "adopted_ledger_sha256": "dfa9ac54fcfb7c894c43738575850420a858e9901914c19c7e1f670c791b5e0e",
+  "staged_exact": {
+    "files": 412,
+    "bytes": 12460332,
+    "paths_hashes_modes_verified": true
+  },
+  "source_commit": "fe9a1427eeed5455e11ec60cf04cc75423c79529",
+  "source_tree": "a0c484fdd1654bb44999ee2fac251d705e31c3a4",
+  "frozen_commit": "52f60924a89f788aab78c826096f34a32af40292",
+  "frozen_tree": "02afb528b429eecb9c1afe58217490b07f4eb190",
+  "inventory": {
+    "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+    "bytes": 11401945,
+    "sha256": "3c2862ad66a27b54646068a6384ec9d8bed4565e006b65f6337f108e602dc084"
+  },
+  "source_description": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "52f60924a89f788aab78c826096f34a32af40292",
+    "tree": "02afb528b429eecb9c1afe58217490b07f4eb190",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "eddd7e04b98f519fc0da26b0f1f305825409ed7c2a4e36fbf07ef7c8aa3c049c"
+  },
+  "remote_confirmation": "52f60924a89f788aab78c826096f34a32af40292\trefs/heads/fix/local-readiness-2026-09-07",
+  "cleanup": {
+    "build_test_tasks": 0,
+    "background_workers_started": 0,
+    "disposable_outputs": 0,
+    "required_inventory_retained": true,
+    "global_caches_or_unrelated_work_changed": false
+  },
+  "finished_at": "2026-09-09T09:55:31.275401+00:00"
+}

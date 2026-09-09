@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "kind": "ONE_FRESH_NONBUILDING_PREFLIGHT06_REQUEST",
+  "coordinator": "/root",
+  "created_at": "2026-09-09T09:57:03.152031+00:00",
+  "status": "PENDING_INDEPENDENT_FROZEN_SOURCE_ADMISSION",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "frozen_source_sha": "52f60924a89f788aab78c826096f34a32af40292",
+  "tree": "02afb528b429eecb9c1afe58217490b07f4eb190",
+  "inputs": {
+    "verification_scope": "native-preflight",
+    "frozen_source_sha": "52f60924a89f788aab78c826096f34a32af40292"
+  },
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=native-preflight",
+    "-f",
+    "frozen_source_sha=52f60924a89f788aab78c826096f34a32af40292"
+  ],
+  "freeze_receipt": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/a27-b28-source-freeze-01.json",
+    "sha256": "59c13c64ca665d6468d26d8b07663ee880954fe18c51f43f33c84c55e25df88e"
+  },
+  "actual_control_reviews": [
+    "reviews/native-a27-controls-final-applicability-01.json",
+    "reviews/native-b28-controls-actual-independent-01.json"
+  ],
+  "screening": {
+    "remote": "52f60924a89f788aab78c826096f34a32af40292\trefs/heads/fix/local-readiness-2026-09-07",
+    "workflow": {
+      "id": 335554528,
+      "state": "active",
+      "path": ".github/workflows/production-verification.yml"
+    },
+    "all_same_ref_runs": [
+      {
+        "id": 34321128224,
+        "head_sha": "0303a76771794c52ea96a7d7f47eb689f5b236ba",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_attempt": 1,
+        "created_at": "2026-09-09T06:53:17Z"
+      },
+      {
+        "id": 34318962397,
+        "head_sha": "0303a76771794c52ea96a7d7f47eb689f5b236ba",
+        "status": "completed",
+        "conclusion": "success",
+        "run_attempt": 1,
+        "created_at": "2026-09-09T06:25:05Z"
+      },
+      {
+        "id": 34303850578,
+        "head_sha": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_attempt": 1,
+        "created_at": "2026-09-09T02:35:55Z"
+      },
+      {
+        "id": 34300240397,
+        "head_sha": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+        "status": "completed",
+        "conclusion": "success",
+        "run_attempt": 1,
+        "created_at": "2026-09-09T01:42:00Z"
+      },
+      {
+        "id": 34275491965,
+        "head_sha": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_attempt": 1,
+        "created_at": "2026-09-08T20:33:28Z"
+      },
+      {
+        "id": 34273018746,
+        "head_sha": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+        "status": "completed",
+        "conclusion": "success",
+        "run_attempt": 1,
+        "created_at": "2026-09-08T20:08:12Z"
+      },
+      {
+        "id": 34244902185,
+        "head_sha": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_attempt": 1,
+        "created_at": "2026-09-08T15:27:49Z"
+      },
+      {
+        "id": 34242374948,
+        "head_sha": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+        "status": "completed",
+        "conclusion": "success",
+        "run_attempt": 1,
+        "created_at": "2026-09-08T15:04:18Z"
+      },
+      {
+        "id": 34239707887,
+        "head_sha": "5f35a20d3c9c846cd98b38a16881997ecf577497",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_attempt": 1,
+        "created_at": "2026-09-08T14:39:50Z"
+      },
+      {
+        "id": 34232325670,
+        "head_sha": "1efed50cbc7856c11867e4cb088ba3b68716c8fc",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_attempt": 1,
+        "created_at": "2026-09-08T13:29:55Z"
+      },
+      {
+        "id": 34216788568,
+        "head_sha": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_attempt": 1,
+        "created_at": "2026-09-08T10:41:37Z"
+      },
+      {
+        "id": 34214410629,
+        "head_sha": "25b1c5551aee7630ac22d4b34668dd4b06c71b17",
+        "status": "completed",
+        "conclusion": "success",
+        "run_attempt": 1,
+        "created_at": "2026-09-08T10:14:45Z"
+      },
+      {
+        "id": 34152138368,
+        "head_sha": "89dbe8aeaf4e2c83f491521629982be09706cf67",
+        "status": "completed",
+        "conclusion": "success",
+        "run_attempt": 1,
+        "created_at": "2026-09-07T18:33:56Z"
+      },
+      {
+        "id": 34143924756,
+        "head_sha": "0b3090a40ff8135b04e0d6e9933c0af5d160daba",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_attempt": 1,
+        "created_at": "2026-09-07T16:34:54Z"
+      },
+      {
+        "id": 34112913001,
+        "head_sha": "f5ea8045bd903c255041b198f54aca67e893612f",
+        "status": "completed",
+        "conclusion": "failure",
+        "run_attempt": 1,
+        "created_at": "2026-09-07T10:43:15Z"
+      }
+    ],
+    "active_runs": []
+  },
+  "required_review": "remediation-runs/2026-09-08-continuation/reviews/native-preflight-a27-b28-freeze-independent-01.json",
+  "maximum_dispatches": 1,
+  "scope": "Fresh official hosted source/control/toolchain binding only. No application build, simulator, libproc, Store, private signing or physical-device operation. Actual A27/B28 remains NOT_RUN. Prior successful Linux controls reused only in independently reviewed unchanged scope.",
+  "cleanup": "Read-only short Git/API subprocesses reaped. No build workers or disposable outputs allocated; small evidence retained."
+}

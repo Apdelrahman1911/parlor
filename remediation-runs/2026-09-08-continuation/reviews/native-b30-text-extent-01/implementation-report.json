@@ -1,0 +1,171 @@
+{
+  "schema_version": 1,
+  "kind": "HELD_B30_EXACT_OWNED_TEXT_EXTENT_IMPLEMENTATION",
+  "author": "/root/lifecycle_controls",
+  "coordinator": "/root",
+  "recorded_at": "2026-09-09T13:08:21.445983+00:00",
+  "status": "HOLD_SEALED_FOR_INDEPENDENT_REVIEW_AND_ROOT_ONLY_ADOPTION_EXECUTION",
+  "scope": "Only the ten held files below; canonical files untouched by author. No ancillary refactoring.",
+  "actual_B28": {
+    "status": "FAIL_REMAINS_FAIL_NOT_RETROSPECTIVELY_UPGRADED",
+    "original_failure": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34339916129/native-evidence/ios-readiness-28/kernel-region-01.json",
+      "bytes": 373,
+      "sha256": "096127c5f9aad53c95061257d05191ae2209839ac13f9a5594117be202006e08"
+    },
+    "failure_only_layout": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34339916129/native-evidence/ios-readiness-28/kernel-region-01-layout.json",
+      "bytes": 2535,
+      "sha256": "fa4ccc69344bec64d9a40850156eef945e1e696144e1e983856f71fb53efbf00"
+    },
+    "independent_actual_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b28-actual-independent-01.json",
+      "bytes": 21626,
+      "sha256": "36f4818e5350a6f751485310283834c5ed3fa7b6a277ad16f85325703b0cf83e"
+    },
+    "sample": {
+      "start": 4461772800,
+      "end_inclusive": 4504490783,
+      "observed_tool_uuid": "778d39b8-c432-3c5a-b597-8e95cca2d559"
+    },
+    "sample_span": 42717984,
+    "kernel_region": {
+      "requested_start": 4461772800,
+      "requested_end_exclusive": 4504490784,
+      "pri_address": 4461772800,
+      "pri_size": 42729472,
+      "pri_offset": 0,
+      "pri_protection": 5,
+      "pri_max_protection": 7,
+      "pri_flags": 2,
+      "native_structure_bytes": 1272,
+      "native_return_bytes": 1272,
+      "query_errno": 0
+    },
+    "file_layout": {
+      "uuid": "778d39b8-c432-3c5a-b597-8e95cca2d559",
+      "text_segment": {
+        "vmaddr": 0,
+        "vmsize": 42729472,
+        "fileoff": 0,
+        "filesize": 42729472,
+        "maxprot": 5,
+        "initprot": 5,
+        "nsects": 24,
+        "flags": 0
+      }
+    },
+    "artifact": {
+      "origin": "installed-app",
+      "relative_path": "Frameworks/ComposeApp.framework/ComposeApp",
+      "kind": "compose-framework",
+      "bytes": 82428752,
+      "sha256": "f66190b75670c3387dd1001161f0beb8fb7b818694e8ba07430c22633bbeec2a",
+      "uuid": "778d39b8-c432-3c5a-b597-8e95cca2d559"
+    },
+    "source": {
+      "commit": "52f60924a89f788aab78c826096f34a32af40292",
+      "tree": "02afb528b429eecb9c1afe58217490b07f4eb190",
+      "source_manifest_sha256": "eddd7e04b98f519fc0da26b0f1f305825409ed7c2a4e36fbf07ef7c8aa3c049c"
+    },
+    "approved_control_sha256": "342bed59c3d058976b8097e095a8b877c25507c833aab1bd48be24bce6a62769",
+    "falsified_hypothesis": "Sample span 42717984 is NOT __TEXT.filesize. __TEXT.filesize == __TEXT.vmsize == kernel pri_size == 42729472.",
+    "reach_limit": "Only first selected Compose image reached the failed span predicate; vnode/post-query corroboration and all-image acceptance were not reached. Diagnostic evidence supplies no provenance PASS.",
+    "protection_distinction": "Segment init/max5 is separate from kernel protection5/max7; kernel flags2 is non-submap, not segment flags0."
+  },
+  "acceptance_contract": {
+    "bounds": "Preserve original sample endpoints. Accept only 0 < region_size <= original sample_span OR region_size == independently owned-file-bound __TEXT.vmsize. Reject intermediate oversized or rounded bounds.",
+    "per_image_geometry": "Fresh exact selected artifact for every image; C independently decodes the held owned descriptor, Python independently streams full SHA/identity and bounded fixed-width header/load commands. Thin LE ARM64 executable/dylib only; one __TEXT and LC_UUID; exact framing/count/section tables; UUID matches inventory/sample.",
+    "narrow_geometry": "fileoff0; positive sample_span <= filesize == vmsize <= artifact bytes; full header and command table within __TEXT.filesize; preferred vmaddr+vmsize and runtime sample_start+vmsize do not wrap; initprot5, maxprot5/7, flags0. No assumed vmaddr0.",
+    "preserved_safeguards": "Native structure/return width, same start, no zero/wrapping extent, offset0, RX/nonwrite/non-submap, independently bound kernel max5/7, exact canonical path/vnode/device/inode/size/UID, pre/post descriptor/file custody and full hashes, helper integrity, target audit-token/lifetime, every selected image required, no native-interval overlap.",
+    "custody_addition": "C rechecks lstat/canonical path after bounded descriptor parsing and before query; retains FD through post-query checks, closes every owned FD. Runner brackets slow pre/post artifact/helper hash work with target checks.",
+    "closed_output": "Success schema2 adds primitive artifact_text/UUID, extent_kind, device/inode/UID. Python derives kind and compares geometry/hash/identity; numeric booleans fail. Original failure schema1 and failure-only B28 diagnostic remain separate.",
+    "prohibited_shortcuts": "No rounding/page-size inference, arbitrary allowance, extra external tool cycle, fallback, or mapped-memory/page-hash claim."
+  },
+  "files": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-text-extent-01/draft/image_text_extent.py",
+      "bytes": 7438,
+      "sha256": "fb71d90347c76056d1fd977c0b889c7ee535952619807736ffdc57c7ff0cbeb5",
+      "adoption_path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/image_text_extent.py"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-text-extent-01/draft/image_text_layout_diagnostic.py",
+      "bytes": 10048,
+      "sha256": "534ce969b2df701895a9f32593e5af7ed34f4a10478619e9c8ec2269bd9b8b78",
+      "adoption_path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/image_text_layout_diagnostic.py"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-text-extent-01/draft/kernel_image_region.c.in",
+      "bytes": 11078,
+      "sha256": "1cdb0a7812c7bbb71879651d060a9993cf9acab7288e9b2e1568dc8466f27df0",
+      "adoption_path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_region.c.in"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-text-extent-01/draft/kernel_image_regions.py",
+      "bytes": 5544,
+      "sha256": "920d915789dcb3b1b3d94db66451637d089f977e52e9c2d4cac99b065e28e10f",
+      "adoption_path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_regions.py"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-text-extent-01/draft/run_control_tests.py",
+      "bytes": 2932,
+      "sha256": "d6e81d1b18ec2dd4f2d53065b928618a800d173bab47e0c0623abada247acfed",
+      "adoption_path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-text-extent-01/draft/run_normal_ios_launch.py",
+      "bytes": 67784,
+      "sha256": "766087ddf72b50f51b1c4072c64afb1a7dd231f047d26e534817cddf9be295bf",
+      "adoption_path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-text-extent-01/draft/test_image_text_extent.py",
+      "bytes": 9265,
+      "sha256": "d4c3467f7b43e2b471cf81f0e48e6f0a81ce19235aac28c7533a2542fd7d2382",
+      "adoption_path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_image_text_extent.py"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-text-extent-01/draft/test_image_text_layout_diagnostic.py",
+      "bytes": 27554,
+      "sha256": "1339ad866777cba31e4bbd661da79bea313486aae8afb977cb0c5954ea0d400d",
+      "adoption_path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_image_text_layout_diagnostic.py"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-text-extent-01/draft/test_kernel_image_regions.py",
+      "bytes": 21748,
+      "sha256": "e54c0564f0195d7fe62635a30736595351723ad5a4c24d1ddb8ec025ddff428f",
+      "adoption_path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_kernel_image_regions.py"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-text-extent-01/draft/test_kernel_region_failure_diagnostics.py",
+      "bytes": 42766,
+      "sha256": "c352b4259792cb76283745a7c269bef1f2b8b81ea0f40930af44d5a6bbbd04b8",
+      "adoption_path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/test_kernel_region_failure_diagnostics.py"
+    }
+  ],
+  "coverage": {
+    "declared_test_methods": {
+      "test_image_text_extent.py": 8,
+      "test_kernel_image_regions.py": 14,
+      "test_image_text_layout_diagnostic.py": 22,
+      "test_kernel_region_failure_diagnostics.py": 22
+    },
+    "aggregate_declared_methods": 243,
+    "aggregate_expected_count": 243,
+    "scope": "243 is a stdlib AST declaration count, not an executed PASS count.",
+    "new_parser": "Synthetic B28 numbers (not historical binary bytes), nonzero preferred vmaddr, framing/UUID/section/bounds/overflow, prefix/exact vs intermediate/rounding, full-file SHA with bounded prefix, mutation/symlink/hash/descriptor negatives.",
+    "adapted_native": "Actual pinned changed C and binder, real private thin Mach-O files/open/pread/fstat, closed libproc stubs. Default sample24577/text40000 keeps 4KiB28672 and16KiB32768 rounding witnesses non-exact; existing native/raw/ABI/path/vnode/stat and independent predicate oracles retained.",
+    "nonvacuous_native": "Prequery pathname same-byte/new-inode replacement during command read; real correct-owned-FD close plus EBADF oracle; tinyTEXT512/header-table608 with sample1/region1 and removed-header-bound mutant; malformed files never query.",
+    "orchestration": "All three exact image extents preserve original endpoints; missing/mismatched UUID/hash/inode/kind/boolean layouts and overlaps fail. Artifact replacement/helper/lifetime failures never publish or fallback. Target changes during real prehash read produce zero helper calls; during real posthash read one helper call. Fake-helper inspection is isolated, and no JSON row consumption ensures next-image preflight cannot mask the new posthash guard.",
+    "diagnostic_separation": "All22 original failure-only handler/custody methods retained; only new acceptance preflight is mocked there and target ordinals shifted. Original same-exception/no-PASS/interruption/replacement/raw-cleanup oracles remain.",
+    "pins": "Native/binder hashes are deliberately updated to B30 in both native-suite and diagnostic-suite pin assertions; no claim of historical acceptance byte-equivalence.",
+    "native_sha256": "1cdb0a7812c7bbb71879651d060a9993cf9acab7288e9b2e1568dc8466f27df0",
+    "binder_sha256": "920d915789dcb3b1b3d94db66451637d089f977e52e9c2d4cac99b065e28e10f"
+  },
+  "author_checks": {
+    "performed": "Source review, stdlib AST parsing, hash/byte counts, declared-ID/count and literal-pin reconciliation only.",
+    "not_performed": "No project imports/validators, tests, compiler/build/native tools, process queries, network/API/CI, Git writes or canonical adoption.",
+    "root_handoff": "Independent frozen-source reviews and root-only exact adoption/full updated normal-control driver with explicit owned private TMPDIR remain required. Driver includes synthetic native compilation; none is Darwin ABI/app/runtime/Store proof."
+  }
+}

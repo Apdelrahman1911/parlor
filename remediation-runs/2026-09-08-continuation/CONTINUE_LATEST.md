@@ -1,14 +1,9 @@
 # Continuation execution ledger — 2026-09-08
 
-**Latest: 2026-09-09 09:36UTC reviewed-control cutoff: reviewed A7/B4
-diagnostic/control changes and corrected stale A test guard are adopted in the
-uncommitted0303-based working tree. Actual combined controls remain210PASS/1FAIL
-of211; the obsolete source-comparison guard was corrected, then11/11 passed.
-Independent reviews accept scoped two-cycle applicability, not a new211-test
-PASS. B61 and label1 passed in the original cycle, not rerun. Both cycles have scoped
-cleanupPASS/stop0. Native A27/B28 NOT_RUN; fresh freeze/preflight pending.
-Actual A25/B26 failures remain; C05/fullD NOT_RUN, C04 historical scoped PASS.
-Linux controls are not application-runtime proof. NOT READY.** Read `AGENTS.md`,
+**Latest: frozen52f60924 native34339916129/1 FAILED: A27 first host
+prepare-await-started FAIL; B28 Home8/48 PASS but provenanceFAIL. The fixture
+has Linux red1FAIL then green283PASS/3SKIP, not native recovery proof.
+B30 source adopted;338 controls PASS, Linux postrun reviews approved. Native A29/B30, C05/fullD NOT_RUN. NOT READY.** Read `AGENTS.md`,
 [`CONTINUE_HERE.md`](../../CONTINUE_HERE.md), the
 [Linux handoff](../../docs/AGENT_CONTINUATION_2026-09-08_LINUX.md) and the preserved
 [transfer handoff](../../docs/AGENT_CONTINUATION_2026-09-08.md).
@@ -1667,3 +1662,38 @@ Preserve all earlier failed receipts and held historical snapshots.
 are pending. A25/B26 remain failed; C05/fullD NOT_RUN, C04 valid only in its
 historical scope. **NOT READY**; strict/host/provenance, physical/signed-candidate,
 identity/Store and owner/legal gates remain.
+
+## 2026-09-09 actual A27/B28 and follow-up — 13:18UTC result cutoff
+
+Normal push: `fe9a1427`+`52f60924`/tree`02afb528`; full identities/reviews:
+`reviews/continuation-ledger-a27-b28-actual-01/author-report.json`.
+Nonbuilding preflight34338494052 PASS, not app proof. Native34339916129/1
+FAIL;4jobs skipped. Collection:
+`actions/34339916129/download-receipt.json` (`caa0e87c`).
+
+- A27:4 UIKit PASS/1 integrated FAIL/0skip; host prepare-await-started FAIL,
+  0/42 host PASS,41 unreached. Storage/strict were not freshly reached.
+  A25's20/20 operations/13boots and26 strictFAIL remain historical, not A27 results.
+- B28:8 Home repetitions/48 samples PASS; provenanceFAIL. Same-artifact
+  __TEXT filesize=vmsize=kernel42,729,472B; sample span42,717,984B.
+  Sample-span==filesize is false; this is not rounding proof or provenancePASS.
+  Kernel vnode and normal success post-query/final gates remained unreached.
+
+Under `remediation-runs/2026-09-07-local-readiness/evidence/`,
+`continuation-host-reentrancy-red-01` actually failed1 test:
+`Commit preceded this peer's Ready`. After reviewed fixture/guard/label adoption,
+`continuation-host-reentrancy-contracts-green-01` has286cases/26suites:
+283PASS/3existing loopbackSKIP,0fail/error. Unchanged regression; not proof of A27's exact cause.
+B30's reviewed10 files adopted; `continuation-a29-b30-controls-01`:
+338 control executions(9+9+21+55+243+1)PASS,0fail/error/skip, at dirty52f,
+217 bound controls/829 stable source rows. No JVM repeat; new Linux postrun
+reviews and fresh source/inventory freeze are pending.
+
+Scoped native/Linux cleanupPASS,stops0; failures retained. C04 historical only.
+Physical/signed-candidate, identity/Store and owner/legal gates remain.
+
+Post-cutoff review closure: `reviews/native-a29-host-correction-independent-01.json`
+(`ed924058`) and `reviews/native-b30-controls-actual-independent-01.json`
+(`6ff42680`) independently approve the exact corrections, local results and cleanup.
+No findings; no new native execution or readiness approval. Source/inventory freeze
+and fresh Apple bindings remain next.

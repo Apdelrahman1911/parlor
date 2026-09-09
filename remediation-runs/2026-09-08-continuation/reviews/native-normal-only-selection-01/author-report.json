@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "kind": "HELD_CLOSED_NORMAL_ONLY_SELECTION_CANDIDATE",
+  "author": "/root/ci_workflow",
+  "recorded_at": "2026-09-09T10:44:48.141339+00:00",
+  "status": "HELD_NOT_ADOPTED_NOT_EXECUTED_PENDING_INDEPENDENT_REVIEW",
+  "baseline": {
+    "commit": "52f60924a89f788aab78c826096f34a32af40292",
+    "tree": "02afb528b429eecb9c1afe58217490b07f4eb190",
+    "branch": "fix/local-readiness-2026-09-07",
+    "canonical_six_files_still_exact": true,
+    "active_native_run": 34339916129
+  },
+  "files": [
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "source_sha256": "84888fae00e1add37dd8f39c5a86a9600c2a95b5e3bca794133c3fc28147b46c",
+      "source_bytes": 41331,
+      "held_sha256": "6414c40d1bea880fc071114a636526e963b125872dfd3f220d1602331a356939",
+      "held_bytes": 41728,
+      "git_mode": "100644"
+    },
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "source_sha256": "23569ba9a718bcbbd3b6d7aa08bb73ef9f0882019779d1b7f7c53e24b979e35e",
+      "source_bytes": 64697,
+      "held_sha256": "fe6503dc2a629624693d4feb04ff967541c48e432d949b24f5eb562dcf2a92d0",
+      "held_bytes": 66397,
+      "git_mode": "100644"
+    },
+    {
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "source_sha256": "153c23a2e8fd314923b2fb57a973e2edb7ae4eff3e386241b0fdab4ed212b6cf",
+      "source_bytes": 18880,
+      "held_sha256": "9f6fbdb69a6ad78568e69d435faf1163773ccec24441f31fd275d4c772a5de88",
+      "held_bytes": 20176,
+      "git_mode": "100644"
+    },
+    {
+      "path": "scripts/release/workflow_contract.py",
+      "source_sha256": "fa142d3bbfb3dd18e0f3dc9aba2f388a3ce634ee7fdd16612b2d9bbf2df1f429",
+      "source_bytes": 47465,
+      "held_sha256": "d26e36fea3151a89f3eb76264f4d0ce8315409e7d342415ba7f1e3d34422a9a5",
+      "held_bytes": 48484,
+      "git_mode": "100755"
+    },
+    {
+      "path": "scripts/release/tests/test_native_continuation.py",
+      "source_sha256": "366cd58febbe2f91f7cc287af8942948dd15d5372de2cec750dcbde9f9539465",
+      "source_bytes": 80771,
+      "held_sha256": "a3c096a61bac51e3f89a0fecb12528c3f398a1ff0fa4ba9322e4cbd4682c5942",
+      "held_bytes": 94278,
+      "git_mode": "100644"
+    },
+    {
+      "path": "scripts/release/tests/test_workflow_contract.py",
+      "source_sha256": "695a513b227d1aa3bde6adb49f886713ccdde4f684d9e8478b476cb0c6d8c4ae",
+      "source_bytes": 39774,
+      "held_sha256": "84ae9edc5de9cfbd4487062004709b0269a737ffc80e7b83c1464156b9e25f33",
+      "held_bytes": 42292,
+      "git_mode": "100644"
+    }
+  ],
+  "diff": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-normal-only-selection-01/change.diff",
+    "bytes": 36106,
+    "sha256": "33696fd9928d37950f2afba6acc70ea256224cb67df2913de2b13b84915c39d6"
+  },
+  "contract": {
+    "input": "native_selection choice[paired, normal-only], default paired; env PARLOR_NATIVE_SELECTION in validate-scope/run/cleanup. Omitted/empty compatibility input means paired; explicit unknown/non-string values fail. Normal-only requires effective native-evidence, rejected by CLI/constructor before native context/allocation otherwise.",
+    "paired": "Closed ordered l08/normal tuple preserves original A->B execution and all unsafe/interrupted/timeout admission barriers. Only a selected-lane preguard was added to actual run_native/admit_native bodies; the remaining ASTs match exactly.",
+    "normal_only": "Only normal may be admitted/invoked/claimed. PASS is explicitly NORMAL_ONLY_PASS; ordinary failing result NORMAL_ONLY_NOT_READY; exception FAIL. No synthetic A receipt/combined PASS. Scope/selection are persisted in state/continuation/cleanup; cleanup rejects changed selection/scope and unselected runs/admissions/preservation/directory claims before any deletion.",
+    "unchanged": "Both nonbuilding preflight manifests/source/producer/artifact/toolchain/path comparisons remain exact. Actual child runner argv, libproc mode, worker/lifecycle/cleanup ownership, wait/grace/reserve and job clock/timeouts are unchanged. Both preexisting cycle directories remain protected by pristine-output refusal. Full/probe workflow predicates, publication-disabled workflows, app/runners and cycle labels are untouched."
+  },
+  "static_inspection": {
+    "method": "Standard-library AST parsing/comparison, read-only Git/source/hash/mode/diff checks; no imports or execution of project modules/functions.",
+    "python_syntax": "Four held Python files parsed; no duplicate new test-method names.",
+    "new_tests": "Eight native orchestration methods and two workflow contract methods added; existing per-manifest drift test expanded to paired/normal-only and individual A/B controls.",
+    "coverage": "Closed defaults/combinations/preallocation rejection; real constructor/state/result selection binding; scoped status and original paired order; synthetic actual B run_native lifecycle/timeout/observer gates with no A resources; missing/insufficient B budget and unselected admission refusal; cleanup selection/scope/unselected footprint refusal; identical three-step workflow input wiring and closed input mutations.",
+    "execution": "NOT_RUN: source/control review only; test methods are synthetic controls, never application proof."
+  },
+  "required_next_steps": [
+    "Independent review by /root/ci_review. Root alone decides whether actual A27/B28 evidence justifies adoption; this candidate does not establish A applicability or authorize a retry.",
+    "If adopted, root runs focused test_native_continuation.py and test_workflow_contract.py in one owned cycle. Workflow change also triggers :shared:transport-p2p:desktopTest repositoryContractFiles; do not reuse label-only no-trigger conclusions.",
+    "Preserve all failed evidence. Before native use: reviewed source/control commit, regenerated committed mechanical inventory, fresh same-source full four-file preflight and independent actual bindings/request review, immediate source/remote/no-overlap guards. No publication workflow.",
+    "Cycle labels remain current27/28 only as held baseline; root must choose independently reviewed never-used output identities for any later execution. Reused A observations remain at their real SHA and are not silently reattributed to the new source."
+  ],
+  "activity": {
+    "canonical_edits": [],
+    "project_imports_or_functions": 0,
+    "tests_run": [],
+    "builds_run": [],
+    "network_api_calls": 0,
+    "dispatches": 0,
+    "workers_started": 0,
+    "cleanup": "Only six assigned held replacements and this review packet written. No build/test/simulator resources allocated; no Gradle/global-cache cleanup warranted. Current canonical source and required evidence preserved."
+  },
+  "readiness": "No readiness change; A27/B28 actual result still pending root review, and strict protection/C05/fullD/physical-device/Store/owner/legal requirements remain unwaived."
+}

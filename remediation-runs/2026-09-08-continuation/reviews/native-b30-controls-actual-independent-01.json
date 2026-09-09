@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_ACTUAL_B30_CONTROL_RECONCILIATION",
+  "reviewer": "/root/portability_review",
+  "execution_owner": "/root",
+  "recorded_at": "2026-09-09T13:29:08.818Z",
+  "status": "B_NORMAL_243_AND_LABEL_1_PASS_CLEANUP_PASS_NOT_NATIVE_APP_PROOF",
+  "findings": [],
+  "scope": "Additive review of actual retained B30 driver execution and one label control. A94 source/functional controls have separate reviewer ownership. No source-correctness campaign repeated and no tests, builds or native queries executed by this reviewer.",
+  "evidence": {
+    "cycle": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a29-b30-controls-01",
+    "receipt": {
+      "file": "receipt.json",
+      "bytes": 311332,
+      "sha256": "2c123aab5829d92c2bed1302fd47818c4c913ffbda61ead025f9525a8c3139e2"
+    },
+    "normal_log": {
+      "file": "normal.log",
+      "bytes": 139939,
+      "sha256": "3da14d3426570a3d34222be411383b40b36aee1923daf371b329f0fd295cd459"
+    },
+    "label_log": {
+      "file": "native_labels.log",
+      "bytes": 326,
+      "sha256": "b6c42af9add74670e9e1abdb64cdd0e27199b7cc8768d73977200e4636fca6e0"
+    },
+    "outer_before_after": {
+      "files": [
+        "control-inputs-before.json",
+        "control-inputs-after.json"
+      ],
+      "bytes_each": 42023,
+      "sha256_each": "112d5622a9561cd5f54d56755973de35989c57f188797db5ff63e51b735e8aa2"
+    },
+    "exit_ledger": {
+      "file": "command-exits.tsv",
+      "bytes": 103,
+      "sha256": "eb7106f5179b8536b530c348ce0265ea797c17cb8d9ab054e669849a4a79c8ec"
+    },
+    "root_result": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a29-b30-controls-01-result.json",
+      "sha256": "c4f75f04c227a16af9d839fe36195ef00596be849fe56262d6c7ad7292ca398e"
+    },
+    "exact_adoption": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/b30-source-adoption-01.json",
+      "bytes": 5581,
+      "sha256": "5946af2c76872677bd41d1ca0288a80e18112b2dc89f3cfa795687320d68463e"
+    }
+  },
+  "actual_tests": {
+    "normal": {
+      "command": "/usr/bin/python3 -B remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py",
+      "exit_code": 0,
+      "seconds": 3.482,
+      "declared": 243,
+      "discovered": 243,
+      "executed": 243,
+      "unique_executed_ids": 243,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "verbose_statuses": {
+        "ok": 243
+      },
+      "by_module": {
+        "test_header_diagnostics": 8,
+        "test_image_diagnostic_orchestration": 18,
+        "test_image_diagnostics": 25,
+        "test_image_text_extent": 8,
+        "test_image_text_layout_diagnostic": 22,
+        "test_kernel_image_regions": 14,
+        "test_kernel_region_failure_diagnostics": 22,
+        "test_normal_launch_controls": 78,
+        "test_owned_tool_paths": 21,
+        "test_sample_literal_star": 7,
+        "test_vmmap_command_failure": 7,
+        "test_xcode26_repetitions": 13
+      },
+      "sorted_ids_compact_json_sha256": "f695875d871509bf83e2f11d16fb344a874a427348ff0f4234350842f7550930"
+    },
+    "id_reconciliation": "Independently extracted all243 verbose executed IDs and statuses; exact equality with both structured declared/discovered lists and source AST declarations. Final structured243/0/0/0, unittest summary/OK and external exit0 agree. No missing, duplicate, skipped or failed ID.",
+    "label": {
+      "id": "scripts.release.tests.test_native_process_probe.ProbeSourceContractTest.test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels",
+      "executed": 1,
+      "exit_code": 0,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0
+    },
+    "combined_scope": "External six-command exit ledger and every root-result log hash reconcile. Batch arithmetic is338 = normal243 + label1 + separately owned A94 (9+9+21+55). This report independently approves the244 B/label executions, not A-specific correctness. The338 descriptors are not asserted globally unique; canonical/companion copy methods overlap."
+  },
+  "meaningful_native_control_execution": {
+    "classification": "Actual Linux C compiler/subprocess/temporary-file control execution, not a macOS SDK build, Darwin ABI measurement or real libproc query.",
+    "basis": "All22 KernelRegionFailureDiagnosticTests methods have actual ok leaves. Their pinned setUpClass unconditionally validates private owned TMPDIR, hashes the candidate C/binder, requires an available compiler without skip, writes the controlled headers/harness, and compiles with -std=c11 -Wall -Wextra -Werror. Nonzero compiler return or any compiler stdout/stderr fails setup. Bounded children execute the compiled candidate and mutants against real temporary thin Mach-O bytes; test oracles parse closed stdout/telemetry, require query-entry errno0 when queried, and reject bad API use. No project code was executed by this reviewer.",
+    "executed_witnesses": [
+      "Original sample-contained prefix and exact40000 file extent execute separately; original sample span24577/end is retained. C-decoded geometry/UUID is compared with actual Python decoding/binding. Segment max5 versus kernel max7 and native flags2 remain separate.",
+      "Six original predicate witnesses reach the synthetic native query; their six removed-predicate mutants are killed by the corresponding oracles. Advancing regions, intermediate oversized extents and4KiB/16KiB rounded extents are rejected; rounding-acceptance mutants are killed.",
+      "Legacy full-structure/incomplete-return, errno/raw-field, closed failure/success schema, exact path/vnode/UID/final-stat and extra-query controls actually execute on valid Mach-O inputs; rejection is not vacuously caused by the new parser.",
+      "Malformed framing/section/UUID/geometry and overflow cases assert zero native queries and descriptor closure. TinyTEXT512 with608-byte header/table uses sample1/region1; its removed-table-bound mutant is killed.",
+      "During-read same-byte/new-inode replacement really changes the pathname inode while preserving bytes; exact artifact-changed-before-query, query0 and close1 are asserted. The harness checks retirement of the correct owned FD with successful close plus EBADF.",
+      "Passing kernel/image tests exercise every-selected binding, overlap versus adjacency, strict UUID/hash/inode/kind/boolean failures, full-file streaming hash with bounded prefix, and target changes during actual pre/post artifact reads. Zero/one helper call and no JSON consumption prevent a later guard from masking either added post-read lifetime check.",
+      "Failure-only diagnostic controls execute their original-exception, interruption, output-replacement/custody and raw-output cleanup oracles. They do not convert synthetic failures or historical B28 failure into runtime provenance."
+    ],
+    "retention_limit": "Compiler selection is source-bound (clang, otherwise cc), but actual compiler path/version and each child telemetry/compile output are not separately retained. Their asserted outcomes are evidenced through executed pinned test methods, not presented as independent native logs. Compiled fixtures were task-owned and retired."
+  },
+  "binding": {
+    "source_commit": "52f60924a89f788aab78c826096f34a32af40292",
+    "source_tree": "02afb528b429eecb9c1afe58217490b07f4eb190",
+    "branch": "fix/local-readiness-2026-09-07",
+    "source_scope": "Dirty working-tree-bound execution, NOT pristine commit52f or a new frozen native source. Receipt preserves15 modified tracked paths; new controls are covered by the explicit manifests.",
+    "source_rows": 829,
+    "source_manifest_sha256": "1c4935790e87803c5e28de448353c0baf161b2282e7ffca7c87dbb442ad6064b",
+    "tracked_diff_sha256": "88b029c975df77749973b2005e525ef8752bc81f68c65eb54d2714249d8d2a1e",
+    "outer_control_rows": 217,
+    "normal_control_rows": 98,
+    "actual_imports": 41,
+    "lane_rows": 1,
+    "lane_manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912",
+    "reconciliation": "Source_before/source_after, runner_before/runner_after and normal before/after objects match exactly; outer217 files are byte-identical. Independently rehashed all829 source,217 outer,98 normal and1 lane rows with no mismatch (overlapping sets, not1145 distinct files). Independently enumerated the current Git-selected source set under the recorded exclusion contract: exact829-row equality and matching compact-JSON digest. Current tracked diff digest also matches. All41 actual imports belong to the98 normal rows, themselves a subset of217.",
+    "adopted_ten": "All ten canonical bytes equal adoption receipt, author seal and held draft; all ten occur in the bound manifests. No source rereview was needed.",
+    "source_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-text-extent-independent-01.json",
+      "sha256": "dfcfb82f20c070c66af35396aa3f973c9ae6565fad32ca42242a4fe2d85f9260"
+    },
+    "regression_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-text-extent-tests-independent-01.json",
+      "sha256": "4a8c3d1c98f48928259bbfe5db6d6f7b9101a780df1b8b0216655a7e6f0b7084"
+    }
+  },
+  "cleanup": {
+    "times": {
+      "started_at": "2026-09-09T13:16:22.522537+00:00",
+      "finished_at": "2026-09-09T13:16:38.492434+00:00",
+      "stopped_at": "2026-09-09T13:16:39.191901+00:00",
+      "cleanup_completed_at": "2026-09-09T13:16:39.294927+00:00"
+    },
+    "immediate_gradle_stop_exit": 0,
+    "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+    "stop_log": "No Gradle daemons are running.",
+    "finish_to_stop_completion_seconds": 0.699467,
+    "stop_completion_to_cleanup_completion_seconds": 0.103026,
+    "timing_limit": "The receipt records completion, not a separate stop-start timestamp. Source-bound finalizer invokes ./gradlew --stop immediately after recording finished_at.",
+    "retained_receipt": {
+      "stop_exit_code": 0,
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "artifact_workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "outputs_before": [],
+      "removed_outputs": [],
+      "retained_outputs": [],
+      "remaining_outputs": [],
+      "cleanup_errors": [],
+      "deferred_signals": []
+    },
+    "native_fixture_cleanup": "Native setUpClass registers its TemporaryDirectory cleanup before compilation; the243-test successful completion includes class cleanup. Compiler scratch and synthetic binaries are nested beneath the cycle-owned scratch; that parent is now absent.",
+    "external_composition_cleanup": "Four allocation markers and four PASS cleanup markers reconcile exactly by path/device/inode/UID, parent_removed=true and workers_started0. Only cleanup custody is reviewed here, not A-specific test semantics.",
+    "current_exact_path_inspection": "Cycle scratch and all four specifically recorded external composition parents are absent. All16 task-owned live build output paths are absent. No process queries/signals or global-cache inspection/deletion were performed by reviewer.",
+    "gradle_clean": "No Gradle build outputs were created (before/removed/retained/remaining lists empty); exact scratch cleanup was used without starting a clean daemon. Both test-receipts.json and artifact-receipts.json contain[]; no JVM/build/artifact PASS is inferred.",
+    "errors": []
+  },
+  "limitations": "This closes actual Linux control execution only. B28 remains FAIL; B30 real platform execution, fresh frozen source/control bindings, final combined qualification and native provenance are still pending. These synthetic observations do not measure Darwin struct size, query Parlor mappings or prove simulator/device/Store readiness. Physical-device, Store/signing/publication, application identity collision and separate owner/legal requirements remain unwaived.",
+  "reviewer_actions": "Read-only retained source/evidence and GIT_OPTIONAL_LOCKS=0 identity observation, stdlib AST/JSON/hash/arithmetic/path-absence checks, plus this explicitly assigned additive report. No tests/imported project functions/compilers/native tools/network/Actions/adoption/process queries/cleanup by reviewer.",
+  "conclusion": "Accept normal243 plus label1 actual PASS and cleanup at the exact recorded working-tree/control scope. Zero reconciliation findings. Preserve failed historical receipts and require fresh frozen-source real Apple evidence before any B provenance claim."
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "kind": "HELD_MECHANICAL_NEXT_PAIRED_CYCLE_LABEL_DELTA",
+  "author": "/root/ci_workflow",
+  "recorded_at": "2026-09-09T11:54:54.899157+00:00",
+  "status": "HELD_NOT_ADOPTED_PENDING_INDEPENDENT_REVIEW",
+  "base_commit": "52f60924a89f788aab78c826096f34a32af40292",
+  "files": [
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "source_sha256": "23569ba9a718bcbbd3b6d7aa08bb73ef9f0882019779d1b7f7c53e24b979e35e",
+      "held_sha256": "d6d70592d10b4cb71c42c6b5dab07de1ea58fc8b2fb044eb9dc89e6a4b2b799e",
+      "bytes": 64697,
+      "git_mode": "100644"
+    },
+    {
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "source_sha256": "153c23a2e8fd314923b2fb57a973e2edb7ae4eff3e386241b0fdab4ed212b6cf",
+      "held_sha256": "02d9dc8b547f9c8b367e05cf1bead6a4f51d47a4bb4849af01fa34c579b38570",
+      "bytes": 18880,
+      "git_mode": "100644"
+    },
+    {
+      "path": "scripts/release/tests/test_native_process_probe.py",
+      "source_sha256": "669d6448c9d19506e4779bf1566bb0f8e4936ce0d1665d274fdec8b94f31923b",
+      "held_sha256": "460c04643aca548e528a8b2fc7fd7037b99e82959aaf9f5c48c50e8027e6f64c",
+      "bytes": 43371,
+      "git_mode": "100644"
+    }
+  ],
+  "diff": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-a29-b30-label-01/change.diff",
+    "sha256": "5c2f0b9f68eebd6587a18f51fb97249bfdffb163d1c64dc4b87fb0da43b033fa",
+    "bytes": 1970
+  },
+  "changes": "Exactly one27->29 and one28->30 substitution per file; all remaining bytes/modes preserved. Only adapter CYCLES, matching existing test assertion and next-cycle guidance change.",
+  "scope": "Paired l08 then normal adapter remains unchanged. Normal-only candidate remains held/unadopted. No workflow, app/runner, runtime acceptance, toolchain, source/control, budgets, ownership, cleanup or probe scope change.",
+  "verification": "Read-only Git/byte/hash and standard-library AST syntax inspection only. No project functions/imports/tests/builds/network/dispatch. Existing label assertion may be batched by root with forthcoming controls; no new test added.",
+  "planned_paths_absent": [
+    "remediation-runs/2026-09-08-continuation/evidence/ios-readiness-29",
+    "remediation-runs/2026-09-08-continuation/evidence/ios-readiness-30"
+  ],
+  "required_next": "ci_review independent exact-diff review, then root decides adoption. Existing A27/B28 receipts remain unchanged historical observations; new labels are not runtime proof or dispatch approval. Reviewed-source and mechanical-inventory commits plus fresh independently reviewed bindings are still required.",
+  "cleanup": "Only three held replacements and this assigned review packet written; no build/test/simulator/worker resources allocated, no cleanup cycle required. Canonical52f source and all evidence preserved."
+}
