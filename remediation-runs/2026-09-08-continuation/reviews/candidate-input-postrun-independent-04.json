@@ -1,0 +1,669 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_ACCEPTANCE_OF_ACTUAL_C04_FROZEN_CANDIDATE_INPUT_CHAIN",
+  "reviewer": "/root/fixture_review",
+  "execution_coordinator": "/root",
+  "postrun_author": "/root/dependency_chain",
+  "status": "ACCEPTED_ACTUAL_SCOPED_C04_CHAIN_NOT_APPLICATION_RUNTIME",
+  "findings": [],
+  "scope": [
+    "Independently reviewed completed raw gate/invocation output and the consumer, adapter, schema-bootstrap and outer-lane receipts and logs; inspected source that couples these results and preserves ownership, integrity and cleanup.",
+    "Reconciled the actual consumed-input digest to all 511 retained admission rows and current file bytes, all fourteen current controls/schemas, all 828 current source rows and exact Git path scope, and complete producer/admission/outer before-after source and runner objects.",
+    "No producer/schema/consumer rerun, synthetic test, application build/runtime, native or Store execution was performed by this reviewer. Acceptance is exact frozen resolved-input/source-notice scope, not full release qualification."
+  ],
+  "source_freeze": {
+    "commit": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+    "tree": "c19beea4647ce882c02d8751d1bf82c22484b52b",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_count": 828,
+    "source_manifest_sha256": "d7d6bd8802fb36ab75e566adc183500db24555dce36f0fafd0a1ac91034bf08e",
+    "runner_manifest_count": 1,
+    "runner_manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912",
+    "full_current_and_retained_source_runner_equality": true,
+    "all14_controls_and_schemas_equal": true,
+    "method": "Read-only Git plus stdlib hash/path/stat comparison of every retained source row and exact lane scope; no project identity() import/invocation.",
+    "complete_retained_source_runner_locations": [
+      "remediation-runs/2026-09-08-continuation/reviews/candidate-input-current-bindings-04.json#/capture",
+      "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-04/receipt.json#/source_before",
+      "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-04/receipt.json#/source_after",
+      "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-04/receipt.json#/runner_before",
+      "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-04/receipt.json#/runner_after"
+    ],
+    "control_pin_location": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-current-bindings-04.json#/all14_control_and_schema_pins",
+    "remote_confirmation": "Not in this review; no network or Git remote operation authorized."
+  },
+  "administrative_execution": {
+    "normalization_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-admission-normalization-independent-04.json",
+      "sha256": "038b7b8534b363a3cae1db248ecfbb4e52c06e480a7e569b83cebd4e9fca083b",
+      "bytes": 18204
+    },
+    "exact_gate": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-immediate-admission-04.py",
+      "sha256": "290d62d00a83a4c7fc77294fea4c8fc2711f9443ed487e11007f1b1b53e46f84",
+      "bytes": 9668
+    },
+    "actual_invocation": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-invocation-04.json",
+      "sha256": "2c7e3f0222ab2eadcabab82cf93ddf262eb8e6ee95f1fc659fbeaeeed502b358",
+      "bytes": 2846
+    },
+    "fresh_gate_output": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-current-bindings-04.json",
+      "sha256": "59750836211a0e4773c624b4bb0934859545b0e47d53ae6d25ccc3a3b090a71b",
+      "bytes": 306325
+    },
+    "invocation_facts": "The retained invocation has exactly two commands: one approved290d administrative gate, then the unchanged previously approved C04 consumer command through the ordinary lane. Both process exits are 0; no candidate retry is recorded.",
+    "gate_stdout": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-admission-execution-04.log",
+      "sha256": "4d57c31ed72318279899a1c98b63c6f1a6313b137dda5f7e6cbfde933312ca42",
+      "bytes": 354
+    },
+    "gate_stderr": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-admission-execution-04.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "gate_stderr_empty": true,
+    "binding": {
+      "path": "remediation-runs/2026-09-08-continuation/candidate-input-binding-04.json",
+      "sha256": "641d4a894084f6d4fc76360d964b21e1920faa74912bff1d463a1e826351bc0d",
+      "bytes": 1517
+    },
+    "binding_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-independent-04.json",
+      "sha256": "189086dea69cd62fef4c56dc85c9e3034d31ead889c5d282fed053308a4fa987",
+      "bytes": 33190
+    },
+    "gate_interpretation": "Gate output correctly states candidate NOT_RUN because it precedes the actual consumer. Its exact command/capture/full511 rows and fourteen pins matched the subsequent actual run; this historical state is not relabeled as runtime success.",
+    "earlier_administrative_failure": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-preexecution-failure-04.json",
+        "sha256": "d8d57bdcc16ca04a530d0ea550f399af0e55cc9bdee92d1141e05699e63b52db",
+        "bytes": 116469
+      },
+      "status": "FAILED_PREEXECUTION_ASSERTION_BEFORE_CANDIDATE",
+      "preserved": true,
+      "classification": "Tuple/list representation mismatch in the original administrative comparison; not a consumer failure/retry. Successful later execution does not erase the failure.",
+      "evidence_limit": "The original full stdin script was not retained; only the root-reported traceback/comparison excerpt and investigation receipt are available. The excerpt is not the full original command."
+    }
+  },
+  "actual_four_receipt_acceptance": {
+    "conjunction_satisfied": true,
+    "consumer": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-04/candidate-input-verification.json",
+        "sha256": "7bf1ab22048dc6cb5718b579cab124dce7d456ccbe055de5ebf724c3a3ca5248",
+        "bytes": 8078
+      },
+      "status": "PASS_SCOPED_CANDIDATE_INPUTS",
+      "binding_and_source_exact": true,
+      "actual_four_official_schema_validations": true,
+      "no_unresolved": true
+    },
+    "adapter": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-04/candidate-prerequisites.json",
+        "sha256": "c36241294a4bc4910618b78e0d209f97d7c694c1cd314fa5ab49e5d3ec0ac8dc",
+        "bytes": 9943
+      },
+      "status": "PASS_SCOPED_CANDIDATE_INPUT_EXECUTION",
+      "consumer_exit_code": 0,
+      "error_type_present": false,
+      "ephemeral_parser_cleanup": true,
+      "frozen_driver_helper_consumer_hashes_matched": true
+    },
+    "bootstrap": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-04/schema-base-prerequisites.json",
+        "sha256": "f53cdcbcb88f824b94d4087f0e60b924e6441da1b044b942132be158c1268a4e",
+        "bytes": 28590
+      },
+      "status": "PASS_OWNED_SCHEMA_PREREQUISITES",
+      "mode": "candidate",
+      "inner_exit_code": 0,
+      "error_type_present": false,
+      "pending_distribution_present": false,
+      "controls_before_after_equal_current": true,
+      "control_count": 6,
+      "base_package_cleanup": true
+    },
+    "outer": {
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-04/receipt.json",
+        "sha256": "fd3908822d2e2c125a5a09ea26644ff615228b6c1a906d3b210590b7acdf1afa",
+        "bytes": 305572
+      },
+      "status": "PASS",
+      "exit_code": 0,
+      "stop_exit_code": 0,
+      "error_present": false,
+      "source_before_after_complete_equal": true,
+      "runner_before_after_complete_equal": true,
+      "source_changed_during_cycle": false,
+      "runner_changed_during_cycle": false,
+      "outputs_before": [],
+      "removed_outputs": [],
+      "retained_outputs": [],
+      "remaining_outputs": [],
+      "cleanup_errors": [],
+      "deferred_signals": [],
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "artifact_workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      }
+    },
+    "output_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-04/gradle.log",
+      "sha256": "1366576e7c5a743d9620e0d1849edc379e1dcc369335c2c0176c80d87d0a20b8",
+      "bytes": 289
+    },
+    "controller_log": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-04-controller.log",
+      "sha256": "fb8a1286ed9faef094f4c38532e08bde374f3a72c7019aa33c9591bdfc83678c",
+      "bytes": 2335
+    },
+    "log_reconciliation": "The actual command log contains the consumer, adapter and bootstrap success/exit/cleanup summaries. The controller JSON equals the complete outer receipt with only the two large source snapshots omitted, exactly as the pinned lane prints it.",
+    "source_control_behavior": [
+      "The bound candidate consume() checks producer receipts/commands, strict artifact pins, graph completion/source, actual declaration inputs, exact generated BOM content, official schemas, declaration draft and source notices, then rereads every Inputs.read file and directory before emitting the consumed-manifest digest.",
+      "The bound adapter invokes actual consumer.main with the exact binding, not the helper's synthetic-test entrypoint, and checks consumer exit, helper/consumer controls and optional-parser cleanup.",
+      "The bound bootstrap is in candidate mode, checks coupled actual consumer/adapter receipts, all package bytes and the eight actual loaded module hashes before cleanup, and requires controls_before == controls_after plus successful base cleanup.",
+      "The bound outer lane invokes the Python bootstrap under coordinated ownership, executes JDK runtime/compiler probes, immediately invokes ./gradlew --stop in finalization, records owned worker/artifact cleanup, removes owned scratch, and captures complete final source/runner identities."
+    ]
+  },
+  "actual_candidate_inputs": {
+    "closure": {
+      "count": 511,
+      "bytes": 5567850,
+      "sha256": "a1cd2e26dd6d6264dea7213df114772643575a362787f9ee2ca340576e94b94a",
+      "directory_counts": [
+        5,
+        465,
+        3,
+        26
+      ],
+      "actual_consumer_digest_equals_admission_all_rows_and_current": true,
+      "recipe": "path-sorted [repository-relative path,SHA256,byte length], compact JSON separators comma/colon, UTF8, no newline"
+    },
+    "closure_evidence": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-current-bindings-04.json#/prospective_input_closure/files",
+    "closure_limit": "The 511 count is the actual consumer Inputs.read ledger reconciled to retained admission rows/current bytes, not a complete inventory of all Python transitive imports or every source file. Full source and separate schema bootstrap/import bindings are checked independently.",
+    "graphs": [
+      {
+        "graph": "androidRelease",
+        "graph_sha256": "2db040f4b6506b9fb8d66984903e13c8f2e36ef04821b30da2b0406759d3e93f",
+        "sbom_sha256": "96983f9c92840e07f3ddbd8df88cb3d311b48d7ffba1880b64b9983b64b82f35",
+        "components": 239,
+        "artifacts": 129,
+        "status": "PASS"
+      },
+      {
+        "graph": "iosArm64",
+        "graph_sha256": "55285a18edbf8b24d9c0b88e3eacd44b4e800abbf1b3cc00afe8ff014c017b98",
+        "sbom_sha256": "828b832641877852c35c99752d443b3e639cf6319c2992c905a7219ff5f604a9",
+        "components": 167,
+        "artifacts": 81,
+        "status": "PASS"
+      },
+      {
+        "graph": "iosSimulatorArm64",
+        "graph_sha256": "743ac975fb776f933f21837ac332834ac5ec35205ee59e7dbd8377a4168c0976",
+        "sbom_sha256": "ddcedab13398ffa4b63df4486b0824ed9dd8a766ffbcf59d8340f6a04e018b50",
+        "components": 167,
+        "artifacts": 81,
+        "status": "PASS"
+      },
+      {
+        "graph": "iosX64",
+        "graph_sha256": "5aedb0c449c0eea65e9aa03433541602202140c0059298ce97ff1949ad7e9f64",
+        "sbom_sha256": "9163e0e7361f58c6a9ab7292898ee13cc48e9a1d35afcb35d31779b188f6e29c",
+        "components": 167,
+        "artifacts": 81,
+        "status": "PASS"
+      }
+    ],
+    "maven_components": 456,
+    "publisher_poms": 459,
+    "metadata_bytes": 1507794,
+    "unresolved": [],
+    "unchanged_producers": {
+      "export": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-04/receipt.json",
+        "sha256": "509f37bc84dc69bdb5935406ea81656a91fbb971eb69202820ddf8ad22f782dd",
+        "bytes": 306150
+      },
+      "render": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-04/receipt.json",
+        "sha256": "c3cb580003f48c5f7eb7c884a435261dca96a870b2d4c009dcf1d4f03728b35d",
+        "bytes": 305621
+      },
+      "scope": "Actual prior producer receipts reopened and rehashed; both complete before/after source/runner objects equal admission/current/consumer outer objects. No producer rerun or new legal/binary completeness claim."
+    },
+    "schema_validation": {
+      "schemas": {
+        "bom-1.6.schema.json": "3e92dddbc30cf7f6a02b80f0942b1a4cfd4fb1c26f1dfc4310afa9d613cafb93",
+        "spdx.schema.json": "baa9d3bd1ed57b6751b0887edead6b5063ff53ff7429cf85d476c6c94af0166e",
+        "jsf-0.82.schema.json": "8bae002c25e723db7ee1f26afde680ae1a2b1a8f6b4b4b0fd65dc3becb090aae"
+      },
+      "jsonschema_version": "4.25.1",
+      "referencing_version": "0.36.2",
+      "actual_formats": {
+        "registered": [
+          "date",
+          "email",
+          "idn-email",
+          "ipv4",
+          "ipv6",
+          "iri",
+          "iri-reference",
+          "regex",
+          "time",
+          "uuid"
+        ],
+        "encountered": [
+          "iri-reference"
+        ],
+        "missing": []
+      },
+      "behavior": "Pinned official CycloneDX1.6 schema and both pinned referenced schema files are loaded into a local Registry with no remote retrieval. The reviewed consumer calls actual validator.iter_errors for each of the four exact BOMs; graph PASS rows are appended only after successful validation.",
+      "coverage_limit": "Only iri-reference was encountered in the executed documents. Ten registered checkers do not mean ten formats were exercised. Format observations are a cumulative set, not per-instance or per-BOM counts. Loading three pinned schemas does not imply separate exhaustive tests of all their branches."
+    },
+    "source_notices": {
+      "status": "PASS",
+      "manifest_sha256": "4b501223b3841017477a226515d3758bc60848fe00d579fac3152a81928d6406",
+      "catalog_sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "catalog_raw_sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "catalog_hash_policy": "CRLF_TO_LF",
+      "resource_namespace": "com.parlor.app.resources",
+      "resource_directory": "composeApp/src/commonMain/composeResources/files/legal",
+      "resource_count": 26,
+      "total_bytes": 99515,
+      "all26_current_size_and_hash_rows_match": true,
+      "limit": "Source-notice/declaration integrity only; not final binary resource embedding or legal redistribution approval."
+    },
+    "resolved_p2pkit": {
+      "version": "0.7.0-rc3",
+      "distinct_maven_variants": 10,
+      "actual_graph_list_matches_author": true,
+      "scope": "Same pinned Maven Central graph bytes; no dependency substitution or source change in C04."
+    }
+  },
+  "owned_schema_prerequisites": {
+    "platform_scope": "Pinned bootstrap enforces Linux x86_64 CPython3.12, glibc>=2.17 and -B before package setup. No different-platform schema-bootstrap compatibility is inferred.",
+    "base_packages": [
+      {
+        "distribution": "jsonschema",
+        "version": "4.25.1",
+        "url": "https://files.pythonhosted.org/packages/bf/9c/8c95d856233c1f82500c2450b8c68576b4cf1c871db3afac5c34ff84e6fd/jsonschema-4.25.1-py3-none-any.whl",
+        "bytes": 90040,
+        "sha256": "3fba0169e345c7175110351d456342c364814cfcf3b964ba4587f22915230a63",
+        "expanded_bytes": 475270,
+        "member_count": 42
+      },
+      {
+        "distribution": "referencing",
+        "version": "0.36.2",
+        "url": "https://files.pythonhosted.org/packages/c1/b1/3baf80dc6d2b7bc27a95a67752d0208e410351e3feb4eb78de5f77454d8d/referencing-0.36.2-py3-none-any.whl",
+        "bytes": 26775,
+        "sha256": "e8699adbbf8b5c7de96d8ffa0eb5c158b3beafce084968e2ea8bb08c6794dcd0",
+        "expanded_bytes": 115431,
+        "member_count": 19
+      },
+      {
+        "distribution": "attrs",
+        "version": "25.3.0",
+        "url": "https://files.pythonhosted.org/packages/77/06/bb80f5f86020c4551da315d78b3ab75e8228f89f0162f2c3a819e407941a/attrs-25.3.0-py3-none-any.whl",
+        "bytes": 63815,
+        "sha256": "427318ce031701fea540783410126f03899a97ffc6f61596ad581ac2e40e3bc3",
+        "expanded_bytes": 219126,
+        "member_count": 35
+      },
+      {
+        "distribution": "jsonschema-specifications",
+        "version": "2025.4.1",
+        "url": "https://files.pythonhosted.org/packages/01/0e/b27cdbaccf30b890c40ed1da9fd4a3593a5cf94dae54fb34f8a4b74fcd3f/jsonschema_specifications-2025.4.1-py3-none-any.whl",
+        "bytes": 18437,
+        "sha256": "4653bffbd6584f7de83a67e0d620ef16900b390ddc7939d56684d6c81e33f1af",
+        "expanded_bytes": 47261,
+        "member_count": 28
+      },
+      {
+        "distribution": "rpds-py",
+        "version": "0.27.1",
+        "url": "https://files.pythonhosted.org/packages/ed/7b/8f4fee9ba1fb5ec856eb22d725a4efa3deb47f769597c809e03578b0f9d9/rpds_py-0.27.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+        "bytes": 386883,
+        "sha256": "466bfe65bd932da36ff279ddd92de56b042f2266d752719beb97b08526268ec5",
+        "expanded_bytes": 1046710,
+        "member_count": 8
+      },
+      {
+        "distribution": "typing-extensions",
+        "version": "4.15.0",
+        "url": "https://files.pythonhosted.org/packages/18/67/36e9267722cc04a6b9f15c7f3441c2363321a3ea07da7ae0c0707beb2a9c/typing_extensions-4.15.0-py3-none-any.whl",
+        "bytes": 44614,
+        "sha256": "f0fa19c6845758ab08074a0cfa8b7aecb71c999ca73d62883bc25cc018c4e548",
+        "expanded_bytes": 178133,
+        "member_count": 5
+      }
+    ],
+    "base_member_count": 137,
+    "base_member_evidence": "All137 actual [path,bytes,SHA256] rows match the unchanged frozen research wheel inspection and the literal bootstrap wheel URL/version/size/SHA256 pins; no duplicate member names.",
+    "actual_imports": {
+      "jsonschema": {
+        "path": "jsonschema/__init__.py",
+        "sha256": "a7e470e134bfd0e3c76482722260d6b1d5a099de823d61cc5cbabb06e4314c67"
+      },
+      "referencing": {
+        "path": "referencing/__init__.py",
+        "sha256": "e4864a5da007fc55b20894646939f55dca6d2df83d72f78b6fdbb99d853124ab"
+      },
+      "attr": {
+        "path": "attr/__init__.py",
+        "sha256": "7ce608bedd5e192a90adee2e092dec256299d26c00b82f140faa9b6b9392f7f5"
+      },
+      "attrs": {
+        "path": "attrs/__init__.py",
+        "sha256": "a9e4096783b4f327334a7f38d2ff5b60e699c9113cd56b158be402ad8de4ac25"
+      },
+      "jsonschema_specifications": {
+        "path": "jsonschema_specifications/__init__.py",
+        "sha256": "aa84c1d83298eeabcdac684c3c7ea0b6600944b8a599543e7c56704faaf2ab0d"
+      },
+      "rpds": {
+        "path": "rpds/__init__.py",
+        "sha256": "c373205d6ee5a530880b0d0a5dbc36d105f9ef7fe46ec12758878cb0202e82f3"
+      },
+      "typing_extensions": {
+        "path": "typing_extensions.py",
+        "sha256": "433d11d170d3a24d2eb065ebc1bfe848cea7e3d7ce68567ab52bea2d4c2f7ed8"
+      },
+      "rpds.rpds": {
+        "path": "rpds/rpds.cpython-312-x86_64-linux-gnu.so",
+        "sha256": "1a5acf297faad922c1335dc00cc2ae6e24dd907f77576bef0e200bd07e0f0e5c"
+      }
+    },
+    "import_hash_conclusion": "All eight recorded loaded module paths/SHA256 values, including rpds.rpds's CPython3.12 Linux native extension, correspond exactly to the recorded base-package member inventory. Source verifies their scratch origin and complete package recheck before cleanup.",
+    "optional_packages": [
+      {
+        "distribution": "rfc3987-syntax",
+        "version": "1.1.0",
+        "url": "https://files.pythonhosted.org/packages/7e/71/44ce230e1b7fadd372515a97e32a83011f906ddded8d03e3c6aafbdedbb7/rfc3987_syntax-1.1.0-py3-none-any.whl",
+        "bytes": 8046,
+        "sha256": "6c3d97604e4c5ce9f714898e05401a0445a641cfa276432b0a648c80856f6a3f",
+        "uncompressed_bytes": 18424,
+        "member_count": 9
+      },
+      {
+        "distribution": "lark",
+        "version": "1.2.2",
+        "url": "https://files.pythonhosted.org/packages/2d/00/d90b10b962b4277f5e64a78b6609968859ff86889f5b898c1a778c06ec00/lark-1.2.2-py3-none-any.whl",
+        "bytes": 111036,
+        "sha256": "c2276486b02f0f1b90be155f2c8ba4a8e194d42775786db622faccd652d8e80c",
+        "uncompressed_bytes": 350066,
+        "member_count": 46
+      }
+    ],
+    "optional_member_count": 55,
+    "optional_evidence": "Both recorded wheel identities match the literal pinned helper values; all55 member rows were inspected for unique names, roots, byte totals and SHA256 fields. The unchanged helper verifies fetched wheel bytes and owned import origin at runtime.",
+    "limits": "Raw ephemeral installed files/wheels removed by owned cleanup; review reconciles recorded actual members/import hashes to frozen control/research, no refetch/reinstall/reimport. Optional import byte hashes are not retained."
+  },
+  "timing": {
+    "chronological_times_in_execution_order": [
+      "2026-09-09T02:47:48.406684+00:00",
+      "2026-09-09T02:47:49.277226+00:00",
+      "2026-09-09T02:47:49.325520+00:00",
+      "2026-09-09T02:47:49.329786+00:00",
+      "2026-09-09T02:47:49.409669+00:00",
+      "2026-09-09T02:47:50.448597+00:00",
+      "2026-09-09T02:47:52.056610+00:00",
+      "2026-09-09T02:48:06.724648+00:00",
+      "2026-09-09T02:48:06.726789+00:00",
+      "2026-09-09T02:48:06.748880+00:00",
+      "2026-09-09T02:48:06.850960+00:00",
+      "2026-09-09T02:48:07.546887+00:00",
+      "2026-09-09T02:48:07.751983+00:00",
+      "2026-09-09T02:48:07.980516+00:00",
+      "2026-09-09T02:48:07.981280+00:00",
+      "2026-09-09T02:49:24.108893+00:00"
+    ],
+    "ordering_checked": true,
+    "outer_command_finished_at": "2026-09-09T02:48:06.850960+00:00",
+    "gradle_stop_completed_at": "2026-09-09T02:48:07.546887+00:00",
+    "seconds_command_finish_to_stop_completion": 0.695927,
+    "cleanup_completed_at": "2026-09-09T02:48:07.751983+00:00",
+    "note": "Stop start time is not independently retained; the reviewed lane source schedules stop immediately in finalization and the raw receipt records its completion."
+  },
+  "cleanup": {
+    "root_completion": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-root-completion-04.json",
+      "sha256": "1279e48587d7860d9f931b330d6a12cb530aa0527a174d03e4b20055ad007a42",
+      "bytes": 3144
+    },
+    "stop_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-04/stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "bytes": 31
+    },
+    "stop_exit_code": 0,
+    "stop_log_text": "No Gradle daemons are running.\n",
+    "exact20_parent_live_paths": [
+      {
+        "path": "build",
+        "result": "ENOENT",
+        "method": "lstat and lexists"
+      },
+      {
+        "path": "build-logic/build",
+        "result": "ENOENT",
+        "method": "lstat and lexists"
+      },
+      {
+        "path": "build-logic/convention/build",
+        "result": "ENOENT",
+        "method": "lstat and lexists"
+      },
+      {
+        "path": "composeApp/build",
+        "result": "ENOENT",
+        "method": "lstat and lexists"
+      },
+      {
+        "path": "game-modes/mafia/build",
+        "result": "ENOENT",
+        "method": "lstat and lexists"
+      },
+      {
+        "path": "game-modes/whodunit/build",
+        "result": "ENOENT",
+        "method": "lstat and lexists"
+      },
+      {
+        "path": "iosApp/build",
+        "result": "ENOENT",
+        "method": "lstat and lexists"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-04/scratch",
+        "result": "ENOENT",
+        "method": "lstat and lexists"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-export-linux-04/scratch",
+        "result": "ENOENT",
+        "method": "lstat and lexists"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-dependency-render-linux-04/scratch",
+        "result": "ENOENT",
+        "method": "lstat and lexists"
+      },
+      {
+        "path": "shared/content/build",
+        "result": "ENOENT",
+        "method": "lstat and lexists"
+      },
+      {
+        "path": "shared/core/build",
+        "result": "ENOENT",
+        "method": "lstat and lexists"
+      },
+      {
+        "path": "shared/design-system/build",
+        "result": "ENOENT",
+        "method": "lstat and lexists"
+      },
+      {
+        "path": "shared/engine-testing/build",
+        "result": "ENOENT",
+        "method": "lstat and lexists"
+      },
+      {
+        "path": "shared/engine/build",
+        "result": "ENOENT",
+        "method": "lstat and lexists"
+      },
+      {
+        "path": "shared/networking-testing/build",
+        "result": "ENOENT",
+        "method": "lstat and lexists"
+      },
+      {
+        "path": "shared/networking/build",
+        "result": "ENOENT",
+        "method": "lstat and lexists"
+      },
+      {
+        "path": "shared/session/build",
+        "result": "ENOENT",
+        "method": "lstat and lexists"
+      },
+      {
+        "path": "shared/storage/build",
+        "result": "ENOENT",
+        "method": "lstat and lexists"
+      },
+      {
+        "path": "shared/transport-p2p/build",
+        "result": "ENOENT",
+        "method": "lstat and lexists"
+      }
+    ],
+    "actual_cleanup_flags": {
+      "optional_parser": true,
+      "base_packages": true
+    },
+    "owned_worker_results": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "artifact_worker_results": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "remaining_outputs": [],
+    "retained_outputs": [],
+    "cleanup_errors": [],
+    "deferred_signals": [],
+    "scope_limit": "Random schema-base-/schema-parsers- child directory names were not retained; no child identity is invented. Actual cleanup flags plus independent ENOENT checks of their exact candidate scratch parent substantiate removal. The twenty observations cover owned live build outputs and candidate/producer scratch parents only.",
+    "no_unrelated_cleanup": true,
+    "no_second_stop_required_by_reviewer": "Reviewer ran only read-only inspections; no build cleanup or toolchain execution was started."
+  },
+  "actual_execution_vs_tests": {
+    "executed": "One reviewed administrative gate and one actual bound C04 candidate input consumer, including real official-schema/source-notice verification and owned schema prerequisite acquisition/imports; JDK21/java and javac21.0.12 probes and Gradle stop executed by the outer lane.",
+    "test_receipts": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-04/test-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    "artifact_receipts": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-04/artifact-receipts.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    "test_and_artifact_receipts": [],
+    "not_run_in_this_cycle": [
+      "synthetic schema control unit tests",
+      "application unit or integration tests",
+      "Gradle build/compile/test task",
+      "final-binary package qualification",
+      "iOS L08 or Debug libproc application runtime",
+      "physical-device, signing or Store operation"
+    ],
+    "skipped_test_count": "Not applicable: no test suite invoked, not zero-skips evidence from a test execution.",
+    "toolchain_logs": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-04/java-toolchain.log",
+        "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c",
+        "bytes": 2026
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/final-candidate-input-linux-04/javac-toolchain.log",
+        "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755",
+        "bytes": 14
+      }
+    ]
+  },
+  "independence_and_preservation": {
+    "observed_at_start": "2026-09-09T02:58:56.944017+00:00",
+    "observed_at_end": "2026-09-09T02:58:57.458282+00:00",
+    "unique_files_rehashed": 1333,
+    "author_reviewer_different": true,
+    "activity": "Read-only Git and stdlib AST/JSON/hash/stat/path operations, including literal metadata extraction only. No project module import, extracted-function execution, tests/builds, schema validation rerun, network, cleanup or source/ledger/index mutation.",
+    "inspection_error": "Three read-only reviewer comparisons initially failed because of reviewer assumptions: an extra argv slice element, sorted rather than retained admission key order for author bookkeeping hashes, and an assumed inventory filename. Actual indexed argv, hash serialization and read-only Git delta identified the correct values; corrected comparisons succeeded. These were inspection AssertionErrors, not project/schema/test failures, and caused no evidence/source modification or project execution.",
+    "only_write": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-postrun-independent-04.json",
+    "preservation": "All source, prior failed administrative receipt, producer and candidate raw receipts/logs, archived build reports and other-agent evidence preserved. No temporary package/worker/simulator resources created by reviewer.",
+    "observation_windows": {
+      "main": {
+        "started_at": "2026-09-09T02:58:56.944017+00:00",
+        "finished_at": "2026-09-09T02:58:57.458282+00:00",
+        "unique_files_rehashed": 1333
+      },
+      "held_author_reconciliation": {
+        "finished_at": "2026-09-09T03:08:11.520641+00:00",
+        "unique_repository_reference_files_rehashed": 69
+      }
+    },
+    "write_time_recheck": "All22 primary artifacts plus held author report rehashed; all828 source rows, all14 control/schema pins and all511 input rows still match. All20 exact paths remain ENOENT; HEAD/tree08d/c19 and clean tracked checkout rechecked before exclusive report write."
+  },
+  "decision": {
+    "accepted": "The four-receipt postrun conjunction required by binding review189086de is satisfied for this exact frozen08d source/control/producer binding and the first recorded actual C04 invocation.",
+    "workstream_C": "Fresh dependency export, rendering and actual candidate-consumer chain accepted within resolved-input/source-notice scope.",
+    "no_reexecution_authorized": "No new source revision, producer/schema/consumer retry, build, native/CI dispatch or Store authorization is implied.",
+    "overall_readiness": "NOT_READY",
+    "limits": [
+      "No final-package/binary-internal completeness or legal clearance.",
+      "No Apple L08/recovery/protection or normal Debug libproc result is inferred from this Linux chain.",
+      "No final combined frozen-source qualification is established by this scoped acceptance.",
+      "Physical-device, Store operations/identity collision/signing/publication, and separate owner/legal requirements remain separately unresolved/owned."
+    ]
+  },
+  "postrun_author_report": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/candidate-input-postrun-author-04.json",
+    "sha256": "ad5b9848d9c15a4da68661f1ec3b5c0e08e81ca8766e87ebec5cad16cb986504",
+    "bytes": 54126,
+    "held_status": "FOUR_SCOPED_PASS_RECEIPTS_RECONCILED_PENDING_DIFFERENT_AGENT_ACCEPTANCE",
+    "conclusion": "Held author report accepted after independent raw evidence reconciliation; no factual discrepancy found.",
+    "checks": {
+      "current_repository_reference_files_rehashed": 69,
+      "four_receipt_fields_graphs_schemas_equal": true,
+      "all_eight_package_member_manifest_digests_equal": true,
+      "all_twenty_cleanup_paths_equal_and_absent": true,
+      "p2p_variants_exact": 10,
+      "source_capture_hash_recipe": "json.dumps(actual_admission_object,separators=(',',':'),ensure_ascii=True,allow_nan=False), original key order preserved, no sort_keys and no trailing newline.",
+      "complete_source_object_sha256": "88b706619920daa2d8186e3b45ae8b9273dd2028755b7ad00dcfc5dcaeb6858e",
+      "complete_source_and_runner_capture_sha256": "fd4eabd59e2c7a8607efe6c42415b481935ea98fdee1b66ae57b4ee80f02adf7",
+      "parent_links_and_inventory_only_delta": [
+        "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv"
+      ],
+      "completed_at": "2026-09-09T03:08:11.520641+00:00"
+    },
+    "bookkeeping_limit": "1351 read count/digest is author bookkeeping, not repeated execution evidence or an independently retained full read list.",
+    "source_freeze_context_limit": "Prior freeze/inventory/validator and producer evidence references were rehashed, not rerun. No fresh remote or native result is inferred."
+  },
+  "recorded_at": "2026-09-09T03:10:13.458689+00:00"
+}

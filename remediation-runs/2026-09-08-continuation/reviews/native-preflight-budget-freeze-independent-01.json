@@ -1,0 +1,340 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_FROZEN_BUDGET_SOURCE_SINGLE_NONBUILDING_PREFLIGHT_AUTHORIZATION",
+  "reviewer": "/root/ci_review",
+  "recorded_at": "2026-09-09T01:39:56.780Z",
+  "status": "APPROVED_ONE_NONBUILDING_PREFLIGHT_SUBJECT_TO_FRESH_ADMISSION_NOT_NATIVE_EXECUTION",
+  "findings": [],
+  "scope": "Exact fresh two-input hosted native-preflight request after independently reviewed source/inventory delivery and actually completed postfreeze Linux release-validator04. Reuses the held preparation rather than recreating it. Root alone may execute the single request after fresh admission below; no native-evidence, retry, C04 or full-D dispatch is authorized.",
+  "authorization": {
+    "coordinator": "/root",
+    "preparation_author": "/root/native_ci",
+    "request_author": "/root",
+    "independent_reviewer": "/root/ci_review",
+    "request": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-04/request.json",
+      "sha256": "2bda2d11e71e00114987e3e1afd09eaee5f92d370af7e5bb46891665045d0b0f",
+      "bytes": 2331
+    },
+    "repository": "Apdelrahman1911/parlor",
+    "workflow": ".github/workflows/production-verification.yml",
+    "workflow_id": 335554528,
+    "repository_id": 1247560518,
+    "branch": "fix/local-readiness-2026-09-07",
+    "frozen_source_sha": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+    "frozen_source_tree": "c19beea4647ce882c02d8751d1bf82c22484b52b",
+    "exact_inputs": {
+      "verification_scope": "native-preflight",
+      "frozen_source_sha": "08d1adfbd7284f190fbab5f7baa846944bca5b68"
+    },
+    "exact_command": [
+      "gh",
+      "workflow",
+      "run",
+      "production-verification.yml",
+      "--repo",
+      "Apdelrahman1911/parlor",
+      "--ref",
+      "fix/local-readiness-2026-09-07",
+      "-f",
+      "verification_scope=native-preflight",
+      "-f",
+      "frozen_source_sha=08d1adfbd7284f190fbab5f7baa846944bca5b68"
+    ],
+    "maximum_new_dispatches": 1,
+    "requested_initial_attempt": 1,
+    "allow_app_builds": false,
+    "allow_app_XCTest_or_libproc": false,
+    "allow_native_evidence_dispatch": false,
+    "allow_process_probe_dispatch": false,
+    "allow_full_qualification_dispatch": false,
+    "allow_Store_publication_promotion_signing_or_private_credentials": false,
+    "preflight_run_id": null,
+    "preflight_artifact_id": null,
+    "approved_l08_control_sha256": null,
+    "approved_normal_control_sha256": null,
+    "one_attempt_limit": "A failed, ambiguous, interrupted or unassociated request does not grant resubmission. Preserve evidence, investigate and obtain separate authorization before any further request."
+  },
+  "retained_preparation": {
+    "author_packet": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a23-afterfreeze-preparation-01.json",
+      "sha256": "2600e818cf07c124cb071a512df3530bcb82a680ca2aec2956dd27bbdc0b7475",
+      "bytes": 53704
+    },
+    "independent_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a23-afterfreeze-preparation-independent-01.json",
+      "sha256": "657ff4e08ed17817f9c348c7735029b0d0eed2e0bb71a43cbe62a564d38a5be9",
+      "bytes": 37932
+    },
+    "unchanged_concrete_references": 73,
+    "all_current_reference_bytes_equal_frozen_Git_blobs": true,
+    "interpretation": "Preparation657ff4e remains preparation-only. This new narrower record closes only its freeze/local-validator gates and authorizes one nonbuilding request. Its native runtime, clock, control-binding, archive, no-overlap and cleanup restrictions remain unweakened.",
+    "unchanged_source_precision": "Adapter JSON decoder rejects duplicate keys, not JSON nonfinite constants globally; exact clock schema/type/context checks reject those constants before arithmetic. API collection decoder separately rejects duplicates/nonfinite/overflow."
+  },
+  "exact_frozen_source": {
+    "baseline_commit": "e5111ea49113c3f12cb577058c3f926dfebdc325",
+    "reviewed_source_commit": "347ecccff9da7068a6f7046346a09b3b027f6968",
+    "reviewed_source_tree": "3f99a61886559c5518d476d8be5be3c3750f4618",
+    "separate_inventory_commit": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+    "frozen_tree": "c19beea4647ce882c02d8751d1bf82c22484b52b",
+    "parent_chain_checked": true,
+    "full_history": true,
+    "tracked_status": "",
+    "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "inventory": {
+      "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "sha256": "ce754d053f8fe4998de7e2045ba666f13aa35a7350c769ec5c5989f4edd3bf29",
+      "bytes": 10612461,
+      "parsed_rows": 17036
+    },
+    "inventory_only_commit_delta": [
+      "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv"
+    ],
+    "freeze_receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/budget-source-freeze-01.json",
+      "sha256": "47bd573eabf7d2481704adab7e39a3809b084f3163b847577de3f89c9e343f29",
+      "bytes": 344420
+    },
+    "recorded_remote": "08d1adfbd7284f190fbab5f7baa846944bca5b68\trefs/heads/fix/local-readiness-2026-09-07",
+    "remote_limit": "Root's actual normal-push/ls-remote receipt is corroborated, not a new reviewer network observation. Root must reobserve current remote equality immediately before dispatch.",
+    "independent_freeze_validator_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/budget-freeze-and-validator04-independent-01.json",
+      "sha256": "83e83d13a5197ca6c88779450ab2206c291ac593eedba1b3bcc4df72301237ef",
+      "bytes": 25217
+    },
+    "committed_delivery_scope": "Portability reviewer inspected every707 exact committed reviewed blob/mode,12,874,588 bytes, against705 selection rows plus separately bound selection/safety reports. No shipping application source changed. Mechanical17036 rows are not blanket source-review attestation.",
+    "non_evidence_change_paths": [
+      ".github/workflows/production-verification.yml",
+      "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+      "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+      "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+      "scripts/ci/NATIVE_CONTINUATION.md",
+      "scripts/ci/native_continuation.py",
+      "scripts/release/tests/test_native_continuation.py",
+      "scripts/release/tests/test_native_process_probe.py",
+      "scripts/release/tests/test_workflow_contract.py",
+      "scripts/release/workflow_contract.py",
+      "scripts/verification/ios-readiness/test_native_command_failures.py",
+      "scripts/verification/ios-readiness/test_simulator_lifecycle_integration.py"
+    ],
+    "local_untracked_preservation": "Existing old campaign lock and later completed reports/receipts remain preserved and outside this execution SHA. Clean tracked state is not a wholly clean local checkout. Hosted preflight must use a genuinely clean fresh checkout.",
+    "expected_ordinary_source": {
+      "count": 828,
+      "source_manifest_sha256": "d7d6bd8802fb36ab75e566adc183500db24555dce36f0fafd0a1ac91034bf08e",
+      "method": "Independent frozen Git-tree enumeration + AST literal protected/build-path data; canonical sameUID singlelink current files independently match Git blobs. No project identity()/allowed_path() execution or official binding creation.",
+      "count_freshly_recomputed_not_reused": true
+    },
+    "expected_copy_only": {
+      "count": 753,
+      "compact_copy_rows_sha256": "296df232ad173e9e9ab4d26eafcee57c568669a07ee4b9246b1aed542982b9ee",
+      "method": "Filter independently reconstructed source rows using literal path data, encode dictionaries path,sha256 compact JSON.",
+      "count_freshly_recomputed_not_reused": true
+    },
+    "actual_hosted_official_binding_still_required": true
+  },
+  "control_applicability": {
+    "partial_manifests": {
+      "l08": {
+        "count_without_future_binding": 98,
+        "expected_count_with_fresh_binding": 99,
+        "partial_rows_sha256": "07aba26e7552599f121622a338f49166e7ede712a25074fc0349fb9eeca1c49a",
+        "partial_is_not_dispatch_approval": true,
+        "all_members_equal_frozen_git_blob": true
+      },
+      "normal": {
+        "count_without_future_binding": 93,
+        "expected_count_with_fresh_binding": 94,
+        "partial_rows_sha256": "d503eccdd9ef3f0232759bd144402069d34dcbfb1721506b550f012d51eb3b49",
+        "partial_is_not_dispatch_approval": true,
+        "all_members_equal_frozen_git_blob": true
+      }
+    },
+    "generated_l08": {
+      "bytes": 88916,
+      "sha256": "dcb1f6ce32da3fc83b24bf2b2b868de68ac7fb35ca1539fc31140ce2589e60d7",
+      "literal_transform_count": 12
+    },
+    "method": "Independent direct path/literal draft enumeration, canonical same-UID single-link regular-file SHA256, frozen Git-blob equality and sorted compact path/sha256 row hashing. No project control_manifest, render_source, identity or allowed_path function was executed. The12 literal transform data pairs were independently applied in memory with exactly one before anchor each; generated text was AST-parsed, not executed.",
+    "critical_final_support": "Final c5601e2d integration, ea2f6d7b primary,366cd58f adapter,695a513b workflow,513e45a9 probe and9cbc5488 composition tests are frozen unchanged. Provisional/obsolete snapshots cannot replace these.",
+    "incomplete_digest_warning": "98/93 rows exclude the one future official hosted source binding; expected full99/94 includes it.07aba26e/d503eccd are partial-list hashes and must NEVER populate approved_* fields. Full actual fresh manifests and binding bytes remain to be independently reviewed.",
+    "expected_rendered_diff": {
+      "bytes": 8850,
+      "sha256": "252859418eb7464186e44cec5d8bab489a8dbeb0952ff2a9802f8c841489ae61"
+    },
+    "old_success_not_reused": "Preflight34273018746 at e511 was consumed and is not applicable to changed source. No old preflight ZIP/file/control/source digest supplies a new approval."
+  },
+  "completed_local_prerequisites": {
+    "independent_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/budget-freeze-and-validator04-independent-01.json",
+      "sha256": "83e83d13a5197ca6c88779450ab2206c291ac593eedba1b3bcc4df72301237ef",
+      "bytes": 25217
+    },
+    "review_findings": [],
+    "evidence_identity_audit": {
+      "bound_path_occurrences": 25,
+      "unique_bound_files": 23,
+      "all_alias_expanded_file_SHA256_and_bytes_match": true
+    },
+    "actual_validator": {
+      "cycle": "continuation-release-validator-04",
+      "command": [
+        "/bin/bash",
+        "scripts/release/validate_release_system.sh"
+      ],
+      "receipt": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-04/receipt.json",
+        "sha256": "1c9687ca429362deff066c6f14d5a207a01ac6704f66cc2a6746761fb747ea2c",
+        "bytes": 305370
+      },
+      "raw_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-04/gradle.log",
+        "sha256": "88113a0eab28a7e95b4bf16c654b1fa3c7c2d96920a28001bd3750478efcee94",
+        "bytes": 90040
+      },
+      "stop_log": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-04/stop.log",
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+        "bytes": 31
+      },
+      "frozen_commit": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+      "frozen_tree": "c19beea4647ce882c02d8751d1bf82c22484b52b",
+      "source_manifest_sha256": "d7d6bd8802fb36ab75e566adc183500db24555dce36f0fafd0a1ac91034bf08e",
+      "actual_exit_code": 0,
+      "tests": {
+        "passed": 464,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "distinct_id_reconciliation_by": "/root/portability_review",
+        "id_result_manifest_sha256": "2746b1a566b8514578a5d4dada5745b4a8f90863c3118787fba966cffc9a02e1"
+      },
+      "raw_summary": "Ran 464 tests in 51.938s; OK",
+      "gate_sources": [
+        {
+          "path": "scripts/release/validate_release_system.sh",
+          "sha256": "ce52c9c08edecba968337d6de42c90895badec127c7029a5afc16737d3b8864a",
+          "bytes": 3673
+        },
+        {
+          "path": "config/release-policy.json",
+          "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+          "bytes": 4481
+        }
+      ],
+      "inventory_check": "Actual raw line verifies17036 current inventory rows.",
+      "pinned_tools": "Bound ShellCheck0.11.0/actionlint1.7.12 Linux-amd64 archives each log SHA-OK, then bound set-euo script unconditionally invokes actual shell/YAML checking and completes exit0. This is not a cached or mocked tool result.",
+      "pinned_tool_evidence_limit": "Bound fail-fast shell script unconditionally executes pinned ShellCheck/actionlint after digest checks and whole-command exit is0. No separate per-tool version, executable digest or exit receipt is fabricated.",
+      "source_and_runner_before_after_equal": true,
+      "finished_at": "2026-09-09T01:13:41.673121+00:00",
+      "stop_exit_code": 0,
+      "stopped_at": "2026-09-09T01:13:42.314854+00:00",
+      "cleanup_completed_at": "2026-09-09T01:13:42.397311+00:00",
+      "remaining_owned_workers": [],
+      "cleanup_errors": [],
+      "cleanup_review": {
+        "status": "PASS",
+        "exact_absence_checks": 22,
+        "all_checked_paths_absent_including_symlinks": true,
+        "scope": "Full22 exact-path corroboration by portability_review; ci_review directly rechecked the actual named owned scratch/tool parent without deletion."
+      },
+      "reviewer_direct_cleanup_check": "Actual receipt/stop and exact owned scratch/tool-parent absence independently rechecked; no reviewer cleanup or process scan performed.",
+      "expected_failure_fixture_limit": "Synthetic native-probe/custody FAILED JSON remains raw test-fixture output, not actual application/native cleanup evidence. Exact464 actual method IDs/0 skips were reconciled independently; no numeric subtest count is invented."
+    },
+    "earlier_scoped_control_gate": {
+      "independent_postrun_review": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-budget-controls-postrun-independent-01.json",
+        "sha256": "fb3c0a104850a2f2a0a60b26503ec526243e2f86cb80482b9e8b1c58eb536c68",
+        "bytes": 89125
+      },
+      "raw_result": {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-native-budget-controls-01/native-budget-results.json",
+        "sha256": "0c5113933311ee662403ee243f37f963b72fac0050286b85a600ce1665b43559",
+        "bytes": 13068
+      },
+      "applicability": "286 scoped Linux methods/8 children/0 failures/errors/skips independently reconciled, including5 exact external parents and ordinary cleanup. Current held source/control hashes unchanged; not new native proof.",
+      "limit": "464 full release controls and earlier286 selected controls are separate executed scopes with overlap, not750 distinct tests. Neither proves Parlor runtime."
+    },
+    "gate_conclusion": "Required actually executed postfreeze release-validator04, pinned tools and independent scoped cleanup/freeze prerequisite are complete at08d1. They do not themselves authorize Actions; only this one-request record does, under fresh admission."
+  },
+  "inspected_preliminary_screening": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-04/screening-receipt.json",
+      "sha256": "da6440405fd4880d6464c76c3ca0d4547113ec06e996a0445e852e18de074b01",
+      "bytes": 3852
+    },
+    "normalized_pages": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-04/screening-runs.json",
+      "sha256": "df65d18d37c765fb660e2810537e57cebb0ee352a04b6f94eeda0c788d83b70f",
+      "bytes": 174138
+    },
+    "raw_stream": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-04/screening-runs.raw.json-stream",
+      "sha256": "d9759001717511fa9c865d8335f98700ef8757e50f761642d2afca90c2cc410e",
+      "bytes": 139408
+    },
+    "workflow_metadata": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-04/screening-workflow.json",
+      "sha256": "8345984073768616fd6aff6682c95051f186881c5fa4727b120c80e019841ece",
+      "bytes": 533
+    },
+    "command_exits": 0,
+    "raw_complete_consumption": true,
+    "page_count": 1,
+    "total_count": 11,
+    "unique_ids": 11,
+    "correct_workflow_branch_repository_head_repository": true,
+    "all_status_completed": true,
+    "nonterminal_runs": [],
+    "parser_packet_sha256": "feba34720798a3a70608dcf81b6239a2357c21fb53e94214601390b5febc8403",
+    "parser_source_sha256": "48ca12d9ec8a02410ac4ea645716902efc37842b23050e450c60074aabbdd270",
+    "review_method": "Decoded the entire raw JSON stream independently with duplicate/nonfinite/overflow rejection, checked complete counts/unique IDs and per-run identity/status, and compared all normalized pages. Rehashed root's exact reviewed parser text as data; did not execute it.",
+    "is_final_dispatch_admission": false,
+    "warning": "This historical preliminary screening is insufficient to dispatch. Root must retain a new complete immediate admission observation and remote equality after this approval."
+  },
+  "mandatory_immediate_root_admission": [
+    "Rehash this held review, exact request2bda2d11, independent gate83e83d13, held source/control inputs and inventory against08d1. Confirm exact HEAD/tree/branch, full history, empty tracked diff/status and unchanged intended source. No source or evidence commit/push may silently move the ref before this request.",
+    "Reobserve actual origin branch SHA equals08d1adfbd7284f190fbab5f7baa846944bca5b68. A changed remote/source is investigated, never reset or force-pushed; it invalidates this authorization.",
+    "Fetch fresh workflow metadata and COMPLETE same-branch workflow run pages using gh api --paginate without --slurp or an event filter. Preserve original stdout/stderr/exit and normalized full pages with exact counts/IDs/identity. Unknown/malformed/nonterminal/partial/changing pagination denies dispatch.",
+    "Require no conflicting same-ref full/focused/probe workflow in any nonterminal status. Root remains sole dispatcher. Do not cancel another owner's run or rely on cancel-in-progress as admission.",
+    "Use only the exact two inputs/argv above once. Retain fresh request-start time, complete before-run IDs and actual command exit/stdout/stderr in new nonoverwriting evidence. No new helper/source or disabled Store workflow is introduced.",
+    "After the request, collect complete after pages and require exactly one new eligible workflow_dispatch run absent from the before set, created no earlier than request, exact workflow/repository/path/branch/08d1 SHA and initial attempt1. CLI exit0 alone is not successful association. Ambiguity/failure requires preservation/investigation, not an automatic retry."
+  ],
+  "required_actual_preflight_acceptance": {
+    "independent_review_required_before_native_dispatch": true,
+    "job_scope": "Actual focused ios job only; all other4 jobs and all full/probe steps skipped. Inspect step names/conditions, not historical numeric log filenames.",
+    "outcome": "Actual successful attempt1 on the approved08d1 source, with nonempty source/control/platform artifact and separate successful cleanup evidence. Workflow success without complete bound artifacts is insufficient.",
+    "expected_archive_members": [
+      "preflight.json",
+      "ios-readiness-source-ci.json",
+      "l08-controls.json",
+      "normal-controls.json"
+    ],
+    "archive_contract": "Exactly4 unique nonempty regular preflight members; ZIP and aggregate uncompressed limit8MiB, each<=4MiB; safe relative paths, no traversal/backslash/absolute/symlink/special/encrypted members, CRC and extracted-byte equality. Preserve original ZIP/API size/SHA256, run/attempt/artifact/repository/head-repository/workflow/name/expiry identity and separate cleanup ZIP.",
+    "source_binding": "Fresh official schema3 REVIEW_REQUIRED_BOUND at actual hosted absolute checkout. Exact08d1/tree/branch/empty diff/tracked status and every ordinary828/copy753 row must independently match current frozen bytes and freshly derived digests above. Do not infer the binding JSON hash from these row hashes.",
+    "controls": "Every full99/94 row and compact-list control_sha256 must be independently checked, including exactly one fresh binding row and final reviewed support tests, draft/driver/Foundations/lifecycle/libproc sources. Verify composed88916-byte/dcb1f6ce source and actual diff binding.",
+    "platform": "Darwin arm64, Xcode26.3/17C529, qualified26.2 SDKs and exact iOS26.2 runtime/build, iPhone17Pro device type, JDK21 and required developer/public SDK paths. Later native execution must reobserve and equal the entire preflight toolchain object; no substitution.",
+    "cleanup": "Successful exact artifact upload custody before scoped binding/staging removal; cleanupPASS, unchanged source, final clean hosted checkout, native_runs={}, no allocated application simulator/copy or fabricated Gradle/native evidence.",
+    "clock_limitation": "The first-step CLOCK_MONOTONIC_RAW producer is skipped in preflight. A preflight pass does NOT demonstrate that kernel clock API, an app build/XCTest, libproc ABI/query, strict protection, retained-host or application recovery works.",
+    "pause": "Retain all actual artifacts/logs/cleanup receipts and request a new independently reviewed one-native-attempt authorization. None of preflight_run_id/artifact/approved_* fields is filled by this authorization."
+  },
+  "preservation_and_qualification_limits": {
+    "historical": "A21 run34275491965/1 remains FAIL/cleanupFAIL and B22 remains NOT_RUN. Current preflight/control approvals do not repair missing runtime/copy/ownership/raw evidence. Strict protection is unresolved.",
+    "runtime": "A23/B24 are future serial labels, not executed results. Only safe uninterrupted preserved A with all independent authority/cleanup guards plus a full7200s B admission can permit later B; budgets remain finite policy, not duration/success guarantees.",
+    "collection": "Preserve compact raw logs, original archives, all failed receipts and exact cleanup. Do not remove archived evidence build/ paths or local unrelated work to imitate a clean checkout.",
+    "excluded": "No physical-device/LAN/accessibility/keybag/backup/restore evidence, Store identity/credential/signing/publication/promotion, separate owner/legal/privacy/editorial approval, C04 or final combined full-D qualification is supplied or waived.",
+    "readiness": "NOT_READY"
+  },
+  "reviewer_activity": {
+    "project_imports_or_extracted_function_execution": 0,
+    "tests_builds_inventory_or_native_commands": 0,
+    "network_API_Actions": 0,
+    "source_or_ledger_edits": 0,
+    "resource_deletion_or_process_signals": 0,
+    "commits_or_pushes": 0,
+    "only_authorized_write": "remediation-runs/2026-09-08-continuation/reviews/native-preflight-budget-freeze-independent-01.json",
+    "static_inspection_notice": "First read-only audit printed all source/control rows; orchestrator JSON parsing failed because tool output was truncated. No writes/execution or failed source assertions. This bounded-summary audit reran those static comparisons successfully.",
+    "cleanup": "No build/test/native fixture or worker allocated by reviewer; no Gradle stop/clean owed. Only exact-path absence inspection and exclusive additive report creation.",
+    "final_write_guards": "Recheck held request/gate/preparation/actual-receipt/source-input/inventory hashes plus08d1 HEAD/tree/branch and clean tracked state before/after exclusive write in the explicit nested repository; never overwrite a prior review."
+  }
+}

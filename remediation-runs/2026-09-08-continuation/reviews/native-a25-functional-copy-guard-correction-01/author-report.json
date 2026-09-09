@@ -1,0 +1,422 @@
+{
+  "schema_version": 1,
+  "kind": "native-a25-functional-copy-guard-correction-author",
+  "recorded_at": "2026-09-09T05:20:17.395527+00:00",
+  "author": "/root/l08_fixture",
+  "independent_reviewer_requested": "/root/fixture_review",
+  "status": "DRAFT_HELD_FOR_INDEPENDENT_REVIEW",
+  "readiness": "NOT_READY",
+  "scope": "Only stale public-control guard and its existing mutation method in test_l08_functional_copy.py. No Swift fixture, application, clone, probe, native driver, counter, privacy or protocol changes.",
+  "canonical_target": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+  "canonical_before": {
+    "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+    "sha256": "b58d9761b7c199f0ab7fd01c2c6614d2f49e0a71102fd54ff3f6783acfede7f0",
+    "bytes": 25344
+  },
+  "draft_output": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-functional-copy-guard-correction-01/test_l08_functional_copy.py",
+    "sha256": "a630c0002261e09a114390e5661ae0a95b75dc9a2548b249b425fac456077a1e",
+    "bytes": 33100
+  },
+  "actual_failed_cycle": {
+    "cycle": "continuation-a25-functional-copy-controls-01",
+    "evidence": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-01/gradle.log",
+        "sha256": "6e348154b3710fc2d3bc354d36f937107fa73eef59fe940721f9658ecb77a225",
+        "bytes": 30967
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-01/receipt.json",
+        "sha256": "a37b3797b637bea5e47497cdbd981d33be11f24f6154efcb3ddf976f0114c572",
+        "bytes": 306648
+      }
+    ],
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02",
+      "-p",
+      "test_l08_functional_copy.py",
+      "-v"
+    ],
+    "status": "FAIL",
+    "exit_code": 1,
+    "reported_tests": 12,
+    "passed_methods": 10,
+    "failed_methods": 1,
+    "errored_methods": 1,
+    "skips": 0,
+    "error": "Baseline assert_public_control_contract rejected reviewedSwift750d at old list.swipeUp()/for0..<8 guard (test source88).",
+    "failure": "Negative mutation method then expected the removed for0..<8 source anchor and failed assertIn at test source217. Earlier mutant rejection did not demonstrate valid current-baseline coverage.",
+    "failure_lines": [
+      {
+        "line": 15,
+        "text": "ERROR: test_home_scrolling_and_diagnostics_preserve_strict_public_activation (test_l08_functional_copy.L08FunctionalCopyTests.test_home_scrolling_and_diagnostics_preserve_strict_public_activation)"
+      },
+      {
+        "line": 24,
+        "text": "RuntimeError: The only scroll must be bounded and belong to the tagged list"
+      },
+      {
+        "line": 27,
+        "text": "FAIL: test_scroll_contract_rejects_bypass_ambiguity_unbounded_or_private_diagnostics (test_l08_functional_copy.L08FunctionalCopyTests.test_scroll_contract_rejects_bypass_ambiguity_unbounded_or_private_diagnostics)"
+      },
+      {
+        "line": 32,
+        "text": "AssertionError: 'for attempt in 0..<8 {' not found in '// Separate functional companion; never an upgrade of original strict L08 or physical storage evidence.\\nextension IOSAppLaunchUITests {\\n    @MainActor private func"
+      },
+      {
+        "line": 35,
+        "text": "Ran 12 tests in 0.096s"
+      },
+      {
+        "line": 37,
+        "text": "FAILED (failures=1, errors=1)"
+      }
+    ],
+    "source_before": {
+      "commit": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+      "tree": "c19beea4647ce882c02d8751d1bf82c22484b52b",
+      "branch": "fix/local-readiness-2026-09-07",
+      "tracked_status": "M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_region.c.in\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py\n M remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py\n M scripts/ci/NATIVE_CONTINUATION.md\n M scripts/ci/native_continuation.py\n M scripts/release/tests/test_native_process_probe.py",
+      "diff_sha256": "a34a207234a8f098f3949dab0bdc6d0709f3d3f8742eb470ca0f6c24322f2094",
+      "source_manifest_sha256": "f7d8b3dbdec3d07c16921e7f8457c0da96d404708758605eb7797c2f6b106237"
+    },
+    "source_changed_during_cycle": false,
+    "cleanup": {
+      "stop_exit_code": 0,
+      "workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "artifact_workers": {
+        "terminated_owned_workers": [],
+        "remaining_owned_workers": []
+      },
+      "removed_outputs": [],
+      "remaining_outputs": [],
+      "cleanup_errors": [],
+      "deferred_signals": [],
+      "cleanup_completed_at": "2026-09-09T05:00:49.014636+00:00",
+      "cleanup_method": "Exact task-owned generated dirs; no Gradle clean daemon or global cache deletion. Unrelated processes excluded by PID/start identity and cycle ownership."
+    },
+    "preservation": "Original failure receipt and complete log left byte-for-byte unchanged. Any root recheck must be a new cycle, never overwrite this failure."
+  },
+  "repair_mapping": [
+    {
+      "old": "Exactly one list.swipeUp() and for0..<8",
+      "current": "Exactly one slow list.swipeUp and one slow list.swipeDown code site, nine decision windows with guardattempt<8 preventing a ninth gesture, explicit direction routing and readybreak."
+    },
+    {
+      "old": "Main-loop query count<=1 plus final count1",
+      "current": "Final exact list/query count1 plus each settling observation closed0..1 target/list/overlay counts. A duplicate target/list/overlay still fails."
+    },
+    {
+      "old": "Two target.exists&&enabled&&hittable expressions in main",
+      "current": "One unchanged non-Home predicate plus Home l08HomeGeometry dispatch. Guard now inspects every original unique/environment/enabled/full-card/overlay8point/hittable predicate and insists on geometry before hit computation."
+    },
+    {
+      "old": "Single postloop diagnostic/readiness/tap ordering",
+      "current": "Retains that order and additionally checks settled-decision/break/gesture-cap/slowgestures before actual freshzero/finalsixstable/finalguard/onetap/aftertapack."
+    },
+    {
+      "old": "Unscoped negative mutation may pass because baseline already rejects",
+      "current": "Validate actual baseline first. Each mutant is localized to its intended named helper, asserts exactly one anchor/replacement region and actual changed bytes, then expects its exact RuntimeError reason, not arbitrary ValueError/previous failure."
+    },
+    {
+      "old": "Original bounded public diagnostic/privacy assertions",
+      "current": "All preserved, with explicit current unqueried-not-false offscreen hittability guard. No label/value/hierarchy/screenshot allowance and no proves_recovery upgrade."
+    }
+  ],
+  "preserved_boundaries": {
+    "only_changed_function_names": [
+      "assert_public_control_contract",
+      "test_scroll_contract_rejects_bypass_ambiguity_unbounded_or_private_diagnostics"
+    ],
+    "outside_owned_regions_byte_identical": true,
+    "outside_owned_regions_masked_sha256": "1e9e43e459dd8eb64c5d43f71886a050f6072c3ba20ea769b1c8b6f2fc9ab87d",
+    "reverse_restored_full_source_sha256": "b58d9761b7c199f0ab7fd01c2c6614d2f49e0a71102fd54ff3f6783acfede7f0",
+    "unchanged": [
+      "All imports, HERE/ROOT/CANONICAL paths and clone manifest identity/allowlist.",
+      "All nonmetadata functional execution, ownership, cancellation/payload clearing and controller/scope cleanup assertions.",
+      "All actual Complete getter/equality, native primitive metadata, comparison labels, checkpoint membership and command-local bounds.",
+      "All closed failure diagnostics, Mafia stage/action/guard comparisons and privacy checks.",
+      "Every other test method; test method census remains12.",
+      "Canonical Swift750d and single-tap scannerb77b are unchanged. Prior fixture source review remains separate from this test repair."
+    ]
+  },
+  "declared_controls": {
+    "test_methods": 12,
+    "method_names": [
+      "test_home_list_tag_preserves_every_other_production_character",
+      "test_home_scrolling_and_diagnostics_preserve_strict_public_activation",
+      "test_scroll_contract_rejects_bypass_ambiguity_unbounded_or_private_diagnostics",
+      "test_all_original_controls_and_exact_clone_allowlist_are_preserved",
+      "test_only_the_new_probe_registration_replaces_the_strict_probe_in_owned_copy",
+      "test_current_source_transforms_once_with_single_bridge_and_shared_context",
+      "test_functional_probe_preserves_complete_nonmetadata_execution_regions",
+      "test_continuation_stages_are_closed_and_all_mafia_guards_actions_remain_identical",
+      "test_continuation_diagnostics_cannot_hide_removed_guards_or_dynamic_private_stages",
+      "test_each_source_boundary_mutation_is_rejected_not_just_missing_check_names",
+      "test_swift_namespace_preserves_shared_host_helpers_and_exact_distinct_test",
+      "test_all_new_python_controls_parse_without_launching_any_worker"
+    ],
+    "mutation_cases": 24,
+    "retained_original_semantic_cases": 14,
+    "new_current_fixture_cases": 10,
+    "mutations": [
+      {
+        "ordinal": 1,
+        "origin": "retained-original-semantic-case",
+        "region": "tap",
+        "before": "target.tap() // No alternate selector",
+        "after": "target.tap(); target.tap() // No alternate selector",
+        "expected_rejection": "Exactly one public activation is required"
+      },
+      {
+        "ordinal": 2,
+        "origin": "retained-original-semantic-case",
+        "region": "tap",
+        "before": "for attempt in 0...8 {",
+        "after": "for attempt in 0...100 {",
+        "expected_rejection": "The only scrolls must be bounded slow gestures on the tagged list"
+      },
+      {
+        "ordinal": 3,
+        "origin": "retained-original-semantic-case",
+        "region": "tap",
+        "before": "list.swipeUp(velocity: .slow)",
+        "after": "app.swipeUp(velocity: .slow)",
+        "expected_rejection": "The only scrolls must be bounded slow gestures on the tagged list"
+      },
+      {
+        "ordinal": 4,
+        "origin": "retained-original-semantic-case",
+        "region": "tap",
+        "before": "matching(identifier: \"l08-home-list\")",
+        "after": "matching(identifier: \"other-list\")",
+        "expected_rejection": "Scroll eligibility and destination must use exact identities"
+      },
+      {
+        "ordinal": 5,
+        "origin": "retained-original-semantic-case",
+        "region": "tap",
+        "before": "XCTAssertEqual(lists.count, 1)",
+        "after": "XCTAssertGreaterThan(lists.count, 0)",
+        "expected_rejection": "Ambiguous list or target identities must fail"
+      },
+      {
+        "ordinal": 6,
+        "origin": "retained-original-semantic-case",
+        "region": "tap",
+        "before": "XCTAssertEqual(query.count, 1)",
+        "after": "XCTAssertGreaterThan(query.count, 0)",
+        "expected_rejection": "Ambiguous list or target identities must fail"
+      },
+      {
+        "ordinal": 7,
+        "origin": "retained-original-semantic-case",
+        "region": "settling",
+        "before": "(0...1).contains(targetCount)",
+        "after": "(0...2).contains(targetCount)",
+        "expected_rejection": "Ambiguous list or target identities must fail"
+      },
+      {
+        "ordinal": 8,
+        "origin": "retained-original-semantic-case",
+        "region": "tap",
+        "before": "target.exists && target.isEnabled && target.isHittable",
+        "after": "target.exists",
+        "expected_rejection": "No activation or gesture may bypass required state checks"
+      },
+      {
+        "ordinal": 9,
+        "origin": "retained-original-semantic-case",
+        "region": "tap",
+        "before": "XCTAssertTrue(list.exists && list.isEnabled && list.isHittable)",
+        "after": "XCTAssertTrue(true)",
+        "expected_rejection": "No activation or gesture may bypass required state checks"
+      },
+      {
+        "ordinal": 10,
+        "origin": "retained-original-semantic-case",
+        "region": "tap",
+        "before": "XCTAssertEqual(result, .completed)",
+        "after": "XCTAssertTrue(true)",
+        "expected_rejection": "Observe failures before asserting; tap only after readiness succeeds"
+      },
+      {
+        "ordinal": 11,
+        "origin": "retained-original-semantic-case",
+        "region": "tap",
+        "before": "target.tap() // No alternate selector",
+        "after": "onResume(); target.tap() // No alternate selector",
+        "expected_rejection": "No coordinates, callbacks or swallowed failures"
+      },
+      {
+        "ordinal": 12,
+        "origin": "retained-original-semantic-case",
+        "region": "observation",
+        "before": "\"proves_recovery\": false",
+        "after": "\"proves_recovery\": true",
+        "expected_rejection": "Presence/geometry cannot claim recovery or disclose UI content"
+      },
+      {
+        "ordinal": 13,
+        "origin": "retained-original-semantic-case",
+        "region": "observation",
+        "before": "XCTAssertLessThanOrEqual(data.count, 2048)",
+        "after": "XCTAssertTrue(true)",
+        "expected_rejection": "Diagnostic output is bounded to a closed public alias list"
+      },
+      {
+        "ordinal": 14,
+        "origin": "retained-original-semantic-case",
+        "region": "observation",
+        "before": "row[\"exists\"] = node.exists",
+        "after": "row[\"exists\"] = node.label",
+        "expected_rejection": "Presence/geometry cannot claim recovery or disclose UI content"
+      },
+      {
+        "ordinal": 15,
+        "origin": "new-current-fixture-case",
+        "region": "tap",
+        "before": "list.swipeDown(velocity: .slow)",
+        "after": "app.swipeDown(velocity: .slow)",
+        "expected_rejection": "The only scrolls must be bounded slow gestures on the tagged list"
+      },
+      {
+        "ordinal": 16,
+        "origin": "new-current-fixture-case",
+        "region": "tap",
+        "before": "guard attempt < 8 else {",
+        "after": "guard attempt < 9 else {",
+        "expected_rejection": "The only scrolls must be bounded slow gestures on the tagged list"
+      },
+      {
+        "ordinal": 17,
+        "origin": "new-current-fixture-case",
+        "region": "tap",
+        "before": "if direction == .ready { break }",
+        "after": "if direction == .ready { continue }",
+        "expected_rejection": "The only scrolls must be bounded slow gestures on the tagged list"
+      },
+      {
+        "ordinal": 18,
+        "origin": "new-current-fixture-case",
+        "region": "settling",
+        "before": "for sample in 0..<24 {",
+        "after": "for sample in 0..<25 {",
+        "expected_rejection": "Scroll decisions must remain bounded settled read-only observations"
+      },
+      {
+        "ordinal": 19,
+        "origin": "new-current-fixture-case",
+        "region": "settling",
+        "before": "if consecutive == 6, let direction",
+        "after": "if consecutive == 1, let direction",
+        "expected_rejection": "Scroll decisions must remain bounded settled read-only observations"
+      },
+      {
+        "ordinal": 20,
+        "origin": "new-current-fixture-case",
+        "region": "settling",
+        "before": "targetCount == 0 && !targetSeen",
+        "after": "targetCount == 0",
+        "expected_rejection": "Scroll decisions must remain bounded settled read-only observations"
+      },
+      {
+        "ordinal": 21,
+        "origin": "new-current-fixture-case",
+        "region": "settling",
+        "before": "else { direction = nil }",
+        "after": "else { direction = .up }",
+        "expected_rejection": "Scroll decisions must remain bounded settled read-only observations"
+      },
+      {
+        "ordinal": 22,
+        "origin": "new-current-fixture-case",
+        "region": "settling",
+        "before": "consecutive += 1",
+        "after": "consecutive += 1; anchor = frames",
+        "expected_rejection": "Scroll decisions must remain bounded settled read-only observations"
+      },
+      {
+        "ordinal": 23,
+        "origin": "new-current-fixture-case",
+        "region": "observation",
+        "before": "if hittabilityQueried { row[\"hittable\"] = node.isHittable }",
+        "after": "row[\"hittable\"] = node.isHittable",
+        "expected_rejection": "Offscreen diagnostic hittability must remain unqueried rather than fabricated"
+      },
+      {
+        "ordinal": 24,
+        "origin": "new-current-fixture-case",
+        "region": "tap",
+        "before": "try l08RequireHomeZeroBeforeTap(app, identifier: identifier)",
+        "after": "try l08RequireHomeZeroBeforeTap(app, identifier: identifier); app.swipeDown(velocity: .slow)",
+        "expected_rejection": "The only scrolls must be bounded slow gestures on the tagged list"
+      }
+    ],
+    "static_author_checks": "Python AST parses; exact reverse-restoration proves only the two authorized functions differ; all24 mutation literal anchors occur once in their intended current750d helper. No project modules, tests, validators or reference models imported/executed.",
+    "draft_execution": "NOT_RUN",
+    "native_compilation": "NOT_RUN",
+    "application_runtime": "NOT_RUN",
+    "adoption": "Draft is an exact canonical replacement proposal, not a standalone runnable suite: original imports and HERE/ROOT remain unchanged. Root alone adopts approved bytes at the canonical companion path and executes its ordinary unittest-discovery cycle.",
+    "interpretation": "These are source/copy contract controls only; a future12PASS does not prove actual scrolling, callback delivery, functional/retained-host completion, file protection, libproc runtime or Store readiness."
+  },
+  "source_and_review_pins": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in",
+      "sha256": "750dbb70d879ba4cc41908103699457557e8723e4d67d2c27cbab133b202cac3",
+      "bytes": 26023
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py",
+      "sha256": "b77b36c317f4f04620c0cf4b40065fc55a382e57110d622a78b818d9761e9b79",
+      "bytes": 48084
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-independent-01.json",
+      "sha256": "4bf106beba684f5e1d7751899472e8ef8e9e664ff9f5695d78414a22c635de66",
+      "bytes": 61812
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_copy.py",
+      "sha256": "c2bf28bf0efd9449d646c451d7b8e665000e8d11a3a6eea76de95e1fb4a55a5f",
+      "bytes": 10248
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_functional_copy.py",
+      "sha256": "417865a86daca8c09e1d650abc2d46b20920a128d95d2021ad365e38e7a207a4",
+      "bytes": 2509
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalProbe.kt.in",
+      "sha256": "55d9ccb998831b07a43429249fc335189227bcd344f252dbcd4dbdbda963463c",
+      "bytes": 30638
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-functional-companion-clone-manifest-01.json",
+      "sha256": "3036231a1bcfc9d567b8381ee33d89cd381377bea2b10790ddde0f90baf682fb",
+      "bytes": 11870
+    }
+  ],
+  "test_delta_unified": "--- remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py\n+++ remediation-runs/2026-09-08-continuation/reviews/native-a25-functional-copy-guard-correction-01/test_l08_functional_copy.py\n@@ -83,23 +83,73 @@\n def assert_public_control_contract(text):\n     tap = section(text, '    @MainActor private func l08TapExactPublicControl(',\n                   '    @MainActor private func l08PublicControlObservation(')\n+    settling = section(text, '    @MainActor private func l08SettleHomeScrollDecision(',\n+                       '    @MainActor private func l08HomeGeometry(')\n+    geometry = section(text, '    @MainActor private func l08HomeGeometry(',\n+                       '    private func l08HomeGeometryNear(')\n     require(tap.count('target.tap()') == 1 and tap.count('.tap()') == 1,\n             'Exactly one public activation is required')\n-    require(tap.count('list.swipeUp()') == 1 and 'for attempt in 0..<8 {' in tap,\n-            'The only scroll must be bounded and belong to the tagged list')\n+    require(tap.count('list.swipeUp(velocity: .slow)') == tap.count('.swipeUp(') == 1 and\n+            tap.count('list.swipeDown(velocity: .slow)') == tap.count('.swipeDown(') == 1 and\n+            'for attempt in 0...8 {' in tap and 'guard attempt < 8 else {' in tap and\n+            'if direction == .ready { break }' in tap and\n+            'if direction == .up { list.swipeUp(velocity: .slow) }' in tap and\n+            'else { list.swipeDown(velocity: .slow) }' in tap and\n+            'throw NSError(domain: \"L08HomeScroll\", code: 1)' in tap,\n+            'The only scrolls must be bounded slow gestures on the tagged list')\n     require('let isHome = homeAliases.contains { identifier == \"l08-home-\" + $0 }' in tap and\n             'if isHome {' in tap and 'matching(identifier: \"l08-home-list\")' in tap,\n             'Scroll eligibility and destination must use exact identities')\n     require(tap.count('XCTAssertEqual(lists.count, 1)') == 1 and\n             tap.count('XCTAssertEqual(query.count, 1)') == 1 and\n-            tap.count('XCTAssertLessThanOrEqual(query.count, 1)') == 1,\n+            all(settling.count('(0...1).contains(' + count + ')') == 1\n+                for count in ('targetCount', 'listCount', 'overlayCount')),\n             'Ambiguous list or target identities must fail')\n-    require(tap.count('target.exists && target.isEnabled && target.isHittable') == 2 and\n-            'XCTAssertTrue(list.exists && list.isEnabled && list.isHittable)' in tap,\n+    flat_geometry = ' '.join(geometry.split())\n+    require(tap.count('target.exists && target.isEnabled && target.isHittable') == 1 and\n+            'if isHome { return self.l08HomeGeometry(app, identifier: identifier) != nil }' in tap and\n+            'XCTAssertTrue(list.exists && list.isEnabled && list.isHittable)' in tap and\n+            all(predicate in flat_geometry for predicate in (\n+                'guard targets.count == 1, lists.count == 1, overlays.count == 1, '\n+                'app.state == .runningForeground, !app.alerts.firstMatch.exists, '\n+                '!app.keyboards.firstMatch.exists else { return nil }',\n+                'guard target.exists, target.isEnabled, list.exists, list.isEnabled, '\n+                'overlay.exists else { return nil }',\n+                'guard frames.allSatisfy(dsc01CatalogFinite), frames[2].contains(frames[1]), '\n+                'frames[2].contains(frames[3]), frames[1].contains(frames[0]), '\n+                '!frames[0].intersects(frames[3].insetBy(dx: -8, dy: -8)) else { return nil }',\n+                'guard target.isHittable, list.isHittable else { return nil }')),\n             'No activation or gesture may bypass required state checks')\n-    assertion = tap.index('XCTAssertEqual(result, .completed)')\n-    require(tap.index('try l08PublicControlObservation(app, identifier: identifier, attempt: 8)') < assertion <\n-            tap.index('target.tap()'), 'Observe failures before asserting; tap only after readiness succeeds')\n+    require(geometry.index('guard frames.allSatisfy') < geometry.index('target.isHittable'),\n+            'Full geometry must precede Home hittability')\n+    flat_settling = ' '.join(settling.split())\n+    require(all(predicate in flat_settling for predicate in (\n+                'for sample in 0..<24 {',\n+                'direction = l08HomeScrollDirection(frames)',\n+                'if let visible = l08HomeGeometry(app, identifier: identifier), '\n+                'l08HomeGeometryNear(frames, visible) { frames = visible } else { direction = nil }',\n+                'if targetCount == 1 { targetSeen = true }',\n+                'else if targetCount == 0 && !targetSeen {',\n+                'if let anchor, anchoredDirection == direction, anchor.count == frames.count, '\n+                'zip(anchor, frames).allSatisfy({ dsc01CatalogNear($0.0, $0.1) }) { consecutive += 1 }',\n+                'else { anchor = frames; anchoredDirection = direction; consecutive = 1 }',\n+                'else { anchor = nil; anchoredDirection = nil; consecutive = 0 }',\n+                'if consecutive == 6, let direction { return direction }',\n+                'if sample < 23 { try catalogSamplingInterval() }',\n+                'throw NSError(domain: \"L08HomeScroll\", code: 4)')) and\n+            not any(gesture in settling for gesture in ('.tap(', '.swipeUp(', '.swipeDown(')),\n+            'Scroll decisions must remain bounded settled read-only observations')\n+    stages = ('try l08SettleHomeScrollDecision(', 'if direction == .ready { break }',\n+              'guard attempt < 8 else {', 'list.swipeUp(velocity: .slow)', 'list.swipeDown(velocity: .slow)',\n+              'try l08PublicControlObservation(app, identifier: identifier, attempt: 8)',\n+              'XCTAssertEqual(result, .completed)', 'try l08RequireHomeZeroBeforeTap(',\n+              'try l08WaitStableHomeGeometry(', 'guard let current', 'target.tap()',\n+              'try l08WaitHomeOneAfterTap(')\n+    require(all(tap.count(stage) == 1 for stage in stages),\n+            'Observe failures before asserting; tap only after readiness succeeds')\n+    positions = [tap.index(stage) for stage in stages]\n+    require(positions == sorted(positions),\n+            'Observe failures before asserting; tap only after readiness succeeds')\n     require(not any(forbidden in tap for forbidden in\n                     ('coordinate(', 'onResume(', 'homeTapped(', 'performClick(', 'forceTap(', 'try?', 'catch {')),\n             'No coordinates, callbacks or swallowed failures')\n@@ -112,6 +162,12 @@\n     require('\"proves_recovery\": false' in observation and\n             not any(field in observation for field in ('.label', '.value', '.debugDescription', '.screenshot()')),\n             'Presence/geometry cannot claim recovery or disclose UI content')\n+    require('let hittabilityQueried = dsc01CatalogFinite(frame) && app.frame.contains(frame)' in observation and\n+            'row[\"hittability_queried\"] = hittabilityQueried' in observation and\n+            'if hittabilityQueried { row[\"hittable\"] = node.isHittable }' in observation and\n+            observation.count('node.isHittable') == 1 and\n+            observation.index('let frame = node.frame') < observation.index('node.isHittable'),\n+            'Offscreen diagnostic hittability must remain unqueried rather than fabricated')\n \n \n def assert_probe_contract(candidate, original):\n@@ -197,26 +253,68 @@\n \n     def test_scroll_contract_rejects_bypass_ambiguity_unbounded_or_private_diagnostics(self):\n         text = (HERE / 'L08StorageFunctionalUITests.swift.in').read_text()\n+        # A stale/broken baseline must not make unrelated negative mutations pass.\n+        assert_public_control_contract(text)\n+        regions = {\n+            'tap': ('    @MainActor private func l08TapExactPublicControl(',\n+                    '    @MainActor private func l08PublicControlObservation('),\n+            'settling': ('    @MainActor private func l08SettleHomeScrollDecision(',\n+                         '    @MainActor private func l08HomeGeometry('),\n+            'observation': ('    @MainActor private func l08PublicControlObservation(',\n+                            '    @MainActor private func l08WaitRecovery('),\n+        }\n+        activation = 'Exactly one public activation is required'\n+        scroll = 'The only scrolls must be bounded slow gestures on the tagged list'\n+        ambiguity = 'Ambiguous list or target identities must fail'\n+        state = 'No activation or gesture may bypass required state checks'\n+        settled = 'Scroll decisions must remain bounded settled read-only observations'\n+        privacy = 'Presence/geometry cannot claim recovery or disclose UI content'\n         mutations = [\n-            ('target.tap() // No alternate selector', 'target.tap(); target.tap() // No alternate selector'),\n-            ('for attempt in 0..<8 {', 'for attempt in 0..<100 {'),\n-            ('list.swipeUp()', 'app.swipeUp()'),\n-            ('matching(identifier: \"l08-home-list\")', 'matching(identifier: \"other-list\")'),\n-            ('XCTAssertEqual(lists.count, 1)', 'XCTAssertGreaterThan(lists.count, 0)'),\n-            ('XCTAssertEqual(query.count, 1)', 'XCTAssertGreaterThan(query.count, 0)'),\n-            ('XCTAssertLessThanOrEqual(query.count, 1)', 'XCTAssertTrue(true)'),\n-            ('target.exists && target.isEnabled && target.isHittable', 'target.exists'),\n-            ('XCTAssertTrue(list.exists && list.isEnabled && list.isHittable)', 'XCTAssertTrue(true)'),\n-            ('XCTAssertEqual(result, .completed)', 'XCTAssertTrue(true)'),\n-            ('target.tap() // No alternate selector', 'onResume(); target.tap() // No alternate selector'),\n-            ('\"proves_recovery\": false', '\"proves_recovery\": true'),\n-            ('XCTAssertLessThanOrEqual(data.count, 2048)', 'XCTAssertTrue(true)'),\n-            ('row[\"exists\"] = node.exists', 'row[\"exists\"] = node.label'),\n+            # Original14 semantic witnesses, remapped only where the reviewed UI changed.\n+            ('tap', 'target.tap() // No alternate selector', 'target.tap(); target.tap() // No alternate selector', activation),\n+            ('tap', 'for attempt in 0...8 {', 'for attempt in 0...100 {', scroll),\n+            ('tap', 'list.swipeUp(velocity: .slow)', 'app.swipeUp(velocity: .slow)', scroll),\n+            ('tap', 'matching(identifier: \"l08-home-list\")', 'matching(identifier: \"other-list\")',\n+             'Scroll eligibility and destination must use exact identities'),\n+            ('tap', 'XCTAssertEqual(lists.count, 1)', 'XCTAssertGreaterThan(lists.count, 0)', ambiguity),\n+            ('tap', 'XCTAssertEqual(query.count, 1)', 'XCTAssertGreaterThan(query.count, 0)', ambiguity),\n+            ('settling', '(0...1).contains(targetCount)', '(0...2).contains(targetCount)', ambiguity),\n+            ('tap', 'target.exists && target.isEnabled && target.isHittable', 'target.exists', state),\n+            ('tap', 'XCTAssertTrue(list.exists && list.isEnabled && list.isHittable)', 'XCTAssertTrue(true)', state),\n+            ('tap', 'XCTAssertEqual(result, .completed)', 'XCTAssertTrue(true)',\n+             'Observe failures before asserting; tap only after readiness succeeds'),\n+            ('tap', 'target.tap() // No alternate selector', 'onResume(); target.tap() // No alternate selector',\n+             'No coordinates, callbacks or swallowed failures'),\n+            ('observation', '\"proves_recovery\": false', '\"proves_recovery\": true', privacy),\n+            ('observation', 'XCTAssertLessThanOrEqual(data.count, 2048)', 'XCTAssertTrue(true)',\n+             'Diagnostic output is bounded to a closed public alias list'),\n+            ('observation', 'row[\"exists\"] = node.exists', 'row[\"exists\"] = node.label', privacy),\n+            # Current bidirectional/pre-scroll guards also need actual negative witnesses.\n+            ('tap', 'list.swipeDown(velocity: .slow)', 'app.swipeDown(velocity: .slow)', scroll),\n+            ('tap', 'guard attempt < 8 else {', 'guard attempt < 9 else {', scroll),\n+            ('tap', 'if direction == .ready { break }', 'if direction == .ready { continue }', scroll),\n+            ('settling', 'for sample in 0..<24 {', 'for sample in 0..<25 {', settled),\n+            ('settling', 'if consecutive == 6, let direction', 'if consecutive == 1, let direction', settled),\n+            ('settling', 'targetCount == 0 && !targetSeen', 'targetCount == 0', settled),\n+            ('settling', 'else { direction = nil }', 'else { direction = .up }', settled),\n+            ('settling', 'consecutive += 1', 'consecutive += 1; anchor = frames', settled),\n+            ('observation', 'if hittabilityQueried { row[\"hittable\"] = node.isHittable }',\n+             'row[\"hittable\"] = node.isHittable',\n+             'Offscreen diagnostic hittability must remain unqueried rather than fabricated'),\n+            ('tap', 'try l08RequireHomeZeroBeforeTap(app, identifier: identifier)',\n+             'try l08RequireHomeZeroBeforeTap(app, identifier: identifier); app.swipeDown(velocity: .slow)', scroll),\n         ]\n-        for before, after in mutations:\n-            self.assertIn(before, text)\n-            with self.subTest(mutation=before), self.assertRaises((RuntimeError, ValueError)):\n-                assert_public_control_contract(text.replace(before, after, 1))\n+        for region, before, after, reason in mutations:\n+            original = section(text, *regions[region])\n+            with self.subTest(region=region, mutation=before):\n+                self.assertEqual(original.count(before), 1)\n+                changed = original.replace(before, after, 1)\n+                self.assertNotEqual(changed, original)\n+                self.assertEqual(text.count(original), 1)\n+                altered = text.replace(original, changed, 1)\n+                self.assertNotEqual(altered, text)\n+                with self.assertRaisesRegex(RuntimeError, '^' + re.escape(reason) + '$'):\n+                    assert_public_control_contract(altered)\n \n     def test_all_original_controls_and_exact_clone_allowlist_are_preserved(self):\n         self.assertEqual(sha(CLONE_MANIFEST), CLONE_MANIFEST_SHA256)\n",
+  "pin_closure": "No six-file direct Foundation pin changes. Companion*.py is included dynamically in composition controls; root must regenerate required source/control bindings after approved canonical integration/freeze. No stale native binding reuse authorized.",
+  "author_operations_and_cleanup": {
+    "canonical_edited": false,
+    "other_source_edited": false,
+    "project_imports_or_test_execution": false,
+    "native_or_api_dispatch": false,
+    "workers_created": false,
+    "build_test_cycle_started": false,
+    "operations": "Static reads of actual source/evidence; authored only assigned draft test+report. No task-owned generated build/test outputs to clean. Root retains lane and cleanup authority."
+  },
+  "remaining": "Different-agent exact source/regression review, root-approved adoption and new focused test execution. Failedcycle01 remainsFAIL; application/storage/native readiness remains unresolved."
+}

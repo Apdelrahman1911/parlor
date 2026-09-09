@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "kind": "ROOT_ADMINISTRATIVE_EVIDENCE_PARSER_FAILURE_NOT_TEST_EXECUTION",
+  "recorded_at": "2026-09-09T05:10:38.258745+00:00",
+  "failure": "AssertionError: ('continuation-a25-composition-controls-01', 54, ['55'])",
+  "cause": "Coordinator line-only unittest outcome regex did not match one test whose allocation/cleanup stdout was interleaved before its standalone ok. No postflight file was written and no test was rerun.",
+  "evidence": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-composition-controls-01/gradle.log",
+    "sha256": "fb1a838a165980d048215786fef5a4494f7e357abe50ee3d2dfb31328c223a76"
+  },
+  "followup": "Require exact interleaved descriptor/marker structure plus actual result JSON, unmodified Ran55/OK and receipt, not an exception waiver. Separate independent evidence review still required."
+}

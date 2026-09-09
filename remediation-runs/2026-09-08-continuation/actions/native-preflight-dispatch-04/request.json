@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "kind": "EXACT_PENDING_NONBUILDING_NATIVE_PREFLIGHT_REQUEST",
+  "coordinator": "/root",
+  "created_at": "2026-09-09T01:19:20.151734+00:00",
+  "status": "NOT_DISPATCHED_REQUIRES_COMPLETED_INDEPENDENT_FREEZE_VALIDATOR_REVIEW_AND_FRESH_NO_OVERLAP",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "frozen_source_sha": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+  "frozen_source_tree": "c19beea4647ce882c02d8751d1bf82c22484b52b",
+  "inputs": {
+    "verification_scope": "native-preflight",
+    "frozen_source_sha": "08d1adfbd7284f190fbab5f7baa846944bca5b68"
+  },
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=native-preflight",
+    "-f",
+    "frozen_source_sha=08d1adfbd7284f190fbab5f7baa846944bca5b68"
+  ],
+  "source_freeze": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/budget-source-freeze-01.json",
+    "sha256": "47bd573eabf7d2481704adab7e39a3809b084f3163b847577de3f89c9e343f29"
+  },
+  "actual_validator": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-release-validator-04/receipt.json",
+    "sha256": "1c9687ca429362deff066c6f14d5a207a01ac6704f66cc2a6746761fb747ea2c",
+    "independent_review_required": "remediation-runs/2026-09-08-continuation/reviews/budget-freeze-and-validator04-independent-01.json"
+  },
+  "independent_preflight_authorization_required": "remediation-runs/2026-09-08-continuation/reviews/native-preflight-budget-freeze-independent-01.json",
+  "prior_reviewed_preparation_sha256": "657ff4e08ed17817f9c348c7735029b0d0eed2e0bb71a43cbe62a564d38a5be9",
+  "screening": {
+    "path": "remediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-04/screening-receipt.json",
+    "bytes": 3852,
+    "sha256": "da6440405fd4880d6464c76c3ca0d4547113ec06e996a0445e852e18de074b01"
+  },
+  "runtime": "NOT_RUN. This request is only a nonbuilding fresh hosted source/control/platform binding. No app build/test/libproc/Store/physical-device action authorized here.",
+  "cleanup": "No build or test lane started by this request/GET collection; no temporary helper file, caches, workers or background process left."
+}

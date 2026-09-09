@@ -1,0 +1,978 @@
+{
+  "schema_version": 1,
+  "kind": "native-a25-integrated-fixture-linux-controls-independent-review",
+  "reviewed_at": "2026-09-09T05:22:55.152Z",
+  "reviewer": "/root/fixture_review",
+  "executor": "/root",
+  "status": "ACTUAL_A_CONTROLS_PARTIAL_PASS_FUNCTIONAL_COPY_GUARD_FAILURE_RETAINED",
+  "readiness": "NOT_READY",
+  "scope": "Independent integration and actual-execution evidence review of exactly three Linux A25 control cycles. The shared211-input binding also includes B26, but B26 test evidence is outside this review.",
+  "summary": {
+    "integrated_swift_matches_reviewed": true,
+    "integrated_scanner_matches_reviewed_projection": true,
+    "fixture_controls": {
+      "tests": 25,
+      "passed": 25,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "functional_copy_controls": {
+      "tests": 12,
+      "passed": 10,
+      "failed": 1,
+      "errors": 1,
+      "skipped": 0
+    },
+    "foundation_composition_controls": {
+      "tests": 55,
+      "passed": 55,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "total_A_controls": {
+      "tests": 92,
+      "passed": 90,
+      "failed": 1,
+      "errors": 1,
+      "skipped": 0
+    },
+    "all_three_cycles_passed": false,
+    "all_three_cleanup_passed": true,
+    "administrative_54_versus_55_parse_gap": "CLOSED_FROM_UNCHANGED_RAW_LOG_AND_DRIVER_RESULT; no rerun or waived assertion",
+    "current_application_runtime_or_native_provenance_proved": false
+  },
+  "integration": {
+    "source_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-independent-01.json",
+      "sha256": "4bf106beba684f5e1d7751899472e8ef8e9e664ff9f5695d78414a22c635de66"
+    },
+    "adoption_receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-b26-control-adoption-01.json",
+      "sha256": "108900a08faa7099d6aaca3480a274fa6bc0de31ed3e69abc599f4d0382795d1",
+      "bytes": 2460
+    },
+    "canonical": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in",
+        "sha256": "750dbb70d879ba4cc41908103699457557e8723e4d67d2c27cbab133b202cac3",
+        "bytes": 26023,
+        "check": "Byte-identical held Swift; no integration edit."
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py",
+        "sha256": "b77b36c317f4f04620c0cf4b40065fc55a382e57110d622a78b818d9761e9b79",
+        "bytes": 48084,
+        "check": "Exact independently reviewed ROOT parents5→3, SWIFT canonical COMPANION path and truthful opening docstring projection. No extra scanner edit."
+      }
+    ],
+    "declared_to_executed_test_ids": [
+      {
+        "cycle": "continuation-a25-fixture-controls-01",
+        "declared": 25,
+        "observed": 25,
+        "unique": 25,
+        "exact_same_ids": true
+      },
+      {
+        "cycle": "continuation-a25-functional-copy-controls-01",
+        "declared": 12,
+        "observed": 12,
+        "unique": 12,
+        "exact_same_ids": true
+      }
+    ],
+    "source_state": {
+      "commit": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+      "tree": "c19beea4647ce882c02d8751d1bf82c22484b52b",
+      "tracked_status": "M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_region.c.in\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py\n M remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py\n M scripts/ci/NATIVE_CONTINUATION.md\n M scripts/ci/native_continuation.py\n M scripts/release/tests/test_native_process_probe.py",
+      "diff_sha256": "a34a207234a8f098f3949dab0bdc6d0709f3d3f8742eb470ca0f6c24322f2094",
+      "rows": 828,
+      "computed_manifest_digest": "f7d8b3dbdec3d07c16921e7f8457c0da96d404708758605eb7797c2f6b106237",
+      "reported_manifest_digest": "f7d8b3dbdec3d07c16921e7f8457c0da96d404708758605eb7797c2f6b106237",
+      "current_source_mismatches": []
+    },
+    "current_read_only_git_diff_sha256": "a34a207234a8f098f3949dab0bdc6d0709f3d3f8742eb470ca0f6c24322f2094",
+    "scope_limit": "Executed on08d HEAD plus explicitly recorded tracked changes, not a clean frozen qualification commit. HEAD tree is not represented as the working tree."
+  },
+  "source_and_control_binding": {
+    "before": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-a25-b26-controls-inputs-before-01.json",
+      "sha256": "63eb8b87edebe3021f7895c16be923942793274e20cc5b140e510f97ce0d473b",
+      "bytes": 43689
+    },
+    "after": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-a25-b26-controls-inputs-after-01.json",
+      "sha256": "40a1d9f00579ec22b238aac9d600644b6a62218744cbd44cab7ecc2eedb7d91b",
+      "bytes": 46380
+    },
+    "checks": {
+      "before_sha256": "63eb8b87edebe3021f7895c16be923942793274e20cc5b140e510f97ce0d473b",
+      "after_sha256": "40a1d9f00579ec22b238aac9d600644b6a62218744cbd44cab7ecc2eedb7d91b",
+      "rows": 211,
+      "before_equals_after": true,
+      "manifest_digest_recomputed": "cfff74eba46aeed5883d26f1536edfafa2543dc36eb8ac61410507cb29b1e09e",
+      "reported_manifest_digest": "cfff74eba46aeed5883d26f1536edfafa2543dc36eb8ac61410507cb29b1e09e",
+      "current_input_mismatches": []
+    },
+    "production_source_manifest_check": {
+      "commit": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+      "tree": "c19beea4647ce882c02d8751d1bf82c22484b52b",
+      "tracked_status": "M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_region.c.in\n M remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_control_tests.py\n M remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py\n M scripts/ci/NATIVE_CONTINUATION.md\n M scripts/ci/native_continuation.py\n M scripts/release/tests/test_native_process_probe.py",
+      "diff_sha256": "a34a207234a8f098f3949dab0bdc6d0709f3d3f8742eb470ca0f6c24322f2094",
+      "rows": 828,
+      "computed_manifest_digest": "f7d8b3dbdec3d07c16921e7f8457c0da96d404708758605eb7797c2f6b106237",
+      "reported_manifest_digest": "f7d8b3dbdec3d07c16921e7f8457c0da96d404708758605eb7797c2f6b106237",
+      "current_source_mismatches": []
+    },
+    "runner": {
+      "path": "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "sha256": "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc",
+      "bytes": 25106,
+      "manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912"
+    },
+    "independent_operations": [
+      "Parsed before and after raw JSON, compared exact211 rows and recomputed the compact JSON manifest SHA256.",
+      "Rehashed all211 bound current files and all828 current production-source manifest entries; zero mismatches or redirected/nonregular files.",
+      "Compared source_before/source_after and runner_before/runner_after in each of the three actual receipts; all equal, and each shares the same source context.",
+      "Computed read-only git diff --binary HEAD SHA256; it equals the recorded a34a2072... diff.",
+      "Freshly hashed canonical adopted A files and matched the earlier independent projection and root adoption receipt."
+    ],
+    "new_guard_not_in_this_binding": "The proposed test_l08_functional_copy.py correction is not adopted or executed by this evidence set. A later corrected-file hash must not be relabeled as having run under this cfff74... control manifest."
+  },
+  "actual_cycles": [
+    {
+      "cycle": "continuation-a25-fixture-controls-01",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py"
+      ],
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": {
+        "tests": 25,
+        "passed": 25,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "seconds": 9.946
+      },
+      "actual_test_rows": [
+        {
+          "line": 1,
+          "id": "__main__.ScrollCorrectionDraftTests.test_actual_a23_trajectory_is_conditional_geometry_not_callback_proof",
+          "outcome": "ok"
+        },
+        {
+          "line": 2,
+          "id": "__main__.ScrollCorrectionDraftTests.test_direction_policy_mutations_are_source_bound",
+          "outcome": "ok"
+        },
+        {
+          "line": 3,
+          "id": "__main__.ScrollCorrectionDraftTests.test_every_home_hittability_site_follows_geometry_without_fabricated_false",
+          "outcome": "ok"
+        },
+        {
+          "line": 4,
+          "id": "__main__.ScrollCorrectionDraftTests.test_final_six_anchor_zero_one_recovery_parameter_body_bytes_match_frozen_baseline",
+          "outcome": "ok"
+        },
+        {
+          "line": 5,
+          "id": "__main__.ScrollCorrectionDraftTests.test_geometry_policy_rejects_nonfinite_overflow_and_malformed_containment",
+          "outcome": "ok"
+        },
+        {
+          "line": 6,
+          "id": "__main__.ScrollCorrectionDraftTests.test_only_reviewed_main_scrolling_sites_allow_downward_gestures",
+          "outcome": "ok"
+        },
+        {
+          "line": 7,
+          "id": "__main__.ScrollCorrectionDraftTests.test_overlay_requires_whole_card_band_and_never_chooses_tap_point",
+          "outcome": "ok"
+        },
+        {
+          "line": 8,
+          "id": "__main__.ScrollCorrectionDraftTests.test_scroll_bounds_and_single_activation_retries_remain_rejected",
+          "outcome": "ok"
+        },
+        {
+          "line": 9,
+          "id": "__main__.ScrollCorrectionDraftTests.test_settling_cannot_guess_ambiguous_invalid_or_disappeared_target",
+          "outcome": "ok"
+        },
+        {
+          "line": 10,
+          "id": "__main__.ScrollCorrectionDraftTests.test_settling_nil_resets_and_complete_window_is_bounded",
+          "outcome": "ok"
+        },
+        {
+          "line": 11,
+          "id": "__main__.ScrollCorrectionDraftTests.test_transient_visibility_and_drift_cannot_trigger_next_gesture",
+          "outcome": "ok"
+        },
+        {
+          "line": 12,
+          "id": "__main__.SingleTapFixtureContractTests.test_actual_swift_matches_independently_reviewed_contract",
+          "outcome": "ok"
+        },
+        {
+          "line": 13,
+          "id": "__main__.SingleTapFixtureContractTests.test_after_tap_polling_cannot_reactivate_or_be_unbounded",
+          "outcome": "ok"
+        },
+        {
+          "line": 14,
+          "id": "__main__.SingleTapFixtureContractTests.test_all_thirteen_boot_callers_and_storage_assertions_are_unchanged",
+          "outcome": "ok"
+        },
+        {
+          "line": 15,
+          "id": "__main__.SingleTapFixtureContractTests.test_counter_freshness_and_schema_mutations_rejected",
+          "outcome": "ok"
+        },
+        {
+          "line": 16,
+          "id": "__main__.SingleTapFixtureContractTests.test_geometry_visibility_uniqueness_and_bounds_mutations_rejected",
+          "outcome": "ok"
+        },
+        {
+          "line": 17,
+          "id": "__main__.SingleTapFixtureContractTests.test_pre_scroll_zero_and_missing_fresh_resample_mutations_rejected",
+          "outcome": "ok"
+        },
+        {
+          "line": 18,
+          "id": "__main__.SingleTapFixtureContractTests.test_private_or_unbounded_or_overclaiming_diagnostic_mutations_rejected",
+          "outcome": "ok"
+        },
+        {
+          "line": 19,
+          "id": "__main__.SingleTapFixtureContractTests.test_repeat_activation_and_direct_callback_mutations_rejected",
+          "outcome": "ok"
+        },
+        {
+          "line": 20,
+          "id": "__main__.SingleTapFixtureContractTests.test_shared_geometry_helpers_have_strict_tolerance_and_runloop_wait",
+          "outcome": "ok"
+        },
+        {
+          "line": 21,
+          "id": "__main__.SingleTapFixtureContractTests.test_swift_for_argument_label_is_not_an_activation_loop",
+          "outcome": "ok"
+        },
+        {
+          "line": 22,
+          "id": "__main__.UnchangedApplicationBoundaryTests.test_actual_counter_seam_and_observer_stay_byte_identical",
+          "outcome": "ok"
+        },
+        {
+          "line": 23,
+          "id": "__main__.UnchangedApplicationBoundaryTests.test_counter_guard_precedes_actual_controller_attachment",
+          "outcome": "ok"
+        },
+        {
+          "line": 24,
+          "id": "__main__.UnchangedApplicationBoundaryTests.test_shipping_home_callback_and_card_are_not_replaced",
+          "outcome": "ok"
+        },
+        {
+          "line": 25,
+          "id": "__main__.UnchangedApplicationBoundaryTests.test_source_scanner_does_not_accept_comment_laundering",
+          "outcome": "ok"
+        }
+      ],
+      "raw_summary_and_failure_lines": [
+        {
+          "line": 28,
+          "raw": "Ran 25 tests in 9.946s"
+        },
+        {
+          "line": 30,
+          "raw": "OK"
+        }
+      ],
+      "started_at": "2026-09-09T04:59:34.254980+00:00",
+      "finished_at": "2026-09-09T04:59:45.128335+00:00",
+      "stop_exit_code": 0,
+      "stopped_at": "2026-09-09T04:59:45.868638+00:00",
+      "cleanup_completed_at": "2026-09-09T04:59:45.946090+00:00",
+      "test_xml_receipts": [],
+      "artifact_receipts": [],
+      "evidence_interpretation": "Python verbose unittest log plus actual exit/cleanup receipt; not Gradle application tests, Swift compilation, XCTest or platform runtime."
+    },
+    {
+      "cycle": "continuation-a25-functional-copy-controls-01",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02",
+        "-p",
+        "test_l08_functional_copy.py",
+        "-v"
+      ],
+      "status": "FAIL",
+      "exit_code": 1,
+      "counts": {
+        "tests": 12,
+        "passed": 10,
+        "failed": 1,
+        "errors": 1,
+        "skipped": 0,
+        "seconds": 0.096
+      },
+      "actual_test_rows": [
+        {
+          "line": 1,
+          "id": "test_l08_functional_copy.L08FunctionalCopyTests.test_all_new_python_controls_parse_without_launching_any_worker",
+          "outcome": "ok"
+        },
+        {
+          "line": 2,
+          "id": "test_l08_functional_copy.L08FunctionalCopyTests.test_all_original_controls_and_exact_clone_allowlist_are_preserved",
+          "outcome": "ok"
+        },
+        {
+          "line": 3,
+          "id": "test_l08_functional_copy.L08FunctionalCopyTests.test_continuation_diagnostics_cannot_hide_removed_guards_or_dynamic_private_stages",
+          "outcome": "ok"
+        },
+        {
+          "line": 4,
+          "id": "test_l08_functional_copy.L08FunctionalCopyTests.test_continuation_stages_are_closed_and_all_mafia_guards_actions_remain_identical",
+          "outcome": "ok"
+        },
+        {
+          "line": 5,
+          "id": "test_l08_functional_copy.L08FunctionalCopyTests.test_current_source_transforms_once_with_single_bridge_and_shared_context",
+          "outcome": "ok"
+        },
+        {
+          "line": 6,
+          "id": "test_l08_functional_copy.L08FunctionalCopyTests.test_each_source_boundary_mutation_is_rejected_not_just_missing_check_names",
+          "outcome": "ok"
+        },
+        {
+          "line": 7,
+          "id": "test_l08_functional_copy.L08FunctionalCopyTests.test_functional_probe_preserves_complete_nonmetadata_execution_regions",
+          "outcome": "ok"
+        },
+        {
+          "line": 8,
+          "id": "test_l08_functional_copy.L08FunctionalCopyTests.test_home_list_tag_preserves_every_other_production_character",
+          "outcome": "ok"
+        },
+        {
+          "line": 9,
+          "id": "test_l08_functional_copy.L08FunctionalCopyTests.test_home_scrolling_and_diagnostics_preserve_strict_public_activation",
+          "outcome": "ERROR"
+        },
+        {
+          "line": 10,
+          "id": "test_l08_functional_copy.L08FunctionalCopyTests.test_only_the_new_probe_registration_replaces_the_strict_probe_in_owned_copy",
+          "outcome": "ok"
+        },
+        {
+          "line": 11,
+          "id": "test_l08_functional_copy.L08FunctionalCopyTests.test_scroll_contract_rejects_bypass_ambiguity_unbounded_or_private_diagnostics",
+          "outcome": "FAIL"
+        },
+        {
+          "line": 12,
+          "id": "test_l08_functional_copy.L08FunctionalCopyTests.test_swift_namespace_preserves_shared_host_helpers_and_exact_distinct_test",
+          "outcome": "ok"
+        }
+      ],
+      "raw_summary_and_failure_lines": [
+        {
+          "line": 15,
+          "raw": "ERROR: test_home_scrolling_and_diagnostics_preserve_strict_public_activation (test_l08_functional_copy.L08FunctionalCopyTests.test_home_scrolling_and_diagnostics_preserve_strict_public_activation)"
+        },
+        {
+          "line": 24,
+          "raw": "RuntimeError: The only scroll must be bounded and belong to the tagged list"
+        },
+        {
+          "line": 27,
+          "raw": "FAIL: test_scroll_contract_rejects_bypass_ambiguity_unbounded_or_private_diagnostics (test_l08_functional_copy.L08FunctionalCopyTests.test_scroll_contract_rejects_bypass_ambiguity_unbounded_or_private_diagnostics)"
+        },
+        {
+          "line": 32,
+          "raw": "AssertionError: 'for attempt in 0..<8 {' not found in '// Separate functional companion; never an upgrade of original strict L08 or physical storage evidence.\\nextension IOSAppLaunchUITests {\\n    @MainActor private func verifyL08FunctionalStoreResume(_ app: XCUIApplication) throws {\\n        var boots = Set<String>()\\n        for ordinal in 1...13"
+        },
+        {
+          "line": 35,
+          "raw": "Ran 12 tests in 0.096s"
+        },
+        {
+          "line": 37,
+          "raw": "FAILED (failures=1, errors=1)"
+        }
+      ],
+      "started_at": "2026-09-09T05:00:47.211673+00:00",
+      "finished_at": "2026-09-09T05:00:48.230833+00:00",
+      "stop_exit_code": 0,
+      "stopped_at": "2026-09-09T05:00:48.926017+00:00",
+      "cleanup_completed_at": "2026-09-09T05:00:49.014636+00:00",
+      "test_xml_receipts": [],
+      "artifact_receipts": [],
+      "evidence_interpretation": "Python verbose unittest log plus actual exit/cleanup receipt; not Gradle application tests, Swift compilation, XCTest or platform runtime."
+    },
+    {
+      "cycle": "continuation-a25-composition-controls-01",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py"
+      ],
+      "status": "PASS",
+      "exit_code": 0,
+      "counts": {
+        "tests": 55,
+        "passed": 55,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0,
+        "seconds": 6.036
+      },
+      "started_at": "2026-09-09T05:04:20.299321+00:00",
+      "finished_at": "2026-09-09T05:04:27.571133+00:00",
+      "stop_exit_code": 0,
+      "stopped_at": "2026-09-09T05:04:28.086066+00:00",
+      "cleanup_completed_at": "2026-09-09T05:04:28.169329+00:00",
+      "log_summary": [
+        {
+          "line": 65,
+          "raw": "Ran 55 tests in 6.036s"
+        },
+        {
+          "line": 67,
+          "raw": "OK"
+        }
+      ],
+      "structured_result_line": 68,
+      "structured_result": {
+        "discovered": [
+          "l08_app_foundation_draft_controls.OwnedCopyControls.test_copy_adapter_adds_only_two_files_and_three_exact_changes",
+          "l08_app_foundation_draft_controls.OwnedCopyControls.test_foreign_source_root_and_preexisting_adapter_are_never_overwritten",
+          "l08_app_foundation_draft_controls.OwnedCopyControls.test_hardlinked_inherited_source_fails_before_copy_mutation",
+          "l08_app_foundation_draft_controls.OwnedCopyControls.test_malformed_compile_hash_or_device_root_cannot_write_copy",
+          "l08_app_foundation_draft_controls.OwnedCopyControls.test_owned_receipt_rejects_symlink_hardlink_oversize_and_traversal",
+          "l08_app_foundation_draft_controls.OwnedCopyControls.test_partial_available_receipts_preserved_before_later_abort_without_overwrite",
+          "l08_app_foundation_draft_controls.OwnedCopyControls.test_removed_synthetic_root_claim_is_checked_before_preserving",
+          "l08_app_foundation_draft_controls.OwnedCopyControls.test_source_custody_hash_drift_and_extra_inputs_fail_before_any_addition",
+          "l08_app_foundation_draft_controls.SchemaControls.test_claims_context_runtime_and_unknown_fields_are_strict",
+          "l08_app_foundation_draft_controls.SchemaControls.test_closed_delivery_failure_never_becomes_native_observation",
+          "l08_app_foundation_draft_controls.SchemaControls.test_cross_control_source_token_image_or_install_fails_binding",
+          "l08_app_foundation_draft_controls.SchemaControls.test_duplicate_nonfinite_malformed_and_oversized_json_is_rejected",
+          "l08_app_foundation_draft_controls.SchemaControls.test_every_boolean_field_rejects_numeric_zero_and_one",
+          "l08_app_foundation_draft_controls.SchemaControls.test_false_operations_errors_and_exceptions_remain_observed",
+          "l08_app_foundation_draft_controls.SchemaControls.test_first_health_cross_check_never_substitutes_a_different_boot_or_process",
+          "l08_app_foundation_draft_controls.SchemaControls.test_full_native_dicts_paths_payloads_and_error_descriptions_cannot_enter_receipt",
+          "l08_app_foundation_draft_controls.SchemaControls.test_inner_cleanup_failure_cannot_be_collection_validated",
+          "l08_app_foundation_draft_controls.SchemaControls.test_missing_complete_metadata_never_satisfies_l08",
+          "l08_app_foundation_draft_controls.SchemaControls.test_missing_duplicate_wrong_architecture_or_digest_uuid_inventory_rejected",
+          "l08_app_foundation_draft_controls.SchemaControls.test_partial_error_receipt_is_preservable_not_collection_success",
+          "l08_app_foundation_draft_controls.SchemaControls.test_rows_are_complete_unique_ordered_and_cannot_query_directory_url_class",
+          "l08_app_foundation_draft_controls.SchemaControls.test_unavailable_image_preserves_closed_error_rows_without_collection_success",
+          "l08_app_foundation_draft_controls.SchemaControls.test_wrong_debug_identity_and_conflicting_native_aliases_fail_binding",
+          "l08_app_foundation_draft_controls.SchemaControls.test_xctest_receipt_must_execute_once_with_exact_primitive_types",
+          "l08_app_foundation_draft_controls.SourceControls.test_bridge_wires_only_app_debug_and_preserves_original_project_sections",
+          "l08_app_foundation_draft_controls.SourceControls.test_control03_operation_query_and_image_helpers_remain_exact",
+          "l08_app_foundation_draft_controls.SourceControls.test_hooks_preserve_existing_loop_method_and_one_activation_counts",
+          "l08_app_foundation_draft_controls.SourceControls.test_main_image_selects_exact_bundle_executable_with_no_index_zero_fallback",
+          "l08_app_foundation_draft_controls.SourceControls.test_main_selection_failures_are_preservable_only_as_closed_control_errors",
+          "l08_app_foundation_draft_controls.SourceControls.test_native_cleanup_static_guards_reject_individual_policy_mutations",
+          "l08_app_foundation_draft_controls.SourceControls.test_native_closed_reason_schema_covers_every_guard_without_raw_messages",
+          "l08_app_foundation_draft_controls.SourceControls.test_native_guard_no_process_global_override_or_production_storage_api",
+          "l08_app_foundation_draft_controls.SourceControls.test_wrong_main_uuid_still_fails_with_correct_fixture_and_foundation",
+          "l08_app_foundation_composition_controls.IntegrationControls.test_binding_requires_actual_inventories_executed_log_and_first_boot",
+          "l08_app_foundation_composition_controls.IntegrationControls.test_capture_and_canonicalization_keep_original_creation_identity",
+          "l08_app_foundation_composition_controls.IntegrationControls.test_first_health_process_binding_is_enforced_when_available",
+          "l08_app_foundation_composition_controls.IntegrationControls.test_foreign_container_and_cross_run_token_are_not_read_or_adopted",
+          "l08_app_foundation_composition_controls.IntegrationControls.test_malformed_or_missing_context_cannot_produce_collection_success",
+          "l08_app_foundation_composition_controls.IntegrationControls.test_normal_preservation_uses_existing_context_and_never_overwrites",
+          "l08_app_foundation_composition_controls.IntegrationControls.test_partial_preservation_failure_retains_first_record_and_cleanup_still_runs",
+          "l08_app_foundation_composition_controls.IntegrationControls.test_replaced_or_nonprivate_custody_is_rejected",
+          "l08_app_foundation_composition_controls.IntegrationControls.test_required_collection_never_upgrades_original_classification",
+          "l08_app_foundation_composition_controls.IntegrationControls.test_timeout_and_cancellation_fallback_preserve_before_simulated_deletion",
+          "l08_app_foundation_composition_controls.LauncherControls.test_external_parent_and_environment_are_finalized_on_success_failure_and_cancellation",
+          "l08_app_foundation_composition_controls.LauncherControls.test_external_parent_canonicalizes_exact_platform_path_before_allocation",
+          "l08_app_foundation_composition_controls.LauncherControls.test_external_parent_rejects_unreviewed_platform_before_allocation",
+          "l08_app_foundation_composition_controls.SourceControls.test_allocation_custody_is_inside_original_deferred_signal_boundary",
+          "l08_app_foundation_composition_controls.SourceControls.test_control_union_keeps_every_inherited_and_new_input",
+          "l08_app_foundation_composition_controls.SourceControls.test_each_missing_and_ambiguous_anchor_fails_closed",
+          "l08_app_foundation_composition_controls.SourceControls.test_exact_companion_hash_and_composed_syntax",
+          "l08_app_foundation_composition_controls.SourceControls.test_inherited_inspector_precedes_adapter_and_extended_evidence",
+          "l08_app_foundation_composition_controls.SourceControls.test_only_declared_regions_change_and_original_functions_remain",
+          "l08_app_foundation_composition_controls.SourceControls.test_preservation_binding_and_required_gate_do_not_replace_original_gates",
+          "l08_app_foundation_composition_controls.SourceControls.test_relative_freeze_preserves_exact_nine_owned_draft_inputs",
+          "l08_app_foundation_composition_controls.SourceControls.test_relative_freeze_rejects_wrong_root_escapes_duplicate_and_hash_changes"
+        ],
+        "tests_run": 55,
+        "failures": 0,
+        "errors": 0,
+        "skipped": [],
+        "input_tests": [
+          {
+            "path": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py",
+            "sha256": "c04c7d4b1bb99207415beab77ae3b40bb3d5f59709970f7d844d5d14beab0fe5"
+          },
+          {
+            "path": "/root/projects/Parlor/parlor/remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+            "sha256": "9cbc54882717a4c441b51e953c883579976cdd1c299d9a57099a713c36823464"
+          }
+        ],
+        "native_execution": false
+      },
+      "raw_descriptor_count": 55,
+      "direct_inline_ok_count": 54,
+      "raw_descriptor_order_equals_structured_discovery": true,
+      "source_AST_names_count": 55,
+      "source_AST_names_equal_discovery": true,
+      "test_xml_receipts": [],
+      "artifact_receipts": [],
+      "evidence_interpretation": "The55 actual Python source/schema/copy/cleanup controls ran once. Native/device operations are inert synthetic fixtures or source checks. Native execution is explicitly false in the driver result."
+    }
+  ],
+  "functional_copy_failure": {
+    "status": "OPEN_REQUIRES_REVIEWED_GUARD_CORRECTION_AND_NEW_ACTUAL12_RUN",
+    "old_guard_source": {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+      "sha256": "b58d9761b7c199f0ab7fd01c2c6614d2f49e0a71102fd54ff3f6783acfede7f0",
+      "bytes": 25344
+    },
+    "failed_receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-01/receipt.json",
+      "sha256": "a37b3797b637bea5e47497cdbd981d33be11f24f6154efcb3ddf976f0114c572"
+    },
+    "failed_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-01/gradle.log",
+      "sha256": "6e348154b3710fc2d3bc354d36f937107fa73eef59fe940721f9658ecb77a225"
+    },
+    "positive_error": "test_home_scrolling_and_diagnostics_preserve_strict_public_activation rejected the revised real source with RuntimeError: The only scroll must be bounded and belong to the tagged list.",
+    "mutation_failure": "test_scroll_contract_rejects_bypass_ambiguity_unbounded_or_private_diagnostics failed because obsolete 'for attempt in 0..<8 {' was absent. It did not finish validating its mutation list.",
+    "source_cause": "The older independent functional-copy guard still requires list.swipeUp(), for0..<8, the removed pre-sampling query-count assertion and two generic target readiness fragments. The reviewed Swift uses bounded settled slow up/down decisions and strict Home geometry readiness.",
+    "not_valid_negative_evidence": "An exception raised for a mutated input when the unmodified candidate already fails the same stale guard is not proof that the intended mutation was detected. No failed/unfinished mutant set is counted as validated.",
+    "required_correction": "Retain the12 existing declarations and original semantic cases, align the exact guard with current reviewed Swift, validate the positive baseline before mutants, use unique intended helper/anchor changes and reason-specific rejection, independently review the held patch, then execute the affected12 suite with fresh input bindings and cleanup.",
+    "preservation": "This10PASS/1FAIL/1ERROR cycle remains immutable historical failed evidence, even if a later corrected control run passes."
+  },
+  "administrative_parser_reconciliation": {
+    "failure_receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-a25-b26-postflight-parser-failure-01.json",
+      "sha256": "6c80f4bd438bbdf7eb75a6897c7d31cd25600debdcc1f609ae99e6141271f1c0",
+      "bytes": 883
+    },
+    "original_failure": "AssertionError: ('continuation-a25-composition-controls-01', 54, ['55'])",
+    "cause": "One unittest descriptor's stderr line is interleaved with the first of three allocation/cleanup stdout pairs; its success appears as a standalone 'ok'. An inline-only outcome regex counted54 although55 distinct tests executed.",
+    "exact_interleaved_test": {
+      "line": 45,
+      "name": "l08_app_foundation_composition_controls.LauncherControls.test_external_parent_and_environment_are_finalized_on_success_failure_and_cancellation",
+      "rest": "PARLOR_APP_FOUNDATION_CONTROL_ALLOCATION {\"path\": \"/tmp/parlor-app-foundation-controls-jc8lz7zi\", \"device\": 27, \"inode\": 1322642, \"uid\": 0}"
+    },
+    "exact_raw_lines45_through51": [
+      "test_external_parent_and_environment_are_finalized_on_success_failure_and_cancellation (l08_app_foundation_composition_controls.LauncherControls.test_external_parent_and_environment_are_finalized_on_success_failure_and_cancellation) ... PARLOR_APP_FOUNDATION_CONTROL_ALLOCATION {\"path\": \"/tmp/parlor-app-foundation-controls-jc8lz7zi\", \"device\": 27, \"inode\": 1322642, \"uid\": 0}",
+      "PARLOR_APP_FOUNDATION_CONTROL_CLEANUP {\"status\": \"PASS\", \"parent\": \"/tmp/parlor-app-foundation-controls-jc8lz7zi\", \"workers_started\": 0, \"parent_removed\": true, \"custody\": {\"device\": 27, \"inode\": 1322642, \"uid\": 0}}",
+      "PARLOR_APP_FOUNDATION_CONTROL_ALLOCATION {\"path\": \"/tmp/parlor-app-foundation-controls-9f66u81_\", \"device\": 27, \"inode\": 1322645, \"uid\": 0}",
+      "PARLOR_APP_FOUNDATION_CONTROL_CLEANUP {\"status\": \"PASS\", \"parent\": \"/tmp/parlor-app-foundation-controls-9f66u81_\", \"workers_started\": 0, \"parent_removed\": true, \"custody\": {\"device\": 27, \"inode\": 1322645, \"uid\": 0}}",
+      "PARLOR_APP_FOUNDATION_CONTROL_ALLOCATION {\"path\": \"/tmp/parlor-app-foundation-controls-4gpmm90d\", \"device\": 27, \"inode\": 1322648, \"uid\": 0}",
+      "PARLOR_APP_FOUNDATION_CONTROL_CLEANUP {\"status\": \"PASS\", \"parent\": \"/tmp/parlor-app-foundation-controls-4gpmm90d\", \"workers_started\": 0, \"parent_removed\": true, \"custody\": {\"device\": 27, \"inode\": 1322648, \"uid\": 0}}",
+      "ok"
+    ],
+    "independent_reconciliation": [
+      "There are55 unique raw test descriptors in exactly the driver's discovery order.",
+      "All55 discovered IDs match the AST-declared tests in the two unchanged driver-loaded modules.",
+      "The54 ordinary descriptors end in inline ok; the single specified descriptor is followed by exactly three valid allocation/cleanup pairs, then standalone ok before the next descriptor.",
+      "Raw Ran55/OK, driver tests_run55/failures0/errors0/skipped[], bound input hashes and the actual exit0 receipt agree.",
+      "All four main/nested external allocations have matching exact device/inode/uid cleanup PASS records and are now absent.",
+      "The preserved parser failure remains an administrative failure, not a test failure, native-runtime failure or license to override count checks."
+    ],
+    "status": "CLOSED_SCOPED_RECONCILIATION_NO_REEXECUTION",
+    "native_or_control_test_reruns_performed_by_reviewer": 0,
+    "failure_receipt_retained": true
+  },
+  "cleanup": {
+    "status": "PASS_FOR_ALL_THREE_ACTUAL_A_CYCLES",
+    "cycle_checks": [
+      {
+        "name": "continuation-a25-fixture-controls-01",
+        "same_source_as_first": true,
+        "source_before_after_equal": true,
+        "runner_before_after_equal": true,
+        "scratch_absent": true,
+        "outputs_before": [],
+        "remaining_outputs": [],
+        "remaining_workers": [],
+        "artifact_workers_remaining": [],
+        "cleanup_errors": [],
+        "stop_log": "No Gradle daemons are running.\n",
+        "stop_exit_code": 0
+      },
+      {
+        "name": "continuation-a25-functional-copy-controls-01",
+        "same_source_as_first": true,
+        "source_before_after_equal": true,
+        "runner_before_after_equal": true,
+        "scratch_absent": true,
+        "outputs_before": [],
+        "remaining_outputs": [],
+        "remaining_workers": [],
+        "artifact_workers_remaining": [],
+        "cleanup_errors": [],
+        "stop_log": "No Gradle daemons are running.\n",
+        "stop_exit_code": 0
+      },
+      {
+        "name": "continuation-a25-composition-controls-01",
+        "same_source_as_first": true,
+        "source_before_after_equal": true,
+        "runner_before_after_equal": true,
+        "scratch_absent": true,
+        "outputs_before": [],
+        "remaining_outputs": [],
+        "remaining_workers": [],
+        "artifact_workers_remaining": [],
+        "cleanup_errors": [],
+        "stop_log": "No Gradle daemons are running.\n",
+        "stop_exit_code": 0
+      }
+    ],
+    "serial_lane": "Each next A cycle starts after the prior cycle's cleanup_completed_at; no competing build lane was started by this reviewer.",
+    "jdk21": "All three raw receipts record JDK21 runtime/compiler probes with matching retained Java/javac logs. These were environment probes, not application builds.",
+    "immediate_gradle_stop": "Every receipt records stop_exit_code0 immediately after its command, and each stop.log says 'No Gradle daemons are running.'.",
+    "method": "Exact task-owned generated output and scratch removal; no application build outputs existed, no Gradle clean daemon was required, no global cache or unrelated source deletion.",
+    "owned_scratch_absent": true,
+    "remaining_owned_workers": 0,
+    "remaining_artifact_workers": 0,
+    "remaining_outputs": 0,
+    "cleanup_errors": 0,
+    "deferred_signals": 0,
+    "composition_external_allocations": [
+      {
+        "line": 1,
+        "row": {
+          "path": "/tmp/parlor-app-foundation-controls-112qqmep",
+          "device": 27,
+          "inode": 1322025,
+          "uid": 0
+        },
+        "currently_absent": true,
+        "cleanup_matches_exact_custody": true
+      },
+      {
+        "line": 45,
+        "row": {
+          "path": "/tmp/parlor-app-foundation-controls-jc8lz7zi",
+          "device": 27,
+          "inode": 1322642,
+          "uid": 0
+        },
+        "currently_absent": true,
+        "cleanup_matches_exact_custody": true
+      },
+      {
+        "line": 47,
+        "row": {
+          "path": "/tmp/parlor-app-foundation-controls-9f66u81_",
+          "device": 27,
+          "inode": 1322645,
+          "uid": 0
+        },
+        "currently_absent": true,
+        "cleanup_matches_exact_custody": true
+      },
+      {
+        "line": 49,
+        "row": {
+          "path": "/tmp/parlor-app-foundation-controls-4gpmm90d",
+          "device": 27,
+          "inode": 1322648,
+          "uid": 0
+        },
+        "currently_absent": true,
+        "cleanup_matches_exact_custody": true
+      }
+    ],
+    "composition_external_cleanup_records": [
+      {
+        "line": 46,
+        "row": {
+          "status": "PASS",
+          "parent": "/tmp/parlor-app-foundation-controls-jc8lz7zi",
+          "workers_started": 0,
+          "parent_removed": true,
+          "custody": {
+            "device": 27,
+            "inode": 1322642,
+            "uid": 0
+          }
+        }
+      },
+      {
+        "line": 48,
+        "row": {
+          "status": "PASS",
+          "parent": "/tmp/parlor-app-foundation-controls-9f66u81_",
+          "workers_started": 0,
+          "parent_removed": true,
+          "custody": {
+            "device": 27,
+            "inode": 1322645,
+            "uid": 0
+          }
+        }
+      },
+      {
+        "line": 50,
+        "row": {
+          "status": "PASS",
+          "parent": "/tmp/parlor-app-foundation-controls-4gpmm90d",
+          "workers_started": 0,
+          "parent_removed": true,
+          "custody": {
+            "device": 27,
+            "inode": 1322648,
+            "uid": 0
+          }
+        }
+      },
+      {
+        "line": 69,
+        "row": {
+          "status": "PASS",
+          "parent": "/tmp/parlor-app-foundation-controls-112qqmep",
+          "workers_started": 0,
+          "parent_removed": true,
+          "custody": {
+            "device": 27,
+            "inode": 1322025,
+            "uid": 0
+          }
+        }
+      }
+    ],
+    "all_external_parent_custody_pairs_match": true,
+    "all_external_parents_currently_absent": true,
+    "reviewer_cleanup": "No execution cycle was started by the reviewer, so no reviewer Gradle/native cleanup was performed."
+  },
+  "later_minimal_guard_fix_applicability": {
+    "status": "CONDITIONAL_SOURCE_SCOPE_ANALYSIS; EXACT_HELD_PATCH_REVIEW_PENDING",
+    "not_an_approval_of_unread_patch": true,
+    "source_paths_reopened": [
+      "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py:92-111",
+      "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py:21-55,234-249",
+      "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py:21-30,384-400,421-444",
+      "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py:23-30,71-79",
+      "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py:194-213,350-375",
+      "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py:32-71,90-105",
+      "remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py:16-28,467-487,680-684,792-825"
+    ],
+    "dependency_analysis": [
+      "The25 scanner imports standard libraries and reads its canonical Swift, shared geometry, pinned observer/counter/copy boundaries, public Home/Card source and A23 log. It does not read or import test_l08_functional_copy.py.",
+      "The55 launcher loads only test_app_foundation.py and test_composition.py, with fixed55 discovery; neither imports or executes test_l08_functional_copy.py.",
+      "The55 control-union test enumerates the functional-copy test file as an inherited path. This is not execution of that file or a fixed content pin.",
+      "Foundation app_foundation_copy has six direct PINS; test_l08_functional_copy.py is not one. Its native module loader and copied Swift template inputs do not select that test file.",
+      "compose_runner.control_manifest does hash every inherited companion.py input, including the functional-copy test file. A future change therefore changes the aggregate control-manifest identity even if native/runtime modules and55 executable tests stay byte-identical."
+    ],
+    "conditional_decision": "If the independently reviewed correction changes only the old guard and its existing mutation method, with no new imports/path selection/count or dependency edits, rerunning the affected12 suite is sufficient for that correction. The existing25/55 outcomes may be retained for their unchanged source/test scope, explicitly as reused historical executions—not newly run results at a new aggregate manifest.",
+    "requirements": [
+      "Confirm the exact proposed diff and all unchanged25/55 inputs before adoption; this analysis is not an automatic waiver.",
+      "Bind and rehash the corrected12 execution with a fresh before/after input manifest; record the single intended content-digest delta.",
+      "Do not reuse cfff74... as the fresh native control identity. Future native/CI qualification requires fresh frozen-source/control/image bindings.",
+      "Any additional consumer, runtime, template, test, import, manifest-path or admission change reopens this applicability assessment."
+    ]
+  },
+  "operations": {
+    "authorized_output": "remediation-runs/2026-09-08-continuation/reviews/native-a25-fixture-controls-independent-01.json",
+    "project_code_imports": 0,
+    "extracted_functions_executed": 0,
+    "tests_or_builds_run": 0,
+    "native_commands": 0,
+    "api_or_actions_calls": 0,
+    "canonical_edits": 0,
+    "allowed_activity": "Read-only Git/source/logs, standard-library AST/JSON/hash/path/stat/text operations and this independent report.",
+    "historical_failures_deleted_or_rewritten": 0,
+    "native_execution_authorized": false
+  },
+  "references": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-fixture-controls-01/artifact-receipts.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-fixture-controls-01/gradle.log",
+      "bytes": 4450,
+      "sha256": "5873973d21c4d9cc881e1fe9d11a99fcc37bf9012c931a39ea8ea7b72a90026e"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-fixture-controls-01/java-toolchain.log",
+      "bytes": 2026,
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-fixture-controls-01/javac-toolchain.log",
+      "bytes": 14,
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-fixture-controls-01/receipt.json",
+      "bytes": 306537,
+      "sha256": "c1bebb7c2a9bc9ed16a85d00cff627671e8703961aa698bfc926fe8d06c8bc08"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-fixture-controls-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-fixture-controls-01/test-receipts.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-01/artifact-receipts.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-01/gradle.log",
+      "bytes": 30967,
+      "sha256": "6e348154b3710fc2d3bc354d36f937107fa73eef59fe940721f9658ecb77a225"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-01/java-toolchain.log",
+      "bytes": 2026,
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-01/javac-toolchain.log",
+      "bytes": 14,
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-01/receipt.json",
+      "bytes": 306648,
+      "sha256": "a37b3797b637bea5e47497cdbd981d33be11f24f6154efcb3ddf976f0114c572"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-functional-copy-controls-01/test-receipts.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-composition-controls-01/artifact-receipts.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-composition-controls-01/gradle.log",
+      "bytes": 19640,
+      "sha256": "fb1a838a165980d048215786fef5a4494f7e357abe50ee3d2dfb31328c223a76"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-composition-controls-01/java-toolchain.log",
+      "bytes": 2026,
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-composition-controls-01/javac-toolchain.log",
+      "bytes": 14,
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-composition-controls-01/receipt.json",
+      "bytes": 306558,
+      "sha256": "b875badd345cba022f6e3dcfd69a6b2fecae631fa88169843f6115138a122064"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-composition-controls-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-a25-composition-controls-01/test-receipts.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-b26-control-adoption-01.json",
+      "bytes": 2460,
+      "sha256": "108900a08faa7099d6aaca3480a274fa6bc0de31ed3e69abc599f4d0382795d1"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-a25-b26-controls-inputs-before-01.json",
+      "bytes": 43689,
+      "sha256": "63eb8b87edebe3021f7895c16be923942793274e20cc5b140e510f97ce0d473b"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-a25-b26-controls-inputs-after-01.json",
+      "bytes": 46380,
+      "sha256": "40a1d9f00579ec22b238aac9d600644b6a62218744cbd44cab7ecc2eedb7d91b"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/continuation-a25-b26-postflight-parser-failure-01.json",
+      "bytes": 883,
+      "sha256": "6c80f4bd438bbdf7eb75a6897c7d31cd25600debdcc1f609ae99e6141271f1c0"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-independent-01.json",
+      "bytes": 61812,
+      "sha256": "4bf106beba684f5e1d7751899472e8ef8e9e664ff9f5695d78414a22c635de66"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in",
+      "bytes": 26023,
+      "sha256": "750dbb70d879ba4cc41908103699457557e8723e4d67d2c27cbab133b202cac3"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py",
+      "bytes": 48084,
+      "sha256": "b77b36c317f4f04620c0cf4b40065fc55a382e57110d622a78b818d9761e9b79"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+      "bytes": 25344,
+      "sha256": "b58d9761b7c199f0ab7fd01c2c6614d2f49e0a71102fd54ff3f6783acfede7f0"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/run_controls.py",
+      "bytes": 5918,
+      "sha256": "03c115d45474ee082204d38c6315e19909108148b2de8804898dd66c40c14dbf"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/test_composition.py",
+      "bytes": 34551,
+      "sha256": "9cbc54882717a4c441b51e953c883579976cdd1c299d9a57099a713c36823464"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py",
+      "bytes": 34661,
+      "sha256": "c04c7d4b1bb99207415beab77ae3b40bb3d5f59709970f7d844d5d14beab0fe5"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+      "bytes": 25106,
+      "sha256": "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc"
+    }
+  ],
+  "readiness_limits": [
+    "Successful25/55 source/model/composition controls are not application runtime proof and cannot complete legacy functional recovery, retained-host scenarios, strict file protection or normal Debug provenance.",
+    "The new Swift fixture has still not executed on Apple in this evidence set; actual A23 failures remain historical blocking observations.",
+    "This report does not qualify B26's204 controls, Darwin libproc ABI, a normal Debug app, frozen combined source, physical devices, Store signing/publication or separate owner/legal requirements.",
+    "Overall readiness remains NOT_READY; the current A Linux control chain has a real retained failure requiring a reviewed correction and new affected-suite execution."
+  ]
+}

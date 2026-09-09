@@ -1,0 +1,481 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_ACTUAL_SINGLE_NATIVE_DISPATCH_AND_ASSOCIATION_REVIEW",
+  "reviewer": "/root/ci_review",
+  "coordinator": "/root",
+  "recorded_at": "2026-09-09T02:46:19.559Z",
+  "status": "ACCEPTED_EXACT_SINGLE_DISPATCH_AND_ASSOCIATION_NOT_RUNTIME_PROOF",
+  "findings": [],
+  "scope": "Bounded independent review of completed native-evidence-dispatch-04 admission/request/result/association records and their unchanged held source/preflight bindings while root watches the remote job. No current job steps, native outcome artifacts, clock API, application runtime or cleanup result was inspected or inferred.",
+  "conclusion": {
+    "exact_single_authorized_dispatch": "ACCEPTED",
+    "complete_fresh_same_branch_no_overlap_admission": "ACCEPTED_AT_RECORDED_REQUEST",
+    "unique_new_initial_attempt": "34303850578/1",
+    "source": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+    "runtime_outcome": "UNKNOWN_NOT_REVIEWED",
+    "runtime_cleanup": "UNKNOWN_NOT_REVIEWED",
+    "readiness": "NOT_READY",
+    "further_dispatch_authorization": "NONE_THE_ONE_HELD_NATIVE_AUTHORIZATION_IS_CONSUMED"
+  },
+  "consumed_authorization": {
+    "prior_independent_actual_preflight_approval": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-preflight-34300240397-independent-01.json",
+      "bytes": 59290,
+      "sha256": "34e2038f191e1bef8c73dd37fde6da343c277873055205b91db23ef9f2fe6e51"
+    },
+    "exact_root_request": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/request.json",
+      "bytes": 3340,
+      "sha256": "3d1a7319c491f3990a9bd7d64e4ac2489b917f90c945222d266a0d38c0dcf47a"
+    },
+    "exact_inputs": {
+      "verification_scope": "native-evidence",
+      "frozen_source_sha": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+      "preflight_run_id": "34300240397",
+      "preflight_run_attempt": "1",
+      "preflight_artifact_id": "10084669989",
+      "preflight_artifact_sha256": "6ca09caa187e12338269859e94de659d2e61149326ac8e6d91e1ea4be8a11461",
+      "approved_l08_control_sha256": "54402bb821327f8256b04e730591ac31d349f831d64ca554678a02e819e58763",
+      "approved_normal_control_sha256": "7cdd2dee7adb3a53be0d2c2487e0e776dbc83208693909b6ecbfb0b872e3a82f"
+    },
+    "exact_command": [
+      "gh",
+      "workflow",
+      "run",
+      "production-verification.yml",
+      "--repo",
+      "Apdelrahman1911/parlor",
+      "--ref",
+      "fix/local-readiness-2026-09-07",
+      "-f",
+      "verification_scope=native-evidence",
+      "-f",
+      "frozen_source_sha=08d1adfbd7284f190fbab5f7baa846944bca5b68",
+      "-f",
+      "preflight_run_id=34300240397",
+      "-f",
+      "preflight_run_attempt=1",
+      "-f",
+      "preflight_artifact_id=10084669989",
+      "-f",
+      "preflight_artifact_sha256=6ca09caa187e12338269859e94de659d2e61149326ac8e6d91e1ea4be8a11461",
+      "-f",
+      "approved_l08_control_sha256=54402bb821327f8256b04e730591ac31d349f831d64ca554678a02e819e58763",
+      "-f",
+      "approved_normal_control_sha256=7cdd2dee7adb3a53be0d2c2487e0e776dbc83208693909b6ecbfb0b872e3a82f"
+    ],
+    "maximum_approved_new_dispatches": 1,
+    "actual_recorded_dispatch_commands": 1,
+    "newly_associated_matching_runs": 1,
+    "run_id": 34303850578,
+    "run_attempt": 1,
+    "approved_future_cycle_labels": {
+      "l08": "ios-readiness-23",
+      "normal": "ios-readiness-24"
+    },
+    "conditional_modes": {
+      "signing": "adhoc",
+      "toolchain": "qualified-xcode-26.3",
+      "lifecycle": "direct-owned-v1",
+      "normal_image_observer": "libproc"
+    },
+    "no_retry_rerun_second_dispatch_probe_or_fullD_authorized": true,
+    "no_Store_publication_promotion_or_private_credentials_authorized": true
+  },
+  "independent_audit": {
+    "recorded_at": "2026-09-09T02:42:09.598961+00:00",
+    "status": "PASS_EXACT_DISPATCH_AND_ASSOCIATION_NOT_RUNTIME",
+    "dispatch_result": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/dispatch-result.json",
+      "sha256": "815362ce45c5e89b0d6dd5f63c55e52021d7124470ac4c63d887d63aa3df10fa",
+      "bytes": 170478
+    },
+    "durable_before_dispatch": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/admission-before-dispatch.json",
+      "sha256": "7c4e294740e150650cbea4bd7c7728dfb90ba85cd017c33fadb64129b19dcc37",
+      "bytes": 167217
+    },
+    "association": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/run-association.json",
+      "sha256": "7d6389c7e76760fa0a019b8c1fa0cebf658bbf84433da8deca936e1bd8a36533",
+      "bytes": 681
+    },
+    "request": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/request.json",
+      "bytes": 3340,
+      "sha256": "3d1a7319c491f3990a9bd7d64e4ac2489b917f90c945222d266a0d38c0dcf47a"
+    },
+    "approval": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-preflight-34300240397-independent-01.json",
+      "bytes": 59290,
+      "sha256": "34e2038f191e1bef8c73dd37fde6da343c277873055205b91db23ef9f2fe6e51"
+    },
+    "all_command_count": 11,
+    "all_command_output_references_rehashed": 22,
+    "all_command_exit_codes_zero": true,
+    "all_command_stderr_empty": true,
+    "durable_admission_preserves_exact_first9_command_records": true,
+    "durable_pre_dispatch_flag_false_and_nested_admission_PASS": true,
+    "exact_one_eight_input_approved_dispatch": true,
+    "recorded_normalizer_pin": "48ca12d9ec8a02410ac4ea645716902efc37842b23050e450c60074aabbdd270",
+    "normalizer_execution_by_reviewer": false,
+    "current_branch": "fix/local-readiness-2026-09-07",
+    "current_head": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+    "current_tree": "c19beea4647ce882c02d8751d1bf82c22484b52b",
+    "full_history_and_empty_tracked_diff": true,
+    "recorded_remote": "08d1adfbd7284f190fbab5f7baa846944bca5b68\trefs/heads/fix/local-readiness-2026-09-07",
+    "recorded_remote_scope": "Root-owned actual Git network output just before request; reviewer made no network call.",
+    "preflight_fresh_API_metadata_bytes_equal_original_reviewed": true,
+    "preflight_artifact_expired": false,
+    "preflight_artifact_expires_at": "2026-09-23T01:43:05Z",
+    "original_preflight_zip": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34300240397/native-preflight.zip",
+      "sha256": "6ca09caa187e12338269859e94de659d2e61149326ac8e6d91e1ea4be8a11461",
+      "bytes": 93960
+    },
+    "original_preflight_members": 4,
+    "original_preflight_uncompressed_bytes": 341891,
+    "crc_and_raw_retained_member_equality": true,
+    "preflight_toolchain_equals_held_approval": true,
+    "native_host_toolchain_not_observed_by_dispatch_review": true,
+    "source": {
+      "ordinary_count": 828,
+      "ordinary_rows_sha256": "d7d6bd8802fb36ab75e566adc183500db24555dce36f0fafd0a1ac91034bf08e",
+      "copy_count": 753,
+      "copy_rows_sha256": "296df232ad173e9e9ab4d26eafcee57c568669a07ee4b9246b1aed542982b9ee",
+      "union_with_one_archived_binding": 941,
+      "nonbinding_current_files_equal_frozen_blobs": 940,
+      "root_durable_source_rows_equal_current_and_original_binding": true
+    },
+    "controls": {
+      "l08": {
+        "count": 99,
+        "compact_rows_sha256": "54402bb821327f8256b04e730591ac31d349f831d64ca554678a02e819e58763",
+        "manifest_file_sha256": "8a9f7d33723ae0a481c4e634a086436aa1690152195b4758df9820b3f1312368",
+        "current_nonbinding_bytes_equal_frozen_git": true
+      },
+      "normal": {
+        "count": 94,
+        "compact_rows_sha256": "7cdd2dee7adb3a53be0d2c2487e0e776dbc83208693909b6ecbfb0b872e3a82f",
+        "manifest_file_sha256": "b410deec02f2381a29db3fd5b3ec2351040ef7c7fb6c7af9131899f7db42feb4",
+        "current_nonbinding_bytes_equal_frozen_git": true
+      }
+    },
+    "pages": {
+      "runs-immediate-before": {
+        "raw": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/runs-immediate-before.raw.json-stream",
+          "sha256": "d64a4b1bdf4e7190acf1ce18743b6759126365ef210b2057dc939d50943713ef",
+          "bytes": 152089
+        },
+        "normalized": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/runs-immediate-before.json",
+          "sha256": "881a8082506ca48a7ca13619c36b4168a3e05d6b1cbe6fb42b47433abcbb29bc",
+          "bytes": 189947
+        },
+        "page_count": 1,
+        "total_count": 12,
+        "complete_consumption": true,
+        "normalized_pages_exact": true,
+        "unique_ids": [
+          34300240397,
+          34275491965,
+          34273018746,
+          34244902185,
+          34242374948,
+          34239707887,
+          34232325670,
+          34216788568,
+          34214410629,
+          34152138368,
+          34143924756,
+          34112913001
+        ]
+      },
+      "runs-after-dispatch": {
+        "raw": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/runs-after-dispatch.raw.json-stream",
+          "sha256": "857e8a7b47c8b947da2a4bc1d3b66df2d0278b58161cd029e95b625dc226fcbd",
+          "bytes": 164767
+        },
+        "normalized": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/runs-after-dispatch.json",
+          "sha256": "d3d20fcda43b35c5405e9f4ebf3f57d16977b2b6c32e3ca87838b8f30eb0c4d2",
+          "bytes": 205744
+        },
+        "page_count": 1,
+        "total_count": 13,
+        "complete_consumption": true,
+        "normalized_pages_exact": true,
+        "unique_ids": [
+          34303850578,
+          34300240397,
+          34275491965,
+          34273018746,
+          34244902185,
+          34242374948,
+          34239707887,
+          34232325670,
+          34216788568,
+          34214410629,
+          34152138368,
+          34143924756,
+          34112913001
+        ]
+      }
+    },
+    "before_all12_terminal": true,
+    "unchanged_preexisting_rows_before_after": true,
+    "one_new_run": {
+      "id": 34303850578,
+      "run_attempt": 1,
+      "repository_id": 1247560518,
+      "head_repository_id": 1247560518,
+      "workflow_id": 335554528,
+      "head_sha": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+      "branch": "fix/local-readiness-2026-09-07",
+      "event": "workflow_dispatch",
+      "status_at_association": "in_progress",
+      "conclusion_at_association": null,
+      "created_at": "2026-09-09T02:35:55Z",
+      "url": "https://github.com/Apdelrahman1911/parlor/actions/runs/34303850578"
+    },
+    "timing": {
+      "recorded_requested_at": "2026-09-09T02:35:52+00:00",
+      "dispatch_started_at": "2026-09-09T02:35:52.262429+00:00",
+      "dispatch_finished_at": "2026-09-09T02:35:54.482433+00:00",
+      "new_run_created_at": "2026-09-09T02:35:55Z",
+      "after_list_started_at": "2026-09-09T02:36:02.483197+00:00",
+      "after_list_finished_at": "2026-09-09T02:36:03.300031+00:00",
+      "actual_new_run_created_after_full_precision_command_start": true
+    },
+    "evidence_file_identities": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/dispatch-result.json",
+        "sha256": "815362ce45c5e89b0d6dd5f63c55e52021d7124470ac4c63d887d63aa3df10fa",
+        "bytes": 170478
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/request.json",
+        "sha256": "3d1a7319c491f3990a9bd7d64e4ac2489b917f90c945222d266a0d38c0dcf47a",
+        "bytes": 3340
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-preflight-34300240397-independent-01.json",
+        "sha256": "34e2038f191e1bef8c73dd37fde6da343c277873055205b91db23ef9f2fe6e51",
+        "bytes": 59290
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/admission-before-dispatch.json",
+        "sha256": "7c4e294740e150650cbea4bd7c7728dfb90ba85cd017c33fadb64129b19dcc37",
+        "bytes": 167217
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/run-association.json",
+        "sha256": "7d6389c7e76760fa0a019b8c1fa0cebf658bbf84433da8deca936e1bd8a36533",
+        "bytes": 681
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/workflow-immediate.json",
+        "sha256": "8345984073768616fd6aff6682c95051f186881c5fa4727b120c80e019841ece",
+        "bytes": 533
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/workflow-immediate.json.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/preflight-attempt-immediate.json",
+        "sha256": "dd20fca98e97f5c74c1b38ddd29e7eddd8db0b248f0668516a57437ee1802d72",
+        "bytes": 12702
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/preflight-attempt-immediate.json.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/preflight-artifact-immediate.json",
+        "sha256": "6f23c0ec6e732b53e9578853e9c1d8459e7a796dc203a1805eb610d5b5bc60c1",
+        "bytes": 727
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/preflight-artifact-immediate.json.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/runs-immediate-before.raw.json-stream",
+        "sha256": "d64a4b1bdf4e7190acf1ce18743b6759126365ef210b2057dc939d50943713ef",
+        "bytes": 152089
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/runs-immediate-before.raw.json-stream.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/source-immediate.txt",
+        "sha256": "1959184b1f08ca4c13925615cdffcefdfc700ce97b10d4025b6479249cf63814",
+        "bytes": 82
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/source-immediate.txt.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/branch-immediate.txt",
+        "sha256": "1c1c717d880304c7c17517f6d21c918e2d035438b7c843525b049a2f050c4692",
+        "bytes": 31
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/branch-immediate.txt.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/tracked-status-immediate.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/tracked-status-immediate.txt.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/history-immediate.txt",
+        "sha256": "2ed27c1421e6928dbe13dbfdb5c59e1045b30341fe7ebe05700006bc5ac572c0",
+        "bytes": 6
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/history-immediate.txt.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/remote-immediate.txt",
+        "sha256": "cb81d06eaec99ab0414202a8235bb447b968eea3e4ada721c87f5725d1df5d01",
+        "bytes": 83
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/remote-immediate.txt.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/dispatch.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/dispatch.log.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/runs-after-dispatch.raw.json-stream",
+        "sha256": "857e8a7b47c8b947da2a4bc1d3b66df2d0278b58161cd029e95b625dc226fcbd",
+        "bytes": 164767
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/runs-after-dispatch.raw.json-stream.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34300240397/workflow.json",
+        "sha256": "8345984073768616fd6aff6682c95051f186881c5fa4727b120c80e019841ece",
+        "bytes": 533
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34300240397/attempt.json",
+        "sha256": "dd20fca98e97f5c74c1b38ddd29e7eddd8db0b248f0668516a57437ee1802d72",
+        "bytes": 12702
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34300240397/artifact-10084669989.json",
+        "sha256": "6f23c0ec6e732b53e9578853e9c1d8459e7a796dc203a1805eb610d5b5bc60c1",
+        "bytes": 727
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/runs-immediate-before.json",
+        "sha256": "881a8082506ca48a7ca13619c36b4168a3e05d6b1cbe6fb42b47433abcbb29bc",
+        "bytes": 189947
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-04/runs-after-dispatch.json",
+        "sha256": "d3d20fcda43b35c5405e9f4ebf3f57d16977b2b6c32e3ca87838b8f30eb0c4d2",
+        "bytes": 205744
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34300240397/native-preflight.zip",
+        "sha256": "6ca09caa187e12338269859e94de659d2e61149326ac8e6d91e1ea4be8a11461",
+        "bytes": 93960
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34300240397/native-preflight/ios-readiness-source-ci.json",
+        "sha256": "34a430419b0feae9f4fe45daa713ef73992046a0eacf674ce1c85ef570b01814",
+        "bytes": 300363
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34300240397/native-preflight/l08-controls.json",
+        "sha256": "8a9f7d33723ae0a481c4e634a086436aa1690152195b4758df9820b3f1312368",
+        "bytes": 21430
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34300240397/native-preflight/normal-controls.json",
+        "sha256": "b410deec02f2381a29db3fd5b3ec2351040ef7c7fb6c7af9131899f7db42feb4",
+        "bytes": 17395
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34300240397/native-preflight/preflight.json",
+        "sha256": "233b9147cbfa85cb90a33a2e09533ed31d9222027ac5630510800696568285e7",
+        "bytes": 2703
+      }
+    ],
+    "no_current_native_job_or_artifact_inspection": true,
+    "no_new_dispatch_or_build_or_API_call_by_reviewer": true,
+    "one_native_authorization_now_consumed": true
+  },
+  "accepted_gate_details": [
+    "The exact3340-byte request3d1a7319 and59290-byte independent approval34e2038f are unchanged. The sole CLI argv matches all eight approved inputs, branch, repository and workflow exactly; no probe input or additional workflow dispatch occurs in the recorded sequence.",
+    "All11 commands have exit0, their22 stdout/stderr references rehash exactly, and every stderr is empty. The retained167217-byte pre-dispatch snapshot7c4e2947 contains exactly the first9 command records, nested admissionPASS and dispatch_issued=false; final170478-byte result815362ce adds the one CLI and one after-list call. The pending snapshot's historical status is preserved, not rewritten as a later result.",
+    "Fresh recorded workflow metadata is active workflow335554528. Producer34300240397/1 and artifact10084669989 are fresh GET observations byte-equal to the reviewed originals; producer repository/head-repository/workflow/branch/source and successful attempt match, ZIP digest/size/name match, expired=false and expiry is after the request.",
+    "Both raw gh api --paginate run streams were independently strict-decoded to complete consumption with duplicate-key/nonfinite rejection. The sole page before has12 unique records, all completed; after has13. Normalized pages/counts/IDs exactly equal the raw data. No --slurp or event filter was used. All12 preexisting rows are identical before/after and exactly one new eligible run exists.",
+    "The new run34303850578 has initial attempt1, workflow_dispatch, exact workflow/path/repository/head-repository/branch/08d1 source and created_at02:35:55Z. This is after the actual CLI start02:35:52.262429+00:00, not merely the rounded requested_at02:35:52Z. The independent association does not rely on CLI exit0 alone.",
+    "Recorded Git outputs immediately before the CLI establish08d1/c19bee, the intended branch, full history, clean tracked state and actual origin equality at that time. The reviewer also independently rederived every current828 source and753 copy row and rehashed940 nonbinding source/control files against frozen Git blobs plus the one archived binding, matching the941-input union.",
+    "The already reviewed original93960-byte preflight ZIP6ca09caa was reopened in memory: exactly4 safe unique nonempty regular members,341891 bytes aggregate, valid CRCs, no encrypted/special/symlink/traversal members, and bytes exactly equal retained extracted files. Complete99/94 row hashes remain54402bb8/7cdd2dee with the exact binding. The full preflight toolchain object equals the held approval; this is not an observation of the new native host."
+  ],
+  "scope_and_evidence_limits": {
+    "association_snapshot": "The collected after-page run was in_progress with conclusion=null. No current status query or remote platform resource inspection was performed by the reviewer; later execution may differ and requires its own actual evidence.",
+    "native_attempt": "A23/B24 are conditional cycle labels, not a claim that either has started, completed, passed or cleaned. Root alone watches/collects. All existing actual first CLOCK_MONOTONIC_RAW producer/consumer, full7200s per-lane admission, toolchain/source/control, interruption/completion, direct lifecycle/copy/raw-retention and cleanup gates remain mandatory.",
+    "preflight_vs_native": "Successful preflight, byte-equal producer metadata and original artifact custody do not prove libproc ABI/query, eight normal launches, functional storage/recovery, retained-host scenarios, strict file protection, actual clock availability or new-host platform equality.",
+    "source_epoch": "The root admission/result retain one equal source summary across the pre/post record; the reviewer independently validates those rows against the held binding/current/frozen bytes. No extra original hash-command stdout or native-runtime result is invented.",
+    "remote_epoch": "Origin equality is the actual root-owned output immediately before this dispatch, not a new reviewer network observation or guarantee against a later ref change.",
+    "C04_parallel_note": "Root reports the separate Linux C04 administrative tuple/list correction review remained in progress and its consumer had not started when this hosted native attempt commenced. This reviewer confirms native source/control bytes stayed frozen; C04 evidence and local build state were not inspected or certified. Administrative evidence under excluded remediation paths does not change these native source/control bindings.",
+    "historical": "Retain historical A21FAIL/cleanupFAIL and B22NOT_RUN; this accepted dispatch does not repair those receipts. Strict L08 remains unresolved and cannot be made PASS through companion collection or safe cleanup.",
+    "publication_and_readiness": "No Store operation, physical-device test, full-D dispatch or owner/legal/privacy/editorial requirement is satisfied or waived. No readiness upgrade follows from dispatch."
+  },
+  "postrun_requirements": [
+    "Collect actual terminal run/attempt/job evidence and original native evidence/cleanup artifacts with exact IDs/sizes/digests and raw logs; independently reconcile them against this run, frozen08d1 and the already approved preflight34300240397/1.",
+    "Review the actual first job-clock step, both conditional admission records, bound toolchain/preflight/API input custody and canonical source/control/copy/runtime/ownership/retention/cleanup evidence. Keep failures, interruption, timeout, partial observations and NOT_RUN distinct.",
+    "Preserve failed receipts and raw evidence before task-owned cleanup. No second attempt, retry, scope/profile fallback or change of source is authorized by this dispatch review; investigate actual failures and seek separate independent approval if needed."
+  ],
+  "reviewer_activity": {
+    "project_imports_or_extracted_project_code_execution": 0,
+    "builds_tests_inventory_generation": 0,
+    "native_process_queries_or_signals": 0,
+    "API_network_Actions_operations": 0,
+    "ongoing_native_job_or_artifact_reads": 0,
+    "source_control_or_C04_edits": 0,
+    "process_cleanup_or_deletion": 0,
+    "commits_or_pushes": 0,
+    "only_authorized_write": "remediation-runs/2026-09-08-continuation/reviews/native-34303850578-dispatch-independent-01.json",
+    "method": "Standard-library strict JSON/ZIP/CRC and file hashing, AST literal path-policy data and read-only Git only. Recorded root normalizer source pin was checked; no project or extracted normalizer was executed.",
+    "cleanup": "No reviewer-owned build/test/native fixture or worker was created, so no Gradle stop/clean was owed. All existing evidence, untracked work and resources remained unchanged.",
+    "final_write_guards": "Exclusive creation at the exact nested-repository path only; before/after held-file hashes and frozen HEAD/tree/full-history/tracked-state/bound-source-control checks must pass before this report identity is delivered."
+  }
+}

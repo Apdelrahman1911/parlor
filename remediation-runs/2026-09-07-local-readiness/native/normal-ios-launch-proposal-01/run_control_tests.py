@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Root-only pure test driver. No native or build runtime evidence is produced."""
+"""Root-only control driver, including synthetic C compilation and fixtures.
+
+No Darwin ABI, real process query, application, simulator, or Store proof is produced."""
 import ast
 import json
 from pathlib import Path
@@ -10,7 +12,7 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import run_normal_ios_launch as control
 
-EXPECTED_COUNT = 187
+EXPECTED_COUNT = 204
 
 
 def declared_tests():
@@ -48,12 +50,12 @@ def main():
     bound = {str(control.ROOT / row['path']) for row in before}
     if not imports or not set(imports.values()) <= bound:
         raise RuntimeError('Imported control module is not bound to its reviewed bytes')
-    print(json.dumps(dict(kind='PURE_CONTROL_TESTS_NOT_APP_RUNTIME', before=before,
+    print(json.dumps(dict(kind='SYNTHETIC_CONTROL_TESTS_NOT_APP_RUNTIME', before=before,
                           actual_imports=imports, declared_ids=declared, discovered_ids=actual,
                           expected_tests=EXPECTED_COUNT), sort_keys=True), flush=True)
     result = unittest.TextTestRunner(verbosity=2).run(suite)
     after = control.control_manifest()
-    print(json.dumps(dict(kind='PURE_CONTROL_TESTS_NOT_APP_RUNTIME', after=after,
+    print(json.dumps(dict(kind='SYNTHETIC_CONTROL_TESTS_NOT_APP_RUNTIME', after=after,
                           source_unchanged=before == after, tests=result.testsRun,
                           failures=len(result.failures), errors=len(result.errors),
                           skips=len(result.skipped)), sort_keys=True), flush=True)

@@ -1,0 +1,305 @@
+{
+  "schema_version": 1,
+  "kind": "ADDITIVE_INDEPENDENT_EXACT_THREE_FILE_LABEL_INTEGRATION_REVIEW",
+  "recorded_at": "2026-09-09T04:48:07.704105+00:00",
+  "reviewer": "/root/native_ci",
+  "integration_author": "/root",
+  "status": "ACCEPTED_EXACT_REVIEWED_LABEL_INTEGRATION_ONLY",
+  "findings": [],
+  "scope": "Additive source-only check of root adoption. Reviewer authored neither ci_workflow label proposal nor root integration; the prior independent proposal review is an integrity-bound antecedent, not represented as a new different-agent review of itself.",
+  "authorization": {
+    "only_write": "remediation-runs/2026-09-08-continuation/reviews/native-a25-label-integration-independent-01.json",
+    "canonical_source_edits": 0,
+    "project_imports": 0,
+    "tests_or_builds_executed": 0,
+    "APIs_or_dispatches": 0,
+    "commit_push_or_cleanup_commands": 0,
+    "native_retry_authorized": false,
+    "final_qualification_authorized": false
+  },
+  "source_cutoff": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "base_commit": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+    "base_tree": "c19beea4647ce882c02d8751d1bf82c22484b52b",
+    "tracked_worktree_state": "Exactly three unstaged reviewed label files; not a frozen-source commit. Root-owned untracked evidence and locks preserved.",
+    "tracked_changed_paths": [
+      "scripts/ci/NATIVE_CONTINUATION.md",
+      "scripts/ci/native_continuation.py",
+      "scripts/release/tests/test_native_process_probe.py"
+    ],
+    "staged_changed_paths": []
+  },
+  "adoption_ref": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-label-adoption-01.json",
+    "bytes": 1472,
+    "sha256": "b7ac59bf4b3b0fdf3ce5fe970b3a27e4be3d886eb7eb0cafed2257120576a7e9"
+  },
+  "prior_independent_proposal_review_ref": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-cycle-preparation-independent-01.json",
+    "bytes": 31847,
+    "sha256": "057938cbc276278bb35f0bd72fca4a22d73fae25b935725c92eb426dbbe95656"
+  },
+  "author_proposal_ref": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-cycle-preparation-01.json",
+    "bytes": 42523,
+    "sha256": "d1a81fd2fbbc0fa7234e06bb18798df25b2e230e3c1fab88d686a747c83d1b26"
+  },
+  "integrated_changes": [
+    {
+      "canonical_path": "scripts/ci/native_continuation.py",
+      "base_git_blob": {
+        "commit": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+        "bytes": 64697,
+        "sha256": "e41186dc13dd94e851b449079d73b98cc4655bb6234ebcd76adc61942bb12feb"
+      },
+      "integrated_file": {
+        "path": "scripts/ci/native_continuation.py",
+        "bytes": 64697,
+        "sha256": "21d5f2ba437d5aaed855e2a5f1bfd2a0c8141c625772aa1409405087025ed222"
+      },
+      "reviewed_candidate": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-cycle-preparation-01/native_continuation.py.candidate",
+        "bytes": 64697,
+        "sha256": "21d5f2ba437d5aaed855e2a5f1bfd2a0c8141c625772aa1409405087025ed222"
+      },
+      "exact_replacement_occurrences": 1,
+      "matches_reviewed_full_bytes": true
+    },
+    {
+      "canonical_path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "base_git_blob": {
+        "commit": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+        "bytes": 18880,
+        "sha256": "70dfb3286a5a005f79bdfbfb116c179ef81a7e7054e337758de9dafb0539dbb8"
+      },
+      "integrated_file": {
+        "path": "scripts/ci/NATIVE_CONTINUATION.md",
+        "bytes": 18880,
+        "sha256": "65888db5a545840fc72cacba1fe32f01eae3293e46e53ead72e8b0ef4b6f951a"
+      },
+      "reviewed_candidate": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-a25-cycle-preparation-01/NATIVE_CONTINUATION.md.candidate",
+        "bytes": 18880,
+        "sha256": "65888db5a545840fc72cacba1fe32f01eae3293e46e53ead72e8b0ef4b6f951a"
+      },
+      "exact_replacement_occurrences": 2,
+      "matches_reviewed_full_bytes": true
+    },
+    {
+      "canonical_path": "scripts/release/tests/test_native_process_probe.py",
+      "base_git_blob": {
+        "commit": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+        "bytes": 43371,
+        "sha256": "513e45a9c4b46b8e58ef3058abc0da6148223bd5175d1b784a190b8153de9c8d"
+      },
+      "integrated_file": {
+        "path": "scripts/release/tests/test_native_process_probe.py",
+        "bytes": 43371,
+        "sha256": "8108f26cb176ecf5d9c2c63dcee762256111fa6ef32dc5bf5068a2fc40d81bbe"
+      },
+      "reviewed_candidate": null,
+      "exact_replacement_occurrences": 1,
+      "matches_reviewed_full_bytes": true
+    }
+  ],
+  "checks": {
+    "strict_duplicate_and_nonfinite_JSON_rejection": true,
+    "all_three_integrated_full_bytes_match_reviewed_candidates": true,
+    "all_base_bytes_rehashed_from_git": true,
+    "embedded_test_candidate_reconstructed_in_memory_and_matches_integrated_file": true,
+    "companion_exact_CYCLES_assertion_integrated": true,
+    "python_AST_syntax_only": true,
+    "git_diff_check_exit": 0,
+    "unchanged_prior_source_references_rehashed": 16,
+    "unchanged_prior_source_paths": [
+      "AGENTS.md",
+      "shared/transport-p2p/build.gradle.kts",
+      ".github/workflows/production-verification.yml",
+      "scripts/release/validate_release_system.sh",
+      "scripts/release/workflow_contract.py",
+      "scripts/ci/native_process_probe.py",
+      "scripts/release/tests/test_native_continuation.py",
+      "scripts/release/tests/test_workflow_contract.py",
+      "scripts/verification/ios-readiness/toolchain_profiles.py",
+      "gradle/libs.versions.toml",
+      "gradle/verification-metadata.xml",
+      "settings.gradle.kts",
+      "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_functional_receipts.py",
+      "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/kernel_image_region.c.in"
+    ],
+    "additional_pin_and_contract_refs_equal_base": true
+  },
+  "guard_disposition": "Only CYCLES23/24 ->25/26, two usage-doc labels and one exact assertion changed. Source/control bindings, paired serial A then B, full/default/five-job workflow, native clock/admission/budgets, toolchain, signing prohibition, ownership, preservation, journal, strict validation and cleanup logic remain unchanged. Probe CONTROL_PATHS hashes the adapter and its script documentation; old source/control approvals cannot be reused.",
+  "dependency_pin_disposition": {
+    "new_or_changed_pins": false,
+    "P2pKit": "Both p2p-core and p2p-transport-lan still use the same catalog pin0.7.0-rc3 from the existing Maven Central dependency path. No mavenLocal, sibling composite build or repository override introduced.",
+    "other_pins": "AGP8.13.2, lint9.1.1, R8 9.1.41 and Gradle8.13 unchanged. Verification metadata unchanged; no graph resolution or dependency verification run is claimed.",
+    "application_protocol_privacy_changes": false
+  },
+  "transport_declared_input_scope": {
+    "source": "shared/transport-p2p/build.gradle.kts",
+    "property": "repositoryContractFiles",
+    "explicit_file_count": 23,
+    "file_trees": [
+      {
+        "root": "build-logic/convention/src/main/kotlin",
+        "include": [
+          "**/*.kt",
+          "**/*.kts"
+        ],
+        "exclude": []
+      },
+      {
+        "root": ".",
+        "include": [
+          "**/build.gradle.kts"
+        ],
+        "exclude": [
+          "**/build/**"
+        ]
+      },
+      {
+        "root": "shared/session/src/commonMain",
+        "include": [
+          "**/*.kt"
+        ],
+        "exclude": []
+      },
+      {
+        "root": "shared/networking-testing/src/commonMain",
+        "include": [
+          "**/*.kt"
+        ],
+        "exclude": []
+      },
+      {
+        "root": "shared/engine/src/commonMain",
+        "include": [
+          "**/*.kt"
+        ],
+        "exclude": []
+      },
+      {
+        "root": "shared/engine-testing/src/commonTest",
+        "include": [
+          "**/*.kt"
+        ],
+        "exclude": []
+      },
+      {
+        "root": "composeApp/src/commonMain/kotlin/com/parlor/app/shell/game",
+        "include": [
+          "**/*.kt"
+        ],
+        "exclude": []
+      },
+      {
+        "root": "composeApp/src/commonTest/kotlin/com/parlor/app/shell/game",
+        "include": [
+          "**/*.kt"
+        ],
+        "exclude": []
+      },
+      {
+        "root": "composeApp/src/desktopTest/kotlin/com/parlor/app/shell/game",
+        "include": [
+          "**/*.kt"
+        ],
+        "exclude": []
+      },
+      {
+        "root": "composeApp/src/androidMain/res",
+        "include": [
+          "**/*"
+        ],
+        "exclude": []
+      },
+      {
+        "root": "composeApp/src/commonMain/composeResources",
+        "include": [
+          "**/*.xml"
+        ],
+        "exclude": []
+      },
+      {
+        "root": "docs",
+        "include": [
+          "**/*.md"
+        ],
+        "exclude": []
+      }
+    ],
+    "exact_adopted_paths_matching_declared_inputs": [],
+    "script_documentation_explanation": "scripts/ci/NATIVE_CONTINUATION.md is outside rootProject.fileTree(\"docs\") with include(\"**/*.md\"). The root-wide tree includes only **/build.gradle.kts, not all Markdown. Neither Python path is an explicit input or under another declared tree.",
+    "conclusion": "This exact three-file label delta alone does not trigger a focused transport desktopTest rerun by these declared repository inputs. This is source-derived scope analysis, not a Gradle task-input evaluation or an UP-TO-DATE/PASS claim.",
+    "limit": "Re-evaluate after the complete merged A/B/source/docs change set. docs/**/*.md, workflow YAML, platform manifests/plists, build files and verification metadata remain declared triggers. This is not a blanket transport-test waiver or final-gate substitution."
+  },
+  "readiness": {
+    "verdict": "NOT_READY",
+    "native_execution_evidence_added": false,
+    "other_A_B_proposals_reviewed_here": false,
+    "future_B_only_approval": false,
+    "physical_device_Store_and_owner_legal_gates": "Excluded and unwaived.",
+    "next_admission": "Root must finish separate correction reviews and affected checks, commit reviewed source/control changes, regenerate and commit mechanical inventory, then obtain fresh frozen-source/control bindings/preflight and separate independent execution admission."
+  },
+  "cleanup": "No build/test cycle, workers, simulators or generated build outputs were started. No Gradle stop/clean was needed or run; no deletion. Only this authorized additive report was written.",
+  "source_refs": [
+    {
+      "path": "AGENTS.md",
+      "bytes": 5834,
+      "sha256": "1e8cbc4f414819f47908e1a3be9f717792a0401fb4fb35b7272c053c00e2f609"
+    },
+    {
+      "path": "shared/transport-p2p/build.gradle.kts",
+      "bytes": 4251,
+      "sha256": "6ce2fd726bd41031a5b26d0d30f8ee8f693b4dc942da90bdc48b40fbf040c3b7"
+    },
+    {
+      "path": "gradle/libs.versions.toml",
+      "bytes": 5556,
+      "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399"
+    },
+    {
+      "path": "gradle.properties",
+      "bytes": 973,
+      "sha256": "2df8685921ad2c6eead097a6d9994bbcc93dbc5cbdeb0bce8911ffa4e83162ce"
+    },
+    {
+      "path": "gradle/verification-metadata.xml",
+      "bytes": 795388,
+      "sha256": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95"
+    },
+    {
+      "path": "gradle/wrapper/gradle-wrapper.properties",
+      "bytes": 338,
+      "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2"
+    },
+    {
+      "path": "settings.gradle.kts",
+      "bytes": 1422,
+      "sha256": "27a40495b1adf18ca90b5a8fdd345448c2ecf2f9ac726c753468a5e627b27d18"
+    },
+    {
+      "path": "build-logic/settings.gradle.kts",
+      "bytes": 342,
+      "sha256": "d86cd60d448dfb6ebf0c9b6977456dc7b93865afe5c415dc368a56ab6ef1f729"
+    },
+    {
+      "path": "docs/PRODUCTION_ARCHITECTURE.md",
+      "bytes": 16988,
+      "sha256": "279e3287ab49d8889f9f9450a6a6769cc1dd9f72cbfa8c5ff559d2fa1884ca99"
+    },
+    {
+      "path": "docs/RELEASE_GATES.md",
+      "bytes": 9623,
+      "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32"
+    },
+    {
+      "path": "docs/P2PKIT_MAVEN_PROVENANCE.md",
+      "bytes": 7395,
+      "sha256": "360f3d6ced7a1aaf0a6320bb4c82b309e0265470d82771d7e9b13a0bd6a2ec6d"
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "kind": "EXACT_PENDING_FRESH_A23_B24_NATIVE_EVIDENCE_REQUEST",
+  "coordinator": "/root",
+  "created_at": "2026-09-09T02:12:24.703065+00:00",
+  "status": "NOT_DISPATCHED_PENDING_INDEPENDENT_ACTUAL_PREFLIGHT_AND_SINGLE_RUN_APPROVAL",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "frozen_source_sha": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+  "frozen_source_tree": "c19beea4647ce882c02d8751d1bf82c22484b52b",
+  "inputs": {
+    "verification_scope": "native-evidence",
+    "frozen_source_sha": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+    "preflight_run_id": "34300240397",
+    "preflight_run_attempt": "1",
+    "preflight_artifact_id": "10084669989",
+    "preflight_artifact_sha256": "6ca09caa187e12338269859e94de659d2e61149326ac8e6d91e1ea4be8a11461",
+    "approved_l08_control_sha256": "54402bb821327f8256b04e730591ac31d349f831d64ca554678a02e819e58763",
+    "approved_normal_control_sha256": "7cdd2dee7adb3a53be0d2c2487e0e776dbc83208693909b6ecbfb0b872e3a82f"
+  },
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=native-evidence",
+    "-f",
+    "frozen_source_sha=08d1adfbd7284f190fbab5f7baa846944bca5b68",
+    "-f",
+    "preflight_run_id=34300240397",
+    "-f",
+    "preflight_run_attempt=1",
+    "-f",
+    "preflight_artifact_id=10084669989",
+    "-f",
+    "preflight_artifact_sha256=6ca09caa187e12338269859e94de659d2e61149326ac8e6d91e1ea4be8a11461",
+    "-f",
+    "approved_l08_control_sha256=54402bb821327f8256b04e730591ac31d349f831d64ca554678a02e819e58763",
+    "-f",
+    "approved_normal_control_sha256=7cdd2dee7adb3a53be0d2c2487e0e776dbc83208693909b6ecbfb0b872e3a82f"
+  ],
+  "maximum_new_dispatches": 1,
+  "intended_cycles": {
+    "l08": "ios-readiness-23",
+    "normal": "ios-readiness-24"
+  },
+  "preflight_collection": {
+    "path": "remediation-runs/2026-09-08-continuation/actions/34300240397/download-receipt.json",
+    "sha256": "67f0be592a16ba485289f30bb4225c4e47c1ae0689aa49d80e76c5d0e56aeac4"
+  },
+  "source_freeze_validator_review_sha256": "83e83d13a5197ca6c88779450ab2206c291ac593eedba1b3bcc4df72301237ef",
+  "actual_preflight_independent_review_required": "remediation-runs/2026-09-08-continuation/reviews/native-preflight-34300240397-independent-01.json",
+  "pre_dispatch": "Must obtain separate exact one-run approval, then fresh complete same-ref no-overlap/workflow/source/remote admission. No retry on uncertain association or failure. No Store or unrelated workflow operation.",
+  "safety": "Same reviewed direct-owned lifecycle, exact full clock admission, controls/toolchain equality, original AppHost ownership/retention/strict gates. B24 only if actual A23 safety and completion guards all admit. No shortened budgets, fallback or relabelled result.",
+  "scope": "A23/B24 actual runtime/ABI/strict-protection/cleanup remain NOT_RUN at creation; successful nonbuilding preflight is not runtime evidence. A strict partial result is not a pass. FullD requires later independent actual outcome reconciliation.",
+  "cleanup": "Request assembly writes retained evidence only; no build/test/workers/caches created. All local producer cycles already stopped and cleaned."
+}

@@ -1,0 +1,1293 @@
+{
+  "schema_version": 1,
+  "kind": "native-a23-scroll-correction-independent-source-review",
+  "reviewed_at": "2026-09-09T04:55:02.752Z",
+  "reviewer": "/root/fixture_review",
+  "implementation_author": "/root/l08_fixture",
+  "canonical_promotion_author": "/root",
+  "status": "ACCEPTED_REVISION_02_AND_EXACT_CANONICAL_PROJECTION_SOURCE_ONLY",
+  "readiness": "NOT_READY",
+  "conclusion": "The held copy-only Swift correction and revision-02 source/mutation/reference-model controls are independently acceptable for the exact canonical promotion specified below. Two regression-oracle findings in held draft01 were corrected without changing Swift bytes. This is not test execution, native compilation, application-runtime proof, an approval to dispatch Actions, or qualification of L08.",
+  "approval": {
+    "held_swift_source": true,
+    "revision_02_test_source": true,
+    "exact_three_replacement_canonical_projection": true,
+    "canonical_files_already_changed_by_reviewer": false,
+    "new_control_test_results": false,
+    "swift_or_xctest_compilation": false,
+    "native_execution_or_workflow_dispatch": false,
+    "strict_l08_pass": false,
+    "application_or_store_readiness": false,
+    "conditions": [
+      "Root must adopt only the held Swift bytes and the exact reviewed scanner projection, then freshly rehash canonical files; any further source/control/admission change needs independent review.",
+      "Retain all original 14 test declarations and all 11 new declarations, with no skips or fixed-count override. Actual focused control execution and cleanup remain root-owned.",
+      "Before final native qualification, commit reviewed source/controls, regenerate and commit mechanical inventory, and create fresh source/control/copied-source/image bindings for the frozen source.",
+      "Keep all prior failed receipts and this draft01 finding history. No old A23 matrix or binding is promoted into evidence for the revised fixture."
+    ]
+  },
+  "ownership": {
+    "authorized_output": "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-independent-01.json",
+    "source_branch": "fix/local-readiness-2026-09-07",
+    "source_commit": "08d1adfbd7284f190fbab5f7baa846944bca5b68",
+    "source_tree": "c19beea4647ce882c02d8751d1bf82c22484b52b",
+    "canonical_source_at_last_read": {
+      "fixture_sha256": "5d81dfb0b5accc127a4f5510a23d610ba73efd2fc8b19a0ff12395912e2d0c59",
+      "scanner_sha256": "6443de2ea249c74a945aee5513e74eedadc077a68c43089201b89e9c90695298",
+      "interpretation": "Both canonical files were still the unchanged 08d baseline at the last read before this report; the approved canonical scanner hash below is an in-memory projection, not an already-written file."
+    },
+    "root_exclusive": "Project-code execution/imports, tests, builds, native commands, API/Actions, cleanup, staging, commits and pushes.",
+    "reviewer_operations": [
+      "Read-only Git with GIT_OPTIONAL_LOCKS=0; source/log/JSON reads; standard-library AST/literal, hash, path/stat and text/diff inspection; this one independent JSON report."
+    ],
+    "project_imports": 0,
+    "extracted_project_function_executions": 0,
+    "tests_executed": 0,
+    "builds_or_native_commands": 0,
+    "api_or_workflow_calls": 0,
+    "canonical_source_edits": 0,
+    "unrelated_user_or_peer_work_preserved": true
+  },
+  "held_draft_01": {
+    "disposition": "NOT_ACCEPTED_AS_A_PROMOTABLE_TEST_ORACLE; retained unchanged",
+    "identities": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/L08StorageFunctionalUITests.swift.in",
+        "sha256": "750dbb70d879ba4cc41908103699457557e8723e4d67d2c27cbab133b202cac3",
+        "bytes": 26023
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/test_single_tap_fixture_review.py",
+        "sha256": "1ee870c576b7d5212d3b14b93514a7ba973c07065493a33bfc4a2b8dca73e5e2",
+        "bytes": 45184
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/author-report.json",
+        "sha256": "2c2233f4d71b327c1f1abd2500393c3ff6bdeaee0c739e0c59b1bb49ff5be667",
+        "bytes": 34317
+      }
+    ],
+    "swift_changed_in_revision_02": false
+  },
+  "held_revision_02": {
+    "identities": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/revision-02/L08StorageFunctionalUITests.swift.in",
+        "sha256": "750dbb70d879ba4cc41908103699457557e8723e4d67d2c27cbab133b202cac3",
+        "bytes": 26023
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/revision-02/test_single_tap_fixture_review.py",
+        "sha256": "73db8287ce46c0579368b8322f3fca93faef909fbf1a75ffb98239b5eef19862",
+        "bytes": 48179
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/revision-02/author-report.json",
+        "sha256": "0d51e6a6c83e9d101c551d0eda5eb3eca4ddfbf86ebe6275559de33ff5e26380",
+        "bytes": 17775
+      }
+    ],
+    "author_embedded_test_delta_matches_independently_generated_diff": true,
+    "all_three_initial_files_reopened_and_preserved": true,
+    "revision_identity_checks": "All six held files were freshly read and rehashed; supplied sizes and SHA256 values matched."
+  },
+  "findings": [
+    {
+      "id": "F01",
+      "severity": "MEDIUM",
+      "scope": "Regression-oracle integrity on canonical promotion",
+      "status": "CLOSED_IN_HELD_REVISION_02_SOURCE; EXECUTION_NOT_RUN",
+      "draft_01_location": "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/test_single_tap_fixture_review.py:594-604",
+      "finding": "The new helper-preservation test read COMPANION/L08StorageFunctionalUITests.swift.in as expected output while its candidate source was a sibling draft. On canonical promotion SWIFT would identify that same COMPANION file, turning both body and raw-slice comparisons into self-comparisons.",
+      "basis": "Direct source/path analysis only; no mutation or extracted test function was executed.",
+      "correction": "Revision02 replaces the mutable expected-file read with seven literal historical parameter/body-slice SHA256 values pinned to the 08d baseline fixture. Candidate slices are hashed against literals; headers are unique and helper structure is independently parsed by the source contract.",
+      "independent_validation": "Read-only git show of 08d baseline produced fixture SHA5d81dfb0...; all seven raw baseline and draft slices were independently hashed and matched every literal, and remain independent of canonical SWIFT path remapping.",
+      "limits": "The frozen hash convention includes parameters, comments, whitespace and body before the ordinary four-space closing delimiter; it is not a claim that every modifier/header byte is hashed. Structural helper-name/brace checks remain separate."
+    },
+    {
+      "id": "F02",
+      "severity": "MEDIUM",
+      "scope": "New bidirectional gesture must not escape pre-zero scroll sites",
+      "status": "CLOSED_IN_HELD_REVISION_02_SOURCE; FIVE_NEGATIVE_WITNESSES_NOT_RUN",
+      "draft_01_location": "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/test_single_tap_fixture_review.py:136-153,208-210,257-259",
+      "finding": "Draft01 permitted swipeDown in the main search but omitted it from the stable-geometry and after-tap denysets. Required exact list gesture substrings also did not reject an additional app.swipeDown after fresh zero in main or in changed geometry/diagnostic helpers.",
+      "basis": "Static insertion/oracle reasoning only, not a demonstrated executed test. The actual held Swift already contains no such extra gesture.",
+      "correction": "Revision02 adds swipeDown to both read-only helper denysets and requires exactly one swipeUp token and one swipeDown token across main plus eleven named helper bodies, including public observation and recovery. Existing exact main-site and ordering guards still locate both allowed gesture sites before fresh zero.",
+      "negative_witnesses": [
+        "Stable-geometry loop downward insertion must match its specific read-only denial.",
+        "After-tap loop downward insertion must match its specific observer-only denial.",
+        "Main downward insertion immediately after fresh-zero call must match the global two-site census denial.",
+        "Changed l08HomeGeometry downward insertion must match the global census denial.",
+        "Public diagnostic downward insertion must match the global census denial."
+      ],
+      "independent_validation": "Read complete revision diff and all five in-memory mutation constructions; local guards run before the global census, anchors are asserted unique, changed source is asserted different, and expected rejection reasons are specific. The declarations parse as Python; test results remain NOT_RUN.",
+      "limits": "The scanner is a source-contract guard, not a Swift compiler, general semantic proof, or application activation oracle."
+    }
+  ],
+  "source_analysis": {
+    "scope": "One copy-only Swift fixture and its source-control tests; no production app, storage, reducer, navigation, protocol, catalog, snapshot, counter, observer, host fixture, dependency, identity, or native runner change.",
+    "failure_reopened": {
+      "raw_log": {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/xcodebuild.log",
+        "sha256": "80d4223592c3bb95690fe088adcaccdfddd13a54abd022883574a9b243bb77c9",
+        "bytes": 542593
+      },
+      "failed_test": "testDSC01ActualSettingsLocalSessionsAndOSWithL08FunctionalObservation",
+      "xctest_summary": {
+        "total": 5,
+        "passed": 4,
+        "failed": 1,
+        "skipped": 0
+      },
+      "failure": [
+        {
+          "line": 5489,
+          "raw": "/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-23-ljj7k3it/copy/iosApp/iosAppUITests/IOSAppLaunchUITests.swift:2359: error: -[iosAppUITests.IOSAppLaunchUITests testDSC01ActualSettingsLocalSessionsAndOSWithL08FunctionalObservation] : Failed to determine hittability of \"l08-home-legacy\" Button: Activation point invalid and no suggested hit points based on element frame"
+        }
+      ],
+      "legacy_public_snapshots": [
+        {
+          "line": 5200,
+          "attempt": 0,
+          "target": {
+            "height": 96,
+            "width": 354,
+            "x": 24,
+            "y": 911.6666870117188
+          },
+          "list": {
+            "height": 769.6666870117188,
+            "width": 402,
+            "x": 0,
+            "y": 0
+          },
+          "overlay": {
+            "height": 139,
+            "width": 265,
+            "x": 68.66666666666666,
+            "y": 134
+          },
+          "logged_hittable": false,
+          "app_frame_retained": false
+        },
+        {
+          "line": 5229,
+          "attempt": 1,
+          "target": {
+            "height": 96,
+            "width": 354,
+            "x": 24,
+            "y": 358.6666564941406
+          },
+          "list": {
+            "height": 769.6666870117188,
+            "width": 402,
+            "x": 0,
+            "y": 0
+          },
+          "overlay": {
+            "height": 139,
+            "width": 265,
+            "x": 68.66666666666666,
+            "y": 134
+          },
+          "logged_hittable": true,
+          "app_frame_retained": false
+        },
+        {
+          "line": 5274,
+          "attempt": 2,
+          "target": {
+            "height": 95.99999237060547,
+            "width": 354,
+            "x": 24,
+            "y": 95.66666412353516
+          },
+          "list": {
+            "height": 769.6666870117188,
+            "width": 402,
+            "x": 0,
+            "y": 0
+          },
+          "overlay": {
+            "height": 139,
+            "width": 265,
+            "x": 68.66666666666666,
+            "y": 134
+          },
+          "logged_hittable": true,
+          "app_frame_retained": false
+        },
+        {
+          "line": 5319,
+          "attempt": 3,
+          "target": {
+            "height": 96,
+            "width": 354,
+            "x": 24,
+            "y": -236.3333282470703
+          },
+          "list": {
+            "height": 769.6666870117188,
+            "width": 402,
+            "x": 0,
+            "y": 0
+          },
+          "overlay": {
+            "height": 139,
+            "width": 265,
+            "x": 68.66666666666666,
+            "y": 134
+          },
+          "logged_hittable": false,
+          "app_frame_retained": false
+        },
+        {
+          "line": 5348,
+          "attempt": 4,
+          "target": {
+            "height": 96,
+            "width": 354,
+            "x": 24,
+            "y": -236.3333282470703
+          },
+          "list": {
+            "height": 769.6666870117188,
+            "width": 402,
+            "x": 0,
+            "y": 0
+          },
+          "overlay": {
+            "height": 139,
+            "width": 265,
+            "x": 68.66666666666666,
+            "y": 134
+          },
+          "logged_hittable": false,
+          "app_frame_retained": false
+        },
+        {
+          "line": 5377,
+          "attempt": 5,
+          "target": {
+            "height": 96,
+            "width": 354,
+            "x": 24,
+            "y": -236.3333282470703
+          },
+          "list": {
+            "height": 769.6666870117188,
+            "width": 402,
+            "x": 0,
+            "y": 0
+          },
+          "overlay": {
+            "height": 139,
+            "width": 265,
+            "x": 68.66666666666666,
+            "y": 134
+          },
+          "logged_hittable": false,
+          "app_frame_retained": false
+        },
+        {
+          "line": 5406,
+          "attempt": 6,
+          "target": {
+            "height": 96,
+            "width": 354,
+            "x": 24,
+            "y": -236.3333282470703
+          },
+          "list": {
+            "height": 769.6666870117188,
+            "width": 402,
+            "x": 0,
+            "y": 0
+          },
+          "overlay": {
+            "height": 139,
+            "width": 265,
+            "x": 68.66666666666666,
+            "y": 134
+          },
+          "logged_hittable": false,
+          "app_frame_retained": false
+        },
+        {
+          "line": 5435,
+          "attempt": 7,
+          "target": {
+            "height": 96,
+            "width": 354,
+            "x": 24,
+            "y": -236.3333282470703
+          },
+          "list": {
+            "height": 769.6666870117188,
+            "width": 402,
+            "x": 0,
+            "y": 0
+          },
+          "overlay": {
+            "height": 139,
+            "width": 265,
+            "x": 68.66666666666666,
+            "y": 134
+          },
+          "logged_hittable": false,
+          "app_frame_retained": false
+        }
+      ],
+      "legacy_eight_up_swipe_log_lines": [
+        5207,
+        5252,
+        5297,
+        5326,
+        5355,
+        5384,
+        5413,
+        5442
+      ],
+      "legacy_home_activation_markers": 0,
+      "other_home_activation_marker_counts": {
+        "l08-home-wc": 10,
+        "l08-home-we": 10,
+        "l08-home-mon": 10,
+        "l08-home-moff": 10
+      },
+      "interpretation": [
+        "Actual legacy target moved from below the list (y911.67) to transiently contained/clear (y358.67), then overlay-overlapping (y95.67), then above-list (y-236.33 repeated). The old routine issued eight up gestures.",
+        "Attempt1's public target/list/overlay snapshot was nominally clear, but a later separate l08HomeGeometry read did not admit it. Its exact rejecting subpredicate and actual app.frame were not retained; neither is inferred.",
+        "The actual failed generic readiness predicate requested an offscreen legacy hit point. No legacy fresh-zero/final-six/target activation/callback acknowledgement marker was reached.",
+        "The revised source is motivated by this evidence, not proved effective by it."
+      ]
+    },
+    "scroll_search": {
+      "swift_lines": "87-142,197-276 in the held Swift",
+      "decision_windows_maximum": 9,
+      "list_gestures_maximum": 8,
+      "samples_per_window_maximum": 24,
+      "required_consecutive_samples": 6,
+      "first_anchor_component_tolerance_points": 0.5,
+      "nonblocking_interval_seconds": 0.25,
+      "new_diagnostic_rows_per_home_maximum": 216,
+      "new_diagnostic_bytes_per_row_maximum": 2048,
+      "analysis": [
+        "Nine bounded decision windows permit no more than eight gestures: ready exits, and a ninth nonready result throws before a gesture.",
+        "Direction comes from finite full target/list/app/overlay rectangles. Above-list means down; below-list means up; fully contained and clear means ready.",
+        "For a contained overlay-overlapping card, a larger vertical free band is chosen only if the entire card fits. Horizontal overflow, oversized/nonfinite geometry, or no fitting band yields no direction.",
+        "An absent target permits initial up-search only while it has never been seen. Any exact sighting permanently marks targetSeen; later disappearance cannot restart blind search. Ambiguous target/list/overlay counts fail.",
+        "Every direction needs six samples near the first anchor with identical direction/frame count. Nil, movement or direction change resets the anchor and count.",
+        "A ready sample still reuses every original strict l08HomeGeometry predicate and requires the independently recaptured frames to be near the candidate sample.",
+        "Only real exact-list swipeUp(velocity: .slow)/swipeDown(velocity: .slow) occur, with no coordinate, drag, selector fallback, direct callback or Home activation retry.",
+        "Slow velocity is not a pixel-displacement or convergence guarantee. Persistent invalidity or oscillation fails within the source bounds rather than activating."
+      ]
+    },
+    "geometry_and_diagnostics": {
+      "swift_lines": "144-177,278-295,303-365 in the held Swift",
+      "analysis": [
+        "l08HomeGeometry retains exact identity counts, foreground/no-alert/no-keyboard, existence/enabled, finite positive bounded rectangles, app containing list/overlay, full list containment of target, expanded-overlay exclusion, and target/list hittability.",
+        "The original geometry predicates now precede target/list isHittable. Home generic readiness calls this strict helper; non-Home readiness retains its original predicate.",
+        "Public observation measures a finite fully app-contained frame before requesting hittability. Unqueried is explicitly marked and omitted, not fabricated as false.",
+        "The diagnostic guard is screen-containment, not an atomic readiness or list-clipping guarantee. XCTest can still fail; no exception is swallowed or converted to readiness.",
+        "Diagnostics retain only whitelisted public aliases/counts/geometry/counters and bounded data with proves_recovery=false; they do not print labels, private state, errors, screenshots or hierarchy dumps."
+      ]
+    },
+    "final_single_activation": {
+      "sequence": "All list scrolling -> untouched observer -> fresh zero counter sample -> original six first-anchor full-geometry samples -> immediately recaptured near geometry/actual target frame + enabled/hittable -> exactly one Home target.tap -> bounded fresh observer reads requiring exact resume_taps==1 with zero retry/discard and bounded recovery shows.",
+      "unchanged_parameter_body_slices": [
+        {
+          "name": "l08HomeGeometryNear",
+          "canonical_header_count": 1,
+          "draft_header_count": 1,
+          "bytes": 172,
+          "baseline_sha256": "218095d62d6f0d78ff892ccc782f95c63d8027d070421069f33d8bd3a1630252",
+          "draft_sha256": "218095d62d6f0d78ff892ccc782f95c63d8027d070421069f33d8bd3a1630252",
+          "literal_sha256": "218095d62d6f0d78ff892ccc782f95c63d8027d070421069f33d8bd3a1630252",
+          "all_equal": true
+        },
+        {
+          "name": "l08WaitStableHomeGeometry",
+          "canonical_header_count": 1,
+          "draft_header_count": 1,
+          "bytes": 1215,
+          "baseline_sha256": "219c73596391ff7c270a2028d7fca05c8443fa83f3342d8bb1ccc26a156a4443",
+          "draft_sha256": "219c73596391ff7c270a2028d7fca05c8443fa83f3342d8bb1ccc26a156a4443",
+          "literal_sha256": "219c73596391ff7c270a2028d7fca05c8443fa83f3342d8bb1ccc26a156a4443",
+          "all_equal": true
+        },
+        {
+          "name": "l08RequireHomeZeroBeforeTap",
+          "canonical_header_count": 1,
+          "draft_header_count": 1,
+          "bytes": 1284,
+          "baseline_sha256": "a56a66792ca42f52483e6b5c82a24b5292b47ae9af61596940444b50effa1105",
+          "draft_sha256": "a56a66792ca42f52483e6b5c82a24b5292b47ae9af61596940444b50effa1105",
+          "literal_sha256": "a56a66792ca42f52483e6b5c82a24b5292b47ae9af61596940444b50effa1105",
+          "all_equal": true
+        },
+        {
+          "name": "l08WaitHomeOneAfterTap",
+          "canonical_header_count": 1,
+          "draft_header_count": 1,
+          "bytes": 1293,
+          "baseline_sha256": "234dbf02625cecd654381c6ef0fb3a68a99b1b9b8cb1a6028fbed76f529547e5",
+          "draft_sha256": "234dbf02625cecd654381c6ef0fb3a68a99b1b9b8cb1a6028fbed76f529547e5",
+          "literal_sha256": "234dbf02625cecd654381c6ef0fb3a68a99b1b9b8cb1a6028fbed76f529547e5",
+          "all_equal": true
+        },
+        {
+          "name": "l08ReadHomeCounters",
+          "canonical_header_count": 1,
+          "draft_header_count": 1,
+          "bytes": 1007,
+          "baseline_sha256": "9c49648ab4c3ecaf1c6f55c8dc957f20e02e5b9ec78d34eb8573c708c86fa8ec",
+          "draft_sha256": "9c49648ab4c3ecaf1c6f55c8dc957f20e02e5b9ec78d34eb8573c708c86fa8ec",
+          "literal_sha256": "9c49648ab4c3ecaf1c6f55c8dc957f20e02e5b9ec78d34eb8573c708c86fa8ec",
+          "all_equal": true
+        },
+        {
+          "name": "l08HomeActivationDiagnostic",
+          "canonical_header_count": 1,
+          "draft_header_count": 1,
+          "bytes": 1336,
+          "baseline_sha256": "c09ceefb51f2ee1bf44ab438b5732fc0da34328ac6203b53bed0823e88e73b44",
+          "draft_sha256": "c09ceefb51f2ee1bf44ab438b5732fc0da34328ac6203b53bed0823e88e73b44",
+          "literal_sha256": "c09ceefb51f2ee1bf44ab438b5732fc0da34328ac6203b53bed0823e88e73b44",
+          "all_equal": true
+        },
+        {
+          "name": "l08WaitRecovery",
+          "canonical_header_count": 1,
+          "draft_header_count": 1,
+          "bytes": 1099,
+          "baseline_sha256": "3048d3f303d9c8da57f50552a2ee97de7a3e40d86ea346782e07ffb640b4ccd3",
+          "draft_sha256": "3048d3f303d9c8da57f50552a2ee97de7a3e40d86ea346782e07ffb640b4ccd3",
+          "literal_sha256": "3048d3f303d9c8da57f50552a2ee97de7a3e40d86ea346782e07ffb640b4ccd3",
+          "all_equal": true
+        }
+      ],
+      "functional_boot_action_prefix": {
+        "bytes": 5740,
+        "sha256": "b7788b8547813c0982a5f4da63833620fd08c6b7941ecab33cccee9706b7f7ef",
+        "baseline_and_draft_identical": true
+      },
+      "no_post_zero_scroll_or_home_retap_in_reviewed_source": true,
+      "observer_interpretation": "After-tap observation may physically tap the existing read-only l08-ui-observe control; it never reactivates the Home card or directly invokes a resume callback.",
+      "strict_storage_and_host_scope": "All thirteen original functional boot/action callers, comparison handling and the retained-host fixture are byte-unchanged. Functional metadata FAIL remains FAIL for strict verification; no L08 pass is inferred."
+    },
+    "architecture_invariants": "No change to host-only reducer authority, exact protocol4.2, session-seed determinism, public/own-private/host-only boundaries, strict snapshot/content validation, Doctor ON/OFF or exclusion of Leave Confirmation time from Whodunit Discussion."
+  },
+  "test_source_review": {
+    "execution": "NOT_RUN",
+    "native_compilation": "NOT_RUN",
+    "native_runtime": "NOT_RUN",
+    "source_ast_parse": "PASS; AST parsing/literal inspection only, no module import",
+    "baseline_declarations": 14,
+    "held_draft01_declarations": 24,
+    "held_revision02_declarations": 25,
+    "all_14_inherited_present": true,
+    "unchanged_inherited_method_count": 13,
+    "inherited_method_comparison": [
+      {
+        "name": "test_actual_swift_matches_independently_reviewed_contract",
+        "preserved": true,
+        "ast_identical": true,
+        "bytes_identical": true
+      },
+      {
+        "name": "test_swift_for_argument_label_is_not_an_activation_loop",
+        "preserved": true,
+        "ast_identical": true,
+        "bytes_identical": true
+      },
+      {
+        "name": "test_all_thirteen_boot_callers_and_storage_assertions_are_unchanged",
+        "preserved": true,
+        "ast_identical": true,
+        "bytes_identical": true
+      },
+      {
+        "name": "test_shared_geometry_helpers_have_strict_tolerance_and_runloop_wait",
+        "preserved": true,
+        "ast_identical": true,
+        "bytes_identical": true
+      },
+      {
+        "name": "test_repeat_activation_and_direct_callback_mutations_rejected",
+        "preserved": true,
+        "ast_identical": true,
+        "bytes_identical": true
+      },
+      {
+        "name": "test_pre_scroll_zero_and_missing_fresh_resample_mutations_rejected",
+        "preserved": true,
+        "ast_identical": true,
+        "bytes_identical": true
+      },
+      {
+        "name": "test_geometry_visibility_uniqueness_and_bounds_mutations_rejected",
+        "preserved": true,
+        "ast_identical": false,
+        "bytes_identical": false
+      },
+      {
+        "name": "test_counter_freshness_and_schema_mutations_rejected",
+        "preserved": true,
+        "ast_identical": true,
+        "bytes_identical": true
+      },
+      {
+        "name": "test_after_tap_polling_cannot_reactivate_or_be_unbounded",
+        "preserved": true,
+        "ast_identical": true,
+        "bytes_identical": true
+      },
+      {
+        "name": "test_private_or_unbounded_or_overclaiming_diagnostic_mutations_rejected",
+        "preserved": true,
+        "ast_identical": true,
+        "bytes_identical": true
+      },
+      {
+        "name": "test_actual_counter_seam_and_observer_stay_byte_identical",
+        "preserved": true,
+        "ast_identical": true,
+        "bytes_identical": true
+      },
+      {
+        "name": "test_shipping_home_callback_and_card_are_not_replaced",
+        "preserved": true,
+        "ast_identical": true,
+        "bytes_identical": true
+      },
+      {
+        "name": "test_counter_guard_precedes_actual_controller_attachment",
+        "preserved": true,
+        "ast_identical": true,
+        "bytes_identical": true
+      },
+      {
+        "name": "test_source_scanner_does_not_accept_comment_laundering",
+        "preserved": true,
+        "ast_identical": true,
+        "bytes_identical": true
+      }
+    ],
+    "only_changed_inherited_method": {
+      "name": "test_geometry_visibility_uniqueness_and_bounds_mutations_rejected",
+      "reason": "New direction/settling helpers duplicate some geometry fragments; mutations now target the intended exact helper instead of the first global match.",
+      "nine_original_mutation_pairs_retained": true,
+      "original_pair_count": 9,
+      "revision_pair_count": 9
+    },
+    "new_declarations": [
+      "test_actual_a23_trajectory_is_conditional_geometry_not_callback_proof",
+      "test_direction_policy_mutations_are_source_bound",
+      "test_every_home_hittability_site_follows_geometry_without_fabricated_false",
+      "test_final_six_anchor_zero_one_recovery_parameter_body_bytes_match_frozen_baseline",
+      "test_geometry_policy_rejects_nonfinite_overflow_and_malformed_containment",
+      "test_only_reviewed_main_scrolling_sites_allow_downward_gestures",
+      "test_overlay_requires_whole_card_band_and_never_chooses_tap_point",
+      "test_scroll_bounds_and_single_activation_retries_remain_rejected",
+      "test_settling_cannot_guess_ambiguous_invalid_or_disappeared_target",
+      "test_settling_nil_resets_and_complete_window_is_bounded",
+      "test_transient_visibility_and_drift_cannot_trigger_next_gesture"
+    ],
+    "no_test_decorators_or_skip_decorators_declared": true,
+    "synthetic_and_replay_scope": [
+      "DIRECTION_BODY pins the intended Swift geometry policy by exact comment-stripped tokens. Python Rect/direction/settling functions are explicitly a conditional reference model, not executed Swift.",
+      "Actual A23 raw log is SHA-pinned. Its eight legacy snapshots and absent legacy activation markers are checked separately from the model.",
+      "A23 did not retain app.frame in those public snapshots; replay substitutes list.frame as a synthetic containing app envelope. The modeled ready decision at attempt1 is not historical native readiness.",
+      "Tests cover transient visibility, cumulative first-anchor drift, nil resets, six-sample and 24-sample bounds, alternating directions, invalid rectangles/containment, overlay full-card fit, identity ambiguity/disappearance, exact gesture bounds, one activation, read-only post-zero behavior, diagnostics and inherited application boundaries.",
+      "Positive setUp validates candidate source before each negative mutation so a broken baseline cannot make all rejection assertions appear successful.",
+      "These are bounded textual and model controls. Their actual execution, Swift/SDK API compatibility, non-atomic XCUI observation behavior and new fixture runtime remain unproved by this review."
+    ]
+  },
+  "foundation_pin_closure": {
+    "direct_pin_source": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py:23-30,71-79",
+    "direct_count": 6,
+    "direct_pins": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_functional_copy.py",
+        "sha256": "417865a86daca8c09e1d650abc2d46b20920a128d95d2021ad365e38e7a207a4",
+        "bytes": 2509,
+        "verified": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+        "sha256": "9580071ecec4abc8ba375ca01e722eee4245f36132e6a5b8790f5d8bb8456687",
+        "bytes": 87139,
+        "verified": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/copied_sources.py",
+        "sha256": "ba1dbbd9fabc23e43060663ff6051617f1fe3119979e60df7a1db3c13fe950d6",
+        "bytes": 13090,
+        "verified": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/NativeReadinessUITests.swift.in",
+        "sha256": "fa2dc7dbc97c576262ad14cd85b22f65aa908b1629ab1a205b22aa4873f5c0dc",
+        "bytes": 4754,
+        "verified": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/NativeReadinessLaunch.swift.in",
+        "sha256": "df8f0cce3f45bedbfea47df3ca0b2e56c6a777383395fc170f0f07b83f8d143a",
+        "bytes": 20170,
+        "verified": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01Probe.swift.in",
+        "sha256": "1c4b113ec8695d8da2115e4f386fdaf8820411879af6ff9492109b62c7770746",
+        "bytes": 24831,
+        "verified": true
+      }
+    ],
+    "direct_pin_change_required": false,
+    "reason": "The six direct PINS are unchanged and none is L08StorageFunctionalUITests.swift.in.",
+    "composition_source": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py:194-213",
+    "composition_binding_checks": {
+      "freeze_schema_version": 2,
+      "freeze_directory": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01",
+      "frozen_source_count": 9,
+      "all_match": true,
+      "records": [
+        {
+          "path": "remediation-runs/2026-09-08-continuation/reviews/a23-budget-preservation-draft-freeze-01.json",
+          "sha256": "f73bd3be82522dd4a3404bc68c4c0093d7af7b7b7f9d37bfd87a993c4aebb618",
+          "bytes": 5076,
+          "expected_sha256": "f73bd3be82522dd4a3404bc68c4c0093d7af7b7b7f9d37bfd87a993c4aebb618",
+          "match": true,
+          "regular": true,
+          "symlink": false,
+          "canonical": true
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/L08AppFoundation.m.in",
+          "sha256": "f7b0e515b580f4bd9c49857ad4a49a3ab925218e8e52c260eb14cc75e410cba7",
+          "bytes": 29952,
+          "expected_sha256": "f7b0e515b580f4bd9c49857ad4a49a3ab925218e8e52c260eb14cc75e410cba7",
+          "match": true,
+          "regular": true,
+          "symlink": false,
+          "canonical": true
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/L08AppFoundationBridge.h.in",
+          "sha256": "b65a86e26170b313ba00d875910da7499685736240a5cb644b6f916ec71e7d08",
+          "bytes": 314,
+          "expected_sha256": "b65a86e26170b313ba00d875910da7499685736240a5cb644b6f916ec71e7d08",
+          "match": true,
+          "regular": true,
+          "symlink": false,
+          "canonical": true
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/L08AppFoundationLaunch.swift.in",
+          "sha256": "76e37762006d912e40b18508414dc55384aaa89be9212f7fd172b55a30edabb0",
+          "bytes": 4344,
+          "expected_sha256": "76e37762006d912e40b18508414dc55384aaa89be9212f7fd172b55a30edabb0",
+          "match": true,
+          "regular": true,
+          "symlink": false,
+          "canonical": true
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/L08AppFoundationUITests.swift.in",
+          "sha256": "5f3f136ec7c5925ed82f277c2ca60e6f22ba81e42e97cc22ef7bdc3954ef2e07",
+          "bytes": 3506,
+          "expected_sha256": "5f3f136ec7c5925ed82f277c2ca60e6f22ba81e42e97cc22ef7bdc3954ef2e07",
+          "match": true,
+          "regular": true,
+          "symlink": false,
+          "canonical": true
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/README.md",
+          "sha256": "0854ffec41d4eafcbfc8269b2c199d4d681e79576e4d53b77716ff0080249cc1",
+          "bytes": 6120,
+          "expected_sha256": "0854ffec41d4eafcbfc8269b2c199d4d681e79576e4d53b77716ff0080249cc1",
+          "match": true,
+          "regular": true,
+          "symlink": false,
+          "canonical": true
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/ROOT_INTEGRATION.md",
+          "sha256": "e3009bfe096930dbde969f239dd162da15a25d407e4b39a99f8bf4fab22d8dcb",
+          "bytes": 6638,
+          "expected_sha256": "e3009bfe096930dbde969f239dd162da15a25d407e4b39a99f8bf4fab22d8dcb",
+          "match": true,
+          "regular": true,
+          "symlink": false,
+          "canonical": true
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+          "sha256": "399151fef8743c2553bf72f40affb07842a00f643dd34fed1aa3703c0efcec09",
+          "bytes": 13449,
+          "expected_sha256": "399151fef8743c2553bf72f40affb07842a00f643dd34fed1aa3703c0efcec09",
+          "match": true,
+          "regular": true,
+          "symlink": false,
+          "canonical": true
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_receipts.py",
+          "sha256": "db69c16b7d8abfb5998f92db886a8b8c77bcbb3e72fdd1d806f0ea3dd05f1fb6",
+          "bytes": 18855,
+          "expected_sha256": "db69c16b7d8abfb5998f92db886a8b8c77bcbb3e72fdd1d806f0ea3dd05f1fb6",
+          "match": true,
+          "regular": true,
+          "symlink": false,
+          "canonical": true
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/test_app_foundation.py",
+          "sha256": "c04c7d4b1bb99207415beab77ae3b40bb3d5f59709970f7d844d5d14beab0fe5",
+          "bytes": 34661,
+          "expected_sha256": "c04c7d4b1bb99207415beab77ae3b40bb3d5f59709970f7d844d5d14beab0fe5",
+          "match": true,
+          "regular": true,
+          "symlink": false,
+          "canonical": true
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/run_control.py",
+          "sha256": "58e8daf875eaf8061ed017e10cc8c8065eb49292866b6741227814282a1b8e9f",
+          "bytes": 37730,
+          "expected_sha256": "58e8daf875eaf8061ed017e10cc8c8065eb49292866b6741227814282a1b8e9f",
+          "match": true,
+          "regular": true,
+          "symlink": false,
+          "canonical": true
+        },
+        {
+          "path": "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/FoundationProtectionControl.m",
+          "sha256": "a6b025d7b77c3b1b1de57b93869d0beff6b4cc9e365eb5672ffd2be9d52013f2",
+          "bytes": 15988,
+          "expected_sha256": "a6b025d7b77c3b1b1de57b93869d0beff6b4cc9e365eb5672ffd2be9d52013f2",
+          "match": true,
+          "regular": true,
+          "symlink": false,
+          "canonical": true
+        }
+      ]
+    },
+    "transitive_change": "control_files dynamically includes companion .in/.py/.md files; promoting the fixture changes its control-manifest entry and generated XCTest bytes even though direct Foundation pins do not change.",
+    "required_fresh_bindings": [
+      "Frozen source commit/tree and source context",
+      "Updated control manifest/template input bytes",
+      "Owned-copy source manifest/diff",
+      "Built/installed/executed image provenance appropriate to the new native run"
+    ],
+    "not_authorized": "No reuse of A23 full binding as qualification for changed fixture; no change to direct pins, Foundation strict comparisons or cleanup/ownership/toolchain guards."
+  },
+  "canonical_promotion": {
+    "fixture": {
+      "from": "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/revision-02/L08StorageFunctionalUITests.swift.in",
+      "to": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in",
+      "sha256": "750dbb70d879ba4cc41908103699457557e8723e4d67d2c27cbab133b202cac3",
+      "bytes": 26023,
+      "modifications_permitted": "None; byte-for-byte held copy."
+    },
+    "scanner": {
+      "from": "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/revision-02/test_single_tap_fixture_review.py",
+      "to": "remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py",
+      "exact_literal_replacements": [
+        {
+          "before": "ROOT = Path(__file__).resolve().parents[5]",
+          "after": "ROOT = Path(__file__).resolve().parents[3]",
+          "occurrences": 1
+        },
+        {
+          "before": "SWIFT = Path(__file__).with_name(\"L08StorageFunctionalUITests.swift.in\")",
+          "after": "SWIFT = COMPANION / \"L08StorageFunctionalUITests.swift.in\"",
+          "occurrences": 1
+        },
+        {
+          "before": "\"\"\"Draft-only L08 scroll-correction source/mutation/geometry-model guards.\n\nNot independently approved and NOT Swift, XCTest, or application execution.\nThe new geometry replay is an explicitly conditional Python reference model;\nits policy body is token-bound to the draft Swift, not a native runtime oracle.\nDraft paths must be independently reviewed on canonical promotion.\n\nInherited independently authored single-tap guards:",
+          "after": "\"\"\"Read-only L08 scroll-correction source/mutation/geometry-model guards.\n\nThese controls are NOT Swift, XCTest, or application execution.\nThe geometry replay is an explicitly conditional Python reference model;\nits policy body is token-bound to the reviewed Swift, not a native runtime oracle.\n\nInherited independently authored single-tap guards:",
+          "occurrences": 1
+        }
+      ],
+      "hypothetical_sha256": "b77b36c317f4f04620c0cf4b40065fc55a382e57110d622a78b818d9761e9b79",
+      "hypothetical_bytes": 48084,
+      "ast_parse": "PASS_SOURCE_ONLY",
+      "declared_tests": 25,
+      "tests_executed": 0,
+      "canonical_written": false
+    },
+    "count_admission": "The accepted scanner declares25=14inherited+11new methods. The existing fixed continuation packet invokes this canonical scanner directly and has no fixed14 check in run_continuation_controls.py; root must review any external exact-count/pin admission rather than override/skip.",
+    "docstring_review": "Root-requested initial docstring substitution is truthful: it identifies read-only controls and reviewed source, explicitly denies Swift/XCTest/application execution, and preserves the conditional-model limit. The remainder of the inherited text is unchanged.",
+    "follow_up": "Freshly read/hash adopted canonical files and ensure only these reviewed substitutions. A different quote style or other edit changes the approved scanner identity and must be reconciled; no canonical file was written by this reviewer."
+  },
+  "evidence_references": {
+    "author_pins_rehashed": 41,
+    "author_pin_mismatches": 0,
+    "author_source_and_evidence_references": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalUITests.swift.in",
+        "sha256": "5d81dfb0b5accc127a4f5510a23d610ba73efd2fc8b19a0ff12395912e2d0c59",
+        "bytes": 19846,
+        "category": "source_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/controls/test_single_tap_fixture_review.py",
+        "sha256": "6443de2ea249c74a945aee5513e74eedadc077a68c43089201b89e9c90695298",
+        "bytes": 24518,
+        "category": "source_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_functional_copy.py",
+        "sha256": "417865a86daca8c09e1d650abc2d46b20920a128d95d2021ad365e38e7a207a4",
+        "bytes": 2509,
+        "category": "source_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/l08_copy.py",
+        "sha256": "c2bf28bf0efd9449d646c451d7b8e665000e8d11a3a6eea76de95e1fb4a55a5f",
+        "bytes": 10248,
+        "category": "source_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08UiSeam.kt.in",
+        "sha256": "22d9e352ba6c4b8e161b2e69f1aae208a0c9a654ed85284ef4a34c2ea63399e4",
+        "bytes": 2111,
+        "category": "source_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalLaunch.swift.in",
+        "sha256": "cc61c02ceae5b5144cdc66dd12927dd31475ac3fac76be7732151582a1d777a6",
+        "bytes": 4766,
+        "category": "source_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08StorageFunctionalProbe.kt.in",
+        "sha256": "55d9ccb998831b07a43429249fc335189227bcd344f252dbcd4dbdbda963463c",
+        "bytes": 30638,
+        "category": "source_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/L08HostUITests.swift.in",
+        "sha256": "0156fdbb6210f1257c49eba9eee7fc7ac42fce2ad85870525131a7adf9ea99a9",
+        "bytes": 9077,
+        "category": "source_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01CatalogSelection.swift.in",
+        "sha256": "2649fb97fe27e74539dfd9867f6677c6a390e722129f8e2434231f44b1d91465",
+        "bytes": 16447,
+        "category": "source_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+        "sha256": "9580071ecec4abc8ba375ca01e722eee4245f36132e6a5b8790f5d8bb8456687",
+        "bytes": 87139,
+        "category": "source_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/copied_sources.py",
+        "sha256": "ba1dbbd9fabc23e43060663ff6051617f1fe3119979e60df7a1db3c13fe950d6",
+        "bytes": 13090,
+        "category": "source_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/NativeReadinessUITests.swift.in",
+        "sha256": "fa2dc7dbc97c576262ad14cd85b22f65aa908b1629ab1a205b22aa4873f5c0dc",
+        "bytes": 4754,
+        "category": "source_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/NativeReadinessLaunch.swift.in",
+        "sha256": "df8f0cce3f45bedbfea47df3ca0b2e56c6a777383395fc170f0f07b83f8d143a",
+        "bytes": 20170,
+        "category": "source_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01Probe.swift.in",
+        "sha256": "1c4b113ec8695d8da2115e4f386fdaf8820411879af6ff9492109b62c7770746",
+        "bytes": 24831,
+        "category": "source_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+        "sha256": "7d99de87082cda02d1e003ca8cad35835dec5fb34afd58c41ee3c9b7e30c8bdf",
+        "bytes": 21848,
+        "category": "source_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/app_foundation_copy.py",
+        "sha256": "399151fef8743c2553bf72f40affb07842a00f643dd34fed1aa3703c0efcec09",
+        "bytes": 13449,
+        "category": "source_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "composeApp/src/commonMain/kotlin/com/parlor/app/shell/home/HomeScreen.kt",
+        "sha256": "ae11eb3dd97c28520205237b95c28766ccd6ce8dd0e005f82a0d63866323e152",
+        "bytes": 21306,
+        "category": "source_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "shared/design-system/src/commonMain/kotlin/com/parlor/designsystem/components/ParlorCard.kt",
+        "sha256": "e764e6c7e09dc72464ad3eb14b41328a609a7d47475941054fb7af292f7a9d51",
+        "bytes": 1880,
+        "category": "source_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+        "sha256": "c2852fafb293a693be830171f4674947289fafb07f8ecdbafa5c0aaae6d1bf8b",
+        "bytes": 20807,
+        "category": "source_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/xcodebuild.log",
+        "sha256": "80d4223592c3bb95690fe088adcaccdfddd13a54abd022883574a9b243bb77c9",
+        "bytes": 542593,
+        "category": "evidence_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/xcresult-summary.json",
+        "sha256": "ec867f340b925ca095ec7038f5c6d11ab3f5dcde1ad50cbe371f70fb67691c2b",
+        "bytes": 1627,
+        "category": "evidence_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/xcresult-tests.json",
+        "sha256": "dff0a212f3fdb7f81592c25a1fede6034b2fca0e6223e67492b58fac62664e57",
+        "bytes": 5057,
+        "category": "evidence_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/copied-source.diff",
+        "sha256": "9cff75f99ae5263fce9ade011a8e4cd5d16f1ac05d6668346a42e8ab5e405772",
+        "bytes": 425637,
+        "category": "evidence_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/receipt.json",
+        "sha256": "f113c4189807486d96a6b9b81c2a2f09dbb8c54600c2eb9065348c15531a4a2a",
+        "bytes": 498476,
+        "category": "evidence_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/probe-l08-storage-functional-result.json",
+        "sha256": "63a4f3522a29992c9f74b8793446d7345c14a9cc04be7c69696df97e262a8df5",
+        "bytes": 40021,
+        "category": "evidence_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/native-a23-functional-protection-independent-01.json",
+        "sha256": "7118d57cc22d9cf06cf4cdb42e52cdcdb1c92768dac805dc609efb26ff51ac69",
+        "bytes": 68476,
+        "category": "evidence_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/l08-single-tap-independent-01.json",
+        "sha256": "7e8584012393a899aa3c5423c586834ee2703251c26d443513d03a4e5e16e8ac",
+        "bytes": 13314,
+        "category": "evidence_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/parlor-l08-storage-functional-1-save.json",
+        "sha256": "3312d9657b354e00e26ef97605f701fede0754ef35f91568947047578f2d4d27",
+        "bytes": 2075,
+        "category": "evidence_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/parlor-l08-storage-functional-10-legacy-load.json",
+        "sha256": "3e232a82af33949b8baaebddea03690b8e8ee9ddfcadce372c8879c4f88499ed",
+        "bytes": 2798,
+        "category": "evidence_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/parlor-l08-storage-functional-2-continue.json",
+        "sha256": "be587d70494d184c14ea0e3bab69481c50edfdaccf6b444bf1eb402e87ed1952",
+        "bytes": 1594,
+        "category": "evidence_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/parlor-l08-storage-functional-2-load.json",
+        "sha256": "ae3ecf9e1d5f0910baa9d721065b96203a9bb7737445455d9f6ca6be1ebfbb52",
+        "bytes": 2078,
+        "category": "evidence_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/parlor-l08-storage-functional-3-save.json",
+        "sha256": "c2db699cf78078299e5d914886c2c981dfcbf942d237952fa1d41a7fe64ce8b6",
+        "bytes": 2075,
+        "category": "evidence_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/parlor-l08-storage-functional-4-continue.json",
+        "sha256": "0e834f419fed2a3303aba6db82c0a2356c4acc780e80c166e6429333dc2585fa",
+        "bytes": 1594,
+        "category": "evidence_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/parlor-l08-storage-functional-4-load.json",
+        "sha256": "d8a468062dc5d2c2a927c4ff7b5d0f0b0a7257b8bb3e6b1f8ae55796c8f366cc",
+        "bytes": 2078,
+        "category": "evidence_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/parlor-l08-storage-functional-5-save.json",
+        "sha256": "f0310b0b66e2cb5f164d3c8aad024bdc8a139d9180c69ce849a47e99137671ce",
+        "bytes": 2077,
+        "category": "evidence_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/parlor-l08-storage-functional-6-continue.json",
+        "sha256": "45fac88eaa16c36f9a5ef5927a2c40f500257f90892bea77307c0f62bbfc2c21",
+        "bytes": 1594,
+        "category": "evidence_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/parlor-l08-storage-functional-6-load.json",
+        "sha256": "8d388100a8be59c3c350c680134dd062e7e8fc79021eb126712952d0d28025d2",
+        "bytes": 2080,
+        "category": "evidence_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/parlor-l08-storage-functional-7-save.json",
+        "sha256": "6cb9d3c0f749ea2b5f98282c67af66171cc85110fc7409c80fb8c58e9f66f516",
+        "bytes": 2079,
+        "category": "evidence_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/parlor-l08-storage-functional-8-continue.json",
+        "sha256": "58b33dd2207c7617e7e8e232b089f2e539906e38bacc544d394d94ffe75eef35",
+        "bytes": 1594,
+        "category": "evidence_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/parlor-l08-storage-functional-8-load.json",
+        "sha256": "664fdc12921510703a3c0334f7fece6112a6c05a163755f337b0555110e16f97",
+        "bytes": 2082,
+        "category": "evidence_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34303850578/native-evidence/ios-readiness-23/parlor-l08-storage-functional-9-legacy-seed.json",
+        "sha256": "6a44d085348eaf8ca4ed50541318ca0517486075911ab080682b53bfc4318cd8",
+        "bytes": 2747,
+        "category": "evidence_pins",
+        "expected_matches": true,
+        "regular_file": true,
+        "symlink": false,
+        "canonical_path": true
+      }
+    ],
+    "additional_contract_and_command_references": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "1e8cbc4f414819f47908e1a3be9f717792a0401fb4fb35b7272c053c00e2f609",
+        "bytes": 5834,
+        "regular_file": true,
+        "symlink": false,
+        "canonical": true
+      },
+      {
+        "path": "docs/PRODUCTION_ARCHITECTURE.md",
+        "sha256": "279e3287ab49d8889f9f9450a6a6769cc1dd9f72cbfa8c5ff559d2fa1884ca99",
+        "bytes": 16988,
+        "regular_file": true,
+        "symlink": false,
+        "canonical": true
+      },
+      {
+        "path": "docs/RELEASE_GATES.md",
+        "sha256": "19ee19acf35f833e3bd61b03d3113c6a3ea05b67afcbe1b956e9d4aa070a3f32",
+        "bytes": 9623,
+        "regular_file": true,
+        "symlink": false,
+        "canonical": true
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/controls/run_continuation_controls.py",
+        "sha256": "1896d5a309e8802b691bfc9a37db2c0ac92dcfb6173d4cee564e5dcfcc234627",
+        "bytes": 8796,
+        "regular_file": true,
+        "symlink": false,
+        "canonical": true
+      }
+    ],
+    "reference_scope": "Source references identify the unchanged08d baseline at review time; proposed future canonical bytes are separately identified. Historical A23 failed evidence is retained as historical, not newly executed."
+  },
+  "cleanup": {
+    "reviewer_started_build_or_test_cycle": false,
+    "workers_or_fixtures_created": false,
+    "native_or_gradle_cleanup_invoked": false,
+    "reason": "Read-only source/evidence inspection and one JSON report require no build/test cleanup cycle; root retains the coordinated build lane and cleanup authority.",
+    "evidence_or_unrelated_files_deleted": 0,
+    "prior_A23_cleanup_interpretation": "The earlier independently reviewed A23 cleanup PASS is historical and untouched; it neither repairs the older A21 cleanup FAIL nor supplies cleanup for any future run."
+  },
+  "remaining_readiness_limits": [
+    "A23 actual runtime remains5XCTests with4PASS/1FAIL,14/20 durable functional actions and no completed legacy continuation/recovery-final actions; all retained-host actions remained unreached.",
+    "Twenty-four reached strict production-path complete-protection comparisons failed with missing dictionary keys; this unchanged strict failure is not converted into success by functional or Foundation simulator observations.",
+    "The new copy-only scroll fixture has no Swift compilation or runtime result yet. Actual functional/recovery and retained-host completion still need fresh platform evidence.",
+    "This review does not qualify normal Debug libproc provenance, any future combined frozen-source qualification, physical devices, Store signing/publication, or separate owner/legal requirements.",
+    "Overall evidence-backed readiness remains NOT_READY."
+  ]
+}
