@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "author": "/root/l08_fixture",
+  "status": "HELD_SOURCE_ONLY_NOT_ADOPTED_OR_EXECUTED_PENDING_INDEPENDENT_REVIEW",
+  "scope": "Narrow companion-only public OS primary-choice representation correction and bounded diagnostics; not proof that A31 actually presented a Sheet.",
+  "actual_A31": {
+    "github_run_id": 34384037292,
+    "attempt": 1,
+    "cycle": "ios-readiness-31",
+    "source": {
+      "commit": "965eb79cea7dd40ced8efa0b1fcd98596f7a952b",
+      "tree": "334bf3a1fe15fc8acd55715bbc40eb78e2a0646f",
+      "branch": "fix/local-readiness-2026-09-07",
+      "tracked_status": "",
+      "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_manifest_sha256": "ed52f946cd5241f41fe8b8b25c4e42253741656bf68c688926a55f6e2979ed6e"
+    },
+    "control_sha256": "d80a89608fe17d35c0676b5f18b24acaddbecc782eecf852048b3a6c9b9e86c6",
+    "platform": "qualified Xcode26.3/17C529, iOS26.2/23C54 arm64 simulator, iPhone17Pro; not physical/Store evidence.",
+    "evidence": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34384037292/native-evidence/ios-readiness-31/receipt.json",
+        "bytes": 541719,
+        "sha256": "0251827d0d25f1c4f1afbe1591fc20a2b96e4aed61058070891b3564d18862a5"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34384037292/native-evidence/ios-readiness-31/input-manifest.json",
+        "bytes": 173163,
+        "sha256": "bb6c1a1d19f31864bd9a7dde6f36954da23738662675c5da05a11d5670333907"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34384037292/native-evidence/ios-readiness-31/xcodebuild.log",
+        "bytes": 1209410,
+        "sha256": "61290374ed5929fe111d20edf021197fcd77dcf4aecb7025f4691627c7c1af94"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34384037292/native-evidence/ios-readiness-31/xcresult-summary.json",
+        "bytes": 1579,
+        "sha256": "06a846d90a4d634e8ca5e4d05c17a5f780a9ecf95f717960c9e322ea95d8cf9f"
+      }
+    ],
+    "result": "Overall/runtime FAIL; Xcode65 and4PASS/1FAIL/0SKIP XCTest. Strict gate remains NOT_SATISFIED_BY_COMPANION. Other subscenario reconciliation belongs to independent fixture_review, not this proposal.",
+    "failure_boundary": "Actual xcodebuild.log13310/13343: one Arabic-cell activation, keyboard transitions to absent and former Arabic controls remain present/nonhittable. Row25 at13352 and row26 at13410 report Alertcount0. Alert-only existence wait13353-13399 lasts15s (t2548.57-2563.74), then generated Swift1344 reports retainEnglishPrimary BLOCKED.",
+    "source_boundary": "Bound DSC01OSPrerequisite.swift.in364-367 fails before372 Use/Keep English lookup. No before/after English-primary activation or final preferred-list receipt exists.",
+    "diagnosis_limit": "No observed Sheet, unknown-dialog identity or English-choice count was retained. A31 demonstrates failed Alert-only assumption, not an exclusive sheet cause, unsupported OS capability, or production Parlor defect. Retained AppleSupport109358 research documents a human primary-language alert, not an XCUIElementType contract.",
+    "retention_limit": "All three downloaded artifact ZIP inventories were inspected read-only: no screenshot/hierarchy/XCResult attachment; only xcresult-summary/tests JSON. This matches driver200-205 prohibition on private attachments/whole XCResult export. No private dump was sought or generated.",
+    "cleanup": {
+      "cleanup_status": "PASS",
+      "cleanup_errors": [],
+      "remaining_outputs": [],
+      "owned_processes_remaining": [],
+      "controls_unchanged": true,
+      "source_unchanged": true,
+      "copied_sources_unchanged": true
+    }
+  },
+  "inputs": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01OSPrerequisite.swift.in",
+      "bytes": 26454,
+      "sha256": "f266cc919734bd840a6a6e9288088e9e437a67b2ed41d16c8a02337ad19627d8"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+      "bytes": 64859,
+      "sha256": "b7a760577d86b7cc1c5a192fb20164afc21e06b8fa74e63c1f7dfb2bd58ec75e"
+    }
+  ],
+  "held_outputs": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a31-os-prerequisite-followup-01/DSC01OSPrerequisite.swift.in",
+      "bytes": 28379,
+      "sha256": "586bfc5e18058537a375355ba8ef273856403a9ff0ae29ab03253fba734eae09",
+      "destination": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01OSPrerequisite.swift.in"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a31-os-prerequisite-followup-01/test_l08_functional_copy.py",
+      "bytes": 71283,
+      "sha256": "52489b877ccf6abea0ff2dda4bad505b6c0acc4578d74481494024f8e2dbeef0",
+      "destination": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py"
+    }
+  ],
+  "correction": {
+    "acceptance": "Exactly one Preferences public Alert OR exactly one Sheet. Neither/both/multiple are rejected, with no Other/global button fallback. Same exact Use English/Keep English whitelist, exactly one matched action,1..4modalbuttons, hittable/enabled. One shared15s wait, fresh representation counts and foreground recheck before one physical tap.",
+    "diagnostics": "Existing8192byte/96row/196608byte envelope remains exact. Public sheet count plus two fixed representation rows record capped container/button/known-choice counts; no unknown labels, values, hierarchy, screenshot or selected-container property access after tap. Renamed primaryChoiceButtonCountCapped16 truthfully scopes the selected Alert-or-Sheet rather than relabel a Sheet as an Alert.",
+    "success": "The exact original20s exposed/ordered/hittable English-primary->Arabic->AddLanguage final oracle remains mandatory. Added sheetCount0 guards initial, already-satisfied final, postactivation wait and final verification. No language preference writes/launch injection or new UI action.",
+    "metadata_addition": {
+      "bytes": 831,
+      "sha256": "9676f40fef94f11c2f9897fd662876f57bbefa6219517a04348f713c8086bea0"
+    },
+    "choice_block": {
+      "bytes": 2467,
+      "sha256": "97c024957cf52c33d58d4b75b29d74227556a76184596d8cb92787ef34af49df"
+    },
+    "exact_reversal": "Remove the exact metadata helper, restore only the bounded primary-choice block, and reverse5small sheet-count/absence additions: complete original f266cc919734bd840a6a6e9288088e9e437a67b2ed41d16c8a02337ad19627d8 restored. Original ownership/termination, navigation/add/search/select actions,24case decision oracle, preferred-list geometry/hittability logic, stage envelopes and failure mechanism remain byte-identical.",
+    "runtime_limit": "If actual modal is unrecognized or exact English action absent/ambiguous, this candidate still BLOCKS. It does not assert a correction succeeded or justify blind retrying."
+  },
+  "tests_and_binding": {
+    "proposed_tests": "Existing functional-copy suite26->28methods, with20negative source mutations covering multiple/both/unknown modalities, omitted shared wait, global/unknown labels, ambiguous action, button bounds/hittability, stale modal counts, duplicate tap, inflated timeout/metadata, private diagnostic export and weakened initial/final proof. Positive exact restoration and rejection of old Alert-only baseline included.",
+    "author_execution": "No project imports or test execution. Read-only stdlib AST/hash/diff/complete-source-reversal and mutation-anchor inspection only. Native compilation/runtime NOT_RUN for candidate.",
+    "clone_guard": "One narrowly hash/reversal-bound OS-template exception in existing suite. Immutable original clone manifest,65rows,75filenames, canonical strict template f266cc91 and all preexisting catalogue/host guards remain unchanged; pristine companion originals57->56.",
+    "receipts": "Both prerequisite_receipts.py and public_interaction_receipts.py remain unchanged. Existing envelope/oneactivationperstep/24casecontract/orderedfinalpreferredlist and subsequent per-app Settings/System/restart proof are still required. Additional bounded fields do not change the parsers.",
+    "composition": "OS template and test are dynamically included in fresh control manifests. None of six app_foundation_copy.PINS, driver9580071, composer transforms or existing nine-file draft freeze changes. Preserve old manifests/freezes; root must bind newly committed controls/inventory before any new native run.",
+    "replay": "No existing per-helper XCTest selector: the current main method is monolithic. Root declined a new OS-only mode/harness; any authorized follow-up uses existing focused A-only lane, not normalB/fullmatrix replay."
+  },
+  "ownership": "Held files only; no canonical edit, Git write, build, native/network or cleanup cycle. Root owns adoption/tests/cleanup/freeze/dispatch. portability_review independently reviews candidate; fixture_review independently reconciles actual A31.",
+  "readiness": "No app-runtime, OS-preference, strict-protection, physical-device, Store or owner/legal readiness upgrade."
+}

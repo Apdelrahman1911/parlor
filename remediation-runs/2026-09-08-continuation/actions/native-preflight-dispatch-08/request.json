@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "kind": "ONE_NONBUILDING_FRESH_NATIVE_PREFLIGHT_DISPATCH",
+  "coordinator": "/root",
+  "created_at": "2026-09-09T17:09:38.735899+00:00",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "frozen_source_sha": "965eb79cea7dd40ced8efa0b1fcd98596f7a952b",
+  "tree": "334bf3a1fe15fc8acd55715bbc40eb78e2a0646f",
+  "remote_before": "965eb79cea7dd40ced8efa0b1fcd98596f7a952b\trefs/heads/fix/local-readiness-2026-09-07",
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=native-preflight",
+    "-f",
+    "frozen_source_sha=965eb79cea7dd40ced8efa0b1fcd98596f7a952b"
+  ],
+  "maximum_dispatches": 1,
+  "source_freeze": "remediation-runs/2026-09-08-continuation/reviews/a31-source-freeze-01.json",
+  "source_freeze_sha256": "4848e445e23f5b268b236307ba053fc4a68e274b6a6095e25c3c1dcdd7ed3b46",
+  "native_selection": "paired default omitted from command",
+  "scope": "Fresh nonbuilding official hosted source/control/toolchain binding. Both manifests required, no app build/simulator/XCTest/libproc or Store operations. Actual archive independently reviewed before A31-only approval."
+}

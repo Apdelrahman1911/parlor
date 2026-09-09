@@ -1,0 +1,29 @@
+--- adopted-base/test_controls.py
++++ held/test_controls.py
+@@ -149,7 +149,25 @@
+             self.assertTrue(callable(getattr(runner, function)))
+         with self.assertRaises(RuntimeError): runner.control_manifest()
+         text = (HERE / 'run_ios_readiness.py').read_text()
+-        self.assertNotIn('spec_from_file_location', text)
++        # Permit only the two reviewed source-root helper loaders, with their guards intact.
++        owned_imports = """TOOLCHAIN_HELPER = ROOT / 'scripts/verification/ios-readiness/toolchain_profiles.py'
++if TOOLCHAIN_HELPER.is_symlink() or TOOLCHAIN_HELPER.resolve(strict=True) != TOOLCHAIN_HELPER:
++    raise RuntimeError('Redirected native toolchain profile helper')
++_toolchain_spec = importlib.util.spec_from_file_location('parlor_l08_toolchain_profiles', TOOLCHAIN_HELPER)
++toolchains = importlib.util.module_from_spec(_toolchain_spec)
++_toolchain_spec.loader.exec_module(toolchains)
++LIFECYCLE_HELPER = TOOLCHAIN_HELPER.parent / 'simulator_lifecycle.py'
++LIFECYCLE_TESTS = [TOOLCHAIN_HELPER.parent / name for name in (
++    'test_simulator_lifecycle.py', 'test_simulator_lifecycle_integration.py')]
++if LIFECYCLE_HELPER.is_symlink() or LIFECYCLE_HELPER.resolve(strict=True) != LIFECYCLE_HELPER:
++    raise RuntimeError('Redirected simulator lifecycle helper')
++_lifecycle_spec = importlib.util.spec_from_file_location('parlor_l08_simulator_lifecycle', LIFECYCLE_HELPER)
++simulator_lifecycle = importlib.util.module_from_spec(_lifecycle_spec)
++_lifecycle_spec.loader.exec_module(simulator_lifecycle)
++"""
++        self.assertEqual(text.count(owned_imports), 1)
++        for loader in ('spec_from_file_location', 'module_from_spec', 'exec_module'):
++            self.assertNotIn(loader, text.replace(owned_imports, '', 1))
+         self.assertNotIn('2026-09-06-approved-policy-completion', text)
+ 
+     def test_binding_destination_never_overwrites_or_traverses_a_campaign_symlink(self):

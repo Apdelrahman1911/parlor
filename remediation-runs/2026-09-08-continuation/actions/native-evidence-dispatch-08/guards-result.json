@@ -1,0 +1,173 @@
+{
+  "schema_version": 1,
+  "started_at": "2026-09-09T17:37:19.240944+00:00",
+  "status": "GUARDS_PASS_DISPATCH_EXACTLY_ONCE",
+  "commands": [
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "started_at": "2026-09-09T17:37:19.241445+00:00",
+      "finished_at": "2026-09-09T17:37:19.243783+00:00",
+      "exit_code": 0,
+      "stdout_bytes": 41,
+      "stdout_sha256": "bb1d92a4bcaab64ee59f0a3759cc38e88db093ea22148f55b5f5176a1731ac2d",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "started_at": "2026-09-09T17:37:19.243803+00:00",
+      "finished_at": "2026-09-09T17:37:19.247797+00:00",
+      "exit_code": 0,
+      "stdout_bytes": 41,
+      "stdout_sha256": "aa54414f488977ad509e7a5f57aebefbd18fa4458c0d3cc5276a48e836984bb0",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "started_at": "2026-09-09T17:37:19.247816+00:00",
+      "finished_at": "2026-09-09T17:37:19.249876+00:00",
+      "exit_code": 0,
+      "stdout_bytes": 31,
+      "stdout_sha256": "1c1c717d880304c7c17517f6d21c918e2d035438b7c843525b049a2f050c4692",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "--is-shallow-repository"
+      ],
+      "started_at": "2026-09-09T17:37:19.249903+00:00",
+      "finished_at": "2026-09-09T17:37:19.251951+00:00",
+      "exit_code": 0,
+      "stdout_bytes": 6,
+      "stdout_sha256": "2ed27c1421e6928dbe13dbfdb5c59e1045b30341fe7ebe05700006bc5ac572c0",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=no"
+      ],
+      "started_at": "2026-09-09T17:37:19.251965+00:00",
+      "finished_at": "2026-09-09T17:37:19.291699+00:00",
+      "exit_code": 0,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "ls-files",
+        "--others",
+        "--exclude-standard",
+        "-z"
+      ],
+      "started_at": "2026-09-09T17:37:19.291737+00:00",
+      "finished_at": "2026-09-09T17:37:19.350233+00:00",
+      "exit_code": 0,
+      "stdout_bytes": 2391,
+      "stdout_sha256": "65232d0a8099908cbed25cf8d1717d218e3fbf1025b95d46617a3e1a42d31035",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "ls-remote",
+        "origin",
+        "refs/heads/fix/local-readiness-2026-09-07"
+      ],
+      "started_at": "2026-09-09T17:37:19.364132+00:00",
+      "finished_at": "2026-09-09T17:37:19.950098+00:00",
+      "exit_code": 0,
+      "stdout_bytes": 83,
+      "stdout_sha256": "5be15211f69d6245476292e782f9712c60cdb87c244a94ce98b0b15b0db41650",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/workflows/production-verification.yml"
+      ],
+      "started_at": "2026-09-09T17:37:19.950200+00:00",
+      "finished_at": "2026-09-09T17:37:20.435916+00:00",
+      "exit_code": 0,
+      "stdout_bytes": 533,
+      "stdout_sha256": "8345984073768616fd6aff6682c95051f186881c5fa4727b120c80e019841ece",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/workflows/production-verification.yml/runs?branch=fix/local-readiness-2026-09-07&per_page=100"
+      ],
+      "started_at": "2026-09-09T17:37:20.436542+00:00",
+      "finished_at": "2026-09-09T17:37:21.942032+00:00",
+      "exit_code": 0,
+      "stdout_bytes": 253535,
+      "stdout_sha256": "2d3de503e6b89d9cd96e08528ee5233c99afa781fbda128f0f06a6b1debeb039",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34381199948"
+      ],
+      "started_at": "2026-09-09T17:37:21.944122+00:00",
+      "finished_at": "2026-09-09T17:37:22.452689+00:00",
+      "exit_code": 0,
+      "stdout_bytes": 12682,
+      "stdout_sha256": "a04dc72361bb2be6805859f0261f6429c72ca8bab48aba875c49f5d30a51bc11",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34381199948/attempts/1"
+      ],
+      "started_at": "2026-09-09T17:37:22.453173+00:00",
+      "finished_at": "2026-09-09T17:37:22.975893+00:00",
+      "exit_code": 0,
+      "stdout_bytes": 12704,
+      "stdout_sha256": "7ebd980555b97d1f2e8c00ab29bd2750f60f2ffbad6da1867c9fa0ec8a17a0c7",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/artifacts/10115976207"
+      ],
+      "started_at": "2026-09-09T17:37:22.976598+00:00",
+      "finished_at": "2026-09-09T17:37:23.465015+00:00",
+      "exit_code": 0,
+      "stdout_bytes": 727,
+      "stdout_sha256": "cb64a9a046034572786a27015906da08829beaadd8db6d6144a84a6634b5a20c",
+      "stderr": ""
+    }
+  ],
+  "maximum_dispatches": 1,
+  "source_control_request_approval_bytes": "UNCHANGED",
+  "review_sha256": "6254ba53c22f1fbce15a29d6eae0b5b1a094089d40d1e2e41b50999181980d18",
+  "b30_applicability_sha256": "5c83a3f74457b640cb3eb4a7782294197b4995471eccf6a785d5b9120f50a7b1",
+  "remote_before": "965eb79cea7dd40ced8efa0b1fcd98596f7a952b\trefs/heads/fix/local-readiness-2026-09-07",
+  "finished_at": "2026-09-09T17:37:23.465632+00:00"
+}
