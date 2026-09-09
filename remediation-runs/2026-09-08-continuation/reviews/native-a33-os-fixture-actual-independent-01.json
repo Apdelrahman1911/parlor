@@ -1,0 +1,210 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/portability_review",
+  "status": "APPROVED_SCOPED_LINUX_CONTROLS_WITH_RETAINED_INITIAL_FAILURE",
+  "findings": [],
+  "scope": "Actual focused Linux source/control test evidence for the reviewed copy-only OS correction, plus independent source review and exact affected-method retest of the stale helper-import assertion. Not A33 native runtime, dispatch admission or whole-repository qualification.",
+  "prior_source_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-a31-os-prerequisite-independent-01.json",
+    "bytes": 11044,
+    "sha256": "031aec93bfa242bfb16f33c224486a4ad4a90dedf894b528b88aa6937c2cebb8",
+    "disposition": "Immutable. Exact OS Swift586bfc5e was adopted; original held test52489b87 ran in the initial batch before the reviewed test-only follow-up."
+  },
+  "initial_batch": {
+    "cycle": "a33-os-fixture-focused-linux-01",
+    "status": "FAIL",
+    "exit_code": 1,
+    "executed": 42,
+    "passed": 41,
+    "failed": 1,
+    "errors": 0,
+    "skips": 0,
+    "functional_copy_passes": 28,
+    "controls_passes": 13,
+    "failure": "test_controls.BindingAndImportTests.test_runner_import_is_read_only_and_no_longer_depends_on_archived_modules",
+    "actual_cause": "Raw log line48 identifies test_controls.py152; line49 is blanket assertNotIn('spec_from_file_location', text). Current runner already contains two fixed reviewed source-root helper loaders. Failure is a stale test expectation, not an OS correction failure. Original failed receipt and log remain intact.",
+    "os_scope": "Both added OS source-contract tests actually passed, including the exact-source restoration and20 negative source mutations; these do not execute XCTest/UI behavior.",
+    "source_identity": {
+      "commit": "965eb79cea7dd40ced8efa0b1fcd98596f7a952b",
+      "tree": "334bf3a1fe15fc8acd55715bbc40eb78e2a0646f",
+      "branch": "fix/local-readiness-2026-09-07",
+      "tracked_status": "M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01OSPrerequisite.swift.in\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py\n M scripts/ci/native_continuation.py",
+      "diff_sha256": "a1835cf8d23e01a21f671861d7269c693a4334da70a683bf762c1b2ff0a459c7",
+      "source_manifest_sha256": "6683886eefaeaa6ce2e69f69ea88a724357f1b1505b72fd6b2435f0339e0f7df"
+    },
+    "bindings": "Source829 and runner before/after equal;77 exact control paths/bytes before/after equal. OS Swift586bfc5e and test52489b87 are bound in those controls. External canonical toolchain/lifecycle helpers are separately bound in source829.",
+    "external_helper_pins": {
+      "scripts/verification/ios-readiness/toolchain_profiles.py": "8adacaf4c59ed823aa088ecb70ad5c6c1e3f76e7ca3520d8abf0563341591313",
+      "scripts/verification/ios-readiness/simulator_lifecycle.py": "8d799475f1e92fc7943ca05b2d1e59655cbb8b0973031029440662059e65f248"
+    },
+    "pins": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/a33-os-fixture-focused-linux-01/receipt.json",
+        "bytes": 307673,
+        "sha256": "b9e16a9d970c4ec93c18885bab8ec9480f28db65a90150bef1efc9abfc261f85"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/a33-os-fixture-focused-linux-01/gradle.log",
+        "bytes": 100008,
+        "sha256": "c57bf2f50c88539c332438b4be793383a5e13f55a880204dfbc09415a52f7e94"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/a33-os-fixture-focused-linux-01/control-inputs-before.json",
+        "bytes": 14708,
+        "sha256": "af666f3f931311829a0a18211078a904832bf3543bc4e789b4eb2f37b471bc4f"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/a33-os-fixture-focused-linux-01/control-inputs-after.json",
+        "bytes": 14708,
+        "sha256": "af666f3f931311829a0a18211078a904832bf3543bc4e789b4eb2f37b471bc4f"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/a33-os-fixture-focused-linux-01/stop.log",
+        "bytes": 31,
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      }
+    ]
+  },
+  "independent_test_correction_review": {
+    "author": "/root/lifecycle_controls",
+    "author_report": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a33-owned-import-test-followup-01/author-report.json",
+      "bytes": 6357,
+      "sha256": "b1de45dfc1d47985040a792c3d8e752c7118ba279c5e47a56172d61ed6c402c9"
+    },
+    "held_and_adopted": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/a33-owned-import-test-followup-01/test_controls.py",
+        "bytes": 19638,
+        "sha256": "4ff5ad4caa52b94322e7353de50dbf9214ce7274973ff11c2905d268b280d51c"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/a33-owned-import-test-followup-01/test_l08_functional_copy.py",
+        "bytes": 72140,
+        "sha256": "8710a7e163312d59e286ce18d5a23f9989a8a0b9c1a9b2a38d5c4306358b8a30"
+      }
+    ],
+    "expected_before": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_controls.py",
+        "bytes": 18284,
+        "sha256": "9c1948c6f5ce8ace176df6a9324d851004162e5296d1157a3648d50344e3ea8f"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+        "bytes": 71283,
+        "sha256": "52489b877ccf6abea0ff2dda4bad505b6c0acc4578d74481494024f8e2dbeef0"
+      }
+    ],
+    "source_review_disposition": "APPROVED exact two held test files before root adoption; no runtime implementation changed.",
+    "changed_methods": [
+      "test_runner_import_is_read_only_and_no_longer_depends_on_archived_modules",
+      "test_all_original_controls_and_exact_clone_allowlist_are_preserved"
+    ],
+    "method_counts": "Existing14 control methods and28 functional-copy methods retained; no added/removed methods. Independent AST comparison found only the two named existing methods changed.",
+    "guard": "Require exactly one literal existing toolchain-through-lifecycle import block: source-root toolchain path, parent-derived lifecycle path, both symlink/strict-resolve guards, exact module/spec/exec identities and lifecycle test paths. Remove only that block, then forbid all remaining spec_from_file_location/module_from_spec/exec_module tokens. Existing archived-path ban, subprocess.Popen no-worker import/reload mock, receipt callable checks and unbound-control refusal are unchanged.",
+    "guard_region": {
+      "bytes": 1412,
+      "sha256": "3da8973ef638d2e55e967cfb347a51296d92cac83c0f5cdf5dee208a64e49f5c"
+    },
+    "reversal": "Independently reversed only the new guard to the original blanket assertion; complete test_controls.py equals canonical18284B SHA9c1948c6f5ce8ace176df6a9324d851004162e5296d1157a3648d50344e3ea8f. Functional clone exception hashes that entire guard and requires this full reversal; immutable clone manifest remains unchanged.",
+    "runner": {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "sha256": "9580071ecec4abc8ba375ca01e722eee4245f36132e6a5b8790f5d8bb8456687",
+      "changes": "NONE"
+    },
+    "limits": "Only stale test compatibility changes. No permission for arbitrary/archived loaders or weakening of actual source, ownership, lifecycle, toolchain, cleanup, receipt or shipping guards."
+  },
+  "affected_method_retest": {
+    "cycle": "a33-owned-import-focused-linux-01",
+    "status": "PASS",
+    "exit_code": 0,
+    "executed": 2,
+    "passed": 2,
+    "failed": 0,
+    "errors": 0,
+    "skips": 0,
+    "exact_test_ids": [
+      "test_controls.BindingAndImportTests.test_runner_import_is_read_only_and_no_longer_depends_on_archived_modules",
+      "test_l08_functional_copy.L08FunctionalCopyTests.test_all_original_controls_and_exact_clone_allowlist_are_preserved"
+    ],
+    "source_identity": {
+      "commit": "965eb79cea7dd40ced8efa0b1fcd98596f7a952b",
+      "tree": "334bf3a1fe15fc8acd55715bbc40eb78e2a0646f",
+      "branch": "fix/local-readiness-2026-09-07",
+      "tracked_status": "M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01OSPrerequisite.swift.in\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_controls.py\n M remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py\n M scripts/ci/native_continuation.py",
+      "diff_sha256": "158f8b338b2218b2cb5e03d398af2fe8d121aace33e866b020abb20ab055424f",
+      "source_manifest_sha256": "6683886eefaeaa6ce2e69f69ea88a724357f1b1505b72fd6b2435f0339e0f7df"
+    },
+    "bindings": "All77 before/after control bytes equal and matched current adopted files at review. Compared to initial77, only test_controls.py and test_l08_functional_copy.py differ, exactly as independently reviewed. Source829 is unchanged across the two batches, and before/after source/runner identities are equal within each batch.",
+    "only_changed_controls": [
+      "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_controls.py",
+      "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py"
+    ],
+    "adopted_byte_check": "Current test_controls.py equals held4ff5ad4c; functional-copy test equals held8710a7e1. OS Swift586bfc5e and runtime runner9580071 remain unchanged.",
+    "pins": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/a33-owned-import-focused-linux-01/receipt.json",
+        "bytes": 308064,
+        "sha256": "e31d43c198c2f5b7e8b5c705f1a3e154905268a2237bb4835b09e7836a42465e"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/a33-owned-import-focused-linux-01/gradle.log",
+        "bytes": 629,
+        "sha256": "a2283d219cd7819b0487d6a91df49cc4120296081df0a7d8a8095c196bd9c1fc"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/a33-owned-import-focused-linux-01/control-inputs-before.json",
+        "bytes": 14708,
+        "sha256": "06b0dc84ec990ec729195780cd143d86b17626038ac200bbacb0bbe6eea61c9d"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/a33-owned-import-focused-linux-01/control-inputs-after.json",
+        "bytes": 14708,
+        "sha256": "06b0dc84ec990ec729195780cd143d86b17626038ac200bbacb0bbe6eea61c9d"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/a33-owned-import-focused-linux-01/stop.log",
+        "bytes": 31,
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      }
+    ],
+    "execution": "Root ran only the two exact existing methods shown, not the complete42 again. Any prospective author-report wording about a42-test retest is superseded by this actual2-method command and raw outcome."
+  },
+  "reconciliation": {
+    "total_actual_test_executions": 44,
+    "chronology": "Initial42:41PASS/1FAIL. Follow-up2:2PASS. Initial failed packet remains FAIL; there was no fresh all42-PASS batch.",
+    "reuse": "Forty initially passing methods are unchanged and remain applicable; the initially passing but now modified clone-guard method was explicitly rerun alongside the corrected initially failing import method. Thus both changed methods have fresh2/2 evidence, while the original41 successes remain historical evidence. No unchanged55 composition,71 native controls or transport suite was repeated by this review.",
+    "approval": "Reviewed source/control correction has focused Linux verification with the initial failure transparently reconciled. This supports source freeze preparation, not native success.",
+    "not_evidence_of": "No real Apple UI, preferred-language outcome, storage protection, libproc observation, native A33 runtime, binary identity or combined qualification was executed in these Linux batches."
+  },
+  "cleanup": {
+    "initial": {
+      "stop_exit": 0,
+      "stop_stdout": "No Gradle daemons are running.",
+      "remaining_workers": 0,
+      "remaining_artifact_workers": 0,
+      "remaining_outputs": [],
+      "errors": []
+    },
+    "affected_retest": {
+      "stop_exit": 0,
+      "remaining_workers": 0,
+      "remaining_artifact_workers": 0,
+      "remaining_outputs": [],
+      "errors": []
+    },
+    "evidence": "Both raw receipts and stop logs show final Gradle stop0, no owned/artifact workers, no remaining/retained outputs and no cleanup errors. Source/runner/control identities stayed stable within each cycle. Tests use fake shell wrappers; no Gradle compilation or app build. Existing coordinator runner recorded JDK probes and final Gradle stop.",
+    "reviewer": "Reviewer performed no cleanup/process operations and allocated no worker or build outputs."
+  },
+  "remaining_requirements": [
+    "Commit reviewed source/control changes, regenerate and commit mechanical inventory, then create fresh bindings for frozen source. Independent native_ci admission and live guards remain required.",
+    "Native l08-only follow-up must keep normal NOT_RUN_THIS_RUN and report actual outcomes. A31 remains FAIL with actual modal type unknown; no Sheet-cause or fix-success claim follows from these tests.",
+    "Strict file-protection failures, full combined qualification, physical-device, Store-operation and separate owner/legal obligations remain outside this approval."
+  ],
+  "reviewer_operations": {
+    "performed": "Read-only source/evidence inspection; stdlib JSON/hash/AST/string/arithmetic comparisons; only this separate report written.",
+    "not_performed": "No duplicate tests, project imports/extracted-function execution, builds/compilers/native tools, network/API/Actions, Git writes, process queries/signals or cleanup.",
+    "evidence_scope": "Reviewed actual raw test lines, exact commands/receipts, before/after control files and stop logs, not just coordinator/author summaries."
+  }
+}

@@ -1,0 +1,256 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/native_ci",
+  "reviewed_at": "2026-09-09T20:57:14.050430+00:00",
+  "status": "APPROVED_SCOPED_HISTORICAL_B30_APPLICABILITY_TO_A33_FREEZE",
+  "findings": [],
+  "scope": "Bounded extension of independently reviewed B30 applicability from360fc through965eb to f5d3100; source/control comparison and retained historical identity, not fresh B runtime or preflight/dispatch admission.",
+  "decision": "The new delta does not require repeating historical B30 normal-application behavior/provenance before the requested A33-only attempt. Historical B30 remains34362984912/1 at360fc797a85e1e494334fd8cc11b4e739981cea8. Any A33-only execution must retain normal=NOT_RUN_THIS_RUN; fresh paired preflight, separate independent admission and immediate root guards remain required.",
+  "identities": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "historical_b30": {
+      "run_id": 34362984912,
+      "run_attempt": 1,
+      "commit": "360fc797a85e1e494334fd8cc11b4e739981cea8",
+      "tree": "8bfe56a21074ba51a4b668bad0728e42007a7593"
+    },
+    "prior_applicability_freeze": "965eb79cea7dd40ced8efa0b1fcd98596f7a952b",
+    "reviewed_source_commit": "b300fffc89b464da4db6e4d6f22ff6f07199b047",
+    "inventory_only_frozen_commit": "f5d3100dc92d7d1f3415a2be8c0ef6ccc93d3aac",
+    "frozen_tree": "99ac631b9a51a8f181dfde1926c7aa6ec60ff11e",
+    "history": "Exactly two additional linear commits: b300fffc89b464da4db6e4d6f22ff6f07199b047 follows965eb; f5d3100 follows b300fffc and changes only mechanical inventory.",
+    "tracked_status_at_audit": "clean",
+    "remote_confirmation": "Coordinator retained ls-remote receipt only; no reviewer network request."
+  },
+  "references": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-a31-source-applicability-01.json",
+      "bytes": 14054,
+      "sha256": "5c83a3f74457b640cb3eb4a7782294197b4995471eccf6a785d5b9120f50a7b1"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a33-source-freeze-01.json",
+      "bytes": 90254,
+      "sha256": "081a0a58f17c5559b529006d3826e913545868806d1b0eaa7a7557e5d5098489"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a33-os-fixture-actual-independent-01.json",
+      "bytes": 14170,
+      "sha256": "c78c36381c21b6db53466f5067bc43d976a5a4d1160bb8a3180f8de207ce657b"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-a31-os-prerequisite-independent-01.json",
+      "bytes": 11044,
+      "sha256": "031aec93bfa242bfb16f33c224486a4ad4a90dedf894b528b88aa6937c2cebb8"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-actual-independent-01.json",
+      "bytes": 29223,
+      "sha256": "f2426faf649d1a9b13fbdfa8ef59741c7cf38d62f5f38f54e4afadbf8a3788fd"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native34362984912-postrun-custody-independent-01.json",
+      "bytes": 9769,
+      "sha256": "f0606578324150da8252d897d7d7b66cb57ee87308020c24afd5217fbfe51e7c"
+    }
+  ],
+  "new_delta_from_prior_freeze": {
+    "added": 226,
+    "deleted": 0,
+    "modified": 5,
+    "modified_paths": [
+      "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01OSPrerequisite.swift.in",
+      "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_controls.py",
+      "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+      "scripts/ci/native_continuation.py"
+    ],
+    "addition_prefix_counts": {
+      "remediation-runs/2026-09-07-local-readiness/evidence": 26,
+      "remediation-runs/2026-09-08-continuation/actions": 182,
+      "remediation-runs/2026-09-08-continuation/reviews": 18
+    }
+  },
+  "cumulative_delta_from_B30": {
+    "added": 1039,
+    "deleted": 0,
+    "modified": 14
+  },
+  "source_correction_adoption": {
+    "files": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01OSPrerequisite.swift.in",
+        "sha256": "586bfc5e18058537a375355ba8ef273856403a9ff0ae29ab03253fba734eae09"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_controls.py",
+        "sha256": "4ff5ad4caa52b94322e7353de50dbf9214ce7274973ff11c2905d268b280d51c"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+        "sha256": "8710a7e163312d59e286ce18d5a23f9989a8a0b9c1a9b2a38d5c4306358b8a30"
+      },
+      {
+        "path": "scripts/ci/native_continuation.py",
+        "sha256": "00c2956df77a896402dcb30eb17138a15b0c44f88eebf14649bcad57ec2afae0"
+      }
+    ],
+    "observation": "Frozen Git bytes and current file bytes match the four reviewed pins. The OS prerequisite accepts only an exact single Alert XOR Sheet container and one bounded English-primary choice, taps once, and requires actual final uncovered preferred-language list; unknown/multiple/both containers fail closed. Neither the historical cause nor correction success is inferred.",
+    "test_only_followup": "Only the two existing stale import/clone assertions changed after the initial42-method result41PASS/1FAIL. Existing exact helper block/source guards are allowed; arbitrary or archived loaders remain forbidden. The affected2 methods were actually rerun2PASS; there was no fresh complete42-PASS run.",
+    "coordinator": "Independently compared exact31/32→33/34 CYCLES literal replacement and no other adapter change. No selector, timing, source/control-binding, ownership, cleanup, runtime or Store workflow behavior changed.",
+    "prior_reviews": "Reopened the immutable source/actual review pins and actual frozen diffs rather than interpreting historical source summaries as new runtime evidence."
+  },
+  "unchanged_normal_scope": {
+    "rows": 98,
+    "aggregate_sha256": "7d598e39bd718e0f8347d0eee839b5aad2bece2bddb82e08ce7f6c1ea592c413",
+    "directories": [
+      "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01",
+      "scripts/verification/ios-readiness"
+    ],
+    "pinned_helper": "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin_owned_processes.py",
+    "comparison": "All98 closed inner-control path sets, modes and Git blob identities equal at360fc,965eb and f5d3100, including normal templates, transforms, libproc C/helper/binder, Mach-O decoders, signing, toolchain/lifecycle, ownership and notices. Closed selection was independently derived from unchanged runner enumeration rules; no new control path.",
+    "shipping_subtrees": [
+      "composeApp",
+      "shared",
+      "game-modes",
+      "build-logic",
+      "gradle",
+      "config",
+      "iosApp"
+    ],
+    "root_build_blobs_and_modes": [
+      "build.gradle.kts",
+      "settings.gradle.kts",
+      "gradle.properties",
+      "gradlew",
+      "gradlew.bat"
+    ],
+    "shipping_conclusion": "All seven subtree objects and five root build blob objects/modes are identical across the three sources. No production application source/resources, dependency pins/verification metadata, identity or normal build/launch recipe changed.",
+    "source_manifest": {
+      "rows": 829,
+      "changed_from_B30": [
+        ".github/workflows/production-verification.yml",
+        "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+        "scripts/ci/NATIVE_CONTINUATION.md",
+        "scripts/ci/native_continuation.py",
+        "scripts/release/tests/test_native_continuation.py",
+        "scripts/release/tests/test_native_process_probe.py",
+        "scripts/release/tests/test_workflow_contract.py",
+        "scripts/release/workflow_contract.py"
+      ],
+      "changed_from_prior_freeze": [
+        "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+        "scripts/ci/native_continuation.py"
+      ]
+    },
+    "copied_originals": {
+      "rows": 754,
+      "changed_from_B30": [
+        "scripts/ci/NATIVE_CONTINUATION.md",
+        "scripts/ci/native_continuation.py",
+        "scripts/release/tests/test_native_continuation.py",
+        "scripts/release/tests/test_native_process_probe.py",
+        "scripts/release/tests/test_workflow_contract.py",
+        "scripts/release/workflow_contract.py"
+      ],
+      "changed_from_prior_freeze": [
+        "scripts/ci/native_continuation.py"
+      ]
+    },
+    "new_copy_change": "Only scripts/ci/native_continuation.py changes among copied originals since965eb, and only its cycle labels change. It is a nonshipping coordinator script, not imported/executed by unchanged normal build or runtime controls.",
+    "important_limit": "The entire source manifest, copied-input manifest and source binding are NOT identical. Cumulative six changed copied originals are nonshipping scripts; identical application/build objects justify bounded historical applicability, not byte-identical future binaries."
+  },
+  "mechanical_inventory": {
+    "sha256": "c87f13bf2454f5b3dfd65e7e1d59f180c954283d4a0d1204fb847fd1cd3c6898",
+    "bytes": 12210371,
+    "rows": 19666,
+    "observation": "Independently hash/size/count-parsed19666CSV rows and inventory-only commit. Reopened recorded generator/check/stop and freeze-command exits0; did not rerun generator. This is mechanical inventory, not exhaustive source review."
+  },
+  "fresh_normal_manifest_only": {
+    "preflight": "34402764126/1",
+    "manifest": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34402764126/native-preflight/normal-controls.json",
+      "bytes": 18523,
+      "sha256": "c779561248d006852eda54b23cfff23272ceeb49b0dea22844db4e5018b5ca8c"
+    },
+    "control_sha256": "5d6d22b9e27cebaf495da976c05bd58722d1ed1c6ed7cae6a3c31fb4dc3548b6",
+    "source_binding": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34402764126/native-preflight/ios-readiness-source-ci.json",
+      "bytes": 300809,
+      "sha256": "5e479a3d7bc7483670f24fb93df5d758d7875da54df5d2e25ec44b1eed561324"
+    },
+    "producer_admission": "PENDING_SEPARATE_FULL_PREFLIGHT_REVIEW",
+    "historical_control_sha256": "fdf7e4a73ca22cb43f3490d545d787d51dda9b3048d10fc1c31e566701f88ac0",
+    "prior_control_sha256": "3c62deedf626c4e14eb4bca77699bcee90fc9c036a01e74180fe22e313d15a17",
+    "row_count": 99,
+    "unchanged_inner_rows": 98,
+    "only_changed_row": "remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json",
+    "comparison": "Fresh normal99 exactly equals historical99 after replacing only the source-binding digest; compact ordered JSON aggregate recomputed. Fresh producer/API/archive and complete A/B/source binding remain separate admission scope.",
+    "limit": "This new aggregate cannot substitute for a newly executed normal application. No B34 child/receipt/result has been created by this review."
+  },
+  "historical_actual_evidence": {
+    "artifact": {
+      "artifact_id": 10112403229,
+      "bytes": 1051304,
+      "digest": "sha256:d85c972297feea2b88dccacd8918e68795548cd917da6a77c589d5c3ca8ade48",
+      "run_id": 34362984912,
+      "run_attempt": 1,
+      "source": "360fc797a85e1e494334fd8cc11b4e739981cea8",
+      "overall_conclusion": "failure"
+    },
+    "raw_pins": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34362984912/native-evidence/ios-readiness-30/receipt.json",
+        "bytes": 446052,
+        "sha256": "29cb6106fa32866da27e5b85ee676b87d4103d354125a22675c98b0bc57da982"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34362984912/native-evidence/ios-readiness-30/input-manifest.json",
+        "bytes": 170365,
+        "sha256": "b33b30a344b331928ad33f1fd76544c2d34669b478b4d3015a3bab75c8bc4030"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34362984912/native-evidence/ios-readiness-30/separate-external-image-provenance.json",
+        "bytes": 9049,
+        "sha256": "0971ee6d7c9da5fb37bbd18229e5baaf7a3ae660f5fcecb0b5f2cf7fbb7330d0"
+      }
+    ],
+    "observed_images": [
+      {
+        "relative_path": "Frameworks/ComposeApp.framework/ComposeApp",
+        "origin": "installed-app",
+        "sha256": "b156c2d92870c9538b5c22f5a158eaa0011a6fbe4f26bf6f378e95b19aa3c00e",
+        "bytes": 82428752,
+        "uuid": "d3ebaaa8-57e4-3b36-aa06-8e64e6eff395"
+      },
+      {
+        "relative_path": "Parlor",
+        "origin": "installed-app",
+        "sha256": "6acda53036c2ce82b46281219d6a080a57f9a4f58571ba99fa287db5b01b4c19",
+        "bytes": 57792,
+        "uuid": "97094aa6-2a0c-31b7-a7e7-cdfb7c3fecbf"
+      },
+      {
+        "relative_path": "Parlor.debug.dylib",
+        "origin": "installed-app",
+        "sha256": "effbf472fbce98a93dace8e9abfdc28878c23ea9ba841c5cba229fb5eb085170",
+        "bytes": 191424,
+        "uuid": "7c88f56f-ac32-34f5-b06b-b93f6a96020c"
+      }
+    ],
+    "executed_scope": "Historical B30 receipt/source-before/after/controls and separately reviewed actual evidence reopened. Eight fixed XCTest repetitions yielded48 periodic foreground/Home/no-alert samples. Separate ninth public launch supplied3 actual libproc replies, each structure/return1272 with exact-owned-text-extent, current owned vnode/path/hash and lifetime brackets. Original interval endpoints remained unchanged.",
+    "recorded_scoped_statuses": "B30 runtime/provenance/notices/cleanup PASS at360fc; overall34362984912/A29 remains failure/NOT_READY.",
+    "limitations": "No re-execution, retired binary rehash, mapped-memory header/page hash, all-mapping enumeration or continuous-liveness guarantee. Old producer/artifact identities are preserved, not relabeled as f5d3100 evidence. Historical B28 provenance FAIL and A31 runtime FAIL remain intact."
+  },
+  "remaining_requirements": [
+    "Distinct reviewer/coordinator may verify this extension; full fresh paired-preflight admission must still bind exact f5d3100 source and both manifests.",
+    "One explicitly approved l08-only request and immediate root guards are needed; normal must be NOT_RUN_THIS_RUN.",
+    "No A33 success, B34 success, complete L08, fresh normal runtime, combined qualification, physical-device protection or Store readiness follows.",
+    "Any later shipping/build/normal-control delta requires renewed applicability review; this approval covers only the exact compared source."
+  ],
+  "reviewer_execution": {
+    "performed": "Read-only Git/source/evidence inspection; bounded stdlib JSON/hash/CSV/string comparisons. No repeated unchanged control test suites or application execution. Only this additive report written.",
+    "not_performed": "No project imports/extracted-function execution, build/compiler/native tools, network/API/Actions dispatch, source/index changes or Git writes, process queries/signals or cleanup.",
+    "cleanup": "No reviewer workers or generated build outputs created; historical evidence untouched."
+  }
+}

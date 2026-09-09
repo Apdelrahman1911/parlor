@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "kind": "ADDITIVE_FULL_D_FROZEN_SOURCE_SCOPE_ADMISSION_REVIEW",
+  "reviewer": "/root/ci_workflow",
+  "coordinator": "/root",
+  "reviewed_at": "2026-09-09T21:11:09.634819+00:00",
+  "status": "FULL_D_ADMISSION_WITHHELD_STALE_EXACT_LABEL_CONTRACT",
+  "source": {
+    "commit": "f5d3100dc92d7d1f3415a2be8c0ef6ccc93d3aac",
+    "tree": "99ac631b9a51a8f181dfde1926c7aa6ec60ff11e",
+    "branch": "fix/local-readiness-2026-09-07",
+    "scope": "Frozen Git blobs and retained approvals; no live remote/active-run API observation."
+  },
+  "findings": [
+    {
+      "id": "D-A33-LABEL-CONTRACT",
+      "severity": "blocking before fullD dispatch",
+      "source": "scripts/ci/native_continuation.py:43 selects33/34; scripts/release/tests/test_native_process_probe.py:126 still requires31/32.",
+      "impact": "Full Linux productionReleaseAutomationCheck calls scripts/release/validate_release_system.sh:26 unittest discovery, which includes this unconditional assertEqual. This is a deterministic source-level mismatch, NOT a newly executed test failure. Running unchanged f5d fullD would waste matrix resources.",
+      "related_documentation": "scripts/ci/NATIVE_CONTINUATION.md:74-77 still advertises31/32/B32.",
+      "smallest_correction": "Different author updates only the exact label expectation and matching next-cycle guide to33/34, preserves historical B30, obtains independent review and executes the existing affected label method; then source/inventory freeze and scoped rebinding. Do not weaken/remove/dynamically self-derive the exact guard. A33 native/preflight semantics are not changed by this finding; root controls timing."
+    }
+  ],
+  "applicable_source_scope": {
+    "full_controls": "Rehashed17 accepted full02 controls from frozen f5d:15 byte-identical; only workflow and native adapter differ. General/Apple cleanup, owned simulator/worker identity, root Gradle graph, package/notice controls and five ordinary Swift test/PBX/scheme wiring remain unchanged.",
+    "current17_manifest_sha256": "ba1b5c79d7646a5f69a5f11b21f69f4e728ed25204048a7d34919c045515e0a3",
+    "changed_control_rows": [
+      {
+        "path": ".github/workflows/production-verification.yml",
+        "bytes": 41722,
+        "sha256": "5895ce4e80000b205302a987f8b603ac21380764f36e3711064029c3b1af62bc"
+      },
+      {
+        "path": "scripts/ci/native_continuation.py",
+        "bytes": 66688,
+        "sha256": "00c2956df77a896402dcb30eb17138a15b0c44f88eebf14649bcad57ec2afae0"
+      }
+    ],
+    "selector": "Frozen workflow exactly matches independently approved7-file selector packet. Native adapter equals that packet except31/32->33/34 labels. Existing source59cdc22e and actualc3b58a36 reviews cover selector; this review does not self-approve its implementation.",
+    "full_entry": "Default verification_scope=full and native_selection=paired (or omitted/empty) remain accepted. Full iOS invokes native_continuation.py validate-scope, whose branch checks effective scope/selection, prints and returns BEFORE Continuation/context. No frozen_source_sha/preflight/API/native-clock/worker/simulator allocation is required for full validation. Explicit l08-only with full correctly rejects; do not pass it.",
+    "five_job_graph": [
+      "desktop-android",
+      "desktop-linux-arm64",
+      "desktop-macos-x64",
+      "desktop-windows-x64",
+      "ios"
+    ],
+    "full_ios_timeout_minutes": 120,
+    "focused_only_steps_expected_skipped": 9,
+    "fixture_isolation": "Reopened actual catalogue count-only posttap, bounded host ownership acknowledgement and typed Settings alert/sheet copy-template deltas plus separate actual approvals. These archived copy fixtures are not fullD ordinary app/UIKit sources. A33 initial stale helper-import failure and2-method correction remain honestly recorded; no new app/runtime acceptance inferred. No shipping app/shared/game delta since360fc in the reviewed later selector/fixture/label changes."
+  },
+  "conditional_future_dispatch": {
+    "command": [
+      "gh",
+      "workflow",
+      "run",
+      "production-verification.yml",
+      "--repo",
+      "Apdelrahman1911/parlor",
+      "--ref",
+      "fix/local-readiness-2026-09-07",
+      "-f",
+      "verification_scope=full"
+    ],
+    "conditions": [
+      "Resolve D-A33-LABEL-CONTRACT and freeze reviewed source then mechanical inventory; use actual final source, not stale f5d by assumption.",
+      "Root must immediately verify exact remote branch equality, clean intended source/tree/full-history/inventory, active workflow and NO active needed same-ref run; cancel-in-progress must not supersede A33.",
+      "Finish/reconcile required focused evidence and final-source C06 applicability/execution before final combined conclusion. A33 preflight completion/request status and C06/fullD NOT_RUN are coordinator-provided, not fresh API observations here.",
+      "Associate one actual full workflow_dispatch attempt1 with exact repository/branch/workflow/source and preserve request/association. Full itself does not enforce focused frozen_source_sha. No automatic retries or dispatch authority from this report."
+    ],
+    "publication": "Verification workflow only. No candidate/promotion/Store signing/publication/private credentials or physical-device testing."
+  },
+  "evidence_and_accounting": {
+    "expected_main_artifacts": [
+      "desktop-android-verification",
+      "desktop-verification-desktop-linux-arm64",
+      "desktop-verification-desktop-macos-x64",
+      "desktop-verification-desktop-windows-x64",
+      "ios-verification"
+    ],
+    "expected_cleanup_artifacts": [
+      "verification-cleanup-desktop-android",
+      "verification-cleanup-desktop-linux-arm64",
+      "verification-cleanup-desktop-macos-x64",
+      "verification-cleanup-desktop-windows-x64",
+      "verification-cleanup-ios"
+    ],
+    "expected_total": 10,
+    "collector": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-01.py",
+      "sha256": "036d2921c6f08cce2d04f8b7d947d00041977a88cec39a9ca83d9e6815a760c6",
+      "status": "Existing source approvale87392ae applies unchanged; collection-only, never passing runtime.",
+      "constraints": "Assertion-enabled Python;64MiB compressed/5000members/256MiB expanded/128MiB per artifact member; missing/extra names PARTIAL, invalid archives COLLECTION_FAILED. Preserve failed receipts and verify actual upload/API/run/attempt/digests and cleanup members."
+    },
+    "runtime_vs_cache": "After execution reconcile distinct job/platform/task/suite/testcase and actual XCTest descriptors, not aggregate aliases. Executed test tasks/runtime, cached/up-to-date tests, NO-SOURCE/SKIPPED, compile/link/distribution resolution, failures/aborts/NOT_RUN must stay separate. Retained XML or5 declared full UIKit methods alone is not new execution. Full UIKit does not perform A storage/host/strict matrix, B eight repetitions/ninth libproc or C06 consumer chain.",
+    "cleanup": "Require actual immediate per-cycle Gradle stops, source/ownership stability and Apple aggregate/UI/wrapper prepare/run/finish/owned-simulator retirement. Main nonempty upload precedes task-owned cleanup; inspect all5 cleanup receipts separately. Never infer emulator/device cleanup from a general stop, delete global caches or archived evidence, or silently treat missing artifacts as PASS."
+  },
+  "reference_pins": {
+    "full-qualification-afterfreeze-02.json": "feba34720798a3a70608dcf81b6239a2357c21fb53e94214601390b5febc8403",
+    "full-qualification-afterfreeze-independent-02.json": "10c0acc986adf9175ca4c3a10acb798206a46ea9f6a6920f80c7e6c24267b716",
+    "final-d-0303-preparation-01.json": "8ff30d3078ad0b1f8987ef8496dfdb625f77794c1589339931074c7a1e31ee18",
+    "native-l08-only-selection-independent-01.json": "59cdc22e7c3ed384300818d1c641edceb4cb9151f07ba62e96780c17270fa859",
+    "native-l08-only-selection-actual-independent-01.json": "c3b58a3638a16fd405e8fddfa5f9153aa57a1a68319fe73f3c4dc929a043bbab",
+    "native-a31-fixtures-independent-01.json": "a109645ebbf94d0a96156a135bb76a0377135166a61a15b36edeb8d87515b2f1",
+    "native-a31-fixtures-actual-independent-01.json": "c76d8eee84b2f648e57909e6ac711a8091d2d19e2c93063a0ccfcdb9f23341eb",
+    "native-a33-os-fixture-actual-independent-01.json": "c78c36381c21b6db53466f5067bc43d976a5a4d1160bb8a3180f8de207ce657b",
+    "native-b30-a33-source-applicability-01.json": "98770b96213aba2c0c9eda42e4e7fe076142f8575eb8bab2070690d155b90d0a",
+    "a33-source-freeze-01.json": "081a0a58f17c5559b529006d3826e913545868806d1b0eaa7a7557e5d5098489",
+    "full-d-compact-collector-independent-01.json": "e87392aed0d40e83aeb7bc35c335697a291b6bc80c73e0f3b0c81ff48287c2a7"
+  },
+  "verdict": "Full five-job recipe and unchanged collector remain reusable; this exact frozen source is NOT admitted to expensive fullD because of the identified stale label test. No runtime, final readiness or Store approval; remaining strict/physical/identity/owner/legal gates unwaived.",
+  "activity": "Read-only Git/source/stdlib hash/AST/JSON inspection and this one report write. No project execution/imports, tests/builds/network/API/dispatch, canonical/Git edits, workers or cleanup cycle. One tool-wrapper syntax typo failed before command execution; it did not alter source/evidence."
+}
