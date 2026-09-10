@@ -188,6 +188,38 @@ class WorkflowContractTest(unittest.TestCase):
             with self.subTest(anchor=anchor), self.assertRaisesRegex(RuntimeError, "verification scope"):
                 workflow_contract.verify_verification_scopes(changed)
 
+    def test_linux_full_cleanup_reader_is_explicit_and_cannot_leak_to_other_jobs(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        linux = workflow.split("\n  desktop-android:\n", 1)[1].split("\n  desktop-linux-arm64:\n", 1)[0]
+        block = workflow_contract.validation_step(linux, "Clean only attested verification outputs")
+        flag = ', "--android-reader=sudo-proc-exe-v1"'
+        workflow_contract.verify_verification_scopes(workflow)
+        for original, replacement in (
+            (flag, ""), (flag, flag + flag),
+            ("sudo-proc-exe-v1", "unprivileged"),
+            ("sudo-proc-exe-v1", "sudo-proc-exe-v2"),
+            (flag, flag + ', "--unreviewed"'),
+            ("if: " + workflow_contract.FULL_VERIFICATION_FINALIZER, "if: always()"),
+            (workflow_contract.FULL_VERIFICATION_FINALIZER, workflow_contract.LINUX_PROBE_SCOPE),
+            ("steps.verification_ownership.outcome", "steps.verification_artifact.outcome"),
+            ("steps.verification_artifact.outcome", "steps.linux_process_probe_artifact.outcome"),
+            ("steps.verification_artifact.outputs.artifact-id", "steps.linux_process_probe_artifact.outputs.artifact-id"),
+            ("steps.verification_artifact.outputs.artifact-digest", "steps.linux_process_probe_artifact.outputs.artifact-digest"),
+            ('"scripts/ci/verification_hygiene.py"', '"scripts/ci/unreviewed.py"'),
+            ("import runpy, sys", "import os, runpy, sys\n          os.seteuid(0)"),
+        ):
+            changed = workflow.replace(block, block.replace(original, replacement, 1), 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(original=original, replacement=replacement), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+        for name in ("desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64", "ios"):
+            before, after = workflow.split("\n  " + name + ":\n", 1)
+            changed = before + "\n  " + name + ":\n" + after.replace(
+                '["verification_hygiene.py", "cleanup"]', '["verification_hygiene.py", "cleanup"' + flag + ']', 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(job=name), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+
     def test_non_app_probe_requires_explicit_review_no_token_and_uploaded_custody(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
         for original, replacement in (

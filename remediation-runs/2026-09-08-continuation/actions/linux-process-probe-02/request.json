@@ -1,0 +1,83 @@
+{
+  "kind": "BOUNDED_LINUX_PROCESS_PROBE_WITH_REAL_SDK_PREREQUISITE_REQUEST",
+  "at": "2026-09-10T12:50:49.254818+00:00",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "frozen_source_sha": "055f9fd3ac4ff714ada9ac0a582075739653199e",
+  "tree": "896ccc027ed48b0c08b80d10bbbd6145bc66f0f2",
+  "remote_before": "055f9fd3ac4ff714ada9ac0a582075739653199e\trefs/heads/fix/local-readiness-2026-09-07",
+  "controls": {
+    "files": [
+      {
+        "path": ".github/workflows/production-verification.yml",
+        "sha256": "79d9fa5cdf487ad87849e19fb1baeb71d7694db7f2b62123e9cec729519a3be0"
+      },
+      {
+        "path": "gradle/wrapper/gradle-wrapper.jar",
+        "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f"
+      },
+      {
+        "path": "gradle/wrapper/gradle-wrapper.properties",
+        "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2"
+      },
+      {
+        "path": "gradlew",
+        "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933"
+      },
+      {
+        "path": "scripts/ci/linux_process_probe.py",
+        "sha256": "2696b0d81f1113eeaea20b431191788925053703d2ed6e12d72489041c6f76b6"
+      },
+      {
+        "path": "scripts/ci/verification_hygiene.py",
+        "sha256": "1fc2fb6f0b3bb7a505edc63277e0fe974a67ccf972753eec0da60386438c16f4"
+      },
+      {
+        "path": "scripts/release/tests/test_ci_verification_hygiene.py",
+        "sha256": "1f228c62dd1de0b79b8c0add9500dd3da7572bd761d079a058f45ef502e1f8e0"
+      },
+      {
+        "path": "scripts/release/tests/test_linux_process_probe.py",
+        "sha256": "51e3086b6bc43712e689f3c06584cfc9659adbdf45564d16f60c8493f8891325"
+      },
+      {
+        "path": "scripts/release/tests/test_workflow_contract.py",
+        "sha256": "69f1cbc3775896fe297314a867b864062527e4ac3f7417ca13880afefe5cc0a9"
+      },
+      {
+        "path": "scripts/release/workflow_contract.py",
+        "sha256": "b834e45c87a0f45e426e3b5b113b62986ba00bc2edb0e2daa12757540035b3a6"
+      }
+    ],
+    "control_sha256": "72e531e4a6166b387d1617b1489a080223e4a2dd00c5636da13fff39eaa5aecc"
+  },
+  "inputs": {
+    "verification_scope": "linux-process-probe",
+    "frozen_source_sha": "055f9fd3ac4ff714ada9ac0a582075739653199e",
+    "approved_probe_control_sha256": "72e531e4a6166b387d1617b1489a080223e4a2dd00c5636da13fff39eaa5aecc"
+  },
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=linux-process-probe",
+    "-f",
+    "frozen_source_sha=055f9fd3ac4ff714ada9ac0a582075739653199e",
+    "-f",
+    "approved_probe_control_sha256=72e531e4a6166b387d1617b1489a080223e4a2dd00c5636da13fff39eaa5aecc"
+  ],
+  "scope": "One Ubuntu24.04 job; bounded SDK-manager installation of emulator package only after source/control admission. No system-image/platform install, emulator execution, build, app packaging or Store operation. Existing strict /proc audit and 2 actual direct-child mechanism controls unchanged. Other4jobs skipped.",
+  "source_and_local_review": "remediation-runs/2026-09-08-continuation/reviews/linux-probe-sdk-prerequisite-independent-01.json",
+  "source_and_local_review_sha256": "2a71f1bd26b2c2ffedc7b6a4136f66d88fcd3f0028a7b03f32608a7e2ab8cb9f",
+  "baseline_probe_review": "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-independent-01.json",
+  "baseline_probe_review_sha256": "a9184100bb521387e85cb1d540ef8e329f368c112eb1d8f6aac28321be056458",
+  "preceding_actual_review": "remediation-runs/2026-09-08-continuation/reviews/linux-probe-01-actual-independent-01.json",
+  "preceding_actual_review_sha256": "ebbac96572c333f1f8550175f36b4df32e0a24bf9e31be10b9b771109a86f67e",
+  "preserved_failures": "LP01 remainsFAIL; all4audits FileNotFoundError pre-enumeration, exact missing path not retained. D03 cleanupFAIL and strictComplete0PASS26FAIL unchanged. No claim that LP01 establishes D03 permission cause or retirement."
+}

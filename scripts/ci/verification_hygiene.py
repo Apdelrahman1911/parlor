@@ -6,6 +6,7 @@ Initialize before output exists; only successful evidence upload authorizes clea
 """
 from __future__ import annotations
 
+import errno
 import json
 import hashlib
 import os
@@ -130,6 +131,11 @@ class AndroidAuditError(RuntimeError):
 ANDROID_PROC_MAX_ENTRIES = 4096
 ANDROID_PROC_MAX_BYTES = 8192
 ANDROID_PROC_SECONDS = 5.0
+ANDROID_EXE_READER_UNPRIVILEGED = "unprivileged"
+ANDROID_EXE_READER_SUDO = "sudo-proc-exe-v1"
+ANDROID_EXE_READERS = (ANDROID_EXE_READER_UNPRIVILEGED, ANDROID_EXE_READER_SUDO)
+ANDROID_EXE_READER_MAX_BYTES = 65536
+ANDROID_EXE_READER_SECONDS = 2.0  # Includes sudo/Python startup; helper itself has a 1s timer.
 
 
 def android_sdk_binding() -> tuple[Path, dict]:
@@ -178,10 +184,76 @@ def android_proc_identity(process: Path, pid: int, diagnostic: dict | None = Non
     return int(fields[19]), tuple(int(value) for value in match.groups())
 
 
-def audit_android_emulator_absence(expected: dict | None, proc: Path = Path("/proc")) -> dict:
+def android_privileged_executable(uid: int, pid: int, starttime: int, deadline: float) -> tuple:
+    """One fixed helper, private bounded protocol; no caller-supplied command/path."""
+    if (sys.platform != "linux" or type(uid) is not int or not 0 < uid < 2**32 or
+            uid != os.getuid() or uid != os.geteuid() or type(pid) is not int or not 0 < pid < 2**31 or
+            type(starttime) is not int or not 0 <= starttime < 2**64):
+        raise AndroidAuditError("PROC_EXE_READER_CALLER_INVALID")
+    helper = Path(__file__).absolute().with_name("linux_exe_reader.py")
+    if helper.resolve(strict=True) != helper or not helper.is_file():
+        raise AndroidAuditError("PROC_EXE_READER_SOURCE_INVALID")
+    remaining = deadline - time.monotonic()
+    if remaining <= 0:
+        raise AndroidAuditError("PROC_SCAN_DEADLINE")
+    try:
+        response = subprocess.run(
+            ["/usr/bin/sudo", "-n", "--", "/usr/bin/python3", "-I", "-S", "-B", str(helper),
+             str(uid), str(pid), str(starttime)],
+            stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+            cwd="/", env={"PATH": "/usr/bin:/bin", "LC_ALL": "C"},
+            timeout=min(ANDROID_EXE_READER_SECONDS, remaining), check=False,
+        )
+    except subprocess.TimeoutExpired:
+        raise AndroidAuditError("PROC_EXE_READER_TIMEOUT") from None
+    except OSError:
+        raise AndroidAuditError("PROC_EXE_READER_UNAVAILABLE") from None
+    if time.monotonic() > deadline:
+        raise AndroidAuditError("PROC_SCAN_DEADLINE")
+    if response.returncode != 0:
+        raise AndroidAuditError("PROC_EXE_READER_FAILED")
+    # The fixed helper bounds bytes before writing; never log stdout/stderr/argv.
+    if not isinstance(response.stdout, bytes) or len(response.stdout) > ANDROID_EXE_READER_MAX_BYTES:
+        raise AndroidAuditError("PROC_EXE_READER_RESPONSE_INVALID")
+
+    def unique(pairs):
+        value = dict(pairs)
+        if len(value) != len(pairs):
+            raise ValueError("duplicate field")
+        return value
+
+    try:
+        value = json.loads(response.stdout, object_pairs_hook=unique)
+        if (not isinstance(value, dict) or set(value) != {"schema", "uid", "pid", "starttime", "observations"} or
+                any(type(value[name]) is not int or value[name] != wanted
+                    for name, wanted in (("schema", 1), ("uid", uid), ("pid", pid), ("starttime", starttime))) or
+                not isinstance(value["observations"], list) or len(value["observations"]) != 2):
+            raise ValueError("invalid identity")
+        for row in value["observations"]:
+            if (not isinstance(row, dict) or set(row) != {"path", "device", "inode", "mode"} or
+                    not isinstance(row["path"], str) or "\0" in row["path"] or
+                    not Path(row["path"]).is_absolute() or len(os.fsencode(row["path"])) > 4096 or
+                    row["path"].endswith(" (deleted)") or
+                    any(type(row[name]) is not int or not 0 <= row[name] < limit
+                        for name, limit in (("device", 2**64), ("inode", 2**64), ("mode", 2**32))) or
+                    not stat.S_ISREG(row["mode"])):
+                raise ValueError("invalid executable")
+        first, last = value["observations"]
+        if first != last:
+            raise ValueError("changed executable")
+    except (ValueError, TypeError, KeyError, RecursionError):
+        raise AndroidAuditError("PROC_EXE_READER_RESPONSE_INVALID") from None
+    return (first["path"], (first["device"], first["inode"], first["mode"]),
+            last["path"], (last["device"], last["inode"], last["mode"]))
+
+
+def audit_android_emulator_absence(expected: dict | None, proc: Path = Path("/proc"),
+                                   *, reader: str = ANDROID_EXE_READER_UNPRIVILEGED) -> dict:
     """Read-only, non-atomic sample; does not establish process ownership or exit."""
     receipt = {"result": "FAIL", "started_at": timestamp(), "enumerated": 0, "sampled": 0,
                "selected_uid": 0, "matching_executables": 0, "errors": [],
+               "exe_reader": {"mode": reader if type(reader) is str and reader in ANDROID_EXE_READERS else "invalid",
+                              "eacces_denials": 0, "privileged_reads": 0},
                "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; "
                         "not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence"}
     deadline = time.monotonic() + ANDROID_PROC_SECONDS
@@ -194,6 +266,8 @@ def audit_android_emulator_absence(expected: dict | None, proc: Path = Path("/pr
             raise AndroidAuditError("PROC_SCAN_DEADLINE")
 
     try:
+        if type(reader) is not str or reader not in ANDROID_EXE_READERS:
+            raise AndroidAuditError("ANDROID_EXE_READER_INVALID")
         sdk, binding = android_sdk_binding()
         if binding != expected:
             raise AndroidAuditError("SDK_UID_BINDING_CHANGED")
@@ -225,15 +299,27 @@ def audit_android_emulator_absence(expected: dict | None, proc: Path = Path("/pr
                 if before[1] != (binding["uid"],) * 4:
                     raise AndroidAuditError("PROC_UID_AMBIGUOUS")
                 diagnostic["operation"] = "before_exe_readlink"
-                executable = os.readlink(process / "exe")
-                diagnostic["operation"] = "before_exe_stat"
-                first = (process / "exe").stat()
-                diagnostic["operation"] = "after_exe_readlink"
-                after = os.readlink(process / "exe")
-                diagnostic["operation"] = "after_exe_stat"
-                last = (process / "exe").stat()
-                if (executable != after or (first.st_dev, first.st_ino) != (last.st_dev, last.st_ino) or
-                        not stat.S_ISREG(first.st_mode) or not Path(executable).is_absolute() or
+                try:
+                    executable = os.readlink(process / "exe")
+                except PermissionError as error:
+                    if error.errno == errno.EACCES:
+                        receipt["exe_reader"]["eacces_denials"] += 1
+                    if reader != ANDROID_EXE_READER_SUDO or error.errno != errno.EACCES:
+                        raise
+                    diagnostic["operation"] = None  # Helper failure is not a new unprivileged read failure.
+                    executable, first, after, last = android_privileged_executable(binding["uid"], pid, before[0], deadline)
+                    receipt["exe_reader"]["privileged_reads"] += 1
+                else:
+                    diagnostic["operation"] = "before_exe_stat"
+                    first_stat = (process / "exe").stat()
+                    first = (first_stat.st_dev, first_stat.st_ino, first_stat.st_mode)
+                    diagnostic["operation"] = "after_exe_readlink"
+                    after = os.readlink(process / "exe")
+                    diagnostic["operation"] = "after_exe_stat"
+                    last_stat = (process / "exe").stat()
+                    last = (last_stat.st_dev, last_stat.st_ino, last_stat.st_mode)
+                if (executable != after or first[:2] != last[:2] or
+                        not stat.S_ISREG(first[2]) or not Path(executable).is_absolute() or
                         len(os.fsencode(executable)) > 4096 or executable.endswith(" (deleted)")):
                     raise AndroidAuditError("PROC_EXECUTABLE_AMBIGUOUS")
                 matches = emulator in Path(executable).parents
@@ -313,13 +399,16 @@ def verify_apple_cleanup(root: Path, claim_path: Path, task: dict, outcomes: dic
 
 
 def cleanup(root: Path, claim_path: Path, task: dict, upload: dict, preparation_outcome: str,
-            apple_outcomes: dict | None = None) -> dict:
+            apple_outcomes: dict | None = None, *, android_reader: str = ANDROID_EXE_READER_UNPRIVILEGED) -> dict:
     receipt = {"task": task, "started_at": timestamp(), "removed": [], "not_created": [],
                "retained": [], "upload": upload, "preparation_outcome": preparation_outcome, "errors": []}
     receipt["gradle_stop"] = stop_gradle(root)
     try:
         if receipt["gradle_stop"]["exit_code"] != 0:
             raise RuntimeError("Gradle stop failed; do not race active workers by deleting outputs")
+        if (type(android_reader) is not str or android_reader not in ANDROID_EXE_READERS or
+                android_reader != ANDROID_EXE_READER_UNPRIVILEGED and task.get("GITHUB_JOB") != "desktop-android"):
+            raise RuntimeError("Invalid Android executable reader mode; retain outputs")
         if preparation_outcome != "success":
             raise RuntimeError("Fresh ownership preparation did not succeed; preserve all pre-existing outputs")
         if claim_path.is_symlink() or not claim_path.is_file():
@@ -346,7 +435,7 @@ def cleanup(root: Path, claim_path: Path, task: dict, upload: dict, preparation_
         if not uploaded_evidence_is_retained(upload):
             raise RuntimeError("No successful nonempty verification upload; preserve required evidence outputs")
         if task.get("GITHUB_JOB") == "desktop-android":
-            receipt["android_emulator_absence"] = audit_android_emulator_absence(claim.get("android_sdk"))
+            receipt["android_emulator_absence"] = audit_android_emulator_absence(claim.get("android_sdk"), reader=android_reader)
             receipt["android_emulator_absence"]["source"] = {key: current[key] for key in ("head", "tree")}
             if receipt["android_emulator_absence"]["result"] != "PASS":
                 raise RuntimeError("Android sampled emulator absence did not pass; retain outputs")
@@ -396,9 +485,13 @@ def main() -> int:
     claim_path = Path(str(prefix) + "-ownership.json")
     mode = sys.argv[1]
     if mode == "prepare":
+        if len(sys.argv) != 2:
+            raise RuntimeError("Invalid prepare arguments")
         prepare(root, claim_path, task)
         return 0
     if mode == "stop":
+        if len(sys.argv) != 3:
+            raise RuntimeError("Invalid stop arguments")
         label = sys.argv[2]
         if not re.fullmatch(r"[a-z0-9-]+", label):
             raise RuntimeError("Invalid cycle label")
@@ -407,6 +500,11 @@ def main() -> int:
         print(json.dumps(result))
         return 0 if result["exit_code"] == 0 else 1
     if mode == "cleanup":
+        # Invalid/duplicate/unknown flags reach cleanup's failure path after Gradle stop.
+        reader = ANDROID_EXE_READER_UNPRIVILEGED
+        if len(sys.argv) != 2:
+            reader = (sys.argv[2].removeprefix("--android-reader=") if len(sys.argv) == 3 and
+                      sys.argv[2].startswith("--android-reader=") else "invalid")
         upload = {
             "outcome": os.environ.get("PARLOR_VERIFICATION_UPLOAD_OUTCOME", ""),
             "artifact_id": os.environ.get("PARLOR_VERIFICATION_ARTIFACT_ID", ""),
@@ -417,7 +515,8 @@ def main() -> int:
         except ValueError:
             apple_outcomes = None  # cleanup still stops Gradle before refusing deletion.
         receipt = cleanup(root, claim_path, task, upload,
-                          os.environ.get("PARLOR_VERIFICATION_PREPARE_OUTCOME", ""), apple_outcomes)
+                          os.environ.get("PARLOR_VERIFICATION_PREPARE_OUTCOME", ""), apple_outcomes,
+                          android_reader=reader)
         # Keep failure evidence in the job log even if a historical receipt prevents replacement.
         print(json.dumps(receipt))
         write_new(Path(str(prefix) + "-cleanup.json"), receipt)

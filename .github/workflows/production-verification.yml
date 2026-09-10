@@ -220,7 +220,7 @@ jobs:
         shell: python
         run: |
           import runpy, sys
-          sys.argv = ["verification_hygiene.py", "cleanup"]
+          sys.argv = ["verification_hygiene.py", "cleanup", "--android-reader=sudo-proc-exe-v1"]
           runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
 
       - name: Upload verification cleanup receipt

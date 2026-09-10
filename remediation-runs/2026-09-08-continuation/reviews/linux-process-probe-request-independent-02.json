@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/native_ci",
+  "review_date_utc": "2026-09-10",
+  "decision": "APPROVE_EXACT_LP02_SINGLE_COORDINATED_DISPATCH",
+  "status": "FRESH_BINDING_ADMISSION_PASS_NOT_RUNTIME",
+  "source": {
+    "head": "055f9fd3ac4ff714ada9ac0a582075739653199e",
+    "tree": "896ccc027ed48b0c08b80d10bbbd6145bc66f0f2",
+    "source_commit": "960de51e36b97fa08b1503ccf28bd4ac2ce53811",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_clean": true,
+    "full_history": true
+  },
+  "controls": {
+    "files": 10,
+    "sha256": "72e531e4a6166b387d1617b1489a080223e4a2dd00c5636da13fff39eaa5aecc"
+  },
+  "inventory": {
+    "rows": 29013,
+    "sha256": "affa75278162d502b6f52368b238d1b53fa4dfd8f95111cd74175b52ecf6e544",
+    "verification": "Frozen child changes only inventory; bytes/CSV count match retained generate/check0 receipt."
+  },
+  "checks": "Exact request SHA, three inputs and gh command verified. Ten sorted control rows/hash recomputed from current bytes and frozen Git blobs; source/local review pins unchanged. Canonical parent changes are exactly the three reviewed files. Normal push/ls-remote/stop0 receipt agrees with frozen HEAD/tree; no reviewer network check.",
+  "scope": "One Ubuntu24.04 job,10minutes: admitted source/controls, real emulator-package-only SDK setup (180s+10s kill bound,4minute step), then unchanged no-build host/control diagnostic. Other4jobs excluded. No system images/platforms, emulator launch, app build/packaging or Store operation.",
+  "reused_review": "Previously accepted source/60-test/focused-actionlint evidence is reused at identical bytes, not repeated or relabelled hosted runtime. Source/UID/SDK/ownership/child retirement/upload/final strict audit/Gradle-stop guards remain covered by those unchanged pinned reviews.",
+  "coordinator_prerequisite": "Root alone must freshly recheck active workflow, no live same-ref run, exact remote/ref/HEAD/tree and clean source, then dispatch exactly once. Existing cancel-in-progress must not supersede live work. Reviewer performs no external calls.",
+  "independent_audit": {
+    "tool_chunk": "c76293",
+    "exit_code": 0,
+    "method": "Read-only Git and standard-library hash/JSON/CSV binding assertions only; no project import, validator, test, build, SDK or process execution."
+  },
+  "pins": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/linux-process-probe-02/request.json",
+      "sha256": "63e6b95888a947834c04cb91ce81e6028ef8d2095e6e886d5b84cde81468e4c6"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/linux-process-probe-02/freeze-push-receipt.json",
+      "sha256": "1d61ce82f848680e485abf07d6c450f6d7d7d6df123f62cc4439f37ff083a296"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-probe-sdk-prerequisite-independent-01.json",
+      "sha256": "2a71f1bd26b2c2ffedc7b6a4136f66d88fcd3f0028a7b03f32608a7e2ab8cb9f"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-independent-01.json",
+      "sha256": "a9184100bb521387e85cb1d540ef8e329f368c112eb1d8f6aac28321be056458"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-probe-01-actual-independent-01.json",
+      "sha256": "ebbac96572c333f1f8550175f36b4df32e0a24bf9e31be10b9b771109a86f67e"
+    }
+  ],
+  "findings": [],
+  "preserved": {
+    "LP01": "FAIL",
+    "D03": "FAIL",
+    "historical_local_outer_exit": 143,
+    "strict_protection_passed": 0,
+    "strict_protection_failed": 26,
+    "LP02_runtime": "NOT_YET_RUN",
+    "readiness": "NOT_READY",
+    "limit": "No D03 cause/retirement repair, application/combined qualification, physical-device, Store or owner/legal credit."
+  }
+}

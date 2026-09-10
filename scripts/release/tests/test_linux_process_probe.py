@@ -71,7 +71,8 @@ class LinuxProcessProbeTest(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             probe.file_bytes(self.base / "large")
 
-    def control(self, mode, *, audit=None, ready=True, extra_file=False, unreaped=False, timeouts=0, interrupt=False):
+    def control(self, mode, *, reader="unprivileged", audit=None, ready=True, extra_file=False, unreaped=False,
+                timeouts=0, interrupt=False):
         child = SimpleNamespace(pid=2147000000, stdin=Mock(), stdout=Mock(), returncode=None, terminate=Mock(), kill=Mock())
         child.stdout.fileno.return_value = 29
         pending_timeouts = [timeouts]
@@ -85,11 +86,14 @@ class LinuxProcessProbeTest(unittest.TestCase):
             return 0
         child.wait = Mock(side_effect=wait)
         observed = (dict(result="PASS", errors=[], enumerated=2, sampled=2, selected_uid=2, matching_executables=0)
-                    if mode else dict(result="FAIL", errors=[{"code": "PermissionError"}], enumerated=2,
+                    if mode or reader == probe.EXE_READER else dict(result="FAIL", errors=[{"code": "PermissionError"}], enumerated=2,
                         sampled=1, selected_uid=1, matching_executables=0,
                         failure_context=dict(operation="before_exe_readlink", selection=True, errno=errno.EACCES)))
-        def sample(binding, proc):
+        observed["exe_reader"] = dict(mode=reader, eacces_denials=int(not mode),
+                                      privileged_reads=int(not mode and reader == probe.EXE_READER))
+        def sample(binding, proc, **options):
             self.assertEqual(binding, self.sdk)
+            self.assertEqual(options, {"reader": reader})
             self.assertEqual({p.name for p in proc.iterdir()}, {str(os.getpid()), str(child.pid)})
             self.assertTrue(all(p.is_symlink() for p in proc.iterdir()))
             if extra_file:
@@ -102,7 +106,7 @@ class LinuxProcessProbeTest(unittest.TestCase):
                 patch.object(probe.select, "select", return_value=([child.stdout] if ready else [], [], [])), \
                 patch.object(probe.os, "read", return_value=(json.dumps(dict(pid=child.pid, uid=1001, dumpable=mode)) + "\n").encode()), \
                 patch.object(probe.hygiene, "audit_android_emulator_absence", side_effect=sample) as sampler:
-            row = probe.owned_dumpability_control(self.base, self.sdk, mode)
+            row = probe.owned_dumpability_control(self.base, self.sdk, mode, reader=reader)
         return row, child, launch, sampler
 
     def test_negative_control_remains_failed_audit_and_uses_only_owned_isolated_child(self):
@@ -117,6 +121,21 @@ class LinuxProcessProbeTest(unittest.TestCase):
         child.wait.assert_called_once_with(timeout=2)
         child.terminate.assert_not_called()
         child.kill.assert_not_called()
+
+    def test_explicit_privileged_control_requires_an_actual_reader_success_record(self):
+        row, child, _, _ = self.control(0, reader=probe.EXE_READER)
+        self.assertEqual((row["result"], row["audit"]["result"]), ("CONTROL_PASS", "PASS"))
+        child.terminate.assert_not_called()
+        good = row["audit"]
+        for changed in (
+            {**good, "exe_reader": dict(mode="unprivileged", eacces_denials=1, privileged_reads=1)},
+            {**good, "exe_reader": dict(mode=probe.EXE_READER, eacces_denials=1, privileged_reads=0)},
+            {**good, "result": "FAIL"},
+        ):
+            with self.subTest(audit=changed):
+                observed, _, _, _ = self.control(0, reader=probe.EXE_READER, audit=changed)
+                self.assertEqual(observed["result"], "CONTROL_FAIL")
+                self.assertTrue(observed["child_reaped"] and observed["fixture_removed"])
 
     def test_readiness_failure_reaps_child_without_sampling_or_private_text(self):
         row, child, _, sampler = self.control(1, ready=False)
@@ -161,8 +180,8 @@ class LinuxProcessProbeTest(unittest.TestCase):
         for unretired in (False, True):
             prefix = self.base / ("unretired" if unretired else "host-fail")
             probe.hygiene.write_new(Path(str(prefix) + "-ownership.json"), {**self.source, "task": self.task, "android_sdk": self.sdk})
-            def control(_parent, _binding, mode):
-                return dict(dumpable=mode, result="CONTROL_PASS", child_reaped=not unretired, fixture_removed=not unretired)
+            def control(_parent, _binding, mode, *, reader):
+                return dict(dumpable=mode, reader=reader, result="CONTROL_PASS", child_reaped=not unretired, fixture_removed=not unretired)
             with patch.object(probe.hygiene, "context", return_value=(self.base, prefix, self.task)), \
                     patch.object(probe, "admit", return_value=(self.base, prefix, self.task, self.source, self.proof)), \
                     patch.dict(os.environ, {"PARLOR_VERIFICATION_PREPARE_OUTCOME": "success"}), \
@@ -172,14 +191,16 @@ class LinuxProcessProbeTest(unittest.TestCase):
                 self.assertEqual(probe.run(), 1)
             row = json.loads(Path(str(prefix) + "-linux-probe.json").read_text())
             self.assertEqual((row["result"], row["host_audit"]["result"]), ("FAIL", "FAIL"))
-            self.assertEqual(controls.call_count, 1 if unretired else 2)
+            self.assertEqual(controls.call_count, 1 if unretired else 3)
             stop.assert_called_once()
 
     def test_finalizer_requires_retired_control_receipts_before_unchanged_cleanup(self):
-        rows = [dict(dumpable=mode, child_reaped=True, fixture_removed=True) for mode in (1, 0)]
+        rows = [dict(dumpable=mode, reader=reader, child_reaped=True, fixture_removed=True)
+                for mode, reader in probe.CONTROL_MODES]
         for unretired in (False, True):
             prefix = self.base / ("bad-cleanup" if unretired else "good-cleanup")
-            observed = dict(binding=self.proof, controls=[{**item, "child_reaped": not unretired} for item in rows])
+            observed = dict(binding=self.proof, reader=probe.EXE_READER,
+                            controls=[{**item, "child_reaped": not unretired} for item in rows])
             probe.hygiene.write_new(Path(str(prefix) + "-linux-probe.json"), observed)
             probe.hygiene.write_new(Path(str(prefix) + "-stop-linux-probe.json"), dict(binding=self.proof, task=self.task, exit_code=0))
             with patch.object(probe.hygiene, "context", return_value=(self.base, prefix, self.task)), \
@@ -193,6 +214,7 @@ class LinuxProcessProbeTest(unittest.TestCase):
                 cleanup.assert_not_called()
             else:
                 self.assertEqual(cleanup.call_args.args[3], dict(outcome="success", artifact_id="456", artifact_digest="f" * 64))
+                self.assertEqual(cleanup.call_args.kwargs, {"android_reader": probe.EXE_READER})
 
 
 if __name__ == "__main__":

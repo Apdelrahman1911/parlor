@@ -198,7 +198,7 @@ def verify_windows_checkout(text: str) -> None:
 
 
 def verify_linux_process_probe(job: str) -> None:
-    """A closed no-build diagnostic path; full Linux commands stay unchanged."""
+    """A closed no-build diagnostic path; full cleanup opts into its read-only reader."""
     full = ("Install pinned Android SDK packages", "Record exact source and require a clean checkout",
             "Run common, desktop, Android, static-analysis, and release gates",
             "Run release Android managed-device smoke tests", "Inspect unsigned Android release artifact and merged manifest")
@@ -221,6 +221,20 @@ def verify_linux_process_probe(job: str) -> None:
                     LINUX_PROBE_SCOPE if name in probe[:2] or name == prerequisite else "always() && (" + LINUX_PROBE_SCOPE + ")")
         if re.findall(r"(?m)^        if: (.*)$", validation_step(job, name)) != [required]:
             fail("verification scope Linux probe must skip builds/full SDK setup and preserve full gates/finalizers")
+    expected_cleanup = '''        if: ''' + FULL_VERIFICATION_FINALIZER + '''
+        env:
+          PARLOR_VERIFICATION_PREPARE_OUTCOME: ${{ steps.verification_ownership.outcome }}
+          PARLOR_VERIFICATION_UPLOAD_OUTCOME: ${{ steps.verification_artifact.outcome }}
+          PARLOR_VERIFICATION_ARTIFACT_ID: ${{ steps.verification_artifact.outputs.artifact-id }}
+          PARLOR_VERIFICATION_ARTIFACT_DIGEST: ${{ steps.verification_artifact.outputs.artifact-digest }}
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "cleanup", "--android-reader=sudo-proc-exe-v1"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+'''
+    if validation_step(job, final[3]).strip("\n") != expected_cleanup.strip("\n"):
+        fail("verification scope Linux full cleanup requires the explicit read-only reader and unchanged custody guards")
     expected_prerequisite = '''        if: ''' + LINUX_PROBE_SCOPE + '''
         timeout-minutes: 4
         shell: bash
@@ -268,6 +282,8 @@ def verify_verification_scopes(text: str) -> None:
     expected = ["desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64", "ios"]
     if jobs != expected:
         fail("verification scope contract requires exactly the five reviewed jobs")
+    if text.count("--android-reader") != 1 or text.count("sudo-proc-exe-v1") != 1:
+        fail("verification scope permits the explicit Android reader only in Linux full cleanup")
     for name in expected[:-1]:
         block = jobs_text.split("  " + name + ":\n", 1)[1].split("\n  " + expected[expected.index(name) + 1] + ":\n", 1)[0]
         required = (WINDOWS_VERIFICATION_SCOPE if name == "desktop-windows-x64" else

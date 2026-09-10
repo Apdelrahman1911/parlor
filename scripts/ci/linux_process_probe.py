@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Opt-in Linux procfs discriminator; no build, emulator, or absence workaround.
+"""Opt-in Linux procfs reader verification; no build or emulator execution.
 
-The real-host sample remains separate from two synthetic-enumeration controls.
+The explicitly selected read-only executable reader never relaxes absence checks.
+The host sample stays separate from unprivileged and privileged owned controls.
 Importing this module does not observe processes or allocate resources.
 """
 from __future__ import annotations
@@ -27,7 +28,10 @@ from scripts.ci import verification_hygiene as hygiene
 SCOPE = "linux-process-probe"
 REPOSITORY, BRANCH = "Apdelrahman1911/parlor", "fix/local-readiness-2026-09-07"
 WORKFLOW = ".github/workflows/production-verification.yml"
+EXE_READER = "sudo-proc-exe-v1"
+CONTROL_MODES = ((1, "unprivileged"), (0, "unprivileged"), (0, EXE_READER))
 CONTROL_PATHS = (WORKFLOW, "scripts/ci/linux_process_probe.py", "scripts/ci/verification_hygiene.py",
+    "scripts/ci/linux_exe_reader.py", "scripts/release/tests/test_linux_exe_reader.py",
     "scripts/release/workflow_contract.py", "scripts/release/tests/test_linux_process_probe.py",
     "scripts/release/tests/test_ci_verification_hygiene.py", "scripts/release/tests/test_workflow_contract.py",
     "gradlew", "gradle/wrapper/gradle-wrapper.jar", "gradle/wrapper/gradle-wrapper.properties")
@@ -106,16 +110,16 @@ def admit():
     return root, prefix, task, source, proof
 
 
-def owned_dumpability_control(parent: Path, binding: dict, dumpable: int) -> dict:
+def owned_dumpability_control(parent: Path, binding: dict, dumpable: int, *, reader="unprivileged") -> dict:
     """Real nonroot Linux control; no GitHub impersonation is needed by local callers.
 
     Caller owns the outer evidence/Gradle-stop lane. Only this observer and its
     direct child are enumerated, through owned symlinks to real /proc entries.
     """
-    require(type(dumpable) is int and dumpable in (0, 1) and
+    require(type(dumpable) is int and (dumpable, reader) in CONTROL_MODES and
             hygiene.android_sdk_binding()[1] == binding, "invalid-live-control-binding")
     require(parent.resolve() == parent and parent.is_dir() and parent.stat().st_uid == os.getuid(), "unowned-control-parent")
-    row = dict(kind="LIVE_LINUX_CONTROL_SYNTHETIC_ENUMERATION", dumpable=dumpable, result="CONTROL_FAIL",
+    row = dict(kind="LIVE_LINUX_CONTROL_SYNTHETIC_ENUMERATION", dumpable=dumpable, reader=reader, result="CONTROL_FAIL",
                started_at=hygiene.timestamp(), child_reaped=False, fixture_removed=False, errors=[],
                scope="Only self/direct-child enumeration with real procfs reads; not a host inventory or emulator runtime.")
     child, fixture, identity, links, previous, interrupted = None, None, None, {}, {}, []
@@ -139,15 +143,18 @@ def owned_dumpability_control(parent: Path, binding: dict, dumpable: int) -> dic
             link = fixture / str(pid)
             link.symlink_to(target)
             links[link] = target
-        row["audit"] = hygiene.audit_android_emulator_absence(binding, proc=fixture)
+        row["audit"] = hygiene.audit_android_emulator_absence(binding, proc=fixture, reader=reader)
         require(not interrupted, "control-interrupted")
         audit = row["audit"]
         expected = (audit.get("result") == "PASS" and audit.get("errors") == [] and audit.get("sampled") == 2 and
-                    audit.get("selected_uid") == 2) if dumpable else (
+                    audit.get("selected_uid") == 2) if dumpable or reader == EXE_READER else (
                     audit.get("result") == "FAIL" and audit.get("errors") == [{"code": "PermissionError"}] and
                     audit.get("failure_context") == dict(operation="before_exe_readlink", selection=True, errno=errno.EACCES))
         require(expected and audit.get("enumerated") == 2 and audit.get("matching_executables") == 0,
                 "live-control-expectation-not-observed")
+        if reader == EXE_READER:
+            require(audit.get("exe_reader") == dict(mode=EXE_READER, eacces_denials=1, privileged_reads=1),
+                    "live-privileged-read-not-observed")
         row["result"] = "CONTROL_PASS"
     except BaseException as error:
         row["errors"].append(dict(stage="observation", error_type=type(error).__name__))
@@ -207,7 +214,8 @@ def owned_dumpability_control(parent: Path, binding: dict, dumpable: int) -> dic
 def run():
     root, prefix, task = hygiene.context()
     row = dict(kind="BARE_HOST_LINUX_PROC_DISCRIMINATOR_NOT_APP_QUALIFICATION", result="FAIL", task=task,
-               started_at=hygiene.timestamp(), binding=None, host_audit={"result": "NOT_RUN"}, controls=[], errors=[],
+               started_at=hygiene.timestamp(), binding=None, reader=EXE_READER,
+               host_audit={"result": "NOT_RUN"}, controls=[], errors=[],
                scope="No build/emulator/managed-device execution; cannot repair previous cleanup or combined qualification.")
     try:
         _, _, _, source, row["binding"] = admit()
@@ -215,12 +223,14 @@ def run():
         require(os.environ.get("PARLOR_VERIFICATION_PREPARE_OUTCOME") == "success" and claim.get("task") == task and
                 all(claim.get(key) == value for key, value in source.items()) and
                 claim.get("android_sdk") == row["binding"]["android_sdk"], "probe-ownership-not-prepared")
-        row["host_audit"] = hygiene.audit_android_emulator_absence(claim["android_sdk"])
-        for dumpable in (1, 0):
-            row["controls"].append(owned_dumpability_control(prefix.parent, claim["android_sdk"], dumpable))
+        row["host_audit"] = hygiene.audit_android_emulator_absence(claim["android_sdk"], reader=EXE_READER)
+        for dumpable, reader in CONTROL_MODES:
+            row["controls"].append(owned_dumpability_control(prefix.parent, claim["android_sdk"], dumpable, reader=reader))
             require(row["controls"][-1]["child_reaped"] and row["controls"][-1]["fixture_removed"], "control-resources-not-retired")
         require(row["binding"] == admit()[4], "probe-source-controls-or-sdk-changed")
-        if row["host_audit"]["result"] == "PASS" and all(item["result"] == "CONTROL_PASS" for item in row["controls"]):
+        if (row["host_audit"]["result"] == "PASS" and
+                row["host_audit"].get("exe_reader", {}).get("mode") == EXE_READER and
+                all(item["result"] == "CONTROL_PASS" for item in row["controls"])):
             row["result"] = "PASS"
     except BaseException as error:
         row["errors"].append({"error_type": type(error).__name__})
@@ -243,16 +253,17 @@ def cleanup():
         observation = json.loads(file_bytes(Path(str(prefix) + "-linux-probe.json")))
         stopped = json.loads(file_bytes(Path(str(prefix) + "-stop-linux-probe.json")))
         rows = observation["controls"]
-        require(observation.get("binding") == proof and stopped.get("binding") == proof and
+        require(observation.get("binding") == proof and observation.get("reader") == EXE_READER and
+                stopped.get("binding") == proof and
                 stopped.get("task") == task and stopped.get("exit_code") == 0 and
-                len(rows) == 2 and [item.get("dumpable") for item in rows] == [1, 0] and
+                tuple((item.get("dumpable"), item.get("reader")) for item in rows) == CONTROL_MODES and
                 all(item.get("child_reaped") is True and item.get("fixture_removed") is True for item in rows),
                 "probe-resource-retirement-or-binding-incomplete")
         upload = {key: os.environ.get(variable, "") for key, variable in (
             ("outcome", "PARLOR_VERIFICATION_UPLOAD_OUTCOME"), ("artifact_id", "PARLOR_VERIFICATION_ARTIFACT_ID"),
             ("artifact_digest", "PARLOR_VERIFICATION_ARTIFACT_DIGEST"))}
         receipt = hygiene.cleanup(root, Path(str(prefix) + "-ownership.json"), task, upload,
-                                  os.environ.get("PARLOR_VERIFICATION_PREPARE_OUTCOME", ""))
+                                  os.environ.get("PARLOR_VERIFICATION_PREPARE_OUTCOME", ""), android_reader=EXE_READER)
     except BaseException as error:
         receipt = dict(task=task, result="FAIL", removed=[], errors=[{"error_type": type(error).__name__}],
                        scope="Probe pre-cleanup guard failed; no output deletion authorized.", gradle_stop=hygiene.stop_gradle(root))

@@ -1,0 +1,193 @@
+{
+  "kind": "BARE_HOST_LINUX_PROC_DISCRIMINATOR_NOT_APP_QUALIFICATION",
+  "result": "FAIL",
+  "task": {
+    "GITHUB_RUN_ID": "34479469398",
+    "GITHUB_RUN_ATTEMPT": "1",
+    "GITHUB_JOB": "desktop-android"
+  },
+  "started_at": "2026-09-10T12:55:37.893776+00:00",
+  "binding": {
+    "task": {
+      "GITHUB_RUN_ID": "34479469398",
+      "GITHUB_RUN_ATTEMPT": "1",
+      "GITHUB_JOB": "desktop-android"
+    },
+    "source": {
+      "root": "/home/runner/work/parlor/parlor",
+      "head": "055f9fd3ac4ff714ada9ac0a582075739653199e",
+      "tree": "896ccc027ed48b0c08b80d10bbbd6145bc66f0f2"
+    },
+    "controls": {
+      "files": [
+        {
+          "path": ".github/workflows/production-verification.yml",
+          "sha256": "79d9fa5cdf487ad87849e19fb1baeb71d7694db7f2b62123e9cec729519a3be0"
+        },
+        {
+          "path": "gradle/wrapper/gradle-wrapper.jar",
+          "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f"
+        },
+        {
+          "path": "gradle/wrapper/gradle-wrapper.properties",
+          "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2"
+        },
+        {
+          "path": "gradlew",
+          "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933"
+        },
+        {
+          "path": "scripts/ci/linux_process_probe.py",
+          "sha256": "2696b0d81f1113eeaea20b431191788925053703d2ed6e12d72489041c6f76b6"
+        },
+        {
+          "path": "scripts/ci/verification_hygiene.py",
+          "sha256": "1fc2fb6f0b3bb7a505edc63277e0fe974a67ccf972753eec0da60386438c16f4"
+        },
+        {
+          "path": "scripts/release/tests/test_ci_verification_hygiene.py",
+          "sha256": "1f228c62dd1de0b79b8c0add9500dd3da7572bd761d079a058f45ef502e1f8e0"
+        },
+        {
+          "path": "scripts/release/tests/test_linux_process_probe.py",
+          "sha256": "51e3086b6bc43712e689f3c06584cfc9659adbdf45564d16f60c8493f8891325"
+        },
+        {
+          "path": "scripts/release/tests/test_workflow_contract.py",
+          "sha256": "69f1cbc3775896fe297314a867b864062527e4ac3f7417ca13880afefe5cc0a9"
+        },
+        {
+          "path": "scripts/release/workflow_contract.py",
+          "sha256": "b834e45c87a0f45e426e3b5b113b62986ba00bc2edb0e2daa12757540035b3a6"
+        }
+      ],
+      "control_sha256": "72e531e4a6166b387d1617b1489a080223e4a2dd00c5636da13fff39eaa5aecc"
+    },
+    "android_sdk": {
+      "sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1",
+      "sdk_device": 2049,
+      "sdk_inode": 795534,
+      "uid": 1001
+    },
+    "platform": {
+      "os": "ubuntu-24.04",
+      "machine": "x86_64",
+      "kernel": "6.17.0-1022-azure",
+      "python": "3.12.3"
+    }
+  },
+  "host_audit": {
+    "result": "FAIL",
+    "started_at": "2026-09-10T12:55:38.818653+00:00",
+    "enumerated": 162,
+    "sampled": 145,
+    "selected_uid": 0,
+    "matching_executables": 0,
+    "errors": [
+      {
+        "code": "PermissionError"
+      }
+    ],
+    "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence",
+    "binding": {
+      "sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1",
+      "sdk_device": 2049,
+      "sdk_inode": 795534,
+      "uid": 1001
+    },
+    "failure_context": {
+      "operation": "before_exe_readlink",
+      "selection": true,
+      "errno": 13
+    },
+    "finished_at": "2026-09-10T12:55:38.837822+00:00"
+  },
+  "controls": [
+    {
+      "kind": "LIVE_LINUX_CONTROL_SYNTHETIC_ENUMERATION",
+      "dumpable": 1,
+      "result": "CONTROL_PASS",
+      "started_at": "2026-09-10T12:55:38.838018+00:00",
+      "child_reaped": true,
+      "fixture_removed": true,
+      "errors": [],
+      "scope": "Only self/direct-child enumeration with real procfs reads; not a host inventory or emulator runtime.",
+      "fixture_basename": "parlor-linux-proc-control-itbqhvra",
+      "owned_pid": 2534,
+      "readiness": {
+        "pid": 2534,
+        "uid": 1001,
+        "dumpable": 1
+      },
+      "audit": {
+        "result": "PASS",
+        "started_at": "2026-09-10T12:55:38.862318+00:00",
+        "enumerated": 2,
+        "sampled": 2,
+        "selected_uid": 2,
+        "matching_executables": 0,
+        "errors": [],
+        "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence",
+        "binding": {
+          "sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1",
+          "sdk_device": 2049,
+          "sdk_inode": 795534,
+          "uid": 1001
+        },
+        "finished_at": "2026-09-10T12:55:38.863291+00:00"
+      },
+      "child_exit_code": 0,
+      "interrupted": false,
+      "finished_at": "2026-09-10T12:55:38.864594+00:00"
+    },
+    {
+      "kind": "LIVE_LINUX_CONTROL_SYNTHETIC_ENUMERATION",
+      "dumpable": 0,
+      "result": "CONTROL_PASS",
+      "started_at": "2026-09-10T12:55:38.864760+00:00",
+      "child_reaped": true,
+      "fixture_removed": true,
+      "errors": [],
+      "scope": "Only self/direct-child enumeration with real procfs reads; not a host inventory or emulator runtime.",
+      "fixture_basename": "parlor-linux-proc-control-nx5bfmfz",
+      "owned_pid": 2535,
+      "readiness": {
+        "pid": 2535,
+        "uid": 1001,
+        "dumpable": 0
+      },
+      "audit": {
+        "result": "FAIL",
+        "started_at": "2026-09-10T12:55:38.889121+00:00",
+        "enumerated": 2,
+        "sampled": 1,
+        "selected_uid": 1,
+        "matching_executables": 0,
+        "errors": [
+          {
+            "code": "PermissionError"
+          }
+        ],
+        "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence",
+        "binding": {
+          "sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1",
+          "sdk_device": 2049,
+          "sdk_inode": 795534,
+          "uid": 1001
+        },
+        "failure_context": {
+          "operation": "before_exe_readlink",
+          "selection": true,
+          "errno": 13
+        },
+        "finished_at": "2026-09-10T12:55:38.889783+00:00"
+      },
+      "child_exit_code": 0,
+      "interrupted": false,
+      "finished_at": "2026-09-10T12:55:38.891052+00:00"
+    }
+  ],
+  "errors": [],
+  "scope": "No build/emulator/managed-device execution; cannot repair previous cleanup or combined qualification.",
+  "finished_at": "2026-09-10T12:55:39.807760+00:00"
+}

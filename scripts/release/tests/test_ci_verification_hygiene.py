@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import errno
 import importlib.util
+import io
 import json
 import os
 import subprocess
@@ -242,7 +243,7 @@ class VerificationHygieneTest(unittest.TestCase):
             self.assertEqual(receipt["result"], "FAIL")
             audit.assert_not_called()
             receipt = hygiene.cleanup(self.root, self.claim, self.task, self.upload, "success")
-            audit.assert_called_once_with(binding)
+            audit.assert_called_once_with(binding, reader=hygiene.ANDROID_EXE_READER_UNPRIVILEGED)
         self.assertEqual(receipt["result"], "FAIL")
         self.assertEqual(receipt["removed"], [])
         self.assertEqual(receipt["retained"], ["build"])
@@ -263,6 +264,46 @@ class VerificationHygieneTest(unittest.TestCase):
         self.assertEqual(receipt["retained"], [])
         self.assertTrue(self.claim.is_file())
         self.stop.assert_called_once_with(self.root)
+
+    def test_reader_mode_and_reader_failure_retain_outputs_after_gradle_stop(self) -> None:
+        self.task["GITHUB_JOB"] = "desktop-android"
+        binding = {"sdk_path_sha256": "e" * 64, "sdk_device": 1, "sdk_inode": 2, "uid": 1001}
+        with patch.object(hygiene, "android_sdk_binding", return_value=(self.base, binding)):
+            self.prepare()
+        (self.root / "build").mkdir()
+        evidence = self.root / "build/evidence.xml"
+        evidence.write_text("preserve")
+        for mode in ("private-invalid-mode", None, [], hygiene.ANDROID_EXE_READER_SUDO):
+            with self.subTest(mode=mode), patch.object(hygiene, "audit_android_emulator_absence",
+                    return_value={"result": "FAIL", "errors": [{"code": "PROC_EXE_READER_FAILED"}]}) as audit:
+                receipt = hygiene.cleanup(self.root, self.claim, self.task, self.upload, "success", android_reader=mode)
+                self.assertEqual(receipt["result"], "FAIL")
+                self.assertEqual(receipt["removed"], [])
+                self.assertEqual(evidence.read_text(), "preserve")
+                self.assertNotIn("private-invalid-mode", json.dumps(receipt))
+                if mode == hygiene.ANDROID_EXE_READER_SUDO:
+                    audit.assert_called_once_with(binding, reader=mode)
+                    self.assertEqual(receipt["retained"], ["build"])
+                else:
+                    audit.assert_not_called()
+        self.assertEqual(self.stop.call_count, 4)
+        self.task["GITHUB_JOB"] = "ios"
+        receipt = hygiene.cleanup(self.root, self.claim, self.task, self.upload, "success",
+                                  android_reader=hygiene.ANDROID_EXE_READER_SUDO)
+        self.assertIn("Invalid Android executable reader", receipt["errors"][0]["error"])
+        self.assertEqual(evidence.read_text(), "preserve")
+
+    def test_cleanup_reader_cli_rejects_bad_flags_after_gradle_stop(self) -> None:
+        for arguments in (("--private-unknown",), ("--android-reader=wrong",),
+                          ("--android-reader=sudo-proc-exe-v1", "--android-reader=unprivileged")):
+            with self.subTest(arguments=arguments), patch.object(hygiene, "context", return_value=(self.root, self.base / "run", self.task)), \
+                    patch.object(hygiene.sys, "argv", ["verification_hygiene.py", "cleanup", *arguments]), \
+                    patch.object(hygiene, "write_new") as write, patch.object(hygiene.sys, "stdout", io.StringIO()):
+                self.assertEqual(hygiene.main(), 1)
+                self.assertEqual(write.call_args.args[1]["gradle_stop"]["exit_code"], 0)
+                self.assertEqual(write.call_args.args[1]["removed"], [])
+                self.assertIn("Invalid Android executable reader", write.call_args.args[1]["errors"][0]["error"])
+        self.assertEqual(self.stop.call_count, 3)
 
 
 @unittest.skipUnless(sys.platform == "linux", "Linux-only procfs symlink fixture")
@@ -305,8 +346,8 @@ class AndroidEmulatorAbsenceTest(unittest.TestCase):
             link.symlink_to(executable)
         return path
 
-    def audit(self) -> dict:
-        return hygiene.audit_android_emulator_absence(self.binding, proc=self.proc)
+    def audit(self, reader: str = hygiene.ANDROID_EXE_READER_UNPRIVILEGED) -> dict:
+        return hygiene.audit_android_emulator_absence(self.binding, proc=self.proc, reader=reader)
 
     def test_coherent_sample_excludes_other_uid_without_reading_its_executable(self) -> None:
         self.process(202, None, uid=0)
@@ -387,8 +428,95 @@ class AndroidEmulatorAbsenceTest(unittest.TestCase):
                 self.assertEqual(receipt["errors"], [{"code": error.__name__}])
                 self.assertEqual(receipt["failure_context"], dict(operation=operation,
                     selection=selection, errno=expected_errno))
+                self.assertEqual(receipt["exe_reader"], {"mode": "unprivileged", "privileged_reads": 0,
+                    "eacces_denials": int(operation == "before_exe_readlink" and number == errno.EACCES)})
                 self.assertNotIn("private-PID-999999", json.dumps(receipt))
                 self.assertNotIn(str(self.base), json.dumps(receipt))
+
+    def test_opt_in_reader_only_recovers_first_selected_exe_eacces(self) -> None:
+        original = os.readlink
+        metadata = self.observer.stat()
+        identity = (metadata.st_dev, metadata.st_ino, metadata.st_mode)
+        response = (str(self.observer), identity, str(self.observer), identity)
+        for reader in hygiene.ANDROID_EXE_READERS:
+            with self.subTest(reader=reader):
+                def denied(path, *args, **kwargs):
+                    if Path(path) == self.proc / "101/exe":
+                        raise PermissionError(errno.EACCES, "private failure")
+                    return original(path, *args, **kwargs)
+                with patch.object(hygiene.os, "readlink", side_effect=denied), \
+                        patch.object(hygiene, "android_privileged_executable", return_value=response) as privileged:
+                    receipt = self.audit(reader)
+                expected = reader == hygiene.ANDROID_EXE_READER_SUDO
+                self.assertEqual(receipt["result"], "PASS" if expected else "FAIL")
+                self.assertEqual(receipt["exe_reader"], {"mode": reader, "eacces_denials": 1,
+                                                       "privileged_reads": int(expected)})
+                self.assertNotIn(str(self.base), json.dumps(receipt))
+                if expected:
+                    self.assertEqual(privileged.call_args.args[:3], (1001, 101, 123))
+                    self.assertEqual(receipt["selected_uid"], 1)
+                else:
+                    privileged.assert_not_called()
+        with patch.object(hygiene, "android_privileged_executable") as privileged:
+            self.assertEqual(self.audit(hygiene.ANDROID_EXE_READER_SUDO)["result"], "PASS")
+            privileged.assert_not_called()
+
+    def test_opt_in_reader_does_not_hide_churn_or_sdk_emulator_executable(self) -> None:
+        original = os.readlink
+        def denied(path, *args, **kwargs):
+            if Path(path) == self.proc / "101/exe":
+                raise PermissionError(errno.EACCES, "private failure")
+            return original(path, *args, **kwargs)
+        for change in ("lifetime", "uid", "emulator", "failure"):
+            with self.subTest(change=change):
+                self.process(101, self.observer)
+                def privileged(*_args):
+                    if change == "failure":
+                        raise hygiene.AndroidAuditError("PROC_EXE_READER_FAILED")
+                    self.process(101, self.observer, uid=1002 if change == "uid" else 1001,
+                                 start=124 if change == "lifetime" else 123)
+                    executable = self.emulator if change == "emulator" else self.observer
+                    metadata = executable.stat()
+                    identity = (metadata.st_dev, metadata.st_ino, metadata.st_mode)
+                    return str(executable), identity, str(executable), identity
+                with patch.object(hygiene.os, "readlink", side_effect=denied), \
+                        patch.object(hygiene, "android_privileged_executable", side_effect=privileged):
+                    receipt = self.audit(hygiene.ANDROID_EXE_READER_SUDO)
+                code = ("PROC_EXE_READER_FAILED" if change == "failure" else "SDK_EMULATOR_EXECUTABLE_OBSERVED"
+                        if change == "emulator" else "PROC_LIFETIME_OR_UID_CHANGED")
+                self.assertEqual(receipt["result"], "FAIL")
+                self.assertEqual(receipt["errors"], [{"code": code}])
+                self.assertEqual(receipt["exe_reader"]["eacces_denials"], 1)
+                self.assertEqual(receipt["exe_reader"]["privileged_reads"], int(change != "failure"))
+
+    def test_opt_in_reader_never_escalates_later_exe_or_identity_failure(self) -> None:
+        original_link, original_stat, original_bytes = os.readlink, Path.stat, hygiene.android_proc_bytes
+        for failure in ("before_stat", "before_status", "before_exe_stat", "after_exe_readlink", "after_exe_stat", "eperm", "missing"):
+            with self.subTest(failure=failure):
+                counts = {}
+                def access(name):
+                    counts[name] = counts.get(name, 0) + 1
+                    stage = ("before_" if counts[name] == 1 else "after_") + name
+                    if stage == failure:
+                        raise PermissionError(errno.EACCES, "private failure")
+                    if stage == "before_exe_readlink" and failure in ("eperm", "missing"):
+                        raise (PermissionError(errno.EPERM, "private") if failure == "eperm" else FileNotFoundError(errno.ENOENT, "private"))
+                def link(path, *args, **kwargs):
+                    if Path(path) == self.proc / "101/exe": access("exe_readlink")
+                    return original_link(path, *args, **kwargs)
+                def stat_(path, *args, **kwargs):
+                    if path == self.proc / "101/exe": access("exe_stat")
+                    return original_stat(path, *args, **kwargs)
+                def bytes_(path):
+                    if path.parent == self.proc / "101": access(path.name)
+                    return original_bytes(path)
+                with patch.object(hygiene.os, "readlink", side_effect=link), patch.object(Path, "stat", new=stat_), \
+                        patch.object(hygiene, "android_proc_bytes", side_effect=bytes_), \
+                        patch.object(hygiene, "android_privileged_executable") as privileged:
+                    receipt = self.audit(hygiene.ANDROID_EXE_READER_SUDO)
+                self.assertEqual(receipt["result"], "FAIL")
+                self.assertEqual(receipt["exe_reader"]["privileged_reads"], 0)
+                privileged.assert_not_called()
 
     def test_deleted_executable_path_is_ambiguous_not_absence(self) -> None:
         deleted = self.base / "observer (deleted)"
