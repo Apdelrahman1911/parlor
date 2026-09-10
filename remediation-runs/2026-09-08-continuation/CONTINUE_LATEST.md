@@ -1,6 +1,69 @@
 # Continuation execution ledger — 2026-09-10
 
-**Frozen9e4 verification checkpoint: LP04 actual mixed-UID privileged host sampling
+## CURRENT — 09f freeze through failed PA40; NOT_READY
+
+`C=remediation-runs/2026-09-07-local-readiness`; `N=remediation-runs/2026-09-08-continuation`.
+This section supersedes the9e4 delivery state below, not its historical evidence.
+
+- Reviewed source commits: `3c4f904ad1340ad5e8688aefe90ea18dccc98a8f` (split Apple
+  runtime/Release gates and isolated diagnostics); `2d291d294f6f0b2bd73057a60957a48690edd585`
+  (tracked-status timeout20→60s only); `8dccb4908159a2ea0ac819599e6a10f45c5e3434`
+  (six Objective-C expressions emit JSON booleans, not numeric0/1; strict parsers unchanged).
+  Their mechanical-inventory freezes are respectively
+  `b9883232c5208c9c3a1203347124cd36fb17dd24`, `5bb98fd58232d6e7f3b4392b1436b20be5fe5db1`,
+  `09f613c491af909043b69050c12b43baff81b23a`; latest tree
+  `ef5f83fadab880101df88d3e986765ba57582b40`. Recorded remote equality,29,457 inventory
+  rows and15-control PD03 binding: `$N/actions/protection-probe-03/freeze.json`.
+- Reviews: `$N/reviews/apple-split-integration-independent-01.json`,
+  `apple-protection-route-independent-01.json`, `protection-probe-failure-timeout-independent-01.json`,
+  `protection-native-boolean-independent-01.json`. No shipping rules/storage/identity change.
+- **PD01 FAIL**,34523946762/1 atb988: compiled/signed/booted, then tracked-status20s
+  timeout before native launch; zero protection observations. Simulator removed, but
+  scratch intentionally retained by unsettled-tool guard: **cleanup FAIL**, three stops0.
+- **PD02 FAIL**,34526589536/1 at5bb: native command exited0 and emitted15 JSON rows,
+  but exact validator rejected numeric boolean fields (`native-error-shape`). Its
+  seven synthetic samples and raw strict0PASS/4FAIL are not admitted qualification.
+  **Cleanup PASS**, three stops0; no production snapshots or A37 gate closed.
+- **PD03 FAIL**,34528539328/1 at09f: corrected producer compiled; standalone native
+  spawn timed out40s with empty stdout/stderr. Simulator removed; scratch retained:
+  **cleanup FAIL**, three stops0. Raw PD packets: `$N/actions/{run_id}/main/` and `cleanup/`.
+- Actual Linux timeout controls **27 PASS**; Boolean controls **27+13 PASS**, no
+  failures/errors/skips. These were pinned modified-worktree Python executions, not
+  Objective-C serialization or app-runtime proof. Evidence directories:
+  `$C/evidence/continuation-protection-{timeout,boolean}-controls-01/`: logs/pins, stop0, scratch removed,
+  no remaining monitored workers/build roots/errors; no compilation outputs to clean.
+- Fresh APP-only preflight34529609395/1 at09f succeeded: Xcode26.3/17C529,
+  arm64 iOS26.2/23C54;844 source rows,112 bound controls. Independent admission:
+  `$N/reviews/protection-application-preflight-admission-01.json`; raw packet
+  `$N/actions/34529609395/`. Binding cleanup PASS; **no native runtime executed**.
+- **PA40 FAIL**,34530289651/1 at09f, `PROTECTION_APPLICATION_NOT_CAPTURED`:
+  copied Kotlin diagnostic imports unresolved `platform.Foundation.NSObject`;
+  xcodebuild65, **zero XCTest cases and zero native observations**. Runtime,
+  provenance and notices remain NOT_RUN. Raw directory:
+  `$N/actions/34530289651/native-evidence/ios-readiness-40/` (receipt, gzipped log, xcresult, retention).
+  Inner cleanup **PASS**,17 stages, two stops0; owned simulator/copy/DerivedData/temp
+  removed, no remaining owned workers/unknown holders/errors; source/controls unchanged.
+  Outer cleanup PASS at `$N/actions/34530289651/cleanup/`. Upload success is not runtime PASS.
+- Copy-only `Foundation.NSObject`→`darwin.NSObject` correction independently approved,
+  not recompiled: `$N/reviews/protection-application-import-independent-01.json`.
+  Next: source/inventory commits and fresh APP-specific preflight/bindings; no repeated
+  local heavy test needed for the import-only diff. PA40 admission is consumed.
+- **Technical blocker1: strict Complete remains0PASS/26FAIL on A37.** Corrected-app
+  diagnostics must retain typed same-inode observations and separate capture/strict status.
+  Closing production protection requires accepted evidence satisfying unchanged strict
+  validation; diagnostic capture alone, successful writes or simulator hypotheses do not.
+- **Technical blocker2: final combined qualification NOT_RUN for the new topology.**
+  Require one full dispatch at one clean reviewed source/inventory freeze: all **six**
+  mandatory jobs, both Apple runtime/Release lanes, source-bound evidence and cleanup PASS.
+  The seventh diagnostic job is excluded; do not stitch historical/focused runs into PASS.
+  `$N/reviews/final-d04-source-admission-independent-01.json` is preparation, not dispatch approval.
+- B30/C08/OS39 historical applicability: `$N/reviews/b988-historical-component-applicability-01.json`.
+  C08's14 pins remain unchanged; no current-SHA consumer execution is claimed. Rerun only if relevant inputs change.
+  Physical-device, Store-operation and owner/legal gates remain.
+
+## Historical9e4 checkpoint — superseded delivery state, preserved evidence
+
+**Historical frozen9e4 verification checkpoint: LP04 actual mixed-UID privileged host sampling
 and ADC01's3 current Android managed-device tests/post-emulator cleanup are
 independently accepted. Reviewed v2 controls and123 local tests passed. Historical
 A37/B30/C08/OS39/D03 component applicability through9e4 is independently accepted,
@@ -13,7 +76,7 @@ transfer handoff. `C=remediation-runs/2026-09-07-local-readiness`,
 `N=remediation-runs/2026-09-08-continuation`. Counts overlap across platforms and
 are not overall readiness percentages. Later delivery never relocates execution.
 
-## Current source freeze and delivery status
+### Historical9e4 source freeze and delivery status
 
 - Repository `Apdelrahman1911/parlor`; branch `fix/local-readiness-2026-09-07`.
   Reviewed source `cafd4143b3d2f2458b2d02725a9f419c7fd03ed7`; inventory freeze

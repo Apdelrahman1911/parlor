@@ -1,0 +1,166 @@
+{
+  "schema": 1,
+  "kind": "INDEPENDENT_PA40_COMPILE_FAILURE_AND_COPY_ONLY_IMPORT_CORRECTION_REVIEW",
+  "reviewer": "/root/fixture_review",
+  "implementation_author": "/root/l08_fixture",
+  "reviewed_at": "2026-09-10T21:30:31.113459+00:00",
+  "status": "APPROVED_MINIMAL_SOURCE_CORRECTION_NOT_RECOMPILED_OR_RUNTIME_VERIFIED",
+  "source_base": {
+    "commit": "09f613c491af909043b69050c12b43baff81b23a",
+    "tree": "ef5f83fadab880101df88d3e986765ba57582b40"
+  },
+  "correction": {
+    "file": {
+      "path": "remediation-runs/2026-09-08-continuation/protection-application-01/ProtectionApplicationProbe.kt.in",
+      "bytes": 10501,
+      "sha256": "2244ad4ec7f29b6bc5c75d6180f5a875397b89d14b10f7c6df4cd6813e7518ce"
+    },
+    "old_sha256": "8cc4434506ac595ce559b1aa35e24e3363ecaec97929af5de89b5a71b177f524",
+    "old_bytes": 10505,
+    "exact_delta": "Line30 only: import platform.Foundation.NSObject -> import platform.darwin.NSObject. Exactly1 insertion/1 deletion; all other template bytes unchanged.",
+    "reason": "Actual Kotlin/Native compiler rejected Foundation.NSObject and the unresolved superclass atline195. The NSObject Objective-C root type uses the darwin platform namespace. This changes name resolution only; class ProtectionApplicationImageMarker, exported method and its body are unchanged.",
+    "boundary": "Only the .kt.in added to the owned copied Debug app changes. No canonical production source, actual filesystem/Keychain implementation, native sampler, callback, storage options, strict comparison, receipt validator, ownership or cleanup code changes.",
+    "unbound_control_rows": 111,
+    "new_unbound_control_sha256": "3e7299c9df87736391162dd9300da75e0bbf57b39a9a8ea818a92c731a5e6cc8",
+    "control_delta": "All other110 working controls equal the approved boolean-controls baseline. This is not a fresh hosted source-binding digest.",
+    "previous_review_limit": "The earlier application source review and Python control tests did not prove Kotlin/Native compilability and missed this target import error. PA40 provides the actual contrary compiler evidence."
+  },
+  "actual_failed_run": {
+    "run_id": 34530289651,
+    "attempt": 1,
+    "job_id": 103049092371,
+    "conclusion": "failure",
+    "scope": "native-evidence / protection-application-only",
+    "cycle": "ios-readiness-40",
+    "source_sha": "09f613c491af909043b69050c12b43baff81b23a",
+    "bound_control_sha256": "9a612db858d26a04cfe0a83ebc4a047bf980fe6790749b3859a0be3d40dca5d3",
+    "toolchain": "Xcode26.3/17C529; SDK26.2; iOS26.2/23C54 arm64 simulator.",
+    "build_attempted": true,
+    "xcodebuild_exit_code": 65,
+    "failing_task": ":composeApp:compileKotlinIosSimulatorArm64",
+    "raw_log_lines": {
+      "1054": "ProtectionApplicationProbe.kt:30:28: error: Unresolved reference 'NSObject'.",
+      "1055": "ProtectionApplicationProbe.kt:195:42: error: Unresolved reference 'NSObject'.",
+      "1096": "Testing cancelled because the build failed."
+    },
+    "test_result": {
+      "total": 0,
+      "passed": 0,
+      "failed": 0,
+      "skipped": 0,
+      "result": "unknown",
+      "test_nodes": [],
+      "interpretation": "Zero tests executed; zero failures/skips here is not a passed suite."
+    },
+    "runtime_evidence_status": "NOT_RUN",
+    "provenance_status": "NOT_RUN",
+    "notice_package_status": "NOT_RUN",
+    "strict_protection_status": "NOT_RUN",
+    "native_protection_records": [],
+    "container_query_exit": 2,
+    "interpretation": "Simulator creation/boot and a failed copied-app build occurred, but no application test/runtime protection observation or host same-inode collection occurred. Summary/tests extraction exit0 means extraction succeeded, not tests passed."
+  },
+  "copy_and_cleanup": {
+    "copy_rows": 773,
+    "production_storage_bytes": "Copied-source manifest has identical original/copied IosSnapshotFileSystem c2852fafb293a693be830171f4674947289fafb07f8ecdbafa5c0aaae6d1bf8b and IosSnapshotKeychain511aff877a27eb3f42ce4891203a830ba8879781de405e2248c3873f5f381a5e; failed added Kotlin file pin matches old template8cc44345. Postbuild copied-input receipt is unchanged.",
+    "source_and_controls_unchanged": true,
+    "native_cleanup_status": "PASS",
+    "uploaded_custody_cleanup_status": "PASS",
+    "gradle_stops": [
+      {
+        "label": "stop-xcode-immediate",
+        "exit_code": 0,
+        "at": "2026-09-10T21:23:06.809236+00:00"
+      },
+      {
+        "label": "stop-final",
+        "exit_code": 0,
+        "at": "2026-09-10T21:23:18.079797+00:00"
+      }
+    ],
+    "embedded_phase": "build_exit=1; stop_exit=0",
+    "owned_simulator": "8ED1B026-DBF0-4332-B804-8B098482DD91",
+    "shutdown_exit": 0,
+    "delete_exit": 0,
+    "owned_device_absent": true,
+    "owned_processes_remaining": [],
+    "unknown_holders": [],
+    "secondary_fifo_pending": [],
+    "temporary_directory_removed": true,
+    "cleanup_errors": [],
+    "uploaded_cleanup_removed": [
+      "remediation-runs/2026-09-08-continuation/evidence/ios-readiness-40",
+      "remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json",
+      "remediation-runs/2026-09-08-continuation/build-lane.lock"
+    ],
+    "distinction": "Both cleanup levels genuinely PASS despite execution FAIL. Task copy/build/DerivedData and exact simulator were removed; uploaded evidence preserved before hosted evidence/binding/lock cleanup. Global caches were not deleted. PD03 cleanupFAIL remains separately preserved."
+  },
+  "evidence": {
+    "directory": "remediation-runs/2026-09-08-continuation/actions/34530289651",
+    "artifact_verification": "Both artifact ZIP digests match retained API/collector metadata; all36 native-evidence and1 cleanup member bytes match extracted files. All30 native directory manifest pins match. No historical evidence edited.",
+    "native_artifact_id": 10173863549,
+    "cleanup_artifact_id": 10173866359,
+    "artifacts": [
+      {
+        "file": "native-evidence.zip",
+        "bytes": 370223,
+        "sha256": "e3711cbd51d3cab37c632d210859681d52306655472ab66549a38e475028aa16"
+      },
+      {
+        "file": "cleanup.zip",
+        "bytes": 1276,
+        "sha256": "9fbf985cc8c02c90e16359b8355e477843118799fe201349b7668e54fe27713c"
+      }
+    ],
+    "native_directory": "native-evidence/ios-readiness-40",
+    "native_files": [
+      {
+        "file": "xcodebuild.log.gz",
+        "bytes": 13726,
+        "sha256": "72d301f0f8dc85732d5e0d4dc7b6f25ea36716a9870667486fc4e10ae5aa00d9"
+      },
+      {
+        "file": "receipt.json",
+        "bytes": 367233,
+        "sha256": "bbe785cc1fb91c5c0936196163e0eb311183abeee6caebb453ae40be45f706af"
+      },
+      {
+        "file": "xcresult-summary.json",
+        "bytes": 418,
+        "sha256": "fbad2bbf8acc328a6a6b6f8ed0f3be95fe1ea663181f422044c8eda402d03c5a"
+      },
+      {
+        "file": "xcresult-tests.json",
+        "bytes": 397,
+        "sha256": "ac830b3f74005c1efaeebbe86a35933beb311d03441b1b6228f80ce3fe1dbcdc"
+      },
+      {
+        "file": "protection-retention.json",
+        "bytes": 211,
+        "sha256": "b4618d29198a696c89fda02022c64cbcdb23e3aacc05f252d4a8798a1915ba32"
+      },
+      {
+        "file": "copied-source-manifest.json",
+        "bytes": 221142,
+        "sha256": "6325973b7d295f66f54d2bac29c2e2bf05b855186a91c2e39c7ae2b53390bd66"
+      },
+      {
+        "file": "copied-inputs-after-build.json",
+        "bytes": 250301,
+        "sha256": "eba304910bf6f95e320fe02d46d4860a5f7218fffa38e33d66fdbfc241c187b2"
+      }
+    ],
+    "uncompressed_xcode_log": {
+      "bytes": 96486,
+      "sha256": "356fc81284d565c82005a89de939ec2ee0bf606f038c7e313282b68e7bd5f880"
+    },
+    "cleanup_file": {
+      "file": "cleanup/parlor-native-34530289651-1-cleanup.json",
+      "bytes": 2484,
+      "sha256": "f1d7678a826663452105f912c1e03bb5f24c15db7b912610da152036011ef7be"
+    }
+  },
+  "next_admission": "Eligible for coordinator commit of reviewed correction, regenerated/committed mechanical inventory, fresh APP-only hosted preflight and independent source/control binding admission, then one focused actual application run. Old09f/9a612 preflight cannot be reused after this source change. No expensive Linux or duplicate control test was requested for the import-only fix; a target compiler has not yet verified the correction.",
+  "kept_limits": "A37 strict protection0 PASS/26 FAIL and all prior PD failures remain unchanged. No runtime, normal Debug provenance, combined qualification, physical-device, Store-operation or owner/legal PASS follows.",
+  "reviewer_operations": "Read-only Git and standard-library gzip/JSON/hash/text/ZIP inspection plus this authorized additive report. Tests/builds/project imports/native execution/network/dispatch/cleanup/staging/commits by reviewer:0."
+}

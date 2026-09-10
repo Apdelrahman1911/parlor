@@ -1,0 +1,189 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_D04_SOURCE_SCOPE_AND_DISPATCH_PREPARATION_NOT_EXACT_REQUEST_ADMISSION",
+  "reviewer": "/root/ci_review",
+  "dispatcher": "/root",
+  "status": "SOURCE_SCOPE_ACCEPTED_AT_09F_NEW_FREEZE_AND_EXACT_REQUEST_REQUIRED",
+  "reviewed_source": {
+    "head": "09f613c491af909043b69050c12b43baff81b23a",
+    "tree": "ef5f83fadab880101df88d3e986765ba57582b40",
+    "branch": "fix/local-readiness-2026-09-07",
+    "prior_admission_base": "b9883232c5208c9c3a1203347124cd36fb17dd24",
+    "inventory": {
+      "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "bytes": 18643329,
+      "sha256": "18c475b647694b1b13f1ed07a82adc1a4d39a7e76bdfbb1cceaaeff10348c2d9"
+    }
+  },
+  "request": null,
+  "run": null,
+  "dispatch_approval": false,
+  "known_pending_source_change": "Coordinator reported PA40 failed at2026-09-10T21:24:48Z and an independently reviewed fixture NSObject-import correction/new freeze is being prepared. This report retains09f source scope only; do not dispatch09f or silently relabel this as approval of the next SHA. PA40 outcome/cause was not independently audited by this task.",
+  "narrow_diff": {
+    "counts": {
+      "modified": 5,
+      "added": 239,
+      "deleted": 0
+    },
+    "modified": "Only mechanical inventory plus four protection-diagnostic-01 source/test files. All239 additions are retained local-test evidence, Actions evidence or review reports; no prior evidence was modified/deleted.",
+    "corrections": "Reopened exact diff: runner permits60s instead of20s only for the exact tracked-status Git argv, with regression proving six calls/no retries; six Objective-C conditional producer sites emit explicit JSON booleans. Existing strict consumers/equality guards unchanged.",
+    "independent_reviews": "Current frozen four source/test hashes exactly match the two referenced independent correction reviews. Their scoped27 and40 Linux control results are reused as reviewed evidence, not rerun or native execution.",
+    "unchanged": "Workflow, full-job topology/budgets, collector03/tests, split hygiene, Linux v2 reader, shipping sources, root/module build definitions and dependency pins are byte-unchanged from b988. No full-path correction/refactor is introduced by this delta."
+  },
+  "pinned_full_controls": [
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "bytes": 60142,
+      "sha256": "0e5db3ed963b0a047f0730cf867a08109798036a3c041e16913fe7445f6d2a63"
+    },
+    {
+      "path": "scripts/ci/verification_hygiene.py",
+      "bytes": 31100,
+      "sha256": "db1ceebf56ab3c10f9bb52dba12b8b7e77b9aedd97c6113b53c59a7267022fbc"
+    },
+    {
+      "path": "scripts/ci/apple_verification_hygiene.py",
+      "bytes": 15375,
+      "sha256": "08df376a2b622d09cf6097cac93234576d9f70b53b5486dcc01476ae69d2cff8"
+    },
+    {
+      "path": "scripts/ci/linux_exe_reader.py",
+      "bytes": 5552,
+      "sha256": "0600e84e29647158bf39b64fad73d5548d63f2e661dd42bbcb2a55d63a4eda6c"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-03.py",
+      "bytes": 18172,
+      "sha256": "53d6a05f4a2c591f25e3bda2104b0c15e39cd472d6519d24e6fd1aff5234f7a8"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/test_full_d_compact_collector_03.py",
+      "bytes": 4344,
+      "sha256": "780eac69c46ec16fe6f08c5b3a786c102c70402afa28e39dd875166883863618"
+    }
+  ],
+  "reused_reviews": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/apple-split-integration-independent-01.json",
+      "bytes": 5253,
+      "sha256": "c4c23aa772a714d1c57fa80ec4697f83899dfb47662bb24a16887e941ab280d9"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/apple-protection-route-independent-01.json",
+      "bytes": 10598,
+      "sha256": "585068050e6c6d7a156ce8fe319f78b8cdcb9cf119542992b3339b9e93af2ca5"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-independent-03.json",
+      "bytes": 15247,
+      "sha256": "7d51d7feed02bcd9ca532fb5fcd7abc69ececaad164540ba4054b8bb8605fd38"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/protection-probe-failure-timeout-independent-01.json",
+      "bytes": 12279,
+      "sha256": "5803f1eeb9227f57f7cd2c2acade47a32812627fff22525df2b8ccc5222157af"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/protection-native-boolean-independent-01.json",
+      "bytes": 11123,
+      "sha256": "407b33d37c8afab2baa8f5282f10c7844d22fd5b8a09c1ea67e92f5bfb052375"
+    }
+  ],
+  "dispatch_template": {
+    "repository": "Apdelrahman1911/parlor",
+    "workflow": ".github/workflows/production-verification.yml",
+    "branch": "fix/local-readiness-2026-09-07",
+    "inputs": {
+      "verification_scope": "full",
+      "native_selection": "paired"
+    },
+    "command": [
+      "gh",
+      "workflow",
+      "run",
+      "production-verification.yml",
+      "--repo",
+      "Apdelrahman1911/parlor",
+      "--ref",
+      "fix/local-readiness-2026-09-07",
+      "-f",
+      "verification_scope=full",
+      "-f",
+      "native_selection=paired"
+    ],
+    "maximum_dispatches": 1,
+    "request_metadata_required": "Record the NEXT independently reviewed frozen source SHA/tree, workflow/collector hashes, explicit inputs and command, plus exact-request review. No preflight IDs or probe/L08/normal approval hashes belong to full dispatch.",
+    "frozen_input_limit": "Full mode does NOT enforce frozen_source_sha. Do not pass an unused SHA input as if it pins execution; immediate local/remote/ref equality plus actual API/checkout/source evidence must bind the run. The branch-ref command is conditional on those checks."
+  },
+  "immediate_conditions": [
+    "Finish and independently review the announced import correction and its focused tests; commit reviewed source/control changes, regenerate/commit inventory, obtain a narrow09f-to-final source extension and exact-request review.",
+    "Root verifies intended active workflow, branch/local/remote/request SHA equality, clean tracked checkout and current control pins immediately before one dispatch; preserve unrelated/untracked evidence and locks.",
+    "PA40 and every other same-ref run must be completed, with evidence/finalizers inspected before dispatch. Same-ref cancel-in-progress remains true; no overlapping focused/full runs or blind retries.",
+    "Use a new attempt1 run and retain request/dispatch/API association. No Store workflows, credentials, signing/publication, physical devices, merges or force-pushes."
+  ],
+  "required_jobs": {
+    "desktop-android": "Common, desktop, and Android release",
+    "desktop-linux-arm64": "Desktop strict verification (Linux arm64)",
+    "desktop-macos-x64": "Desktop and Kotlin Native strict verification (macOS x64)",
+    "desktop-windows-x64": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+    "ios": "iOS simulator runtime and Swift host",
+    "ios-release": "iOS release frameworks and Swift wrapper"
+  },
+  "required_skipped_jobs": {
+    "ios-protection-probe": "iOS strict protection diagnostic"
+  },
+  "job_count": 7,
+  "mandatory_full_count": 6,
+  "budgets_minutes": {
+    "desktop-android": 90,
+    "desktop-linux-arm64": 45,
+    "desktop-macos-x64": 45,
+    "desktop-windows-x64": 60,
+    "ios": 120,
+    "ios-release": 120
+  },
+  "budget_conclusion": "Reuse prior source/timing check: D03 actually20m32s Linux,4m58s arm64,12m34s macOS,8m37s Windows,73m36s formerly combined Apple. Current split retains sufficient justified ceilings; no increase indicated and no guaranteed completion/cleanup claim.",
+  "required_execution": {
+    "desktop-android": "productionCheck productionStaticAnalysis productionReleaseAutomationCheck allTests; release managed-device smoke; unsigned AAB/notices/manifest inspection.",
+    "desktop-linux-arm64": "productionDesktopCheck.",
+    "desktop-macos-x64": "productionDesktopCheck and composeApp:downloadKotlinNativeDistribution.",
+    "desktop-windows-x64": "productionDesktopCheck, composeApp:downloadKotlinNativeDistribution and composeApp:processDebugResources.",
+    "ios": "Complete productionIosSimulatorRuntimeTests, then all five current XCTest methods using one owned simulator. Not L08/OS39/B libproc execution.",
+    "ios-release": "Complete productionAppleCheck/static analysis and all three serialized Release links; unsigned Swift wrapper, notices and complete package inspection. Linkage is not Release runtime.",
+    "skips": "Focused native/process/application/protection paths are skipped. Expected physical-LAN skips stay explicit; count only actual current leaves/descriptors, never cached or frozen-tracked archived XML."
+  },
+  "expected_artifacts": [
+    "desktop-android-verification",
+    "desktop-verification-desktop-linux-arm64",
+    "desktop-verification-desktop-macos-x64",
+    "desktop-verification-desktop-windows-x64",
+    "ios-runtime-verification",
+    "ios-release-verification",
+    "verification-cleanup-desktop-android",
+    "verification-cleanup-desktop-linux-arm64",
+    "verification-cleanup-desktop-macos-x64",
+    "verification-cleanup-desktop-windows-x64",
+    "verification-cleanup-ios",
+    "verification-cleanup-ios-release"
+  ],
+  "artifact_count": 12,
+  "first_failure_monitoring": [
+    "Early source/checkout/host/JDK/Xcode26.3/17C529 failures: retain exact failing step/log and allow owned always/finalizer paths to finish; do not launch another matrix or cancel independent useful jobs reflexively.",
+    "Linux post-emulator cleanup must use sudo-proc-exe-v2 with the original caller/SDK binding; complete sampling, zero errors/matches and successful root accounting/upload/stop are required. D03 partial118/154 PermissionError scan was not absence. Unchanged v2 had actual LP04/ADC01 acceptance, but D03 remains FAIL with21 historical retained roots and unresolved exact cause.",
+    "Apple per-job native receipts must remain distinct: ios=aggregate+ui, ios-release=aggregate+wrapper. Observe actual link/runtime duration and cleanup time; successful compilation or one lane cannot supply another missing receipt/outcome.",
+    "A successful main upload does not establish cleanup. Require all six cleanup receipts and own-prefix current source/run/attempt bindings; missing uploads/failed scans/unknown ownership must retain outputs and remain failures.",
+    "Collector03 requires the completed exact seven-job API set with only the focused probe skipped, attempt1,12 expected artifact identities and an absent nonredirected destination. Existing64MiB/artifact,512MiB total,256MiB expanded/archive bounds stay intact; preserve partial failure receipts instead of bypassing caps.",
+    "COLLECTED_NOT_RUNTIME_REVIEW is custody only. Independently reconcile every full job conclusion, actual task/cache/skip/XML/XCTest/package results and cleanup. Failed jobs remain collectible, not passed."
+  ],
+  "collector_command_template": [
+    "/usr/bin/python3",
+    "-B",
+    "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-03.py",
+    "<NEW_COMPLETED_RUN_ID>",
+    "<NEXT_REVIEWED_FROZEN_SHA>"
+  ],
+  "findings": [],
+  "readiness_limit": "NOT_READY. Source preparation is not dispatch or runtime success; no new same-SHA combined PASS. Strict A37 failures, historical failed receipts, physical-device/Store-operation and separate owner/legal requirements remain unchanged by this report.",
+  "reviewer_activity": "Read-only Git/hash/JSON/source inspection and previous bounded review reuse. No project imports, validators, tests, builds, probes, network, dispatch, process/cleanup operations or tracked edits. One coordinator-authorized additive source-admission report.",
+  "completed_at": "2026-09-10T21:30:57.815080+00:00"
+}
