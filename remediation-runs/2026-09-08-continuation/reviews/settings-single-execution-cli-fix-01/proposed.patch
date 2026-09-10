@@ -1,0 +1,70 @@
+diff --git a/scripts/verification/ios-settings-sheet/settings_sheet_probe.py b/scripts/verification/ios-settings-sheet/settings_sheet_probe.py
+--- a/scripts/verification/ios-settings-sheet/settings_sheet_probe.py
++++ b/scripts/verification/ios-settings-sheet/settings_sheet_probe.py
+@@ -157,8 +157,10 @@
+         arguments = normal.xcode_arguments(self.temporary / 'copy' / PROJECT,
+             self.environment['SDK_NAME'], self.uuid, self.temporary, self.signing)
+         arguments[arguments.index('-only-testing:' + normal.SELECTOR)] = '-only-testing:iosAppUITests/' + METHOD.removesuffix('()')
+-        for key, value in (('-test-iterations', '1'), ('-test-repetition-relaunch-enabled', 'NO'),
+-                           ('-default-test-execution-time-allowance', '180'), ('-maximum-test-execution-time-allowance', '240')):
++        for key in ('-test-iterations', '-test-repetition-relaunch-enabled'):
++            index = arguments.index(key)
++            del arguments[index:index + 2]  # Single default execution, not XCTest repetition mode.
++        for key, value in (('-default-test-execution-time-allowance', '180'), ('-maximum-test-execution-time-allowance', '240')):
+             arguments[arguments.index(key) + 1] = value
+         primary = None
+         try:
+diff --git a/scripts/verification/ios-settings-sheet/test_settings_sheet_probe.py b/scripts/verification/ios-settings-sheet/test_settings_sheet_probe.py
+--- a/scripts/verification/ios-settings-sheet/test_settings_sheet_probe.py
++++ b/scripts/verification/ios-settings-sheet/test_settings_sheet_probe.py
+@@ -121,6 +121,14 @@
+         lane.lifecycle = SimpleNamespace(mark_build_attempted=Mock())
+         lane.command = Mock(side_effect=TimeoutError('synthetic owned build timeout'))
+         with self.assertRaises(TimeoutError): lane.run_xctest()
++        arguments = lane.command.call_args.args[0]
++        for option in ('-test-iterations', '-test-repetition-relaunch-enabled'):
++            self.assertNotIn(option, arguments)
++        self.assertEqual([arg for arg in arguments if arg.startswith('-only-testing:')],
++            ['-only-testing:iosAppUITests/' + probe.METHOD.removesuffix('()')])
++        for option, seconds in (('-default-test-execution-time-allowance', '180'), ('-maximum-test-execution-time-allowance', '240')):
++            self.assertEqual(arguments[arguments.index(option) + 1], seconds)
++        self.assertEqual(lane.command.call_args.kwargs, dict(timeout=600, limit=8 * 1024 * 1024))
+         self.assertTrue(lane.gradle_attempted and lane.receipt['build_attempted'])
+         lane.lifecycle.mark_build_attempted.assert_called_once_with()
+         lane.stop_gradle.assert_called_once_with('stop-xcode-immediate')
+diff --git a/scripts/ci/native_continuation.py b/scripts/ci/native_continuation.py
+--- a/scripts/ci/native_continuation.py
++++ b/scripts/ci/native_continuation.py
+@@ -43,7 +43,7 @@
+ SHEET_RUNNERS = {"settings_sheet": "scripts/verification/ios-settings-sheet/settings_sheet_probe.py"}
+ SHEET_SELECTION = "settings-sheet-only"
+ SHEET_CAPTURED = "SETTINGS_SHEET_CAPTURED_NOT_APP_QUALIFICATION"
+-CYCLES = {"l08": "ios-readiness-33", "normal": "ios-readiness-34", "settings_sheet": "ios-readiness-35"}
++CYCLES = {"l08": "ios-readiness-33", "normal": "ios-readiness-34", "settings_sheet": "ios-readiness-36"}
+ NATIVE_SELECTIONS = {"paired": ("l08", "normal"), "l08-only": ("l08",), SHEET_SELECTION: ("settings_sheet",)}
+ LIFECYCLE_MODE = "direct-owned-v1"
+ NATIVE_JOB_SECONDS = 240 * 60
+diff --git a/scripts/release/tests/test_native_process_probe.py b/scripts/release/tests/test_native_process_probe.py
+--- a/scripts/release/tests/test_native_process_probe.py
++++ b/scripts/release/tests/test_native_process_probe.py
+@@ -123,7 +123,7 @@
+     def test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels(self):
+         self.assertEqual(native.effective_scope("workflow_dispatch", probe.SCOPE), probe.SCOPE)
+         self.assertEqual(native.effective_scope("pull_request", probe.SCOPE), "full")
+-        self.assertEqual(native.CYCLES, {"l08": "ios-readiness-33", "normal": "ios-readiness-34", "settings_sheet": "ios-readiness-35"})
++        self.assertEqual(native.CYCLES, {"l08": "ios-readiness-33", "normal": "ios-readiness-34", "settings_sheet": "ios-readiness-36"})
+         with self.assertRaisesRegex(RuntimeError, "not-an-app-native-continuation"):
+             native.Continuation(dict(GITHUB_EVENT_NAME="workflow_dispatch", PARLOR_DISPATCH_SCOPE=probe.SCOPE))
+ 
+diff --git a/scripts/ci/NATIVE_CONTINUATION.md b/scripts/ci/NATIVE_CONTINUATION.md
+--- a/scripts/ci/NATIVE_CONTINUATION.md
++++ b/scripts/ci/NATIVE_CONTINUATION.md
+@@ -338,7 +338,7 @@
+ control domains are different; a hash or package from the other mode is rejected.
+ Both dispatches must use the same freshly reviewed frozen source.
+ 
+-Cycle `ios-readiness-35` builds only a disposable, detached UI-test target using
++Cycle `ios-readiness-36` builds only a disposable, detached UI-test target using
+ the existing Debug test identity. No Kotlin/Parlor target, normal B launch,
+ external image probe or Store operation runs. After exact public Settings flow
+ on the fresh owned simulator, one XCTest records exactly three action labels

@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "kind": "BOUNDED_HISTORICAL_B30_APPLICABILITY_AND_SETTINGS_PREFLIGHT_ROUTE_REVIEW",
+  "reviewer": "/root/native_ci",
+  "status": "APPROVED_SCOPED_HISTORICAL_B30_APPLICABILITY_TO_730A",
+  "findings": [],
+  "source": {
+    "historical_run_id": 34362984912,
+    "historical_run_attempt": 1,
+    "historical_commit": "360fc797a85e1e494334fd8cc11b4e739981cea8",
+    "previous_reviewed_freeze": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+    "current_frozen_commit": "730a91e4dade4dbc2168b5367e20c3d0f42237e1",
+    "current_frozen_tree": "1f71dc64bc7680f461efc3e841dc051579a0d993",
+    "branch": "fix/local-readiness-2026-09-07",
+    "method": "Direct read-only Git object/path/mode comparison at all three commits, not inferred solely from earlier reports. Current canonical adapter, workflow and Settings runner equal the730a blobs. Remote push/admission is outside this review."
+  },
+  "unchanged_normal_scope": {
+    "closed_control_files": 98,
+    "aggregate_sha256": "7d598e39bd718e0f8347d0eee839b5aad2bece2bddb82e08ce7f6c1ea592c413",
+    "selection": "Unchanged normal control_manifest: direct .py/.in/.md and inherited-controls.json files in normal-ios-launch-proposal-01 and scripts/verification/ios-readiness, plus the pinned darwin_owned_processes.py helper.",
+    "verification": "All98 path sets, Git blobs and modes match at360fc,4cc and730a. Recomputed unbound aggregate matches the prior pin. Removing only the historical source-binding row from actual B30 reviewed-preflight/normal-controls.json yields these exact98 rows.",
+    "normal_runner_sha256": "766087ddf72b50f51b1c4072c64afb1a7dd231f047d26e534817cddf9be295bf",
+    "shipping_subtrees_equal_at_all_three_commits": {
+      "composeApp": "27e88880f97d3148184c80c1fa40bae958530a22",
+      "shared": "03addf8feb5d9722b69539aa21857e522c8c00f2",
+      "game-modes": "d56b07334d549c3a6d4d3819f2bff645c149aa50",
+      "build-logic": "3fa3848246aa0204b6daf067617b0aed69c7510c",
+      "gradle": "56fe4ae6668625c7cd9f357c52bb7ba9c684a8c9",
+      "config": "3081d67d7c14ca8ffc7b30824dc5b1a81c0f0fd4",
+      "iosApp": "da6d918bb46c4c29640b8ce5c4484ca57fc5101e"
+    },
+    "root_build_files_equal_in_blob_and_mode": ["build.gradle.kts", "settings.gradle.kts", "gradle.properties", "gradlew", "gradlew.bat"],
+    "interpretation": "Shipping source/resources, dependency pins/verification metadata, identities, normal fixture, libproc controls, build/launch recipe, toolchain/lifecycle and provenance validation remain unchanged. This supports bounded historical applicability, not identical future artifact bytes."
+  },
+  "changed_nonshipping_scope": {
+    "historical_copied_originals": 754,
+    "current_copy_eligible_originals": 758,
+    "removed_copy_inputs": [],
+    "six_existing_copied_paths_changed_from_b30_and_from_4cc": [
+      "scripts/ci/NATIVE_CONTINUATION.md",
+      "scripts/ci/native_continuation.py",
+      "scripts/release/tests/test_native_continuation.py",
+      "scripts/release/tests/test_native_process_probe.py",
+      "scripts/release/tests/test_workflow_contract.py",
+      "scripts/release/workflow_contract.py"
+    ],
+    "four_new_copy_eligible_files": [
+      "scripts/verification/ios-settings-sheet/SettingsSheet.xcscheme.in",
+      "scripts/verification/ios-settings-sheet/SettingsSheetUITest.swift.in",
+      "scripts/verification/ios-settings-sheet/settings_sheet_probe.py",
+      "scripts/verification/ios-settings-sheet/test_settings_sheet_probe.py"
+    ],
+    "scope": "These scripts/templates/tests are not shipping source and are not imported or executed by the unchanged normal B build/launch recipe. The whole copied input inventory is not identical. Workflow/inventory/evidence changes likewise prevent whole-source equivalence.",
+    "adapter_review": "Reopened exact4cc-to730a adapter/workflow diff. Settings adds an explicit nondefault runner and105-row control domain; ordinary paired/l08-only retain normal runner, libproc flag, ad-hoc mode, qualified toolchain, direct-owned lifecycle,6000s child wait and240min job budget. Windows-only prevents the iOS job from running; it does not alter an admitted normal run.",
+    "guards_ast_identical_to_4cc": ["context", "qualified_platform", "validate_producer", "producer_evidence", "cleanup_is_safe", "inner_execution_completed", "direct_lifecycle_is_safe", "lifecycle_journal_matches", "Continuation.cleanup"],
+    "private_diagnostic_module": "Only the Settings runner imports its private pinned normal module and strengthens that private manifest. The ordinary normal module/entry point is unchanged. No ordinary B runtime rerun is justified by this isolated addition."
+  },
+  "historical_runtime_retained_not_reexecuted": {
+    "packet": "remediation-runs/2026-09-08-continuation/actions/34362984912/native-evidence/ios-readiness-30",
+    "receipt_sha256": "29cb6106fa32866da27e5b85ee676b87d4103d354125a22675c98b0bc57da982",
+    "input_manifest_sha256": "b33b30a344b331928ad33f1fd76544c2d34669b478b4d3015a3bab75c8bc4030",
+    "normal_launch_observations_sha256": "9cc42d74fbb977a026d2ff9a026f24437e339e8c68a1e0592e7bd814b121088f",
+    "separate_external_provenance_sha256": "0971ee6d7c9da5fb37bbd18229e5baaf7a3ae660f5fcecb0b5f2cf7fbb7330d0",
+    "reopened_actual_fields": "B30 scoped runtime/provenance/notices/cleanup PASS; one XCTest method executed eight identified repetitions with0 failures/skips and48 periodic observations. Separate ninth public launch supplies3 image/libproc region observations. Source/control/copy equality and owned simulator/temp/worker cleanup remain recorded PASS.",
+    "whole_historical_run": "A29/B30 Actions run34362984912 remains failure; only B30's bounded evidence is accepted.",
+    "limit": "No new730a runtime, newly produced binary, continuous-liveness proof, mapped-page hashing, all-mapping enumeration, physical-device or Store evidence was created. Earlier failed evidence remains unchanged."
+  },
+  "fresh_settings_preflight_route": {
+    "status": "PREPARED_FOR_FUTURE_PACKET_REVIEW_NOT_DISPATCH_ADMISSION",
+    "frozen_source_required": "730a91e4dade4dbc2168b5367e20c3d0f42237e1",
+    "coordinator_expected_source_manifest_sha256": "4e9a00fec5ed979179f4f66ebb47656395d5ebf04c86db765eaf40798e4e73ea",
+    "first_dispatch": {"verification_scope": "native-preflight", "native_selection": "settings-sheet-only"},
+    "closed_package_members": ["preflight.json", "ios-readiness-source-ci.json", "settings_sheet-controls.json"],
+    "unbound_controls_rederived_from_frozen_blobs": {
+      "rows": 104,
+      "sha256": "7be66c50ba05c3abc92fea1b15edc1feecbdf034563053d75eed425734924a86",
+      "composition": "Normal98 plus the four Settings diagnostic files, workflow and native adapter. This is not the future105-row bound hash and cannot authorize execution."
+    },
+    "required_future_admission_checks": "Completed same-source successful preflight producer/API/artifact ZIP identity, exact3-member package, actual fresh source binding and all105 control rows including its hash, qualified toolchain/path equality, preflight cleanup/upload custody and an independently approved control aggregate. Neither old c797/4cc packages nor the historical B30 bound hash can substitute.",
+    "second_dispatch_only_after_admission": {"verification_scope": "native-evidence", "native_selection": "settings-sheet-only", "control_input": "approved_probe_control_sha256"},
+    "execution_limit": "Only ios-readiness-35; l08 and normal remain NOT_RUN_THIS_RUN. One Swift-only method/one bounded3-label capture; no primary-choice tap, Parlor/Compose outputs, normal runtime/provenance/notices or protection claim. At most SETTINGS_SHEET_CAPTURED_NOT_APP_QUALIFICATION after exact XCTest and ownership/cleanup reconciliation.",
+    "budget": "40min job;900s child wait+600s finalizer grace+600s custody reserve,600s Xcode command. The remaining300s preparation allowance is enforced by the shared kernel-clock admission guard."
+  },
+  "review_references": {
+    "native-b30-a33-source-applicability-02.json": "1327d2034df9a440db1654e6c8f8a9ed60029b9dff0b359e50f8705d05ea5eae",
+    "native-settings-sheet-diagnostic-independent-01.json": "52cb9183a049e98ba8681ffd2077b8ee9c95606178092432516efefaf24d4295"
+  },
+  "readiness": "NOT_READY. A33 strict protection/OS recovery, actual future Settings diagnostic, Windows/fullD reconciliation and separate device/Store/owner/legal requirements are not completed by B applicability.",
+  "activity": "Read-only Git/stdlib JSON/hash/AST inspection, no project imports or validators, no tests/builds/network/dispatch/Git writes. One reviewer-only top-level-tree lookup initially used recursive ls-tree and raised KeyError; corrected to nonrecursive ls-tree. A top-level-only AST lookup was likewise corrected to Continuation.cleanup. Neither affected source or historical evidence. Only this additive report was written; no build cleanup required."
+}

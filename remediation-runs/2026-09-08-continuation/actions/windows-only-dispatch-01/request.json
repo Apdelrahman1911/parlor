@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "kind": "ONE_FROZEN_WINDOWS_ONLY_FOLLOWUP_REQUEST",
+  "coordinator": "/root",
+  "created_at": "2026-09-10T03:00:24.649726+00:00",
+  "status": "PREPARED_PENDING_LOCAL_REVIEW_PUSH_AND_IMMEDIATE_REMOTE_CHECK",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "frozen_source_sha": "730a91e4dade4dbc2168b5367e20c3d0f42237e1",
+  "tree": "1f71dc64bc7680f461efc3e841dc051579a0d993",
+  "inputs": {
+    "verification_scope": "windows-only",
+    "native_selection": "paired",
+    "frozen_source_sha": "730a91e4dade4dbc2168b5367e20c3d0f42237e1"
+  },
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=windows-only",
+    "-f",
+    "native_selection=paired",
+    "-f",
+    "frozen_source_sha=730a91e4dade4dbc2168b5367e20c3d0f42237e1"
+  ],
+  "maximum_dispatches": 1,
+  "source_freeze": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/windows-settings-source-freeze-01.json",
+    "bytes": 2383,
+    "sha256": "1c2e4b7390cf1b74bd2da15209dff062bf52cc52509943b58fb0168d311ed53d"
+  },
+  "collector": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/windows-targeted-collector-01/collect_windows.py",
+    "bytes": 18707,
+    "sha256": "87afd5bc709a5bf83a672e6acc43983783cb38b878beac00722233c6b93777d1"
+  },
+  "expected_selected_job": "desktop-windows-x64",
+  "expected_skipped_jobs": [
+    "desktop-android",
+    "desktop-linux-arm64",
+    "desktop-macos-x64",
+    "ios"
+  ],
+  "required_before_execution": [
+    "Independent local/source/request review",
+    "Normal push and immediate exact remote/local730a equality; clean tracked source",
+    "Active intended workflow and no active same-ref run"
+  ],
+  "scope": "Windows-only graph/runtime/checkout/cleanup correction verification; not a full-D five-job result. Original full-D4cc Windows failure remains immutable; no Store, signing, publication or physical devices."
+}

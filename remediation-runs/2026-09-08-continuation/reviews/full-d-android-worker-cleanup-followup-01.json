@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "kind": "ADDITIVE_FULL_D_ANDROID_EMULATOR_CLEANUP_EVIDENCE_INVESTIGATION",
+  "reviewer": "/root/ci_workflow",
+  "reviewed_at": "2026-09-10T03:28:32.833193+00:00",
+  "status": "EMULATOR_EXIT_NOT_ATTESTED_NO_LEAK_ESTABLISHED_ADB_RUNNER_TERMINATION_LINE_ADDED",
+  "source_commit": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+  "run_id": 34420745957,
+  "run_attempt": 1,
+  "job_id": 102695388477,
+  "prior_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-android-actual-independent-01.json",
+    "sha256": "c439bd57a3ca67c36ff4130187e4b5259352d6b93aa7f828581fa31b9b67901d",
+    "disposition": "Preserved unchanged; scoped Android runtime/build-output cleanup acceptance and complete-emulator-cleanup limitation remain valid."
+  },
+  "evidence_directory": "remediation-runs/2026-09-08-continuation/actions/34420745957",
+  "exact_evidence": [
+    {
+      "archive": "run-attempt-1-logs.zip",
+      "member": "Common, desktop, and Android release/9_Run release Android managed-device smoke tests.txt",
+      "bytes": 63330,
+      "sha256": "5ef181faef65feb5c0243a6b4c701b5e3692ce66c57f03ab5edbb22c7a0ce08a",
+      "lines": {
+        "686": "2026-09-10T00:42:14.1575457Z Starting 3 tests on pixel2Api35",
+        "688": "2026-09-10T00:42:23.5601743Z Finished 3 tests on pixel2Api35",
+        "697": "2026-09-10T00:42:24.4564152Z BUILD SUCCESSFUL in 4m 8s"
+      }
+    },
+    {
+      "archive": "run-attempt-1-logs.zip",
+      "member": "Common, desktop, and Android release/29_Complete job.txt",
+      "bytes": 133,
+      "sha256": "cffe685f3204483c29504934a87c7de5005d2736340e642f15a0f8269e735b1a",
+      "lines": {
+        "1": "2026-09-10T00:42:49.0447235Z Cleaning up orphan processes",
+        "2": "2026-09-10T00:42:49.0888676Z Terminate orphan process: pid (7230) (adb)"
+      }
+    },
+    {
+      "archive": "desktop-android-verification.zip",
+      "member": "parlor/parlor/composeApp/build/outputs/androidTest-results/managedDevice/release/pixel2Api35/utp.0.log",
+      "bytes": 2029,
+      "sha256": "10f1b6d2ea0e3805e2f3aa6a69e9e687093d086e373e7346165d2a6d169b2e81",
+      "lines": {
+        "32": "INFO: Installing [/home/runner/work/parlor/parlor/composeApp/build/outputs/apk/release/composeApp-release.apk] on device emulator-5554.",
+        "33": "INFO: Installing [/home/runner/work/parlor/parlor/composeApp/build/outputs/apk/androidTest/release/composeApp-release-androidTest.apk] on device emulator-5554.",
+        "34": "INFO: Start logcat streaming.",
+        "36": "INFO: Copying files from device to host: /sdcard/Android/media/com.parlor.app/additional_test_output to /home/runner/work/parlor/parlor/composeApp/build/outputs/managed_device_android_test_additional_output/release/pixel2Api35",
+        "37": "INFO: Stop logcat streaming.",
+        "38": "INFO: Execute com.parlor.app.MainActivityColdStartTest.testColdStartDisplaysContentWhileSettingsIoIsBlocked: PASSED",
+        "39": "INFO: Execute com.parlor.app.ReleaseRuntimeSmokeTest.testReleaseBuildCanAcquireDeclaredMulticastLock: PASSED",
+        "40": "INFO: Execute com.parlor.app.ReleaseRuntimeSmokeTest.testReleaseBuildLaunchesCanonicalActivityWithoutDebuggableFlag: PASSED"
+      }
+    }
+  ],
+  "source": [
+    {
+      "path": "scripts/ci/verification_hygiene.py",
+      "frozen_sha256": "9eab427aeb3d810c033a3827aa44f7201cbb261345a2e6667a8d085df2fbd603",
+      "lines": "95-110;170-221"
+    },
+    {
+      "path": "scripts/android/run_release_managed_device_smoke.sh",
+      "frozen_sha256": "5b6dc8fcdd7b11c9cefd39da3adb8783321b647cd9a8459ff761ef7fa031262d",
+      "lines": "7-27;49-58"
+    },
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "frozen_sha256": "5895ce4e80000b205302a987f8b603ac21380764f36e3711064029c3b1af62bc",
+      "lines": "135-145"
+    },
+    {
+      "path": "composeApp/build.gradle.kts",
+      "frozen_sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+      "lines": "306-315"
+    }
+  ],
+  "findings": [
+    "Actual3-test runtime and successful Gradle completion are evidenced; neither says emulator/qemu exited. UTP line37 stops logcat only. The13 current device-result ZIP members contain instrumentation/XML/logcat/profile/results, not an owned host emulator PID/starttime, teardown receipt, AVD-removal record or post-stop host-process inventory.",
+    "Additional positive evidence omitted from the earlier scoped log list: Complete job lines1-2 report runner orphan cleanup and termination of adb PID7230 at00:42:49.0888676. This is a runner-reported termination action, not explicit adb exit/wait confirmation and not emulator/qemu or AVD evidence.",
+    "Frozen wrapper trap stops Gradle and removes only its exact temporary signing directory. Workflow135-145 invokes that wrapper and an unconditional managed-device Gradle stop. General hygiene has path/source/upload guards but explicitly limits non-Apple worker scope; successful output deletion cannot imply emulator retirement.",
+    "Searched the combined current Android job log, inspected current UTP/testlog/textproto and the13-member current device-result manifest, not nested historical reports. No managed-emulator shutdown/exit record was found in that evidence. Missing evidence is NOT a demonstrated surviving emulator. Current wrapper/hygiene and Android job body remain byte-identical to this frozen execution."
+  ],
+  "smallest_forward_proposal": {
+    "scope": "If another Android/full cycle is already required, a bounded read-only Linux post-stop audit in the existing managed-device stop path; no new lifecycle harness, observer worker or workflow.",
+    "identity": "Bind existing clean source/run/attempt/job/output-ownership claim, verified SDK location and runner UID. Inspect /proc executable identities under that SDK emulator directory; for candidates record PID/startticks/UID/executable and only exact relevant job-ownership fields, never dump environments. Recheck transient/PID identities, bound reads/time, fail closed on unresolved inspection.",
+    "passing_claim": "Zero relevant live SDK-emulator executables observed after successful stop (optionally two short bounded snapshots) supports contemporaneous emulator-worker absence only. It is not a retrospective4cc exit event or proof of deleting AVD files.",
+    "nonpassing_case": "A positively owned candidate or ambiguous candidate produces FAIL/retained evidence, not a leak assertion from name alone. Never signal/delete unrelated resources or start adb merely to query; no killall, adb kill-server, broad AVD or global-cache cleanup.",
+    "cleanup_guard": "Before deleting Android owned output paths, existing final cleanup must require the current source-bound managed-device audit to pass; missing/failed/skipped-unproven audit retains outputs. Existing upload/source/ownership/Gradle guards stay intact.",
+    "admission": "Proposal only, not authored/approved/tested code. Different-agent review, focused existing hygiene/contract tests and actual next already-required Android execution would be needed. Do not rerun a matrix solely to turn old missing evidence into a new PASS."
+  },
+  "recommendation": "Do not add speculative emulator-kill/AVD-removal logic or modify current queued-run source. Retain4cc cleanup limitation; batch only the narrow future absence audit if coordinator deems a further full/Android run independently justified. Otherwise no retrospective safe source change can manufacture the missing ownership/exit evidence.",
+  "activity": "Read-only source/frozen Git and bounded in-memory ZIP/JSON/log inspection; this additive report only. No project imports, tests/builds, tools acting on devices/processes, signals, network or dispatch; no workers or generated build outputs created and no cleanup owed."
+}
