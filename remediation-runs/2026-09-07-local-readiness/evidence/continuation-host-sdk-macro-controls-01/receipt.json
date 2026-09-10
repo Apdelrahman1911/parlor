@@ -1,0 +1,44 @@
+{
+  "kind": "FOCUSED_HOST_SDK_MACRO_PARSING_AND_RETENTION_CONTROLS_NOT_NATIVE_RUNTIME",
+  "started_at": "2026-09-10T23:15:26.106583+00:00",
+  "source_head": "9abd3c4c7d4e04c2c5243639417543d9b1f9aa9f",
+  "working_tree_controls_before": {
+    "remediation-runs/2026-09-08-continuation/protection-application-01/application_probe.py": "5a999d66f31bf0cf9f5fc714d166ddf1fc177bda3abb9c6ba11e8a4e27a18267",
+    "remediation-runs/2026-09-08-continuation/protection-application-01/test_application.py": "7806ab90085ff6998fa613697ed1da392c654bd34640f0362351f5a69083937e"
+  },
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "test_application.HostSdkMacroTests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.266
+    }
+  ],
+  "status": "PASS",
+  "test_summary": [
+    "test_raw_archive_survives_selected_definition_failure (test_application.HostSdkMacroTests.test_raw_archive_survives_selected_definition_failure) ... ok",
+    "",
+    "----------------------------------------------------------------------",
+    "Ran 7 tests in 0.006s",
+    "",
+    "OK"
+  ],
+  "working_tree_controls_after": {
+    "remediation-runs/2026-09-08-continuation/protection-application-01/application_probe.py": "5a999d66f31bf0cf9f5fc714d166ddf1fc177bda3abb9c6ba11e8a4e27a18267",
+    "remediation-runs/2026-09-08-continuation/protection-application-01/test_application.py": "7806ab90085ff6998fa613697ed1da392c654bd34640f0362351f5a69083937e"
+  },
+  "cleanup": {
+    "gradle_stop_exit": 0,
+    "scratch_removed": true,
+    "errors": [],
+    "checked_live_outputs_remaining": []
+  },
+  "finished_at": "2026-09-10T23:15:27.195921+00:00",
+  "resources": "Filesystem      Size  Used Avail Use% Mounted on\noverlay          94G   70G   19G  80% /\n               total        used        free      shared  buff/cache   available\nMem:            62Gi        42Gi       1.4Gi        22Gi        42Gi        20Gi\nSwap:             0B          0B          0B\n"
+}

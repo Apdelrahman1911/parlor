@@ -6,6 +6,7 @@ strict Complete, normal Debug provenance, game/runtime qualification, or Store.
 """
 import difflib
 import fcntl
+import gzip
 import hashlib
 import importlib.util
 import json
@@ -43,6 +44,25 @@ ADDITIONS = {KOTLIN: HERE / 'ProtectionApplicationProbe.kt.in',
 UNCHANGED_STORAGE = ('IosSnapshotFileSystem.kt', 'IosSnapshotKeychain.kt')
 RECORDS = ('parlor-protection-application.json',) + tuple(
     'parlor-protection-application-sample-%02d.json' % n for n in range(1, 7))
+HOST_SDK_MACRO_NAMES = ('F_GETPROTECTIONCLASS', 'F_SETPROTECTIONCLASS', 'ATTR_CMN_RETURNED_ATTRS',
+    'ATTR_CMN_DATA_PROTECT_FLAGS', 'ATTR_BIT_MAP_COUNT', 'MNT_CPROTECT', 'PROTECTION_CLASS_A')
+
+
+def parse_host_sdk_macros(raw):
+    """Only named definitions are text; unrelated SDK bytes need not be UTF-8."""
+    require(type(raw) is bytes and 0 < len(raw) <= 4 * 1024 * 1024, 'host-sdk-macro-output')
+    lines, macros = raw.split(b'\n'), {}
+    for name in HOST_SDK_MACRO_NAMES:
+        prefix = b'#define ' + name.encode('ascii')
+        # Recognize the exact name, not a longer macro sharing its prefix.
+        # An empty/function-like/malformed named definition is not absence.
+        selected = [line[len(prefix):] for line in lines if line.startswith(prefix) and
+                    line[len(prefix):len(prefix) + 1] in (b'', b' ', b'\t', b'(')]
+        require(len(selected) <= 1 and all(value.startswith(b' ') and 0 < len(value[1:]) <= 256 and
+                all(32 <= byte < 127 for byte in value[1:]) for value in selected), 'host-sdk-macro')
+        macros[name] = dict(available=bool(selected),
+            definition=selected[0][1:].decode('ascii') if selected else None)
+    return macros
 
 
 def control_manifest(binding=None):
@@ -328,19 +348,24 @@ class ApplicationLane(normal.Lane):
         output = self.temporary / 'host-sdk-macros.txt'
         self.require(['xcrun', '--sdk', 'macosx', 'clang', '-x', 'objective-c', '-std=gnu11', '-fobjc-arc',
             '-arch', 'arm64', '-I', include, '-dM', '-E', include / 'ProtectionSampler.m'], 'host-sdk-macros', output=output, limit=4 * 1024 * 1024)
-        names = ('F_GETPROTECTIONCLASS', 'F_SETPROTECTIONCLASS', 'ATTR_CMN_RETURNED_ATTRS', 'ATTR_CMN_DATA_PROTECT_FLAGS',
-                 'ATTR_BIT_MAP_COUNT', 'MNT_CPROTECT', 'PROTECTION_CLASS_A')
-        macros = {}
-        for name in names:
-            selected = [line.removeprefix('#define ' + name + ' ') for line in output.read_text().splitlines()
-                        if line.startswith('#define ' + name + ' ')]
-            require(len(selected) <= 1 and all(len(value) <= 256 for value in selected), 'host-sdk-macro')
-            macros[name] = dict(available=bool(selected), definition=selected[0] if selected else None)
+        raw = output.read_bytes()
+        require(0 < len(raw) <= 4 * 1024 * 1024, 'host-sdk-macro-output')
+        raw_sha256 = hashlib.sha256(raw).hexdigest()
+        compressed = gzip.compress(raw, mtime=0)
+        archive = self.destination / 'host-reader-sdk-macros.raw.gz'
+        with archive.open('xb') as stream:
+            stream.write(compressed)
+        # Preserve exact bytes/identity before parsing, including on a selected
+        # definition failure; never discard or replace undecodable SDK bytes.
+        normal.write_json(self.destination / 'host-reader-sdk-macros-identity.json', dict(schema_version=1,
+            raw_sha256=raw_sha256, raw_bytes=len(raw), artifact=archive.name,
+            artifact_sha256=hashlib.sha256(compressed).hexdigest(), artifact_bytes=len(compressed)))
+        macros = parse_host_sdk_macros(raw)
         normal.write_json(self.destination / 'host-reader-sdk-bindings.json', dict(schema_version=1,
             sdk_version=(self.destination / 'host-reader-sdk-version.log').read_text().strip(), headers=headers,
-            macros=macros, preprocessor_sha256=normal.digest(output), source_sha256=normal.digest(source),
+            macros=macros, preprocessor_sha256=raw_sha256, source_sha256=normal.digest(source),
             sampler_sha256=normal.digest(include / 'ProtectionSampler.m')))
-        output.unlink()  # Exact owned raw macro file, compact whitelist retained.
+        output.unlink()  # Exact owned duplicate; lossless compressed bytes retained.
 
     def finalize(self):
         if self.receipt.get('diagnostic_status') in ('RUNNING', 'APP_CAPTURED'):

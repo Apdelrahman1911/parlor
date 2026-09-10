@@ -1,8 +1,15 @@
 """Synthetic control regressions only; none of these tests execute Parlor."""
 import copy
+import gzip
+import hashlib
+import json
+from pathlib import Path
+import tempfile
+from types import SimpleNamespace
 import unittest
 
 import application_receipts as receipts
+from application_probe import ApplicationLane, HOST_SDK_MACRO_NAMES, parse_host_sdk_macros
 
 
 TOKEN = 'application-control-fixture'
@@ -86,6 +93,79 @@ def absent_attrlist():
                 data_protection_mask=0x40000000, requested_common_mask=0xc0000000,
                 returned_common_mask=0x80000000, attribute_set_bytes=20, length=24,
                 protection_returned=False, **{'class': None})
+
+
+class HostSdkMacroTests(unittest.TestCase):
+    def test_non_utf8_unrelated_macro_does_not_poison_ascii_definition(self):
+        raw = b'#define UNRELATED_SDK_MACRO "\xa9"\n#define F_GETPROTECTIONCLASS 63\n'
+        macros = parse_host_sdk_macros(raw)
+        self.assertEqual(macros['F_GETPROTECTIONCLASS'], dict(available=True, definition='63'))
+        self.assertEqual(set(macros), set(HOST_SDK_MACRO_NAMES))
+        self.assertEqual(macros['PROTECTION_CLASS_A'], dict(available=False, definition=None))
+
+    def test_definition_bytes_are_not_normalized_or_evaluated(self):
+        macros = parse_host_sdk_macros(b'#define MNT_CPROTECT  (0x80U) /* SDK */\n')
+        self.assertEqual(macros['MNT_CPROTECT'], dict(available=True, definition=' (0x80U) /* SDK */'))
+
+    def test_non_ascii_or_control_byte_in_selected_definition_fails(self):
+        for value in (b'6\xa93', b'\xff', b'63\r', b'63\x00'):
+            with self.subTest(value=value), self.assertRaises(RuntimeError):
+                parse_host_sdk_macros(b'#define F_GETPROTECTIONCLASS ' + value + b'\n')
+
+    def test_duplicate_named_definition_fails_even_when_identical(self):
+        with self.assertRaises(RuntimeError):
+            parse_host_sdk_macros(b'#define F_GETPROTECTIONCLASS 63\n' * 2)
+
+    def test_empty_function_like_and_oversized_named_definitions_fail(self):
+        for suffix in (b'', b' ', b'(x) x', b'\t63', b' ' + b'1' * 257):
+            with self.subTest(suffix=suffix), self.assertRaises(RuntimeError):
+                parse_host_sdk_macros(b'#define F_GETPROTECTIONCLASS' + suffix + b'\n')
+
+    def test_bounds_and_exact_name_absence_remain_explicit(self):
+        macros = parse_host_sdk_macros(b'#define F_GETPROTECTIONCLASS_OTHER 63\n')
+        self.assertTrue(all(row == dict(available=False, definition=None) for row in macros.values()))
+        for raw in (b'', b'x' * (4 * 1024 * 1024 + 1)):
+            with self.assertRaises(RuntimeError):
+                parse_host_sdk_macros(raw)
+
+    def test_raw_archive_survives_selected_definition_failure(self):
+        raw = b'#define UNRELATED_SDK_MACRO "\xa9"\n#define F_GETPROTECTIONCLASS 6\xff\n'
+        with tempfile.TemporaryDirectory(prefix='parlor-host-sdk-test-') as directory:
+            work = Path(directory).resolve()
+            destination, sdk, include = work / 'evidence', work / 'sdk', work / 'include'
+            destination.mkdir()
+            include.mkdir()
+            (sdk / 'usr/include/sys').mkdir(parents=True)
+            for name in ('fcntl.h', 'attr.h', 'mount.h'):
+                (sdk / 'usr/include/sys' / name).write_bytes(b'// Synthetic SDK header; never compiled.\n')
+            source = work / 'host.m'
+            source.write_bytes(b'// Synthetic host source; never compiled.\n')
+            (include / 'ProtectionSampler.m').write_bytes(b'// Synthetic sampler; never compiled.\n')
+            calls = []
+
+            def fake_command(arguments, label, **options):
+                calls.append(label)
+                if label == 'host-reader-sdk-path.log':
+                    (destination / label).write_text(str(sdk) + '\n')
+                else:
+                    self.assertEqual(label, 'host-sdk-macros')
+                    self.assertEqual(arguments[-1], include / 'ProtectionSampler.m')
+                    self.assertEqual(options['limit'], 4 * 1024 * 1024)
+                    options['output'].write_bytes(raw)
+
+            lane = SimpleNamespace(temporary=work, destination=destination,
+                                   environment={'DEVELOPER_DIR': str(work)}, require=fake_command)
+            with self.assertRaisesRegex(RuntimeError, 'protection-application-host-sdk-macro'):
+                ApplicationLane.preserve_host_sdk(lane, source, include)
+            compressed = (destination / 'host-reader-sdk-macros.raw.gz').read_bytes()
+            identity = json.loads((destination / 'host-reader-sdk-macros-identity.json').read_text())
+            self.assertEqual(gzip.decompress(compressed), raw)
+            self.assertEqual((identity['raw_sha256'], identity['raw_bytes']),
+                             (hashlib.sha256(raw).hexdigest(), len(raw)))
+            self.assertEqual((identity['artifact_sha256'], identity['artifact_bytes']),
+                             (hashlib.sha256(compressed).hexdigest(), len(compressed)))
+            self.assertEqual(calls, ['host-reader-sdk-path.log', 'host-sdk-macros'])
+            self.assertFalse((destination / 'host-reader-sdk-bindings.json').exists())
 
 
 class ApplicationReceiptTests(unittest.TestCase):

@@ -1,0 +1,761 @@
+--- original/iosApp/iosApp.xcodeproj/project.pbxproj
++++ protection-copy/iosApp/iosApp.xcodeproj/project.pbxproj
+@@ -7,6 +7,7 @@
+ 	objects = {
+ 
+ /* Begin PBXBuildFile section */
++		F08A01002C00000100000001 /* ProtectionSampler.m in Sources */ = {isa = PBXBuildFile; fileRef = F08A01002C00000100000002 /* ProtectionSampler.m */; settings = {COMPILER_FLAGS = "-Wall -Wextra -Werror"; }; };
+ 		7555FF7B242A565900829871 /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF7A242A565900829871 /* iOSApp.swift */; };
+ 		7555FF82242A565B00829871 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7555FF81242A565B00829871 /* Assets.xcassets */; };
+ 		AB1D03C72B0E0FA8002A1234 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1D03C62B0E0FA8002A1234 /* ContentView.swift */; };
+@@ -29,6 +30,9 @@
+ /* End PBXContainerItemProxy section */
+ 
+ /* Begin PBXFileReference section */
++		F08A01002C00000100000002 /* ProtectionSampler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProtectionSampler.m; sourceTree = "<group>"; };
++		F08A01002C00000100000003 /* ProtectionSampler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProtectionSampler.h; sourceTree = "<group>"; };
++		F08A01002C00000100000004 /* ProtectionApplicationBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProtectionApplicationBridge.h; sourceTree = "<group>"; };
+ 		058557BA273AAA24004C7B11 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+ 		7555FF77242A565900829871 /* Parlor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Parlor.app; sourceTree = BUILT_PRODUCTS_DIR; };
+ 		7555FF7A242A565900829871 /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
+@@ -94,6 +98,9 @@
+ 			isa = PBXGroup;
+ 			children = (
+ 				AB1D03C62B0E0FA8002A1234 /* ContentView.swift */,
++				F08A01002C00000100000002 /* ProtectionSampler.m */,
++				F08A01002C00000100000003 /* ProtectionSampler.h */,
++				F08A01002C00000100000004 /* ProtectionApplicationBridge.h */,
+ 				D5C010012C00000100000001 /* ComposeContainerViewController.swift */,
+ 				7555FF7A242A565900829871 /* iOSApp.swift */,
+ 				7555FF81242A565B00829871 /* Assets.xcassets */,
+@@ -250,7 +257,7 @@
+ 			);
+ 			runOnlyForDeploymentPostprocessing = 0;
+ 			shellPath = /bin/sh;
+-			shellScript = "set -e\ncd \"$SRCROOT/..\"\nif [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\n./gradlew --no-daemon :composeApp:embedAndSignAppleFrameworkForXcode --dependency-verification=strict --console=plain\nscripts/release/normalize_embedded_apple_framework.sh \"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}\" ComposeApp\n";
++			shellScript = "#!/bin/sh\n# Temporary copied-wrapper phase only. Current production phase is source-bound.\n# Preserve failed cd/build/normalization exit status; stop this isolated daemon\n# registry immediately after embedding, including interruption/error paths.\nset -u\ncd \"/private/var/folders/nj/vtw8zd2j31d1gdrtntc5y4600000gn/T/parlor-audit-ios-readiness-40-3ig7va1s/copy\" || exit 1\nstop_recorded=0\nbuild_status=125\nstop_status=125\nstop_and_record() {\n  ./gradlew --stop\n  stop_status=$?\n  printf 'build_exit=%s\\nstop_exit=%s\\n' \"$build_status\" \"$stop_status\" > \"/Users/runner/work/parlor/parlor/remediation-runs/2026-09-08-continuation/evidence/ios-readiness-40/embedded-gradle-stop.txt\"\n  record_status=$?\n  stop_recorded=1\n  if [ \"$record_status\" -ne 0 ]; then return \"$record_status\"; fi\n  return \"$stop_status\"\n}\nfinish() {\n  exit_status=$?\n  trap - EXIT INT TERM\n  if [ \"$stop_recorded\" -eq 0 ]; then\n    build_status=$exit_status\n    stop_and_record\n    late_stop=$?\n    if [ \"$exit_status\" -eq 0 ]; then exit_status=$late_stop; fi\n  fi\n  exit \"$exit_status\"\n}\ntrap finish EXIT\ntrap 'exit 130' INT\ntrap 'exit 143' TERM\n/usr/bin/python3 -B \"/private/var/folders/nj/vtw8zd2j31d1gdrtntc5y4600000gn/T/parlor-audit-ios-readiness-40-3ig7va1s/copy/scripts/verification/ios-readiness/simulator_signing.py\" \\\n  \"adhoc\" \"iphonesimulator26.2\" \"/private/var/folders/nj/vtw8zd2j31d1gdrtntc5y4600000gn/T/parlor-audit-ios-readiness-40-3ig7va1s/copy\" \\\n  \"/Users/runner/work/parlor/parlor/remediation-runs/2026-09-08-continuation/evidence/ios-readiness-40/effective-simulator-app-phase.json\" || exit $?\n./gradlew --no-daemon :composeApp:embedAndSignAppleFrameworkForXcode \\\n  --dependency-verification=strict --console=plain --no-configuration-cache \\\n  --no-parallel --max-workers=1 --no-build-cache\nbuild_status=$?\nstop_and_record\nrecorded_stop_status=$?\nif [ \"$build_status\" -ne 0 ]; then exit \"$build_status\"; fi\nif [ \"$recorded_stop_status\" -ne 0 ]; then exit \"$recorded_stop_status\"; fi\n\"/private/var/folders/nj/vtw8zd2j31d1gdrtntc5y4600000gn/T/parlor-audit-ios-readiness-40-3ig7va1s/copy/scripts/release/normalize_embedded_apple_framework.sh\" \\\n  \"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}\" ComposeApp\n";
+ 		};
+ /* End PBXShellScriptBuildPhase section */
+ 
+@@ -260,6 +267,7 @@
+ 			buildActionMask = 2147483647;
+ 			files = (
+ 				AB1D03C72B0E0FA8002A1234 /* ContentView.swift in Sources */,
++				F08A01002C00000100000001 /* ProtectionSampler.m in Sources */,
+ 				D5C010012C00000100000002 /* ComposeContainerViewController.swift in Sources */,
+ 				7555FF7B242A565900829871 /* iOSApp.swift in Sources */,
+ 			);
+@@ -429,6 +437,7 @@
+ 				);
+ 				MARKETING_VERSION = "$(PARLOR_VERSION_NAME)";
+ 				PRODUCT_BUNDLE_IDENTIFIER = "$(BUNDLE_ID).debug";
++				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/iosApp/ProtectionApplicationBridge.h";
+ 				PRODUCT_NAME = "$(APP_NAME)";
+ 				SWIFT_EMIT_LOC_STRINGS = YES;
+ 				SWIFT_VERSION = 5.0;
+--- original/iosApp/iosApp/iOSApp.swift
++++ protection-copy/iosApp/iosApp/iOSApp.swift
+@@ -4,7 +4,160 @@
+ struct iOSApp: App {
+     var body: some Scene {
+         WindowGroup {
+-            ContentView()
++            ProtectionApplicationView()
+         }
+     }
+ }
++
++// Appended only to copied iOSApp.swift; no normal MainViewController is started.
++// Filesystem/Keychain implementations themselves are not transformed.
++import ComposeApp
++import Darwin
++
++private enum ProtectionApplicationFailure: Error { case boundary }
++
++private func protectionApplicationImages() throws -> [String: Any] {
++    let marker = ProtectionApplicationImageMarker()
++    guard marker.sourceBoundMarker() else { throw ProtectionApplicationFailure.boundary }
++    let kotlin = ParlorProtectionImplementation(marker, NSSelectorFromString("sourceBoundMarker"))
++    guard let implementation = kotlin["implementation"] as? [String: Any],
++          implementation["image_basename"] as? String == "ComposeApp",
++          implementation["platforms"] as? [Int] == [7],
++          let handle = dlopen(nil, RTLD_NOW) else { throw ProtectionApplicationFailure.boundary }
++    defer { dlclose(handle) }
++    guard let address = dlsym(handle, "ParlorProtectionSample") else { throw ProtectionApplicationFailure.boundary }
++    let native = ParlorProtectionImageIdentity(address)
++    guard let name = native["image_basename"] as? String,
++          ["Parlor", "Parlor.debug.dylib"].contains(name),
++          native["platforms"] as? [Int] == [7] else { throw ProtectionApplicationFailure.boundary }
++    return ["kotlin_marker": kotlin, "native_sampler": native]
++}
++
++private func protectionApplicationSameIdentity(_ kotlin: [String: Any], _ native: [String: Any]) -> Bool {
++    let names = ["device": "device", "inode": "inode", "uid": "uid", "links": "links", "bytes": "size"]
++    guard names.allSatisfy({ key, nativeKey in
++        guard let a = kotlin[key] as? NSNumber, let b = native[nativeKey] as? NSNumber else { return false }
++        return a == b
++    }), let type = kotlin["file_type"] as? NSNumber, let mode = native["mode"] as? NSNumber else { return false }
++    return type.uint32Value == (mode.uint32Value & UInt32(S_IFMT))
++}
++
++private func protectionApplicationOutput(_ name: String, _ value: [String: Any]) throws {
++    guard name == "parlor-protection-application.json" ||
++        (1...6).contains(where: { name == String(format: "parlor-protection-application-sample-%02d.json", $0) }) else {
++        throw ProtectionApplicationFailure.boundary
++    }
++    let temporary = FileManager.default.temporaryDirectory
++    let home = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true).resolvingSymlinksInPath().path
++    guard temporary.resolvingSymlinksInPath().path.hasPrefix(home + "/"),
++          temporary.resolvingSymlinksInPath().path == temporary.standardizedFileURL.path else {
++        throw ProtectionApplicationFailure.boundary
++    }
++    let data = try JSONSerialization.data(withJSONObject: value, options: [.sortedKeys])
++    guard (1...131072).contains(data.count) else { throw ProtectionApplicationFailure.boundary }
++    // Separate exclusive rows preserve earlier failures if a later write/call
++    // aborts. They live in tmp, never alongside or inside the tested ciphertext.
++    try data.write(to: temporary.appendingPathComponent(name), options: [.withoutOverwriting])
++}
++
++@MainActor private final class ProtectionApplicationState: ObservableObject {
++    @Published var status = "pending"
++
++    func start() {
++        guard status == "pending" else { return }
++        status = "running"
++        let environment = ProcessInfo.processInfo.environment
++        let expectedToken: String = "2749bbaa-22b3-480d-87f3-e1f35eb3188e"
++        let expectedDevice: String = "FB71D9F5-0E11-40DE-B450-0D6138B20649"
++        let expectedControl: String = "a7056799457b41a5e07d112795eef74451e18fd31624079e21ff65121597f66f"
++        let expectedSource: String = "83f0b432a4120d249810cc66b1432ec6c49229ebc3eb7f8f14900047e87f65ef"
++        guard environment["PARLOR_PROTECTION_TOKEN"] == expectedToken,
++              environment["SIMULATOR_UDID"] == expectedDevice,
++              environment["PARLOR_PROTECTION_EXPECTED_UDID"] == expectedDevice,
++              environment["PARLOR_PROTECTION_MODE"] == "actual-filesystem",
++              Bundle.main.bundleIdentifier == "com.parlor.app.debug" else { status = "failed"; return }
++        DispatchQueue.global(qos: .utility).async { [weak self] in
++            let processBoot = UUID().uuidString.lowercased()
++            let version = ProcessInfo.processInfo.operatingSystemVersion
++            var receipt: [String: Any] = ["schema_version": 1, "kind": "protection-application",
++                "run_token": expectedToken, "simulator_udid": expectedDevice, "process_boot": processBoot,
++                "process_id": Int(getpid()), "uid": Int(getuid()), "bundle_id": "com.parlor.app.debug",
++                "controls_sha256": expectedControl, "source_manifest_sha256": expectedSource,
++                "runtime_version": [version.majorVersion, version.minorVersion, version.patchVersion],
++                "collection_status": "FAIL", "recorded_samples": 0, "hardware_protection_verified": false,
++                "l08_requirements_waived": false, "snapshot_validation_tested": false]
++            var recorded = 0
++            var collectionSucceeded = false
++            do {
++                guard version.majorVersion == 26, version.minorVersion == 2, version.patchVersion == 0 else {
++                    throw ProtectionApplicationFailure.boundary
++                }
++                let images = try protectionApplicationImages()
++                receipt["images"] = images
++                let home = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true).resolvingSymlinksInPath().path
++                guard home.contains("/CoreSimulator/Devices/" + expectedDevice + "/data/Containers/Data/Application/") else {
++                    throw ProtectionApplicationFailure.boundary
++                }
++                receipt["container_id"] = URL(fileURLWithPath: home).lastPathComponent
++                let directory = home + "/Library/Application Support/Parlor/snapshots"
++                let file = directory + "/protection-" + expectedToken + ".snapshot.json"
++                let text = ProtectionApplicationProbeKt.runProtectionApplication(runToken: expectedToken) { path, raw in
++                    do {
++                        guard (path == directory || path == file), recorded < 6,
++                              URL(fileURLWithPath: path).resolvingSymlinksInPath().path == path,
++                              raw.utf8.count <= 8192,
++                              let kotlin = try JSONSerialization.jsonObject(with: Data(raw.utf8)) as? [String: Any],
++                              kotlin["ordinal"] as? Int == recorded + 1,
++                              let before = kotlin["identity_before"] as? [String: Any],
++                              let after = kotlin["identity_after"] as? [String: Any] else {
++                            throw ProtectionApplicationFailure.boundary
++                        }
++                        let sample = ParlorProtectionSample(path)
++                        let native = sample["identity"] as? [String: Any] ?? [:]
++                        let same = protectionApplicationSameIdentity(before, native) &&
++                            protectionApplicationSameIdentity(after, native)
++                        let row: [String: Any] = ["schema_version": 1, "kind": "protection-application-sample",
++                            "run_token": expectedToken, "process_boot": processBoot, "process_id": Int(getpid()),
++                            "simulator_udid": expectedDevice, "ordinal": recorded + 1,
++                            "kotlin": kotlin, "native": sample, "kotlin_native_same_inode": same]
++                        try protectionApplicationOutput(String(format: "parlor-protection-application-sample-%02d.json", recorded + 1), row)
++                        recorded += 1
++                        guard same, sample["collection_status"] as? String == "PASS",
++                              sample["descriptor_closed"] as? Bool == true else { return "failed" }
++                        return "recorded"
++                    } catch { return "failed" }
++                }
++                guard text.utf8.count <= 32768,
++                      let kotlin = try JSONSerialization.jsonObject(with: Data(text.utf8)) as? [String: Any] else {
++                    throw ProtectionApplicationFailure.boundary
++                }
++                receipt["kotlin"] = kotlin
++                receipt["recorded_samples"] = recorded
++                guard recorded == 6, kotlin["status"] as? String == "OBSERVATIONS_COMPLETE",
++                      kotlin["first_roundtrip"] as? Bool == true, kotlin["overwrite_roundtrip"] as? Bool == true,
++                      NSDictionary(dictionary: try protectionApplicationImages()).isEqual(to: images) else {
++                    throw ProtectionApplicationFailure.boundary
++                }
++                receipt["collection_status"] = "CAPTURED_NOT_PROTECTION_PASS"
++                collectionSucceeded = true
++            } catch {
++                receipt["failure"] = "application-observer-boundary"
++                receipt["recorded_samples"] = recorded
++            }
++            do { try protectionApplicationOutput("parlor-protection-application.json", receipt) }
++            catch { collectionSucceeded = false }
++            let captured = collectionSucceeded
++            DispatchQueue.main.async { self?.status = captured ? "captured" : "failed" }
++        }
++    }
++}
++
++private struct ProtectionApplicationView: View {
++    @StateObject private var diagnostic = ProtectionApplicationState()
++    var body: some View {
++        Text("Protection observations only")
++            .accessibilityIdentifier("parlor-protection-application-status")
++            .accessibilityValue(diagnostic.status)
++            .onAppear { diagnostic.start() }
++    }
++}
+--- original/iosApp/iosAppUITests/IOSAppLaunchUITests.swift
++++ protection-copy/iosApp/iosAppUITests/IOSAppLaunchUITests.swift
+@@ -1,32 +1,30 @@
++import Foundation
+ import XCTest
+ 
+ final class IOSAppLaunchUITests: XCTestCase {
+-    override func setUpWithError() throws {
+-        continueAfterFailure = false
+-    }
++    override func setUpWithError() throws { continueAfterFailure = false }
+ 
+-    @MainActor
+-    func testColdLaunchRendersComposeHomeWithoutUnexpectedAlert() throws {
+-        let app = XCUIApplication()
+-        app.launchArguments += ["-AppleLanguages", "(en)", "-AppleLocale", "en_US"]
++    @MainActor func testActualFilesystemProtectionObservation() throws {
++        let environment = ProcessInfo.processInfo.environment
++        let expectedDevice: String = "FB71D9F5-0E11-40DE-B450-0D6138B20649"
++        let expectedName: String = "Parlor-Audit-parlor-audit-ios-readiness-40-3ig7va1s"
++        let token: String = "2749bbaa-22b3-480d-87f3-e1f35eb3188e"
++        XCTAssertEqual(environment["SIMULATOR_UDID"], expectedDevice)
++        XCTAssertEqual(environment["SIMULATOR_DEVICE_NAME"], expectedName)
++        let app = XCUIApplication(bundleIdentifier: "com.parlor.app.debug")
++        app.launchEnvironment = ["PARLOR_PROTECTION_MODE": "actual-filesystem",
++            "PARLOR_PROTECTION_TOKEN": token, "PARLOR_PROTECTION_EXPECTED_UDID": expectedDevice]
++        app.launchArguments = []
+         app.launch()
+-
+-        XCTAssertTrue(
+-            app.wait(for: .runningForeground, timeout: 30),
+-            "The Swift host should launch and remain in the foreground",
+-        )
+-        XCTAssertTrue(
+-            app.staticTexts["parlor-home-brand"].waitForExistence(timeout: 30),
+-            "The Kotlin Compose root should render the home screen",
+-        )
+-        XCTAssertFalse(
+-            app.alerts.firstMatch.waitForExistence(timeout: 2),
+-            "No alert should appear during the simulator cold-start observation window",
+-        )
+-        XCTAssertEqual(
+-            app.state,
+-            .runningForeground,
+-            "The Swift host should remain in the foreground after Compose renders",
+-        )
++        defer { app.terminate() }
++        let state = app.staticTexts["parlor-protection-application-status"]
++        XCTAssertTrue(state.waitForExistence(timeout: 30))
++        let finished = NSPredicate(format: "value == %@ OR value == %@", "captured", "failed")
++        let observed = expectation(for: finished, evaluatedWith: state)
++        wait(for: [observed], timeout: 90)
++        // Collection only. A missing/non-Complete strict value remains FAIL
++        // inside the retained rows and does not fail this metadata collector.
++        XCTAssertEqual(state.value as? String, "captured")
++        print("PROTECTION_APPLICATION_COLLECTED " + token)
+     }
+ }
+--- /dev/null
++++ protection-copy/composeApp/src/iosMain/kotlin/com/parlor/app/storage/ProtectionApplicationProbe.kt
+@@ -0,0 +1,217 @@
++@file:OptIn(kotlinx.cinterop.ExperimentalForeignApi::class, kotlinx.cinterop.BetaInteropApi::class)
++
++package com.parlor.app.storage
++
++import com.parlor.storage.snapshot.SnapshotProtectionException
++import com.parlor.storage.snapshot.requireSafeSnapshotFileName
++import kotlinx.cinterop.ObjCObjectVar
++import kotlinx.cinterop.alloc
++import kotlinx.cinterop.memScoped
++import kotlinx.cinterop.ptr
++import kotlinx.cinterop.value
++import kotlinx.coroutines.CancellationException
++import kotlinx.coroutines.runBlocking
++import kotlinx.serialization.json.JsonArray
++import kotlinx.serialization.json.JsonObject
++import kotlinx.serialization.json.buildJsonObject
++import kotlinx.serialization.json.put
++import platform.Foundation.NSApplicationSupportDirectory
++import platform.Foundation.NSBundle
++import platform.Foundation.NSDataWritingAtomic
++import platform.Foundation.NSDataWritingFileProtectionComplete
++import platform.Foundation.NSError
++import platform.Foundation.NSFileManager
++import platform.Foundation.NSFileProtectionComplete
++import platform.Foundation.NSFileProtectionCompleteUnlessOpen
++import platform.Foundation.NSFileProtectionCompleteUntilFirstUserAuthentication
++import platform.Foundation.NSFileProtectionKey
++import platform.Foundation.NSFileProtectionNone
++import platform.Foundation.NSHomeDirectory
++import platform.Foundation.NSProcessInfo
++import platform.Foundation.NSURL
++import platform.Foundation.NSUserDomainMask
++import platform.posix.S_IFDIR
++import platform.posix.S_IFMT
++import platform.posix.S_IFREG
++import platform.posix.getuid
++import platform.posix.lstat
++import platform.posix.stat
++
++/**
++ * Added ONLY to an owned Debug copy. The production filesystem and Keychain
++ * files stay byte-identical. This is a real filesystem/crypto call with PUBLIC
++ * synthetic bytes, not GameSnapshot validation, a game scenario, or L08 PASS.
++ *
++ * The callback runs synchronously, and must close every observation descriptor
++ * before it returns: an open old-file descriptor must not perturb atomic replace.
++ */
++fun runProtectionApplication(runToken: String, observe: (String, String) -> String): String = runBlocking {
++    val files = NSFileManager.defaultManager
++    val rows = mutableListOf<JsonObject>()
++    var stage = "context"
++    var writeOrdinal = 0
++    var firstRoundtrip = false
++    var secondRoundtrip = false
++    val first = "{\"fixture\":\"public-protection-diagnostic\",\"ordinal\":1}".encodeToByteArray()
++    val second = "{\"fixture\":\"public-protection-diagnostic\",\"ordinal\":2}".encodeToByteArray()
++    fun report(status: String, failure: String = "none") = buildJsonObject {
++        put("schema_version", 1)
++        put("kind", "protection-application-kotlin")
++        put("run_token", runToken)
++        put("status", status)
++        put("stage", stage)
++        put("failure", failure)
++        put("first_roundtrip", firstRoundtrip)
++        put("overwrite_roundtrip", secondRoundtrip)
++        put("samples", JsonArray(rows.toList()))
++        put("snapshot_validation_tested", false)
++        put("hardware_protection_verified", false)
++        put("l08_requirements_waived", false)
++    }.toString()
++    try {
++        check(Regex("[a-f0-9]{8}(-[a-f0-9]{4}){3}-[a-f0-9]{12}").matches(runToken))
++        val environment = NSProcessInfo.processInfo.environment
++        check(NSBundle.mainBundle.bundleIdentifier == "com.parlor.app.debug")
++        check(environment["PARLOR_PROTECTION_TOKEN"] == runToken)
++        check(environment["PARLOR_PROTECTION_MODE"] == "actual-filesystem")
++        val device = environment["SIMULATOR_UDID"] as? String
++        check(device != null && device == environment["PARLOR_PROTECTION_EXPECTED_UDID"])
++        val home = protectionCanonical(NSHomeDirectory())
++        check(home.contains("/CoreSimulator/Devices/$device/data/Containers/Data/Application/"))
++        val support = checkNotNull(files.URLForDirectory(
++            NSApplicationSupportDirectory, NSUserDomainMask, null, false, null,
++        )?.path)
++        check(support.startsWith(NSHomeDirectory() + "/"))
++        val directory = home + support.removePrefix(NSHomeDirectory()) + "/Parlor/snapshots"
++        val name = "protection-$runToken.snapshot.json"
++        requireSafeSnapshotFileName(name)
++        val path = "$directory/$name"
++        stage = "initial-absence"
++        // Never precreate/repair the production snapshots directory ourselves.
++        check(!files.fileExistsAtPath(directory))
++        check(!files.fileExistsAtPath(path))
++
++        fun sample(observedPath: String, boundary: String) {
++            val target = when (observedPath) {
++                directory -> "directory"
++                path -> "file"
++                else -> error("unexpected-observer-path")
++            }
++            val identifier = if (target == "directory") "directory-$boundary" else "write-$writeOrdinal-$boundary"
++            stage = identifier
++            check(protectionCanonical(observedPath) == observedPath)
++            val before = protectionIdentity(observedPath, target)
++            val attributes = memScoped {
++                val error = alloc<ObjCObjectVar<NSError?>>()
++                error.value = null
++                val key = checkNotNull(NSFileProtectionKey)
++                val complete = checkNotNull(NSFileProtectionComplete)
++                val values = files.attributesOfItemAtPath(observedPath, error.ptr)
++                val value = values?.get(key)
++                buildJsonObject {
++                    put("dictionary_present", values != null)
++                    put("key_present", values?.containsKey(key) == true)
++                    put("value", when {
++                        values == null -> "unavailable"
++                        !values.containsKey(key) -> "missing"
++                        value == null -> "null"
++                        value == NSFileProtectionComplete -> "complete"
++                        value == NSFileProtectionNone -> "none"
++                        value == NSFileProtectionCompleteUnlessOpen -> "unless-open"
++                        value == NSFileProtectionCompleteUntilFirstUserAuthentication -> "until-first-authentication"
++                        value is String -> "other-string"
++                        else -> "non-string"
++                    })
++                    // Keep the original equality visible; an error-bearing or
++                    // missing dictionary must never become a new strict PASS.
++                    put("original_equality", value == complete)
++                    put("comparison", if (values != null && values.containsKey(key) &&
++                        error.value == null && value == complete) "PASS" else "FAIL")
++                    put("error_present", error.value != null)
++                    put("error_code", error.value?.code ?: 0L)
++                }
++            }
++            val after = protectionIdentity(observedPath, target)
++            check(before == after)
++            val row = buildJsonObject {
++                put("ordinal", rows.size + 1)
++                put("id", identifier)
++                put("target", target)
++                put("identity_before", before)
++                put("identity_after", after)
++                put("kotlin_fm", attributes)
++                put("kotlin_options", buildJsonObject {
++                    put("atomic", NSDataWritingAtomic.toLong())
++                    put("complete", NSDataWritingFileProtectionComplete.toLong())
++                    put("combined", (NSDataWritingAtomic or NSDataWritingFileProtectionComplete).toLong())
++                    put("protection_key", checkNotNull(NSFileProtectionKey))
++                    put("complete_value", checkNotNull(NSFileProtectionComplete))
++                })
++            }
++            check(rows.size < 6)
++            rows += row // Preserve even if the native callback rejects collection.
++            check(observe(observedPath, row.toString()) == "recorded")
++            check(protectionIdentity(observedPath, target) == after)
++        }
++
++        val filesystem = IosSnapshotFileSystem(backupExcluder = { url ->
++            val observedPath = checkNotNull(url.path)
++            sample(observedPath, "before-backup")
++            // The real production exclusion and its fresh-URL readback execute.
++            excludeSnapshotFromBackup(url)
++            sample(observedPath, "after-backup")
++        })
++        stage = "first-write"
++        writeOrdinal = 1
++        filesystem.write(name, first)
++        stage = "first-roundtrip"
++        checkNotNull(filesystem.read(name)).also { restored ->
++            try { check(restored.contentEquals(first)); firstRoundtrip = true } finally { restored.fill(0) }
++        }
++        stage = "atomic-overwrite"
++        writeOrdinal = 2
++        filesystem.write(name, second)
++        stage = "overwrite-roundtrip"
++        checkNotNull(filesystem.read(name)).also { restored ->
++            try { check(restored.contentEquals(second)); secondRoundtrip = true } finally { restored.fill(0) }
++        }
++        check(rows.size == 6)
++        stage = "complete"
++        // Leave ONLY our ciphertext for read-only host-native same-inode queries.
++        // The existing owned-simulator finalizer deletes its app and Keychain.
++        report("OBSERVATIONS_COMPLETE")
++    } catch (cancelled: CancellationException) {
++        throw cancelled
++    } catch (failure: Exception) {
++        report("CONTROL_ERROR", if (failure is SnapshotProtectionException) "snapshot-protection" else "io-or-control")
++    } finally {
++        first.fill(0)
++        second.fill(0)
++    }
++}
++
++/** Its actual exported method IMP binds this executed hook to ComposeApp. */
++class ProtectionApplicationImageMarker {
++    fun sourceBoundMarker(): Boolean = true
++}
++
++private fun protectionCanonical(path: String): String = checkNotNull(
++    NSURL.fileURLWithPath(path).URLByResolvingSymlinksInPath?.path,
++)
++
++private fun protectionIdentity(path: String, target: String): JsonObject = memScoped {
++    val value = alloc<stat>()
++    check(lstat(path, value.ptr) == 0)
++    val type = value.st_mode.toInt() and S_IFMT.toInt()
++    check(value.st_uid == getuid())
++    check(type == if (target == "directory") S_IFDIR.toInt() else S_IFREG.toInt())
++    check(target == "directory" || value.st_nlink.toLong() == 1L)
++    buildJsonObject {
++        put("device", value.st_dev.toLong())
++        put("inode", value.st_ino.toLong())
++        put("uid", value.st_uid.toLong())
++        put("file_type", type)
++        put("links", value.st_nlink.toLong())
++        put("bytes", value.st_size)
++    }
++}
+--- /dev/null
++++ protection-copy/iosApp/iosApp/ProtectionApplicationBridge.h
+@@ -0,0 +1,2 @@
++// Added only to the source-bound copied app Debug target.
++#import "ProtectionSampler.h"
+--- /dev/null
++++ protection-copy/iosApp/iosApp/ProtectionSampler.h
+@@ -0,0 +1,9 @@
++// Copy-only diagnostic. The caller, not this sampler, authorizes the exact path.
++// No writes, enumeration, app identity, Keychain access, or held descriptor on return.
++#import <Foundation/Foundation.h>
++
++NS_ASSUME_NONNULL_BEGIN
++FOUNDATION_EXPORT NSDictionary *ParlorProtectionSample(NSString *path);
++FOUNDATION_EXPORT NSDictionary *ParlorProtectionImplementation(id receiver, SEL selector);
++FOUNDATION_EXPORT NSDictionary *ParlorProtectionImageIdentity(const void *address);
++NS_ASSUME_NONNULL_END
+--- /dev/null
++++ protection-copy/iosApp/iosApp/ProtectionSampler.m
+@@ -0,0 +1,244 @@
++#import "ProtectionSampler.h"
++#import <TargetConditionals.h>
++#import <objc/runtime.h>
++#include <dlfcn.h>
++#include <errno.h>
++#include <fcntl.h>
++#include <mach-o/dyld.h>
++#include <mach-o/loader.h>
++#include <mach/vm_prot.h>
++#include <string.h>
++#include <sys/attr.h>
++#include <sys/mount.h>
++#include <sys/stat.h>
++#include <unistd.h>
++
++static void demand(BOOL value, NSString *reason) {
++    if (!value) @throw [NSException exceptionWithName:@"ProtectionBoundary" reason:reason userInfo:nil];
++}
++
++static NSDictionary *errorRecord(NSError *error) {
++    return @{@"present": error != nil ? @YES : @NO, @"code": error ? @(error.code) : @0,
++        @"domain": !error ? @"none" : [error.domain isEqual:NSCocoaErrorDomain] ? @"cocoa" :
++            [error.domain isEqual:NSPOSIXErrorDomain] ? @"posix" : @"other"};
++}
++
++NSDictionary *ParlorProtectionImageIdentity(const void *address) {
++    Dl_info info = {0};
++    demand(address && dladdr(address, &info) && info.dli_fbase && info.dli_fname, @"image-resolution");
++    const struct mach_header_64 *header = info.dli_fbase;
++    demand(header->magic == MH_MAGIC_64 && header->ncmds <= 4096 && header->sizeofcmds <= 1024 * 1024,
++           @"image-header");
++    uint32_t count = _dyld_image_count(), matches = 0;
++    demand(count > 0 && count <= 4096, @"image-count");
++    intptr_t slide = 0;
++    for (uint32_t i = 0; i < count; i++) {
++        if ((const void *)_dyld_get_image_header(i) == info.dli_fbase) {
++            matches++; slide = _dyld_get_image_vmaddr_slide(i);
++        }
++    }
++    demand(matches == 1, @"image-loaded-identity");
++    const uint8_t *commands = (const uint8_t *)(header + 1);
++    size_t offset = 0;
++    NSString *uuid = nil;
++    NSMutableArray *platforms = [NSMutableArray array];
++    id dylib = NSNull.null;
++    BOOL executableAddress = NO;
++    for (uint32_t i = 0; i < header->ncmds; i++) {
++        demand(offset + sizeof(struct load_command) <= header->sizeofcmds, @"image-command-bounds");
++        const struct load_command *command = (const void *)(commands + offset);
++        demand(command->cmdsize >= sizeof(*command) && command->cmdsize <= header->sizeofcmds - offset,
++               @"image-command-size");
++        if (command->cmd == LC_UUID) {
++            demand(!uuid && command->cmdsize == sizeof(struct uuid_command), @"image-uuid");
++            uuid = [[[NSUUID alloc] initWithUUIDBytes:((const struct uuid_command *)command)->uuid]
++                UUIDString].lowercaseString;
++        } else if (command->cmd == LC_BUILD_VERSION) {
++            demand(command->cmdsize >= sizeof(struct build_version_command), @"image-platform");
++            [platforms addObject:@(((const struct build_version_command *)command)->platform)];
++        } else if (command->cmd == LC_ID_DYLIB) {
++            demand(command->cmdsize >= sizeof(struct dylib_command) && dylib == NSNull.null, @"image-dylib");
++            struct dylib value = ((const struct dylib_command *)command)->dylib;
++            dylib = @{@"current_version": @(value.current_version), @"compatibility_version": @(value.compatibility_version)};
++        } else if (command->cmd == LC_SEGMENT_64) {
++            demand(command->cmdsize >= sizeof(struct segment_command_64), @"image-segment");
++            const struct segment_command_64 *segment = (const void *)command;
++            uintptr_t start = (uintptr_t)(segment->vmaddr + slide), pointer = (uintptr_t)address;
++            if ((segment->initprot & VM_PROT_EXECUTE) && pointer >= start && pointer - start < segment->vmsize)
++                executableAddress = YES;
++        }
++        offset += command->cmdsize;
++    }
++    demand(offset == header->sizeofcmds && uuid && platforms.count == 1 && executableAddress &&
++           (uintptr_t)address >= (uintptr_t)header, @"image-executable-address");
++    NSString *name = [[NSString stringWithUTF8String:info.dli_fname] lastPathComponent];
++    demand(name.length > 0 && name.length <= 256, @"image-name");
++    return @{@"image_basename": name, @"uuid": uuid, @"platforms": platforms,
++        @"cputype": @(header->cputype), @"cpusubtype": @(header->cpusubtype),
++        @"image_offset": @((uintptr_t)address - (uintptr_t)header), @"dylib": dylib};
++}
++
++NSDictionary *ParlorProtectionImplementation(id receiver, SEL selector) {
++    Class concrete = object_getClass(receiver);
++    Method method = class_getInstanceMethod(concrete, selector);
++    demand(concrete && method, @"resolved-method");
++    IMP implementation = method_getImplementation(method);
++    demand(implementation != NULL, @"method-implementation");
++    return @{@"receiver_class": NSStringFromClass(concrete), @"selector": NSStringFromSelector(selector),
++        @"implementation": ParlorProtectionImageIdentity((const void *)implementation)};
++}
++
++static NSDictionary *identity(struct stat value) {
++    return @{@"device": @((uint64_t)value.st_dev), @"inode": @((uint64_t)value.st_ino),
++        @"uid": @(value.st_uid), @"mode": @(value.st_mode), @"links": @(value.st_nlink),
++        @"size": @(value.st_size), @"type": S_ISREG(value.st_mode) ? @"regular" : @"directory"};
++}
++
++static void attest(NSString *path, int fd, NSDictionary *expected) {
++    struct stat named, opened;
++    demand(lstat(path.fileSystemRepresentation, &named) == 0 && fstat(fd, &opened) == 0 &&
++           [identity(named) isEqual:expected] && [identity(opened) isEqual:expected], @"same-inode-attestation");
++}
++
++static NSString *protection(id value, BOOL url) {
++    if (!value) return @"missing";
++    if (value == NSNull.null) return @"null";
++    if (![value isKindOfClass:NSString.class]) return @"non-string";
++    if ([value isEqual:(url ? NSURLFileProtectionComplete : NSFileProtectionComplete)]) return @"complete";
++    if ([value isEqual:(url ? NSURLFileProtectionNone : NSFileProtectionNone)]) return @"none";
++    if ([value isEqual:(url ? NSURLFileProtectionCompleteUnlessOpen : NSFileProtectionCompleteUnlessOpen)]) return @"unless-open";
++    if ([value isEqual:(url ? NSURLFileProtectionCompleteUntilFirstUserAuthentication : NSFileProtectionCompleteUntilFirstUserAuthentication)]) return @"until-first-authentication";
++#if TARGET_OS_IOS
++    if (@available(iOS 17.0, *)) {
++        if ([value isEqual:(url ? NSURLFileProtectionCompleteWhenUserInactive : NSFileProtectionCompleteWhenUserInactive)]) return @"when-user-inactive";
++    }
++#endif
++    return @"other-string";
++}
++
++static NSDictionary *foundationQuery(NSString *path, BOOL directory, BOOL fileManager) {
++    NSError *error = nil;
++    id receiver = fileManager ? NSFileManager.defaultManager : [NSURL fileURLWithPath:path isDirectory:directory];
++    SEL selector = fileManager ? @selector(attributesOfItemAtPath:error:) : @selector(resourceValuesForKeys:error:);
++    NSDictionary *before = ParlorProtectionImplementation(receiver, selector);
++    NSDictionary *values = fileManager ? [receiver attributesOfItemAtPath:path error:&error] :
++        [receiver resourceValuesForKeys:directory ? @[NSURLVolumeSupportsFileProtectionKey] :
++            @[NSURLFileProtectionKey, NSURLVolumeSupportsFileProtectionKey] error:&error];
++    NSDictionary *after = ParlorProtectionImplementation(receiver, selector);
++    demand([before isEqual:after], @"getter-implementation-changed");
++    id raw = values[fileManager ? NSFileProtectionKey : NSURLFileProtectionKey];
++    NSMutableDictionary *result = [@{@"dictionary_present": values != nil ? @YES : @NO, @"key_present": raw != nil ? @YES : @NO,
++        @"protection": (!fileManager && directory) ? @"NOT_APPLICABLE_DIRECTORY" : protection(raw, !fileManager),
++        @"native_error": errorRecord(error), @"implementation_before": before, @"implementation_after": after} mutableCopy];
++    if (!fileManager) {
++        id volume = values[NSURLVolumeSupportsFileProtectionKey];
++        result[@"volume_support"] = [volume isKindOfClass:NSNumber.class] ?
++            ([volume boolValue] ? @"supported" : @"unsupported") : volume ? @"non-number" : @"missing";
++        result[@"fresh_url"] = @YES;
++        result[@"is_directory"] = @(directory);
++    }
++    return result;
++}
++
++static NSDictionary *descriptorClass(int fd) {
++#if defined(F_GETPROTECTIONCLASS)
++    errno = 0;
++    int result = fcntl(fd, F_GETPROTECTIONCLASS);
++    int code = result == -1 ? errno : 0;
++    return @{@"sdk_available": @YES, @"command": @(F_GETPROTECTIONCLASS), @"return_value": @(result),
++        @"errno": @(code), @"class": result == -1 ? NSNull.null : @(result)};
++#else
++    return @{@"sdk_available": @NO, @"status": @"PUBLIC_SDK_SYMBOL_UNAVAILABLE"};
++#endif
++}
++
++static NSDictionary *descriptorAttributes(int fd) {
++#if defined(ATTR_CMN_RETURNED_ATTRS) && defined(ATTR_CMN_DATA_PROTECT_FLAGS)
++    struct attrlist requested = {0};
++    requested.bitmapcount = ATTR_BIT_MAP_COUNT;
++    requested.commonattr = ATTR_CMN_RETURNED_ATTRS | ATTR_CMN_DATA_PROTECT_FLAGS;
++    struct __attribute__((packed, aligned(4))) {
++        uint32_t length;
++        attribute_set_t returned;
++        uint32_t protection;
++    } output = {0};
++    errno = 0;
++    int result = fgetattrlist(fd, &requested, &output, sizeof(output), 0);
++    int code = result == -1 ? errno : 0;
++    BOOL present = result == 0 && (output.returned.commonattr & ATTR_CMN_DATA_PROTECT_FLAGS) != 0;
++    if (result == 0) {
++        demand(output.length == sizeof(uint32_t) + sizeof(attribute_set_t) + (present ? sizeof(uint32_t) : 0) &&
++            !(output.returned.commonattr & ~(ATTR_CMN_RETURNED_ATTRS | ATTR_CMN_DATA_PROTECT_FLAGS)) &&
++            !output.returned.volattr && !output.returned.dirattr && !output.returned.fileattr && !output.returned.forkattr,
++            @"returned-attribute-layout");
++    }
++    return @{@"sdk_available": @YES, @"return_value": @(result), @"errno": @(code),
++        @"length": @(output.length), @"returned_common_mask": @(output.returned.commonattr),
++        @"requested_common_mask": @(requested.commonattr), @"data_protection_mask": @(ATTR_CMN_DATA_PROTECT_FLAGS),
++        @"attribute_set_bytes": @(sizeof(attribute_set_t)),
++        @"returned_attributes_mask": @(ATTR_CMN_RETURNED_ATTRS), @"protection_returned": @(present),
++        @"class": present ? @(output.protection) : NSNull.null};
++#else
++    return @{@"sdk_available": @NO, @"status": @"PUBLIC_SDK_SYMBOL_UNAVAILABLE"};
++#endif
++}
++
++static NSDictionary *descriptorFilesystem(int fd) {
++    struct statfs value = {0};
++    errno = 0;
++    int result = fstatfs(fd, &value), code = result == -1 ? errno : 0;
++    NSMutableDictionary *record = [@{@"return_value": @(result), @"errno": @(code)} mutableCopy];
++    if (result == 0) {
++        demand(strnlen(value.f_fstypename, sizeof(value.f_fstypename)) < sizeof(value.f_fstypename), @"filesystem-type");
++        record[@"type"] = [NSString stringWithUTF8String:value.f_fstypename];
++        record[@"fsid"] = @[@(value.f_fsid.val[0]), @(value.f_fsid.val[1])];
++        record[@"flags"] = @(value.f_flags);
++#if defined(MNT_CPROTECT)
++        record[@"content_protection_capability"] = (value.f_flags & MNT_CPROTECT) ? @"supported" : @"unsupported";
++        record[@"content_protection_flag"] = @(MNT_CPROTECT);
++#else
++        record[@"content_protection_capability"] = @"PUBLIC_SDK_SYMBOL_UNAVAILABLE";
++#endif
++    }
++    return record;
++}
++
++NSDictionary *ParlorProtectionSample(NSString *path) {
++    int fd = -1;
++    NSMutableDictionary *record = [@{@"schema": @1, @"collection_status": @"FAIL", @"reads": [NSMutableArray array]} mutableCopy];
++    @try {
++        demand(path.isAbsolutePath && [path isEqual:path.stringByStandardizingPath] && getuid() > 0 && getuid() == geteuid(), @"sample-path");
++        struct stat named;
++        demand(lstat(path.fileSystemRepresentation, &named) == 0 && named.st_uid == getuid() &&
++            (S_ISREG(named.st_mode) || S_ISDIR(named.st_mode)) && named.st_nlink >= 1 &&
++            (!S_ISREG(named.st_mode) || named.st_nlink == 1) && named.st_size >= 0 && named.st_size <= 16 * 1024 * 1024,
++            @"sample-type-owner-links-size");
++        BOOL directory = S_ISDIR(named.st_mode);
++        NSDictionary *expected = identity(named);
++        record[@"identity"] = expected;
++        fd = open(path.fileSystemRepresentation, O_RDONLY | O_NOFOLLOW | O_CLOEXEC | (directory ? O_DIRECTORY : 0));
++        demand(fd >= 0, @"sample-open");
++        attest(path, fd, expected);
++        for (NSString *kind in @[@"fm", @"url", @"fcntl", @"attrlist", @"filesystem"]) {
++            attest(path, fd, expected);
++            NSDictionary *value = [kind isEqual:@"fm"] ? foundationQuery(path, directory, YES) :
++                [kind isEqual:@"url"] ? foundationQuery(path, directory, NO) :
++                [kind isEqual:@"fcntl"] ? descriptorClass(fd) :
++                [kind isEqual:@"attrlist"] ? descriptorAttributes(fd) : descriptorFilesystem(fd);
++            attest(path, fd, expected);
++            record[kind] = value;
++            [record[@"reads"] addObject:@{@"kind": kind, @"before": expected, @"after": expected,
++                @"descriptor_and_path_same_inode": @YES}];
++        }
++        record[@"collection_status"] = @"PASS";
++    } @catch (NSException *exception) {
++        record[@"failure"] = [exception.name isEqual:@"ProtectionBoundary"] ? exception.reason : @"native-exception";
++    } @finally {
++        if (fd >= 0) {
++            int result = close(fd);
++            record[@"descriptor_closed"] = result == 0 ? @YES : @NO;
++            if (result != 0) record[@"collection_status"] = @"FAIL";
++        } else record[@"descriptor_closed"] = @NO;
++    }
++    return record;
++}

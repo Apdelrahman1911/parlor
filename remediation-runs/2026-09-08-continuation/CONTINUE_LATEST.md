@@ -1,14 +1,16 @@
 # Continuation execution ledger — 2026-09-10
 
-## CURRENT — 902597bb freeze through failed APP02; NOT_READY
+## CURRENT — 9abd3c4c APP03 app capture, whole diagnostic FAIL; NOT_READY
 
 `N=remediation-runs/2026-09-08-continuation`. This cutoff supersedes older current-state prose, not retained failures.
-- Committed freeze `902597bb5d074530acd6b8b14279968e8f5c6503`, tree `3882fc1d8b2604cb16eae5b7551565c41c98468b`.
-  Source `8da6fad53163c6920c97e366cffbeffe0dcb6280` corrected the copied Kotlin import;
+- Committed freeze `9abd3c4c7d4e04c2c5243639417543d9b1f9aa9f`, tree `e102b09492147118b4c09fb536d0dc88840f273b`.
+  Source `4bfa199316d53d312b8dad299fb3949c183669d7` removed explicit NSObject inheritance and used exact scalar version checks;
+  independent approval: `$N/reviews/protection-application-swift-boundary-independent-01.json`.
+  Earlier source `8da6fad53163c6920c97e366cffbeffe0dcb6280` corrected the copied Kotlin import;
   `45a0d06f9060df01b2d1a5343fd64cdfdf739aba` retained safe command identity on preflight timeouts, without extending budgets.
 - Preflight34533039007/1 at72736446 **FAIL/TimeoutExpired**; original failing command not retained.
   Raw `$N/actions/34533039007/preflight/failure.json`; cleanup PASS, no app/runtime execution.
-- Fresh APP-only preflight34534289751/1 at902597bb **PASS**:844 source rows,112 bound controls,
+- Historical APP-only preflight34534289751/1 at902597bb **PASS**:844 source rows,112 bound controls,
   Xcode26.3/17C529, arm64 iOS26.2/23C54; binding cleanup PASS, no application tests/runtime.
   Raw `$N/actions/34534289751/`; independent `reviews/protection-application-preflight-admission-02.json`.
 - **APP02 run34534798397/1 at902597bb FAIL**, `PROTECTION_APPLICATION_NOT_CAPTURED`, xcodebuild65.
@@ -18,13 +20,25 @@
   `receipt.json`, `xcodebuild.log.gz`, `xcresult-summary.json`, `protection-retention.json`; no protection closure.
   Inner cleanup **PASS**,17 stages/two stops0; owned simulator/copy/DerivedData/temp removed,
   source/controls unchanged, no remaining owned workers/unknown holders/errors. Outer `cleanup/` also PASS.
-- Two copy-template corrections are under independent review at this cutoff: remove the marker's
-  explicit NSObject inheritance and replace array comparison with three exact scalar version checks.
-  No new target compile/runtime or fresh dispatch yet. Finish review, commit source then inventory,
-  create fresh APP-only preflight/control bindings and obtain independent admission before execution.
+- Fresh APP-only preflight34538599669/1 at9abd3c4c **PASS**, same qualified platform;844 source rows,
+  112 bound controls, binding cleanup PASS. `$N/actions/34538599669/` and `reviews/protection-application-preflight-admission-03.json`.
+- **APP03 run34539013540/1 at9abd3c4c remains FAIL**, despite xcodebuild0 and **1 XCTest PASS,0 FAIL/SKIP**.
+  Copied app emitted six Kotlin/native same-inode samples; retained validator result is
+  **CAPTURED_NOT_PROTECTION_PASS**, **strict0PASS/6FAIL** (all FileManager protection keys missing).
+  First/overwrite crypto-roundtrip flags true, replacement inode changed. These public-synthetic-data
+  filesystem/Keychain observations are not game snapshot validation, normal-runtime/provenance or hardware qualification.
+  Raw `$N/actions/34539013540/native-evidence/ios-readiness-40/`: `protection-application-validation.json`,
+  `parlor-protection-application*.json`, `xcresult-summary.json`, `receipt.json`, `xcodebuild.log.gz`.
+  Whole diagnostic/outer result is FAIL/`PROTECTION_APPLICATION_NOT_CAPTURED`: macOS SDK macro-dump
+  UTF-8 read raised `UnicodeDecodeError`, byte0xa9 at208017. Preprocessor exited0; host-reader executable
+  compilation/execution was not reached. Raw temporary dump was not retained; no offending macro is identified.
+  Both cleanup receipts **PASS**:17 inner stages/two stops0, source/controls unchanged, owned simulator/copy/
+  DerivedData/temp removed, no remaining owned workers/unknown holders/errors; outer packet in `actions/34539013540/cleanup/`.
+- Macro-byte preservation/parsing correction is under implementation/review, not a completed repair or new runtime result.
+  Finish independent review, commit source then inventory and obtain fresh APP-specific preflight/control admission.
 - **Strict A37 remains0PASS/26FAIL**; capture alone cannot satisfy unchanged strict production validation.
-  **Final combined qualification NOT_RUN** for the six mandatory jobs. D04's902597bb request was
-  conditionally admitted, not dispatched; pending source edits require a fresh exact-source request/admission.
+  **Final combined qualification NOT_RUN** for the six mandatory jobs. D05 at9abd3c4c is prepared/conditionally
+  admitted, not dispatched; macro-fix source changes require a fresh exact-source request/admission. D04 was not run.
   C08 remains historical scoped evidence, not current-SHA consumption; physical/Store/owner/legal gates remain.
 
 ## Historical09f freeze through failed PA40 — superseded cutoff, preserved evidence

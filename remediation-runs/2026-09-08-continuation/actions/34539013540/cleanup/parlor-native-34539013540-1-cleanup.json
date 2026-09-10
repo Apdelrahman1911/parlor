@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "context": {
+    "repository": "Apdelrahman1911/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "head_sha": "9abd3c4c7d4e04c2c5243639417543d9b1f9aa9f",
+    "tree": "e102b09492147118b4c09fb536d0dc88840f273b",
+    "workflow": ".github/workflows/production-verification.yml",
+    "root": "/Users/runner/work/parlor/parlor",
+    "run_id": 34539013540,
+    "run_attempt": 1
+  },
+  "scope": "native-evidence",
+  "selection": "protection-application-only",
+  "unselected_lanes": {
+    "l08": "NOT_RUN_THIS_RUN",
+    "normal": "NOT_RUN_THIS_RUN"
+  },
+  "started_at": "2026-09-10T23:03:32.353645+00:00",
+  "status": "PASS",
+  "removed": [
+    "remediation-runs/2026-09-08-continuation/evidence/ios-readiness-40",
+    "remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json",
+    "remediation-runs/2026-09-08-continuation/build-lane.lock"
+  ],
+  "errors": [],
+  "upload": {
+    "artifact_id": "10177013503",
+    "sha256": "c26906398e8d7f76f7e83b0f88246b2b1308f95d8d285e61f8ce2b8ce627c3f5"
+  },
+  "native_runs": {
+    "protection_application": {
+      "cycle": "ios-readiness-40",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "/Users/runner/work/parlor/parlor/remediation-runs/2026-09-08-continuation/protection-application-01/application_probe.py",
+        "ios-readiness-40",
+        "/Users/runner/work/parlor/parlor/remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json",
+        "a7056799457b41a5e07d112795eef74451e18fd31624079e21ff65121597f66f",
+        "--simulator-signing=adhoc",
+        "--toolchain=qualified-xcode-26.3",
+        "--simulator-lifecycle=direct-owned-v1"
+      ],
+      "started_at": "2026-09-10T22:46:30.064198+00:00",
+      "status": "FINISHED",
+      "exit_code": 1,
+      "finished_at": "2026-09-10T23:03:29.012079+00:00",
+      "receipt_status": "FAIL",
+      "cleanup_safe": true,
+      "receipt_sha256": "62b3711b0e3a033128172b80015d9bbe52265dd4b5dac443f2c9a6c07938bee1",
+      "diagnostic_status": "FAIL",
+      "strict_protection_status": "FAIL"
+    }
+  },
+  "cache_policy": {
+    "created": [
+      "/Users/runner/.gradle/caches",
+      "/Users/runner/.gradle/wrapper"
+    ],
+    "policy": "Dependency/distribution cache only; never delete global caches."
+  },
+  "stop_policy": "Canonical native receipts attest immediate/final isolated Gradle stops; preflight builds nothing.",
+  "source_unchanged": true,
+  "finished_at": "2026-09-10T23:03:32.578672+00:00"
+}
