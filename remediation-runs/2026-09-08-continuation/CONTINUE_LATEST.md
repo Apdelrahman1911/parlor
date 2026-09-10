@@ -1,10 +1,12 @@
 # Continuation execution ledger — 2026-09-10
 
-**Latest pre-qualification checkpoint: the observed L08 selector correction and
-bounded Android cleanup sample are independently source-reviewed and adopted;
-37 focused Linux controls PASS. Settings36 supplied actual selector data but
-remains FAIL from strict process polling. A37/C07/final full D NOT_RUN yet.
-Historical B30 scoped PASS retained; strict protection remains FAIL. NOT_READY.**
+**Latest checkpoint: A37 actually ran and remains FAIL after the real single
+Settings tap. Separately executed retrospective validators accept its scoped
+functional-storage and retained-host matrices; strict protection remains FAIL.
+C07 COMPLETE at15e; historical B30 scoped PASS applies through15e. The minimal
+two-stage OS-only followup is source-reviewed; focused Linux controls PASS,
+independent actual-result review accepted. OS39 NOT_RUN; its freeze and
+final same-source combined D remain pending. NOT_READY.**
 
 Read `AGENTS.md`, [`CONTINUE_HERE.md`](../../CONTINUE_HERE.md), the Linux handoff
 and preserved transfer handoff. Paths below use
@@ -15,100 +17,108 @@ not overall readiness. Later delivery commits never relocate older execution.
 ## Current source and next freeze
 
 - Branch `fix/local-readiness-2026-09-07`; repository `Apdelrahman1911/parlor`.
-- Latest pushed freeze at this checkpoint: `bd939632975e6e7802896322b514af06b6a7f6c3`,
-  tree `b3f7fc54702e5dd0c6d8401f44b51d1a45706652`. Source correction commit
-  `db97a55f397f76170a664028f4c5e95727cd6140`; inventory24,076 rows and check PASS.
-  Normal push/direct remote equality: `$N/actions/settings-sheet-preflight-02/`.
-- Seven later reviewed control/fixture files are adopted and tested, awaiting
-  source commit then inventory-only freeze. No shipping application source,
-  protocol4.2, deterministic seed, privacy/authority, Doctor or timer change.
-- New current cycles: **A37/B38; Settings36 unchanged**. Next native selection is
-  **l08-only** after fresh paired preflight and independent bindings; B38 will
-  remain NOT_RUN_THIS_RUN, not a relabeled B30 result. Old bindings are stale.
+- Latest pushed freeze: `15e8982b35e39006868868a11c6f4e1864e613a7`, tree
+  `8f3fd56f86d7934fddaff068539d69fe26d4aaad`; source correction commit
+  `ab4d4a49c863828b0cb1ace033caf40ecf98bf17`. Inventory24,198 rows; check PASS.
+  Freeze: `$N/reviews/a37-c07-d-source-freeze-01.json`; normal push0 and actual
+  remote equality: `$N/actions/l08-final-preflight-01/push-receipt.json`.
+- This commits the independently reviewed exact `Use English (US)` copied-fixture
+  correction and bounded Android cleanup sample, without shipping-source changes.
+- OS-only copy/Swift, driver/receipts, CI and collector source reviews are sealed,
+  with no open findings: `$N/reviews/os-recovery-copy-swift-independent-01.json`,
+  `os-recovery-driver-receipts-independent-01.json`, `os-recovery-ci-independent-01.json`
+  and `os-recovery-native-collector-independent-01.json`. Source freeze is next,
+  not already established; **OS39 native execution NOT_RUN**.
+- `$C/evidence/continuation-os-recovery-controls-linux-01/` actually **PASS**:
+  **165 Python tests (26+81+57+1) and9 targeted Gradle cases**, zero failures/skips.
+  Gradle test task executed; compiles were cached. All193 explicit control rows
+  and840 source rows stable; stop0,7 build roots removed, no workers/outputs/errors.
+  Independent actual-result review accepted:
+  `$N/reviews/os-recovery-controls-linux-actual-independent-01.json`.
+  These controls are not native runtime.
 
-## Completed followups and actual verification
+## A37 actual execution and separately accepted components
 
-- **Windows34431938089/1 PASS at730a91e4:**203 fresh XML suites,13 actually executed
-  desktop leaves, **1,337 PASS /3 physical-LAN SKIP /0 FAIL**. Kotlin Native
-  distribution and Android resource processing passed; these are not app runtime.
-  Both stops0;167 claimed cleanup paths reconciled, no retained outputs/errors.
-  Evidence `$N/actions/34431938089/`; independent review
-  `$N/reviews/windows-34431938089-actual-independent-01.json`.
-- **Settings35 FAIL at730a**, run34433711685/1: Xcode64 rejected repetition-mode
-  arguments before any test. Zero tests/labels; failure retained, cleanup PASS.
-  The reviewed single-execution CLI correction had **6/6 focused controls PASS**
-  at730a plus its five working changes, then was committed in db97a55f/bd939632.
-- **Fresh Settings36 preflight34437271196/1 atbd939 PASS:** exact three-file
-  source/control package, qualified Xcode26.3/17C529, iOS26.2 ARM64 simulator
-  profile. Artifact10136633764;105-row control
-  `10c7553a8cc297f8084ada5f6af993ed3df448a0ab0da7c024b328fc64f59023`.
-  Nonbuilding binding only; independent admission under
-  `$N/reviews/settings36-preflight34437271196-admission-independent-01.json`.
-- **Settings36 diagnostic34437980623/1 atbd939 remains FAIL:** one actual expected
-  Swift XCTest **PASS**, no skips; the sole bounded raw marker records
-  `Use Arabic`, **`Use English (US)`**, `Cancel`, `selectionTapped=false`.
-  Strict original `ps`15s polling raised after the test. The exception-cleanup
-  command row records child exit0, but canonical capture acceptance never ran:
-  no top-level xcodebuild exit field or `public-sheet-actions.json`. Do not
-  manufacture either or call this diagnostic PASS. Inner/outer cleanup PASS,
-  both stops0, owned simulator/temp removed; source/controls/copies unchanged.
-  Actual `$N/actions/34437980623/native-evidence/ios-readiness-36/`; independent
-  `$N/reviews/settings36-34437980623-actual-independent-01.json` admits only the
-  raw public selector data. No Parlor/Kotlin build/runtime/provenance credit.
-- **Observed selector correction:** revision02 in
-  `$N/reviews/l08-observed-english-us-selector-01/` adds only that exact label to
-  both copied L08 choice arrays. Existing exact block pins/unknown-action mutation
-  and A37/B38 current references updated. One real tap, uniqueness, unknown-action
-  rejection, complete actual preferred-list proof and strict protection unchanged.
-  Independent source approval `l08-observed-english-us-selector-independent-01.json`.
-- **Android cleanup sample:** reviewed/adopted two-file change under
-  `$N/reviews/android-emulator-absence-audit-01/`. A bounded, read-only selected-UID
-  SDK/emulator-path sample runs after existing retention/ownership gates and before
-  deletion; failure retains outputs. No signals, adb, task-ownership grant or AVD
-  retirement; no retrospective upgrade of4cc cleanup. Hosted sample NOT_RUN yet.
-- **Batched local37/37 controls PASS (100% of these methods):**33 hygiene,
-  three affected existing L08 guards and one cycle guard atbd939+the seven reviewed
-  changes. `$C/evidence/continuation-l08-selector-hygiene-controls-01/`: exit0,
-  stop0, unchanged source/runner during cycle, no remaining outputs/workers/errors.
-  Synthetic fixtures are not Apple/Android application or real procfs execution.
+- **A37 FAIL at15e**, run34442662032/1, `l08-only`; **B38 NOT_RUN_THIS_RUN**.
+  Real copied/instrumented Debug app and XCTest built/executed with Xcode26.3/
+  17C529 on arm64 iPhone17Pro/iOS26.2/23C54. **4/5 XCTest cases PASS, one FAIL,
+  zero SKIP**: four container wrappers passed; integration crashed with signal kill.
+  xcodebuild returned65 naturally, not an outer timeout or interruption.
+- The unique **`Use English (US)`** choice was actually tapped once at
+  `retainEnglishPrimary` (~2525s). No after-activation marker or OS result;
+  restarted runner executed zero tests. SIGKILL sender/cause is unknown; no
+  retained crash/jetsam/logarchive diagnosis distinguishes language reconfiguration,
+  watchdog or app fault. The observed boundary is below3000/3300s allowances;
+  neither a timeout increase nor an unchanged retry is justified by this evidence.
+- Original `verify_xctest` failed before component/final OS validators; original
+  accepted `xctest`, `l08_storage_functional`, `l08_host` fields remain absent.
+  Raw packet `$N/actions/34442662032/native-evidence/ios-readiness-37/`; review
+  `$N/reviews/native-a37-actual-independent-01.json` preserves the whole-run failure.
+- **New retrospective Linux evaluation actually executed unchanged pure validators
+  against those A37 records**, not a native rerun or unit-test suite (zero cases).
+  Functional storage **PASS**:20 ordered operations,13 cold boots,106 corroborated
+  invariants; real save/load/Home/continuation/terminal deletion, migration/bad
+  neighbor, Retry/Discard and owned metadata/header/backup checks across four variants.
+  Retained host **PASS**:42 operations,3 boots,156 invariants,9 BG/FG cycles,
+  3 remounts,18 suspend/resume guards and final Leave worker cleanup PASS.
+  ControlledStartRoom/synthetic pre-admitted peers are not physical LAN proof.
+- **Strict Complete gate remains0/26 PASS;26 FAIL**, with every failed tuple
+  retained. App-process Foundation setters/getters and unsupported-volume observations
+  do not waive validation, establish physical enforcement or prove an exclusive cause.
+  OS postproof/live-copy-phase validation were not executed retrospectively; neither
+  component PASS promotes original A37/XCTest/full-companion/strict protection.
+- Evaluation `$C/evidence/continuation-a37-scenario-validation-linux-01/`; accepted
+  by `$N/reviews/native-a37-retrospective-actual-independent-01.json`.
+  Outer exit0/stop0, scratch removed, no owned workers/outputs/errors.
+- A37 custody/cleanup **PASS**: immediate/final stops0 (first stop started14ms after
+  command exit),14 finalization stages PASS,12/12 simulator children and31/31 build
+  handles reaped; owned simulator/copy/DerivedData/temp/FIFOs removed, no remaining
+  workers/unknown holders/outputs/errors. Watcher failure exit1 and stop0 retained.
 
-## Retained A/B/C/D qualification status
+## B/C and retained qualification
 
-- **A33 FAIL** at4ccfafc, run34412114359/1:4/5 XCTest cases PASS (80%); one OS
-  selector failure prevented downstream final validators. Functional20 receipts/
-  13 boots and host42 operations/156 invariants remain scoped observations, not
-  whole-run acceptance. Strict Complete readback: **0/26 PASS;26 FAIL (0%)**.
-  Foundation controls also disagree; no exclusive simulator cause or justified
-  production patch established. Preserve this unresolved hold without waivers.
-  `$N/reviews/native-a33-strict-protection-reinspection-01.json`.
-- **B30 actual scoped PASS** at360fc797, run34362984912/1: eight normal Debug
+- **B30 actual scoped PASS**, run34362984912/1 at360fc797: eight normal Debug
   repetitions/48 samples, separate ninth launch/three real libproc queries.
-  Reviewed applicability through730a is historical, not new execution, whole-map
-  enumeration or memory hashing. Reconcile final-source applicability rather
-  than repeat unchanged B. `$N/reviews/native-b30-730a-source-applicability-01.json`.
-- **C06 COMPLETE at4cc:** export/render plus4/4 required candidate receipt layers
-  PASS,511 consumed files/four graph-BOM pairs, cleanup accepted. **C07 NOT_RUN**;
-  one fresh final-source export/render/reviewed binding/consumer is required.
-  `$N/reviews/candidate-input-c06-actual-independent-01.json` and
-  `candidate-c06-windows-applicability-c07-prep-01.json`.
-- **FullD34420745957/1 remains FAIL at4cc:**4/5 jobs succeeded (80%); Windows
-  checkout failed before current tests. Windows730a does not create a same-source
-  five-job PASS. Run **one final full** after the source settles, not intermediate
-  matrices. Reuse unchanged v02 collector and14 existing controls per
-  `$N/reviews/final-full-collector-route-02.json`; distinguish archived XML/cache
-  work from current executed tests. D does not substitute for focused L08/B.
+  Source/control applicability now approved through15e in
+  `$N/reviews/a37-preflight34440661169-admission-independent-01.json`.
+  This is historical runtime/provenance/notices/cleanup, not new15e execution,
+  B38PASS, future binary identity, identical runner image, whole-map enumeration,
+  memory hashing or continuous liveness. Whole A29/B30 workflow remains FAIL.
+- **C07 COMPLETE at15e:** actual export/render and **4/4 mandatory receipt layers
+  PASS** (consumer, adapter, schema bootstrap, outer lane);511 consumed files,
+  four graph/SBOM pairs, official schemas actually executed. Both package cleanup
+  booleans true, stop0, no outputs/workers/errors. Evidence
+  `$C/evidence/final-candidate-input-linux-07/`; independent review
+  `$N/reviews/candidate-input-c07-actual-independent-01.json`.
+  Resolved-input/source-notice integrity only, not runtime/legal readiness.
+  Keep C07 bound15e and C06 separately bound4cc; never relocate old execution.
+- **Windows34431938089/1 PASS at730a:**203 suites,13 executed desktop leaves,
+  **1,337 PASS /3 physical-LAN SKIP /0 FAIL**; stops0,167 cleanup paths reconciled.
+  `$N/reviews/windows-34431938089-actual-independent-01.json`.
+- **Settings35/36 remain FAIL**:35 Xcode64 before tests;36 one XCTest PASS supplied
+  raw public labels but strict15s process polling failed, no canonical capture.
+  Failures/cleanup preserved; no need to recapture the now-used selector labels.
+- Prior **37/37 local controls PASS** (33 hygiene,3 L08,1 cycle) apply to the
+  reviewed15e delta, not the new two-stage work. Android absence sampling is
+  committed but hosted execution NOT_RUN; it cannot retroactively retire4cc AVDs.
+- **FullD34420745957/1 remains FAIL at4cc:** four jobs succeeded; Windows checkout/
+  cleanup failed before current tests. Windows730a cannot be stitched into same-SHA D.
+  One final full run awaits settled source; reuse unchanged v02 collector/14 controls
+  per `$N/reviews/final-full-collector-route-02.json`, not cached XML as fresh runtime.
 
 ## Remaining work and boundaries
 
-1. Commit reviewed controls and inventory; fresh paired preflight/admission.
-2. Execute A37 only; inspect all recovery/OS/protection/cleanup outcomes honestly.
-   No further Settings diagnostic is justified solely to recapture known labels.
-3. Run one fresh C07 chain and one final same-source five-job D, independently
-   reconcile actual results, update this ledger, commit/push and confirm remote.
+1. Retain independently accepted focused local results and the reviewed
+   OS-only strict oracles, ownership and killed-bootstrap failure without promotion.
+2. Commit reviewed changes, regenerate/commit mechanical inventory, then create fresh
+   source/control/platform bindings before any justified native execution. Outcome unknown.
+3. Refresh the appropriate final-source dependency chain and B applicability; run one
+   settled-source five-job D. Independently reconcile actual results/cleanup, update
+   this ledger, commit/push and confirm remote. Do not rerun unchanged successful scope.
 
 Original16 repairs and Whodunit Leave Confirmation timer policy remain committed.
-Physical LAN/lifecycle/accessibility, same-inode file-class/lock/keybag/backup/
-restore/power-loss tests, private signing and Store operations remain outside this
+Physical/mixed-LAN/lifecycle/accessibility, same-inode file-class/locked/pre-first-unlock/
+keybag/backup/restore/power-loss tests, private signing and Store operations remain outside this
 execution. `com.parlor.app` collision, owner/legal/content rights/editorial/privacy/
 account requirements remain separate. No Store workflow, identity change, merge,
 force-push or physical-device testing is authorized. **NOT_READY.**

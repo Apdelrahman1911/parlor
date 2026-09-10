@@ -1,0 +1,35 @@
+// Appended only to the copied Debug simulator app. No preference writes, Kotlin
+// bridge invocation, source changes between stages or normal-B provenance claim.
+#if DEBUG && targetEnvironment(simulator)
+extension DSC01Probe {
+    private func recordOSRecoveryImages(report: DSC01Report) throws {
+        precondition(Thread.isMainThread)
+        let starts = report.observations.filter { $0.phase == "before_main" }
+        let environment = ProcessInfo.processInfo.environment
+        guard report.scenario == "os", report.runToken == environment["PARLOR_DSC01_RUN_TOKEN"],
+              UUID(uuidString: report.runToken) != nil,
+              let simulator = environment["SIMULATOR_UDID"], UUID(uuidString: simulator) != nil,
+              simulator == environment["PARLOR_DSC01_EXPECTED_UDID"],
+              (1...8).contains(starts.count), starts.last?.boot == boot,
+              report.observations.last?.phase == "before_main", report.observations.last?.boot == boot,
+              nativeReadinessSigningMode == "adhoc" else { throw fixtureError() }
+        // The original before_main report is already durable. These unchanged
+        // dyld/file helpers do not invoke Kotlin or mount an early App controller.
+        let images = try nativeReadinessLoadedImages()
+        let loader = try nativeReadinessLoaderEnvironment()
+        let row: [String: Any] = ["schema_version": 1, "kind": "os-recovery-process-images",
+            "scenario": "os", "signing_mode": nativeReadinessSigningMode,
+            "boot_ordinal": starts.count, "process_boot": boot,
+            "process_id": ProcessInfo.processInfo.processIdentifier, "run_token": report.runToken,
+            "simulator_uuid": simulator, "loaded_app_images": images.app,
+            "loaded_compose_framework": images.framework, "loader_environment": loader]
+        let encoded = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
+        guard encoded.count <= 49152 else { throw fixtureError() }
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(
+            "parlor-os-recovery-images-\(starts.count).json")
+        // A duplicate/missing capture is an evidence failure, never a retry or
+        // overwritten successful sample. Failure escapes original prepare().
+        try encoded.write(to: url, options: [.withoutOverwriting])
+    }
+}
+#endif

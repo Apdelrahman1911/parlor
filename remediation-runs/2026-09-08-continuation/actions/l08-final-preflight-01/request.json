@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "kind": "ONE_NONBUILDING_PAIRED_PREFLIGHT_FOR_REVIEWED_FINAL_SOURCE",
+  "created_at": "2026-09-10T05:18:50.447484+00:00",
+  "coordinator": "/root",
+  "status": "COORDINATOR_AUTHORIZED_NONBUILDING_BINDING_ONLY_REVIEWED_SOURCE_AND_EXISTING_ROUTE",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "frozen_source_sha": "15e8982b35e39006868868a11c6f4e1864e613a7",
+  "tree": "8f3fd56f86d7934fddaff068539d69fe26d4aaad",
+  "inputs": {
+    "verification_scope": "native-preflight",
+    "native_selection": "paired",
+    "frozen_source_sha": "15e8982b35e39006868868a11c6f4e1864e613a7"
+  },
+  "maximum_dispatches": 1,
+  "source_freeze": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/a37-c07-d-source-freeze-01.json",
+    "bytes": 2567,
+    "sha256": "0db4d9bb127ecc6dacda9ceb7b2914edcadee915b4b5d0bd3f1cd1510d186dbb"
+  },
+  "source_and_actual_local_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/l08-selector-hygiene-local-actual-independent-01.json",
+    "bytes": 3671,
+    "sha256": "cfd0358c7f300156e6a3928ef94666b3d60f48a2d8a402ba3de8dddf46041257"
+  },
+  "expected_preflight_files": [
+    "preflight.json",
+    "ios-readiness-source-ci.json",
+    "l08-controls.json",
+    "normal-controls.json"
+  ],
+  "authorization_boundary": "User-authorized existing nonbuilding preflight after independent source review and clean committed inventory freeze. No separate repeat review of the unchanged nonbuilding workflow route; root verifies exact live source/remote/workflow/no-overlap. Fresh actual source/control/toolchain/artifact package and exact l08-only request must receive independent review before any native execution. This request is not runtime admission or normal B reuse approval.",
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=native-preflight",
+    "-f",
+    "native_selection=paired",
+    "-f",
+    "frozen_source_sha=15e8982b35e39006868868a11c6f4e1864e613a7"
+  ]
+}

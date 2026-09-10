@@ -1,0 +1,718 @@
+diff --git a/.github/workflows/production-verification.yml b/.github/workflows/production-verification.yml
+index ac06d699..5931c52a 100644
+--- a/.github/workflows/production-verification.yml
++++ b/.github/workflows/production-verification.yml
+@@ -19,10 +19,10 @@ on:
+         default: full
+         options: [full, native-preflight, native-evidence, native-process-probe, windows-only]
+       native_selection:
+-        description: Native lanes or Settings-sheet diagnostic (nondefault requires explicit scoped approval)
++        description: Native lanes, Settings diagnostic, or scoped OS recovery (explicit nondefault approval)
+         type: choice
+         default: paired
+-        options: [paired, l08-only, settings-sheet-only]
++        options: [paired, l08-only, settings-sheet-only, os-recovery-only]
+       frozen_source_sha:
+         description: Exact reviewed source/inventory SHA (required for every focused mode)
+         type: string
+@@ -45,7 +45,7 @@ on:
+         description: Independently approved normal libproc control hash (native-evidence only)
+         type: string
+       approved_probe_control_sha256:
+-        description: Independently approved process-probe or settings-sheet-only diagnostic control hash
++        description: Independently approved process-probe, settings-sheet-only, or os-recovery-only control hash
+         type: string
+ 
+ concurrency:
+@@ -513,7 +513,7 @@ jobs:
+     if: github.event_name != 'workflow_dispatch' || inputs.verification_scope != 'windows-only'
+     name: iOS tests, release frameworks, and Swift wrapper
+     runs-on: macos-15
+-    timeout-minutes: ${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'settings-sheet-only' && 40 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}
++    timeout-minutes: ${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'settings-sheet-only' && 40 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'os-recovery-only' && 120 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}
+     permissions:
+       contents: read
+       actions: read
+diff --git a/scripts/ci/NATIVE_CONTINUATION.md b/scripts/ci/NATIVE_CONTINUATION.md
+index fac1ba16..2c873bcc 100644
+--- a/scripts/ci/NATIVE_CONTINUATION.md
++++ b/scripts/ci/NATIVE_CONTINUATION.md
+@@ -51,7 +51,8 @@ Dispatch again at the **same SHA** with `verification_scope=native-evidence`,
+ - `approved_l08_control_sha256`, `approved_normal_control_sha256` (independently
+   reviewed `control_sha256` values, not the JSON-file hashes).
+ 
+-`native_selection` is a closed choice: **`paired` (default)** or `l08-only`.
++The A/B `native_selection` choices are **`paired` (default)** or `l08-only`;
++the separate closed Settings and OS-recovery selections are described below.
+ Omission preserves the A-then-B chain. `l08-only` is accepted only for
+ `verification_scope=native-evidence`; unknown or other combinations fail before
+ native allocation. Preflight stays nonbuilding, paired and binds **both** manifests;
+@@ -121,7 +122,8 @@ and that command's `timeout_seconds`. B's2700s whole command and120/240s XCTest
+ allowances are unchanged. No XCTest split, test-filter reduction, retry, app or
+ production timing change is introduced.
+ 
+-Ordinary `native-evidence` has a240-minute job ceiling (the explicitly separate Settings diagnostic below is40 minutes). Full and native-preflight
++Ordinary `native-evidence` has a240-minute job ceiling (Settings diagnostic40,
++OS-only recovery120). Full and native-preflight
+ remain120 minutes; the non-app process probe remains10. The first evidence-only
+ job step, before checkout, records `CLOCK_MONOTONIC_RAW` via
+ `time.clock_gettime_ns(time.CLOCK_MONOTONIC_RAW)`, bound to source SHA, job and
+@@ -359,3 +361,49 @@ Success is `SETTINGS_SHEET_CAPTURED_NOT_APP_QUALIFICATION`, not `PASS` for A/B.
+ Both original lanes remain `NOT_RUN_THIS_RUN`; normal runtime/provenance/notice
+ statuses stay `NOT_RUN`. Observe and independently review actual labels before
+ considering any fixture selector correction or another L08 execution.
++
++## Scoped public OS recovery, separate from A/B
++
++`native_selection=os-recovery-only` is accepted only with `native-preflight`
++or `native-evidence`. Cycle `ios-readiness-39` belongs exclusively to this new
++selection; A37, B38 and Settings36 labels and runner scopes are unchanged. Its
++preflight has exactly `preflight.json`, the source binding and
++`os_recovery-controls.json`. Use the existing `approved_probe_control_sha256`
++input for this distinct complete control manifest. Settings, process-probe and
++paired hashes/packages cannot replace it. Both dispatches still require the same
++freshly reviewed frozen source and actual qualified hosted toolchain observation.
++
++The new copy-only driver compiles once, then runs two individually selected
++XCTest invocations on the same exactly owned simulator: public OS bootstrap and
++per-app OS recovery. This is not a full L08 repetition or normal B provenance.
++The build-for-testing command is capped at2700seconds, bootstrap600 and proof900;
++the native child wait is5400seconds and the job ceiling120minutes. Existing
++600-second finalizer grace,600-second custody reserve and source/run-bound raw
++kernel-clock admission remain mandatory. No shorter finalizer, retry or timeout
++increase for the failed A37 test is authorized. These are bounded interruption
++deadlines, not a guarantee that every inherited operation's worst-case allowance
++fits. Exhaustion remains failure, with required evidence/resource retention.
++
++Every attempted stage records its actual command, outcome, immediate Gradle stop
++and retained raw evidence. The OS-only cleanup schema requires the exact ordered
++attempted prefix of `stop-build-immediate`, `stop-bootstrap-immediate`,
++`stop-proof-immediate`, followed by `stop-final`; all attempted stops must exit0.
++With no build attempt, all three stages remain exactly false/`NOT_RUN`, no Xcode
++action or Gradle stop is claimed, and the result remains failed/not-run. Stage
++return codes are joined to the actual command rows; an exceptional command has
++no invented returned stage exit and cannot become PASS through cleanup alone.
++The original two-stop A/B/Settings schema is unchanged. The original direct-owned
++simulator journal, postbuild preservation barrier, strict worker/holder checks,
++source/control/copy custody, successful upload and precise output-cleanup guards
++still apply. A failure is not permission to skip preservation or ownership checks.
++
++`bootstrap_status` and `os_subgate_status` are retained separately. Only exit0,
++`SCOPED_OS_RECOVERY_VERIFIED`, and both stages PASS with actual zero-exit stage
++commands can produce that scoped adapter result. A failed/nonzero bootstrap
++remains failed even if the separately validated OS subgate is PASS; the adapter
++reports `OS_RECOVERY_NOT_READY` (or `FAIL` on an exception), never A/B or combined
++PASS. Standard normal runtime/provenance/notice statuses and both original lanes
++remain `NOT_RUN`/`NOT_RUN_THIS_RUN`. OS-specific observations cannot erase A37's
++SIGKILL, establish its sender, waive strict protection failures, or upgrade
++historical functional/host/B results. Actual platform evidence and independent
++review remain required; a new selection or passing fixture controls prove neither.
+diff --git a/scripts/ci/native_continuation.py b/scripts/ci/native_continuation.py
+index 423447a5..a0f58e3d 100644
+--- a/scripts/ci/native_continuation.py
++++ b/scripts/ci/native_continuation.py
+@@ -43,8 +43,19 @@ RUNNERS = {
+ SHEET_RUNNERS = {"settings_sheet": "scripts/verification/ios-settings-sheet/settings_sheet_probe.py"}
+ SHEET_SELECTION = "settings-sheet-only"
+ SHEET_CAPTURED = "SETTINGS_SHEET_CAPTURED_NOT_APP_QUALIFICATION"
+-CYCLES = {"l08": "ios-readiness-37", "normal": "ios-readiness-38", "settings_sheet": "ios-readiness-36"}
+-NATIVE_SELECTIONS = {"paired": ("l08", "normal"), "l08-only": ("l08",), SHEET_SELECTION: ("settings_sheet",)}
++OS_RUNNERS = {"os_recovery": "scripts/verification/ios-os-recovery/os_recovery_probe.py"}
++OS_SELECTION = "os-recovery-only"
++OS_VERIFIED = "SCOPED_OS_RECOVERY_VERIFIED"
++OS_EXECUTION_KIND = "owned-simulator-os-only-two-invocation-recovery"
++OS_STAGES = ("build", "bootstrap", "proof")
++OS_SELECTORS = ("iosAppUITests/IOSAppLaunchUITests/testDSC01OSPublicBootstrap",
++                "iosAppUITests/IOSAppLaunchUITests/testDSC01OSPerAppRecovery")
++OS_WAIT_SECONDS = 5400
++OS_JOB_SECONDS = 120 * 60
++CYCLES = {"l08": "ios-readiness-37", "normal": "ios-readiness-38", "settings_sheet": "ios-readiness-36",
++          "os_recovery": "ios-readiness-39"}
++NATIVE_SELECTIONS = {"paired": ("l08", "normal"), "l08-only": ("l08",), SHEET_SELECTION: ("settings_sheet",),
++                     OS_SELECTION: ("os_recovery",)}
+ LIFECYCLE_MODE = "direct-owned-v1"
+ NATIVE_JOB_SECONDS = 240 * 60
+ NATIVE_WAIT_SECONDS = 6000
+@@ -147,6 +158,9 @@ def effective_scope(event, requested):
+ def effective_native_selection(scope, requested):
+     selection = "paired" if requested in (None, "") else requested
+     require(isinstance(selection, str) and selection in NATIVE_SELECTIONS, "unknown-native-selection")
++    if selection == OS_SELECTION:
++        require(scope in {"native-preflight", "native-evidence"}, "os-recovery-only-requires-native-preflight-or-evidence")
++        return selection
+     require(selection == "paired" or scope == "native-evidence" or
+             selection == SHEET_SELECTION and scope == "native-preflight", "l08-only-requires-native-evidence")
+     return selection
+@@ -595,7 +609,83 @@ def lifecycle_journal_matches(raw, receipt, root, evidence):
+         return False
+ 
+ 
+-def cleanup_is_safe(receipt, approved, source, *, lifecycle_mode=None):
++def os_recovery_stops_are_safe(receipt, commands, stops):
++    """New OS-only attempted prefix; never relax the original two-stop schema."""
++    try:
++        stages = receipt["os_recovery_stages"]
++        if not (receipt["execution_kind"] == OS_EXECUTION_KIND and isinstance(stages, dict) and
++                set(stages) == set(OS_STAGES) and all(isinstance(stages[name], dict) for name in OS_STAGES)):
++            return False
++        flags = [stages[name]["attempted"] for name in OS_STAGES]
++        if any(type(value) is not bool for value in flags) or flags != sorted(flags, reverse=True):
++            return False
++        attempted = [name for name in OS_STAGES if stages[name]["attempted"]]
++        expected_stops = ["stop-" + name + "-immediate" for name in attempted] + (["stop-final"] if attempted else [])
++        if (receipt.get("build_attempted") is not bool(attempted) or
++                [row.get("label") for row in stops] != expected_stops or
++                any(type(row.get("exit_code")) is not int or row["exit_code"] != 0 for row in stops)):
++            return False
++        actions = {"build-for-testing", "test-without-building", "build", "test", "archive"}
++        builds = [row for row in commands if row["command"] and
++                  Path(row["command"][0]).name == "xcodebuild" and any(arg in actions for arg in row["command"])]
++        if len(builds) != len(attempted):
++            return False
++        for name, row in zip(attempted, builds):
++            arguments = row["command"]
++            stage = stages[name]
++            action = "build-for-testing" if name == "build" else "test-without-building"
++            selectors = OS_SELECTORS if name == "build" else (OS_SELECTORS[0 if name == "bootstrap" else 1],)
++            if not (stage.get("action") == action and stage.get("status") in {"PASS", "FAIL"} and
++                    stage.get("result_bundle") == name + ".xcresult" and stage.get("log") == row.get("log") == name + "-xcodebuild.log" and
++                    stage.get("preserved") is True and type(stage.get("stop_exit_code")) is int and stage["stop_exit_code"] == 0 and
++                    [arg for arg in arguments if arg in actions] == [action] and
++                    [arg for arg in arguments if arg.startswith("-only-testing:")] == ["-only-testing:" + item for item in selectors] and
++                    not any(arg.startswith("-skip-testing") for arg in arguments) and
++                    arguments.count("-resultBundlePath") == 1 and
++                    Path(arguments[arguments.index("-resultBundlePath") + 1]).name == stage["result_bundle"]):
++                return False
++            if stage.get("command_completed") is True:
++                if not (type(stage.get("exit_code")) is int and type(row.get("exit_code")) is int and
++                        stage["exit_code"] == row["exit_code"] and (stage["status"] != "PASS" or stage["exit_code"] == 0)):
++                    return False
++            elif stage.get("command_completed") is False:
++                # Exceptions have no returned stage exit; a cleanup/reap exit is
++                # retained only on the actual command, never invented as success.
++                if not (stage["status"] == "FAIL" and "exit_code" not in stage and
++                        row.get("interrupted_or_failed") is True and isinstance(row.get("primary_error"), dict) and
++                        (row.get("exit_code") is None or type(row["exit_code"]) is int)):
++                    return False
++            else:
++                return False
++        return all(stages[name] == {"attempted": False, "status": "NOT_RUN"} for name in OS_STAGES if name not in attempted)
++    except (KeyError, IndexError, TypeError, ValueError, AttributeError):
++        return False
++
++
++def os_recovery_summary(receipt):
++    """OS proof and bootstrap result stay separate, including safely cleaned failures."""
++    require(receipt.get("execution_kind") == OS_EXECUTION_KIND and receipt.get("image_observer") == "NOT_RUN_NORMAL_PROVENANCE" and
++            isinstance(receipt.get("status"), str) and
++            receipt["status"] in {OS_VERIFIED, "FAIL"} and
++            all(receipt.get(key) == "NOT_RUN" for key in ("runtime_evidence_status", "provenance_status", "notice_package_status")),
++            "os-recovery-is-not-a-b-qualification")
++    summary = {key: receipt.get(key) for key in ("bootstrap_status", "os_subgate_status")}
++    stages = receipt.get("os_recovery_stages")
++    require(all(isinstance(value, str) and value in {"PASS", "FAIL", "NOT_RUN"} for value in summary.values()) and
++            isinstance(stages, dict) and set(stages) == set(OS_STAGES) and
++            all(isinstance(stages[name], dict) for name in OS_STAGES), "invalid-os-recovery-stage-status")
++    passed = lambda name: (stages[name].get("attempted") is True and stages[name].get("command_completed") is True and
++                           stages[name].get("status") == "PASS" and
++                           type(stages[name].get("exit_code")) is int and stages[name]["exit_code"] == 0)
++    require(all(summary[key] != "PASS" or passed(name) for key, name in
++                (("bootstrap_status", "bootstrap"), ("os_subgate_status", "proof"))), "os-stage-pass-without-zero-exit")
++    if receipt["status"] == OS_VERIFIED:
++        require(all(value == "PASS" for value in summary.values()) and all(passed(name) for name in OS_STAGES),
++                "failed-bootstrap-or-stage-is-not-os-success")
++    return summary
++
++
++def cleanup_is_safe(receipt, approved, source, *, lifecycle_mode=None, os_recovery=False):
+     if not isinstance(receipt, dict):
+         return False
+     stops = receipt.get("gradle_stops", [])
+@@ -609,8 +699,12 @@ def cleanup_is_safe(receipt, approved, source, *, lifecycle_mode=None):
+         row.get("command") and Path(str(row["command"][0])).name == "xcodebuild" and
+         any(arg in {"test", "build"} for arg in row["command"][1:])
+         for row in receipt.get("commands", [])))
+-    if (not isinstance(stops, list) or any(not isinstance(row, dict) or row.get("exit_code") != 0 for row in stops) or
+-            attempted and (len(stops) != 2 or {row.get("label") for row in stops} != {"stop-xcode-immediate", "stop-final"})):
++    if not isinstance(stops, list) or any(not isinstance(row, dict) or row.get("exit_code") != 0 for row in stops):
++        return False
++    if os_recovery:
++        if not os_recovery_stops_are_safe(receipt, commands, stops):
++            return False
++    elif attempted and (len(stops) != 2 or {row.get("label") for row in stops} != {"stop-xcode-immediate", "stop-final"}):
+         return False
+     if lifecycle_mode is not None and (lifecycle_mode != LIFECYCLE_MODE or
+             not direct_lifecycle_is_safe(receipt, approved, source) or
+@@ -813,6 +907,8 @@ class Continuation:
+ 
+     @property
+     def runners(self):
++        if self.selection == OS_SELECTION:
++            return OS_RUNNERS
+         return SHEET_RUNNERS if self.selection == SHEET_SELECTION else RUNNERS
+ 
+     @property
+@@ -861,6 +957,8 @@ class Continuation:
+             expected[key] = int(raw)
+         approvals = (("settings_sheet_sha256", "PARLOR_APPROVED_PROBE_CONTROL_SHA256"),) if self.selection == SHEET_SELECTION else (
+             ("l08_sha256", "PARLOR_APPROVED_L08_CONTROL_SHA256"), ("normal_sha256", "PARLOR_APPROVED_NORMAL_CONTROL_SHA256"))
++        if self.selection == OS_SELECTION:
++            approvals = (("os_recovery_sha256", "PARLOR_APPROVED_PROBE_CONTROL_SHA256"),)
+         for key, variable in (("artifact_sha256", "PARLOR_PREFLIGHT_ARTIFACT_SHA256"), *approvals):
+             raw = self.env.get(variable, "")
+             require(HEX64.fullmatch(raw), "missing-independent-preflight-or-control-hash")
+@@ -927,7 +1025,10 @@ class Continuation:
+                         stdout=output, stderr=subprocess.STDOUT)
+                     if entry.get("interrupted"):
+                         raise NativeInterrupted()
+-                    entry["exit_code"] = child.wait(timeout=900 if self.selection == SHEET_SELECTION else NATIVE_WAIT_SECONDS)
++                    wait_seconds = 900 if self.selection == SHEET_SELECTION else NATIVE_WAIT_SECONDS
++                    if self.selection == OS_SELECTION:
++                        wait_seconds = OS_WAIT_SECONDS
++                    entry["exit_code"] = child.wait(timeout=wait_seconds)
+                 except (subprocess.TimeoutExpired, NativeInterrupted) as error:
+                     finishing = True
+                     entry["timed_out"] = isinstance(error, subprocess.TimeoutExpired)
+@@ -947,6 +1048,8 @@ class Continuation:
+         require(label in self.selected_lanes, "native-lane-not-selected")
+         wait_seconds = 900 if self.selection == SHEET_SELECTION else NATIVE_WAIT_SECONDS
+         job_seconds = 40 * 60 if self.selection == SHEET_SELECTION else NATIVE_JOB_SECONDS
++        if self.selection == OS_SELECTION:
++            wait_seconds, job_seconds = OS_WAIT_SECONDS, OS_JOB_SECONDS
+         required = wait_seconds + NATIVE_GRACE_SECONDS + NATIVE_FINISH_RESERVE_SECONDS
+         admission = dict(cycle=CYCLES[label], status="DENIED_NOT_RUN", job_budget_seconds=job_seconds,
+                          child_wait_seconds=wait_seconds, finalizer_grace_seconds=NATIVE_GRACE_SECONDS,
+@@ -1010,7 +1113,8 @@ class Continuation:
+             self.save()
+         require(preserved["status"] == "COMPLETE", "native-evidence-not-fully-preserved-retain-canonical-files")
+         receipt = decode(file_bytes(destination / "receipt.json", 8 * 1024 * 1024))
+-        safe = cleanup_is_safe(receipt, approved, source, lifecycle_mode=LIFECYCLE_MODE)
++        safe = cleanup_is_safe(receipt, approved, source, lifecycle_mode=LIFECYCLE_MODE,
++                               **({"os_recovery": True} if label == "os_recovery" else {}))
+         if safe:
+             journal = destination / "simulator-lifecycle.jsonl"
+             raw = file_bytes(journal, 1024 * 1024)
+@@ -1019,6 +1123,8 @@ class Continuation:
+                     receipt["simulator_lifecycle"]["journal"]["identity"] == [info.st_dev, info.st_ino, info.st_uid])
+         entry.update(receipt_status=receipt.get("status"), cleanup_safe=safe,
+                      receipt_sha256=sha(file_bytes(destination / "receipt.json", 8 * 1024 * 1024)))
++        if label == "os_recovery":
++            entry["os_recovery"] = self.state["os_recovery"] = os_recovery_summary(receipt)
+         self.state["cleanup_safe"] = safe
+         self.save()
+         require(not entry.get("interrupted") and not entry.get("timed_out") and
+@@ -1040,6 +1146,11 @@ class Continuation:
+         # Paired A partial/strict failure is retained; it does not prevent the independent
+         # normal-source B observation if (and only if) A's actual cleanup is safe.
+         results = [self.run_native(label, expected[label + "_sha256"], source) for label in self.selected_lanes]
++        if self.selection == OS_SELECTION:
++            summary = self.state.get("os_recovery", {})
++            verified = (results == [(0, OS_VERIFIED)] and summary == {"bootstrap_status": "PASS", "os_subgate_status": "PASS"})
++            self.state["status"] = OS_VERIFIED if verified else "OS_RECOVERY_NOT_READY"
++            return 0 if verified else 2  # A separately passing OS subgate never erases a failed bootstrap.
+         if self.selection == SHEET_SELECTION:
+             captured = results == [(0, SHEET_CAPTURED)]
+             self.state["status"] = SHEET_CAPTURED if captured else "SETTINGS_SHEET_NOT_CAPTURED"
+@@ -1065,6 +1176,8 @@ class Continuation:
+         self.state = dict(schema_version=1, context=self.context, scope=self.scope, selection=self.selection,
+             unselected_lanes=self.unselected_lanes, base_custody=custody(self.base),
+             status="RUNNING", started_at=now(), files={}, directories={}, runs={}, cleanup_safe=True)
++        if self.selection == OS_SELECTION:
++            self.state["os_recovery"] = {"bootstrap_status": "NOT_RUN", "os_subgate_status": "NOT_RUN"}
+         self.save()
+         code = 1
+         try:
+@@ -1084,7 +1197,8 @@ class Continuation:
+                 write_new(self.bundle / "continuation.json", json_bytes(self.state))
+             self.state["bundle_manifest"] = tree_manifest(self.bundle)
+             self.save()
+-            print(json.dumps({key: self.state.get(key) for key in ("scope", "selection", "unselected_lanes", "status", "cleanup_safe", "error")}, indent=2))
++            keys = ("scope", "selection", "unselected_lanes", "status", "cleanup_safe", "error")
++            print(json.dumps({key: self.state.get(key) for key in keys + (("os_recovery",) if self.selection == OS_SELECTION else ())}, indent=2))
+         return code
+ 
+     def cleanup(self):
+diff --git a/scripts/release/tests/test_native_continuation.py b/scripts/release/tests/test_native_continuation.py
+index dc4f186c..54756e09 100644
+--- a/scripts/release/tests/test_native_continuation.py
++++ b/scripts/release/tests/test_native_continuation.py
+@@ -41,6 +41,32 @@ def cleanup_fixture():
+                 gradle_stops=[dict(label=label, exit_code=0) for label in ("stop-xcode-immediate", "stop-final")])
+ 
+ 
++def os_cleanup_fixture(prefix=3):
++    value = cleanup_fixture()
++    value.pop("xcodebuild_exit_code")
++    value.update(status=native.OS_VERIFIED if prefix == 3 else "FAIL", execution_kind=native.OS_EXECUTION_KIND,
++                 image_observer="NOT_RUN_NORMAL_PROVENANCE",
++                 build_attempted=bool(prefix), runtime_evidence_status="NOT_RUN", provenance_status="NOT_RUN",
++                 notice_package_status="NOT_RUN", bootstrap_status="PASS" if prefix >= 2 else "NOT_RUN",
++                 os_subgate_status="PASS" if prefix == 3 else "NOT_RUN", os_recovery_stages={}, commands=[], gradle_stops=[])
++    for index, name in enumerate(native.OS_STAGES):
++        stage = {"attempted": index < prefix, "status": "PASS" if index < prefix else "NOT_RUN"}
++        value["os_recovery_stages"][name] = stage
++        if not stage["attempted"]:
++            continue
++        action = "build-for-testing" if name == "build" else "test-without-building"
++        selectors = native.OS_SELECTORS if name == "build" else (native.OS_SELECTORS[0 if name == "bootstrap" else 1],)
++        stage.update(action=action, result_bundle=name + ".xcresult", log=name + "-xcodebuild.log",
++                     command_completed=True, exit_code=0, stop_exit_code=0, preserved=True)
++        value["commands"].append(dict(command=["/usr/bin/xcodebuild", action, "-resultBundlePath", "/owned/" + name + ".xcresult",
++                                              *["-only-testing:" + selector for selector in selectors]],
++                                      log=name + "-xcodebuild.log", exit_code=0))
++        value["gradle_stops"].append(dict(label="stop-" + name + "-immediate", exit_code=0))
++    if prefix:
++        value["gradle_stops"].append(dict(label="stop-final", exit_code=0))
++    return value
++
++
+ SYNTHETIC_JOB_START_NS = 1_000_000_000_000
+ 
+ 
+@@ -102,7 +128,8 @@ def zipped(files, info=None):
+ 
+ class NativeScopeTest(unittest.TestCase):
+     def test_native_selection_defaults_to_paired_and_is_closed(self):
+-        self.assertEqual(native.NATIVE_SELECTIONS, {'paired': ('l08', 'normal'), 'l08-only': ('l08',), 'settings-sheet-only': ('settings_sheet',)})
++        self.assertEqual(native.NATIVE_SELECTIONS, {'paired': ('l08', 'normal'), 'l08-only': ('l08',),
++                         'settings-sheet-only': ('settings_sheet',), 'os-recovery-only': ('os_recovery',)})
+         for scope in ('full', 'native-preflight', 'native-evidence', 'native-process-probe'):
+             for value in (None, '', 'paired'):
+                 with self.subTest(scope=scope, value=value):
+@@ -112,7 +139,10 @@ class NativeScopeTest(unittest.TestCase):
+             self.assertEqual(native.effective_native_selection(scope, 'settings-sheet-only'), 'settings-sheet-only')
+         for scope in ('full', 'native-process-probe'):
+             with self.assertRaises(RuntimeError): native.effective_native_selection(scope, 'settings-sheet-only')
+-        for value in ('normal-only', 'normal', 'l08', 'all', 'PAIRED', 'paired ', '../l08', False, 1, [], {}):
++        for scope in ('native-preflight', 'native-evidence'):
++            self.assertEqual(native.effective_native_selection(scope, 'os-recovery-only'), 'os-recovery-only')
++        for value in ('normal-only', 'normal', 'l08', 'all', 'PAIRED', 'paired ', '../l08', False, 1, [], {},
++                      'OS-RECOVERY-ONLY', 'os-recovery-only ', 'os-recovery'):
+             with self.subTest(value=value), self.assertRaisesRegex(RuntimeError, 'unknown-native-selection'):
+                 native.effective_native_selection('native-evidence', value)
+ 
+@@ -121,14 +151,16 @@ class NativeScopeTest(unittest.TestCase):
+                  ('full', 'native-preflight', 'native-process-probe')]
+         cases += [('push', 'native-evidence', 'l08-only'), ('pull_request', 'full', 'l08-only'),
+                   ('workflow_dispatch', 'native-evidence', 'normal-only')]
++        cases += [('workflow_dispatch', scope, 'os-recovery-only') for scope in ('full', 'native-process-probe')]
++        cases += [('push', 'native-evidence', 'os-recovery-only'), ('pull_request', 'native-preflight', 'os-recovery-only')]
+         for event, scope, selection in cases:
+             env = dict(GITHUB_EVENT_NAME=event, PARLOR_DISPATCH_SCOPE=scope, PARLOR_NATIVE_SELECTION=selection)
+             with self.subTest(event=event, scope=scope, selection=selection), \
+                     patch.dict(native.os.environ, env, clear=True), patch.object(native, 'context') as context, \
+                     patch.object(native.Path, 'mkdir') as allocate, patch.object(native, 'command') as command:
+-                with self.assertRaisesRegex(RuntimeError, 'native-selection|l08-only-requires-native-evidence'):
++                with self.assertRaisesRegex(RuntimeError, 'native-selection|l08-only-requires-native-evidence|os-recovery-only-requires'):
+                     native.main(['validate-scope'])
+-                with self.assertRaisesRegex(RuntimeError, 'native-selection|l08-only-requires-native-evidence'):
++                with self.assertRaisesRegex(RuntimeError, 'native-selection|l08-only-requires-native-evidence|os-recovery-only-requires'):
+                     native.Continuation(env)
+                 context.assert_not_called()
+                 allocate.assert_not_called()
+@@ -1107,6 +1139,223 @@ class SettingsSheetSelectionTest(unittest.TestCase):
+                 with self.assertRaisesRegex(RuntimeError, 'insufficient-complete'): lane.admit_native('settings_sheet')
+ 
+ 
++class OSRecoverySelectionTest(unittest.TestCase):
++    def test_os_preflight_domain_cannot_consume_settings_or_paired_packages(self):
++        files, expected, current = package_fixture(runners=native.OS_RUNNERS)
++        self.assertEqual(set(files), {'preflight.json', native.BINDING_NAME, 'os_recovery-controls.json'})
++        native.validate_package(native.unpack_preflight(zipped(files), set(files)), expected, current, ROOT, native.OS_RUNNERS)
++        for other in (native.RUNNERS, native.SHEET_RUNNERS):
++            with self.assertRaisesRegex(RuntimeError, 'control-domain'):
++                native.validate_package(files, expected, current, ROOT, other)
++            wrong, wrong_expected, _ = package_fixture(runners=other)
++            with self.assertRaisesRegex(RuntimeError, 'zip-members'):
++                native.unpack_preflight(zipped(wrong), set(files))
++            with self.assertRaisesRegex(RuntimeError, 'control-domain'):
++                native.validate_package(wrong, wrong_expected, current, ROOT, native.OS_RUNNERS)
++        with self.assertRaisesRegex(RuntimeError, 'independent-control-approval'):
++            native.validate_package(files, {**expected, 'os_recovery_sha256': 'f' * 64}, current, ROOT, native.OS_RUNNERS)
++
++    def test_os_requires_its_explicit_probe_hash_before_any_api_or_native_work(self):
++        lane = object.__new__(native.Continuation)
++        lane.selection = native.OS_SELECTION
++        _, expected, lane.context = package_fixture(runners=native.OS_RUNNERS)
++        self.assertEqual(lane.runners, native.OS_RUNNERS)
++        lane.env = dict(PARLOR_PREFLIGHT_RUN_ID='100', PARLOR_PREFLIGHT_RUN_ATTEMPT='2', PARLOR_PREFLIGHT_ARTIFACT_ID='300',
++                        PARLOR_PREFLIGHT_ARTIFACT_SHA256='e' * 64, PARLOR_APPROVED_L08_CONTROL_SHA256='d' * 64,
++                        PARLOR_APPROVED_NORMAL_CONTROL_SHA256='d' * 64)
++        for value in ('', 'not-a-control-hash', 'D' * 64):
++            lane.env['PARLOR_APPROVED_PROBE_CONTROL_SHA256'] = value
++            with self.subTest(value=value), patch.object(native, 'api_json') as api, \
++                    self.assertRaisesRegex(RuntimeError, 'missing-independent'):
++                lane.fetch_preflight()
++            api.assert_not_called()
++        lane.env['PARLOR_APPROVED_PROBE_CONTROL_SHA256'] = expected['os_recovery_sha256']
++        with patch.object(native, 'api_json', side_effect=RuntimeError('synthetic-read-only-admission')) as api:
++            with self.assertRaisesRegex(RuntimeError, 'synthetic-read-only-admission'):
++                lane.fetch_preflight()
++        self.assertEqual(api.call_count, 1)
++
++    def test_os_cleanup_requires_exact_attempted_prefix_and_does_not_relax_old_two_stops(self):
++        for prefix in range(4):
++            value = os_cleanup_fixture(prefix)
++            with self.subTest(prefix=prefix):
++                self.assertTrue(native.cleanup_is_safe(value, 'd' * 64, source_fixture(), os_recovery=True))
++                if prefix:
++                    self.assertFalse(native.cleanup_is_safe(value, 'd' * 64, source_fixture()))
++        mutations = [lambda r: r['gradle_stops'].pop(0),
++                     lambda r: r['gradle_stops'].reverse(),
++                     lambda r: r['gradle_stops'][-1].update(exit_code=1),
++                     lambda r: r['gradle_stops'][0].update(exit_code=False),
++                     lambda r: r['os_recovery_stages']['bootstrap'].update(attempted=False),
++                     lambda r: r['os_recovery_stages']['build'].update(preserved=False),
++                     lambda r: r['os_recovery_stages']['proof'].update(stop_exit_code=1),
++                     lambda r: r['os_recovery_stages']['proof'].update(result_bundle='bootstrap.xcresult'),
++                     lambda r: r['commands'][2]['command'].append('-only-testing:iosAppUITests/UnselectedTest'),
++                     lambda r: r['commands'][1]['command'].append('-skip-testing:iosAppUITests'),
++                     lambda r: r['commands'][1].update(log='proof-xcodebuild.log'),
++                     lambda r: r['commands'].pop(1), lambda r: r.update(build_attempted=False),
++                     lambda r: r.update(execution_kind='public-settings-sheet-diagnostic-only')]
++        for index, change in enumerate(mutations):
++            value = os_cleanup_fixture()
++            change(value)
++            with self.subTest(mutation=index):
++                self.assertFalse(native.cleanup_is_safe(value, 'd' * 64, source_fixture(), os_recovery=True))
++        failed_build = os_cleanup_fixture(1)
++        failed_build['os_recovery_stages']['build'].update(status='FAIL', exit_code=65)
++        failed_build['commands'][0]['exit_code'] = 65
++        self.assertTrue(native.cleanup_is_safe(failed_build, 'd' * 64, source_fixture(), os_recovery=True))
++        self.assertEqual(native.os_recovery_summary(failed_build), {'bootstrap_status': 'NOT_RUN', 'os_subgate_status': 'NOT_RUN'})
++
++    def test_no_build_has_no_invented_stops_or_runtime_success(self):
++        value = os_cleanup_fixture(0)
++        self.assertEqual(value['os_recovery_stages'], {name: {'attempted': False, 'status': 'NOT_RUN'} for name in native.OS_STAGES})
++        self.assertEqual((value['build_attempted'], value['commands'], value['gradle_stops'], value['status']), (False, [], [], 'FAIL'))
++        self.assertTrue(native.cleanup_is_safe(value, 'd' * 64, source_fixture(), os_recovery=True))
++        self.assertEqual(native.os_recovery_summary(value), {'bootstrap_status': 'NOT_RUN', 'os_subgate_status': 'NOT_RUN'})
++        for change in (lambda r: r['gradle_stops'].append(dict(label='stop-final', exit_code=0)),
++                       lambda r: r.update(gradle_stops=os_cleanup_fixture(1)['gradle_stops']),
++                       lambda r: r['commands'].extend(os_cleanup_fixture(1)['commands']),
++                       lambda r: r['os_recovery_stages']['build'].update(status='PASS'),
++                       lambda r: r.update(build_attempted=True), lambda r: r.update(source_unchanged=False),
++                       lambda r: r.update(controls_unchanged=False), lambda r: r.update(unknown_holders=['unattested'])):
++            changed = copy.deepcopy(value)
++            change(changed)
++            self.assertFalse(native.cleanup_is_safe(changed, 'd' * 64, source_fixture(), os_recovery=True))
++        value['status'] = native.OS_VERIFIED
++        with self.assertRaisesRegex(RuntimeError, 'failed-bootstrap-or-stage'):
++            native.os_recovery_summary(value)
++
++    def test_actual_xcode_exit_cannot_be_hidden_by_stage_status_or_exit(self):
++        for index, name in enumerate(native.OS_STAGES):
++            for bad in (65, -9, False, None):
++                value = os_cleanup_fixture()
++                value['commands'][index]['exit_code'] = bad
++                with self.subTest(name=name, actual_exit=bad):
++                    self.assertFalse(native.cleanup_is_safe(value, 'd' * 64, source_fixture(), os_recovery=True))
++        for actual_exit in ('absent', None, 0, -15):
++            value = os_cleanup_fixture(1)
++            stage, row = value['os_recovery_stages']['build'], value['commands'][0]
++            stage.update(status='FAIL', command_completed=False)
++            stage.pop('exit_code')
++            row.update(interrupted_or_failed=True, primary_error=dict(type='RuntimeError', message='synthetic launch failure'))
++            if actual_exit == 'absent':
++                row.pop('exit_code')
++            else:
++                row['exit_code'] = actual_exit
++            with self.subTest(exception_exit=actual_exit):
++                self.assertTrue(native.cleanup_is_safe(value, 'd' * 64, source_fixture(), os_recovery=True))
++                self.assertEqual(value['status'], 'FAIL')
++                self.assertEqual(native.os_recovery_summary(value), {'bootstrap_status': 'NOT_RUN', 'os_subgate_status': 'NOT_RUN'})
++                if actual_exit in (None, -15):
++                    self.assertFalse(native.inner_execution_completed(value))
++                for field, bad in (('command_completed', True), ('exit_code', 0), ('status', 'PASS')):
++                    changed = copy.deepcopy(value)
++                    changed['os_recovery_stages']['build'][field] = bad
++                    self.assertFalse(native.cleanup_is_safe(changed, 'd' * 64, source_fixture(), os_recovery=True))
++
++    def test_stage_pass_needs_real_zero_exit_and_unique_non_ab_success_status(self):
++        for key, bad in (('status', 'PASS'), ('bootstrap_status', 'FAIL'), ('os_subgate_status', 'NOT_RUN'),
++                         ('runtime_evidence_status', 'PASS'), ('provenance_status', 'PASS'), ('image_observer', 'libproc')):
++            value = os_cleanup_fixture()
++            value[key] = bad
++            with self.subTest(key=key), self.assertRaises(RuntimeError):
++                native.os_recovery_summary(value)
++        for name in native.OS_STAGES:
++            for bad in (65, -9, False, None):
++                value = os_cleanup_fixture()
++                value['os_recovery_stages'][name]['exit_code'] = bad
++                with self.subTest(name=name, exit_code=bad), self.assertRaises(RuntimeError):
++                    native.os_recovery_summary(value)
++            value = os_cleanup_fixture()
++            value['os_recovery_stages'][name]['command_completed'] = False
++            with self.subTest(name=name, not_completed=True), self.assertRaises(RuntimeError):
++                native.os_recovery_summary(value)
++
++    def test_actual_os_adapter_retains_bootstrap_failure_and_never_bypasses_inner_or_cleanup_failure(self):
++        for mutation in (None, 'prebuild-failed', 'bootstrap-failed', 'concealed-bootstrap-exit', 'proof-timeout', 'final-stop-failed', 'masquerade'):
++            with self.subTest(mutation=mutation), TemporaryDirectory() as raw:
++                root = Path(raw).resolve()
++                lane = object.__new__(native.Continuation)
++                lane.root, lane.binding = root, root / native.CAMPAIGN / native.BINDING_NAME
++                lane.bundle = root / 'bundle'; lane.bundle.mkdir()
++                lane.state, lane.save = dict(runs={}, files={}, directories={}), Mock()
++                native_clock_fixture(lane, selection=native.OS_SELECTION)
++                invoked = []
++                def invoke(arguments, log, entry):
++                    invoked.append(arguments)
++                    value, events, _, destination = direct_fixture(root, cycle=entry['cycle'], attempted=mutation != 'prebuild-failed')
++                    scoped = os_cleanup_fixture(0 if mutation == 'prebuild-failed' else 3)
++                    for key in ('status', 'execution_kind', 'image_observer', 'runtime_evidence_status', 'provenance_status',
++                                'notice_package_status', 'bootstrap_status', 'os_subgate_status', 'os_recovery_stages', 'gradle_stops'):
++                        value[key] = scoped[key]
++                    value.pop('xcodebuild_exit_code', None)
++                    value['commands'] = scoped['commands'] + [row for row in value['commands'] if 'operation' in row]
++                    if mutation != 'prebuild-failed':
++                        value['simulator_lifecycle']['postbuild_barrier'].update(direct_build_handles=3, direct_build_handles_reaped=3)
++                    (destination / 'simulator-lifecycle.jsonl').write_bytes(direct_journal_bytes(events, value))
++                    if mutation == 'bootstrap-failed':
++                        value.update(status='FAIL', bootstrap_status='FAIL')
++                        value['os_recovery_stages']['bootstrap'].update(status='FAIL', exit_code=65)
++                        value['commands'][1]['exit_code'] = 65
++                    elif mutation == 'concealed-bootstrap-exit':
++                        value['commands'][1]['exit_code'] = 65
++                    elif mutation == 'proof-timeout':
++                        value.update(status='FAIL', os_subgate_status='FAIL')
++                        value['os_recovery_stages']['proof'].update(status='FAIL', exit_code=1)
++                        value['commands'][2].update(exit_code=1, timed_out=True)
++                    elif mutation == 'final-stop-failed':
++                        value['status'] = 'FAIL'
++                        value['gradle_stops'][-1]['exit_code'] = 1
++                    elif mutation == 'masquerade':
++                        value['status'] = 'PASS'
++                    native.write_new(destination / 'receipt.json', native.json_bytes(value))
++                    entry['exit_code'] = 0 if mutation is None else 1
++                lane.invoke_native = invoke
++                lane.fetch_preflight = Mock(return_value=({'os_recovery_sha256': 'd' * 64}, source_fixture()))
++                lane.bootstrap_cache_directories = Mock()
++                with patch.object(native, 'native_job_clock_ns', return_value=SYNTHETIC_JOB_START_NS):
++                    if mutation in (None, 'prebuild-failed', 'bootstrap-failed'):
++                        self.assertEqual(lane.evidence(), 0 if mutation is None else 2)
++                        self.assertEqual(lane.state['status'], native.OS_VERIFIED if mutation is None else 'OS_RECOVERY_NOT_READY')
++                        self.assertEqual(lane.state['os_recovery'],
++                            {'bootstrap_status': 'NOT_RUN', 'os_subgate_status': 'NOT_RUN'} if mutation == 'prebuild-failed' else
++                            {'bootstrap_status': 'PASS' if mutation is None else 'FAIL', 'os_subgate_status': 'PASS'})
++                    else:
++                        with self.assertRaises(RuntimeError): lane.evidence()
++                self.assertEqual(len(invoked), 1)
++                self.assertEqual(invoked[0][2:4], [str(root / native.OS_RUNNERS['os_recovery']), native.CYCLES['os_recovery']])
++                self.assertIn('--simulator-lifecycle=direct-owned-v1', invoked[0])
++                self.assertNotIn('--image-observer=libproc', invoked[0])
++                self.assertEqual(lane.unselected_lanes, {'l08': 'NOT_RUN_THIS_RUN', 'normal': 'NOT_RUN_THIS_RUN'})
++                self.assertEqual(set(lane.state['runs']), {'os_recovery'})
++                self.assertTrue((lane.bundle / native.CYCLES['os_recovery'] / 'receipt.json').is_file())
++
++    def test_os_native_wait_job_and_unselected_lanes_are_exact(self):
++        lane = object.__new__(native.Continuation)
++        lane.state, lane.save = {}, Mock()
++        native_clock_fixture(lane, selection=native.OS_SELECTION)
++        with patch.object(native, 'native_job_clock_ns', return_value=SYNTHETIC_JOB_START_NS):
++            lane.admit_native('os_recovery')
++        admission = lane.state['native_admissions']['os_recovery']
++        self.assertEqual((admission['job_budget_seconds'], admission['child_wait_seconds'], admission['required_seconds']), (7200, 5400, 6600))
++        for label in ('l08', 'normal', 'settings_sheet'):
++            with self.assertRaisesRegex(RuntimeError, 'not-selected'): lane.admit_native(label)
++        with patch.object(native, 'native_job_clock_ns', return_value=SYNTHETIC_JOB_START_NS + 601 * 10 ** 9):
++            with self.assertRaisesRegex(RuntimeError, 'insufficient-complete'): lane.admit_native('os_recovery')
++        with TemporaryDirectory() as raw:
++            lane.root = Path(raw).resolve()
++            child = Mock()
++            child.wait.side_effect = [subprocess.TimeoutExpired('owned-os-driver', 5400), 1]
++            with patch.object(native.subprocess, 'Popen', return_value=child), \
++                    patch.object(native.signal, 'signal', return_value=None):
++                entry = {}
++                lane.invoke_native(['not-executed'], lane.root / 'os-runner.log', entry)
++            self.assertTrue(entry['timed_out'])
++            self.assertEqual([call.kwargs for call in child.wait.call_args_list], [{'timeout': 5400}, {'timeout': 600}])
++            child.send_signal.assert_called_once_with(native.signal.SIGTERM)
++            child.kill.assert_not_called()
++
++
+ class NativeJobBudgetAdmissionTest(unittest.TestCase):
+     """Actual pre-spawn admission; all clocks, native launches and saves are inert."""
+     def lane(self, root):
+diff --git a/scripts/release/tests/test_native_process_probe.py b/scripts/release/tests/test_native_process_probe.py
+index 1b29c3dc..3108bbba 100644
+--- a/scripts/release/tests/test_native_process_probe.py
++++ b/scripts/release/tests/test_native_process_probe.py
+@@ -123,7 +123,8 @@ class ProbeSourceContractTest(unittest.TestCase):
+     def test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels(self):
+         self.assertEqual(native.effective_scope("workflow_dispatch", probe.SCOPE), probe.SCOPE)
+         self.assertEqual(native.effective_scope("pull_request", probe.SCOPE), "full")
+-        self.assertEqual(native.CYCLES, {"l08": "ios-readiness-37", "normal": "ios-readiness-38", "settings_sheet": "ios-readiness-36"})
++        self.assertEqual(native.CYCLES, {"l08": "ios-readiness-37", "normal": "ios-readiness-38", "settings_sheet": "ios-readiness-36",
++                                         "os_recovery": "ios-readiness-39"})
+         with self.assertRaisesRegex(RuntimeError, "not-an-app-native-continuation"):
+             native.Continuation(dict(GITHUB_EVENT_NAME="workflow_dispatch", PARLOR_DISPATCH_SCOPE=probe.SCOPE))
+ 
+diff --git a/scripts/release/tests/test_workflow_contract.py b/scripts/release/tests/test_workflow_contract.py
+index 08ff0cd6..572b4ba1 100644
+--- a/scripts/release/tests/test_workflow_contract.py
++++ b/scripts/release/tests/test_workflow_contract.py
+@@ -72,8 +72,9 @@ class WorkflowContractTest(unittest.TestCase):
+         workflow_contract.verify_verification_scopes(workflow)
+         mutations = [block.replace('type: choice', 'type: string', 1),
+                      block.replace('default: paired', 'default: l08-only', 1),
+-                     block.replace('[paired, l08-only, settings-sheet-only]', '[paired, l08-only, settings-sheet-only, l08]', 1),
+-                     block.replace('[paired, l08-only, settings-sheet-only]', '[l08-only, paired, settings-sheet-only]', 1),
++                     block.replace('[paired, l08-only, settings-sheet-only, os-recovery-only]', '[paired, l08-only, settings-sheet-only, os-recovery-only, l08]', 1),
++                     block.replace('[paired, l08-only, settings-sheet-only, os-recovery-only]', '[l08-only, paired, settings-sheet-only, os-recovery-only]', 1),
++                     block.replace(', os-recovery-only', '', 1),
+                      block + block, '']
+         for replacement in mutations:
+             changed = workflow.replace(block, replacement, 1)
+@@ -98,7 +99,7 @@ class WorkflowContractTest(unittest.TestCase):
+         with self.assertRaisesRegex(RuntimeError, 'verification scope'):
+             workflow_contract.verify_verification_scopes(changed)
+ 
+-    def test_settings_sheet_diagnostic_requires_the_explicit_shared_probe_hash_binding(self) -> None:
++    def test_settings_and_os_selections_require_the_explicit_shared_probe_hash_binding(self) -> None:
+         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+         block = workflow_contract.validation_step(workflow, "Run focused native continuation")
+         original = "          PARLOR_APPROVED_PROBE_CONTROL_SHA256: ${{ inputs.approved_probe_control_sha256 }}\n"
+@@ -173,6 +174,7 @@ class WorkflowContractTest(unittest.TestCase):
+         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+         expression = ("${{ inputs.verification_scope == 'native-process-probe' && 10 || "
+                       "inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'settings-sheet-only' && 40 || "
++                      "inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'os-recovery-only' && 120 || "
+                       "inputs.verification_scope == 'native-evidence' && 240 || 120 }}")
+         ios = workflow.split("\n  ios:\n", 1)[1]
+         self.assertEqual([expression], re.findall(r"(?m)^    timeout-minutes: (.*)$", ios))
+@@ -181,6 +183,8 @@ class WorkflowContractTest(unittest.TestCase):
+             expression.replace("&& 10", "&& 30"),
+             expression.replace("&& 40", "&& 240"),
+             expression.replace("'settings-sheet-only'", "'l08-only'"),
++            expression.replace("'os-recovery-only'", "'l08-only'"),
++            expression.replace("'os-recovery-only' && 120", "'os-recovery-only' && 240"),
+             expression.replace("&& 240", "&& 120"),
+             expression.replace("&& 240", "&& 241"),
+             expression.replace("|| 120", "|| 240"),
+diff --git a/scripts/release/workflow_contract.py b/scripts/release/workflow_contract.py
+index 5a33ab40..3d7b57fa 100755
+--- a/scripts/release/workflow_contract.py
++++ b/scripts/release/workflow_contract.py
+@@ -212,8 +212,8 @@ def verify_verification_scopes(text: str) -> None:
+     if re.findall(r"(?m)^    if: (.*)$", ios) != [IOS_VERIFICATION_SCOPE]:
+         fail("verification scope may skip iOS only for the separately guarded Windows-only follow-up")
+     if re.findall(r"(?m)^    timeout-minutes: (.*)$", ios) != [
+-            "${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'settings-sheet-only' && 40 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}"]:
+-        fail("verification scope must keep full/preflight120, probe10, settings-sheet evidence40 and other native-evidence240 minute bounds")
++            "${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'settings-sheet-only' && 40 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'os-recovery-only' && 120 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}"]:
++        fail("verification scope must keep full/preflight120, probe10, settings-sheet evidence40, OS-recovery evidence120 and other native-evidence240 minute bounds")
+     clock_name = "Start focused native job clock"
+     clock = validation_step(ios, clock_name)
+     clock_script = '''        run: |
+@@ -242,8 +242,8 @@ def verify_verification_scopes(text: str) -> None:
+     selections = re.findall(r"(?m)^      native_selection:\n((?:        .*\n)+)", text.split("\nconcurrency:", 1)[0])
+     if (len(selections) != 1 or
+             re.findall(r"(?m)^        (type|default|options): (.*)$", selections[0]) !=
+-            [("type", "choice"), ("default", "paired"), ("options", "[paired, l08-only, settings-sheet-only]")]):
+-        fail("verification scope must retain closed paired-default, l08-only or settings-sheet-only selection")
++            [("type", "choice"), ("default", "paired"), ("options", "[paired, l08-only, settings-sheet-only, os-recovery-only]")]):
++        fail("verification scope must retain closed paired-default, l08-only, settings-sheet-only or os-recovery-only selection")
+     for name in ("Validate verification scope", "Run focused native continuation",
+                  "Verify focused native cleanup and uploaded custody"):
+         if re.findall(r"(?m)^          PARLOR_NATIVE_SELECTION: (.*)$", validation_step(ios, name)) != [

@@ -1,0 +1,364 @@
+{
+  "schema_version": 1,
+  "kind": "A37_ACTUAL_RUNTIME_FAILURE_CUSTODY_COMPONENT_OBSERVATIONS_AND_CLEANUP_REVIEW",
+  "reviewer": "/root/native_ci",
+  "reviewed_at": "2026-09-10T07:25:56.392Z",
+  "status": "A37_RUNTIME_FAIL_CUSTODY_SOURCE_COPY_CLEANUP_PASS_RAW_COMPONENT_OBSERVATIONS_CORROBORATED",
+  "readiness": "NOT_READY",
+  "source": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "15e8982b35e39006868868a11c6f4e1864e613a7",
+    "tree": "8f3fd56f86d7934fddaff068539d69fe26d4aaad",
+    "source_manifest_sha256": "51edfdd6aea7b293afe9061a30d05054f1e0338661eedd8e225bd3ba2ebbb7fd",
+    "bound_l08_controls_sha256": "281ef2fd40d28ac1041d49bc353ff083aa8e50a6c5775e09d09e3887d803ec1f",
+    "preflight": "34440661169/1",
+    "admission_review": "remediation-runs/2026-09-08-continuation/reviews/a37-preflight34440661169-admission-independent-01.json",
+    "admission_review_sha256": "74d8b9e3f35c8ad814890359f286954fec89d2d988670b4ff3b0a9d279ee204e",
+    "request_sha256": "ba222d01cbe1edb3df9422d986c5ef3895019eba39726c14994ab44438df1c0a"
+  },
+  "execution": {
+    "run": "34442662032/1",
+    "repository_id": 1247560518,
+    "workflow_id": 335554528,
+    "job_id": 102760768928,
+    "selection": "l08-only",
+    "workflow_conclusion": "failure",
+    "outer_status": "L08_ONLY_NOT_READY",
+    "normal_lane": "NOT_RUN_THIS_RUN",
+    "actual_app": "Reviewed copy-only Debug app and XCTest targets built and executed; not a normal/uninstrumented B binary.",
+    "simulator": {
+      "uuid": "E8F190C8-5155-4A81-BB85-B6836A4BAACA",
+      "name": "Parlor-Audit-parlor-audit-ios-readiness-37-fc96age1",
+      "device": "iPhone 17 Pro",
+      "architecture": "arm64",
+      "runtime": "iOS 26.2 / 23C54"
+    },
+    "platform": {
+      "macos": "15.7.9 / 24G830",
+      "xcode": "26.3 / 17C529",
+      "sdk": "26.2",
+      "actual_runner_image": "macos-15-arm64 20260829.0321.1",
+      "preflight_runner_image": "macos-15-arm64 20260907.0337.1",
+      "applicability": "Actual complete structured toolchain/profile/path observation equals reviewed preflight. Canonical guard pins these observations, not runner-image version. Raw setup logs show different image versions; no claim of an identical image or fabricated binding failure."
+    }
+  },
+  "runtime_failure": {
+    "receipt_status": "FAIL",
+    "runtime_evidence_status": "FAIL",
+    "xcodebuild_exit_code": 65,
+    "command_started_at": "2026-09-10T05:53:09.472340+00:00",
+    "command_finished_at": "2026-09-10T06:59:00.972715+00:00",
+    "command_return": "Natural recorded exit; no interrupted_or_failed/primary_error and no outer interrupted/timed_out flag.",
+    "error": "Actual XCTest summary is not exactly five successful, unskipped tests",
+    "xctest": {
+      "total": 5,
+      "passed": 4,
+      "failed": 1,
+      "skipped": 0,
+      "expected_failures": 0
+    },
+    "cases": [
+      {
+        "durationInSeconds": 1.2365700006484985,
+        "nodeIdentifier": "ComposeContainerViewControllerTests/testChildUsesFullBoundsAcrossSizesAndOpposingSemanticDirections()",
+        "result": "Passed"
+      },
+      {
+        "durationInSeconds": 0.10078799724578857,
+        "nodeIdentifier": "ComposeContainerViewControllerTests/testDefaultAppearanceForwardingReachesTheSameChildExactlyOnce()",
+        "result": "Passed"
+      },
+      {
+        "durationInSeconds": 0.14606809616088867,
+        "nodeIdentifier": "ComposeContainerViewControllerTests/testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView()",
+        "result": "Passed"
+      },
+      {
+        "durationInSeconds": 0.11530399322509766,
+        "nodeIdentifier": "ComposeContainerViewControllerTests/testSystemDecorationAndOrientationPoliciesStillBelongToTheChild()",
+        "result": "Passed"
+      },
+      {
+        "nodeIdentifier": "IOSAppLaunchUITests/testDSC01ActualSettingsLocalSessionsAndOSWithL08FunctionalObservation()",
+        "result": "Failed"
+      }
+    ],
+    "failure_text": "Test crashed with signal kill.",
+    "last_action": {
+      "prerequisite_markers": 26,
+      "last_marker_line": 14117,
+      "stage": "retainEnglishPrimary",
+      "status": "before-activation",
+      "observed": "Foreground Settings, no keyboard, zero alerts, one sheet, three buttons, exactly one recognized English-primary choice.",
+      "tap_line": 14124,
+      "tap_test_seconds": 2525.03,
+      "target_line": 14127,
+      "exact_target": "Use English (US)",
+      "synthesize_event_test_seconds": 2525.16,
+      "last_sheet_query_test_seconds": 2526.88,
+      "runner_restart_line": 14133,
+      "runner_restart_at": "2026-09-10T06:57:23.533876+00:00",
+      "generic_restart_line": 14138,
+      "restart_tests_executed": 0,
+      "after_activation_marker_present": false,
+      "os_result_present": false
+    },
+    "diagnosis": "SIGKILL is temporally adjacent to the actual Settings primary-language tap. Retained evidence does not identify its sender or distinguish OS language reconfiguration, jetsam, watchdog or application fault. Generic restart text is not a timeout diagnosis; restart executed zero tests, not a successful retry.",
+    "budgets_seconds": {
+      "xcode_command": 5400,
+      "default_test": 3000,
+      "maximum_test": 3300,
+      "outer_wait": 6000
+    },
+    "timeout_conclusion": "Observed long-test boundary about2527s is below both admitted test allowances; no evidence justifies increasing a timeout.",
+    "retained_crash_diagnostics": "All139 native ZIP members inspected: no .ips/crash/jetsam/logarchive diagnosis retained.",
+    "harness_kill_review": "Reopened command ownership/exception paths. Recorded command returned65 without exception cleanup; owner.stop is called on exceptions, not this path. Owned simulator shutdown starts07:00:11.421340, after failure. No retained evidence of a harness-originated kill at the boundary; this does not prove OS-level signal provenance."
+  },
+  "component_observations": {
+    "status": "ACTUAL_PRESERVED_RECORDS_INDEPENDENTLY_CORROBORATED_NOT_ORIGINAL_CANONICAL_MATRIX_PASS",
+    "run_token": "DDB32FBF-9F4C-43E1-B6CD-4E41C1258CAD",
+    "functional_storage": {
+      "operation_files": 20,
+      "cold_boots_and_actual_boot_markers": 13,
+      "raw_marker_lines": [
+        6096,
+        10915
+      ],
+      "expected_invariant_booleans_true": 106,
+      "probe": {
+        "events": 41,
+        "starts": 13,
+        "native_geometry_rows": 28
+      },
+      "strict_complete_comparisons": 26,
+      "strict_complete_failures": 26,
+      "strict_observation": "All26 required Complete comparisons fail: dictionary returned, NSFileProtectionKey absent/value missing, no native error."
+    },
+    "retained_host": {
+      "operation_files": 42,
+      "cold_boots_and_actual_boot_markers": 3,
+      "raw_marker_lines": [
+        4076,
+        6010
+      ],
+      "variants": [
+        "whodunit-classic",
+        "mafia-doctor-on",
+        "mafia-doctor-off"
+      ],
+      "expected_invariant_booleans_true": 156,
+      "unique_monotone_native_sequences": 42,
+      "background_foreground_cycles": 9,
+      "remounts": 3,
+      "final_leave_records": 3,
+      "probe": {
+        "events": 95,
+        "starts": 3,
+        "native_geometry_rows": 92
+      },
+      "comparisons": "Source literal operation order, EN/AR/System ownership/preferences, native/host directions, UIKit lifecycle callback/state counters, resuming guards, retained-private-state booleans and final roomnone agree. All native geometry rows independently checked."
+    },
+    "image_binding": {
+      "receipt_status": "AVAILABLE_OBSERVATIONS_IMAGE_BOUND",
+      "rows": 70,
+      "process_groups": 24,
+      "matrix_verified": false,
+      "frameworks": [
+        {
+          "origin": "installed-app-bundle",
+          "path": "Frameworks/ComposeApp.framework/ComposeApp",
+          "bytes": 84050448,
+          "sha256": "97fc49af6f10b6b78923d50b9e3379b2529aa250101f56005761f488194a603e",
+          "architectures": [
+            {
+              "architecture": "arm64",
+              "uuid": "34df5e06-f671-3cbc-b227-36b9d175fee5"
+            }
+          ]
+        },
+        {
+          "origin": "owned-copy-build",
+          "path": "xcode-frameworks/Debug/iphonesimulator26.2/ComposeApp.framework/ComposeApp",
+          "bytes": 84032296,
+          "sha256": "d9dc194270c6d05f4292d9816437cc03f9bfc1e85fd738e8905b409bdaf46c4d",
+          "architectures": [
+            {
+              "architecture": "arm64",
+              "uuid": "34df5e06-f671-3cbc-b227-36b9d175fee5"
+            }
+          ]
+        }
+      ],
+      "interpretation": "Built/installed inventories agree; process/operation images bind the current copied build. Owned-build and ad-hoc-resigned embedded framework share UUID, not bytes. This is instrumentedA evidence, not libproc normalB proof."
+    },
+    "canonical_validation_boundary": {
+      "source": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py:1119-1190",
+      "reached": "verify_xctest raised on4/5PASS",
+      "not_reached": [
+        "verify_storage_functional",
+        "verify_host",
+        "final DSC01/OS validators"
+      ],
+      "absent_receipt_fields": [
+        "xctest",
+        "l08_storage_functional",
+        "l08_host"
+      ],
+      "reviewer_execution": "No project validators or tests executed. Read-only independent source-table/raw-file/hash/marker cross-checks only.",
+      "later_retrospective_results": "Outside this review. A separately controlled offline execution of unchanged pure component validators must have its own receipt and review; it cannot mutate or promote A37/XCTest/OS/strict-protection failure."
+    }
+  },
+  "foundation": {
+    "collection_status": "COLLECTION_VALIDATED_NOT_L08_PASS",
+    "strict_l08_gate": "NOT_SATISFIED_BY_COMPANION",
+    "native_operations_returned_true": 8,
+    "getters_with_absent_protection_key": 8,
+    "volume_reports_unsupported": 8,
+    "errors_or_exceptions": 0,
+    "hardware_protection_verified": false,
+    "l08_requirements_waived": false,
+    "own_fixture_root": "REMOVED",
+    "interpretation": "Bound app-process Foundation operations include explicit directory/file protection setters followed by missing metadata getters. Eight volume observations report unsupported. This supports a bounded actual simulator-volume limitation observation, not physical enforcement proof and not grounds to relax strict Complete validation."
+  },
+  "custody": {
+    "status": "PASS",
+    "get_responses_independently_verified": 7,
+    "archive_members_independently_verified": 154,
+    "checks": "Run/attempt/head-repository/workflow/artifact identity; every retained GET exact byte/hash result; safe unique bounded ZIP paths/types, no symlinks/encryption, CRC and exact extracted byte sets; all132 cycle files vs outer preservation hashes; four admitted preflight files byte-identical and API producer binding exact.",
+    "source_and_controls": "Fresh binding equals source-before/source-after/input manifest;99A controls unchanged. No original source modifications.",
+    "copied_originals": 758,
+    "copied_total": 772,
+    "copied_existing_transforms": 16,
+    "copied_added": 14,
+    "copied_unchanged_originals": 742,
+    "copy_review": "Independently applied all30 retained unified diffs in memory with exact context/offset checks; reconstructed hashes equal copied manifest. All772 postbuild copied inputs unchanged, no missing/unexpected/symlink inputs.",
+    "archives": [
+      {
+        "pin": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34442662032/native-cleanup.zip",
+          "bytes": 1257,
+          "sha256": "2e5ee1b6b4235f83586358965f93f647b8940637b5ce07b923d261853b9c08f5"
+        },
+        "members": 1,
+        "expanded_bytes": 2350
+      },
+      {
+        "pin": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34442662032/native-evidence.zip",
+          "bytes": 786671,
+          "sha256": "85cea1544cb22295d2cfc806fd388580993c375db6585a509fd08dfbd16feb6e"
+        },
+        "members": 139,
+        "expanded_bytes": 4678406
+      },
+      {
+        "pin": {
+          "path": "remediation-runs/2026-09-08-continuation/actions/34442662032/run-attempt-1-logs.zip",
+          "bytes": 25444,
+          "sha256": "9ad1fa2aff93118027628285e9df2a81b74a87cc93685bca14465745051661cc"
+        },
+        "members": 14,
+        "expanded_bytes": 81386
+      }
+    ]
+  },
+  "cleanup": {
+    "status": "PASS",
+    "immediate_gradle_stop_started_at": "2026-09-10T06:59:00.986715+00:00",
+    "immediate_stop_delay_after_xcode_milliseconds": 14,
+    "gradle_stops_exit_codes": [
+      0,
+      0
+    ],
+    "stop_logs": "Both exact: No Gradle daemons are running.",
+    "embedded_build_stop": "build_exit=0; stop_exit=0",
+    "finalization_stages_passed": 14,
+    "lifecycle_journal_rows": 50,
+    "simulator_children_started_reaped": [
+      12,
+      12
+    ],
+    "build_handles_started_reaped": [
+      31,
+      31
+    ],
+    "shutdown_delete_exit_codes": [
+      0,
+      0
+    ],
+    "owned_device_absent": true,
+    "owned_copy_derived_data_temp_removed": true,
+    "fifo_evidence": "Two FIFO records' child/parent PID/start identities match141-row ledger. Exactly twoFIFOs and two emptyparents removed under attested metadata; pending empty.",
+    "unowned_or_unresolved": "No remaining workers, unknown holders, secondary errors, outputs, deferred signals or cleanup errors.",
+    "outer_cleanup": "PASS/source unchanged; removes only owned evidence cycle,binding,lock after successful upload. Raw cleanup-step JSON equals retained receipt.",
+    "coordinator": "Watcher workflow-failure exit1 and stop0 retained; root reported synchronous child reaping of session33492."
+  },
+  "recommendations_and_limits": [
+    "Preserve A37 FAIL, original strict26FAIL and every failed/cleanup receipt. Do not treat manual component consistency, successful collection or four wrapper tests as entire application PASS.",
+    "A separate reviewed offline component evaluator can execute unchanged pure validators against exact preserved source/control/image-bound A37 files without a native rerun; preserve independent per-component output and the overall failure.",
+    "No blind native rerun or timeout increase is justified. Any two-stage OS-only experiment requires separately reviewed source/control/oracle/ownership/XCResult-preservation contracts, safe stage transition and actual post-activation/prerequisite proof; never convert a killed bootstrap into expected-success.",
+    "Normal lane did not execute; historical reviewed B30 applicability is not fresh runtime. No final combined qualification, physical-device, LAN, hardware-protection, Store/signing/publication, identity/owner/legal acceptance follows."
+  ],
+  "pins": {
+    "receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34442662032/native-evidence/ios-readiness-37/receipt.json",
+      "bytes": 532443,
+      "sha256": "b254bef327572c116bb8ff899152997ecb13446fcc502fb3cbc62d1f7f0cdd52"
+    },
+    "raw_xcode": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34442662032/native-evidence/ios-readiness-37/xcodebuild.log",
+      "bytes": 1273818,
+      "sha256": "67f61c5dc8f96681663ab1261069528294a94950f75a6c143d124905196531aa"
+    },
+    "xcresult_summary": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34442662032/native-evidence/ios-readiness-37/xcresult-summary.json",
+      "bytes": 1519,
+      "sha256": "3fdbe2c2172464775d626066673deea801911daee8a21b370dc5013cae801f50"
+    },
+    "xcresult_tests": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34442662032/native-evidence/ios-readiness-37/xcresult-tests.json",
+      "bytes": 5126,
+      "sha256": "fa2414fc80a6b1260bfef9abed731252c4a30faabc9d3144ec53944054962537"
+    },
+    "foundation": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34442662032/native-evidence/ios-readiness-37/parlor-l08-app-foundation.json",
+      "bytes": 7841,
+      "sha256": "f5d39ae0c8896989f1f07e4b97eba4dcc6bb0e67e449296e6ed50f09a9677d6e"
+    },
+    "functional_probe": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34442662032/native-evidence/ios-readiness-37/probe-l08-storage-functional-result.json",
+      "bytes": 55205,
+      "sha256": "c965714d88e211aac2272a75e54bbbd68ab60ac98cb7cad40563505a0422a5ff"
+    },
+    "host_probe": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34442662032/native-evidence/ios-readiness-37/probe-l08-host-result.json",
+      "bytes": 150205,
+      "sha256": "b186843a7a087a3a0e9b00012c3b219313eee56a1dc41988b64494cf8d007613"
+    },
+    "download_receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34442662032/download-receipt.json",
+      "bytes": 86524,
+      "sha256": "13a997529bc844dbf76ce0c5b46718bb0c26cf366156f9754afdd688bbe47f01"
+    },
+    "continuation": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34442662032/native-evidence/continuation.json",
+      "bytes": 33816,
+      "sha256": "a90af4cea1a921749059e0f28d8a5b67c7b07baf4833aff9226c283cc25b63d4"
+    },
+    "cleanup": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34442662032/native-cleanup/parlor-native-34442662032-1-cleanup.json",
+      "bytes": 2350,
+      "sha256": "d96d11738f7720d59d5b5a629d81c3d2414f2e142f4e7fd4aa9b60339217d03f"
+    },
+    "watcher": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/l08-final-evidence-01/watcher-collection-receipt.json",
+      "bytes": 666,
+      "sha256": "188596ec3bad86ddbf3a8b08cae266a3476ea157447de39fa96a844f16a9e53d"
+    }
+  },
+  "reviewer_activity": {
+    "scope": "Local read-only Git/source/evidence and standard-library/in-memory independent assertions, plus this additive review only. No network, test/build, project import, process/simulator command, canonical edit or Git write.",
+    "corrections": "Reviewer-only schema assumptions corrected against actual A/FIFO fields; component completion need not be final same-boot event. A final read helper used unavailable python then corrected to python3. No project/CI test failure or rerun caused; final custody/raw audits succeeded.",
+    "cleanup": "No build/worker/simulator outputs created by reviewer."
+  }
+}

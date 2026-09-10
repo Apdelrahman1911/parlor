@@ -43,8 +43,19 @@ RUNNERS = {
 SHEET_RUNNERS = {"settings_sheet": "scripts/verification/ios-settings-sheet/settings_sheet_probe.py"}
 SHEET_SELECTION = "settings-sheet-only"
 SHEET_CAPTURED = "SETTINGS_SHEET_CAPTURED_NOT_APP_QUALIFICATION"
-CYCLES = {"l08": "ios-readiness-37", "normal": "ios-readiness-38", "settings_sheet": "ios-readiness-36"}
-NATIVE_SELECTIONS = {"paired": ("l08", "normal"), "l08-only": ("l08",), SHEET_SELECTION: ("settings_sheet",)}
+OS_RUNNERS = {"os_recovery": "scripts/verification/ios-os-recovery/os_recovery_probe.py"}
+OS_SELECTION = "os-recovery-only"
+OS_VERIFIED = "SCOPED_OS_RECOVERY_VERIFIED"
+OS_EXECUTION_KIND = "owned-simulator-os-only-two-invocation-recovery"
+OS_STAGES = ("build", "bootstrap", "proof")
+OS_SELECTORS = ("iosAppUITests/IOSAppLaunchUITests/testDSC01OSPublicBootstrap",
+                "iosAppUITests/IOSAppLaunchUITests/testDSC01OSPerAppRecovery")
+OS_WAIT_SECONDS = 5400
+OS_JOB_SECONDS = 120 * 60
+CYCLES = {"l08": "ios-readiness-37", "normal": "ios-readiness-38", "settings_sheet": "ios-readiness-36",
+          "os_recovery": "ios-readiness-39"}
+NATIVE_SELECTIONS = {"paired": ("l08", "normal"), "l08-only": ("l08",), SHEET_SELECTION: ("settings_sheet",),
+                     OS_SELECTION: ("os_recovery",)}
 LIFECYCLE_MODE = "direct-owned-v1"
 NATIVE_JOB_SECONDS = 240 * 60
 NATIVE_WAIT_SECONDS = 6000
@@ -147,6 +158,9 @@ def effective_scope(event, requested):
 def effective_native_selection(scope, requested):
     selection = "paired" if requested in (None, "") else requested
     require(isinstance(selection, str) and selection in NATIVE_SELECTIONS, "unknown-native-selection")
+    if selection == OS_SELECTION:
+        require(scope in {"native-preflight", "native-evidence"}, "os-recovery-only-requires-native-preflight-or-evidence")
+        return selection
     require(selection == "paired" or scope == "native-evidence" or
             selection == SHEET_SELECTION and scope == "native-preflight", "l08-only-requires-native-evidence")
     return selection
@@ -595,7 +609,83 @@ def lifecycle_journal_matches(raw, receipt, root, evidence):
         return False
 
 
-def cleanup_is_safe(receipt, approved, source, *, lifecycle_mode=None):
+def os_recovery_stops_are_safe(receipt, commands, stops):
+    """New OS-only attempted prefix; never relax the original two-stop schema."""
+    try:
+        stages = receipt["os_recovery_stages"]
+        if not (receipt["execution_kind"] == OS_EXECUTION_KIND and isinstance(stages, dict) and
+                set(stages) == set(OS_STAGES) and all(isinstance(stages[name], dict) for name in OS_STAGES)):
+            return False
+        flags = [stages[name]["attempted"] for name in OS_STAGES]
+        if any(type(value) is not bool for value in flags) or flags != sorted(flags, reverse=True):
+            return False
+        attempted = [name for name in OS_STAGES if stages[name]["attempted"]]
+        expected_stops = ["stop-" + name + "-immediate" for name in attempted] + (["stop-final"] if attempted else [])
+        if (receipt.get("build_attempted") is not bool(attempted) or
+                [row.get("label") for row in stops] != expected_stops or
+                any(type(row.get("exit_code")) is not int or row["exit_code"] != 0 for row in stops)):
+            return False
+        actions = {"build-for-testing", "test-without-building", "build", "test", "archive"}
+        builds = [row for row in commands if row["command"] and
+                  Path(row["command"][0]).name == "xcodebuild" and any(arg in actions for arg in row["command"])]
+        if len(builds) != len(attempted):
+            return False
+        for name, row in zip(attempted, builds):
+            arguments = row["command"]
+            stage = stages[name]
+            action = "build-for-testing" if name == "build" else "test-without-building"
+            selectors = OS_SELECTORS if name == "build" else (OS_SELECTORS[0 if name == "bootstrap" else 1],)
+            if not (stage.get("action") == action and stage.get("status") in {"PASS", "FAIL"} and
+                    stage.get("result_bundle") == name + ".xcresult" and stage.get("log") == row.get("log") == name + "-xcodebuild.log" and
+                    stage.get("preserved") is True and type(stage.get("stop_exit_code")) is int and stage["stop_exit_code"] == 0 and
+                    [arg for arg in arguments if arg in actions] == [action] and
+                    [arg for arg in arguments if arg.startswith("-only-testing:")] == ["-only-testing:" + item for item in selectors] and
+                    not any(arg.startswith("-skip-testing") for arg in arguments) and
+                    arguments.count("-resultBundlePath") == 1 and
+                    Path(arguments[arguments.index("-resultBundlePath") + 1]).name == stage["result_bundle"]):
+                return False
+            if stage.get("command_completed") is True:
+                if not (type(stage.get("exit_code")) is int and type(row.get("exit_code")) is int and
+                        stage["exit_code"] == row["exit_code"] and (stage["status"] != "PASS" or stage["exit_code"] == 0)):
+                    return False
+            elif stage.get("command_completed") is False:
+                # Exceptions have no returned stage exit; a cleanup/reap exit is
+                # retained only on the actual command, never invented as success.
+                if not (stage["status"] == "FAIL" and "exit_code" not in stage and
+                        row.get("interrupted_or_failed") is True and isinstance(row.get("primary_error"), dict) and
+                        (row.get("exit_code") is None or type(row["exit_code"]) is int)):
+                    return False
+            else:
+                return False
+        return all(stages[name] == {"attempted": False, "status": "NOT_RUN"} for name in OS_STAGES if name not in attempted)
+    except (KeyError, IndexError, TypeError, ValueError, AttributeError):
+        return False
+
+
+def os_recovery_summary(receipt):
+    """OS proof and bootstrap result stay separate, including safely cleaned failures."""
+    require(receipt.get("execution_kind") == OS_EXECUTION_KIND and receipt.get("image_observer") == "NOT_RUN_NORMAL_PROVENANCE" and
+            isinstance(receipt.get("status"), str) and
+            receipt["status"] in {OS_VERIFIED, "FAIL"} and
+            all(receipt.get(key) == "NOT_RUN" for key in ("runtime_evidence_status", "provenance_status", "notice_package_status")),
+            "os-recovery-is-not-a-b-qualification")
+    summary = {key: receipt.get(key) for key in ("bootstrap_status", "os_subgate_status")}
+    stages = receipt.get("os_recovery_stages")
+    require(all(isinstance(value, str) and value in {"PASS", "FAIL", "NOT_RUN"} for value in summary.values()) and
+            isinstance(stages, dict) and set(stages) == set(OS_STAGES) and
+            all(isinstance(stages[name], dict) for name in OS_STAGES), "invalid-os-recovery-stage-status")
+    passed = lambda name: (stages[name].get("attempted") is True and stages[name].get("command_completed") is True and
+                           stages[name].get("status") == "PASS" and
+                           type(stages[name].get("exit_code")) is int and stages[name]["exit_code"] == 0)
+    require(all(summary[key] != "PASS" or passed(name) for key, name in
+                (("bootstrap_status", "bootstrap"), ("os_subgate_status", "proof"))), "os-stage-pass-without-zero-exit")
+    if receipt["status"] == OS_VERIFIED:
+        require(all(value == "PASS" for value in summary.values()) and all(passed(name) for name in OS_STAGES),
+                "failed-bootstrap-or-stage-is-not-os-success")
+    return summary
+
+
+def cleanup_is_safe(receipt, approved, source, *, lifecycle_mode=None, os_recovery=False):
     if not isinstance(receipt, dict):
         return False
     stops = receipt.get("gradle_stops", [])
@@ -609,8 +699,12 @@ def cleanup_is_safe(receipt, approved, source, *, lifecycle_mode=None):
         row.get("command") and Path(str(row["command"][0])).name == "xcodebuild" and
         any(arg in {"test", "build"} for arg in row["command"][1:])
         for row in receipt.get("commands", [])))
-    if (not isinstance(stops, list) or any(not isinstance(row, dict) or row.get("exit_code") != 0 for row in stops) or
-            attempted and (len(stops) != 2 or {row.get("label") for row in stops} != {"stop-xcode-immediate", "stop-final"})):
+    if not isinstance(stops, list) or any(not isinstance(row, dict) or row.get("exit_code") != 0 for row in stops):
+        return False
+    if os_recovery:
+        if not os_recovery_stops_are_safe(receipt, commands, stops):
+            return False
+    elif attempted and (len(stops) != 2 or {row.get("label") for row in stops} != {"stop-xcode-immediate", "stop-final"}):
         return False
     if lifecycle_mode is not None and (lifecycle_mode != LIFECYCLE_MODE or
             not direct_lifecycle_is_safe(receipt, approved, source) or
@@ -813,6 +907,8 @@ class Continuation:
 
     @property
     def runners(self):
+        if self.selection == OS_SELECTION:
+            return OS_RUNNERS
         return SHEET_RUNNERS if self.selection == SHEET_SELECTION else RUNNERS
 
     @property
@@ -861,6 +957,8 @@ class Continuation:
             expected[key] = int(raw)
         approvals = (("settings_sheet_sha256", "PARLOR_APPROVED_PROBE_CONTROL_SHA256"),) if self.selection == SHEET_SELECTION else (
             ("l08_sha256", "PARLOR_APPROVED_L08_CONTROL_SHA256"), ("normal_sha256", "PARLOR_APPROVED_NORMAL_CONTROL_SHA256"))
+        if self.selection == OS_SELECTION:
+            approvals = (("os_recovery_sha256", "PARLOR_APPROVED_PROBE_CONTROL_SHA256"),)
         for key, variable in (("artifact_sha256", "PARLOR_PREFLIGHT_ARTIFACT_SHA256"), *approvals):
             raw = self.env.get(variable, "")
             require(HEX64.fullmatch(raw), "missing-independent-preflight-or-control-hash")
@@ -927,7 +1025,10 @@ class Continuation:
                         stdout=output, stderr=subprocess.STDOUT)
                     if entry.get("interrupted"):
                         raise NativeInterrupted()
-                    entry["exit_code"] = child.wait(timeout=900 if self.selection == SHEET_SELECTION else NATIVE_WAIT_SECONDS)
+                    wait_seconds = 900 if self.selection == SHEET_SELECTION else NATIVE_WAIT_SECONDS
+                    if self.selection == OS_SELECTION:
+                        wait_seconds = OS_WAIT_SECONDS
+                    entry["exit_code"] = child.wait(timeout=wait_seconds)
                 except (subprocess.TimeoutExpired, NativeInterrupted) as error:
                     finishing = True
                     entry["timed_out"] = isinstance(error, subprocess.TimeoutExpired)
@@ -947,6 +1048,8 @@ class Continuation:
         require(label in self.selected_lanes, "native-lane-not-selected")
         wait_seconds = 900 if self.selection == SHEET_SELECTION else NATIVE_WAIT_SECONDS
         job_seconds = 40 * 60 if self.selection == SHEET_SELECTION else NATIVE_JOB_SECONDS
+        if self.selection == OS_SELECTION:
+            wait_seconds, job_seconds = OS_WAIT_SECONDS, OS_JOB_SECONDS
         required = wait_seconds + NATIVE_GRACE_SECONDS + NATIVE_FINISH_RESERVE_SECONDS
         admission = dict(cycle=CYCLES[label], status="DENIED_NOT_RUN", job_budget_seconds=job_seconds,
                          child_wait_seconds=wait_seconds, finalizer_grace_seconds=NATIVE_GRACE_SECONDS,
@@ -1010,7 +1113,8 @@ class Continuation:
             self.save()
         require(preserved["status"] == "COMPLETE", "native-evidence-not-fully-preserved-retain-canonical-files")
         receipt = decode(file_bytes(destination / "receipt.json", 8 * 1024 * 1024))
-        safe = cleanup_is_safe(receipt, approved, source, lifecycle_mode=LIFECYCLE_MODE)
+        safe = cleanup_is_safe(receipt, approved, source, lifecycle_mode=LIFECYCLE_MODE,
+                               **({"os_recovery": True} if label == "os_recovery" else {}))
         if safe:
             journal = destination / "simulator-lifecycle.jsonl"
             raw = file_bytes(journal, 1024 * 1024)
@@ -1019,6 +1123,8 @@ class Continuation:
                     receipt["simulator_lifecycle"]["journal"]["identity"] == [info.st_dev, info.st_ino, info.st_uid])
         entry.update(receipt_status=receipt.get("status"), cleanup_safe=safe,
                      receipt_sha256=sha(file_bytes(destination / "receipt.json", 8 * 1024 * 1024)))
+        if label == "os_recovery":
+            entry["os_recovery"] = self.state["os_recovery"] = os_recovery_summary(receipt)
         self.state["cleanup_safe"] = safe
         self.save()
         require(not entry.get("interrupted") and not entry.get("timed_out") and
@@ -1040,6 +1146,11 @@ class Continuation:
         # Paired A partial/strict failure is retained; it does not prevent the independent
         # normal-source B observation if (and only if) A's actual cleanup is safe.
         results = [self.run_native(label, expected[label + "_sha256"], source) for label in self.selected_lanes]
+        if self.selection == OS_SELECTION:
+            summary = self.state.get("os_recovery", {})
+            verified = (results == [(0, OS_VERIFIED)] and summary == {"bootstrap_status": "PASS", "os_subgate_status": "PASS"})
+            self.state["status"] = OS_VERIFIED if verified else "OS_RECOVERY_NOT_READY"
+            return 0 if verified else 2  # A separately passing OS subgate never erases a failed bootstrap.
         if self.selection == SHEET_SELECTION:
             captured = results == [(0, SHEET_CAPTURED)]
             self.state["status"] = SHEET_CAPTURED if captured else "SETTINGS_SHEET_NOT_CAPTURED"
@@ -1065,6 +1176,8 @@ class Continuation:
         self.state = dict(schema_version=1, context=self.context, scope=self.scope, selection=self.selection,
             unselected_lanes=self.unselected_lanes, base_custody=custody(self.base),
             status="RUNNING", started_at=now(), files={}, directories={}, runs={}, cleanup_safe=True)
+        if self.selection == OS_SELECTION:
+            self.state["os_recovery"] = {"bootstrap_status": "NOT_RUN", "os_subgate_status": "NOT_RUN"}
         self.save()
         code = 1
         try:
@@ -1084,7 +1197,8 @@ class Continuation:
                 write_new(self.bundle / "continuation.json", json_bytes(self.state))
             self.state["bundle_manifest"] = tree_manifest(self.bundle)
             self.save()
-            print(json.dumps({key: self.state.get(key) for key in ("scope", "selection", "unselected_lanes", "status", "cleanup_safe", "error")}, indent=2))
+            keys = ("scope", "selection", "unselected_lanes", "status", "cleanup_safe", "error")
+            print(json.dumps({key: self.state.get(key) for key in keys + (("os_recovery",) if self.selection == OS_SELECTION else ())}, indent=2))
         return code
 
     def cleanup(self):

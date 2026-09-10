@@ -1,0 +1,107 @@
+{
+  "kind": "FOCUSED_CONTROL_EXECUTION_NOT_NATIVE_RUNTIME",
+  "commands": [
+    {
+      "label": "os-copy-and-driver",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/verification/ios-os-recovery",
+        "-p",
+        "test_os_recovery*.py",
+        "-v"
+      ],
+      "started_at": "2026-09-10T08:34:55.656572+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-09-10T08:34:56.875004+00:00"
+    },
+    {
+      "label": "native-continuation",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "scripts.release.tests.test_native_continuation",
+        "-v"
+      ],
+      "started_at": "2026-09-10T08:34:56.875167+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-09-10T08:35:00.606218+00:00"
+    },
+    {
+      "label": "workflow-contract",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "scripts.release.tests.test_workflow_contract",
+        "-v"
+      ],
+      "started_at": "2026-09-10T08:35:00.606354+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-09-10T08:35:01.474434+00:00"
+    },
+    {
+      "label": "affected-process-cycle",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "scripts.release.tests.test_native_process_probe.ProbeSourceContractTest.test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels",
+        "-v"
+      ],
+      "started_at": "2026-09-10T08:35:01.474572+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-09-10T08:35:02.392310+00:00"
+    },
+    {
+      "label": "transport-workflow",
+      "command": [
+        "./gradlew",
+        ":shared:transport-p2p:desktopTest",
+        "--tests",
+        "*ProductionVerificationWorkflowContractTest*",
+        "--no-daemon",
+        "--no-parallel",
+        "--max-workers=1",
+        "--no-configuration-cache",
+        "--dependency-verification=strict",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC -Dparlor.remediation.cycle=continuation-os-recovery-controls-linux-01",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Pparlor.android.signing.storeFile=",
+        "-Pparlor.android.signing.storePassword=",
+        "-Pparlor.android.signing.keyAlias=",
+        "-Pparlor.android.signing.keyPassword="
+      ],
+      "started_at": "2026-09-10T08:35:02.392484+00:00",
+      "exit_code": 0,
+      "finished_at": "2026-09-10T08:35:29.465655+00:00"
+    }
+  ],
+  "controls_unchanged": true,
+  "approved_review_sources": [
+    [
+      "os-recovery-copy-swift-independent-01.json",
+      "17a9b45b0c7de7d157677fa07d74df83d6860ffa4b976087e5a3926ad4fe01c8",
+      "files"
+    ],
+    [
+      "os-recovery-driver-receipts-independent-01.json",
+      "2308fbeababbfbee1388267e979abcbc1df33ddfd02a6dd0515aeb3c83055703",
+      "approved_files"
+    ],
+    [
+      "os-recovery-ci-independent-01.json",
+      "b3fee55d3dee92e57b73e90a57bd9bb9b276ea0d438b08f532f5848927015ae2",
+      "approved_files"
+    ]
+  ],
+  "finished_at": "2026-09-10T08:35:29.487013+00:00"
+}

@@ -1,0 +1,232 @@
+{
+  "schema_version": 1,
+  "kind": "OS_RECOVERY_FOCUSED_LINUX_ACTUAL_EXECUTION_INDEPENDENT_REVIEW",
+  "reviewer": "/root/ci_review",
+  "reviewed_at": "2026-09-10T08:45:20.658212+00:00",
+  "status": "ACCEPT_SCOPED_174_ACTUAL_CONTROLS_AND_CLEANUP_NO_OPEN_FINDINGS",
+  "readiness": "NOT_READY",
+  "findings": [],
+  "cycle": "continuation-os-recovery-controls-linux-01",
+  "evidence_root": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-os-recovery-controls-linux-01",
+  "evidence": [
+    {
+      "path": "artifact-receipts.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "path": "control-inputs-after.json",
+      "bytes": 40430,
+      "sha256": "9892d2b92a246a0c23a5a97e343a2533ffa9505696c84738c31f7c720a48728e"
+    },
+    {
+      "path": "control-inputs-before.json",
+      "bytes": 40430,
+      "sha256": "9892d2b92a246a0c23a5a97e343a2533ffa9505696c84738c31f7c720a48728e"
+    },
+    {
+      "path": "focused-commands.json",
+      "bytes": 3189,
+      "sha256": "d0b9ab16c266e10ce538c8fe51bddf279f76e104506a3ae3062e22ee34728e73"
+    },
+    {
+      "path": "gradle.log",
+      "bytes": 41016,
+      "sha256": "2c257182557f214c240c2e8888f44bfab262462576698262b309c780005d9e68"
+    },
+    {
+      "path": "java-toolchain.log",
+      "bytes": 2026,
+      "sha256": "a7a86ea7b20362e2c856e5e71a8b6fc51764d5aeaa9f5a8c82b386ff156f8a7c"
+    },
+    {
+      "path": "javac-toolchain.log",
+      "bytes": 14,
+      "sha256": "157f601a5854ca28a7dc364c13a5ca2879084186be49e3462d37acd028f35755"
+    },
+    {
+      "path": "receipt.json",
+      "bytes": 314146,
+      "sha256": "8a45c61d587a4bb769b55e393904679669d937c2f2e07955f2b70082a2394630"
+    },
+    {
+      "path": "reports/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+      "bytes": 2116,
+      "sha256": "b5fce7a14746834eb4a6f09612219c25231b3232b957f0f4d208c85e1d3d3b55"
+    },
+    {
+      "path": "stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "test-receipts.json",
+      "bytes": 2682,
+      "sha256": "d1dc193ce944191291da03e045a2784526049830979c723b6d0734d73ae7237f"
+    }
+  ],
+  "source": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "base_commit": "15e8982b35e39006868868a11c6f4e1864e613a7",
+    "base_tree": "8f3fd56f86d7934fddaff068539d69fe26d4aaad",
+    "state": "Base15e plus exactly14 independently approved control/fixture files (seven existing modifications and seven new OS files), with separately modified ledger. This is unfrozen working-tree test execution, not a future frozen-SHA native qualification.",
+    "manifest_rows": 840,
+    "manifest_sha256": "1f99167c155eaedd39fd6bb11a1d37cc2fda07a4a96f8cf20d706251250a6c4b",
+    "captured_tracked_diff_sha256": "364f54922f011cf3a856d1de7c40808f1bb1a83558861fb613e3c8fd833b54f6",
+    "runner": {
+      "manifest": [
+        [
+          "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+          "1b9e882514bfe5386785d5a71ae32fdc2bc3aa4cc1dd24532709899fbf4f41bc"
+        ]
+      ],
+      "manifest_sha256": "942e138764146313a59cbe1278c1357284a5701d0c125809c34ddbbe876ce912"
+    },
+    "explicit_controls": {
+      "rows": 193,
+      "total_bytes": 3204214,
+      "before_and_after_file_sha256": "9892d2b92a246a0c23a5a97e343a2533ffa9505696c84738c31f7c720a48728e",
+      "status": "Exact byte equality; all193 files rehashed against disk and exact declared closure reconstructed."
+    }
+  },
+  "source_reviews": [
+    [
+      "os-recovery-copy-swift-independent-01.json",
+      "17a9b45b0c7de7d157677fa07d74df83d6860ffa4b976087e5a3926ad4fe01c8",
+      "files"
+    ],
+    [
+      "os-recovery-driver-receipts-independent-01.json",
+      "2308fbeababbfbee1388267e979abcbc1df33ddfd02a6dd0515aeb3c83055703",
+      "approved_files"
+    ],
+    [
+      "os-recovery-ci-independent-01.json",
+      "b3fee55d3dee92e57b73e90a57bd9bb9b276ea0d438b08f532f5848927015ae2",
+      "approved_files"
+    ]
+  ],
+  "executed": {
+    "commands": 5,
+    "command_exits": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "python": [
+      {
+        "selection": "new OS copy/driver discover",
+        "tests": 26,
+        "composition": "10 copy +16 driver",
+        "passed": 26,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "selection": "native continuation full module",
+        "tests": 81,
+        "passed": 81,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "selection": "workflow contract full module",
+        "tests": 57,
+        "passed": 57,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "selection": "one affected process-probe cycle contract",
+        "tests": 1,
+        "passed": 1,
+        "failed": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ],
+    "python_total": 165,
+    "gradle": {
+      "command": "./gradlew :shared:transport-p2p:desktopTest --tests *ProductionVerificationWorkflowContractTest* with retained strict/no-daemon/no-parallel/one-worker/in-process flags and empty signing props",
+      "task": "ACTUALLY_EXECUTED_NOT_FROM_CACHE",
+      "suite": "com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest",
+      "tests": 9,
+      "passed": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "xml_timestamp": "2026-09-10T08:35:28.458Z",
+      "xml_suite_seconds": 0.614,
+      "build_seconds_reported": 26,
+      "actionable_tasks": 21,
+      "executed_actionable_tasks": 14,
+      "from_cache_actionable_tasks": 7,
+      "compilation": "Seven compile tasks FROM-CACHE, including the test compile. No fresh compilation claim."
+    },
+    "total_actual_cases": 174,
+    "overall_exit": 0,
+    "failures": 0,
+    "errors": 0,
+    "test_skips": 0
+  },
+  "independent_reconciliation": [
+    "Read whole retained gradle.log and exact inline outer command AST/text without executing it. Five FOCUSED_COMMAND headers match focused-commands.json exactly, serial timestamps and all exit0. The wrapper invokes all five commands and would return nonzero on any command failure or control drift; no harness failure was ignored.",
+    "All165 unique Python method identities/outcomes match the exact statically declared expected selected sets. Four complete unittest summaries26/81/57/1, four OK lines and every case ok. This actually exercises the reviewed new copy/driver and eight OS adapter methods, not just declaration counts.",
+    "One preserved XML suite has exactly the nine current Kotlin @Test names, no skipped/failure/error nodes, and matches test-receipts.json. The unannotated desktopTest task plus fresh XML timestamp/duration inside the actual Gradle command window corroborates execution; compilation-cache hits are kept separate. Empty artifact-receipts is appropriate to this no-package cycle.",
+    "Complete source-before/source-after and runner-before/runner-after objects are equal. Recomputed their manifest digests; reconstructed complete source membership from read-only Git listing; all840 records and the exact lane runner matched disk. All14 approved files match their independently sealed review hashes and the193 explicit control rows.",
+    "The optional extra Kotlin path in the inline recipe contains a nonexistent extra shared/ segment and was explicitly filtered before both control snapshots; no hash exists or is claimed for it. The actual test source is present with exact bytes in both840-row source manifests, and its nine methods match executed XML. This does not require a test rerun or fabrication of a194th explicit control row.",
+    "The coordinator updated the ledger after the cycle. Captured full tracked-diff hashes remain equal before/after; current full diff changed while all840 application/source records and193 controls still match. Do not relabel the receipt as execution of later ledger/frozen commits."
+  ],
+  "actual_Kotlin_source_binding": {
+    "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/ProductionVerificationWorkflowContractTest.kt",
+    "sha256": "f827b3bba6f51581e874206e95431e1c3a843db2706649e7f5c6f95610a637d1",
+    "binding": "ordinary source manifest before and after, not explicit control list"
+  },
+  "warnings_and_not_executed": [
+    "No test failures/errors/skips. Gradle configuration/resource tasks have ordinary SKIPPED/NO-SOURCE/UP-TO-DATE labels; these are not executed test cases.",
+    "Existing warnings: experimental Lint9.1.1 pin; Gradle8.13 deprecation toward future Kotlin2.5.0; iosX64Test and iosSimulatorArm64Test disabled on Linux. Neither Apple task was selected or executed.",
+    "Only one affected native-process-probe method executed, not its entire45-method suite; only nine targeted transport workflow tests executed, not all transport/domain suites.",
+    "No Swift/Xcode build, simulator allocation, OS39 preflight/runtime, real Settings recovery, new libproc query, protection enforcement, dependency consumer or combined qualification executed in this cycle. Expected synthetic failure fixtures are not actual native failures or native passes."
+  ],
+  "cleanup": {
+    "status": "PASS",
+    "cycle_started_at": "2026-09-10T08:34:54.792464+00:00",
+    "command_finished_at": "2026-09-10T08:35:29.502143+00:00",
+    "stop_exit_code": 0,
+    "stopped_at": "2026-09-10T08:35:30.152769+00:00",
+    "cleanup_completed_at": "2026-09-10T08:35:30.308987+00:00",
+    "raw_stop_log": "No Gradle daemons are running.",
+    "removed_outputs": [
+      "shared/networking/build",
+      "shared/transport-p2p/build",
+      "shared/core/build",
+      "shared/storage/build",
+      "shared/engine/build",
+      "build",
+      "build-logic/convention/build"
+    ],
+    "live_build_roots_independently_observed_absent": 16,
+    "cycle_scratch_absent": true,
+    "remaining_outputs": [],
+    "retained_outputs": [],
+    "workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "artifact_workers": {
+      "terminated_owned_workers": [],
+      "remaining_owned_workers": []
+    },
+    "cleanup_errors": [],
+    "deferred_signals": [],
+    "method": "Inherited finalizer invokes ./gradlew --stop immediately after outer command completion, captures XML/artifact reports, removes only exact owned roots and scratch. No cleanup Gradle process was started, so no second stop was required. All11 retained evidence files preserved; archived reports not mistaken for live outputs.",
+    "lock": "Retained regular zero-byte lane lock; device24/inode16276678. No live process sampling by reviewer."
+  },
+  "review_activity": "Read-only Git/source/AST/JSON/XML/hash and precise path inspection; no tests/imports/builds/network/process sampling or canonical edits. An initial inspection assumption that the live full diff would still match was corrected for the already-updated post-cycle ledger; not a test failure/retry. Sole write this additive review JSON; no reviewer build cleanup owed.",
+  "conclusion": "Accept actual174 focused Linux controls and cleanup at recorded working-tree source. This closes the local-control prerequisite only. Source/inventory freeze, fresh OS-only binding/preflight and actual platform execution/independent evidence review remain required. A37 FAIL, strict0/26 and all physical/Store/owner/legal boundaries remain unchanged."
+}

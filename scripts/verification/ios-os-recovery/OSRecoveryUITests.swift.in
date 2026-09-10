@@ -1,0 +1,38 @@
+// Appended to the one frozen copied XCTest source. Each method is invoked once
+// by a separate xcodebuild test-without-building command on the SAME owned device.
+extension IOSAppLaunchUITests {
+    @MainActor private func osRecoveryContext(_ stage: String) throws -> (XCUIApplication, String) {
+        XCTAssertTrue(["bootstrap", "proof"].contains(stage))
+        let simulator = try XCTUnwrap(ProcessInfo.processInfo.environment["SIMULATOR_UDID"])
+        XCTAssertNotNil(UUID(uuidString: simulator))
+        let token = UUID().uuidString
+        let app = XCUIApplication()
+        app.launchArguments = []
+        app.launchEnvironment = ["PARLOR_DSC01_RUN_TOKEN": token,
+            "PARLOR_DSC01_EXPECTED_UDID": simulator, "PARLOR_DSC01_SCENARIO": "os"]
+        XCUIDevice.shared.orientation = .portrait
+        let row: [String: Any] = ["schemaVersion": 1, "stage": stage,
+            "simulator": simulator, "runToken": token]
+        let encoded = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
+        XCTAssertLessThanOrEqual(encoded.count, 512)
+        print("PARLOR_OS_RECOVERY_STAGE " + String(decoding: encoded, as: UTF8.self))
+        return (app, simulator)
+    }
+
+    @MainActor func testDSC01OSPublicBootstrap() throws {
+        let (app, simulator) = try osRecoveryContext("bootstrap")
+        // Deliberately no defer, completion marker or other explicit AX call
+        // after the single original public-English-primary choice. This is NOT
+        // final preferred-list proof or permission to accept a crashed XCTest.
+        try prepareActualOSMultilingualPrerequisite(app, expectedSimulator: simulator, mode: .bootstrap)
+    }
+
+    @MainActor func testDSC01OSPerAppRecovery() throws {
+        let (app, simulator) = try osRecoveryContext("proof")
+        defer { app.terminate(); XCUIDevice.shared.orientation = .portrait }
+        // Fail before Add Language if the complete preferred list did not persist.
+        // The original public-list geometry/order/ownership checks remain intact.
+        try prepareActualOSMultilingualPrerequisite(app, expectedSimulator: simulator, mode: .proofOnly)
+        try investigateActualOSPerAppLanguage(app)
+    }
+}

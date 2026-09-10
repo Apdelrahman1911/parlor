@@ -72,8 +72,9 @@ class WorkflowContractTest(unittest.TestCase):
         workflow_contract.verify_verification_scopes(workflow)
         mutations = [block.replace('type: choice', 'type: string', 1),
                      block.replace('default: paired', 'default: l08-only', 1),
-                     block.replace('[paired, l08-only, settings-sheet-only]', '[paired, l08-only, settings-sheet-only, l08]', 1),
-                     block.replace('[paired, l08-only, settings-sheet-only]', '[l08-only, paired, settings-sheet-only]', 1),
+                     block.replace('[paired, l08-only, settings-sheet-only, os-recovery-only]', '[paired, l08-only, settings-sheet-only, os-recovery-only, l08]', 1),
+                     block.replace('[paired, l08-only, settings-sheet-only, os-recovery-only]', '[l08-only, paired, settings-sheet-only, os-recovery-only]', 1),
+                     block.replace(', os-recovery-only', '', 1),
                      block + block, '']
         for replacement in mutations:
             changed = workflow.replace(block, replacement, 1)
@@ -98,7 +99,7 @@ class WorkflowContractTest(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, 'verification scope'):
             workflow_contract.verify_verification_scopes(changed)
 
-    def test_settings_sheet_diagnostic_requires_the_explicit_shared_probe_hash_binding(self) -> None:
+    def test_settings_and_os_selections_require_the_explicit_shared_probe_hash_binding(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
         block = workflow_contract.validation_step(workflow, "Run focused native continuation")
         original = "          PARLOR_APPROVED_PROBE_CONTROL_SHA256: ${{ inputs.approved_probe_control_sha256 }}\n"
@@ -173,6 +174,7 @@ class WorkflowContractTest(unittest.TestCase):
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
         expression = ("${{ inputs.verification_scope == 'native-process-probe' && 10 || "
                       "inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'settings-sheet-only' && 40 || "
+                      "inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'os-recovery-only' && 120 || "
                       "inputs.verification_scope == 'native-evidence' && 240 || 120 }}")
         ios = workflow.split("\n  ios:\n", 1)[1]
         self.assertEqual([expression], re.findall(r"(?m)^    timeout-minutes: (.*)$", ios))
@@ -181,6 +183,8 @@ class WorkflowContractTest(unittest.TestCase):
             expression.replace("&& 10", "&& 30"),
             expression.replace("&& 40", "&& 240"),
             expression.replace("'settings-sheet-only'", "'l08-only'"),
+            expression.replace("'os-recovery-only'", "'l08-only'"),
+            expression.replace("'os-recovery-only' && 120", "'os-recovery-only' && 240"),
             expression.replace("&& 240", "&& 120"),
             expression.replace("&& 240", "&& 241"),
             expression.replace("|| 120", "|| 240"),

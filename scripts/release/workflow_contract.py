@@ -212,8 +212,8 @@ def verify_verification_scopes(text: str) -> None:
     if re.findall(r"(?m)^    if: (.*)$", ios) != [IOS_VERIFICATION_SCOPE]:
         fail("verification scope may skip iOS only for the separately guarded Windows-only follow-up")
     if re.findall(r"(?m)^    timeout-minutes: (.*)$", ios) != [
-            "${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'settings-sheet-only' && 40 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}"]:
-        fail("verification scope must keep full/preflight120, probe10, settings-sheet evidence40 and other native-evidence240 minute bounds")
+            "${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'settings-sheet-only' && 40 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'os-recovery-only' && 120 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}"]:
+        fail("verification scope must keep full/preflight120, probe10, settings-sheet evidence40, OS-recovery evidence120 and other native-evidence240 minute bounds")
     clock_name = "Start focused native job clock"
     clock = validation_step(ios, clock_name)
     clock_script = '''        run: |
@@ -242,8 +242,8 @@ def verify_verification_scopes(text: str) -> None:
     selections = re.findall(r"(?m)^      native_selection:\n((?:        .*\n)+)", text.split("\nconcurrency:", 1)[0])
     if (len(selections) != 1 or
             re.findall(r"(?m)^        (type|default|options): (.*)$", selections[0]) !=
-            [("type", "choice"), ("default", "paired"), ("options", "[paired, l08-only, settings-sheet-only]")]):
-        fail("verification scope must retain closed paired-default, l08-only or settings-sheet-only selection")
+            [("type", "choice"), ("default", "paired"), ("options", "[paired, l08-only, settings-sheet-only, os-recovery-only]")]):
+        fail("verification scope must retain closed paired-default, l08-only, settings-sheet-only or os-recovery-only selection")
     for name in ("Validate verification scope", "Run focused native continuation",
                  "Verify focused native cleanup and uploaded custody"):
         if re.findall(r"(?m)^          PARLOR_NATIVE_SELECTION: (.*)$", validation_step(ios, name)) != [

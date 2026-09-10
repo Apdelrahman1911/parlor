@@ -19,10 +19,10 @@ on:
         default: full
         options: [full, native-preflight, native-evidence, native-process-probe, windows-only]
       native_selection:
-        description: Native lanes or Settings-sheet diagnostic (nondefault requires explicit scoped approval)
+        description: Native lanes, Settings diagnostic, or scoped OS recovery (explicit nondefault approval)
         type: choice
         default: paired
-        options: [paired, l08-only, settings-sheet-only]
+        options: [paired, l08-only, settings-sheet-only, os-recovery-only]
       frozen_source_sha:
         description: Exact reviewed source/inventory SHA (required for every focused mode)
         type: string
@@ -45,7 +45,7 @@ on:
         description: Independently approved normal libproc control hash (native-evidence only)
         type: string
       approved_probe_control_sha256:
-        description: Independently approved process-probe or settings-sheet-only diagnostic control hash
+        description: Independently approved process-probe, settings-sheet-only, or os-recovery-only control hash
         type: string
 
 concurrency:
@@ -513,7 +513,7 @@ jobs:
     if: github.event_name != 'workflow_dispatch' || inputs.verification_scope != 'windows-only'
     name: iOS tests, release frameworks, and Swift wrapper
     runs-on: macos-15
-    timeout-minutes: ${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'settings-sheet-only' && 40 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}
+    timeout-minutes: ${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'settings-sheet-only' && 40 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'os-recovery-only' && 120 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}
     permissions:
       contents: read
       actions: read

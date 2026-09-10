@@ -51,7 +51,8 @@ Dispatch again at the **same SHA** with `verification_scope=native-evidence`,
 - `approved_l08_control_sha256`, `approved_normal_control_sha256` (independently
   reviewed `control_sha256` values, not the JSON-file hashes).
 
-`native_selection` is a closed choice: **`paired` (default)** or `l08-only`.
+The A/B `native_selection` choices are **`paired` (default)** or `l08-only`;
+the separate closed Settings and OS-recovery selections are described below.
 Omission preserves the A-then-B chain. `l08-only` is accepted only for
 `verification_scope=native-evidence`; unknown or other combinations fail before
 native allocation. Preflight stays nonbuilding, paired and binds **both** manifests;
@@ -121,7 +122,8 @@ and that command's `timeout_seconds`. B's2700s whole command and120/240s XCTest
 allowances are unchanged. No XCTest split, test-filter reduction, retry, app or
 production timing change is introduced.
 
-Ordinary `native-evidence` has a240-minute job ceiling (the explicitly separate Settings diagnostic below is40 minutes). Full and native-preflight
+Ordinary `native-evidence` has a240-minute job ceiling (Settings diagnostic40,
+OS-only recovery120). Full and native-preflight
 remain120 minutes; the non-app process probe remains10. The first evidence-only
 job step, before checkout, records `CLOCK_MONOTONIC_RAW` via
 `time.clock_gettime_ns(time.CLOCK_MONOTONIC_RAW)`, bound to source SHA, job and
@@ -359,3 +361,49 @@ Success is `SETTINGS_SHEET_CAPTURED_NOT_APP_QUALIFICATION`, not `PASS` for A/B.
 Both original lanes remain `NOT_RUN_THIS_RUN`; normal runtime/provenance/notice
 statuses stay `NOT_RUN`. Observe and independently review actual labels before
 considering any fixture selector correction or another L08 execution.
+
+## Scoped public OS recovery, separate from A/B
+
+`native_selection=os-recovery-only` is accepted only with `native-preflight`
+or `native-evidence`. Cycle `ios-readiness-39` belongs exclusively to this new
+selection; A37, B38 and Settings36 labels and runner scopes are unchanged. Its
+preflight has exactly `preflight.json`, the source binding and
+`os_recovery-controls.json`. Use the existing `approved_probe_control_sha256`
+input for this distinct complete control manifest. Settings, process-probe and
+paired hashes/packages cannot replace it. Both dispatches still require the same
+freshly reviewed frozen source and actual qualified hosted toolchain observation.
+
+The new copy-only driver compiles once, then runs two individually selected
+XCTest invocations on the same exactly owned simulator: public OS bootstrap and
+per-app OS recovery. This is not a full L08 repetition or normal B provenance.
+The build-for-testing command is capped at2700seconds, bootstrap600 and proof900;
+the native child wait is5400seconds and the job ceiling120minutes. Existing
+600-second finalizer grace,600-second custody reserve and source/run-bound raw
+kernel-clock admission remain mandatory. No shorter finalizer, retry or timeout
+increase for the failed A37 test is authorized. These are bounded interruption
+deadlines, not a guarantee that every inherited operation's worst-case allowance
+fits. Exhaustion remains failure, with required evidence/resource retention.
+
+Every attempted stage records its actual command, outcome, immediate Gradle stop
+and retained raw evidence. The OS-only cleanup schema requires the exact ordered
+attempted prefix of `stop-build-immediate`, `stop-bootstrap-immediate`,
+`stop-proof-immediate`, followed by `stop-final`; all attempted stops must exit0.
+With no build attempt, all three stages remain exactly false/`NOT_RUN`, no Xcode
+action or Gradle stop is claimed, and the result remains failed/not-run. Stage
+return codes are joined to the actual command rows; an exceptional command has
+no invented returned stage exit and cannot become PASS through cleanup alone.
+The original two-stop A/B/Settings schema is unchanged. The original direct-owned
+simulator journal, postbuild preservation barrier, strict worker/holder checks,
+source/control/copy custody, successful upload and precise output-cleanup guards
+still apply. A failure is not permission to skip preservation or ownership checks.
+
+`bootstrap_status` and `os_subgate_status` are retained separately. Only exit0,
+`SCOPED_OS_RECOVERY_VERIFIED`, and both stages PASS with actual zero-exit stage
+commands can produce that scoped adapter result. A failed/nonzero bootstrap
+remains failed even if the separately validated OS subgate is PASS; the adapter
+reports `OS_RECOVERY_NOT_READY` (or `FAIL` on an exception), never A/B or combined
+PASS. Standard normal runtime/provenance/notice statuses and both original lanes
+remain `NOT_RUN`/`NOT_RUN_THIS_RUN`. OS-specific observations cannot erase A37's
+SIGKILL, establish its sender, waive strict protection failures, or upgrade
+historical functional/host/B results. Actual platform evidence and independent
+review remain required; a new selection or passing fixture controls prove neither.
