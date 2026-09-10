@@ -520,6 +520,7 @@ class NativeCleanupTest(unittest.TestCase):
     def test_native_timeout_sends_term_and_waits_for_finalizer_without_kill(self):
         with TemporaryDirectory() as raw:
             lane = native.Continuation.__new__(native.Continuation)
+            lane.selection = "paired"
             lane.root = Path(raw).resolve()
             lane.env, lane.save = {}, Mock()
             child = Mock()
@@ -529,7 +530,7 @@ class NativeCleanupTest(unittest.TestCase):
                 lane.invoke_native(["not-executed"], Path(raw).resolve() / "runner.log", entry)
             self.assertTrue(entry["timed_out"])
             self.assertEqual(entry["exit_code"], 1)
-            self.assertEqual(child.wait.call_args_list[-1].kwargs, {"timeout": 600})
+            self.assertEqual([call.kwargs for call in child.wait.call_args_list], [{"timeout": 6000}, {"timeout": 600}])
             child.send_signal.assert_called_once_with(native.signal.SIGTERM)
             child.kill.assert_not_called()
             self.assertEqual(handlers.call_count, 4)
@@ -537,6 +538,7 @@ class NativeCleanupTest(unittest.TestCase):
     def test_native_unfinished_finalizer_keeps_cleanup_unsafe_and_does_not_kill(self):
         with TemporaryDirectory() as raw:
             lane = native.Continuation.__new__(native.Continuation)
+            lane.selection = "paired"
             lane.root = Path(raw).resolve()
             lane.env, lane.save = {}, Mock()
             child = Mock()
@@ -545,6 +547,7 @@ class NativeCleanupTest(unittest.TestCase):
                 with self.assertRaisesRegex(RuntimeError, "finalizer-did-not-finish"):
                     lane.invoke_native(["not-executed"], Path(raw).resolve() / "runner.log", {})
             lane.save.assert_called_once()
+            self.assertEqual([call.kwargs for call in child.wait.call_args_list], [{"timeout": 6000}, {"timeout": 600}])
             child.kill.assert_not_called()
 
     def test_signal_during_popen_assignment_is_forwarded_after_exact_child_is_known(self):
