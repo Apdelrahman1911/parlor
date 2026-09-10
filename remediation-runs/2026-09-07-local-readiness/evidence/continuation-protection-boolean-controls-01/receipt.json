@@ -1,0 +1,68 @@
+{
+  "kind": "FOCUSED_NATIVE_BOOLEAN_PRODUCER_CONTROL_REGRESSIONS_NOT_PLATFORM_EXECUTION",
+  "started_at": "2026-09-10T20:41:26.401114+00:00",
+  "source_head": "5bb98fd58232d6e7f3b4392b1436b20be5fe5db1",
+  "source_scope": "working tree: six independently reviewed Boolean-producing expressions in two native files atop recorded HEAD; strict parsers unchanged",
+  "commands": [
+    {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "/root/projects/Parlor/parlor/remediation-runs/2026-09-08-continuation/protection-diagnostic-01",
+        "-p",
+        "test_probe.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.255,
+      "expected_tests": 27,
+      "summary": [
+        "----------------------------------------------------------------------",
+        "Ran 27 tests in 0.055s",
+        "",
+        "OK"
+      ]
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "/root/projects/Parlor/parlor/remediation-runs/2026-09-08-continuation/protection-application-01",
+        "-p",
+        "test_application.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.136,
+      "expected_tests": 13,
+      "summary": [
+        "----------------------------------------------------------------------",
+        "Ran 13 tests in 0.053s",
+        "",
+        "OK"
+      ]
+    }
+  ],
+  "cleanup": {
+    "errors": [],
+    "removed": [
+      "/tmp/parlor-pd03-controls-aieh3u0l"
+    ],
+    "remaining_build_roots": [],
+    "scratch_absent": true,
+    "gradle_clean_not_run": "No compilation/project outputs: pure control tests only.",
+    "remaining_monitored_workers": []
+  },
+  "stop_exit_code": 0,
+  "controls_unchanged": true,
+  "finished_at": "2026-09-10T20:41:28.000650+00:00",
+  "status": "PASS"
+}

@@ -29,7 +29,7 @@ static void emit(NSDictionary *row) {
 }
 
 static NSDictionary *errorRecord(NSError *error) {
-    return @{@"present": @(error != nil), @"code": error ? @(error.code) : @0,
+    return @{@"present": error != nil ? @YES : @NO, @"code": error ? @(error.code) : @0,
         @"domain": !error ? @"none" : [error.domain isEqual:NSCocoaErrorDomain] ? @"cocoa" :
             [error.domain isEqual:NSPOSIXErrorDomain] ? @"posix" : @"other"};
 }
@@ -164,7 +164,7 @@ static NSDictionary *collect(void) {
     return @{@"strict_synthetic_complete": @{@"required_sample_ids": required, @"pass": @(pass),
         @"fail": @(required.count - pass), @"status": pass == required.count ? @"PASS" : @"FAIL"},
         @"replacement": @{@"before": original, @"after": replaced, @"observer_descriptor_held": @NO,
-            @"named_inode_changed": @(![original[@"inode"] isEqual:replaced[@"inode"]])}};
+            @"named_inode_changed": ![original[@"inode"] isEqual:replaced[@"inode"]] ? @YES : @NO}};
 }
 
 int main(void) {

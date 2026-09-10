@@ -18,7 +18,7 @@ static void demand(BOOL value, NSString *reason) {
 }
 
 static NSDictionary *errorRecord(NSError *error) {
-    return @{@"present": @(error != nil), @"code": error ? @(error.code) : @0,
+    return @{@"present": error != nil ? @YES : @NO, @"code": error ? @(error.code) : @0,
         @"domain": !error ? @"none" : [error.domain isEqual:NSCocoaErrorDomain] ? @"cocoa" :
             [error.domain isEqual:NSPOSIXErrorDomain] ? @"posix" : @"other"};
 }
@@ -127,7 +127,7 @@ static NSDictionary *foundationQuery(NSString *path, BOOL directory, BOOL fileMa
     NSDictionary *after = ParlorProtectionImplementation(receiver, selector);
     demand([before isEqual:after], @"getter-implementation-changed");
     id raw = values[fileManager ? NSFileProtectionKey : NSURLFileProtectionKey];
-    NSMutableDictionary *result = [@{@"dictionary_present": @(values != nil), @"key_present": @(raw != nil),
+    NSMutableDictionary *result = [@{@"dictionary_present": values != nil ? @YES : @NO, @"key_present": raw != nil ? @YES : @NO,
         @"protection": (!fileManager && directory) ? @"NOT_APPLICABLE_DIRECTORY" : protection(raw, !fileManager),
         @"native_error": errorRecord(error), @"implementation_before": before, @"implementation_after": after} mutableCopy];
     if (!fileManager) {
@@ -236,7 +236,7 @@ NSDictionary *ParlorProtectionSample(NSString *path) {
     } @finally {
         if (fd >= 0) {
             int result = close(fd);
-            record[@"descriptor_closed"] = @(result == 0);
+            record[@"descriptor_closed"] = result == 0 ? @YES : @NO;
             if (result != 0) record[@"collection_status"] = @"FAIL";
         } else record[@"descriptor_closed"] = @NO;
     }
