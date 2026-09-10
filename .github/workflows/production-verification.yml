@@ -14,10 +14,10 @@ on:
   workflow_dispatch:
     inputs:
       verification_scope:
-        description: Full qualification (default), native continuation, non-app probes, or Windows-only follow-up
+        description: Full qualification (default), native continuation, probes, or focused Windows/Android follow-up
         type: choice
         default: full
-        options: [full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe]
+        options: [full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe, android-cleanup-only]
       native_selection:
         description: Native lanes, Settings diagnostic, or scoped OS recovery (explicit nondefault approval)
         type: choice
@@ -45,7 +45,7 @@ on:
         description: Independently approved normal libproc control hash (native-evidence only)
         type: string
       approved_probe_control_sha256:
-        description: Independently approved native/Linux probe, settings-sheet-only, or os-recovery-only control hash
+        description: Independently approved native/Linux probe, Android cleanup, settings-sheet, or OS-recovery control hash
         type: string
 
 concurrency:
@@ -63,10 +63,10 @@ env:
 
 jobs:
   desktop-android:
-    if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'linux-process-probe'
+    if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'linux-process-probe' || inputs.verification_scope == 'android-cleanup-only'
     name: Common, desktop, and Android release
     runs-on: ubuntu-24.04
-    timeout-minutes: ${{ inputs.verification_scope == 'linux-process-probe' && 10 || 90 }}
+    timeout-minutes: ${{ inputs.verification_scope == 'linux-process-probe' && 10 || inputs.verification_scope == 'android-cleanup-only' && 45 || 90 }}
 
     steps:
       - name: Check out source
@@ -90,8 +90,14 @@ jobs:
           PARLOR_LINUX_PROBE_INPUTS: ${{ toJSON(inputs) }}
         run: /usr/bin/python3 -B scripts/ci/linux_process_probe.py validate
 
+      - name: Validate Android cleanup source and controls
+        if: github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'android-cleanup-only'
+        env:
+          PARLOR_LINUX_PROBE_INPUTS: ${{ toJSON(inputs) }}
+        run: /usr/bin/python3 -B scripts/ci/linux_process_probe.py validate-android-cleanup
+
       - name: Install Linux process-probe emulator package
-        if: github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'linux-process-probe'
+        if: github.event_name == 'workflow_dispatch' && (inputs.verification_scope == 'linux-process-probe' || inputs.verification_scope == 'android-cleanup-only')
         timeout-minutes: 4
         shell: bash
         run: |
@@ -108,7 +114,7 @@ jobs:
           runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
 
       - name: Install pinned Android SDK packages
-        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'android-cleanup-only'
         shell: bash
         run: |
           set -euo pipefail
@@ -130,7 +136,7 @@ jobs:
           test "$image_revision" = "$(jq -r '.toolchains.android_managed_device.system_image_revision' config/release-policy.json)"
 
       - name: Record exact source and require a clean checkout
-        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'android-cleanup-only'
         shell: bash
         run: |
           set -euo pipefail
@@ -151,12 +157,12 @@ jobs:
           runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
 
       - name: Run release Android managed-device smoke tests
-        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'android-cleanup-only'
         shell: bash
         run: scripts/android/run_release_managed_device_smoke.sh
 
       - name: Stop Gradle after managed-device
-        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')
+        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'android-cleanup-only')
         shell: python
         run: |
           import runpy, sys
@@ -190,7 +196,7 @@ jobs:
 
       - name: Upload verification reports, mappings, and unsigned AAB
         id: verification_artifact
-        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')
+        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'android-cleanup-only')
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: desktop-android-verification
@@ -211,7 +217,7 @@ jobs:
 
       # A successful nonempty upload must precede deletion of the last local evidence copy.
       - name: Clean only attested verification outputs
-        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')
+        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'android-cleanup-only')
         env:
           PARLOR_VERIFICATION_PREPARE_OUTCOME: ${{ steps.verification_ownership.outcome }}
           PARLOR_VERIFICATION_UPLOAD_OUTCOME: ${{ steps.verification_artifact.outcome }}
@@ -220,11 +226,11 @@ jobs:
         shell: python
         run: |
           import runpy, sys
-          sys.argv = ["verification_hygiene.py", "cleanup", "--android-reader=sudo-proc-exe-v1"]
+          sys.argv = ["verification_hygiene.py", "cleanup", "--android-reader=sudo-proc-exe-v2"]
           runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
 
       - name: Upload verification cleanup receipt
-        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')
+        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'android-cleanup-only')
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: verification-cleanup-${{ github.job }}
@@ -570,7 +576,7 @@ jobs:
           path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
 
   ios:
-    if: github.event_name != 'workflow_dispatch' || (inputs.verification_scope != 'windows-only' && inputs.verification_scope != 'linux-process-probe')
+    if: github.event_name != 'workflow_dispatch' || (inputs.verification_scope != 'windows-only' && inputs.verification_scope != 'linux-process-probe' && inputs.verification_scope != 'android-cleanup-only')
     name: iOS tests, release frameworks, and Swift wrapper
     runs-on: macos-15
     timeout-minutes: ${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'settings-sheet-only' && 40 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'os-recovery-only' && 120 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}

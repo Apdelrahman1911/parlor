@@ -1,0 +1,102 @@
+{
+  "kind": "EXPLICIT_READ_ONLY_PRIVILEGED_PROC_EXE_HOSTED_PROBE_REQUEST",
+  "at": "2026-09-10T14:03:52.059669+00:00",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "frozen_source_sha": "e4d49e17f5f1099a742ab3985c6257d090d61ba6",
+  "tree": "1e3697d7eab93cc856166f85a791fe3cdd62941a",
+  "remote_before": "e4d49e17f5f1099a742ab3985c6257d090d61ba6\trefs/heads/fix/local-readiness-2026-09-07",
+  "controls": {
+    "files": [
+      {
+        "path": ".github/workflows/production-verification.yml",
+        "sha256": "f455e2b7327009935fe4503d340237bc78dcaa2a65763a662a3dcf54318ac7b5"
+      },
+      {
+        "path": "gradle/wrapper/gradle-wrapper.jar",
+        "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f"
+      },
+      {
+        "path": "gradle/wrapper/gradle-wrapper.properties",
+        "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2"
+      },
+      {
+        "path": "gradlew",
+        "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933"
+      },
+      {
+        "path": "scripts/ci/linux_exe_reader.py",
+        "sha256": "f3b71da3870e8d45630b5415045eb77ede9f6eeb1ae706cc3f6332b4bd0b8ae0"
+      },
+      {
+        "path": "scripts/ci/linux_process_probe.py",
+        "sha256": "e449163d97161f570ed61227df2b345a9a3a7d652784f224109610c04a561e50"
+      },
+      {
+        "path": "scripts/ci/verification_hygiene.py",
+        "sha256": "f6a882754d8df582148e4c7e97f22eca2613041170ebfcc36cb946a63bff3ea0"
+      },
+      {
+        "path": "scripts/release/tests/test_ci_verification_hygiene.py",
+        "sha256": "927981c5aa745b8f430d1e4b96feab9b5f2669548364b96d089210944800cdaf"
+      },
+      {
+        "path": "scripts/release/tests/test_linux_exe_reader.py",
+        "sha256": "a844c29651b1d3c475c7331d614a15bde5365b0f6ed9152f81916aa2678b145a"
+      },
+      {
+        "path": "scripts/release/tests/test_linux_process_probe.py",
+        "sha256": "225effb84ef4bd58c91354cd98619200e780e3d771aa6b40383ca554059683bd"
+      },
+      {
+        "path": "scripts/release/tests/test_workflow_contract.py",
+        "sha256": "1b322f47e96c68f3b8e690e8a0ef01159e33bd751d3c48204d141b61a9051872"
+      },
+      {
+        "path": "scripts/release/workflow_contract.py",
+        "sha256": "98b722d0ac5c0ec3711522ca2b5e8367ebcaa1873342425f01d1c9a464a7f0a6"
+      }
+    ],
+    "control_sha256": "f01113e6516e1e16ccefb9d96b8e3ffa2bc0ece7ebcb8206d603c52c80108d51"
+  },
+  "inputs": {
+    "verification_scope": "linux-process-probe",
+    "frozen_source_sha": "e4d49e17f5f1099a742ab3985c6257d090d61ba6",
+    "approved_probe_control_sha256": "f01113e6516e1e16ccefb9d96b8e3ffa2bc0ece7ebcb8206d603c52c80108d51"
+  },
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=linux-process-probe",
+    "-f",
+    "frozen_source_sha=e4d49e17f5f1099a742ab3985c6257d090d61ba6",
+    "-f",
+    "approved_probe_control_sha256=f01113e6516e1e16ccefb9d96b8e3ffa2bc0ece7ebcb8206d603c52c80108d51"
+  ],
+  "reviews": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-privileged-exe-read-independent-01.json",
+      "sha256": "cf96258a64884f5841d69f1bc55758881780f363cb4115449c71683fa0bc8936"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-exe-reader-integration-independent-01.json",
+      "sha256": "c6d4ce170b4f87a53544fee47cd9bf5767ae67bd9674f3f2fe543f9d2ef6a71f"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-probe-02-actual-independent-01.json",
+      "sha256": "3cefa20117ec8f12350611009af51810cc02ca671e97580e3c89a9f8827f91bc"
+    }
+  ],
+  "freeze_push_receipt_sha256": "9864d7cb433dba73246745e52105345b049413e2d5c7a040e5e1b62aadad4c6b",
+  "scope": "Exactly one Ubuntu24.04x64 job; bounded emulator-package installation only, no system-image/platform install, emulator/app build or Store operations. Explicit sudo-proc-exe-v1 initial/final host scans plus original unprivileged positive/negative and third real nondumpable privileged control. Strict UID/lifetime/SDK/source/upload/deletion guards remain. Other four jobs skipped.",
+  "runtime_acceptance": "Complete initial/final scans and three CONTROL_PASS with exact child/fixture retirement. Privileged nondumpable control must observe exactly one EACCES and one successful privileged read. Unprivileged nondumpable audit remains FAIL as required; host failure cannot be promoted by control success.",
+  "preserved_failures": "LP01/LP02 and original D03 cleanup remain FAIL; no retroactive retirement or D03 cause, no application/combined/runtime readiness from this bare-host scope. Strict iOS Complete0PASS26FAIL remains unresolved. Prior local outer143 remains retained.",
+  "local_validation": "119 focused Python controls and changed-workflow pinned actionlint/ShellCheck actually passed with equal15controls/844source rows, inner/outer/stop0 and cleanup PASS. This is not hosted sudo/procfs or app-runtime proof."
+}

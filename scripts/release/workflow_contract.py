@@ -30,10 +30,17 @@ DISABLED_STORE_JOB_CONDITION = "if: ${{ always() && false }}"
 FULL_VERIFICATION_SCOPE = "github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'"
 FULL_VERIFICATION_FINALIZER = "always() && (" + FULL_VERIFICATION_SCOPE + ")"
 WINDOWS_VERIFICATION_SCOPE = FULL_VERIFICATION_SCOPE + " || inputs.verification_scope == 'windows-only'"
-LINUX_VERIFICATION_SCOPE = FULL_VERIFICATION_SCOPE + " || inputs.verification_scope == 'linux-process-probe'"
+LINUX_VERIFICATION_SCOPE = (FULL_VERIFICATION_SCOPE + " || inputs.verification_scope == 'linux-process-probe'"
+                            " || inputs.verification_scope == 'android-cleanup-only'")
 LINUX_PROBE_SCOPE = "github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'linux-process-probe'"
+ANDROID_CLEANUP_SCOPE = "github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'android-cleanup-only'"
+ANDROID_RUNTIME_SCOPE = FULL_VERIFICATION_SCOPE + " || inputs.verification_scope == 'android-cleanup-only'"
+ANDROID_RUNTIME_FINALIZER = "always() && (" + ANDROID_RUNTIME_SCOPE + ")"
+LINUX_PREREQUISITE_SCOPE = ("github.event_name == 'workflow_dispatch' && "
+                            "(inputs.verification_scope == 'linux-process-probe' || inputs.verification_scope == 'android-cleanup-only')")
 IOS_VERIFICATION_SCOPE = ("github.event_name != 'workflow_dispatch' || "
-                          "(inputs.verification_scope != 'windows-only' && inputs.verification_scope != 'linux-process-probe')")
+                          "(inputs.verification_scope != 'windows-only' && inputs.verification_scope != 'linux-process-probe'"
+                          " && inputs.verification_scope != 'android-cleanup-only')")
 NATIVE_VERIFICATION_SCOPE = ("github.event_name == 'workflow_dispatch' && "
                              "(inputs.verification_scope == 'native-preflight' || inputs.verification_scope == 'native-evidence')")
 PROCESS_PROBE_SCOPE = "github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'native-process-probe'"
@@ -198,7 +205,7 @@ def verify_windows_checkout(text: str) -> None:
 
 
 def verify_linux_process_probe(job: str) -> None:
-    """A closed no-build diagnostic path; full cleanup opts into its read-only reader."""
+    """Closed probe/managed-cleanup paths; full qualification keeps its complete gates."""
     full = ("Install pinned Android SDK packages", "Record exact source and require a clean checkout",
             "Run common, desktop, Android, static-analysis, and release gates",
             "Run release Android managed-device smoke tests", "Inspect unsigned Android release artifact and merged manifest")
@@ -208,20 +215,29 @@ def verify_linux_process_probe(job: str) -> None:
     probe = ("Validate Linux process-probe source and controls", "Observe Linux process access without a build",
              "Upload bounded Linux process-probe evidence", "Finalize Linux process-probe resources and uploaded custody",
              "Upload Linux process-probe cleanup receipt")
+    admission = "Validate Android cleanup source and controls"
     prerequisite = "Install Linux process-probe emulator package"
-    expected = ["Check out source", "Set up JDK 21", probe[0], prerequisite, "Claim fresh verification output ownership",
+    expected = ["Check out source", "Set up JDK 21", probe[0], admission, prerequisite, "Claim fresh verification output ownership",
                 full[0], full[1], full[2], final[0], full[3], final[1], full[4], *final[2:], *probe[1:]]
     if (re.findall(r"(?m)^      - name: (.*)$", job) != expected or
             re.findall(r"(?m)^    runs-on: (.*)$", job) != ["ubuntu-24.04"] or
             re.findall(r"(?m)^    timeout-minutes: (.*)$", job) != [
-                "${{ inputs.verification_scope == 'linux-process-probe' && 10 || 90 }}"]):
-        fail("verification scope Linux probe requires the closed Ubuntu24.04 no-build path and 10/90 minute bounds")
-    for name in (*full, *final, *probe, prerequisite):
-        required = (FULL_VERIFICATION_SCOPE if name in full else FULL_VERIFICATION_FINALIZER if name in final else
-                    LINUX_PROBE_SCOPE if name in probe[:2] or name == prerequisite else "always() && (" + LINUX_PROBE_SCOPE + ")")
-        if re.findall(r"(?m)^        if: (.*)$", validation_step(job, name)) != [required]:
-            fail("verification scope Linux probe must skip builds/full SDK setup and preserve full gates/finalizers")
-    expected_cleanup = '''        if: ''' + FULL_VERIFICATION_FINALIZER + '''
+                "${{ inputs.verification_scope == 'linux-process-probe' && 10 || inputs.verification_scope == 'android-cleanup-only' && 45 || 90 }}"]):
+        fail("verification scope Linux requires closed Ubuntu24.04 probe10, managed-cleanup45 and full90 minute paths")
+    for names, required in (
+        ((full[2], full[4]), FULL_VERIFICATION_SCOPE), ((final[0],), FULL_VERIFICATION_FINALIZER),
+        ((full[0], full[1], full[3]), ANDROID_RUNTIME_SCOPE), (final[1:], ANDROID_RUNTIME_FINALIZER),
+        (probe[:2], LINUX_PROBE_SCOPE), (probe[2:], "always() && (" + LINUX_PROBE_SCOPE + ")"),
+        ((admission,), ANDROID_CLEANUP_SCOPE), ((prerequisite,), LINUX_PREREQUISITE_SCOPE),
+    ):
+        for name in names:
+            if re.findall(r"(?m)^        if: (.*)$", validation_step(job, name)) != [required]:
+                fail("verification scope Linux must isolate the probe/managed cleanup and preserve full gates/finalizers")
+    expected_smoke = ("        if: " + ANDROID_RUNTIME_SCOPE + "\n        shell: bash\n"
+                      "        run: scripts/android/run_release_managed_device_smoke.sh")
+    if validation_step(job, full[3]).strip("\n") != expected_smoke:
+        fail("verification scope managed cleanup must run only the existing Android runtime script")
+    expected_cleanup = '''        if: ''' + ANDROID_RUNTIME_FINALIZER + '''
         env:
           PARLOR_VERIFICATION_PREPARE_OUTCOME: ${{ steps.verification_ownership.outcome }}
           PARLOR_VERIFICATION_UPLOAD_OUTCOME: ${{ steps.verification_artifact.outcome }}
@@ -230,12 +246,12 @@ def verify_linux_process_probe(job: str) -> None:
         shell: python
         run: |
           import runpy, sys
-          sys.argv = ["verification_hygiene.py", "cleanup", "--android-reader=sudo-proc-exe-v1"]
+          sys.argv = ["verification_hygiene.py", "cleanup", "--android-reader=sudo-proc-exe-v2"]
           runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
 '''
     if validation_step(job, final[3]).strip("\n") != expected_cleanup.strip("\n"):
-        fail("verification scope Linux full cleanup requires the explicit read-only reader and unchanged custody guards")
-    expected_prerequisite = '''        if: ''' + LINUX_PROBE_SCOPE + '''
+        fail("verification scope Linux runtime cleanup requires the explicit read-only reader and unchanged custody guards")
+    expected_prerequisite = '''        if: ''' + LINUX_PREREQUISITE_SCOPE + '''
         timeout-minutes: 4
         shell: bash
         run: |
@@ -250,13 +266,14 @@ def verify_linux_process_probe(job: str) -> None:
     upload = [("PARLOR_VERIFICATION_UPLOAD_OUTCOME", "${{ steps.linux_process_probe_artifact.outcome }}"),
               ("PARLOR_VERIFICATION_ARTIFACT_ID", "${{ steps.linux_process_probe_artifact.outputs.artifact-id }}"),
               ("PARLOR_VERIFICATION_ARTIFACT_DIGEST", "${{ steps.linux_process_probe_artifact.outputs.artifact-digest }}")]
-    for name, mode, environment in ((probe[0], "validate", inputs), (probe[1], "run", inputs + prepare),
+    for name, mode, environment in ((probe[0], "validate", inputs), (admission, "validate-android-cleanup", inputs),
+                                    (probe[1], "run", inputs + prepare),
                                     (probe[3], "cleanup", inputs + prepare + upload)):
         block = validation_step(job, name)
         if (re.findall(r"(?m)^        run: (.*)$", block) != ["/usr/bin/python3 -B scripts/ci/linux_process_probe.py " + mode] or
                 re.findall(r"(?m)^          ([A-Z][A-Z0-9_]+): (.*)$", block) != environment or "github.token" in block):
             fail("verification scope Linux probe requires exact source/control/prepare/upload inputs without tokens")
-    if (job.count("PARLOR_LINUX_PROBE_INPUTS:") != 3 or
+    if (job.count("PARLOR_LINUX_PROBE_INPUTS:") != 4 or
             re.findall(r"(?m)^        id: (.*)$", validation_step(job, probe[1])) != ["linux_process_probe"] or
             re.findall(r"(?m)^        id: (.*)$", validation_step(job, probe[2])) != ["linux_process_probe_artifact"]):
         fail("verification scope Linux probe requires exact producer identities and no input overrides")
@@ -276,14 +293,14 @@ def verify_linux_process_probe(job: str) -> None:
 
 
 def verify_verification_scopes(text: str) -> None:
-    """Only reviewed native, Windows-only, and no-build Linux probe scopes bypass full."""
+    """Only reviewed native, Windows, Linux probe and managed-cleanup scopes bypass full."""
     jobs_text = text.split("\njobs:\n", 1)[-1]
     jobs = re.findall(r"(?m)^  ([a-z][a-z0-9-]+):$", jobs_text)
     expected = ["desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64", "ios"]
     if jobs != expected:
         fail("verification scope contract requires exactly the five reviewed jobs")
-    if text.count("--android-reader") != 1 or text.count("sudo-proc-exe-v1") != 1:
-        fail("verification scope permits the explicit Android reader only in Linux full cleanup")
+    if text.count("--android-reader") != 1 or text.count("sudo-proc-exe-v2") != 1:
+        fail("verification scope permits the explicit Android reader only in Linux runtime cleanup")
     for name in expected[:-1]:
         block = jobs_text.split("  " + name + ":\n", 1)[1].split("\n  " + expected[expected.index(name) + 1] + ":\n", 1)[0]
         required = (WINDOWS_VERIFICATION_SCOPE if name == "desktop-windows-x64" else
@@ -296,7 +313,7 @@ def verify_verification_scopes(text: str) -> None:
             verify_linux_process_probe(block)
     ios = jobs_text.split("\n  ios:\n", 1)[1]
     if re.findall(r"(?m)^    if: (.*)$", ios) != [IOS_VERIFICATION_SCOPE]:
-        fail("verification scope may skip iOS only for the separately guarded Windows follow-up or Linux probe")
+        fail("verification scope may skip iOS only for separately guarded Windows or Linux follow-ups")
     if re.findall(r"(?m)^    timeout-minutes: (.*)$", ios) != [
             "${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'settings-sheet-only' && 40 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'os-recovery-only' && 120 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}"]:
         fail("verification scope must keep full/preflight120, probe10, settings-sheet evidence40, OS-recovery evidence120 and other native-evidence240 minute bounds")
@@ -322,9 +339,9 @@ def verify_verification_scopes(text: str) -> None:
             re.findall(r"(?m)^      - name: (.*)$", ios)[0] != clock_name or
             ios.count("PARLOR_NATIVE_JOB_CLOCK=") != 1):
         fail("focused native job clock must be fresh, source/run-bound, RAW kernel time before checkout and evidence-only")
-    for token in ("        default: full\n", "        options: [full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe]\n"):
+    for token in ("        default: full\n", "        options: [full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe, android-cleanup-only]\n"):
         if token not in text.split("\nconcurrency:", 1)[0]:
-            fail("verification scope must default to full with only the reviewed native and Windows-only modes")
+            fail("verification scope must default to full with only the reviewed native, Windows and Linux modes")
     selections = re.findall(r"(?m)^      native_selection:\n((?:        .*\n)+)", text.split("\nconcurrency:", 1)[0])
     if (len(selections) != 1 or
             re.findall(r"(?m)^        (type|default|options): (.*)$", selections[0]) !=

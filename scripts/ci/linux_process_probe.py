@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Opt-in Linux procfs reader verification; no build or emulator execution.
+"""Opt-in Linux procfs verification and focused Android-cleanup admission.
 
 The explicitly selected read-only executable reader never relaxes absence checks.
 The host sample stays separate from unprivileged and privileged owned controls.
-Importing this module does not observe processes or allocate resources.
+This module never builds or launches an emulator. Importing it does not observe
+processes or allocate resources; the Android workflow owns its separate smoke run.
 """
 from __future__ import annotations
 
@@ -26,15 +27,20 @@ sys.path.insert(0, str(ROOT))
 from scripts.ci import verification_hygiene as hygiene
 
 SCOPE = "linux-process-probe"
+ANDROID_CLEANUP_SCOPE = "android-cleanup-only"
 REPOSITORY, BRANCH = "Apdelrahman1911/parlor", "fix/local-readiness-2026-09-07"
 WORKFLOW = ".github/workflows/production-verification.yml"
-EXE_READER = "sudo-proc-exe-v1"
+EXE_READER = "sudo-proc-exe-v2"
 CONTROL_MODES = ((1, "unprivileged"), (0, "unprivileged"), (0, EXE_READER))
 CONTROL_PATHS = (WORKFLOW, "scripts/ci/linux_process_probe.py", "scripts/ci/verification_hygiene.py",
     "scripts/ci/linux_exe_reader.py", "scripts/release/tests/test_linux_exe_reader.py",
     "scripts/release/workflow_contract.py", "scripts/release/tests/test_linux_process_probe.py",
     "scripts/release/tests/test_ci_verification_hygiene.py", "scripts/release/tests/test_workflow_contract.py",
     "gradlew", "gradle/wrapper/gradle-wrapper.jar", "gradle/wrapper/gradle-wrapper.properties")
+ANDROID_CLEANUP_EXTRA_CONTROLS = (
+    "scripts/android/run_release_managed_device_smoke.sh", "build.gradle.kts", "composeApp/build.gradle.kts",
+    "config/release-policy.json", "gradle.properties", "gradle/libs.versions.toml",
+)
 CHILD = '''import ctypes, json, os, signal, sys
 signal.alarm(12)
 uid, mode = os.getuid(), int(sys.argv[1])
@@ -66,13 +72,16 @@ def file_bytes(path):
     return raw
 
 
-def controls(root=ROOT):
+def controls(root=ROOT, *, scope=SCOPE):
+    require(type(scope) is str and scope in {SCOPE, ANDROID_CLEANUP_SCOPE}, "invalid-linux-control-scope")
+    paths = CONTROL_PATHS + (ANDROID_CLEANUP_EXTRA_CONTROLS if scope == ANDROID_CLEANUP_SCOPE else ())
     rows = [dict(path=name, sha256=hashlib.sha256(file_bytes(root / name)).hexdigest())
-            for name in sorted(CONTROL_PATHS)]
+            for name in sorted(paths)]
     return dict(files=rows, control_sha256=hashlib.sha256(json.dumps(rows, separators=(",", ":")).encode()).hexdigest())
 
 
-def admit():
+def admit(*, scope=SCOPE):
+    require(type(scope) is str and scope in {SCOPE, ANDROID_CLEANUP_SCOPE}, "invalid-linux-admission-scope")
     root, prefix, task = hygiene.context()
     env = os.environ
     expected = dict(GITHUB_EVENT_NAME="workflow_dispatch", GITHUB_REPOSITORY=REPOSITORY,
@@ -90,7 +99,7 @@ def admit():
     require(isinstance(inputs, dict) and set(inputs) <= allowed and all(type(v) is str for v in inputs.values()),
             "invalid-probe-inputs")
     commit = inputs.get("frozen_source_sha", "")
-    require(inputs.get("verification_scope") == SCOPE and re.fullmatch(r"[0-9a-f]{40}", commit) and
+    require(inputs.get("verification_scope") == scope and re.fullmatch(r"[0-9a-f]{40}", commit) and
             commit == env.get("GITHUB_SHA") == env.get("GITHUB_WORKFLOW_SHA"), "unbound-probe-source")
     require(inputs.get("native_selection", "") in ("", "paired") and not any(inputs.get(key) for key in
             allowed - {"verification_scope", "native_selection", "frozen_source_sha", "approved_probe_control_sha256"}),
@@ -102,9 +111,9 @@ def admit():
     release = platform.freedesktop_os_release()
     require(sys.platform == "linux" and platform.machine() == "x86_64" and
             release.get("ID") == "ubuntu" and release.get("VERSION_ID") == "24.04", "qualified-linux-host-required")
-    manifest, sdk = controls(root), hygiene.android_sdk_binding()[1]
+    manifest, sdk = controls(root, scope=scope), hygiene.android_sdk_binding()[1]
     require(inputs.get("approved_probe_control_sha256") == manifest["control_sha256"], "unapproved-probe-controls")
-    proof = dict(task=task, source={key: source[key] for key in ("root", "head", "tree")}, controls=manifest,
+    proof = dict(verification_scope=scope, task=task, source={key: source[key] for key in ("root", "head", "tree")}, controls=manifest,
                  android_sdk=sdk, platform=dict(os="ubuntu-24.04", machine=platform.machine(),
                     kernel=platform.release(), python=sys.version.split()[0]))
     return root, prefix, task, source, proof
@@ -152,6 +161,8 @@ def owned_dumpability_control(parent: Path, binding: dict, dumpable: int, *, rea
                     audit.get("failure_context") == dict(operation="before_exe_readlink", selection=True, errno=errno.EACCES))
         require(expected and audit.get("enumerated") == 2 and audit.get("matching_executables") == 0,
                 "live-control-expectation-not-observed")
+        require(audit.get("mixed_uid_samples") == 0 and audit.get("mixed_uid_privileged_samples") == 0,
+                "unexpected-mixed-uid-owned-control")
         if reader == EXE_READER:
             require(audit.get("exe_reader") == dict(mode=EXE_READER, eacces_denials=1, privileged_reads=1),
                     "live-privileged-read-not-observed")
@@ -273,10 +284,13 @@ def cleanup():
 
 
 if __name__ == "__main__":
-    require(len(sys.argv) == 2 and sys.argv[1] in {"controls", "validate", "run", "cleanup"}, "invalid-probe-mode")
-    if sys.argv[1] == "controls":
-        print(json.dumps(controls(), indent=2))
-    elif sys.argv[1] == "validate":
-        print(json.dumps(admit()[4]))
+    require(len(sys.argv) == 2 and sys.argv[1] in {
+        "controls", "validate", "run", "cleanup", "controls-android-cleanup", "validate-android-cleanup",
+    }, "invalid-probe-mode")
+    scope = ANDROID_CLEANUP_SCOPE if sys.argv[1].endswith("-android-cleanup") else SCOPE
+    if sys.argv[1] in {"controls", "controls-android-cleanup"}:
+        print(json.dumps(controls(scope=scope), indent=2))
+    elif sys.argv[1] in {"validate", "validate-android-cleanup"}:
+        print(json.dumps(admit(scope=scope)[4]))
     else:
         raise SystemExit(run() if sys.argv[1] == "run" else cleanup())

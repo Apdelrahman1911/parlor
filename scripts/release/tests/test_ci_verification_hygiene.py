@@ -295,7 +295,8 @@ class VerificationHygieneTest(unittest.TestCase):
 
     def test_cleanup_reader_cli_rejects_bad_flags_after_gradle_stop(self) -> None:
         for arguments in (("--private-unknown",), ("--android-reader=wrong",),
-                          ("--android-reader=sudo-proc-exe-v1", "--android-reader=unprivileged")):
+                          ("--android-reader=sudo-proc-exe-v1",),
+                          ("--android-reader=sudo-proc-exe-v2", "--android-reader=unprivileged")):
             with self.subTest(arguments=arguments), patch.object(hygiene, "context", return_value=(self.root, self.base / "run", self.task)), \
                     patch.object(hygiene.sys, "argv", ["verification_hygiene.py", "cleanup", *arguments]), \
                     patch.object(hygiene, "write_new") as write, patch.object(hygiene.sys, "stdout", io.StringIO()):
@@ -303,7 +304,7 @@ class VerificationHygieneTest(unittest.TestCase):
                 self.assertEqual(write.call_args.args[1]["gradle_stop"]["exit_code"], 0)
                 self.assertEqual(write.call_args.args[1]["removed"], [])
                 self.assertIn("Invalid Android executable reader", write.call_args.args[1]["errors"][0]["error"])
-        self.assertEqual(self.stop.call_count, 3)
+        self.assertEqual(self.stop.call_count, 4)
 
 
 @unittest.skipUnless(sys.platform == "linux", "Linux-only procfs symlink fixture")
@@ -453,13 +454,57 @@ class AndroidEmulatorAbsenceTest(unittest.TestCase):
                                                        "privileged_reads": int(expected)})
                 self.assertNotIn(str(self.base), json.dumps(receipt))
                 if expected:
-                    self.assertEqual(privileged.call_args.args[:3], (1001, 101, 123))
+                    self.assertEqual(privileged.call_args.args[:4], (1001, 101, 123, (1001,) * 4))
                     self.assertEqual(receipt["selected_uid"], 1)
                 else:
                     privileged.assert_not_called()
         with patch.object(hygiene, "android_privileged_executable") as privileged:
             self.assertEqual(self.audit(hygiene.ANDROID_EXE_READER_SUDO)["result"], "PASS")
             privileged.assert_not_called()
+
+    def test_v2_exact_mixed_uid_identity_is_sampled_not_skipped_or_claimed_owned(self) -> None:
+        original = os.readlink
+        uids = (1001, 0, 1002, 1003)
+        for case in ("default", "legacy", "readable", "privileged", "tuple_changed", "helper_failed", "sdk_executable"):
+            with self.subTest(case=case):
+                executable = self.emulator if case == "sdk_executable" else self.observer
+                process = self.process(202, executable)
+                (process / "status").write_text("Uid:\t" + "\t".join(map(str, uids)) + "\n")
+                def denied(path, *args, **kwargs):
+                    if Path(path) == process / "exe" and case not in ("default", "legacy", "readable"):
+                        raise PermissionError(errno.EACCES, "private mixed process")
+                    return original(path, *args, **kwargs)
+                def privileged(*args):
+                    self.assertEqual(args[:4], (1001, 202, 123, uids))
+                    if case == "helper_failed":
+                        raise hygiene.AndroidAuditError("PROC_EXE_READER_FAILED")
+                    if case == "tuple_changed":
+                        (process / "status").write_text("Uid:\t1001\t0\t1003\t1002\n")
+                    metadata = executable.stat()
+                    identity = (metadata.st_dev, metadata.st_ino, metadata.st_mode)
+                    return str(executable), identity, str(executable), identity
+                mode = (hygiene.ANDROID_EXE_READER_UNPRIVILEGED if case == "default" else
+                        "sudo-proc-exe-v1" if case == "legacy" else hygiene.ANDROID_EXE_READER_SUDO)
+                with patch.object(hygiene.os, "readlink", side_effect=denied), \
+                        patch.object(hygiene, "android_privileged_executable", side_effect=privileged) as helper:
+                    receipt = self.audit(mode)
+                codes = {"default": "PROC_UID_AMBIGUOUS", "legacy": "ANDROID_EXE_READER_INVALID",
+                         "tuple_changed": "PROC_LIFETIME_OR_UID_CHANGED", "helper_failed": "PROC_EXE_READER_FAILED",
+                         "sdk_executable": "SDK_EMULATOR_EXECUTABLE_OBSERVED"}
+                self.assertEqual(receipt["result"], "FAIL" if case in codes else "PASS")
+                self.assertEqual(receipt["errors"], [{"code": codes[case]}] if case in codes else [])
+                completed = case in ("readable", "privileged", "sdk_executable")
+                self.assertEqual(receipt["mixed_uid_samples"], int(completed))
+                self.assertEqual(receipt["mixed_uid_privileged_samples"], int(completed and case != "readable"))
+                self.assertEqual(receipt["selected_uid"], 0 if case == "legacy" else 1 + int(completed))
+                self.assertEqual(receipt["matching_executables"], int(case == "sdk_executable"))
+                if case in ("default", "legacy", "readable"):
+                    helper.assert_not_called()
+                else:
+                    self.assertEqual(helper.call_count, 1)
+                self.assertNotIn('"uids":', json.dumps(receipt))
+                self.assertNotIn(str(self.base), json.dumps(receipt))
+                if case != "legacy": self.assertEqual(receipt["binding"]["uid"], 1001)
 
     def test_opt_in_reader_does_not_hide_churn_or_sdk_emulator_executable(self) -> None:
         original = os.readlink

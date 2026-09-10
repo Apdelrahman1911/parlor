@@ -132,7 +132,7 @@ ANDROID_PROC_MAX_ENTRIES = 4096
 ANDROID_PROC_MAX_BYTES = 8192
 ANDROID_PROC_SECONDS = 5.0
 ANDROID_EXE_READER_UNPRIVILEGED = "unprivileged"
-ANDROID_EXE_READER_SUDO = "sudo-proc-exe-v1"
+ANDROID_EXE_READER_SUDO = "sudo-proc-exe-v2"
 ANDROID_EXE_READERS = (ANDROID_EXE_READER_UNPRIVILEGED, ANDROID_EXE_READER_SUDO)
 ANDROID_EXE_READER_MAX_BYTES = 65536
 ANDROID_EXE_READER_SECONDS = 2.0  # Includes sudo/Python startup; helper itself has a 1s timer.
@@ -184,11 +184,13 @@ def android_proc_identity(process: Path, pid: int, diagnostic: dict | None = Non
     return int(fields[19]), tuple(int(value) for value in match.groups())
 
 
-def android_privileged_executable(uid: int, pid: int, starttime: int, deadline: float) -> tuple:
+def android_privileged_executable(uid: int, pid: int, starttime: int, uids: tuple[int, ...], deadline: float) -> tuple:
     """One fixed helper, private bounded protocol; no caller-supplied command/path."""
     if (sys.platform != "linux" or type(uid) is not int or not 0 < uid < 2**32 or
             uid != os.getuid() or uid != os.geteuid() or type(pid) is not int or not 0 < pid < 2**31 or
-            type(starttime) is not int or not 0 <= starttime < 2**64):
+            type(starttime) is not int or not 0 <= starttime < 2**64 or
+            type(uids) is not tuple or len(uids) != 4 or
+            any(type(value) is not int or not 0 <= value < 2**32 for value in uids) or uid not in uids):
         raise AndroidAuditError("PROC_EXE_READER_CALLER_INVALID")
     helper = Path(__file__).absolute().with_name("linux_exe_reader.py")
     if helper.resolve(strict=True) != helper or not helper.is_file():
@@ -199,7 +201,7 @@ def android_privileged_executable(uid: int, pid: int, starttime: int, deadline: 
     try:
         response = subprocess.run(
             ["/usr/bin/sudo", "-n", "--", "/usr/bin/python3", "-I", "-S", "-B", str(helper),
-             str(uid), str(pid), str(starttime)],
+             str(uid), str(pid), str(starttime), *(str(value) for value in uids)],
             stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
             cwd="/", env={"PATH": "/usr/bin:/bin", "LC_ALL": "C"},
             timeout=min(ANDROID_EXE_READER_SECONDS, remaining), check=False,
@@ -224,9 +226,12 @@ def android_privileged_executable(uid: int, pid: int, starttime: int, deadline: 
 
     try:
         value = json.loads(response.stdout, object_pairs_hook=unique)
-        if (not isinstance(value, dict) or set(value) != {"schema", "uid", "pid", "starttime", "observations"} or
+        if (not isinstance(value, dict) or set(value) != {"schema", "uid", "pid", "starttime", "uids", "observations"} or
                 any(type(value[name]) is not int or value[name] != wanted
-                    for name, wanted in (("schema", 1), ("uid", uid), ("pid", pid), ("starttime", starttime))) or
+                    for name, wanted in (("schema", 2), ("uid", uid), ("pid", pid), ("starttime", starttime))) or
+                not isinstance(value["uids"], list) or len(value["uids"]) != 4 or
+                any(type(item) is not int or not 0 <= item < 2**32 for item in value["uids"]) or
+                tuple(value["uids"]) != uids or
                 not isinstance(value["observations"], list) or len(value["observations"]) != 2):
             raise ValueError("invalid identity")
         for row in value["observations"]:
@@ -252,6 +257,7 @@ def audit_android_emulator_absence(expected: dict | None, proc: Path = Path("/pr
     """Read-only, non-atomic sample; does not establish process ownership or exit."""
     receipt = {"result": "FAIL", "started_at": timestamp(), "enumerated": 0, "sampled": 0,
                "selected_uid": 0, "matching_executables": 0, "errors": [],
+               "mixed_uid_samples": 0, "mixed_uid_privileged_samples": 0,
                "exe_reader": {"mode": reader if type(reader) is str and reader in ANDROID_EXE_READERS else "invalid",
                               "eacces_denials": 0, "privileged_reads": 0},
                "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; "
@@ -294,9 +300,13 @@ def audit_android_emulator_absence(expected: dict | None, proc: Path = Path("/pr
             before = android_proc_identity(process, pid, diagnostic)
             selected = binding["uid"] in before[1]
             diagnostic["selection"] = selected
+            mixed = selected and before[1] != (binding["uid"],) * 4
+            privileged = False
             matches = False
             if selected:
-                if before[1] != (binding["uid"],) * 4:
+                # Explicit v2 samples the exact ordered credential tuple, not ownership.
+                # The default still refuses mixed credentials; neither mode selects UID 0.
+                if mixed and reader != ANDROID_EXE_READER_SUDO:
                     raise AndroidAuditError("PROC_UID_AMBIGUOUS")
                 diagnostic["operation"] = "before_exe_readlink"
                 try:
@@ -307,7 +317,8 @@ def audit_android_emulator_absence(expected: dict | None, proc: Path = Path("/pr
                     if reader != ANDROID_EXE_READER_SUDO or error.errno != errno.EACCES:
                         raise
                     diagnostic["operation"] = None  # Helper failure is not a new unprivileged read failure.
-                    executable, first, after, last = android_privileged_executable(binding["uid"], pid, before[0], deadline)
+                    executable, first, after, last = android_privileged_executable(binding["uid"], pid, before[0], before[1], deadline)
+                    privileged = True
                     receipt["exe_reader"]["privileged_reads"] += 1
                 else:
                     diagnostic["operation"] = "before_exe_stat"
@@ -328,6 +339,8 @@ def audit_android_emulator_absence(expected: dict | None, proc: Path = Path("/pr
             diagnostic["operation"] = None  # Later SDK/budget failures are not process reads.
             receipt["sampled"] += 1
             receipt["selected_uid"] += int(selected)
+            receipt["mixed_uid_samples"] += int(mixed)
+            receipt["mixed_uid_privileged_samples"] += int(mixed and privileged)
             saw_self = saw_self or (pid == os.getpid() and selected)
             if matches:
                 receipt["matching_executables"] += 1

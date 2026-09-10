@@ -22,8 +22,8 @@ class WorkflowContractTest(unittest.TestCase):
         workflow_contract.verify_verification_scopes(workflow)
         for original, replacement in (
             ("default: full", "default: windows-only"),
-            ("[full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe]",
-             "[full, native-preflight, native-evidence, native-process-probe, linux-process-probe]"),
+            ("[full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe, android-cleanup-only]",
+             "[full, native-preflight, native-evidence, native-process-probe, linux-process-probe, android-cleanup-only]"),
             ("if: " + workflow_contract.WINDOWS_VERIFICATION_SCOPE, "if: " + workflow_contract.FULL_VERIFICATION_SCOPE),
             ("if: " + workflow_contract.IOS_VERIFICATION_SCOPE, "if: true"),
             ("    if: " + workflow_contract.FULL_VERIFICATION_SCOPE + "\n",
@@ -119,7 +119,7 @@ class WorkflowContractTest(unittest.TestCase):
         workflow_contract.verify_verification_scopes(workflow)
         for original, replacement in (
             ("default: full", "default: native-preflight"),
-            ("options: [full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe]", "options: [full, skip]"),
+            ("options: [full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe, android-cleanup-only]", "options: [full, skip]"),
             ("  desktop-linux-arm64:\n", "  unreviewed-sixth-job:\n    runs-on: ubuntu-latest\n  desktop-linux-arm64:\n"),
             ("    if: " + workflow_contract.FULL_VERIFICATION_SCOPE, "    if: false"),
             ("scripts/ci/native_continuation.py validate-scope", "true"),
@@ -134,8 +134,8 @@ class WorkflowContractTest(unittest.TestCase):
             ("default: full", "default: linux-process-probe"),
             (workflow_contract.LINUX_VERIFICATION_SCOPE, workflow_contract.FULL_VERIFICATION_SCOPE),
             (workflow_contract.IOS_VERIFICATION_SCOPE, "github.event_name != 'workflow_dispatch' || inputs.verification_scope != 'windows-only'"),
-            ("'linux-process-probe' && 10 || 90", "'linux-process-probe' && 90 || 90"),
-            ("      - name: Install pinned Android SDK packages\n        if: " + workflow_contract.FULL_VERIFICATION_SCOPE,
+            ("'linux-process-probe' && 10 ||", "'linux-process-probe' && 90 ||"),
+            ("      - name: Install pinned Android SDK packages\n        if: " + workflow_contract.ANDROID_RUNTIME_SCOPE,
              "      - name: Install pinned Android SDK packages\n        if: always()"),
             ("      - name: Observe Linux process access without a build\n", "      - name: Unreviewed build\n        run: ./gradlew allTests\n      - name: Observe Linux process access without a build\n"),
         ):
@@ -167,7 +167,7 @@ class WorkflowContractTest(unittest.TestCase):
         block = workflow_contract.validation_step(workflow, name)
         workflow_contract.verify_verification_scopes(workflow)
         for original, replacement in (
-            ("if: " + workflow_contract.LINUX_PROBE_SCOPE, "if: always()"),
+            ("if: " + workflow_contract.LINUX_PREREQUISITE_SCOPE, "if: always()"),
             ("timeout-minutes: 4", "timeout-minutes: 10"),
             ("--kill-after=10s 180s", "--kill-after=10s 600s"),
             ('--sdk_root="${ANDROID_HOME}"', '--sdk_root="/tmp/another-sdk"'),
@@ -192,15 +192,15 @@ class WorkflowContractTest(unittest.TestCase):
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
         linux = workflow.split("\n  desktop-android:\n", 1)[1].split("\n  desktop-linux-arm64:\n", 1)[0]
         block = workflow_contract.validation_step(linux, "Clean only attested verification outputs")
-        flag = ', "--android-reader=sudo-proc-exe-v1"'
+        flag = ', "--android-reader=sudo-proc-exe-v2"'
         workflow_contract.verify_verification_scopes(workflow)
         for original, replacement in (
             (flag, ""), (flag, flag + flag),
-            ("sudo-proc-exe-v1", "unprivileged"),
-            ("sudo-proc-exe-v1", "sudo-proc-exe-v2"),
+            ("sudo-proc-exe-v2", "unprivileged"),
+            ("sudo-proc-exe-v2", "sudo-proc-exe-v1"),
             (flag, flag + ', "--unreviewed"'),
-            ("if: " + workflow_contract.FULL_VERIFICATION_FINALIZER, "if: always()"),
-            (workflow_contract.FULL_VERIFICATION_FINALIZER, workflow_contract.LINUX_PROBE_SCOPE),
+            ("if: " + workflow_contract.ANDROID_RUNTIME_FINALIZER, "if: always()"),
+            (workflow_contract.ANDROID_RUNTIME_FINALIZER, workflow_contract.LINUX_PROBE_SCOPE),
             ("steps.verification_ownership.outcome", "steps.verification_artifact.outcome"),
             ("steps.verification_artifact.outcome", "steps.linux_process_probe_artifact.outcome"),
             ("steps.verification_artifact.outputs.artifact-id", "steps.linux_process_probe_artifact.outputs.artifact-id"),
@@ -218,6 +218,71 @@ class WorkflowContractTest(unittest.TestCase):
                 '["verification_hygiene.py", "cleanup"]', '["verification_hygiene.py", "cleanup"' + flag + ']', 1)
             self.assertNotEqual(changed, workflow)
             with self.subTest(job=name), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+
+    def test_android_cleanup_scope_runs_only_managed_runtime_and_standard_custody(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        linux = workflow.split("\n  desktop-android:\n", 1)[1].split("\n  desktop-linux-arm64:\n", 1)[0]
+        workflow_contract.verify_verification_scopes(workflow)
+        for original, replacement in (
+            ("default: full", "default: android-cleanup-only"),
+            (", android-cleanup-only]", "]"),
+            (workflow_contract.LINUX_VERIFICATION_SCOPE,
+             workflow_contract.LINUX_VERIFICATION_SCOPE.replace(" || inputs.verification_scope == 'android-cleanup-only'", "")),
+            (workflow_contract.IOS_VERIFICATION_SCOPE,
+             workflow_contract.IOS_VERIFICATION_SCOPE.replace(" && inputs.verification_scope != 'android-cleanup-only'", "")),
+            ("'android-cleanup-only' && 45 || 90", "'android-cleanup-only' && 10 || 90"),
+            ("run: scripts/android/run_release_managed_device_smoke.sh", "run: ./gradlew productionCheck allTests"),
+        ):
+            changed = workflow.replace(original, replacement, 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+        for name, condition in (
+            ("Run common, desktop, Android, static-analysis, and release gates", workflow_contract.ANDROID_RUNTIME_SCOPE),
+            ("Stop Gradle after common-android", workflow_contract.ANDROID_RUNTIME_FINALIZER),
+            ("Inspect unsigned Android release artifact and merged manifest", workflow_contract.ANDROID_RUNTIME_SCOPE),
+            ("Install pinned Android SDK packages", workflow_contract.FULL_VERIFICATION_SCOPE),
+            ("Record exact source and require a clean checkout", workflow_contract.FULL_VERIFICATION_SCOPE),
+            ("Run release Android managed-device smoke tests", workflow_contract.FULL_VERIFICATION_SCOPE),
+            ("Stop Gradle after managed-device", workflow_contract.FULL_VERIFICATION_FINALIZER),
+            ("Upload verification reports, mappings, and unsigned AAB", workflow_contract.FULL_VERIFICATION_FINALIZER),
+            ("Clean only attested verification outputs", workflow_contract.FULL_VERIFICATION_FINALIZER),
+            ("Upload verification cleanup receipt", workflow_contract.FULL_VERIFICATION_FINALIZER),
+            ("Observe Linux process access without a build", workflow_contract.ANDROID_CLEANUP_SCOPE),
+        ):
+            block = workflow_contract.validation_step(linux, name)
+            changed = workflow.replace(block, re.sub(r"(?m)^        if: .*$", "        if: " + condition, block), 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(step=name), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+
+    def test_android_cleanup_admission_is_bound_and_before_sdk_and_ownership(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        name = "Validate Android cleanup source and controls"
+        block = workflow_contract.validation_step(workflow, name)
+        for original, replacement in (
+            ("if: " + workflow_contract.ANDROID_CLEANUP_SCOPE, "if: always()"),
+            ("${{ toJSON(inputs) }}", "{}"),
+            ("PARLOR_LINUX_PROBE_INPUTS:", "UNBOUND_INPUTS:"),
+            ("validate-android-cleanup", "validate"),
+            ("validate-android-cleanup", "controls-android-cleanup"),
+            ("/usr/bin/python3 -B", "python3 -B"),
+            ("        env:\n", "        env:\n          GH_TOKEN: ${{ github.token }}\n"),
+            ("validate-android-cleanup", "validate-android-cleanup; ./gradlew allTests"),
+        ):
+            changed = workflow.replace(block, block.replace(original, replacement, 1), 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(original=original, replacement=replacement), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+        step = "\n      - name: " + name + "\n" + block
+        without = workflow.replace(step, "", 1)
+        with self.assertRaisesRegex(RuntimeError, "verification scope"):
+            workflow_contract.verify_verification_scopes(without)
+        for anchor in ("Claim fresh verification output ownership", "Install pinned Android SDK packages"):
+            changed = without.replace("\n      - name: " + anchor + "\n", step + "\n      - name: " + anchor + "\n", 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(anchor=anchor), self.assertRaisesRegex(RuntimeError, "verification scope"):
                 workflow_contract.verify_verification_scopes(changed)
 
     def test_non_app_probe_requires_explicit_review_no_token_and_uploaded_custody(self) -> None:

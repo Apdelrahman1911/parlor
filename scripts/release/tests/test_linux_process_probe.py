@@ -35,25 +35,32 @@ class LinuxProcessProbeTest(unittest.TestCase):
             GITHUB_REF="refs/heads/" + probe.BRANCH, GITHUB_JOB="desktop-android", RUNNER_OS="Linux", RUNNER_ARCH="X64",
             GITHUB_WORKFLOW_REF=probe.REPOSITORY + "/" + probe.WORKFLOW + "@refs/heads/" + probe.BRANCH,
             GITHUB_SHA="a" * 40, GITHUB_WORKFLOW_SHA="a" * 40)
-        inputs = dict(verification_scope=probe.SCOPE, frozen_source_sha="a" * 40,
-                      approved_probe_control_sha256="d" * 64, native_selection="paired")
         def git(_root, *arguments):
             return probe.BRANCH if arguments[0] == "branch" else "false" if arguments[0] == "rev-parse" else ""
         with patch.object(probe, "ROOT", self.base), patch.object(probe.hygiene, "context", return_value=(self.base, self.prefix, self.task)), \
                 patch.object(probe.hygiene, "source_identity", return_value=self.source), patch.object(probe.hygiene, "git", side_effect=git), \
-                patch.object(probe, "controls", return_value=self.manifest), patch.object(probe.hygiene, "android_sdk_binding", return_value=(self.base, self.sdk)), \
+                patch.object(probe, "controls", return_value=self.manifest) as controls, patch.object(probe.hygiene, "android_sdk_binding", return_value=(self.base, self.sdk)), \
                 patch.object(probe.sys, "platform", "linux"), patch.object(probe.platform, "machine", return_value="x86_64"), \
                 patch.object(probe.platform, "freedesktop_os_release", return_value=dict(ID="ubuntu", VERSION_ID="24.04")):
-            with patch.dict(os.environ, {**env, "PARLOR_LINUX_PROBE_INPUTS": json.dumps(inputs)}, clear=True):
-                self.assertEqual(probe.admit()[4]["android_sdk"], self.sdk)
-            for change, input_change in (({"GITHUB_EVENT_NAME": "push"}, {}), ({"GITHUB_WORKFLOW_SHA": "b" * 40}, {}),
-                    ({"RUNNER_ARCH": "ARM64"}, {}), ({}, {"verification_scope": "full"}),
-                    ({}, {"approved_probe_control_sha256": "e" * 64}), ({}, {"preflight_run_id": "123"}),
-                    ({}, {"native_selection": "l08-only"}), ({}, {"unreviewed": "input"})):
-                with self.subTest(change=change, input_change=input_change), \
-                        patch.dict(os.environ, {**env, **change, "PARLOR_LINUX_PROBE_INPUTS": json.dumps({**inputs, **input_change})}, clear=True), \
-                        self.assertRaises(RuntimeError):
-                    probe.admit()
+            for scope in (probe.SCOPE, probe.ANDROID_CLEANUP_SCOPE):
+                inputs = dict(verification_scope=scope, frozen_source_sha="a" * 40,
+                              approved_probe_control_sha256="d" * 64, native_selection="paired")
+                with patch.dict(os.environ, {**env, "PARLOR_LINUX_PROBE_INPUTS": json.dumps(inputs)}, clear=True):
+                    proof = probe.admit(scope=scope)[4]
+                    self.assertEqual((proof["verification_scope"], proof["android_sdk"]), (scope, self.sdk))
+                    controls.assert_called_with(self.base, scope=scope)
+                other_scope = probe.ANDROID_CLEANUP_SCOPE if scope == probe.SCOPE else probe.SCOPE
+                for change, input_change in (({"GITHUB_EVENT_NAME": "push"}, {}), ({"GITHUB_WORKFLOW_SHA": "b" * 40}, {}),
+                        ({"RUNNER_ARCH": "ARM64"}, {}), ({}, {"verification_scope": "full"}),
+                        ({}, {"verification_scope": other_scope}),
+                        ({}, {"approved_probe_control_sha256": "e" * 64}), ({}, {"preflight_run_id": "123"}),
+                        ({}, {"native_selection": "l08-only"}), ({}, {"unreviewed": "input"})):
+                    with self.subTest(scope=scope, change=change, input_change=input_change), \
+                            patch.dict(os.environ, {**env, **change, "PARLOR_LINUX_PROBE_INPUTS": json.dumps({**inputs, **input_change})}, clear=True), \
+                            self.assertRaises(RuntimeError):
+                        probe.admit(scope=scope)
+            with self.assertRaises(RuntimeError):
+                probe.admit(scope="full")
 
     def test_controls_hash_exact_regular_bounded_bytes(self):
         (self.base / "a").write_bytes(b"a")
@@ -70,6 +77,25 @@ class LinuxProcessProbeTest(unittest.TestCase):
         (self.base / "large").write_bytes(b"x" * (1024 * 1024 + 1))
         with self.assertRaises(RuntimeError):
             probe.file_bytes(self.base / "large")
+
+    def test_android_cleanup_control_binding_cannot_use_the_smaller_probe_manifest(self):
+        for name in ("base", "smoke"):
+            (self.base / name).write_bytes(name.encode())
+        with patch.object(probe, "CONTROL_PATHS", ("base",)), \
+                patch.object(probe, "ANDROID_CLEANUP_EXTRA_CONTROLS", ("smoke",)):
+            original = probe.controls(self.base)
+            android = probe.controls(self.base, scope=probe.ANDROID_CLEANUP_SCOPE)
+            self.assertEqual([row["path"] for row in android["files"]], ["base", "smoke"])
+            self.assertNotEqual(original["control_sha256"], android["control_sha256"])
+            (self.base / "smoke").write_bytes(b"changed")
+            self.assertEqual(probe.controls(self.base), original)
+            self.assertNotEqual(probe.controls(self.base, scope=probe.ANDROID_CLEANUP_SCOPE), android)
+            (self.base / "smoke").unlink()
+            (self.base / "smoke").symlink_to(self.base / "base")
+            with self.assertRaises(RuntimeError):
+                probe.controls(self.base, scope=probe.ANDROID_CLEANUP_SCOPE)
+            with self.assertRaises(RuntimeError):
+                probe.controls(self.base, scope="full")
 
     def control(self, mode, *, reader="unprivileged", audit=None, ready=True, extra_file=False, unreaped=False,
                 timeouts=0, interrupt=False):
@@ -91,6 +117,7 @@ class LinuxProcessProbeTest(unittest.TestCase):
                         failure_context=dict(operation="before_exe_readlink", selection=True, errno=errno.EACCES)))
         observed["exe_reader"] = dict(mode=reader, eacces_denials=int(not mode),
                                       privileged_reads=int(not mode and reader == probe.EXE_READER))
+        observed.update(mixed_uid_samples=0, mixed_uid_privileged_samples=0)
         def sample(binding, proc, **options):
             self.assertEqual(binding, self.sdk)
             self.assertEqual(options, {"reader": reader})
@@ -131,6 +158,9 @@ class LinuxProcessProbeTest(unittest.TestCase):
             {**good, "exe_reader": dict(mode="unprivileged", eacces_denials=1, privileged_reads=1)},
             {**good, "exe_reader": dict(mode=probe.EXE_READER, eacces_denials=1, privileged_reads=0)},
             {**good, "result": "FAIL"},
+            {**good, "mixed_uid_samples": 1},
+            {**good, "mixed_uid_privileged_samples": 1},
+            {key: value for key, value in good.items() if key != "mixed_uid_samples"},
         ):
             with self.subTest(audit=changed):
                 observed, _, _, _ = self.control(0, reader=probe.EXE_READER, audit=changed)

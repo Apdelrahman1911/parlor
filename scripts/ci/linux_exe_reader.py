@@ -4,6 +4,7 @@
 Only stat/status and two exe link/stat observations are read. No target argv,
 environment, file contents, process control, or caller-supplied paths/commands.
 The sole environment input, sudo's SUDO_UID, authenticates the original caller.
+The exact ordered target UID tuple is a lifetime constraint, not ownership.
 """
 from __future__ import annotations
 
@@ -53,11 +54,13 @@ def identity(directory: int, pid: int) -> tuple[int, tuple[int, ...]]:
     return int(fields[19]), tuple(int(value) for value in match.groups())
 
 
-def read_executable(uid: int, pid: int, starttime: int) -> dict:
+def read_executable(uid: int, pid: int, starttime: int, uids: tuple[int, ...]) -> dict:
     if (sys.platform != "linux" or os.getuid() != 0 or os.geteuid() != 0 or
             type(uid) is not int or not 0 < uid < 2**32 or
             type(pid) is not int or not 0 < pid < 2**31 or
             type(starttime) is not int or not 0 <= starttime < 2**64 or
+            type(uids) is not tuple or len(uids) != 4 or
+            any(type(value) is not int or not 0 <= value < 2**32 for value in uids) or uid not in uids or
             decimal(os.environ.get("SUDO_UID", ""), 1, 2**32) != uid):
         raise ReaderError("CALLER_UID_MISMATCH")
     flags = os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC | os.O_NOFOLLOW
@@ -67,7 +70,7 @@ def read_executable(uid: int, pid: int, starttime: int) -> dict:
     finally:
         os.close(proc)
     try:
-        expected = (starttime, (uid,) * 4)
+        expected = (starttime, uids)
         if identity(directory, pid) != expected:
             raise ReaderError("PROC_LIFETIME_OR_UID_CHANGED")
         observations = []
@@ -82,7 +85,7 @@ def read_executable(uid: int, pid: int, starttime: int) -> dict:
         if (first != last or not stat.S_ISREG(first["mode"]) or not first["path"].startswith("/") or
                 len(os.fsencode(first["path"])) > 4096 or first["path"].endswith(" (deleted)")):
             raise ReaderError("PROC_EXECUTABLE_AMBIGUOUS")
-        return {"schema": 1, "uid": uid, "pid": pid, "starttime": starttime, "observations": observations}
+        return {"schema": 2, "uid": uid, "pid": pid, "starttime": starttime, "uids": list(uids), "observations": observations}
     finally:
         os.close(directory)
 
@@ -97,11 +100,11 @@ def main() -> int:
     signal.signal(signal.SIGALRM, expired)
     signal.setitimer(signal.ITIMER_REAL, SECONDS)
     try:
-        if len(sys.argv) != 4:
+        if len(sys.argv) != 8:
             raise ReaderError("INVALID_REQUEST")
-        uid, pid, starttime = (decimal(value, lower, upper) for value, lower, upper in
-                              zip(sys.argv[1:], (1, 1, 0), (2**32, 2**31, 2**64)))
-        result = read_executable(uid, pid, starttime)
+        values = [decimal(value, lower, upper) for value, lower, upper in
+                  zip(sys.argv[1:], (1, 1, 0, 0, 0, 0, 0), (2**32, 2**31, 2**64, 2**32, 2**32, 2**32, 2**32))]
+        result = read_executable(*values[:3], tuple(values[3:]))
         encoded = json.dumps(result, ensure_ascii=True).encode("ascii") + b"\n"
         if len(encoded) > MAX_RESPONSE_BYTES:
             raise ReaderError("RESPONSE_LIMIT")
