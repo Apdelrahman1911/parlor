@@ -40,10 +40,21 @@ LINUX_PREREQUISITE_SCOPE = ("github.event_name == 'workflow_dispatch' && "
                             "(inputs.verification_scope == 'linux-process-probe' || inputs.verification_scope == 'android-cleanup-only')")
 IOS_VERIFICATION_SCOPE = ("github.event_name != 'workflow_dispatch' || "
                           "(inputs.verification_scope != 'windows-only' && inputs.verification_scope != 'linux-process-probe'"
-                          " && inputs.verification_scope != 'android-cleanup-only')")
+                          " && inputs.verification_scope != 'android-cleanup-only'"
+                          " && inputs.verification_scope != 'ios-protection-probe')")
 NATIVE_VERIFICATION_SCOPE = ("github.event_name == 'workflow_dispatch' && "
                              "(inputs.verification_scope == 'native-preflight' || inputs.verification_scope == 'native-evidence')")
 PROCESS_PROBE_SCOPE = "github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'native-process-probe'"
+PROTECTION_PROBE_SCOPE = "github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'ios-protection-probe'"
+VERIFICATION_JOBS = {
+    "desktop-android": "Common, desktop, and Android release",
+    "desktop-linux-arm64": "Desktop strict verification (Linux arm64)",
+    "desktop-macos-x64": "Desktop and Kotlin Native strict verification (macOS x64)",
+    "desktop-windows-x64": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+    "ios": "iOS simulator runtime and Swift host",
+    "ios-release": "iOS release frameworks and Swift wrapper",
+    "ios-protection-probe": "iOS strict protection diagnostic",
+}
 
 
 def fail(message: str) -> None:
@@ -113,6 +124,14 @@ def validation_step(text: str, name: str) -> str:
     if text.count(marker) != 1:
         fail(f"validation workflow requires exactly one step {name!r}")
     return text.split(marker, 1)[1].split("\n      - ", 1)[0]
+
+
+def validation_job(text: str, name: str) -> str:
+    """Keep checks inside one job even when lifecycle step names are shared."""
+    marker = f"\n  {name}:\n"
+    if text.count(marker) != 1:
+        fail(f"validation workflow requires exactly one job {name!r}")
+    return re.split(r"(?m)^  [A-Za-z_][A-Za-z0-9_-]*:\n", text.split(marker, 1)[1], maxsplit=1)[0]
 
 
 def verify_owned_ios_app_launch(text: str) -> None:
@@ -292,17 +311,229 @@ def verify_linux_process_probe(job: str) -> None:
             fail("verification scope Linux probe requires only exact compact evidence and cleanup paths")
 
 
+def verify_verification_jdk(job: str) -> None:
+    java = validation_step(job, "Set up JDK 21")
+    if (re.findall(r"(?m)^        ([a-z-]+):(?: (.*))?$", java) != [
+            ("uses", "actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0"), ("with", "")] or
+            re.findall(r"(?m)^          ([a-z-]+): (.*)$", java) != [
+                ("distribution", "temurin"), ("java-version", '"21"'), ("check-latest", "false")]):
+        fail("verification scope Apple jobs require pinned JDK 21 for builds and mandatory Gradle stops")
+
+
+def verify_split_apple_scopes(text: str) -> None:
+    """Two independent full jobs retain every gate and exactly their own cycles."""
+    runtime_run = "Run all KMP iOS simulator runtime tests"
+    release_run = "Run complete Apple static analysis and release linkage gates"
+    shared_start = ["Claim fresh verification output ownership", "Claim apple-aggregate native resource ownership",
+                    "Record Xcode toolchain and exact source"]
+    shared_end = ["Clean only attested verification outputs", "Upload verification cleanup receipt"]
+    native_steps = ["Start focused native job clock", "Check out source", "Validate verification scope", "Set up JDK 21",
+                    "Run focused native continuation", "Upload focused native evidence",
+                    "Verify focused native cleanup and uploaded custody", "Upload native continuation cleanup receipt",
+                    "Observe hosted native processes without an app build", "Upload bounded process-probe evidence",
+                    "Verify process-probe cleanup and uploaded custody", "Upload process-probe cleanup receipt"]
+    prefix = "${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}"
+    for job_id, cycle, run, upload, artifact_name in (
+        ("ios", "apple-ui", runtime_run, "Upload Apple runtime verification evidence", "ios-runtime-verification"),
+        ("ios-release", "apple-wrapper", release_run, "Upload Apple release verification evidence", "ios-release-verification"),
+    ):
+        job = validation_job(text, job_id)
+        header = job.split("\n    steps:\n", 1)[0]
+        if (re.findall(r"(?m)^    runs-on: (.*)$", header) != ["macos-15"] or
+                re.search(r"(?m)^    (needs|strategy):", header) or
+                re.findall(r"(?m)^      DEVELOPER_DIR: (.*)$", header) != ["/Applications/Xcode_26.3.app/Contents/Developer"]):
+            fail("verification scope Apple jobs require independent pinned macOS runners, not a dependency or matrix")
+        if job_id == "ios-release" and (
+                re.findall(r"(?m)^    if: (.*)$", header) != [FULL_VERIFICATION_SCOPE] or
+                re.findall(r"(?m)^    timeout-minutes: (.*)$", header) != ["120"] or "permissions:" in header):
+            fail("verification scope Apple release job must be full-only, bounded and inherit read-only contents permission")
+        verify_verification_jdk(job)
+        checkout = validation_step(job, "Check out source")
+        depth = ("${{ github.event_name == 'workflow_dispatch' && inputs.verification_scope != 'full' && '0' || '1' }}"
+                 if job_id == "ios" else "1")
+        if (re.findall(r"(?m)^        ([a-z-]+):(?: (.*))?$", checkout) != [
+                ("uses", "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1"), ("with", "")] or
+                re.findall(r"(?m)^          ([a-z-]+): (.*)$", checkout) != [
+                    ("fetch-depth", depth), ("persist-credentials", "false")]):
+            fail("verification scope Apple jobs require independent credential-free triggering-source checkouts")
+        finish = f"Stop Gradle after {cycle} and retire owned Apple resources"
+        run_name = ("Launch Swift host and Compose root on iOS Simulator" if job_id == "ios" else
+                    "Build unsigned Swift Release wrapper")
+        full_steps = shared_start + [run, "Stop Gradle after apple-aggregate and retire owned Apple resources",
+                                    "Validate iOS plist and privacy manifest", f"Claim {cycle} native resource ownership"]
+        if job_id == "ios":
+            full_steps += ["Verify effective Debug and Release application identities"]
+        full_steps += [run_name, finish]
+        if job_id == "ios-release":
+            full_steps += ["Inspect complete unsigned iOS Release package"]
+        full_steps += [upload] + shared_end
+        expected_steps = (native_steps if job_id == "ios" else ["Check out source", "Set up JDK 21"]) + full_steps
+        if re.findall(r"(?m)^      - name: (.*)$", job) != expected_steps:
+            fail("verification scope split Apple jobs require all full gates and immediate finalizers in reviewed order")
+        for name in full_steps:
+            required = FULL_VERIFICATION_SCOPE
+            if name.startswith("Stop Gradle after ") or name in [upload] + shared_end:
+                required = FULL_VERIFICATION_FINALIZER
+            elif name == "Inspect complete unsigned iOS Release package":
+                required = ("success() && steps.apple_wrapper_run.outcome == 'success' && "
+                            "steps.apple_wrapper_finish.outcome == 'success' && (" + FULL_VERIFICATION_SCOPE + ")")
+            if re.findall(r"(?m)^        if: (.*)$", validation_step(job, name)) != [required]:
+                fail("verification scope must retain full Apple gates/finalizers and skip them only in focused modes")
+        for current, current_run in (("apple-aggregate", run), (cycle, run_name)):
+            stem = current.replace("-", "_")
+            for suffix, name in (("prepare", f"Claim {current} native resource ownership"), ("run", current_run),
+                                 ("finish", f"Stop Gradle after {current} and retire owned Apple resources")):
+                block = validation_step(job, name)
+                if re.findall(r"(?m)^        id: (.*)$", block) != [stem + "_" + suffix]:
+                    fail("verification scope Apple cycles require exact producer identities")
+                if suffix != "run" and re.findall(r"(?m)^        run: (.*)$", block) != [
+                        f"/usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene {suffix} {current}"]:
+                    fail("verification scope Apple cycles require the guarded native lifecycle helper")
+                if suffix == "finish" and re.findall(r"(?m)^          ([A-Z][A-Z0-9_]+): (.*)$", block) != [
+                        ("PARLOR_APPLE_PREPARE_OUTCOME", "${{ steps." + stem + "_prepare.outcome }}"),
+                        ("PARLOR_APPLE_RUN_OUTCOME", "${{ steps." + stem + "_run.outcome }}")]:
+                    fail("verification scope Apple cycles require exact prepare/run outcomes")
+        cleanup = validation_step(job, shared_end[0])
+        for name, command in ((shared_start[0], "prepare"), (shared_end[0], "cleanup")):
+            block = validation_step(job, name)
+            script = ('          import runpy, sys\n'
+                      '          sys.argv = ["verification_hygiene.py", "' + command + '"]\n'
+                      '          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")')
+            expected_fields = [("if", FULL_VERIFICATION_SCOPE), ("id", "verification_ownership")] if command == "prepare" else [
+                ("if", FULL_VERIFICATION_FINALIZER), ("env", "")]
+            expected_fields += [("shell", "python"), ("run", "|")]
+            if (re.findall(r"(?m)^        ([a-z-]+):(?: (.*))?$", block) != expected_fields or
+                    block.split("        run: |\n", 1)[-1].rstrip() != script):
+                fail("verification scope Apple output ownership and cleanup must invoke only the guarded common helper")
+        if cleanup.count("PARLOR_APPLE_CYCLE_OUTCOMES: >-\n") != 1:
+            fail("verification scope Apple cleanup requires exact two-cycle outcome bindings")
+        outcomes_text = cleanup.split("PARLOR_APPLE_CYCLE_OUTCOMES: >-\n", 1)[1].split(
+            "\n          PARLOR_VERIFICATION_UPLOAD_OUTCOME:", 1)[0]
+        def unique_pairs(pairs: list[tuple[str, object]]) -> dict:
+            result = dict(pairs)
+            if len(result) != len(pairs):
+                raise ValueError("duplicate cycle/outcome key")
+            return result
+        try:
+            outcomes = json.loads(outcomes_text, object_pairs_hook=unique_pairs)
+        except ValueError:
+            fail("verification scope Apple cleanup cycle bindings must be valid JSON")
+        expected_outcomes = {
+            current: {phase: "${{ steps." + current.replace("-", "_") + "_" + phase + ".outcome }}"
+                      for phase in ("prepare", "run", "finish")}
+            for current in ("apple-aggregate", cycle)
+        }
+        if outcomes != expected_outcomes or re.findall(r"(?m)^          ([A-Z][A-Z0-9_]+): (.*)$", cleanup) != [
+                ("PARLOR_VERIFICATION_PREPARE_OUTCOME", "${{ steps.verification_ownership.outcome }}"),
+                ("PARLOR_APPLE_CYCLE_OUTCOMES", ">-"),
+                ("PARLOR_VERIFICATION_UPLOAD_OUTCOME", "${{ steps.verification_artifact.outcome }}"),
+                ("PARLOR_VERIFICATION_ARTIFACT_ID", "${{ steps.verification_artifact.outputs.artifact-id }}"),
+                ("PARLOR_VERIFICATION_ARTIFACT_DIGEST", "${{ steps.verification_artifact.outputs.artifact-digest }}")]:
+            fail("verification scope Apple cleanup requires only its own two cycles and uploaded custody")
+        evidence = validation_step(job, upload)
+        report_paths = (["**/build/reports/tests/", "**/build/test-results/**/*.xml"] if job_id == "ios" else
+                        ["build/xcode-derived-data/Build/Products/Release-iphonesimulator/Parlor.app.dSYM/",
+                         "**/build/reports/detekt/"])
+        paths = ["build/ci-evidence/"] + report_paths + [prefix + suffix for suffix in (
+            "-ownership.json", "-stop-*.json", "-apple-*-ownership.json")]
+        if job_id == "ios":
+            paths.append(prefix + "-apple-ui-simulator-*.json")
+        if (re.findall(r"(?m)^        id: (.*)$", evidence) != ["verification_artifact"] or
+                re.findall(r"(?m)^          (name|if-no-files-found|retention-days|path): (.*)$", evidence) != [
+                    ("name", artifact_name), ("if-no-files-found", "warn"), ("retention-days", "14"), ("path", "|")] or
+                re.findall(r"(?m)^            (\S.*)$", evidence) != paths):
+            fail("verification scope Apple evidence must retain exact per-job reports and lifecycle receipts")
+        receipt = validation_step(job, shared_end[1])
+        if re.findall(r"(?m)^          (name|if-no-files-found|retention-days|path): (.*)$", receipt) != [
+                ("name", "verification-cleanup-${{ github.job }}"), ("if-no-files-found", "warn"),
+                ("retention-days", "14"), ("path", prefix + "-cleanup.json")]:
+            fail("verification scope Apple cleanup receipts must be distinct and source/run/job bound")
+
+
+def verify_protection_probe(job: str) -> None:
+    """The seventh job is an opt-in, token-free standalone diagnostic, never full."""
+    header = job.split("\n    steps:\n", 1)[0]
+    if (re.findall(r"(?m)^    ([a-z-]+):(?: (.*))?$", header) != [
+            ("if", PROTECTION_PROBE_SCOPE), ("name", VERIFICATION_JOBS["ios-protection-probe"]),
+            ("runs-on", "macos-15"), ("timeout-minutes", "20"), ("env", "")] or
+            re.findall(r"(?m)^      ([A-Z][A-Z0-9_]+): (.*)$", header) != [
+                ("DEVELOPER_DIR", "/Applications/Xcode_26.3.app/Contents/Developer"),
+                ("PARLOR_DISPATCH_SCOPE", "${{ inputs.verification_scope }}"),
+                ("PARLOR_FROZEN_SOURCE_SHA", "${{ inputs.frozen_source_sha }}"),
+                ("PARLOR_APPROVED_PROBE_CONTROL_SHA256", "${{ inputs.approved_probe_control_sha256 }}")]):
+        fail("verification scope protection probe requires exact opt-in, toolchain, source/control and bounded job inputs")
+    names = ["Check out source", "Run independently approved strict protection diagnostic",
+             "Upload strict protection diagnostic evidence", "Finalize strict protection diagnostic resources and custody",
+             "Upload strict protection diagnostic cleanup", "Assert diagnostic collection and cleanup outcomes"]
+    if re.findall(r"(?m)^      - name: (.*)$", job) != names[:1] + ["Set up JDK 21"] + names[1:]:
+        fail("verification scope protection probe requires exact collection/upload/cleanup/assertion order")
+    checkout = validation_step(job, names[0])
+    if (re.findall(r"(?m)^        ([a-z-]+):(?: (.*))?$", checkout) != [
+            ("uses", "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1"), ("with", "")] or
+            re.findall(r"(?m)^          ([a-z-]+): (.*)$", checkout) != [
+                ("fetch-depth", "0"), ("persist-credentials", "false")]):
+        fail("verification scope protection probe requires complete history and a credential-free checkout")
+    verify_verification_jdk(job)
+    runner = "/usr/bin/python3 -B remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py "
+    for name, command, step_id, environment in (
+        (names[1], "run", "protection_probe", []),
+        (names[3], "cleanup", "protection_probe_cleanup", [
+            ("PARLOR_PROTECTION_UPLOAD_OUTCOME", "${{ steps.protection_probe_artifact.outcome }}"),
+            ("PARLOR_PROTECTION_ARTIFACT_ID", "${{ steps.protection_probe_artifact.outputs.artifact-id }}"),
+            ("PARLOR_PROTECTION_ARTIFACT_DIGEST", "${{ steps.protection_probe_artifact.outputs.artifact-digest }}")]),
+        (names[5], "assert-result", None, [
+            ("PARLOR_PROTECTION_RUN_OUTCOME", "${{ steps.protection_probe.outcome }}"),
+            ("PARLOR_PROTECTION_CLEANUP_OUTCOME", "${{ steps.protection_probe_cleanup.outcome }}"),
+            ("PARLOR_PROTECTION_UPLOAD_OUTCOME", "${{ steps.protection_probe_artifact.outcome }}"),
+            ("PARLOR_PROTECTION_ARTIFACT_ID", "${{ steps.protection_probe_artifact.outputs.artifact-id }}"),
+            ("PARLOR_PROTECTION_ARTIFACT_DIGEST", "${{ steps.protection_probe_artifact.outputs.artifact-digest }}"),
+            ("PARLOR_PROTECTION_CLEANUP_UPLOAD_OUTCOME", "${{ steps.protection_probe_cleanup_artifact.outcome }}"),
+            ("PARLOR_PROTECTION_CLEANUP_ARTIFACT_ID", "${{ steps.protection_probe_cleanup_artifact.outputs.artifact-id }}"),
+            ("PARLOR_PROTECTION_CLEANUP_ARTIFACT_DIGEST", "${{ steps.protection_probe_cleanup_artifact.outputs.artifact-digest }}")]),
+    ):
+        block = validation_step(job, name)
+        expected_fields = [("id", step_id)] if step_id is not None else []
+        if command != "run":
+            expected_fields += [("if", "always()")]
+        expected_fields += [("shell", "bash")]
+        if environment:
+            expected_fields += [("env", "")]
+        expected_fields += [("run", runner + command)]
+        if (re.findall(r"(?m)^        ([a-z-]+):(?: (.*))?$", block) != expected_fields or
+                re.findall(r"(?m)^          ([A-Z][A-Z0-9_]+): (.*)$", block) != environment or
+                block.split("        run: ", 1)[-1].strip() != runner + command):
+            fail("verification scope protection probe requires exact token-free commands, bindings and actual outcomes")
+    prefix = "${{ runner.temp }}/parlor-protection-probe-${{ github.run_id }}-${{ github.run_attempt }}/"
+    for name, step_id, artifact, path in (
+        (names[2], "protection_probe_artifact", "ios-protection-probe", "evidence"),
+        (names[4], "protection_probe_cleanup_artifact", "ios-protection-probe-cleanup", "cleanup"),
+    ):
+        block = validation_step(job, name)
+        if (re.findall(r"(?m)^        ([a-z-]+):(?: (.*))?$", block) != [
+                ("id", step_id), ("if", "always()"),
+                ("uses", "actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1"), ("with", "")] or
+                re.findall(r"(?m)^          ([a-z-]+): (.*)$", block) != [
+                    ("name", artifact + "-${{ github.run_id }}-${{ github.run_attempt }}"),
+                    ("if-no-files-found", "error"), ("retention-days", "14"), ("path", prefix + path)]):
+            fail("verification scope protection probe requires exact evidence/cleanup artifact custody")
+    if any(token in job for token in ("github.token", "secrets.", "verification_hygiene.py", "./gradlew")):
+        fail("verification scope protection probe forbids tokens, app builds and unrelated cleanup helpers")
+
+
 def verify_verification_scopes(text: str) -> None:
-    """Only reviewed native, Windows, Linux probe and managed-cleanup scopes bypass full."""
+    """Only closed reviewed diagnostic/follow-up scopes bypass six mandatory full jobs."""
     jobs_text = text.split("\njobs:\n", 1)[-1]
-    jobs = re.findall(r"(?m)^  ([a-z][a-z0-9-]+):$", jobs_text)
-    expected = ["desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64", "ios"]
+    jobs = re.findall(r"(?m)^  ([A-Za-z_][A-Za-z0-9_-]*):$", jobs_text)
+    expected = list(VERIFICATION_JOBS)
     if jobs != expected:
-        fail("verification scope contract requires exactly the five reviewed jobs")
+        fail("verification scope contract requires exactly six full jobs and one focused protection probe")
+    for name, display in VERIFICATION_JOBS.items():
+        if re.findall(r"(?m)^    name: (.*)$", validation_job(text, name)) != [display]:
+            fail("verification scope requires the exact reviewed job/check identities")
     if text.count("--android-reader") != 1 or text.count("sudo-proc-exe-v2") != 1:
         fail("verification scope permits the explicit Android reader only in Linux runtime cleanup")
-    for name in expected[:-1]:
-        block = jobs_text.split("  " + name + ":\n", 1)[1].split("\n  " + expected[expected.index(name) + 1] + ":\n", 1)[0]
+    for name in expected[:4]:
+        block = validation_job(text, name)
         required = (WINDOWS_VERIFICATION_SCOPE if name == "desktop-windows-x64" else
                     LINUX_VERIFICATION_SCOPE if name == "desktop-android" else FULL_VERIFICATION_SCOPE)
         if re.findall(r"(?m)^    if: (.*)$", block) != [required]:
@@ -311,12 +542,12 @@ def verify_verification_scopes(text: str) -> None:
             verify_windows_checkout(block)
         elif name == "desktop-android":
             verify_linux_process_probe(block)
-    ios = jobs_text.split("\n  ios:\n", 1)[1]
+    ios = validation_job(text, "ios")
     if re.findall(r"(?m)^    if: (.*)$", ios) != [IOS_VERIFICATION_SCOPE]:
-        fail("verification scope may skip iOS only for separately guarded Windows or Linux follow-ups")
+        fail("verification scope may skip iOS only for separately guarded Windows, Linux or protection follow-ups")
     if re.findall(r"(?m)^    timeout-minutes: (.*)$", ios) != [
-            "${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'settings-sheet-only' && 40 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'os-recovery-only' && 120 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}"]:
-        fail("verification scope must keep full/preflight120, probe10, settings-sheet evidence40, OS-recovery evidence120 and other native-evidence240 minute bounds")
+            "${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'settings-sheet-only' && 40 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'os-recovery-only' && 120 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'protection-application-only' && 90 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}"]:
+        fail("verification scope must keep full/preflight120, probe10, settings-sheet evidence40, OS-recovery evidence120, protection-application evidence90 and other native-evidence240 minute bounds")
     clock_name = "Start focused native job clock"
     clock = validation_step(ios, clock_name)
     clock_script = '''        run: |
@@ -339,14 +570,14 @@ def verify_verification_scopes(text: str) -> None:
             re.findall(r"(?m)^      - name: (.*)$", ios)[0] != clock_name or
             ios.count("PARLOR_NATIVE_JOB_CLOCK=") != 1):
         fail("focused native job clock must be fresh, source/run-bound, RAW kernel time before checkout and evidence-only")
-    for token in ("        default: full\n", "        options: [full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe, android-cleanup-only]\n"):
+    for token in ("        default: full\n", "        options: [full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe, android-cleanup-only, ios-protection-probe]\n"):
         if token not in text.split("\nconcurrency:", 1)[0]:
             fail("verification scope must default to full with only the reviewed native, Windows and Linux modes")
     selections = re.findall(r"(?m)^      native_selection:\n((?:        .*\n)+)", text.split("\nconcurrency:", 1)[0])
     if (len(selections) != 1 or
             re.findall(r"(?m)^        (type|default|options): (.*)$", selections[0]) !=
-            [("type", "choice"), ("default", "paired"), ("options", "[paired, l08-only, settings-sheet-only, os-recovery-only]")]):
-        fail("verification scope must retain closed paired-default, l08-only, settings-sheet-only or os-recovery-only selection")
+            [("type", "choice"), ("default", "paired"), ("options", "[paired, l08-only, settings-sheet-only, os-recovery-only, protection-application-only]")]):
+        fail("verification scope must retain closed paired-default, l08-only, settings-sheet-only, os-recovery-only or protection-application-only selection")
     for name in ("Validate verification scope", "Run focused native continuation",
                  "Verify focused native cleanup and uploaded custody"):
         if re.findall(r"(?m)^          PARLOR_NATIVE_SELECTION: (.*)$", validation_step(ios, name)) != [
@@ -356,35 +587,17 @@ def verify_verification_scopes(text: str) -> None:
         fail("verification scope must not override native selection outside its three reviewed boundaries")
     diagnostic = validation_step(ios, "Run focused native continuation")
     if (re.findall(r"(?m)^          PARLOR_APPROVED_PROBE_CONTROL_SHA256: (.*)$", diagnostic) != [
-            "${{ inputs.approved_probe_control_sha256 }}"] or text.count("PARLOR_APPROVED_PROBE_CONTROL_SHA256:") != 3):
-        fail("verification scope requires the explicit diagnostic control hash only at its three reviewed boundaries")
+            "${{ inputs.approved_probe_control_sha256 }}"] or ios.count("PARLOR_APPROVED_PROBE_CONTROL_SHA256:") != 3 or
+            text.count("PARLOR_APPROVED_PROBE_CONTROL_SHA256:") != 4):
+        fail("verification scope requires the explicit diagnostic control hash only at its four reviewed boundaries")
     validator = validation_step(ios, "Validate verification scope")
     if (re.findall(r"(?m)^        if: (.*)$", validator) or
             "run: /usr/bin/python3 -B scripts/ci/native_continuation.py validate-scope\n" not in validator or
             any(ios.index("- name: Validate verification scope\n") > ios.index("- name: " + name + "\n")
                 for name in ("Run focused native continuation", "Observe hosted native processes without an app build"))):
         fail("verification scope must reject unknown values before any native execution")
-    full_steps = (
-        "Claim fresh verification output ownership", "Claim apple-aggregate native resource ownership",
-        "Record Xcode toolchain and exact source", "Run iOS simulator tests, Apple static analysis, and release linkage gates",
-        "Validate iOS plist and privacy manifest", "Claim apple-ui native resource ownership",
-        "Verify effective Debug and Release application identities", "Launch Swift host and Compose root on iOS Simulator",
-        "Claim apple-wrapper native resource ownership", "Build unsigned Swift Release wrapper",
-    )
-    finalizers = (
-        "Stop Gradle after apple-aggregate and retire owned Apple resources",
-        "Stop Gradle after apple-ui and retire owned Apple resources",
-        "Stop Gradle after apple-wrapper and retire owned Apple resources", "Upload Apple verification evidence",
-        "Clean only attested verification outputs", "Upload verification cleanup receipt",
-    )
-    for name in (*full_steps, *finalizers):
-        required = FULL_VERIFICATION_FINALIZER if name in finalizers else FULL_VERIFICATION_SCOPE
-        if re.findall(r"(?m)^        if: (.*)$", validation_step(ios, name)) != [required]:
-            fail("verification scope must retain full Apple gates/finalizers and skip them only in focused modes")
-    inspection = validation_step(ios, "Inspect complete unsigned iOS Release package")
-    if re.findall(r"(?m)^        if: (.*)$", inspection) != [
-            "success() && steps.apple_wrapper_run.outcome == 'success' && steps.apple_wrapper_finish.outcome == 'success' && (" + FULL_VERIFICATION_SCOPE + ")"]:
-        fail("verification scope must retain full unsigned package qualification")
+    verify_split_apple_scopes(text)
+    verify_protection_probe(validation_job(text, "ios-protection-probe"))
     focused_steps = ("Run focused native continuation", "Upload focused native evidence",
                      "Verify focused native cleanup and uploaded custody", "Upload native continuation cleanup receipt")
     for name in focused_steps:
@@ -452,19 +665,24 @@ def verify_validation(text: str) -> None:
     desktop_android_job = text.split(desktop_android_marker, 1)[1].split(next_job_marker, 1)[0]
     if "fetch-depth: 0" not in desktop_android_job:
         fail("validation workflow review-inventory gate requires full Git history")
-    apple_test_step = text.split(
-        "- name: Run iOS simulator tests, Apple static analysis, and release linkage gates",
-        1,
-    )[-1].split("- name: Validate iOS plist and privacy manifest", 1)[0]
-    if "./gradlew productionIosSimulatorRuntimeTests productionAppleCheck" not in apple_test_step:
-        fail("validation workflow does not enforce the dedicated executable iOS simulator test aggregate")
-    if "./gradlew allTests" in apple_test_step:
-        fail("Apple validation duplicates the Linux common/desktop/Android test aggregate")
+    runtime = validation_job(text, "ios")
+    release = validation_job(text, "ios-release")
+    for job, name, task in (
+        (runtime, "Run all KMP iOS simulator runtime tests", "productionIosSimulatorRuntimeTests"),
+        (release, "Run complete Apple static analysis and release linkage gates", "productionAppleCheck"),
+    ):
+        aggregate = validation_step(job, name)
+        command = "./gradlew " + task + " --dependency-verification=strict --no-daemon --stacktrace --console=plain"
+        if (re.findall(r"(?m)^          (\./gradlew .*)$", aggregate) != [command] or
+                re.findall(r"(?m)^          (\./gradlew .*)$", job) != [command]):
+            fail("validation workflow must enforce each complete split Apple aggregate without replacing or duplicating its gates")
+        if "./gradlew allTests" in job:
+            fail("Apple validation duplicates the Linux common/desktop/Android test aggregate")
     app_launch_marker = "- name: Launch Swift host and Compose root on iOS Simulator"
     swift_release_marker = "- name: Build unsigned Swift Release wrapper"
-    if app_launch_marker not in text or swift_release_marker not in text:
+    if app_launch_marker not in runtime or swift_release_marker not in release:
         fail("validation workflow does not run the iOS app-launch UI test")
-    app_launch_step = text.split(app_launch_marker, 1)[1].split(swift_release_marker, 1)[0]
+    app_launch_step = validation_step(runtime, "Launch Swift host and Compose root on iOS Simulator")
     required_app_launch_contract = (
         "-project iosApp/iosApp.xcodeproj",
         "-scheme iosApp",
@@ -477,7 +695,7 @@ def verify_validation(text: str) -> None:
     for token in required_app_launch_contract:
         if token not in app_launch_step:
             fail(f"validation workflow iOS app-launch test lacks {token!r}")
-    verify_owned_ios_app_launch(text)
+    verify_owned_ios_app_launch(runtime)
     for step, command in (
         ("Inspect unsigned Android release artifact and merged manifest",
          'python3 -B scripts/verification/third_party_notices.py --package "$aab" --json >build/ci-evidence/android-release-notices.json'),
@@ -495,7 +713,7 @@ def verify_validation(text: str) -> None:
     ):
         if token not in android_inspection:
             fail("validation workflow lacks complete unsigned Android artifact inspection/cleanup")
-    ios_inspection = validation_step(text, "Inspect complete unsigned iOS Release package")
+    ios_inspection = validation_step(release, "Inspect complete unsigned iOS Release package")
     for token in (
         "if: success() && steps.apple_wrapper_run.outcome == 'success' && steps.apple_wrapper_finish.outcome == 'success'",
         '/usr/bin/python3 -B scripts/verification/ios_release_artifacts.py',
@@ -504,23 +722,33 @@ def verify_validation(text: str) -> None:
     ):
         if token not in ios_inspection:
             fail("validation workflow lacks current-source complete iOS artifact inspection")
-    if not (text.index('id: apple_wrapper_finish') < text.index('name: Inspect complete unsigned iOS Release package')
-            < text.index('name: Upload Apple verification evidence')):
+    if not (release.index('id: apple_wrapper_finish') < release.index('name: Inspect complete unsigned iOS Release package')
+            < release.index('name: Upload Apple release verification evidence')):
         fail("complete iOS artifact inspection must follow successful immediate finalization and precede evidence upload")
     if '$1 ~ /PRODUCT_BUNDLE_IDENTIFIER$/' in text:
         fail("validation workflow can confuse the Mac Catalyst derivation flag with the Bundle ID")
     if text.count('key == "PRODUCT_BUNDLE_IDENTIFIER"') != 2:
         fail("validation workflow does not parse the exact Xcode Bundle-ID build setting")
     verify_verification_scopes(text)
-    required_apple_toolchain = (
-        "/Applications/Xcode_26.3.app/Contents/Developer",
-        'test "$(sed -n \'1p\' build/ci-evidence/xcode-version.txt)" = "Xcode 26.3"',
-        'test "$(sed -n \'2p\' build/ci-evidence/xcode-version.txt)" = "Build version 17C529"',
-        ".toolchains.apple.minimum_ios_sdk_major",
-    )
-    for token in required_apple_toolchain:
-        if token not in text:
-            fail(f"validation workflow does not pin the reviewed Apple toolchain: {token!r}")
+    source_script = '''          set -euo pipefail
+          mkdir -p build/ci-evidence
+          test -x "$DEVELOPER_DIR/usr/bin/xcodebuild"
+          xcodebuild -version | tee build/ci-evidence/xcode-version.txt
+          test "$(sed -n '1p' build/ci-evidence/xcode-version.txt)" = "Xcode 26.3"
+          test "$(sed -n '2p' build/ci-evidence/xcode-version.txt)" = "Build version 17C529"
+          test "$(jq -r .toolchains.apple.developer_dir config/release-policy.json)" = "$DEVELOPER_DIR"
+          test "$(jq -r .toolchains.apple.xcode_build config/release-policy.json)" = "17C529"
+          xcrun --sdk iphoneos --show-sdk-version | tee build/ci-evidence/iphoneos-sdk.txt
+          xcrun --sdk iphonesimulator --show-sdk-version | tee build/ci-evidence/iphonesimulator-sdk.txt
+          test "$(cut -d. -f1 build/ci-evidence/iphoneos-sdk.txt)" -ge "$(jq -r .toolchains.apple.minimum_ios_sdk_major config/release-policy.json)"
+          git rev-parse HEAD | tee build/ci-evidence/commit.txt
+          test -z "$(git status --porcelain)"'''
+    for job in (runtime, release):
+        source = validation_step(job, "Record Xcode toolchain and exact source")
+        if (re.findall(r"(?m)^        ([a-z-]+):(?: (.*))?$", source) != [
+                ("if", FULL_VERIFICATION_SCOPE), ("shell", "bash"), ("run", "|")] or
+                source.split("        run: |\n", 1)[-1].rstrip() != source_script):
+            fail("validation workflow requires exact independent Apple source/toolchain guards")
 
 
 def verify_store_workflow(name: str, text: str) -> None:

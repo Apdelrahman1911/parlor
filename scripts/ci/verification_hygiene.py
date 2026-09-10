@@ -20,6 +20,21 @@ from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
 
 
+APPLE_JOB_CYCLES = {
+    "ios": ("apple-aggregate", "apple-ui"),
+    "ios-release": ("apple-aggregate", "apple-wrapper"),
+}
+APPLE_CYCLES = tuple(dict.fromkeys(cycle for cycles in APPLE_JOB_CYCLES.values() for cycle in cycles))
+
+
+def apple_cycles(task: dict) -> tuple[str, ...]:
+    """Closed full-verification jobs only; no prefix admission or Darwin import."""
+    job = task.get("GITHUB_JOB")
+    if not isinstance(job, str) or job not in APPLE_JOB_CYCLES:
+        raise RuntimeError("Unknown Apple verification job")
+    return APPLE_JOB_CYCLES[job]
+
+
 def timestamp() -> str:
     return datetime.now(timezone.utc).isoformat()
 
@@ -79,6 +94,9 @@ def write_new(path: Path, value: dict) -> None:
 
 
 def prepare(root: Path, claim_path: Path, task: dict) -> dict:
+    job = task.get("GITHUB_JOB", "")
+    if isinstance(job, str) and job.startswith("ios"):
+        apple_cycles(task)  # Unknown Apple-like jobs cannot acquire generic cleanup authority.
     claim = source_identity(root)
     if git(root, "status", "--porcelain").strip():
         raise RuntimeError("Verification must begin from a clean checkout")
@@ -365,13 +383,22 @@ def audit_android_emulator_absence(expected: dict | None, proc: Path = Path("/pr
 
 def verify_apple_cleanup(root: Path, claim_path: Path, task: dict, outcomes: dict | None) -> dict:
     """Current step outcomes AND current, source-bound receipts gate Apple deletion."""
-    cycles = ("apple-aggregate", "apple-ui", "apple-wrapper")
+    cycles = apple_cycles(task)
     if not isinstance(outcomes, dict) or set(outcomes) != set(cycles):
         raise RuntimeError("Missing complete Apple cycle outcomes; retain outputs")
     suffix = "-ownership.json"
     if not str(claim_path).endswith(suffix):
         raise RuntimeError("Invalid Apple ownership receipt prefix")
     prefix = str(claim_path)[:-len(suffix)]
+    # A cycle assigned to the other Apple job must not leave unaccounted resources.
+    # Exact known paths only; never scan, adopt, or delete another job's receipts.
+    for cycle in APPLE_CYCLES:
+        if cycle not in cycles:
+            unexpected = [Path(prefix + "-stop-" + cycle + ".json"),
+                          *(Path(prefix + "-" + cycle + ending) for ending in (
+                              "-ownership.json", "-simulator-plan.json", "-simulator-create.json", "-simulator-adopted.json"))]
+            if any(path.exists() or path.is_symlink() for path in unexpected):
+                raise RuntimeError("Unassigned Apple cycle has resource or cleanup receipts; retain outputs")
     current = source_identity(root)
     expected_source = {key: current[key] for key in ("root", "head", "tree")}
     retained = {}
@@ -399,6 +426,7 @@ def verify_apple_cleanup(root: Path, claim_path: Path, task: dict, outcomes: dic
                     value.get("workers_before_simulator", {}).get("result") != "PASS" or
                     value.get("workers", {}).get("result") != "PASS" or
                     value.get("simulator", {}).get("result") not in {"PASS", "NOT_CREATED", "NOT_APPLICABLE"} or
+                    cycle != "apple-ui" and value.get("simulator", {}).get("result") != "NOT_APPLICABLE" or
                     cycle == "apple-ui" and outcome.get("run") == "success" and
                     value.get("simulator", {}).get("result") != "PASS" or
                     owned_claim.is_symlink() or not owned_claim.is_file() or
@@ -422,6 +450,9 @@ def cleanup(root: Path, claim_path: Path, task: dict, upload: dict, preparation_
         if (type(android_reader) is not str or android_reader not in ANDROID_EXE_READERS or
                 android_reader != ANDROID_EXE_READER_UNPRIVILEGED and task.get("GITHUB_JOB") != "desktop-android"):
             raise RuntimeError("Invalid Android executable reader mode; retain outputs")
+        job = task.get("GITHUB_JOB", "")
+        if isinstance(job, str) and job.startswith("ios"):
+            apple_cycles(task)  # Includes explicit rejection of the separate ios-protection-probe lane.
         if preparation_outcome != "success":
             raise RuntimeError("Fresh ownership preparation did not succeed; preserve all pre-existing outputs")
         if claim_path.is_symlink() or not claim_path.is_file():
@@ -443,7 +474,7 @@ def cleanup(root: Path, claim_path: Path, task: dict, upload: dict, preparation_
             if not path.is_dir():
                 raise RuntimeError(f"Claimed output is not a directory: {relative}")
             receipt["retained"].append(relative)
-        if task.get("GITHUB_JOB") == "ios":
+        if task.get("GITHUB_JOB") in APPLE_JOB_CYCLES:
             receipt["apple_cleanup"] = verify_apple_cleanup(root, claim_path, task, apple_outcomes)
         if not uploaded_evidence_is_retained(upload):
             raise RuntimeError("No successful nonempty verification upload; preserve required evidence outputs")
@@ -468,7 +499,7 @@ def cleanup(root: Path, claim_path: Path, task: dict, upload: dict, preparation_
     receipt.update(result="FAIL" if receipt["errors"] else "PASS", finished_at=timestamp(),
                    scope="Only attested checkout build/Python-cache directories; no global caches or source",
                    worker_scope=("Gradle plus source-bound Apple native/device cleanup receipts" if
-                                 task.get("GITHUB_JOB") == "ios" else
+                                 task.get("GITHUB_JOB") in APPLE_JOB_CYCLES else
                                  "Gradle stop; Android receipt, when present, covers only sampled selected-UID "
                                  "SDK/emulator executable-path absence, not termination or AVD retirement" if
                                  task.get("GITHUB_JOB") == "desktop-android" else

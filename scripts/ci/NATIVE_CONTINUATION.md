@@ -1,12 +1,16 @@
 # Focused native continuation (evidence only)
 
-The existing `production-verification.yml` still defaults to its **five-job full
-qualification** on dispatch, push and pull request. The three explicit focused
-native dispatch modes run only the existing qualified Apple job; they are not substitutes
-for final five-job qualification. Unknown dispatch scope fails validation.
+The existing `production-verification.yml` defaults to **six-job full
+qualification** on dispatch, push and pull request. Its seven configured jobs
+include the separate opt-in protection diagnostic, skipped in full runs. The
+three existing focused native dispatch modes still run only the qualified `ios`
+job; they are not substitutes for final six-job qualification. Unknown dispatch
+scope fails validation. Full Apple runtime and Release qualification use
+independent `ios`/`ios-release` jobs, source bindings and two-cycle cleanup receipts;
+see [the current release gates](../../docs/RELEASE_GATES.md).
 
 The separate `verification_scope=windows-only` follow-up runs just the unchanged
-Windows verification graph, not native evidence or a new five-job result. It
+Windows verification graph, not native evidence or a new six-job result. It
 requires `frozen_source_sha` to match the reviewed checkout/workflow SHA and
 `native_selection` to remain `paired`. Git long paths are enabled only for that
 job before checkout; archived evidence, line endings, and cleanup guards remain.
@@ -52,7 +56,8 @@ Dispatch again at the **same SHA** with `verification_scope=native-evidence`,
   reviewed `control_sha256` values, not the JSON-file hashes).
 
 The A/B `native_selection` choices are **`paired` (default)** or `l08-only`;
-the separate closed Settings and OS-recovery selections are described below.
+the separate closed Settings, OS-recovery and copied-app protection selections
+are described below.
 Omission preserves the A-then-B chain. `l08-only` is accepted only for
 `verification_scope=native-evidence`; unknown or other combinations fail before
 native allocation. Preflight stays nonbuilding, paired and binds **both** manifests;
@@ -69,7 +74,7 @@ budgets and all lifecycle/ownership/finalizer guards. It admits no B child or B
 cleanup claim and records `unselected_lanes.normal=NOT_RUN_THIS_RUN`, never B PASS.
 Success is `L08_ONLY_PASS`, never combined `PASS`; ordinary failure is
 `L08_ONLY_NOT_READY`, and exceptions remain `FAIL`. No B receipt is synthesized.
-Full five-job qualification stays separate and unchanged. Never use selection to
+Full six-job qualification stays separate. Never use selection to
 bypass an unsafe finalizer or to reattribute historical evidence to fresh source.
 
 The adapter uses only read-only Actions API requests. It verifies the exact
@@ -123,7 +128,7 @@ allowances are unchanged. No XCTest split, test-filter reduction, retry, app or
 production timing change is introduced.
 
 Ordinary `native-evidence` has a240-minute job ceiling (Settings diagnostic40,
-OS-only recovery120). Full and native-preflight
+OS-only recovery120, copied-app protection90). Full and native-preflight
 remain120 minutes; the non-app process probe remains10. The first evidence-only
 job step, before checkout, records `CLOCK_MONOTONIC_RAW` via
 `time.clock_gettime_ns(time.CLOCK_MONOTONIC_RAW)`, bound to source SHA, job and
@@ -229,7 +234,7 @@ dependency/distribution cache directories may be created and are recorded.
 Retain the focused evidence artifact and `native-cleanup-<run>-<attempt>`, plus
 API/run/artifact SHA-256 identities. Inspect all statuses and actual descriptors.
 A strict L08 partial result deliberately fails the focused workflow; successful
-cleanup does not disguise that result. Final all-five-job qualification still
+cleanup does not disguise that result. Final all-six-job qualification still
 requires a separate **full** dispatch at the same frozen source.
 
 Linux controls live in `scripts/release/tests/test_native_continuation.py` and
@@ -407,3 +412,35 @@ remain `NOT_RUN`/`NOT_RUN_THIS_RUN`. OS-specific observations cannot erase A37's
 SIGKILL, establish its sender, waive strict protection failures, or upgrade
 historical functional/host/B results. Actual platform evidence and independent
 review remain required; a new selection or passing fixture controls prove neither.
+
+## Scoped copied-app protection diagnostic, separate from A/B
+
+`native_selection=protection-application-only` is accepted only with
+`native-preflight` or `native-evidence`, on the existing `ios` job. Both dispatches
+must explicitly select it at the same freshly reviewed frozen source. Its
+preflight contains only `preflight.json`, the source binding and
+`protection_application-controls.json`; it never imports paired A/B controls.
+Approve this distinct manifest with `approved_probe_control_sha256`, not another
+diagnostic's hash/package.
+
+Cycle `ios-readiness-40` uses
+`remediation-runs/2026-09-08-continuation/protection-application-01/application_probe.py`.
+It builds one disposable copied Debug app, executes one selected XCTest and a
+bounded read-only host observation. Production storage source stays unchanged;
+the fixture investigates actual filesystem protection separately from synthetic
+standalone observations. It is not an A37 repetition, normal B provenance or full
+qualification, and must be separately justified before dispatch.
+
+The Xcode command is capped at2700seconds, the native child wait at3600seconds
+and this evidence job at90minutes. The existing600-second finalizer grace and
+600-second custody reserve remain intact: shared source/run-bound kernel-clock
+admission requires4800seconds remaining before the lane starts. No timeout or
+cleanup allowance is shortened to force a result. All original source/control,
+owned-simulator, worker, preservation and upload-before-deletion guards apply.
+
+Successful collection is `CAPTURED_NOT_PROTECTION_PASS`, never A/B or full PASS.
+`strict_protection_status` remains a separate PASS/FAIL observation; it is not
+changed by successful collection or cleanup. Normal runtime, provenance and
+notice-package fields stay `NOT_RUN`, and both original lanes stay
+`NOT_RUN_THIS_RUN`. No diagnostic result retroactively passes A37 or establishes
+physical-device enforcement, Store readiness or fresh normal Debug provenance.

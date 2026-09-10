@@ -1,0 +1,159 @@
+{
+  "schema": 1,
+  "kind": "INDEPENDENT_COPIED_APPLICATION_PROTECTION_SOURCE_REVIEW_NOT_RUNTIME_PROOF",
+  "reviewer": "/root/fixture_review",
+  "implementation_author": "/root/l08_fixture",
+  "status": "SOURCE_APPROVED_FOR_CONDITIONAL_FOCUSED_APPLICATION_DIAGNOSTIC",
+  "reviewed_at": "2026-09-10T19:57:42.102719+00:00",
+  "checkout_head": "0b192d63729b884b7f45ddab14c7a67da922f457",
+  "checkout_tree": "d78587d9e2446441c03d4ca5aee5c382c7e97e39",
+  "scope": "Nine additive application controls and their reuse of the pinned normal lane/shared native sampler. Admission, exact copy changes, strict receipt semantics, final host reader binding and cleanup reuse reviewed. No application execution or strict L08 qualification asserted.",
+  "reviewed_files": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/protection-application-01/ProtectionApplicationBridge.h.in",
+      "bytes": 89,
+      "sha256": "2e2f2c62c22cfa09be084d02a1cf1fabb99dffc2f7089531ead213a0a0f4f579"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/protection-application-01/ProtectionApplicationLaunch.swift.in",
+      "bytes": 9609,
+      "sha256": "71784dc4dccce5ac15823fa9d66d2f73ea992f349f5f470af8d5679d16fb73cf"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/protection-application-01/ProtectionApplicationProbe.kt.in",
+      "bytes": 10505,
+      "sha256": "8cc4434506ac595ce559b1aa35e24e3363ecaec97929af5de89b5a71b177f524"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/protection-application-01/ProtectionApplicationRead.m.in",
+      "bytes": 5619,
+      "sha256": "ccc29f42ed0916e1bcfcaa8340fdfa400c78fe33cf345e62b1bde67db5bd12d7"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/protection-application-01/ProtectionApplicationUITest.swift.in",
+      "bytes": 1573,
+      "sha256": "76145b359827fb77c2e5c47c542debe5abadcb362b7cc82d51f09c60d3ef4665"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/protection-application-01/README.md",
+      "bytes": 5235,
+      "sha256": "dd000d12115dd5e5468e8d70d2c05df45ae0580f2d94af7a46d93dea74990ca0"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/protection-application-01/application_probe.py",
+      "bytes": 25366,
+      "sha256": "b56ab55fb0918e791bc59c94c489378c82478384ad170f229652f68992298517"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/protection-application-01/application_receipts.py",
+      "bytes": 18641,
+      "sha256": "bae8bf33dcb72f1446aac93fda668fdbe26668b7596be330cb9e3c01e5747a16"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/protection-application-01/test_application.py",
+      "bytes": 11419,
+      "sha256": "ef33a2f30efa487bf0abbd3283f9fed98f9249803fe13e8a80e65341f68ea522"
+    }
+  ],
+  "shared_sampler": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/ProtectionSampler.h",
+      "bytes": 498,
+      "sha256": "f606f61c7e8c2271cd23abb3876d1b6e0daff40ccdcd9d0f43b949d4d502bb13"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/ProtectionSampler.m",
+      "bytes": 13371,
+      "sha256": "8b28b174dd335081b93cdbef70cb05618c0b130717414fa2683012228cd5f112"
+    }
+  ],
+  "pinned_base_lane": {
+    "path": "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+    "bytes": 67784,
+    "sha256": "766087ddf72b50f51b1c4072c64afb1a7dd231f047d26e534817cddf9be295bf"
+  },
+  "shipping_storage_inputs_unchanged_from_head": [
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+      "bytes": 20807,
+      "sha256": "c2852fafb293a693be830171f4674947289fafb07f8ecdbafa5c0aaae6d1bf8b"
+    },
+    {
+      "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotKeychain.kt",
+      "bytes": 8056,
+      "sha256": "511aff877a27eb3f42ce4891203a830ba8879781de405e2248c3873f5f381a5e"
+    }
+  ],
+  "control_manifest_without_source_binding": {
+    "file_count": 111,
+    "sha256": "37e7f72fbb325f7b09ac06639f048c92a275c82cc1bbd6f6358646f41948bc05",
+    "purpose": "Read-only reconstruction of the current control list before the required fresh binding file is added. This is NOT the execution approval digest. Root must bind the frozen source and independently approve the complete source-bound manifest."
+  },
+  "resolved_findings": [
+    {
+      "id": "PA-R1",
+      "finding": "The draft could label an NSError-bearing Complete getter value strict PASS.",
+      "resolution": "Original equality remains explicitly recorded, but new comparison and independent recomputation require dictionary, key, Complete equality and no NSError. Historical A37 comparisons are not altered."
+    },
+    {
+      "id": "PA-R2",
+      "finding": "The initial persisted native validator did not enforce missing-bit/null and raw syscall semantics.",
+      "resolution": "Closed native/IMP/error schemas now check direct fcntl return/class, syscall errno, actual returned/data-protection masks, attribute_set_t size and 24/28-byte layout. Missing/unavailable cannot invent class zero; filesystem support and platform observations remain distinct from protection success."
+    },
+    {
+      "id": "PA-R3",
+      "finding": "Draft host reader had no fresh compiled UUID/runtime match or post-execution artifact binding.",
+      "resolution": "Driver captures the fresh arm64 UUID and binary digest, compares loaded UUID, and requires device/inode/mode/owner/links/size/mtime/hash unchanged. Host records image before/after. Selected macOS public header hashes and macros preprocessed from the actual copied sampler TU are retained."
+    },
+    {
+      "id": "PA-R4",
+      "finding": "Matching absent process fields and unbound UID could survive the draft application validator.",
+      "resolution": "Final/samples require explicit boot/container UUIDs, positive PID/nonroot UID, matching inode ownership, and driver binds UID to actual real/effective current account. Host platform/UID/process/image fields are validated separately."
+    },
+    {
+      "id": "PA-R5",
+      "finding": "README overstated compile-time binding of the runtime-created data container.",
+      "resolution": "Final README correctly distinguishes compile-bound device/token/source/controls from driver-bound final container and inodes."
+    }
+  ],
+  "source_conclusions": [
+    "The copied app entry alone changes to the diagnostic view; no production Compose/Koin/game entry executes. The driver declares only Swift entry, XCTest and Xcode project modifications plus four copied additions, keeps production filesystem/Keychain byte-identical and checks the complete copied-input inventory before/after workers stop.",
+    "The Kotlin hook calls the concrete IosSnapshotFileSystem with default real Keychain/crypto and default dispatcher. The only wrapper surrounds real excludeSnapshotFromBackup with before/after metadata observations. Two authenticated write/read round trips use fixed public bytes, not GameSnapshot fixtures or key seams.",
+    "Six ordered samples identify the new directory and installed first/overwritten file before/after real backup exclusion. Kotlin/native identity agreement and the shared sampler FD closure are required before returning to the writer. No old observer FD survives atomic replacement and no inode-change assumption is enforced.",
+    "Each sample and final receipt is bounded, metadata-only and written exclusively in owned app tmp rather than the ciphertext directory. Partial/failure rows are preserved; no raw key, plaintext/ciphertext payload, protection xattr or NSError description is emitted.",
+    "The host reader is separately built arm64 macOS code, restricted by compiled device/token plus driver-supplied canonical final container/inodes. It performs no setters or payload reads, checks final app inode identity, and cannot substitute its different Foundation/process/platform observations for iOS evidence.",
+    "The existing normal lane remains pinned and owns source binding, copy, isolated build, task workers and journaled simulator finalization. Only one XCTest is selected; normal launch repetitions, libproc observation and notice qualification are not invoked. Their status fields stay NOT_RUN.",
+    "Diagnostic CAPTURED_NOT_PROTECTION_PASS is not strict PASS. Six new strict comparisons are independent of A37 0/26, and no snapshot-validation, retained-host, normal Debug, dependency, combined, hardware or Store gate is waived."
+  ],
+  "validation": {
+    "reviewer_execution": "Standard-library AST/JSON/hash/text and read-only Git only; no project imports/functions, tests, Apple compiler, simulator, workflow dispatch or cleanup operations.",
+    "python_ast": "All three Python files parsed without execution.",
+    "test_source_cases": [
+      "test_missing_is_collection_not_protection_pass",
+      "test_synthetic_complete_does_not_qualify_application",
+      "test_error_bearing_complete_preserves_equality_but_fails_strict",
+      "test_process_boot_pid_uid_and_source_are_required",
+      "test_open_descriptor_and_changed_per_api_inode_fail",
+      "test_directory_url_cannot_assert_regular_file_protection",
+      "test_missing_attrlist_protection_is_null_not_zero",
+      "test_attrlist_masks_lengths_and_result_fail_closed",
+      "test_fcntl_raw_positive_class_is_success_not_errno",
+      "test_unavailable_api_cannot_carry_invented_class",
+      "test_host_same_inode_is_not_same_ios_process_or_causal_proof",
+      "test_host_changed_inode_platform_uid_or_executable_fails",
+      "test_metadata_rejects_paths_and_raw_control_characters"
+    ],
+    "executed_test_count_by_reviewer": 0,
+    "coordinator_reported_test_location": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-application-controls-01",
+    "coordinator_reported_result": "Root reported 13 tests PASS with stop0 and no owned workers/outputs/errors. This source review does not replace its underlying execution receipts."
+  },
+  "execution_conditions_and_limits": [
+    "First inspect the standalone native diagnostic; approve this additional actual-app build only if useful. Commit reviewed source/controls, then the mechanical inventory, then create a fresh source binding and full control digest. Changed listed bytes need delta review.",
+    "The surrounding GitHub/native-continuation application selection and workflow gates have separate CI-review ownership. This report approves the listed application implementation, not unseen adapter changes or a future source binding.",
+    "Actual Swift/Kotlin/Objective-C compilation and execution have not occurred in this review. A successful pure receipt test is not application-runtime proof.",
+    "No confirmed native ABI/FD defect remained in the complementary /root/portability_review message at these final shared/host/driver pins. Its noted system-image single-LC_BUILD_VERSION/platform constraint remains an unproven fail-closed collection risk, not grounds to relax a guard.",
+    "The new round trips use public synthetic bytes, not game snapshots. Same-inode observations cannot erase A37 failures, establish an opaque Foundation implementation branch or prove lock/keybag enforcement.",
+    "Physical-device, Store-operation and separate owner/legal requirements remain unexecuted and independent."
+  ],
+  "cleanup": "No build/test/native resources were allocated by this reviewer. This authorized additive report is the only new artifact from this review; root owns execution evidence, immediate stops, exact cleanup and all Git writes."
+}

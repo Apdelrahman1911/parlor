@@ -1,0 +1,30 @@
+import Foundation
+import XCTest
+
+final class IOSAppLaunchUITests: XCTestCase {
+    override func setUpWithError() throws { continueAfterFailure = false }
+
+    @MainActor func testActualFilesystemProtectionObservation() throws {
+        let environment = ProcessInfo.processInfo.environment
+        let expectedDevice: String = __PROTECTION_DEVICE__
+        let expectedName: String = __PROTECTION_DEVICE_NAME__
+        let token: String = __PROTECTION_TOKEN__
+        XCTAssertEqual(environment["SIMULATOR_UDID"], expectedDevice)
+        XCTAssertEqual(environment["SIMULATOR_DEVICE_NAME"], expectedName)
+        let app = XCUIApplication(bundleIdentifier: "com.parlor.app.debug")
+        app.launchEnvironment = ["PARLOR_PROTECTION_MODE": "actual-filesystem",
+            "PARLOR_PROTECTION_TOKEN": token, "PARLOR_PROTECTION_EXPECTED_UDID": expectedDevice]
+        app.launchArguments = []
+        app.launch()
+        defer { app.terminate() }
+        let state = app.staticTexts["parlor-protection-application-status"]
+        XCTAssertTrue(state.waitForExistence(timeout: 30))
+        let finished = NSPredicate(format: "value == %@ OR value == %@", "captured", "failed")
+        let observed = expectation(for: finished, evaluatedWith: state)
+        wait(for: [observed], timeout: 90)
+        // Collection only. A missing/non-Complete strict value remains FAIL
+        // inside the retained rows and does not fail this metadata collector.
+        XCTAssertEqual(state.value as? String, "captured")
+        print("PROTECTION_APPLICATION_COLLECTED " + token)
+    }
+}

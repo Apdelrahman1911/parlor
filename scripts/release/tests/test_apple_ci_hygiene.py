@@ -5,6 +5,7 @@ import ctypes
 import hashlib
 import json
 import os
+import re
 import struct
 import sys
 import unittest
@@ -620,6 +621,8 @@ class SimulatorOwnershipTest(unittest.TestCase):
 
 
 class AppleCycleAndOutputGateTest(unittest.TestCase):
+    JOB = "ios"
+
     def setUp(self):
         temp = TemporaryDirectory(prefix="parlor-apple-ci-cycle-control-")
         self.addCleanup(temp.cleanup)
@@ -628,6 +631,9 @@ class AppleCycleAndOutputGateTest(unittest.TestCase):
         self.root.mkdir()
         self.prefix = self.base / "ci"
         self.claim_path = self.base / "ci-ownership.json"
+        self.task = {**TASK, "GITHUB_JOB": self.JOB}
+        self.cycles = hygiene.apple_cycles(self.task)
+        self.secondary = self.cycles[1]
         self.source = {"root": str(self.root), "head": "a" * 40, "tree": "b" * 40}
         self.identity = {**self.source, "outputs": ["build"]}
         self.upload = {"outcome": "success", "artifact_id": "123", "artifact_digest": "c" * 64}
@@ -643,51 +649,51 @@ class AppleCycleAndOutputGateTest(unittest.TestCase):
         current = patch.dict(os.environ, {"RUNNER_TRACKING_ID": TRACKING})
         current.start()
         self.addCleanup(current.stop)
-        hygiene.prepare(self.root, self.claim_path, TASK)
+        hygiene.prepare(self.root, self.claim_path, self.task)
         (self.root / "build").mkdir()
         (self.root / "build/test.xml").write_text("preserve required evidence")
 
     def prepare_cycle(self, cycle):
         prefix = apple.cycle_prefix(self.prefix, cycle)
-        apple.prepare(self.root, prefix, TASK, cycle, Workers(), self.config)
+        apple.prepare(self.root, prefix, self.task, cycle, Workers(), self.config)
         return prefix
 
     def test_cancelled_build_finalizes_gradle_workers_device_workers_in_order(self):
-        prefix = self.prepare_cycle("apple-ui")
+        prefix = self.prepare_cycle(self.secondary)
         order = []
         hygiene.stop_gradle.side_effect = lambda root: order.append("gradle") or {"exit_code": 0}
         with patch.object(apple, "stop_workers", side_effect=lambda *args: order.append("workers") or {"result": "PASS"}), \
                 patch.object(sim, "cleanup", side_effect=lambda *args: order.append("device") or {"result": "PASS"}):
-            receipt = apple.finish(self.root, prefix, TASK, "apple-ui", "success", "cancelled",
+            receipt = apple.finish(self.root, prefix, self.task, self.secondary, "success", "cancelled",
                                    backend_factory=Workers, simulator_factory=Mock)
         self.assertEqual(receipt["result"], "PASS", receipt)
         self.assertEqual(receipt["run_outcome"], "cancelled")
-        self.assertEqual(order, ["gradle", "workers", "device", "workers"])
+        self.assertEqual(order, ["gradle", "workers", "device", "workers"] if self.JOB == "ios" else ["gradle", "workers", "workers"])
 
     def test_unquiesced_workers_prevent_device_deletion(self):
-        prefix = self.prepare_cycle("apple-ui")
+        prefix = self.prepare_cycle(self.secondary)
         with patch.object(apple, "stop_workers", return_value={"result": "FAIL"}), patch.object(sim, "cleanup") as cleanup:
-            receipt = apple.finish(self.root, prefix, TASK, "apple-ui", "success", "failure", backend_factory=Workers)
+            receipt = apple.finish(self.root, prefix, self.task, self.secondary, "success", "failure", backend_factory=Workers)
         self.assertEqual(receipt["result"], "FAIL")
         cleanup.assert_not_called()
 
     def test_failed_prepare_cannot_adopt_old_same_task_claim_and_skipped_is_not_pass(self):
         prefix = self.prepare_cycle("apple-aggregate")
         for preparation, run in (("failure", "skipped"), ("cancelled", "skipped"), ("skipped", "skipped")):
-            receipt = apple.finish(self.root, prefix, TASK, "apple-aggregate", preparation, run,
+            receipt = apple.finish(self.root, prefix, self.task, "apple-aggregate", preparation, run,
                                    backend_factory=Mock(side_effect=AssertionError("must not instantiate native backend")))
             self.assertEqual(receipt["result"], "FAIL")
-        fresh = apple.cycle_prefix(self.prefix, "apple-wrapper")
-        receipt = apple.finish(self.root, fresh, TASK, "apple-wrapper", "skipped", "skipped")
+        fresh = apple.cycle_prefix(self.prefix, self.secondary)
+        receipt = apple.finish(self.root, fresh, self.task, self.secondary, "skipped", "skipped")
         self.assertEqual(receipt["result"], "NOT_RUN")
         self.assertEqual(receipt["gradle_stop"]["exit_code"], 0)
 
     def receipts(self):
         outcomes = {}
-        for cycle in apple.CYCLES:
+        for cycle in self.cycles:
             prefix = self.prepare_cycle(cycle)
             claim_hash = hashlib.sha256(apple.claim_path(prefix).read_bytes()).hexdigest()
-            receipt = {"schema": 1, "task": TASK, "cycle": cycle, "source": self.source,
+            receipt = {"schema": 1, "task": self.task, "cycle": cycle, "source": self.source,
                        "prepare_outcome": "success", "run_outcome": "success", "result": "PASS",
                        "errors": [], "gradle_stop": {"exit_code": 0}, "claim_sha256": claim_hash,
                        "workers_before_simulator": {"result": "PASS"}, "workers": {"result": "PASS"},
@@ -697,52 +703,134 @@ class AppleCycleAndOutputGateTest(unittest.TestCase):
         return outcomes
 
     def cleanup_outputs(self, outcomes):
-        return hygiene.cleanup(self.root, self.claim_path, TASK, self.upload, "success", outcomes)
+        return hygiene.cleanup(self.root, self.claim_path, self.task, self.upload, "success", outcomes)
 
     def test_complete_source_bound_native_receipts_allow_output_cleanup_after_upload(self):
         outcomes = self.receipts()
         receipt = self.cleanup_outputs(outcomes)
         self.assertEqual(receipt["result"], "PASS", receipt)
         self.assertFalse((self.root / "build").exists())
-        self.assertEqual(set(receipt["apple_cleanup"]), set(apple.CYCLES))
+        self.assertEqual(set(receipt["apple_cleanup"]), set(self.cycles))
 
     def test_absent_failed_stale_or_unexecuted_native_cleanup_retains_output_evidence(self):
         outcomes = self.receipts()
         self.assertEqual(self.cleanup_outputs(None)["result"], "FAIL")
         for outcome in ("failure", "cancelled", "skipped", ""):
-            changed = {**outcomes, "apple-ui": {**outcomes["apple-ui"], "finish": outcome}}
+            changed = {**outcomes, self.secondary: {**outcomes[self.secondary], "finish": outcome}}
             self.assertEqual(self.cleanup_outputs(changed)["result"], "FAIL")
-        path = Path(str(self.prefix) + "-stop-apple-ui.json")
+        path = Path(str(self.prefix) + "-stop-" + self.secondary + ".json")
         original = json.loads(path.read_text())
         for change in ({"workers": {"result": "FAIL"}}, {"source": {**self.source, "head": "d" * 40}},
                        {"claim_sha256": "e" * 64}, {"simulator": {"result": "NOT_CREATED"}},
-                       {"gradle_stop": {"exit_code": 1}}, {"result": "NOT_RUN"}):
+                       {"gradle_stop": {"exit_code": 1}}, {"result": "NOT_RUN"},
+                       {"task": {**self.task, "GITHUB_JOB": "ios-release" if self.JOB == "ios" else "ios"}}):
             path.write_text(json.dumps({**original, **change}))
             receipt = self.cleanup_outputs(outcomes)
             self.assertEqual(receipt["result"], "FAIL", change)
             self.assertEqual(receipt["removed"], [])
             self.assertEqual((self.root / "build/test.xml").read_text(), "preserve required evidence")
 
+    def test_wrong_jobs_cycles_and_simulator_commands_never_admit_native_resources(self):
+        cases = (("ios", "apple-wrapper"), ("ios-release", "apple-ui"), (self.JOB, "unknown-cycle"),
+                 ("ios-other", "apple-aggregate"), ("ios-protection-probe", "apple-aggregate"), ("desktop-macos-x64", "apple-aggregate"))
+        for job, cycle in cases:
+            task = {**TASK, "GITHUB_JOB": job}
+            backend = Mock()
+            with self.subTest(job=job, cycle=cycle):
+                with self.assertRaises(RuntimeError):
+                    apple.prepare(self.root, self.prefix, task, cycle, backend, self.config)
+                backend.lifetimes.assert_not_called()
+                with patch.object(sim, "read_record") as read, self.assertRaises(RuntimeError):
+                    apple.validate_claim(self.root, self.prefix, task, cycle, self.config)
+                read.assert_not_called()
+                with patch.object(apple, "stop_workers") as workers, patch.object(sim, "cleanup") as simulator:
+                    receipt = apple.finish(self.root, self.prefix, task, cycle, "skipped", "skipped", backend_factory=backend)
+                self.assertEqual(receipt["result"], "FAIL")
+                self.assertEqual(receipt["gradle_stop"]["exit_code"], 0)
+                workers.assert_not_called()
+                simulator.assert_not_called()
+                backend.assert_not_called()
+                if job.startswith("ios") and job not in hygiene.APPLE_JOB_CYCLES:
+                    with self.assertRaisesRegex(RuntimeError, "Unknown Apple verification job"):
+                        hygiene.prepare(self.root, self.base / "unknown-claim.json", task)
+                    result = hygiene.cleanup(self.root, self.claim_path, task, self.upload, "success")
+                    self.assertEqual(result["result"], "FAIL")
+                    self.assertIn("Unknown Apple verification job", result["errors"][0]["error"])
+                    self.assertEqual(result["removed"], [])
+        for job, cycle in (("ios", "apple-aggregate"), ("ios", "apple-wrapper"),
+                           ("ios-release", "apple-aggregate"), ("ios-release", "apple-wrapper"), ("ios-release", "apple-ui")):
+            with self.subTest(create_job=job, cycle=cycle), \
+                    patch.object(hygiene, "context", return_value=(self.root, self.prefix, {**TASK, "GITHUB_JOB": job})), \
+                    patch.object(sys, "argv", ["apple_verification_hygiene.py", "create-simulator", cycle]), \
+                    patch.object(apple, "validate_claim") as validate, patch.object(sim, "create") as create, \
+                    self.assertRaises(RuntimeError):
+                apple.main()
+            validate.assert_not_called()
+            create.assert_not_called()
+        with patch.object(hygiene, "context", return_value=(self.root, self.prefix, TASK)), \
+                patch.object(sys, "argv", ["apple_verification_hygiene.py", "create-simulator", "apple-ui"]), \
+                patch.object(apple, "validate_claim", return_value={"task": TASK}) as validate, \
+                patch.object(sim, "create", return_value=CREATED) as create, patch.object(sim, "SimctlBackend"), patch("builtins.print"):
+            self.assertEqual(apple.main(), 0)
+        validate.assert_called_once()
+        create.assert_called_once()
+
+    def test_exact_job_cycle_outcomes_foreign_receipts_and_upload_gate(self):
+        outcomes = self.receipts()
+        foreign = next(cycle for cycle in apple.CYCLES if cycle not in self.cycles)
+        for changed in ({self.secondary: outcomes[self.secondary]}, {**outcomes, foreign: outcomes[self.secondary]},
+                        {**outcomes, "unknown-cycle": outcomes[self.secondary]}):
+            self.assertEqual(self.cleanup_outputs(changed)["result"], "FAIL")
+        foreign_paths = [Path(str(self.prefix) + "-stop-" + foreign + ".json"),
+                         *(Path(str(self.prefix) + "-" + foreign + ending) for ending in (
+                             "-ownership.json", "-simulator-plan.json", "-simulator-create.json", "-simulator-adopted.json"))]
+        for path in foreign_paths:
+            path.write_text("unassigned cycle evidence")
+            receipt = self.cleanup_outputs(outcomes)
+            self.assertEqual(receipt["result"], "FAIL")
+            self.assertEqual(receipt["removed"], [])
+            self.assertEqual(path.read_text(), "unassigned cycle evidence")
+            path.unlink()
+        other_task = {**self.task, "GITHUB_JOB": "ios-release" if self.JOB == "ios" else "ios"}
+        with self.assertRaisesRegex(RuntimeError, "ownership changed"):
+            apple.validate_claim(self.root, apple.cycle_prefix(self.prefix, "apple-aggregate"), other_task, "apple-aggregate", self.config)
+        result = hygiene.cleanup(self.root, self.claim_path, self.task, {**self.upload, "outcome": "failure"}, "success", outcomes)
+        self.assertEqual(result["result"], "FAIL")
+        self.assertEqual(result["removed"], [])
+        self.assertEqual((self.root / "build/test.xml").read_text(), "preserve required evidence")
+
+
+class AppleReleaseCycleAndOutputGateTest(AppleCycleAndOutputGateTest):
+    """Run the same destructive-cleanup and native-ownership controls for the new job."""
+    JOB = "ios-release"
+
 
 class AppleWorkflowOwnershipTest(unittest.TestCase):
     def test_each_apple_cycle_has_preparation_always_finalizer_and_output_gate(self):
         workflow = (ROOT / ".github/workflows/production-verification.yml").read_text()
-        ios = workflow.split("  ios:\n", 1)[1]
-        for cycle in apple.CYCLES:
-            self.assertEqual(ios.count("scripts.ci.apple_verification_hygiene prepare " + cycle), 1)
-            self.assertEqual(ios.count("scripts.ci.apple_verification_hygiene finish " + cycle), 1)
-            stem = cycle.replace("-", "_")
-            self.assertIn(f"id: {stem}_finish\n        if: always()", ios)
-            for role in ("prepare", "run", "finish"):
-                self.assertIn(f"steps.{stem}_{role}.outcome", ios)
-        self.assertIn("PARLOR_APPLE_CYCLE_OUTCOMES:", ios)
-        self.assertIn("-apple-ui-simulator-*.json", ios)
-        self.assertIn("create-simulator apple-ui", ios)
-        self.assertIn("-parallel-testing-enabled NO", ios)
-        self.assertNotIn("rm -rf build/ci-evidence/ios-ui-tests.xcresult", ios)
-        self.assertNotIn("xcrun simctl list devices available", ios)
-        for dangerous in ("RUNNER_TRACKING_ID:", "shutdown all", "delete unavailable", "killall", "pkill"):
-            self.assertNotIn(dangerous, ios)
+        jobs = {block.split(":\n", 1)[0]: block for block in
+                re.split(r"(?m)^  (?=[a-z][a-z0-9-]*:\n)", workflow.split("jobs:\n", 1)[1])[1:]}
+        self.assertEqual(hygiene.APPLE_JOB_CYCLES, {"ios": ("apple-aggregate", "apple-ui"),
+                                                   "ios-release": ("apple-aggregate", "apple-wrapper")})
+        for job, cycles in hygiene.APPLE_JOB_CYCLES.items():
+            body = jobs[job]
+            for cycle in apple.CYCLES:
+                self.assertEqual(body.count("scripts.ci.apple_verification_hygiene prepare " + cycle), int(cycle in cycles))
+                self.assertEqual(body.count("scripts.ci.apple_verification_hygiene finish " + cycle), int(cycle in cycles))
+                if cycle in cycles:
+                    stem = cycle.replace("-", "_")
+                    self.assertIn(f"id: {stem}_finish\n        if: always()", body)
+                    for role in ("prepare", "run", "finish"):
+                        self.assertIn(f"steps.{stem}_{role}.outcome", body)
+            self.assertIn("PARLOR_APPLE_CYCLE_OUTCOMES:", body)
+            for dangerous in ("RUNNER_TRACKING_ID:", "shutdown all", "delete unavailable", "killall", "pkill"):
+                self.assertNotIn(dangerous, body)
+        self.assertIn("-apple-ui-simulator-*.json", jobs["ios"])
+        self.assertIn("create-simulator apple-ui", jobs["ios"])
+        self.assertIn("-parallel-testing-enabled NO", jobs["ios"])
+        self.assertNotIn("rm -rf build/ci-evidence/ios-ui-tests.xcresult", jobs["ios"])
+        self.assertNotIn("xcrun simctl list devices available", jobs["ios"])
+        self.assertNotIn("create-simulator", jobs["ios-release"])
 
 
 if __name__ == "__main__":

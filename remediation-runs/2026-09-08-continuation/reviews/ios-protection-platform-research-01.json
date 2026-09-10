@@ -1,0 +1,128 @@
+{
+  "schema": 1,
+  "kind": "FOCUSED_IOS_PROTECTION_PLATFORM_RESEARCH_NOT_RUNTIME_QUALIFICATION",
+  "reviewer": "/root/portability_review",
+  "status": "RESEARCH_COMPLETE_EXACT_RUNTIME_CAUSE_NOT_YET_PROVEN",
+  "scope": "Read-only A37 raw-evidence/source inspection and public Apple/open-source API research. No source edits, builds, probes, dispatches, clones, physical-device or Store operations.",
+  "actual_a37": {
+    "run": "34442662032/1",
+    "source": "15e8982b35e39006868868a11c6f4e1864e613a7",
+    "toolchain": "Xcode26.3/17C529, iOS Simulator26.2/23C54 arm64; macOS15.7.9/24G830",
+    "raw_foundation": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34442662032/native-evidence/ios-readiness-37/parlor-l08-app-foundation.json",
+      "bytes": 7841,
+      "sha256": "f5d39ae0c8896989f1f07e4b97eba4dcc6bb0e67e449296e6ed50f09a9677d6e"
+    },
+    "independent_recount": {
+      "functional_files": 20,
+      "required_comparisons": 26,
+      "passed": 0,
+      "failed": 26,
+      "targets": {
+        "directory": 13,
+        "file": 13
+      },
+      "all_attributes": "Dictionary returned, protection key absent/value missing, native error absent.",
+      "foundation_operations_true": 8,
+      "fm_missing": 8,
+      "url_until_first_authentication": 5,
+      "volume_unsupported": 8
+    },
+    "functional_file_manifest": {
+      "sha256": "1dc5553543d1cac4c102986445d1f116a532bc50cc3f90a16b922a75331179b6",
+      "recipe": "Sorted parlor-l08-storage-functional-*.json in the same directory; JSON list of {path:repo-relative,bytes,sha256}, json.dumps(sort_keys=True,separators=(',',':'))."
+    },
+    "foundation_class_image": {
+      "uuid": "c153116f-dd31-3fa9-89bb-04b47c1fa83d",
+      "platform": 7
+    },
+    "limit": "The retained image is the NSFileManager class image, not the dispatched getter/setter IMP or its callees. Foundation controls used separate owned synthetic files; no same-inode native class query on each production snapshot was retained. Raw observations establish failure, not an exclusive simulator or application cause.",
+    "cleanup": "Owned Foundation fixture removed in retained receipt; full A37 custody/cleanup was previously independently reviewed. This research does not promote failed A37."
+  },
+  "reopened_production_source": {
+    "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+    "bytes": 20807,
+    "sha256": "c2852fafb293a693be830171f4674947289fafb07f8ecdbafa5c0aaae6d1bf8b",
+    "requests": "Lines90\u2013105 request NSFileProtectionComplete on the snapshot directory; lines362\u2013373 request NSDataWritingAtomic|NSDataWritingFileProtectionComplete and reject false writes. Successful requests are not postcondition proof."
+  },
+  "primary_references": [
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/foundation/fileprotectiontype/complete.json",
+      "bytes": 12855,
+      "sha256": "9b1599448c0166bfa49cb959f22ed11459bc8a3f58e96c7b90f79ac81125c04a",
+      "meaning": "Complete means encrypted on disk and unavailable while locked or booting; metadata-only simulator checks cannot prove lock/keybag enforcement."
+    },
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/foundation/urlresourcekey/volumesupportsfileprotectionkey.json",
+      "bytes": 27000,
+      "sha256": "cc72e2961079c921b19630bc41a2314f1e13fb5f998dbd37d23a4cb214e1746f",
+      "meaning": "Boolean indicates volume supports data protection for files. A37's false result is actual capability advertisement, not Complete success."
+    },
+    {
+      "url": "https://developer.apple.com/tutorials/data/documentation/foundation/nsdata/writingoptions/completefileprotection.json",
+      "bytes": 22052,
+      "sha256": "69d8ce6ef9580c6951e470edb3e4f1bdaec15a7e5483f6487d85629e8d45c6b4",
+      "meaning": "Requests availability only while unlocked; successful write alone does not demonstrate that behavior."
+    },
+    {
+      "url": "https://github.com/swiftlang/swift-foundation/blob/06c824765e0ae26821bb797051a15a3c7a43cc44/Sources/FoundationEssentials/FileManager/FileManager%2BFiles.swift#L658-L667",
+      "bytes": 42851,
+      "sha256": "bc812bb0c52cd6817f42f5b3694f3c46a33d1c95571c1a6c4a31691c0df33893",
+      "meaning": "Getter protection insertion at658\u2013667 and setter at1002\u20131012 are guarded by !targetEnvironment(simulator) && FOUNDATION_FRAMEWORK. This current public source is newer than A37 and not mapped to its installed Foundation image; hypothesis, not exact-runtime proof."
+    },
+    {
+      "url": "https://github.com/swiftlang/swift-foundation/blob/06c824765e0ae26821bb797051a15a3c7a43cc44/Sources/FoundationEssentials/Data/Data%2BWriting.swift#L51-L64",
+      "bytes": 40151,
+      "sha256": "7546a34ab46863c52c08bf5a6a19c8a46331679d8bb234501838790b09c6570a",
+      "meaning": "Framework builds forward options to private _NSOpenFileDescriptor_Protected/_NSOpenAtFileDescriptor_Protected; plain open is the non-framework branch. Public FileManager simulator guards do NOT establish how installed NSData handles Complete write flags."
+    },
+    {
+      "url": "https://github.com/apple-oss-distributions/xnu/blob/f6217f891ac0bb64f3d375211650a4c1ff8ca1ea/bsd/sys/fcntl.h#L317-L318",
+      "bytes": 32224,
+      "sha256": "0f93c8918a70ffafe20bfe9c72e671fde67438cbee9f9de8c2f87b5c704c9a9e",
+      "meaning": "F_GETPROTECTIONCLASS63 returns int, F_SETPROTECTIONCLASS64 takes an int; F_GETPROTECTIONLEVEL77 queries filesystem protection version."
+    },
+    {
+      "url": "https://github.com/apple-oss-distributions/xnu/blob/f6217f891ac0bb64f3d375211650a4c1ff8ca1ea/bsd/kern/kern_descrip.c#L4369-L4444",
+      "bytes": 147011,
+      "sha256": "480cfed4e987be874bd71fb6933c254adf9fb1f36de8496dee8f351b18da13b1",
+      "meaning": "GET reads va_dataprotect_class and returns ENOTSUP if unsupported. SET authorizes vnode write access then sets that attribute. CONFIG_PROTECT gates these cases. Reference kernel source is not bound to A37's actual kernel."
+    },
+    {
+      "url": "https://github.com/apple-oss-distributions/xnu/blob/f6217f891ac0bb64f3d375211650a4c1ff8ca1ea/bsd/vfs/vfs_attrlist.c#L2108-L2114",
+      "bytes": 160046,
+      "sha256": "3fcbca58e2d63963115ecd4aa1e27c3d1f7dc21f124897c8bdfdf9916b503c06",
+      "meaning": "Unsupported protection attributes can pack zero unless returned-valid-attribute handling is requested. Request ATTR_CMN_RETURNED_ATTRS and require the DATA_PROTECT_FLAGS returned bit; syscall success or a zero field alone is not class evidence."
+    },
+    {
+      "url": "https://github.com/apple-oss-distributions/xnu/blob/f6217f891ac0bb64f3d375211650a4c1ff8ca1ea/bsd/sys/mount.h#L303",
+      "bytes": 69380,
+      "sha256": "049682e582ede05082580d55a5db0647d1ef057dc7966443fab54438f6acdeb5",
+      "meaning": "Public MNT_CPROTECT0x80 advertises filesystem content-protection support; fstatfs on the pinned FD supplies an independent volume-capability discriminator."
+    },
+    {
+      "url": "https://github.com/apple-oss-distributions/xnu/blob/f6217f891ac0bb64f3d375211650a4c1ff8ca1ea/bsd/sys/content_protection.h#L32-L62",
+      "bytes": 2286,
+      "sha256": "bb5bfccb8e088060d439708f82aa579f62fc50f26a1b1cbbe015f231dffeb393",
+      "meaning": "ClassA1/B2/C3/D4 definitions are inside PRIVATE. Do not fabricate public SDK declarations or silently substitute numeric1. Capture installed SDK availability; skip a direct SET control honestly if the approved public constant is unavailable."
+    }
+  ],
+  "smallest_useful_discriminator": [
+    "Bind exact installed Xcode/SDK/runtime build, host kernel/build, app/control source, app images and filesystem context. On each observed file keep an O_NOFOLLOW|O_CLOEXEC descriptor, verify dev/inode/type/owner and parent custody before/after; atomic replacement requires a newly identified post-write inode, not an old retained FD.",
+    "On that same inode retain strict FileManager dictionary/key/value/error; fresh NSURL FileProtection and volume-support value/error; fcntl GETPROTECTIONCLASS raw return and immediately captured errno; fgetattrlist DATA_PROTECT_FLAGS plus RETURNED_ATTRS with strict lengths/mask; fstatfs filesystem type/fsid/flags/MNT_CPROTECT. Validate FD success independently. Distinguish ENOTSUP, EINVAL, EPERM and missing returned fields.",
+    "Use only exclusively owned synthetic files for mutations: None/default baseline, Foundation Complete setter and Complete direct/atomic creation with observed numeric option mask. A native SETCLASS contrast is useful only when authorized and declared by the installed SDK; otherwise retain an explicit diagnostic skip. Do not mutate production snapshots or change the strict oracle.",
+    "Bind actual receiver classes and method_getImplementation results for FM getter/setter and the actual NSData write receiver; dladdr the IMP and retain Mach-O UUID/platform, image-relative offset and version, bracketed against change. A class image alone is insufficient; a wrapper IMP does not identify an opaque FoundationEssentials/private-C callee. Targeted exact-image disassembly/trace would be required to prove the internal compile-time branch rather than merely its identity.",
+    "Avoid broad xattr enumeration or reading protection-xattr payloads: implementation-specific names, authorization and wrapped-key contents make this weaker and riskier than public typed FD queries. If any xattr size/error control is later justified, never equate ENODATA/EPERM with no protection.",
+    "Run one narrow source/control-bound platform probe, preserve raw failures and exact cleanup receipts, and inspect before any further native run. No full unchanged application matrix is justified merely to repeat missing keys."
+  ],
+  "interpretation": {
+    "native_A_fm_missing": "Proves a metadata-exposure discrepancy for that same inode in that runtime. Missing FM key still fails the existing strict gate; native class is not a substitute.",
+    "native_unsupported": "GET reports unsupported, returned attr bit absent, and volume support/MNT_CPROTECT false together establish unavailable protection-class interfaces/capability in that sampled context. They do not alone identify the exact Foundation branch or retroactively prove every A37 production inode's state.",
+    "native_C_then_set_A": "If an approved native/public alternate setter changes the same inode from a non-A class to A while Foundation Complete requests do not, isolate the framework/request path rather than declaring the whole filesystem incapable.",
+    "control_A_production_not_A": "A working owned positive control with a failing same-inode production observation is actionable application-path/replacement/attribute evidence; investigate that difference before another broad qualification.",
+    "nonphysical_gate": "The retained gate is unequivocally FAIL. It can pass honestly only when the required actual production FileManager comparisons return Complete under the unchanged validator. Proving an installed simulator getter omits the key explains failure but does not make it PASS/N/A or a physical-only exemption. No currently demonstrated nonphysical configuration supplies those 26 successful comparisons; the targeted discriminator remains actionable."
+  },
+  "research_limits": "No installed Apple runtime or method body was examined on Linux. Public-source guards and image identities are not interchangeable with runtime implementation proof. Several ancillary documentation URLs returned404/300 and were not used as evidence. No tests or native operations were executed by this reviewer.",
+  "cleanup": "No build, simulator, process-control or temporary workers allocated. Public references fetched into memory only; this report is the sole created file.",
+  "researched_at": "2026-09-10T19:06:01.926714+00:00"
+}

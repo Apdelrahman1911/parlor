@@ -52,10 +52,16 @@ OS_SELECTORS = ("iosAppUITests/IOSAppLaunchUITests/testDSC01OSPublicBootstrap",
                 "iosAppUITests/IOSAppLaunchUITests/testDSC01OSPerAppRecovery")
 OS_WAIT_SECONDS = 5400
 OS_JOB_SECONDS = 120 * 60
+APPLICATION_RUNNERS = {"protection_application": CAMPAIGN + "/protection-application-01/application_probe.py"}
+APPLICATION_SELECTION = "protection-application-only"
+APPLICATION_CAPTURED = "CAPTURED_NOT_PROTECTION_PASS"
+APPLICATION_EXECUTION_KIND = "actual-filesystem-protection-diagnostic-only"
+APPLICATION_WAIT_SECONDS = 3600
+APPLICATION_JOB_SECONDS = 90 * 60
 CYCLES = {"l08": "ios-readiness-37", "normal": "ios-readiness-38", "settings_sheet": "ios-readiness-36",
-          "os_recovery": "ios-readiness-39"}
+          "os_recovery": "ios-readiness-39", "protection_application": "ios-readiness-40"}
 NATIVE_SELECTIONS = {"paired": ("l08", "normal"), "l08-only": ("l08",), SHEET_SELECTION: ("settings_sheet",),
-                     OS_SELECTION: ("os_recovery",)}
+                     OS_SELECTION: ("os_recovery",), APPLICATION_SELECTION: ("protection_application",)}
 LIFECYCLE_MODE = "direct-owned-v1"
 NATIVE_JOB_SECONDS = 240 * 60
 NATIVE_WAIT_SECONDS = 6000
@@ -158,8 +164,8 @@ def effective_scope(event, requested):
 def effective_native_selection(scope, requested):
     selection = "paired" if requested in (None, "") else requested
     require(isinstance(selection, str) and selection in NATIVE_SELECTIONS, "unknown-native-selection")
-    if selection == OS_SELECTION:
-        require(scope in {"native-preflight", "native-evidence"}, "os-recovery-only-requires-native-preflight-or-evidence")
+    if selection in {OS_SELECTION, APPLICATION_SELECTION}:
+        require(scope in {"native-preflight", "native-evidence"}, selection + "-requires-native-preflight-or-evidence")
         return selection
     require(selection == "paired" or scope == "native-evidence" or
             selection == SHEET_SELECTION and scope == "native-preflight", "l08-only-requires-native-evidence")
@@ -907,6 +913,8 @@ class Continuation:
 
     @property
     def runners(self):
+        if self.selection == APPLICATION_SELECTION:
+            return APPLICATION_RUNNERS
         if self.selection == OS_SELECTION:
             return OS_RUNNERS
         return SHEET_RUNNERS if self.selection == SHEET_SELECTION else RUNNERS
@@ -959,6 +967,8 @@ class Continuation:
             ("l08_sha256", "PARLOR_APPROVED_L08_CONTROL_SHA256"), ("normal_sha256", "PARLOR_APPROVED_NORMAL_CONTROL_SHA256"))
         if self.selection == OS_SELECTION:
             approvals = (("os_recovery_sha256", "PARLOR_APPROVED_PROBE_CONTROL_SHA256"),)
+        if self.selection == APPLICATION_SELECTION:
+            approvals = (("protection_application_sha256", "PARLOR_APPROVED_PROBE_CONTROL_SHA256"),)
         for key, variable in (("artifact_sha256", "PARLOR_PREFLIGHT_ARTIFACT_SHA256"), *approvals):
             raw = self.env.get(variable, "")
             require(HEX64.fullmatch(raw), "missing-independent-preflight-or-control-hash")
@@ -1028,6 +1038,8 @@ class Continuation:
                     wait_seconds = 900 if self.selection == SHEET_SELECTION else NATIVE_WAIT_SECONDS
                     if self.selection == OS_SELECTION:
                         wait_seconds = OS_WAIT_SECONDS
+                    if self.selection == APPLICATION_SELECTION:
+                        wait_seconds = APPLICATION_WAIT_SECONDS
                     entry["exit_code"] = child.wait(timeout=wait_seconds)
                 except (subprocess.TimeoutExpired, NativeInterrupted) as error:
                     finishing = True
@@ -1050,6 +1062,8 @@ class Continuation:
         job_seconds = 40 * 60 if self.selection == SHEET_SELECTION else NATIVE_JOB_SECONDS
         if self.selection == OS_SELECTION:
             wait_seconds, job_seconds = OS_WAIT_SECONDS, OS_JOB_SECONDS
+        if self.selection == APPLICATION_SELECTION:
+            wait_seconds, job_seconds = APPLICATION_WAIT_SECONDS, APPLICATION_JOB_SECONDS
         required = wait_seconds + NATIVE_GRACE_SECONDS + NATIVE_FINISH_RESERVE_SECONDS
         admission = dict(cycle=CYCLES[label], status="DENIED_NOT_RUN", job_budget_seconds=job_seconds,
                          child_wait_seconds=wait_seconds, finalizer_grace_seconds=NATIVE_GRACE_SECONDS,
@@ -1125,6 +1139,9 @@ class Continuation:
                      receipt_sha256=sha(file_bytes(destination / "receipt.json", 8 * 1024 * 1024)))
         if label == "os_recovery":
             entry["os_recovery"] = self.state["os_recovery"] = os_recovery_summary(receipt)
+        if label == "protection_application":
+            entry["diagnostic_status"] = receipt.get("diagnostic_status")
+            entry["strict_protection_status"] = receipt.get("strict_protection_status", "NOT_RUN")
         self.state["cleanup_safe"] = safe
         self.save()
         require(not entry.get("interrupted") and not entry.get("timed_out") and
@@ -1138,6 +1155,17 @@ class Continuation:
         if label == "settings_sheet":
             require(receipt.get("execution_kind") == "public-settings-sheet-diagnostic-only" and all(receipt.get(key) == "NOT_RUN"
                 for key in ("runtime_evidence_status", "provenance_status", "notice_package_status")), "diagnostic-is-not-app-qualification")
+        if label == "protection_application":
+            require(receipt.get("execution_kind") == APPLICATION_EXECUTION_KIND and
+                receipt.get("image_observer") == "NOT_RUN_DIAGNOSTIC_ONLY" and
+                all(receipt.get(key) == "NOT_RUN" for key in
+                    ("runtime_evidence_status", "provenance_status", "notice_package_status")) and
+                receipt.get("status") in ("FAIL", APPLICATION_CAPTURED) and
+                entry["diagnostic_status"] in ("NOT_RUN", "FAIL", APPLICATION_CAPTURED) and
+                entry["strict_protection_status"] in ("NOT_RUN", "PASS", "FAIL") and
+                (receipt["status"] != APPLICATION_CAPTURED or
+                 entry["diagnostic_status"] == APPLICATION_CAPTURED and entry["strict_protection_status"] in ("PASS", "FAIL")),
+                "protection-application-diagnostic-is-not-qualification")
         return entry["exit_code"], receipt.get("status")
 
     def evidence(self):
@@ -1155,6 +1183,10 @@ class Continuation:
             captured = results == [(0, SHEET_CAPTURED)]
             self.state["status"] = SHEET_CAPTURED if captured else "SETTINGS_SHEET_NOT_CAPTURED"
             return 0 if captured else 2  # Diagnostic capture is never A/B or combined qualification.
+        if self.selection == APPLICATION_SELECTION:
+            captured = results == [(0, APPLICATION_CAPTURED)]
+            self.state["status"] = APPLICATION_CAPTURED if captured else "PROTECTION_APPLICATION_NOT_CAPTURED"
+            return 0 if captured else 2  # Even strict PASS here cannot promote historical L08, B or D.
         passed = all(code == 0 and status == "PASS" for code, status in results)
         if self.selection == "paired":
             self.state["status"] = "PASS" if passed else "NOT_READY"

@@ -124,7 +124,7 @@ class ProbeSourceContractTest(unittest.TestCase):
         self.assertEqual(native.effective_scope("workflow_dispatch", probe.SCOPE), probe.SCOPE)
         self.assertEqual(native.effective_scope("pull_request", probe.SCOPE), "full")
         self.assertEqual(native.CYCLES, {"l08": "ios-readiness-37", "normal": "ios-readiness-38", "settings_sheet": "ios-readiness-36",
-                                         "os_recovery": "ios-readiness-39"})
+                                         "os_recovery": "ios-readiness-39", "protection_application": "ios-readiness-40"})
         with self.assertRaisesRegex(RuntimeError, "not-an-app-native-continuation"):
             native.Continuation(dict(GITHUB_EVENT_NAME="workflow_dispatch", PARLOR_DISPATCH_SCOPE=probe.SCOPE))
 

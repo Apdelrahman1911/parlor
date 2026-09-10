@@ -1,0 +1,94 @@
+// Read-only HOST-native observation of the exact final owned app inodes.
+// This is a different process/OS Foundation, not iOS execution or a gate repair.
+#import <Foundation/Foundation.h>
+#import <TargetConditionals.h>
+#import "ProtectionSampler.h"
+#include <errno.h>
+#include <inttypes.h>
+#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+#if !TARGET_OS_OSX || !defined(__arm64__)
+#error Host same-inode reader requires arm64 macOS, never a device or simulator build.
+#endif
+
+static void need(BOOL value, NSString *reason) {
+    if (!value) @throw [NSException exceptionWithName:@"ApplicationReaderBoundary" reason:reason userInfo:nil];
+}
+
+static uint64_t number(const char *text) {
+    need(text && *text, @"identity-number");
+    for (const char *p = text; *p; p++) need(*p >= '0' && *p <= '9', @"identity-number");
+    errno = 0;
+    char *end = NULL;
+    unsigned long long result = strtoull(text, &end, 10);
+    need(errno == 0 && end && !*end && result > 0, @"identity-number");
+    return result;
+}
+
+static void samePath(NSString *path, uint64_t device, uint64_t inode, BOOL directory) {
+    char resolved[PATH_MAX];
+    struct stat value;
+    need(realpath(path.fileSystemRepresentation, resolved) &&
+        [path isEqual:[NSString stringWithUTF8String:resolved]] &&
+        lstat(path.fileSystemRepresentation, &value) == 0 && value.st_uid == getuid() &&
+        (uint64_t)value.st_dev == device && (uint64_t)value.st_ino == inode &&
+        (directory ? S_ISDIR(value.st_mode) : S_ISREG(value.st_mode)), @"expected-owned-inode");
+}
+
+int main(int argc, const char *argv[]) {
+    @autoreleasepool {
+        NSMutableDictionary *receipt = [@{@"schema_version": @1, @"kind": @"protection-application-host-reader",
+            @"collection_status": @"FAIL", @"controls_sha256": @__PROTECTION_CONTROLS__,
+            @"source_manifest_sha256": @__PROTECTION_SOURCE__, @"run_token": @__PROTECTION_TOKEN__,
+            @"simulator_udid": @__PROTECTION_DEVICE__, @"process_id": @(getpid()), @"uid": @(getuid()),
+            @"read_only": @YES, @"same_ios_process": @NO, @"hardware_protection_verified": @NO,
+            @"l08_requirements_waived": @NO, @"samples": [NSMutableArray array]} mutableCopy];
+        @try {
+            need(argc == 6 && getuid() == geteuid(), @"invocation");
+            NSString *container = [NSString stringWithUTF8String:argv[1]];
+            NSString *deviceRoot = [[NSHomeDirectory() stringByAppendingPathComponent:
+                @"Library/Developer/CoreSimulator/Devices"] stringByAppendingPathComponent:@__PROTECTION_DEVICE__];
+            deviceRoot = [deviceRoot stringByAppendingPathComponent:@"data/Containers/Data/Application"];
+            char canonical[PATH_MAX];
+            need(realpath(deviceRoot.fileSystemRepresentation, canonical) != NULL, @"owned-device-root");
+            NSString *root = [NSString stringWithUTF8String:canonical];
+            need(container && [[container stringByDeletingLastPathComponent] isEqual:root] &&
+                [[NSUUID alloc] initWithUUIDString:container.lastPathComponent], @"owned-container");
+            NSString *directory = [container stringByAppendingPathComponent:@"Library/Application Support/Parlor/snapshots"];
+            NSString *name = [[@"protection-" stringByAppendingString:@__PROTECTION_TOKEN__]
+                stringByAppendingString:@".snapshot.json"];
+            NSString *file = [directory stringByAppendingPathComponent:name];
+            uint64_t directoryDevice = number(argv[2]), directoryInode = number(argv[3]);
+            uint64_t fileDevice = number(argv[4]), fileInode = number(argv[5]);
+            NSOperatingSystemVersion version = NSProcessInfo.processInfo.operatingSystemVersion;
+            receipt[@"runtime_version"] = @[@(version.majorVersion), @(version.minorVersion), @(version.patchVersion)];
+            receipt[@"reader_image"] = ParlorProtectionImageIdentity((const void *)&main);
+            NSArray *paths = @[directory, file];
+            for (NSUInteger i = 0; i < paths.count; i++) {
+                NSString *path = paths[i];
+                uint64_t device = i == 0 ? directoryDevice : fileDevice;
+                uint64_t inode = i == 0 ? directoryInode : fileInode;
+                samePath(path, device, inode, i == 0);
+                NSDictionary *sample = ParlorProtectionSample(path);
+                [receipt[@"samples"] addObject:@{@"target": i == 0 ? @"directory" : @"file", @"native": sample}];
+                samePath(path, device, inode, i == 0);
+                need([sample[@"collection_status"] isEqual:@"PASS"] &&
+                    [sample[@"descriptor_closed"] isEqual:@YES], @"native-collection");
+            }
+            receipt[@"reader_image_after"] = ParlorProtectionImageIdentity((const void *)&main);
+            need([receipt[@"reader_image"] isEqual:receipt[@"reader_image_after"]], @"reader-image-changed");
+            receipt[@"collection_status"] = @"CAPTURED_NOT_PROTECTION_PASS";
+        } @catch (NSException *exception) {
+            receipt[@"failure"] = [exception.name isEqual:@"ApplicationReaderBoundary"] ? exception.reason : @"native-exception";
+        }
+        NSError *error = nil;
+        NSData *data = [NSJSONSerialization dataWithJSONObject:receipt options:NSJSONWritingSortedKeys error:&error];
+        if (!data || error || data.length > 65536 || fwrite(data.bytes, 1, data.length, stdout) != data.length ||
+            fputc('\n', stdout) == EOF) return 2;
+        return [receipt[@"collection_status"] isEqual:@"CAPTURED_NOT_PROTECTION_PASS"] ? 0 : 1;
+    }
+}

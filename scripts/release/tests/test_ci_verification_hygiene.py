@@ -690,24 +690,28 @@ class VerificationWorkflowHygieneTest(unittest.TestCase):
         import re
         workflow = (ROOT / ".github/workflows/production-verification.yml").read_text()
         jobs = re.split(r"(?m)^  (?=[a-z][a-z0-9-]*:\n)", workflow.split("jobs:\n", 1)[1])[1:]
-        self.assertEqual(len(jobs), 5)
+        self.assertEqual(len(jobs), 7)
+        # The focused protection diagnostic has its own closed native cleanup.
+        jobs = [job for job in jobs if not job.startswith("ios-protection-probe:\n")]
         expected_stops = {"desktop-android": 2, "desktop-linux-arm64": 1, "desktop-macos-x64": 1,
-                          "desktop-windows-x64": 1, "ios": 3}
+                          "desktop-windows-x64": 1, "ios": 2, "ios-release": 2}
+        self.assertEqual({job.split(":\n", 1)[0] for job in jobs}, set(expected_stops))
         for job in jobs:
             name = job.split(":\n", 1)[0]
             with self.subTest(job=name):
                 self.assertEqual(job.count('"verification_hygiene.py", "prepare"'), 1)
-                stop_command = ('scripts.ci.apple_verification_hygiene finish ' if name == "ios" else
+                stop_command = ('scripts.ci.apple_verification_hygiene finish ' if name in hygiene.APPLE_JOB_CYCLES else
                                 '"verification_hygiene.py", "stop",')
                 self.assertEqual(job.count(stop_command), expected_stops[name])
-                self.assertIn("**/build/test-results/**/*.xml", job)
+                report = "**/build/reports/detekt/" if name == "ios-release" else "**/build/test-results/**/*.xml"
+                self.assertIn(report, job)
                 self.assertEqual(job.count("id: verification_artifact"), 1)
                 self.assertEqual(job.count("id: verification_ownership"), 1)
                 for output in ("steps.verification_ownership.outcome", "steps.verification_artifact.outcome",
                                "steps.verification_artifact.outputs.artifact-id",
                                "steps.verification_artifact.outputs.artifact-digest"):
                     self.assertIn(output, job)
-                self.assertLess(job.index("**/build/test-results/**/*.xml"),
+                self.assertLess(job.index(report),
                                 job.index("- name: Clean only attested verification outputs"))
                 steps = re.split(r"(?m)^      - name: ", job)[1:]
                 cleanup_steps = [step for step in steps if step.startswith(("Stop Gradle after", "Clean only", "Upload verification cleanup"))]

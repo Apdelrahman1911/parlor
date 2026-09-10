@@ -129,7 +129,8 @@ def zipped(files, info=None):
 class NativeScopeTest(unittest.TestCase):
     def test_native_selection_defaults_to_paired_and_is_closed(self):
         self.assertEqual(native.NATIVE_SELECTIONS, {'paired': ('l08', 'normal'), 'l08-only': ('l08',),
-                         'settings-sheet-only': ('settings_sheet',), 'os-recovery-only': ('os_recovery',)})
+                         'settings-sheet-only': ('settings_sheet',), 'os-recovery-only': ('os_recovery',),
+                         'protection-application-only': ('protection_application',)})
         for scope in ('full', 'native-preflight', 'native-evidence', 'native-process-probe'):
             for value in (None, '', 'paired'):
                 with self.subTest(scope=scope, value=value):
@@ -141,8 +142,10 @@ class NativeScopeTest(unittest.TestCase):
             with self.assertRaises(RuntimeError): native.effective_native_selection(scope, 'settings-sheet-only')
         for scope in ('native-preflight', 'native-evidence'):
             self.assertEqual(native.effective_native_selection(scope, 'os-recovery-only'), 'os-recovery-only')
+            self.assertEqual(native.effective_native_selection(scope, 'protection-application-only'), 'protection-application-only')
         for value in ('normal-only', 'normal', 'l08', 'all', 'PAIRED', 'paired ', '../l08', False, 1, [], {},
-                      'OS-RECOVERY-ONLY', 'os-recovery-only ', 'os-recovery'):
+                      'OS-RECOVERY-ONLY', 'os-recovery-only ', 'os-recovery', 'PROTECTION-APPLICATION-ONLY',
+                      'protection-application-only ', 'protection_application'):
             with self.subTest(value=value), self.assertRaisesRegex(RuntimeError, 'unknown-native-selection'):
                 native.effective_native_selection('native-evidence', value)
 
@@ -153,14 +156,17 @@ class NativeScopeTest(unittest.TestCase):
                   ('workflow_dispatch', 'native-evidence', 'normal-only')]
         cases += [('workflow_dispatch', scope, 'os-recovery-only') for scope in ('full', 'native-process-probe')]
         cases += [('push', 'native-evidence', 'os-recovery-only'), ('pull_request', 'native-preflight', 'os-recovery-only')]
+        cases += [('workflow_dispatch', scope, 'protection-application-only') for scope in ('full', 'native-process-probe')]
+        cases += [('push', 'native-evidence', 'protection-application-only'),
+                  ('pull_request', 'native-preflight', 'protection-application-only')]
         for event, scope, selection in cases:
             env = dict(GITHUB_EVENT_NAME=event, PARLOR_DISPATCH_SCOPE=scope, PARLOR_NATIVE_SELECTION=selection)
             with self.subTest(event=event, scope=scope, selection=selection), \
                     patch.dict(native.os.environ, env, clear=True), patch.object(native, 'context') as context, \
                     patch.object(native.Path, 'mkdir') as allocate, patch.object(native, 'command') as command:
-                with self.assertRaisesRegex(RuntimeError, 'native-selection|l08-only-requires-native-evidence|os-recovery-only-requires'):
+                with self.assertRaisesRegex(RuntimeError, 'native-selection|l08-only-requires-native-evidence|os-recovery-only-requires|protection-application-only-requires'):
                     native.main(['validate-scope'])
-                with self.assertRaisesRegex(RuntimeError, 'native-selection|l08-only-requires-native-evidence|os-recovery-only-requires'):
+                with self.assertRaisesRegex(RuntimeError, 'native-selection|l08-only-requires-native-evidence|os-recovery-only-requires|protection-application-only-requires'):
                     native.Continuation(env)
                 context.assert_not_called()
                 allocate.assert_not_called()
@@ -748,44 +754,51 @@ class NativePreflightTest(unittest.TestCase):
         lane.invoke_native, lane.bootstrap_cache_directories = Mock(), Mock()
         return lane
 
-    def test_preflight_only_binds_and_observes_exact_four_file_package(self):
-        with TemporaryDirectory() as raw:
-            lane = self.prepare_lane(Path(raw).resolve())
-            files, _, lane.context = package_fixture(lane.root)
-            observation = json.loads(files["preflight.json"])["source_observation"]
-            manifests = {label: (files[label + "-controls.json"], json.loads(files[label + "-controls.json"])) for label in native.RUNNERS}
-            def bind(arguments, root):
-                self.assertEqual(arguments[:2], ["/usr/bin/python3", "-B"])
-                self.assertEqual(Path(arguments[2]), root / native.SUPPORT / "bind_source.py")
-                self.assertEqual(arguments[3:], [lane.binding, observation["source_manifest_sha256"], observation["diff_sha256"]])
-                native.write_new(lane.binding, files[native.BINDING_NAME])
-                return b"binding output not approval"
-            with patch.object(native, "describe", return_value=observation), patch.object(native, "command", side_effect=bind) as binder, patch.object(native, "controls", return_value=manifests):
-                self.assertEqual(lane.preflight(), 0)
-            self.assertEqual({path.name for path in lane.bundle.iterdir()}, native.PREFLIGHT_FILES)
-            self.assertEqual((lane.bundle / native.BINDING_NAME).read_bytes(), files[native.BINDING_NAME])
-            self.assertEqual(json.loads((lane.bundle / "preflight.json").read_bytes())["status"], "REVIEW_REQUIRED_NOT_RUNTIME_EVIDENCE")
-            self.assertEqual(binder.call_count, 1)
-            lane.invoke_native.assert_not_called()
-            lane.bootstrap_cache_directories.assert_not_called()
+    def test_preflight_only_binds_and_observes_exact_selected_package(self):
+        for selection in ('paired', native.APPLICATION_SELECTION):
+            with self.subTest(selection=selection), TemporaryDirectory() as raw:
+                lane = self.prepare_lane(Path(raw).resolve())
+                lane.selection = selection
+                files, _, lane.context = package_fixture(lane.root, lane.runners)
+                observation = json.loads(files["preflight.json"])["source_observation"]
+                manifests = {label: (files[label + "-controls.json"], json.loads(files[label + "-controls.json"])) for label in lane.runners}
+                def bind(arguments, root):
+                    self.assertEqual(arguments[:2], ["/usr/bin/python3", "-B"])
+                    self.assertEqual(Path(arguments[2]), root / native.SUPPORT / "bind_source.py")
+                    self.assertEqual(arguments[3:], [lane.binding, observation["source_manifest_sha256"], observation["diff_sha256"]])
+                    native.write_new(lane.binding, files[native.BINDING_NAME])
+                    return b"binding output not approval"
+                with patch.object(native, "describe", return_value=observation), patch.object(native, "command", side_effect=bind) as binder, patch.object(native, "controls", return_value=manifests) as observed_controls:
+                    self.assertEqual(lane.preflight(), 0)
+                self.assertEqual({path.name for path in lane.bundle.iterdir()}, set(files))
+                observed_controls.assert_called_once_with(lane.binding, lane.root, lane.runners)
+                self.assertEqual((lane.bundle / native.BINDING_NAME).read_bytes(), files[native.BINDING_NAME])
+                self.assertEqual(json.loads((lane.bundle / "preflight.json").read_bytes())["status"], "REVIEW_REQUIRED_NOT_RUNTIME_EVIDENCE")
+                self.assertEqual(binder.call_count, 1)
+                lane.invoke_native.assert_not_called()
+                lane.bootstrap_cache_directories.assert_not_called()
 
     def test_fetch_rejects_zip_digest_before_install_and_live_control_drift_before_build(self):
-        for selection, mutation in ((selection, mutation) for selection in ('paired', 'l08-only')
-                                    for mutation in ('zip-digest', 'l08-control', 'normal-control')):
+        cases = [(selection, mutation) for selection in ('paired', 'l08-only')
+                 for mutation in ('zip-digest', 'l08-control', 'normal-control')]
+        cases += [(native.APPLICATION_SELECTION, mutation) for mutation in ('zip-digest', 'protection_application-control')]
+        for selection, mutation in cases:
             with self.subTest(selection=selection, mutation=mutation), TemporaryDirectory() as raw:
                 lane = self.prepare_lane(Path(raw).resolve())
                 lane.selection = selection
-                files, expected, lane.context = package_fixture(lane.root)
+                files, expected, lane.context = package_fixture(lane.root, lane.runners)
                 zip_bytes = zipped(files)
                 digest = "0" * 64 if mutation == "zip-digest" else native.sha(zip_bytes)
                 lane.env = dict(PARLOR_PREFLIGHT_RUN_ID="100", PARLOR_PREFLIGHT_RUN_ATTEMPT="2", PARLOR_PREFLIGHT_ARTIFACT_ID="300",
-                                PARLOR_PREFLIGHT_ARTIFACT_SHA256=digest, PARLOR_APPROVED_L08_CONTROL_SHA256=expected["l08_sha256"],
-                                PARLOR_APPROVED_NORMAL_CONTROL_SHA256=expected["normal_sha256"], PARLOR_ACTIONS_READ_TOKEN="synthetic-read-token")
+                                PARLOR_PREFLIGHT_ARTIFACT_SHA256=digest, PARLOR_APPROVED_L08_CONTROL_SHA256=expected.get("l08_sha256", ""),
+                                PARLOR_APPROVED_NORMAL_CONTROL_SHA256=expected.get("normal_sha256", ""),
+                                PARLOR_APPROVED_PROBE_CONTROL_SHA256=expected.get("protection_application_sha256", ""),
+                                PARLOR_ACTIONS_READ_TOKEN="synthetic-read-token")
                 run, workflow, artifact, _ = producer_fixture()
                 artifact["digest"] = "sha256:" + digest
                 observation = json.loads(files["preflight.json"])["source_observation"]
                 manifests = {label: (files[label + "-controls.json"] + (b' ' if mutation == label + '-control' else b''),
-                                    json.loads(files[label + "-controls.json"])) for label in native.RUNNERS}
+                                    json.loads(files[label + "-controls.json"])) for label in lane.runners}
                 with patch.object(native, "api_json", side_effect=[run, workflow, artifact]), patch.object(native, "download_zip", return_value=zip_bytes), patch.object(native, "describe", return_value=observation), patch.object(native, "controls", return_value=manifests):
                     with self.assertRaisesRegex(RuntimeError, "zip-digest-mismatch" if mutation == "zip-digest" else "live-control-manifest"):
                         lane.fetch_preflight()
@@ -1352,6 +1365,154 @@ class OSRecoverySelectionTest(unittest.TestCase):
                 lane.invoke_native(['not-executed'], lane.root / 'os-runner.log', entry)
             self.assertTrue(entry['timed_out'])
             self.assertEqual([call.kwargs for call in child.wait.call_args_list], [{'timeout': 5400}, {'timeout': 600}])
+            child.send_signal.assert_called_once_with(native.signal.SIGTERM)
+            child.kill.assert_not_called()
+
+
+class ProtectionApplicationSelectionTest(unittest.TestCase):
+    def test_application_preflight_and_approval_cannot_reuse_another_lane_domain(self):
+        files, expected, current = package_fixture(runners=native.APPLICATION_RUNNERS)
+        self.assertEqual(native.APPLICATION_RUNNERS, {'protection_application':
+            native.CAMPAIGN + '/protection-application-01/application_probe.py'})
+        self.assertEqual(set(files), {'preflight.json', native.BINDING_NAME, 'protection_application-controls.json'})
+        native.validate_package(native.unpack_preflight(zipped(files), set(files)), expected, current, ROOT, native.APPLICATION_RUNNERS)
+        for other in (native.RUNNERS, native.SHEET_RUNNERS, native.OS_RUNNERS):
+            with self.assertRaisesRegex(RuntimeError, 'control-domain'):
+                native.validate_package(files, expected, current, ROOT, other)
+            wrong, wrong_expected, _ = package_fixture(runners=other)
+            with self.assertRaisesRegex(RuntimeError, 'zip-members'):
+                native.unpack_preflight(zipped(wrong), set(files))
+            with self.assertRaisesRegex(RuntimeError, 'control-domain'):
+                native.validate_package(wrong, wrong_expected, current, ROOT, native.APPLICATION_RUNNERS)
+        with self.assertRaisesRegex(RuntimeError, 'independent-control-approval'):
+            native.validate_package(files, {**expected, 'protection_application_sha256': 'f' * 64},
+                                    current, ROOT, native.APPLICATION_RUNNERS)
+
+    def test_explicit_application_probe_approval_and_separate_preflight_are_required_before_api(self):
+        lane = object.__new__(native.Continuation)
+        lane.selection = native.APPLICATION_SELECTION
+        _, expected, lane.context = package_fixture(runners=native.APPLICATION_RUNNERS)
+        self.assertEqual(lane.runners, native.APPLICATION_RUNNERS)
+        lane.env = dict(PARLOR_PREFLIGHT_RUN_ID='100', PARLOR_PREFLIGHT_RUN_ATTEMPT='2', PARLOR_PREFLIGHT_ARTIFACT_ID='300',
+                        PARLOR_PREFLIGHT_ARTIFACT_SHA256='e' * 64, PARLOR_APPROVED_L08_CONTROL_SHA256='d' * 64,
+                        PARLOR_APPROVED_NORMAL_CONTROL_SHA256='d' * 64)
+        for value in (None, '', 'not-a-control-hash', 'D' * 64):
+            if value is not None:
+                lane.env['PARLOR_APPROVED_PROBE_CONTROL_SHA256'] = value
+            with self.subTest(value=value), patch.object(native, 'api_json') as api, \
+                    self.assertRaisesRegex(RuntimeError, 'missing-independent'):
+                lane.fetch_preflight()
+            api.assert_not_called()
+        lane.env['PARLOR_APPROVED_PROBE_CONTROL_SHA256'] = expected['protection_application_sha256']
+        with patch.object(native, 'api_json', side_effect=RuntimeError('synthetic-read-only-admission')) as api:
+            with self.assertRaisesRegex(RuntimeError, 'synthetic-read-only-admission'):
+                lane.fetch_preflight()
+        self.assertEqual(api.call_count, 1)
+        lane.env['PARLOR_PREFLIGHT_RUN_ID'] = str(lane.context['run_id'])
+        with patch.object(native, 'api_json') as api, self.assertRaisesRegex(RuntimeError, 'separate-reviewed-run'):
+            lane.fetch_preflight()
+        api.assert_not_called()
+
+    def test_actual_adapter_preserves_strict_results_without_promoting_or_bypassing_existing_guards(self):
+        cases = ('strict-fail', 'strict-pass', 'prebuild-failed', 'collection-failed', 'nonzero-exit', 'wrong-cycle',
+                 'wrong-control', 'wrong-source', 'wrong-profile', 'unsafe-cleanup', 'inner-timeout', 'journal-drift',
+                 'qualification-status', 'diagnostic-status', 'missing-capture', 'strict-status', 'missing-strict',
+                 'runtime_evidence_status', 'provenance_status', 'notice_package_status')
+        for case in cases:
+            with self.subTest(case=case), TemporaryDirectory() as raw:
+                root = Path(raw).resolve()
+                lane = object.__new__(native.Continuation)
+                lane.root, lane.binding = root, root / native.CAMPAIGN / native.BINDING_NAME
+                lane.bundle = root / 'bundle'; lane.bundle.mkdir()
+                lane.state, lane.save = dict(runs={}, files={}, directories={}), Mock()
+                native_clock_fixture(lane, selection=native.APPLICATION_SELECTION)
+                invoked, originals = [], {}
+                def invoke(arguments, log, entry):
+                    invoked.append(arguments)
+                    value, _, _, destination = direct_fixture(root, cycle=entry['cycle'], attempted=case != 'prebuild-failed')
+                    value.update(status=native.APPLICATION_CAPTURED, diagnostic_status=native.APPLICATION_CAPTURED,
+                        execution_kind=native.APPLICATION_EXECUTION_KIND, image_observer='NOT_RUN_DIAGNOSTIC_ONLY',
+                        runtime_evidence_status='NOT_RUN', provenance_status='NOT_RUN', notice_package_status='NOT_RUN')
+                    if case == 'prebuild-failed':
+                        value.update(status='FAIL', diagnostic_status='NOT_RUN')
+                    else:
+                        value.update(xcodebuild_exit_code=0, strict_protection_status='PASS' if case == 'strict-pass' else 'FAIL')
+                        comparisons = [dict(ordinal=index, comparison=value['strict_protection_status']) for index in range(1, 7)]
+                        originals['protection-application-validation.json'] = native.json_bytes(dict(strict_comparisons=comparisons,
+                            strict_total=6, original_l08_comparisons_reclassified=False, application_runtime_qualification=False))
+                    if case == 'collection-failed': value.update(status='FAIL', diagnostic_status='FAIL')
+                    elif case == 'wrong-cycle': value['cycle'] = native.CYCLES['l08']
+                    elif case == 'wrong-control': value['approved_control_sha256'] = 'e' * 64
+                    elif case == 'wrong-source': value['source_after'] = {**source_fixture(), 'commit': 'e' * 40}
+                    elif case == 'wrong-profile': value['toolchain_profile'] = 'local-default'
+                    elif case == 'unsafe-cleanup': value['gradle_stops'][-1]['exit_code'] = 1
+                    elif case == 'inner-timeout': value['commands'][0]['timed_out'] = True
+                    elif case == 'journal-drift': (destination / 'simulator-lifecycle.jsonl').write_bytes(b'{}\n')
+                    elif case == 'qualification-status': value['status'] = 'PASS'
+                    elif case == 'diagnostic-status': value['diagnostic_status'] = 'PASS'
+                    elif case == 'missing-capture': value.pop('diagnostic_status')
+                    elif case == 'strict-status': value['strict_protection_status'] = native.APPLICATION_CAPTURED
+                    elif case == 'missing-strict': value.pop('strict_protection_status')
+                    elif case in ('runtime_evidence_status', 'provenance_status', 'notice_package_status'): value[case] = 'PASS'
+                    originals['receipt.json'] = native.json_bytes(value)
+                    for name, contents in originals.items():
+                        native.write_new(destination / name, contents)
+                    entry['exit_code'] = 1 if case in ('prebuild-failed', 'collection-failed', 'nonzero-exit') else 0
+                lane.invoke_native = invoke
+                lane.fetch_preflight = Mock(return_value=({'protection_application_sha256': 'd' * 64}, source_fixture()))
+                lane.bootstrap_cache_directories = Mock()
+                with patch.object(native, 'native_job_clock_ns', return_value=SYNTHETIC_JOB_START_NS):
+                    if case in ('strict-fail', 'strict-pass', 'prebuild-failed', 'collection-failed', 'nonzero-exit'):
+                        captured = case in ('strict-fail', 'strict-pass')
+                        self.assertEqual(lane.evidence(), 0 if captured else 2)
+                        self.assertEqual(lane.state['status'], native.APPLICATION_CAPTURED if captured else 'PROTECTION_APPLICATION_NOT_CAPTURED')
+                        self.assertEqual(lane.state['runs']['protection_application']['strict_protection_status'],
+                            'NOT_RUN' if case == 'prebuild-failed' else 'PASS' if case == 'strict-pass' else 'FAIL')
+                    else:
+                        with self.assertRaises(RuntimeError): lane.evidence()
+                self.assertEqual(invoked, [['/usr/bin/python3', '-B', str(root / native.APPLICATION_RUNNERS['protection_application']),
+                    'ios-readiness-40', str(lane.binding), 'd' * 64, '--simulator-signing=adhoc',
+                    '--toolchain=qualified-xcode-26.3', '--simulator-lifecycle=direct-owned-v1']])
+                self.assertEqual(lane.unselected_lanes, {'l08': 'NOT_RUN_THIS_RUN', 'normal': 'NOT_RUN_THIS_RUN'})
+                self.assertEqual(set(lane.state['runs']), {'protection_application'})
+                self.assertNotIn(lane.state.get('status'), ('PASS', 'L08_ONLY_PASS'))
+                for name, contents in originals.items():
+                    self.assertEqual((lane.bundle / 'ios-readiness-40' / name).read_bytes(), contents)
+                for label in ('l08', 'normal', 'settings_sheet', 'os_recovery'):
+                    self.assertFalse((root / native.CAMPAIGN / 'evidence' / native.CYCLES[label]).exists())
+
+    def test_application_admission_and_bounded_wait_use_only_the_approved_ninety_minute_budget(self):
+        with TemporaryDirectory() as raw:
+            lane = object.__new__(native.Continuation)
+            lane.root = Path(raw).resolve()
+            lane.binding = lane.root / native.CAMPAIGN / native.BINDING_NAME
+            lane.state, lane.save = dict(runs={}, files={}, directories={}, cleanup_safe=True), Mock()
+            native_clock_fixture(lane, selection=native.APPLICATION_SELECTION)
+            deadline = SYNTHETIC_JOB_START_NS + 600 * 10 ** 9
+            with patch.object(native, 'native_job_clock_ns', return_value=deadline):
+                lane.admit_native('protection_application')
+            admission = lane.state['native_admissions']['protection_application']
+            self.assertEqual((admission['job_budget_seconds'], admission['child_wait_seconds'], admission['required_seconds'],
+                admission['finalizer_grace_seconds'], admission['evidence_cleanup_reserve_seconds'], admission['remaining_seconds']),
+                (5400, 3600, 4800, 600, 600, 4800))
+            for label in ('l08', 'normal', 'settings_sheet', 'os_recovery'):
+                with self.assertRaisesRegex(RuntimeError, 'not-selected'): lane.admit_native(label)
+            with patch.object(native, 'native_job_clock_ns', return_value=deadline + 1), \
+                    patch.object(lane, 'invoke_native') as invoke, self.assertRaisesRegex(RuntimeError, 'insufficient-complete'):
+                lane.run_native('protection_application', 'd' * 64, source_fixture())
+            invoke.assert_not_called()
+            self.assertEqual(lane.state['runs'], {})
+            self.assertEqual(lane.state['native_admissions']['protection_application']['status'], 'DENIED_NOT_RUN')
+            self.assertNotIn('preservation', lane.state)
+            self.assertTrue(lane.state['cleanup_safe'])
+            self.assertFalse((lane.root / native.CAMPAIGN / 'evidence').exists())
+            child = Mock()
+            child.wait.side_effect = [subprocess.TimeoutExpired('owned-application-driver', 3600), 1]
+            with patch.object(native.subprocess, 'Popen', return_value=child), patch.object(native.signal, 'signal', return_value=None):
+                entry = {}
+                lane.invoke_native(['not-executed'], lane.root / 'application-runner.log', entry)
+            self.assertTrue(entry['timed_out'])
+            self.assertEqual([call.kwargs for call in child.wait.call_args_list], [{'timeout': 3600}, {'timeout': 600}])
             child.send_signal.assert_called_once_with(native.signal.SIGTERM)
             child.kill.assert_not_called()
 

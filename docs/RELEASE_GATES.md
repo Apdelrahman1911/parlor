@@ -16,12 +16,12 @@ remain separate evidence.
 | iOS simulator runtime tests | `./gradlew productionIosSimulatorRuntimeTests` on Apple Silicon macOS | Every KMP module's executable `iosSimulatorArm64Test` task runs; new KMP modules join automatically. This is runtime-test evidence for the simulator only, not physical-device evidence. |
 | iOS app launch UI test | The `xcodebuild test` command in `IOS_SETUP.md` | The real SwiftUI wrapper launches on an iOS Simulator, instantiates the exported Kotlin controller, renders the Compose home screen, remains foreground, and presents no alert during the observation window. This is simulator launch evidence, not Local Network permission evidence. |
 | Android release | `./gradlew productionAndroidCheck` | Android debug and release unit tests, release Kotlin compilation, R8, unsigned release AAB, `lintRelease`, and the allowlist-enforcing `verifyReleaseLintWarnings` task all pass. |
-| iOS KMP release | `./gradlew productionAppleCheck` on macOS | Release frameworks link serially for `iosArm64`, `iosSimulatorArm64`, and `iosX64` without concurrent-LTO heap pressure. |
+| iOS KMP release | `./gradlew productionAppleCheck` on macOS | Apple type-aware static analysis passes and Release frameworks link serially for `iosArm64`, `iosSimulatorArm64`, and `iosX64` without concurrent-LTO heap pressure. |
 | Unsigned Swift Release wrapper | The Release `xcodebuild` command in `IOS_SETUP.md`/`RELEASE_RUNBOOK.md` with `ARCHS=arm64`, `ONLY_ACTIVE_ARCH=YES`, and signing disabled | The arm64 simulator `.app` builds, its executable and plist/privacy inputs are inspected, and its checksum is recorded. Other Kotlin/Native architectures remain independently covered by `productionAppleCheck`; neither result is physical-device runtime evidence. |
-| Host-independent aggregate | `./gradlew productionCheck` | Desktop/common, Android unit, repository-wide Detekt/static-analysis, shell-dispatch validation, and unsigned Android release gates (including lint warning verification) pass. Apple remains a separate macOS job. |
+| Host-independent aggregate | `./gradlew productionCheck` | Desktop/common, Android unit, repository-wide Detekt/static-analysis, shell-dispatch validation, and unsigned Android release gates (including lint warning verification) pass. Apple remains separate macOS jobs. |
 | Release automation security | `./gradlew productionReleaseAutomationCheck` | Candidate/provenance tampering tests, exact-tree/history tests, no-publication tests, workflow contracts, immutable Action pins, pinned ShellCheck/actionlint, and shell/YAML checks pass. |
 | Desktop host compatibility | `./gradlew productionDesktopCheck` on Linux x64, Linux arm64, macOS arm64, macOS x64, and Windows x64; the x64 macOS/Windows jobs also run `:composeApp:downloadKotlinNativeDistribution`, and Windows runs `:composeApp:processDebugResources` | Each supported host resolves and executes its real host-selected dependency graph under strict verification. Linux arm64 support is Desktop-only because Kotlin Native does not publish a Linux arm64 host distribution. |
-| Exact-candidate aggregate | Linux runs `./gradlew productionCheck allTests`; macOS runs `./gradlew productionIosSimulatorRuntimeTests productionAppleCheck`, both with strict dependency verification | Every configured automated suite and unsigned Android/Apple release gate passes at the same recorded clean Git SHA without duplicating common/desktop/Android tests on the expensive Apple runner. |
+| Exact-candidate aggregate | Full verification: Linux runs `./gradlew productionCheck allTests`; independent macOS jobs run `./gradlew productionIosSimulatorRuntimeTests` and `./gradlew productionAppleCheck`, all with strict dependency verification | All six mandatory full jobs, including the Debug XCTest launch and unsigned Release wrapper/package inspection, pass in one full dispatch at the same recorded clean Git SHA. The focused protection diagnostic is skipped. No cross-run/SHA evidence stitching or duplicate common/desktop/Android aggregate on Apple. |
 
 The root tasks discover KMP modules through the multiplatform plugin. A newly
 included game module therefore joins the desktop gate automatically.
@@ -59,7 +59,9 @@ unit test.
 
 ## CI policy
 
-`.github/workflows/production-verification.yml` runs five jobs:
+`.github/workflows/production-verification.yml` configures seven jobs: six
+mandatory jobs in every full qualification and one opt-in protection diagnostic.
+The six full jobs are:
 
 - Linux x64: strict dependency verification, the root `productionCheck` and
   `allTests` aggregates, Android debug/release unit tests, repository-wide
@@ -73,18 +75,38 @@ unit test.
 - Windows x64: the real host-selected Desktop graph, tests, Kotlin Native
   distribution download, and Android resource processing through Windows
   `aapt2`.
-- macOS arm64: pinned Xcode `26.3` build `17C529` and iOS SDK-floor validation,
+- macOS arm64 runtime (`ios`): pinned Xcode `26.3` build `17C529` and iOS SDK-floor validation,
   every KMP `iosSimulatorArm64Test` through the dedicated
-  `productionIosSimulatorRuntimeTests` aggregate, release framework linkage
-  for all supported Apple targets (linkage-only for `iosArm64`/`iosX64` on
-  this job), plist and privacy-manifest validation, an XCTest launch of the
-  SwiftUI/Compose app on an iOS Simulator, and an unsigned Xcode Swift Release
-  wrapper build. The wrapper invokes the real Gradle resource/embed task with
-  strict dependency verification.
+  `productionIosSimulatorRuntimeTests` aggregate, plist/privacy-manifest and
+  effective Debug/Release identity validation, and an XCTest launch of the
+  Debug SwiftUI/Compose app on its own fresh iOS Simulator.
+- macOS arm64 release (`ios-release`): an independent checkout with the same
+  pinned Xcode/SDK-floor guards, the **complete** `productionAppleCheck`
+  aggregate (Apple type-aware static analysis and all three serial Release
+  framework links), plist/privacy validation, an unsigned Swift Release wrapper
+  build, and complete package/notices/identity/version inspection. The wrapper
+  invokes the real Gradle resource/embed task with strict dependency verification.
+
+The Apple jobs have no dependency on each other and no per-architecture matrix;
+Release LTO links remain serialized. Runtime evidence is
+`ios-runtime-verification`, Release evidence is `ios-release-verification`, with
+separate run/job-bound ownership and cleanup receipts. Each full Apple job owns
+exactly two cycles: `ios` owns `apple-aggregate`/`apple-ui`, while `ios-release`
+owns `apple-aggregate`/`apple-wrapper`. Every cycle stops Gradle and retires its
+owned resources immediately; upload custody is required before output deletion.
+
+`verification_scope=ios-protection-probe` selects only the seventh job. It runs
+an independently reviewed, source/control-bound standalone same-inode protection
+diagnostic with its own simulator, collection and cleanup receipts, not Parlor
+runtime, a replacement full gate, or proof of physical-device protection. It is
+excluded from full runs. Successful diagnostic collection must not be relabeled
+as a passed strict protection observation or application readiness.
 
 The workflow deliberately labels framework linkage separately from executable
 simulator runtime tests. A successful link is not reported as a runtime test.
-Every job prints the checked-out SHA and fails if the checkout is dirty.
+Every full job prints the checked-out SHA and fails if the checkout is dirty.
+All six jobs and their cleanup must succeed against one frozen source in the
+same full dispatch; focused or historical passes cannot fill a missing full job.
 
 The workflow has read-only repository permission and receives no signing or
 Store secrets on pull requests. Signed delivery and promotion use the separate

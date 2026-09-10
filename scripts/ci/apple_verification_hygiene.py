@@ -1,6 +1,7 @@
 """Per-cycle Apple CI ownership: stop Gradle, owned simulator, and Xcode workers.
 
-Restricted to the isolated GitHub `ios` job. Never changes RUNNER_TRACKING_ID,
+Restricted to the closed isolated GitHub `ios` / `ios-release` job-cycle map.
+Never changes RUNNER_TRACKING_ID,
 signals a numeric PID/PGID, reuses a device profile, or removes build evidence.
 The final output cleaner separately requires these receipts and retained uploads.
 """
@@ -20,7 +21,7 @@ from scripts.ci import owned_ci_simulator as simulator
 from scripts.ci import verification_hygiene as common
 from scripts.ci.darwin_worker_identity import DarwinWorkerBackend, MAX_PROCESSES
 
-CYCLES = ("apple-aggregate", "apple-ui", "apple-wrapper")
+CYCLES = common.APPLE_CYCLES
 WORKER_PATHS = (
     "Contents/Developer/usr/bin/xcodebuild",
     "Contents/Developer/usr/bin/ibtoold",
@@ -74,6 +75,8 @@ def claim_path(prefix: Path) -> Path:
 
 
 def prepare(root: Path, prefix: Path, task: dict, cycle: str, backend, config: dict) -> dict:
+    if cycle not in common.apple_cycles(task):
+        raise RuntimeError("Apple verification cycle is not assigned to this job")
     if common.git(root, "status", "--porcelain").strip():
         raise RuntimeError("Apple cycle must begin with unchanged source")
     baseline = backend.lifetimes()
@@ -87,6 +90,8 @@ def prepare(root: Path, prefix: Path, task: dict, cycle: str, backend, config: d
 
 
 def validate_claim(root: Path, prefix: Path, task: dict, cycle: str, config: dict) -> dict:
+    if cycle not in common.apple_cycles(task):
+        raise RuntimeError("Apple verification cycle is not assigned to this job")
     claim = simulator.read_record(claim_path(prefix))
     if (claim.get("schema") != 1 or claim.get("task") != task or
             claim.get("source") != source(root) or claim.get("cycle") != cycle or
@@ -209,6 +214,8 @@ def finish(root: Path, prefix: Path, task: dict, cycle: str, preparation: str, r
     # First operation even on failed/skipped/cancelled cycles: release Gradle RAM.
     receipt["gradle_stop"] = common.stop_gradle(root)
     try:
+        if cycle not in common.apple_cycles(task):
+            raise RuntimeError("Apple verification cycle is not assigned to this job")
         receipt["source"] = source(root)
         if receipt["gradle_stop"]["exit_code"] != 0:
             raise RuntimeError("Gradle stop failed; do not race ongoing compilation")
@@ -251,17 +258,17 @@ def finish(root: Path, prefix: Path, task: dict, cycle: str, preparation: str, r
 
 def main() -> int:
     root, prefix, task = common.context()
-    if task["GITHUB_JOB"] != "ios":
-        raise RuntimeError("Native Apple ownership is restricted to the isolated ios job")
     mode, cycle = sys.argv[1:]
     owned = cycle_prefix(prefix, cycle)
+    if mode != "finish" and cycle not in common.apple_cycles(task):
+        raise RuntimeError("Apple verification cycle is not assigned to this job")
     if mode == "prepare":
         config = configuration(root)
         prepare(root, owned, task, cycle, DarwinWorkerBackend(), config)
         return 0
     if mode == "create-simulator":
-        if cycle != "apple-ui":
-            raise RuntimeError("Only the UI cycle may create a simulator")
+        if task["GITHUB_JOB"] != "ios" or cycle != "apple-ui":
+            raise RuntimeError("Only the ios/apple-ui cycle may create a simulator")
         claim = validate_claim(root, owned, task, cycle, configuration(root))
         print(simulator.create(owned, claim, simulator.SimctlBackend()))
         return 0

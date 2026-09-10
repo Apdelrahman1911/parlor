@@ -1,0 +1,152 @@
+// Appended only to copied iOSApp.swift; no normal MainViewController is started.
+// Filesystem/Keychain implementations themselves are not transformed.
+import ComposeApp
+import Darwin
+
+private enum ProtectionApplicationFailure: Error { case boundary }
+
+private func protectionApplicationImages() throws -> [String: Any] {
+    let marker = ProtectionApplicationImageMarker()
+    guard marker.sourceBoundMarker() else { throw ProtectionApplicationFailure.boundary }
+    let kotlin = ParlorProtectionImplementation(marker, NSSelectorFromString("sourceBoundMarker"))
+    guard let implementation = kotlin["implementation"] as? [String: Any],
+          implementation["image_basename"] as? String == "ComposeApp",
+          implementation["platforms"] as? [Int] == [7],
+          let handle = dlopen(nil, RTLD_NOW) else { throw ProtectionApplicationFailure.boundary }
+    defer { dlclose(handle) }
+    guard let address = dlsym(handle, "ParlorProtectionSample") else { throw ProtectionApplicationFailure.boundary }
+    let native = ParlorProtectionImageIdentity(address)
+    guard let name = native["image_basename"] as? String,
+          ["Parlor", "Parlor.debug.dylib"].contains(name),
+          native["platforms"] as? [Int] == [7] else { throw ProtectionApplicationFailure.boundary }
+    return ["kotlin_marker": kotlin, "native_sampler": native]
+}
+
+private func protectionApplicationSameIdentity(_ kotlin: [String: Any], _ native: [String: Any]) -> Bool {
+    let names = ["device": "device", "inode": "inode", "uid": "uid", "links": "links", "bytes": "size"]
+    guard names.allSatisfy({ key, nativeKey in
+        guard let a = kotlin[key] as? NSNumber, let b = native[nativeKey] as? NSNumber else { return false }
+        return a == b
+    }), let type = kotlin["file_type"] as? NSNumber, let mode = native["mode"] as? NSNumber else { return false }
+    return type.uint32Value == (mode.uint32Value & UInt32(S_IFMT))
+}
+
+private func protectionApplicationOutput(_ name: String, _ value: [String: Any]) throws {
+    guard name == "parlor-protection-application.json" ||
+        (1...6).contains(where: { name == String(format: "parlor-protection-application-sample-%02d.json", $0) }) else {
+        throw ProtectionApplicationFailure.boundary
+    }
+    let temporary = FileManager.default.temporaryDirectory
+    let home = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true).resolvingSymlinksInPath().path
+    guard temporary.resolvingSymlinksInPath().path.hasPrefix(home + "/"),
+          temporary.resolvingSymlinksInPath().path == temporary.standardizedFileURL.path else {
+        throw ProtectionApplicationFailure.boundary
+    }
+    let data = try JSONSerialization.data(withJSONObject: value, options: [.sortedKeys])
+    guard (1...131072).contains(data.count) else { throw ProtectionApplicationFailure.boundary }
+    // Separate exclusive rows preserve earlier failures if a later write/call
+    // aborts. They live in tmp, never alongside or inside the tested ciphertext.
+    try data.write(to: temporary.appendingPathComponent(name), options: [.withoutOverwriting])
+}
+
+@MainActor private final class ProtectionApplicationState: ObservableObject {
+    @Published var status = "pending"
+
+    func start() {
+        guard status == "pending" else { return }
+        status = "running"
+        let environment = ProcessInfo.processInfo.environment
+        let expectedToken: String = __PROTECTION_TOKEN__
+        let expectedDevice: String = __PROTECTION_DEVICE__
+        let expectedControl: String = __PROTECTION_CONTROLS__
+        let expectedSource: String = __PROTECTION_SOURCE__
+        guard environment["PARLOR_PROTECTION_TOKEN"] == expectedToken,
+              environment["SIMULATOR_UDID"] == expectedDevice,
+              environment["PARLOR_PROTECTION_EXPECTED_UDID"] == expectedDevice,
+              environment["PARLOR_PROTECTION_MODE"] == "actual-filesystem",
+              Bundle.main.bundleIdentifier == "com.parlor.app.debug" else { status = "failed"; return }
+        DispatchQueue.global(qos: .utility).async { [weak self] in
+            let processBoot = UUID().uuidString.lowercased()
+            let version = ProcessInfo.processInfo.operatingSystemVersion
+            var receipt: [String: Any] = ["schema_version": 1, "kind": "protection-application",
+                "run_token": expectedToken, "simulator_udid": expectedDevice, "process_boot": processBoot,
+                "process_id": Int(getpid()), "uid": Int(getuid()), "bundle_id": "com.parlor.app.debug",
+                "controls_sha256": expectedControl, "source_manifest_sha256": expectedSource,
+                "runtime_version": [version.majorVersion, version.minorVersion, version.patchVersion],
+                "collection_status": "FAIL", "recorded_samples": 0, "hardware_protection_verified": false,
+                "l08_requirements_waived": false, "snapshot_validation_tested": false]
+            var recorded = 0
+            var collectionSucceeded = false
+            do {
+                guard [version.majorVersion, version.minorVersion, version.patchVersion] == [26, 2, 0] else {
+                    throw ProtectionApplicationFailure.boundary
+                }
+                let images = try protectionApplicationImages()
+                receipt["images"] = images
+                let home = URL(fileURLWithPath: NSHomeDirectory(), isDirectory: true).resolvingSymlinksInPath().path
+                guard home.contains("/CoreSimulator/Devices/" + expectedDevice + "/data/Containers/Data/Application/") else {
+                    throw ProtectionApplicationFailure.boundary
+                }
+                receipt["container_id"] = URL(fileURLWithPath: home).lastPathComponent
+                let directory = home + "/Library/Application Support/Parlor/snapshots"
+                let file = directory + "/protection-" + expectedToken + ".snapshot.json"
+                let text = ProtectionApplicationProbeKt.runProtectionApplication(runToken: expectedToken) { path, raw in
+                    do {
+                        guard (path == directory || path == file), recorded < 6,
+                              URL(fileURLWithPath: path).resolvingSymlinksInPath().path == path,
+                              raw.utf8.count <= 8192,
+                              let kotlin = try JSONSerialization.jsonObject(with: Data(raw.utf8)) as? [String: Any],
+                              kotlin["ordinal"] as? Int == recorded + 1,
+                              let before = kotlin["identity_before"] as? [String: Any],
+                              let after = kotlin["identity_after"] as? [String: Any] else {
+                            throw ProtectionApplicationFailure.boundary
+                        }
+                        let sample = ParlorProtectionSample(path)
+                        let native = sample["identity"] as? [String: Any] ?? [:]
+                        let same = protectionApplicationSameIdentity(before, native) &&
+                            protectionApplicationSameIdentity(after, native)
+                        let row: [String: Any] = ["schema_version": 1, "kind": "protection-application-sample",
+                            "run_token": expectedToken, "process_boot": processBoot, "process_id": Int(getpid()),
+                            "simulator_udid": expectedDevice, "ordinal": recorded + 1,
+                            "kotlin": kotlin, "native": sample, "kotlin_native_same_inode": same]
+                        try protectionApplicationOutput(String(format: "parlor-protection-application-sample-%02d.json", recorded + 1), row)
+                        recorded += 1
+                        guard same, sample["collection_status"] as? String == "PASS",
+                              sample["descriptor_closed"] as? Bool == true else { return "failed" }
+                        return "recorded"
+                    } catch { return "failed" }
+                }
+                guard text.utf8.count <= 32768,
+                      let kotlin = try JSONSerialization.jsonObject(with: Data(text.utf8)) as? [String: Any] else {
+                    throw ProtectionApplicationFailure.boundary
+                }
+                receipt["kotlin"] = kotlin
+                receipt["recorded_samples"] = recorded
+                guard recorded == 6, kotlin["status"] as? String == "OBSERVATIONS_COMPLETE",
+                      kotlin["first_roundtrip"] as? Bool == true, kotlin["overwrite_roundtrip"] as? Bool == true,
+                      NSDictionary(dictionary: try protectionApplicationImages()).isEqual(to: images) else {
+                    throw ProtectionApplicationFailure.boundary
+                }
+                receipt["collection_status"] = "CAPTURED_NOT_PROTECTION_PASS"
+                collectionSucceeded = true
+            } catch {
+                receipt["failure"] = "application-observer-boundary"
+                receipt["recorded_samples"] = recorded
+            }
+            do { try protectionApplicationOutput("parlor-protection-application.json", receipt) }
+            catch { collectionSucceeded = false }
+            let captured = collectionSucceeded
+            DispatchQueue.main.async { self?.status = captured ? "captured" : "failed" }
+        }
+    }
+}
+
+private struct ProtectionApplicationView: View {
+    @StateObject private var diagnostic = ProtectionApplicationState()
+    var body: some View {
+        Text("Protection observations only")
+            .accessibilityIdentifier("parlor-protection-application-status")
+            .accessibilityValue(diagnostic.status)
+            .onAppear { diagnostic.start() }
+    }
+}
