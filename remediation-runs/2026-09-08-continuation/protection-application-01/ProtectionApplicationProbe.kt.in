@@ -27,7 +27,6 @@ import platform.Foundation.NSFileProtectionCompleteUntilFirstUserAuthentication
 import platform.Foundation.NSFileProtectionKey
 import platform.Foundation.NSFileProtectionNone
 import platform.Foundation.NSHomeDirectory
-import platform.darwin.NSObject
 import platform.Foundation.NSProcessInfo
 import platform.Foundation.NSURL
 import platform.Foundation.NSUserDomainMask
@@ -192,7 +191,7 @@ fun runProtectionApplication(runToken: String, observe: (String, String) -> Stri
 }
 
 /** Its actual exported method IMP binds this executed hook to ComposeApp. */
-class ProtectionApplicationImageMarker : NSObject() {
+class ProtectionApplicationImageMarker {
     fun sourceBoundMarker(): Boolean = true
 }
 

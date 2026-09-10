@@ -78,7 +78,7 @@ private func protectionApplicationOutput(_ name: String, _ value: [String: Any])
             var recorded = 0
             var collectionSucceeded = false
             do {
-                guard [version.majorVersion, version.minorVersion, version.patchVersion] == [26, 2, 0] else {
+                guard version.majorVersion == 26, version.minorVersion == 2, version.patchVersion == 0 else {
                     throw ProtectionApplicationFailure.boundary
                 }
                 let images = try protectionApplicationImages()

@@ -1,6 +1,33 @@
 # Continuation execution ledger — 2026-09-10
 
-## CURRENT — 09f freeze through failed PA40; NOT_READY
+## CURRENT — 902597bb freeze through failed APP02; NOT_READY
+
+`N=remediation-runs/2026-09-08-continuation`. This cutoff supersedes older current-state prose, not retained failures.
+- Committed freeze `902597bb5d074530acd6b8b14279968e8f5c6503`, tree `3882fc1d8b2604cb16eae5b7551565c41c98468b`.
+  Source `8da6fad53163c6920c97e366cffbeffe0dcb6280` corrected the copied Kotlin import;
+  `45a0d06f9060df01b2d1a5343fd64cdfdf739aba` retained safe command identity on preflight timeouts, without extending budgets.
+- Preflight34533039007/1 at72736446 **FAIL/TimeoutExpired**; original failing command not retained.
+  Raw `$N/actions/34533039007/preflight/failure.json`; cleanup PASS, no app/runtime execution.
+- Fresh APP-only preflight34534289751/1 at902597bb **PASS**:844 source rows,112 bound controls,
+  Xcode26.3/17C529, arm64 iOS26.2/23C54; binding cleanup PASS, no application tests/runtime.
+  Raw `$N/actions/34534289751/`; independent `reviews/protection-application-preflight-admission-02.json`.
+- **APP02 run34534798397/1 at902597bb FAIL**, `PROTECTION_APPLICATION_NOT_CAPTURED`, xcodebuild65.
+  Three Swift diagnostics: Kotlin NSObject subclass unavailable to Swift, missing `sourceBoundMarker`,
+  and ambiguous array `==` in the exact runtime-version guard. **XCTest0; native/protection observations0.**
+  Runtime/provenance/notices NOT_RUN. Raw `$N/actions/34534798397/native-evidence/ios-readiness-40/`:
+  `receipt.json`, `xcodebuild.log.gz`, `xcresult-summary.json`, `protection-retention.json`; no protection closure.
+  Inner cleanup **PASS**,17 stages/two stops0; owned simulator/copy/DerivedData/temp removed,
+  source/controls unchanged, no remaining owned workers/unknown holders/errors. Outer `cleanup/` also PASS.
+- Two copy-template corrections are under independent review at this cutoff: remove the marker's
+  explicit NSObject inheritance and replace array comparison with three exact scalar version checks.
+  No new target compile/runtime or fresh dispatch yet. Finish review, commit source then inventory,
+  create fresh APP-only preflight/control bindings and obtain independent admission before execution.
+- **Strict A37 remains0PASS/26FAIL**; capture alone cannot satisfy unchanged strict production validation.
+  **Final combined qualification NOT_RUN** for the six mandatory jobs. D04's902597bb request was
+  conditionally admitted, not dispatched; pending source edits require a fresh exact-source request/admission.
+  C08 remains historical scoped evidence, not current-SHA consumption; physical/Store/owner/legal gates remain.
+
+## Historical09f freeze through failed PA40 — superseded cutoff, preserved evidence
 
 `C=remediation-runs/2026-09-07-local-readiness`; `N=remediation-runs/2026-09-08-continuation`.
 This section supersedes the9e4 delivery state below, not its historical evidence.
