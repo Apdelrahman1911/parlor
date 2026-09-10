@@ -1,0 +1,276 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/native_ci",
+  "recorded_at": "2026-09-10T00:03:50.104Z",
+  "status": "CUSTODY_AND_CLEANUP_ACCEPTED_ACTUAL_A33_FAIL",
+  "findings": [],
+  "conclusion": "No custody/cleanup blocker to separately admitted fullD at unchanged4cc. This is not an A pass or D dispatch authorization. A33 actual FAIL/L08_ONLY_NOT_READY, OS/XCTest and strict-protection failures remain unwaived.",
+  "identity": {
+    "run_id": 34412114359,
+    "run_attempt": 1,
+    "run_number": 178,
+    "job_id": 102668685298,
+    "repository": "Apdelrahman1911/parlor",
+    "repository_id": 1247560518,
+    "workflow_id": 335554528,
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+    "tree": "8a89fab3042b8614fc4285148a8cd645f7ac2786"
+  },
+  "pins": {
+    "collection": "79e89b2a5e5d87652fde7326b9405927aedaf53145bb5453f87aaf86ebe0e568",
+    "receipt": "3b5d82e22fc017b2a345e3f1514391aacc5996466066d9be475b9573bee9e443",
+    "continuation": "0adc547357ec31d4c6a0b622fe50a4d8cbcbea23e1f9547c9028b321f740c2bf",
+    "cleanup": "524fd6bd2be51602e6e44c1a25c94c75726b16d60ee841ac9ed39254b626bb24",
+    "input_manifest": "0a4f94a2ac2a907860336ce0e52904f9e39f23e6f40bfcf0eb2f2916f40a3d61",
+    "approved_control": "c239881efea4cda5cfc948e7c227aaccb861b552dec054cfeccba6afff388cc0",
+    "admission_report": "150e4be8df226bf008baa0af37d0256a35d6a00307bac76ef913575478b75fb4",
+    "request10": "dc486fde8dc490eb6efa0e81fb8d171618de348d96896ee58feecda166490424",
+    "immediate_guards": "46753c48fdac07c7a9b7a9430f49c5d3ac109b279f9abfd96a412c00b55d124c",
+    "dispatch_result": "4dfe0c41ae80d9f3ff29c491816eb015c1b7b372c510329651bf612abd076879"
+  },
+  "collection": {
+    "root": "remediation-runs/2026-09-08-continuation/actions/34412114359",
+    "archives": [
+      {
+        "path": "native-cleanup.zip",
+        "sha256": "e032385d34df9942fab32a548d4d8c5e9aba9131672e8c993a2f2067ffe33435",
+        "bytes": 1254,
+        "members": 1,
+        "expanded_bytes": 2350
+      },
+      {
+        "path": "native-evidence.zip",
+        "sha256": "5b1ef3eaaef02c9f7eb75a29773178d332c49a21a23e7791c695e8aa0efb2c00",
+        "bytes": 777874,
+        "members": 139,
+        "expanded_bytes": 4601744
+      },
+      {
+        "path": "run-attempt-1-logs.zip",
+        "sha256": "8e5e7750e38d035e018415463179afeb1caa996937e17a7db94512c8a13ba287",
+        "bytes": 25843,
+        "members": 14,
+        "expanded_bytes": 82880
+      }
+    ],
+    "native_artifact_id": 10129641567,
+    "cleanup_artifact_id": 10129643169,
+    "audit": "Seven captured GETs' exact commands/exit0/output hashes and lengths verified. Run/attempt/source/tree/repository/workflow/path, complete five jobs/two artifacts reconcile. Derived individual artifact JSON equals list rows; no extra API fetch claimed. All154 fresh ZIP members read once: safe unique names/types/bounds, CRC/size/hash, exact extracted file sets. All132 A files match canonical preservation manifest/custody."
+  },
+  "source_and_selection": {
+    "source_rows": 829,
+    "copied_originals": 754,
+    "control_rows": 99,
+    "reviewed_preflight": {
+      "l08-controls.json": "789c9b1c93af5b63d0cd11e69933ac7c6dfb7c6af104ed5a9bcbe9985acb1dda",
+      "ios-readiness-source-ci.json": "f29108888924bae02caff8fdebd642c135f0abc5fb3c35e6aaea5cba184c6993",
+      "preflight.json": "bf4f7014722d4efb54d86b22a4bb2e946df6095326c8fd4bed8b3a52418f4a93",
+      "normal-controls.json": "d59d82df13887e72d778a7d77ad2270ae3356d048210f07eb94977b2d46628ac"
+    },
+    "audit": "Four admitted34408391427 preflight files preserved byte-for-byte. Actual input source/99 controls equal admitted manifest; source_before==source_after and controls_after==approved. Current local HEAD/tree/tracked cleanliness unchanged. Prior independent live829/99+99 audit reused, not rerun or source-relabeled.",
+    "actual": "Exact canonical A33 command, adhoc/qualified-xcode-26.3/direct-owned-v1. Only l08 in runs/admissions/preservation/cleanup; no B directory/child/receipt. B34 NOT_RUN_THIS_RUN.",
+    "budget": "Bound CLOCK_MONOTONIC_RAW/240min,14348s remaining admitted >=7200s required;6000s child+600s grace+600s reserve unchanged. Actual child4079.967495s, finished exit1; Xcode3715.234288s/5400s bound, exit65, not outer timeout/interruption."
+  },
+  "result": {
+    "actions": "failure",
+    "steps": {
+      "success": 11,
+      "failure": 1,
+      "skipped": 21
+    },
+    "other_jobs_skipped": 4,
+    "outer": "L08_ONLY_NOT_READY / exit2",
+    "inner": "FAIL / exit1",
+    "runtime_evidence_status": "FAIL",
+    "actual_error": {
+      "type": "RuntimeError",
+      "message": "Actual XCTest summary is not exactly five successful, unskipped tests"
+    },
+    "scope": "Fixture semantics assigned independently to fixture_review. Raw collection COMPLETE is preservation only:79 files retained,29 explicitly absent including OS result. No notice-package, complete scenario or native-runtime success inferred."
+  },
+  "cleanup": {
+    "inner": "PASS",
+    "outer": "PASS",
+    "journal_sha256": "0a75b0f549cd952fe8e3e68538e59470f6a1ade3a1b3459f1c2a4c923043d10d",
+    "journal_events": 50,
+    "audit": "Allocation/source/control/custody/nonce context, all12 intent-launch-result triplets, fresh nonbaseline UUID, build/preservation/strict-stop barrier, fresh Shutdown metadata before deletion and final commands digest reconcile.12 direct simulator and31 nonlifecycle handles reaped.14 finalizer stages PASS;127 ownership observations, no owned workers/unknown holders/outputs/errors/deferred signals.",
+    "immediate_stop_delay_seconds": 0.031763,
+    "gradle_stops": "Both exit0; both raw No Gradle daemons are running. Embedded phase build_exit0/stop_exit0. Stop began0.031763s after Xcode exit65.",
+    "uuid": "B24EA0CF-CCAF-4722-A15C-E8581404594A",
+    "temporary": "/private/var/folders/bl/vzjcvbz95c3dk19cb0fw46180000gn/T/parlor-audit-ios-readiness-33-qkaob8z3",
+    "fifo": {
+      "records": 2,
+      "retired_inodes": 4,
+      "sha256": "60f59d0c5bab93fc953d1042096c26e82575846d212a4aeb4fa447256b832092",
+      "ancestry": [
+        66850,
+        66783,
+        66780,
+        6512,
+        5668
+      ],
+      "audit": "Exact PID/start parent chain and device/inode/UID/birth metadata; both FIFOs and two empty owned parents retired, pending/remaining empty."
+    },
+    "outer_removal": "Only canonical A33 evidence after132-file preservation/upload, bound source file and owned lock removed. Raw cleanup-step JSON equals artifact; upload10129641567/digest bound. Global caches preserved.",
+    "limit": "Hosted absence/reaping is retained journal/receipt evidence, not new local live inspection. Lifecycle boot/status/shutdown/delete logs are structured markers, not raw lifecycle streams."
+  },
+  "copied_inputs": {
+    "originals": 754,
+    "added": 14,
+    "modified_originals": 16,
+    "unchanged_originals": 738,
+    "postbuild_rows": 768,
+    "reconstructed_diff_paths": 30,
+    "manifest_sha256": "f2d4a17bbe1f7e460281932b6f4dd99be47b40326e4eea4976b7ead8d4d95bd3",
+    "diff_sha256": "854370aae667454db0f62d71716c5e902127405881d549ffa2797b425e724a16",
+    "postbuild_sha256": "a17271c983a5025db79b67683d16734e51403a4ae0f2c37cd5f0fd4625378ff9",
+    "audit": "Exact added/modified path sets match reviewed predecessor. Every original bound hash and all768 postbuild hashes agree. Retained diff strictly reapplied in memory against frozen originals, all30 resulting hashes exact; no source helper executed/copy written. Generated runner digest matches admitted manifest."
+  },
+  "artifact_provenance": {
+    "audit": "Four built/installed Mach-O inventories byte-identical; exact Debug identity/version/minimum16. Four UUID/strict codesign command logs and whole built-app strict signature logs corroborate inventory. All arm64/ad-hoc, no Authority/private team; public linker-section reports match installed. Removed native binaries not rehashed/reparsed locally.",
+    "images": [
+      {
+        "path": "Frameworks/ComposeApp.framework/ComposeApp",
+        "resolved_path": "Frameworks/ComposeApp.framework/ComposeApp",
+        "bytes": 84050448,
+        "sha256": "d33b6c4f45413232baae05fecff04316a35b52c9c40b0f509d074145d95bfd2a",
+        "symbolic_link": false,
+        "magic": "cffaedfe"
+      },
+      {
+        "path": "Parlor",
+        "resolved_path": "Parlor",
+        "bytes": 57792,
+        "sha256": "8ef1b4d0168d77ff27c6547bcc1af896338becee5be568dddf7d5335b5bc2350",
+        "symbolic_link": false,
+        "magic": "cffaedfe"
+      },
+      {
+        "path": "Parlor.debug.dylib",
+        "resolved_path": "Parlor.debug.dylib",
+        "bytes": 1071408,
+        "sha256": "a8120b677cfdde8ec86140dc2a8feb0f28e9e907d02f4d69f72e1a86192ec75e",
+        "symbolic_link": false,
+        "magic": "cffaedfe"
+      },
+      {
+        "path": "__preview.dylib",
+        "resolved_path": "__preview.dylib",
+        "bytes": 34896,
+        "sha256": "fb79761f58f1b06713e631d6474eca1950b567b31ed64e465ccbee43d05e4dbb",
+        "symbolic_link": false,
+        "magic": "cffaedfe"
+      }
+    ],
+    "uuid_inventory": [
+      {
+        "path": "Frameworks/ComposeApp.framework/ComposeApp",
+        "sha256": "d33b6c4f45413232baae05fecff04316a35b52c9c40b0f509d074145d95bfd2a",
+        "architectures": [
+          {
+            "architecture": "arm64",
+            "uuid": "3872621f-b9c0-3fc4-8bc3-5495f89329a9"
+          }
+        ]
+      },
+      {
+        "path": "Parlor",
+        "sha256": "8ef1b4d0168d77ff27c6547bcc1af896338becee5be568dddf7d5335b5bc2350",
+        "architectures": [
+          {
+            "architecture": "arm64",
+            "uuid": "97094aa6-2a0c-31b7-a7e7-cdfb7c3fecbf"
+          }
+        ]
+      },
+      {
+        "path": "Parlor.debug.dylib",
+        "sha256": "a8120b677cfdde8ec86140dc2a8feb0f28e9e907d02f4d69f72e1a86192ec75e",
+        "architectures": [
+          {
+            "architecture": "arm64",
+            "uuid": "cb0ea818-3773-3351-a30a-c6a57195a85f"
+          }
+        ]
+      },
+      {
+        "path": "__preview.dylib",
+        "sha256": "fb79761f58f1b06713e631d6474eca1950b567b31ed64e465ccbee43d05e4dbb",
+        "architectures": [
+          {
+            "architecture": "arm64",
+            "uuid": "6685199f-0972-3818-a0f9-9ffa82ab9091"
+          }
+        ]
+      }
+    ],
+    "external_framework": {
+      "origin": "owned-copy-build",
+      "path": "xcode-frameworks/Debug/iphonesimulator26.2/ComposeApp.framework/ComposeApp",
+      "bytes": 84032296,
+      "sha256": "4e6579aef54d9f770f2eca97484101dadbe54a7720410fcbf7573e6329244010",
+      "architectures": [
+        {
+          "architecture": "arm64",
+          "uuid": "3872621f-b9c0-3fc4-8bc3-5495f89329a9"
+        }
+      ]
+    },
+    "external_limit": "Actual loaded framework remains owned-copy-build,84,032,296B SHA4e6579ae…, not embedded84,050,448B SHAd33b6c4f… despite equal UUID.24 available process bindings/70 rows match inventories; matrix_verified remains false. No installed-origin substitution, whole-map/mapped-memory hash or B libproc claim.",
+    "metadata": [
+      {
+        "index": 0,
+        "platform": 7,
+        "minimum": "15.0",
+        "sdk": "26.4",
+        "raw_values": [
+          7,
+          983040,
+          1704960
+        ],
+        "same_as_reviewed_A31": true
+      },
+      {
+        "index": 1,
+        "platform": 7,
+        "minimum": "16.0",
+        "sdk": "26.2",
+        "raw_values": [
+          7,
+          1048576,
+          1704448
+        ],
+        "same_as_reviewed_A31": true
+      },
+      {
+        "index": 2,
+        "platform": 7,
+        "minimum": "16.0",
+        "sdk": "26.2",
+        "raw_values": [
+          7,
+          1048576,
+          1704448
+        ],
+        "same_as_reviewed_A31": true
+      },
+      {
+        "index": 3,
+        "platform": 7,
+        "minimum": "16.0",
+        "sdk": "26.2",
+        "raw_values": [
+          7,
+          1048576,
+          1704448
+        ],
+        "same_as_reviewed_A31": true
+      }
+    ],
+    "reviewer_check_correction": "Initial reviewer-only compound assertion mistakenly required framework VersionMin15/SDK26.4 for all four images. Actual three wrapper images have minimum16/SDK26.2, consistent with frozen wrapper/profile and reviewed A31. Framework metadata15/26.4 retained separately; no source/control/runtime receipt changed, no validation waived."
+  },
+  "separate_D": "May proceed on accepted A33 custody/cleanup grounds only with its independent unchanged-source scope/admission and immediate root remote/no-overlap guards. No automatic retry or source edit authorized here.",
+  "readiness": "NOT_READY. A33 and strict failures preserved; fullD/candidate/final reconciliation have separate evidence. Physical-device, Store operations/signing/publication, known identity collision and owner/legal obligations remain.",
+  "activity": "Read-only Git and stdlib JSON/hash/ZIP/diff/path inspection. No tests/builds/project imports/native commands/network/Git writes. Only this additive report authored; no reviewer workers/outputs to clean."
+}

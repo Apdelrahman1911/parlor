@@ -1,0 +1,264 @@
+{
+  "schema_version": 1,
+  "kind": "BOUNDED_ACTIONS_ARCHIVE_COLLECTION_NOT_RUNTIME_REVIEW",
+  "coordinator": "/root",
+  "started_at": "2026-09-09T21:45:37.174545+00:00",
+  "run_id": 34408391427,
+  "run_attempt": 1,
+  "source_commit": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+  "commands": [
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34408391427"
+      ],
+      "started_at": "2026-09-09T21:45:37.174573+00:00",
+      "finished_at": "2026-09-09T21:45:37.656877+00:00",
+      "exit_code": 0,
+      "stdout_file": "run.json",
+      "stderr": "",
+      "bytes": 12676,
+      "sha256": "edb193ebfc218520f6e1dc386f82998f3ecd54578fff4dbfa9213f56e6ea812a"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34408391427/attempts/1"
+      ],
+      "started_at": "2026-09-09T21:45:37.657781+00:00",
+      "finished_at": "2026-09-09T21:45:38.212726+00:00",
+      "exit_code": 0,
+      "stdout_file": "attempt.json",
+      "stderr": "",
+      "bytes": 12698,
+      "sha256": "ee1f6880ca460d08e5f83c9cc692436f085245b26db5b561b53eda262709dc0b"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34408391427/attempts/1/jobs?per_page=100"
+      ],
+      "started_at": "2026-09-09T21:45:38.213201+00:00",
+      "finished_at": "2026-09-09T21:45:38.786276+00:00",
+      "exit_code": 0,
+      "stdout_file": "jobs.json",
+      "stderr": "",
+      "bytes": 10733,
+      "sha256": "ac0dc9245dd50ba32ac7622fe17e1ecd9ca575dc28f0bb299475e244ac66f927"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34408391427/artifacts?per_page=100"
+      ],
+      "started_at": "2026-09-09T21:45:38.786714+00:00",
+      "finished_at": "2026-09-09T21:45:39.279604+00:00",
+      "exit_code": 0,
+      "stdout_file": "artifacts.json",
+      "stderr": "",
+      "bytes": 1483,
+      "sha256": "efe0e3f47d8cfb398da6ffbe0e51ce20cbfb35880d4e57a78033c89ba4c87238"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/artifacts/10126260755/zip"
+      ],
+      "started_at": "2026-09-09T21:45:39.280276+00:00",
+      "finished_at": "2026-09-09T21:45:40.403720+00:00",
+      "exit_code": 0,
+      "stdout_file": "native-cleanup.zip",
+      "stderr": "",
+      "bytes": 799,
+      "sha256": "1b0db921362d658878a34715076979e1529d41b76de8ddd9d6d36da73b3d41e3"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/artifacts/10126259771/zip"
+      ],
+      "started_at": "2026-09-09T21:45:40.405893+00:00",
+      "finished_at": "2026-09-09T21:45:41.721759+00:00",
+      "exit_code": 0,
+      "stdout_file": "native-preflight.zip",
+      "stderr": "",
+      "bytes": 94319,
+      "sha256": "8fe7a431b22611136188cc993e64e9b115300a2e1ff5311592544e3d6f2fa779"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34408391427/attempts/1/logs"
+      ],
+      "started_at": "2026-09-09T21:45:41.729094+00:00",
+      "finished_at": "2026-09-09T21:45:43.012395+00:00",
+      "exit_code": 0,
+      "stdout_file": "run-attempt-1-logs.zip",
+      "stderr": "",
+      "bytes": 22088,
+      "sha256": "e4fc1bfe2016494223f513e512fc81655137a41cf9e8d91ee6b3e62aac8463a1"
+    }
+  ],
+  "archives": [
+    {
+      "artifact_id": 10126260755,
+      "artifact_name": "native-cleanup-34408391427-1",
+      "archive": "native-cleanup.zip",
+      "bytes": 799,
+      "sha256": "1b0db921362d658878a34715076979e1529d41b76de8ddd9d6d36da73b3d41e3",
+      "api_digest_matches": true,
+      "members": [
+        {
+          "path": "parlor-native-34408391427-1-cleanup.json",
+          "bytes": 1059,
+          "sha256": "e992e2215f90d1f87ab7ecc77229fdaeae29d5a45c7fe95170780fd0b4c579d3"
+        }
+      ],
+      "crc_and_bounds_checked": true
+    },
+    {
+      "artifact_id": 10126259771,
+      "artifact_name": "native-preflight-34408391427-1",
+      "archive": "native-preflight.zip",
+      "bytes": 94319,
+      "sha256": "8fe7a431b22611136188cc993e64e9b115300a2e1ff5311592544e3d6f2fa779",
+      "api_digest_matches": true,
+      "members": [
+        {
+          "path": "ios-readiness-source-ci.json",
+          "bytes": 300809,
+          "sha256": "f29108888924bae02caff8fdebd642c135f0abc5fb3c35e6aaea5cba184c6993"
+        },
+        {
+          "path": "l08-controls.json",
+          "bytes": 21430,
+          "sha256": "789c9b1c93af5b63d0cd11e69933ac7c6dfb7c6af104ed5a9bcbe9985acb1dda"
+        },
+        {
+          "path": "normal-controls.json",
+          "bytes": 18523,
+          "sha256": "d59d82df13887e72d778a7d77ad2270ae3356d048210f07eb94977b2d46628ac"
+        },
+        {
+          "path": "preflight.json",
+          "bytes": 2703,
+          "sha256": "bf4f7014722d4efb54d86b22a4bb2e946df6095326c8fd4bed8b3a52418f4a93"
+        }
+      ],
+      "crc_and_bounds_checked": true
+    }
+  ],
+  "status": "COLLECTED_NOT_RUNTIME_REVIEW",
+  "log_archive": {
+    "path": "run-attempt-1-logs.zip",
+    "sha256": "e4fc1bfe2016494223f513e512fc81655137a41cf9e8d91ee6b3e62aac8463a1",
+    "bytes": 22088,
+    "members": [
+      {
+        "path": "0_iOS tests, release frameworks, and Swift wrapper.txt",
+        "bytes": 35972,
+        "sha256": "ad2b779d072357a49e10dbf36bbd2494821d8a0c2752ff1dd6c687a894d9c99f"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/system.txt",
+        "bytes": 611,
+        "sha256": "13cb4ef59e628408f740904983a07a39380caf249ae4fcc391bd6d865011755d"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/1_Set up job.txt",
+        "bytes": 2335,
+        "sha256": "2b2528e0ce390dcda02cd02e8a23eebaa4d8dfe6770145149ab152e636a53d02"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/3_Check out source.txt",
+        "bytes": 18712,
+        "sha256": "2f20d9e8d970fa3e4848352c2cfc044ea075776a986997d740fcaa3e5d414076"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/4_Validate verification scope.txt",
+        "bytes": 768,
+        "sha256": "933b4a58bc4db4de3f24a0c22fdd866821918e69b0df1b2341a136599be59765"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/5_Set up JDK 21.txt",
+        "bytes": 2182,
+        "sha256": "77356c46f6511e59901e0b2b706fbe4f9eed69d070f9ffd3645a2153ed9d8905"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/6_Run focused native continuation.txt",
+        "bytes": 1964,
+        "sha256": "25467fea94ca3fde0feae026f0a21ea5367ecbf07d884a21651a1ca6e2b1e047"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/7_Upload focused native evidence.txt",
+        "bytes": 2317,
+        "sha256": "65299db9655ab33a2d363d91176e699397c1b495eb0e05e849ae710f6882d6e3"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/8_Verify focused native cleanup and uploaded custody.txt",
+        "bytes": 3349,
+        "sha256": "82fe7c4da8c99a2a824e4cfb5a3e95723780db1fdf6f23a479135942fed36b00"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/9_Upload native continuation cleanup receipt.txt",
+        "bytes": 2309,
+        "sha256": "ee8e10af152926f15bf98abf8df140469f15efcfcd0332a274ee505944bad5a6"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/59_Post Set up JDK 21.txt",
+        "bytes": 50,
+        "sha256": "942719a36476b6027ad3935862ab9749aba7b70c519f0659a9d6f5eda8d35ebb"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/60_Post Check out source.txt",
+        "bytes": 1955,
+        "sha256": "9b0895c1c659ef041de2c29245e9a241e75dccc03fc5d05f77ba8f568a37e91f"
+      },
+      {
+        "path": "iOS tests, release frameworks, and Swift wrapper/61_Complete job.txt",
+        "bytes": 61,
+        "sha256": "0588ae63c63b536d66e05875aaaafeb8a4a0299f4816633a5c8d40b588a63958"
+      }
+    ],
+    "crc_and_bounds_checked": true,
+    "extracted": false,
+    "scope": "Compact original ZIP retained; underlying per-step logs remain readable directly from this archive."
+  },
+  "run_conclusion": "success",
+  "run_url": "https://github.com/Apdelrahman1911/parlor/actions/runs/34408391427",
+  "jobs": [
+    {
+      "id": 102656771170,
+      "name": "iOS tests, release frameworks, and Swift wrapper",
+      "conclusion": "success"
+    },
+    {
+      "id": 102656772533,
+      "name": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+      "conclusion": "skipped"
+    },
+    {
+      "id": 102656772537,
+      "name": "Common, desktop, and Android release",
+      "conclusion": "skipped"
+    },
+    {
+      "id": 102656772634,
+      "name": "Desktop strict verification (Linux arm64)",
+      "conclusion": "skipped"
+    },
+    {
+      "id": 102656772868,
+      "name": "Desktop and Kotlin Native strict verification (macOS x64)",
+      "conclusion": "skipped"
+    }
+  ],
+  "finished_at": "2026-09-09T21:45:43.014864+00:00"
+}

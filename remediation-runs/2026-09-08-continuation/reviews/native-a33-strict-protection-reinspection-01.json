@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "kind": "BOUNDED_A33_STRICT_PROTECTION_SOURCE_AND_RAW_EVIDENCE_REINSPECTION",
+  "reviewer": "/root/native_ci",
+  "status": "STRICT_GATE_FAILED_NO_NEW_SOURCE_CORRECTION_JUSTIFIED_BY_THESE_OBSERVATIONS",
+  "source_commit": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+  "evidence_directory": "remediation-runs/2026-09-08-continuation/actions/34412114359/native-evidence/ios-readiness-33",
+  "actual_production_path_observations": {
+    "files": "All20 parlor-l08-storage-functional-{boot}-{action}.json records reopened, not only an earlier review summary.",
+    "functional_checks_true": 106,
+    "required_complete_comparisons": 26,
+    "comparison_results": {"PASS": 0, "FAIL": 26},
+    "targets": {"directory": 13, "file": 13},
+    "every_attributes_record": {
+      "query": "returned",
+      "dictionary_present": true,
+      "key_present": false,
+      "value": "missing",
+      "native_error": {"present": false, "domain": "none", "code": 0}
+    },
+    "checkpoint_accounting": "Eight save/load checkpoints, two legacy-seed checkpoints, two legacy-load checkpoints and the boot12 retained-dual checkpoint; each contributes directory+file. Functional success does not replace any failed equality.",
+    "representative_first_record": "parlor-l08-storage-functional-1-save.json",
+    "first_record_sha256": "68fea25d71c8b466ee26132aafd94af2f15785dbca1a936cc381de035c391811",
+    "representative_retained_record": "parlor-l08-storage-functional-12-dual-preserved.json",
+    "retained_record_sha256": "94e63cd4e7cb2313bae5624f5030d4257ff419d004bd00712fe9047d16498ecd"
+  },
+  "paired_native_foundation": {
+    "file": "parlor-l08-app-foundation.json",
+    "sha256": "cf825ef7f3b080d0a3dc817fa82e6bddda7dfa882c9035eab0a3c4325a77ef5f",
+    "runtime": "iOS Simulator26.2, ad-hoc copied app, platform7",
+    "operations": "Eight returned true with no native error or exception.",
+    "file_manager_observations": "All8 dictionaries returned but protection key missing.",
+    "file_url_observations": "All5 regular-file NSURLFileProtectionKey observations report until-first-authentication, never Complete. The3 directory observations intentionally do not query the file-only key.",
+    "volume_observations": "All8 report unsupported.",
+    "backup_observations": "Five included and three excluded; exclusion changes are observed without changing the missing FileManager/non-Complete URL protection observations.",
+    "sequence": "Directory creation with Complete, backup exclusion, atomic|Complete write, file backup exclusion; then explicit directory Complete setter, direct non-atomic Complete write, default atomic write and explicit file Complete setter.",
+    "template": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/L08AppFoundation.m.in:221-273",
+    "template_sha256": "f7b0e515b580f4bd9c49857ad4a49a3ab925218e8e52c260eb14cc75e410cba7",
+    "hardware_protection_verified": false,
+    "l08_requirements_waived": false,
+    "scope_limit": "These are separate fresh synthetic Foundation files in the same app-container context, not same-inode URL queries on each production snapshot. The controls therefore do not rule out a coexisting production-path defect."
+  },
+  "current_source_reopened": {
+    "path": "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
+    "sha256": "c2852fafb293a693be830171f4674947289fafb07f8ecdbafa5c0aaae6d1bf8b",
+    "binding": "Current file equals frozen4cc, A33 copied-source-manifest original/copied hashes and copied-source-inputs-after-build observed hash.",
+    "directory_request": "Lines90-105 require NSFileProtectionKey/NSFileProtectionComplete, create Application Support/Parlor/snapshots with that attribute, reject a false creation result and exclude backup.",
+    "write_request": "Lines362-373 use NSDataWritingAtomic OR NSDataWritingFileProtectionComplete, reject a false write result, then exclude backup.",
+    "readback_distinction": "Lines401-415 set and verify backup exclusion with a fresh URL. There is no analogous production protection-class readback or post-create explicit setAttributes. Successful native requests are not proof that the requested Complete postcondition or lock enforcement holds.",
+    "strict_fixture": "L08StorageFunctionalProbe.kt.in:500-562 reads each production directory/file once through attributesOfItemAtPath and retains actual value==NSFileProtectionComplete as PASS/FAIL. l08_functional_receipts.py:29-63,185-201 requires the exact26 planned comparisons and keeps their FAIL separate from functional PASS.",
+    "keychain_scope": "IosSnapshotKeychain.kt:153-154 uses AfterFirstUnlockThisDeviceOnly. Authenticated encryption/keychain behavior cannot be substituted for Complete file-class or lock/keybag evidence. No keychain-policy change is proposed."
+  },
+  "conclusion": "No wrong protection constant, lost Complete write option, or newly demonstrated uniquely application-side defect is established by A33. The native controls make Kotlin bridging alone, atomic replacement alone and backup exclusion alone insufficient sole explanations. They also do not establish an exclusive simulator cause, effective Complete attributes or hardware enforcement. The source postcondition remains unverified; not finding a justified patch is not a claim that the application is correct on devices. Do not add setters/readback bypasses, relabel unsupported as PASS/N/A, or rerun expensive unchanged frameworks merely to obtain a different label.",
+  "one_next_step": "Preserve the26 failed comparisons as a release-qualification hold. When separately authorized, qualify the same production snapshot paths/inodes on a physical device with raw protection-class observations and actual locked/unlocked/pre-first-unlock I/O behavior. That external enforcement check is prohibited in this task; another hosted simulator framework build cannot supply it.",
+  "activity": "Read-only JSON/source/hash inspection; no project imports, tests/builds, native tools, network, dispatch, source edits or Git writes. Only this additive report was written; no build/fixture cleanup required. Available for the separate forthcoming Settings diagnostic CI review.",
+  "readiness": "NOT_READY"
+}

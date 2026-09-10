@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "kind": "ONE_FROZEN_FULL_D_QUALIFICATION_REQUEST",
+  "coordinator": "/root",
+  "created_at": "2026-09-09T21:43:23.646589+00:00",
+  "status": "PREPARED_NOT_DISPATCHED_PENDING_NATIVE_CUSTODY_C06_AND_SCOPE_REVIEW",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "frozen_source_sha": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+  "tree": "8a89fab3042b8614fc4285148a8cd645f7ac2786",
+  "inputs": {
+    "verification_scope": "full"
+  },
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=full"
+  ],
+  "maximum_dispatches": 1,
+  "required_before_execution": [
+    "A33 actually completed and cleanup/custody independently reconciled; failures remain failures, not waived by D",
+    "Fresh C06 four-receipt candidate chain independently accepted at this frozen SHA",
+    "Different-agent source/scope and exact-request review",
+    "Immediate actual branch/local/remote equality, active intended workflow, no active same-ref run; no overlapping focused/full run"
+  ],
+  "source_freeze": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/a33-source-freeze-03.json",
+    "sha256": "3df46b60b2bb19002c74462221de0db75df77be7e12ee272a353074da29a0a92"
+  },
+  "source_correction_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/a33-cycle-label-correction-independent-01.json",
+    "sha256": "2dbb9b3ad558422b65e6e8a4e8b82cc205600daf5c2d0ecd955e9c1bc37ad30c"
+  },
+  "collector": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-01.py",
+    "sha256": "036d2921c6f08cce2d04f8b7d947d00041977a88cec39a9ca83d9e6815a760c6"
+  },
+  "collector_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-independent-01.json",
+    "sha256": "e87392aed0d40e83aeb7bc35c335697a291b6bc80c73e0f3b0c81ff48287c2a7"
+  },
+  "expected_jobs": [
+    "desktop-android",
+    "desktop-linux-arm64",
+    "desktop-macos-x64",
+    "desktop-windows-x64",
+    "ios"
+  ],
+  "expected_main_artifacts": [
+    "desktop-android-verification",
+    "desktop-verification-desktop-linux-arm64",
+    "desktop-verification-desktop-macos-x64",
+    "desktop-verification-desktop-windows-x64",
+    "ios-verification"
+  ],
+  "expected_cleanup_artifacts": [
+    "verification-cleanup-desktop-android",
+    "verification-cleanup-desktop-linux-arm64",
+    "verification-cleanup-desktop-macos-x64",
+    "verification-cleanup-desktop-windows-x64",
+    "verification-cleanup-ios"
+  ],
+  "interpretation": "Inspect exact same-attempt raw tests/tasks/cache/skips, native runtime versus linkage, unsigned packages/notices/hashes, artifact upload identities and owned cleanup. D is not A strict protection, B libproc, physical-device or Store proof. Earlier failed receipts and unexecuted scopes remain explicit.",
+  "safety": "No Store/promotion/signing/credentials/physical devices, source edits during qualification, blind retries, merge/force-push/issue mutation. Retain bounded raw artifacts and logs; do not delete unrelated work/global caches."
+}

@@ -1,0 +1,96 @@
+--- remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-02.py
++++ remediation-runs/2026-09-08-continuation/reviews/windows-targeted-collector-01/collect_windows.py
+@@ -1,12 +1,13 @@
+ #!/usr/bin/env python3
+-"""Additive full-D collector: compressed custody, not application/runtime review.
+-
+-v01 is retained unchanged. Its 5,000-member cap is below the frozen checkout's
+-6,482 historical report files matched by the workflow's recursive upload globs.
+-The only enlarged cap is 50,000 table members; all byte caps remain unchanged.
+-Every member (including historical/unselected files) is path/type/size/CRC/SHA
+-checked. Only exact live report scopes and current-named receipts are extracted.
+-An extracted report is a review candidate, NEVER proof that its tests ran.
++"""Windows-only collection adaptation of the independently reviewed full-D v02.
++
++Original v01/v02 remain unchanged. ZIP/path/CRC/hash/extraction controls and
++byte/member bounds are unchanged. Exactly one non-skipped Windows job and four
++skipped unrelated jobs are required; only Windows artifacts are selected.
++The exact scope argument and API job shape bind the coordinator's intended
++scope, not independently recovered dispatch inputs. Preserve the separately
++reviewed request/association and raw logs for actual scope/runtime review.
++Extracted reports remain candidates, NEVER proof that their tests ran.
+ """
+ import collections
+ import hashlib
+@@ -30,11 +31,11 @@
+     "desktop-windows-x64": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+     "ios": "iOS tests, release frameworks, and Swift wrapper",
+ }
++WINDOWS_JOB = "desktop-windows-x64"
++EXPECTED_SCOPE = "windows-only"
+ ARTIFACT_JOBS = {
+-    "desktop-android-verification": "desktop-android",
+-    "ios-verification": "ios",
+-    **{"desktop-verification-" + job: job for job in JOB_NAMES if job.startswith("desktop-") and job != "desktop-android"},
+-    **{"verification-cleanup-" + job: job for job in JOB_NAMES},
++    "desktop-verification-" + WINDOWS_JOB: WINDOWS_JOB,
++    "verification-cleanup-" + WINDOWS_JOB: WINDOWS_JOB,
+ }
+ 
+ 
+@@ -84,6 +85,26 @@
+                 steps=steps, live_path_extraction_admitted=all(
+                     step["status"] == "completed" and step["conclusion"] == "success"
+                     for step in selected.values()))
++
++
++def windows_job_contexts(jobs):
++    require(len(jobs) == len(JOB_NAMES) and {job["name"] for job in jobs} == set(JOB_NAMES.values()),
++            "Exactly one Windows job and four known unrelated jobs required")
++    contexts = {}
++    for key, name in JOB_NAMES.items():
++        job = next(job for job in jobs if job["name"] == name)
++        if key == WINDOWS_JOB:
++            require(isinstance(job["conclusion"], str) and job["conclusion"] and job["conclusion"] != "skipped",
++                    "The Windows job must not be skipped")
++            contexts[key] = job_context(job)
++        else:
++            require(job["conclusion"] == "skipped", "A non-Windows job was selected")
++            steps = job.get("steps", [])
++            require(isinstance(steps, list) and all(step["status"] == "completed" and step["conclusion"] == "skipped" for step in steps),
++                    "A skipped unrelated job contains a non-skipped step")
++            contexts[key] = dict(id=job["id"], name=name, conclusion="skipped",
++                                 steps=steps, live_path_extraction_admitted=False)
++    return contexts
+ 
+ 
+ def classify_member(name, artifact, run_id, job_id, context, tracked, roots):
+@@ -186,8 +207,8 @@
+ 
+ 
+ def main(argv):
+-    require(len(argv) == 3 and re.fullmatch(r"[1-9][0-9]*", argv[1]) and re.fullmatch(r"[0-9a-f]{40}", argv[2]),
+-            "Usage: full-d-compact-collector-02.py RUN_ID SOURCE_SHA")
++    require(len(argv) == 4 and re.fullmatch(r"[1-9][0-9]*", argv[1]) and re.fullmatch(r"[0-9a-f]{40}", argv[2]) and
++            argv[3] == EXPECTED_SCOPE, "Usage: collect_windows.py RUN_ID SOURCE_SHA windows-only")
+     run_id, source, attempt = int(argv[1]), argv[2], 1
+     dest = Path("remediation-runs/2026-09-08-continuation/actions") / str(run_id)
+     require(dest.parent.resolve() == dest.parent.absolute(), "Redirected collection parent")
+@@ -195,6 +216,8 @@
+     receipt = dict(schema_version=2, kind="BOUNDED_ACTIONS_ARCHIVE_COLLECTION_NOT_RUNTIME_REVIEW",
+                    coordinator="/root", started_at=now(), run_id=run_id, run_attempt=attempt,
+                    source_commit=source, collector_sha256=sha_file(Path(__file__)), commands=[], archives=[], status="RUNNING",
++                   verification_scope=EXPECTED_SCOPE,
++                   scope_binding="Coordinator intended scope plus exact API job shape; request/association and raw dispatch inputs require separate review.",
+                    current_test_execution_counts="NOT_COMPUTED_REQUIRES_SEPARATE_RUNTIME_REVIEW",
+                    extraction_policy="Exact frozen live roots, checkout+ownership step success; candidates only. Historical/unknown and opaque outputs remain in retained original ZIPs. Receipt contents require separate review.",
+                    bounds=dict(artifact_compressed=64 * MIB, artifacts_compressed_total=512 * MIB,
+@@ -243,7 +266,7 @@
+         require(jobs["total_count"] == len(jobs["jobs"]) == len(JOB_NAMES), "Complete jobs page required")
+         require({job["name"] for job in jobs["jobs"]} == set(JOB_NAMES.values()), "Exact job identities required")
+         require(all(job["run_id"] == run_id and job["run_attempt"] == attempt and job["head_sha"] == source and job["status"] == "completed" for job in jobs["jobs"]), "Job/source/attempt binding")
+-        contexts = {key: job_context(next(job for job in jobs["jobs"] if job["name"] == name)) for key, name in JOB_NAMES.items()}
++        contexts = windows_job_contexts(jobs["jobs"])
+         receipt.update(run_conclusion=run["conclusion"], run_url=run["html_url"], jobs=contexts)
+         require(arts["total_count"] == len(arts["artifacts"]) <= 100, "Complete artifact page required")
+         require(len({art["name"] for art in arts["artifacts"]}) == len(arts["artifacts"]), "Duplicate artifact names")

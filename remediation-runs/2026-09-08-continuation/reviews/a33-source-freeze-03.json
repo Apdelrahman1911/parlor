@@ -1,0 +1,293 @@
+{
+  "kind": "REVIEWED_SOURCE_THEN_MECHANICAL_INVENTORY_FREEZE",
+  "started_at": "2026-09-09T21:38:07.170811+00:00",
+  "commands": [
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "output": "f5d3100dc92d7d1f3415a2be8c0ef6ccc93d3aac\n",
+      "at": "2026-09-09T21:38:07.173707+00:00"
+    },
+    {
+      "command": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "exit_code": 0,
+      "output": "fix/local-readiness-2026-09-07\n",
+      "at": "2026-09-09T21:38:07.176190+00:00"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--name-only"
+      ],
+      "exit_code": 0,
+      "output": "",
+      "at": "2026-09-09T21:38:07.207837+00:00"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--name-only"
+      ],
+      "exit_code": 0,
+      "output": "remediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/artifact-receipts.json\nremediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/gradle.log\nremediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/java-toolchain.log\nremediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/javac-toolchain.log\nremediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/receipt.json\nremediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/stop.log\nremediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/test-receipts.json\nremediation-runs/2026-09-08-continuation/actions/34402764126/artifact-10124160586.json\nremediation-runs/2026-09-08-continuation/actions/34402764126/artifact-10124161709.json\nremediation-runs/2026-09-08-continuation/actions/34402764126/artifacts.json\nremediation-runs/2026-09-08-continuation/actions/34402764126/attempt.json\nremediation-runs/2026-09-08-continuation/actions/34402764126/download-receipt.json\nremediation-runs/2026-09-08-continuation/actions/34402764126/jobs.json\nremediation-runs/2026-09-08-continuation/actions/34402764126/native-cleanup.zip\nremediation-runs/2026-09-08-continuation/actions/34402764126/native-cleanup/parlor-native-34402764126-1-cleanup.json\nremediation-runs/2026-09-08-continuation/actions/34402764126/native-preflight.zip\nremediation-runs/2026-09-08-continuation/actions/34402764126/native-preflight/ios-readiness-source-ci.json\nremediation-runs/2026-09-08-continuation/actions/34402764126/native-preflight/l08-controls.json\nremediation-runs/2026-09-08-continuation/actions/34402764126/native-preflight/normal-controls.json\nremediation-runs/2026-09-08-continuation/actions/34402764126/native-preflight/preflight.json\nremediation-runs/2026-09-08-continuation/actions/34402764126/run-attempt-1-logs.zip\nremediation-runs/2026-09-08-continuation/actions/34402764126/run.json\nremediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-09/admission-withdrawn.json\nremediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-09/request.json\nremediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-09/dispatch-result.json\nremediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-09/request.json\nremediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-09/run-association.json\nremediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-09/runs-before.json\nremediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-09/watch.log\nremediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-09/watcher-receipt.json\nremediation-runs/2026-09-08-continuation/reviews/a33-cycle-label-correction-independent-01.json\nremediation-runs/2026-09-08-continuation/reviews/a33-source-freeze-01.json\nremediation-runs/2026-09-08-continuation/reviews/full-d-f5d-source-scope-admission-independent-01.json\nremediation-runs/2026-09-08-continuation/reviews/native-a33-os-fixture-actual-independent-01.json\nremediation-runs/2026-09-08-continuation/reviews/native-b30-a33-source-applicability-01.json\nscripts/ci/NATIVE_CONTINUATION.md\nscripts/release/tests/test_native_process_probe.py\n",
+      "at": "2026-09-09T21:38:07.216465+00:00"
+    },
+    {
+      "command": [
+        "git",
+        "ls-remote",
+        "origin",
+        "refs/heads/fix/local-readiness-2026-09-07"
+      ],
+      "exit_code": 0,
+      "output": "f5d3100dc92d7d1f3415a2be8c0ef6ccc93d3aac\trefs/heads/fix/local-readiness-2026-09-07\n",
+      "at": "2026-09-09T21:38:07.817779+00:00"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--check",
+        "--",
+        "scripts/ci/NATIVE_CONTINUATION.md",
+        "scripts/release/tests/test_native_process_probe.py"
+      ],
+      "exit_code": 0,
+      "output": "",
+      "at": "2026-09-09T21:38:07.827169+00:00"
+    },
+    {
+      "command": [
+        "git",
+        "add",
+        "--",
+        "remediation-runs/2026-09-08-continuation/reviews/a33-source-freeze-02.json"
+      ],
+      "exit_code": 0,
+      "output": "",
+      "at": "2026-09-09T21:38:07.867158+00:00"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--name-only"
+      ],
+      "exit_code": 0,
+      "output": "remediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/artifact-receipts.json\nremediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/gradle.log\nremediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/java-toolchain.log\nremediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/javac-toolchain.log\nremediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/receipt.json\nremediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/stop.log\nremediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/test-receipts.json\nremediation-runs/2026-09-08-continuation/actions/34402764126/artifact-10124160586.json\nremediation-runs/2026-09-08-continuation/actions/34402764126/artifact-10124161709.json\nremediation-runs/2026-09-08-continuation/actions/34402764126/artifacts.json\nremediation-runs/2026-09-08-continuation/actions/34402764126/attempt.json\nremediation-runs/2026-09-08-continuation/actions/34402764126/download-receipt.json\nremediation-runs/2026-09-08-continuation/actions/34402764126/jobs.json\nremediation-runs/2026-09-08-continuation/actions/34402764126/native-cleanup.zip\nremediation-runs/2026-09-08-continuation/actions/34402764126/native-cleanup/parlor-native-34402764126-1-cleanup.json\nremediation-runs/2026-09-08-continuation/actions/34402764126/native-preflight.zip\nremediation-runs/2026-09-08-continuation/actions/34402764126/native-preflight/ios-readiness-source-ci.json\nremediation-runs/2026-09-08-continuation/actions/34402764126/native-preflight/l08-controls.json\nremediation-runs/2026-09-08-continuation/actions/34402764126/native-preflight/normal-controls.json\nremediation-runs/2026-09-08-continuation/actions/34402764126/native-preflight/preflight.json\nremediation-runs/2026-09-08-continuation/actions/34402764126/run-attempt-1-logs.zip\nremediation-runs/2026-09-08-continuation/actions/34402764126/run.json\nremediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-09/admission-withdrawn.json\nremediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-09/request.json\nremediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-09/dispatch-result.json\nremediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-09/request.json\nremediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-09/run-association.json\nremediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-09/runs-before.json\nremediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-09/watch.log\nremediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-09/watcher-receipt.json\nremediation-runs/2026-09-08-continuation/reviews/a33-cycle-label-correction-independent-01.json\nremediation-runs/2026-09-08-continuation/reviews/a33-source-freeze-01.json\nremediation-runs/2026-09-08-continuation/reviews/a33-source-freeze-02.json\nremediation-runs/2026-09-08-continuation/reviews/full-d-f5d-source-scope-admission-independent-01.json\nremediation-runs/2026-09-08-continuation/reviews/native-a33-os-fixture-actual-independent-01.json\nremediation-runs/2026-09-08-continuation/reviews/native-b30-a33-source-applicability-01.json\nscripts/ci/NATIVE_CONTINUATION.md\nscripts/release/tests/test_native_process_probe.py\n",
+      "at": "2026-09-09T21:38:07.875251+00:00"
+    },
+    {
+      "command": [
+        "git",
+        "commit",
+        "-q",
+        "-m",
+        "fix(ci): align native cycle contract and guide labels"
+      ],
+      "exit_code": 0,
+      "output": "",
+      "at": "2026-09-09T21:38:07.943662+00:00"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "output": "b90c1759aed567b184ab8bb9cd1312c0cbacb489\n",
+      "at": "2026-09-09T21:38:07.946077+00:00"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/generate_review_inventory.py"
+      ],
+      "exit_code": 0,
+      "output": "Wrote 19702 inventory rows to docs/review/INDEPENDENT_REVIEW_INVENTORY.csv; source review not attested\n",
+      "at": "2026-09-09T21:38:08.558869+00:00"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--name-only"
+      ],
+      "exit_code": 0,
+      "output": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv\n",
+      "at": "2026-09-09T21:38:08.592673+00:00"
+    },
+    {
+      "command": [
+        "git",
+        "add",
+        "--",
+        "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv"
+      ],
+      "exit_code": 0,
+      "output": "",
+      "at": "2026-09-09T21:38:08.762623+00:00"
+    },
+    {
+      "command": [
+        "git",
+        "commit",
+        "-q",
+        "-m",
+        "chore(review): freeze corrected A33 cycle inventory"
+      ],
+      "exit_code": 0,
+      "output": "",
+      "at": "2026-09-09T21:38:08.868612+00:00"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "output": "4ccfafcfc361231cfb730178b3798ebcb6304770\n",
+      "at": "2026-09-09T21:38:08.871102+00:00"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "exit_code": 0,
+      "output": "8a89fab3042b8614fc4285148a8cd645f7ac2786\n",
+      "at": "2026-09-09T21:38:08.873606+00:00"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/generate_review_inventory.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "output": "Verified freshness of 19702 inventory rows in docs/review/INDEPENDENT_REVIEW_INVENTORY.csv; source review not attested\n",
+      "at": "2026-09-09T21:38:09.515709+00:00"
+    },
+    {
+      "command": [
+        "./gradlew",
+        "--stop"
+      ],
+      "exit_code": 0,
+      "output": "No Gradle daemons are running.\n",
+      "at": "2026-09-09T21:38:10.030216+00:00"
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain",
+        "--untracked-files=no"
+      ],
+      "exit_code": 0,
+      "output": "",
+      "at": "2026-09-09T21:38:10.109005+00:00"
+    },
+    {
+      "command": [
+        "git",
+        "push",
+        "origin",
+        "HEAD:refs/heads/fix/local-readiness-2026-09-07"
+      ],
+      "exit_code": 0,
+      "output": "To https://github.com/Apdelrahman1911/parlor.git\n   f5d3100d..4ccfafcf  HEAD -> fix/local-readiness-2026-09-07\n",
+      "at": "2026-09-09T21:38:13.428786+00:00"
+    },
+    {
+      "command": [
+        "git",
+        "ls-remote",
+        "origin",
+        "refs/heads/fix/local-readiness-2026-09-07"
+      ],
+      "exit_code": 0,
+      "output": "4ccfafcfc361231cfb730178b3798ebcb6304770\trefs/heads/fix/local-readiness-2026-09-07\n",
+      "at": "2026-09-09T21:38:14.010243+00:00"
+    }
+  ],
+  "review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/a33-cycle-label-correction-independent-01.json",
+    "sha256": "2dbb9b3ad558422b65e6e8a4e8b82cc205600daf5c2d0ecd955e9c1bc37ad30c"
+  },
+  "previous_attempt": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/a33-source-freeze-02.json",
+    "sha256": "2814291291d2cb775c4dfa393dde9d591834baf21171534c9bdffcb16cca8c60",
+    "reason": "No commit occurred: blanket whitespace check hit raw JDK log trailing spaces. Raw log preserved byte-for-byte; source-only whitespace check passes. No product/control guard changed."
+  },
+  "status": "COMMITTED_INVENTORY_CHECKED_PUSHED_REMOTE_MATCH",
+  "staged_paths": [
+    "remediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/artifact-receipts.json",
+    "remediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/gradle.log",
+    "remediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/java-toolchain.log",
+    "remediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/javac-toolchain.log",
+    "remediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/receipt.json",
+    "remediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/stop.log",
+    "remediation-runs/2026-09-07-local-readiness/evidence/a33-cycle-label-focused-linux-01/test-receipts.json",
+    "remediation-runs/2026-09-08-continuation/actions/34402764126/artifact-10124160586.json",
+    "remediation-runs/2026-09-08-continuation/actions/34402764126/artifact-10124161709.json",
+    "remediation-runs/2026-09-08-continuation/actions/34402764126/artifacts.json",
+    "remediation-runs/2026-09-08-continuation/actions/34402764126/attempt.json",
+    "remediation-runs/2026-09-08-continuation/actions/34402764126/download-receipt.json",
+    "remediation-runs/2026-09-08-continuation/actions/34402764126/jobs.json",
+    "remediation-runs/2026-09-08-continuation/actions/34402764126/native-cleanup.zip",
+    "remediation-runs/2026-09-08-continuation/actions/34402764126/native-cleanup/parlor-native-34402764126-1-cleanup.json",
+    "remediation-runs/2026-09-08-continuation/actions/34402764126/native-preflight.zip",
+    "remediation-runs/2026-09-08-continuation/actions/34402764126/native-preflight/ios-readiness-source-ci.json",
+    "remediation-runs/2026-09-08-continuation/actions/34402764126/native-preflight/l08-controls.json",
+    "remediation-runs/2026-09-08-continuation/actions/34402764126/native-preflight/normal-controls.json",
+    "remediation-runs/2026-09-08-continuation/actions/34402764126/native-preflight/preflight.json",
+    "remediation-runs/2026-09-08-continuation/actions/34402764126/run-attempt-1-logs.zip",
+    "remediation-runs/2026-09-08-continuation/actions/34402764126/run.json",
+    "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-09/admission-withdrawn.json",
+    "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-09/request.json",
+    "remediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-09/dispatch-result.json",
+    "remediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-09/request.json",
+    "remediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-09/run-association.json",
+    "remediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-09/runs-before.json",
+    "remediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-09/watch.log",
+    "remediation-runs/2026-09-08-continuation/actions/native-preflight-dispatch-09/watcher-receipt.json",
+    "remediation-runs/2026-09-08-continuation/reviews/a33-cycle-label-correction-independent-01.json",
+    "remediation-runs/2026-09-08-continuation/reviews/a33-source-freeze-01.json",
+    "remediation-runs/2026-09-08-continuation/reviews/a33-source-freeze-02.json",
+    "remediation-runs/2026-09-08-continuation/reviews/full-d-f5d-source-scope-admission-independent-01.json",
+    "remediation-runs/2026-09-08-continuation/reviews/native-a33-os-fixture-actual-independent-01.json",
+    "remediation-runs/2026-09-08-continuation/reviews/native-b30-a33-source-applicability-01.json",
+    "scripts/ci/NATIVE_CONTINUATION.md",
+    "scripts/release/tests/test_native_process_probe.py"
+  ],
+  "source_control_commit": "b90c1759aed567b184ab8bb9cd1312c0cbacb489",
+  "commit": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+  "tree": "8a89fab3042b8614fc4285148a8cd645f7ac2786",
+  "inventory": {
+    "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+    "sha256": "a8ff0784363d0b79ac68d086e9be3041ac448b8ebb39dcedf94cbfdff132f93a",
+    "mechanical_only": true
+  },
+  "gradle_stop_exit_code": 0,
+  "remote": "4ccfafcfc361231cfb730178b3798ebcb6304770\trefs/heads/fix/local-readiness-2026-09-07",
+  "finished_at": "2026-09-09T21:38:14.010294+00:00"
+}

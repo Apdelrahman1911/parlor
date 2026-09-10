@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_COLLECTION_ONLY_HELPER_AND_FIXTURE_SOURCE_REVIEW",
+  "reviewer": "/root/fixture_review",
+  "author": "/root/ci_review",
+  "reviewed_at": "2026-09-10T01:14:36.716544+00:00",
+  "status": "APPROVED_PINNED_SOURCE_FOR_ROOT_FOCUSED_TESTS_THEN_COLLECTION_SUBJECT_TO_PASS_AND_IMMEDIATE_GUARDS",
+  "findings": [],
+  "bindings": {
+    "helper": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-02.py",
+      "bytes": 17464,
+      "sha256": "3af9603aff8e20aa1380f844897ed356426ba29c4dd5172cc5c60edb2dea10de"
+    },
+    "fixtures": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/test_full_d_compact_collector_02.py",
+      "bytes": 9677,
+      "sha256": "1b56aa715b06947d6e3e06968c9b60bd25825254ce080446051cfaa2ae364afa"
+    },
+    "author_report": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-02-author.json",
+      "bytes": 4745,
+      "sha256": "5a15e75892cc9dff965b869103f56de104ac6f4698ea23a5313e205f144a9f6c"
+    },
+    "preserved_v01": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-01.py",
+      "bytes": 7177,
+      "sha256": "036d2921c6f08cce2d04f8b7d947d00041977a88cec39a9ca83d9e6815a760c6"
+    },
+    "source_commit": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+    "source_tree": "8a89fab3042b8614fc4285148a8cd645f7ac2786",
+    "run_id": 34420745957,
+    "run_attempt": 1,
+    "repository": "Apdelrahman1911/parlor",
+    "branch": "fix/local-readiness-2026-09-07"
+  },
+  "scope": "Complete helper and fixture source/AST/hash inspection, frozen Git path-table inspection, current workflow upload/job identities. Collector/tests were NOT imported or executed by reviewer. No network, CI, builds, project-function execution, canonical edits or Git writes. This review only admits root-managed focused tests and, after success plus immediate guards, collection; it does not approve application runtime or qualification.",
+  "frozen_root_concern": {
+    "path_records": 19702,
+    "raw_ls_tree_bytes": 2912754,
+    "raw_ls_tree_sha256": "a72835eb93d251b0039408e64fc70e13164f0965abff2bb3b328a695747a9e23",
+    "gradle_build_or_settings_inputs": 17,
+    "derived_live_build_roots": 17,
+    "gradle_inputs_under_historical_prefixes": 0,
+    "tracked_paths_overlapping_derived_live_roots": 0,
+    "conclusion": "Root raised possible archived build.gradle-derived roots causing preflight rejection. Actual4cc table has only canonical root/build-logic/composeApp/game-modes/shared Gradle inputs, so this run is not affected. This is a pinned-tree acceptance, not proof of generality for future trees containing copied Gradle inputs."
+  },
+  "source_review": {
+    "request_and_identity": "GET-only gh api against fixed repository; no dispatch/retry/mutation/build/test in collector. Positive run ID, lowercase40hex source, attempt1. Run+attempt bind source/branch/repository/workflow_dispatch/completed and production-verification path. Exact five completed job names bind run/source/attempt; each must contain uniquely named Check out source and Claim fresh verification output ownership steps. Ten fixed artifact names map to their own job context; missing/extra names remain explicit and partial, unexpected artifacts are not downloaded.",
+    "source_classification": "Frozen git ls-tree paths are retained verbatim and hashed, source tree pinned. Exact tracked members under parlor/parlor are archive-only before any live-root check. remediation-runs/audit-runs/handoffs are historical-only even if untracked in the frozen tree. Live extraction uses exact derived build roots plus whitelisted report/descriptor subpaths; an unknown archive layout or scope remains compressed-only, never a guessed current report.",
+    "windows_failure": "A failed checkout or skipped/failed ownership claim sets live_path_extraction_admitted=false for that exact Windows job. Even a live-looking test XML then gets UNATTESTED_LIVE_PATH_ARCHIVE_ONLY; tracked historical XML remains FROZEN_TRACKED_FILE_ARCHIVE_ONLY independently. Only current run/attempt/job-named receipts may be extracted, explicitly CONTENT_UNREVIEWED. No archive report counts become fresh test counts; current_test_execution_counts is NOT_COMPUTED_REQUIRES_SEPARATE_RUNTIME_REVIEW.",
+    "candidate_not_execution": "Successful checkout+claim only admits CURRENT_PATH_CANDIDATE_NOT_EXECUTION. Receipt content, test task execution versus cached restoration, actual XML semantics, skipped tests, signatures and source/control/runtime applicability remain separate review obligations. No success conclusion is derived from a path, artifact or completed job.",
+    "zip_integrity": "Original compressed ZIP bytes are retained unchanged and require API size+SHA equality before parsing. Whole table is preflighted before extraction: reject absolute/traversal/backslash/colon/NUL/noncanonical/empty-dot paths, duplicate normalized file-directory names, ancestor collisions, symlink/special/mismatched types, encryption and nonempty directories. Every member including excluded history and directories is streamed to EOF for CRC/length/SHA with finite bounds; complete member metadata/classifications are recorded.",
+    "selective_extraction": "Only after every ZIP member passes integrity checks is a second extraction pass allowed. Fresh output root, nonredirected resolved parents and exclusive files avoid overwrite. Selected bytes are streamed and rechecked against first-pass length/SHA; historical/unknown/opaque members are not copied out. dSYM/xcresult/AAB/mappings remain original ZIP custody, not discarded or relabeled.",
+    "bounds": "Only count cap grows5000->50000 members to accommodate6482 frozen historical report files (5802 test-results XML+680 build/reports files) plus actual outputs. Artifact compressed64MiB each/512MiB aggregate, expanded256MiB/archive, file128MiB unchanged. Log ZIP remains128MiB downloaded/1500members/256MiB expanded/64MiB member; kept compressed. Source path table additionally bounded32MiB.",
+    "failure_honesty": "Explicit require checks replace optimization-sensitive asserts. Main is import-guarded. All writes use new destinations/exclusive files; failed prior destinations are not overwritten. Commands record start/end, partial file identity even on timeout, and outer finally attempts COLLECTION_FAILED receipt. Failed/corrupt collection does not erase previously downloaded compressed evidence or imply remaining artifacts were collected."
+  },
+  "focused_fixture_source_review": {
+    "method_count": 14,
+    "methods": [
+      "test_full_table_but_selective_extraction",
+      "test_failed_windows_checkout_never_admits_reports",
+      "test_exact_unique_job_steps_required",
+      "test_tracked_build_lookalike_is_not_current",
+      "test_current_cleanup_name_only",
+      "test_unsafe_paths",
+      "test_nul_original_name_is_rejected",
+      "test_special_and_mismatched_types",
+      "test_duplicate_and_ancestor_collisions",
+      "test_encryption_flags_rejected",
+      "test_crc_in_unselected_history_still_fails",
+      "test_member_total_and_file_bounds",
+      "test_directory_is_present_in_complete_table",
+      "test_extraction_refuses_existing_or_redirected_root"
+    ],
+    "coverage": "Selective extraction with historical hashes, failed Windows checkout, ownership/unique exact steps, tracked live-looking paths, current named cleanup scope, traversal/dot/backslash/drive/NUL, special/mismatched modes, duplicate/ancestor collisions, encryption bits, CRC corruption in unselected history, member/byte caps, directory retention, existing/redirected output refusal. TemporaryDirectory is fixture-owned and cleaned by unittest addCleanup. Fixed sibling helper import is guarded from main; no network/build/project execution in fixture methods.",
+    "actual_execution_status": "NOT_RUN_BY_AUTHOR_OR_REVIEWER_AT_SOURCE_APPROVAL; root must retain actual batch result and cleanup."
+  },
+  "execution_conditions": [
+    "Root alone manages the build/test/collection lane. Run only these pinned fixture bytes before collection; any failure requires inspection, not a blind retry or unreviewed bound change.",
+    "Before collection check exact helper hash, intended run34420745957/attempt1 and source4cc, completed API identity, and absent/nonredirected destination. Existing successful/failed task-owned evidence must be preserved, not removed to force rerun.",
+    "This approval does not invoke or approve CI publication/promotion. Requested full-scope dispatch binding and subsequent runtime/cleanup reconciliation remain root-owned.",
+    "After focused tests, preserve evidence and perform coordinated required stop/cleanup; reviewer allocated no workers or test resources."
+  ],
+  "limitations_and_risks": [
+    "Download limits remain post-process size checks with180second timeout, not live streamed quotas; stderr is buffered. Per-archive expanded limits are finite, not one combined extraction-disk quota.",
+    "Workspace prefix is the observed frozen full-D parlor/parlor layout. Other layouts are safely left compressed-only for inspection; collection status alone does not establish completeness of live evidence.",
+    "An entirely skipped job lacking checkout/ownership API steps or a future tree with tracked files beneath a derived output root fails closed. General future compatibility is not claimed.",
+    "Current-named receipt JSON is extracted without accepting its contents. Cleanup PASS, run freshness, ownership and test execution still require independent raw reconciliation.",
+    "API/input/path setup failure before outer try can lack a new final receipt; root retains command output. Two-pass extraction preserves already-written files on later failure, with COLLECTION_FAILED rather than inferred completeness."
+  ],
+  "verdict": "No blocking source finding for exact34420745957/4cc collection. Approve focused root-run tests first, then one responsible collection after actual pass and immediate guards. No tests, collection, fresh Windows execution, runtime success or readiness approval claimed by this report."
+}

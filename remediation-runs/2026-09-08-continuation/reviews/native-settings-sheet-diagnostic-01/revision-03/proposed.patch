@@ -1,0 +1,1300 @@
+diff --git a/.github/workflows/production-verification.yml b/.github/workflows/production-verification.yml
+--- a/.github/workflows/production-verification.yml
++++ b/.github/workflows/production-verification.yml
+@@ -19,10 +19,10 @@
+         default: full
+         options: [full, native-preflight, native-evidence, native-process-probe, windows-only]
+       native_selection:
+-        description: Native evidence lanes (l08-only requires explicit scoped approval)
++        description: Native lanes or Settings-sheet diagnostic (nondefault requires explicit scoped approval)
+         type: choice
+         default: paired
+-        options: [paired, l08-only]
++        options: [paired, l08-only, settings-sheet-only]
+       frozen_source_sha:
+         description: Exact reviewed source/inventory SHA (required for every focused mode)
+         type: string
+@@ -45,7 +45,7 @@
+         description: Independently approved normal libproc control hash (native-evidence only)
+         type: string
+       approved_probe_control_sha256:
+-        description: Independently approved non-app process-probe control hash (native-process-probe only)
++        description: Independently approved process-probe or settings-sheet-only diagnostic control hash
+         type: string
+ 
+ concurrency:
+@@ -513,7 +513,7 @@
+     if: github.event_name != 'workflow_dispatch' || inputs.verification_scope != 'windows-only'
+     name: iOS tests, release frameworks, and Swift wrapper
+     runs-on: macos-15
+-    timeout-minutes: ${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}
++    timeout-minutes: ${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'settings-sheet-only' && 40 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}
+     permissions:
+       contents: read
+       actions: read
+@@ -579,6 +579,7 @@
+           PARLOR_PREFLIGHT_ARTIFACT_SHA256: ${{ inputs.preflight_artifact_sha256 }}
+           PARLOR_APPROVED_L08_CONTROL_SHA256: ${{ inputs.approved_l08_control_sha256 }}
+           PARLOR_APPROVED_NORMAL_CONTROL_SHA256: ${{ inputs.approved_normal_control_sha256 }}
++          PARLOR_APPROVED_PROBE_CONTROL_SHA256: ${{ inputs.approved_probe_control_sha256 }}
+           PARLOR_ACTIONS_READ_TOKEN: ${{ github.token }}
+         run: /usr/bin/python3 -B scripts/ci/native_continuation.py run
+ 
+diff --git a/scripts/ci/NATIVE_CONTINUATION.md b/scripts/ci/NATIVE_CONTINUATION.md
+--- a/scripts/ci/NATIVE_CONTINUATION.md
++++ b/scripts/ci/NATIVE_CONTINUATION.md
+@@ -121,7 +121,7 @@
+ allowances are unchanged. No XCTest split, test-filter reduction, retry, app or
+ production timing change is introduced.
+ 
+-Only `native-evidence` has a240-minute job ceiling. Full and native-preflight
++Ordinary `native-evidence` has a240-minute job ceiling (the explicitly separate Settings diagnostic below is40 minutes). Full and native-preflight
+ remain120 minutes; the non-app process probe remains10. The first evidence-only
+ job step, before checkout, records `CLOCK_MONOTONIC_RAW` via
+ `time.clock_gettime_ns(time.CLOCK_MONOTONIC_RAW)`, bound to source SHA, job and
+@@ -327,3 +327,35 @@
+ 
+ Synthetic controls are in `scripts/release/tests/test_native_process_probe.py`;
+ they execute no Apple tool, simulator or application.
++
++## Diagnostic-only public Settings sheet
++
++`native_selection=settings-sheet-only` is accepted only with `native-preflight`
++or `native-evidence`. Its preflight contains exactly `preflight.json`, the source
++binding, and `settings_sheet-controls.json`; it does not replace the unchanged
++paired preflight domain. Approve the combined diagnostic control hash with the
++existing `approved_probe_control_sha256` input. The process-probe and Settings
++control domains are different; a hash or package from the other mode is rejected.
++Both dispatches must use the same freshly reviewed frozen source.
++
++Cycle `ios-readiness-35` builds only a disposable, detached UI-test target using
++the existing Debug test identity. No Kotlin/Parlor target, normal B launch,
++external image probe or Store operation runs. After exact public Settings flow
++on the fresh owned simulator, one XCTest records exactly three action labels
++(up to128UTF-8 bytes each) from the unique public language-choice sheet. It never
++selects a choice or retries discovery; unfamiliar context/counts fail closed.
++No hierarchy, screenshot, app container or private state is retained.
++
++The diagnostic Xcode command is capped at600seconds (one180/240-second XCTest),
++the child at900seconds, and the iOS evidence job at40minutes. Existing600-second
++finalizer grace,600-second custody reserve and kernel-clock admission stay in
++force. The original normal runner/control files remain unchanged; a private
++module binds inherited checks to the aggregate diagnostic manifest. Actual
++Swift build attempts retain the original worker/destructive-cleanup barrier.
++Missing/failed XCTest results are recorded, not manufactured; retention alone
++can authorize cleanup but never label capture or application qualification.
++
++Success is `SETTINGS_SHEET_CAPTURED_NOT_APP_QUALIFICATION`, not `PASS` for A/B.
++Both original lanes remain `NOT_RUN_THIS_RUN`; normal runtime/provenance/notice
++statuses stay `NOT_RUN`. Observe and independently review actual labels before
++considering any fixture selector correction or another L08 execution.
+diff --git a/scripts/ci/native_continuation.py b/scripts/ci/native_continuation.py
+--- a/scripts/ci/native_continuation.py
++++ b/scripts/ci/native_continuation.py
+@@ -40,8 +40,11 @@
+     "l08": OLD_CAMPAIGN + "/native/l08-app-foundation-composition-01/compose_runner.py",
+     "normal": OLD_CAMPAIGN + "/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py",
+ }
+-CYCLES = {"l08": "ios-readiness-33", "normal": "ios-readiness-34"}
+-NATIVE_SELECTIONS = {"paired": ("l08", "normal"), "l08-only": ("l08",)}
++SHEET_RUNNERS = {"settings_sheet": "scripts/verification/ios-settings-sheet/settings_sheet_probe.py"}
++SHEET_SELECTION = "settings-sheet-only"
++SHEET_CAPTURED = "SETTINGS_SHEET_CAPTURED_NOT_APP_QUALIFICATION"
++CYCLES = {"l08": "ios-readiness-33", "normal": "ios-readiness-34", "settings_sheet": "ios-readiness-35"}
++NATIVE_SELECTIONS = {"paired": ("l08", "normal"), "l08-only": ("l08",), SHEET_SELECTION: ("settings_sheet",)}
+ LIFECYCLE_MODE = "direct-owned-v1"
+ NATIVE_JOB_SECONDS = 240 * 60
+ NATIVE_WAIT_SECONDS = 6000
+@@ -144,7 +147,8 @@
+ def effective_native_selection(scope, requested):
+     selection = "paired" if requested in (None, "") else requested
+     require(isinstance(selection, str) and selection in NATIVE_SELECTIONS, "unknown-native-selection")
+-    require(selection == "paired" or scope == "native-evidence", "l08-only-requires-native-evidence")
++    require(selection == "paired" or scope == "native-evidence" or
++            selection == SHEET_SELECTION and scope == "native-preflight", "l08-only-requires-native-evidence")
+     return selection
+ 
+ 
+@@ -234,19 +238,19 @@
+     return value
+ 
+ 
+-def controls(binding, root=ROOT):
++def controls(binding, root=ROOT, runners=RUNNERS):
+     result = {}
+-    for label, runner in RUNNERS.items():
++    for label, runner in runners.items():
+         raw = command(["/usr/bin/python3", "-B", root / runner, "--control-manifest", binding], root)
+         result[label] = (raw, validate_controls(decode(raw), label))
+     return result
+ 
+ 
+-def unpack_preflight(raw):
++def unpack_preflight(raw, members=PREFLIGHT_FILES):
+     require(0 < len(raw) <= MAX_ZIP, "unbounded-preflight-zip")
+     with zipfile.ZipFile(io.BytesIO(raw)) as archive:
+         entries = archive.infolist()
+-        require(len(entries) == len(PREFLIGHT_FILES) and {row.filename for row in entries} == PREFLIGHT_FILES,
++        require(len(entries) == len(members) and {row.filename for row in entries} == members,
+                 "unexpected-or-duplicate-preflight-zip-members")
+         require(sum(row.file_size for row in entries) <= MAX_ZIP, "unbounded-preflight-contents")
+         result = {}
+@@ -349,7 +353,9 @@
+     return observed
+ 
+ 
+-def validate_package(files, expected, current, root=ROOT):
++def validate_package(files, expected, current, root=ROOT, runners=RUNNERS):
++    require(set(files) == {"preflight.json", BINDING_NAME, *[label + "-controls.json" for label in runners]},
++            "preflight-control-domain-mismatch")
+     preflight = decode(files["preflight.json"])
+     require(preflight.get("schema_version") == 1 and preflight.get("kind") == "NATIVE_CONTINUATION_PREFLIGHT"
+             and preflight.get("status") == "REVIEW_REQUIRED_NOT_RUNTIME_EVIDENCE", "not-a-successful-preflight-package")
+@@ -367,7 +373,7 @@
+             observation.get("commit") == current["head_sha"] and observation.get("tree") == current["tree"] and
+             observation.get("branch") == BRANCH and observation.get("diff_sha256") == sha(b"") and
+             binding["source_identity"].get("tracked_status") == "", "binding-source-does-not-match-preflight")
+-    for label in RUNNERS:
++    for label in runners:
+         manifest = validate_controls(decode(files[label + "-controls.json"]), label)
+         require(manifest["control_sha256"] == expected[label + "_sha256"] == preflight["control_sha256"][label],
+                 "independent-control-approval-mismatch")
+@@ -806,6 +812,10 @@
+         self.state = None
+ 
+     @property
++    def runners(self):
++        return SHEET_RUNNERS if self.selection == SHEET_SELECTION else RUNNERS
++
++    @property
+     def selected_lanes(self):
+         return NATIVE_SELECTIONS[self.selection]
+ 
+@@ -828,7 +838,7 @@
+         command(["/usr/bin/python3", "-B", self.root / SUPPORT / "bind_source.py", self.binding,
+                  before["source_manifest_sha256"], before["diff_sha256"]], self.root)
+         self.claim_file(self.binding)
+-        manifests = controls(self.binding, self.root)
++        manifests = controls(self.binding, self.root, self.runners)
+         write_new(self.bundle / BINDING_NAME, file_bytes(self.binding))
+         for label, (raw, _) in manifests.items():
+             write_new(self.bundle / (label + "-controls.json"), raw)
+@@ -849,9 +859,9 @@
+             raw = self.env.get("PARLOR_PREFLIGHT_" + key.upper(), "")
+             require(POSITIVE.fullmatch(raw), "missing-explicit-preflight-identity")
+             expected[key] = int(raw)
+-        for key, variable in (("artifact_sha256", "PARLOR_PREFLIGHT_ARTIFACT_SHA256"),
+-                              ("l08_sha256", "PARLOR_APPROVED_L08_CONTROL_SHA256"),
+-                              ("normal_sha256", "PARLOR_APPROVED_NORMAL_CONTROL_SHA256")):
++        approvals = (("settings_sheet_sha256", "PARLOR_APPROVED_PROBE_CONTROL_SHA256"),) if self.selection == SHEET_SELECTION else (
++            ("l08_sha256", "PARLOR_APPROVED_L08_CONTROL_SHA256"), ("normal_sha256", "PARLOR_APPROVED_NORMAL_CONTROL_SHA256"))
++        for key, variable in (("artifact_sha256", "PARLOR_PREFLIGHT_ARTIFACT_SHA256"), *approvals):
+             raw = self.env.get(variable, "")
+             require(HEX64.fullmatch(raw), "missing-independent-preflight-or-control-hash")
+             expected[key] = raw
+@@ -864,8 +874,8 @@
+         validate_producer(run, workflow, artifact, expected)
+         raw = download_zip(prefix + "artifacts/{}/zip".format(expected["artifact_id"]), token)
+         require(sha(raw) == expected["artifact_sha256"], "downloaded-preflight-zip-digest-mismatch")
+-        files = unpack_preflight(raw)
+-        preflight = validate_package(files, expected, self.context, self.root)
++        files = unpack_preflight(raw, {"preflight.json", BINDING_NAME, *[label + "-controls.json" for label in self.runners]})
++        preflight = validate_package(files, expected, self.context, self.root, self.runners)
+         require(preflight["source_observation"] == describe(self.root), "live-source-does-not-match-preflight")
+         require(preflight["toolchain"] == self.state["toolchain"], "native-host-toolchain-or-paths-differ-from-preflight")
+         retained = self.bundle / "reviewed-preflight"
+@@ -876,7 +886,7 @@
+             observed=producer_evidence(run, workflow, artifact), downloaded_sha256=sha(raw))))
+         write_new(self.binding, files[BINDING_NAME])
+         self.claim_file(self.binding)
+-        for label, (observed, _) in controls(self.binding, self.root).items():
++        for label, (observed, _) in controls(self.binding, self.root, self.runners).items():
+             require(observed == files[label + "-controls.json"], "live-control-manifest-differs-from-review")
+         return expected, decode(files[BINDING_NAME])["source_identity"]
+ 
+@@ -917,7 +927,7 @@
+                         stdout=output, stderr=subprocess.STDOUT)
+                     if entry.get("interrupted"):
+                         raise NativeInterrupted()
+-                    entry["exit_code"] = child.wait(timeout=NATIVE_WAIT_SECONDS)
++                    entry["exit_code"] = child.wait(timeout=900 if self.selection == SHEET_SELECTION else NATIVE_WAIT_SECONDS)
+                 except (subprocess.TimeoutExpired, NativeInterrupted) as error:
+                     finishing = True
+                     entry["timed_out"] = isinstance(error, subprocess.TimeoutExpired)
+@@ -935,9 +945,11 @@
+     def admit_native(self, label):
+         """Do not start a child unless its full unchanged wait/grace can fit."""
+         require(label in self.selected_lanes, "native-lane-not-selected")
+-        required = NATIVE_WAIT_SECONDS + NATIVE_GRACE_SECONDS + NATIVE_FINISH_RESERVE_SECONDS
+-        admission = dict(cycle=CYCLES[label], status="DENIED_NOT_RUN", job_budget_seconds=NATIVE_JOB_SECONDS,
+-                         child_wait_seconds=NATIVE_WAIT_SECONDS, finalizer_grace_seconds=NATIVE_GRACE_SECONDS,
++        wait_seconds = 900 if self.selection == SHEET_SELECTION else NATIVE_WAIT_SECONDS
++        job_seconds = 40 * 60 if self.selection == SHEET_SELECTION else NATIVE_JOB_SECONDS
++        required = wait_seconds + NATIVE_GRACE_SECONDS + NATIVE_FINISH_RESERVE_SECONDS
++        admission = dict(cycle=CYCLES[label], status="DENIED_NOT_RUN", job_budget_seconds=job_seconds,
++                         child_wait_seconds=wait_seconds, finalizer_grace_seconds=NATIVE_GRACE_SECONDS,
+                          evidence_cleanup_reserve_seconds=NATIVE_FINISH_RESERVE_SECONDS, required_seconds=required)
+         self.state.setdefault("native_admissions", {})[label] = admission
+         try:
+@@ -954,7 +966,7 @@
+                     clock["head_sha"] == self.context["head_sha"], "unbound-native-job-clock")
+             current = native_job_clock_ns()
+             require(current >= clock["start_ns"], "native-job-clock-is-in-the-future")
+-            remaining = NATIVE_JOB_SECONDS * 10 ** 9 - (current - clock["start_ns"])
++            remaining = job_seconds * 10 ** 9 - (current - clock["start_ns"])
+             admission.update(clock=clock, observed_ns=current, remaining_seconds=remaining // 10 ** 9)
+             require(remaining >= required * 10 ** 9, "insufficient-complete-native-lane-budget")
+             admission["status"] = "ADMITTED"
+@@ -973,7 +985,7 @@
+         # A denied B has no child/canonical receipt and must not overwrite A's
+         # honestly established cleanup safety or prevent uploaded-custody cleanup.
+         self.admit_native(label)
+-        arguments = ["/usr/bin/python3", "-B", str(self.root / RUNNERS[label]), cycle, str(self.binding), approved,
++        arguments = ["/usr/bin/python3", "-B", str(self.root / self.runners[label]), cycle, str(self.binding), approved,
+                      "--simulator-signing=adhoc", "--toolchain=" + PROFILE,
+                      "--simulator-lifecycle=" + LIFECYCLE_MODE]
+         if label == "normal":
+@@ -1017,6 +1029,9 @@
+                 receipt.get("toolchain_profile") == PROFILE and
+                 receipt.get("simulator_lifecycle_mode") == LIFECYCLE_MODE and
+                 (label != "normal" or receipt.get("image_observer") == "libproc"), "native-cycle-mode-profile-mismatch")
++        if label == "settings_sheet":
++            require(receipt.get("execution_kind") == "public-settings-sheet-diagnostic-only" and all(receipt.get(key) == "NOT_RUN"
++                for key in ("runtime_evidence_status", "provenance_status", "notice_package_status")), "diagnostic-is-not-app-qualification")
+         return entry["exit_code"], receipt.get("status")
+ 
+     def evidence(self):
+@@ -1025,6 +1040,10 @@
+         # Paired A partial/strict failure is retained; it does not prevent the independent
+         # normal-source B observation if (and only if) A's actual cleanup is safe.
+         results = [self.run_native(label, expected[label + "_sha256"], source) for label in self.selected_lanes]
++        if self.selection == SHEET_SELECTION:
++            captured = results == [(0, SHEET_CAPTURED)]
++            self.state["status"] = SHEET_CAPTURED if captured else "SETTINGS_SHEET_NOT_CAPTURED"
++            return 0 if captured else 2  # Diagnostic capture is never A/B or combined qualification.
+         passed = all(code == 0 and status == "PASS" for code, status in results)
+         if self.selection == "paired":
+             self.state["status"] = "PASS" if passed else "NOT_READY"
+diff --git a/scripts/release/tests/test_native_continuation.py b/scripts/release/tests/test_native_continuation.py
+--- a/scripts/release/tests/test_native_continuation.py
++++ b/scripts/release/tests/test_native_continuation.py
+@@ -55,14 +55,14 @@
+     return token
+ 
+ 
+-def package_fixture(root=ROOT):
++def package_fixture(root=ROOT, runners=None):
+     current = dict(repository=native.REPOSITORY, branch=native.BRANCH, head_sha="a" * 40, tree="b" * 40,
+                    workflow=native.WORKFLOW, root=str(root), run_id=200, run_attempt=1)
+     expected = dict(head_sha="a" * 40, run_id=100, run_attempt=2, artifact_id=300, artifact_sha256="f" * 64)
+     binding = dict(schema_version=3, repository=str(root), binding_status="REVIEW_REQUIRED_BOUND", source_identity=source_fixture())
+     files = {native.BINDING_NAME: native.json_bytes(binding)}
+     hashes = {}
+-    for label in native.RUNNERS:
++    for label in (native.RUNNERS if runners is None else runners):
+         rows = [dict(path=native.CAMPAIGN + "/" + native.BINDING_NAME, sha256=native.sha(files[native.BINDING_NAME]))]
+         value = dict(files=rows, control_sha256=native.sha(json.dumps(rows, separators=(",", ":")).encode()))
+         if label == "l08":
+@@ -102,12 +102,16 @@
+ 
+ class NativeScopeTest(unittest.TestCase):
+     def test_native_selection_defaults_to_paired_and_is_closed(self):
+-        self.assertEqual(native.NATIVE_SELECTIONS, {'paired': ('l08', 'normal'), 'l08-only': ('l08',)})
++        self.assertEqual(native.NATIVE_SELECTIONS, {'paired': ('l08', 'normal'), 'l08-only': ('l08',), 'settings-sheet-only': ('settings_sheet',)})
+         for scope in ('full', 'native-preflight', 'native-evidence', 'native-process-probe'):
+             for value in (None, '', 'paired'):
+                 with self.subTest(scope=scope, value=value):
+                     self.assertEqual(native.effective_native_selection(scope, value), 'paired')
+         self.assertEqual(native.effective_native_selection('native-evidence', 'l08-only'), 'l08-only')
++        for scope in ('native-preflight', 'native-evidence'):
++            self.assertEqual(native.effective_native_selection(scope, 'settings-sheet-only'), 'settings-sheet-only')
++        for scope in ('full', 'native-process-probe'):
++            with self.assertRaises(RuntimeError): native.effective_native_selection(scope, 'settings-sheet-only')
+         for value in ('normal-only', 'normal', 'l08', 'all', 'PAIRED', 'paired ', '../l08', False, 1, [], {}):
+             with self.subTest(value=value), self.assertRaisesRegex(RuntimeError, 'unknown-native-selection'):
+                 native.effective_native_selection('native-evidence', value)
+@@ -697,6 +701,7 @@
+ class NativePreflightTest(unittest.TestCase):
+     def prepare_lane(self, temporary):
+         lane = native.Continuation.__new__(native.Continuation)
++        lane.selection = 'paired'
+         lane.root = temporary / "checkout"
+         lane.root.mkdir()
+         lane.bundle = temporary / "bundle"
+@@ -1063,6 +1068,42 @@
+                 self.assertTrue((lane.bundle / native.CYCLES['l08'] / 'receipt.json').is_file())
+ 
+ 
++class SettingsSheetSelectionTest(unittest.TestCase):
++    def test_disjoint_package_and_approval_domain_before_native_work(self):
++        files, expected, current = package_fixture(runners=native.SHEET_RUNNERS)
++        self.assertEqual(set(files), {'preflight.json', native.BINDING_NAME, 'settings_sheet-controls.json'})
++        self.assertEqual(native.unpack_preflight(zipped(files), set(files)), files)
++        native.validate_package(files, expected, current, ROOT, native.SHEET_RUNNERS)
++        with self.assertRaisesRegex(RuntimeError, 'control-domain'):
++            native.validate_package(files, expected, current)  # Never an A/B package.
++        with self.assertRaisesRegex(RuntimeError, 'zip-members'):
++            native.unpack_preflight(zipped(files))
++        changed = {**expected, 'settings_sheet_sha256': 'f' * 64}
++        with self.assertRaisesRegex(RuntimeError, 'independent-control-approval'):
++            native.validate_package(files, changed, current, ROOT, native.SHEET_RUNNERS)
++
++    def test_capture_is_not_a_b_or_combined_pass_and_has_one_short_admission(self):
++        for result in ((0, native.SHEET_CAPTURED), (0, 'PASS'), (1, native.SHEET_CAPTURED)):
++            lane = object.__new__(native.Continuation)
++            lane.state, lane.save = {}, Mock()
++            native_clock_fixture(lane, selection=native.SHEET_SELECTION)
++            lane.fetch_preflight = Mock(return_value=({'settings_sheet_sha256': 'd' * 64}, source_fixture()))
++            lane.bootstrap_cache_directories = Mock()
++            lane.run_native = Mock(return_value=result)
++            self.assertEqual(lane.evidence(), 0 if result == (0, native.SHEET_CAPTURED) else 2)
++            self.assertEqual(lane.unselected_lanes, {'l08': 'NOT_RUN_THIS_RUN', 'normal': 'NOT_RUN_THIS_RUN'})
++            lane.run_native.assert_called_once_with('settings_sheet', 'd' * 64, source_fixture())
++            self.assertNotEqual(lane.state['status'], 'PASS')
++            with patch.object(native, 'native_job_clock_ns', return_value=SYNTHETIC_JOB_START_NS):
++                lane.admit_native('settings_sheet')
++            admission = lane.state['native_admissions']['settings_sheet']
++            self.assertEqual((admission['job_budget_seconds'], admission['child_wait_seconds'],
++                admission['finalizer_grace_seconds'], admission['evidence_cleanup_reserve_seconds']), (2400, 900, 600, 600))
++            with self.assertRaisesRegex(RuntimeError, 'not-selected'): lane.admit_native('normal')
++            with patch.object(native, 'native_job_clock_ns', return_value=SYNTHETIC_JOB_START_NS + 301 * 10 ** 9):
++                with self.assertRaisesRegex(RuntimeError, 'insufficient-complete'): lane.admit_native('settings_sheet')
++
++
+ class NativeJobBudgetAdmissionTest(unittest.TestCase):
+     """Actual pre-spawn admission; all clocks, native launches and saves are inert."""
+     def lane(self, root):
+diff --git a/scripts/release/tests/test_native_process_probe.py b/scripts/release/tests/test_native_process_probe.py
+--- a/scripts/release/tests/test_native_process_probe.py
++++ b/scripts/release/tests/test_native_process_probe.py
+@@ -123,7 +123,7 @@
+     def test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels(self):
+         self.assertEqual(native.effective_scope("workflow_dispatch", probe.SCOPE), probe.SCOPE)
+         self.assertEqual(native.effective_scope("pull_request", probe.SCOPE), "full")
+-        self.assertEqual(native.CYCLES, {"l08": "ios-readiness-33", "normal": "ios-readiness-34"})
++        self.assertEqual(native.CYCLES, {"l08": "ios-readiness-33", "normal": "ios-readiness-34", "settings_sheet": "ios-readiness-35"})
+         with self.assertRaisesRegex(RuntimeError, "not-an-app-native-continuation"):
+             native.Continuation(dict(GITHUB_EVENT_NAME="workflow_dispatch", PARLOR_DISPATCH_SCOPE=probe.SCOPE))
+ 
+diff --git a/scripts/release/tests/test_workflow_contract.py b/scripts/release/tests/test_workflow_contract.py
+--- a/scripts/release/tests/test_workflow_contract.py
++++ b/scripts/release/tests/test_workflow_contract.py
+@@ -72,8 +72,8 @@
+         workflow_contract.verify_verification_scopes(workflow)
+         mutations = [block.replace('type: choice', 'type: string', 1),
+                      block.replace('default: paired', 'default: l08-only', 1),
+-                     block.replace('[paired, l08-only]', '[paired, l08-only, l08]', 1),
+-                     block.replace('[paired, l08-only]', '[l08-only, paired]', 1),
++                     block.replace('[paired, l08-only, settings-sheet-only]', '[paired, l08-only, settings-sheet-only, l08]', 1),
++                     block.replace('[paired, l08-only, settings-sheet-only]', '[l08-only, paired, settings-sheet-only]', 1),
+                      block + block, '']
+         for replacement in mutations:
+             changed = workflow.replace(block, replacement, 1)
+@@ -98,6 +98,21 @@
+         with self.assertRaisesRegex(RuntimeError, 'verification scope'):
+             workflow_contract.verify_verification_scopes(changed)
+ 
++    def test_settings_sheet_diagnostic_requires_the_explicit_shared_probe_hash_binding(self) -> None:
++        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
++        block = workflow_contract.validation_step(workflow, "Run focused native continuation")
++        original = "          PARLOR_APPROVED_PROBE_CONTROL_SHA256: ${{ inputs.approved_probe_control_sha256 }}\n"
++        self.assertEqual(block.count(original), 1)
++        for replacement in ("", original.replace("inputs.approved_probe_control_sha256", "inputs.approved_normal_control_sha256"),
++                            original + original):
++            changed = workflow.replace(block, block.replace(original, replacement, 1), 1)
++            self.assertNotEqual(workflow, changed)
++            with self.subTest(replacement=replacement), self.assertRaisesRegex(RuntimeError, "verification scope"):
++                workflow_contract.verify_verification_scopes(changed)
++        changed = workflow.replace("env:\n", "env:\n" + original, 1)
++        with self.assertRaisesRegex(RuntimeError, "verification scope"):
++            workflow_contract.verify_verification_scopes(changed)
++
+     def test_focused_native_modes_do_not_weaken_full_verification(self) -> None:
+         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+         workflow_contract.verify_verification_scopes(workflow)
+@@ -121,8 +136,14 @@
+             ("PARLOR_PROBE_ARTIFACT_DIGEST: ${{ steps.process_probe_artifact.outputs.artifact-digest }}", "PARLOR_PROBE_ARTIFACT_DIGEST: cached"),
+             ("if: " + workflow_contract.PROCESS_PROBE_SCOPE, "if: always()"),
+         ):
++            name = ("Verify process-probe cleanup and uploaded custody" if "PARLOR_PROBE_" in original else
++                    "Observe hosted native processes without an app build")
++            block = workflow_contract.validation_step(workflow, name)
++            self.assertIn(original, block)
++            changed = workflow.replace(block, block.replace(original, replacement, 1), 1)
++            self.assertNotEqual(workflow, changed)
+             with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+-                workflow_contract.verify_verification_scopes(workflow.replace(original, replacement, 1))
++                workflow_contract.verify_verification_scopes(changed)
+         step = workflow_contract.validation_step(workflow, "Observe hosted native processes without an app build")
+         changed = workflow.replace(step, step.replace("        env:\n", "        env:\n          GH_TOKEN: ${{ github.token }}\n"), 1)
+         with self.assertRaisesRegex(RuntimeError, "verification scope"):
+@@ -151,12 +172,15 @@
+     def test_native_evidence_only_job_budget_and_all_other_scope_ceilings_are_exact(self) -> None:
+         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+         expression = ("${{ inputs.verification_scope == 'native-process-probe' && 10 || "
++                      "inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'settings-sheet-only' && 40 || "
+                       "inputs.verification_scope == 'native-evidence' && 240 || 120 }}")
+         ios = workflow.split("\n  ios:\n", 1)[1]
+         self.assertEqual([expression], re.findall(r"(?m)^    timeout-minutes: (.*)$", ios))
+         workflow_contract.verify_verification_scopes(workflow)
+         for replacement in (
+             expression.replace("&& 10", "&& 30"),
++            expression.replace("&& 40", "&& 240"),
++            expression.replace("'settings-sheet-only'", "'l08-only'"),
+             expression.replace("&& 240", "&& 120"),
+             expression.replace("&& 240", "&& 241"),
+             expression.replace("|| 120", "|| 240"),
+diff --git a/scripts/release/workflow_contract.py b/scripts/release/workflow_contract.py
+--- a/scripts/release/workflow_contract.py
++++ b/scripts/release/workflow_contract.py
+@@ -212,8 +212,8 @@
+     if re.findall(r"(?m)^    if: (.*)$", ios) != [IOS_VERIFICATION_SCOPE]:
+         fail("verification scope may skip iOS only for the separately guarded Windows-only follow-up")
+     if re.findall(r"(?m)^    timeout-minutes: (.*)$", ios) != [
+-            "${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}"]:
+-        fail("verification scope must keep full/preflight120, probe10 and focused native-evidence240 minute bounds")
++            "${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && inputs.native_selection == 'settings-sheet-only' && 40 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}"]:
++        fail("verification scope must keep full/preflight120, probe10, settings-sheet evidence40 and other native-evidence240 minute bounds")
+     clock_name = "Start focused native job clock"
+     clock = validation_step(ios, clock_name)
+     clock_script = '''        run: |
+@@ -242,8 +242,8 @@
+     selections = re.findall(r"(?m)^      native_selection:\n((?:        .*\n)+)", text.split("\nconcurrency:", 1)[0])
+     if (len(selections) != 1 or
+             re.findall(r"(?m)^        (type|default|options): (.*)$", selections[0]) !=
+-            [("type", "choice"), ("default", "paired"), ("options", "[paired, l08-only]")]):
+-        fail("verification scope must retain closed paired-default or l08-only native selection")
++            [("type", "choice"), ("default", "paired"), ("options", "[paired, l08-only, settings-sheet-only]")]):
++        fail("verification scope must retain closed paired-default, l08-only or settings-sheet-only selection")
+     for name in ("Validate verification scope", "Run focused native continuation",
+                  "Verify focused native cleanup and uploaded custody"):
+         if re.findall(r"(?m)^          PARLOR_NATIVE_SELECTION: (.*)$", validation_step(ios, name)) != [
+@@ -251,6 +251,10 @@
+             fail("verification scope must bind identical explicit native selection into validation/run/cleanup")
+     if text.count("PARLOR_NATIVE_SELECTION:") != 3:
+         fail("verification scope must not override native selection outside its three reviewed boundaries")
++    diagnostic = validation_step(ios, "Run focused native continuation")
++    if (re.findall(r"(?m)^          PARLOR_APPROVED_PROBE_CONTROL_SHA256: (.*)$", diagnostic) != [
++            "${{ inputs.approved_probe_control_sha256 }}"] or text.count("PARLOR_APPROVED_PROBE_CONTROL_SHA256:") != 3):
++        fail("verification scope requires the explicit diagnostic control hash only at its three reviewed boundaries")
+     validator = validation_step(ios, "Validate verification scope")
+     if (re.findall(r"(?m)^        if: (.*)$", validator) or
+             "run: /usr/bin/python3 -B scripts/ci/native_continuation.py validate-scope\n" not in validator or
+diff --git a/scripts/verification/ios-settings-sheet/SettingsSheet.xcscheme.in b/scripts/verification/ios-settings-sheet/SettingsSheet.xcscheme.in
+new file mode 100644
+--- /dev/null
++++ b/scripts/verification/ios-settings-sheet/SettingsSheet.xcscheme.in
+@@ -0,0 +1,19 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<Scheme LastUpgradeVersion="1620" version="1.3">
++   <BuildAction parallelizeBuildables="NO" buildImplicitDependencies="NO">
++      <BuildActionEntries>
++         <BuildActionEntry buildForTesting="YES" buildForRunning="NO" buildForProfiling="NO" buildForArchiving="NO" buildForAnalyzing="NO">
++            <BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="B14500012C0000010000000A" BuildableName="iosAppUITests.xctest" BlueprintName="iosAppUITests" ReferencedContainer="container:iosApp.xcodeproj">
++            </BuildableReference>
++         </BuildActionEntry>
++      </BuildActionEntries>
++   </BuildAction>
++   <TestAction buildConfiguration="Debug" selectedDebuggerIdentifier="Xcode.DebuggerFoundation.Debugger.LLDB" selectedLauncherIdentifier="Xcode.DebuggerFoundation.Launcher.LLDB" shouldUseLaunchSchemeArgsEnv="YES">
++      <Testables>
++         <TestableReference skipped="NO" parallelizable="NO">
++            <BuildableReference BuildableIdentifier="primary" BlueprintIdentifier="B14500012C0000010000000A" BuildableName="iosAppUITests.xctest" BlueprintName="iosAppUITests" ReferencedContainer="container:iosApp.xcodeproj">
++            </BuildableReference>
++         </TestableReference>
++      </Testables>
++   </TestAction>
++</Scheme>
+diff --git a/scripts/verification/ios-settings-sheet/SettingsSheetUITest.swift.in b/scripts/verification/ios-settings-sheet/SettingsSheetUITest.swift.in
+new file mode 100644
+--- /dev/null
++++ b/scripts/verification/ios-settings-sheet/SettingsSheetUITest.swift.in
+@@ -0,0 +1,424 @@
++import Foundation
++import XCTest
++
++// Generated copy of the reviewed public prerequisite helpers; no app fixture.
++final class IOSAppLaunchUITests: XCTestCase {
++    override func setUpWithError() throws { continueAfterFailure = false }
++    @MainActor private func catalogSamplingInterval() throws {
++        // No Thread.sleep, touch-to-stop gesture, callback invocation or app
++        // mutation. This lets UIKit/Compose settle while the test runloop works.
++        let interval = XCTestExpectation(description: "Fixed catalog readiness observation interval")
++        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { interval.fulfill() }
++        guard XCTWaiter.wait(for: [interval], timeout: 3) == .completed else {
++            XCTFail("Catalog observation interval did not complete")
++            throw NSError(domain: "DSC01CatalogObservation", code: 1)
++        }
++    }
++
++}
++
++private func dsc01CatalogFinite(_ rect: CGRect) -> Bool {
++    !rect.isNull && !rect.isInfinite && rect.size.width > 0 && rect.size.height > 0 &&
++        [rect.origin.x, rect.origin.y, rect.width, rect.height].allSatisfy { $0.isFinite && abs($0) <= 16384 }
++}
++
++private func dsc01CatalogRectFields(_ frame: CGRect?) -> [String: Any] {
++    guard let frame else { return ["present": false] }
++    guard dsc01CatalogFinite(frame) else { return ["present": true, "validFiniteRectangle": false] }
++    return ["present": true, "validFiniteRectangle": true,
++            "rectangle": [frame.origin.x, frame.origin.y, frame.width, frame.height]]
++}
++
++// Copied XCTest only. Public Apple Support109358 flow on the exact NEW runner-
++// owned simulator: Settings > General > Language & Region > Add Language.
++// This is a bounded experiment, not a documented guarantee that any particular
++// iOS26.5 Settings selector/per-app language row must exist after two languages.
++private enum DSC01OSPrerequisiteStage: String {
++    case ownership, settingsRoot, general, languageRegion, initialEnglishPrimary
++    case addLanguage, searchArabic, selectArabic, retainEnglishPrimary, finalPreferredLanguages
++}
++
++private enum DSC01OSInitialDisposition: String {
++    case alreadySatisfied = "already-satisfied"
++    case requiresArabic = "requires-arabic"
++    case blocked
++}
++
++private enum DSC01OSPrerequisiteControl: String {
++    case general, languageRegion, addLanguage, arabic
++
++    var labels: [String] {
++        switch self {
++        case .general: return ["General"]
++        case .languageRegion: return ["Language & Region"]
++        case .addLanguage: return ["Add Language…", "Add Language...", "Add Language"]
++        case .arabic: return ["Arabic", "العربية", "Arabic, العربية", "العربية, Arabic"]
++        }
++    }
++}
++
++@MainActor private final class DSC01OSPrerequisiteDiagnostics {
++    private var ordinal = 0
++    private var bytes = 0
++
++    func append(stage: DSC01OSPrerequisiteStage, status: String, fields: [String: Any]) throws {
++        guard ["observe", "before-activation", "after-activation", "PASS", "BLOCKED"].contains(status),
++              ordinal < 96 else { throw NSError(domain: "DSC01OSPrerequisiteDiagnosticBudget", code: 1) }
++        ordinal += 1
++        let row: [String: Any] = ["schemaVersion": 1, "ordinal": ordinal, "stage": stage.rawValue,
++            "status": status, "fields": fields]
++        let encoded = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
++        bytes += encoded.count
++        guard encoded.count <= 8192, bytes <= 196608,
++              let text = String(data: encoded, encoding: .utf8) else {
++            throw NSError(domain: "DSC01OSPrerequisiteDiagnosticBudget", code: 2)
++        }
++        print("DSC01_OS_PREREQUISITE " + text)
++    }
++}
++
++extension IOSAppLaunchUITests {
++    @MainActor private func osPrerequisiteQueries(_ settings: XCUIApplication,
++        control: DSC01OSPrerequisiteControl) -> [(String, XCUIElementQuery)] {
++        let predicate = NSPredicate(format: "label IN %@", control.labels)
++        // Exact whitelisted semantic row only. UITableView and SwiftUI can
++        // expose the same PUBLIC row as a cell/button/text. A unique cell is
++        // preferred, then a unique button, then a unique exact visible text.
++        // An ambiguous nonempty class fails; it never falls through to another.
++        return [("cell-containing-known-text", settings.cells.containing(predicate)),
++                ("known-button", settings.buttons.matching(predicate)),
++                ("known-text", settings.staticTexts.matching(predicate))]
++    }
++
++    @MainActor private func osPrerequisiteMetadata(_ settings: XCUIApplication,
++        control: DSC01OSPrerequisiteControl? = nil) -> [String: Any] {
++        var value: [String: Any] = ["foreground": settings.state == .runningForeground,
++            "viewport": dsc01CatalogRectFields(settings.frame),
++            "alertCountCapped16": min(settings.alerts.count, 16),
++            "sheetCountCapped16": min(settings.sheets.count, 16),
++            "keyboardPresent": settings.keyboards.firstMatch.exists]
++        let titles = ["Settings", "General", "Language & Region", "Add Language", "iPhone Language"]
++        value["knownNavigationTitles"] = titles.map { title -> [String: Any] in
++            ["knownTitle": title, "countCapped16": min(settings.navigationBars.matching(identifier: title).count, 16)]
++        }
++        if let control {
++            value["knownControl"] = control.rawValue
++            value["selectorClasses"] = osPrerequisiteQueries(settings, control: control).map { kind, query in
++                let count = query.count
++                let samples = count < 16 ? Array(query.allElementsBoundByIndex.prefix(2)) : []
++                return ["kind": kind, "countCapped16": min(count, 16), "atMostTwo": samples.map { item in
++                    ["hittable": item.isHittable, "enabled": item.isEnabled, "frame": dsc01CatalogRectFields(item.frame)]
++                }] as [String: Any]
++            }
++        }
++        return value
++    }
++
++    @MainActor private func osPrimaryChoiceMetadata(_ settings: XCUIApplication) -> [String: Any] {
++        var fields = osPrerequisiteMetadata(settings)
++        let knownChoice = NSPredicate(format: "label IN %@", ["Use English", "Keep English"])
++        // Independent public counts only: no unknown labels, hierarchy dump or
++        // required-element property access while a modal may be transitioning.
++        fields["primaryChoiceModalCounts"] = [("alert", settings.alerts), ("sheet", settings.sheets)].map { kind, query in
++            ["representation": kind, "countCapped16": min(query.count, 16),
++             "buttonCountCapped16": min(query.buttons.count, 16),
++             "englishPrimaryChoiceCountCapped16": min(query.buttons.matching(knownChoice).count, 16)] as [String: Any]
++        }
++        return fields
++    }
++
++    @MainActor private func osPrerequisiteBlock(_ stage: DSC01OSPrerequisiteStage,
++        diagnostics: DSC01OSPrerequisiteDiagnostics, fields: [String: Any]) throws -> Never {
++        try diagnostics.append(stage: stage, status: "BLOCKED", fields: fields)
++        XCTFail("Actual OS multilingual prerequisite BLOCKED at public stage: " + stage.rawValue)
++        throw NSError(domain: "DSC01OSPrerequisiteBlocked." + stage.rawValue, code: 1)
++    }
++
++    @MainActor private func osPrerequisiteTitle(_ settings: XCUIApplication, title: String,
++        stage: DSC01OSPrerequisiteStage, diagnostics: DSC01OSPrerequisiteDiagnostics) throws {
++        try diagnostics.append(stage: stage, status: "observe", fields: osPrerequisiteMetadata(settings))
++        let query = settings.navigationBars.matching(identifier: title)
++        let appeared = query.firstMatch.waitForExistence(timeout: 15)
++        let fields = osPrerequisiteMetadata(settings)
++        guard appeared, query.count == 1, settings.state == .runningForeground, settings.alerts.count == 0 else {
++            try osPrerequisiteBlock(stage, diagnostics: diagnostics, fields: fields)
++        }
++        try diagnostics.append(stage: stage, status: "PASS", fields: fields)
++    }
++
++    @MainActor private func osPrerequisiteTapRow(_ settings: XCUIApplication,
++        control: DSC01OSPrerequisiteControl, stage: DSC01OSPrerequisiteStage,
++        diagnostics: DSC01OSPrerequisiteDiagnostics, allowScroll: Bool = true) throws {
++        var selected: XCUIElement?
++        for attempt in 1...6 {
++            var fields = osPrerequisiteMetadata(settings, control: control)
++            fields["attempt"] = attempt
++            try diagnostics.append(stage: stage, status: "observe", fields: fields)
++            guard settings.state == .runningForeground, settings.alerts.count == 0 else {
++                try osPrerequisiteBlock(stage, diagnostics: diagnostics, fields: fields)
++            }
++            for (_, query) in osPrerequisiteQueries(settings, control: control) {
++                let count = query.count
++                if count == 0 { continue }
++                guard count == 1 else { try osPrerequisiteBlock(stage, diagnostics: diagnostics, fields: fields) }
++                let target = query.firstMatch
++                if target.isHittable && target.isEnabled && dsc01CatalogFinite(target.frame) {
++                    selected = target
++                }
++                break
++            }
++            if selected != nil { break }
++            if attempt < 6 {
++                if allowScroll && !settings.keyboards.firstMatch.exists { settings.swipeUp(velocity: .slow) }
++                try catalogSamplingInterval()
++            }
++        }
++        guard let selected else {
++            try osPrerequisiteBlock(stage, diagnostics: diagnostics, fields: osPrerequisiteMetadata(settings, control: control))
++        }
++        // One activation of this semantic OS step, never retried on missing successor.
++        try diagnostics.append(stage: stage, status: "before-activation",
++            fields: osPrerequisiteMetadata(settings, control: control))
++        guard selected.isHittable, selected.isEnabled, settings.state == .runningForeground,
++              settings.alerts.count == 0 else {
++            try osPrerequisiteBlock(stage, diagnostics: diagnostics, fields: osPrerequisiteMetadata(settings, control: control))
++        }
++        selected.tap()
++        try diagnostics.append(stage: stage, status: "after-activation",
++            fields: osPrerequisiteMetadata(settings, control: control))
++    }
++
++    @MainActor private func osPreferredLanguagesMetadata(_ settings: XCUIApplication) -> [String: Any] {
++        let englishCells = settings.cells.containing(NSPredicate(format: "label == %@", "English"))
++            .containing(NSPredicate(format: "label == %@", "iPhone Language"))
++        let mergedEnglish = settings.descendants(matching: .any)
++            .matching(NSPredicate(format: "label == %@", "English, iPhone Language"))
++        let arabicCells = settings.cells.containing(NSPredicate(format: "label IN %@", ["Arabic", "العربية"]))
++        let arabicTexts = settings.staticTexts.matching(NSPredicate(format: "label IN %@", ["Arabic", "العربية"]))
++        let titles = settings.navigationBars.matching(identifier: "Language & Region")
++        let english = englishCells.count == 1 ? englishCells.firstMatch :
++            (mergedEnglish.count == 1 ? mergedEnglish.firstMatch : nil)
++        let arabic = arabicCells.count == 1 ? arabicCells.firstMatch : nil
++        var addLanguage: XCUIElement?
++        for (_, query) in osPrerequisiteQueries(settings, control: .addLanguage) {
++            let count = query.count
++            if count == 0 { continue }
++            if count == 1 { addLanguage = query.firstMatch }
++            break
++        }
++        let englishFrame = english?.frame
++        let arabicFrame = arabic?.frame
++        let addFrame = addLanguage?.frame
++        var orderedPreferredRows = false
++        if let englishFrame, let arabicFrame, let addFrame,
++           [englishFrame, arabicFrame, addFrame].allSatisfy(dsc01CatalogFinite) {
++            orderedPreferredRows = englishFrame.maxY <= arabicFrame.minY + 1 && arabicFrame.maxY <= addFrame.minY + 1
++        }
++        var fields = osPrerequisiteMetadata(settings, control: .addLanguage)
++        fields["englishPrimaryCellCountCapped16"] = min(englishCells.count, 16)
++        fields["mergedEnglishPrimaryCountCapped16"] = min(mergedEnglish.count, 16)
++        fields["arabicCellCountCapped16"] = min(arabicCells.count, 16)
++        fields["arabicTextCountCapped16"] = min(arabicTexts.count, 16)
++        fields["englishPrimaryObserved"] = englishCells.count == 1 || mergedEnglish.count == 1
++        fields["arabicObserved"] = arabicCells.count == 1 || (1...2).contains(arabicTexts.count)
++        fields["languageRegionTitleObserved"] = titles.count == 1
++        fields["languageRegionTitleHittable"] = titles.count == 1 && titles.firstMatch.isHittable
++        fields["searchFieldCountCapped16"] = min(settings.searchFields.count, 16)
++        fields["englishPrimaryHittable"] = english?.isHittable ?? false
++        fields["addLanguageSuccessorHittableEnabled"] = (addLanguage?.isHittable ?? false) && (addLanguage?.isEnabled ?? false)
++        fields["arabicPreferredRowObserved"] = arabic != nil && (arabic?.isHittable ?? false) && orderedPreferredRows
++        fields["englishPrimaryFrame"] = dsc01CatalogRectFields(englishFrame)
++        fields["arabicPreferredRowFrame"] = dsc01CatalogRectFields(arabicFrame)
++        fields["addLanguageSuccessorFrame"] = dsc01CatalogRectFields(addFrame)
++        return fields
++    }
++
++    private func osObservedFrame(_ observed: [String: Any], key: String) -> CGRect? {
++        guard let value = observed[key] as? [String: Any], value["present"] as? Bool == true,
++              value["validFiniteRectangle"] as? Bool == true,
++              let numbers = value["rectangle"] as? [CGFloat], numbers.count == 4 else { return nil }
++        let frame = CGRect(x: numbers[0], y: numbers[1], width: numbers[2], height: numbers[3])
++        return dsc01CatalogFinite(frame) ? frame : nil
++    }
++
++    private func osEnglishPrimaryListIsUncovered(_ observed: [String: Any]) -> Bool {
++        guard observed["foreground"] as? Bool == true, observed["alertCountCapped16"] as? Int == 0,
++              observed["keyboardPresent"] as? Bool == false, observed["searchFieldCountCapped16"] as? Int == 0,
++              ["languageRegionTitleObserved", "languageRegionTitleHittable", "englishPrimaryObserved",
++               "englishPrimaryHittable", "addLanguageSuccessorHittableEnabled"]
++                .allSatisfy({ observed[$0] as? Bool == true }),
++              let cells = observed["englishPrimaryCellCountCapped16"] as? Int,
++              let merged = observed["mergedEnglishPrimaryCountCapped16"] as? Int,
++              (0...1).contains(cells), (0...1).contains(merged), cells + merged >= 1,
++              let viewport = osObservedFrame(observed, key: "viewport"),
++              let english = osObservedFrame(observed, key: "englishPrimaryFrame"),
++              let add = osObservedFrame(observed, key: "addLanguageSuccessorFrame") else { return false }
++        return viewport.contains(english) && viewport.contains(add) && english.maxY <= add.minY + 1
++    }
++
++    private func osPreferredListIsUncovered(_ observed: [String: Any]) -> Bool {
++        // A presented picker can leave underlying labels in the AX tree. The
++        // actual preferred list must be exposed, ordered and interactable after
++        // English-primary selection; a global Arabic search result is not proof.
++        guard osEnglishPrimaryListIsUncovered(observed),
++              observed["arabicCellCountCapped16"] as? Int == 1,
++              let viewport = osObservedFrame(observed, key: "viewport"),
++              let english = osObservedFrame(observed, key: "englishPrimaryFrame"),
++              let arabic = osObservedFrame(observed, key: "arabicPreferredRowFrame"),
++              let add = osObservedFrame(observed, key: "addLanguageSuccessorFrame"),
++              viewport.contains(arabic), english.maxY <= arabic.minY + 1,
++              arabic.maxY <= add.minY + 1 else { return false }
++        return observed["foreground"] as? Bool == true && observed["alertCountCapped16"] as? Int == 0 &&
++            observed["keyboardPresent"] as? Bool == false && observed["searchFieldCountCapped16"] as? Int == 0 &&
++            ["languageRegionTitleObserved", "languageRegionTitleHittable", "englishPrimaryObserved",
++             "englishPrimaryHittable", "arabicObserved", "arabicPreferredRowObserved", "addLanguageSuccessorHittableEnabled"]
++            .allSatisfy { observed[$0] as? Bool == true }
++    }
++
++    private func osInitialDisposition(_ observed: [String: Any]) -> DSC01OSInitialDisposition {
++        if osPreferredListIsUncovered(observed) { return .alreadySatisfied }
++        guard osEnglishPrimaryListIsUncovered(observed), observed["arabicObserved"] as? Bool == false,
++              observed["arabicCellCountCapped16"] as? Int == 0,
++              observed["arabicTextCountCapped16"] as? Int == 0 else { return .blocked }
++        return .requiresArabic
++    }
++
++    private func verifyOSPrerequisiteDecisionContract() throws {
++        let present: [String: Any] = ["foreground": true, "alertCountCapped16": 0,
++            "keyboardPresent": false, "searchFieldCountCapped16": 0,
++            "languageRegionTitleObserved": true, "languageRegionTitleHittable": true,
++            "englishPrimaryObserved": true, "englishPrimaryHittable": true,
++            "addLanguageSuccessorHittableEnabled": true, "englishPrimaryCellCountCapped16": 1,
++            "mergedEnglishPrimaryCountCapped16": 0, "arabicObserved": true,
++            "arabicCellCountCapped16": 1, "arabicTextCountCapped16": 2, "arabicPreferredRowObserved": true,
++            "viewport": dsc01CatalogRectFields(CGRect(x: 0, y: 0, width: 402, height: 874)),
++            "englishPrimaryFrame": dsc01CatalogRectFields(CGRect(x: 20, y: 171, width: 362, height: 68)),
++            "arabicPreferredRowFrame": dsc01CatalogRectFields(CGRect(x: 20, y: 239, width: 362, height: 68)),
++            "addLanguageSuccessorFrame": dsc01CatalogRectFields(CGRect(x: 20, y: 307, width: 362, height: 55))]
++        var absent = present
++        absent["arabicObserved"] = false; absent["arabicCellCountCapped16"] = 0
++        absent["arabicTextCountCapped16"] = 0; absent["arabicPreferredRowObserved"] = false
++        absent["arabicPreferredRowFrame"] = dsc01CatalogRectFields(nil)
++        var cases: [(String, [String: Any], DSC01OSInitialDisposition)] = [
++            ("already-satisfied", present, .alreadySatisfied), ("missing-Arabic", absent, .requiresArabic)]
++        for (name, key, value) in [
++            ("background", "foreground", false), ("covered-picker", "searchFieldCountCapped16", 1),
++            ("keyboard", "keyboardPresent", true), ("alert", "alertCountCapped16", 1),
++            ("wrong-primary", "englishPrimaryObserved", false), ("hidden-primary", "englishPrimaryHittable", false),
++            ("hidden-title", "languageRegionTitleHittable", false), ("missing-title", "languageRegionTitleObserved", false),
++            ("disabled-successor", "addLanguageSuccessorHittableEnabled", false),
++            ("ambiguous-primary", "englishPrimaryCellCountCapped16", 2),
++            ("ambiguous-merged-primary", "mergedEnglishPrimaryCountCapped16", 2),
++            ("ambiguous-Arabic", "arabicCellCountCapped16", 2),
++            ("nonpreferred-Arabic", "arabicPreferredRowObserved", false)
++        ] as [(String, String, Any)] {
++            var changed = present; changed[key] = value; cases.append((name, changed, .blocked))
++        }
++        for (name, key, frame) in [
++            ("Arabic-before-English", "arabicPreferredRowFrame", CGRect(x: 20, y: 100, width: 362, height: 68)),
++            ("Arabic-after-Add", "arabicPreferredRowFrame", CGRect(x: 20, y: 380, width: 362, height: 68)),
++            ("English-after-Add", "englishPrimaryFrame", CGRect(x: 20, y: 380, width: 362, height: 68)),
++            ("offscreen-Arabic", "arabicPreferredRowFrame", CGRect(x: -500, y: 239, width: 362, height: 68)),
++            ("nonfinite-English", "englishPrimaryFrame", CGRect(x: CGFloat.nan, y: 171, width: 362, height: 68))
++        ] {
++            var changed = present; changed[key] = dsc01CatalogRectFields(frame)
++            cases.append((name, changed, .blocked))
++        }
++        var coveredAbsent = absent; coveredAbsent["searchFieldCountCapped16"] = 1
++        cases.append(("missing-Arabic-covered-picker", coveredAbsent, .blocked))
++        var ambiguousAbsent = absent; ambiguousAbsent["arabicTextCountCapped16"] = 1
++        cases.append(("inconsistent-Arabic-absence", ambiguousAbsent, .blocked))
++        var missingFrame = present; missingFrame["englishPrimaryFrame"] = dsc01CatalogRectFields(nil)
++        cases.append(("missing-English-frame", missingFrame, .blocked))
++        var mergedOnly = present; mergedOnly["englishPrimaryCellCountCapped16"] = 0
++        mergedOnly["mergedEnglishPrimaryCountCapped16"] = 1
++        cases.append(("unique-merged-English-primary", mergedOnly, .alreadySatisfied))
++        XCTAssertEqual(cases.count, 24)
++        for (name, observed, expected) in cases {
++            XCTAssertEqual(osInitialDisposition(observed), expected, "Pure public OS prerequisite: " + name)
++        }
++        print("DSC01_OS_PREREQUISITE_DECISION_CONTRACT {\"schemaVersion\":1,\"cases\":24,\"passed\":true}")
++    }
++
++    @MainActor @objc func testSettingsPrimaryLanguageSheet() throws {
++        let expectedSimulator = __PARLOR_EXPECTED_SIMULATOR_UUID__
++        try verifyOSPrerequisiteDecisionContract()
++        let diagnostics = DSC01OSPrerequisiteDiagnostics()
++        #if DEBUG && targetEnvironment(simulator)
++        let environment = ProcessInfo.processInfo.environment
++        let sameSimulator = environment["SIMULATOR_UDID"] == expectedSimulator && UUID(uuidString: expectedSimulator) != nil
++        // The source-copy renderer binds the exact fresh allocation, not merely
++        // a prefix that could identify a different campaign's simulator.
++        let ownedName = environment["SIMULATOR_DEVICE_NAME"] == __PARLOR_EXPECTED_SIMULATOR_NAME__
++        let ownership: [String: Any] = ["sameExpectedSimulator": sameSimulator, "ownedSyntheticDeviceName": ownedName,
++            "debugSimulatorBuild": true]
++        guard sameSimulator, ownedName else { try osPrerequisiteBlock(.ownership, diagnostics: diagnostics, fields: ownership) }
++        try diagnostics.append(stage: .ownership, status: "PASS", fields: ownership)
++        #else
++        try osPrerequisiteBlock(.ownership, diagnostics: diagnostics, fields: ["debugSimulatorBuild": false])
++        #endif
++        // Diagnostic-only fresh owned simulator. No Parlor app is built or launched.
++        let settings = XCUIApplication(bundleIdentifier: "com.apple.Preferences")
++        settings.launchArguments = [] // Never inject AppleLanguages/AppleLocale.
++        defer { settings.terminate() }
++        settings.launch()
++        try osPrerequisiteTitle(settings, title: "Settings", stage: .settingsRoot, diagnostics: diagnostics)
++        try osPrerequisiteTapRow(settings, control: .general, stage: .general, diagnostics: diagnostics)
++        try osPrerequisiteTitle(settings, title: "General", stage: .general, diagnostics: diagnostics)
++        try osPrerequisiteTapRow(settings, control: .languageRegion, stage: .languageRegion, diagnostics: diagnostics)
++        try osPrerequisiteTitle(settings, title: "Language & Region", stage: .languageRegion, diagnostics: diagnostics)
++        var initial = osPreferredLanguagesMetadata(settings)
++        let disposition = osInitialDisposition(initial)
++        initial["prerequisiteDisposition"] = disposition.rawValue
++        try diagnostics.append(stage: .initialEnglishPrimary, status: "observe", fields: initial)
++        guard disposition == .requiresArabic, initial["sheetCountCapped16"] as? Int == 0 else {
++            try osPrerequisiteBlock(.initialEnglishPrimary, diagnostics: diagnostics, fields: initial)
++        }
++        try diagnostics.append(stage: .initialEnglishPrimary, status: "PASS", fields: initial)
++        try osPrerequisiteTapRow(settings, control: .addLanguage, stage: .addLanguage, diagnostics: diagnostics)
++        try diagnostics.append(stage: .searchArabic, status: "observe", fields: osPrerequisiteMetadata(settings, control: .arabic))
++        let search = settings.searchFields
++        guard search.firstMatch.waitForExistence(timeout: 15), search.count == 1,
++              search.firstMatch.isHittable, search.firstMatch.isEnabled, settings.alerts.count == 0 else {
++            try osPrerequisiteBlock(.searchArabic, diagnostics: diagnostics, fields: osPrerequisiteMetadata(settings, control: .arabic))
++        }
++        try diagnostics.append(stage: .searchArabic, status: "before-activation",
++            fields: ["uniqueSearchField": true, "frame": dsc01CatalogRectFields(search.firstMatch.frame)])
++        search.firstMatch.tap()
++        search.firstMatch.typeText("Arabic") // Real public Settings search, once; no backing preference write.
++        try diagnostics.append(stage: .searchArabic, status: "after-activation", fields: osPrerequisiteMetadata(settings, control: .arabic))
++        try osPrerequisiteTapRow(settings, control: .arabic, stage: .selectArabic, diagnostics: diagnostics, allowScroll: false)
++        // Observe only the unique sheet reached by the exact public Add Arabic flow.
++        // Unknown labels are permitted ONLY here, on a pristine owned Settings sheet.
++        // No button is selected, retried or generically dismissed by this diagnostic.
++        guard settings.sheets.firstMatch.waitForExistence(timeout: 15),
++              settings.state == .runningForeground, settings.alerts.count == 0,
++              settings.sheets.count == 1, !settings.keyboards.firstMatch.exists,
++              settings.navigationBars.matching(identifier: "Language & Region").count == 1 else {
++            try osPrerequisiteBlock(.retainEnglishPrimary, diagnostics: diagnostics, fields: osPrimaryChoiceMetadata(settings))
++        }
++        let sheet = settings.sheets.firstMatch
++        guard sheet.buttons.count == 3 else {
++            try osPrerequisiteBlock(.retainEnglishPrimary, diagnostics: diagnostics, fields: osPrimaryChoiceMetadata(settings))
++        }
++        let actions = sheet.buttons.allElementsBoundByIndex
++        guard actions.count == 3, actions.allSatisfy({ $0.isHittable && $0.isEnabled && dsc01CatalogFinite($0.frame) }) else {
++            try osPrerequisiteBlock(.retainEnglishPrimary, diagnostics: diagnostics, fields: osPrimaryChoiceMetadata(settings))
++        }
++        let labels = actions.map { $0.label }
++        guard labels.allSatisfy({ !$0.isEmpty && $0.utf8.count <= 128 &&
++                !$0.unicodeScalars.contains(where: { $0.value < 32 || $0.value == 127 }) }),
++              settings.state == .runningForeground, settings.alerts.count == 0,
++              settings.sheets.count == 1, sheet.buttons.count == 3,
++              !settings.keyboards.firstMatch.exists else {
++            try osPrerequisiteBlock(.retainEnglishPrimary, diagnostics: diagnostics, fields: osPrimaryChoiceMetadata(settings))
++        }
++        let row: [String: Any] = ["schemaVersion": 1, "simulator": expectedSimulator,
++            "labels": labels, "selectionTapped": false]
++        let data = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
++        guard data.count <= 2048, let text = String(data: data, encoding: .utf8) else {
++            throw NSError(domain: "SettingsSheetDiagnosticBudget", code: 1)
++        }
++        print("SETTINGS_SHEET_CAPTURE " + text)
++    }
++}
+diff --git a/scripts/verification/ios-settings-sheet/settings_sheet_probe.py b/scripts/verification/ios-settings-sheet/settings_sheet_probe.py
+new file mode 100644
+--- /dev/null
++++ b/scripts/verification/ios-settings-sheet/settings_sheet_probe.py
+@@ -0,0 +1,215 @@
++#!/usr/bin/env python3
++"""One public Settings-sheet observation; never Parlor runtime qualification.
++
++Import allocates no native resources. A private, immutable normal-Lane module
++supplies all source, process, simulator and finalizer guards without changing B.
++"""
++import difflib
++import fcntl
++import hashlib
++import importlib.util
++import json
++from pathlib import Path
++import re
++import signal
++import sys
++
++HERE = Path(__file__).resolve().parent
++ROOT = HERE.parents[2]
++NORMAL = ROOT / 'remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/run_normal_ios_launch.py'
++NORMAL_SHA = '766087ddf72b50f51b1c4072c64afb1a7dd231f047d26e534817cddf9be295bf'
++METHOD = 'IOSAppLaunchUITests/testSettingsPrimaryLanguageSheet()'
++CAPTURED = 'SETTINGS_SHEET_CAPTURED_NOT_APP_QUALIFICATION'
++UI_TEST = 'iosApp/iosAppUITests/IOSAppLaunchUITests.swift'
++PROJECT = 'iosApp/iosApp.xcodeproj/project.pbxproj'
++SCHEME = 'iosApp/iosApp.xcodeproj/xcshareddata/xcschemes/iosApp.xcscheme'
++
++
++def require(value, code):
++    if not value:
++        raise RuntimeError('settings-sheet-' + code)
++
++
++require(NORMAL.resolve() == NORMAL and hashlib.sha256(NORMAL.read_bytes()).hexdigest() == NORMAL_SHA, 'base-drift')
++_spec = importlib.util.spec_from_file_location('_settings_sheet_private_normal_lane', NORMAL)
++normal = importlib.util.module_from_spec(_spec)
++_spec.loader.exec_module(normal)
++_base_manifest = normal.control_manifest
++
++
++def control_manifest(binding=None):
++    rows = _base_manifest(binding)  # Retain the original callable, not a recursive replacement.
++    extra = [p for p in HERE.iterdir() if p.is_file() and p.suffix in {'.py', '.in', '.md'}]
++    extra += [ROOT / p for p in ('.github/workflows/production-verification.yml', 'scripts/ci/native_continuation.py')]
++    for path in extra:
++        require(path.resolve() == path and path.is_file() and not path.is_symlink(), 'control-path')
++        rows.append(dict(path=str(path.relative_to(ROOT)), sha256=normal.digest(path)))
++    require(len({row['path'] for row in rows}) == len(rows), 'duplicate-control')
++    return sorted(rows, key=lambda row: row['path'])
++
++
++def control_hash(binding=None):
++    return hashlib.sha256(json.dumps(control_manifest(binding), separators=(',', ':')).encode()).hexdigest()
++
++
++# Every inherited prepare/finalize/lifecycle callback sees this same aggregate.
++# This module is private to this diagnostic process; normal's entry point is unchanged.
++normal.control_manifest, normal.control_hash = control_manifest, control_hash
++
++
++def detach_project(text):
++    for needle, count in (
++        ('\t\t\t\t7555FF76242A565900829871 /* iosApp */,\n', 1),
++        ('\t\t\t\tB14500012C00000100000009 /* PBXTargetDependency */,\n', 1),
++        ('TestTargetID = 7555FF76242A565900829871;', 1),
++        ('\t\t\t\tTEST_TARGET_NAME = iosApp;\n', 2),
++        ('\t\t\t\tD5C010012C00000100000003 /* ComposeContainerViewController.swift in Sources */,\n', 1),
++        ('\t\t\t\tD5C010012C00000100000005 /* ComposeContainerViewControllerTests.swift in Sources */,\n', 1),
++    ):
++        require(text.count(needle) == count, 'project-anchor-drift')
++        text = text.replace(needle, '')
++    return text
++
++
++def validate_capture(summary, tests, log, uuid):
++    expected = dict(result='Passed', totalTestCount=1, passedTests=1, failedTests=0, skippedTests=0, expectedFailures=0)
++    require(all(type(summary.get(k)) is type(v) and summary[k] == v for k, v in expected.items()) and not summary.get('testFailures'), 'xctest-summary')
++    configs, devices = summary.get('devicesAndConfigurations', []), tests.get('devices', [])
++    require(len(configs) == len(devices) == 1 and all(d.get('deviceId') == uuid and
++        d.get('architecture') == 'arm64' and d.get('platform') == 'iOS Simulator'
++        for d in (configs[0].get('device', {}), devices[0])), 'xctest-device')
++    pending, cases, visited = list(tests.get('testNodes', [])), [], 0
++    while pending:
++        item = pending.pop(); visited += 1
++        require(visited <= 512, 'xctest-node-budget')
++        if item.get('nodeType') == 'Test Case': cases.append(item)
++        pending.extend(item.get('children', []))
++    require(len(cases) == 1 and cases[0].get('nodeIdentifier') == METHOD and cases[0].get('result') == 'Passed', 'xctest-method')
++    rows = [line.split('SETTINGS_SHEET_CAPTURE ', 1)[1] for line in log.splitlines() if line.startswith('SETTINGS_SHEET_CAPTURE ')]
++    require(len(rows) == 1 and len(rows[0].encode()) <= 2048, 'capture-count-or-budget')
++    value = normal.read_json(rows[0], maximum=2048)
++    require(isinstance(value, dict) and set(value) == {'schemaVersion', 'simulator', 'labels', 'selectionTapped'} and
++        type(value['schemaVersion']) is int and value['schemaVersion'] == 1 and value['simulator'] == uuid and value['selectionTapped'] is False and
++        isinstance(value['labels'], list) and len(value['labels']) == 3 and
++        all(isinstance(label, str) and 0 < len(label.encode()) <= 128 and not any(ord(c) < 32 or ord(c) == 127 for c in label)
++            for label in value['labels']), 'capture-shape')
++    return value
++
++
++class SheetLane(normal.Lane):
++    def prepare(self):
++        self.receipt.update(execution_kind='public-settings-sheet-diagnostic-only', diagnostic_status='NOT_RUN', image_observer='NOT_RUN_DIAGNOSTIC_ONLY',
++            scope='Fresh owned Settings public-language flow; three capped modal action labels only. No selection tap, Parlor build/runtime, provenance, protection or Store claim.')
++        super().prepare()
++        copy = self.temporary / 'copy'
++        swift = (HERE / 'SettingsSheetUITest.swift.in').read_text()
++        for token, value in (('__PARLOR_EXPECTED_SIMULATOR_NAME__', self.receipt['owned_device_name']),
++                             ('__PARLOR_EXPECTED_SIMULATOR_UUID__', self.uuid)):
++            require(swift.count(token) == 1, 'fixture-binding')
++            swift = swift.replace(token, json.dumps(value))
++        (copy / UI_TEST).write_text(swift)
++        (copy / PROJECT).write_text(detach_project((copy / PROJECT).read_text()))
++        (copy / SCHEME).write_text((HERE / 'SettingsSheet.xcscheme.in').read_text())
++        changed = {UI_TEST, PROJECT, SCHEME}
++        for row in self.copy_manifest:
++            observed = normal.digest(copy / row['path'])
++            require((observed != row['copied_sha256']) == (row['path'] in changed), 'copy-change-set')
++            row['copied_sha256'] = observed
++        require(changed <= {row['path'] for row in self.copy_manifest}, 'copy-input-missing')
++        normal.write_json(self.destination / 'copied-source-manifest.json', self.copy_manifest)
++        diff = ''.join(''.join(difflib.unified_diff((ROOT / p).read_text().splitlines(True),
++            (copy / p).read_text().splitlines(True), fromfile='original/' + p, tofile='settings-sheet-copy/' + p)) for p in sorted(changed))
++        (self.destination / 'copied-source.diff').write_text(diff)
++        self.receipt.update(copied_source_manifest_sha256=normal.digest(self.destination / 'copied-source-manifest.json'),
++            copied_source_diff_sha256=normal.digest(self.destination / 'copied-source.diff'), diagnostic_changed_inputs=sorted(changed))
++        self.save()
++
++    def preserve(self):
++        self.receipt.update(postbuild_evidence_preserved=False, parlor_outputs_absent=False)
++        results = self.temporary / 'Results.xcresult'
++        require(not results.is_symlink(), 'redirected-result')
++        log = self.destination / 'xcodebuild.log'
++        require(log.is_file() and not log.is_symlink() and log.stat().st_size <= 8 * 1024 * 1024, 'build-log-retention')
++        state = dict(xcode_log_sha256=normal.digest(log), xcresult_present=results.exists(), extraction={})
++        if results.exists():
++            require(results.is_dir(), 'result-type')
++            for view in ('summary', 'tests'):
++                code = self.command(['xcrun', 'xcresulttool', 'get', 'test-results', view, '--path', results], 'xcresult-' + view + '.json')
++                state['extraction'][view] = code
++        normal.write_json(self.destination / 'diagnostic-retention.json', state)
++        require(all(not path.exists() and not path.is_symlink() for path in (
++            self.temporary / 'copy/composeApp/build',
++            self.temporary / 'DerivedData/Build/Products/Debug-iphonesimulator/Parlor.app')), 'unexpected-app-build')
++        self.receipt['parlor_outputs_absent'] = True
++        # Missing/failed XCTest extraction is retained as such, NEVER capture success.
++        # No Parlor app/container/phase receipt is expected in this diagnostic.
++        self.receipt['postbuild_evidence_preserved'] = True
++        try: self.save()
++        except BaseException:
++            self.receipt['postbuild_evidence_preserved'] = False
++            raise
++        return state
++
++    def run_xctest(self):
++        self.gradle_attempted = True  # Real Swift build: retain the original worker/destruction barrier.
++        self.receipt.update(build_attempted=True, diagnostic_status='RUNNING')
++        self.save()
++        arguments = normal.xcode_arguments(self.temporary / 'copy' / PROJECT,
++            self.environment['SDK_NAME'], self.uuid, self.temporary, self.signing)
++        arguments[arguments.index('-only-testing:' + normal.SELECTOR)] = '-only-testing:iosAppUITests/' + METHOD.removesuffix('()')
++        for key, value in (('-test-iterations', '1'), ('-test-repetition-relaunch-enabled', 'NO'),
++                           ('-default-test-execution-time-allowance', '180'), ('-maximum-test-execution-time-allowance', '240')):
++            arguments[arguments.index(key) + 1] = value
++        primary = None
++        try:
++            self.lifecycle.mark_build_attempted()
++            self.receipt['xcodebuild_exit_code'] = self.command(arguments, 'xcodebuild.log', timeout=600, limit=8 * 1024 * 1024)
++        except BaseException as error:
++            primary = error
++        finally:
++            self.stage('stop-xcode-immediate', lambda: self.stop_gradle('stop-xcode-immediate'))
++            retained = self.stage('preserve-settings-sheet-evidence', self.preserve)
++        if primary is not None: raise primary
++        require(not self.errors and self.receipt.get('xcodebuild_exit_code') == 0 and
++            retained['extraction'] == {'summary': 0, 'tests': 0}, 'incomplete-native-execution')
++        value = validate_capture(*[normal.read_json((self.destination / ('xcresult-' + view + '.json')).read_text())
++            for view in ('summary', 'tests')], (self.destination / 'xcodebuild.log').read_text(), self.uuid)
++        normal.write_json(self.destination / 'public-sheet-actions.json', value)
++        self.receipt['diagnostic_status'] = 'CAPTURED'
++
++    def observe_external_images(self):
++        return  # No normal B launch, notice or libproc observation; their statuses remain NOT_RUN.
++
++    def finalize(self):
++        if self.receipt.get('diagnostic_status') == 'RUNNING':
++            self.receipt['diagnostic_status'] = 'FAIL'
++        super().finalize()  # Every original ownership/source/cleanup guard runs, including real build barrier.
++        r = self.receipt
++        complete = (r.get('diagnostic_status') == 'CAPTURED' and r['cleanup_status'] == 'PASS' and not r.get('error') and
++            r['source_unchanged'] and r['controls_unchanged'] and r.get('copied_sources_unchanged') is True and
++            not r['original_outputs_preserved'] and all(r[key] == 'NOT_RUN' for key in
++                ('runtime_evidence_status', 'provenance_status', 'notice_package_status')))
++        r['status'] = CAPTURED if complete else 'FAIL'
++
++
++def main(arguments=None):
++    arguments = sys.argv[1:] if arguments is None else arguments
++    if len(arguments) == 2 and arguments[0] == '--control-manifest':
++        binding = normal.checked_binding_path(arguments[1])
++        print(json.dumps(dict(control_sha256=control_hash(binding), files=control_manifest(binding)), indent=2)); return 0
++    require(len(arguments) == 6 and re.fullmatch(r'ios-readiness-[0-9]{2}', arguments[0]) and arguments[3:] ==
++        ['--simulator-signing=adhoc', '--toolchain=qualified-xcode-26.3', '--simulator-lifecycle=direct-owned-v1'], 'explicit-qualified-invocation')
++    name, binding, approved = arguments[0], normal.checked_binding_path(arguments[1]), arguments[2]
++    require(approved == control_hash(binding), 'independent-control-approval')
++    with (binding.parent / 'build-lane.lock').open('a') as lock:
++        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
++        lane = SheetLane(name, binding, approved, 'adhoc', toolchain='qualified-xcode-26.3', lifecycle_mode='direct-owned-v1')
++        lane.run()
++        return 0 if lane.receipt['status'] == CAPTURED else 1
++
++
++if __name__ == '__main__':
++    def interrupted(sig, _frame):
++        raise KeyboardInterrupt('signal ' + str(sig))
++    signal.signal(signal.SIGTERM, interrupted)
++    raise SystemExit(main())
+diff --git a/scripts/verification/ios-settings-sheet/test_settings_sheet_probe.py b/scripts/verification/ios-settings-sheet/test_settings_sheet_probe.py
+new file mode 100644
+--- /dev/null
++++ b/scripts/verification/ios-settings-sheet/test_settings_sheet_probe.py
+@@ -0,0 +1,140 @@
++"""Small inert controls; synthetic labels never claim observed Apple UI/runtime."""
++import copy
++import importlib.util
++import json
++from pathlib import Path
++from tempfile import TemporaryDirectory
++from types import SimpleNamespace
++import unittest
++from unittest.mock import Mock, patch
++import xml.etree.ElementTree as ET
++
++HERE = Path(__file__).resolve().parent
++SPEC = importlib.util.spec_from_file_location('settings_sheet_probe_test_subject', HERE / 'settings_sheet_probe.py')
++probe = importlib.util.module_from_spec(SPEC)
++SPEC.loader.exec_module(probe)
++UUID = '11111111-2222-3333-4444-555555555555'
++
++
++def capture_fixture():
++    device = dict(deviceId=UUID, architecture='arm64', platform='iOS Simulator')
++    summary = dict(result='Passed', totalTestCount=1, passedTests=1, failedTests=0,
++                   skippedTests=0, expectedFailures=0, devicesAndConfigurations=[dict(device=device)])
++    tests = dict(devices=[device], testNodes=[dict(nodeType='Test Case', nodeIdentifier=probe.METHOD, result='Passed')])
++    value = dict(schemaVersion=1, simulator=UUID, labels=['SYNTHETIC_A', 'SYNTHETIC_B', 'SYNTHETIC_C'], selectionTapped=False)
++    return summary, tests, value
++
++
++class SettingsSheetControlsTest(unittest.TestCase):
++    def test_private_binding_includes_every_unchanged_normal_control(self):
++        inherited, combined = probe._base_manifest(), probe.control_manifest()
++        self.assertTrue(all(row in combined for row in inherited))
++        self.assertGreater(len(combined), len(inherited))
++        self.assertIs(probe.normal.control_manifest, probe.control_manifest)
++        self.assertEqual(probe.normal.control_hash(), probe.control_hash())
++        self.assertEqual(probe.normal.digest(probe.NORMAL), probe.NORMAL_SHA)
++        self.assertNotIn(str(HERE / 'settings_sheet_probe.py'), {str(probe.ROOT / row['path']) for row in inherited})
++
++    def test_project_and_scheme_build_only_existing_test_target_and_reject_drift(self):
++        original = (probe.ROOT / probe.PROJECT).read_text()
++        detached = probe.detach_project(original)
++        targets = detached.split('\n\t\t\ttargets = (', 1)[1].split(');', 1)[0]
++        self.assertNotIn('/* iosApp */', targets)
++        self.assertEqual(targets.count('/* iosAppUITests */'), 1)
++        self.assertNotIn('TEST_TARGET_NAME =', detached)
++        self.assertNotIn('TestTargetID =', detached)
++        for changed in (original.replace('TestTargetID = ', 'UnexpectedTargetID = '),
++                        original.replace('TestTargetID = ', 'TestTargetID = 7555FF76242A565900829871; TestTargetID = ')):
++            with self.assertRaises(RuntimeError): probe.detach_project(changed)
++        scheme = ET.parse(HERE / 'SettingsSheet.xcscheme.in').getroot()
++        self.assertEqual(scheme.find('BuildAction').get('buildImplicitDependencies'), 'NO')
++        refs = scheme.findall('.//BuildableReference')
++        self.assertEqual(len(refs), 2)
++        self.assertTrue(all(ref.get('BlueprintIdentifier') == 'B14500012C0000010000000A' for ref in refs))
++        self.assertIsNone(scheme.find('LaunchAction'))
++        swift = (HERE / 'SettingsSheetUITest.swift.in').read_text()
++        tail = swift.split('// Observe only the unique sheet', 1)[1]
++        self.assertNotIn('.tap(', tail)
++        self.assertNotIn('debugDescription', swift)
++        self.assertNotIn('screenshot', swift)
++        self.assertIn('guard disposition == .requiresArabic', swift)
++        self.assertEqual(swift.count('__PARLOR_EXPECTED_SIMULATOR_UUID__'), 1)
++        self.assertEqual(swift.count('__PARLOR_EXPECTED_SIMULATOR_NAME__'), 1)
++
++    def test_exact_capture_rejects_forgery_excess_labels_and_wrong_actual_test(self):
++        summary, tests, value = capture_fixture()
++        log = lambda row: 'SETTINGS_SHEET_CAPTURE ' + json.dumps(row) + '\n'
++        self.assertEqual(probe.validate_capture(summary, tests, log(value), UUID), value)
++        for field, replacement in (('schemaVersion', True), ('simulator', 'unowned'), ('selectionTapped', True),
++            ('labels', ['A'] * 4), ('labels', ['A'] * 2), ('labels', ['', 'B', 'C']),
++            ('labels', ['x' * 129, 'B', 'C']), ('labels', ['A\nB', 'B', 'C'])):
++            changed = {**value, field: replacement}
++            with self.subTest(field=field, replacement=replacement), self.assertRaises(RuntimeError):
++                probe.validate_capture(summary, tests, log(changed), UUID)
++        for bad_log in (log(value) * 2, '', log(value).replace('"schemaVersion": 1', '"schemaVersion": 1, "schemaVersion": 1')):
++            with self.assertRaises(RuntimeError): probe.validate_capture(summary, tests, bad_log, UUID)
++        for mutation in ('skip', 'wrong-method', 'second-device', 'boolean-count'):
++            s, t = copy.deepcopy(summary), copy.deepcopy(tests)
++            if mutation == 'skip': s['skippedTests'] = 1
++            elif mutation == 'wrong-method': t['testNodes'][0]['nodeIdentifier'] = 'Other/test()'
++            elif mutation == 'second-device': t['devices'] *= 2
++            else: s['passedTests'] = True
++            with self.subTest(mutation=mutation), self.assertRaises(RuntimeError):
++                probe.validate_capture(s, t, log(value), UUID)
++
++    def test_missing_results_are_retention_only_and_failed_ack_is_not_cleanup_permission(self):
++        with TemporaryDirectory() as raw:
++            lane = object.__new__(probe.SheetLane)
++            lane.temporary = Path(raw); lane.destination = Path(raw) / 'evidence'; lane.destination.mkdir()
++            (lane.destination / 'xcodebuild.log').write_text('synthetic compiler failure\n')
++            lane.receipt = dict(diagnostic_status='NOT_RUN', postbuild_evidence_preserved=False)
++            lane.command, lane.save = Mock(), Mock()
++            state = lane.preserve()
++            self.assertFalse(state['xcresult_present'])
++            self.assertTrue(lane.receipt['postbuild_evidence_preserved'])
++            self.assertEqual(lane.receipt['diagnostic_status'], 'NOT_RUN')
++            lane.command.assert_not_called()
++            lane.save.side_effect = OSError('synthetic ack failure')
++            with self.assertRaises(OSError): lane.preserve()
++            self.assertFalse(lane.receipt['postbuild_evidence_preserved'])
++            lane.save.side_effect = None
++            for relative in ('copy/composeApp/build', 'DerivedData/Build/Products/Debug-iphonesimulator/Parlor.app'):
++                unexpected = lane.temporary / relative
++                unexpected.parent.mkdir(parents=True, exist_ok=True)
++                unexpected.mkdir()
++                with self.assertRaisesRegex(RuntimeError, 'unexpected-app-build'): lane.preserve()
++                self.assertFalse(lane.receipt['postbuild_evidence_preserved'])
++                self.assertFalse(lane.receipt['parlor_outputs_absent'])
++                self.assertTrue(unexpected.is_dir())  # No diagnostic destruction authorization.
++                unexpected.rmdir()
++                unexpected.symlink_to(lane.temporary / 'absent-synthetic-target')
++                with self.assertRaisesRegex(RuntimeError, 'unexpected-app-build'): lane.preserve()
++                self.assertFalse(lane.receipt['postbuild_evidence_preserved'])
++                unexpected.unlink()
++
++    def test_failed_swift_build_marks_real_barrier_stops_and_preserves_before_reraising(self):
++        lane = object.__new__(probe.SheetLane)
++        lane.temporary = Path('/synthetic-owned-no-file-access'); lane.environment = dict(SDK_NAME='iphonesimulator26.2')
++        lane.uuid, lane.signing, lane.errors = UUID, {}, []
++        lane.receipt = dict(runtime_evidence_status='NOT_RUN', provenance_status='NOT_RUN', notice_package_status='NOT_RUN')
++        lane.save, lane.stop_gradle, lane.preserve = Mock(), Mock(), Mock(return_value={})
++        lane.lifecycle = SimpleNamespace(mark_build_attempted=Mock())
++        lane.command = Mock(side_effect=TimeoutError('synthetic owned build timeout'))
++        with self.assertRaises(TimeoutError): lane.run_xctest()
++        self.assertTrue(lane.gradle_attempted and lane.receipt['build_attempted'])
++        lane.lifecycle.mark_build_attempted.assert_called_once_with()
++        lane.stop_gradle.assert_called_once_with('stop-xcode-immediate')
++        lane.preserve.assert_called_once_with()
++        self.assertEqual(lane.receipt['runtime_evidence_status'], 'NOT_RUN')
++        lane.receipt['cleanup_status'] = 'FAIL'
++        with patch.object(probe.normal.Lane, 'finalize'):
++            lane.finalize()
++            self.assertEqual(lane.receipt['diagnostic_status'], 'FAIL')
++            lane.receipt['diagnostic_status'] = 'CAPTURED'
++            lane.finalize()
++            self.assertEqual(lane.receipt['diagnostic_status'], 'CAPTURED')
++        self.assertEqual(lane.receipt['status'], 'FAIL')
++
++
++if __name__ == '__main__':
++    unittest.main()

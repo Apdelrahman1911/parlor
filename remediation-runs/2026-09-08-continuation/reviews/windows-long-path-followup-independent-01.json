@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "kind": "BOUNDED_INDEPENDENT_WINDOWS_LONG_PATH_FOLLOWUP_SOURCE_REVIEW",
+  "status": "APPROVED_REVISION02_SOURCE_ONLY_FOR_COORDINATOR_ADOPTION_AND_FOCUSED_VERIFICATION",
+  "reviewer": "/root/portability_review",
+  "author": "/root/ci_workflow",
+  "coordinator": "/root",
+  "review_date": "2026-09-10",
+  "base_commit": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+  "base_tree": "8a89fab3042b8614fc4285148a8cd645f7ac2786",
+  "approved_packet": {
+    "directory": "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/revision-02",
+    "patch": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/revision-02/proposed.patch",
+      "bytes": 17754,
+      "sha256": "aef31352d1213a0fdc3b802483e3dc31f0b101ab811a91eaf168f992605f49d4"
+    },
+    "author_report": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/revision-02/AUTHOR_REPORT.json",
+      "bytes": 8609,
+      "sha256": "e50b49c37c32040f25671d101fefb1e52f4d11663fa0a42389a7179acdc4d33c"
+    },
+    "files": [
+      {
+        "path": ".github/workflows/production-verification.yml",
+        "bytes": 43665,
+        "sha256": "d80bfd7062f43b93d7697490325fbd32cf679cca4dfea5a3dc9fc5e705e0a7ff"
+      },
+      {
+        "path": "scripts/release/workflow_contract.py",
+        "bytes": 52246,
+        "sha256": "4e65fa76afce936e007f46b4987f140b885ce58a2b19719feef75a336e08a2c5"
+      },
+      {
+        "path": "scripts/release/tests/test_workflow_contract.py",
+        "bytes": 45841,
+        "sha256": "dda15ea413bbb912ac96972c7f6247b1569eb16cc75250c4c60b20832749d5d5"
+      },
+      {
+        "path": "scripts/ci/NATIVE_CONTINUATION.md",
+        "bytes": 20959,
+        "sha256": "237d7ddd53c4f8b5531c759ce83573c8853bfea74143d940f64ca137e946b9e6"
+      }
+    ]
+  },
+  "findings": [],
+  "resolved_findings": [
+    {
+      "id": "WINDOWS_SCOPE_RAW_CASE_GUARD",
+      "original_packet_status": "NOT_ADMITTED_PRESERVED",
+      "original_patch": {
+        "bytes": 17246,
+        "sha256": "486089abaaa13f70aee295ae55874ea2a96ad96b8c9523200eabbd2a4c8aa9ed"
+      },
+      "original_report": {
+        "bytes": 6839,
+        "sha256": "2fe1d9766d0a3a1818e17e6061636b6e6b6f4bc879d8798fffead8e8bcfc32f2"
+      },
+      "observation": "GitHub expression string comparisons ignore case. The initial derived-boolean gate would accept API WINDOWS-ONLY while skipping the native exact-scope validator.",
+      "resolution": "Revision02 binds raw inputs.verification_scope through PARLOR_WINDOWS_SCOPE and requires case-sensitive -cne rejection unless the value is exactly windows-only, inside the selected Windows-only branch and before frozen-source checks.",
+      "regression": "One bounded -cne-to--ne mutation added to the already proposed checkout-contract method; execution remains NOT_RUN by reviewer.",
+      "inspected_delta": "Revision02 reverses exactly to the original four-file proposal by removing the one raw-scope environment line and one case-sensitive guard from workflow/contract, plus the one test witness; guide is identical."
+    }
+  ],
+  "underlying_failure": {
+    "directory": "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-02/early-windows-job",
+    "run_id": 34420745957,
+    "attempt": 1,
+    "job_id": 102695388432,
+    "source": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+    "job": {
+      "bytes": 3213,
+      "sha256": "22ecabf5ea0384e859f387f8574ca0b96cec78a42ee8f289017d4d92708ee124"
+    },
+    "log": {
+      "bytes": 386385,
+      "sha256": "ee89bfa23be32c7fcb7212fc9251a8a3a55e38311f80641ac9b2693042999561"
+    },
+    "collection_receipt": {
+      "bytes": 984,
+      "sha256": "7340fd4cd17dbe957fbb1e12f6441375ea3439c34fbc094e8347d2c67d67e331"
+    },
+    "filename_too_long_lines": 1038,
+    "checkout": "FAIL exit1",
+    "graph": "SKIPPED",
+    "ownership": "SKIPPED",
+    "stop": "PASS exit0 no daemons",
+    "cleanup": "FAIL precondition; zero deletions; historical failure preserved",
+    "interpretation": "Actual Windows job failed checkout before JDK, ownership, host, SDK and graph/test work. Stop wrapper downloaded its distribution and stopped successfully; that is not graph/test execution. Cleanup failure is retained and accurately fail-closed."
+  },
+  "independent_inspections": {
+    "whole_patch_reconstruction": "Both original and revision02 unified patches independently reconstructed byte-for-byte from canonical/proposed files; all four base/proposed report pins matched. Canonical four files remain at the recorded4cc base.",
+    "line_endings": "All four original/proposed files LF-only with terminal LF",
+    "long_paths": "Only Windows job-local GIT_CONFIG_COUNT=1, KEY_0=core.longpaths, VALUE_0=true. Effective Git boolean and command success checked before checkout. No registry/global Git write, autocrlf change, sparse checkout, evidence omission/rename or normalization.",
+    "dispatch_scope": "Full default, push and PR retain five jobs. Native modes retain original iOS body and skip non-Apple jobs. Exact windows-only selects Windows alone. Its case variants are rejected by the new raw-scope guard; other unknown scopes still reach unchanged iOS exact validation.",
+    "frozen_source": "Windows-only requires lowercase40hex frozen_source_sha equal to GITHUB_SHA and GITHUB_WORKFLOW_SHA; native selection must be empty/default paired. Later source gate checks rev-parse success and exact triggering HEAD, then status success and clean source.",
+    "history_credentials": "Windowsfetch-depth1 and all prior action pins/credentials remain; Linux primary inventoryfetch-depth0 and native history controls are unchanged. No repository clone, dependency or source-binding policy relaxed.",
+    "literal_contracts": "AST literal inspection confirms complete expected Windows precheckout gate and host/source gate strings equal their workflow bodies. No project function or PowerShell executed.",
+    "existing_validator_definitions": {
+      "new_function": "verify_windows_checkout",
+      "changed_existing_function": "verify_verification_scopes",
+      "unchanged_existing_functions": 21
+    },
+    "existing_test_methods": {
+      "new_methods": 2,
+      "changed_existing_methods": 1,
+      "unchanged_existing_methods": 53
+    },
+    "proposed_new_test_witnesses": "Two methods contain5 selection mutations and14 checkout/source mutations, plus one gate-order mutation. All are proposed tests, not reviewer-executed passes.",
+    "unaffected_jobs": {
+      "desktop_android_byte_identical": true,
+      "desktop_linux_arm64_byte_identical": true,
+      "desktop_macos_x64_byte_identical": true,
+      "ios": "Exactly one added job-level windows-only skip predicate; all preexisting iOS job bytes identical after removing that line."
+    },
+    "windows_unchanged_blocks": [
+      "checkout/JDK/ownership segment",
+      "complete SDK-through-Gradle-stop-artifact-cleanup tail"
+    ],
+    "ownership_cleanup": "Read current closed output-root derivation, tracked-file refusal, prebuild ownership, source/task checks, stop-before-delete, upload custody and fail-closed preparation behavior. Their workflow invocation/evidence/cleanup tail is unchanged.",
+    "application_scope": "Exactly four proposed nonshipping files. No application, game rule, protocol4.2, seed, privacy, Doctor, Leave Confirmation timer, dependency, toolchain, Store identity, signing or publication change."
+  },
+  "qualification_disposition": {
+    "required_focused_checks": [
+      "test_workflow_contract existing module",
+      "workflow_contract validator",
+      "pinned actionlint",
+      "transport ProductionVerificationWorkflowContractTest"
+    ],
+    "windows_runtime": "Still required after reviewed adoption, source commit, mechanical inventory commit and fresh frozen-source binding. Inspect real long-path checkout, source/host gates, actual graph/tests versus cache, artifacts and cleanup.",
+    "unaffected_platforms": "No concrete Apple/macOS/Linux-arm64 runtime or build behavior changed by this proposal. A new Git SHA or retained-evidence/inventory addition alone is not a reason to repeat those expensive runs.",
+    "historical_applicability": "Reuse of other-four results remains conditional on their actual recorded success/scope/platform/cleanup and independent final frozen-source shipping/build/control equivalence. This review does not substitute for those results or a final-freeze comparison.",
+    "combined_label": "Retain failed full4cc/run34420745957/attempt1 and label a later Windows-only follow-up at its distinct actual SHA. Never synthesize a fresh five-job same-SHA all-PASS verdict.",
+    "limits": "Not Windows runtime execution, dispatch admission, native/application runtime proof, final full qualification, strict file-protection closure, physical-device, Store/signing/publication or owner/legal approval."
+  },
+  "reviewer_activity": {
+    "executed": "Read-only Git/source/evidence inspection and stdlib hash, JSON, AST and string comparisons. Every Git command used GIT_OPTIONAL_LOCKS=0.",
+    "not_executed": "No project imports, tests, validators, PowerShell, native/build/tool-version commands, Git/network/API/Actions writes, global config, process queries or signals.",
+    "files_written": [
+      "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-independent-01.json"
+    ],
+    "cleanup": "No reviewer fixtures, workers or live build outputs created. This one review report is retained evidence, not disposable output. No cleanup obligation."
+  }
+}

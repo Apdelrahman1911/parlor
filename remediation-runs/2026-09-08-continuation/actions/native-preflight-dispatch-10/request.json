@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "kind": "ONE_NONBUILDING_FRESH_NATIVE_PREFLIGHT_DISPATCH",
+  "coordinator": "/root",
+  "created_at": "2026-09-09T21:42:25.742184+00:00",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "frozen_source_sha": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+  "tree": "8a89fab3042b8614fc4285148a8cd645f7ac2786",
+  "remote_before": "4ccfafcfc361231cfb730178b3798ebcb6304770\trefs/heads/fix/local-readiness-2026-09-07",
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=native-preflight",
+    "-f",
+    "frozen_source_sha=4ccfafcfc361231cfb730178b3798ebcb6304770"
+  ],
+  "maximum_dispatches": 1,
+  "source_freeze": "remediation-runs/2026-09-08-continuation/reviews/a33-source-freeze-03.json",
+  "source_freeze_sha256": "3df46b60b2bb19002c74462221de0db75df77be7e12ee272a353074da29a0a92",
+  "native_selection": "paired default omitted from command",
+  "scope": "Fresh nonbuilding official hosted binding of both manifests after exact label-test/guide correction. No build/simulator/XCTest/libproc/Store. Independent archive review required before A33-only admission."
+}

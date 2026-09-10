@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "kind": "BOUNDED_INDEPENDENT_PUBLIC_SETTINGS_SHEET_SOURCE_REVIEW",
+  "status": "APPROVED_REVISION03_SOURCE_ONLY",
+  "reviewer": "/root/portability_review",
+  "authors": [
+    "/root/l08_fixture",
+    "/root/ci_workflow"
+  ],
+  "coordinator": "/root",
+  "review_date": "2026-09-10",
+  "approved_pins": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/SEALED_MANIFEST.json",
+      "bytes": 4839,
+      "sha256": "6fca4af5dbff90e48813d1ed6a33f0ae00e6d5d4e1d593b6beeb6a99f20644f8"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/AUTHOR_REPORT.json",
+      "bytes": 22008,
+      "sha256": "cee17133929fb66040ddff46ff788c5fe88cc0fd3c6fc083c01053694251ebac"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed.patch",
+      "bytes": 85015,
+      "sha256": "952eee29f65d1483f9f6a70f8b61a16da9098d1be3f7226d5d39b70351a558ab"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/control-snapshot.json",
+      "bytes": 20040,
+      "sha256": "af9b2e03d90bf44ad6eb69c339214e571f2799836142dde9651a53f64177b0da"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/revision-delta.patch",
+      "bytes": 865,
+      "sha256": "ab7406eb41410fde701d4cbb09c2b3610095c6e2d9b8ebb63a4d7692b12c24b4"
+    }
+  ],
+  "approved_file_count": 11,
+  "base": "4ccfafcfc361231cfb730178b3798ebcb6304770 plus exact previously approved/adopted Windowsrevision02 layer; all11 canonical base/absence pins matched. Not a frozen native-execution binding.",
+  "findings": [],
+  "resolved_findings": [
+    {
+      "id": "NO_APP_RETENTION_SCOPE_BEFORE_ACK",
+      "closure": "preserve() now resets acknowledgement/absence flags, retains logs and extraction attempts, rejects either composeApp/build or Parlor.app output (including dangling links), and only then acknowledges no-app retention. A failing build cannot bypass that proof. Existing focused test covers both output locations and link forms."
+    },
+    {
+      "id": "TERMINAL_DIAGNOSTIC_STATUS",
+      "closure": "Finalization converts only RUNNING to FAIL before invoking the complete inherited finalizer. A genuinely CAPTURED observation is retained even if cleanup fails; overall success still requires every cleanup/source guard."
+    },
+    {
+      "id": "EXISTING_CYCLE_CONTRACT_CONSUMER",
+      "closure": "Revision03 changes only the existing process-probe source-contract expectation to include settings_sheet35; A33/B34 and all other assertions remain. No process-probe runtime edit."
+    }
+  ],
+  "independent_evidence": {
+    "pins": "All17 final seal entries and all11 baseline/proposal identities matched. Full85,015-byte patch independently reconstructed with exact Git/new-file headers. Initial and revision02 seals/reports/patches remain preserved.",
+    "trigger": {
+      "run_id": 34412114359,
+      "cycle": "ios-readiness-33",
+      "log": "remediation-runs/2026-09-08-continuation/actions/34412114359/native-evidence/ios-readiness-33/xcodebuild.log",
+      "bytes": 1203457,
+      "sha256": "337725f40723a7e51cfabdd53e51f060eeb5eb15ae51f6443fcca78332845ccb",
+      "observed": "Reopened actual lines13317/13339/13343: ordinals25/26/27, foreground Settings, Alert0/Sheet1, three sheet buttons, zero whitelisted English-choice matches; final BLOCKED. No actual unknown labels in this evidence."
+    },
+    "normal_controls": {
+      "files": 98,
+      "aggregate_sha256": "7d598e39bd718e0f8347d0eee839b5aad2bece2bddb82e08ce7f6c1ea592c413",
+      "disposition": "Exact original control paths/bytes retained; no normal B file or entry-point change."
+    },
+    "diagnostic_controls": {
+      "files_without_binding": 104,
+      "aggregate_sha256": "7be66c50ba05c3abc92fea1b15edc1feecbdf034563053d75eed425734924a86",
+      "reconstruction": "Original98 plus four diagnostic files, workflow and adapter exactly reproduce retained snapshot rows/hash without project import.",
+      "limitation": "Unbound source inspection only. Later real source binding adds105th row; fresh preflight/control approval is still mandatory."
+    },
+    "swift_reuse": "Exact311-line prerequisite-helper prefix and all three complete catalogue helpers match their pinned originals. New wrapper binds exact fresh simulator UUID/name; public requires-Arabic flow remains strict; old primary-choice/acceptance tail is absent.",
+    "changed_delta": "After original packet review, only diagnostic runner, its existing tests, and one existing process-probe assertion changed. Final revision03 adds only that assertion relative to revision02."
+  },
+  "source_conclusions": {
+    "privacy": "One method follows public Settings navigation on a newly owned simulator, requires English-primary/no-Arabic prerequisite, and reads exactly three actions from one foreground sheet. Each label is nonempty, at most128UTF-8 bytes, without control characters; marker at most2048bytes. No primary-choice tap/retry, hierarchy, screenshot, application container or private-state read introduced.",
+    "targetless": "Copied project removes app target/dependency/TestTargetID/TEST_TARGET_NAME and Compose-dependent test sources using exact occurrence guards. Copied scheme references only existing iosAppUITests target, disables implicit dependencies and has no LaunchAction. Existing Debug .uitests identity remains. This is source approval, NOT proof that Xcode accepts/builds/executes this targetless arrangement.",
+    "bindings": "Private immutable normal module retains original manifest callable; its inherited prepare/finalize/lifecycle callbacks all resolve the same strengthened combined control manifest/hash. No recursive omission or ordinary-B mutation.",
+    "lifecycle": "Actual Swift build attempt sets original sticky build/worker barrier before xcodebuild. Immediate/final Gradle stops, evidence retention, owned simulator retirement, strict worker/unknown-holder checks, copied-input checks, source/control comparison and upload custody remain. Missing/failed results can authorize only correctly scoped retention/cleanup, never capture.",
+    "result": "Capture additionally requires Xcode0, successful structured extraction, exactly one passed unskipped expected method on the exact arm64 simulator, and one strict marker. Normal runtime/provenance/notices stay NOT_RUN; outer A/B lanes stay NOT_RUN_THIS_RUN. Success is SETTINGS_SHEET_CAPTURED_NOT_APP_QUALIFICATION, never normal/combined PASS.",
+    "dispatch": "Exact settings-sheet-only selection is limited to preflight/evidence. Closed three-member diagnostic package and distinct manifest reject cross-mode package/hash reuse through the existing approved_probe_control_sha256 input. Ordinary paired/l08-only and process-probe execution paths retain their prior behavior.",
+    "compatibility": "Four full job bodies, including approved Windows job, are byte-identical to the Windows baseline. Existing process-probe workflow block is identical. qualified_platform, cleanup, cleanup_is_safe, inner_execution_completed, direct_lifecycle_is_safe and lifecycle_journal_matches are AST-identical. Default normal runner, command flags, wait/grace/admission values and control98 remain applicable; no B runtime repetition justified by this isolated diagnostic addition.",
+    "budget": "One600-second Xcode command,900-second child,600-second finalizer grace and600-second custody reserve within a40-minute job; fresh shared kernel-clock admission refuses starts after the300-second available preparation allowance.",
+    "size_disclosure": "Author's conservative operative-runtime/control bound is285 lines; full overlay adds957 physical lines including tests/docs,424-line generated/reused Swift and19-line scheme. Reused helper bytes were independently compared; physical size is not described as285."
+  },
+  "disposition": {
+    "approved": "Coordinator may adopt exact final11-file overlay and execute its already chosen single affected Linux/control lane.",
+    "still_required": "Reviewed source/inventory freeze, fresh105-row preflight binding/admission, and one capped actual targetless diagnostic run with retained success/failure and cleanup evidence.",
+    "normal_B": "Historical evidence retains its actual SHA/run identity; this report neither reruns B nor relabels it as current execution.",
+    "excluded": "No A/L08 scenario, strict file-protection, C/D combined qualification, physical-device, Store/signing/publication or owner/legal gate is completed by this source approval. Separately authored collector/ledger work is outside this report."
+  },
+  "reviewer_activity": {
+    "performed": "Read-only Git/source/evidence plus stdlib JSON/hash/string/AST/XML inspection; no project imports or extracted-function execution.",
+    "not_run": "Tests, validators, Swift/Gradle builds, native tools, simulators, network/API/Actions and process operations.",
+    "written": [
+      "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-independent-01.json"
+    ],
+    "cleanup": "No reviewer fixtures, workers or live generated outputs. Only this compact retained review report; no cleanup owed."
+  }
+}

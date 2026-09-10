@@ -1,0 +1,868 @@
+name: Production verification
+
+on:
+  pull_request:
+    branches:
+      - main
+      - testing
+      - release
+  push:
+    branches:
+      - main
+      - testing
+      - release
+  workflow_dispatch:
+    inputs:
+      verification_scope:
+        description: Full qualification (default), native continuation, non-app probe, or Windows-only follow-up
+        type: choice
+        default: full
+        options: [full, native-preflight, native-evidence, native-process-probe, windows-only]
+      native_selection:
+        description: Native evidence lanes (l08-only requires explicit scoped approval)
+        type: choice
+        default: paired
+        options: [paired, l08-only]
+      frozen_source_sha:
+        description: Exact reviewed source/inventory SHA (required for every focused mode)
+        type: string
+      preflight_run_id:
+        description: Successful native-preflight run ID (native-evidence only)
+        type: string
+      preflight_run_attempt:
+        description: Exact successful preflight attempt (native-evidence only)
+        type: string
+      preflight_artifact_id:
+        description: Exact preflight artifact ID (native-evidence only)
+        type: string
+      preflight_artifact_sha256:
+        description: Independently verified preflight ZIP SHA256 (native-evidence only)
+        type: string
+      approved_l08_control_sha256:
+        description: Independently approved composed L08 control hash (native-evidence only)
+        type: string
+      approved_normal_control_sha256:
+        description: Independently approved normal libproc control hash (native-evidence only)
+        type: string
+      approved_probe_control_sha256:
+        description: Independently approved non-app process-probe control hash (native-process-probe only)
+        type: string
+
+concurrency:
+  group: production-verification-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  # --no-daemon controls Gradle, not Kotlin's separate compiler daemon.
+  # Keep compiler work inside the explicitly stopped verification Gradle lane,
+  # including Gradle invocations from the Xcode shell phase.
+  GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+
+jobs:
+  desktop-android:
+    if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
+    name: Common, desktop, and Android release
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # The review-inventory gate derives per-file findings from the
+          # accepted review baseline, so this job needs that history.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        with:
+          distribution: temurin
+          java-version: "21"
+          check-latest: false
+
+      - name: Claim fresh verification output ownership
+        id: verification_ownership
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "prepare"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Install pinned Android SDK packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -c /dev/kvm
+          sudo chmod 0666 /dev/kvm
+          test -r /dev/kvm
+          test -w /dev/kvm
+          managed_device_image=$(jq -r '.toolchains.android_managed_device.system_image_package' config/release-policy.json)
+          test "$managed_device_image" = "system-images;android-35;google_apis;x86_64"
+          "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" \
+            "platforms;android-36" \
+            "build-tools;36.0.0" \
+            "platform-tools" \
+            "emulator" \
+            "$managed_device_image"
+          image_properties="${ANDROID_HOME}/system-images/android-35/google_apis/x86_64/source.properties"
+          test -s "$image_properties"
+          image_revision=$(sed -n 's/^Pkg.Revision=//p' "$image_properties" | tr -d '\r')
+          test "$image_revision" = "$(jq -r '.toolchains.android_managed_device.system_image_revision' config/release-policy.json)"
+
+      - name: Record exact source and require a clean checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/ci-evidence
+          git rev-parse HEAD | tee build/ci-evidence/commit.txt
+          test -z "$(git status --porcelain)"
+
+      - name: Run common, desktop, Android, static-analysis, and release gates
+        run: ./gradlew productionCheck productionStaticAnalysis productionReleaseAutomationCheck allTests --dependency-verification=strict --no-daemon --stacktrace --console=plain
+
+      - name: Stop Gradle after common-android
+        if: always()
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "stop", "common-android"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Run release Android managed-device smoke tests
+        shell: bash
+        run: scripts/android/run_release_managed_device_smoke.sh
+
+      - name: Stop Gradle after managed-device
+        if: always()
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "stop", "managed-device"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Inspect unsigned Android release artifact and merged manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t aabs < <(find composeApp/build/outputs/bundle/release -maxdepth 1 -type f -name '*.aab' -print)
+          test "${#aabs[@]}" -eq 1
+          aab="${aabs[0]}"
+          unzip -t "$aab"
+          unzip -l "$aab" | grep -Fq 'base/manifest/AndroidManifest.xml'
+          unzip -l "$aab" | grep -Fq 'base/dex/classes.dex'
+          manifest="composeApp/build/intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml"
+          test -s "$manifest"
+          sha256sum "$aab" | tee build/ci-evidence/android-aab.sha256
+          cp "$manifest" build/ci-evidence/merged-release-manifest.xml
+          python3 -B scripts/verification/third_party_notices.py --package "$aab" --json >build/ci-evidence/android-release-notices.json
+          tools=$(mktemp -d "${RUNNER_TEMP}/parlor-unsigned-aab-tools.XXXXXX")
+          trap 'rm -rf "$tools"' EXIT
+          curl --fail --silent --show-error --location --proto '=https' --tlsv1.2 \
+            --max-filesize 134217728 --max-time 120 --retry 3 \
+            "$(jq -r '.tools.bundletool.url' config/release-policy.json)" -o "$tools/bundletool.jar"
+          python3 -B scripts/verification/android_release_artifacts.py --package "$aab" \
+            --bundletool "$tools/bundletool.jar" --dexdump "$ANDROID_HOME/build-tools/36.0.0/dexdump" \
+            >build/ci-evidence/android-release-artifact-inventory.json
+
+      - name: Upload verification reports, mappings, and unsigned AAB
+        id: verification_artifact
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: desktop-android-verification
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            build/ci-evidence/
+            **/build/reports/detekt/
+            **/build/reports/tests/
+            **/build/test-results/**/*.xml
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
+            **/build/reports/androidTests/managedDevice/
+            **/build/outputs/androidTest-results/managedDevice/
+            **/build/reports/lint-results-*
+            composeApp/build/outputs/mapping/release/
+            composeApp/build/outputs/bundle/release/*.aab
+
+      # A successful nonempty upload must precede deletion of the last local evidence copy.
+      - name: Clean only attested verification outputs
+        if: always()
+        env:
+          PARLOR_VERIFICATION_PREPARE_OUTCOME: ${{ steps.verification_ownership.outcome }}
+          PARLOR_VERIFICATION_UPLOAD_OUTCOME: ${{ steps.verification_artifact.outcome }}
+          PARLOR_VERIFICATION_ARTIFACT_ID: ${{ steps.verification_artifact.outputs.artifact-id }}
+          PARLOR_VERIFICATION_ARTIFACT_DIGEST: ${{ steps.verification_artifact.outputs.artifact-digest }}
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "cleanup"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Upload verification cleanup receipt
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: verification-cleanup-${{ github.job }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
+
+  desktop-linux-arm64:
+    if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
+    name: Desktop strict verification (Linux arm64)
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        with:
+          distribution: temurin
+          java-version: "21"
+          check-latest: false
+
+      - name: Claim fresh verification output ownership
+        id: verification_ownership
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "prepare"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Require the Linux arm64 host
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(uname -s)" = "Linux"
+          test "$(uname -m)" = "aarch64"
+          git rev-parse HEAD
+          test -z "$(git status --porcelain)"
+
+      - name: Resolve and test the supported Linux arm64 desktop graph
+        shell: bash
+        run: ./gradlew productionDesktopCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain
+
+      - name: Stop Gradle after linux-arm64
+        if: always()
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "stop", "linux-arm64"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Upload Desktop verification descriptors
+        id: verification_artifact
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: desktop-verification-${{ github.job }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            **/build/reports/tests/
+            **/build/test-results/**/*.xml
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
+
+      # A successful nonempty upload must precede deletion of the last local evidence copy.
+      - name: Clean only attested verification outputs
+        if: always()
+        env:
+          PARLOR_VERIFICATION_PREPARE_OUTCOME: ${{ steps.verification_ownership.outcome }}
+          PARLOR_VERIFICATION_UPLOAD_OUTCOME: ${{ steps.verification_artifact.outcome }}
+          PARLOR_VERIFICATION_ARTIFACT_ID: ${{ steps.verification_artifact.outputs.artifact-id }}
+          PARLOR_VERIFICATION_ARTIFACT_DIGEST: ${{ steps.verification_artifact.outputs.artifact-digest }}
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "cleanup"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Upload verification cleanup receipt
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: verification-cleanup-${{ github.job }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
+
+  desktop-macos-x64:
+    if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
+    name: Desktop and Kotlin Native strict verification (macOS x64)
+    runs-on: macos-15-intel
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        with:
+          distribution: temurin
+          java-version: "21"
+          check-latest: false
+
+      - name: Claim fresh verification output ownership
+        id: verification_ownership
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "prepare"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Require the macOS x64 host
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(uname -s)" = "Darwin"
+          test "$(uname -m)" = "x86_64"
+          git rev-parse HEAD
+          test -z "$(git status --porcelain)"
+
+      - name: Resolve and test the macOS x64 host-selected graphs
+        shell: bash
+        run: ./gradlew productionDesktopCheck :composeApp:downloadKotlinNativeDistribution --dependency-verification=strict --no-daemon --stacktrace --console=plain
+
+      - name: Stop Gradle after macos-x64
+        if: always()
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "stop", "macos-x64"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Upload Desktop verification descriptors
+        id: verification_artifact
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: desktop-verification-${{ github.job }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            **/build/reports/tests/
+            **/build/test-results/**/*.xml
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
+
+      # A successful nonempty upload must precede deletion of the last local evidence copy.
+      - name: Clean only attested verification outputs
+        if: always()
+        env:
+          PARLOR_VERIFICATION_PREPARE_OUTCOME: ${{ steps.verification_ownership.outcome }}
+          PARLOR_VERIFICATION_UPLOAD_OUTCOME: ${{ steps.verification_artifact.outcome }}
+          PARLOR_VERIFICATION_ARTIFACT_ID: ${{ steps.verification_artifact.outputs.artifact-id }}
+          PARLOR_VERIFICATION_ARTIFACT_DIGEST: ${{ steps.verification_artifact.outputs.artifact-digest }}
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "cleanup"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Upload verification cleanup receipt
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: verification-cleanup-${{ github.job }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
+
+  desktop-windows-x64:
+    if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full' || inputs.verification_scope == 'windows-only'
+    name: Desktop, Kotlin Native, and Android resources strict verification (Windows x64)
+    runs-on: windows-2025
+    timeout-minutes: 60
+    env:
+      # Git inherits this job-local config before checkout; do not change autocrlf
+      # or omit the hash-bound archived evidence to work around long paths.
+      GIT_CONFIG_COUNT: "1"
+      GIT_CONFIG_KEY_0: core.longpaths
+      GIT_CONFIG_VALUE_0: "true"
+
+    steps:
+      - name: Validate Windows checkout prerequisites
+        shell: pwsh
+        env:
+          PARLOR_WINDOWS_SCOPE: ${{ inputs.verification_scope }}
+          PARLOR_WINDOWS_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'windows-only' }}
+          PARLOR_WINDOWS_FROZEN_SOURCE_SHA: ${{ inputs.frozen_source_sha }}
+          PARLOR_WINDOWS_NATIVE_SELECTION: ${{ inputs.native_selection }}
+        run: |
+          $longPaths = git config --bool --get core.longpaths
+          if ($LASTEXITCODE -ne 0 -or $longPaths -cne "true") { throw "Expected job-local Git long paths" }
+          Write-Output "core.longpaths=$longPaths (job-local)"
+          if ($env:PARLOR_WINDOWS_ONLY -eq "true") {
+            if ($env:PARLOR_WINDOWS_SCOPE -cne "windows-only") { throw "Windows-only dispatch requires its exact explicit scope" }
+            $source = $env:PARLOR_WINDOWS_FROZEN_SOURCE_SHA
+            if ($source -cnotmatch '^[0-9a-f]{40}$' -or $source -cne $env:GITHUB_SHA -or $source -cne $env:GITHUB_WORKFLOW_SHA) {
+              throw "Windows-only dispatch requires the reviewed frozen source"
+            }
+            if ($env:PARLOR_WINDOWS_NATIVE_SELECTION -cnotin @("", "paired")) { throw "Windows-only dispatch cannot select native evidence" }
+          }
+
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        with:
+          distribution: temurin
+          java-version: "21"
+          check-latest: false
+
+      - name: Claim fresh verification output ownership
+        id: verification_ownership
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "prepare"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Require the Windows x64 host
+        shell: pwsh
+        run: |
+          if (-not $IsWindows) { throw "Expected a Windows runner" }
+          if ([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture -ne [System.Runtime.InteropServices.Architecture]::X64) {
+            throw "Expected an x64 runner"
+          }
+          $head = git rev-parse HEAD
+          if ($LASTEXITCODE -ne 0 -or $head -cne $env:GITHUB_SHA) { throw "Checkout differs from the triggering source" }
+          Write-Output $head
+          $status = git status --porcelain
+          if ($LASTEXITCODE -ne 0 -or $status) { throw "Checkout is not clean" }
+
+      - name: Install pinned Android SDK packages
+        shell: pwsh
+        run: |
+          & "$env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat" `
+            "platforms;android-36" `
+            "build-tools;36.0.0" `
+            "platform-tools"
+          if ($LASTEXITCODE -ne 0) { throw "sdkmanager failed with exit code $LASTEXITCODE" }
+
+      - name: Resolve and test the Windows x64 host-selected graphs
+        shell: pwsh
+        run: .\gradlew.bat productionDesktopCheck :composeApp:downloadKotlinNativeDistribution :composeApp:processDebugResources --dependency-verification=strict --no-daemon --stacktrace --console=plain
+
+      - name: Stop Gradle after windows-x64
+        if: always()
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "stop", "windows-x64"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Upload Desktop verification descriptors
+        id: verification_artifact
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: desktop-verification-${{ github.job }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            **/build/reports/tests/
+            **/build/test-results/**/*.xml
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
+
+      # A successful nonempty upload must precede deletion of the last local evidence copy.
+      - name: Clean only attested verification outputs
+        if: always()
+        env:
+          PARLOR_VERIFICATION_PREPARE_OUTCOME: ${{ steps.verification_ownership.outcome }}
+          PARLOR_VERIFICATION_UPLOAD_OUTCOME: ${{ steps.verification_artifact.outcome }}
+          PARLOR_VERIFICATION_ARTIFACT_ID: ${{ steps.verification_artifact.outputs.artifact-id }}
+          PARLOR_VERIFICATION_ARTIFACT_DIGEST: ${{ steps.verification_artifact.outputs.artifact-digest }}
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "cleanup"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Upload verification cleanup receipt
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: verification-cleanup-${{ github.job }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json
+
+  ios:
+    if: github.event_name != 'workflow_dispatch' || inputs.verification_scope != 'windows-only'
+    name: iOS tests, release frameworks, and Swift wrapper
+    runs-on: macos-15
+    timeout-minutes: ${{ inputs.verification_scope == 'native-process-probe' && 10 || inputs.verification_scope == 'native-evidence' && 240 || 120 }}
+    permissions:
+      contents: read
+      actions: read
+    env:
+      # macos-15 installs this reviewed GA toolchain alongside newer Xcodes.
+      # Apple has required the iOS 26 SDK for uploads since 2026-04-28.
+      # Fail explicitly if the runner image removes or replaces it instead of
+      # silently qualifying a candidate with a different compiler/SDK.
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+
+    steps:
+      - name: Start focused native job clock
+        if: github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'native-evidence'
+        shell: bash
+        run: |
+          /usr/bin/python3 -B - <<'PY' >> "$GITHUB_ENV"
+          import json
+          import os
+          import time
+          value = time.clock_gettime_ns(time.CLOCK_MONOTONIC_RAW)
+          if type(value) is not int or value <= 0:
+              raise RuntimeError("invalid-native-job-kernel-clock")
+          clock = dict(clock="CLOCK_MONOTONIC_RAW", start_ns=value,
+                       run_id=int(os.environ["GITHUB_RUN_ID"]), run_attempt=int(os.environ["GITHUB_RUN_ATTEMPT"]),
+                       job=os.environ["GITHUB_JOB"], head_sha=os.environ["GITHUB_SHA"])
+          print("PARLOR_NATIVE_JOB_CLOCK=" + json.dumps(clock, separators=(",", ":")))
+          PY
+
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: ${{ github.event_name == 'workflow_dispatch' && inputs.verification_scope != 'full' && '0' || '1' }}
+          persist-credentials: false
+
+      - name: Validate verification scope
+        shell: bash
+        env:
+          PARLOR_DISPATCH_SCOPE: ${{ inputs.verification_scope }}
+          PARLOR_NATIVE_SELECTION: ${{ inputs.native_selection }}
+        run: /usr/bin/python3 -B scripts/ci/native_continuation.py validate-scope
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95 # v5.6.0
+        with:
+          distribution: temurin
+          java-version: "21"
+          check-latest: false
+
+      # These opt-in modes are evidence-only. They never replace the five-job full gate.
+      # Preflight and execution are separate dispatches so a different reviewer can
+      # approve the exact source-bound A/B control hashes before any application build.
+      - name: Run focused native continuation
+        id: native_continuation
+        if: github.event_name == 'workflow_dispatch' && (inputs.verification_scope == 'native-preflight' || inputs.verification_scope == 'native-evidence')
+        shell: bash
+        env:
+          PARLOR_DISPATCH_SCOPE: ${{ inputs.verification_scope }}
+          PARLOR_NATIVE_SELECTION: ${{ inputs.native_selection }}
+          PARLOR_FROZEN_SOURCE_SHA: ${{ inputs.frozen_source_sha }}
+          PARLOR_PREFLIGHT_RUN_ID: ${{ inputs.preflight_run_id }}
+          PARLOR_PREFLIGHT_RUN_ATTEMPT: ${{ inputs.preflight_run_attempt }}
+          PARLOR_PREFLIGHT_ARTIFACT_ID: ${{ inputs.preflight_artifact_id }}
+          PARLOR_PREFLIGHT_ARTIFACT_SHA256: ${{ inputs.preflight_artifact_sha256 }}
+          PARLOR_APPROVED_L08_CONTROL_SHA256: ${{ inputs.approved_l08_control_sha256 }}
+          PARLOR_APPROVED_NORMAL_CONTROL_SHA256: ${{ inputs.approved_normal_control_sha256 }}
+          PARLOR_ACTIONS_READ_TOKEN: ${{ github.token }}
+        run: /usr/bin/python3 -B scripts/ci/native_continuation.py run
+
+      - name: Upload focused native evidence
+        id: native_artifact
+        if: always() && (github.event_name == 'workflow_dispatch' && (inputs.verification_scope == 'native-preflight' || inputs.verification_scope == 'native-evidence'))
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ${{ inputs.verification_scope }}-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-native-${{ github.run_id }}-${{ github.run_attempt }}/bundle/
+
+      - name: Verify focused native cleanup and uploaded custody
+        if: always() && (github.event_name == 'workflow_dispatch' && (inputs.verification_scope == 'native-preflight' || inputs.verification_scope == 'native-evidence'))
+        shell: bash
+        env:
+          PARLOR_DISPATCH_SCOPE: ${{ inputs.verification_scope }}
+          PARLOR_NATIVE_SELECTION: ${{ inputs.native_selection }}
+          PARLOR_FROZEN_SOURCE_SHA: ${{ inputs.frozen_source_sha }}
+          PARLOR_NATIVE_UPLOAD_OUTCOME: ${{ steps.native_artifact.outcome }}
+          PARLOR_NATIVE_ARTIFACT_ID: ${{ steps.native_artifact.outputs.artifact-id }}
+          PARLOR_NATIVE_ARTIFACT_DIGEST: ${{ steps.native_artifact.outputs.artifact-digest }}
+        run: /usr/bin/python3 -B scripts/ci/native_continuation.py cleanup
+
+      - name: Upload native continuation cleanup receipt
+        if: always() && (github.event_name == 'workflow_dispatch' && (inputs.verification_scope == 'native-preflight' || inputs.verification_scope == 'native-evidence'))
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: native-cleanup-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-native-${{ github.run_id }}-${{ github.run_attempt }}-cleanup.json
+
+      # One bounded diagnostic, not an application retry or ownership fallback.
+      - name: Observe hosted native processes without an app build
+        id: process_probe
+        if: github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'native-process-probe'
+        shell: bash
+        env:
+          PARLOR_DISPATCH_SCOPE: ${{ inputs.verification_scope }}
+          PARLOR_FROZEN_SOURCE_SHA: ${{ inputs.frozen_source_sha }}
+          PARLOR_APPROVED_PROBE_CONTROL_SHA256: ${{ inputs.approved_probe_control_sha256 }}
+        run: /usr/bin/python3 -B scripts/ci/native_process_probe.py run
+
+      - name: Upload bounded process-probe evidence
+        id: process_probe_artifact
+        if: always() && (github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'native-process-probe')
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: native-process-probe-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-process-probe-${{ github.run_id }}-${{ github.run_attempt }}/bundle/
+
+      - name: Verify process-probe cleanup and uploaded custody
+        if: always() && (github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'native-process-probe')
+        shell: bash
+        env:
+          PARLOR_DISPATCH_SCOPE: ${{ inputs.verification_scope }}
+          PARLOR_FROZEN_SOURCE_SHA: ${{ inputs.frozen_source_sha }}
+          PARLOR_APPROVED_PROBE_CONTROL_SHA256: ${{ inputs.approved_probe_control_sha256 }}
+          PARLOR_PROBE_UPLOAD_OUTCOME: ${{ steps.process_probe_artifact.outcome }}
+          PARLOR_PROBE_ARTIFACT_ID: ${{ steps.process_probe_artifact.outputs.artifact-id }}
+          PARLOR_PROBE_ARTIFACT_DIGEST: ${{ steps.process_probe_artifact.outputs.artifact-digest }}
+        run: /usr/bin/python3 -B scripts/ci/native_process_probe.py cleanup
+
+      - name: Upload process-probe cleanup receipt
+        if: always() && (github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'native-process-probe')
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: native-process-probe-cleanup-${{ github.run_id }}-${{ github.run_attempt }}
+          if-no-files-found: error
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-process-probe-${{ github.run_id }}-${{ github.run_attempt }}-cleanup.json
+
+      - name: Claim fresh verification output ownership
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
+        id: verification_ownership
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "prepare"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Claim apple-aggregate native resource ownership
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
+        id: apple_aggregate_prepare
+        shell: bash
+        run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene prepare apple-aggregate
+
+      - name: Record Xcode toolchain and exact source
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/ci-evidence
+          test -x "$DEVELOPER_DIR/usr/bin/xcodebuild"
+          xcodebuild -version | tee build/ci-evidence/xcode-version.txt
+          test "$(sed -n '1p' build/ci-evidence/xcode-version.txt)" = "Xcode 26.3"
+          test "$(sed -n '2p' build/ci-evidence/xcode-version.txt)" = "Build version 17C529"
+          test "$(jq -r .toolchains.apple.developer_dir config/release-policy.json)" = "$DEVELOPER_DIR"
+          test "$(jq -r .toolchains.apple.xcode_build config/release-policy.json)" = "17C529"
+          xcrun --sdk iphoneos --show-sdk-version | tee build/ci-evidence/iphoneos-sdk.txt
+          xcrun --sdk iphonesimulator --show-sdk-version | tee build/ci-evidence/iphonesimulator-sdk.txt
+          test "$(cut -d. -f1 build/ci-evidence/iphoneos-sdk.txt)" -ge "$(jq -r .toolchains.apple.minimum_ios_sdk_major config/release-policy.json)"
+          git rev-parse HEAD | tee build/ci-evidence/commit.txt
+          test -z "$(git status --porcelain)"
+
+      - name: Run iOS simulator tests, Apple static analysis, and release linkage gates
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
+        id: apple_aggregate_run
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "productionIosSimulatorRuntimeTests runs all executable iosSimulatorArm64 runtime tests; productionAppleCheck runs Apple type-aware static analysis and linkage-only checks for iosArm64, iosSimulatorArm64, and iosX64."
+          ./gradlew productionIosSimulatorRuntimeTests productionAppleCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain
+
+      - name: Stop Gradle after apple-aggregate and retire owned Apple resources
+        id: apple_aggregate_finish
+        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')
+        env:
+          PARLOR_APPLE_PREPARE_OUTCOME: ${{ steps.apple_aggregate_prepare.outcome }}
+          PARLOR_APPLE_RUN_OUTCOME: ${{ steps.apple_aggregate_run.outcome }}
+        shell: bash
+        run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene finish apple-aggregate
+
+      - name: Validate iOS plist and privacy manifest
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
+        shell: bash
+        run: |
+          set -euo pipefail
+          plutil -lint iosApp/iosApp/Info.plist
+          plutil -lint iosApp/iosApp/PrivacyInfo.xcprivacy
+
+      - name: Claim apple-ui native resource ownership
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
+        id: apple_ui_prepare
+        shell: bash
+        run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene prepare apple-ui
+
+      - name: Verify effective Debug and Release application identities
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
+        shell: bash
+        run: |
+          set -euo pipefail
+          debug_settings=build/ci-evidence/xcode-debug-settings.txt
+          release_settings=build/ci-evidence/xcode-release-settings.txt
+          xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -configuration Debug \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            -showBuildSettings >"$debug_settings"
+          xcodebuild -project iosApp/iosApp.xcodeproj -scheme iosApp -configuration Release \
+            -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' \
+            -showBuildSettings >"$release_settings"
+          debug_bundle=$(awk -F' = ' '{key=$1; gsub(/^[[:space:]]+|[[:space:]]+$/, "", key); if (key == "PRODUCT_BUNDLE_IDENTIFIER") {print $2; exit}}' "$debug_settings")
+          release_bundle=$(awk -F' = ' '{key=$1; gsub(/^[[:space:]]+|[[:space:]]+$/, "", key); if (key == "PRODUCT_BUNDLE_IDENTIFIER") {print $2; exit}}' "$release_settings")
+          [[ "$debug_bundle" == com.parlor.app.debug ]]
+          [[ "$release_bundle" == com.parlor.app ]]
+
+      - name: Launch Swift host and Compose root on iOS Simulator
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
+        id: apple_ui_run
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Never run settings/destructive fixtures in an existing simulator profile.
+          simulator_udid="$(/usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene create-simulator apple-ui)"
+          test ! -e build/ci-evidence/ios-ui-tests.xcresult
+          xcodebuild \
+            -project iosApp/iosApp.xcodeproj \
+            -scheme iosApp \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination "platform=iOS Simulator,id=$simulator_udid" \
+            -parallel-testing-enabled NO \
+            -maximum-concurrent-test-simulator-destinations 1 \
+            -destination-timeout 120 \
+            -derivedDataPath build/xcode-derived-data \
+            -resultBundlePath build/ci-evidence/ios-ui-tests.xcresult \
+            test | tee build/ci-evidence/xcode-ui-test.log
+
+      - name: Stop Gradle after apple-ui and retire owned Apple resources
+        id: apple_ui_finish
+        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')
+        env:
+          PARLOR_APPLE_PREPARE_OUTCOME: ${{ steps.apple_ui_prepare.outcome }}
+          PARLOR_APPLE_RUN_OUTCOME: ${{ steps.apple_ui_run.outcome }}
+        shell: bash
+        run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene finish apple-ui
+
+      - name: Claim apple-wrapper native resource ownership
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
+        id: apple_wrapper_prepare
+        shell: bash
+        run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene prepare apple-wrapper
+
+      - name: Build unsigned Swift Release wrapper
+        if: github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full'
+        id: apple_wrapper_run
+        shell: bash
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -project iosApp/iosApp.xcodeproj \
+            -scheme iosApp \
+            -configuration Release \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build/xcode-derived-data \
+            ARCHS=arm64 \
+            ONLY_ACTIVE_ARCH=YES \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build | tee build/ci-evidence/xcode-release-build.log
+          app="build/xcode-derived-data/Build/Products/Release-iphonesimulator/Parlor.app"
+          test -x "$app/Parlor"
+          plutil -lint "$app/Info.plist"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$app/Info.plist")" = "com.parlor.app"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$app/Info.plist")" = "$(sed -n 's/^PARLOR_VERSION_NAME = //p' config/parlor-version.xcconfig)"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$app/Info.plist")" = "$(sed -n 's/^PARLOR_BUILD_NUMBER = //p' config/parlor-version.xcconfig)"
+          file "$app/Parlor" | tee build/ci-evidence/xcode-binary.txt
+          shasum -a 256 "$app/Parlor" | tee build/ci-evidence/xcode-binary.sha256
+          /usr/bin/python3 -B scripts/verification/third_party_notices.py --package "$app" --json >build/ci-evidence/ios-release-notices.json
+
+      - name: Stop Gradle after apple-wrapper and retire owned Apple resources
+        id: apple_wrapper_finish
+        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')
+        env:
+          PARLOR_APPLE_PREPARE_OUTCOME: ${{ steps.apple_wrapper_prepare.outcome }}
+          PARLOR_APPLE_RUN_OUTCOME: ${{ steps.apple_wrapper_run.outcome }}
+        shell: bash
+        run: /usr/bin/python3 -B -m scripts.ci.apple_verification_hygiene finish apple-wrapper
+
+      - name: Inspect complete unsigned iOS Release package
+        if: success() && steps.apple_wrapper_run.outcome == 'success' && steps.apple_wrapper_finish.outcome == 'success' && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')
+        shell: bash
+        run: |
+          set -euo pipefail
+          /usr/bin/python3 -B scripts/verification/ios_release_artifacts.py \
+            --app build/xcode-derived-data/Build/Products/Release-iphonesimulator/Parlor.app \
+            --source "$GITHUB_WORKSPACE" --json >build/ci-evidence/ios-release-artifact-inventory.json
+
+      - name: Upload Apple verification evidence
+        id: verification_artifact
+        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ios-verification
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            build/ci-evidence/
+            build/xcode-derived-data/Build/Products/Release-iphonesimulator/Parlor.app.dSYM/
+            **/build/reports/detekt/
+            **/build/reports/tests/
+            **/build/test-results/**/*.xml
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-ownership.json
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-stop-*.json
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-apple-*-ownership.json
+            ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-apple-ui-simulator-*.json
+
+      # A successful nonempty upload must precede deletion of the last local evidence copy.
+      - name: Clean only attested verification outputs
+        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')
+        env:
+          PARLOR_VERIFICATION_PREPARE_OUTCOME: ${{ steps.verification_ownership.outcome }}
+          PARLOR_APPLE_CYCLE_OUTCOMES: >-
+            {"apple-aggregate":{"prepare":"${{ steps.apple_aggregate_prepare.outcome }}","run":"${{ steps.apple_aggregate_run.outcome }}","finish":"${{ steps.apple_aggregate_finish.outcome }}"},
+             "apple-ui":{"prepare":"${{ steps.apple_ui_prepare.outcome }}","run":"${{ steps.apple_ui_run.outcome }}","finish":"${{ steps.apple_ui_finish.outcome }}"},
+             "apple-wrapper":{"prepare":"${{ steps.apple_wrapper_prepare.outcome }}","run":"${{ steps.apple_wrapper_run.outcome }}","finish":"${{ steps.apple_wrapper_finish.outcome }}"}}
+          PARLOR_VERIFICATION_UPLOAD_OUTCOME: ${{ steps.verification_artifact.outcome }}
+          PARLOR_VERIFICATION_ARTIFACT_ID: ${{ steps.verification_artifact.outputs.artifact-id }}
+          PARLOR_VERIFICATION_ARTIFACT_DIGEST: ${{ steps.verification_artifact.outputs.artifact-digest }}
+        shell: python
+        run: |
+          import runpy, sys
+          sys.argv = ["verification_hygiene.py", "cleanup"]
+          runpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")
+
+      - name: Upload verification cleanup receipt
+        if: always() && (github.event_name != 'workflow_dispatch' || inputs.verification_scope == 'full')
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: verification-cleanup-${{ github.job }}
+          if-no-files-found: warn
+          retention-days: 14
+          path: ${{ runner.temp }}/parlor-verification-${{ github.run_id }}-${{ github.run_attempt }}-${{ github.job }}-cleanup.json

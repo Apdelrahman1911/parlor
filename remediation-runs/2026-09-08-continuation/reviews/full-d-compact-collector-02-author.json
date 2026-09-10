@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "kind": "ADDITIVE_COLLECTOR_AUTHOR_PACKET_NOT_RUNTIME_EVIDENCE",
+  "author": "/root/ci_review",
+  "created_at": "2026-09-10T01:10:25.712018+00:00",
+  "status": "AWAITING_INDEPENDENT_REVIEW_AND_ROOT_EXECUTED_FIXTURES",
+  "source_commit": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+  "source_tree": "8a89fab3042b8614fc4285148a8cd645f7ac2786",
+  "files": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-01.py",
+      "bytes": 7177,
+      "sha256": "036d2921c6f08cce2d04f8b7d947d00041977a88cec39a9ca83d9e6815a760c6"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-02.py",
+      "bytes": 17464,
+      "sha256": "3af9603aff8e20aa1380f844897ed356426ba29c4dd5172cc5c60edb2dea10de"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/test_full_d_compact_collector_02.py",
+      "bytes": 9677,
+      "sha256": "1b56aa715b06947d6e3e06968c9b60bd25825254ce080446051cfaa2ae364afa"
+    }
+  ],
+  "change_scope": [
+    "New v02 collector + focused stdlib fixtures only; v01 and canonical workflow/source untouched.",
+    "Import-safe main preserves API/repository/branch/workflow/source/attempt/completed-job/artifact-size/digest guards, and binds artifacts to exact unique job names and step names.",
+    "Increase only artifact member cap from5000 to50000: frozen source has19702tracked paths,5802test-resultXML files and680build/report files. Retain64MiB compressed/artifact,512MiB combined,256MiB expanded/archive,128MiB expanded/file; log limits remain1500members/64MiB expanded/file/128MiB compressed.",
+    "All table paths/types/duplicate/file-directory-prefix checks run before every member streams to EOF for CRC and SHA; only then selected extraction with exclusive/nonredirected paths and second-pass SHA/byte checks.",
+    "Exact observed workspace prefix parlor/parlor/ and frozen Git-derived live output roots; tracked/historical/unknown paths never extracted as current reports.",
+    "API checkout+ownership step success admits only current-path review candidates, never test execution. Windows failed checkout has zero admitted live reports. Exact current-named receipts are retained even on job failure and require separate content/source/cleanup review.",
+    "Original compressed artifacts/logs kept, with every historical/opaque/unselected member in full validated table; no deletion, dispatch, retry, build, publication, or runtime result counting."
+  ],
+  "observed_inputs": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-02/early-artifacts.json",
+      "bytes": 5919,
+      "sha256": "86fbf9f61634a51e4b0015987f64e59d50a9a4a0cda55348a661b85566ae96e9"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-02/early-windows-job/job.json",
+      "bytes": 3213,
+      "sha256": "22ecabf5ea0384e859f387f8574ca0b96cec78a42ee8f289017d4d92708ee124"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/ci-run-34152138368-evidence/10029809772-download-inspection-receipt.json",
+      "bytes": 96141,
+      "sha256": "b4ce442fc9ea597afff0eabfcc70fe83fef5032b45935ddb0128113f56306c33"
+    }
+  ],
+  "author_checks": {
+    "ast_parse": "PASS_ONLY_NOT_EXECUTION",
+    "project_imports": false,
+    "fixture_execution": "NOT_RUN_ROOT_OWNS_LANE",
+    "fixture_method_count": 14,
+    "artifact_downloads": false,
+    "build_or_ci_execution": false,
+    "scratch_outputs_created": false
+  },
+  "fixture_command": [
+    "/usr/bin/python3",
+    "-B",
+    "remediation-runs/2026-09-08-continuation/reviews/test_full_d_compact_collector_02.py"
+  ],
+  "collector_command": [
+    "/usr/bin/python3",
+    "-B",
+    "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-02.py",
+    "34420745957",
+    "4ccfafcfc361231cfb730178b3798ebcb6304770"
+  ],
+  "limitations": [
+    "Collection/admission is not fresh test execution; runtime provenance requires current logs/tasks/source/receipt review.",
+    "Unknown artifact layouts stay compressed and explicitly unclassified rather than heuristically expanded.",
+    "Ownership/cleanup contents are not accepted as PASS by collection; independent interpretation remains required.",
+    "Oversized/bad archives fail closed; partial downloads and any failed collection receipt remain preserved.",
+    "Download byte limits, like v01, are checked after the bounded180-second gh process completes; metadata compressed sizes are checked before artifact download."
+  ],
+  "cleanup": "No test/build/import execution or generated scratch outputs by author; root owns coordinated fixture stop/cleanup and collection."
+}

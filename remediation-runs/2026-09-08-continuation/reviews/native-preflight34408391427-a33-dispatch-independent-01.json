@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/native_ci",
+  "recorded_at": "2026-09-09T22:03:46.497951+00:00",
+  "status": "APPROVED_ONE_A33_ONLY_DISPATCH_SUBJECT_TO_IMMEDIATE_ROOT_GUARDS",
+  "findings": [],
+  "source": {
+    "commit": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+    "tree": "8a89fab3042b8614fc4285148a8cd645f7ac2786",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": "clean",
+    "full_history": true,
+    "rows": 829,
+    "copy_rows": 754,
+    "binding_sha256": "f29108888924bae02caff8fdebd642c135f0abc5fb3c35e6aaea5cba184c6993",
+    "source_manifest_sha256": "7002de84a90710efe96dbf758108e1351886ba00bc481b080cdfc0540839af88",
+    "canonical_source_identity_sha256": "769fb82d70eda2d912eaf520e10b3186cec740271a7eb91f5fbe5dce78bcbbb8",
+    "copy_selection_sha256": "d4288a9d0a4a4892e7973710b7090b329108e65e2926b48dc132267a09056782",
+    "freeze": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a33-source-freeze-03.json",
+      "sha256": "3df46b60b2bb19002c74462221de0db75df77be7e12ee272a353074da29a0a92"
+    },
+    "verification": "All829 live source hashes/path selection and754 copied originals equal fresh hosted schema3 binding; empty tracked diff. Exact two-commit freeze/inventory19702 and retained push/direct remote equality independently reconciled in B applicability02. Inventory is not exhaustive review."
+  },
+  "preflight": {
+    "run_id": 34408391427,
+    "run_attempt": 1,
+    "run_number": 177,
+    "job_id": 102656771170,
+    "repository_id": 1247560518,
+    "workflow_id": 335554528,
+    "workflow_live_guard_required": true,
+    "run_conclusion": "success",
+    "jobs": 5,
+    "other_jobs_skipped": 4,
+    "steps": {
+      "success": 11,
+      "skipped": 22
+    },
+    "collection": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34408391427/download-receipt.json",
+      "sha256": "302b992b5400db73807181ecf15ed2baecb3768dc22f3b452388021fb0ff524e"
+    },
+    "archives": [
+      {
+        "archive": "native-cleanup.zip",
+        "sha256": "1b0db921362d658878a34715076979e1529d41b76de8ddd9d6d36da73b3d41e3",
+        "bytes": 799,
+        "members": 1,
+        "expanded_bytes": 1059
+      },
+      {
+        "archive": "native-preflight.zip",
+        "sha256": "8fe7a431b22611136188cc993e64e9b115300a2e1ff5311592544e3d6f2fa779",
+        "bytes": 94319,
+        "members": 4,
+        "expanded_bytes": 343465
+      },
+      {
+        "archive": "run-attempt-1-logs.zip",
+        "sha256": "e4fc1bfe2016494223f513e512fc81655137a41cf9e8d91ee6b3e62aac8463a1",
+        "bytes": 22088,
+        "members": 13,
+        "expanded_bytes": 72585
+      }
+    ],
+    "main_artifact_id": 10126259771,
+    "cleanup_artifact_id": 10126260755,
+    "preflight_sha256": "bf4f7014722d4efb54d86b22a4bb2e946df6095326c8fd4bed8b3a52418f4a93",
+    "custody": "Seven captured GET command/status/size/hash records verified. Exact repository/head-repository/run/attempt/source/tree/workflow/path, five jobs and two artifact rows reconcile. Individual artifact JSON equals list rows, not separate GETs. All18 ZIP members read once: safe unique names/types/bounds, CRC/length/hash, exact extracted byte sets. No historical ZIP/binary replay.",
+    "raw_result": {
+      "scope": "native-preflight",
+      "selection": "paired",
+      "unselected_lanes": {},
+      "status": "PREFLIGHT_REVIEW_REQUIRED",
+      "cleanup_safe": true,
+      "error": null
+    },
+    "cleanup_sha256": "e992e2215f90d1f87ab7ecc77229fdaeae29d5a45c7fe95170780fd0b4c579d3",
+    "cleanup": "PASS artifact equals raw cleanup-step JSON. Paired/nonbuilding, native_runs{}, cache_policy null, only bound source file removed, source unchanged/errors[]. Upload IDs/digests match. No app build, simulator allocation, XCTest/libproc/protection runtime.",
+    "toolchain": "Exact previously reviewed public qualified profile unchanged: Xcode26.3/17C529, arm64, iOS26.2/23C54, SDK26.2 and expected JDK21/Android paths.",
+    "dispatch_receipt": "Preflight request7f4029c4 and successful dispatch/run association reconcile. Complete22-row pre-dispatch snapshot had no active runs; not a present live no-overlap claim.",
+    "workflow_limit": "Current collection has no separate workflow API response. Retained run/attempt bind workflow335554528/path; root must immediately verify active workflow before dispatch."
+  },
+  "controls": {
+    "l08": "c239881efea4cda5cfc948e7c227aaccb861b552dec054cfeccba6afff388cc0",
+    "normal": "d8d246266e8f72747f6f6e56c6851e723972c7d0c75abf2a0286c783f8c22b4f",
+    "changed_since_A31": {
+      "l08": [
+        "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01OSPrerequisite.swift.in",
+        "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_controls.py",
+        "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+        "remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json"
+      ],
+      "normal": [
+        "remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json"
+      ]
+    },
+    "generated_A_runner": "dcb1f6ce32da3fc83b24bf2b2b868de68ac7fb35ca1539fc31140ce2589e60d7",
+    "verification": "Both closed99 path sets match reviewed predecessor; every current row rehashed and ordered compact-JSON aggregates independently recomputed. Only the three approved A fixture/test rows plus new binding differ for A; only binding for B. Exact in-memory literal A driver rendering matches retained generated digest. No project import/control suite rerun."
+  },
+  "applicable_reviews": {
+    "os_source": "native-a31-os-prerequisite-independent-01.json@031aec93bfa242bfb16f33c224486a4ad4a90dedf894b528b88aa6937c2cebb8",
+    "os_actual": "native-a33-os-fixture-actual-independent-01.json@c78c36381c21b6db53466f5067bc43d976a5a4d1160bb8a3180f8de207ce657b",
+    "selector_source": "native-l08-only-selection-independent-01.json@59cdc22e7c3ed384300818d1c641edceb4cb9151f07ba62e96780c17270fa859",
+    "selector_actual": "native-l08-only-selection-actual-independent-01.json@c3b58a3638a16fd405e8fddfa5f9153aa57a1a68319fe73f3c4dc929a043bbab",
+    "labels_actual": "a33-cycle-label-correction-independent-01.json@2dbb9b3ad558422b65e6e8a4e8b82cc205600daf5c2d0ecd955e9c1bc37ad30c",
+    "scope": "Pins/current adoption verified. Preserve initial OS controls41/42 PASS and exact2-method corrected retest PASS; no all42-PASS rerun asserted. Label correction has one actual PASS. These are Linux/control evidence, not fresh native execution."
+  },
+  "historical_B": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/native-b30-a33-source-applicability-02.json",
+    "sha256": "1327d2034df9a440db1654e6c8f8a9ed60029b9dff0b359e50f8705d05ea5eae",
+    "conclusion": "Scoped historical B30 applicability independently approved; portability_review separately checked incremental report with no findings. B30 remains34362984912/1 at360fc797, not execution/artifacts at4cc. Unchanged normal98/shipping/build supports no redundant B run; whole copy/source equality is NOT claimed."
+  },
+  "dispatch": {
+    "request": "remediation-runs/2026-09-08-continuation/actions/native-evidence-dispatch-10/request.json",
+    "request_sha256": "dc486fde8dc490eb6efa0e81fb8d171618de348d96896ee58feecda166490424",
+    "maximum_dispatches": 1,
+    "verification": "Exact nine-input gh command/repository/ref verified: native-evidence,l08-only,4cc,preflight34408391427/1/artifact10126259771/digest8fe7a431, both current approved controls. Only A33; B34 NOT_RUN_THIS_RUN.",
+    "guards": [
+      "Root immediately rechecks HEAD/tree/branch/full history/tracked cleanliness, direct remote4cc and unchanged source/control/request/approval bytes; no intervening source/control commit or edit.",
+      "Root immediately checks exact producer34408391427/1 success, artifact10126259771 unexpired/digest unchanged, active workflow335554528 at expected path and complete same-ref no-overlap. Reviewer made no network request.",
+      "Dispatch exact request10 once. Canonical A33 retains adhoc/qualified-xcode-26.3/direct-owned-v1 and full6000s child+600s grace+600s reserve admission under bound240min CLOCK_MONOTONIC_RAW budget. Never shorten waits or bypass unsafe finalizers.",
+      "Retain actual failures and cleanup. A-only state/receipt/cleanup must bind normal NOT_RUN_THIS_RUN; no B child, admission, receipt or PASS synthesized. f5 preflight34402764126/request09 are obsolete and must not be dispatched/reused."
+    ]
+  },
+  "readiness": "NOT_READY. A33 actual runtime not yet executed at this approval; expected L08_ONLY_PASS or L08_ONLY_NOT_READY, exceptions FAIL, never combined PASS. Historical A31 failure/26 strict failures preserved. C06/fullD, final reconciliation, physical-device, Store/signing/publication, identity collision and owner/legal requirements are not waived.",
+  "activity": {
+    "checks": 1299,
+    "errors": [],
+    "method": "Read-only local Git/stdlib byte, JSON/ZIP/path/AST-literal comparison; only additive reports authored. No tests/builds/native/project-function execution/network/Git writes; no reviewer workers/outputs to clean."
+  }
+}

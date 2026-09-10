@@ -1,0 +1,87 @@
+--- sealed01/scripts/verification/ios-settings-sheet/settings_sheet_probe.py
++++ revision02/scripts/verification/ios-settings-sheet/settings_sheet_probe.py
+@@ -125,6 +125,7 @@
+         self.save()
+ 
+     def preserve(self):
++        self.receipt.update(postbuild_evidence_preserved=False, parlor_outputs_absent=False)
+         results = self.temporary / 'Results.xcresult'
+         require(not results.is_symlink(), 'redirected-result')
+         log = self.destination / 'xcodebuild.log'
+@@ -136,6 +137,10 @@
+                 code = self.command(['xcrun', 'xcresulttool', 'get', 'test-results', view, '--path', results], 'xcresult-' + view + '.json')
+                 state['extraction'][view] = code
+         normal.write_json(self.destination / 'diagnostic-retention.json', state)
++        require(all(not path.exists() and not path.is_symlink() for path in (
++            self.temporary / 'copy/composeApp/build',
++            self.temporary / 'DerivedData/Build/Products/Debug-iphonesimulator/Parlor.app')), 'unexpected-app-build')
++        self.receipt['parlor_outputs_absent'] = True
+         # Missing/failed XCTest extraction is retained as such, NEVER capture success.
+         # No Parlor app/container/phase receipt is expected in this diagnostic.
+         self.receipt['postbuild_evidence_preserved'] = True
+@@ -167,9 +172,6 @@
+         if primary is not None: raise primary
+         require(not self.errors and self.receipt.get('xcodebuild_exit_code') == 0 and
+             retained['extraction'] == {'summary': 0, 'tests': 0}, 'incomplete-native-execution')
+-        require(not (self.temporary / 'copy/composeApp/build').exists() and
+-            not (self.temporary / 'DerivedData/Build/Products/Debug-iphonesimulator/Parlor.app').exists(), 'unexpected-app-build')
+-        self.receipt['parlor_outputs_absent'] = True
+         value = validate_capture(*[normal.read_json((self.destination / ('xcresult-' + view + '.json')).read_text())
+             for view in ('summary', 'tests')], (self.destination / 'xcodebuild.log').read_text(), self.uuid)
+         normal.write_json(self.destination / 'public-sheet-actions.json', value)
+@@ -179,6 +181,8 @@
+         return  # No normal B launch, notice or libproc observation; their statuses remain NOT_RUN.
+ 
+     def finalize(self):
++        if self.receipt.get('diagnostic_status') == 'RUNNING':
++            self.receipt['diagnostic_status'] = 'FAIL'
+         super().finalize()  # Every original ownership/source/cleanup guard runs, including real build barrier.
+         r = self.receipt
+         complete = (r.get('diagnostic_status') == 'CAPTURED' and r['cleanup_status'] == 'PASS' and not r.get('error') and
+--- sealed01/scripts/verification/ios-settings-sheet/test_settings_sheet_probe.py
++++ revision02/scripts/verification/ios-settings-sheet/test_settings_sheet_probe.py
+@@ -6,7 +6,7 @@
+ from tempfile import TemporaryDirectory
+ from types import SimpleNamespace
+ import unittest
+-from unittest.mock import Mock
++from unittest.mock import Mock, patch
+ import xml.etree.ElementTree as ET
+ 
+ HERE = Path(__file__).resolve().parent
+@@ -97,6 +97,20 @@
+             lane.save.side_effect = OSError('synthetic ack failure')
+             with self.assertRaises(OSError): lane.preserve()
+             self.assertFalse(lane.receipt['postbuild_evidence_preserved'])
++            lane.save.side_effect = None
++            for relative in ('copy/composeApp/build', 'DerivedData/Build/Products/Debug-iphonesimulator/Parlor.app'):
++                unexpected = lane.temporary / relative
++                unexpected.parent.mkdir(parents=True, exist_ok=True)
++                unexpected.mkdir()
++                with self.assertRaisesRegex(RuntimeError, 'unexpected-app-build'): lane.preserve()
++                self.assertFalse(lane.receipt['postbuild_evidence_preserved'])
++                self.assertFalse(lane.receipt['parlor_outputs_absent'])
++                self.assertTrue(unexpected.is_dir())  # No diagnostic destruction authorization.
++                unexpected.rmdir()
++                unexpected.symlink_to(lane.temporary / 'absent-synthetic-target')
++                with self.assertRaisesRegex(RuntimeError, 'unexpected-app-build'): lane.preserve()
++                self.assertFalse(lane.receipt['postbuild_evidence_preserved'])
++                unexpected.unlink()
+ 
+     def test_failed_swift_build_marks_real_barrier_stops_and_preserves_before_reraising(self):
+         lane = object.__new__(probe.SheetLane)
+@@ -112,6 +126,14 @@
+         lane.stop_gradle.assert_called_once_with('stop-xcode-immediate')
+         lane.preserve.assert_called_once_with()
+         self.assertEqual(lane.receipt['runtime_evidence_status'], 'NOT_RUN')
++        lane.receipt['cleanup_status'] = 'FAIL'
++        with patch.object(probe.normal.Lane, 'finalize'):
++            lane.finalize()
++            self.assertEqual(lane.receipt['diagnostic_status'], 'FAIL')
++            lane.receipt['diagnostic_status'] = 'CAPTURED'
++            lane.finalize()
++            self.assertEqual(lane.receipt['diagnostic_status'], 'CAPTURED')
++        self.assertEqual(lane.receipt['status'], 'FAIL')
+ 
+ 
+ if __name__ == '__main__':

@@ -1,0 +1,638 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_FULL_D_ANDROID_RUNTIME_UNSIGNED_AAB_AND_LINUX_X64_CUSTODY_REVIEW",
+  "reviewer": "/root/ci_review",
+  "reviewed_at": "2026-09-10T01:44:11.772135+00:00",
+  "status": "ACCEPTED_SCOPED_ANDROID_CHECKS_AT_4CC_WITH_EXPLICIT_CLEANUP_LIMITS_FULL_RUN_REMAINS_FAILURE",
+  "blocking_findings_in_scoped_android_checks": [],
+  "source_commit": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+  "source_tree": "8a89fab3042b8614fc4285148a8cd645f7ac2786",
+  "run_id": 34420745957,
+  "run_attempt": 1,
+  "inputs": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34420745957/download-receipt.json",
+      "bytes": 22804748,
+      "sha256": "9756e582e12dbdaa25a6b382d3ed30fc9ef3bd6a133215fcc636c312bc3376a1"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34420745957/run.json",
+      "bytes": 12676,
+      "sha256": "7c1a03e1222267557438992a10ea45731372e3e78ad40385a988fb2c45973dc0"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34420745957/attempt.json",
+      "bytes": 12698,
+      "sha256": "da0821060b2e4478f9a2169e42b09deaa3821601cff03db8ddb2c3a70b196c9d"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34420745957/jobs.json",
+      "bytes": 20455,
+      "sha256": "cfb1f5a759241eb20075bbd8b48baa720c3d07adb1402dabac4a701c9eac70da"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34420745957/artifacts.json",
+      "bytes": 7357,
+      "sha256": "b7b1d11ec064a5ea71340035a58a8d6b86483af4f9e5a7f26577b45d47f6d6a9"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34420745957/frozen-tree-paths.z",
+      "bytes": 2912754,
+      "sha256": "a72835eb93d251b0039408e64fc70e13164f0965abff2bb3b328a695747a9e23"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34420745957/run-attempt-1-logs.zip",
+      "bytes": 411240,
+      "sha256": "bb2789174a5d992850d6772e6cfcf156be3d2fa24c0332533a87ee3078aed050"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34420745957/verification-cleanup-desktop-android/parlor-verification-34420745957-1-desktop-android-cleanup.json",
+      "bytes": 14687,
+      "sha256": "e1b5e964964a5c9d84a0ca233f77a4ff922f5a1b778d8282440844d83219472d"
+    }
+  ],
+  "frozen_source_inputs": [
+    {
+      "path": ".github/workflows/production-verification.yml",
+      "bytes": 41722,
+      "sha256": "5895ce4e80000b205302a987f8b603ac21380764f36e3711064029c3b1af62bc"
+    },
+    {
+      "path": "scripts/ci/verification_hygiene.py",
+      "bytes": 13802,
+      "sha256": "9eab427aeb3d810c033a3827aa44f7201cbb261345a2e6667a8d085df2fbd603"
+    },
+    {
+      "path": "scripts/android/run_release_managed_device_smoke.sh",
+      "bytes": 1511,
+      "sha256": "5b6dc8fcdd7b11c9cefd39da3adb8783321b647cd9a8459ff761ef7fa031262d"
+    },
+    {
+      "path": "scripts/verification/android_release_artifacts.py",
+      "bytes": 16937,
+      "sha256": "55d6b3ddbe4877956c383225ea8bc8b203a2b023206be60eeac519b2555e98cb"
+    },
+    {
+      "path": "scripts/verification/third_party_notices.py",
+      "bytes": 30079,
+      "sha256": "d5a9e8e0cafd9c2d0de9ecd8dfcb040053fa52d25d798abd9998e84ab6676bdf"
+    },
+    {
+      "path": "composeApp/build.gradle.kts",
+      "bytes": 27271,
+      "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5"
+    },
+    {
+      "path": "composeApp/src/androidInstrumentedTest/kotlin/com/parlor/app/MainActivityColdStartTest.kt",
+      "bytes": 8462,
+      "sha256": "14055d93940b37c4f1a03b91d0df87b8042b146cdd58a9e061da752d375094f9"
+    },
+    {
+      "path": "composeApp/src/androidInstrumentedTest/java/com/parlor/app/ReleaseRuntimeSmokeTest.java",
+      "bytes": 2557,
+      "sha256": "bfa1c7a05d6310d467ebaa993225f72a80a8ed9ea0791cc67640d5810a248a13"
+    },
+    {
+      "path": "config/release-policy.json",
+      "bytes": 4481,
+      "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4"
+    },
+    {
+      "path": "config/parlor-version.xcconfig",
+      "bytes": 202,
+      "sha256": "4975e763730608718095d3c7342f34f333a86e20cf562eb221b9e3478fa93f9e"
+    },
+    {
+      "path": "config/third-party-notices.json",
+      "bytes": 26026,
+      "sha256": "4b501223b3841017477a226515d3758bc60848fe00d579fac3152a81928d6406"
+    },
+    {
+      "path": "gradle/libs.versions.toml",
+      "bytes": 5556,
+      "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399"
+    }
+  ],
+  "artifact_custody": [
+    {
+      "artifact_id": 10132326004,
+      "artifact_name": "verification-cleanup-ios",
+      "bytes": 2486,
+      "sha256": "c28c4b35cd88d5bcc6013fa1020e56c0364595e9d18a8755ff7c265bc2bf8c2a",
+      "api_and_collector_digest_equal": true,
+      "members": 1
+    },
+    {
+      "artifact_id": 10132324313,
+      "artifact_name": "ios-verification",
+      "bytes": 7586821,
+      "sha256": "8559eac276c7742586c32e37f8b6dd5ad4e714dab362948f5056afd4596de96b",
+      "api_and_collector_digest_equal": true,
+      "members": 6790
+    },
+    {
+      "artifact_id": 10131388620,
+      "artifact_name": "verification-cleanup-desktop-android",
+      "bytes": 2366,
+      "sha256": "e3436c64e074d120e7fca8a074d880ae2b2e5e251a8e54fc5c26a4e07208fce8",
+      "api_and_collector_digest_equal": true,
+      "members": 1
+    },
+    {
+      "artifact_id": 10131387249,
+      "artifact_name": "desktop-android-verification",
+      "bytes": 22405067,
+      "sha256": "01e0713b5a5cab0ef9df68e50da46e5aa429952c33e37348f4d6c813ff49455e",
+      "api_and_collector_digest_equal": true,
+      "members": 7999
+    },
+    {
+      "artifact_id": 10131049572,
+      "artifact_name": "verification-cleanup-desktop-macos-x64",
+      "bytes": 2368,
+      "sha256": "140e1b15e8cbd476f25bf93ac6670cdf8f4325abb7fe60fb4224fd760aa66111",
+      "api_and_collector_digest_equal": true,
+      "members": 1
+    },
+    {
+      "artifact_id": 10131047376,
+      "artifact_name": "desktop-verification-desktop-macos-x64",
+      "bytes": 6756336,
+      "sha256": "051952b491520f256eeaa9c091b8be09a44fc8c82599a8363dc053e7071135bb",
+      "api_and_collector_digest_equal": true,
+      "members": 6461
+    },
+    {
+      "artifact_id": 10130918114,
+      "artifact_name": "verification-cleanup-desktop-linux-arm64",
+      "bytes": 2366,
+      "sha256": "ea26ca22948f651675bbc5f7f8f52447cdc0792edcef7443bdab28640791480e",
+      "api_and_collector_digest_equal": true,
+      "members": 1
+    },
+    {
+      "artifact_id": 10130917242,
+      "artifact_name": "desktop-verification-desktop-linux-arm64",
+      "bytes": 6746035,
+      "sha256": "9d0157d4f1e93264db0eab090fcd0acd177761d0ae9c6790da0fc35126400fc5",
+      "api_and_collector_digest_equal": true,
+      "members": 6461
+    },
+    {
+      "artifact_id": 10130797634,
+      "artifact_name": "verification-cleanup-desktop-windows-x64",
+      "bytes": 890,
+      "sha256": "2cae3aff9af019f2418f1cb6e94c04beaf7a06982f47dcbda5dd8f1c3bfbfdce",
+      "api_and_collector_digest_equal": true,
+      "members": 1
+    },
+    {
+      "artifact_id": 10130796657,
+      "artifact_name": "desktop-verification-desktop-windows-x64",
+      "bytes": 5046116,
+      "sha256": "4223d61770b9f2fa80ac01269ee53448e53eee42d73027a7f4a2baa2683edd1a",
+      "api_and_collector_digest_equal": true,
+      "members": 4975
+    }
+  ],
+  "source_and_ownership": {
+    "frozen_git_path_table_matches_retained_manifest": true,
+    "tracked_paths": 19702,
+    "owned_output_roots": 147,
+    "all_claimed_roots_match_frozen_source": true,
+    "no_claimed_root_overlaps_tracked_files": true,
+    "owner_prepared_at": "2026-09-10T00:18:55.167032+00:00",
+    "runner_root": "/home/runner/work/parlor/parlor",
+    "embedded_aab_git_revision_matches": true,
+    "post_D_windows_changes_not_applied_to_this_evidence": true
+  },
+  "android_job": {
+    "id": 102695388477,
+    "name": "Common, desktop, and Android release",
+    "conclusion": "success",
+    "runner_labels": [
+      "ubuntu-24.04"
+    ],
+    "started_at": "2026-09-10T00:18:45Z",
+    "completed_at": "2026-09-10T00:42:50Z",
+    "platform": "GitHub ubuntu-24.04 / Ubuntu24.04.4 x64, Temurin21.0.12-1; Android35 google_apis x86_64 system image revision9 required by successful source-pinned SDK step"
+  },
+  "android_runtime": {
+    "status": "ACTUALLY_EXECUTED_3_PASS_0_FAILURE_0_ERROR_0_SKIP",
+    "scope": "Only the three committed release instrumentation methods below, on managed emulator-5554/pixel2Api35. Not complete game interaction, physical-device/multiplayer, performance, or installed unsigned-AAB identity proof.",
+    "xml_timestamp": "2026-09-10T00:42:23",
+    "xml_suite_seconds": "9.399",
+    "cases": [
+      {
+        "classname": "com.parlor.app.MainActivityColdStartTest",
+        "name": "testColdStartDisplaysContentWhileSettingsIoIsBlocked",
+        "time": "2.788"
+      },
+      {
+        "classname": "com.parlor.app.ReleaseRuntimeSmokeTest",
+        "name": "testReleaseBuildCanAcquireDeclaredMulticastLock",
+        "time": "0.83"
+      },
+      {
+        "classname": "com.parlor.app.ReleaseRuntimeSmokeTest",
+        "name": "testReleaseBuildLaunchesCanonicalActivityWithoutDebuggableFlag",
+        "time": "4.399"
+      }
+    ],
+    "proofs": [
+      "Current fresh-checkout/source-bound ownership claim preceded build; current XML path is outside every frozen tracked-history path.",
+      "Task pixel2Api35ReleaseAndroidTest executed without FROM-CACHE, UP-TO-DATE or SKIPPED suffix; raw log Starting3 then Finished3 in this job.",
+      "UTP independently records forced installation of freshly built release app/test APKs, actual InstrumentationTestRunner invocation and three PASSED methods.",
+      "Instrumentation stream records start/success pairs1/0 three times and OK(3tests); final Android INSTRUMENTATION_CODE -1 is the normal success code, not a failed test.",
+      "Current test-result.textproto and three per-method logcats corroborate executed class/method identity; not HTML duplicates or historical uploaded XML.",
+      "Source release variant is nondebuggable, R8 minified/resource-shrunk; disposable2-day managed-device key is separate from unsigned AAB and Store signing."
+    ],
+    "main_gradle_summary": {
+      "actionable": 1179,
+      "executed": 959,
+      "from_cache": 220,
+      "seconds_label": "18m45s"
+    },
+    "managed_gradle_summary": {
+      "actionable": 487,
+      "executed": 50,
+      "from_cache": 4,
+      "up_to_date": 433,
+      "seconds_label": "4m8s",
+      "cached_tasks": [
+        ":composeApp:processReleaseAndroidTestNavigationResources FROM-CACHE",
+        ":composeApp:compileReleaseAndroidTestNavigationResources FROM-CACHE",
+        ":composeApp:generateReleaseAndroidTestResources FROM-CACHE",
+        ":composeApp:javaPreCompileReleaseAndroidTest FROM-CACHE"
+      ]
+    },
+    "fresh_tests_not_inferred_from_build_cache_counts": true
+  },
+  "unsigned_aab": {
+    "bytes": 8872909,
+    "sha256": "e02fb1b3d97aeca240a091a9dd64ff6e11175f09b6b19daa3fd676a7d237d847",
+    "entry_count": 380,
+    "expanded_bytes": 68403585,
+    "all_380_entry_crc_sha_size_match_current_inventory": true,
+    "entry_table_sha256": "a5c553b3b34ca1b6241f68c2e18ef6ae701f9c270b6ae9de455f5ecce63d4a18",
+    "jar_signatures_present": false,
+    "embedded_source_revision": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+    "r8_version": "9.1.41",
+    "r8_optimization_obfuscation_shrinking_enabled": true,
+    "r8_debug_mode": false,
+    "dex": {
+      "bytes": 4714184,
+      "sha256": "6520278b689b6b617a73e44343c1a800fc0cc9871f387191fbbfd5b301759f2b",
+      "class_definitions": 5454,
+      "sha1_and_adler32_valid": true,
+      "main_activity_present": true,
+      "reviewed_test_namespaces_absent": true,
+      "method": "Independent bounded DEX header/string/type/class-table parsing; no dexdump executed locally."
+    },
+    "native_images": [
+      {
+        "path": "base/lib/arm64-v8a/libandroidx.graphics.path.so",
+        "abi": "arm64-v8a",
+        "elf_class": 2,
+        "machine": 183
+      },
+      {
+        "path": "base/lib/armeabi-v7a/libandroidx.graphics.path.so",
+        "abi": "armeabi-v7a",
+        "elf_class": 1,
+        "machine": 40
+      },
+      {
+        "path": "base/lib/x86/libandroidx.graphics.path.so",
+        "abi": "x86",
+        "elf_class": 1,
+        "machine": 3
+      },
+      {
+        "path": "base/lib/x86_64/libandroidx.graphics.path.so",
+        "abi": "x86_64",
+        "elf_class": 2,
+        "machine": 62
+      }
+    ],
+    "r8_mapping": {
+      "bytes": 60007671,
+      "sha256": "3c0d59898be57f4b16211e979346f392c8210363dd92b3371fafff481b0d9d0f",
+      "class_mappings": 6263,
+      "main_activity_present": true,
+      "reviewed_test_namespaces_absent": true,
+      "standalone_mapping_matches_embedded_bytes": true
+    },
+    "notices": {
+      "resource_count": 26,
+      "total_bytes": 99515,
+      "exact_packaged_bytes_match_4cc_git_blobs": true,
+      "manifest_sha256": "4b501223b3841017477a226515d3758bc60848fe00d579fac3152a81928d6406",
+      "catalog_sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399"
+    },
+    "stories_and_fonts": {
+      "resource_count": 9,
+      "story_count": 7,
+      "font_count": 2,
+      "exact_packaged_bytes_match_4cc_git_blobs": true
+    }
+  },
+  "manifest_and_ci_tool_review": {
+    "status": "ACCEPTED_SCOPED_CURRENT_CI_TOOL_RESULT_AND_INDEPENDENT_PACKAGE_BYTE_BINDING",
+    "manifest": {
+      "application_id": "com.parlor.app",
+      "exported": [
+        [
+          "activity",
+          "com.parlor.app.MainActivity",
+          ""
+        ],
+        [
+          "receiver",
+          "androidx.profileinstaller.ProfileInstallReceiver",
+          "android.permission.DUMP"
+        ]
+      ],
+      "min_sdk": 26,
+      "permissions": [
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.ACCESS_WIFI_STATE",
+        "android.permission.CHANGE_WIFI_MULTICAST_STATE",
+        "android.permission.INTERNET",
+        "com.parlor.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+      ],
+      "target_sdk": 36,
+      "version_code": 1,
+      "version_name": "1.0.0"
+    },
+    "merged_manifest_policies_checked": true,
+    "bundletool_version": "1.18.3",
+    "bundletool_sha256": "a099cfa1543f55593bc2ed16a70a7c67fe54b1747bb7301f37fdfd6d91028e29",
+    "dexdump_sha256": "0944161e1e453ac40a16362ab42f4b1ee5e60eccf503cd87f4a6040c78247d02",
+    "build_tools": "36.0.0",
+    "scope": "Frozen inspector source calls pinned bundletool validate/dump and build-tools dexdump, returns PASS in the successful current inspection step. Reviewer did not execute these tools or independently decode protobuf AndroidManifest; every embedded package entry was independently CRC/SHA checked against that bound inventory, and merged plain-XML policies independently parsed."
+  },
+  "cleanup": {
+    "result": "PASS_FOR_RECORDED_GRADLE_AND_147_CLAIMED_OUTPUT_PATHS_ONLY",
+    "stop_receipts": [
+      {
+        "cycle": "common-android",
+        "started_at": "2026-09-10T00:38:14.519329+00:00",
+        "finished_at": "2026-09-10T00:38:15.144302+00:00",
+        "exit_code": 0,
+        "output": "No Gradle daemons are running.\n"
+      },
+      {
+        "cycle": "managed-device",
+        "started_at": "2026-09-10T00:42:25.499952+00:00",
+        "finished_at": "2026-09-10T00:42:26.088799+00:00",
+        "exit_code": 0,
+        "output": "No Gradle daemons are running.\n"
+      }
+    ],
+    "final_stop": {
+      "command": [
+        "./gradlew",
+        "--stop"
+      ],
+      "started_at": "2026-09-10T00:42:45.571201+00:00",
+      "exit_code": 0,
+      "output": "No Gradle daemons are running.\n",
+      "finished_at": "2026-09-10T00:42:46.157085+00:00"
+    },
+    "removed_count": 21,
+    "not_created_count": 126,
+    "retained": [],
+    "errors": [],
+    "started_at": "2026-09-10T00:42:45.571191+00:00",
+    "finished_at": "2026-09-10T00:42:47.748735+00:00",
+    "upload_identity_bound_before_deletion": {
+      "outcome": "success",
+      "artifact_id": "10131387249",
+      "artifact_digest": "01e0713b5a5cab0ef9df68e50da46e5aa429952c33e37348f4d6c813ff49455e"
+    },
+    "exact_claimed_partition_verified": true,
+    "emulator_worker_exit_attestation": "NOT_PRESENT: UTP records stopping logcat, not emulator process termination; final hygiene receipt explicitly excludes other native/emulator-worker proof.",
+    "temporary_key_cleanup": "Successful smoke-script result includes its EXIT trap: Gradle stop and rm of exact mktemp directory; no private Store credentials used. No separate keystore deletion receipt."
+  },
+  "preserved_failures": {
+    "full_run": "failure",
+    "job_conclusions": {
+      "Desktop strict verification (Linux arm64)": "success",
+      "iOS tests, release frameworks, and Swift wrapper": "success",
+      "Desktop and Kotlin Native strict verification (macOS x64)": "success",
+      "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)": "failure",
+      "Common, desktop, and Android release": "success"
+    },
+    "windows_checkout": "failure",
+    "windows_fresh_ownership": "skipped",
+    "windows_cleanup": "FAIL",
+    "windows_removed_outputs": [],
+    "windows_fresh_test_count": 0
+  },
+  "limitations": [
+    "Do not treat four successful jobs as successful combined qualification: original fullD is failure because Windows checkout failed; original cleanup FAIL and historical-only Windows reports remain unchanged.",
+    "Gradle/build-output cleanup PASS does not establish complete emulator process/AVD cleanup. No additional remote worker inventory or physical-device inspection was run.",
+    "Release emulator test APKs and independently inspected unsigned AAB share frozen source and R8 mapping bytes, but this does not prove the installed APK was generated from that exact AAB digest.",
+    "The26 delivered notice files are the reviewed supplement, not exhaustive dependency/legal approval. Fresh dependency export/candidate-consumer chain is separately reviewed.",
+    "Physical-device gates, Store identity collision/ownership, signing, publication/promotion and owner/legal approvals remain unmet/outside this review. No Store workflow or physical test was invoked.",
+    "Desktop/unit/17repair mapping and Apple/native runtime conclusions are owned by other independent reviewers; no duplicate pass counts or A33/file-protection conclusions inferred here."
+  ],
+  "member_bindings": [
+    {
+      "archive": "desktop-android-verification.zip",
+      "member": "parlor/parlor/build/ci-evidence/commit.txt",
+      "bytes": 41,
+      "sha256": "7b8c882f0657ac520ac0692dc364af7ffb245aae7853fe189c098bd311b4d800"
+    },
+    {
+      "archive": "desktop-android-verification.zip",
+      "member": "parlor/parlor/build/ci-evidence/android-aab.sha256",
+      "bytes": 129,
+      "sha256": "2ca2b0c7bc01bf202362744d87797144dab3e87c9f20302dbf71f8a0e0b3d24c"
+    },
+    {
+      "archive": "desktop-android-verification.zip",
+      "member": "parlor/parlor/build/ci-evidence/android-release-artifact-inventory.json",
+      "bytes": 78248,
+      "sha256": "1fd676d9a2d122ba7f6d052fb6905ff6456d3623db26481ce54370853d1d5bf4"
+    },
+    {
+      "archive": "desktop-android-verification.zip",
+      "member": "parlor/parlor/build/ci-evidence/android-release-notices.json",
+      "bytes": 10256,
+      "sha256": "aa9d81fc220f24be8bf0b3a45cd3e9ecb1f4f1e25a161d6cff6f0feca3adcf03"
+    },
+    {
+      "archive": "desktop-android-verification.zip",
+      "member": "parlor/parlor/build/ci-evidence/merged-release-manifest.xml",
+      "bytes": 4176,
+      "sha256": "f0f946934d2f96ec7391f9bf1fbd2600aadcd8be570f77e5b8a36bd3aade9228"
+    },
+    {
+      "archive": "desktop-android-verification.zip",
+      "member": "_temp/parlor-verification-34420745957-1-desktop-android-ownership.json",
+      "bytes": 14281,
+      "sha256": "b7ff1feece0825850e209b937c4ec0352e39c9f3a849311b98c31c5e30e498b9"
+    },
+    {
+      "archive": "desktop-android-verification.zip",
+      "member": "_temp/parlor-verification-34420745957-1-desktop-android-stop-common-android.json",
+      "bytes": 344,
+      "sha256": "b6542b426c91b006d7d195e9a74dd1196eedb75fdba4be07db12d3c36531bae6"
+    },
+    {
+      "archive": "desktop-android-verification.zip",
+      "member": "_temp/parlor-verification-34420745957-1-desktop-android-stop-managed-device.json",
+      "bytes": 344,
+      "sha256": "6610973bc31f75ccb9c87d1ce1052abf8ba16b636ae7cf14be264a1325ad69cf"
+    },
+    {
+      "archive": "desktop-android-verification.zip",
+      "member": "parlor/parlor/composeApp/build/outputs/androidTest-results/managedDevice/release/pixel2Api35/TEST-pixel2Api35-_composeApp-.xml",
+      "bytes": 831,
+      "sha256": "c84e18e5c156e791727f588e0305816c1f7c1e32bcb532a8844d33cefd105291"
+    },
+    {
+      "archive": "desktop-android-verification.zip",
+      "member": "parlor/parlor/composeApp/build/outputs/androidTest-results/managedDevice/release/pixel2Api35/utp.0.log",
+      "bytes": 2029,
+      "sha256": "10f1b6d2ea0e3805e2f3aa6a69e9e687093d086e373e7346165d2a6d169b2e81"
+    },
+    {
+      "archive": "desktop-android-verification.zip",
+      "member": "parlor/parlor/composeApp/build/outputs/androidTest-results/managedDevice/release/pixel2Api35/testlog/test-results.log",
+      "bytes": 2248,
+      "sha256": "c1db08d2c37e0e20d9ec4e226476d3edbc257182bff9229b9681014ef675bba4"
+    },
+    {
+      "archive": "desktop-android-verification.zip",
+      "member": "parlor/parlor/composeApp/build/outputs/androidTest-results/managedDevice/release/pixel2Api35/test-result.textproto",
+      "bytes": 5281,
+      "sha256": "eeb8ae59097e2584c377ee1b219db5337bb631afcbbc87ce3585e2f035a1ef36"
+    },
+    {
+      "archive": "desktop-android-verification.zip",
+      "member": "parlor/parlor/composeApp/build/outputs/androidTest-results/managedDevice/release/pixel2Api35/cpuinfo",
+      "bytes": 1663,
+      "sha256": "35f072e8d83833b523d87f214c0ad0bd5c5b736b1261e690b91d52f8307d5cbd"
+    },
+    {
+      "archive": "desktop-android-verification.zip",
+      "member": "parlor/parlor/composeApp/build/outputs/androidTest-results/managedDevice/release/pixel2Api35/device-info.pb",
+      "bytes": 115,
+      "sha256": "555de4a83c5f2bb7b3b5c3c56d8ed70232858151803d5d41f7695bd5b4328c95"
+    },
+    {
+      "archive": "desktop-android-verification.zip",
+      "member": "parlor/parlor/composeApp/build/outputs/androidTest-results/managedDevice/release/pixel2Api35/logcat-com.parlor.app.MainActivityColdStartTest-testColdStartDisplaysContentWhileSettingsIoIsBlocked.txt",
+      "bytes": 38212,
+      "sha256": "912cfeb4eb3fc0f556dfb68bf443fb2472e191c8c894a30505b4b9f74af88446"
+    },
+    {
+      "archive": "desktop-android-verification.zip",
+      "member": "parlor/parlor/composeApp/build/outputs/androidTest-results/managedDevice/release/pixel2Api35/logcat-com.parlor.app.ReleaseRuntimeSmokeTest-testReleaseBuildCanAcquireDeclaredMulticastLock.txt",
+      "bytes": 8828,
+      "sha256": "6b02a9405a2d6ca9ddbff6ce195d40ce8ab1fab7b918f83f82133c4069461cda"
+    },
+    {
+      "archive": "desktop-android-verification.zip",
+      "member": "parlor/parlor/composeApp/build/outputs/androidTest-results/managedDevice/release/pixel2Api35/logcat-com.parlor.app.ReleaseRuntimeSmokeTest-testReleaseBuildLaunchesCanonicalActivityWithoutDebuggableFlag.txt",
+      "bytes": 48732,
+      "sha256": "2f47ec3a6ef2c36449e4b00234256f4ce2c8614d2160e6d88cdb8553276b6a13"
+    },
+    {
+      "archive": "desktop-android-verification.zip",
+      "member": "parlor/parlor/composeApp/build/outputs/bundle/release/composeApp-release.aab",
+      "bytes": 8872909,
+      "sha256": "e02fb1b3d97aeca240a091a9dd64ff6e11175f09b6b19daa3fd676a7d237d847"
+    }
+  ],
+  "log_bindings": [
+    {
+      "archive": "run-attempt-1-logs.zip",
+      "member": "Common, desktop, and Android release/1_Set up job.txt",
+      "bytes": 2267,
+      "sha256": "845c5c35d65b369ebc4c91c8db43b548673f5ff4fc8d696b871c196189f83261"
+    },
+    {
+      "archive": "run-attempt-1-logs.zip",
+      "member": "Common, desktop, and Android release/2_Check out source.txt",
+      "bytes": 14444,
+      "sha256": "0d0ed188de698485ee0a6e8536289aa1e6262574e54780c878984463ddddeec1"
+    },
+    {
+      "archive": "run-attempt-1-logs.zip",
+      "member": "Common, desktop, and Android release/3_Set up JDK 21.txt",
+      "bytes": 2045,
+      "sha256": "da27a9741efa0e7ee9055245a5bdbd1d6bfc22f463e5e92b21a2f0d7d87b4cbe"
+    },
+    {
+      "archive": "run-attempt-1-logs.zip",
+      "member": "Common, desktop, and Android release/4_Claim fresh verification output ownership.txt",
+      "bytes": 827,
+      "sha256": "21bcab4a8e702c3164da807ac738cf4570a6f369f88916ab2c9403a357c09a2d"
+    },
+    {
+      "archive": "run-attempt-1-logs.zip",
+      "member": "Common, desktop, and Android release/5_Install pinned Android SDK packages.txt",
+      "bytes": 23320,
+      "sha256": "44d62f1ea173bdc5b9b858ce50126c1b06336c17a97f533698271bba4852c978"
+    },
+    {
+      "archive": "run-attempt-1-logs.zip",
+      "member": "Common, desktop, and Android release/6_Record exact source and require a clean checkout.txt",
+      "bytes": 962,
+      "sha256": "0abcad3270ef9cfa11f39dd05f5f37ea8cd8e5e60143690a90e5df797d273cf0"
+    },
+    {
+      "archive": "run-attempt-1-logs.zip",
+      "member": "Common, desktop, and Android release/7_Run common, desktop, Android, static-analysis, and release gates.txt",
+      "bytes": 290871,
+      "sha256": "aedc99f048d92c7681c76c36bba53491a8ddf64e3b38933222232d9a9cdca2ad"
+    },
+    {
+      "archive": "run-attempt-1-logs.zip",
+      "member": "Common, desktop, and Android release/8_Stop Gradle after common-android.txt",
+      "bytes": 1173,
+      "sha256": "1e8d22b008e295a26a65381b46b1550595c77da35456683c318108d88f6b6c80"
+    },
+    {
+      "archive": "run-attempt-1-logs.zip",
+      "member": "Common, desktop, and Android release/9_Run release Android managed-device smoke tests.txt",
+      "bytes": 63330,
+      "sha256": "5ef181faef65feb5c0243a6b4c701b5e3692ce66c57f03ab5edbb22c7a0ce08a"
+    },
+    {
+      "archive": "run-attempt-1-logs.zip",
+      "member": "Common, desktop, and Android release/10_Stop Gradle after managed-device.txt",
+      "bytes": 1173,
+      "sha256": "8158a4b557062bcda11bdd2ffd30e0500e9126a60d98ea1d92c326ccaac454f2"
+    },
+    {
+      "archive": "run-attempt-1-logs.zip",
+      "member": "Common, desktop, and Android release/11_Inspect unsigned Android release artifact and merged manifest.txt",
+      "bytes": 44814,
+      "sha256": "f626d00d9567f2e4d6e82d02f41c8096ebf39d13dcd454e362be9e5a23054e5b"
+    },
+    {
+      "archive": "run-attempt-1-logs.zip",
+      "member": "Common, desktop, and Android release/12_Upload verification reports, mappings, and unsigned AAB.txt",
+      "bytes": 2936,
+      "sha256": "972a5935cbdcd652ce0fa9e5b2d6d928d4a7d30ea14de63387e78a5cd274a869"
+    },
+    {
+      "archive": "run-attempt-1-logs.zip",
+      "member": "Common, desktop, and Android release/13_Clean only attested verification outputs.txt",
+      "bytes": 15205,
+      "sha256": "8c6b97290df0ca66d8abc042dcbd484115e77b946e9ccce6bc721106d9b2bd0d"
+    },
+    {
+      "archive": "run-attempt-1-logs.zip",
+      "member": "Common, desktop, and Android release/14_Upload verification cleanup receipt.txt",
+      "bytes": 2209,
+      "sha256": "9db5f24b0169ad4728aea9a1101b6b798ae5f565ef66b0036250af3b4d3c7903"
+    }
+  ],
+  "reviewer_activity": "Read-only frozen Git blobs, retained API/ZIP/XML/text/JSON and bounded in-memory AAB/DEX/ELF/R8/notice inspection only; one assigned additive report. No project/collector imports, builds, tests, network, workflow dispatch, large extraction, source/Git mutation or new workers. Collector correction itself was independently reviewed by fixture_review, not re-approved by its author here."
+}

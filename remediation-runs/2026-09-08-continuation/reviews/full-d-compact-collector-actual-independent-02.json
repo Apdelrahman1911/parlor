@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_ACTUAL_COLLECTOR_FIXTURES_AND_ADDITIVE_COLLECTION_ADMISSION",
+  "reviewer": "/root/fixture_review",
+  "reviewed_at": "2026-09-10T01:18:14.266783+00:00",
+  "status": "ACCEPTED_14_ACTUAL_FIXTURES_AND_ADMITTED_V02_COLLECTION_AFTER_RUN_COMPLETION",
+  "findings": [],
+  "inputs": {
+    "source_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-independent-02.json",
+      "bytes": 10163,
+      "sha256": "3e3f5be8590e2cfc808629c8787f414873c32169179d1a8b8dce737dcb372140"
+    },
+    "collector": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-02.py",
+      "bytes": 17464,
+      "sha256": "3af9603aff8e20aa1380f844897ed356426ba29c4dd5172cc5c60edb2dea10de"
+    },
+    "fixtures": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/test_full_d_compact_collector_02.py",
+      "bytes": 9677,
+      "sha256": "1b56aa715b06947d6e3e06968c9b60bd25825254ce080446051cfaa2ae364afa"
+    },
+    "cycle_receipt": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-full-d-collector-controls-01/receipt.json",
+      "bytes": 306292,
+      "sha256": "75a8814a1954d0b44adedd01e49f4bb7d1bd2a06698ee6b29c1b536b41395101"
+    },
+    "raw_fixture_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-full-d-collector-controls-01/gradle.log",
+      "bytes": 2015,
+      "sha256": "af72e7a2c001a0e1bae9652e109153de8c3763b2472182b93d8dd8c52dc2b408"
+    },
+    "immediate_stop_log": {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-full-d-collector-controls-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    "original_request": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-02/request.json",
+      "bytes": 3233,
+      "sha256": "2a54943f8ec8d56f4e263dc1b1c0aafe858fd22e9b8711533bd7da72f1fb812b"
+    },
+    "existing_run_association": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-02/run-association.json",
+      "bytes": 635,
+      "sha256": "5b0bc95ed9ce8c8304d149e5e37fa33ea7c266e6df23cf77a31d983a4e6cace4"
+    }
+  },
+  "actual_execution": {
+    "operator": "/root",
+    "cycle": "continuation-full-d-collector-controls-01",
+    "command": [
+      "/bin/bash",
+      "-c",
+      "set -eu; check_controls() { printf \"%s\\n\" \"3af9603aff8e20aa1380f844897ed356426ba29c4dd5172cc5c60edb2dea10de  remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-02.py\" \"1b56aa715b06947d6e3e06968c9b60bd25825254ce080446051cfaa2ae364afa  remediation-runs/2026-09-08-continuation/reviews/test_full_d_compact_collector_02.py\" | sha256sum --check; }; check_controls; /usr/bin/python3 -B remediation-runs/2026-09-08-continuation/reviews/test_full_d_compact_collector_02.py; check_controls"
+    ],
+    "exit_code": 0,
+    "methods_executed": 14,
+    "exact_method_names_match_reviewed_ast": true,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "unittest_duration_seconds": 0.023,
+    "before_and_after_control_checks": "Both pinned collector3af9603a and fixture1b56aa71 report OK before and after the actual14method batch.",
+    "source_commit": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+    "source_tree": "8a89fab3042b8614fc4285148a8cd645f7ac2786",
+    "source_before_after_equal": true,
+    "runner_before_after_equal": true,
+    "limits": "These are actual synthetic hostile-ZIP/classifier harness methods only, not application tests, Actions execution, runtime evidence or proof that any Windows report is current."
+  },
+  "cleanup": {
+    "stop_exit_code": 0,
+    "finished_at": "2026-09-10T01:12:38.620296+00:00",
+    "stopped_at": "2026-09-10T01:12:39.319446+00:00",
+    "completed_at": "2026-09-10T01:12:39.419718+00:00",
+    "scratch_absent": true,
+    "remaining_outputs": [],
+    "remaining_workers": [],
+    "remaining_artifact_workers": [],
+    "errors": [],
+    "conclusion": "Accepted actual immediate Gradle stop0 and precise cycle-owned scratch removal/no residual generated outputs or workers. No global cache/source/evidence deletion required or claimed."
+  },
+  "additive_admission": {
+    "reason": "Original immutable full-D request pins collector v01/036d2921. This independent additive admission permits only the reviewed and now tested v02/3af9603a collection replacement; the original request, source, Actions run and its failed/skipped outcomes remain unchanged.",
+    "repository": "Apdelrahman1911/parlor",
+    "run_id": 34420745957,
+    "run_attempt": 1,
+    "source_commit": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-02.py",
+      "34420745957",
+      "4ccfafcfc361231cfb730178b3798ebcb6304770"
+    ],
+    "required_before_call": [
+      "Run and attempt must actually be completed; collector independently enforces fixed repository/branch/source/workflow and exact five job identities. No collection invocation claimed here.",
+      "Root rechecks exact v02 hash and exclusive absent/nonredirected destination. Preserve previous receipts and files; do not delete evidence to make an existing destination reusable.",
+      "Use one coordinator and no dispatch/retry/build/publication operation. Scope is GET-only collection of this existing run."
+    ],
+    "classification_guard": "Historical/tracked/unknown files retain original ZIP custody and never become current test counts. Failed Windows checkout/ownership cannot admit live report extraction. Successful admitted paths are candidate-only; actual test execution still needs raw task/log/XML and ownership review.",
+    "runtime_and_qualification_status": "NOT_ASSESSED_BY_COLLECTOR_FIXTURES; existing A33 and strict protection failures remain unchanged."
+  },
+  "reviewer_activity": "Read-only raw cycle/source/log/hash/AST/Git review and this assigned additive report. No collector/project import, tests, build, network, CI or canonical edits by reviewer; no new cleanup cycle owed."
+}

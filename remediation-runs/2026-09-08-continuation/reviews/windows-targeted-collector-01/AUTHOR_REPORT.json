@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "kind": "HELD_WINDOWS_ONLY_COLLECTOR_AUTHOR_PACKET_NOT_INDEPENDENT_REVIEW",
+  "author": "/root/fixture_review",
+  "independent_reviewer_assigned": "/root/ci_review",
+  "coordinator": "/root",
+  "recorded_at": "2026-09-10T02:16:44.770615+00:00",
+  "status": "HELD_SOURCE_ONLY_REQUIRES_INDEPENDENT_REVIEW_AND_ROOT_FOCUSED_TESTS",
+  "repository_context": {
+    "repository": "Apdelrahman1911/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "inspected_head": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+    "inspected_tree": "8a89fab3042b8614fc4285148a8cd645f7ac2786",
+    "new_run_id": null,
+    "new_frozen_source_sha": null,
+    "disposition": "No future source/run binding. Root freezes reviewed changes and inventory, then retains request and run association before collection."
+  },
+  "trusted_base": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-02.py",
+    "bytes": 17464,
+    "sha256": "3af9603aff8e20aa1380f844897ed356426ba29c4dd5172cc5c60edb2dea10de"
+  },
+  "independent_base_evidence": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-independent-02.json",
+      "bytes": 10163,
+      "sha256": "3e3f5be8590e2cfc808629c8787f414873c32169179d1a8b8dce737dcb372140"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-actual-independent-02.json",
+      "bytes": 6231,
+      "sha256": "585c499356175a982143d5ca168f24cac989c89fc8da3dcb5fc5e05584bdbb37"
+    }
+  ],
+  "separate_windows_workflow_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-independent-01.json",
+    "bytes": 9598,
+    "sha256": "976d56ec9192b7ed1f2bba396fd8219484e7ef871a387176d808e63785e7c3a7"
+  },
+  "held_files": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/windows-targeted-collector-01/collect_windows.py",
+      "bytes": 18707,
+      "sha256": "87afd5bc709a5bf83a672e6acc43983783cb38b878beac00722233c6b93777d1"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/windows-targeted-collector-01/test_collect_windows.py",
+      "bytes": 5749,
+      "sha256": "86ba36a466b82a57af610cafaddb4d28e979ed96978f6c703abe9bf6e0ecb53d"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/windows-targeted-collector-01/collector.diff",
+      "bytes": 6201,
+      "sha256": "8dd3a04b952f4478ff3a5bc71c341d047e405b440e626efb52a77b740eddaa93"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/windows-targeted-collector-01/README.md",
+      "bytes": 5763,
+      "sha256": "6c4dff7938cbd84dbac45bc94fc6ab3ef93765d9e580272c64d33aaa3d27ae44"
+    }
+  ],
+  "author_static_inspection": {
+    "method": "stdlib ast.parse/get_source_segment/dump, string diff, JSON parsing and SHA256 hashing only; no project import or execution",
+    "parsed_files": [
+      "remediation-runs/2026-09-08-continuation/reviews/windows-targeted-collector-01/collect_windows.py",
+      "remediation-runs/2026-09-08-continuation/reviews/windows-targeted-collector-01/test_collect_windows.py"
+    ],
+    "added_top_level_functions": [
+      "windows_job_contexts"
+    ],
+    "removed_top_level_functions": [],
+    "changed_existing_top_level_functions": [
+      "main"
+    ],
+    "unchanged_functions": [
+      {
+        "function": "archive_members",
+        "source_text_identical": true,
+        "ast_identical": true,
+        "source_segment_sha256": "2e24e58fd0304ed845acf844d5226614e9c985ad39941d0657fe5a4dd5c7ec49"
+      },
+      {
+        "function": "classify_member",
+        "source_text_identical": true,
+        "ast_identical": true,
+        "source_segment_sha256": "75772214ae4d50bb9206714b0f1d681e7434a20dc48f43b4c60c119bb0fd3ba8"
+      },
+      {
+        "function": "extract_selected",
+        "source_text_identical": true,
+        "ast_identical": true,
+        "source_segment_sha256": "3b331793597e6fb6ac22a5a50c95ca13e7807865cf924450f10306a9fe62a96e"
+      },
+      {
+        "function": "job_context",
+        "source_text_identical": true,
+        "ast_identical": true,
+        "source_segment_sha256": "16964074dc89bf906ee17fbe4be785c61b8e854e0dc85d0f9ea6624aea494fa2"
+      },
+      {
+        "function": "live_build_roots",
+        "source_text_identical": true,
+        "ast_identical": true,
+        "source_segment_sha256": "031746d01d0e4e8f404a3329a2947d75bd2e67a9f9704d8d12fae9f4ba79ab15"
+      },
+      {
+        "function": "new_json",
+        "source_text_identical": true,
+        "ast_identical": true,
+        "source_segment_sha256": "0d4cdd482c95a58e9d289f4c19543fef71cd3e27b147a7745414a56b5a1a30e0"
+      },
+      {
+        "function": "now",
+        "source_text_identical": true,
+        "ast_identical": true,
+        "source_segment_sha256": "657729523cb5c0ead0b1e95551773c0d89eca7b7f361a6f59a6766df30c1b014"
+      },
+      {
+        "function": "require",
+        "source_text_identical": true,
+        "ast_identical": true,
+        "source_segment_sha256": "570ace48effbcffbb325b4bdc4424b575500114187d28c59c86b8870081e9f76"
+      },
+      {
+        "function": "sha_file",
+        "source_text_identical": true,
+        "ast_identical": true,
+        "source_segment_sha256": "e32cbffc32c4611748b1a7524ca5f829291a9e2e258481d01cfc74b20de15dd7"
+      },
+      {
+        "function": "main.download",
+        "source_text_identical": true,
+        "ast_identical": true,
+        "source_segment_sha256": "d6011e12f2fa7bcb7f4c79c42649bbe843eb8ae6134ac6c8294f60dc03fe4cb6"
+      },
+      {
+        "function": "main.metadata",
+        "source_text_identical": true,
+        "ast_identical": true,
+        "source_segment_sha256": "05b626aec17c26e306d1bd6a4cf6608969eac5ed44d62b9f641f5c10696b5974"
+      }
+    ],
+    "module_delta": [
+      "Updated explanatory docstring",
+      "Added WINDOWS_JOB and EXPECTED_SCOPE constants",
+      "Narrowed ARTIFACT_JOBS to exact Windows verification/cleanup artifacts"
+    ],
+    "main_delta": [
+      "Require fourth CLI argument exactly windows-only while retaining positive run ID/lowercase40hex source validation",
+      "Record intended scope and explicit external binding limitation in receipt",
+      "Replace all-five job_context calls with Windows/non-Windows shape gate; all original API/source/artifact/bounds/log/error-custody logic unchanged"
+    ],
+    "new_job_shape": "Exact five known identities, one Windows non-skipped nonempty string conclusion; original Windows job_context unique checkout/ownership step checks retained; four completed/skipped unrelated jobs via original main API checks and new skipped/no-executed-step guard. Missing unrelated steps allowed.",
+    "original_collectors_and_canonical_files_modified": false
+  },
+  "focused_regression_source": {
+    "methods": [
+      "test_one_windows_job_accepts_four_skipped_jobs_without_checkout_steps",
+      "test_wrong_scope_or_active_job_shape_fails_before_side_effects",
+      "test_failed_windows_never_turns_historical_or_unattested_xml_into_current"
+    ],
+    "method_count": 3,
+    "author_execution": "NOT_RUN",
+    "root_command": "/usr/bin/python3 -B remediation-runs/2026-09-08-continuation/reviews/windows-targeted-collector-01/test_collect_windows.py",
+    "scope": "Synthetic API dictionaries, fixed sibling collector import by root only, and invalid-CLI side-effect mocks; no network/build/filesystem fixtures. Historical/unknown/unattested reports never counted as execution."
+  },
+  "future_root_usage": {
+    "command": "/usr/bin/python3 -B remediation-runs/2026-09-08-continuation/reviews/windows-targeted-collector-01/collect_windows.py RUN_ID NEW_FROZEN_SOURCE_SHA windows-only",
+    "attempt": 1,
+    "destination": "remediation-runs/2026-09-08-continuation/actions/RUN_ID/",
+    "preconditions": [
+      "Independent review of exact packet hashes",
+      "Actual root-run three focused methods pass with before/after source pins and cleanup evidence",
+      "Reviewed source/control changes and regenerated mechanical inventory committed",
+      "Fresh frozen workflow/source/control/request bindings; associated completed new run/attempt 1",
+      "Destination absent and existing parent nonredirected; preserve all previous collection failures"
+    ],
+    "scope_limitation": "CLI intended scope plus exact API job shape; no recovery of actual dispatch inputs. Coordinator request/run-association and raw log review remain external requirements. No new log parser."
+  },
+  "preserved_controls": {
+    "compressed_artifact_bytes": 67108864,
+    "compressed_artifacts_aggregate_bytes": 536870912,
+    "artifact_members": 50000,
+    "expanded_archive_bytes": 268435456,
+    "expanded_artifact_member_bytes": 134217728,
+    "compressed_logs_bytes": 134217728,
+    "log_members": 1500,
+    "expanded_log_member_bytes": 67108864,
+    "whole_table_and_streams": "Preflight all path/type/collision/encryption/bounds before extraction; CRC/length/SHA every member including unselected history; second pass verifies hashes and exclusively creates selected outputs.",
+    "runtime_counts": "NOT_COMPUTED_REQUIRES_SEPARATE_RUNTIME_REVIEW"
+  },
+  "limitations": [
+    "Actual download byte limits are checked after subprocess completion, not an OS-enforced streaming quota; inherited 180-second download timeout.",
+    "Early cancelled Windows jobs lacking planned checkout/ownership steps fail closed; no relaxation to permit unattested reports.",
+    "Failure before log-download stage preserves existing files and receipt but does not imply complete log custody.",
+    "Attempt1, exact five jobs/two expected artifacts, reviewed prefix and exact step names only; not a general-purpose collector.",
+    "Unexpected artifacts are inventoried and lead to partial status but are not downloaded.",
+    "Receipt contents and test execution/cleanup still require separate independent raw-evidence review; new three shape methods are unexecuted by this author.",
+    "Source approval does not establish platform runtime, application correctness, physical-device, Store or readiness qualification."
+  ],
+  "author_activity_and_cleanup": {
+    "read_only_git": true,
+    "canonical_edits": false,
+    "project_imports": false,
+    "tests_or_builds": false,
+    "network_or_workflow_dispatch": false,
+    "git_writes": false,
+    "writes": "Only files inside this held packet; initial draft collector.diff regenerated to current final source.",
+    "cleanup": "No build/test workers or generated application outputs created by author; no Gradle stop/clean cycle executed. Root owns future execution cleanup."
+  },
+  "self_reference_policy": "AUTHOR_REPORT.json excludes its own size/hash; coordinator/reviewer receives its independently computed pin separately."
+}
