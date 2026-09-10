@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/ci_review",
+  "decision": "APPROVE_EXACT_ADC01_SINGLE_COORDINATED_DISPATCH",
+  "status": "FRESH_18_CONTROL_ADMISSION_PASS_ADC_RUNTIME_NOT_RUN",
+  "evidence_prefix": "remediation-runs/2026-09-08-continuation",
+  "request": {
+    "path": "actions/android-cleanup-only-01/request.json",
+    "sha256": "089c44de140a04f84336a753eba4f32c351bd7fa4dedb31491bf932e64508379"
+  },
+  "source": {
+    "head": "9e40261e0dc5bd224526eda6126350ac6a6b8bcb",
+    "tree": "dfd8021abc17ebf56f796f787b46b375cade68d2"
+  },
+  "controls": {
+    "count": 18,
+    "sha256": "93f103582c052f0263e571a09f295998daa4735e40a4c147664c924df554defe",
+    "check": "All18 frozen Git/current byte hashes and sorted compact digest match; exact12 base+6 ADC controls, not LP04 digest."
+  },
+  "command": "gh workflow run production-verification.yml --repo Apdelrahman1911/parlor --ref fix/local-readiness-2026-09-07 -f verification_scope=android-cleanup-only -f frozen_source_sha=9e40261e0dc5bd224526eda6126350ac6a6b8bcb -f approved_probe_control_sha256=93f103582c052f0263e571a09f295998daa4735e40a4c147664c924df554defe",
+  "prior_admissions": {
+    "lp04_review": "reviews/linux-probe-04-actual-independent-01.json",
+    "lp04_review_sha256": "e4ac8efc966fb8e930288fe5663933add2c3eb68a98f93088aead79ccb58cb24",
+    "lp04_scope": "Run34495223128 attempt1 on9e4; accepted limited bare-host mechanism/cleanup, not post-emulator/application proof.",
+    "collector": "reviews/android-cleanup-collector-01.py",
+    "collector_sha256": "2469d61bcbd093943a3d63dc850ed958aff3534e1fb25655e42ebab8c999751f",
+    "collector_review": "reviews/android-cleanup-collector-independent-01.json",
+    "collector_review_sha256": "bc905cf7bf875047643e65f8cd92ef4e53f825226480a3e41cd7a238305a9cfe"
+  },
+  "scope": "Exactly one Ubuntu24.04x64 job,45min; fresh18-control admission before SDK/ownership; existing productionAndroidRuntimeCheck managed smoke,3 current instrumentation cases. Legitimate cold compile/R8/resource/lint dependencies included. Aggregate, LP, AAB inspection and other4jobs excluded. Disposable non-Store install key only.",
+  "acceptance": "Actual3 live cases PASS,0failure/error/skip; bound source/control/ownership/upload, managed/final stops0; complete strict v2 audit,0errors/SDK matches; precise cleanupPASS/zero retained roots. Cached builds, historical XML or LP04 cannot substitute.",
+  "coordinator_guard": "Root alone immediately rechecks local/remote/source/control/workflow/no-active-run guards, then dispatches once; exact completed run/source and unchanged approved collector, fresh destination. No reviewer network execution.",
+  "other_checks": "Request pins, sealed core/integration reviews, approved collector/helper and frozen inventory/push receipts reconcile; unchanged scope routing checked. No substantive test/source campaign repeated.",
+  "findings": [],
+  "limits": "Admission only; ADC runtime NOT_RUN. NOT_READY remains; D03/LP failures, unresolved A37/Complete0PASS26FAIL, and physical-device/Store/owner/legal requirements unchanged.",
+  "reviewer_activity": "Read-only Git/stdlib inspection; sole write this assigned report. No project import, tests/builds/probes/signals/network/cleanup.",
+  "completed_at": "2026-09-10T15:47:45.798767+00:00"
+}

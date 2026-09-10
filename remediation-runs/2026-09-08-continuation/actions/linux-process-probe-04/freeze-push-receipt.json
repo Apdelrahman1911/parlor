@@ -1,0 +1,295 @@
+{
+  "kind": "REVIEWED_V2_AND_ANDROID_SCOPE_SOURCE_INVENTORY_FREEZE_AND_NORMAL_PUSH",
+  "started_at": "2026-09-10T15:02:19.036710+00:00",
+  "base": "e4d49e17f5f1099a742ab3985c6257d090d61ba6",
+  "commands": [
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "output": "e4d49e17f5f1099a742ab3985c6257d090d61ba6\n"
+    },
+    {
+      "command": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "exit_code": 0,
+      "output": "fix/local-readiness-2026-09-07\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "--is-shallow-repository"
+      ],
+      "exit_code": 0,
+      "output": "false\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--name-only"
+      ],
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "ls-remote",
+        "origin",
+        "refs/heads/fix/local-readiness-2026-09-07"
+      ],
+      "exit_code": 0,
+      "output": "e4d49e17f5f1099a742ab3985c6257d090d61ba6\trefs/heads/fix/local-readiness-2026-09-07\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--name-only"
+      ],
+      "exit_code": 0,
+      "output": ".github/workflows/production-verification.yml\nscripts/ci/linux_exe_reader.py\nscripts/ci/linux_process_probe.py\nscripts/ci/verification_hygiene.py\nscripts/release/tests/test_ci_verification_hygiene.py\nscripts/release/tests/test_linux_exe_reader.py\nscripts/release/tests/test_linux_process_probe.py\nscripts/release/tests/test_workflow_contract.py\nscripts/release/workflow_contract.py\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "--",
+        ".github/workflows/production-verification.yml",
+        "scripts/ci/verification_hygiene.py",
+        "scripts/ci/linux_exe_reader.py",
+        "scripts/ci/linux_process_probe.py",
+        "scripts/release/workflow_contract.py",
+        "scripts/release/tests/test_ci_verification_hygiene.py",
+        "scripts/release/tests/test_linux_exe_reader.py",
+        "scripts/release/tests/test_linux_process_probe.py",
+        "scripts/release/tests/test_workflow_contract.py"
+      ],
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "add",
+        "--",
+        ".github/workflows/production-verification.yml",
+        "scripts/ci/verification_hygiene.py",
+        "scripts/ci/linux_exe_reader.py",
+        "scripts/ci/linux_process_probe.py",
+        "scripts/release/workflow_contract.py",
+        "scripts/release/tests/test_ci_verification_hygiene.py",
+        "scripts/release/tests/test_linux_exe_reader.py",
+        "scripts/release/tests/test_linux_process_probe.py",
+        "scripts/release/tests/test_workflow_contract.py",
+        "remediation-runs/2026-09-08-continuation/reviews/linux-probe-03-actual-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-request-independent-03.json",
+        "remediation-runs/2026-09-08-continuation/reviews/linux-exe-reader-v2-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/linux-exe-reader-v2-adc-integration-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/android-cleanup-collector-01.py",
+        "remediation-runs/2026-09-08-continuation/reviews/android-cleanup-collector-independent-01.json"
+      ],
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "add",
+        "-f",
+        "--",
+        "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01",
+        "remediation-runs/2026-09-08-continuation/actions/34487728583",
+        "remediation-runs/2026-09-08-continuation/actions/linux-process-probe-03"
+      ],
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--name-only"
+      ],
+      "exit_code": 0,
+      "output": ".github/workflows/production-verification.yml\nremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/artifact-receipts.json\nremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/control-inputs-after.json\nremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/control-inputs-before.json\nremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/focused-commands.json\nremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/gradle.log\nremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/java-toolchain.log\nremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/javac-toolchain.log\nremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/outer-invocation.json\nremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/receipt.json\nremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/stop.log\nremediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/test-receipts.json\nremediation-runs/2026-09-08-continuation/actions/34487728583/artifacts.json\nremediation-runs/2026-09-08-continuation/actions/34487728583/attempt.json\nremediation-runs/2026-09-08-continuation/actions/34487728583/desktop-android.log\nremediation-runs/2026-09-08-continuation/actions/34487728583/download-receipt.json\nremediation-runs/2026-09-08-continuation/actions/34487728583/jobs.json\nremediation-runs/2026-09-08-continuation/actions/34487728583/linux-process-probe-34487728583-1.zip\nremediation-runs/2026-09-08-continuation/actions/34487728583/linux-process-probe-34487728583-1/parlor-verification-34487728583-1-desktop-android-linux-probe.json\nremediation-runs/2026-09-08-continuation/actions/34487728583/linux-process-probe-34487728583-1/parlor-verification-34487728583-1-desktop-android-ownership.json\nremediation-runs/2026-09-08-continuation/actions/34487728583/linux-process-probe-34487728583-1/parlor-verification-34487728583-1-desktop-android-stop-linux-probe.json\nremediation-runs/2026-09-08-continuation/actions/34487728583/linux-process-probe-cleanup-34487728583-1.zip\nremediation-runs/2026-09-08-continuation/actions/34487728583/linux-process-probe-cleanup-34487728583-1/parlor-verification-34487728583-1-desktop-android-cleanup.json\nremediation-runs/2026-09-08-continuation/actions/34487728583/run.json\nremediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/collection.log\nremediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/dispatch-result.json\nremediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/dispatch.log\nremediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/freeze-push-receipt.json\nremediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/immediate-admission.json\nremediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/request.json\nremediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/run-association.json\nremediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/runs-before.json\nremediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/watch.log\nremediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/watcher-collection-receipt.json\nremediation-runs/2026-09-08-continuation/reviews/android-cleanup-collector-01.py\nremediation-runs/2026-09-08-continuation/reviews/android-cleanup-collector-independent-01.json\nremediation-runs/2026-09-08-continuation/reviews/linux-exe-reader-v2-adc-integration-independent-01.json\nremediation-runs/2026-09-08-continuation/reviews/linux-exe-reader-v2-independent-01.json\nremediation-runs/2026-09-08-continuation/reviews/linux-probe-03-actual-independent-01.json\nremediation-runs/2026-09-08-continuation/reviews/linux-process-probe-request-independent-03.json\nscripts/ci/linux_exe_reader.py\nscripts/ci/linux_process_probe.py\nscripts/ci/verification_hygiene.py\nscripts/release/tests/test_ci_verification_hygiene.py\nscripts/release/tests/test_linux_exe_reader.py\nscripts/release/tests/test_linux_process_probe.py\nscripts/release/tests/test_workflow_contract.py\nscripts/release/workflow_contract.py\n"
+    },
+    {
+      "command": [
+        "git",
+        "commit",
+        "-m",
+        "fix(ci): bind complete process credentials and scope Android cleanup"
+      ],
+      "exit_code": 0,
+      "output": "[fix/local-readiness-2026-09-07 cafd4143] fix(ci): bind complete process credentials and scope Android cleanup\n 48 files changed, 10922 insertions(+), 130 deletions(-)\n create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/artifact-receipts.json\n create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/control-inputs-after.json\n create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/control-inputs-before.json\n create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/focused-commands.json\n create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/gradle.log\n create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/java-toolchain.log\n create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/javac-toolchain.log\n create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/outer-invocation.json\n create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/receipt.json\n create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/stop.log\n create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/test-receipts.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/34487728583/artifacts.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/34487728583/attempt.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/34487728583/desktop-android.log\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/34487728583/download-receipt.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/34487728583/jobs.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/34487728583/linux-process-probe-34487728583-1.zip\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/34487728583/linux-process-probe-34487728583-1/parlor-verification-34487728583-1-desktop-android-linux-probe.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/34487728583/linux-process-probe-34487728583-1/parlor-verification-34487728583-1-desktop-android-ownership.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/34487728583/linux-process-probe-34487728583-1/parlor-verification-34487728583-1-desktop-android-stop-linux-probe.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/34487728583/linux-process-probe-cleanup-34487728583-1.zip\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/34487728583/linux-process-probe-cleanup-34487728583-1/parlor-verification-34487728583-1-desktop-android-cleanup.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/34487728583/run.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/collection.log\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/dispatch-result.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/dispatch.log\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/freeze-push-receipt.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/immediate-admission.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/request.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/run-association.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/runs-before.json\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/watch.log\n create mode 100644 remediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/watcher-collection-receipt.json\n create mode 100644 remediation-runs/2026-09-08-continuation/reviews/android-cleanup-collector-01.py\n create mode 100644 remediation-runs/2026-09-08-continuation/reviews/android-cleanup-collector-independent-01.json\n create mode 100644 remediation-runs/2026-09-08-continuation/reviews/linux-exe-reader-v2-adc-integration-independent-01.json\n create mode 100644 remediation-runs/2026-09-08-continuation/reviews/linux-exe-reader-v2-independent-01.json\n create mode 100644 remediation-runs/2026-09-08-continuation/reviews/linux-probe-03-actual-independent-01.json\n create mode 100644 remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-request-independent-03.json\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "output": "cafd4143b3d2f2458b2d02725a9f419c7fd03ed7\n"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/generate_review_inventory.py"
+      ],
+      "exit_code": 0,
+      "output": "Wrote 29091 inventory rows to docs/review/INDEPENDENT_REVIEW_INVENTORY.csv; source review not attested\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--name-only"
+      ],
+      "exit_code": 0,
+      "output": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv\n"
+    },
+    {
+      "command": [
+        "git",
+        "add",
+        "--",
+        "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv"
+      ],
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "commit",
+        "-m",
+        "chore(review): freeze mixed UID and Android cleanup controls"
+      ],
+      "exit_code": 0,
+      "output": "[fix/local-readiness-2026-09-07 9e40261e] chore(review): freeze mixed UID and Android cleanup controls\n 1 file changed, 48 insertions(+), 9 deletions(-)\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "output": "9e40261e0dc5bd224526eda6126350ac6a6b8bcb\n"
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "exit_code": 0,
+      "output": "dfd8021abc17ebf56f796f787b46b375cade68d2\n"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/generate_review_inventory.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "output": "Verified freshness of 29091 inventory rows in docs/review/INDEPENDENT_REVIEW_INVENTORY.csv; source review not attested\n"
+    },
+    {
+      "command": [
+        "git",
+        "push",
+        "origin",
+        "HEAD:refs/heads/fix/local-readiness-2026-09-07"
+      ],
+      "exit_code": 0,
+      "output": "To https://github.com/Apdelrahman1911/parlor.git\n   e4d49e17..9e40261e  HEAD -> fix/local-readiness-2026-09-07\n"
+    },
+    {
+      "command": [
+        "git",
+        "ls-remote",
+        "origin",
+        "refs/heads/fix/local-readiness-2026-09-07"
+      ],
+      "exit_code": 0,
+      "output": "9e40261e0dc5bd224526eda6126350ac6a6b8bcb\trefs/heads/fix/local-readiness-2026-09-07\n"
+    }
+  ],
+  "staged_paths": [
+    ".github/workflows/production-verification.yml",
+    "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/artifact-receipts.json",
+    "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/control-inputs-after.json",
+    "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/control-inputs-before.json",
+    "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/focused-commands.json",
+    "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/gradle.log",
+    "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/java-toolchain.log",
+    "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/javac-toolchain.log",
+    "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/outer-invocation.json",
+    "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/receipt.json",
+    "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/stop.log",
+    "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-mixed-uid-android-scope-controls-01/test-receipts.json",
+    "remediation-runs/2026-09-08-continuation/actions/34487728583/artifacts.json",
+    "remediation-runs/2026-09-08-continuation/actions/34487728583/attempt.json",
+    "remediation-runs/2026-09-08-continuation/actions/34487728583/desktop-android.log",
+    "remediation-runs/2026-09-08-continuation/actions/34487728583/download-receipt.json",
+    "remediation-runs/2026-09-08-continuation/actions/34487728583/jobs.json",
+    "remediation-runs/2026-09-08-continuation/actions/34487728583/linux-process-probe-34487728583-1.zip",
+    "remediation-runs/2026-09-08-continuation/actions/34487728583/linux-process-probe-34487728583-1/parlor-verification-34487728583-1-desktop-android-linux-probe.json",
+    "remediation-runs/2026-09-08-continuation/actions/34487728583/linux-process-probe-34487728583-1/parlor-verification-34487728583-1-desktop-android-ownership.json",
+    "remediation-runs/2026-09-08-continuation/actions/34487728583/linux-process-probe-34487728583-1/parlor-verification-34487728583-1-desktop-android-stop-linux-probe.json",
+    "remediation-runs/2026-09-08-continuation/actions/34487728583/linux-process-probe-cleanup-34487728583-1.zip",
+    "remediation-runs/2026-09-08-continuation/actions/34487728583/linux-process-probe-cleanup-34487728583-1/parlor-verification-34487728583-1-desktop-android-cleanup.json",
+    "remediation-runs/2026-09-08-continuation/actions/34487728583/run.json",
+    "remediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/collection.log",
+    "remediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/dispatch-result.json",
+    "remediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/dispatch.log",
+    "remediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/freeze-push-receipt.json",
+    "remediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/immediate-admission.json",
+    "remediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/request.json",
+    "remediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/run-association.json",
+    "remediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/runs-before.json",
+    "remediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/watch.log",
+    "remediation-runs/2026-09-08-continuation/actions/linux-process-probe-03/watcher-collection-receipt.json",
+    "remediation-runs/2026-09-08-continuation/reviews/android-cleanup-collector-01.py",
+    "remediation-runs/2026-09-08-continuation/reviews/android-cleanup-collector-independent-01.json",
+    "remediation-runs/2026-09-08-continuation/reviews/linux-exe-reader-v2-adc-integration-independent-01.json",
+    "remediation-runs/2026-09-08-continuation/reviews/linux-exe-reader-v2-independent-01.json",
+    "remediation-runs/2026-09-08-continuation/reviews/linux-probe-03-actual-independent-01.json",
+    "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-request-independent-03.json",
+    "scripts/ci/linux_exe_reader.py",
+    "scripts/ci/linux_process_probe.py",
+    "scripts/ci/verification_hygiene.py",
+    "scripts/release/tests/test_ci_verification_hygiene.py",
+    "scripts/release/tests/test_linux_exe_reader.py",
+    "scripts/release/tests/test_linux_process_probe.py",
+    "scripts/release/tests/test_workflow_contract.py",
+    "scripts/release/workflow_contract.py"
+  ],
+  "source_commit": "cafd4143b3d2f2458b2d02725a9f419c7fd03ed7",
+  "frozen_source_sha": "9e40261e0dc5bd224526eda6126350ac6a6b8bcb",
+  "tree": "dfd8021abc17ebf56f796f787b46b375cade68d2",
+  "inventory_sha256": "15606c0c879a0b7e2c36fe41b3547697626e2ac1c4a168ac180469651b80d4d5",
+  "remote_after": "9e40261e0dc5bd224526eda6126350ac6a6b8bcb\trefs/heads/fix/local-readiness-2026-09-07",
+  "result": "PUSHED_AND_REMOTE_CONFIRMED_NOT_RUNTIME_QUALIFICATION",
+  "local_stop": {
+    "exit_code": 0,
+    "output": "No Gradle daemons are running.\n"
+  },
+  "finished_at": "2026-09-10T15:02:28.661246+00:00"
+}

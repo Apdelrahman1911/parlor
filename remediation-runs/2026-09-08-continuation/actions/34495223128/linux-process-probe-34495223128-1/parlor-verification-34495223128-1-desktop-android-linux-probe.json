@@ -1,0 +1,262 @@
+{
+  "kind": "BARE_HOST_LINUX_PROC_DISCRIMINATOR_NOT_APP_QUALIFICATION",
+  "result": "PASS",
+  "task": {
+    "GITHUB_RUN_ID": "34495223128",
+    "GITHUB_RUN_ATTEMPT": "1",
+    "GITHUB_JOB": "desktop-android"
+  },
+  "started_at": "2026-09-10T15:23:08.012916+00:00",
+  "binding": {
+    "verification_scope": "linux-process-probe",
+    "task": {
+      "GITHUB_RUN_ID": "34495223128",
+      "GITHUB_RUN_ATTEMPT": "1",
+      "GITHUB_JOB": "desktop-android"
+    },
+    "source": {
+      "root": "/home/runner/work/parlor/parlor",
+      "head": "9e40261e0dc5bd224526eda6126350ac6a6b8bcb",
+      "tree": "dfd8021abc17ebf56f796f787b46b375cade68d2"
+    },
+    "controls": {
+      "files": [
+        {
+          "path": ".github/workflows/production-verification.yml",
+          "sha256": "1b023983dc8591c2c6023c8a65369ffdb70d0cfa200269593e6ed98eec2cee08"
+        },
+        {
+          "path": "gradle/wrapper/gradle-wrapper.jar",
+          "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f"
+        },
+        {
+          "path": "gradle/wrapper/gradle-wrapper.properties",
+          "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2"
+        },
+        {
+          "path": "gradlew",
+          "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933"
+        },
+        {
+          "path": "scripts/ci/linux_exe_reader.py",
+          "sha256": "0600e84e29647158bf39b64fad73d5548d63f2e661dd42bbcb2a55d63a4eda6c"
+        },
+        {
+          "path": "scripts/ci/linux_process_probe.py",
+          "sha256": "a75d9531c5e753f6ff57993a71085594f00399f913121d51b0979f4d8454def9"
+        },
+        {
+          "path": "scripts/ci/verification_hygiene.py",
+          "sha256": "d412a2cfe0d59c3cce6cdf4d67a978abf9c8981e745168ddae9d02b3a3ad372c"
+        },
+        {
+          "path": "scripts/release/tests/test_ci_verification_hygiene.py",
+          "sha256": "5ef040f31cd893304f6c94e15e7d0c2bca709c8b193f69bf9956ba4cb9c1aa5c"
+        },
+        {
+          "path": "scripts/release/tests/test_linux_exe_reader.py",
+          "sha256": "4dd542609e8e71da8f5cd4778985ddc818fcd2b238f59d819758220e63ff52a2"
+        },
+        {
+          "path": "scripts/release/tests/test_linux_process_probe.py",
+          "sha256": "329971007427514fd48d11db16eb883aae851ad5f6cfa05a766b9dba8020ffc2"
+        },
+        {
+          "path": "scripts/release/tests/test_workflow_contract.py",
+          "sha256": "c385c8e54d64e2d35c787e74f7fba3b221cfaee0ce6768a4c2c56993f792997f"
+        },
+        {
+          "path": "scripts/release/workflow_contract.py",
+          "sha256": "d2c15a250737814cad9aa4d8375bebfd6f57688e82d5328187bbf89b4b34fcb1"
+        }
+      ],
+      "control_sha256": "5d253ee71d35f601910a897fc211b00861360052bd554df3837bdf3acf410f41"
+    },
+    "android_sdk": {
+      "sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1",
+      "sdk_device": 2049,
+      "sdk_inode": 795534,
+      "uid": 1001
+    },
+    "platform": {
+      "os": "ubuntu-24.04",
+      "machine": "x86_64",
+      "kernel": "6.17.0-1022-azure",
+      "python": "3.12.3"
+    }
+  },
+  "reader": "sudo-proc-exe-v2",
+  "host_audit": {
+    "result": "PASS",
+    "started_at": "2026-09-10T15:23:08.945236+00:00",
+    "enumerated": 162,
+    "sampled": 162,
+    "selected_uid": 8,
+    "matching_executables": 0,
+    "errors": [],
+    "mixed_uid_samples": 1,
+    "mixed_uid_privileged_samples": 1,
+    "exe_reader": {
+      "mode": "sudo-proc-exe-v2",
+      "eacces_denials": 3,
+      "privileged_reads": 3
+    },
+    "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence",
+    "binding": {
+      "sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1",
+      "sdk_device": 2049,
+      "sdk_inode": 795534,
+      "uid": 1001
+    },
+    "finished_at": "2026-09-10T15:23:09.053241+00:00"
+  },
+  "controls": [
+    {
+      "kind": "LIVE_LINUX_CONTROL_SYNTHETIC_ENUMERATION",
+      "dumpable": 1,
+      "reader": "unprivileged",
+      "result": "CONTROL_PASS",
+      "started_at": "2026-09-10T15:23:09.053397+00:00",
+      "child_reaped": true,
+      "fixture_removed": true,
+      "errors": [],
+      "scope": "Only self/direct-child enumeration with real procfs reads; not a host inventory or emulator runtime.",
+      "fixture_basename": "parlor-linux-proc-control-vnf4zufa",
+      "owned_pid": 2528,
+      "readiness": {
+        "pid": 2528,
+        "uid": 1001,
+        "dumpable": 1
+      },
+      "audit": {
+        "result": "PASS",
+        "started_at": "2026-09-10T15:23:09.087248+00:00",
+        "enumerated": 2,
+        "sampled": 2,
+        "selected_uid": 2,
+        "matching_executables": 0,
+        "errors": [],
+        "mixed_uid_samples": 0,
+        "mixed_uid_privileged_samples": 0,
+        "exe_reader": {
+          "mode": "unprivileged",
+          "eacces_denials": 0,
+          "privileged_reads": 0
+        },
+        "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence",
+        "binding": {
+          "sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1",
+          "sdk_device": 2049,
+          "sdk_inode": 795534,
+          "uid": 1001
+        },
+        "finished_at": "2026-09-10T15:23:09.088147+00:00"
+      },
+      "child_exit_code": 0,
+      "interrupted": false,
+      "finished_at": "2026-09-10T15:23:09.089438+00:00"
+    },
+    {
+      "kind": "LIVE_LINUX_CONTROL_SYNTHETIC_ENUMERATION",
+      "dumpable": 0,
+      "reader": "unprivileged",
+      "result": "CONTROL_PASS",
+      "started_at": "2026-09-10T15:23:09.089601+00:00",
+      "child_reaped": true,
+      "fixture_removed": true,
+      "errors": [],
+      "scope": "Only self/direct-child enumeration with real procfs reads; not a host inventory or emulator runtime.",
+      "fixture_basename": "parlor-linux-proc-control-dxljrsjd",
+      "owned_pid": 2529,
+      "readiness": {
+        "pid": 2529,
+        "uid": 1001,
+        "dumpable": 0
+      },
+      "audit": {
+        "result": "FAIL",
+        "started_at": "2026-09-10T15:23:09.111504+00:00",
+        "enumerated": 2,
+        "sampled": 1,
+        "selected_uid": 1,
+        "matching_executables": 0,
+        "errors": [
+          {
+            "code": "PermissionError"
+          }
+        ],
+        "mixed_uid_samples": 0,
+        "mixed_uid_privileged_samples": 0,
+        "exe_reader": {
+          "mode": "unprivileged",
+          "eacces_denials": 1,
+          "privileged_reads": 0
+        },
+        "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence",
+        "binding": {
+          "sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1",
+          "sdk_device": 2049,
+          "sdk_inode": 795534,
+          "uid": 1001
+        },
+        "failure_context": {
+          "operation": "before_exe_readlink",
+          "selection": true,
+          "errno": 13
+        },
+        "finished_at": "2026-09-10T15:23:09.112109+00:00"
+      },
+      "child_exit_code": 0,
+      "interrupted": false,
+      "finished_at": "2026-09-10T15:23:09.113365+00:00"
+    },
+    {
+      "kind": "LIVE_LINUX_CONTROL_SYNTHETIC_ENUMERATION",
+      "dumpable": 0,
+      "reader": "sudo-proc-exe-v2",
+      "result": "CONTROL_PASS",
+      "started_at": "2026-09-10T15:23:09.113552+00:00",
+      "child_reaped": true,
+      "fixture_removed": true,
+      "errors": [],
+      "scope": "Only self/direct-child enumeration with real procfs reads; not a host inventory or emulator runtime.",
+      "fixture_basename": "parlor-linux-proc-control-w8ta50s2",
+      "owned_pid": 2530,
+      "readiness": {
+        "pid": 2530,
+        "uid": 1001,
+        "dumpable": 0
+      },
+      "audit": {
+        "result": "PASS",
+        "started_at": "2026-09-10T15:23:09.135030+00:00",
+        "enumerated": 2,
+        "sampled": 2,
+        "selected_uid": 2,
+        "matching_executables": 0,
+        "errors": [],
+        "mixed_uid_samples": 0,
+        "mixed_uid_privileged_samples": 0,
+        "exe_reader": {
+          "mode": "sudo-proc-exe-v2",
+          "eacces_denials": 1,
+          "privileged_reads": 1
+        },
+        "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence",
+        "binding": {
+          "sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1",
+          "sdk_device": 2049,
+          "sdk_inode": 795534,
+          "uid": 1001
+        },
+        "finished_at": "2026-09-10T15:23:09.163260+00:00"
+      },
+      "child_exit_code": 0,
+      "interrupted": false,
+      "finished_at": "2026-09-10T15:23:09.164540+00:00"
+    }
+  ],
+  "errors": [],
+  "scope": "No build/emulator/managed-device execution; cannot repair previous cleanup or combined qualification.",
+  "finished_at": "2026-09-10T15:23:10.088114+00:00"
+}

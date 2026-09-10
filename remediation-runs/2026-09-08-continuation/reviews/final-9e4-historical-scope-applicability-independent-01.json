@@ -1,0 +1,999 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/fixture_review",
+  "reviewed_at": "2026-09-10T15:33:15.341Z",
+  "status": "APPROVED_SCOPED_HISTORICAL_SOURCE_APPLICABILITY_AT_9E4_NOT_NEW_RUNTIME",
+  "findings": [],
+  "conclusion": "Historical B30, A37 component, OS39, C08 and D03 component evidence remains applicable only to the precisely unchanged shipping/build/control scopes below. This is not execution at9e4, a whole-source/binary identity claim, final delivery seal, combined PASS, strict-protection waiver or Store-readiness certification.",
+  "source": {
+    "commit": "9e40261e0dc5bd224526eda6126350ac6a6b8bcb",
+    "tree": "dfd8021abc17ebf56f796f787b46b375cade68d2",
+    "source_commit": "cafd4143b3d2f2458b2d02725a9f419c7fd03ed7",
+    "branch": "fix/local-readiness-2026-09-07",
+    "head_at_inspection": "9e40261e0dc5bd224526eda6126350ac6a6b8bcb",
+    "tracked_diff_at_inspection": [],
+    "remote": "Parent reported pushed; reviewer did not query network",
+    "source_commit_tree": "bd393c8f0d76e1695253edb181ddf64aa1deff96",
+    "source_to_frozen_child_changed_paths": [
+      "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv"
+    ],
+    "frozen_inventory": {
+      "rows": 29091,
+      "sha256": "15606c0c879a0b7e2c36fe41b3547697626e2ac1c4a168ac180469651b80d4d5",
+      "note": "Read-only CSV count/hash, not inventory regeneration/check execution."
+    },
+    "inspection": "Immutable local Git objects, mode/type/path sets and current tracked diff checked; root-reported push is not an independent remote query by this reviewer."
+  },
+  "method": {
+    "baseline_reused": "Completed75c\u2192055f read-only preparation was retained in the same reviewer tool state and reused, not re-run. The new inspection covers only055f\u21929e4 plus final immutable hashes/projections required to bind that preparation.",
+    "historical_reviews": "Accepted actual evidence reviews and earlier applicability mapping are reused at verified file SHA256s. Their underlying raw evidence was reviewed in the original actual/preparation work; this extension does not repeat full artifact, XML, runtime or candidate-consumer audits.",
+    "allowed_operations": "Read-only Git; standard-library AST/literal/JSON/CSV/hash/path/text inspection. No project module import or extracted project-function execution. No build, tests, live process/probe, network, Actions, SDK, Gradle, Git write or canonical edit.",
+    "audit_result": "All explicit read-only final extension assertions passed (chunk from stdlib Git/AST/hash inspection); not a project-test result.",
+    "projections": "Git projections use SHA256 of compact JSON sorted [[path,mode,type,object],...]. Source-manifest projection uses compact JSON sorted [[path,SHA256],...], independently selected from the unchanged runner policy."
+  },
+  "comparison_legs": {
+    "prepared_75c_to_055f": {
+      "from": {
+        "commit": "75c104734373703570a307de9c7a53d291bc2718",
+        "tree": "4d5b660c5f508a3eb8d01cd9203f2503570dbb18"
+      },
+      "to": {
+        "commit": "055f9fd3ac4ff714ada9ac0a582075739653199e",
+        "tree": "896ccc027ed48b0c08b80d10bbbd6145bc66f0f2"
+      },
+      "total_changed_paths": 4155,
+      "evidence_paths": 4147,
+      "changed_active_and_inventory": [
+        {
+          "path": ".github/workflows/production-verification.yml",
+          "old": [
+            "100644",
+            "blob",
+            "5931c52ae06528196289ce3b43a96d549b8129c9"
+          ],
+          "new": [
+            "100644",
+            "blob",
+            "13874b54d96921372efc5cc953cd8191618e71aa"
+          ],
+          "old_sha256": "9a8021ec1ba27f44d7d2ac18f0bcc7a4a254445ba1baae1a420287094c89414b",
+          "new_sha256": "79d9fa5cdf487ad87849e19fb1baeb71d7694db7f2b62123e9cec729519a3be0"
+        },
+        {
+          "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+          "old": [
+            "100644",
+            "blob",
+            "0dfd5220f51e15cf9ebb05216684b7a120dbe601"
+          ],
+          "new": [
+            "100644",
+            "blob",
+            "c165ff77c50313da55d62645125083af72786ba3"
+          ],
+          "old_sha256": "0b3248a142bc5aec0a2ccef4733925e985748ab6e478e79fa9da4c347544a105",
+          "new_sha256": "affa75278162d502b6f52368b238d1b53fa4dfd8f95111cd74175b52ecf6e544"
+        },
+        {
+          "path": "scripts/ci/linux_process_probe.py",
+          "old": null,
+          "new": [
+            "100644",
+            "blob",
+            "bd932e8320f2ed8862ed56dd9e2f551e28c2a022"
+          ],
+          "old_sha256": null,
+          "new_sha256": "2696b0d81f1113eeaea20b431191788925053703d2ed6e12d72489041c6f76b6"
+        },
+        {
+          "path": "scripts/ci/verification_hygiene.py",
+          "old": [
+            "100644",
+            "blob",
+            "e1402552c9fec77710750bb18d74eb2c8376147a"
+          ],
+          "new": [
+            "100644",
+            "blob",
+            "2808fcab03108437cc62808eb49c3198ad2a03e9"
+          ],
+          "old_sha256": "f1aa6d4c5dae8360a9ff1bfd675376d78cb800e3d297fc213cdddca32c7376f6",
+          "new_sha256": "1fc2fb6f0b3bb7a505edc63277e0fe974a67ccf972753eec0da60386438c16f4"
+        },
+        {
+          "path": "scripts/release/tests/test_ci_verification_hygiene.py",
+          "old": [
+            "100644",
+            "blob",
+            "b8738bd5b837921463a32f82ffc1b90fe9dff3d1"
+          ],
+          "new": [
+            "100644",
+            "blob",
+            "5a9c1e17bd3bd0594795e7856b3bf9f8f168b196"
+          ],
+          "old_sha256": "2ba311084cd57923f85c3176b3d5ac83385022c7e0fe174ac5a38fd1c5101f63",
+          "new_sha256": "1f228c62dd1de0b79b8c0add9500dd3da7572bd761d079a058f45ef502e1f8e0"
+        },
+        {
+          "path": "scripts/release/tests/test_linux_process_probe.py",
+          "old": null,
+          "new": [
+            "100644",
+            "blob",
+            "d9286c8f862675678eedb0a9203c73e08e04917e"
+          ],
+          "old_sha256": null,
+          "new_sha256": "51e3086b6bc43712e689f3c06584cfc9659adbdf45564d16f60c8493f8891325"
+        },
+        {
+          "path": "scripts/release/tests/test_workflow_contract.py",
+          "old": [
+            "100644",
+            "blob",
+            "572b4ba11597f01099b508ea3998d807806f25a9"
+          ],
+          "new": [
+            "100644",
+            "blob",
+            "91743a7f99fe02c4dcdb13b965a50887ad4773be"
+          ],
+          "old_sha256": "5c3b0af5ee60f024e417750b10cee69ba8fb75170d80127e3e835b3929c354b3",
+          "new_sha256": "69f1cbc3775896fe297314a867b864062527e4ac3f7417ca13880afefe5cc0a9"
+        },
+        {
+          "path": "scripts/release/workflow_contract.py",
+          "old": [
+            "100755",
+            "blob",
+            "3d7b57faae5f94fc73090103821846ee91c0e1ec"
+          ],
+          "new": [
+            "100755",
+            "blob",
+            "57c227f3d9de1ca3b93fb6fdd81ede21404a0fc7"
+          ],
+          "old_sha256": "40bc1dc521676043be6c70a8d6e7e775e4b902350e0177acd19500ee69576e0d",
+          "new_sha256": "b834e45c87a0f45e426e3b5b113b62986ba00bc2edb0e2daa12757540035b3a6"
+        }
+      ],
+      "interpretation": "Seven verification source/test/workflow paths plus mechanical inventory; other changes were evidence. Shipping/build and mapped source equivalence were established here."
+    },
+    "inspected_055f_to_9e4": {
+      "from": {
+        "commit": "055f9fd3ac4ff714ada9ac0a582075739653199e",
+        "tree": "896ccc027ed48b0c08b80d10bbbd6145bc66f0f2"
+      },
+      "to": {
+        "commit": "9e40261e0dc5bd224526eda6126350ac6a6b8bcb",
+        "tree": "dfd8021abc17ebf56f796f787b46b375cade68d2"
+      },
+      "total": 86,
+      "evidence": 76,
+      "active_source_and_tests": 9,
+      "mechanical_inventory": 1,
+      "active_rows": [
+        {
+          "path": ".github/workflows/production-verification.yml",
+          "old": [
+            "100644",
+            "blob",
+            "13874b54d96921372efc5cc953cd8191618e71aa"
+          ],
+          "new": [
+            "100644",
+            "blob",
+            "f19aadbdca52a416c7e82e0e404a1f1e4481f33a"
+          ],
+          "old_sha256": "79d9fa5cdf487ad87849e19fb1baeb71d7694db7f2b62123e9cec729519a3be0",
+          "new_sha256": "1b023983dc8591c2c6023c8a65369ffdb70d0cfa200269593e6ed98eec2cee08"
+        },
+        {
+          "path": "scripts/ci/linux_exe_reader.py",
+          "old": null,
+          "new": [
+            "100644",
+            "blob",
+            "b9dc7f45dd0c5549d6dab94e8b63cb5f57243ce1"
+          ],
+          "old_sha256": null,
+          "new_sha256": "0600e84e29647158bf39b64fad73d5548d63f2e661dd42bbcb2a55d63a4eda6c"
+        },
+        {
+          "path": "scripts/ci/linux_process_probe.py",
+          "old": [
+            "100644",
+            "blob",
+            "bd932e8320f2ed8862ed56dd9e2f551e28c2a022"
+          ],
+          "new": [
+            "100644",
+            "blob",
+            "aa67f57e0cf62494f1299c655065314c45432cfb"
+          ],
+          "old_sha256": "2696b0d81f1113eeaea20b431191788925053703d2ed6e12d72489041c6f76b6",
+          "new_sha256": "a75d9531c5e753f6ff57993a71085594f00399f913121d51b0979f4d8454def9"
+        },
+        {
+          "path": "scripts/ci/verification_hygiene.py",
+          "old": [
+            "100644",
+            "blob",
+            "2808fcab03108437cc62808eb49c3198ad2a03e9"
+          ],
+          "new": [
+            "100644",
+            "blob",
+            "e7234442e14d6be109154bbd80bbc756c97e7e47"
+          ],
+          "old_sha256": "1fc2fb6f0b3bb7a505edc63277e0fe974a67ccf972753eec0da60386438c16f4",
+          "new_sha256": "d412a2cfe0d59c3cce6cdf4d67a978abf9c8981e745168ddae9d02b3a3ad372c"
+        },
+        {
+          "path": "scripts/release/tests/test_ci_verification_hygiene.py",
+          "old": [
+            "100644",
+            "blob",
+            "5a9c1e17bd3bd0594795e7856b3bf9f8f168b196"
+          ],
+          "new": [
+            "100644",
+            "blob",
+            "202491498c0521c940a42819e80d959fdbdea702"
+          ],
+          "old_sha256": "1f228c62dd1de0b79b8c0add9500dd3da7572bd761d079a058f45ef502e1f8e0",
+          "new_sha256": "5ef040f31cd893304f6c94e15e7d0c2bca709c8b193f69bf9956ba4cb9c1aa5c"
+        },
+        {
+          "path": "scripts/release/tests/test_linux_exe_reader.py",
+          "old": null,
+          "new": [
+            "100644",
+            "blob",
+            "9a7406a830a686a7aa371f26094a93198c033b5f"
+          ],
+          "old_sha256": null,
+          "new_sha256": "4dd542609e8e71da8f5cd4778985ddc818fcd2b238f59d819758220e63ff52a2"
+        },
+        {
+          "path": "scripts/release/tests/test_linux_process_probe.py",
+          "old": [
+            "100644",
+            "blob",
+            "d9286c8f862675678eedb0a9203c73e08e04917e"
+          ],
+          "new": [
+            "100644",
+            "blob",
+            "ffb997d24d1cecc32820ef996976d0766bb09722"
+          ],
+          "old_sha256": "51e3086b6bc43712e689f3c06584cfc9659adbdf45564d16f60c8493f8891325",
+          "new_sha256": "329971007427514fd48d11db16eb883aae851ad5f6cfa05a766b9dba8020ffc2"
+        },
+        {
+          "path": "scripts/release/tests/test_workflow_contract.py",
+          "old": [
+            "100644",
+            "blob",
+            "91743a7f99fe02c4dcdb13b965a50887ad4773be"
+          ],
+          "new": [
+            "100644",
+            "blob",
+            "b3632d6854448056c300716d63b681f58ee023e8"
+          ],
+          "old_sha256": "69f1cbc3775896fe297314a867b864062527e4ac3f7417ca13880afefe5cc0a9",
+          "new_sha256": "c385c8e54d64e2d35c787e74f7fba3b221cfaee0ce6768a4c2c56993f792997f"
+        },
+        {
+          "path": "scripts/release/workflow_contract.py",
+          "old": [
+            "100755",
+            "blob",
+            "57c227f3d9de1ca3b93fb6fdd81ede21404a0fc7"
+          ],
+          "new": [
+            "100755",
+            "blob",
+            "79ead5024887495a02cb62e12a74eb99e1083107"
+          ],
+          "old_sha256": "b834e45c87a0f45e426e3b5b113b62986ba00bc2edb0e2daa12757540035b3a6",
+          "new_sha256": "d2c15a250737814cad9aa4d8375bebfd6f57688e82d5328187bbf89b4b34fcb1"
+        },
+        {
+          "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+          "old": [
+            "100644",
+            "blob",
+            "c165ff77c50313da55d62645125083af72786ba3"
+          ],
+          "new": [
+            "100644",
+            "blob",
+            "994ab00cf5dba1156c9f75dcb66a2ab1ced83393"
+          ],
+          "old_sha256": "affa75278162d502b6f52368b238d1b53fa4dfd8f95111cd74175b52ecf6e544",
+          "new_sha256": "15606c0c879a0b7e2c36fe41b3547697626e2ac1c4a168ac180469651b80d4d5"
+        }
+      ],
+      "commits": [
+        [
+          "eee0298d853a1a0192dab4955b5c38fbe148a82c",
+          "fix(ci): read protected executable metadata without relaxing cleanup"
+        ],
+        [
+          "e4d49e17f5f1099a742ab3985c6257d090d61ba6",
+          "chore(review): freeze protected process reader inventory"
+        ],
+        [
+          "cafd4143b3d2f2458b2d02725a9f419c7fd03ed7",
+          "fix(ci): bind complete process credentials and scope Android cleanup"
+        ],
+        [
+          "9e40261e0dc5bd224526eda6126350ac6a6b8bcb",
+          "chore(review): freeze mixed UID and Android cleanup controls"
+        ]
+      ],
+      "interpretation": "Nine verification source/test/workflow paths plus mechanical inventory;76 evidence paths. Counts for the two legs overlap and must not be added into a unique final changed-path count."
+    }
+  },
+  "unchanged_shipping_build": {
+    "columns": [
+      "mode",
+      "type",
+      "object"
+    ],
+    "rows": {
+      "composeApp": [
+        "040000",
+        "tree",
+        "27e88880f97d3148184c80c1fa40bae958530a22"
+      ],
+      "shared": [
+        "040000",
+        "tree",
+        "03addf8feb5d9722b69539aa21857e522c8c00f2"
+      ],
+      "game-modes": [
+        "040000",
+        "tree",
+        "d56b07334d549c3a6d4d3819f2bff645c149aa50"
+      ],
+      "build-logic": [
+        "040000",
+        "tree",
+        "3fa3848246aa0204b6daf067617b0aed69c7510c"
+      ],
+      "gradle": [
+        "040000",
+        "tree",
+        "56fe4ae6668625c7cd9f357c52bb7ba9c684a8c9"
+      ],
+      "config": [
+        "040000",
+        "tree",
+        "3081d67d7c14ca8ffc7b30824dc5b1a81c0f0fd4"
+      ],
+      "iosApp": [
+        "040000",
+        "tree",
+        "da6d918bb46c4c29640b8ce5c4484ca57fc5101e"
+      ],
+      "build.gradle.kts": [
+        "100644",
+        "blob",
+        "638e4c7d0a4056168c1bc0560fbcde4cf849561f"
+      ],
+      "settings.gradle.kts": [
+        "100644",
+        "blob",
+        "4beca55a8d697ca0c840e6410a3a3015118bd15c"
+      ],
+      "gradle.properties": [
+        "100644",
+        "blob",
+        "21fe7eb8e2b4ccb19473272cb8aaa45faa2bd38b"
+      ],
+      "gradlew": [
+        "100755",
+        "blob",
+        "faf93008b77e7b52e18c44e4eef257fc2f8fd76d"
+      ],
+      "gradlew.bat": [
+        "100644",
+        "blob",
+        "9d21a21834d5195c278ba17baec3115b2aaab06e"
+      ]
+    },
+    "contracts": [
+      "AGENTS.md",
+      "docs/PRODUCTION_ARCHITECTURE.md",
+      "docs/RELEASE_GATES.md",
+      "docs/HOW_TO_ADD_A_GAME.md",
+      "docs/WHODUNIT_DISCUSSION_TIMING.md",
+      "docs/adr/"
+    ],
+    "conclusion": "Seven complete shipping/build subtrees and all five root build inputs are Git-object/mode identical through75c\u2192055f\u21929e4. AGENTS/current architecture/release/add-game/timer contracts and accepted ADR tree are unchanged. No new Kotlin, Swift, content, version, application identity, dependency pin or build-rule change exists in this extension.",
+    "invariant_scope": "Existing host-only multiplayer reducer authority, exact4.2 compatibility, deterministic session seeds, public/own-private/host-only separation, strict snapshot/content validation, Doctor ON/OFF behavior and Leave-confirmation Discussion-time exclusion are not changed by these verification-only deltas; this is source applicability, not a new behavioral execution."
+  },
+  "original16_timer": {
+    "original_defects": 16,
+    "timer_policy_separate": true,
+    "alias": "MF-C1/M-C01 is one finding, not two.",
+    "references": 101,
+    "unique_files": 92,
+    "projection_sha256": "2382a2e6ada8f9025ab8d24553467815fb1143d13c5b1e41d280d4b67de05167",
+    "recorded_source_sha256_all_match": true,
+    "mode_type_blob_all_unchanged": true,
+    "selection": "51 original mechanism references +1 timer-policy source +49 descriptor current-test-source references;92 unique files. Final hashes match recorded sources and055f/final mode/type/blob entries.",
+    "actual_D03_subset": {
+      "run": "34464573240/1",
+      "source": "75c104734373703570a307de9c7a53d291bc2718",
+      "primary_groups": 43,
+      "descriptors": {
+        "PASS": 320,
+        "SKIP": 3,
+        "FAIL": 0
+      },
+      "exact_xml_files_reviewed_in_actual_report": 135,
+      "desktop": {
+        "hosts": 4,
+        "groups": 32,
+        "per_host": {
+          "PASS": 212,
+          "SKIP": 3,
+          "FAIL": 0
+        }
+      },
+      "apple": {
+        "groups": 7,
+        "PASS": 66
+      },
+      "python": {
+        "groups": 4,
+        "PASS": 42
+      },
+      "timer": "All six local and four host mapped Leave-confirmation timer methods passed on each of the four desktop hosts; synthetic/virtual scheduling, not physical Back/LAN.",
+      "projection_sha256": "375f83bd88f69769844bc375775da4bbae5e49216b7e68a3249741afa3b120ec",
+      "limit": "These overlapping selected subsets/repetitions are not additional test totals or defects. Three physical-peer delivery SKIPs remain SKIP. Actual D03 remains FAIL due to required Linux cleanup."
+    }
+  },
+  "control_closures": {
+    "historical_source_binding_exclusion": "Remove ONLY the exact historical remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json row for unbound-control comparison. Different historical source bindings are expected and are not relabeled as current.",
+    "normal": {
+      "manifest": "remediation-runs/2026-09-08-continuation/actions/34362984912/native-evidence/reviewed-preflight/normal-controls.json",
+      "manifest_sha256": "38acea4c500414b621c9d0c61e6f8a374673807b12ebc68ba5db253e012b3a5a",
+      "bound_count": 99,
+      "unbound_count": 98,
+      "changed": [],
+      "unchanged_count": 98,
+      "unchanged_git_projection_sha256": "a349d566f5b59fc2041bcdd545fad44f45717321378a3332242b7c289802e925",
+      "unchanged_git_projection_sha256_at_final": "a349d566f5b59fc2041bcdd545fad44f45717321378a3332242b7c289802e925",
+      "extension_changed": [],
+      "historical_binding_row_excluded_only": {
+        "path": "remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json",
+        "sha256": "c3e7a371207d387d5e24d2b94b682004f0603624de7722b50431dc5514f5c7be"
+      }
+    },
+    "functional_foundation": {
+      "manifest": "remediation-runs/2026-09-08-continuation/actions/34440661169/native-preflight/l08-controls.json",
+      "manifest_sha256": "bc15e9e63a38de76853c0a4209c6a5baf745a716bd71df78ec70efdc7efa1b5c",
+      "bound_count": 99,
+      "unbound_count": 98,
+      "changed": [],
+      "unchanged_count": 98,
+      "unchanged_git_projection_sha256": "4bd4bf79357beb7b2608a31b2109bddb922e7603071c57fc97dc6db2d2e9eee0",
+      "unchanged_git_projection_sha256_at_final": "4bd4bf79357beb7b2608a31b2109bddb922e7603071c57fc97dc6db2d2e9eee0",
+      "extension_changed": [],
+      "historical_binding_row_excluded_only": {
+        "path": "remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json",
+        "sha256": "dcec8d48b780b7e98923e52dd367ade2169905a0d60d3140cf9fba42804ea7ea"
+      }
+    },
+    "os_recovery": {
+      "manifest": "remediation-runs/2026-09-08-continuation/actions/34457604656/native-preflight/os_recovery-controls.json",
+      "manifest_sha256": "f59367fbfaee2b4dbdf447db47f269d768c4b1d9f7b38fde0d7a98d4b40792be",
+      "bound_count": 183,
+      "unbound_count": 182,
+      "changed": [
+        ".github/workflows/production-verification.yml"
+      ],
+      "unchanged_count": 181,
+      "unchanged_git_projection_sha256": "ba683fc77fd4ff747fc2a0f54f99116fdec25bf0982146a05704eccf2675a05b",
+      "unchanged_git_projection_sha256_at_final": "ba683fc77fd4ff747fc2a0f54f99116fdec25bf0982146a05704eccf2675a05b",
+      "extension_changed": [
+        ".github/workflows/production-verification.yml"
+      ],
+      "historical_binding_row_excluded_only": {
+        "path": "remediation-runs/2026-09-08-continuation/ios-readiness-source-ci.json",
+        "sha256": "c55ad9bee17d925d1cd3b98d36869a211026709c564d535d3e98c8604b38880c"
+      }
+    },
+    "OS_workflow_exception": {
+      "old_sha256": "9a8021ec1ba27f44d7d2ac18f0bcc7a4a254445ba1baae1a420287094c89414b",
+      "new_sha256": "1b023983dc8591c2c6023c8a65369ffdb70d0cfa200269593e6ed98eec2cee08",
+      "conclusion": "OS39's183 bound/182 unbound manifest is NOT entirely identical:181 unbound control paths remain unchanged, the workflow row changed. The unchanged native job semantics are checked separately below; no current183-file binding is manufactured."
+    },
+    "historical_unbound_digests": {
+      "normal": "7d598e39bd718e0f8347d0eee839b5aad2bece2bddb82e08ce7f6c1ea592c413",
+      "functional_foundation": "fd8d51f1b7be4715c2db504b7a1aae012bbd1bec7f047a77ae4aeee294c1207f",
+      "os_recovery_actual75c": "a7799abc4b865d0f7055bdf96640f6ddcc64650b954651c1285e7fa9bf3711c6"
+    },
+    "C08": {
+      "paths": [
+        "remediation-runs/2026-09-07-local-readiness/run_gradle_cycle.py",
+        "scripts/verification/resolved_dependencies.init.gradle",
+        "scripts/verification/dependency_inventory.py",
+        "scripts/verification/third_party_notices.py",
+        "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/candidate_consumer.py",
+        "remediation-runs/2026-09-07-local-readiness/reviews/run_candidate_input_01.py",
+        "remediation-runs/2026-09-07-local-readiness/reviews/run_schema_consumer_controls_01.py",
+        "remediation-runs/2026-09-08-continuation/controls/run_candidate_with_schema.py",
+        "remediation-runs/2026-09-08-continuation/controls/test_schema_base_bootstrap.py",
+        "remediation-runs/2026-09-08-continuation/reviews/schema-base-prerequisites-research-01.json",
+        "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/test_candidate_consumer.py",
+        "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/schemas/bom-1.6.schema.json",
+        "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/schemas/spdx.schema.json",
+        "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/schemas/jsf-0.82.schema.json"
+      ],
+      "count": 14,
+      "all_mode_type_blob_unchanged": true,
+      "note": "11 exact producer/consumer/test/bootstrap/reference controls plus3 official schemas. The dependency graph/build declarations, export/render controls and normal notices inputs are unchanged."
+    }
+  },
+  "copied_and_full_source_limits": {
+    "recipe": {
+      "path": "scripts/verification/ios-readiness/copied_sources.py",
+      "sha256": "d52f4f7904d1481fee00796a1c0775ee3512934639dac45fee44704fa9b74e62",
+      "literals": {
+        "BUILD_PREFIXES": [
+          "composeApp/",
+          "shared/",
+          "game-modes/",
+          "build-logic/",
+          "gradle/",
+          "config/",
+          "iosApp/",
+          "scripts/"
+        ],
+        "BUILD_ROOTS": [
+          "build.gradle.kts",
+          "settings.gradle.kts",
+          "gradle.properties",
+          "gradlew",
+          "gradlew.bat"
+        ],
+        "PROTECTED": [
+          ".keystore",
+          ".jks",
+          ".p12",
+          ".p8",
+          ".pfx",
+          ".mobileprovision",
+          "credentials.json",
+          "service-account",
+          "local.properties",
+          ".pem",
+          "/.git/",
+          "/build/",
+          "/.gradle/"
+        ]
+      }
+    },
+    "prepared_copy_delta_75c_to_055f": {
+      "baseline": 765,
+      "candidate": 767,
+      "added": [
+        "scripts/ci/linux_process_probe.py",
+        "scripts/release/tests/test_linux_process_probe.py"
+      ],
+      "removed": [],
+      "modified": [
+        "scripts/ci/verification_hygiene.py",
+        "scripts/release/tests/test_ci_verification_hygiene.py",
+        "scripts/release/tests/test_workflow_contract.py",
+        "scripts/release/workflow_contract.py"
+      ],
+      "unchanged_recipe": "scripts/verification/ios-readiness/copied_sources.py"
+    },
+    "extension_copy_delta_055f_to_9e4": {
+      "before": 767,
+      "after": 769,
+      "added": [
+        "scripts/ci/linux_exe_reader.py",
+        "scripts/release/tests/test_linux_exe_reader.py"
+      ],
+      "removed": [],
+      "modified": [
+        "scripts/ci/linux_process_probe.py",
+        "scripts/ci/verification_hygiene.py",
+        "scripts/release/tests/test_ci_verification_hygiene.py",
+        "scripts/release/tests/test_linux_process_probe.py",
+        "scripts/release/tests/test_workflow_contract.py",
+        "scripts/release/workflow_contract.py"
+      ]
+    },
+    "total_copy_counts": {
+      "at75c": 765,
+      "at055f": 767,
+      "at9e4": 769
+    },
+    "full_manifest": {
+      "actual_C08_commit": "75c104734373703570a307de9c7a53d291bc2718",
+      "actual_C08_rows": 840,
+      "actual_C08_sha256": "b98e5ea13b1658273146a0c96b5d45cc7806d58498966f2e446070322ad7a97a",
+      "frozen_final_rows": 844,
+      "frozen_final_sha256": "5ea7fe538cd4e54acc467c544ac55d81685a8e3c97b19d156f3b7df6449a058d",
+      "added": [
+        "scripts/ci/linux_exe_reader.py",
+        "scripts/ci/linux_process_probe.py",
+        "scripts/release/tests/test_linux_exe_reader.py",
+        "scripts/release/tests/test_linux_process_probe.py"
+      ],
+      "removed": [],
+      "modified": [
+        ".github/workflows/production-verification.yml",
+        "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+        "scripts/ci/verification_hygiene.py",
+        "scripts/release/tests/test_ci_verification_hygiene.py",
+        "scripts/release/tests/test_workflow_contract.py",
+        "scripts/release/workflow_contract.py"
+      ],
+      "equality": false,
+      "warning": "Independent static frozen Git projection; not a new producer or runtime execution, preflight or source-binding admission"
+    },
+    "boundary": "Four added Linux verification scripts/tests and six changed old full-source rows prevent whole copied/full-source equality. Historical source-bound manifests, actual built/installed binary hashes and runner-image identities are not converted to9e4. A new claimed9e4 candidate or native execution would need genuinely fresh source/control/producer bindings and its own evidence; no new execution is claimed here."
+  },
+  "workflow_and_portability": {
+    "prepared_leg": {
+      "three_alternate_job_bodies_byte_identical": true,
+      "alternate_jobs": [
+        "desktop-linux-arm64",
+        "desktop-macos-x64",
+        "desktop-windows-x64"
+      ],
+      "ios_only_change": {
+        "before": "if: github.event_name != 'workflow_dispatch' || inputs.verification_scope != 'windows-only'",
+        "after": "if: github.event_name != 'workflow_dispatch' || (inputs.verification_scope != 'windows-only' && inputs.verification_scope != 'linux-process-probe')"
+      },
+      "legacy_linux_step_commands_env_and_artifact_paths_identical_ignoring_scope_if": true,
+      "legacy_linux_steps": [
+        "Check out source",
+        "Set up JDK 21",
+        "Claim fresh verification output ownership",
+        "Install pinned Android SDK packages",
+        "Record exact source and require a clean checkout",
+        "Run common, desktop, Android, static-analysis, and release gates",
+        "Stop Gradle after common-android",
+        "Run release Android managed-device smoke tests",
+        "Stop Gradle after managed-device",
+        "Inspect unsigned Android release artifact and merged manifest",
+        "Upload verification reports, mappings, and unsigned AAB",
+        "Clean only attested verification outputs",
+        "Upload verification cleanup receipt"
+      ],
+      "new_linux_steps": [
+        "Finalize Linux process-probe resources and uploaded custody",
+        "Install Linux process-probe emulator package",
+        "Observe Linux process access without a build",
+        "Upload Linux process-probe cleanup receipt",
+        "Upload bounded Linux process-probe evidence",
+        "Validate Linux process-probe source and controls"
+      ],
+      "full_linux_effective_timeout_unchanged_minutes": 90,
+      "probe_timeout_minutes": 10,
+      "prerequisite_only_emulator_package": true
+    },
+    "final_extension": {
+      "alternate_jobs_identical": {
+        "desktop-linux-arm64": {
+          "bytes": 3583,
+          "sha256": "6328b927bc5c04e50e6c01df410267bcb21f640c0c0401d142738d274bc2eba7"
+        },
+        "desktop-macos-x64": {
+          "bytes": 3629,
+          "sha256": "2b9e1e4a32da73b031056e9a1452ff201c3049054ba72db302357d1727c8a340"
+        },
+        "desktop-windows-x64": {
+          "bytes": 6059,
+          "sha256": "62478d82269f40d2def5384b3639964b1400c8b7e4b72350879ab9f28c7532fa"
+        }
+      },
+      "ios_only_change": {
+        "before": "github.event_name != 'workflow_dispatch' || (inputs.verification_scope != 'windows-only' && inputs.verification_scope != 'linux-process-probe')",
+        "after": "github.event_name != 'workflow_dispatch' || (inputs.verification_scope != 'windows-only' && inputs.verification_scope != 'linux-process-probe' && inputs.verification_scope != 'android-cleanup-only')"
+      },
+      "unchanged_legacy_step_commands_env_artifact_paths": [
+        "Check out source",
+        "Set up JDK 21",
+        "Claim fresh verification output ownership",
+        "Install pinned Android SDK packages",
+        "Record exact source and require a clean checkout",
+        "Run common, desktop, Android, static-analysis, and release gates",
+        "Stop Gradle after common-android",
+        "Run release Android managed-device smoke tests",
+        "Stop Gradle after managed-device",
+        "Inspect unsigned Android release artifact and merged manifest",
+        "Upload verification reports, mappings, and unsigned AAB",
+        "Upload verification cleanup receipt"
+      ],
+      "changed_legacy_linux_step": {
+        "name": "Clean only attested verification outputs",
+        "sole_nonscope_change": "append --android-reader=sudo-proc-exe-v2 to cleanup sys.argv"
+      },
+      "new_extension_steps": [
+        "Validate Android cleanup source and controls"
+      ],
+      "job_timeouts": "probe10 / Android-cleanup-only45 / full90; other jobs unchanged"
+    },
+    "AST_extension": {
+      "scripts/ci/verification_hygiene.py": {
+        "unchanged": [
+          "AndroidAuditError",
+          "android_proc_bytes",
+          "android_proc_identity",
+          "android_sdk_binding",
+          "checked_path",
+          "context",
+          "git",
+          "gradle_stop_command",
+          "output_roots",
+          "prepare",
+          "source_identity",
+          "stop_gradle",
+          "timestamp",
+          "uploaded_evidence_is_retained",
+          "verify_apple_cleanup",
+          "write_new"
+        ],
+        "changed": [
+          "audit_android_emulator_absence",
+          "cleanup",
+          "main"
+        ],
+        "added": [
+          "android_privileged_executable"
+        ],
+        "removed": [],
+        "imports_before": [
+          "from __future__ import annotations",
+          "import json",
+          "import hashlib",
+          "import os",
+          "import re",
+          "import shutil",
+          "import stat",
+          "import subprocess",
+          "import sys",
+          "import time",
+          "from datetime import datetime, timezone",
+          "from pathlib import Path, PurePosixPath"
+        ],
+        "imports_after": [
+          "from __future__ import annotations",
+          "import errno",
+          "import json",
+          "import hashlib",
+          "import os",
+          "import re",
+          "import shutil",
+          "import stat",
+          "import subprocess",
+          "import sys",
+          "import time",
+          "from datetime import datetime, timezone",
+          "from pathlib import Path, PurePosixPath"
+        ]
+      },
+      "scripts/release/workflow_contract.py": {
+        "unchanged": [
+          "fail",
+          "load_files",
+          "main",
+          "validation_step",
+          "verify_action_pins",
+          "verify_android_runtime_script",
+          "verify_android_runtime_smoke",
+          "verify_candidate",
+          "verify_common",
+          "verify_external_receipt_attestations",
+          "verify_owned_ios_app_launch",
+          "verify_policy",
+          "verify_production",
+          "verify_promotions",
+          "verify_review_inventory_gate",
+          "verify_signing_scripts",
+          "verify_store_jobs_disabled",
+          "verify_store_serialization",
+          "verify_store_workflow",
+          "verify_tool_downloader",
+          "verify_validation",
+          "verify_windows_checkout"
+        ],
+        "changed": [
+          "verify_linux_process_probe",
+          "verify_verification_scopes"
+        ],
+        "added": [],
+        "removed": [],
+        "imports_before": [
+          "from __future__ import annotations",
+          "import json",
+          "import re",
+          "import sys",
+          "from pathlib import Path"
+        ],
+        "imports_after": [
+          "from __future__ import annotations",
+          "import json",
+          "import re",
+          "import sys",
+          "from pathlib import Path"
+        ]
+      },
+      "scripts/ci/linux_process_probe.py": {
+        "unchanged": [
+          "file_bytes",
+          "require"
+        ],
+        "changed": [
+          "admit",
+          "cleanup",
+          "controls",
+          "owned_dumpability_control",
+          "run"
+        ],
+        "added": [],
+        "removed": [],
+        "imports_before": [
+          "from __future__ import annotations",
+          "import errno",
+          "import hashlib",
+          "import json",
+          "import os",
+          "import platform",
+          "import re",
+          "import select",
+          "import signal",
+          "import stat",
+          "import subprocess",
+          "import sys",
+          "import tempfile",
+          "from pathlib import Path",
+          "from scripts.ci import verification_hygiene as hygiene"
+        ],
+        "imports_after": [
+          "from __future__ import annotations",
+          "import errno",
+          "import hashlib",
+          "import json",
+          "import os",
+          "import platform",
+          "import re",
+          "import select",
+          "import signal",
+          "import stat",
+          "import subprocess",
+          "import sys",
+          "import tempfile",
+          "from pathlib import Path",
+          "from scripts.ci import verification_hygiene as hygiene"
+        ]
+      }
+    },
+    "reviewed_source_pins": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/linux-exe-reader-v2-independent-01.json",
+        "bytes": 7836,
+        "sha256": "66e72a7a39c4187a992d7bd5a956eb325b7557a18e4944706b27ef92ccc110c5",
+        "current_source_pins": 4
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/linux-exe-reader-v2-adc-integration-independent-01.json",
+        "bytes": 12525,
+        "sha256": "6c0025361f1f8525a5f6a0410850d90deac968761568ac62a0cdb4f2285b607c",
+        "current_source_pins": 5
+      }
+    ],
+    "direct_inspection": [
+      "Full verification_hygiene.py and new linux_exe_reader.py were read, including initialization, cleanup and CLI. Hygiene's only new import is portable stdlib errno; it does not import linux_exe_reader or run Linux/POSIX calls at module initialization.",
+      "Linux helper subprocess is reached only from android_privileged_executable after explicit sys.platform==linux and nonroot equal caller UID checks. Normal cleanup invokes Android scanning only for GITHUB_JOB=desktop-android; privileged reader use on any other job fails closed after the Gradle stop. Helper-specific SIGALRM and /proc operations are inside functions/main, not imported into Apple/Windows execution.",
+      "For unchanged Apple/alternate-host invocation argument shapes, main's new cardinality checks pass and default reader is unprivileged. cleanup gains a reader-argument validation and forwarding, but source/ownership/upload/stop/output path guards, verify_apple_cleanup and deletion path remain intact. Do not describe cleanup/main or all hygiene definitions as AST-identical.",
+      "Three alternate job bodies are byte-identical through both legs. iOS job body changes only its top-level exclusions for the two Linux-focused scopes. Native steps, controls, environment, budgets, custody and cleanup commands are otherwise unchanged.",
+      "Full Linux build/test/managed-device/SDK commands and evidence artifact bodies remain unchanged. Cleanup intentionally appends exactly --android-reader=sudo-proc-exe-v2, and related step scope conditions admit Android-cleanup-only. Thus the entire Linux job/cleanup contract is not identical to D03.",
+      "The final explicit reader binds original nonroot caller plus exact ordered real/effective/saved/filesystem UID tuple, PID/starttime and two executable observations. Only first-readlink EACCES can escalate to the fixed read-only isolated helper. Default mixed-UID rejection, subsequent-failure handling, SDK executable rejection, source/ownership/upload/lifetime/deletion and bounded observation guards remain; no root caller substitution, skipped ambiguous PID, target argv/environment/content or target signal is introduced."
+    ],
+    "new_scope": "LP12-control no-build probe10min; separately admitted ADC18-control managed-runtime45min; full90min retains complete qualification gates. ADC shares unchanged managed smoke/strict dependencies/normal custody, not full suites or other hosts. No Store workflow was enabled.",
+    "local_controls": {
+      "approval_review": "remediation-runs/2026-09-08-continuation/reviews/linux-exe-reader-v2-adc-integration-independent-01.json",
+      "executed_by_root": 123,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "lint_exit": 0,
+      "inner_stop_outer": [
+        0,
+        0,
+        0
+      ],
+      "scope": "Independently accepted local Python controls and focused workflow lint at the exact nine final reviewed code/test pins; no application build, actual sudo/procfs mixed-path execution, emulator or Apple/Windows runtime. Review reuse, not a second test execution or fresh artifact audit by this report."
+    }
+  },
+  "historical_execution_and_current_applicability": {
+    "B30": {
+      "source": "360fc797a85e1e494334fd8cc11b4e739981cea8",
+      "run": "34362984912/1",
+      "actual": "Eight identified normal Debug XCTest repetitions with48 periodic Home observations passed; a separate ninth public launch supplied three selected-image real libproc provenance observations. Built/installed notices, ad-hoc simulator signature and recorded scoped cleanup accepted.",
+      "current": "Unchanged shipping/build inputs and all98 unbound normal controls preserve the reviewed narrow mechanism/source applicability.",
+      "limits": "Whole A29/B30 workflow remains FAIL. Not a ninth XCTest repetition, all-maps/mapped-page/continuous/atomic lifetime attestation, new9e4 binary runtime, Release runtime, physical-device or Store proof."
+    },
+    "A37_components": {
+      "source": "15e8982b35e39006868868a11c6f4e1864e613a7",
+      "run": "34442662032/1",
+      "actual": "Four wrapper XCTest PASS and integration signal-kill FAIL, xcodebuild65. Separate Linux data-only execution of unchanged pure validators accepted all20 functional-storage operations/13 boots and42 retained-host operations/3 boots against actual A37 records, not a new native execution.",
+      "current": "All98 unbound functional/foundation controls and shipping/source mappings unchanged; narrowly accepted component evidence remains applicable.",
+      "limits": "A37 whole-run FAIL is preserved. Strict Complete26FAIL/0PASS remains unresolved; synthetic transport peers are not physical LAN. SIGKILL sender/cause is unestablished; no silent timeout or simulator-only cause claim."
+    },
+    "OS39": {
+      "source": "75c104734373703570a307de9c7a53d291bc2718",
+      "run": "34458884532/1",
+      "actual": "Two XCTest PASS through split bootstrap/proof, three boots and20 OS observations on Xcode26.3/17C529 and iOS26.2/23C54. Fifteen finalization stages and four Gradle stops0; scoped custody/cleanup accepted.",
+      "current": "Unchanged shipping/copy/native controls and native job semantics support scoped source applicability, with the changed workflow-row exception expressly retained.",
+      "limits": "Not the original whole-A or B30/libproc rerun. Does not change A37 or strict26FAIL/0PASS and does not certify an identical runner image or newly built9e4 binary."
+    },
+    "C08": {
+      "source": "75c104734373703570a307de9c7a53d291bc2718",
+      "binding": "remediation-runs/2026-09-08-continuation/candidate-input-binding-08.json",
+      "binding_sha256": "01db24188c2f5ab077d50a55e18b3121f3e45cc64ec689e52133b93d4c6bb0a0",
+      "actual": "Complete fresh export\u2192render\u2192candidate chain at75c,511 consumed files, four graph/SBOM pairs, four official-schema validations and four mandatory receipt layers PASS. Three cycle Gradle stops0 and scoped cleanup accepted; pre-admission failure preserved separately.",
+      "current": "Unchanged dependency/build/producer/consumer/schema/notices semantics support scoped applicability only; complete840-row historical source binding is not the current844-row source manifest.",
+      "limits": "No current-source rerun is asserted. Existing binding cannot be relabeled or dispatched as9e4; any new claimed candidate run needs fresh full source/producer chain. No application runtime, licensing/legal or Store readiness follows."
+    },
+    "D03": {
+      "source": "75c104734373703570a307de9c7a53d291bc2718",
+      "run": "34464573240/1",
+      "combined_result": "FAIL",
+      "linux": "2215 JVM PASS+3 physical SKIP,39 executed test leaves;3 managed-device PASS;498 Python controls PASS. Required Linux cleanup FAIL after PermissionError:118/154 process entries sampled;21 output roots retained and none removed. Three Gradle stops0.",
+      "alternate_hosts": "Each Linux-arm64/macOS-x64/Windows-x64 executed1337 PASS+3 physical SKIP over13 desktop test leaves; scoped component/cleanup evidence accepted in their respective reviews.",
+      "apple": "465 KMP+5 XCTest PASS (four wrapper plus one normal Debug cold launch); three Release framework links and unsigned wrapper inspection. Apple scoped cleanup accepted; not B30 libproc, Release runtime or Store signing.",
+      "current": "Unchanged shipping/build/test sources and legacy execution commands support these component regressions' source applicability. The changed Linux cleanup reader requires its own fresh hosted/probe/application cleanup evidence and cannot retroactively turn D03 green.",
+      "limits": "Bound observer UID was1001; raw selected_uid=0 in the failed scan is a completed-sample count, not UID0. Zero matches in a failed partial scan is not emulator absence. Components/subsets/hosts must not be added to inflate totals."
+    }
+  },
+  "preserved_failures_and_new_scope_boundaries": {
+    "strict_protection": "26FAIL/0PASS remains an unwaived validation failure, not merely a physical-device-only gate. Existing explicit setters/non-atomic Complete writing and missing/non-Complete/unsupported-volume observations do not prove a uniquely identified application defect or simulator-only cause.",
+    "LP01": "34476522188/1 at7d9ea1eac42ebe7630a01e3dbe9aafcf4f36306b remains FAIL: four FileNotFoundError audits before procfs/zero sampled; missing real emulator prerequisite implicated but exact path unrecorded. Not a D03 causal diagnosis.",
+    "LP02": "Historical failed probe retained; no contrary result asserted here.",
+    "LP03": "34487728583/1 at e4d49e17f5f1099a742ab3985c6257d090d61ba6 remains FAIL: actual three owned controls accepted including real v1 nondumpable privileged-reader success; both host scans failed PROC_UID_AMBIGUOUS at147/167 with three completed selected samples and two privileged reads. Unknown failing PID/tuple; not a D03/LP02 reconstruction.",
+    "historical_local_outer143": "101 Python+9 Gradle controls, lint and two scoped nonroot mechanisms accepted, but their outer143 remains. Potential marker-bearing launcher ancestor selection lacks exact original PID-command snapshots; later clean outer0 does not relabel that invocation.",
+    "LP04_ADC": "Not evaluated or authorized by this historical applicability report. Root-owned fresh frozen9e4 LP04/ADC admission, actual runtime/cleanup and separate independent reviews must supply their own status. Source/control approval or123 mock controls is not a hosted mixed-path or managed application-cleanup PASS.",
+    "D03": "Failed combined run and21 retained owned output roots remain in history even if a later focused cleanup follow-up succeeds."
+  },
+  "reference_pins": {
+    "remediation-runs/2026-09-08-continuation/reviews/final-b30-original16-timer-75c-applicability-01.json": "f2b880f03e46fe7243079c19e6dc89843ac663c774a1f1d94cb14bf0e58c548a",
+    "remediation-runs/2026-09-08-continuation/reviews/native-b30-actual-independent-01.json": "f2426faf649d1a9b13fbdfa8ef59741c7cf38d62f5f38f54e4afadbf8a3788fd",
+    "remediation-runs/2026-09-08-continuation/reviews/native-a37-actual-independent-01.json": "47ba04e2e6cb18d4d17da8f01f97c326c43b1bafd0713dcfa2b500b5783318f6",
+    "remediation-runs/2026-09-08-continuation/reviews/native-a37-retrospective-actual-independent-01.json": "d6f7f58582b8c3f602876c59549cac3586b259eaced02aad1bb9f76717721318",
+    "remediation-runs/2026-09-08-continuation/reviews/native-os39-actual-independent-01.json": "2a46ab40e0beea54bcd197935fd1beb9105b0fcc6213b7ff619df994bc3b2318",
+    "remediation-runs/2026-09-08-continuation/reviews/candidate-input-binding-author-inspection-08.json": "33146822260f2782fcc5cb1e854888a7a61aa0dc687030ddce5ffcd8e98285f4",
+    "remediation-runs/2026-09-08-continuation/reviews/candidate-input-c08-actual-independent-01.json": "5b533609a6366a25a22c5f4dc087adc1d0ae5eb3c738c0a3353eceb822482dd4",
+    "remediation-runs/2026-09-08-continuation/reviews/final-d-linux-actual-independent-01.json": "d3845729e59e08fd4e0471621dcc97968584f18c0db81b24f68f71108d970f52",
+    "remediation-runs/2026-09-08-continuation/reviews/final-d-alternate-hosts-actual-independent-01.json": "5de5262039e507ed7a8d2cc8a98e19c66462ab0517d50267f5d5701e010b633a",
+    "remediation-runs/2026-09-08-continuation/reviews/final-d-apple-actual-independent-01.json": "296dcbd6a50c7e4484b4d6cda32f3d6161460ed756e01bcc4a775cbbec70b0fa",
+    "remediation-runs/2026-09-08-continuation/reviews/final-d-original16-timer-actual-independent-01.json": "a111d8871fc698da23741f4eae59e008bf447902a4cff79eca4e370921aca815",
+    "remediation-runs/2026-09-07-local-readiness/reviews/original16-timer-commit-evidence-map-01.json": "82cc49b33044b27c1be99115847a04bfa505fa5ee28706ccfd7e30f4f0e6f0ff",
+    "remediation-runs/2026-09-07-local-readiness/reviews/original16-timer-regression-descriptors-01.json": "b2fee80c8d9210fb44ab8b226a97912d30f381bc3eeea7ec9d4cb1a0e8d7e7af",
+    "remediation-runs/2026-09-08-continuation/reviews/linux-exe-reader-v2-independent-01.json": "66e72a7a39c4187a992d7bd5a956eb325b7557a18e4944706b27ef92ccc110c5",
+    "remediation-runs/2026-09-08-continuation/reviews/linux-exe-reader-v2-adc-integration-independent-01.json": "6c0025361f1f8525a5f6a0410850d90deac968761568ac62a0cdb4f2285b607c",
+    "remediation-runs/2026-09-08-continuation/reviews/linux-probe-01-actual-independent-01.json": "ebbac96572c333f1f8550175f36b4df32e0a24bf9e31be10b9b771109a86f67e",
+    "remediation-runs/2026-09-08-continuation/reviews/linux-probe-03-actual-independent-01.json": "3afe98a3ac8243fc10fb6c978fe41f1591055ada11756d591f52e34d3a55d4ec",
+    "remediation-runs/2026-09-08-continuation/reviews/linux-proc-controls-actual-independent-01.json": "cd8ec6628d05c4df7164f13eb0640576fceb332a702ae5edb2e547712243162e",
+    "remediation-runs/2026-09-08-continuation/reviews/linux-proc-local-outer-exit-01.json": "1c68735a351e98e1febd83203ecc0ddea4528e04161aab0f50a0d7712380a56b"
+  },
+  "final_boundaries": {
+    "readiness": "NOT_READY. No new combined exact-SHA PASS or strict Complete clearance is established by this report.",
+    "delivery": "Approval binds9e4 only. Later evidence/docs/mechanical-inventory commits require an explicit allowed-diff/applicability extension and independent final delivery reconciliation; unseen future commits are not preapproved.",
+    "external": "Physical-device/mixed-LAN/keybag-lock/backup/restore remain separate unexecuted requirements. Store identity collision, signing/publication/accounts/privacy and independent owner/legal/content-rights approvals remain unresolved/external; no physical-device testing, private Store operation or publication/promotion was performed or authorized.",
+    "cleanup": "Reviewer started no build/test/native/process resources; no Gradle stop/cleanup was appropriate or performed in the shared root lane. Only this additive report was written; source, user work, stashes, live lane lock, historical failures and archived build reports were preserved."
+  }
+}

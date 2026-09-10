@@ -1,0 +1,1415 @@
+﻿2026-09-10T15:48:19.7843540Z Current runner version: '2.337.0'
+2026-09-10T15:48:19.7878187Z ##[group]Runner Image Provisioner
+2026-09-10T15:48:19.7879313Z Hosted Compute Agent
+2026-09-10T15:48:19.7879976Z Version: 20260828.587
+2026-09-10T15:48:19.7880741Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-10T15:48:19.7881526Z Build Date: 2026-08-28T16:44:25Z
+2026-09-10T15:48:19.7882278Z Worker ID: {9d0d8b2a-d9c0-4ce8-bdd8-bfc45a58cd53}
+2026-09-10T15:48:19.7883063Z Azure Region: eastus2
+2026-09-10T15:48:19.7883705Z ##[endgroup]
+2026-09-10T15:48:19.7885201Z ##[group]Operating System
+2026-09-10T15:48:19.7885934Z Ubuntu
+2026-09-10T15:48:19.7886550Z 24.04.5
+2026-09-10T15:48:19.7887112Z LTS
+2026-09-10T15:48:19.7887717Z ##[endgroup]
+2026-09-10T15:48:19.7888353Z ##[group]Runner Image
+2026-09-10T15:48:19.7889202Z Image: ubuntu-24.04
+2026-09-10T15:48:19.7889798Z Version: 20260907.300.1
+2026-09-10T15:48:19.7891222Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260907.300/images/ubuntu/Ubuntu2404-Readme.md
+2026-09-10T15:48:19.7892881Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260907.300
+2026-09-10T15:48:19.7893916Z ##[endgroup]
+2026-09-10T15:48:19.7895131Z ##[group]GITHUB_TOKEN Permissions
+2026-09-10T15:48:19.7897386Z Contents: read
+2026-09-10T15:48:19.7898015Z Metadata: read
+2026-09-10T15:48:19.7898689Z ##[endgroup]
+2026-09-10T15:48:19.7901115Z Secret source: Actions
+2026-09-10T15:48:19.7902280Z Cache mode: write
+2026-09-10T15:48:19.7903258Z Prepare workflow directory
+2026-09-10T15:48:19.8284935Z Prepare all required actions
+2026-09-10T15:48:19.8332786Z Getting action download info
+2026-09-10T15:48:20.0934417Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-10T15:48:20.2266554Z Download action repository 'actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95' (SHA:03ad4de0992f5dab5e18fcb136590ce7c4a0ac95)
+2026-09-10T15:48:20.5130644Z Download action repository 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+2026-09-10T15:48:20.7247605Z Complete job name: Common, desktop, and Android release
+2026-09-10T15:48:20.8058273Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-09-10T15:48:20.8059592Z with:
+2026-09-10T15:48:20.8060026Z   fetch-depth: 0
+2026-09-10T15:48:20.8060496Z   persist-credentials: false
+2026-09-10T15:48:20.8061034Z   repository: Apdelrahman1911/parlor
+2026-09-10T15:48:20.8065286Z   token: ***
+2026-09-10T15:48:20.8065731Z   ssh-strict: true
+2026-09-10T15:48:20.8066171Z   ssh-user: git
+2026-09-10T15:48:20.8066602Z   clean: true
+2026-09-10T15:48:20.8067051Z   sparse-checkout-cone-mode: true
+2026-09-10T15:48:20.8140998Z   fetch-tags: false
+2026-09-10T15:48:20.8141503Z   show-progress: true
+2026-09-10T15:48:20.8142001Z   lfs: false
+2026-09-10T15:48:20.8142499Z   submodules: false
+2026-09-10T15:48:20.8143009Z   set-safe-directory: true
+2026-09-10T15:48:20.8143518Z   allow-unsafe-pr-checkout: false
+2026-09-10T15:48:20.8144982Z env:
+2026-09-10T15:48:20.8145704Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T15:48:20.8146558Z ##[endgroup]
+2026-09-10T15:48:20.9165416Z Syncing repository: Apdelrahman1911/parlor
+2026-09-10T15:48:20.9167935Z ##[group]Getting Git version info
+2026-09-10T15:48:20.9169244Z Working directory is '/home/runner/work/parlor/parlor'
+2026-09-10T15:48:20.9170845Z [command]/usr/bin/git version
+2026-09-10T15:48:20.9184870Z git version 2.55.0
+2026-09-10T15:48:20.9204425Z ##[endgroup]
+2026-09-10T15:48:20.9214397Z Temporarily overriding HOME='/home/runner/work/_temp/f5491e9c-b8f4-4a39-b7e5-762968639546' before making global git config changes
+2026-09-10T15:48:20.9216748Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-10T15:48:20.9220945Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/parlor/parlor
+2026-09-10T15:48:20.9264739Z Deleting the contents of '/home/runner/work/parlor/parlor'
+2026-09-10T15:48:20.9268610Z ##[group]Determining repository object format
+2026-09-10T15:48:20.9270238Z ##[endgroup]
+2026-09-10T15:48:20.9271523Z ##[group]Initializing the repository
+2026-09-10T15:48:20.9274466Z [command]/usr/bin/git init /home/runner/work/parlor/parlor
+2026-09-10T15:48:20.9360394Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-10T15:48:20.9362012Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-10T15:48:20.9363477Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-10T15:48:20.9364624Z hint: call:
+2026-09-10T15:48:20.9365262Z hint:
+2026-09-10T15:48:20.9366091Z hint: 	git config --global init.defaultBranch <name>
+2026-09-10T15:48:20.9367072Z hint:
+2026-09-10T15:48:20.9368015Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-10T15:48:20.9369714Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-10T15:48:20.9370882Z hint:
+2026-09-10T15:48:20.9371523Z hint: 	git branch -m <name>
+2026-09-10T15:48:20.9372259Z hint:
+2026-09-10T15:48:20.9373246Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-10T15:48:20.9374808Z Initialized empty Git repository in /home/runner/work/parlor/parlor/.git/
+2026-09-10T15:48:20.9377040Z [command]/usr/bin/git remote add origin https://github.com/Apdelrahman1911/parlor
+2026-09-10T15:48:20.9417362Z ##[endgroup]
+2026-09-10T15:48:20.9418277Z ##[group]Disabling automatic garbage collection
+2026-09-10T15:48:20.9419200Z [command]/usr/bin/git config --local gc.auto 0
+2026-09-10T15:48:20.9449938Z ##[endgroup]
+2026-09-10T15:48:20.9451072Z ##[group]Setting up auth
+2026-09-10T15:48:20.9452016Z Removing SSH command configuration
+2026-09-10T15:48:20.9460593Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-10T15:48:20.9492170Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-10T15:48:20.9824782Z Removing HTTP extra header
+2026-09-10T15:48:20.9832184Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-10T15:48:20.9873557Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-10T15:48:21.0134389Z Removing includeIf entries pointing to credentials config files
+2026-09-10T15:48:21.0140037Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-10T15:48:21.0177971Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-10T15:48:21.0430028Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-7276cd92-dbac-44fc-b3f6-031986ea0364.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-10T15:48:21.0471220Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/parlor/parlor/.git.path /home/runner/work/_temp/git-credentials-7276cd92-dbac-44fc-b3f6-031986ea0364.config
+2026-09-10T15:48:21.0506060Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/parlor/parlor/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-7276cd92-dbac-44fc-b3f6-031986ea0364.config
+2026-09-10T15:48:21.0544666Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-7276cd92-dbac-44fc-b3f6-031986ea0364.config
+2026-09-10T15:48:21.0581029Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-7276cd92-dbac-44fc-b3f6-031986ea0364.config
+2026-09-10T15:48:21.0613962Z ##[endgroup]
+2026-09-10T15:48:21.0614732Z ##[group]Fetching the repository
+2026-09-10T15:48:21.0620677Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-09-10T15:48:25.8232462Z From https://github.com/Apdelrahman1911/parlor
+2026-09-10T15:48:25.8233742Z  * [new branch]        codex/parlor-fr-remediation -> origin/codex/parlor-fr-remediation
+2026-09-10T15:48:25.8234638Z  * [new branch]        codex/parlor-independent-review-9cd4040 -> origin/codex/parlor-independent-review-9cd4040
+2026-09-10T15:48:25.8235767Z  * [new branch]        dependabot/github_actions/ci-actions-6bc1927ba3 -> origin/dependabot/github_actions/ci-actions-6bc1927ba3
+2026-09-10T15:48:25.8236525Z  * [new branch]        fix/issue-103 -> origin/fix/issue-103
+2026-09-10T15:48:25.8237036Z  * [new branch]        fix/issue-72  -> origin/fix/issue-72
+2026-09-10T15:48:25.8237547Z  * [new branch]        fix/issue-73  -> origin/fix/issue-73
+2026-09-10T15:48:25.8238180Z  * [new branch]        fix/local-readiness-2026-09-07 -> origin/fix/local-readiness-2026-09-07
+2026-09-10T15:48:25.8239267Z  * [new branch]        mafia/module-and-platform-updates -> origin/mafia/module-and-platform-updates
+2026-09-10T15:48:25.8239995Z  * [new branch]        main          -> origin/main
+2026-09-10T15:48:25.8240649Z  * [new branch]        release       -> origin/release
+2026-09-10T15:48:25.8241137Z  * [new branch]        testing       -> origin/testing
+2026-09-10T15:48:25.8241810Z  * [new branch]        whodunit/round-config-and-clue-pool -> origin/whodunit/round-config-and-clue-pool
+2026-09-10T15:48:25.8251012Z [command]/usr/bin/git branch --list --remote origin/fix/local-readiness-2026-09-07
+2026-09-10T15:48:25.8276535Z   origin/fix/local-readiness-2026-09-07
+2026-09-10T15:48:25.8284613Z [command]/usr/bin/git rev-parse refs/remotes/origin/fix/local-readiness-2026-09-07
+2026-09-10T15:48:25.8313061Z 9e40261e0dc5bd224526eda6126350ac6a6b8bcb
+2026-09-10T15:48:25.8317337Z ##[endgroup]
+2026-09-10T15:48:25.8318443Z ##[group]Determining the checkout info
+2026-09-10T15:48:25.8319634Z ##[endgroup]
+2026-09-10T15:48:25.8322180Z [command]/usr/bin/git sparse-checkout disable
+2026-09-10T15:48:25.8377894Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-10T15:48:25.8413358Z ##[group]Checking out the ref
+2026-09-10T15:48:25.8417487Z [command]/usr/bin/git checkout --progress --force -B fix/local-readiness-2026-09-07 refs/remotes/origin/fix/local-readiness-2026-09-07
+2026-09-10T15:48:26.8926843Z Updating files:  50% (14621/29091)
+2026-09-10T15:48:26.9176030Z Updating files:  51% (14837/29091)
+2026-09-10T15:48:26.9357689Z Updating files:  52% (15128/29091)
+2026-09-10T15:48:26.9585463Z Updating files:  53% (15419/29091)
+2026-09-10T15:48:26.9918843Z Updating files:  54% (15710/29091)
+2026-09-10T15:48:27.0207656Z Updating files:  55% (16001/29091)
+2026-09-10T15:48:27.0461188Z Updating files:  56% (16291/29091)
+2026-09-10T15:48:27.0764420Z Updating files:  57% (16582/29091)
+2026-09-10T15:48:27.0900458Z Updating files:  58% (16873/29091)
+2026-09-10T15:48:27.1631436Z Updating files:  59% (17164/29091)
+2026-09-10T15:48:27.1752873Z Updating files:  60% (17455/29091)
+2026-09-10T15:48:27.1941278Z Updating files:  61% (17746/29091)
+2026-09-10T15:48:27.2226679Z Updating files:  62% (18037/29091)
+2026-09-10T15:48:27.2524160Z Updating files:  63% (18328/29091)
+2026-09-10T15:48:27.2760762Z Updating files:  64% (18619/29091)
+2026-09-10T15:48:27.3067964Z Updating files:  65% (18910/29091)
+2026-09-10T15:48:27.3327181Z Updating files:  66% (19201/29091)
+2026-09-10T15:48:27.3530059Z Updating files:  67% (19491/29091)
+2026-09-10T15:48:27.3821774Z Updating files:  68% (19782/29091)
+2026-09-10T15:48:27.4074245Z Updating files:  69% (20073/29091)
+2026-09-10T15:48:27.4879239Z Updating files:  70% (20364/29091)
+2026-09-10T15:48:27.5007612Z Updating files:  71% (20655/29091)
+2026-09-10T15:48:27.5160838Z Updating files:  72% (20946/29091)
+2026-09-10T15:48:27.5325132Z Updating files:  73% (21237/29091)
+2026-09-10T15:48:27.5481558Z Updating files:  74% (21528/29091)
+2026-09-10T15:48:27.5816839Z Updating files:  75% (21819/29091)
+2026-09-10T15:48:27.5954329Z Updating files:  76% (22110/29091)
+2026-09-10T15:48:27.6356114Z Updating files:  77% (22401/29091)
+2026-09-10T15:48:27.7676624Z Updating files:  78% (22691/29091)
+2026-09-10T15:48:27.8259608Z Updating files:  79% (22982/29091)
+2026-09-10T15:48:27.8425590Z Updating files:  80% (23273/29091)
+2026-09-10T15:48:27.8824346Z Updating files:  81% (23564/29091)
+2026-09-10T15:48:27.8833877Z Updating files:  81% (23848/29091)
+2026-09-10T15:48:27.9164865Z Updating files:  82% (23855/29091)
+2026-09-10T15:48:28.0090553Z Updating files:  83% (24146/29091)
+2026-09-10T15:48:28.0219297Z Updating files:  84% (24437/29091)
+2026-09-10T15:48:28.0363752Z Updating files:  85% (24728/29091)
+2026-09-10T15:48:28.0514245Z Updating files:  86% (25019/29091)
+2026-09-10T15:48:28.0656925Z Updating files:  87% (25310/29091)
+2026-09-10T15:48:28.1121885Z Updating files:  88% (25601/29091)
+2026-09-10T15:48:28.1262274Z Updating files:  89% (25891/29091)
+2026-09-10T15:48:28.2667306Z Updating files:  90% (26182/29091)
+2026-09-10T15:48:28.2876858Z Updating files:  91% (26473/29091)
+2026-09-10T15:48:28.3016657Z Updating files:  92% (26764/29091)
+2026-09-10T15:48:28.4618239Z Updating files:  93% (27055/29091)
+2026-09-10T15:48:28.4817529Z Updating files:  94% (27346/29091)
+2026-09-10T15:48:28.5030948Z Updating files:  95% (27637/29091)
+2026-09-10T15:48:28.5401971Z Updating files:  96% (27928/29091)
+2026-09-10T15:48:28.5869489Z Updating files:  97% (28219/29091)
+2026-09-10T15:48:28.6249964Z Updating files:  98% (28510/29091)
+2026-09-10T15:48:28.6611466Z Updating files:  99% (28801/29091)
+2026-09-10T15:48:28.6612537Z Updating files: 100% (29091/29091)
+2026-09-10T15:48:28.6613668Z Updating files: 100% (29091/29091), done.
+2026-09-10T15:48:28.7086223Z Switched to a new branch 'fix/local-readiness-2026-09-07'
+2026-09-10T15:48:28.7089647Z branch 'fix/local-readiness-2026-09-07' set up to track 'origin/fix/local-readiness-2026-09-07'.
+2026-09-10T15:48:28.7185130Z ##[endgroup]
+2026-09-10T15:48:28.7235881Z [command]/usr/bin/git log -1 --format=%H
+2026-09-10T15:48:28.7269208Z 9e40261e0dc5bd224526eda6126350ac6a6b8bcb
+2026-09-10T15:48:28.7280492Z ##[group]Removing auth
+2026-09-10T15:48:28.7280938Z Removing SSH command configuration
+2026-09-10T15:48:28.7283620Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-10T15:48:28.7322850Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-10T15:48:28.7613831Z Removing HTTP extra header
+2026-09-10T15:48:28.7617647Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-10T15:48:28.7656956Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-10T15:48:28.7937143Z Removing includeIf entries pointing to credentials config files
+2026-09-10T15:48:28.7941452Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-10T15:48:28.7979677Z includeif.gitdir:/home/runner/work/parlor/parlor/.git.path
+2026-09-10T15:48:28.7988652Z includeif.gitdir:/home/runner/work/parlor/parlor/.git/worktrees/*.path
+2026-09-10T15:48:28.7989548Z includeif.gitdir:/github/workspace/.git.path
+2026-09-10T15:48:28.7990156Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-10T15:48:28.7991789Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/parlor/parlor/.git.path
+2026-09-10T15:48:28.8028370Z /home/runner/work/_temp/git-credentials-7276cd92-dbac-44fc-b3f6-031986ea0364.config
+2026-09-10T15:48:28.8060441Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/parlor/parlor/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-7276cd92\-dbac\-44fc\-b3f6\-031986ea0364\.config
+2026-09-10T15:48:28.8473067Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/parlor/parlor/.git/worktrees/*.path
+2026-09-10T15:48:28.8513226Z /home/runner/work/_temp/git-credentials-7276cd92-dbac-44fc-b3f6-031986ea0364.config
+2026-09-10T15:48:28.8533017Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/parlor/parlor/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-7276cd92\-dbac\-44fc\-b3f6\-031986ea0364\.config
+2026-09-10T15:48:28.8573060Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-10T15:48:28.8611500Z /github/runner_temp/git-credentials-7276cd92-dbac-44fc-b3f6-031986ea0364.config
+2026-09-10T15:48:28.8619887Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-7276cd92\-dbac\-44fc\-b3f6\-031986ea0364\.config
+2026-09-10T15:48:28.8661106Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-10T15:48:28.8689812Z /github/runner_temp/git-credentials-7276cd92-dbac-44fc-b3f6-031986ea0364.config
+2026-09-10T15:48:28.8696763Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-7276cd92\-dbac\-44fc\-b3f6\-031986ea0364\.config
+2026-09-10T15:48:28.9056119Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-10T15:48:28.9338382Z Removing credentials config '/home/runner/work/_temp/git-credentials-7276cd92-dbac-44fc-b3f6-031986ea0364.config'
+2026-09-10T15:48:28.9347297Z ##[endgroup]
+2026-09-10T15:48:28.9626589Z ##[group]Run actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95
+2026-09-10T15:48:28.9627008Z with:
+2026-09-10T15:48:28.9627237Z   distribution: temurin
+2026-09-10T15:48:28.9627481Z   java-version: 21
+2026-09-10T15:48:28.9627701Z   check-latest: false
+2026-09-10T15:48:28.9627941Z   java-package: jdk
+2026-09-10T15:48:28.9628157Z   set-default: true
+2026-09-10T15:48:28.9628377Z   verify-signature: false
+2026-09-10T15:48:28.9628616Z   server-id: github
+2026-09-10T15:48:28.9628838Z   server-username: GITHUB_ACTOR
+2026-09-10T15:48:28.9629267Z   server-password: GITHUB_TOKEN
+2026-09-10T15:48:28.9629521Z   overwrite-settings: true
+2026-09-10T15:48:28.9629763Z   job-status: success
+2026-09-10T15:48:28.9632844Z   token: ***
+2026-09-10T15:48:28.9633084Z   show-download-progress: false
+2026-09-10T15:48:28.9633341Z env:
+2026-09-10T15:48:28.9633715Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T15:48:28.9634165Z ##[endgroup]
+2026-09-10T15:48:29.1147642Z ##[group]Installed distributions
+2026-09-10T15:48:29.1206942Z Resolved Java 21.0.12+1 from tool-cache
+2026-09-10T15:48:29.1207412Z Setting Java 21.0.12+1 as the default
+2026-09-10T15:48:29.1217524Z Creating toolchains.xml for JDK version 21 from temurin
+2026-09-10T15:48:29.1287868Z Writing to /home/runner/.m2/toolchains.xml
+2026-09-10T15:48:29.1288285Z 
+2026-09-10T15:48:29.1288440Z Java configuration:
+2026-09-10T15:48:29.1288817Z   Distribution: temurin
+2026-09-10T15:48:29.1289293Z   Version: 21.0.12+1
+2026-09-10T15:48:29.1289785Z   Path: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T15:48:29.1290227Z 
+2026-09-10T15:48:29.1290687Z ##[endgroup]
+2026-09-10T15:48:29.1331076Z Creating settings.xml with server-id: github
+2026-09-10T15:48:29.1331497Z Writing to /home/runner/.m2/settings.xml
+2026-09-10T15:48:29.1332282Z Configured MAVEN_ARGS to include -ntp to suppress Maven transfer progress logs. Set 'show-download-progress: true' to keep the download progress output.
+2026-09-10T15:48:29.1508591Z ##[group]Run /usr/bin/python3 -B scripts/ci/linux_process_probe.py validate-android-cleanup
+2026-09-10T15:48:29.1509532Z [36;1m/usr/bin/python3 -B scripts/ci/linux_process_probe.py validate-android-cleanup[0m
+2026-09-10T15:48:29.1568075Z shell: /usr/bin/bash -e {0}
+2026-09-10T15:48:29.1568823Z env:
+2026-09-10T15:48:29.1569583Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T15:48:29.1570181Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T15:48:29.1570675Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T15:48:29.1571063Z   MAVEN_ARGS: -ntp
+2026-09-10T15:48:29.1572054Z   PARLOR_LINUX_PROBE_INPUTS: {
+  "verification_scope": "android-cleanup-only",
+  "native_selection": "paired",
+  "frozen_source_sha": "9e40261e0dc5bd224526eda6126350ac6a6b8bcb",
+  "approved_probe_control_sha256": "93f103582c052f0263e571a09f295998daa4735e40a4c147664c924df554defe"
+}
+2026-09-10T15:48:29.1573220Z ##[endgroup]
+2026-09-10T15:48:30.9088404Z {"verification_scope": "android-cleanup-only", "task": {"GITHUB_RUN_ID": "34498027425", "GITHUB_RUN_ATTEMPT": "1", "GITHUB_JOB": "desktop-android"}, "source": {"root": "/home/runner/work/parlor/parlor", "head": "9e40261e0dc5bd224526eda6126350ac6a6b8bcb", "tree": "dfd8021abc17ebf56f796f787b46b375cade68d2"}, "controls": {"files": [{"path": ".github/workflows/production-verification.yml", "sha256": "1b023983dc8591c2c6023c8a65369ffdb70d0cfa200269593e6ed98eec2cee08"}, {"path": "build.gradle.kts", "sha256": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b"}, {"path": "composeApp/build.gradle.kts", "sha256": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5"}, {"path": "config/release-policy.json", "sha256": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4"}, {"path": "gradle.properties", "sha256": "2df8685921ad2c6eead097a6d9994bbcc93dbc5cbdeb0bce8911ffa4e83162ce"}, {"path": "gradle/libs.versions.toml", "sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399"}, {"path": "gradle/wrapper/gradle-wrapper.jar", "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f"}, {"path": "gradle/wrapper/gradle-wrapper.properties", "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2"}, {"path": "gradlew", "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933"}, {"path": "scripts/android/run_release_managed_device_smoke.sh", "sha256": "5b6dc8fcdd7b11c9cefd39da3adb8783321b647cd9a8459ff761ef7fa031262d"}, {"path": "scripts/ci/linux_exe_reader.py", "sha256": "0600e84e29647158bf39b64fad73d5548d63f2e661dd42bbcb2a55d63a4eda6c"}, {"path": "scripts/ci/linux_process_probe.py", "sha256": "a75d9531c5e753f6ff57993a71085594f00399f913121d51b0979f4d8454def9"}, {"path": "scripts/ci/verification_hygiene.py", "sha256": "d412a2cfe0d59c3cce6cdf4d67a978abf9c8981e745168ddae9d02b3a3ad372c"}, {"path": "scripts/release/tests/test_ci_verification_hygiene.py", "sha256": "5ef040f31cd893304f6c94e15e7d0c2bca709c8b193f69bf9956ba4cb9c1aa5c"}, {"path": "scripts/release/tests/test_linux_exe_reader.py", "sha256": "4dd542609e8e71da8f5cd4778985ddc818fcd2b238f59d819758220e63ff52a2"}, {"path": "scripts/release/tests/test_linux_process_probe.py", "sha256": "329971007427514fd48d11db16eb883aae851ad5f6cfa05a766b9dba8020ffc2"}, {"path": "scripts/release/tests/test_workflow_contract.py", "sha256": "c385c8e54d64e2d35c787e74f7fba3b221cfaee0ce6768a4c2c56993f792997f"}, {"path": "scripts/release/workflow_contract.py", "sha256": "d2c15a250737814cad9aa4d8375bebfd6f57688e82d5328187bbf89b4b34fcb1"}], "control_sha256": "93f103582c052f0263e571a09f295998daa4735e40a4c147664c924df554defe"}, "android_sdk": {"sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1", "sdk_device": 2049, "sdk_inode": 795534, "uid": 1001}, "platform": {"os": "ubuntu-24.04", "machine": "x86_64", "kernel": "6.17.0-1022-azure", "python": "3.12.3"}}
+2026-09-10T15:48:30.9204634Z ##[group]Run set -euo pipefail
+2026-09-10T15:48:30.9204968Z [36;1mset -euo pipefail[0m
+2026-09-10T15:48:30.9205302Z [36;1m/usr/bin/timeout --signal=TERM --kill-after=10s 180s \[0m
+2026-09-10T15:48:30.9205859Z [36;1m  "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" --sdk_root="${ANDROID_HOME}" "emulator"[0m
+2026-09-10T15:48:30.9250225Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-10T15:48:30.9250574Z env:
+2026-09-10T15:48:30.9250955Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T15:48:30.9251505Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T15:48:30.9251999Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T15:48:30.9252380Z   MAVEN_ARGS: -ntp
+2026-09-10T15:48:30.9252597Z ##[endgroup]
+2026-09-10T15:48:36.4935429Z Loading package information...                                                  
+2026-09-10T15:48:36.5653066Z Loading local repository...                                                     
+2026-09-10T15:48:36.5655704Z [                                       ] 3% Loading local repository...        
+2026-09-10T15:48:37.8419366Z [                                       ] 3% Fetch remote repository...         
+2026-09-10T15:48:38.2925980Z [=                                      ] 3% Fetch remote repository...         
+2026-09-10T15:48:38.3605741Z [=                                      ] 4% Fetch remote repository...         
+2026-09-10T15:48:38.3998067Z [=                                      ] 5% Fetch remote repository...         
+2026-09-10T15:48:38.4657915Z [==                                     ] 5% Fetch remote repository...         
+2026-09-10T15:48:38.5294388Z [==                                     ] 6% Fetch remote repository...         
+2026-09-10T15:48:38.7315463Z [==                                     ] 7% Fetch remote repository...         
+2026-09-10T15:48:38.7349697Z [==                                     ] 7% Computing updates...               
+2026-09-10T15:48:38.7449837Z [===                                    ] 8% Computing updates...               
+2026-09-10T15:48:38.7830246Z [===                                    ] 10% Computing updates...              
+2026-09-10T15:48:38.8259517Z [===                                    ] 10% Installing Android Emulator       
+2026-09-10T15:48:39.1530980Z [===                                    ] 10% Downloading emulator-linux_x64-159
+2026-09-10T15:48:39.2359093Z [====                                   ] 10% Downloading emulator-linux_x64-159
+2026-09-10T15:48:39.3224528Z [====                                   ] 11% Downloading emulator-linux_x64-159
+2026-09-10T15:48:39.4108044Z [====                                   ] 12% Downloading emulator-linux_x64-159
+2026-09-10T15:48:39.4767402Z [=====                                  ] 13% Downloading emulator-linux_x64-159
+2026-09-10T15:48:39.5397824Z [=====                                  ] 14% Downloading emulator-linux_x64-159
+2026-09-10T15:48:39.5853757Z [=====                                  ] 15% Downloading emulator-linux_x64-159
+2026-09-10T15:48:39.6141188Z [======                                 ] 15% Downloading emulator-linux_x64-159
+2026-09-10T15:48:39.6708266Z [======                                 ] 16% Downloading emulator-linux_x64-159
+2026-09-10T15:48:39.7295071Z [======                                 ] 17% Downloading emulator-linux_x64-159
+2026-09-10T15:48:39.7692428Z [=======                                ] 18% Downloading emulator-linux_x64-159
+2026-09-10T15:48:39.8477142Z [=======                                ] 19% Downloading emulator-linux_x64-159
+2026-09-10T15:48:39.8670505Z [=======                                ] 20% Downloading emulator-linux_x64-159
+2026-09-10T15:48:39.8845782Z [========                               ] 20% Downloading emulator-linux_x64-159
+2026-09-10T15:48:39.9317384Z [========                               ] 21% Downloading emulator-linux_x64-159
+2026-09-10T15:48:39.9737434Z [========                               ] 22% Downloading emulator-linux_x64-159
+2026-09-10T15:48:40.0229952Z [=========                              ] 23% Downloading emulator-linux_x64-159
+2026-09-10T15:48:40.0582394Z [=========                              ] 24% Downloading emulator-linux_x64-159
+2026-09-10T15:48:40.0770443Z [=========                              ] 25% Downloading emulator-linux_x64-159
+2026-09-10T15:48:40.0987441Z [==========                             ] 25% Downloading emulator-linux_x64-159
+2026-09-10T15:48:40.1387383Z [==========                             ] 26% Downloading emulator-linux_x64-159
+2026-09-10T15:48:40.1740455Z [==========                             ] 27% Downloading emulator-linux_x64-159
+2026-09-10T15:48:40.2139642Z [===========                            ] 28% Downloading emulator-linux_x64-159
+2026-09-10T15:48:40.2549431Z [===========                            ] 29% Downloading emulator-linux_x64-159
+2026-09-10T15:48:40.2779168Z [===========                            ] 30% Downloading emulator-linux_x64-159
+2026-09-10T15:48:40.3016311Z [============                           ] 30% Downloading emulator-linux_x64-159
+2026-09-10T15:48:40.3411395Z [============                           ] 31% Downloading emulator-linux_x64-159
+2026-09-10T15:48:40.3763859Z [============                           ] 32% Downloading emulator-linux_x64-159
+2026-09-10T15:48:40.3769765Z [============                           ] 33% Downloading emulator-linux_x64-159
+2026-09-10T15:48:40.5072805Z [============                           ] 33% Unzipping...                      
+2026-09-10T15:48:40.5074053Z [============                           ] 33% Unzipping... emulator/            
+2026-09-10T15:48:40.5074992Z [============                           ] 33% Unzipping... emulator/resources/  
+2026-09-10T15:48:40.5099793Z [============                           ] 33% Unzipping... emulator/qsn         
+2026-09-10T15:48:40.5490278Z [=============                          ] 33% Unzipping... emulator/qsn         
+2026-09-10T15:48:40.6104839Z [=============                          ] 33% Unzipping... emulator/emulator    
+2026-09-10T15:48:40.7243432Z [=============                          ] 33% Unzipping... emulator/netsimd     
+2026-09-10T15:48:40.7244102Z [=============                          ] 33% Unzipping... emulator/bin64/      
+2026-09-10T15:48:40.7244828Z [=============                          ] 33% Unzipping... emulator/qemu/       
+2026-09-10T15:48:40.7266557Z [=============                          ] 33% Unzipping... emulator/NOTICE.txt  
+2026-09-10T15:48:40.7461552Z [=============                          ] 33% Unzipping... emulator/crashpad_han
+2026-09-10T15:48:40.7465094Z [=============                          ] 33% Unzipping... emulator/source.prope
+2026-09-10T15:48:40.7505078Z [=============                          ] 33% Unzipping... emulator/nimble_bridg
+2026-09-10T15:48:40.8129892Z [=============                          ] 34% Unzipping... emulator/nimble_bridg
+2026-09-10T15:48:40.8133553Z [=============                          ] 34% Unzipping... emulator/LICENSE     
+2026-09-10T15:48:40.8134553Z [=============                          ] 34% Unzipping... emulator/lib/        
+2026-09-10T15:48:40.8224794Z [=============                          ] 34% Unzipping... emulator/qemu-img    
+2026-09-10T15:48:40.8225487Z [=============                          ] 34% Unzipping... emulator/include/    
+2026-09-10T15:48:40.8230319Z [=============                          ] 34% Unzipping... emulator/NOTICE.csv  
+2026-09-10T15:48:40.8234559Z [=============                          ] 34% Unzipping... emulator/lib64/      
+2026-09-10T15:48:40.8408218Z [=============                          ] 34% Unzipping... emulator/emulator-che
+2026-09-10T15:48:40.8622369Z [=============                          ] 34% Unzipping... emulator/crashreport 
+2026-09-10T15:48:40.8631539Z [=============                          ] 34% Unzipping... emulator/mksdcard    
+2026-09-10T15:48:40.8830124Z [=============                          ] 34% Unzipping... emulator/resources/To
+2026-09-10T15:48:40.8831240Z [=============                          ] 35% Unzipping... emulator/resources/To
+2026-09-10T15:48:40.8859956Z [=============                          ] 35% Unzipping... emulator/resources/de
+2026-09-10T15:48:40.8977865Z [=============                          ] 35% Unzipping... emulator/resources/To
+2026-09-10T15:48:40.8979297Z [=============                          ] 35% Unzipping... emulator/resources/ma
+2026-09-10T15:48:40.9019641Z [=============                          ] 35% Unzipping... emulator/resources/de
+2026-09-10T15:48:40.9039750Z [=============                          ] 35% Unzipping... emulator/resources/sk
+2026-09-10T15:48:40.9079636Z [=============                          ] 35% Unzipping... emulator/resources/de
+2026-09-10T15:48:40.9080803Z [=============                          ] 35% Unzipping... emulator/resources/ma
+2026-09-10T15:48:40.9081548Z [=============                          ] 35% Unzipping... emulator/resources/po
+2026-09-10T15:48:40.9139746Z [=============                          ] 35% Unzipping... emulator/resources/ma
+2026-09-10T15:48:40.9199551Z [=============                          ] 35% Unzipping... emulator/resources/sk
+2026-09-10T15:48:40.9208642Z [=============                          ] 35% Unzipping... emulator/resources/ma
+2026-09-10T15:48:40.9250104Z [=============                          ] 35% Unzipping... emulator/bin64/e2fsck
+2026-09-10T15:48:40.9289338Z [=============                          ] 35% Unzipping... emulator/bin64/fsck.e
+2026-09-10T15:48:40.9312998Z [=============                          ] 35% Unzipping... emulator/bin64/tune2f
+2026-09-10T15:48:40.9329965Z [=============                          ] 35% Unzipping... emulator/bin64/resize
+2026-09-10T15:48:40.9356844Z [=============                          ] 35% Unzipping... emulator/bin64/mkfs.e
+2026-09-10T15:48:40.9466967Z [=============                          ] 35% Unzipping... emulator/qemu/linux-x
+2026-09-10T15:48:41.0650614Z [==============                         ] 35% Unzipping... emulator/qemu/linux-x
+2026-09-10T15:48:41.2417565Z [==============                         ] 36% Unzipping... emulator/qemu/linux-x
+2026-09-10T15:48:41.4638011Z [==============                         ] 37% Unzipping... emulator/qemu/linux-x
+2026-09-10T15:48:41.6493182Z [===============                        ] 38% Unzipping... emulator/qemu/linux-x
+2026-09-10T15:48:41.8203600Z [===============                        ] 39% Unzipping... emulator/qemu/linux-x
+2026-09-10T15:48:41.9086695Z [===============                        ] 40% Unzipping... emulator/qemu/linux-x
+2026-09-10T15:48:41.9971721Z [================                       ] 40% Unzipping... emulator/qemu/linux-x
+2026-09-10T15:48:42.0969700Z [================                       ] 41% Unzipping... emulator/qemu/linux-x
+2026-09-10T15:48:42.0973117Z [================                       ] 41% Unzipping... emulator/lib/emulator
+2026-09-10T15:48:42.0976421Z [================                       ] 41% Unzipping... emulator/lib/rtc_serv
+2026-09-10T15:48:42.0981317Z [================                       ] 41% Unzipping... emulator/lib/advanced
+2026-09-10T15:48:42.0982009Z [================                       ] 41% Unzipping... emulator/lib/cmake/  
+2026-09-10T15:48:42.0985370Z [================                       ] 41% Unzipping... emulator/lib/emulator
+2026-09-10T15:48:42.0989297Z [================                       ] 41% Unzipping... emulator/lib/control_
+2026-09-10T15:48:42.0991462Z [================                       ] 41% Unzipping... emulator/lib/emulated
+2026-09-10T15:48:42.0994535Z [================                       ] 41% Unzipping... emulator/lib/rtc_serv
+2026-09-10T15:48:42.0998652Z [================                       ] 41% Unzipping... emulator/lib/emu-orig
+2026-09-10T15:48:42.1003701Z [================                       ] 41% Unzipping... emulator/lib/hardware
+2026-09-10T15:48:42.1004737Z [================                       ] 41% Unzipping... emulator/lib/pkgconfi
+2026-09-10T15:48:42.1005762Z [================                       ] 41% Unzipping... emulator/lib/pc-bios/
+2026-09-10T15:48:42.1009693Z [================                       ] 41% Unzipping... emulator/lib/snapshot
+2026-09-10T15:48:42.1012223Z [================                       ] 41% Unzipping... emulator/lib/adb_serv
+2026-09-10T15:48:42.1020273Z [================                       ] 41% Unzipping... emulator/lib/hostapd.
+2026-09-10T15:48:42.1022958Z [================                       ] 41% Unzipping... emulator/lib/grpc_end
+2026-09-10T15:48:42.1040288Z [================                       ] 41% Unzipping... emulator/lib/ca-bundl
+2026-09-10T15:48:42.1043766Z [================                       ] 41% Unzipping... emulator/lib/ui_contr
+2026-09-10T15:48:42.1047513Z [================                       ] 41% Unzipping... emulator/lib/snapshot
+2026-09-10T15:48:42.1050983Z [================                       ] 41% Unzipping... emulator/lib/ice_conf
+2026-09-10T15:48:42.1403703Z [================                       ] 41% Unzipping... emulator/lib/libflatb
+2026-09-10T15:48:42.1412604Z [================                       ] 41% Unzipping... emulator/lib/emulator
+2026-09-10T15:48:42.1420156Z [================                       ] 41% Unzipping... emulator/lib/waterfal
+2026-09-10T15:48:42.1421068Z [================                       ] 41% Unzipping... emulator/lib/emulated
+2026-09-10T15:48:42.1435509Z [================                       ] 41% Unzipping... emulator/lib/cmake/fl
+2026-09-10T15:48:42.1438303Z [================                       ] 41% Unzipping... emulator/lib/pkgconfi
+2026-09-10T15:48:42.1644780Z [================                       ] 41% Unzipping... emulator/lib/pc-bios/
+2026-09-10T15:48:42.1746667Z [================                       ] 41% Unzipping... emulator/include/flat
+2026-09-10T15:48:42.1833937Z [================                       ] 41% Unzipping... emulator/lib64/libgli
+2026-09-10T15:48:42.1966157Z [================                       ] 41% Unzipping... emulator/lib64/libpro
+2026-09-10T15:48:42.1966887Z [================                       ] 41% Unzipping... emulator/lib64/qt/   
+2026-09-10T15:48:42.2405598Z [================                       ] 41% Unzipping... emulator/lib64/liband
+2026-09-10T15:48:42.2433839Z [================                       ] 41% Unzipping... emulator/lib64/libgfx
+2026-09-10T15:48:42.3170751Z [================                       ] 42% Unzipping... emulator/lib64/libgfx
+2026-09-10T15:48:42.3171416Z [================                       ] 42% Unzipping... emulator/lib64/gles_l
+2026-09-10T15:48:42.3182071Z [================                       ] 42% Unzipping... emulator/lib64/liband
+2026-09-10T15:48:42.3182967Z [================                       ] 42% Unzipping... emulator/lib64/vulkan
+2026-09-10T15:48:42.3183815Z [================                       ] 42% Unzipping... emulator/lib64/gles_s
+2026-09-10T15:48:42.3186758Z [================                       ] 42% Unzipping... emulator/lib64/libemu
+2026-09-10T15:48:42.3321344Z [================                       ] 42% Unzipping... emulator/lib64/libpro
+2026-09-10T15:48:42.4464730Z [================                       ] 42% Unzipping... emulator/lib64/liband
+2026-09-10T15:48:42.5012536Z [=================                      ] 43% Unzipping... emulator/lib64/liband
+2026-09-10T15:48:42.5034239Z [=================                      ] 43% Unzipping... emulator/lib64/libtcm
+2026-09-10T15:48:42.5037082Z [=================                      ] 43% Unzipping... emulator/lib64/libima
+2026-09-10T15:48:42.5109187Z [=================                      ] 43% Unzipping... emulator/lib64/libc++
+2026-09-10T15:48:42.5401638Z [=================                      ] 43% Unzipping... emulator/lib64/liband
+2026-09-10T15:48:42.5451836Z [=================                      ] 43% Unzipping... emulator/lib64/libabs
+2026-09-10T15:48:42.5453653Z [=================                      ] 43% Unzipping... emulator/lib64/gles_a
+2026-09-10T15:48:42.5529122Z [=================                      ] 43% Unzipping... emulator/lib64/libsha
+2026-09-10T15:48:42.5599536Z [=================                      ] 43% Unzipping... emulator/lib64/libc++
+2026-09-10T15:48:42.5619237Z [=================                      ] 43% Unzipping... emulator/lib64/qt/res
+2026-09-10T15:48:42.5620517Z [=================                      ] 43% Unzipping... emulator/lib64/qt/lib
+2026-09-10T15:48:42.5621421Z [=================                      ] 43% Unzipping... emulator/lib64/qt/tra
+2026-09-10T15:48:42.5622116Z [=================                      ] 43% Unzipping... emulator/lib64/qt/plu
+2026-09-10T15:48:42.5732476Z [=================                      ] 43% Unzipping... emulator/lib64/qt/res
+2026-09-10T15:48:42.6409730Z [=================                      ] 44% Unzipping... emulator/lib64/qt/res
+2026-09-10T15:48:42.6534087Z [=================                      ] 44% Unzipping... emulator/lib64/qt/lib
+2026-09-10T15:48:42.7200067Z [=================                      ] 45% Unzipping... emulator/lib64/qt/lib
+2026-09-10T15:48:42.8554084Z [==================                     ] 45% Unzipping... emulator/lib64/qt/lib
+2026-09-10T15:48:43.0301246Z [==================                     ] 46% Unzipping... emulator/lib64/qt/lib
+2026-09-10T15:48:43.2466449Z [==================                     ] 47% Unzipping... emulator/lib64/qt/lib
+2026-09-10T15:48:43.4658320Z [===================                    ] 48% Unzipping... emulator/lib64/qt/lib
+2026-09-10T15:48:43.6692471Z [===================                    ] 49% Unzipping... emulator/lib64/qt/lib
+2026-09-10T15:48:43.7664379Z [===================                    ] 50% Unzipping... emulator/lib64/qt/lib
+2026-09-10T15:48:43.8770324Z [====================                   ] 50% Unzipping... emulator/lib64/qt/lib
+2026-09-10T15:48:43.9391278Z [====================                   ] 51% Unzipping... emulator/lib64/qt/lib
+2026-09-10T15:48:44.0591358Z [====================                   ] 51% Unzipping... emulator/lib64/qt/tra
+2026-09-10T15:48:44.0724554Z [====================                   ] 51% Unzipping... emulator/lib64/qt/plu
+2026-09-10T15:48:44.1155400Z [====================                   ] 51% Unzipping... emulator/lib64/gles_l
+2026-09-10T15:48:44.1647058Z [====================                   ] 52% Unzipping... emulator/lib64/gles_l
+2026-09-10T15:48:44.3412596Z [====================                   ] 52% Unzipping... emulator/lib64/vulkan
+2026-09-10T15:48:44.5443593Z [=====================                  ] 53% Unzipping... emulator/lib64/vulkan
+2026-09-10T15:48:44.7714879Z [=====================                  ] 54% Unzipping... emulator/lib64/vulkan
+2026-09-10T15:48:44.8052939Z [=====================                  ] 54% Unzipping... emulator/lib64/gles_s
+2026-09-10T15:48:44.8465990Z [=====================                  ] 55% Unzipping... emulator/lib64/gles_s
+2026-09-10T15:48:44.9746090Z [=====================                  ] 55% Unzipping... emulator/lib64/gles_a
+2026-09-10T15:48:44.9746787Z [=======================================] 100% Unzipping... emulator/lib64/gles_
+2026-09-10T15:48:45.5511567Z 
+2026-09-10T15:48:45.5867214Z ##[group]Run import runpy, sys
+2026-09-10T15:48:45.5867557Z [36;1mimport runpy, sys[0m
+2026-09-10T15:48:45.5867871Z [36;1msys.argv = ["verification_hygiene.py", "prepare"][0m
+2026-09-10T15:48:45.5868358Z [36;1mrunpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")[0m
+2026-09-10T15:48:45.6016414Z shell: /usr/bin/python {0}
+2026-09-10T15:48:45.6016690Z env:
+2026-09-10T15:48:45.6017093Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T15:48:45.6017663Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T15:48:45.6018157Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T15:48:45.6018542Z   MAVEN_ARGS: -ntp
+2026-09-10T15:48:45.6018767Z ##[endgroup]
+2026-09-10T15:48:46.6032779Z ##[group]Run set -euo pipefail
+2026-09-10T15:48:46.6033131Z [36;1mset -euo pipefail[0m
+2026-09-10T15:48:46.6033382Z [36;1mtest -c /dev/kvm[0m
+2026-09-10T15:48:46.6033624Z [36;1msudo chmod 0666 /dev/kvm[0m
+2026-09-10T15:48:46.6033886Z [36;1mtest -r /dev/kvm[0m
+2026-09-10T15:48:46.6034129Z [36;1mtest -w /dev/kvm[0m
+2026-09-10T15:48:46.6034655Z [36;1mmanaged_device_image=$(jq -r '.toolchains.android_managed_device.system_image_package' config/release-policy.json)[0m
+2026-09-10T15:48:46.6035516Z [36;1mtest "$managed_device_image" = "system-images;android-35;google_apis;x86_64"[0m
+2026-09-10T15:48:46.6036014Z [36;1m"${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" \[0m
+2026-09-10T15:48:46.6036374Z [36;1m  "platforms;android-36" \[0m
+2026-09-10T15:48:46.6036660Z [36;1m  "build-tools;36.0.0" \[0m
+2026-09-10T15:48:46.6036927Z [36;1m  "platform-tools" \[0m
+2026-09-10T15:48:46.6037179Z [36;1m  "emulator" \[0m
+2026-09-10T15:48:46.6037458Z [36;1m  "$managed_device_image"[0m
+2026-09-10T15:48:46.6037948Z [36;1mimage_properties="${ANDROID_HOME}/system-images/android-35/google_apis/x86_64/source.properties"[0m
+2026-09-10T15:48:46.6038465Z [36;1mtest -s "$image_properties"[0m
+2026-09-10T15:48:46.6039097Z [36;1mimage_revision=$(sed -n 's/^Pkg.Revision=//p' "$image_properties" | tr -d '\r')[0m
+2026-09-10T15:48:46.6039817Z [36;1mtest "$image_revision" = "$(jq -r '.toolchains.android_managed_device.system_image_revision' config/release-policy.json)"[0m
+2026-09-10T15:48:46.6080724Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-10T15:48:46.6081073Z env:
+2026-09-10T15:48:46.6081453Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T15:48:46.6082002Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T15:48:46.6082488Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T15:48:46.6082864Z   MAVEN_ARGS: -ntp
+2026-09-10T15:48:46.6083091Z ##[endgroup]
+2026-09-10T15:48:47.3334206Z Loading package information...                                                  
+2026-09-10T15:48:47.4170410Z Loading local repository...                                                     
+2026-09-10T15:48:47.4171226Z [                                       ] 3% Loading local repository...        
+2026-09-10T15:48:47.4202684Z [                                       ] 3% Fetch remote repository...         
+2026-09-10T15:48:47.7888361Z [=                                      ] 3% Fetch remote repository...         
+2026-09-10T15:48:47.8822401Z [=                                      ] 4% Fetch remote repository...         
+2026-09-10T15:48:47.9210415Z [=                                      ] 5% Fetch remote repository...         
+2026-09-10T15:48:47.9910739Z [==                                     ] 5% Fetch remote repository...         
+2026-09-10T15:48:48.0483707Z [==                                     ] 6% Fetch remote repository...         
+2026-09-10T15:48:48.1350401Z [==                                     ] 7% Fetch remote repository...         
+2026-09-10T15:48:48.1369878Z [==                                     ] 7% Computing updates...               
+2026-09-10T15:48:48.1461127Z [===                                    ] 8% Computing updates...               
+2026-09-10T15:48:48.1582605Z [===                                    ] 10% Computing updates...              
+2026-09-10T15:48:48.5882592Z [===                                    ] 10% Installing Google APIs Intel x86_6
+2026-09-10T15:48:49.2209300Z [===                                    ] 10% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:49.4002301Z [====                                   ] 10% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:49.7476903Z [====                                   ] 11% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:50.0084646Z [====                                   ] 12% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:50.1805088Z [=====                                  ] 13% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:50.3704538Z [=====                                  ] 14% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:50.5577413Z [=====                                  ] 15% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:50.6909318Z [======                                 ] 15% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:50.9004797Z [======                                 ] 16% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:51.2925624Z [======                                 ] 17% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:51.5312289Z [=======                                ] 18% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:51.7936588Z [=======                                ] 19% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:51.8866003Z [=======                                ] 20% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:52.0022197Z [========                               ] 20% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:52.2660101Z [========                               ] 21% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:52.5692364Z [========                               ] 22% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:52.8069419Z [=========                              ] 23% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:53.0640374Z [=========                              ] 24% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:53.1689324Z [=========                              ] 25% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:53.2715505Z [==========                             ] 25% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:53.5597477Z [==========                             ] 26% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:53.7774858Z [==========                             ] 27% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:54.0296125Z [===========                            ] 28% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:54.2335802Z [===========                            ] 29% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:54.3317679Z [===========                            ] 30% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:54.4873318Z [============                           ] 30% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:54.7025301Z [============                           ] 31% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:54.9557615Z [============                           ] 32% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:54.9580061Z [============                           ] 33% Downloading x86_64-35_r09.zip...  
+2026-09-10T15:48:54.9974482Z [============                           ] 33% Unzipping...                      
+2026-09-10T15:48:54.9997127Z [============                           ] 33% Unzipping... x86_64/NOTICE.txt    
+2026-09-10T15:48:55.0740511Z [=============                          ] 33% Unzipping... x86_64/NOTICE.txt    
+2026-09-10T15:48:55.0746713Z [=============                          ] 33% Unzipping... x86_64/VerifiedBootPa
+2026-09-10T15:48:55.0799806Z [=============                          ] 33% Unzipping... x86_64/advancedFeatur
+2026-09-10T15:48:55.0800568Z [=============                          ] 33% Unzipping... x86_64/build.prop    
+2026-09-10T15:48:55.1360825Z [=============                          ] 33% Unzipping... x86_64/encryptionkey.
+2026-09-10T15:48:55.2749563Z [=============                          ] 33% Unzipping... x86_64/kernel-ranchu 
+2026-09-10T15:48:55.2754736Z [=============                          ] 33% Unzipping... x86_64/kernel_cmdline
+2026-09-10T15:48:55.2907217Z [=============                          ] 33% Unzipping... x86_64/ramdisk.img   
+2026-09-10T15:48:55.2910666Z [=============                          ] 33% Unzipping... x86_64/source.propert
+2026-09-10T15:48:55.9646816Z [=============                          ] 33% Unzipping... x86_64/system.img    
+2026-09-10T15:48:56.4694323Z [=============                          ] 34% Unzipping... x86_64/system.img    
+2026-09-10T15:48:57.0435364Z [=============                          ] 35% Unzipping... x86_64/system.img    
+2026-09-10T15:48:57.4157749Z [==============                         ] 35% Unzipping... x86_64/system.img    
+2026-09-10T15:48:58.2786641Z [==============                         ] 36% Unzipping... x86_64/system.img    
+2026-09-10T15:48:58.9714837Z [==============                         ] 37% Unzipping... x86_64/system.img    
+2026-09-10T15:48:59.7647732Z [===============                        ] 38% Unzipping... x86_64/system.img    
+2026-09-10T15:49:00.3359105Z [===============                        ] 39% Unzipping... x86_64/system.img    
+2026-09-10T15:49:00.8310164Z [===============                        ] 40% Unzipping... x86_64/system.img    
+2026-09-10T15:49:01.1276422Z [================                       ] 40% Unzipping... x86_64/system.img    
+2026-09-10T15:49:01.9451741Z [================                       ] 41% Unzipping... x86_64/system.img    
+2026-09-10T15:49:02.6498276Z [================                       ] 42% Unzipping... x86_64/system.img    
+2026-09-10T15:49:03.5411909Z [=================                      ] 43% Unzipping... x86_64/system.img    
+2026-09-10T15:49:04.2476761Z [=================                      ] 44% Unzipping... x86_64/system.img    
+2026-09-10T15:49:04.5757863Z [=================                      ] 45% Unzipping... x86_64/system.img    
+2026-09-10T15:49:04.7686244Z [==================                     ] 45% Unzipping... x86_64/system.img    
+2026-09-10T15:49:05.6690025Z [==================                     ] 46% Unzipping... x86_64/system.img    
+2026-09-10T15:49:06.3586319Z [==================                     ] 47% Unzipping... x86_64/system.img    
+2026-09-10T15:49:07.2707680Z [===================                    ] 48% Unzipping... x86_64/system.img    
+2026-09-10T15:49:08.1507765Z [===================                    ] 49% Unzipping... x86_64/system.img    
+2026-09-10T15:49:08.5097168Z [===================                    ] 50% Unzipping... x86_64/system.img    
+2026-09-10T15:49:08.8593454Z [====================                   ] 50% Unzipping... x86_64/system.img    
+2026-09-10T15:49:09.6550022Z [====================                   ] 51% Unzipping... x86_64/system.img    
+2026-09-10T15:49:10.3360377Z [====================                   ] 52% Unzipping... x86_64/system.img    
+2026-09-10T15:49:11.0262139Z [=====================                  ] 53% Unzipping... x86_64/system.img    
+2026-09-10T15:49:14.4015817Z [=====================                  ] 54% Unzipping... x86_64/system.img    
+2026-09-10T15:49:14.4284135Z [=====================                  ] 54% Unzipping... x86_64/vendor.img    
+2026-09-10T15:49:14.9302958Z [=====================                  ] 55% Unzipping... x86_64/vendor.img    
+2026-09-10T15:49:14.9307541Z [=====================                  ] 55% Unzipping... x86_64/data/empty_dat
+2026-09-10T15:49:14.9310865Z [=====================                  ] 55% Unzipping... x86_64/data/local.pro
+2026-09-10T15:49:14.9315120Z [=====================                  ] 55% Unzipping... x86_64/data/misc/Gold
+2026-09-10T15:49:14.9318433Z [=====================                  ] 55% Unzipping... x86_64/data/misc/apns
+2026-09-10T15:49:14.9325026Z [=====================                  ] 55% Unzipping... x86_64/data/misc/emul
+2026-09-10T15:49:14.9341732Z [=====================                  ] 55% Unzipping... x86_64/data/misc/mode
+2026-09-10T15:49:15.2213325Z [=====================                  ] 55% Unzipping... x86_64/data/misc/pixe
+2026-09-10T15:49:15.2213924Z [=======================================] 100% Unzipping... x86_64/data/misc/pix
+2026-09-10T15:49:15.3247568Z 
+2026-09-10T15:49:15.3544401Z ##[group]Run set -euo pipefail
+2026-09-10T15:49:15.3544742Z [36;1mset -euo pipefail[0m
+2026-09-10T15:49:15.3545013Z [36;1mmkdir -p build/ci-evidence[0m
+2026-09-10T15:49:15.3545361Z [36;1mgit rev-parse HEAD | tee build/ci-evidence/commit.txt[0m
+2026-09-10T15:49:15.3545737Z [36;1mtest -z "$(git status --porcelain)"[0m
+2026-09-10T15:49:15.3584866Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-10T15:49:15.3585220Z env:
+2026-09-10T15:49:15.3585615Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T15:49:15.3586158Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T15:49:15.3586850Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T15:49:15.3587235Z   MAVEN_ARGS: -ntp
+2026-09-10T15:49:15.3587457Z ##[endgroup]
+2026-09-10T15:49:15.3673407Z 9e40261e0dc5bd224526eda6126350ac6a6b8bcb
+2026-09-10T15:49:15.4739793Z ##[group]Run scripts/android/run_release_managed_device_smoke.sh
+2026-09-10T15:49:15.4740303Z [36;1mscripts/android/run_release_managed_device_smoke.sh[0m
+2026-09-10T15:49:15.4779154Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-09-10T15:49:15.4779502Z env:
+2026-09-10T15:49:15.4779883Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T15:49:15.4780434Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T15:49:15.4780917Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T15:49:15.4781302Z   MAVEN_ARGS: -ntp
+2026-09-10T15:49:15.4781521Z ##[endgroup]
+2026-09-10T15:49:15.9600702Z Generating 2,048 bit RSA key pair and self-signed certificate (SHA384withRSA) with a validity of 2 days
+2026-09-10T15:49:15.9622251Z 	for: CN=Parlor Managed Device, OU=CI, O=Parlor, L=Cairo, C=EG
+2026-09-10T15:49:16.2510320Z Downloading https://services.gradle.org/distributions/gradle-8.13-bin.zip
+2026-09-10T15:49:17.6050956Z .............10%.............20%.............30%.............40%.............50%.............60%.............70%.............80%.............90%.............100%
+2026-09-10T15:49:19.1855065Z 
+2026-09-10T15:49:19.1855723Z Welcome to Gradle 8.13!
+2026-09-10T15:49:19.1856478Z 
+2026-09-10T15:49:19.1856715Z Here are the highlights of this release:
+2026-09-10T15:49:19.1857397Z  - Daemon JVM auto-provisioning
+2026-09-10T15:49:19.1858489Z  - Enhancements for Scala plugin and JUnit testing
+2026-09-10T15:49:19.1861618Z  - Improvements for build authors and plugin developers
+2026-09-10T15:49:19.1861873Z 
+2026-09-10T15:49:19.1862097Z For more details see https://docs.gradle.org/8.13/release-notes.html
+2026-09-10T15:49:19.1862419Z 
+2026-09-10T15:49:19.2861454Z To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+2026-09-10T15:49:20.5853034Z Daemon will be stopped at the end of the build 
+2026-09-10T15:49:21.8849976Z Calculating task graph as no cached configuration is available for tasks: productionAndroidRuntimeCheck
+2026-09-10T15:49:45.1850431Z Type-safe project accessors is an incubating feature.
+2026-09-10T15:50:11.1921014Z > Task :build-logic:convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-10T15:50:22.8848601Z > Task :build-logic:convention:pluginDescriptors
+2026-09-10T15:50:22.8849481Z > Task :build-logic:convention:processResources
+2026-09-10T15:50:27.9849571Z > Task :build-logic:convention:compileKotlin
+2026-09-10T15:50:27.9850195Z > Task :build-logic:convention:compileJava NO-SOURCE
+2026-09-10T15:50:27.9850727Z > Task :build-logic:convention:classes
+2026-09-10T15:50:27.9851225Z > Task :build-logic:convention:jar
+2026-09-10T15:50:59.7847975Z 
+2026-09-10T15:50:59.7849851Z > Configure project :composeApp
+2026-09-10T15:50:59.7850669Z WARNING: The option setting 'android.experimental.lint.version=9.1.1' is experimental.
+2026-09-10T15:51:07.9849342Z w: ⚠️ Deprecated Gradle Version
+2026-09-10T15:51:07.9870130Z The used Gradle version (Gradle 8.13) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+2026-09-10T15:51:07.9882349Z The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+2026-09-10T15:51:07.9883334Z 
+2026-09-10T15:51:07.9883884Z This warning can be suppressed in 'gradle.properties':
+2026-09-10T15:51:07.9884823Z     kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+2026-09-10T15:51:07.9885881Z Solution: Please update the Gradle version to at least Gradle 8.14.4.
+2026-09-10T15:51:07.9886562Z 
+2026-09-10T15:51:07.9887166Z w: ⚠️ Native task 'iosX64Test' is disabled
+2026-09-10T15:51:07.9888605Z Task 'iosX64Test' for target 'ios_x64' cannot run on the current host (linux-x86_64).
+2026-09-10T15:51:07.9889687Z Reason: simulator tests require macOS
+2026-09-10T15:51:07.9891101Z Solution: To suppress this warning, add 'kotlin.native.ignoreDisabledTargets=true' to gradle.properties.
+2026-09-10T15:51:07.9892079Z 
+2026-09-10T15:51:07.9892652Z w: ⚠️ Native task 'iosSimulatorArm64Test' is disabled
+2026-09-10T15:51:07.9893832Z Task 'iosSimulatorArm64Test' for target 'ios_simulator_arm64' cannot run on the current host (linux-x86_64).
+2026-09-10T15:51:07.9898342Z Reason: simulator tests require macOS
+2026-09-10T15:51:07.9899679Z Solution: To suppress this warning, add 'kotlin.native.ignoreDisabledTargets=true' to gradle.properties.
+2026-09-10T15:51:07.9900517Z 
+2026-09-10T15:52:25.3852521Z 
+2026-09-10T15:52:25.3900115Z > Task :composeApp:kmpPartiallyResolvedDependenciesChecker
+2026-09-10T15:52:25.3901377Z > Task :composeApp:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-10T15:52:25.3915734Z > Task :composeApp:convertXmlValueResourcesForAndroidMain NO-SOURCE
+2026-09-10T15:52:25.3929981Z > Task :composeApp:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
+2026-09-10T15:52:25.3970674Z > Task :composeApp:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+2026-09-10T15:52:25.3993001Z > Task :composeApp:generateResourceAccessorsForAndroidMain NO-SOURCE
+2026-09-10T15:52:25.4850254Z > Task :composeApp:buildKotlinToolingMetadata
+2026-09-10T15:52:25.4880342Z > Task :composeApp:convertXmlValueResourcesForCommonMain
+2026-09-10T15:52:25.4896558Z > Task :composeApp:copyNonXmlValueResourcesForCommonMain
+2026-09-10T15:52:25.4921086Z > Task :composeApp:prepareComposeResourcesTaskForCommonMain
+2026-09-10T15:52:25.4949794Z > Task :composeApp:generateComposeResClass
+2026-09-10T15:52:25.4959304Z > Task :composeApp:generateExpectResourceCollectorsForCommonMain
+2026-09-10T15:52:25.5850965Z > Task :composeApp:generateParlorVersion
+2026-09-10T15:52:25.5890513Z > Task :composeApp:convertXmlValueResourcesForAndroidRelease NO-SOURCE
+2026-09-10T15:52:25.5920252Z > Task :composeApp:copyNonXmlValueResourcesForAndroidRelease NO-SOURCE
+2026-09-10T15:52:25.5950021Z > Task :composeApp:prepareComposeResourcesTaskForAndroidRelease NO-SOURCE
+2026-09-10T15:52:25.5951396Z > Task :composeApp:generateResourceAccessorsForAndroidRelease NO-SOURCE
+2026-09-10T15:52:25.5979799Z > Task :composeApp:preBuild UP-TO-DATE
+2026-09-10T15:52:25.6009730Z > Task :composeApp:preReleaseBuild UP-TO-DATE
+2026-09-10T15:52:25.6039646Z > Task :game-modes:mafia:preBuild UP-TO-DATE
+2026-09-10T15:52:25.6040521Z > Task :game-modes:mafia:preReleaseBuild UP-TO-DATE
+2026-09-10T15:52:25.6069818Z > Task :composeApp:generateResourceAccessorsForCommonMain
+2026-09-10T15:52:25.6079905Z > Task :composeApp:generateActualResourceCollectorsForAndroidMain
+2026-09-10T15:52:25.6129740Z > Task :game-modes:whodunit:preBuild UP-TO-DATE
+2026-09-10T15:52:25.6130339Z > Task :game-modes:whodunit:preReleaseBuild UP-TO-DATE
+2026-09-10T15:52:25.6130869Z > Task :game-modes:mafia:writeReleaseAarMetadata
+2026-09-10T15:52:25.6131420Z > Task :game-modes:whodunit:writeReleaseAarMetadata
+2026-09-10T15:52:25.6131941Z > Task :shared:core:preBuild UP-TO-DATE
+2026-09-10T15:52:25.6132408Z > Task :shared:core:preReleaseBuild UP-TO-DATE
+2026-09-10T15:52:25.6132923Z > Task :shared:content:preBuild UP-TO-DATE
+2026-09-10T15:52:25.6133405Z > Task :shared:content:preReleaseBuild UP-TO-DATE
+2026-09-10T15:52:25.6133938Z > Task :shared:core:writeReleaseAarMetadata
+2026-09-10T15:52:25.6134439Z > Task :shared:design-system:preBuild UP-TO-DATE
+2026-09-10T15:52:25.6134975Z > Task :shared:design-system:preReleaseBuild UP-TO-DATE
+2026-09-10T15:52:25.6135518Z > Task :shared:content:writeReleaseAarMetadata
+2026-09-10T15:52:25.6136017Z > Task :shared:engine:preBuild UP-TO-DATE
+2026-09-10T15:52:25.6136486Z > Task :shared:engine:preReleaseBuild UP-TO-DATE
+2026-09-10T15:52:25.6137028Z > Task :shared:design-system:writeReleaseAarMetadata
+2026-09-10T15:52:25.6137549Z > Task :shared:networking:preBuild UP-TO-DATE
+2026-09-10T15:52:25.6138397Z > Task :shared:networking:preReleaseBuild UP-TO-DATE
+2026-09-10T15:52:25.6854069Z > Task :shared:engine:writeReleaseAarMetadata
+2026-09-10T15:52:25.6880204Z > Task :shared:session:preBuild UP-TO-DATE
+2026-09-10T15:52:25.6910230Z > Task :shared:session:preReleaseBuild UP-TO-DATE
+2026-09-10T15:52:25.6914499Z > Task :shared:networking:writeReleaseAarMetadata
+2026-09-10T15:52:25.6969764Z > Task :shared:session:writeReleaseAarMetadata
+2026-09-10T15:52:25.6970327Z > Task :shared:storage:preBuild UP-TO-DATE
+2026-09-10T15:52:25.6970828Z > Task :shared:storage:preReleaseBuild UP-TO-DATE
+2026-09-10T15:52:25.6971389Z > Task :shared:transport-p2p:preBuild UP-TO-DATE
+2026-09-10T15:52:25.6971866Z > Task :shared:transport-p2p:preReleaseBuild UP-TO-DATE
+2026-09-10T15:52:25.6972353Z > Task :shared:transport-p2p:writeReleaseAarMetadata
+2026-09-10T15:52:25.6972829Z > Task :shared:storage:writeReleaseAarMetadata
+2026-09-10T15:52:25.6973382Z > Task :game-modes:mafia:processReleaseNavigationResources
+2026-09-10T15:52:25.6974118Z > Task :game-modes:whodunit:processReleaseNavigationResources FROM-CACHE
+2026-09-10T15:52:25.6974911Z > Task :shared:content:processReleaseNavigationResources FROM-CACHE
+2026-09-10T15:52:25.6975679Z > Task :shared:core:processReleaseNavigationResources FROM-CACHE
+2026-09-10T15:52:25.6976470Z > Task :shared:design-system:processReleaseNavigationResources FROM-CACHE
+2026-09-10T15:52:25.6977288Z > Task :shared:engine:processReleaseNavigationResources FROM-CACHE
+2026-09-10T15:52:25.6978107Z > Task :shared:networking:processReleaseNavigationResources FROM-CACHE
+2026-09-10T15:52:25.6979206Z > Task :shared:session:processReleaseNavigationResources FROM-CACHE
+2026-09-10T15:52:25.6980033Z > Task :shared:storage:processReleaseNavigationResources FROM-CACHE
+2026-09-10T15:52:25.6980878Z > Task :shared:transport-p2p:processReleaseNavigationResources FROM-CACHE
+2026-09-10T15:52:28.3912209Z > Task :composeApp:processReleaseNavigationResources
+2026-09-10T15:52:28.3970112Z > Task :composeApp:checkReleaseAarMetadata
+2026-09-10T15:52:28.3999952Z > Task :composeApp:generateReleaseResValues
+2026-09-10T15:52:28.4000735Z > Task :game-modes:mafia:convertXmlValueResourcesForAndroidMain NO-SOURCE
+2026-09-10T15:52:28.4001446Z > Task :game-modes:mafia:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
+2026-09-10T15:52:28.4002113Z > Task :game-modes:mafia:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+2026-09-10T15:52:28.4002777Z > Task :game-modes:mafia:convertXmlValueResourcesForAndroidRelease NO-SOURCE
+2026-09-10T15:52:28.4003422Z > Task :game-modes:mafia:copyNonXmlValueResourcesForAndroidRelease NO-SOURCE
+2026-09-10T15:52:28.4004084Z > Task :game-modes:mafia:prepareComposeResourcesTaskForAndroidRelease NO-SOURCE
+2026-09-10T15:52:28.4004717Z > Task :game-modes:mafia:convertXmlValueResourcesForCommonMain
+2026-09-10T15:52:28.4005315Z > Task :game-modes:mafia:copyNonXmlValueResourcesForCommonMain NO-SOURCE
+2026-09-10T15:52:28.4005921Z > Task :game-modes:mafia:prepareComposeResourcesTaskForCommonMain
+2026-09-10T15:52:28.4006521Z > Task :game-modes:mafia:copyReleaseComposeResourcesToAndroidAssets
+2026-09-10T15:52:28.4869608Z > Task :game-modes:mafia:generateReleaseResValues FROM-CACHE
+2026-09-10T15:52:28.4870573Z > Task :game-modes:mafia:generateReleaseResources
+2026-09-10T15:52:28.4909977Z > Task :game-modes:mafia:packageReleaseResources
+2026-09-10T15:52:28.4935551Z > Task :game-modes:whodunit:convertXmlValueResourcesForAndroidMain NO-SOURCE
+2026-09-10T15:52:28.4947335Z > Task :game-modes:whodunit:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
+2026-09-10T15:52:28.4971295Z > Task :game-modes:whodunit:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+2026-09-10T15:52:28.4999887Z > Task :game-modes:whodunit:convertXmlValueResourcesForAndroidRelease NO-SOURCE
+2026-09-10T15:52:28.5079946Z > Task :game-modes:whodunit:copyNonXmlValueResourcesForAndroidRelease NO-SOURCE
+2026-09-10T15:52:28.5160319Z > Task :game-modes:whodunit:prepareComposeResourcesTaskForAndroidRelease NO-SOURCE
+2026-09-10T15:52:28.5170051Z > Task :game-modes:whodunit:convertXmlValueResourcesForCommonMain
+2026-09-10T15:52:28.5172670Z > Task :game-modes:whodunit:copyNonXmlValueResourcesForCommonMain
+2026-09-10T15:52:28.5190913Z > Task :game-modes:whodunit:prepareComposeResourcesTaskForCommonMain
+2026-09-10T15:52:28.5849836Z > Task :game-modes:whodunit:copyReleaseComposeResourcesToAndroidAssets
+2026-09-10T15:52:28.5852538Z > Task :game-modes:whodunit:generateReleaseResValues FROM-CACHE
+2026-09-10T15:52:28.5859800Z > Task :game-modes:whodunit:generateReleaseResources FROM-CACHE
+2026-09-10T15:52:28.5860888Z > Task :composeApp:compileReleaseNavigationResources
+2026-09-10T15:52:28.5861757Z > Task :shared:content:generateReleaseResValues FROM-CACHE
+2026-09-10T15:52:28.5862671Z > Task :shared:content:generateReleaseResources FROM-CACHE
+2026-09-10T15:52:28.5863499Z > Task :game-modes:whodunit:packageReleaseResources
+2026-09-10T15:52:28.5864289Z > Task :shared:content:packageReleaseResources
+2026-09-10T15:52:28.5865076Z > Task :shared:core:generateReleaseResValues FROM-CACHE
+2026-09-10T15:52:28.5875532Z > Task :shared:design-system:convertXmlValueResourcesForAndroidMain NO-SOURCE
+2026-09-10T15:52:28.5876728Z > Task :shared:design-system:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
+2026-09-10T15:52:28.5877828Z > Task :shared:core:generateReleaseResources FROM-CACHE
+2026-09-10T15:52:28.5879157Z > Task :shared:design-system:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+2026-09-10T15:52:28.5901284Z > Task :shared:design-system:convertXmlValueResourcesForAndroidRelease NO-SOURCE
+2026-09-10T15:52:28.5902522Z > Task :shared:design-system:copyNonXmlValueResourcesForAndroidRelease NO-SOURCE
+2026-09-10T15:52:28.5903761Z > Task :shared:design-system:prepareComposeResourcesTaskForAndroidRelease NO-SOURCE
+2026-09-10T15:52:28.5904856Z > Task :shared:design-system:convertXmlValueResourcesForCommonMain
+2026-09-10T15:52:28.5905710Z > Task :shared:core:packageReleaseResources
+2026-09-10T15:52:28.5906546Z > Task :shared:design-system:generateReleaseResValues FROM-CACHE
+2026-09-10T15:52:28.5907484Z > Task :shared:design-system:copyNonXmlValueResourcesForCommonMain
+2026-09-10T15:52:28.5908405Z > Task :shared:design-system:generateReleaseResources FROM-CACHE
+2026-09-10T15:52:28.5911751Z > Task :shared:engine:generateReleaseResValues FROM-CACHE
+2026-09-10T15:52:28.5912777Z > Task :shared:design-system:prepareComposeResourcesTaskForCommonMain
+2026-09-10T15:52:28.5913826Z > Task :shared:engine:generateReleaseResources FROM-CACHE
+2026-09-10T15:52:28.5914649Z > Task :shared:engine:packageReleaseResources
+2026-09-10T15:52:28.5915568Z > Task :shared:design-system:copyReleaseComposeResourcesToAndroidAssets
+2026-09-10T15:52:28.5916546Z > Task :shared:networking:generateReleaseResValues FROM-CACHE
+2026-09-10T15:52:28.5917429Z > Task :shared:networking:generateReleaseResources FROM-CACHE
+2026-09-10T15:52:28.6852295Z > Task :shared:networking:packageReleaseResources
+2026-09-10T15:52:28.6853688Z > Task :shared:design-system:packageReleaseResources
+2026-09-10T15:52:28.6856177Z > Task :shared:session:generateReleaseResValues FROM-CACHE
+2026-09-10T15:52:28.6857391Z > Task :shared:session:generateReleaseResources FROM-CACHE
+2026-09-10T15:52:28.6858277Z > Task :shared:storage:generateReleaseResValues FROM-CACHE
+2026-09-10T15:52:28.6859416Z > Task :shared:storage:generateReleaseResources FROM-CACHE
+2026-09-10T15:52:28.6860330Z > Task :shared:session:packageReleaseResources
+2026-09-10T15:52:28.6861264Z > Task :shared:transport-p2p:generateReleaseResValues FROM-CACHE
+2026-09-10T15:52:28.6862240Z > Task :shared:transport-p2p:generateReleaseResources FROM-CACHE
+2026-09-10T15:52:28.6863096Z > Task :shared:storage:packageReleaseResources
+2026-09-10T15:52:28.6863796Z > Task :composeApp:generateReleaseResources
+2026-09-10T15:52:28.6864813Z > Task :shared:transport-p2p:packageReleaseResources
+2026-09-10T15:52:28.6866628Z > Task :composeApp:copyReleaseComposeResourcesToAndroidAssets
+2026-09-10T15:52:28.7853952Z > Task :composeApp:mapReleaseSourceSetPaths
+2026-09-10T15:52:28.8870271Z > Task :composeApp:packageReleaseResources
+2026-09-10T15:52:30.7848139Z > Task :composeApp:parseReleaseLocalResources
+2026-09-10T15:52:30.7849054Z > Task :composeApp:createReleaseCompatibleScreenManifests
+2026-09-10T15:52:30.7850041Z > Task :composeApp:extractDeepLinksRelease
+2026-09-10T15:52:30.7850593Z > Task :game-modes:mafia:extractDeepLinksRelease
+2026-09-10T15:52:30.8847564Z > Task :game-modes:mafia:processReleaseManifest
+2026-09-10T15:52:30.8848672Z > Task :game-modes:whodunit:extractDeepLinksRelease FROM-CACHE
+2026-09-10T15:52:30.8850133Z > Task :game-modes:whodunit:processReleaseManifest
+2026-09-10T15:52:30.8860304Z > Task :shared:content:extractDeepLinksRelease FROM-CACHE
+2026-09-10T15:52:30.9880169Z > Task :shared:content:processReleaseManifest
+2026-09-10T15:52:30.9909730Z > Task :shared:core:extractDeepLinksRelease FROM-CACHE
+2026-09-10T15:52:30.9910502Z > Task :shared:core:processReleaseManifest
+2026-09-10T15:52:30.9911183Z > Task :shared:design-system:extractDeepLinksRelease FROM-CACHE
+2026-09-10T15:52:30.9911807Z > Task :shared:design-system:processReleaseManifest
+2026-09-10T15:52:30.9912396Z > Task :shared:engine:extractDeepLinksRelease FROM-CACHE
+2026-09-10T15:52:30.9912934Z > Task :shared:engine:processReleaseManifest
+2026-09-10T15:52:30.9913543Z > Task :shared:networking:extractDeepLinksRelease FROM-CACHE
+2026-09-10T15:52:30.9914116Z > Task :shared:networking:processReleaseManifest
+2026-09-10T15:52:30.9914678Z > Task :shared:session:extractDeepLinksRelease FROM-CACHE
+2026-09-10T15:52:31.0870260Z > Task :shared:session:processReleaseManifest
+2026-09-10T15:52:31.0899856Z > Task :shared:storage:extractDeepLinksRelease FROM-CACHE
+2026-09-10T15:52:31.0919246Z > Task :shared:storage:processReleaseManifest
+2026-09-10T15:52:31.0929679Z > Task :shared:transport-p2p:extractDeepLinksRelease FROM-CACHE
+2026-09-10T15:52:31.0959540Z > Task :shared:transport-p2p:processReleaseManifest
+2026-09-10T15:52:31.2890263Z > Task :composeApp:mergeReleaseResources
+2026-09-10T15:52:31.2919725Z > Task :game-modes:mafia:parseReleaseLocalResources
+2026-09-10T15:52:31.3850255Z > Task :composeApp:processReleaseMainManifest
+2026-09-10T15:52:31.3909819Z > Task :game-modes:mafia:generateReleaseRFile
+2026-09-10T15:52:31.3941683Z > Task :game-modes:whodunit:parseReleaseLocalResources FROM-CACHE
+2026-09-10T15:52:31.3942551Z > Task :game-modes:whodunit:generateReleaseRFile
+2026-09-10T15:52:31.3943265Z > Task :shared:content:parseReleaseLocalResources FROM-CACHE
+2026-09-10T15:52:31.4870272Z > Task :composeApp:processReleaseManifest
+2026-09-10T15:52:31.4872135Z > Task :shared:content:generateReleaseRFile
+2026-09-10T15:52:31.4892855Z > Task :shared:core:parseReleaseLocalResources FROM-CACHE
+2026-09-10T15:52:31.4893516Z > Task :shared:core:generateReleaseRFile
+2026-09-10T15:52:31.4894100Z > Task :composeApp:processReleaseManifestForPackage
+2026-09-10T15:52:31.4894780Z > Task :shared:engine:parseReleaseLocalResources FROM-CACHE
+2026-09-10T15:52:31.4895529Z > Task :shared:design-system:parseReleaseLocalResources FROM-CACHE
+2026-09-10T15:52:31.4896260Z > Task :shared:design-system:generateReleaseRFile
+2026-09-10T15:52:31.4896883Z > Task :shared:engine:generateReleaseRFile
+2026-09-10T15:52:31.4897522Z > Task :shared:session:parseReleaseLocalResources FROM-CACHE
+2026-09-10T15:52:31.4898307Z > Task :shared:networking:parseReleaseLocalResources FROM-CACHE
+2026-09-10T15:52:31.4899195Z > Task :shared:session:generateReleaseRFile
+2026-09-10T15:52:31.4899793Z > Task :shared:networking:generateReleaseRFile
+2026-09-10T15:52:31.4900500Z > Task :shared:transport-p2p:parseReleaseLocalResources FROM-CACHE
+2026-09-10T15:52:31.4901306Z > Task :shared:storage:parseReleaseLocalResources FROM-CACHE
+2026-09-10T15:52:31.5880217Z > Task :shared:transport-p2p:generateReleaseRFile
+2026-09-10T15:52:31.5889761Z > Task :shared:storage:generateReleaseRFile
+2026-09-10T15:52:31.5909151Z > Task :game-modes:mafia:kmpPartiallyResolvedDependenciesChecker
+2026-09-10T15:52:31.5937696Z > Task :game-modes:mafia:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-10T15:52:31.5938841Z > Task :game-modes:mafia:generateResourceAccessorsForAndroidMain NO-SOURCE
+2026-09-10T15:52:31.6865362Z > Task :game-modes:mafia:generateResourceAccessorsForCommonMain
+2026-09-10T15:52:31.6872553Z > Task :game-modes:mafia:generateActualResourceCollectorsForAndroidMain
+2026-09-10T15:52:31.6875632Z > Task :game-modes:mafia:generateComposeResClass
+2026-09-10T15:52:31.6876373Z > Task :game-modes:mafia:generateExpectResourceCollectorsForCommonMain
+2026-09-10T15:52:31.6877287Z > Task :game-modes:mafia:generateResourceAccessorsForAndroidRelease NO-SOURCE
+2026-09-10T15:52:31.6878125Z > Task :shared:content:kmpPartiallyResolvedDependenciesChecker
+2026-09-10T15:52:31.6879138Z > Task :shared:content:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-10T15:52:31.6903689Z > Task :shared:core:kmpPartiallyResolvedDependenciesChecker
+2026-09-10T15:52:31.6908060Z > Task :shared:core:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-10T15:52:32.3880240Z > Task :composeApp:processReleaseResources
+2026-09-10T15:52:32.3899655Z > Task :shared:core:javaPreCompileRelease
+2026-09-10T15:52:32.3922287Z > Task :shared:engine:kmpPartiallyResolvedDependenciesChecker
+2026-09-10T15:52:32.3949701Z > Task :shared:engine:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-10T15:52:32.3979480Z > Task :shared:engine:javaPreCompileRelease FROM-CACHE
+2026-09-10T15:52:32.4009468Z > Task :shared:content:javaPreCompileRelease FROM-CACHE
+2026-09-10T15:52:32.4039527Z > Task :shared:design-system:kmpPartiallyResolvedDependenciesChecker
+2026-09-10T15:52:32.4060547Z > Task :shared:design-system:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-10T15:52:32.4089602Z > Task :shared:design-system:generateResourceAccessorsForAndroidMain NO-SOURCE
+2026-09-10T15:52:32.4119569Z > Task :shared:design-system:generateResourceAccessorsForCommonMain
+2026-09-10T15:52:32.4149719Z > Task :shared:design-system:generateActualResourceCollectorsForAndroidMain
+2026-09-10T15:52:32.4179472Z > Task :shared:design-system:generateComposeResClass
+2026-09-10T15:52:32.4209610Z > Task :shared:design-system:generateExpectResourceCollectorsForCommonMain
+2026-09-10T15:52:32.4239633Z > Task :shared:design-system:generateResourceAccessorsForAndroidRelease NO-SOURCE
+2026-09-10T15:52:32.4250278Z > Task :shared:design-system:javaPreCompileRelease FROM-CACHE
+2026-09-10T15:52:32.4279769Z > Task :shared:networking:kmpPartiallyResolvedDependenciesChecker
+2026-09-10T15:52:32.4299580Z > Task :shared:networking:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-10T15:52:32.4329445Z > Task :shared:networking:javaPreCompileRelease FROM-CACHE
+2026-09-10T15:52:32.4350984Z > Task :shared:session:kmpPartiallyResolvedDependenciesChecker
+2026-09-10T15:52:32.4379504Z > Task :shared:session:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-10T15:52:32.4409421Z > Task :shared:session:javaPreCompileRelease FROM-CACHE
+2026-09-10T15:52:32.4439473Z > Task :shared:storage:kmpPartiallyResolvedDependenciesChecker
+2026-09-10T15:52:32.4451761Z > Task :shared:storage:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-10T15:52:32.4499474Z > Task :shared:storage:javaPreCompileRelease FROM-CACHE
+2026-09-10T15:52:32.4529442Z > Task :game-modes:mafia:javaPreCompileRelease FROM-CACHE
+2026-09-10T15:52:32.4552440Z > Task :game-modes:whodunit:kmpPartiallyResolvedDependenciesChecker
+2026-09-10T15:52:32.4569671Z > Task :game-modes:whodunit:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-10T15:52:32.4570822Z > Task :game-modes:whodunit:generateResourceAccessorsForAndroidMain NO-SOURCE
+2026-09-10T15:52:32.4850399Z > Task :game-modes:whodunit:generateResourceAccessorsForCommonMain
+2026-09-10T15:52:32.4895981Z > Task :game-modes:whodunit:generateActualResourceCollectorsForAndroidMain
+2026-09-10T15:52:32.4899555Z > Task :game-modes:whodunit:generateComposeResClass
+2026-09-10T15:52:32.5850808Z > Task :game-modes:whodunit:generateExpectResourceCollectorsForCommonMain
+2026-09-10T15:52:32.5910231Z > Task :game-modes:whodunit:generateResourceAccessorsForAndroidRelease NO-SOURCE
+2026-09-10T15:52:32.5929460Z > Task :game-modes:whodunit:javaPreCompileRelease FROM-CACHE
+2026-09-10T15:52:32.5959493Z > Task :shared:transport-p2p:kmpPartiallyResolvedDependenciesChecker
+2026-09-10T15:52:32.5970221Z > Task :shared:transport-p2p:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-10T15:52:32.5989433Z > Task :shared:transport-p2p:javaPreCompileRelease FROM-CACHE
+2026-09-10T15:52:32.6019462Z > Task :composeApp:javaPreCompileRelease FROM-CACHE
+2026-09-10T15:52:32.6029855Z > Task :composeApp:convertXmlValueResourcesForAndroidInstrumentedTest NO-SOURCE
+2026-09-10T15:52:32.6059773Z > Task :composeApp:copyNonXmlValueResourcesForAndroidInstrumentedTest NO-SOURCE
+2026-09-10T15:52:32.6079714Z > Task :composeApp:prepareComposeResourcesTaskForAndroidInstrumentedTest NO-SOURCE
+2026-09-10T15:52:32.6104792Z > Task :composeApp:generateResourceAccessorsForAndroidInstrumentedTest NO-SOURCE
+2026-09-10T15:52:32.6129874Z > Task :composeApp:convertXmlValueResourcesForAndroidInstrumentedTestRelease NO-SOURCE
+2026-09-10T15:52:32.6139911Z > Task :composeApp:copyNonXmlValueResourcesForAndroidInstrumentedTestRelease NO-SOURCE
+2026-09-10T15:52:32.6169837Z > Task :composeApp:prepareComposeResourcesTaskForAndroidInstrumentedTestRelease NO-SOURCE
+2026-09-10T15:52:32.6189842Z > Task :composeApp:generateResourceAccessorsForAndroidInstrumentedTestRelease NO-SOURCE
+2026-09-10T15:52:32.6219527Z > Task :composeApp:preReleaseAndroidTestBuild SKIPPED
+2026-09-10T15:52:32.6229563Z > Task :composeApp:checkReleaseAndroidTestAarMetadata
+2026-09-10T15:52:32.6249693Z > Task :composeApp:processReleaseAndroidTestNavigationResources FROM-CACHE
+2026-09-10T15:52:32.6262176Z > Task :composeApp:compileReleaseAndroidTestNavigationResources FROM-CACHE
+2026-09-10T15:52:32.6289787Z > Task :composeApp:generateReleaseAndroidTestResValues FROM-CACHE
+2026-09-10T15:52:32.6319615Z > Task :composeApp:mapReleaseAndroidTestSourceSetPaths
+2026-09-10T15:52:32.6320424Z > Task :composeApp:generateReleaseAndroidTestResources FROM-CACHE
+2026-09-10T15:52:32.6321160Z > Task :composeApp:mergeReleaseAndroidTestResources
+2026-09-10T15:52:32.6321820Z > Task :composeApp:processReleaseAndroidTestManifest
+2026-09-10T15:52:32.7854140Z > Task :composeApp:processReleaseAndroidTestResources
+2026-09-10T15:52:32.7857024Z > Task :composeApp:javaPreCompileReleaseAndroidTest FROM-CACHE
+2026-09-10T15:52:35.4849192Z > Task :composeApp:checkReleaseDuplicateClasses
+2026-09-10T15:52:35.4869611Z > Task :game-modes:mafia:prepareReleaseArtProfile
+2026-09-10T15:52:35.4897090Z > Task :game-modes:whodunit:prepareReleaseArtProfile
+2026-09-10T15:52:35.4919295Z > Task :shared:content:prepareReleaseArtProfile
+2026-09-10T15:52:35.4949540Z > Task :shared:core:prepareReleaseArtProfile
+2026-09-10T15:52:35.5860136Z > Task :shared:design-system:prepareReleaseArtProfile
+2026-09-10T15:52:35.5879571Z > Task :shared:engine:prepareReleaseArtProfile
+2026-09-10T15:52:35.5919581Z > Task :shared:networking:prepareReleaseArtProfile
+2026-09-10T15:52:35.5949463Z > Task :shared:session:prepareReleaseArtProfile
+2026-09-10T15:52:35.5979731Z > Task :shared:storage:prepareReleaseArtProfile
+2026-09-10T15:52:35.5999581Z > Task :shared:transport-p2p:prepareReleaseArtProfile
+2026-09-10T15:52:35.6857259Z > Task :composeApp:mergeReleaseArtProfile
+2026-09-10T15:52:35.6879562Z > Task :composeApp:extractProguardFiles
+2026-09-10T15:52:35.6880392Z > Task :composeApp:mergeReleaseStartupProfile
+2026-09-10T15:52:35.7880352Z > Task :composeApp:mergeReleaseShaders
+2026-09-10T15:52:35.7904943Z > Task :composeApp:compileReleaseShaders NO-SOURCE
+2026-09-10T15:52:35.7953267Z > Task :composeApp:generateReleaseAssets UP-TO-DATE
+2026-09-10T15:52:35.7964427Z > Task :composeApp:releaseAssetsCopyForAGP NO-SOURCE
+2026-09-10T15:52:35.7966972Z > Task :game-modes:mafia:mergeReleaseShaders
+2026-09-10T15:52:35.8006365Z > Task :game-modes:mafia:compileReleaseShaders NO-SOURCE
+2026-09-10T15:52:35.8007233Z > Task :game-modes:mafia:generateReleaseAssets UP-TO-DATE
+2026-09-10T15:52:35.8027226Z > Task :game-modes:mafia:releaseAssetsCopyForAGP NO-SOURCE
+2026-09-10T15:52:35.8035711Z > Task :game-modes:mafia:mergeReleaseAssets
+2026-09-10T15:52:35.8059731Z > Task :game-modes:whodunit:mergeReleaseShaders
+2026-09-10T15:52:35.8077612Z > Task :game-modes:whodunit:compileReleaseShaders NO-SOURCE
+2026-09-10T15:52:35.8097038Z > Task :game-modes:whodunit:generateReleaseAssets UP-TO-DATE
+2026-09-10T15:52:35.8105974Z > Task :game-modes:whodunit:releaseAssetsCopyForAGP NO-SOURCE
+2026-09-10T15:52:35.8106791Z > Task :game-modes:whodunit:mergeReleaseAssets
+2026-09-10T15:52:35.8107598Z > Task :shared:content:mergeReleaseShaders
+2026-09-10T15:52:35.8108275Z > Task :shared:content:compileReleaseShaders NO-SOURCE
+2026-09-10T15:52:35.8109171Z > Task :shared:content:generateReleaseAssets UP-TO-DATE
+2026-09-10T15:52:35.8109926Z > Task :shared:content:releaseAssetsCopyForAGP NO-SOURCE
+2026-09-10T15:52:35.8110691Z > Task :shared:content:mergeReleaseAssets
+2026-09-10T15:52:35.8890350Z > Task :shared:core:mergeReleaseShaders
+2026-09-10T15:52:35.8942953Z > Task :shared:core:compileReleaseShaders NO-SOURCE
+2026-09-10T15:52:35.8962135Z > Task :shared:core:generateReleaseAssets UP-TO-DATE
+2026-09-10T15:52:35.8999593Z > Task :shared:core:releaseAssetsCopyForAGP NO-SOURCE
+2026-09-10T15:52:35.9046097Z > Task :shared:core:mergeReleaseAssets
+2026-09-10T15:52:35.9089616Z > Task :shared:design-system:mergeReleaseShaders
+2026-09-10T15:52:35.9090326Z > Task :shared:design-system:compileReleaseShaders NO-SOURCE
+2026-09-10T15:52:35.9091047Z > Task :shared:design-system:generateReleaseAssets UP-TO-DATE
+2026-09-10T15:52:35.9091756Z > Task :shared:design-system:releaseAssetsCopyForAGP NO-SOURCE
+2026-09-10T15:52:35.9092397Z > Task :shared:design-system:mergeReleaseAssets
+2026-09-10T15:52:35.9092936Z > Task :shared:engine:mergeReleaseShaders
+2026-09-10T15:52:35.9093486Z > Task :shared:engine:compileReleaseShaders NO-SOURCE
+2026-09-10T15:52:35.9094084Z > Task :shared:engine:generateReleaseAssets UP-TO-DATE
+2026-09-10T15:52:35.9094717Z > Task :shared:engine:releaseAssetsCopyForAGP NO-SOURCE
+2026-09-10T15:52:35.9095255Z > Task :shared:engine:mergeReleaseAssets
+2026-09-10T15:52:35.9095704Z > Task :shared:networking:mergeReleaseShaders
+2026-09-10T15:52:35.9096162Z > Task :shared:networking:compileReleaseShaders NO-SOURCE
+2026-09-10T15:52:35.9096692Z > Task :shared:networking:generateReleaseAssets UP-TO-DATE
+2026-09-10T15:52:35.9097277Z > Task :shared:networking:releaseAssetsCopyForAGP NO-SOURCE
+2026-09-10T15:52:35.9097805Z > Task :shared:networking:mergeReleaseAssets
+2026-09-10T15:52:35.9098249Z > Task :shared:session:mergeReleaseShaders
+2026-09-10T15:52:35.9098766Z > Task :shared:session:compileReleaseShaders NO-SOURCE
+2026-09-10T15:52:35.9099540Z > Task :shared:session:generateReleaseAssets UP-TO-DATE
+2026-09-10T15:52:35.9100133Z > Task :shared:session:releaseAssetsCopyForAGP NO-SOURCE
+2026-09-10T15:52:35.9100666Z > Task :shared:session:mergeReleaseAssets
+2026-09-10T15:52:35.9101156Z > Task :shared:storage:mergeReleaseShaders
+2026-09-10T15:52:35.9101760Z > Task :shared:storage:compileReleaseShaders NO-SOURCE
+2026-09-10T15:52:35.9102369Z > Task :shared:storage:generateReleaseAssets UP-TO-DATE
+2026-09-10T15:52:35.9102985Z > Task :shared:storage:releaseAssetsCopyForAGP NO-SOURCE
+2026-09-10T15:52:35.9103538Z > Task :shared:storage:mergeReleaseAssets
+2026-09-10T15:52:35.9104077Z > Task :shared:transport-p2p:mergeReleaseShaders
+2026-09-10T15:52:35.9104691Z > Task :shared:transport-p2p:compileReleaseShaders NO-SOURCE
+2026-09-10T15:52:35.9105359Z > Task :shared:transport-p2p:generateReleaseAssets UP-TO-DATE
+2026-09-10T15:52:35.9106177Z > Task :shared:transport-p2p:releaseAssetsCopyForAGP NO-SOURCE
+2026-09-10T15:52:35.9870142Z > Task :shared:transport-p2p:mergeReleaseAssets
+2026-09-10T15:52:36.0847701Z > Task :composeApp:mergeReleaseAssets
+2026-09-10T15:52:36.2847856Z > Task :composeApp:compressReleaseAssets
+2026-09-10T15:52:36.3849389Z > Task :composeApp:extractReleaseVersionControlInfo
+2026-09-10T15:52:36.3855465Z > Task :composeApp:copyReleaseAndroidTestComposeResourcesToAndroidAssets
+2026-09-10T15:52:36.3879996Z > Task :game-modes:mafia:extractProguardFiles
+2026-09-10T15:52:36.3912565Z > Task :shared:content:extractProguardFiles
+2026-09-10T15:52:36.3951825Z > Task :shared:core:extractProguardFiles
+2026-09-10T15:52:36.3969072Z > Task :shared:core:prepareLintJarForPublish
+2026-09-10T15:52:36.4006216Z > Task :shared:engine:extractProguardFiles
+2026-09-10T15:52:36.4041339Z > Task :shared:engine:prepareLintJarForPublish
+2026-09-10T15:52:36.4052757Z > Task :shared:content:prepareLintJarForPublish
+2026-09-10T15:52:36.4079706Z > Task :shared:design-system:extractProguardFiles
+2026-09-10T15:52:36.4094546Z > Task :shared:design-system:prepareLintJarForPublish
+2026-09-10T15:52:36.4095510Z > Task :shared:networking:extractProguardFiles
+2026-09-10T15:52:36.4096287Z > Task :shared:networking:prepareLintJarForPublish
+2026-09-10T15:52:36.4097027Z > Task :shared:session:extractProguardFiles
+2026-09-10T15:52:36.4097733Z > Task :shared:session:prepareLintJarForPublish
+2026-09-10T15:52:36.4098411Z > Task :shared:storage:extractProguardFiles
+2026-09-10T15:52:36.4099291Z > Task :shared:storage:prepareLintJarForPublish
+2026-09-10T15:52:36.4847830Z > Task :game-modes:mafia:prepareLintJarForPublish
+2026-09-10T15:52:36.4848676Z > Task :game-modes:whodunit:extractProguardFiles
+2026-09-10T15:52:36.4849556Z > Task :game-modes:whodunit:prepareLintJarForPublish
+2026-09-10T15:52:36.4850240Z > Task :shared:transport-p2p:extractProguardFiles
+2026-09-10T15:52:36.4850910Z > Task :shared:transport-p2p:prepareLintJarForPublish
+2026-09-10T15:52:36.7860092Z > Task :game-modes:whodunit:checkReleaseAarMetadata
+2026-09-10T15:52:36.7889670Z > Task :game-modes:whodunit:mergeReleaseJniLibFolders
+2026-09-10T15:52:36.7929832Z > Task :game-modes:whodunit:mergeReleaseNativeLibs NO-SOURCE
+2026-09-10T15:52:36.7930610Z > Task :game-modes:whodunit:stripReleaseDebugSymbols NO-SOURCE
+2026-09-10T15:52:36.7931365Z > Task :game-modes:whodunit:copyReleaseJniLibsProjectAndLocalJars
+2026-09-10T15:52:36.7932099Z > Task :game-modes:whodunit:extractDeepLinksForAarRelease
+2026-09-10T15:52:36.7932713Z > Task :game-modes:mafia:checkReleaseAarMetadata
+2026-09-10T15:52:36.7933316Z > Task :game-modes:mafia:mergeReleaseJniLibFolders
+2026-09-10T15:52:36.7933926Z > Task :game-modes:mafia:mergeReleaseNativeLibs NO-SOURCE
+2026-09-10T15:52:36.7934587Z > Task :game-modes:mafia:stripReleaseDebugSymbols NO-SOURCE
+2026-09-10T15:52:36.7935287Z > Task :game-modes:mafia:copyReleaseJniLibsProjectAndLocalJars
+2026-09-10T15:52:36.7936006Z > Task :game-modes:mafia:extractDeepLinksForAarRelease FROM-CACHE
+2026-09-10T15:52:36.7936649Z > Task :shared:session:checkReleaseAarMetadata
+2026-09-10T15:52:36.7937203Z > Task :shared:session:mergeReleaseJniLibFolders
+2026-09-10T15:52:36.7937803Z > Task :shared:session:mergeReleaseNativeLibs NO-SOURCE
+2026-09-10T15:52:36.7938433Z > Task :shared:session:stripReleaseDebugSymbols NO-SOURCE
+2026-09-10T15:52:36.7939247Z > Task :shared:session:copyReleaseJniLibsProjectAndLocalJars
+2026-09-10T15:52:36.7939962Z > Task :shared:session:extractDeepLinksForAarRelease FROM-CACHE
+2026-09-10T15:52:36.8848326Z > Task :shared:content:checkReleaseAarMetadata
+2026-09-10T15:52:36.8860932Z > Task :shared:content:mergeReleaseJniLibFolders
+2026-09-10T15:52:36.8861650Z > Task :shared:content:mergeReleaseNativeLibs NO-SOURCE
+2026-09-10T15:52:36.8862396Z > Task :shared:content:stripReleaseDebugSymbols NO-SOURCE
+2026-09-10T15:52:36.8863146Z > Task :shared:content:copyReleaseJniLibsProjectAndLocalJars
+2026-09-10T15:52:36.8863936Z > Task :shared:content:extractDeepLinksForAarRelease FROM-CACHE
+2026-09-10T15:52:37.0870221Z > Task :shared:transport-p2p:checkReleaseAarMetadata
+2026-09-10T15:52:37.1847664Z > Task :shared:transport-p2p:mergeReleaseJniLibFolders
+2026-09-10T15:52:37.1879122Z > Task :shared:transport-p2p:mergeReleaseNativeLibs NO-SOURCE
+2026-09-10T15:52:37.1909752Z > Task :shared:transport-p2p:stripReleaseDebugSymbols NO-SOURCE
+2026-09-10T15:52:37.1939811Z > Task :shared:transport-p2p:copyReleaseJniLibsProjectAndLocalJars
+2026-09-10T15:52:37.1966086Z > Task :shared:transport-p2p:extractDeepLinksForAarRelease FROM-CACHE
+2026-09-10T15:52:37.1979532Z > Task :shared:networking:checkReleaseAarMetadata
+2026-09-10T15:52:37.2009458Z > Task :shared:networking:mergeReleaseJniLibFolders
+2026-09-10T15:52:37.2049572Z > Task :shared:networking:mergeReleaseNativeLibs NO-SOURCE
+2026-09-10T15:52:37.2079959Z > Task :shared:networking:stripReleaseDebugSymbols NO-SOURCE
+2026-09-10T15:52:37.2099598Z > Task :shared:networking:copyReleaseJniLibsProjectAndLocalJars
+2026-09-10T15:52:37.2139677Z > Task :shared:networking:extractDeepLinksForAarRelease FROM-CACHE
+2026-09-10T15:52:37.2169478Z > Task :shared:storage:checkReleaseAarMetadata
+2026-09-10T15:52:37.2199428Z > Task :shared:storage:mergeReleaseJniLibFolders
+2026-09-10T15:52:37.2229526Z > Task :shared:storage:mergeReleaseNativeLibs NO-SOURCE
+2026-09-10T15:52:37.2259444Z > Task :shared:storage:stripReleaseDebugSymbols NO-SOURCE
+2026-09-10T15:52:37.2289529Z > Task :shared:storage:copyReleaseJniLibsProjectAndLocalJars
+2026-09-10T15:52:37.2303028Z > Task :shared:storage:extractDeepLinksForAarRelease FROM-CACHE
+2026-09-10T15:52:37.2319510Z > Task :shared:engine:checkReleaseAarMetadata
+2026-09-10T15:52:37.2349584Z > Task :shared:engine:mergeReleaseJniLibFolders
+2026-09-10T15:52:37.2360064Z > Task :shared:engine:mergeReleaseNativeLibs NO-SOURCE
+2026-09-10T15:52:37.2389596Z > Task :shared:engine:stripReleaseDebugSymbols NO-SOURCE
+2026-09-10T15:52:37.2409512Z > Task :shared:engine:copyReleaseJniLibsProjectAndLocalJars
+2026-09-10T15:52:37.2439462Z > Task :shared:engine:extractDeepLinksForAarRelease FROM-CACHE
+2026-09-10T15:52:37.2850214Z > Task :shared:design-system:checkReleaseAarMetadata
+2026-09-10T15:52:37.2875946Z > Task :shared:design-system:mergeReleaseJniLibFolders
+2026-09-10T15:52:37.2899666Z > Task :shared:design-system:mergeReleaseNativeLibs NO-SOURCE
+2026-09-10T15:52:37.2929829Z > Task :shared:design-system:stripReleaseDebugSymbols NO-SOURCE
+2026-09-10T15:52:37.2979857Z > Task :shared:design-system:copyReleaseJniLibsProjectAndLocalJars
+2026-09-10T15:52:37.2980776Z > Task :shared:design-system:extractDeepLinksForAarRelease FROM-CACHE
+2026-09-10T15:52:37.2981525Z > Task :shared:core:checkReleaseAarMetadata
+2026-09-10T15:52:37.2982068Z > Task :shared:core:mergeReleaseJniLibFolders
+2026-09-10T15:52:37.2982643Z > Task :shared:core:mergeReleaseNativeLibs NO-SOURCE
+2026-09-10T15:52:37.2983270Z > Task :shared:core:stripReleaseDebugSymbols NO-SOURCE
+2026-09-10T15:52:37.2983914Z > Task :shared:core:copyReleaseJniLibsProjectAndLocalJars
+2026-09-10T15:52:37.2984602Z > Task :shared:core:extractDeepLinksForAarRelease FROM-CACHE
+2026-09-10T15:52:37.2985242Z > Task :shared:content:writeReleaseLintModelMetadata
+2026-09-10T15:52:37.2985828Z > Task :shared:core:writeReleaseLintModelMetadata
+2026-09-10T15:52:37.2986462Z > Task :shared:design-system:writeReleaseLintModelMetadata
+2026-09-10T15:52:37.2987098Z > Task :shared:engine:writeReleaseLintModelMetadata
+2026-09-10T15:52:37.2987724Z > Task :shared:networking:writeReleaseLintModelMetadata
+2026-09-10T15:52:37.2988343Z > Task :shared:session:writeReleaseLintModelMetadata
+2026-09-10T15:52:37.2989113Z > Task :shared:storage:writeReleaseLintModelMetadata
+2026-09-10T15:52:37.2989765Z > Task :game-modes:mafia:writeReleaseLintModelMetadata
+2026-09-10T15:52:37.2990405Z > Task :game-modes:whodunit:writeReleaseLintModelMetadata
+2026-09-10T15:52:37.2991076Z > Task :shared:transport-p2p:writeReleaseLintModelMetadata
+2026-09-10T15:52:37.4852841Z > Task :composeApp:collectReleaseDependencies
+2026-09-10T15:52:37.4860349Z > Task :composeApp:sdkReleaseDependencyData
+2026-09-10T15:52:37.5850346Z > Task :composeApp:mergeReleaseJniLibFolders
+2026-09-10T15:52:37.5876414Z > Task :game-modes:mafia:copyReleaseJniLibsProjectOnly
+2026-09-10T15:52:37.5885134Z > Task :game-modes:whodunit:copyReleaseJniLibsProjectOnly
+2026-09-10T15:52:37.5890639Z > Task :shared:content:copyReleaseJniLibsProjectOnly
+2026-09-10T15:52:37.5891480Z > Task :shared:core:copyReleaseJniLibsProjectOnly
+2026-09-10T15:52:37.5892420Z > Task :shared:design-system:copyReleaseJniLibsProjectOnly
+2026-09-10T15:52:37.5893421Z > Task :shared:engine:copyReleaseJniLibsProjectOnly
+2026-09-10T15:52:37.5894429Z > Task :shared:networking:copyReleaseJniLibsProjectOnly
+2026-09-10T15:52:37.5895055Z > Task :shared:session:copyReleaseJniLibsProjectOnly
+2026-09-10T15:52:37.5895852Z > Task :shared:storage:copyReleaseJniLibsProjectOnly
+2026-09-10T15:52:37.5896468Z > Task :shared:transport-p2p:copyReleaseJniLibsProjectOnly
+2026-09-10T15:52:37.7849580Z > Task :composeApp:mergeReleaseNativeLibs
+2026-09-10T15:52:37.7873971Z 
+2026-09-10T15:52:37.7874566Z > Task :composeApp:stripReleaseDebugSymbols
+2026-09-10T15:52:37.7875715Z Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so. Run with --info option to learn more.
+2026-09-10T15:52:37.8859698Z 
+2026-09-10T15:52:37.8878062Z > Task :composeApp:validateSigningRelease
+2026-09-10T15:52:37.8878861Z > Task :composeApp:writeReleaseAppMetadata
+2026-09-10T15:52:37.8879794Z > Task :composeApp:writeReleaseSigningConfigVersions
+2026-09-10T15:52:37.8880598Z > Task :composeApp:mergeReleaseAndroidTestShaders
+2026-09-10T15:52:37.8881554Z > Task :composeApp:compileReleaseAndroidTestShaders NO-SOURCE
+2026-09-10T15:52:37.8882461Z > Task :composeApp:generateReleaseAndroidTestAssets UP-TO-DATE
+2026-09-10T15:52:37.8883325Z > Task :composeApp:mergeReleaseAndroidTestAssets
+2026-09-10T15:52:37.8884078Z > Task :composeApp:compressReleaseAndroidTestAssets
+2026-09-10T15:52:37.8884992Z > Task :composeApp:checkReleaseAndroidTestDuplicateClasses
+2026-09-10T15:52:37.8885840Z > Task :composeApp:mergeReleaseAndroidTestJniLibFolders
+2026-09-10T15:52:37.8886682Z > Task :composeApp:mergeReleaseAndroidTestNativeLibs NO-SOURCE
+2026-09-10T15:52:37.8887650Z > Task :composeApp:stripReleaseAndroidTestDebugSymbols NO-SOURCE
+2026-09-10T15:52:37.8888670Z > Task :composeApp:validateSigningReleaseAndroidTest
+2026-09-10T15:52:37.8889776Z > Task :composeApp:writeReleaseAndroidTestSigningConfigVersions
+2026-09-10T15:52:39.8846613Z 
+2026-09-10T15:52:39.8847278Z > Task :composeApp:pixel2Api35Setup
+2026-09-10T15:52:39.8847924Z pixel2Api35 has an unspecified testedAbi. This presently defaults to
+2026-09-10T15:52:39.8848422Z "x86_64". However, in 9.0 this will change to "arm64-v8a"
+2026-09-10T15:52:39.8848666Z 
+2026-09-10T15:52:39.8849016Z This device will use NDK translation for native code during testing. To continue
+2026-09-10T15:52:39.8849546Z running tests using the current configuration and not use NDK translation,
+2026-09-10T15:52:39.8849938Z set testedAbi = "x86_64"
+2026-09-10T15:52:46.2859837Z 
+2026-09-10T15:52:46.2890027Z > Task :shared:core:compileReleaseKotlinAndroid
+2026-09-10T15:52:46.2890851Z > Task :shared:core:compileReleaseJavaWithJavac NO-SOURCE
+2026-09-10T15:52:46.3860335Z > Task :shared:core:bundleLibCompileToJarRelease
+2026-09-10T15:52:48.4870494Z > Task :shared:engine:compileReleaseKotlinAndroid
+2026-09-10T15:52:48.4871209Z > Task :shared:engine:compileReleaseJavaWithJavac NO-SOURCE
+2026-09-10T15:52:48.4899972Z > Task :shared:engine:bundleLibCompileToJarRelease
+2026-09-10T15:52:53.8847721Z > Task :shared:content:compileReleaseKotlinAndroid
+2026-09-10T15:52:53.8853106Z > Task :shared:content:compileReleaseJavaWithJavac NO-SOURCE
+2026-09-10T15:52:53.8854681Z > Task :shared:content:bundleLibCompileToJarRelease
+2026-09-10T15:53:07.6870434Z > Task :shared:design-system:compileReleaseKotlinAndroid
+2026-09-10T15:53:07.6897810Z > Task :shared:design-system:compileReleaseJavaWithJavac NO-SOURCE
+2026-09-10T15:53:07.6914214Z > Task :shared:design-system:bundleLibCompileToJarRelease
+2026-09-10T15:53:14.1890395Z > Task :shared:networking:compileReleaseKotlinAndroid
+2026-09-10T15:53:14.2850572Z > Task :shared:networking:compileReleaseJavaWithJavac NO-SOURCE
+2026-09-10T15:53:14.2859721Z > Task :shared:networking:bundleLibCompileToJarRelease
+2026-09-10T15:53:25.6891039Z > Task :shared:session:compileReleaseKotlinAndroid
+2026-09-10T15:53:25.6930749Z > Task :shared:session:compileReleaseJavaWithJavac NO-SOURCE
+2026-09-10T15:53:25.6979650Z > Task :shared:session:bundleLibCompileToJarRelease
+2026-09-10T15:53:27.6847172Z > Task :shared:storage:compileReleaseKotlinAndroid
+2026-09-10T15:53:27.6877265Z > Task :shared:storage:compileReleaseJavaWithJavac NO-SOURCE
+2026-09-10T15:53:27.7850073Z > Task :shared:storage:bundleLibCompileToJarRelease
+2026-09-10T15:53:48.6847829Z > Task :game-modes:mafia:compileReleaseKotlinAndroid
+2026-09-10T15:53:48.6879817Z > Task :game-modes:mafia:compileReleaseJavaWithJavac NO-SOURCE
+2026-09-10T15:53:48.7850252Z > Task :game-modes:mafia:bundleLibCompileToJarRelease
+2026-09-10T15:54:07.0880249Z > Task :game-modes:whodunit:compileReleaseKotlinAndroid
+2026-09-10T15:54:07.0899850Z > Task :game-modes:whodunit:compileReleaseJavaWithJavac NO-SOURCE
+2026-09-10T15:54:07.0929737Z > Task :game-modes:whodunit:bundleLibCompileToJarRelease
+2026-09-10T15:54:13.7859882Z > Task :shared:transport-p2p:compileReleaseKotlinAndroid
+2026-09-10T15:54:13.7867208Z > Task :shared:transport-p2p:compileReleaseJavaWithJavac NO-SOURCE
+2026-09-10T15:54:13.7873175Z > Task :shared:transport-p2p:bundleLibCompileToJarRelease
+2026-09-10T15:54:21.8873982Z > Task :game-modes:whodunit:mergeReleaseGeneratedProguardFiles
+2026-09-10T15:54:21.8917986Z > Task :game-modes:whodunit:exportReleaseConsumerProguardFiles
+2026-09-10T15:54:21.8960114Z > Task :game-modes:mafia:mergeReleaseGeneratedProguardFiles
+2026-09-10T15:54:21.8999820Z > Task :game-modes:mafia:exportReleaseConsumerProguardFiles
+2026-09-10T15:54:21.9000611Z > Task :shared:session:mergeReleaseGeneratedProguardFiles
+2026-09-10T15:54:21.9021059Z > Task :shared:session:exportReleaseConsumerProguardFiles
+2026-09-10T15:54:21.9042921Z > Task :shared:content:mergeReleaseGeneratedProguardFiles
+2026-09-10T15:54:21.9099848Z > Task :shared:content:exportReleaseConsumerProguardFiles
+2026-09-10T15:54:21.9167180Z > Task :shared:transport-p2p:mergeReleaseGeneratedProguardFiles
+2026-09-10T15:54:21.9167981Z > Task :shared:transport-p2p:exportReleaseConsumerProguardFiles
+2026-09-10T15:54:21.9182192Z > Task :shared:networking:mergeReleaseGeneratedProguardFiles
+2026-09-10T15:54:21.9847870Z > Task :shared:networking:exportReleaseConsumerProguardFiles
+2026-09-10T15:54:21.9873556Z > Task :shared:storage:mergeReleaseGeneratedProguardFiles
+2026-09-10T15:54:21.9874684Z > Task :shared:storage:exportReleaseConsumerProguardFiles
+2026-09-10T15:54:21.9900056Z > Task :shared:engine:mergeReleaseGeneratedProguardFiles
+2026-09-10T15:54:21.9916773Z > Task :shared:engine:exportReleaseConsumerProguardFiles
+2026-09-10T15:54:21.9918001Z > Task :shared:design-system:mergeReleaseGeneratedProguardFiles
+2026-09-10T15:54:21.9919624Z > Task :shared:design-system:exportReleaseConsumerProguardFiles
+2026-09-10T15:54:21.9920862Z > Task :shared:core:mergeReleaseGeneratedProguardFiles
+2026-09-10T15:54:21.9922016Z > Task :shared:core:exportReleaseConsumerProguardFiles
+2026-09-10T15:54:22.0847049Z > Task :game-modes:mafia:bundleLibRuntimeToJarRelease
+2026-09-10T15:54:22.0890171Z > Task :game-modes:whodunit:bundleLibRuntimeToJarRelease
+2026-09-10T15:54:22.0891393Z > Task :shared:content:bundleLibRuntimeToJarRelease
+2026-09-10T15:54:22.0919752Z > Task :shared:core:bundleLibRuntimeToJarRelease
+2026-09-10T15:54:22.0949872Z > Task :shared:design-system:bundleLibRuntimeToJarRelease
+2026-09-10T15:54:22.1847828Z > Task :shared:engine:bundleLibRuntimeToJarRelease
+2026-09-10T15:54:22.1859902Z > Task :shared:networking:bundleLibRuntimeToJarRelease
+2026-09-10T15:54:22.1889857Z > Task :shared:session:bundleLibRuntimeToJarRelease
+2026-09-10T15:54:22.1912045Z > Task :shared:storage:bundleLibRuntimeToJarRelease
+2026-09-10T15:54:22.1919780Z > Task :shared:transport-p2p:bundleLibRuntimeToJarRelease
+2026-09-10T15:54:22.1949792Z > Task :game-modes:mafia:processReleaseJavaRes
+2026-09-10T15:54:22.2860089Z > Task :game-modes:whodunit:processReleaseJavaRes
+2026-09-10T15:54:22.2889883Z > Task :shared:content:processReleaseJavaRes
+2026-09-10T15:54:22.2890890Z > Task :shared:core:processReleaseJavaRes
+2026-09-10T15:54:22.2917454Z > Task :shared:design-system:processReleaseJavaRes
+2026-09-10T15:54:22.2929997Z > Task :shared:engine:processReleaseJavaRes
+2026-09-10T15:54:22.2930817Z > Task :shared:networking:processReleaseJavaRes
+2026-09-10T15:54:22.2932018Z > Task :shared:session:processReleaseJavaRes
+2026-09-10T15:54:22.2932766Z > Task :shared:storage:processReleaseJavaRes
+2026-09-10T15:54:22.2933496Z > Task :shared:transport-p2p:processReleaseJavaRes
+2026-09-10T15:54:22.3850785Z > Task :game-modes:mafia:createFullJarRelease
+2026-09-10T15:54:22.3877658Z > Task :shared:content:createFullJarRelease
+2026-09-10T15:54:22.3899465Z > Task :shared:core:createFullJarRelease
+2026-09-10T15:54:23.3851113Z > Task :shared:core:generateReleaseLintModel
+2026-09-10T15:54:23.3879968Z > Task :shared:engine:createFullJarRelease
+2026-09-10T15:54:23.3917113Z > Task :shared:engine:generateReleaseLintModel
+2026-09-10T15:54:23.4847124Z > Task :shared:content:generateReleaseLintModel
+2026-09-10T15:54:23.4859205Z > Task :shared:design-system:createFullJarRelease
+2026-09-10T15:54:24.2847517Z > Task :composeApp:compileReleaseKotlinAndroid
+2026-09-10T15:54:24.2859957Z > Task :composeApp:compileReleaseJavaWithJavac NO-SOURCE
+2026-09-10T15:54:24.2863835Z > Task :composeApp:bundleReleaseClassesToCompileJar
+2026-09-10T15:54:24.9860376Z > Task :shared:design-system:generateReleaseLintModel
+2026-09-10T15:54:25.2847501Z > Task :composeApp:compileReleaseAndroidTestKotlinAndroid
+2026-09-10T15:54:27.1850770Z > Task :composeApp:expandReleaseArtProfileWildcards
+2026-09-10T15:54:27.1869344Z > Task :composeApp:mergeReleaseGeneratedProguardFiles
+2026-09-10T15:54:27.1896530Z > Task :composeApp:processReleaseJavaRes
+2026-09-10T15:54:31.7847092Z > Task :composeApp:compileReleaseAndroidTestJavaWithJavac
+2026-09-10T15:54:32.7861760Z > Task :composeApp:mergeReleaseJavaResource
+2026-09-10T15:54:34.6901961Z > Task :composeApp:produceReleaseComposeMapping
+2026-09-10T15:54:34.6929915Z > Task :composeApp:reportReleaseComposeMappingErrors
+2026-09-10T15:54:34.6930808Z > Task :shared:networking:createFullJarRelease
+2026-09-10T15:54:34.6959857Z > Task :shared:networking:generateReleaseLintModel
+2026-09-10T15:54:34.6989589Z > Task :shared:session:createFullJarRelease
+2026-09-10T15:54:34.7002596Z > Task :shared:session:generateReleaseLintModel
+2026-09-10T15:54:34.7847519Z > Task :shared:storage:createFullJarRelease
+2026-09-10T15:54:34.7870063Z > Task :shared:storage:generateReleaseLintModel
+2026-09-10T15:54:34.7890170Z > Task :game-modes:mafia:generateReleaseLintModel
+2026-09-10T15:54:34.7899776Z > Task :game-modes:whodunit:createFullJarRelease
+2026-09-10T15:54:34.7949781Z > Task :game-modes:whodunit:generateReleaseLintModel
+2026-09-10T15:54:34.8850214Z > Task :shared:transport-p2p:createFullJarRelease
+2026-09-10T15:54:34.8873241Z 
+2026-09-10T15:54:34.8899842Z > Task :composeApp:minifyReleaseWithR8
+2026-09-10T15:54:34.8930464Z WARNING: R8: Class file resource provider does not support async parsing: com.android.builder.dexing.r8.ClassFileProviderFactory$OrderedClassFileResourceProvider
+2026-09-10T15:54:34.8932709Z WARNING: R8: Class file resource provider does not support async parsing: com.android.builder.dexing.r8.ClassFileProviderFactory$OrderedClassFileResourceProvider
+2026-09-10T15:54:35.1846657Z 
+2026-09-10T15:54:35.1899759Z > Task :shared:transport-p2p:generateReleaseLintModel
+2026-09-10T15:54:35.5847375Z > Task :composeApp:generateReleaseLintVitalReportModel
+2026-09-10T15:54:40.8900479Z > Task :game-modes:whodunit:extractReleaseAnnotations
+2026-09-10T15:54:40.8960031Z > Task :game-modes:whodunit:mergeReleaseConsumerProguardFiles
+2026-09-10T15:54:40.9049596Z > Task :game-modes:whodunit:mergeReleaseJavaResource
+2026-09-10T15:54:41.3880308Z > Task :game-modes:whodunit:syncReleaseLibJars
+2026-09-10T15:54:41.3909878Z > Task :game-modes:whodunit:bundleReleaseLocalLintAar
+2026-09-10T15:54:41.5890369Z > Task :game-modes:mafia:extractReleaseAnnotations
+2026-09-10T15:54:41.5944278Z > Task :game-modes:mafia:mergeReleaseConsumerProguardFiles
+2026-09-10T15:54:41.5999965Z > Task :game-modes:mafia:mergeReleaseJavaResource
+2026-09-10T15:54:42.0866645Z > Task :game-modes:mafia:syncReleaseLibJars
+2026-09-10T15:54:42.0894903Z > Task :game-modes:mafia:bundleReleaseLocalLintAar
+2026-09-10T15:54:42.1847858Z > Task :shared:session:extractReleaseAnnotations
+2026-09-10T15:54:42.1882500Z > Task :shared:session:mergeReleaseConsumerProguardFiles
+2026-09-10T15:54:42.1909530Z > Task :shared:session:mergeReleaseJavaResource
+2026-09-10T15:54:42.3880792Z > Task :shared:session:syncReleaseLibJars
+2026-09-10T15:54:42.3989845Z > Task :shared:session:bundleReleaseLocalLintAar
+2026-09-10T15:54:42.5870994Z > Task :shared:content:extractReleaseAnnotations
+2026-09-10T15:54:42.5892380Z > Task :shared:content:mergeReleaseConsumerProguardFiles
+2026-09-10T15:54:42.5928866Z > Task :shared:content:mergeReleaseJavaResource
+2026-09-10T15:54:42.6860104Z > Task :shared:content:syncReleaseLibJars
+2026-09-10T15:54:42.6889842Z > Task :shared:content:bundleReleaseLocalLintAar
+2026-09-10T15:54:42.9862301Z > Task :shared:transport-p2p:extractReleaseAnnotations
+2026-09-10T15:54:42.9920254Z > Task :shared:transport-p2p:mergeReleaseConsumerProguardFiles
+2026-09-10T15:54:42.9959673Z > Task :shared:transport-p2p:mergeReleaseJavaResource
+2026-09-10T15:54:43.2847129Z > Task :shared:transport-p2p:syncReleaseLibJars
+2026-09-10T15:54:43.3847633Z > Task :shared:transport-p2p:bundleReleaseLocalLintAar
+2026-09-10T15:54:43.4875341Z > Task :shared:networking:extractReleaseAnnotations
+2026-09-10T15:54:43.4911771Z > Task :shared:networking:mergeReleaseConsumerProguardFiles
+2026-09-10T15:54:43.5861867Z > Task :shared:networking:mergeReleaseJavaResource
+2026-09-10T15:54:43.6870230Z > Task :shared:networking:syncReleaseLibJars
+2026-09-10T15:54:43.7861266Z > Task :shared:networking:bundleReleaseLocalLintAar
+2026-09-10T15:54:43.7890264Z > Task :shared:storage:extractReleaseAnnotations
+2026-09-10T15:54:43.7891248Z > Task :shared:storage:mergeReleaseConsumerProguardFiles
+2026-09-10T15:54:43.7891905Z > Task :shared:storage:mergeReleaseJavaResource
+2026-09-10T15:54:43.7892459Z > Task :shared:storage:syncReleaseLibJars
+2026-09-10T15:54:43.8860604Z > Task :shared:storage:bundleReleaseLocalLintAar
+2026-09-10T15:54:43.8893711Z > Task :shared:engine:extractReleaseAnnotations
+2026-09-10T15:54:43.8919854Z > Task :shared:engine:mergeReleaseConsumerProguardFiles
+2026-09-10T15:54:43.8929607Z > Task :shared:engine:mergeReleaseJavaResource
+2026-09-10T15:54:43.8959639Z > Task :shared:engine:syncReleaseLibJars
+2026-09-10T15:54:43.8989675Z > Task :shared:engine:bundleReleaseLocalLintAar
+2026-09-10T15:54:43.9873338Z > Task :shared:design-system:extractReleaseAnnotations
+2026-09-10T15:54:43.9899783Z > Task :shared:design-system:mergeReleaseConsumerProguardFiles
+2026-09-10T15:54:43.9933587Z > Task :shared:design-system:mergeReleaseJavaResource
+2026-09-10T15:54:44.0880106Z > Task :shared:design-system:syncReleaseLibJars
+2026-09-10T15:54:44.0939828Z > Task :shared:design-system:bundleReleaseLocalLintAar
+2026-09-10T15:54:44.1890142Z > Task :shared:core:extractReleaseAnnotations
+2026-09-10T15:54:44.1969738Z > Task :shared:core:mergeReleaseConsumerProguardFiles
+2026-09-10T15:54:44.1970414Z > Task :shared:core:mergeReleaseJavaResource
+2026-09-10T15:54:44.2851984Z > Task :shared:core:syncReleaseLibJars
+2026-09-10T15:54:44.2939952Z > Task :shared:core:bundleReleaseLocalLintAar
+2026-09-10T15:54:54.9860267Z > Task :game-modes:mafia:lintVitalAnalyzeRelease
+2026-09-10T15:54:56.3847603Z > Task :game-modes:whodunit:lintVitalAnalyzeRelease
+2026-09-10T15:54:57.1847514Z > Task :shared:content:lintVitalAnalyzeRelease
+2026-09-10T15:54:57.4870305Z > Task :shared:core:lintVitalAnalyzeRelease
+2026-09-10T15:55:00.5863545Z > Task :shared:design-system:lintVitalAnalyzeRelease
+2026-09-10T15:55:00.8847676Z > Task :shared:engine:lintVitalAnalyzeRelease
+2026-09-10T15:55:01.4858529Z > Task :shared:networking:lintVitalAnalyzeRelease
+2026-09-10T15:55:02.7860167Z > Task :shared:session:lintVitalAnalyzeRelease
+2026-09-10T15:55:03.2847644Z > Task :shared:storage:lintVitalAnalyzeRelease
+2026-09-10T15:55:04.3847307Z > Task :shared:transport-p2p:lintVitalAnalyzeRelease
+2026-09-10T15:55:17.1900217Z > Task :composeApp:lintVitalAnalyzeRelease
+2026-09-10T15:55:17.2847787Z > Task :game-modes:mafia:generateReleaseLintVitalModel
+2026-09-10T15:55:17.2859634Z > Task :game-modes:whodunit:generateReleaseLintVitalModel
+2026-09-10T15:55:17.2877021Z > Task :shared:content:generateReleaseLintVitalModel
+2026-09-10T15:55:17.2899659Z > Task :shared:core:generateReleaseLintVitalModel
+2026-09-10T15:55:17.3848569Z > Task :shared:design-system:generateReleaseLintVitalModel
+2026-09-10T15:55:17.3889846Z > Task :shared:engine:generateReleaseLintVitalModel
+2026-09-10T15:55:17.3890820Z > Task :shared:networking:generateReleaseLintVitalModel
+2026-09-10T15:55:17.3919830Z > Task :shared:session:generateReleaseLintVitalModel
+2026-09-10T15:55:17.3949681Z > Task :shared:storage:generateReleaseLintVitalModel
+2026-09-10T15:55:17.3950694Z > Task :shared:transport-p2p:generateReleaseLintVitalModel
+2026-09-10T15:55:17.4850171Z > Task :composeApp:lintVitalReportRelease
+2026-09-10T15:55:17.4884529Z > Task :composeApp:lintVitalRelease
+2026-09-10T15:55:17.4885450Z > Task :composeApp:processReleaseAndroidTestJavaRes
+2026-09-10T15:55:17.4909900Z > Task :composeApp:mergeReleaseAndroidTestJavaResource
+2026-09-10T15:56:50.4847100Z > Task :composeApp:convertShrunkResourcesToBinaryRelease
+2026-09-10T15:56:50.5847498Z > Task :composeApp:optimizeReleaseResources
+2026-09-10T15:56:52.7847037Z > Task :composeApp:mergeReleaseComposeMapping
+2026-09-10T15:56:52.9847470Z > Task :composeApp:compileReleaseArtProfile
+2026-09-10T15:56:53.7847570Z > Task :composeApp:packageRelease
+2026-09-10T15:56:53.7848215Z > Task :composeApp:createReleaseApkListingFileRedirect
+2026-09-10T15:56:54.7847163Z 
+2026-09-10T15:56:54.7847893Z > Task :composeApp:minifyReleaseAndroidTestWithR8
+2026-09-10T15:56:54.7849371Z WARNING: R8: Class file resource provider does not support async parsing: com.android.builder.dexing.r8.ClassFileProviderFactory$OrderedClassFileResourceProvider
+2026-09-10T15:56:55.5849118Z WARNING: R8: Class file resource provider does not support async parsing: com.android.builder.dexing.r8.ClassFileProviderFactory$OrderedClassFileResourceProvider
+2026-09-10T15:57:14.4847065Z 
+2026-09-10T15:57:14.4847785Z > Task :composeApp:packageReleaseAndroidTest
+2026-09-10T15:57:14.4848291Z > Task :composeApp:createReleaseAndroidTestApkListingFileRedirect
+2026-09-10T15:57:44.4847049Z > Task :composeApp:pixel2Api35ReleaseAndroidTest
+2026-09-10T16:02:57.8859988Z Starting 3 tests on pixel2Api35
+2026-09-10T16:03:05.9851138Z 
+2026-09-10T16:03:05.9852320Z Finished 3 tests on pixel2Api35
+2026-09-10T16:03:06.7850062Z 
+2026-09-10T16:03:06.7850978Z > Task :productionAndroidRuntimeCheck
+2026-09-10T16:03:06.7851378Z 
+2026-09-10T16:03:06.7851648Z > Task :composeApp:mergeReleaseAndroidTestTestResultProtos
+2026-09-10T16:03:06.7852494Z Test execution completed. See the report at: file:///home/runner/work/parlor/parlor/composeApp/build/reports/androidTests/managedDevice/release/allDevices/index.html
+2026-09-10T16:03:06.7853099Z 
+2026-09-10T16:03:06.7853515Z [Incubating] Problems report is available at: file:///home/runner/work/parlor/parlor/build/reports/problems/problems-report.html
+2026-09-10T16:03:06.7854012Z 
+2026-09-10T16:03:06.7854155Z BUILD SUCCESSFUL in 13m 50s
+2026-09-10T16:03:06.7854444Z 487 actionable tasks: 417 executed, 70 from cache
+2026-09-10T16:03:06.8290365Z Configuration cache entry stored.
+2026-09-10T16:03:07.8518000Z ##[group]Run import runpy, sys
+2026-09-10T16:03:07.8518688Z [36;1mimport runpy, sys[0m
+2026-09-10T16:03:07.8519448Z [36;1msys.argv = ["verification_hygiene.py", "stop", "managed-device"][0m
+2026-09-10T16:03:07.8520810Z [36;1mrunpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")[0m
+2026-09-10T16:03:07.8671208Z shell: /usr/bin/python {0}
+2026-09-10T16:03:07.8671490Z env:
+2026-09-10T16:03:07.8671906Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T16:03:07.8672484Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T16:03:07.8672966Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T16:03:07.8673344Z   MAVEN_ARGS: -ntp
+2026-09-10T16:03:07.8673569Z ##[endgroup]
+2026-09-10T16:03:08.5859366Z {"task": {"GITHUB_RUN_ID": "34498027425", "GITHUB_RUN_ATTEMPT": "1", "GITHUB_JOB": "desktop-android"}, "command": ["./gradlew", "--stop"], "started_at": "2026-09-10T16:03:07.943223+00:00", "exit_code": 0, "output": "No Gradle daemons are running.\n", "finished_at": "2026-09-10T16:03:08.584453+00:00"}
+2026-09-10T16:03:08.6052904Z ##[group]Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+2026-09-10T16:03:08.6053332Z with:
+2026-09-10T16:03:08.6053557Z   name: desktop-android-verification
+2026-09-10T16:03:08.6053841Z   if-no-files-found: warn
+2026-09-10T16:03:08.6054078Z   retention-days: 14
+2026-09-10T16:03:08.6055894Z   path: build/ci-evidence/
+**/build/reports/detekt/
+**/build/reports/tests/
+**/build/test-results/**/*.xml
+/home/runner/work/_temp/parlor-verification-34498027425-1-desktop-android-ownership.json
+/home/runner/work/_temp/parlor-verification-34498027425-1-desktop-android-stop-*.json
+**/build/reports/androidTests/managedDevice/
+**/build/outputs/androidTest-results/managedDevice/
+**/build/reports/lint-results-*
+composeApp/build/outputs/mapping/release/
+composeApp/build/outputs/bundle/release/*.aab
+
+2026-09-10T16:03:08.6057731Z   compression-level: 6
+2026-09-10T16:03:08.6057954Z   overwrite: false
+2026-09-10T16:03:08.6058176Z   include-hidden-files: false
+2026-09-10T16:03:08.6058458Z   archive: true
+2026-09-10T16:03:08.6058661Z env:
+2026-09-10T16:03:08.6059150Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T16:03:08.6059688Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T16:03:08.6060166Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T16:03:08.6060536Z   MAVEN_ARGS: -ntp
+2026-09-10T16:03:08.6060745Z ##[endgroup]
+2026-09-10T16:03:14.4493678Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-09-10T16:03:14.4494606Z The least common ancestor is /home/runner/work. This will be the root directory of the artifact
+2026-09-10T16:03:14.4495169Z With the provided path, there will be 13182 files uploaded
+2026-09-10T16:03:14.4497431Z Artifact name is valid!
+2026-09-10T16:03:14.4497834Z Root directory input is valid!
+2026-09-10T16:03:14.7895500Z Uploading artifact: desktop-android-verification.zip
+2026-09-10T16:03:14.7912963Z Beginning upload of artifact content to blob storage
+2026-09-10T16:03:18.6112444Z Uploaded bytes 8388608
+2026-09-10T16:03:22.0897779Z Uploaded bytes 16777216
+2026-09-10T16:03:22.9642153Z Uploaded bytes 21761617
+2026-09-10T16:03:22.9758072Z Finished uploading artifact content to blob storage!
+2026-09-10T16:03:22.9761350Z SHA256 digest of uploaded artifact is 972767cf41ace2fe6cc488400ef07ed58f293c12ab8de8a0918cbde23cc7174d
+2026-09-10T16:03:22.9763648Z Finalizing artifact upload
+2026-09-10T16:03:23.2603041Z Artifact desktop-android-verification successfully finalized. Artifact ID 10161277633
+2026-09-10T16:03:23.2603871Z Artifact desktop-android-verification has been successfully uploaded! Final size is 21761617 bytes. Artifact ID is 10161277633
+2026-09-10T16:03:23.2609092Z Artifact download URL: https://github.com/Apdelrahman1911/parlor/actions/runs/34498027425/artifacts/10161277633
+2026-09-10T16:03:23.3165587Z ##[group]Run import runpy, sys
+2026-09-10T16:03:23.3165909Z [36;1mimport runpy, sys[0m
+2026-09-10T16:03:23.3166352Z [36;1msys.argv = ["verification_hygiene.py", "cleanup", "--android-reader=sudo-proc-exe-v2"][0m
+2026-09-10T16:03:23.3166959Z [36;1mrunpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")[0m
+2026-09-10T16:03:23.3236446Z shell: /usr/bin/python {0}
+2026-09-10T16:03:23.3236706Z env:
+2026-09-10T16:03:23.3237102Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T16:03:23.3237677Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T16:03:23.3238162Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T16:03:23.3238545Z   MAVEN_ARGS: -ntp
+2026-09-10T16:03:23.3239198Z   PARLOR_VERIFICATION_PREPARE_OUTCOME: success
+2026-09-10T16:03:23.3239533Z   PARLOR_VERIFICATION_UPLOAD_OUTCOME: success
+2026-09-10T16:03:23.3239900Z   PARLOR_VERIFICATION_ARTIFACT_ID: 10161277633
+2026-09-10T16:03:23.3240425Z   PARLOR_VERIFICATION_ARTIFACT_DIGEST: 972767cf41ace2fe6cc488400ef07ed58f293c12ab8de8a0918cbde23cc7174d
+2026-09-10T16:03:23.3240912Z ##[endgroup]
+2026-09-10T16:03:25.3770993Z {"task": {"GITHUB_RUN_ID": "34498027425", "GITHUB_RUN_ATTEMPT": "1", "GITHUB_JOB": "desktop-android"}, "started_at": "2026-09-10T16:03:23.375639+00:00", "removed": ["build", "build-logic/convention/build", "composeApp/build", "game-modes/mafia/build", "game-modes/whodunit/build", "shared/content/build", "shared/core/build", "shared/design-system/build", "shared/engine/build", "shared/networking/build", "shared/session/build", "shared/storage/build", "shared/transport-p2p/build"], "not_created": ["audit-runs/2026-09-05-source-audit/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/android-managed-reconciliation-mafia-cont-02/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/android-runner-independent-whodunit-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/android-runner-safety-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/coverage-binary-delta-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-apphost-closeout-history/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-checker-root-revision-history/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-frozen-reconciliation-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-frozen-reconciliation-mafia-cont/inputs-after-correction/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-frozen-reconciliation-mafia-cont/inputs/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-frozen-reconciliation-mafia-cont/order-correction-review/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-frozen-reconciliation-mafia-cont/order-correction-review/inputs/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-generation-order-history-01/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-preservation-delta-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-preservation-review-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-preservation-secondary-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-verification-review-initial-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-verification-skeleton-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/iosr1-apphost-01/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/iosr1-apphost-02/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/iosr1-runner-independent-whodunit-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/iosr1-runner-independent-whodunit-cont/cycle01-reviewed-inputs/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/runner-versions/__pycache__", "audit-runs/2026-09-05-source-audit/reproducers/__pycache__", "audit-runs/2026-09-05-source-audit/research/android-managed-listener-whodunit-cont/__pycache__", "build-logic/build", "iosApp/build", "remediation-runs/2026-09-05-confirmed-fixes/__pycache__", "remediation-runs/2026-09-05-confirmed-fixes/mafia/__pycache__", "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost/__pycache__", "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost_v2/__pycache__", "remediation-runs/2026-09-05-confirmed-fixes/observation-controls-contracts-01/__pycache__", "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/__pycache__", "remediation-runs/2026-09-05-confirmed-fixes/session_cont/apple_runner/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v10/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v11/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v4/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v5/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/revision01-unexecuted-controls/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v9/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/ios_release_wrapper_v1/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/ios_wrapper_smoke_v1/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/reviews/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/root/__pycache__", "remediation-runs/2026-09-07-local-readiness/__pycache__", "remediation-runs/2026-09-07-local-readiness/drafts/l08-protection-metadata-01/files/scripts/verification/ios-readiness/__pycache__", "remediation-runs/2026-09-07-local-readiness/drafts/l08-save-diagnostics-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-build-helper/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/emulator-package-followup-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin-null-port-retry-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-final-identity-helper/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/linux-vz-runner-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/release-readiness-map/local-gap-remediation-01/before/scripts/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/release-readiness-map/local-gap-remediation-01/before/scripts/release/tests/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/tsa-positive-runner/__pycache__", "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/control-drafts-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/control-drafts-02/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/controls-gap-drafts-01/before/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/controls-gap-drafts-01/staged/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/normal-image-diagnostics-draft-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/normal-vmmap-capability-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/before-null-port-adoption-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/ci-native-argument-capacity-before-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/darwin-ci-uid-inventory-01/draft/scripts/ci/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/darwin-ci-uid-inventory-01/draft/scripts/release/tests/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/ios-controls-before-gap02/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-02/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/before-last-query-test-correction/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/before-review-correction/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/before/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/draft/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/native-failure-diagnostic-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/native-path-canonicalization-draft-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/native-path-canonicalization-draft-01/review-revision-01-original/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/native-path-canonicalization-prepatch-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/normal-launch-allocation-prepatch-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/normal-user-only-alias-draft-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/partial-fifo-attestation-draft-01/__pycache__", "remediation-runs/2026-09-08-continuation/controls/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/a33-owned-import-test-followup-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/android-emulator-absence-audit-01/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/android-emulator-absence-audit-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/android-proc-permission-diagnostic-01/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/android-proc-permission-diagnostic-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/proposed/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/revision-02/proposed/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/revision-02/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/revision-02/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-single-tap-scanner-correction-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-01/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-01/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/revision-02/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/integration-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/revision-02/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a25-functional-copy-guard-correction-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a27-stale-runner-guard-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a29-b30-label-01/draft/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a29-b30-label-01/draft/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a29-host-followup-01/implementation-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a31-catalog-followup-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a31-host-observation-followup-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a31-os-prerequisite-followup-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-b24-region-diagnostics-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-b26-region-followup-01/draft-02/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-b26-region-followup-01/draft/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-b30-text-extent-01/draft/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-l08-only-selection-01/draft/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-l08-only-selection-01/draft/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-l08-only-selection-01/draft/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-normal-only-selection-01/draft/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-normal-only-selection-01/draft/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-normal-only-selection-01/draft/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/proposed/scripts/verification/ios-settings-sheet/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-02/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-02/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-02/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-02/proposed/scripts/verification/ios-settings-sheet/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/verification/ios-settings-sheet/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/workflow-contract-overlay-01/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/workflow-contract-overlay-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/settings-single-execution-cli-fix-01/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/settings-single-execution-cli-fix-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/settings-single-execution-cli-fix-01/proposed/scripts/verification/ios-settings-sheet/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/revision-02/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/revision-02/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/windows-targeted-collector-01/__pycache__", "scripts/__pycache__", "scripts/ci/__pycache__", "scripts/release/__pycache__", "scripts/release/tests/__pycache__", "scripts/verification/__pycache__", "scripts/verification/ios-os-recovery/__pycache__", "scripts/verification/ios-readiness/__pycache__", "scripts/verification/ios-settings-sheet/__pycache__", "shared/engine-testing/build", "shared/networking-testing/build"], "retained": [], "upload": {"outcome": "success", "artifact_id": "10161277633", "artifact_digest": "972767cf41ace2fe6cc488400ef07ed58f293c12ab8de8a0918cbde23cc7174d"}, "preparation_outcome": "success", "errors": [], "gradle_stop": {"command": ["./gradlew", "--stop"], "started_at": "2026-09-10T16:03:23.375652+00:00", "exit_code": 0, "output": "No Gradle daemons are running.\n", "finished_at": "2026-09-10T16:03:23.999584+00:00"}, "android_emulator_absence": {"result": "PASS", "started_at": "2026-09-10T16:03:24.962072+00:00", "enumerated": 152, "sampled": 152, "selected_uid": 8, "matching_executables": 0, "errors": [], "mixed_uid_samples": 1, "mixed_uid_privileged_samples": 1, "exe_reader": {"mode": "sudo-proc-exe-v2", "eacces_denials": 3, "privileged_reads": 3}, "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence", "binding": {"sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1", "sdk_device": 2049, "sdk_inode": 795534, "uid": 1001}, "finished_at": "2026-09-10T16:03:25.075128+00:00", "source": {"head": "9e40261e0dc5bd224526eda6126350ac6a6b8bcb", "tree": "dfd8021abc17ebf56f796f787b46b375cade68d2"}}, "result": "PASS", "finished_at": "2026-09-10T16:03:25.362944+00:00", "scope": "Only attested checkout build/Python-cache directories; no global caches or source", "worker_scope": "Gradle stop; Android receipt, when present, covers only sampled selected-UID SDK/emulator executable-path absence, not termination or AVD retirement"}
+2026-09-10T16:03:25.3931722Z ##[group]Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+2026-09-10T16:03:25.3932308Z with:
+2026-09-10T16:03:25.3932626Z   name: verification-cleanup-desktop-android
+2026-09-10T16:03:25.3933022Z   if-no-files-found: warn
+2026-09-10T16:03:25.3933342Z   retention-days: 14
+2026-09-10T16:03:25.3934090Z   path: /home/runner/work/_temp/parlor-verification-34498027425-1-desktop-android-cleanup.json
+2026-09-10T16:03:25.3934744Z   compression-level: 6
+2026-09-10T16:03:25.3935072Z   overwrite: false
+2026-09-10T16:03:25.3935374Z   include-hidden-files: false
+2026-09-10T16:03:25.3935695Z   archive: true
+2026-09-10T16:03:25.3935973Z env:
+2026-09-10T16:03:25.3936506Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T16:03:25.3937222Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T16:03:25.3937858Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T16:03:25.3938357Z   MAVEN_ARGS: -ntp
+2026-09-10T16:03:25.3938655Z ##[endgroup]
+2026-09-10T16:03:25.5589840Z With the provided path, there will be 1 file uploaded
+2026-09-10T16:03:25.5620547Z Artifact name is valid!
+2026-09-10T16:03:25.5621003Z Root directory input is valid!
+2026-09-10T16:03:25.7568187Z Uploading artifact: verification-cleanup-desktop-android.zip
+2026-09-10T16:03:25.7610495Z Beginning upload of artifact content to blob storage
+2026-09-10T16:03:25.8211405Z Uploaded bytes 3082
+2026-09-10T16:03:25.8368350Z Finished uploading artifact content to blob storage!
+2026-09-10T16:03:25.8370030Z SHA256 digest of uploaded artifact is c31ec05bed3ce08c8fee5318921b7b63f3d1d9736f14275775242a3afe3879d9
+2026-09-10T16:03:25.8371210Z Finalizing artifact upload
+2026-09-10T16:03:26.1095778Z Artifact verification-cleanup-desktop-android successfully finalized. Artifact ID 10161279770
+2026-09-10T16:03:26.1096683Z Artifact verification-cleanup-desktop-android has been successfully uploaded! Final size is 3082 bytes. Artifact ID is 10161279770
+2026-09-10T16:03:26.1101025Z Artifact download URL: https://github.com/Apdelrahman1911/parlor/actions/runs/34498027425/artifacts/10161279770
+2026-09-10T16:03:26.1334779Z Post job cleanup.
+2026-09-10T16:03:26.2929969Z Post job cleanup.
+2026-09-10T16:03:26.3857677Z [command]/usr/bin/git version
+2026-09-10T16:03:26.3903784Z git version 2.55.0
+2026-09-10T16:03:26.3949877Z Temporarily overriding HOME='/home/runner/work/_temp/74cc5311-4b6b-40a8-8a4c-516387227592' before making global git config changes
+2026-09-10T16:03:26.3951184Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-10T16:03:26.3955608Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/parlor/parlor
+2026-09-10T16:03:26.3993015Z Removing SSH command configuration
+2026-09-10T16:03:26.3999805Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-10T16:03:26.4040684Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-10T16:03:26.4451296Z Removing HTTP extra header
+2026-09-10T16:03:26.4452187Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-10T16:03:26.4492123Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-10T16:03:26.4830010Z Removing includeIf entries pointing to credentials config files
+2026-09-10T16:03:26.4830963Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-10T16:03:26.4854040Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-10T16:03:26.5390762Z Cleaning up orphan processes
+2026-09-10T16:03:26.5777308Z Terminate orphan process: pid (3084) (adb)

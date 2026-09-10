@@ -1,0 +1,183 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/fixture_review",
+  "reviewed_at": "2026-09-10T16:39:58.450Z",
+  "authors": {
+    "entry_point": "/root",
+    "ledger_prefix": "/root/evidence_audit; adopted with two delivery-paragraph changes and indentation correction by /root"
+  },
+  "decision": "ACCEPT_BOUND_STAGED_EVIDENCE_AND_CURRENT_HANDOFF_DELIVERY",
+  "status": "SCOPED_DELIVERY_ACCEPTED_NOT_RUNTIME_OR_READINESS_CERTIFICATION",
+  "findings": [],
+  "base": {
+    "commit": "9e40261e0dc5bd224526eda6126350ac6a6b8bcb",
+    "tree": "dfd8021abc17ebf56f796f787b46b375cade68d2",
+    "branch": "fix/local-readiness-2026-09-07"
+  },
+  "staged_binding": {
+    "paths": 72,
+    "statuses": {
+      "A": 70,
+      "M": 2
+    },
+    "columns": [
+      "status",
+      "path",
+      "old_mode",
+      "old_blob",
+      "new_mode",
+      "new_blob"
+    ],
+    "sha256": "218d8ef9cdd0463a90f971b77c8b84b87bf4e716c29c6c6ff04b134327ea33b4",
+    "raw_git_diff_sha256": "f82b864b38ec02912f02344ed5aa71bcc5082daaad34a9c59eb0524c6f1da15a",
+    "encoding": "Rows sorted by path ascending; SHA256 of UTF8 compact JSON, separators comma/colon; all columns strings; missing old blob is40zero characters.",
+    "excluded_future_report": "remediation-runs/2026-09-08-continuation/reviews/final-evidence-delivery-independent-01.json",
+    "new_modes": "all100644",
+    "allowed_addition_prefixes": [
+      "remediation-runs/2026-09-08-continuation/actions/34495223128/",
+      "remediation-runs/2026-09-08-continuation/actions/34498027425/",
+      "remediation-runs/2026-09-08-continuation/actions/android-cleanup-only-01/",
+      "remediation-runs/2026-09-08-continuation/actions/linux-process-probe-04/"
+    ],
+    "added_review_files": [
+      "android-cleanup-actual-independent-01.json",
+      "android-cleanup-request-independent-01.json",
+      "final-9e4-historical-scope-applicability-independent-01.json",
+      "final-current-ledger-draft-02.md",
+      "final-current-ledger-draft-03.md",
+      "final-local-cache-cleanup-01.json",
+      "final-local-resource-check-01.json",
+      "linux-probe-04-actual-independent-01.json",
+      "linux-process-probe-request-independent-04.json"
+    ]
+  },
+  "reviewed_docs": [
+    {
+      "path": "CONTINUE_HERE.md",
+      "bytes": 1437,
+      "sha256": "8cceb8db2903233a4318b2a9712ee8d2545e27fc4f8b3e04a8479398f1631cff"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md",
+      "bytes": 145234,
+      "sha256": "a48e350be757cdae0c51c6d63bf41ae9fa6e4789e9c3ecf93764b61889cd5e1b"
+    }
+  ],
+  "historical_suffix": {
+    "marker": "## Historical record \u2014 preserved; not current status",
+    "bytes": 118071,
+    "sha256": "08b1a88da9076088803b61645412580b13f6023f12202a03e6005ec4989ad294",
+    "exact_equality_to_9e4": true
+  },
+  "ledger_adoption": {
+    "draft03_sha256": "a31647fd41fe5eed2d6c04dc4e99448235c55b941840ab95f816bccb6e181a10",
+    "scope": "Only the marked proposed prefix was adopted; draft wrapper text remains draft-only. Exact comparison confirms only the declared two delivery-status paragraphs and one indentation space differ. The complete old historical suffix is byte-identical.",
+    "current_wording": "Entry point now directs readers to the current ledger before historical Linux/transfer checkpoints, while keeping AGENTS/source/build contracts authoritative, the original manifest, branch/repository identity, evidence/user-work preservation and stale-binding prohibitions.",
+    "delivery_wording": "The ledger distinguishes immutable9e4 execution from a later delivery tip, obtains actual delivered commits/remote from Git/final report, and explicitly denies preapproval of unseen future commits. It does not embed a fabricated future SHA or relocate historical execution."
+  },
+  "allowed_delta": {
+    "conclusion": "Only entry point/current ledger modify old tracked files;70 additions are permitted evidence/data/reviews/drafts/resources. No shipping/control/build/architecture/release gate/mechanical inventory path changed. No old raw evidence or sealed review changed.",
+    "no_unstaged_tracked_changes": true,
+    "index_and_worktree_bytes_equal_for_all72": true,
+    "additions": "61 LP04/ADC request/raw/log/archive/current extracted-report files and9 additive review/draft/resource files under the four named action prefixes and exact review filenames in the binding. Archived HTML/CSS/JS/build paths are evidence, not live source or cleanup targets.",
+    "historical_preservation": "No tracked old raw receipt, independent review, failure or archived build report changed or disappeared. The only two modifications are CONTINUE_HERE.md and the current ledger prefix; no renamed/deleted/symlink/executable-mode entry is staged.",
+    "source_applicability": "Reuses the accepted49,806-byte9e4 historical-scope review at its exact pin; no repeat shipping-source or regression campaign. An evidence/current-entry-point-only delta adds no application/control/build behavior, but the top-level entry point is a full-source-manifest input: delivery is not full-manifest identity or a new source-bound execution."
+  },
+  "accepted_review_and_resource_pins": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/final-9e4-historical-scope-applicability-independent-01.json",
+      "bytes": 49806,
+      "sha256": "01e812fff4e5682b4a12b62b48ce3cb7d4f1e03d571c00ed35f5c47f0f716e86"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/linux-probe-04-actual-independent-01.json",
+      "bytes": 12772,
+      "sha256": "e4ac8efc966fb8e930288fe5663933add2c3eb68a98f93088aead79ccb58cb24"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/android-cleanup-actual-independent-01.json",
+      "bytes": 15260,
+      "sha256": "df800390af62030bacbd6d2c4e47110d77b25fdaa9d2160092c7a9a5def4129d"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/final-local-cache-cleanup-01.json",
+      "bytes": 1851,
+      "sha256": "4b57f2a3bc45fe8b1eb80bc7ff7660700bfe6e44bfa27b90b1d2c380a96404ba"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/final-local-resource-check-01.json",
+      "bytes": 1698,
+      "sha256": "d857b8d00c6ed832905ccb0addb9ac9e92aa973bda135c11d7b6d7484568993f"
+    }
+  ],
+  "evidence_reconciliation": {
+    "pinned_custody": {
+      "references_verified": 42,
+      "unique_paths": 42,
+      "scope": "Exact staged LP04/ADC review-pinned request/raw metadata/receipts/logs/archives match sizes/SHA256s; no repeated full ZIP-member/runtime evidence campaign."
+    },
+    "small_raw_reopen": {
+      "LP04_initial_final_sampled": [
+        162,
+        162
+      ],
+      "ADC_sampled": 152,
+      "each_selected_mixed_mixedprivileged": [
+        8,
+        1,
+        1
+      ],
+      "each_eacces_privileged": [
+        3,
+        3
+      ],
+      "LP04_notcreated_removed_retained": [
+        184,
+        0,
+        0
+      ],
+      "ADC_notcreated_removed_retained": [
+        171,
+        13,
+        0
+      ],
+      "ADC_xml_sha256": "9bdf74a7804e39460091a1b9cdb724b6a4a60a38d9702219fe953e27414e8e96",
+      "ADC_xml_suite": "com.parlor.app.MainActivityColdStartTest",
+      "ADC_cases": 3,
+      "ADC_commit": "9e40261e0dc5bd224526eda6126350ac6a6b8bcb"
+    },
+    "LP04": "Sealed native_ci review accepts one12-control probe at9e4: both complete162/162 host scans, positive mixed privileged sample, three real owned controls and scoped cleanup. The unprivileged nondumpable audit remains expectedFAIL within CONTROL_PASS, not relabeled successful audit. No application runtime or broad host termination claim.",
+    "ADC01": "Sealed native_ci review accepts one18-control managed-runtime scope at9e4: exactly3 current instrumentation cases PASS, no case failures/errors/skips;417 Gradle tasks executed/70 cached. Current commit/XML/log/proto evidence is not replaced by13,146 archived historical members. Full/other-platform scopes were skipped.",
+    "cleanup": "LP04 claimed184 roots all not created. ADC removed13 and did not create171, with no retained roots/errors; both scoped host samples use boundUID1001/v2 and have zero executable matches only after complete successful scans. The ledger preserves that this is sampled bound-SDK/UID executable-path absence, not AVD retirement, all-process ownership/termination or continuous absence, and makes no independent temporary-key absence claim.",
+    "history": "B30 remains actual360fc and C08/OS39/D03 remain75c; A37 component validators remain retrospective15e evidence. Source/control applicability and current LP04/ADC progress are expressly separate from original whole-run statuses or identical new binaries."
+  },
+  "factual_limits_retained": [
+    "Original16 remain16; MF-C1/M-C01 is one alias and Leave Confirmation timing is a separate policy. Host-only reducer authority, exact4.2, deterministic seeds, privacy boundaries, strict validation and Doctor ON/OFF are retained.",
+    "A37 signal-kill FAIL and its unknown sender/cause remain. Strict Complete0PASS/26FAIL remains an unresolved unwaived validation failure, not physical-only or a uniquely established simulator/application cause.",
+    "D03 remains overallFAIL with21 historically retained roots and an unknown original cleanup-error cause. LP01/02/03 and the historical local outer143 remain failures; newer scoped successes do not erase or retroactively retire them.",
+    "The separate final exact-candidate same-SHA combined gate is still required and no combinedPASS was obtained. No all-actionable-complete, overall-ready or Store-ready claim is made.",
+    "Physical-device/mixed-LAN/lifecycle/accessibility/keybag/backup/restore/power-loss verification, the canonical Store-identity collision, signing/publication/account/privacy and separate owner/legal/content-rights/editorial requirements remain. No prohibited Store workflow, physical test, identity change, merge or force-push is authorized."
+  ],
+  "local_resource_scope": {
+    "receipt_pinned": true,
+    "checked_live_paths": 20,
+    "paths_currently_absent": true,
+    "inherited_lock_preserved": true,
+    "no_new_process_audit": "Stop/monitored-worker facts remain receipt-scoped; reviewer did not inspect or signal live processes.",
+    "cleanup_evidence": "Pinned cache cleanup reports only confirmed-untracked owned .gradle/.kotlin/build-logic/.gradle deletion with stop0 and empty recorded project-worker lists. Pinned later resource receipt reports stop0 and no remaining monitored workers; reviewer independently found all20 explicit live paths absent and inherited build-lane.lock present.",
+    "reviewer_cleanup": "No build/test/process resources were created, no Gradle/cleanup commands or signals were run, and the coordinator's lane/user work/global caches/archive reports were not touched."
+  },
+  "next_commit_boundary": {
+    "accepted_now": "Exactly the72 staged path/status/mode/blob entries above. This new report is intentionally excluded from that digest to avoid self-reference and must be separately inspected/staged by root.",
+    "expected_next_mechanical_only": "A subsequent mechanical regeneration/check and commit may change docs/review/INDEPENDENT_REVIEW_INVENTORY.csv. No future inventory bytes, count, generation/check result, commit SHA or push is certified here; root must preserve the generation/check evidence and verify that actual delta is solely mechanical.",
+    "no_blanket_approval": "Additional source/control/build/policy edits or arbitrary unseen evidence/docs changes are outside this binding and require their own independent review. The ledger's future-inventory language describes this limited expectation, not advance approval of uninspected content.",
+    "coordinator_delivery": "Actual reviewed delivery commit, mechanical inventory commit, normal push, direct remote-SHA equality, final cleanup and no completed task-owned uncommitted changes remain coordinator obligations. Reviewer performed no Git staging/commit or network check.",
+    "readiness": "NOT_READY. Acceptance permits this bounded reviewed evidence/handoff delivery; it does not replace outstanding combined/strict/native-device/Store/owner/legal gates."
+  },
+  "reviewer_activity": {
+    "method": "Read-only Git, stdlib JSON/hash/path/text inspection only. No project imports/extracted functions, tests/builds/probes, archive extraction, network/Actions, signals/cleanup, or Git writes.",
+    "assertions": "Read-only staged-delta/hash/pin/current-receipt/resource-path assertions passed; exact72-entry raw staged diff remained stable through the final audit.",
+    "corrected_review_assertion": "Initial read-only assertion incorrectly expected the aggregate XML suite name com.parlor.app; actual suite uses first class MainActivityColdStartTest with all3 current case classes/names intact. Corrected reviewer-only assertion passed; no source/evidence mutation, application test failure or rerun.",
+    "written_only": "remediation-runs/2026-09-08-continuation/reviews/final-evidence-delivery-independent-01.json"
+  }
+}
