@@ -161,6 +161,33 @@ class WorkflowContractTest(unittest.TestCase):
             with self.subTest(name=name, original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
                 workflow_contract.verify_verification_scopes(changed)
 
+    def test_linux_probe_emulator_package_prerequisite_is_bounded_and_after_admission(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        name = "Install Linux process-probe emulator package"
+        block = workflow_contract.validation_step(workflow, name)
+        workflow_contract.verify_verification_scopes(workflow)
+        for original, replacement in (
+            ("if: " + workflow_contract.LINUX_PROBE_SCOPE, "if: always()"),
+            ("timeout-minutes: 4", "timeout-minutes: 10"),
+            ("--kill-after=10s 180s", "--kill-after=10s 600s"),
+            ('--sdk_root="${ANDROID_HOME}"', '--sdk_root="/tmp/another-sdk"'),
+            ('"emulator"', '"emulator" "system-images;android-35;google_apis;x86_64"'),
+            ('"emulator"', '"platforms;android-36"'),
+            ('"emulator"', '"emulator"\n          "${ANDROID_HOME}/emulator/emulator" -version'),
+            ('"${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager"', 'sudo "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager"'),
+        ):
+            changed = workflow.replace(block, block.replace(original, replacement, 1), 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(original=original), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+        step = "\n      - name: " + name + "\n" + block
+        without = workflow.replace(step, "", 1)
+        for anchor in ("Validate Linux process-probe source and controls", "Install pinned Android SDK packages"):
+            changed = without.replace("\n      - name: " + anchor + "\n", step + "\n      - name: " + anchor + "\n", 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(anchor=anchor), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+
     def test_non_app_probe_requires_explicit_review_no_token_and_uploaded_custody(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
         for original, replacement in (

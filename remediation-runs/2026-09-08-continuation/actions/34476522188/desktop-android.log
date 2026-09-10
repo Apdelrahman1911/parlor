@@ -1,0 +1,391 @@
+﻿2026-09-10T12:24:20.9598554Z Current runner version: '2.337.0'
+2026-09-10T12:24:20.9623993Z ##[group]Runner Image Provisioner
+2026-09-10T12:24:20.9624994Z Hosted Compute Agent
+2026-09-10T12:24:20.9625678Z Version: 20260828.587
+2026-09-10T12:24:20.9626444Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-10T12:24:20.9627260Z Build Date: 2026-08-28T16:44:25Z
+2026-09-10T12:24:20.9628087Z Worker ID: {975ded9b-ab2b-4e9f-8228-824eca0fb861}
+2026-09-10T12:24:20.9628942Z Azure Region: westcentralus
+2026-09-10T12:24:20.9629616Z ##[endgroup]
+2026-09-10T12:24:20.9631581Z ##[group]Operating System
+2026-09-10T12:24:20.9632327Z Ubuntu
+2026-09-10T12:24:20.9632913Z 24.04.5
+2026-09-10T12:24:20.9633654Z LTS
+2026-09-10T12:24:20.9634256Z ##[endgroup]
+2026-09-10T12:24:20.9634904Z ##[group]Runner Image
+2026-09-10T12:24:20.9635595Z Image: ubuntu-24.04
+2026-09-10T12:24:20.9636258Z Version: 20260907.300.1
+2026-09-10T12:24:20.9637649Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260907.300/images/ubuntu/Ubuntu2404-Readme.md
+2026-09-10T12:24:20.9639341Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260907.300
+2026-09-10T12:24:20.9640431Z ##[endgroup]
+2026-09-10T12:24:20.9641935Z ##[group]GITHUB_TOKEN Permissions
+2026-09-10T12:24:20.9643943Z Contents: read
+2026-09-10T12:24:20.9644619Z Metadata: read
+2026-09-10T12:24:20.9645362Z ##[endgroup]
+2026-09-10T12:24:20.9647512Z Secret source: Actions
+2026-09-10T12:24:20.9648764Z Cache mode: write
+2026-09-10T12:24:20.9649530Z Prepare workflow directory
+2026-09-10T12:24:21.0101514Z Prepare all required actions
+2026-09-10T12:24:21.0150001Z Getting action download info
+2026-09-10T12:24:21.3588957Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-10T12:24:21.4910492Z Download action repository 'actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95' (SHA:03ad4de0992f5dab5e18fcb136590ce7c4a0ac95)
+2026-09-10T12:24:22.3335790Z Download action repository 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+2026-09-10T12:24:22.6894462Z Complete job name: Common, desktop, and Android release
+2026-09-10T12:24:22.7906640Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-09-10T12:24:22.7908360Z with:
+2026-09-10T12:24:22.7909100Z   fetch-depth: 0
+2026-09-10T12:24:22.7909922Z   persist-credentials: false
+2026-09-10T12:24:22.7911130Z   repository: Apdelrahman1911/parlor
+2026-09-10T12:24:22.7919300Z   token: ***
+2026-09-10T12:24:22.7920061Z   ssh-strict: true
+2026-09-10T12:24:22.7921000Z   ssh-user: git
+2026-09-10T12:24:22.7921760Z   clean: true
+2026-09-10T12:24:22.7922560Z   sparse-checkout-cone-mode: true
+2026-09-10T12:24:22.7923517Z   fetch-tags: false
+2026-09-10T12:24:22.7924305Z   show-progress: true
+2026-09-10T12:24:22.7925120Z   lfs: false
+2026-09-10T12:24:22.7925859Z   submodules: false
+2026-09-10T12:24:22.7926659Z   set-safe-directory: true
+2026-09-10T12:24:22.7927578Z   allow-unsafe-pr-checkout: false
+2026-09-10T12:24:22.7928833Z env:
+2026-09-10T12:24:22.7930139Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T12:24:22.7931909Z ##[endgroup]
+2026-09-10T12:24:22.9053523Z Syncing repository: Apdelrahman1911/parlor
+2026-09-10T12:24:22.9056966Z ##[group]Getting Git version info
+2026-09-10T12:24:22.9058761Z Working directory is '/home/runner/work/parlor/parlor'
+2026-09-10T12:24:22.9061206Z [command]/usr/bin/git version
+2026-09-10T12:24:22.9092107Z git version 2.55.0
+2026-09-10T12:24:22.9122898Z ##[endgroup]
+2026-09-10T12:24:22.9130296Z Temporarily overriding HOME='/home/runner/work/_temp/8c874438-adc8-4c2b-b179-ae016cb10082' before making global git config changes
+2026-09-10T12:24:22.9134230Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-10T12:24:22.9137449Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/parlor/parlor
+2026-09-10T12:24:22.9195680Z Deleting the contents of '/home/runner/work/parlor/parlor'
+2026-09-10T12:24:22.9199715Z ##[group]Determining repository object format
+2026-09-10T12:24:22.9202618Z ##[endgroup]
+2026-09-10T12:24:22.9204056Z ##[group]Initializing the repository
+2026-09-10T12:24:22.9207167Z [command]/usr/bin/git init /home/runner/work/parlor/parlor
+2026-09-10T12:24:22.9321136Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-09-10T12:24:22.9323917Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-09-10T12:24:22.9325757Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-09-10T12:24:22.9327172Z hint: call:
+2026-09-10T12:24:22.9327891Z hint:
+2026-09-10T12:24:22.9328822Z hint: 	git config --global init.defaultBranch <name>
+2026-09-10T12:24:22.9329999Z hint:
+2026-09-10T12:24:22.9331399Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-09-10T12:24:22.9333212Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-09-10T12:24:22.9334645Z hint:
+2026-09-10T12:24:22.9335392Z hint: 	git branch -m <name>
+2026-09-10T12:24:22.9336258Z hint:
+2026-09-10T12:24:22.9337432Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-09-10T12:24:22.9344026Z Initialized empty Git repository in /home/runner/work/parlor/parlor/.git/
+2026-09-10T12:24:22.9358687Z [command]/usr/bin/git remote add origin https://github.com/Apdelrahman1911/parlor
+2026-09-10T12:24:22.9419316Z ##[endgroup]
+2026-09-10T12:24:22.9421867Z ##[group]Disabling automatic garbage collection
+2026-09-10T12:24:22.9423967Z [command]/usr/bin/git config --local gc.auto 0
+2026-09-10T12:24:22.9459487Z ##[endgroup]
+2026-09-10T12:24:22.9462094Z ##[group]Setting up auth
+2026-09-10T12:24:22.9463672Z Removing SSH command configuration
+2026-09-10T12:24:22.9466266Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-10T12:24:22.9501662Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-10T12:24:22.9869903Z Removing HTTP extra header
+2026-09-10T12:24:22.9888381Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-10T12:24:22.9926875Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-10T12:24:23.0163523Z Removing includeIf entries pointing to credentials config files
+2026-09-10T12:24:23.0167242Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-10T12:24:23.0208345Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-10T12:24:23.0472029Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-b0595ecd-e0e2-4efd-a62a-21847d5d2f54.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-09-10T12:24:23.0515750Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/parlor/parlor/.git.path /home/runner/work/_temp/git-credentials-b0595ecd-e0e2-4efd-a62a-21847d5d2f54.config
+2026-09-10T12:24:23.0552608Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/parlor/parlor/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-b0595ecd-e0e2-4efd-a62a-21847d5d2f54.config
+2026-09-10T12:24:23.0604773Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-b0595ecd-e0e2-4efd-a62a-21847d5d2f54.config
+2026-09-10T12:24:23.0646237Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-b0595ecd-e0e2-4efd-a62a-21847d5d2f54.config
+2026-09-10T12:24:23.0681209Z ##[endgroup]
+2026-09-10T12:24:23.0682631Z ##[group]Fetching the repository
+2026-09-10T12:24:23.0688412Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-09-10T12:24:27.6819758Z From https://github.com/Apdelrahman1911/parlor
+2026-09-10T12:24:27.6821384Z  * [new branch]        codex/parlor-fr-remediation -> origin/codex/parlor-fr-remediation
+2026-09-10T12:24:27.6822761Z  * [new branch]        codex/parlor-independent-review-9cd4040 -> origin/codex/parlor-independent-review-9cd4040
+2026-09-10T12:24:27.6824257Z  * [new branch]        dependabot/github_actions/ci-actions-6bc1927ba3 -> origin/dependabot/github_actions/ci-actions-6bc1927ba3
+2026-09-10T12:24:27.6824984Z  * [new branch]        fix/issue-103 -> origin/fix/issue-103
+2026-09-10T12:24:27.6825425Z  * [new branch]        fix/issue-72  -> origin/fix/issue-72
+2026-09-10T12:24:27.6825846Z  * [new branch]        fix/issue-73  -> origin/fix/issue-73
+2026-09-10T12:24:27.6826422Z  * [new branch]        fix/local-readiness-2026-09-07 -> origin/fix/local-readiness-2026-09-07
+2026-09-10T12:24:27.6827773Z  * [new branch]        mafia/module-and-platform-updates -> origin/mafia/module-and-platform-updates
+2026-09-10T12:24:27.6828688Z  * [new branch]        main          -> origin/main
+2026-09-10T12:24:27.6829106Z  * [new branch]        release       -> origin/release
+2026-09-10T12:24:27.6829508Z  * [new branch]        testing       -> origin/testing
+2026-09-10T12:24:27.6830077Z  * [new branch]        whodunit/round-config-and-clue-pool -> origin/whodunit/round-config-and-clue-pool
+2026-09-10T12:24:27.6832298Z [command]/usr/bin/git branch --list --remote origin/fix/local-readiness-2026-09-07
+2026-09-10T12:24:27.6861658Z   origin/fix/local-readiness-2026-09-07
+2026-09-10T12:24:27.6869679Z [command]/usr/bin/git rev-parse refs/remotes/origin/fix/local-readiness-2026-09-07
+2026-09-10T12:24:27.6896530Z 7d9ea1eac42ebe7630a01e3dbe9aafcf4f36306b
+2026-09-10T12:24:27.6901292Z ##[endgroup]
+2026-09-10T12:24:27.6902130Z ##[group]Determining the checkout info
+2026-09-10T12:24:27.6908311Z ##[endgroup]
+2026-09-10T12:24:27.6916445Z [command]/usr/bin/git sparse-checkout disable
+2026-09-10T12:24:27.6961883Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-09-10T12:24:27.6994729Z ##[group]Checking out the ref
+2026-09-10T12:24:27.6999299Z [command]/usr/bin/git checkout --progress --force -B fix/local-readiness-2026-09-07 refs/remotes/origin/fix/local-readiness-2026-09-07
+2026-09-10T12:24:28.7480819Z Updating files:  50% (14580/28978)
+2026-09-10T12:24:28.7708642Z Updating files:  51% (14779/28978)
+2026-09-10T12:24:28.7903906Z Updating files:  52% (15069/28978)
+2026-09-10T12:24:28.8145769Z Updating files:  53% (15359/28978)
+2026-09-10T12:24:28.8448416Z Updating files:  54% (15649/28978)
+2026-09-10T12:24:28.8732627Z Updating files:  55% (15938/28978)
+2026-09-10T12:24:28.8949776Z Updating files:  56% (16228/28978)
+2026-09-10T12:24:28.9268531Z Updating files:  57% (16518/28978)
+2026-09-10T12:24:28.9405092Z Updating files:  58% (16808/28978)
+2026-09-10T12:24:28.9542800Z Updating files:  59% (17098/28978)
+2026-09-10T12:24:28.9663491Z Updating files:  60% (17387/28978)
+2026-09-10T12:24:28.9824707Z Updating files:  61% (17677/28978)
+2026-09-10T12:24:29.0091303Z Updating files:  62% (17967/28978)
+2026-09-10T12:24:29.0386695Z Updating files:  63% (18257/28978)
+2026-09-10T12:24:29.0617313Z Updating files:  64% (18546/28978)
+2026-09-10T12:24:29.0890548Z Updating files:  65% (18836/28978)
+2026-09-10T12:24:29.1138500Z Updating files:  66% (19126/28978)
+2026-09-10T12:24:29.1359309Z Updating files:  67% (19416/28978)
+2026-09-10T12:24:29.1555181Z Updating files:  68% (19706/28978)
+2026-09-10T12:24:29.1899828Z Updating files:  69% (19995/28978)
+2026-09-10T12:24:29.2651058Z Updating files:  70% (20285/28978)
+2026-09-10T12:24:29.2794855Z Updating files:  71% (20575/28978)
+2026-09-10T12:24:29.2938766Z Updating files:  72% (20865/28978)
+2026-09-10T12:24:29.3112727Z Updating files:  73% (21154/28978)
+2026-09-10T12:24:29.3275461Z Updating files:  74% (21444/28978)
+2026-09-10T12:24:29.3612894Z Updating files:  75% (21734/28978)
+2026-09-10T12:24:29.3751628Z Updating files:  76% (22024/28978)
+2026-09-10T12:24:29.4109738Z Updating files:  77% (22314/28978)
+2026-09-10T12:24:29.4253770Z Updating files:  78% (22603/28978)
+2026-09-10T12:24:29.5443767Z Updating files:  79% (22893/28978)
+2026-09-10T12:24:29.5932714Z Updating files:  80% (23183/28978)
+2026-09-10T12:24:29.6093384Z Updating files:  81% (23473/28978)
+2026-09-10T12:24:29.6541508Z Updating files:  82% (23762/28978)
+2026-09-10T12:24:29.7389199Z Updating files:  83% (24052/28978)
+2026-09-10T12:24:29.7502915Z Updating files:  83% (24166/28978)
+2026-09-10T12:24:29.7639755Z Updating files:  84% (24342/28978)
+2026-09-10T12:24:29.7776371Z Updating files:  85% (24632/28978)
+2026-09-10T12:24:29.7931475Z Updating files:  86% (24922/28978)
+2026-09-10T12:24:29.8090212Z Updating files:  87% (25211/28978)
+2026-09-10T12:24:29.8540360Z Updating files:  88% (25501/28978)
+2026-09-10T12:24:29.8674792Z Updating files:  89% (25791/28978)
+2026-09-10T12:24:29.9231247Z Updating files:  90% (26081/28978)
+2026-09-10T12:24:29.9366989Z Updating files:  91% (26370/28978)
+2026-09-10T12:24:29.9559347Z Updating files:  92% (26660/28978)
+2026-09-10T12:24:29.9707829Z Updating files:  93% (26950/28978)
+2026-09-10T12:24:30.1213605Z Updating files:  94% (27240/28978)
+2026-09-10T12:24:30.1806683Z Updating files:  95% (27530/28978)
+2026-09-10T12:24:30.2141124Z Updating files:  96% (27819/28978)
+2026-09-10T12:24:30.2577424Z Updating files:  97% (28109/28978)
+2026-09-10T12:24:30.3007607Z Updating files:  98% (28399/28978)
+2026-09-10T12:24:30.3406356Z Updating files:  99% (28689/28978)
+2026-09-10T12:24:30.3406947Z Updating files: 100% (28978/28978)
+2026-09-10T12:24:30.3407436Z Updating files: 100% (28978/28978), done.
+2026-09-10T12:24:30.3860000Z Switched to a new branch 'fix/local-readiness-2026-09-07'
+2026-09-10T12:24:30.3865818Z branch 'fix/local-readiness-2026-09-07' set up to track 'origin/fix/local-readiness-2026-09-07'.
+2026-09-10T12:24:30.3953644Z ##[endgroup]
+2026-09-10T12:24:30.4005046Z [command]/usr/bin/git log -1 --format=%H
+2026-09-10T12:24:30.4034294Z 7d9ea1eac42ebe7630a01e3dbe9aafcf4f36306b
+2026-09-10T12:24:30.4043680Z ##[group]Removing auth
+2026-09-10T12:24:30.4044073Z Removing SSH command configuration
+2026-09-10T12:24:30.4047107Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-10T12:24:30.4084619Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-10T12:24:30.4363519Z Removing HTTP extra header
+2026-09-10T12:24:30.4364440Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-10T12:24:30.4395023Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-10T12:24:30.4656258Z Removing includeIf entries pointing to credentials config files
+2026-09-10T12:24:30.4681651Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-10T12:24:30.4697939Z includeif.gitdir:/home/runner/work/parlor/parlor/.git.path
+2026-09-10T12:24:30.4699040Z includeif.gitdir:/home/runner/work/parlor/parlor/.git/worktrees/*.path
+2026-09-10T12:24:30.4700085Z includeif.gitdir:/github/workspace/.git.path
+2026-09-10T12:24:30.4701058Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-10T12:24:30.4710058Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/parlor/parlor/.git.path
+2026-09-10T12:24:30.4742392Z /home/runner/work/_temp/git-credentials-b0595ecd-e0e2-4efd-a62a-21847d5d2f54.config
+2026-09-10T12:24:30.4772196Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/parlor/parlor/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-b0595ecd\-e0e2\-4efd\-a62a\-21847d5d2f54\.config
+2026-09-10T12:24:30.4811833Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/parlor/parlor/.git/worktrees/*.path
+2026-09-10T12:24:30.4842534Z /home/runner/work/_temp/git-credentials-b0595ecd-e0e2-4efd-a62a-21847d5d2f54.config
+2026-09-10T12:24:30.4852547Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/parlor/parlor/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-b0595ecd\-e0e2\-4efd\-a62a\-21847d5d2f54\.config
+2026-09-10T12:24:30.4892140Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-10T12:24:30.4918687Z /github/runner_temp/git-credentials-b0595ecd-e0e2-4efd-a62a-21847d5d2f54.config
+2026-09-10T12:24:30.4927213Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-b0595ecd\-e0e2\-4efd\-a62a\-21847d5d2f54\.config
+2026-09-10T12:24:30.4962512Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-10T12:24:30.4987641Z /github/runner_temp/git-credentials-b0595ecd-e0e2-4efd-a62a-21847d5d2f54.config
+2026-09-10T12:24:30.4995201Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-b0595ecd\-e0e2\-4efd\-a62a\-21847d5d2f54\.config
+2026-09-10T12:24:30.5031963Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-10T12:24:30.5291406Z Removing credentials config '/home/runner/work/_temp/git-credentials-b0595ecd-e0e2-4efd-a62a-21847d5d2f54.config'
+2026-09-10T12:24:30.5301083Z ##[endgroup]
+2026-09-10T12:24:30.5577651Z ##[group]Run actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95
+2026-09-10T12:24:30.5578053Z with:
+2026-09-10T12:24:30.5578252Z   distribution: temurin
+2026-09-10T12:24:30.5578474Z   java-version: 21
+2026-09-10T12:24:30.5578676Z   check-latest: false
+2026-09-10T12:24:30.5578896Z   java-package: jdk
+2026-09-10T12:24:30.5579096Z   set-default: true
+2026-09-10T12:24:30.5579299Z   verify-signature: false
+2026-09-10T12:24:30.5579519Z   server-id: github
+2026-09-10T12:24:30.5579731Z   server-username: GITHUB_ACTOR
+2026-09-10T12:24:30.5579981Z   server-password: GITHUB_TOKEN
+2026-09-10T12:24:30.5580227Z   overwrite-settings: true
+2026-09-10T12:24:30.5580449Z   job-status: success
+2026-09-10T12:24:30.5583116Z   token: ***
+2026-09-10T12:24:30.5583342Z   show-download-progress: false
+2026-09-10T12:24:30.5583583Z env:
+2026-09-10T12:24:30.5583941Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T12:24:30.5584365Z ##[endgroup]
+2026-09-10T12:24:30.7079085Z ##[group]Installed distributions
+2026-09-10T12:24:30.7150534Z Resolved Java 21.0.12+1 from tool-cache
+2026-09-10T12:24:30.7151324Z Setting Java 21.0.12+1 as the default
+2026-09-10T12:24:30.7162884Z Creating toolchains.xml for JDK version 21 from temurin
+2026-09-10T12:24:30.7238533Z Writing to /home/runner/.m2/toolchains.xml
+2026-09-10T12:24:30.7238996Z 
+2026-09-10T12:24:30.7239165Z Java configuration:
+2026-09-10T12:24:30.7239607Z   Distribution: temurin
+2026-09-10T12:24:30.7240044Z   Version: 21.0.12+1
+2026-09-10T12:24:30.7240874Z   Path: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T12:24:30.7241453Z 
+2026-09-10T12:24:30.7241921Z ##[endgroup]
+2026-09-10T12:24:30.7277296Z Creating settings.xml with server-id: github
+2026-09-10T12:24:30.7277985Z Writing to /home/runner/.m2/settings.xml
+2026-09-10T12:24:30.7279272Z Configured MAVEN_ARGS to include -ntp to suppress Maven transfer progress logs. Set 'show-download-progress: true' to keep the download progress output.
+2026-09-10T12:24:30.7458523Z ##[group]Run /usr/bin/python3 -B scripts/ci/linux_process_probe.py validate
+2026-09-10T12:24:30.7459455Z [36;1m/usr/bin/python3 -B scripts/ci/linux_process_probe.py validate[0m
+2026-09-10T12:24:30.7513592Z shell: /usr/bin/bash -e {0}
+2026-09-10T12:24:30.7514220Z env:
+2026-09-10T12:24:30.7514810Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T12:24:30.7515719Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T12:24:30.7516539Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T12:24:30.7517178Z   MAVEN_ARGS: -ntp
+2026-09-10T12:24:30.7518931Z   PARLOR_LINUX_PROBE_INPUTS: {
+  "verification_scope": "linux-process-probe",
+  "native_selection": "paired",
+  "frozen_source_sha": "7d9ea1eac42ebe7630a01e3dbe9aafcf4f36306b",
+  "approved_probe_control_sha256": "bbf7680815c5a6418574ab4accd061b6d0fa57f23178d28f45a986505675d79f"
+}
+2026-09-10T12:24:30.7521028Z ##[endgroup]
+2026-09-10T12:24:32.0475570Z {"task": {"GITHUB_RUN_ID": "34476522188", "GITHUB_RUN_ATTEMPT": "1", "GITHUB_JOB": "desktop-android"}, "source": {"root": "/home/runner/work/parlor/parlor", "head": "7d9ea1eac42ebe7630a01e3dbe9aafcf4f36306b", "tree": "6d2337b11a07f64cf677bbc9ae3d21138a245c5f"}, "controls": {"files": [{"path": ".github/workflows/production-verification.yml", "sha256": "57b112d806277eeb861efc7d58cffc76878210a4c441a7229d064351ecb126f2"}, {"path": "gradle/wrapper/gradle-wrapper.jar", "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f"}, {"path": "gradle/wrapper/gradle-wrapper.properties", "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2"}, {"path": "gradlew", "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933"}, {"path": "scripts/ci/linux_process_probe.py", "sha256": "2696b0d81f1113eeaea20b431191788925053703d2ed6e12d72489041c6f76b6"}, {"path": "scripts/ci/verification_hygiene.py", "sha256": "1fc2fb6f0b3bb7a505edc63277e0fe974a67ccf972753eec0da60386438c16f4"}, {"path": "scripts/release/tests/test_ci_verification_hygiene.py", "sha256": "1f228c62dd1de0b79b8c0add9500dd3da7572bd761d079a058f45ef502e1f8e0"}, {"path": "scripts/release/tests/test_linux_process_probe.py", "sha256": "51e3086b6bc43712e689f3c06584cfc9659adbdf45564d16f60c8493f8891325"}, {"path": "scripts/release/tests/test_workflow_contract.py", "sha256": "c0539b7b2daeef29936aa3c4763e3ee1876ff53b60fb9d68e787388eaa363372"}, {"path": "scripts/release/workflow_contract.py", "sha256": "d1b625c48af28eb0a53153f08b928fc818153d0c6eb4a9275bf7ed78700d7104"}], "control_sha256": "bbf7680815c5a6418574ab4accd061b6d0fa57f23178d28f45a986505675d79f"}, "android_sdk": {"sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1", "sdk_device": 2049, "sdk_inode": 795534, "uid": 1001}, "platform": {"os": "ubuntu-24.04", "machine": "x86_64", "kernel": "6.17.0-1022-azure", "python": "3.12.3"}}
+2026-09-10T12:24:32.0575769Z ##[group]Run import runpy, sys
+2026-09-10T12:24:32.0576093Z [36;1mimport runpy, sys[0m
+2026-09-10T12:24:32.0576406Z [36;1msys.argv = ["verification_hygiene.py", "prepare"][0m
+2026-09-10T12:24:32.0577028Z [36;1mrunpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")[0m
+2026-09-10T12:24:32.1287774Z shell: /usr/bin/python {0}
+2026-09-10T12:24:32.1288122Z env:
+2026-09-10T12:24:32.1288612Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T12:24:32.1289338Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T12:24:32.1289981Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T12:24:32.1290493Z   MAVEN_ARGS: -ntp
+2026-09-10T12:24:32.1290972Z ##[endgroup]
+2026-09-10T12:24:33.1627686Z ##[group]Run /usr/bin/python3 -B scripts/ci/linux_process_probe.py run
+2026-09-10T12:24:33.1628220Z [36;1m/usr/bin/python3 -B scripts/ci/linux_process_probe.py run[0m
+2026-09-10T12:24:33.1663557Z shell: /usr/bin/bash -e {0}
+2026-09-10T12:24:33.1663801Z env:
+2026-09-10T12:24:33.1664180Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T12:24:33.1664734Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T12:24:33.1665227Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T12:24:33.1665771Z   MAVEN_ARGS: -ntp
+2026-09-10T12:24:33.1666760Z   PARLOR_LINUX_PROBE_INPUTS: {
+  "verification_scope": "linux-process-probe",
+  "native_selection": "paired",
+  "frozen_source_sha": "7d9ea1eac42ebe7630a01e3dbe9aafcf4f36306b",
+  "approved_probe_control_sha256": "bbf7680815c5a6418574ab4accd061b6d0fa57f23178d28f45a986505675d79f"
+}
+2026-09-10T12:24:33.1667888Z   PARLOR_VERIFICATION_PREPARE_OUTCOME: success
+2026-09-10T12:24:33.1668174Z ##[endgroup]
+2026-09-10T12:24:45.8686223Z {"kind": "BARE_HOST_LINUX_PROC_DISCRIMINATOR_NOT_APP_QUALIFICATION", "result": "FAIL", "task": {"GITHUB_RUN_ID": "34476522188", "GITHUB_RUN_ATTEMPT": "1", "GITHUB_JOB": "desktop-android"}, "started_at": "2026-09-10T12:24:33.215245+00:00", "binding": {"task": {"GITHUB_RUN_ID": "34476522188", "GITHUB_RUN_ATTEMPT": "1", "GITHUB_JOB": "desktop-android"}, "source": {"root": "/home/runner/work/parlor/parlor", "head": "7d9ea1eac42ebe7630a01e3dbe9aafcf4f36306b", "tree": "6d2337b11a07f64cf677bbc9ae3d21138a245c5f"}, "controls": {"files": [{"path": ".github/workflows/production-verification.yml", "sha256": "57b112d806277eeb861efc7d58cffc76878210a4c441a7229d064351ecb126f2"}, {"path": "gradle/wrapper/gradle-wrapper.jar", "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f"}, {"path": "gradle/wrapper/gradle-wrapper.properties", "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2"}, {"path": "gradlew", "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933"}, {"path": "scripts/ci/linux_process_probe.py", "sha256": "2696b0d81f1113eeaea20b431191788925053703d2ed6e12d72489041c6f76b6"}, {"path": "scripts/ci/verification_hygiene.py", "sha256": "1fc2fb6f0b3bb7a505edc63277e0fe974a67ccf972753eec0da60386438c16f4"}, {"path": "scripts/release/tests/test_ci_verification_hygiene.py", "sha256": "1f228c62dd1de0b79b8c0add9500dd3da7572bd761d079a058f45ef502e1f8e0"}, {"path": "scripts/release/tests/test_linux_process_probe.py", "sha256": "51e3086b6bc43712e689f3c06584cfc9659adbdf45564d16f60c8493f8891325"}, {"path": "scripts/release/tests/test_workflow_contract.py", "sha256": "c0539b7b2daeef29936aa3c4763e3ee1876ff53b60fb9d68e787388eaa363372"}, {"path": "scripts/release/workflow_contract.py", "sha256": "d1b625c48af28eb0a53153f08b928fc818153d0c6eb4a9275bf7ed78700d7104"}], "control_sha256": "bbf7680815c5a6418574ab4accd061b6d0fa57f23178d28f45a986505675d79f"}, "android_sdk": {"sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1", "sdk_device": 2049, "sdk_inode": 795534, "uid": 1001}, "platform": {"os": "ubuntu-24.04", "machine": "x86_64", "kernel": "6.17.0-1022-azure", "python": "3.12.3"}}, "host_audit": {"result": "FAIL", "started_at": "2026-09-10T12:24:34.180996+00:00", "enumerated": 0, "sampled": 0, "selected_uid": 0, "matching_executables": 0, "errors": [{"code": "FileNotFoundError"}], "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence", "binding": {"sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1", "sdk_device": 2049, "sdk_inode": 795534, "uid": 1001}, "finished_at": "2026-09-10T12:24:34.248873+00:00"}, "controls": [{"kind": "LIVE_LINUX_CONTROL_SYNTHETIC_ENUMERATION", "dumpable": 1, "result": "CONTROL_FAIL", "started_at": "2026-09-10T12:24:34.249193+00:00", "child_reaped": true, "fixture_removed": true, "errors": [{"stage": "observation", "error_type": "RuntimeError"}], "scope": "Only self/direct-child enumeration with real procfs reads; not a host inventory or emulator runtime.", "fixture_basename": "parlor-linux-proc-control-6o8s9lmo", "owned_pid": 2445, "readiness": {"pid": 2445, "uid": 1001, "dumpable": 1}, "audit": {"result": "FAIL", "started_at": "2026-09-10T12:24:34.604334+00:00", "enumerated": 0, "sampled": 0, "selected_uid": 0, "matching_executables": 0, "errors": [{"code": "FileNotFoundError"}], "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence", "binding": {"sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1", "sdk_device": 2049, "sdk_inode": 795534, "uid": 1001}, "finished_at": "2026-09-10T12:24:34.604585+00:00"}, "child_exit_code": 0, "interrupted": false, "finished_at": "2026-09-10T12:24:34.605932+00:00"}, {"kind": "LIVE_LINUX_CONTROL_SYNTHETIC_ENUMERATION", "dumpable": 0, "result": "CONTROL_FAIL", "started_at": "2026-09-10T12:24:34.606165+00:00", "child_reaped": true, "fixture_removed": true, "errors": [{"stage": "observation", "error_type": "RuntimeError"}], "scope": "Only self/direct-child enumeration with real procfs reads; not a host inventory or emulator runtime.", "fixture_basename": "parlor-linux-proc-control-_fjmz6ld", "owned_pid": 2446, "readiness": {"pid": 2446, "uid": 1001, "dumpable": 0}, "audit": {"result": "FAIL", "started_at": "2026-09-10T12:24:34.627591+00:00", "enumerated": 0, "sampled": 0, "selected_uid": 0, "matching_executables": 0, "errors": [{"code": "FileNotFoundError"}], "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence", "binding": {"sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1", "sdk_device": 2049, "sdk_inode": 795534, "uid": 1001}, "finished_at": "2026-09-10T12:24:34.627784+00:00"}, "child_exit_code": 0, "interrupted": false, "finished_at": "2026-09-10T12:24:34.629078+00:00"}], "errors": [], "scope": "No build/emulator/managed-device execution; cannot repair previous cleanup or combined qualification.", "finished_at": "2026-09-10T12:24:35.542672+00:00"}
+2026-09-10T12:24:45.8731994Z {"task": {"GITHUB_RUN_ID": "34476522188", "GITHUB_RUN_ATTEMPT": "1", "GITHUB_JOB": "desktop-android"}, "binding": {"task": {"GITHUB_RUN_ID": "34476522188", "GITHUB_RUN_ATTEMPT": "1", "GITHUB_JOB": "desktop-android"}, "source": {"root": "/home/runner/work/parlor/parlor", "head": "7d9ea1eac42ebe7630a01e3dbe9aafcf4f36306b", "tree": "6d2337b11a07f64cf677bbc9ae3d21138a245c5f"}, "controls": {"files": [{"path": ".github/workflows/production-verification.yml", "sha256": "57b112d806277eeb861efc7d58cffc76878210a4c441a7229d064351ecb126f2"}, {"path": "gradle/wrapper/gradle-wrapper.jar", "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f"}, {"path": "gradle/wrapper/gradle-wrapper.properties", "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2"}, {"path": "gradlew", "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933"}, {"path": "scripts/ci/linux_process_probe.py", "sha256": "2696b0d81f1113eeaea20b431191788925053703d2ed6e12d72489041c6f76b6"}, {"path": "scripts/ci/verification_hygiene.py", "sha256": "1fc2fb6f0b3bb7a505edc63277e0fe974a67ccf972753eec0da60386438c16f4"}, {"path": "scripts/release/tests/test_ci_verification_hygiene.py", "sha256": "1f228c62dd1de0b79b8c0add9500dd3da7572bd761d079a058f45ef502e1f8e0"}, {"path": "scripts/release/tests/test_linux_process_probe.py", "sha256": "51e3086b6bc43712e689f3c06584cfc9659adbdf45564d16f60c8493f8891325"}, {"path": "scripts/release/tests/test_workflow_contract.py", "sha256": "c0539b7b2daeef29936aa3c4763e3ee1876ff53b60fb9d68e787388eaa363372"}, {"path": "scripts/release/workflow_contract.py", "sha256": "d1b625c48af28eb0a53153f08b928fc818153d0c6eb4a9275bf7ed78700d7104"}], "control_sha256": "bbf7680815c5a6418574ab4accd061b6d0fa57f23178d28f45a986505675d79f"}, "android_sdk": {"sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1", "sdk_device": 2049, "sdk_inode": 795534, "uid": 1001}, "platform": {"os": "ubuntu-24.04", "machine": "x86_64", "kernel": "6.17.0-1022-azure", "python": "3.12.3"}}, "command": ["./gradlew", "--stop"], "started_at": "2026-09-10T12:24:35.545723+00:00", "exit_code": 0, "output": "Downloading https://services.gradle.org/distributions/gradle-8.13-bin.zip\n.............10%.............20%.............30%.............40%.............50%.............60%.............70%.............80%.............90%.............100%\n\nWelcome to Gradle 8.13!\n\nHere are the highlights of this release:\n - Daemon JVM auto-provisioning\n - Enhancements for Scala plugin and JUnit testing\n - Improvements for build authors and plugin developers\n\nFor more details see https://docs.gradle.org/8.13/release-notes.html\n\nNo Gradle daemons are running.\n", "finished_at": "2026-09-10T12:24:45.858951+00:00"}
+2026-09-10T12:24:45.8770272Z ##[error]Process completed with exit code 1.
+2026-09-10T12:24:45.8869509Z ##[group]Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+2026-09-10T12:24:45.8869933Z with:
+2026-09-10T12:24:45.8870155Z   name: linux-process-probe-34476522188-1
+2026-09-10T12:24:45.8870449Z   if-no-files-found: error
+2026-09-10T12:24:45.8870891Z   retention-days: 14
+2026-09-10T12:24:45.8872039Z   path: /home/runner/work/_temp/parlor-verification-34476522188-1-desktop-android-linux-probe.json
+/home/runner/work/_temp/parlor-verification-34476522188-1-desktop-android-ownership.json
+/home/runner/work/_temp/parlor-verification-34476522188-1-desktop-android-stop-linux-probe.json
+
+2026-09-10T12:24:45.8873253Z   compression-level: 6
+2026-09-10T12:24:45.8873466Z   overwrite: false
+2026-09-10T12:24:45.8873679Z   include-hidden-files: false
+2026-09-10T12:24:45.8873914Z   archive: true
+2026-09-10T12:24:45.8874104Z env:
+2026-09-10T12:24:45.8874455Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T12:24:45.8875027Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T12:24:45.8875512Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T12:24:45.8875895Z   MAVEN_ARGS: -ntp
+2026-09-10T12:24:45.8876096Z ##[endgroup]
+2026-09-10T12:24:46.0345216Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-09-10T12:24:46.0347785Z The least common ancestor is /home/runner/work/_temp. This will be the root directory of the artifact
+2026-09-10T12:24:46.0348812Z With the provided path, there will be 3 files uploaded
+2026-09-10T12:24:46.0361310Z Artifact name is valid!
+2026-09-10T12:24:46.0362045Z Root directory input is valid!
+2026-09-10T12:24:46.3978479Z Uploading artifact: linux-process-probe-34476522188-1.zip
+2026-09-10T12:24:46.4023562Z Beginning upload of artifact content to blob storage
+2026-09-10T12:24:46.6492552Z Uploaded bytes 6412
+2026-09-10T12:24:46.7066509Z Finished uploading artifact content to blob storage!
+2026-09-10T12:24:46.7067896Z SHA256 digest of uploaded artifact is a9587f80a5cb7385ec652f45aa03b04416350d2225b1e0f11d49c72e678b0edb
+2026-09-10T12:24:46.7069075Z Finalizing artifact upload
+2026-09-10T12:24:47.0914365Z Artifact linux-process-probe-34476522188-1 successfully finalized. Artifact ID 10151717705
+2026-09-10T12:24:47.0915906Z Artifact linux-process-probe-34476522188-1 has been successfully uploaded! Final size is 6412 bytes. Artifact ID is 10151717705
+2026-09-10T12:24:47.0918980Z Artifact download URL: https://github.com/Apdelrahman1911/parlor/actions/runs/34476522188/artifacts/10151717705
+2026-09-10T12:24:47.1079220Z ##[group]Run /usr/bin/python3 -B scripts/ci/linux_process_probe.py cleanup
+2026-09-10T12:24:47.1079813Z [36;1m/usr/bin/python3 -B scripts/ci/linux_process_probe.py cleanup[0m
+2026-09-10T12:24:47.1116344Z shell: /usr/bin/bash -e {0}
+2026-09-10T12:24:47.1116601Z env:
+2026-09-10T12:24:47.1116984Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T12:24:47.1117581Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T12:24:47.1118115Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T12:24:47.1118524Z   MAVEN_ARGS: -ntp
+2026-09-10T12:24:47.1119632Z   PARLOR_LINUX_PROBE_INPUTS: {
+  "verification_scope": "linux-process-probe",
+  "native_selection": "paired",
+  "frozen_source_sha": "7d9ea1eac42ebe7630a01e3dbe9aafcf4f36306b",
+  "approved_probe_control_sha256": "bbf7680815c5a6418574ab4accd061b6d0fa57f23178d28f45a986505675d79f"
+}
+2026-09-10T12:24:47.1121390Z   PARLOR_VERIFICATION_PREPARE_OUTCOME: success
+2026-09-10T12:24:47.1121738Z   PARLOR_VERIFICATION_UPLOAD_OUTCOME: success
+2026-09-10T12:24:47.1122069Z   PARLOR_VERIFICATION_ARTIFACT_ID: 10151717705
+2026-09-10T12:24:47.1122609Z   PARLOR_VERIFICATION_ARTIFACT_DIGEST: a9587f80a5cb7385ec652f45aa03b04416350d2225b1e0f11d49c72e678b0edb
+2026-09-10T12:24:47.1123125Z ##[endgroup]
+2026-09-10T12:24:49.6783313Z {"task": {"GITHUB_RUN_ID": "34476522188", "GITHUB_RUN_ATTEMPT": "1", "GITHUB_JOB": "desktop-android"}, "started_at": "2026-09-10T12:24:48.098839+00:00", "removed": [], "not_created": ["audit-runs/2026-09-05-source-audit/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/android-managed-reconciliation-mafia-cont-02/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/android-runner-independent-whodunit-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/android-runner-safety-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/coverage-binary-delta-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-apphost-closeout-history/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-checker-root-revision-history/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-frozen-reconciliation-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-frozen-reconciliation-mafia-cont/inputs-after-correction/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-frozen-reconciliation-mafia-cont/inputs/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-frozen-reconciliation-mafia-cont/order-correction-review/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-frozen-reconciliation-mafia-cont/order-correction-review/inputs/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-generation-order-history-01/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-preservation-delta-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-preservation-review-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-preservation-secondary-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-verification-review-initial-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-verification-skeleton-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/iosr1-apphost-01/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/iosr1-apphost-02/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/iosr1-runner-independent-whodunit-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/iosr1-runner-independent-whodunit-cont/cycle01-reviewed-inputs/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/runner-versions/__pycache__", "audit-runs/2026-09-05-source-audit/reproducers/__pycache__", "audit-runs/2026-09-05-source-audit/research/android-managed-listener-whodunit-cont/__pycache__", "build", "build-logic/build", "build-logic/convention/build", "composeApp/build", "game-modes/mafia/build", "game-modes/whodunit/build", "iosApp/build", "remediation-runs/2026-09-05-confirmed-fixes/__pycache__", "remediation-runs/2026-09-05-confirmed-fixes/mafia/__pycache__", "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost/__pycache__", "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost_v2/__pycache__", "remediation-runs/2026-09-05-confirmed-fixes/observation-controls-contracts-01/__pycache__", "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/__pycache__", "remediation-runs/2026-09-05-confirmed-fixes/session_cont/apple_runner/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v10/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v11/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v4/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v5/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/revision01-unexecuted-controls/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v9/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/ios_release_wrapper_v1/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/ios_wrapper_smoke_v1/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/reviews/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/root/__pycache__", "remediation-runs/2026-09-07-local-readiness/__pycache__", "remediation-runs/2026-09-07-local-readiness/drafts/l08-protection-metadata-01/files/scripts/verification/ios-readiness/__pycache__", "remediation-runs/2026-09-07-local-readiness/drafts/l08-save-diagnostics-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-build-helper/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/emulator-package-followup-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin-null-port-retry-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-final-identity-helper/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/linux-vz-runner-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/release-readiness-map/local-gap-remediation-01/before/scripts/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/release-readiness-map/local-gap-remediation-01/before/scripts/release/tests/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/tsa-positive-runner/__pycache__", "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/control-drafts-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/control-drafts-02/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/controls-gap-drafts-01/before/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/controls-gap-drafts-01/staged/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/normal-image-diagnostics-draft-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/normal-vmmap-capability-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/before-null-port-adoption-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/ci-native-argument-capacity-before-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/darwin-ci-uid-inventory-01/draft/scripts/ci/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/darwin-ci-uid-inventory-01/draft/scripts/release/tests/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/ios-controls-before-gap02/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-02/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/before-last-query-test-correction/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/before-review-correction/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/before/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/draft/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/native-failure-diagnostic-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/native-path-canonicalization-draft-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/native-path-canonicalization-draft-01/review-revision-01-original/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/native-path-canonicalization-prepatch-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/normal-launch-allocation-prepatch-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/normal-user-only-alias-draft-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/partial-fifo-attestation-draft-01/__pycache__", "remediation-runs/2026-09-08-continuation/controls/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/a33-owned-import-test-followup-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/android-emulator-absence-audit-01/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/android-emulator-absence-audit-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/android-proc-permission-diagnostic-01/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/android-proc-permission-diagnostic-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/proposed/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/revision-02/proposed/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/revision-02/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/revision-02/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-single-tap-scanner-correction-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-01/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-01/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/revision-02/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/integration-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/revision-02/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a25-functional-copy-guard-correction-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a27-stale-runner-guard-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a29-b30-label-01/draft/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a29-b30-label-01/draft/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a29-host-followup-01/implementation-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a31-catalog-followup-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a31-host-observation-followup-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a31-os-prerequisite-followup-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-b24-region-diagnostics-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-b26-region-followup-01/draft-02/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-b26-region-followup-01/draft/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-b30-text-extent-01/draft/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-l08-only-selection-01/draft/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-l08-only-selection-01/draft/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-l08-only-selection-01/draft/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-normal-only-selection-01/draft/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-normal-only-selection-01/draft/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-normal-only-selection-01/draft/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/proposed/scripts/verification/ios-settings-sheet/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-02/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-02/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-02/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-02/proposed/scripts/verification/ios-settings-sheet/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/verification/ios-settings-sheet/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/workflow-contract-overlay-01/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/workflow-contract-overlay-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/settings-single-execution-cli-fix-01/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/settings-single-execution-cli-fix-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/settings-single-execution-cli-fix-01/proposed/scripts/verification/ios-settings-sheet/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/revision-02/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/revision-02/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/windows-targeted-collector-01/__pycache__", "scripts/__pycache__", "scripts/ci/__pycache__", "scripts/release/__pycache__", "scripts/release/tests/__pycache__", "scripts/verification/__pycache__", "scripts/verification/ios-os-recovery/__pycache__", "scripts/verification/ios-readiness/__pycache__", "scripts/verification/ios-settings-sheet/__pycache__", "shared/content/build", "shared/core/build", "shared/design-system/build", "shared/engine-testing/build", "shared/engine/build", "shared/networking-testing/build", "shared/networking/build", "shared/session/build", "shared/storage/build", "shared/transport-p2p/build"], "retained": [], "upload": {"outcome": "success", "artifact_id": "10151717705", "artifact_digest": "a9587f80a5cb7385ec652f45aa03b04416350d2225b1e0f11d49c72e678b0edb"}, "preparation_outcome": "success", "errors": [{"error": "Android sampled emulator absence did not pass; retain outputs"}], "gradle_stop": {"command": ["./gradlew", "--stop"], "started_at": "2026-09-10T12:24:48.098856+00:00", "exit_code": 0, "output": "No Gradle daemons are running.\n", "finished_at": "2026-09-10T12:24:48.715053+00:00"}, "android_emulator_absence": {"result": "FAIL", "started_at": "2026-09-10T12:24:49.664007+00:00", "enumerated": 0, "sampled": 0, "selected_uid": 0, "matching_executables": 0, "errors": [{"code": "FileNotFoundError"}], "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence", "binding": {"sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1", "sdk_device": 2049, "sdk_inode": 795534, "uid": 1001}, "finished_at": "2026-09-10T12:24:49.664244+00:00", "source": {"head": "7d9ea1eac42ebe7630a01e3dbe9aafcf4f36306b", "tree": "6d2337b11a07f64cf677bbc9ae3d21138a245c5f"}}, "result": "FAIL", "finished_at": "2026-09-10T12:24:49.664258+00:00", "scope": "Only attested checkout build/Python-cache directories; no global caches or source", "worker_scope": "Gradle stop; Android receipt, when present, covers only sampled selected-UID SDK/emulator executable-path absence, not termination or AVD retirement"}
+2026-09-10T12:24:49.6855644Z ##[error]Process completed with exit code 1.
+2026-09-10T12:24:49.6910189Z ##[group]Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+2026-09-10T12:24:49.6911011Z with:
+2026-09-10T12:24:49.6911376Z   name: linux-process-probe-cleanup-34476522188-1
+2026-09-10T12:24:49.6911904Z   if-no-files-found: error
+2026-09-10T12:24:49.6912141Z   retention-days: 14
+2026-09-10T12:24:49.6912569Z   path: /home/runner/work/_temp/parlor-verification-34476522188-1-desktop-android-cleanup.json
+2026-09-10T12:24:49.6913053Z   compression-level: 6
+2026-09-10T12:24:49.6913270Z   overwrite: false
+2026-09-10T12:24:49.6913509Z   include-hidden-files: false
+2026-09-10T12:24:49.6913755Z   archive: true
+2026-09-10T12:24:49.6913949Z env:
+2026-09-10T12:24:49.6914307Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-10T12:24:49.6914853Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T12:24:49.6915351Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-09-10T12:24:49.6915769Z   MAVEN_ARGS: -ntp
+2026-09-10T12:24:49.6915972Z ##[endgroup]
+2026-09-10T12:24:49.8371502Z With the provided path, there will be 1 file uploaded
+2026-09-10T12:24:49.8378403Z Artifact name is valid!
+2026-09-10T12:24:49.8379406Z Root directory input is valid!
+2026-09-10T12:24:50.1781904Z Uploading artifact: linux-process-probe-cleanup-34476522188-1.zip
+2026-09-10T12:24:50.1829469Z Beginning upload of artifact content to blob storage
+2026-09-10T12:24:50.4206282Z Uploaded bytes 3060
+2026-09-10T12:24:50.4767587Z Finished uploading artifact content to blob storage!
+2026-09-10T12:24:50.4768713Z SHA256 digest of uploaded artifact is 4113d01f10629b74c608bd5dfb7a964a79ee2c712be97b39187abfde97a799e3
+2026-09-10T12:24:50.4769676Z Finalizing artifact upload
+2026-09-10T12:24:50.8265447Z Artifact linux-process-probe-cleanup-34476522188-1 successfully finalized. Artifact ID 10151720206
+2026-09-10T12:24:50.8267371Z Artifact linux-process-probe-cleanup-34476522188-1 has been successfully uploaded! Final size is 3060 bytes. Artifact ID is 10151720206
+2026-09-10T12:24:50.8269059Z Artifact download URL: https://github.com/Apdelrahman1911/parlor/actions/runs/34476522188/artifacts/10151720206
+2026-09-10T12:24:50.8443486Z Post job cleanup.
+2026-09-10T12:24:50.9899121Z Post job cleanup.
+2026-09-10T12:24:51.0828297Z [command]/usr/bin/git version
+2026-09-10T12:24:51.0888347Z git version 2.55.0
+2026-09-10T12:24:51.0979648Z Temporarily overriding HOME='/home/runner/work/_temp/5a5252bb-8d2d-49dd-81ca-c51941ab6ed5' before making global git config changes
+2026-09-10T12:24:51.0981270Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-10T12:24:51.0982425Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/parlor/parlor
+2026-09-10T12:24:51.1022084Z Removing SSH command configuration
+2026-09-10T12:24:51.1023036Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-09-10T12:24:51.1072400Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-09-10T12:24:51.1341151Z Removing HTTP extra header
+2026-09-10T12:24:51.1348472Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-10T12:24:51.1390413Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-09-10T12:24:51.1694934Z Removing includeIf entries pointing to credentials config files
+2026-09-10T12:24:51.1701827Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-10T12:24:51.1742777Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-09-10T12:24:51.2191415Z Cleaning up orphan processes

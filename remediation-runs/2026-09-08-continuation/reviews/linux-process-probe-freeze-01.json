@@ -1,0 +1,57 @@
+{
+  "kind": "LINUX_PROCESS_PROBE_SOURCE_FREEZE",
+  "started_at": "2026-09-10T12:10:36.648282+00:00",
+  "source_commit": "289b01016e58a0843e5c51499f3832e4d1b7b7fd",
+  "commands": [
+    {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/generate_review_inventory.py"
+      ],
+      "exit_code": 0,
+      "output": "Wrote 28978 inventory rows to docs/review/INDEPENDENT_REVIEW_INVENTORY.csv; source review not attested\n"
+    },
+    {
+      "command": [
+        "git",
+        "add",
+        "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv"
+      ],
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "gc.auto=0",
+        "commit",
+        "-m",
+        "chore(review): freeze Linux process probe source inventory"
+      ],
+      "exit_code": 0,
+      "output": "[fix/local-readiness-2026-09-07 7d9ea1ea] chore(review): freeze Linux process probe source inventory\n 1 file changed, 4119 insertions(+), 6 deletions(-)\n"
+    },
+    {
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "scripts/generate_review_inventory.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "output": "Verified freshness of 28978 inventory rows in docs/review/INDEPENDENT_REVIEW_INVENTORY.csv; source review not attested\n"
+    }
+  ],
+  "head": "7d9ea1eac42ebe7630a01e3dbe9aafcf4f36306b",
+  "tree": "6d2337b11a07f64cf677bbc9ae3d21138a245c5f",
+  "inventory_sha256": "d382657560663d4e12ce0c196cf897664b1b33e7abdf2f177a743daf7a1c72c7",
+  "inventory_rows": 28978,
+  "result": "PASS",
+  "stop": {
+    "exit_code": 0,
+    "output": "No Gradle daemons are running.\n"
+  },
+  "finished_at": "2026-09-10T12:10:40.055520+00:00"
+}

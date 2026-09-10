@@ -208,18 +208,29 @@ def verify_linux_process_probe(job: str) -> None:
     probe = ("Validate Linux process-probe source and controls", "Observe Linux process access without a build",
              "Upload bounded Linux process-probe evidence", "Finalize Linux process-probe resources and uploaded custody",
              "Upload Linux process-probe cleanup receipt")
-    expected = ["Check out source", "Set up JDK 21", probe[0], "Claim fresh verification output ownership",
+    prerequisite = "Install Linux process-probe emulator package"
+    expected = ["Check out source", "Set up JDK 21", probe[0], prerequisite, "Claim fresh verification output ownership",
                 full[0], full[1], full[2], final[0], full[3], final[1], full[4], *final[2:], *probe[1:]]
     if (re.findall(r"(?m)^      - name: (.*)$", job) != expected or
             re.findall(r"(?m)^    runs-on: (.*)$", job) != ["ubuntu-24.04"] or
             re.findall(r"(?m)^    timeout-minutes: (.*)$", job) != [
                 "${{ inputs.verification_scope == 'linux-process-probe' && 10 || 90 }}"]):
         fail("verification scope Linux probe requires the closed Ubuntu24.04 no-build path and 10/90 minute bounds")
-    for name in (*full, *final, *probe):
+    for name in (*full, *final, *probe, prerequisite):
         required = (FULL_VERIFICATION_SCOPE if name in full else FULL_VERIFICATION_FINALIZER if name in final else
-                    LINUX_PROBE_SCOPE if name in probe[:2] else "always() && (" + LINUX_PROBE_SCOPE + ")")
+                    LINUX_PROBE_SCOPE if name in probe[:2] or name == prerequisite else "always() && (" + LINUX_PROBE_SCOPE + ")")
         if re.findall(r"(?m)^        if: (.*)$", validation_step(job, name)) != [required]:
-            fail("verification scope Linux probe must skip all builds/SDK mutations and preserve full gates/finalizers")
+            fail("verification scope Linux probe must skip builds/full SDK setup and preserve full gates/finalizers")
+    expected_prerequisite = '''        if: ''' + LINUX_PROBE_SCOPE + '''
+        timeout-minutes: 4
+        shell: bash
+        run: |
+          set -euo pipefail
+          /usr/bin/timeout --signal=TERM --kill-after=10s 180s \\
+            "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" --sdk_root="${ANDROID_HOME}" "emulator"
+'''
+    if validation_step(job, prerequisite).strip("\n") != expected_prerequisite.strip("\n"):
+        fail("verification scope Linux probe requires only the bounded emulator-package prerequisite in the admitted SDK")
     inputs = [("PARLOR_LINUX_PROBE_INPUTS", "${{ toJSON(inputs) }}")]
     prepare = [("PARLOR_VERIFICATION_PREPARE_OUTCOME", "${{ steps.verification_ownership.outcome }}")]
     upload = [("PARLOR_VERIFICATION_UPLOAD_OUTCOME", "${{ steps.linux_process_probe_artifact.outcome }}"),

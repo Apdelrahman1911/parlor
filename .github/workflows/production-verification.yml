@@ -90,6 +90,15 @@ jobs:
           PARLOR_LINUX_PROBE_INPUTS: ${{ toJSON(inputs) }}
         run: /usr/bin/python3 -B scripts/ci/linux_process_probe.py validate
 
+      - name: Install Linux process-probe emulator package
+        if: github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'linux-process-probe'
+        timeout-minutes: 4
+        shell: bash
+        run: |
+          set -euo pipefail
+          /usr/bin/timeout --signal=TERM --kill-after=10s 180s \
+            "${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager" --sdk_root="${ANDROID_HOME}" "emulator"
+
       - name: Claim fresh verification output ownership
         id: verification_ownership
         shell: python

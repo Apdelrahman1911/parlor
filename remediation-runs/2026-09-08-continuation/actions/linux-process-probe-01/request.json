@@ -1,0 +1,81 @@
+{
+  "kind": "BOUNDED_LINUX_PROCESS_PROBE_REQUEST_NOT_APP_QUALIFICATION",
+  "at": "2026-09-10T12:17:14.195439+00:00",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "frozen_source_sha": "7d9ea1eac42ebe7630a01e3dbe9aafcf4f36306b",
+  "tree": "6d2337b11a07f64cf677bbc9ae3d21138a245c5f",
+  "remote_before": "7d9ea1eac42ebe7630a01e3dbe9aafcf4f36306b\trefs/heads/fix/local-readiness-2026-09-07",
+  "controls": {
+    "files": [
+      {
+        "path": ".github/workflows/production-verification.yml",
+        "sha256": "57b112d806277eeb861efc7d58cffc76878210a4c441a7229d064351ecb126f2"
+      },
+      {
+        "path": "gradle/wrapper/gradle-wrapper.jar",
+        "sha256": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f"
+      },
+      {
+        "path": "gradle/wrapper/gradle-wrapper.properties",
+        "sha256": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2"
+      },
+      {
+        "path": "gradlew",
+        "sha256": "734b3879d3501dce471cf0522d3bcbafe76873d9fc5129345b67fb43bd15e933"
+      },
+      {
+        "path": "scripts/ci/linux_process_probe.py",
+        "sha256": "2696b0d81f1113eeaea20b431191788925053703d2ed6e12d72489041c6f76b6"
+      },
+      {
+        "path": "scripts/ci/verification_hygiene.py",
+        "sha256": "1fc2fb6f0b3bb7a505edc63277e0fe974a67ccf972753eec0da60386438c16f4"
+      },
+      {
+        "path": "scripts/release/tests/test_ci_verification_hygiene.py",
+        "sha256": "1f228c62dd1de0b79b8c0add9500dd3da7572bd761d079a058f45ef502e1f8e0"
+      },
+      {
+        "path": "scripts/release/tests/test_linux_process_probe.py",
+        "sha256": "51e3086b6bc43712e689f3c06584cfc9659adbdf45564d16f60c8493f8891325"
+      },
+      {
+        "path": "scripts/release/tests/test_workflow_contract.py",
+        "sha256": "c0539b7b2daeef29936aa3c4763e3ee1876ff53b60fb9d68e787388eaa363372"
+      },
+      {
+        "path": "scripts/release/workflow_contract.py",
+        "sha256": "d1b625c48af28eb0a53153f08b928fc818153d0c6eb4a9275bf7ed78700d7104"
+      }
+    ],
+    "control_sha256": "bbf7680815c5a6418574ab4accd061b6d0fa57f23178d28f45a986505675d79f"
+  },
+  "inputs": {
+    "verification_scope": "linux-process-probe",
+    "frozen_source_sha": "7d9ea1eac42ebe7630a01e3dbe9aafcf4f36306b",
+    "approved_probe_control_sha256": "bbf7680815c5a6418574ab4accd061b6d0fa57f23178d28f45a986505675d79f"
+  },
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=linux-process-probe",
+    "-f",
+    "frozen_source_sha=7d9ea1eac42ebe7630a01e3dbe9aafcf4f36306b",
+    "-f",
+    "approved_probe_control_sha256=bbf7680815c5a6418574ab4accd061b6d0fa57f23178d28f45a986505675d79f"
+  ],
+  "scope": "One bare-host Ubuntu24.04 /proc sample plus two separately labelled owned real dumpability controls. No Gradle build, SDK install, emulator, managed device, packaging, other host jobs or Store operation. Existing cleanup guard unchanged. All earlier failures retained. Not a repair of D03.",
+  "source_review": "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-independent-01.json",
+  "source_review_sha256": "a9184100bb521387e85cb1d540ef8e329f368c112eb1d8f6aac28321be056458",
+  "local_actual_review": "remediation-runs/2026-09-08-continuation/reviews/linux-proc-controls-actual-independent-01.json",
+  "local_actual_review_sha256": "cd8ec6628d05c4df7164f13eb0640576fceb332a702ae5edb2e547712243162e",
+  "prior_failures": "D03 cleanup FAIL; local outer143 retained despite accepted scoped checks; strict Complete26 FAIL."
+}

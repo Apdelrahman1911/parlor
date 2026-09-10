@@ -1,0 +1,29 @@
+{
+  "kind": "WORKFLOW_ONLY_CONTROLS_NOT_APP_RUNTIME",
+  "commands": [
+    {
+      "label": "workflow-python",
+      "command": [
+        "/usr/bin/python3",
+        "-B",
+        "-m",
+        "unittest",
+        "scripts.release.tests.test_workflow_contract",
+        "-v"
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "focused-actionlint",
+      "command": [
+        "/bin/bash",
+        "-c",
+        "#!/usr/bin/env bash\nset -euo pipefail\n\nrepo_root=$(cd \"$(dirname \"$0\")/../..\" && pwd -P)\ncd \"$repo_root\"\n\ntemporary_dir=$(mktemp -d \"${TMPDIR:-/tmp}/parlor-release-tools.XXXXXX\")\ncleanup() {\n  local original_status=${1:-$?}\n  local cleanup_status=0\n  trap - EXIT INT TERM\n  if ! rm -rf \"$temporary_dir\"; then\n    echo \"could not remove the temporary release-tool directory\" >&2\n    cleanup_status=2\n  fi\n  if [[ $original_status -ne 0 ]]; then\n    exit \"$original_status\"\n  fi\n  exit \"$cleanup_status\"\n}\ntrap 'cleanup $?' EXIT\ntrap 'exit 130' INT\ntrap 'exit 143' TERM\n\n\nos_name=$(uname -s | tr '[:upper:]' '[:lower:]')\ncase $(uname -m) in\n  x86_64 | amd64) architecture=amd64 ;;\n  arm64 | aarch64) architecture=arm64 ;;\n  *) echo \"unsupported release-tool architecture\" >&2; exit 2 ;;\nesac\ncase \"$os_name\" in\n  linux | darwin) ;;\n  *) echo \"unsupported release-tool operating system\" >&2; exit 2 ;;\nesac\nplatform_key=\"$os_name-$architecture\"\n\ndownload_tool() {\n  local tool=$1\n  local executable_name=$2\n  local archive=\"$temporary_dir/$tool.tar.gz\"\n  local destination=\"$temporary_dir/$executable_name\"\n  local url\n  local digest\n  url=$(python3 -c 'import json,sys; print(json.load(open(\"config/release-policy.json\"))[\"tools\"][sys.argv[1]][\"artifacts\"][sys.argv[2]][\"url\"])' \"$tool\" \"$platform_key\")\n  digest=$(python3 -c 'import json,sys; print(json.load(open(\"config/release-policy.json\"))[\"tools\"][sys.argv[1]][\"artifacts\"][sys.argv[2]][\"sha256\"])' \"$tool\" \"$platform_key\")\n  if ! curl --fail --silent --show-error --location \\\n    --proto '=https' \\\n    --tlsv1.2 \\\n    --retry 3 \\\n    --retry-all-errors \\\n    --max-filesize 209715200 \\\n    --max-time 120 \\\n    \"$url\" \\\n    --output \"$archive\"; then\n    echo \"could not download pinned $tool release\" >&2\n    return 2\n  fi\n  if ! printf '%s  %s\\n' \"$digest\" \"$archive\" | shasum -a 256 -c - >&2; then\n    echo \"pinned $tool release digest mismatch\" >&2\n    return 2\n  fi\n  if ! python3 - \"$archive\" \"$executable_name\" \"$destination\" <<'PY'\nimport os\nimport sys\nimport tarfile\nfrom pathlib import PurePosixPath\n\narchive_path, expected_name, destination = sys.argv[1:]\nwith tarfile.open(archive_path, \"r:gz\") as archive:\n    members = archive.getmembers()\n    if len(members) > 100:\n        raise SystemExit(\"release-tool archive has too many entries\")\n    matches = []\n    for member in members:\n        path = PurePosixPath(member.name)\n        if path.is_absolute() or \"..\" in path.parts or member.issym() or member.islnk():\n            raise SystemExit(\"unsafe release-tool archive\")\n        if path.name == expected_name and member.isfile():\n            matches.append(member)\n    if len(matches) != 1 or matches[0].size > 100 * 1024 * 1024:\n        raise SystemExit(\"release-tool archive does not contain one bounded executable\")\n    source = archive.extractfile(matches[0])\n    if source is None:\n        raise SystemExit(\"cannot read release-tool executable\")\n    with open(destination, \"wb\") as output:\n        output.write(source.read())\n    os.chmod(destination, 0o755)\nPY\n  then\n    echo \"could not safely extract pinned $tool release\" >&2\n    return 2\n  fi\n  printf '%s\\n' \"$destination\"\n}\n\nshellcheck_command=$(download_tool shellcheck shellcheck) || exit $?\nactionlint_command=$(download_tool actionlint actionlint) || exit $?\n\"$actionlint_command\" -shellcheck \"$shellcheck_command\" .github/workflows/production-verification.yml\n",
+        "scripts/release/validate_release_system.sh"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "controls_unchanged": true,
+  "omitted": "Unchanged hygiene/probe mechanisms and Kotlin/application builds/tests are not repeated for the isolated SDK-prerequisite workflow step."
+}

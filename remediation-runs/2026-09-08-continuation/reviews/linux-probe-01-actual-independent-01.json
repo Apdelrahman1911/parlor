@@ -1,0 +1,275 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_LINUX_PROCESS_PROBE_01_ACTUAL_EVIDENCE_REVIEW",
+  "reviewer": "/root/ci_review",
+  "status": "ACCEPT_FAILED_PROBE_CUSTODY_NO_PROCFS_DISCRIMINATION_OR_CLEANUP_PASS",
+  "source": {
+    "repository": "Apdelrahman1911/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "root": "/home/runner/work/parlor/parlor",
+    "head": "7d9ea1eac42ebe7630a01e3dbe9aafcf4f36306b",
+    "tree": "6d2337b11a07f64cf677bbc9ae3d21138a245c5f",
+    "control_sha256": "bbf7680815c5a6418574ab4accd061b6d0fa57f23178d28f45a986505675d79f",
+    "control_files_rehashed": 10,
+    "critical_control_hashes": {
+      ".github/workflows/production-verification.yml": "57b112d806277eeb861efc7d58cffc76878210a4c441a7229d064351ecb126f2",
+      "scripts/ci/linux_process_probe.py": "2696b0d81f1113eeaea20b431191788925053703d2ed6e12d72489041c6f76b6",
+      "scripts/ci/verification_hygiene.py": "1fc2fb6f0b3bb7a505edc63277e0fe974a67ccf972753eec0da60386438c16f4"
+    }
+  },
+  "run": {
+    "id": 34476522188,
+    "attempt": 1,
+    "job_id": 102868520733,
+    "conclusion": "failure",
+    "job_conclusion": "failure",
+    "url": "https://github.com/Apdelrahman1911/parlor/actions/runs/34476522188",
+    "job_started_at": "2026-09-10T12:24:20Z",
+    "job_completed_at": "2026-09-10T12:24:53Z",
+    "platform": {
+      "os": "ubuntu-24.04",
+      "machine": "x86_64",
+      "kernel": "6.17.0-1022-azure",
+      "python": "3.12.3",
+      "image": "20260907.300.1",
+      "runner_version": "2.337.0",
+      "java": "Temurin 21.0.12+1"
+    },
+    "step_outcomes": "Source/control validation4 and ownership5 succeeded. SDK/build/managed-device/artifact/full-cleanup steps6-15 skipped. Probe16 failed; main upload17 succeeded; probe cleanup18 failed; cleanup upload19 succeeded. All four unrelated platform jobs skipped.",
+    "scope": "No Gradle build/test, emulator launch, managed-device runtime, Apple or Store operation. Wrapper --stop bootstrapped Gradle 8.13; that download is not a build."
+  },
+  "custody": {
+    "root": "remediation-runs/2026-09-08-continuation/actions/34476522188",
+    "collection": {
+      "path": "download-receipt.json",
+      "bytes": 5284,
+      "sha256": "88d227ccc50ffb85eda41781959940056009d96066e83b0f4c3be58a8899f73b",
+      "result": "COLLECTED_NOT_RUNTIME_VERDICT",
+      "started_at": "2026-09-10T12:32:46.636190+00:00",
+      "finished_at": "2026-09-10T12:32:52.935621+00:00",
+      "stop": {
+        "exit_code": 0,
+        "output": "No Gradle daemons are running.\n"
+      }
+    },
+    "metadata": [
+      {
+        "path": "run.json",
+        "bytes": 12683,
+        "sha256": "2d8e0f10f2b98ee05d7709b87cd130647500359d83295061271c2a0e0663a1e7"
+      },
+      {
+        "path": "attempt.json",
+        "bytes": 12705,
+        "sha256": "d788e8ef37e5521a47f66be24f08e2256fc5beda2acc0e9d7e63d2173c589d9b"
+      },
+      {
+        "path": "jobs.json",
+        "bytes": 8701,
+        "sha256": "141cb008cdf77c874eab04934df4b9954492583dc77aed367b5ab98ccf7679d8"
+      },
+      {
+        "path": "artifacts.json",
+        "bytes": 1499,
+        "sha256": "6b2d4530b4129d7a957b7427c3ae911c80e0cf4cec3abe44ee7158c950defd14"
+      },
+      {
+        "path": "desktop-android.log",
+        "bytes": 61242,
+        "sha256": "c0125e163e522bc7bfe489966e54d81836d09317837abeae45fb13277c3a38a1"
+      }
+    ],
+    "artifacts": [
+      {
+        "id": 10151720206,
+        "name": "linux-process-probe-cleanup-34476522188-1",
+        "bytes": 3060,
+        "sha256": "4113d01f10629b74c608bd5dfb7a964a79ee2c712be97b39187abfde97a799e3",
+        "member_count": 1
+      },
+      {
+        "id": 10151717705,
+        "name": "linux-process-probe-34476522188-1",
+        "bytes": 6412,
+        "sha256": "a9587f80a5cb7385ec652f45aa03b04416350d2225b1e0f11d49c72e678b0edb",
+        "member_count": 3
+      }
+    ],
+    "records": {
+      "cleanup": {
+        "path": "linux-process-probe-cleanup-34476522188-1/parlor-verification-34476522188-1-desktop-android-cleanup.json",
+        "bytes": 20657,
+        "sha256": "6045d5d16d44a10fdfb712bd02d728351d238e6265a93e26673a990437dd09d1"
+      },
+      "linux-probe": {
+        "path": "linux-process-probe-34476522188-1/parlor-verification-34476522188-1-desktop-android-linux-probe.json",
+        "bytes": 6771,
+        "sha256": "88ed93d00157ef614990876e6980a49c97bdecb796bda7bd35a85a1fa39c3076"
+      },
+      "ownership": {
+        "path": "linux-process-probe-34476522188-1/parlor-verification-34476522188-1-desktop-android-ownership.json",
+        "bytes": 19465,
+        "sha256": "1de9ce7d50e7d51749a60074d2077cc5685e4fe7ca81b5164107b10ae6e04e10"
+      },
+      "stop-linux-probe": {
+        "path": "linux-process-probe-34476522188-1/parlor-verification-34476522188-1-desktop-android-stop-linux-probe.json",
+        "bytes": 3357,
+        "sha256": "fd7990e406f1baf099fb6d6a40d10fdb47190c34e2ef40af7aab1940ef8f970b"
+      }
+    },
+    "verified": "Independently matched API/run/attempt/branch/source/workflow/job identities, both ZIP lengths/API SHA256s, every member path/type/CRC/hash and all four extracted record byte sequences. Rehashed all10 source/control files using git show at7d9ea1e and independently recomputed the approved control aggregate. Parsed raw log JSON: admission binding, observation, stop and cleanup equal retained values.",
+    "collection_log": {
+      "path": "../linux-process-probe-01/collection.log",
+      "bytes": 139,
+      "sha256": "51b9da63ab9e69bcecdfe106acfce2e3b5ad82a853a483563ce8dc61e6fa2a7a"
+    },
+    "collector_review": {
+      "path": "../../reviews/linux-probe-collector-independent-01.json",
+      "sha256": "e5410a66cd364a617df4cc851ba7e943e4d4c2bd6d32c2a9627dfc32958a81e0"
+    },
+    "main_raw_log": "desktop-android.log",
+    "historical_or_cached_runtime_credit": 0,
+    "reviewer_extractions": 0
+  },
+  "dispatch": {
+    "directory": "remediation-runs/2026-09-08-continuation/actions/linux-process-probe-01",
+    "request_sha256": "755033a93117f180439b1bedde1d95d942ea4a4f835d83d0568eb70e74c65bda",
+    "immediate_admission_sha256": "d8414f626595284683dac9243fe6f725bc62ac44a0dbe6344328e6de0c428502",
+    "dispatch_result_sha256": "a7565f40a3de9992689893d14054f7fe30ae75e2a23f3968e3f2169e54da32a3",
+    "association_sha256": "b10ab5038463999247d1900abe330a9a98373b6cd86b31bb2a7e626bb4f18c08",
+    "dispatches": 1,
+    "dispatch_exit_code": 0,
+    "source_and_control_inputs_equal_reviewed_bindings": true,
+    "pre_dispatch": "Exact local/remote7d9e/tree, empty tracked diff, intended active workflow, no active same-ref runs recorded.",
+    "early_failed_log_sha256": "76b7790a95cd6b8c2e85496a372a45739c6c4fcd6ec1c9f9c855ecc68dc390ff",
+    "early_log_scope": "Retained separately; not substituted for the complete final API job log."
+  },
+  "observations": {
+    "sdk_binding": {
+      "sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1",
+      "sdk_device": 2049,
+      "sdk_inode": 795534,
+      "uid": 1001
+    },
+    "failure_context_present": false,
+    "procfs_samples_completed": 0,
+    "interpretation": "Host audit, dumpable1 control audit, dumpable0 control audit, and final cleanup audit all fail FileNotFoundError before any completed enumeration/PID sample is recorded. Zero matching_executables is NOT absence. No PermissionError/access discriminator observation was obtained.",
+    "control_results": [
+      {
+        "dumpable": 1,
+        "owned_pid": 2445,
+        "readiness_matches_requested_state": true,
+        "result": "CONTROL_FAIL",
+        "child_exit_code": 0,
+        "child_reaped": true,
+        "fixture_removed": true,
+        "interrupted": false,
+        "errors": [
+          {
+            "stage": "observation",
+            "error_type": "RuntimeError"
+          }
+        ]
+      },
+      {
+        "dumpable": 0,
+        "owned_pid": 2446,
+        "readiness_matches_requested_state": true,
+        "result": "CONTROL_FAIL",
+        "child_exit_code": 0,
+        "child_reaped": true,
+        "fixture_removed": true,
+        "interrupted": false,
+        "errors": [
+          {
+            "stage": "observation",
+            "error_type": "RuntimeError"
+          }
+        ]
+      }
+    ],
+    "child_scope": "Both real direct children reached fixed PR_GET_DUMPABLE readiness with the requested1/0 state, then exited0, were reaped and had their owned link fixtures removed. This is child lifecycle/readiness evidence only; both controls remain CONTROL_FAIL, not two passing tests.",
+    "outer_errors_scope": "Observation.errors=[] only means the outer orchestration did not raise; nested host/control failures and overall result FAIL remain decisive.",
+    "audit_windows": {
+      "host": [
+        "2026-09-10T12:24:34.180996+00:00",
+        "2026-09-10T12:24:34.248873+00:00"
+      ],
+      "control_dumpable_1": [
+        "2026-09-10T12:24:34.604334+00:00",
+        "2026-09-10T12:24:34.604585+00:00"
+      ],
+      "control_dumpable_0": [
+        "2026-09-10T12:24:34.627591+00:00",
+        "2026-09-10T12:24:34.627784+00:00"
+      ],
+      "final_cleanup": [
+        "2026-09-10T12:24:49.664007+00:00",
+        "2026-09-10T12:24:49.664244+00:00"
+      ]
+    },
+    "all_four_audits": {
+      "result": "FAIL",
+      "errors": [
+        {
+          "code": "FileNotFoundError"
+        }
+      ],
+      "enumerated": 0,
+      "sampled": 0,
+      "selected_uid": 0,
+      "matching_executables": 0
+    }
+  },
+  "cleanup": {
+    "overall": "FAIL",
+    "direct_children_reaped": 2,
+    "owned_fixtures_removed": 2,
+    "claimed_roots": 184,
+    "not_created": 184,
+    "removed_roots": 0,
+    "retained_roots": 0,
+    "roots_reconciliation": "The entire cleanup.not_created list exactly equals ownership.outputs. No claimed build/Python-cache root was created. Empty removed/retained lists are not a completed Android absence audit.",
+    "gradle_stops": {
+      "probe_started_at": "2026-09-10T12:24:35.545723+00:00",
+      "probe_finished_at": "2026-09-10T12:24:45.858951+00:00",
+      "probe_exit_code": 0,
+      "probe_wrapper_downloaded_gradle": true,
+      "cleanup_started_at": "2026-09-10T12:24:48.098856+00:00",
+      "cleanup_finished_at": "2026-09-10T12:24:48.715053+00:00",
+      "cleanup_exit_code": 0,
+      "local_collection_stop_exit_code": 0
+    },
+    "artifact_custody": "Both uploads succeeded with exact retained artifact IDs/digests; failure is the final strict absence audit, not discarded evidence.",
+    "local_collection": "All seven retained download commands exited0 and the collector reported COLLECTED_NOT_RUNTIME_VERDICT; its finally-stop exited0. This does not turn the hosted cleanup into PASS.",
+    "global_caches": "The wrapper distribution download is outside claimed live outputs; no global-cache deletion is called for."
+  },
+  "findings": [
+    {
+      "id": "LP01-PREREQUISITE-FAILURE",
+      "classification": "PROBE_PURPOSE_NOT_ESTABLISHED",
+      "evidence": "All four audits FileNotFoundError with enumerated=sampled=0; no failure_context. Source at7d9e sets the SDK-root binding, then requires SDK/emulator.resolve(strict=True), is_dir and stat before proc enumeration. Frozen workflow explicitly skipped its SDK-install step.",
+      "conclusion": "Missing SDK/emulator prerequisite is strongly implicated; SDK root itself remained consistently bound. The receipts do not record an exact failing path/operation, so do not assert the precise missing component or an original D03 PID diagnosis.",
+      "correction_scope": "Investigate/provision only a real independently reviewed emulator-package prerequisite before the focused probe. No fake SDK directory, exception waiver, changed selection/absence semantics or automatic heavy-matrix rerun is admitted by this review."
+    }
+  ],
+  "verdict": {
+    "custody": "ACCEPT",
+    "hosted_probe": "FAIL",
+    "positive_dumpable_control": "CONTROL_FAIL",
+    "negative_nondumpable_control": "CONTROL_FAIL",
+    "direct_child_retirement": "ACCEPT_SCOPED",
+    "mandatory_hosted_cleanup": "FAIL",
+    "diagnoses_d03_permission_error": false,
+    "d03_status": "FAIL remains; this probe uses a newer runner image20260907.300.1 than D03's20260831.293.1 and did not reach procfs access discrimination.",
+    "strict_ios_failures": "Unchanged; not tested or waived.",
+    "readiness": "NOT_READY",
+    "excluded": "No application runtime, physical-device LAN/lifecycle, Store publication/signing/identity ownership or separate owner/legal approval."
+  },
+  "reviewer_activity": {
+    "method": "Read-only Git/stdlib JSON/hash/path and bounded in-memory ZIP review. No project imports, tests/builds, process observations/signals, network/Actions calls, source edits or Git mutations.",
+    "written": "Only this additive review JSON.",
+    "cleanup": "No reviewer-owned build/cache, workers or extracted archive output created; required raw/failed evidence preserved."
+  },
+  "completed_at": "2026-09-10T12:44:24.077434+00:00"
+}
