@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "kind": "Independent source/control review; optional Android cleanup sample",
+  "reviewer": "/root/ci_review",
+  "author": "/root/ci_workflow",
+  "reviewed_at": "2026-09-10T04:24:12.214041+00:00",
+  "verdict": "APPROVE_EXACT_HELD_SOURCE_ONLY",
+  "findings": [],
+  "observed_head": "bd939632975e6e7802896322b514af06b6a7f6c3",
+  "observed_tree": "b3f7fc54702e5dd0c6d8401f44b51d1a45706652",
+  "proposal_base": "730a91e4dade4dbc2168b5367e20c3d0f42237e1",
+  "applicability": "Both canonical base files remain byte-identical to proposal base and current HEAD; approval binds exact proposed bytes, not unrelated concurrent Settings changes.",
+  "packet": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/android-emulator-absence-audit-01/proposed.patch",
+      "bytes": 19939,
+      "sha256": "9b0e8ec20ffea0ec294e8274b341120dbdb8cd287cf8abf467d4e9ce61e7ee2c"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/android-emulator-absence-audit-01/author-report.json",
+      "bytes": 9621,
+      "sha256": "0b5283c03a16e8fd319e8350b8e4a451a1c232f2f0ab1fbdfd9edebbcad65682"
+    }
+  ],
+  "files": [
+    {
+      "base": {
+        "path": "scripts/ci/verification_hygiene.py",
+        "bytes": 13802,
+        "sha256": "9eab427aeb3d810c033a3827aa44f7201cbb261345a2e6667a8d085df2fbd603"
+      },
+      "proposed": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/android-emulator-absence-audit-01/proposed/scripts/ci/verification_hygiene.py",
+        "bytes": 20930,
+        "sha256": "f1aa6d4c5dae8360a9ff1bfd675376d78cb800e3d297fc213cdddca32c7376f6"
+      }
+    },
+    {
+      "base": {
+        "path": "scripts/release/tests/test_ci_verification_hygiene.py",
+        "bytes": 18448,
+        "sha256": "3fc6f1d4a15152bcca6d86d77bcbc782b3936c6c47336a3ff7b3067d3790e4c8"
+      },
+      "proposed": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/android-emulator-absence-audit-01/proposed/scripts/release/tests/test_ci_verification_hygiene.py",
+        "bytes": 28576,
+        "sha256": "2ba311084cd57923f85c3176b3d5ac83385022c7e0fe174ac5a38fd1c5101f63"
+      }
+    }
+  ],
+  "independent_checks": [
+    "Read entire proposed patch and author report; rehashed all four packet files and both canonical bases. Independently regenerated unified diff matches proposed.patch exactly:314 added/zero removed lines.",
+    "Both files AST-parse without import. Existing production functions changed only in prepare and cleanup. All22 previous test methods AST-identical;11 methods added,33 total. No workflow/new lifecycle module changes.",
+    "Only desktop-android preparation adds Linux/non-root real=effective UID and absolute canonical SDK path/device/inode binding; optional alternate SDK must resolve identically. Existing source/task/run/attempt/ownership gates remain.",
+    "Cleanup preserves original gate ordering:final Gradle stop, successful preparation, exact current source/task/outputs, clean worktree, preflight all paths, applicable Apple checks and successful nonempty upload precede Android sample; first rmtree follows sample PASS. Sample FAIL retains outputs.",
+    "One bounded read-only enumeration:4096 entries,8192-byte stat/status records,4096-byte selected executable path,5-second monotonic scan budget. Strict stat field22/starttime and four-UID parsing; other-UID executables not read. Selected PID executable link/device/inode observations are bracketed by PID lifetime/UID observations.",
+    "SDK/emulator nonredirected directory and SDK binding rechecked; exact ancestry avoids loose-prefix matches. Missing/denied/malformed/deleted/changed metadata, bound exhaustion, observer omission or observed matching executable yields FAIL with fixed code/type and no argv/environ/path disclosure.",
+    "Receipt receives current head/tree plus existing outer task/run/attempt/job/upload binding; worker-scope text limits interpretation. No adb, signals, process ownership grant, cache/AVD deletion or source mutation introduced.",
+    "New tests use inert owned temporary metadata/symlinks and patched identity, not host procfs. Nine Linux-only fixture methods and two cleanup integration methods retain prior tests; held copy is not standalone runnable because imports remain canonical ROOT-relative."
+  ],
+  "required_interpretation": [
+    "PASS is only a non-atomic one-enumeration visible selected-UID executable-path sample under the bound SDK/emulator subtree. It is not process termination, continuous/atomic absence, AVD retirement or task-ownership evidence.",
+    "Other SDKs/UIDs, adb and copied/redirected binaries outside this exact path predicate remain outside scope. Same-prefix siblings are intentionally excluded.",
+    "PID churn or inaccessible unrelated metadata can conservatively FAIL without establishing a leak. Preserve outputs and investigate; do not blindly retry or relabel. The monotonic limit is a scan budget, not a preemptive stalled-syscall watchdog.",
+    "Historical full-D4cc emulator exit/AVD retirement remains unattested; this proposal cannot upgrade that receipt or turn overall full-D failure into success."
+  ],
+  "historical_pins": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-android-actual-independent-01.json",
+      "bytes": 27831,
+      "sha256": "c439bd57a3ca67c36ff4130187e4b5259352d6b93aa7f828581fa31b9b67901d"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-android-worker-cleanup-followup-01.json",
+      "bytes": 7806,
+      "sha256": "48a838fb4e37349ceb4ce6ad8f503a4cc48ffd75776828e4e3c9fd2012d26afe"
+    }
+  ],
+  "next_root_owned_steps": [
+    "Optional adoption can wait until after immediate Settings36 work; this review does not hold that diagnostic.",
+    "If adopted, recheck exact base/proposed hashes and execute python3 -B -m unittest discover -s scripts/release/tests -p test_ci_verification_hygiene.py -v in the canonical layout; preserve actual result and run coordinated cleanup.",
+    "Shared hygiene participates in native controls:review/freeze source, regenerate and commit inventory, and derive fresh bindings before later relevant qualification. No reuse of earlier native binding as new-source runtime proof.",
+    "A later justified Linux Android job must emit its own actual audit and cleanup receipt; fixture success cannot substitute for hosted procfs or Android application runtime."
+  ],
+  "execution": {
+    "read_only_git_text_hash_ast_diff": "EXECUTED",
+    "project_imports": "NOT_RUN",
+    "unit_tests": "NOT_RUN",
+    "builds": "NOT_RUN",
+    "host_procfs": "NOT_RUN",
+    "network_actions": "NOT_RUN",
+    "application_runtime": "NOT_RUN"
+  },
+  "cleanup": {
+    "build_test_cycle": "NONE",
+    "canonical_edits": [],
+    "reviewer_owned_write": "remediation-runs/2026-09-08-continuation/reviews/android-emulator-absence-audit-independent-01.json",
+    "workers_or_live_outputs_created": [],
+    "note": "Only additive review JSON written; no Gradle/build/simulator/process/network cycle was started. Root owns adoption, test/build cleanup, Git writes and final conclusions."
+  }
+}

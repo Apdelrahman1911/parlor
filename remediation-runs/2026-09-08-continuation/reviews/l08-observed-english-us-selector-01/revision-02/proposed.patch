@@ -1,0 +1,87 @@
+diff --git a/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01OSPrerequisite.swift.in b/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01OSPrerequisite.swift.in
+--- a/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01OSPrerequisite.swift.in
++++ b/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01OSPrerequisite.swift.in
+@@ -85,7 +85,7 @@
+ 
+     @MainActor private func osPrimaryChoiceMetadata(_ settings: XCUIApplication) -> [String: Any] {
+         var fields = osPrerequisiteMetadata(settings)
+-        let knownChoice = NSPredicate(format: "label IN %@", ["Use English", "Keep English"])
++        let knownChoice = NSPredicate(format: "label IN %@", ["Use English", "Keep English", "Use English (US)"])
+         // Independent public counts only: no unknown labels, hierarchy dump or
+         // required-element property access while a modal may be transitioning.
+         fields["primaryChoiceModalCounts"] = [("alert", settings.alerts), ("sheet", settings.sheets)].map { kind, query in
+@@ -392,7 +392,7 @@
+         // These exact English-primary action labels are bounded candidate UI
+         // selectors, not a claim that Apple guarantees them on every version.
+         // No generic OK/Continue/Cancel or unknown alert is ever dismissed.
+-        let keepEnglish = modal.buttons.matching(NSPredicate(format: "label IN %@", ["Use English", "Keep English"]))
++        let keepEnglish = modal.buttons.matching(NSPredicate(format: "label IN %@", ["Use English", "Keep English", "Use English (US)"]))
+         var keepFields = osPrimaryChoiceMetadata(settings)
+         keepFields["primaryChoiceRepresentation"] = alertCount == 1 ? "alert" : "sheet"
+         keepFields["englishPrimaryChoiceCountCapped16"] = min(keepEnglish.count, 16)
+diff --git a/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py b/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py
+--- a/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py
++++ b/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py
+@@ -150,10 +150,10 @@
+     last = '        let settled = XCTNSPredicateExpectation('
+     choice = section(candidate, first, last)
+     require(hashlib.sha256(metadata.encode()).hexdigest() ==
+-            '9676f40fef94f11c2f9897fd662876f57bbefa6219517a04348f713c8086bea0',
++            '11c59d4c810fa11960b84f539943c2aeef6ee4d2a1f42a7c9f2ccfe0d35dae6b',
+             'OS primary-choice diagnostics must remain exact bounded public counts')
+     require(hashlib.sha256(choice.encode()).hexdigest() ==
+-            '97c024957cf52c33d58d4b75b29d74227556a76184596d8cb92787ef34af49df',
++            'e2e6ad2740470ce75e81bc3c71aa75ab5c31b418e3ced1bae2eb152abf0377e7',
+             'OS primary choice must preserve exact typed modal, known action and single activation guards')
+     restored = strict.once(candidate, metadata, '')
+     restored = strict.once(restored, choice, section(original, first, last))
+@@ -559,7 +559,7 @@
+             ('choice', 'settings.sheets.firstMatch : nil', 'settings.sheets.firstMatch : settings.otherElements.firstMatch'),
+             ('choice', 'guard modalOutcome == .completed, let modal,', 'guard let modal,'),
+             ('choice', 'modal.buttons.matching(', 'settings.buttons.matching('),
+-            ('choice', '["Use English", "Keep English"]', '["Use English", "Keep English", "OK"]'),
++            ('choice', '["Use English", "Keep English", "Use English (US)"]', '["Use English", "Keep English", "Use English (US)", "OK"]'),
+             ('choice', 'keepEnglish.count == 1', 'keepEnglish.count >= 1'),
+             ('choice', '(1...4).contains(modal.buttons.count)', '(0...8).contains(modal.buttons.count)'),
+             ('choice', 'keepEnglish.firstMatch.isHittable, keepEnglish.firstMatch.isEnabled',
+diff --git a/scripts/ci/native_continuation.py b/scripts/ci/native_continuation.py
+--- a/scripts/ci/native_continuation.py
++++ b/scripts/ci/native_continuation.py
+@@ -43,7 +43,7 @@
+ SHEET_RUNNERS = {"settings_sheet": "scripts/verification/ios-settings-sheet/settings_sheet_probe.py"}
+ SHEET_SELECTION = "settings-sheet-only"
+ SHEET_CAPTURED = "SETTINGS_SHEET_CAPTURED_NOT_APP_QUALIFICATION"
+-CYCLES = {"l08": "ios-readiness-33", "normal": "ios-readiness-34", "settings_sheet": "ios-readiness-36"}
++CYCLES = {"l08": "ios-readiness-37", "normal": "ios-readiness-38", "settings_sheet": "ios-readiness-36"}
+ NATIVE_SELECTIONS = {"paired": ("l08", "normal"), "l08-only": ("l08",), SHEET_SELECTION: ("settings_sheet",)}
+ LIFECYCLE_MODE = "direct-owned-v1"
+ NATIVE_JOB_SECONDS = 240 * 60
+diff --git a/scripts/release/tests/test_native_process_probe.py b/scripts/release/tests/test_native_process_probe.py
+--- a/scripts/release/tests/test_native_process_probe.py
++++ b/scripts/release/tests/test_native_process_probe.py
+@@ -123,7 +123,7 @@
+     def test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels(self):
+         self.assertEqual(native.effective_scope("workflow_dispatch", probe.SCOPE), probe.SCOPE)
+         self.assertEqual(native.effective_scope("pull_request", probe.SCOPE), "full")
+-        self.assertEqual(native.CYCLES, {"l08": "ios-readiness-33", "normal": "ios-readiness-34", "settings_sheet": "ios-readiness-36"})
++        self.assertEqual(native.CYCLES, {"l08": "ios-readiness-37", "normal": "ios-readiness-38", "settings_sheet": "ios-readiness-36"})
+         with self.assertRaisesRegex(RuntimeError, "not-an-app-native-continuation"):
+             native.Continuation(dict(GITHUB_EVENT_NAME="workflow_dispatch", PARLOR_DISPATCH_SCOPE=probe.SCOPE))
+ 
+diff --git a/scripts/ci/NATIVE_CONTINUATION.md b/scripts/ci/NATIVE_CONTINUATION.md
+--- a/scripts/ci/NATIVE_CONTINUATION.md
++++ b/scripts/ci/NATIVE_CONTINUATION.md
+@@ -79,10 +79,10 @@
+ 
+ By default the canonical runners execute serially on independently owned fresh simulators:
+ 
+-1. A: composed L08, next cycle `ios-readiness-33`;
++1. A: composed L08, next cycle `ios-readiness-37`;
+ 2. B: normal-source eight launches plus separate image observation, cycle
+-   `ios-readiness-34`, explicit `--image-observer=libproc`.
+-   With `l08-only`, B34 is **NOT_RUN_THIS_RUN**, not a new B30 result.
++   `ios-readiness-38`, explicit `--image-observer=libproc`.
++   With `l08-only`, B38 is **NOT_RUN_THIS_RUN**, not a new B30 result.
+ 
+ The failed `ios-readiness-17/18` evidence from run `34216788568` and failed
+ A19 from `34244902185` remain historical failures. A19's simulator cleanup was

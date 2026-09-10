@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "kind": "ONE_CAPPED_PUBLIC_SETTINGS_SHEET_DIAGNOSTIC_REQUEST",
+  "created_at": "2026-09-10T04:30:41.789568+00:00",
+  "coordinator": "/root",
+  "status": "PREPARED_PENDING_INDEPENDENT_PREFLIGHT_BINDING_AND_EXACT_REQUEST_ADMISSION",
+  "repository": "Apdelrahman1911/parlor",
+  "branch": "fix/local-readiness-2026-09-07",
+  "frozen_source_sha": "bd939632975e6e7802896322b514af06b6a7f6c3",
+  "tree": "b3f7fc54702e5dd0c6d8401f44b51d1a45706652",
+  "inputs": {
+    "verification_scope": "native-evidence",
+    "native_selection": "settings-sheet-only",
+    "frozen_source_sha": "bd939632975e6e7802896322b514af06b6a7f6c3",
+    "preflight_run_id": "34437271196",
+    "preflight_run_attempt": "1",
+    "preflight_artifact_id": "10136633764",
+    "preflight_artifact_sha256": "0f31583eb9c5007320f875a90cb3e6ec71f4d9487e5b4638c2547320441fc9d1",
+    "approved_probe_control_sha256": "10c7553a8cc297f8084ada5f6af993ed3df448a0ab0da7c024b328fc64f59023"
+  },
+  "command": [
+    "gh",
+    "workflow",
+    "run",
+    "production-verification.yml",
+    "--repo",
+    "Apdelrahman1911/parlor",
+    "--ref",
+    "fix/local-readiness-2026-09-07",
+    "-f",
+    "verification_scope=native-evidence",
+    "-f",
+    "native_selection=settings-sheet-only",
+    "-f",
+    "frozen_source_sha=bd939632975e6e7802896322b514af06b6a7f6c3",
+    "-f",
+    "preflight_run_id=34437271196",
+    "-f",
+    "preflight_run_attempt=1",
+    "-f",
+    "preflight_artifact_id=10136633764",
+    "-f",
+    "preflight_artifact_sha256=0f31583eb9c5007320f875a90cb3e6ec71f4d9487e5b4638c2547320441fc9d1",
+    "-f",
+    "approved_probe_control_sha256=10c7553a8cc297f8084ada5f6af993ed3df448a0ab0da7c024b328fc64f59023"
+  ],
+  "maximum_dispatches": 1,
+  "cycle": "ios-readiness-36",
+  "budget_seconds": {
+    "job": 2400,
+    "native_child_wait": 900,
+    "xcodebuild": 600,
+    "finalizer_grace": 600,
+    "upload_cleanup_reserve": 600
+  },
+  "binding": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34437271196/native-preflight.zip",
+      "sha256": "0f31583eb9c5007320f875a90cb3e6ec71f4d9487e5b4638c2547320441fc9d1"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34437271196/native-preflight/preflight.json",
+      "sha256": "6b5c5532f737196e6e433bc502857ddeca42b016e8a3b31dcd666f4cfec5b1f6"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34437271196/native-preflight/ios-readiness-source-ci.json",
+      "sha256": "de8e467212aef4b7569425dca867098e6ea11e598e31d40e1e12e712ec54e329"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34437271196/native-preflight/settings_sheet-controls.json",
+      "sha256": "f83402f5ef6dc36cbac34601e18d398a45ec74b29df321201bc805248da2a246"
+    }
+  ],
+  "required_before_execution": [
+    "Different-agent actual preflight105-row/source/platform/archive/custody and request approval",
+    "Immediate remote/localbd939 equality and tracked clean source",
+    "Intended active workflow; no active same-ref run"
+  ],
+  "scope": "One newly owned simulator; targetless Swift XCTest public Settings\u2192Add Arabic sheet, retain only3 capped public button labels and do NOT tap a primary-language choice. No Parlor/Kotlin build or launch, normal B libproc/provenance/notices, functional storage, strict protection, whole L08, physical-device or Store qualification. Capture failure is retained, not grounds for a blind expensive retry. Settings35 CLI failure retained; single-execution correction was independently reviewed and6focused controls actually passed. This is a corrected evidence-backed diagnostic, not an unchanged retry."
+}

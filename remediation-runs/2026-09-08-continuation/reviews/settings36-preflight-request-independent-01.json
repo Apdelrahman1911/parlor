@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "kind": "EXACT_SETTINGS36_NONBUILDING_PREFLIGHT_REQUEST_REVIEW",
+  "reviewer": "/root/native_ci",
+  "reviewed_at": "2026-09-10T04:26:54.217460+00:00",
+  "status": "APPROVED_ONE_EXACT_NONBUILDING_PREFLIGHT_CONDITIONAL_LIVE_CHECKS",
+  "findings": [],
+  "approved": {
+    "repository": "Apdelrahman1911/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "source": "bd939632975e6e7802896322b514af06b6a7f6c3",
+    "tree": "b3f7fc54702e5dd0c6d8401f44b51d1a45706652",
+    "inputs": {
+      "verification_scope": "native-preflight",
+      "native_selection": "settings-sheet-only",
+      "frozen_source_sha": "bd939632975e6e7802896322b514af06b6a7f6c3"
+    },
+    "maximum_dispatches": 1
+  },
+  "source_check": "Local HEAD/tree and tracked-clean status match freeze. Canonical delta from730a is exactly the five previously approved/tested files plus mechanical inventory; other additions are retained remediation evidence. Last commit changes inventory only. Frozen manifest independently derived from reviewed local-cycle rows plus new inventory hash. Source/source-review/local-review/freeze pins match.",
+  "workflow": "Unchanged exact workflow hash reuses prior review: only ios selected, four other jobs skipped. Exact request has three inputs and produces only preflight.json, ios-readiness-source-ci.json, settings_sheet-controls.json. Preflight builds nothing and allocates no simulator.",
+  "conditions": [
+    "Root immediately confirms remote/local frozen SHA, tracked-clean source, intended active workflow and no active same-ref run.",
+    "Dispatch only this one exact request. Retain actual producer/artifact/source/toolchain/control/cleanup evidence for separate independent admission. Old730a preflight and hashes are stale."
+  ],
+  "limits": "Not a native-evidence dispatch approval, Swift compilation, Settings capture, A/B/libproc/protection result or qualification. Reviewer performed no network/build/test/source edit or Git write; no cleanup owed.",
+  "pins": {
+    "request": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/settings-sheet-preflight-02/request.json",
+      "bytes": 2262,
+      "sha256": "860047e11935a3fbdf4b3298838478d0983deac257931f3a396946d6a480c2a8"
+    },
+    "freeze": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/settings36-source-freeze-01.json",
+      "bytes": 1971,
+      "sha256": "02d4c5f6c4fa77aac1151f3ba0e53a248ca52df0c680a6f39f09cb3db1a7c5c4"
+    },
+    "source_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/settings-single-execution-cli-fix-independent-01.json",
+      "bytes": 5393,
+      "sha256": "e943ceabf10ec9edc538f6ac5ce102238f1448ffbadde5ed672f9b52e3338e74"
+    },
+    "local_checks_review": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/settings-single-execution-local-actual-independent-01.json",
+      "bytes": 3692,
+      "sha256": "0e183f2633320d067a555526a1e0ad0176091e7ea2c443b4c79c92d4282310a4"
+    },
+    "workflow": {
+      "path": ".github/workflows/production-verification.yml",
+      "bytes": 43906,
+      "sha256": "5437a0da79512e8c0ae90145972b65074791e6f3ce4b4edd6c6fd2d4e697eb86"
+    },
+    "inventory_check": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/settings-sheet-preflight-02/inventory-check.log",
+      "bytes": 119,
+      "sha256": "2f5cb63be32125acc5d876276a94989a2e21b4be7fc8042964f619d9eb22cece"
+    },
+    "push_receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/settings-sheet-preflight-02/push-receipt.json",
+      "bytes": 478,
+      "sha256": "9a1d631bde9b0ba820cac6addde6506c7ac9c56a3f96e0c9120ae80e84b52985"
+    }
+  }
+}

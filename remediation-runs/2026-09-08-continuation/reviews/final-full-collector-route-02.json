@@ -1,0 +1,40 @@
+{
+  "kind": "FINAL_FULL_D_COLLECTION_ROUTE_PREP_NOT_EXECUTED",
+  "author": "/root/fixture_review",
+  "N": "remediation-runs/2026-09-08-continuation",
+  "route": "Reuse unchanged full-D v02; no copied collector, source correction or repeat test campaign.",
+  "command": "/usr/bin/python3 -B remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-02.py FINAL_RUN_ID FINAL_FROZEN_SHA",
+  "collector_sha256": "3af9603aff8e20aa1380f844897ed356426ba29c4dd5172cc5c60edb2dea10de",
+  "reusable_control_evidence": {
+    "source_review": "N/reviews/full-d-compact-collector-independent-02.json",
+    "actual_review": "N/reviews/full-d-compact-collector-actual-independent-02.json",
+    "raw_log": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-full-d-collector-controls-01/gradle.log",
+    "actual": "14 PASS, no failures/errors/skips; helper/test hashes unchanged; stop0. Prior run-specific admission is NOT new-run approval."
+  },
+  "prior_collection": {
+    "receipt": "N/actions/34420745957/download-receipt.json",
+    "sha256": "9756e582e12dbdaa25a6b382d3ed30fc9ef3bd6a133215fcc636c312bc3376a1",
+    "result": "COLLECTED_NOT_RUNTIME_REVIEW; run FAILED. Rechecked all 10 retained artifact ZIP size/hash pairs and central tables; no reinflation.",
+    "max_members": 7999,
+    "max_compressed_bytes": 22405067
+  },
+  "new_data_only_request": {
+    "template": "N/actions/full-qualification-dispatch-02/request.json (preserve original)",
+    "inputs": {
+      "verification_scope": "full"
+    },
+    "final_source_sha": null,
+    "tree": null,
+    "run_id": null,
+    "replace": "Fresh source/inventory/workflow/control pins and current native/candidate/scope reviews; pin v02 directly, NOT template v01. Fresh request hash, dispatch receipt and run-association bind actual run/attempt1 after freeze.",
+    "scope_limit": "Full scope requires request/API/log review; frozen_source_sha input is not full-mode enforcement."
+  },
+  "guards": [
+    "Freeze reviewed source + inventory; verify local/remote/request equality and no overlapping run; one full matrix.",
+    "Recheck v02 hash and final-tree live roots; require completed attempt1, exact repository/branch/workflow and five named jobs with unique checkout/ownership steps.",
+    "N/actions/FINAL_RUN_ID absent/nonredirected. Preserve failed partials. Keep 10 original ZIPs and log ZIP; v02 checks all members but extracts only candidate paths/current-named receipts. Never count historical XML.",
+    "Retain bounds: 50000 members; artifact64MiB/total512MiB; expanded256MiB/member128MiB. Download sizes checked post-process. Fail closed; inspect, not blind retry/weaken.",
+    "Independent raw task/cache/skips/XML/ownership/cleanup review required; collection is not runtime proof. Root records stop/owned-output cleanup; never delete archived build evidence."
+  ],
+  "activity": "Read-only source/JSON/log/ZIP-table/hash inspection; no imports/tests/builds/network/dispatch/canonical edits."
+}

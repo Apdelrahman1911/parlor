@@ -1,0 +1,20 @@
+{
+  "kind": "EXACT_REVIEWED_ANDROID_ABSENCE_SAMPLE_ADOPTION",
+  "at": "2026-09-10T04:49:11.041817+00:00",
+  "base": "bd939632975e6e7802896322b514af06b6a7f6c3",
+  "author": "/root/ci_workflow",
+  "reviewer": "/root/ci_review",
+  "review_sha256": "1b3494bf84bf8c10739b9fc21b348819bc4dd35db19a8b2d123bf01230a78d1d",
+  "files": [
+    {
+      "path": "scripts/ci/verification_hygiene.py",
+      "sha256": "f1aa6d4c5dae8360a9ff1bfd675376d78cb800e3d297fc213cdddca32c7376f6"
+    },
+    {
+      "path": "scripts/release/tests/test_ci_verification_hygiene.py",
+      "sha256": "2ba311084cd57923f85c3176b3d5ac83385022c7e0fe174ac5a38fd1c5101f63"
+    }
+  ],
+  "validation": "NOT_RUN_YET; will batch33existing/new hygiene methods with affected L08 selector controls",
+  "scope": "Bounded selected-UID SDK/emulator-path absence observation only. No signals, ownership grant, adb/AVD cleanup, global cache deletion or retrospective failure relabel. Original guards remain; sample failure retains outputs."
+}

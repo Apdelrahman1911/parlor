@@ -1,0 +1,183 @@
+{
+  "schema_version": 1,
+  "status": "HELD_SOURCE_ONLY_REVIEW_REQUIRED_NOT_ADOPTED_NOT_TESTED",
+  "author": "/root/l08_fixture",
+  "reviewer": "/root/portability_review",
+  "evidence_reviewer": "/root/native_ci",
+  "created_at": "2026-09-10T04:52:29.910758+00:00",
+  "base": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "head": "bd939632975e6e7802896322b514af06b6a7f6c3",
+    "tree": "b3f7fc54702e5dd0c6d8401f44b51d1a45706652",
+    "unrelated_root_owned_edits": "Android hygiene source/test modifications preserved and outside these5files."
+  },
+  "files": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01OSPrerequisite.swift.in",
+      "base_sha256": "586bfc5e18058537a375355ba8ef273856403a9ff0ae29ab03253fba734eae09",
+      "proposed": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/proposed/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/DSC01OSPrerequisite.swift.in",
+        "sha256": "f23bda7d97b13dd69ad2f0f4c9413f40c23b8039abebdfaca124b0b05991afad",
+        "bytes": 28419
+      },
+      "added_lines": 2,
+      "removed_lines": 2
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+      "base_sha256": "8710a7e163312d59e286ce18d5a23f9989a8a0b9c1a9b2a38d5c4306358b8a30",
+      "proposed": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/proposed/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/test_l08_functional_copy.py",
+        "sha256": "364a0595765083517ed0b8f2777767bf68b9b936a5e3339b76dd83d171933719",
+        "bytes": 72180
+      },
+      "added_lines": 3,
+      "removed_lines": 3
+    },
+    {
+      "path": "scripts/ci/native_continuation.py",
+      "base_sha256": "d1246105417eed3b6fee30cf9333ae307a88e8025c9d83df26e6a9c329d426df",
+      "proposed": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/proposed/scripts/ci/native_continuation.py",
+        "sha256": "b06277bb7738d8a4cc5c0d54defddb6885495c4b1e001b634eeffea908248f9b",
+        "bytes": 68409
+      },
+      "added_lines": 1,
+      "removed_lines": 1
+    },
+    {
+      "path": "scripts/release/tests/test_native_process_probe.py",
+      "base_sha256": "33707329a8606c2d41427552602a2ffaad59c701cd22f26db9142abb0ce41db2",
+      "proposed": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/proposed/scripts/release/tests/test_native_process_probe.py",
+        "sha256": "8a34a9e4998779362fb779a5f188f70f7f77c3e67e01f7cf409265905f698e70",
+        "bytes": 43409
+      },
+      "added_lines": 1,
+      "removed_lines": 1
+    },
+    {
+      "path": "scripts/ci/NATIVE_CONTINUATION.md",
+      "base_sha256": "e86be1e4487fd81d71fac9cd9e8c11f4c2d22e61c57efe4ceeaa9c992cdbf7e0",
+      "proposed": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/proposed/scripts/ci/NATIVE_CONTINUATION.md",
+        "sha256": "e7d77ee646cf9251d13efc0041f66ca96fc902a2b2bb7bfa04eabb09eed2d0dc",
+        "bytes": 23094
+      },
+      "added_lines": 2,
+      "removed_lines": 2
+    }
+  ],
+  "patch": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/proposed.patch",
+    "sha256": "43a12bb00387032b5c87c81521ed5225bb671a93ced5610ad3c1a3400b8a2dec",
+    "bytes": 6602
+  },
+  "evidence": {
+    "run_id": 34437980623,
+    "run_attempt": 1,
+    "cycle": "ios-readiness-36",
+    "source": "bd939632975e6e7802896322b514af06b6a7f6c3",
+    "log": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34437980623/native-evidence/ios-readiness-36/xcodebuild.log.gz",
+      "sha256": "264e2d6c67dc2447d91c159d971b04d273a2ae0e80fd3ffa2cf236c3ea03f141",
+      "bytes": 12958
+    },
+    "decompressed_sha256": "ce219cd506efb64bcae10481571c23677f3c6c42f53625eadf7323333295698c",
+    "decompressed_bytes": 156231,
+    "marker_line": 989,
+    "public_capture": {
+      "labels": [
+        "Use Arabic",
+        "Use English (US)",
+        "Cancel"
+      ],
+      "schemaVersion": 1,
+      "selectionTapped": false,
+      "simulator": "9BF62C80-5F13-499C-B7B0-07DB6AB08BE6"
+    },
+    "summary": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34437980623/native-evidence/ios-readiness-36/xcresult-summary.json",
+      "sha256": "8b46b07428fbfbb64532c9704318af18666ffad1b63963ada7ab8affc244efad",
+      "bytes": 1002
+    },
+    "tests": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34437980623/native-evidence/ios-readiness-36/xcresult-tests.json",
+      "sha256": "af819f025264ec4447d436cd4354cb64f28f418b38d66d45983f57aba304eb0b",
+      "bytes": 1671
+    },
+    "receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34437980623/native-evidence/ios-readiness-36/receipt.json",
+      "sha256": "e2c2613f64373c24e3c04601a0f6ba4d221134b6babf289e9957d1de1808ef16",
+      "bytes": 376965
+    },
+    "input_manifest": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34437980623/native-evidence/ios-readiness-36/input-manifest.json",
+      "sha256": "420e529e3dba4f884cfa4025f89e370b2e011675beee4a5f935bec28ef8175d8",
+      "bytes": 172071
+    },
+    "copy_manifest": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34437980623/native-evidence/ios-readiness-36/copied-source-manifest.json",
+      "sha256": "6ad36c9bb834751129fe362031d78eae4b60f6afbfdc48125bf932d85583d1f7",
+      "bytes": 217567
+    },
+    "copy_diff": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34437980623/native-evidence/ios-readiness-36/copied-source.diff",
+      "sha256": "21d895621d8c20a5ff52b46dff056adbab9e674f4a2907f64ab0332b2fd2f9db",
+      "bytes": 38752
+    },
+    "bounded_conclusion": "Structured1passed/0failed/0skipped exact Swift Settings method and matching UUID support the raw public label. Overall run/diagnosticFAIL remains: strict ps15s observer timeout after test; receipt xcodebuild_exit_code absent, command-ledger exit0. No public-sheet-actions.json was produced. Native_ci independently reviews custody/admissibility; this source packet does not relabel acceptance or override failure.",
+    "cleanup": "Actual receipt reports cleanupPASS, no Parlor output, source/control unchanged, exact temporary removed. Historical35 CLI failure and all6 root control checks remain untouched."
+  },
+  "changes": [
+    "Append only actually observed exact Use English (US) to both metadata knownChoice and modal keepEnglish arrays. Preserve Use English/Keep English, exact scoped label matching, exclusive single modal/action, ambiguity and unknown-action failures, enabled/hittable requirements, exactly one tap, all timing and full preferred-list postproof. No guessed spelling/alias or selector retry.",
+    "Recompute only2 existing exact block hashes and retarget existing unknown-action mutation to the enlarged exact approved list+OK. All test methods and full restored-source equality remain unchanged.",
+    "Mechanical current A33/B34→A37/B38 in adapter, exact existing cycle expectation and2 current guide lines. Settings36 and historical prose unchanged."
+  ],
+  "block_pins": [
+    {
+      "anchor": "    @MainActor private func osPrimaryChoiceMetadata(",
+      "base_sha256": "9676f40fef94f11c2f9897fd662876f57bbefa6219517a04348f713c8086bea0",
+      "proposed_sha256": "11c59d4c810fa11960b84f539943c2aeef6ee4d2a1f42a7c9f2ccfe0d35dae6b"
+    },
+    {
+      "anchor": "        try diagnostics.append(stage: .retainEnglishPrimary, status: \"observe\",",
+      "base_sha256": "97c024957cf52c33d58d4b75b29d74227556a76184596d8cb92787ef34af49df",
+      "proposed_sha256": "e2e6ad2740470ce75e81bc3c71aa75ab5c31b418e3ced1bae2eb152abf0377e7"
+    }
+  ],
+  "unchanged_controls": {
+    "normal_files": 98,
+    "normal_unbound_aggregate": "7d598e39bd718e0f8347d0eee839b5aad2bece2bddb82e08ce7f6c1ea592c413",
+    "driver": {
+      "path": "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/run_ios_readiness.py",
+      "sha256": "9580071ecec4abc8ba375ca01e722eee4245f36132e6a5b8790f5d8bb8456687",
+      "bytes": 87139
+    },
+    "composition": {
+      "path": "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/compose_runner.py",
+      "sha256": "0a97dee59d90a15d90c80ac32401fac4e4061987f08e0db2fb5ad6c34f7fdf6a",
+      "bytes": 21848
+    },
+    "foundation_freeze": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/a27-failfast-foundation-draft-freeze-01.json",
+      "sha256": "72aaebc7d11c9ce04141919976d8b49d77daa16eacf6f3a55c9870385c7104fd",
+      "bytes": 5465
+    },
+    "dynamic_dependency_reason": "composition.control_files enumerates companion .py/.in/.md and manifest dynamically; driver content/hash and foundation draft freeze do not depend on fixture literal bytes. These2fixture/control changes enter fresh later aggregate without driver/freeze repins.",
+    "diagnostic_swift": {
+      "path": "scripts/verification/ios-settings-sheet/SettingsSheetUITest.swift.in",
+      "sha256": "547155ee3cbcf1259ef02a803b9e442b90bb390c0c3ab16dca61c53ede67b8e7",
+      "bytes": 27559
+    }
+  },
+  "existing_checks": [
+    "L08FunctionalCopyTests.test_all_original_controls_and_exact_clone_allowlist_are_preserved",
+    "L08FunctionalCopyTests.test_os_primary_choice_delta_preserves_the_complete_existing_prerequisite",
+    "L08FunctionalCopyTests.test_os_primary_choice_rejects_ambiguity_unknown_actions_retries_and_false_proof",
+    "scripts.release.tests.test_native_process_probe.ProbeSourceContractTest.test_full_non_app_scope_is_explicit_and_cycles_do_not_reuse_failed_labels"
+  ],
+  "author_execution": "Read-only source/retained gzip/JSON evidence; stdlib exact diff/hash and3Python AST parses only. No project imports/tests/build/CI. No canonical edits, workers, simulator or build outputs.",
+  "next": "Portability source review and independent raw-capture custody/admissibility review before root adoption. Root batches affected existing controls with separately reviewed Android hygiene patch, stops/cleans own lane, commits reviewed source and regenerated inventory, then creates fresh source/control preflight before A37/B38 as deliberately selected. Prior approvals/source hashes are not portable.",
+  "readiness": "NOT_READY. Proposed evidence-backed copy-only selector correction is not application runtime, final preferred-language proof, strict storage/protection, retained-host, normalB, D, physical-device or Store/legal evidence."
+}

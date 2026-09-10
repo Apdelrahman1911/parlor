@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "kind": "HELD source/control proposal; non-destructive Android emulator-path sample only",
+  "author": "/root/ci_workflow",
+  "created_at": "2026-09-10T04:05:09.811469+00:00",
+  "status": "HELD_NOT_RUN_PENDING_INDEPENDENT_SOURCE_REVIEW",
+  "base_commit": "730a91e4dade4dbc2168b5367e20c3d0f42237e1",
+  "base_tree": "1f71dc64bc7680f461efc3e841dc051579a0d993",
+  "ownership": "Only this android-emulator-absence-audit-01 packet. Root retains canonical edits, local build/test lane, cleanup, network/Actions, adoption, staging/commit/push and final conclusions.",
+  "files": [
+    {
+      "canonical_path": "scripts/ci/verification_hygiene.py",
+      "proposed_path": "remediation-runs/2026-09-08-continuation/reviews/android-emulator-absence-audit-01/proposed/scripts/ci/verification_hygiene.py",
+      "base": {
+        "bytes": 13802,
+        "sha256": "9eab427aeb3d810c033a3827aa44f7201cbb261345a2e6667a8d085df2fbd603",
+        "lines": 276
+      },
+      "proposed": {
+        "bytes": 20930,
+        "sha256": "f1aa6d4c5dae8360a9ff1bfd675376d78cb800e3d297fc213cdddca32c7376f6",
+        "lines": 410
+      },
+      "base_test_method_count": 0,
+      "proposed_test_method_count": 0,
+      "added_test_methods": [],
+      "removed_test_methods": [],
+      "static_parse": "PASS_AST_ONLY_NOT_EXECUTION"
+    },
+    {
+      "canonical_path": "scripts/release/tests/test_ci_verification_hygiene.py",
+      "proposed_path": "remediation-runs/2026-09-08-continuation/reviews/android-emulator-absence-audit-01/proposed/scripts/release/tests/test_ci_verification_hygiene.py",
+      "base": {
+        "bytes": 18448,
+        "sha256": "3fc6f1d4a15152bcca6d86d77bcbc782b3936c6c47336a3ff7b3067d3790e4c8",
+        "lines": 339
+      },
+      "proposed": {
+        "bytes": 28576,
+        "sha256": "2ba311084cd57923f85c3176b3d5ac83385022c7e0fe174ac5a38fd1c5101f63",
+        "lines": 519
+      },
+      "base_test_method_count": 22,
+      "proposed_test_method_count": 33,
+      "added_test_methods": [
+        "test_android_audit_follows_upload_gate_and_failure_retains_outputs",
+        "test_android_successful_sample_allows_existing_exact_output_cleanup",
+        "test_binding_and_observer_omission_fail_closed",
+        "test_coherent_sample_excludes_other_uid_without_reading_its_executable",
+        "test_deleted_executable_path_is_ambiguous_not_absence",
+        "test_enumeration_and_clock_limits_fail_closed",
+        "test_executable_read_denial_or_disappearing_pid_is_not_absence",
+        "test_malformed_missing_oversized_and_mixed_uid_records_fail_closed",
+        "test_pid_lifetime_uid_and_executable_changes_during_sample_fail",
+        "test_same_prefix_sibling_is_outside_this_explicit_path_predicate",
+        "test_same_uid_sdk_qemu_fails_without_attributing_or_killing_process"
+      ],
+      "removed_test_methods": [],
+      "static_parse": "PASS_AST_ONLY_NOT_EXECUTION"
+    }
+  ],
+  "patch": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/android-emulator-absence-audit-01/proposed.patch",
+    "bytes": 19939,
+    "sha256": "9b0e8ec20ffea0ec294e8274b341120dbdb8cd287cf8abf467d4e9ce61e7ee2c",
+    "added_lines": 314,
+    "removed_lines": 0
+  },
+  "rationale": {
+    "historical_execution": {
+      "run_id": 34420745957,
+      "run_attempt": 1,
+      "job_id": 102695388477,
+      "source": "4ccfafcfc361231cfb730178b3798ebcb6304770",
+      "scope": "Three fresh Android instrumentation PASS and Gradle/claimed-output cleanup accepted. Emulator exit/AVD retirement was not attested; no leak was established."
+    },
+    "underlying_reports": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-android-actual-independent-01.json",
+        "sha256": "c439bd57a3ca67c36ff4130187e4b5259352d6b93aa7f828581fa31b9b67901d"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-android-worker-cleanup-followup-01.json",
+        "sha256": "48a838fb4e37349ceb4ce6ad8f503a4cc48ffd75776828e4e3c9fd2012d26afe"
+      }
+    ],
+    "adb_limit": "The runner later reported an adb termination action, not an explicit wait/exit acknowledgement; this proposal does not inspect platform-tools/adb or retrofit that historical evidence."
+  },
+  "change_scope": [
+    "Only desktop-android preparation gains a binding to the canonical configured ANDROID_HOME path digest, SDK-root device/inode and matching non-root real/effective UID. Optional ANDROID_SDK_ROOT must resolve to the same SDK. The SDK root already exists before the current SDK installation step; the emulator child is validated only at cleanup.",
+    "Existing final Gradle stop, successful preparation, exact task/run/attempt/source/output ownership, clean worktree, safe path preflight and successful nonempty uploaded-evidence gates remain intact and precede the audit. Audit FAIL raises before the first rmtree, retaining all currently claimed output paths.",
+    "The cleanup receipt nests the current head/tree plus validated SDK/UID binding, counters and fixed error codes. The existing outer receipt binds task/run/attempt/job and upload; existing cleanup-receipt upload is unchanged. No workflow modification or extra dispatch/artifact is proposed.",
+    "One read-only non-atomic enumerated /proc sample checks stable PID starttime and four UIDs around selected-UID executable readlink/device/inode observations. Other-UID executable paths are not read. Current observer PID must itself be coherently sampled. Missing, denied, malformed, changed, redirected, oversized, over-budget or live matching observations fail closed.",
+    "No process signal, argv/environ read, adb/device command, lifecycle watcher, SDK/AVD/output relocation, process ownership grant, or global cache/device deletion is added."
+  ],
+  "bounds": {
+    "proc_directory_entries": 4096,
+    "each_stat_or_status_read_bytes": 8192,
+    "each_executable_link_path_bytes": 4096,
+    "monotonic_seconds": 5.0,
+    "qualification": "The deadline is checked during enumeration, per PID and at completion. This is a bounded scan budget, not a preemptive kernel-syscall watchdog; no extra process/lifecycle/signal harness is introduced."
+  },
+  "proof_limits": [
+    "PASS means only that no matching executable path was observed among coherently sampled visible selected-UID PIDs beneath the bound canonical SDK/emulator subtree. It is not an atomic or continuous absence certificate.",
+    "It does not prove emulator termination, AVD retirement, task ownership of any observed process, absence under another UID/SDK, or copied/redirected executables outside the path predicate. Adb and global emulator/device state remain outside scope.",
+    "PID churn or inaccessible metadata can conservatively fail the audit even when an emulator is not running. Such FAIL must retain outputs and be investigated, never auto-retried/relabelled or converted into a leak claim.",
+    "Nothing here upgrades the historical4cc cleanup receipt, changes native730a evidence, weakens a release guard, or changes application code, protocol/privacy/authority/timing rules."
+  ],
+  "verification": {
+    "actually_executed": [
+      "Read-only Git identity/base-byte inspection",
+      "Standard-library text/JSON/hash inspection",
+      "AST parsing of both proposed files without import or execution"
+    ],
+    "unit_tests": "NOT_RUN",
+    "builds": "NOT_RUN",
+    "application_runtime": "NOT_RUN",
+    "hosted_procfs_runtime": "NOT_RUN",
+    "network_or_actions": "NOT_RUN",
+    "planned_focused_command_after_root_adoption": "python3 -B -m unittest discover -s scripts/release/tests -p test_ci_verification_hygiene.py -v",
+    "fixture_scope": "Eleven added test methods (nine Linux-only owned proc metadata/symlink fixture methods and two cleanup-integration methods). Thirty-three methods total in this file; Linux-only methods are explicitly skipped on non-Linux hosts. Symlink targets are inert owned fixture files, never real process executables; no actual /proc is sampled by these tests.",
+    "test_location_warning": "The held copy retains canonical ROOT-relative imports. Do not execute it in place as though it were a standalone tested overlay; root must control adoption/testing against the canonical layout."
+  },
+  "independent_review": {
+    "requested_reviewer": "/root/ci_review",
+    "state": "PENDING_SOURCE_REVIEW",
+    "design_feedback_only": "Reviewer agreed the narrow shape is proportionate and required explicit sampled-path predicate/limitations. This is not source approval."
+  },
+  "adoption_requirements": [
+    "Independent source review, root-controlled exact patch adoption and focused actual Linux fixture/guard verification before any source freeze.",
+    "Batch with the later final source freeze, regenerate/commit mechanical inventory, and derive fresh source/control bindings; the shared helper also participates in native process-probe controls. Do not modify canonical files during the current730a native execution.",
+    "A later justified final Linux Android job must produce its own actual audit/cleanup receipt. Fixture success cannot substitute for that hosted metadata observation or Android application runtime."
+  ],
+  "cleanup": {
+    "author_build_or_test_cycle": "NONE",
+    "canonical_files_modified_by_author": [],
+    "owned_writes": "remediation-runs/2026-09-08-continuation/reviews/android-emulator-absence-audit-01",
+    "workers_or_live_outputs_created": [],
+    "note": "No Gradle, emulator, build/test worker, network operation, canonical edit, stash manipulation or deletion was performed; no build cleanup cycle was started."
+  }
+}
