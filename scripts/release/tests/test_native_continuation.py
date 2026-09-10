@@ -754,6 +754,62 @@ class NativePreflightTest(unittest.TestCase):
         lane.invoke_native, lane.bootstrap_cache_directories = Mock(), Mock()
         return lane
 
+    def test_command_timeout_keeps_default_bound_token_removal_and_output_limits(self):
+        arguments = ['/usr/bin/xcrun', 'simctl', 'list', 'runtimes', '--json']
+        error = subprocess.TimeoutExpired(arguments, 120, output=b'private-output', stderr=b'private-error')
+        with patch.dict(native.os.environ, {'PATH': '/usr/bin', 'PARLOR_ACTIONS_READ_TOKEN': 'private-token'}, clear=True), \
+                patch.object(native.subprocess, 'run', side_effect=error) as execute:
+            with self.assertRaises(subprocess.TimeoutExpired) as caught:
+                native.command(arguments)
+        self.assertIs(caught.exception, error)
+        execute.assert_called_once_with(arguments, cwd=ROOT, env={'PATH': '/usr/bin'},
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=120)
+        for stdout, stderr in ((b'12345', b''), (b'', b'12345')):
+            with self.subTest(stdout=stdout, stderr=stderr), patch.object(native, 'MAX_FILE', 4), \
+                    patch.object(native.subprocess, 'run', return_value=SimpleNamespace(returncode=0, stdout=stdout, stderr=stderr)), \
+                    self.assertRaisesRegex(RuntimeError, 'control-command-output-limit'):
+                native.command(arguments)
+
+    def test_timeout_failure_retains_only_closed_command_identity_without_bypassing_preflight(self):
+        private_url = 'https://example.invalid/artifact?signature=private-token'
+        cases = (
+            (lambda root: ['/usr/bin/xcrun', 'simctl', 'list', 'runtimes', '--json'], 'xcrun-simctl-list-runtimes'),
+            (lambda root: ['/usr/bin/xcrun', 'simctl', 'list', 'devicetypes', '--json'], 'xcrun-simctl-list-devicetypes'),
+            (lambda root: ['/usr/bin/python3', '-B', str(root / native.SUPPORT / 'bind_source.py'), '--describe'], 'source-describe'),
+            (lambda root: ['/usr/bin/python3', '-B', str(root / native.SUPPORT / 'bind_source.py'),
+                          str(root / native.CAMPAIGN / native.BINDING_NAME), 'a' * 64, 'b' * 64], 'source-bind'),
+            (lambda root: ['/usr/bin/python3', '-B', str(root / native.APPLICATION_RUNNERS['protection_application']),
+                          '--control-manifest', str(root / native.CAMPAIGN / native.BINDING_NAME)], 'control-manifest-protection_application'),
+            (lambda root: ['/usr/bin/xcrun', 'simctl', 'list', 'runtimes', '--json', private_url], 'unclassified-command'),
+            (lambda root: private_url, 'unclassified-command'),
+        )
+        for arguments, label in cases:
+            with self.subTest(label=label), TemporaryDirectory() as raw:
+                temporary = Path(raw).resolve()
+                root, runner_temp = temporary / 'checkout', temporary / 'runner-temp'
+                (root / native.CAMPAIGN).mkdir(parents=True)
+                runner_temp.mkdir()
+                _, _, current = package_fixture(root)
+                env = dict(GITHUB_EVENT_NAME='workflow_dispatch', PARLOR_DISPATCH_SCOPE='native-preflight',
+                           PARLOR_NATIVE_SELECTION=native.APPLICATION_SELECTION, RUNNER_TEMP=str(runner_temp))
+                with patch.object(native, 'context', return_value=current):
+                    lane = native.Continuation(env, root)
+                error = subprocess.TimeoutExpired(arguments(root), 120, output=b'private-output', stderr=b'private-error')
+                with patch.object(native, 'command', return_value=b''), patch.object(native, 'qualified_platform', side_effect=error), \
+                        patch.object(lane, 'preflight') as preflight, patch('builtins.print') as printed:
+                    self.assertEqual(lane.run(), 1)
+                preflight.assert_not_called()
+                self.assertFalse(lane.binding.exists())
+                self.assertTrue(lane.state['cleanup_safe'])
+                self.assertEqual((lane.state['runs'], lane.state['files'], lane.state['directories']), ({}, {}, {}))
+                expected = dict(status='FAIL', error_type='TimeoutExpired', timeout_command=label)
+                self.assertEqual(json.loads((lane.bundle / 'failure.json').read_bytes()), expected)
+                self.assertEqual({key: lane.state[key] for key in expected}, expected)
+                self.assertEqual(json.loads(printed.call_args.args[0])['timeout_command'], label)
+                serialized = (lane.base / 'state.json').read_text() + (lane.bundle / 'failure.json').read_text() + printed.call_args.args[0]
+                for secret in (private_url, 'private-token', 'private-output', 'private-error'):
+                    self.assertNotIn(secret, serialized)
+
     def test_preflight_only_binds_and_observes_exact_selected_package(self):
         for selection in ('paired', native.APPLICATION_SELECTION):
             with self.subTest(selection=selection), TemporaryDirectory() as raw:

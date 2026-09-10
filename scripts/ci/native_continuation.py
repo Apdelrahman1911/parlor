@@ -154,6 +154,35 @@ def command(arguments, root=ROOT, timeout=120):
     return result.stdout
 
 
+def timeout_command_label(arguments, root=ROOT):
+    """Closed observation labels only; never retain exception argv or output."""
+    if not isinstance(arguments, (list, tuple)) or not 1 <= len(arguments) <= 6 or not all(
+            isinstance(item, str) and len(item) <= 4096 for item in arguments):
+        return "unclassified-command"
+    arguments = tuple(arguments)
+    known = {
+        ("/usr/bin/xcodebuild", "-version"): "xcodebuild-version",
+        ("/usr/bin/xcode-select", "-p"): "xcode-select-path",
+        ("/usr/bin/xcrun", "--sdk", "iphonesimulator", "--show-sdk-version"): "xcrun-simulator-sdk-version",
+        ("/usr/bin/xcrun", "--sdk", "iphoneos", "--show-sdk-version"): "xcrun-device-sdk-version",
+        ("/usr/bin/xcrun", "--sdk", "iphonesimulator", "--show-sdk-path"): "xcrun-simulator-sdk-path",
+        ("/usr/bin/xcrun", "simctl", "list", "runtimes", "--json"): "xcrun-simctl-list-runtimes",
+        ("/usr/bin/xcrun", "simctl", "list", "devicetypes", "--json"): "xcrun-simctl-list-devicetypes",
+        ("/usr/libexec/java_home", "-v", "21"): "java-home-21",
+        ("/usr/bin/python3", "-B", str(root / SUPPORT / "bind_source.py"), "--describe"): "source-describe",
+    }
+    if arguments in known:
+        return known[arguments]
+    binding = str(root / CAMPAIGN / BINDING_NAME)
+    if len(arguments) == 6 and arguments[:4] == ("/usr/bin/python3", "-B", str(root / SUPPORT / "bind_source.py"), binding) and all(
+            HEX64.fullmatch(item) for item in arguments[4:]):
+        return "source-bind"
+    for label, runner in {**RUNNERS, **SHEET_RUNNERS, **OS_RUNNERS, **APPLICATION_RUNNERS}.items():
+        if arguments == ("/usr/bin/python3", "-B", str(root / runner), "--control-manifest", binding):
+            return "control-manifest-" + label
+    return "unclassified-command"
+
+
 def effective_scope(event, requested):
     if event != "workflow_dispatch":
         return "full"
@@ -1220,8 +1249,10 @@ class Continuation:
             # API exception strings can contain signed URLs; retain only closed local errors.
             if type(error) is RuntimeError:
                 self.state["error"] = str(error)[:500]
+            elif isinstance(error, subprocess.TimeoutExpired):
+                self.state["timeout_command"] = timeout_command_label(error.cmd, self.root)
             write_new(self.bundle / "failure.json", json_bytes({key: self.state[key] for key in
-                      ("status", "error_type", "error") if key in self.state}))
+                      ("status", "error_type", "error", "timeout_command") if key in self.state}))
         finally:
             self.state["finished_at"] = now()
             self.save()
@@ -1229,7 +1260,7 @@ class Continuation:
                 write_new(self.bundle / "continuation.json", json_bytes(self.state))
             self.state["bundle_manifest"] = tree_manifest(self.bundle)
             self.save()
-            keys = ("scope", "selection", "unselected_lanes", "status", "cleanup_safe", "error")
+            keys = ("scope", "selection", "unselected_lanes", "status", "cleanup_safe", "error", "timeout_command")
             print(json.dumps({key: self.state.get(key) for key in keys + (("os_recovery",) if self.selection == OS_SELECTION else ())}, indent=2))
         return code
 
