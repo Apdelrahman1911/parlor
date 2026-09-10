@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "kind": "OS39_C08_D_REVIEWED_SOURCE_INVENTORY_FREEZE",
+  "at": "2026-09-10T08:53:15.243075+00:00",
+  "source": {
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "75c104734373703570a307de9c7a53d291bc2718",
+    "tree": "4d5b660c5f508a3eb8d01cd9203f2503570dbb18",
+    "diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "source_manifest_sha256": "b98e5ea13b1658273146a0c96b5d45cc7806d58498966f2e446070322ad7a97a"
+  },
+  "source_commit": "966646f8eabdc79ce599c48bf37c7871fcb3cf4b",
+  "inventory_commit": "75c104734373703570a307de9c7a53d291bc2718",
+  "inventory_freshness": {
+    "command": "/usr/bin/python3 -B scripts/generate_review_inventory.py --check",
+    "exit_code": 0,
+    "rows": 24865,
+    "inventory": {
+      "path": "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv",
+      "bytes": 15625596,
+      "sha256": "0b3248a142bc5aec0a2ccef4733925e985748ab6e478e79fa9da4c347544a105"
+    }
+  },
+  "push": {
+    "path": "remediation-runs/2026-09-08-continuation/actions/os-recovery-preflight-01/push-receipt.json",
+    "bytes": 722,
+    "sha256": "88857a5ec38067837c2437fb6fa48e96b5a9cec651a9c38b08623e0f140763ca"
+  },
+  "reviews": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/os-recovery-copy-swift-independent-01.json",
+      "bytes": 4509,
+      "sha256": "17a9b45b0c7de7d157677fa07d74df83d6860ffa4b976087e5a3926ad4fe01c8"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/os-recovery-driver-receipts-independent-01.json",
+      "bytes": 15196,
+      "sha256": "2308fbeababbfbee1388267e979abcbc1df33ddfd02a6dd0515aeb3c83055703"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/os-recovery-ci-independent-01.json",
+      "bytes": 13360,
+      "sha256": "b3fee55d3dee92e57b73e90a57bd9bb9b276ea0d438b08f532f5848927015ae2"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/os-recovery-native-collector-independent-01.json",
+      "bytes": 3478,
+      "sha256": "504aa592f8657541fcfd1adabcab9df07e97fed80acca5279442262dd53ea58d"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/os-recovery-controls-linux-actual-independent-01.json",
+      "bytes": 11494,
+      "sha256": "15bbaa2374226a099aa213325c4f779aefd10e9fee716b7358ac49f7956b6cda"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/os-recovery-prequalification-ledger-review-01.json",
+      "bytes": 891,
+      "sha256": "b930af309a77743204d3cf473dd204c6c40dda79751ad8bdf40877406b0e94cb"
+    }
+  ],
+  "scope": "14 reviewed active source/control files, current ledger and retained source-bound evidence; no shipping/build source delta. Local174 controls actually passed at their recorded working tree. Native OS39, final-source C08 and combined D NOT_RUN at this freeze. B30 requires final applicability; no Store/physical operations.",
+  "whitespace_observation": "Initial whole-staged git diff --check exited2 on retained raw POM CRLF/whitespace and unified-diff context. Those evidence bytes were intentionally preserved. A narrowed active .github/scripts/ledger/collector diff --check passed before commits. No test failure or whitespace-policy override."
+}

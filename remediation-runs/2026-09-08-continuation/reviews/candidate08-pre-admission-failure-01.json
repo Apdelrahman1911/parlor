@@ -1,0 +1,13 @@
+{
+  "kind": "ROOT_READONLY_PREADMISSION_RECIPE_FAILURE_NOT_CANDIDATE_EXECUTION",
+  "at": "2026-09-10T09:19:04.000208+00:00",
+  "status": "FAIL",
+  "cause": "Copied C07 immediate-admission expected APPROVED_FOR_ONE_C08 but current independently sealed review intentionally uses APPROVED_ONE_C08. Assertion at line10 occurred before lock/import/resources/output creation.",
+  "candidate_executed": false,
+  "candidate_destination_absent": true,
+  "review_sha256": "d6724ca09f2e6a081077c9633b213d95b9cf4c3b84fe9ce0960bb7de72791e76",
+  "correction": "Use actual sealed C08 status. Join fresh source against reviewed commit/tree/branch/diff/manifest/status+840rows and exact whole source equality of all4 producer objects; C08 report does not use old C07 complete-source-object field. No controls/review/evidence changed or validation weakened.",
+  "stop_exit_code": 0,
+  "stop_output": "No Gradle daemons are running.\n",
+  "cleanup": "No task-owned builder or resources started before this precondition failure. Existing evidence/global caches unchanged."
+}

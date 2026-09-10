@@ -1,0 +1,123 @@
+{
+  "kind": "LOCAL_NONROOT_CONTROL_OUTER",
+  "result": "PASS_MECHANISM_ONLY",
+  "controls": {
+    "scripts/ci/linux_process_probe.py": "2696b0d81f1113eeaea20b431191788925053703d2ed6e12d72489041c6f76b6",
+    "scripts/ci/verification_hygiene.py": "1fc2fb6f0b3bb7a505edc63277e0fe974a67ccf972753eec0da60386438c16f4"
+  },
+  "stage": "/tmp/parlor-linux-proc-local-zkwispza",
+  "stage_removed": true,
+  "observation": {
+    "kind": "LOCAL_NONROOT_MECHANISM_CONTROL_NOT_HOST_AUDIT",
+    "uid": 65534,
+    "euid": 65534,
+    "binding": {
+      "sdk_path_sha256": "d2db3690550ededaf753ae795509e452208eb8cee94d1b645f907136da253381",
+      "sdk_device": 27,
+      "sdk_inode": 1975169,
+      "uid": 65534
+    },
+    "controls": [
+      {
+        "kind": "LIVE_LINUX_CONTROL_SYNTHETIC_ENUMERATION",
+        "dumpable": 1,
+        "result": "CONTROL_PASS",
+        "started_at": "2026-09-10T11:41:03.677974+00:00",
+        "child_reaped": true,
+        "fixture_removed": true,
+        "errors": [],
+        "scope": "Only self/direct-child enumeration with real procfs reads; not a host inventory or emulator runtime.",
+        "fixture_basename": "parlor-linux-proc-control-_anihfog",
+        "owned_pid": 12585,
+        "readiness": {
+          "pid": 12585,
+          "uid": 65534,
+          "dumpable": 1
+        },
+        "audit": {
+          "result": "PASS",
+          "started_at": "2026-09-10T11:41:03.707158+00:00",
+          "enumerated": 2,
+          "sampled": 2,
+          "selected_uid": 2,
+          "matching_executables": 0,
+          "errors": [],
+          "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence",
+          "binding": {
+            "sdk_path_sha256": "d2db3690550ededaf753ae795509e452208eb8cee94d1b645f907136da253381",
+            "sdk_device": 27,
+            "sdk_inode": 1975169,
+            "uid": 65534
+          },
+          "finished_at": "2026-09-10T11:41:03.709961+00:00"
+        },
+        "child_exit_code": 0,
+        "interrupted": false,
+        "finished_at": "2026-09-10T11:41:03.711216+00:00"
+      },
+      {
+        "kind": "LIVE_LINUX_CONTROL_SYNTHETIC_ENUMERATION",
+        "dumpable": 0,
+        "result": "CONTROL_PASS",
+        "started_at": "2026-09-10T11:41:03.711417+00:00",
+        "child_reaped": true,
+        "fixture_removed": true,
+        "errors": [],
+        "scope": "Only self/direct-child enumeration with real procfs reads; not a host inventory or emulator runtime.",
+        "fixture_basename": "parlor-linux-proc-control-fiz2of72",
+        "owned_pid": 12586,
+        "readiness": {
+          "pid": 12586,
+          "uid": 65534,
+          "dumpable": 0
+        },
+        "audit": {
+          "result": "FAIL",
+          "started_at": "2026-09-10T11:41:03.740881+00:00",
+          "enumerated": 2,
+          "sampled": 1,
+          "selected_uid": 1,
+          "matching_executables": 0,
+          "errors": [
+            {
+              "code": "PermissionError"
+            }
+          ],
+          "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence",
+          "binding": {
+            "sdk_path_sha256": "d2db3690550ededaf753ae795509e452208eb8cee94d1b645f907136da253381",
+            "sdk_device": 27,
+            "sdk_inode": 1975169,
+            "uid": 65534
+          },
+          "failure_context": {
+            "operation": "before_exe_readlink",
+            "selection": true,
+            "errno": 13
+          },
+          "finished_at": "2026-09-10T11:41:03.742702+00:00"
+        },
+        "child_exit_code": 0,
+        "interrupted": false,
+        "finished_at": "2026-09-10T11:41:03.743985+00:00"
+      }
+    ]
+  },
+  "command": [
+    "/usr/sbin/runuser",
+    "--user",
+    "nobody",
+    "--",
+    "/usr/bin/env",
+    "-i",
+    "PATH=/usr/bin:/bin",
+    "LANG=C.UTF-8",
+    "ANDROID_HOME=/tmp/parlor-linux-proc-local-zkwispza/sdk",
+    "ANDROID_SDK_ROOT=/tmp/parlor-linux-proc-local-zkwispza/sdk",
+    "/usr/bin/python3",
+    "-I",
+    "-B",
+    "/tmp/parlor-linux-proc-local-zkwispza/entry.py"
+  ],
+  "exit_code": 0
+}

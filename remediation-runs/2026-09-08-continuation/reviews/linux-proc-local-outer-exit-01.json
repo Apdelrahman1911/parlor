@@ -1,0 +1,104 @@
+{
+  "kind": "LOCAL_FOCUSED_BODY_PASS_WITH_OUTER_LAUNCHER_EXIT143_PRESERVED",
+  "recorded_at": "2026-09-10T11:46:26.809299+00:00",
+  "tool_session_id": 67223,
+  "tool_session_exit_code": 143,
+  "inner_receipt_status": "PASS",
+  "inner_exit_code": 0,
+  "inner_stop_exit_code": 0,
+  "observed_cleanup_signals": [
+    {
+      "pid": 12380,
+      "signal": 15,
+      "started": "Thu Sep 10 11:41:00 2026"
+    },
+    {
+      "pid": 12383,
+      "signal": 15,
+      "started": "Thu Sep 10 11:41:00 2026"
+    }
+  ],
+  "invocation": "The coordinator used a bash command containing the full inline cycle marker and a Python subprocess.run wrapper awaiting run_gradle_cycle.py rather than exec replacement.",
+  "explanation": "The archived runner selects cycle-marker-bearing commands and their descendants, so this invocation can select its awaiting launcher ancestors; their reported start time matches the launch. SIGTERM/143 and the two selected PIDs are observed, but no retained pre-signal PID-to-command snapshot proves their exact identity. This is not an application-test failure and is not relabeled as a successful outer invocation.",
+  "correction_for_future_invocations": "Use exec replacement of shell/Python launcher by the existing runner, with no marker-bearing waiting ancestors. No archived runner change or repeat of already-completed tests is proposed.",
+  "actual_scope": "101 Python controls and 9 executed Gradle workflow-contract tests PASS; focused pinned actionlint exit0; two actual nonroot Linux self/direct-child controls demonstrate dumpable PASS versus selected exe-read EACCES FAIL. Expected negative remains audit FAIL, not whole-host absence or historical D03 cause proof.",
+  "focused_commands": [
+    {
+      "label": "python-hygiene-probe-workflow",
+      "started_at": "2026-09-10T11:41:02.102792+00:00",
+      "finished_at": "2026-09-10T11:41:03.370833+00:00",
+      "exit_code": 0
+    },
+    {
+      "label": "actual-nonroot-mechanism",
+      "started_at": "2026-09-10T11:41:03.370995+00:00",
+      "finished_at": "2026-09-10T11:41:03.786362+00:00",
+      "exit_code": 0
+    },
+    {
+      "label": "focused-workflow-actionlint",
+      "started_at": "2026-09-10T11:41:03.786528+00:00",
+      "finished_at": "2026-09-10T11:41:06.308878+00:00",
+      "exit_code": 0
+    },
+    {
+      "label": "transport-workflow",
+      "started_at": "2026-09-10T11:41:06.309116+00:00",
+      "finished_at": "2026-09-10T11:41:28.486803+00:00",
+      "exit_code": 0
+    }
+  ],
+  "fresh_root_followup": {
+    "tool_exec_chunk": "37e5c8",
+    "exit_code": 0,
+    "gradle_stop_output": "No Gradle daemons are running.\n",
+    "matching_java_or_owned_probe_workers": [],
+    "packet_absent": true,
+    "scratch_absent": true,
+    "disk_free_gib_approx": 18,
+    "ram_available_gib_approx": 31
+  },
+  "pins": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-proc-controls-01/receipt.json",
+      "bytes": 315276,
+      "sha256": "a3201bb90198d96b8c4f2911ba04c809bdf83693c8182f68f668a3f42aaa35dc"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-proc-controls-01/gradle.log",
+      "bytes": 33797,
+      "sha256": "5e00bbd333188460b1ef429156c50ae1108f9d27d2367c597e15ec3b244fedf1"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-proc-controls-01/focused-commands.json",
+      "bytes": 6244,
+      "sha256": "cea8378986d27c88b54b096f694ac221c48ad5cb5079e7a9a8c610686f8f4b03"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-proc-controls-01/control-inputs-before.json",
+      "bytes": 2296,
+      "sha256": "411f3ff029d857ad8d9bd15bccb91a3fb82c209e2217dcaf90edc8c9db973243"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-proc-controls-01/control-inputs-after.json",
+      "bytes": 2296,
+      "sha256": "411f3ff029d857ad8d9bd15bccb91a3fb82c209e2217dcaf90edc8c9db973243"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-proc-controls-01/nonroot-control.json",
+      "bytes": 4275,
+      "sha256": "2c226e93326623bb0f2e6076f0b7f65841a7baa2d74939a66ed1314d73d4e3e4"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-proc-controls-01/nonroot-control.log",
+      "bytes": 2602,
+      "sha256": "f88bc17f966442b128a23a578aa5ca82d6190a3fc2b52c6f5353a69f57e54e5d"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-linux-proc-controls-01/stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    }
+  ],
+  "readiness": "D03 remains FAIL; strict iOS protection unresolved; NOT_READY"
+}

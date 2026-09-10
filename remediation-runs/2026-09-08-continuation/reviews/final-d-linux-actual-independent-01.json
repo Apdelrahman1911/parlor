@@ -1,0 +1,711 @@
+{
+  "schema_version": 1,
+  "kind": "INDEPENDENT_D03_LINUX_X64_ANDROID_ACTUAL_EVIDENCE_REVIEW",
+  "reviewer": "/root/ci_review",
+  "executing_coordinator": "/root",
+  "status": "REVIEW_COMPLETE_D03_LINUX_GATE_FAILS_REQUIRED_CLEANUP",
+  "verdict": {
+    "current_evidence_custody": "ACCEPT",
+    "executed_jvm_tests": "ACCEPT_2215_PASS_3_EXPLICIT_SKIP_0_FAILURE",
+    "executed_managed_device_smoke": "ACCEPT_3_PASS",
+    "release_control_static_and_unsigned_artifact_scope": "ACCEPT_SCOPED",
+    "hosted_owned_cleanup": "FAIL",
+    "linux_d03_gate": "FAIL",
+    "readiness": "NOT_READY",
+    "reason": "Successful task/runtime/artifact evidence is retained, but the mandatory hosted Android absence audit failed and all 21 created output roots were retained. Do not rewrite this attempt as green."
+  },
+  "source": {
+    "repository": "Apdelrahman1911/parlor",
+    "branch": "fix/local-readiness-2026-09-07",
+    "commit": "75c104734373703570a307de9c7a53d291bc2718",
+    "tree": "4d5b660c5f508a3eb8d01cd9203f2503570dbb18",
+    "comparison_method": "Every source/control/resource comparison used read-only git show at this exact commit, not mutable working-tree files or later HEAD.",
+    "frozen_tracked_paths": 24865,
+    "frozen_paths_manifest_sha256": "0992082cea4af235f0dc7150e258a21aa0555cd0750b633f0afb87e67e737440",
+    "binding": "Run and attempt API head, job API head, checkout/clean-source raw log, 41-byte commit.txt, prepared ownership, cleanup source, and embedded AAB version-control metadata agree.",
+    "controls_sha256": {
+      "build.gradle.kts": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+      "composeApp/build.gradle.kts": "c23525d6b06f9b536fb5e8ef6be68c653952fa9764e276f831772b864621fdd5",
+      "scripts/release/validate_release_system.sh": "ce52c9c08edecba968337d6de42c90895badec127c7029a5afc16737d3b8864a",
+      "scripts/release/workflow_contract.py": "40bc1dc521676043be6c70a8d6e7e775e4b902350e0177acd19500ee69576e0d",
+      "config/release-policy.json": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+      "scripts/generate_review_inventory.py": "c65ec66aa1ea18e91ddae521de4feda15a08ecffa024f06b8dbde0c1999c5a52",
+      "config/android-lint-accepted-warnings.txt": "4fe091a88dc1cec1849c0076790fa5db25608cf16ff094a30441ac99a84277d7",
+      "scripts/verification/android_release_artifacts.py": "55d6b3ddbe4877956c383225ea8bc8b203a2b023206be60eeac519b2555e98cb",
+      "scripts/verification/third_party_notices.py": "d5a9e8e0cafd9c2d0de9ecd8dfcb040053fa52d25d798abd9998e84ab6676bdf",
+      "scripts/ci/verification_hygiene.py": "f1aa6d4c5dae8360a9ff1bfd675376d78cb800e3d297fc213cdddca32c7376f6",
+      ".github/workflows/production-verification.yml": "9a8021ec1ba27f44d7d2ac18f0bcc7a4a254445ba1baae1a420287094c89414b",
+      "scripts/android/run_release_managed_device_smoke.sh": "5b6dc8fcdd7b11c9cefd39da3adb8783321b647cd9a8459ff761ef7fa031262d",
+      "composeApp/src/androidInstrumentedTest/java/com/parlor/app/ReleaseRuntimeSmokeTest.java": "bfa1c7a05d6310d467ebaa993225f72a80a8ed9ea0791cc67640d5810a248a13",
+      "composeApp/src/androidInstrumentedTest/kotlin/com/parlor/app/MainActivityColdStartTest.kt": "14055d93940b37c4f1a03b91d0df87b8042b146cdd58a9e061da752d375094f9",
+      "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt": "21451bf407d791ec85066227a2670ccf61d3506efaae47375c0bba557fe3be73"
+    }
+  },
+  "run": {
+    "run_id": 34464573240,
+    "run_attempt": 1,
+    "job_id": 102830019251,
+    "job": "desktop-android",
+    "name": "Common, desktop, and Android release",
+    "url": "https://github.com/Apdelrahman1911/parlor/actions/runs/34464573240/job/102830019251",
+    "event": "workflow_dispatch",
+    "run_conclusion": "failure",
+    "job_conclusion": "failure",
+    "job_started_at": "2026-09-10T10:09:38Z",
+    "job_completed_at": "2026-09-10T10:30:10Z",
+    "execution_and_upload_steps": "Checkout, ownership, SDK install, clean source, common gates, managed-device smoke, unsigned inspection, main upload, and cleanup-receipt upload all succeeded. Step 13 cleanup failed.",
+    "environment": {
+      "runner": "GitHub Actions hosted ubuntu-24.04 / x64",
+      "ubuntu": "24.04.4",
+      "image_version": "20260831.293.1",
+      "runner_version": "2.337.0",
+      "java": "Temurin 21.0.12+1, setup-java tool-cache",
+      "gradle": "Wrapper 8.13",
+      "android_build_tools": "36.0.0",
+      "platform_sdk": 36,
+      "managed_device": "Pixel 2 / Android 35 / Google APIs x86_64 / image revision 9",
+      "isolation": "Read-only contents token; immutable action revisions; in-process Kotlin compiler strategy. No Store signing/publication or private Store credentials."
+    },
+    "common_cycle": {
+      "command": "./gradlew productionCheck productionStaticAnalysis productionReleaseAutomationCheck allTests --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+      "step_started_at": "2026-09-10T10:10:38Z",
+      "step_completed_at": "2026-09-10T10:25:30Z",
+      "result": "BUILD SUCCESSFUL in 14m 51s",
+      "actionable_tasks": 1179,
+      "executed": 958,
+      "from_cache": 221,
+      "raw_log_member": "Common, desktop, and Android release/7_Run common, desktop, Android, static-analysis, and release gates.txt",
+      "raw_log_sha256": "0df70f8916af2e6ab7adbac1021d73ce6c285785dad0eb2f8df32fef1dd63461"
+    },
+    "managed_cycle": {
+      "command": "scripts/android/run_release_managed_device_smoke.sh -> strict productionAndroidRuntimeCheck -> :composeApp:pixel2Api35ReleaseAndroidTest",
+      "step_started_at": "2026-09-10T10:25:31Z",
+      "step_completed_at": "2026-09-10T10:29:41Z",
+      "result": "BUILD SUCCESSFUL in 4m 9s",
+      "actionable_tasks": 487,
+      "executed": 50,
+      "from_cache": 4,
+      "up_to_date": 433,
+      "raw_log_member": "Common, desktop, and Android release/9_Run release Android managed-device smoke tests.txt",
+      "raw_log_sha256": "560aa87d8ae844cf011faa82a09d87d2b6882a3c3a741ff0fd17d92eaae0b7c6",
+      "signing_and_binary_scope": "Disposable non-production key installs an R8-shrunk release APK. This is real emulator execution, not execution of the separately retained unsigned AAB bytes or Store/physical-device qualification."
+    }
+  },
+  "custody": {
+    "evidence_root": "remediation-runs/2026-09-08-continuation/actions/34464573240",
+    "metadata": [
+      {
+        "path": "download-receipt.json",
+        "bytes": 35338678,
+        "sha256": "6b14142ab06c9d327ad455985517fecbcc8397de3f70a8dcdd5cc99a8e54774f"
+      },
+      {
+        "path": "run.json",
+        "bytes": 12676,
+        "sha256": "065ce022bdbd2ec8339833c24ed7edd01cbfc1d59af0df0334e1653bf9467bb5"
+      },
+      {
+        "path": "attempt.json",
+        "bytes": 12698,
+        "sha256": "b896ac5baa98cbb9ba29a9c31733a0954cdc15a96c047a7baff5aa034231ba1e"
+      },
+      {
+        "path": "jobs.json",
+        "bytes": 20796,
+        "sha256": "129d94a115622b7133b06198d31c0f49826ee4cc5024a75566432aaa176e980d"
+      },
+      {
+        "path": "artifacts.json",
+        "bytes": 7362,
+        "sha256": "6bd42a54a332328d407c0792a9096f48f86d6a60c11191aafd016ba189597f5e"
+      },
+      {
+        "path": "artifact-10147669118.json",
+        "bytes": 811,
+        "sha256": "d425e00c0127f37e58469db030b5882494c7edeac59e56141f91eca1905ede49"
+      },
+      {
+        "path": "artifact-10147670431.json",
+        "bytes": 815,
+        "sha256": "a8fe8ff3204c3c5d5560b1986849da52749a700cd58c2580858bb847036eed0f"
+      }
+    ],
+    "collector": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-02.py",
+      "sha256": "3af9603aff8e20aa1380f844897ed356426ba29c4dd5172cc5c60edb2dea10de",
+      "source_review_sha256": "3e3f5be8590e2cfc808629c8787f414873c32169179d1a8b8dce737dcb372140",
+      "declared_status": "COLLECTED_NOT_RUNTIME_REVIEW",
+      "review_method": "Independently hashed both Linux ZIPs against API size/digest/run/head/branch; compared all names and central-directory metadata; streamed every current extracted and current compressed-only member, then matched extracted bytes. All 9815 historical path names match the exact frozen tracked manifest and receive no new execution credit. Historical contents were not independently re-decompressed.",
+      "local_extraction_by_reviewer": false
+    },
+    "archives": [
+      {
+        "artifact_id": 10147670431,
+        "archive": "verification-cleanup-desktop-android.zip",
+        "bytes": 3032,
+        "sha256": "f2f09162bdb83a1f1e9cde36f3855b2c41db12fc5e4b6686956883f297a3e7bb",
+        "members": 1,
+        "classification_counts": {
+          "CURRENT_NAMED_RECEIPT_CONTENT_UNREVIEWED": 1
+        },
+        "current_extracted_reconciled": 1,
+        "current_extracted_bytes": 20049,
+        "current_ledger_sha256": "040db523aef0f27159c61c0ccd4d58c941c165750591904c3a29d2b2f1c6b111",
+        "compressed_only_reconciled": 0,
+        "compressed_only_bytes": 0,
+        "compressed_only_ledger_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "artifact_id": 10147669118,
+        "archive": "desktop-android-verification.zip",
+        "bytes": 27634824,
+        "sha256": "71c316844aaa982a790980068547518fb62f9fc040eecd37ccf9c6bfb7b5d3c3",
+        "members": 11330,
+        "classification_counts": {
+          "FROZEN_TRACKED_FILE_ARCHIVE_ONLY": 9815,
+          "CURRENT_PATH_CANDIDATE_NOT_EXECUTION": 1493,
+          "LIVE_SCOPE_COMPRESSED_ONLY_NOT_EXECUTION": 19,
+          "CURRENT_NAMED_RECEIPT_CONTENT_UNREVIEWED": 3
+        },
+        "current_extracted_reconciled": 1496,
+        "current_extracted_bytes": 9030372,
+        "current_ledger_sha256": "8353d4178e0d9ee6bfd3dda833787567e1d068ca4352e538e069db09fd636bf9",
+        "compressed_only_reconciled": 19,
+        "compressed_only_bytes": 75067219,
+        "compressed_only_ledger_sha256": "bb3e1a0cb8d69e208ddef4b8a9fb7f8588e1ff2c8ae9729b0c89a9383bba9ea8"
+      }
+    ],
+    "logs": {
+      "archive": "run-attempt-1-logs.zip",
+      "bytes": 958812,
+      "sha256": "9fdcdb1796877f252032e51bdf05d4ce878d2df3d4f2af263adadbda0afae4ae",
+      "members_reconciled": 19,
+      "ledger_sha256": "937e9cc57e1a1671f8fa239d952ac9d3ca2c10bc44c9c8271a815382a9b5389d",
+      "aggregate_sha256": "9fb6ac8b3c68c5e26615f2e641fd664bcc8285e5f70c157fc7ad65ab2572616e",
+      "aggregate_member": "2_Common, desktop, and Android release.txt",
+      "aggregate_bytes": 478963,
+      "early_job_log_exact_byte_match": true,
+      "scope": "19 Linux job/step log members independently hashed in memory. Other platform logs are not credited by this review."
+    },
+    "ledger_note": "CURRENT_PATH_CANDIDATE_NOT_EXECUTION is a collector classification, not automatic runtime credit. Execution credit in this review follows the separate raw-task/XML/time checks."
+  },
+  "jvm_tests": {
+    "xml_path_selection": "Only exact live <module>/build/test-results/{desktopTest,testDebugUnitTest,testReleaseUnitTest}/TEST-*.xml beneath parlor/parlor/. Excludes tracked historical reports.",
+    "xml_suites": 353,
+    "distinct_executed_tasks": 39,
+    "totals": {
+      "declared": 2218,
+      "passed": 2215,
+      "skipped": 3,
+      "failures": 0,
+      "errors": 0
+    },
+    "xml_ledger_sha256": "f89945e42125549a290da6c5593da67dfdf0512b73a8ec2495c51cbbfa574d47",
+    "method": "Parsed suite attributes and testcase children independently; all declared/skip/failure/error counts agree and per-task testcase identities are unique. Every one of the 39 task log records is unqualified execution, not FROM-CACHE, UP-TO-DATE, NO-SOURCE or SKIPPED.",
+    "freshness": "All suite timestamps explicitly use UTC Z and fall within the actual common-cycle invocation: 2026-09-10T10:17:16.314Z through 2026-09-10T10:25:29.812Z. Task headings are output events, not asserted exact test start/end times.",
+    "per_module_column_order": [
+      "desktopTest",
+      "testDebugUnitTest",
+      "testReleaseUnitTest"
+    ],
+    "skipped_cases": [
+      {
+        "task": ":shared:transport-p2p:desktopTest",
+        "classname": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "name": "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]",
+        "skip_attributes": {}
+      },
+      {
+        "task": ":shared:transport-p2p:desktopTest",
+        "classname": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "name": "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+        "skip_attributes": {}
+      },
+      {
+        "task": ":shared:transport-p2p:desktopTest",
+        "classname": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "name": "host_broadcast_reaches_every_peer()[desktop]",
+        "skip_attributes": {}
+      }
+    ],
+    "skip_reason_source": "P2pKitRoomTransportLoopbackTest.kt explicitly @Ignore-s these peer fixtures: two devices for join/round-trip and three devices for broadcast, because single-JVM mDNS loopback is unreliable; directs docs/P2P_MANUAL_TEST.md. XML itself has only empty <skipped/> nodes.",
+    "ios_tasks_skipped_on_linux": 26,
+    "ios_skip_scope": "All 13 modules' iosSimulatorArm64Test and iosX64Test are explicitly SKIPPED in this Linux job; no Apple runtime or linkage credit.",
+    "alltests_aggregate_count": 14,
+    "alltests_scope": "The explicit root allTests and all 13 module allTests aggregates were observed, rather than Gradle abbreviation or a subset being called allTests.",
+    "per_module_case_counts": {
+      ":composeApp": "96,76,76",
+      ":game-modes:mafia": "297,23,23",
+      ":game-modes:whodunit": "360,9,9",
+      ":shared:content": "24,24,24",
+      ":shared:core": "12,12,12",
+      ":shared:design-system": "40,15,15",
+      ":shared:engine-testing": "6,6,6",
+      ":shared:engine": "13,9,9",
+      ":shared:networking-testing": "5,5,5",
+      ":shared:networking": "34,34,34",
+      ":shared:session": "145,142,142",
+      ":shared:storage": "31,31,31",
+      ":shared:transport-p2p": "277,53,53"
+    },
+    "per_module_counts_format": "Comma-separated declared cases in the stated column order. Only transport-p2p desktop has 3 skips; all other declared cases passed. Suite/task details remain bound by XML and raw-task ledgers.",
+    "raw_task_details_sha256": "293207207043dfc0d7c58a930550612564ba57db2007082d56e4150006080318"
+  },
+  "managed_device_tests": {
+    "path": "composeApp/build/outputs/androidTest-results/managedDevice/release/pixel2Api35/TEST-pixel2Api35-_composeApp-.xml",
+    "bytes": 830,
+    "sha256": "62bef8a9bf79f46fdc406a635d6aa3279dda32af476cee24e7d2ee6a80dfbad3",
+    "attributes": {
+      "name": "com.parlor.app.MainActivityColdStartTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "8.39",
+      "timestamp": "2026-09-10T10:29:39",
+      "hostname": "localhost"
+    },
+    "cases": [
+      {
+        "name": "testColdStartDisplaysContentWhileSettingsIoIsBlocked",
+        "classname": "com.parlor.app.MainActivityColdStartTest",
+        "time": "2.361"
+      },
+      {
+        "name": "testReleaseBuildCanAcquireDeclaredMulticastLock",
+        "classname": "com.parlor.app.ReleaseRuntimeSmokeTest",
+        "time": "1.047"
+      },
+      {
+        "name": "testReleaseBuildLaunchesCanonicalActivityWithoutDebuggableFlag",
+        "classname": "com.parlor.app.ReleaseRuntimeSmokeTest",
+        "time": "3.91"
+      }
+    ],
+    "raw_test_lines": [
+      "2026-09-10T10:29:18.1716647Z > Task :composeApp:pixel2Api35ReleaseAndroidTest",
+      "2026-09-10T10:29:31.4726143Z Starting 3 tests on pixel2Api35",
+      "2026-09-10T10:29:39.8829112Z Finished 3 tests on pixel2Api35",
+      "2026-09-10T10:29:40.8717903Z > Task :productionAndroidRuntimeCheck"
+    ],
+    "result": "3 PASS / 0 FAIL / 0 ERROR / 0 SKIP",
+    "timestamp_interpretation": "The XML has no timezone suffix and is interpreted only with its same-run UTC Starting 3 tests / Finished 3 tests logs and fresh ownership; it is not treated as a standalone UTC timestamp.",
+    "assertions": "Cold-start test blocks settings I/O with a real FIFO and requires visible, attached, nonzero Compose content before unblocking; release smoke checks canonical activity/non-debuggable flag and declared multicast-lock acquire/release.",
+    "limitations": "No multi-device discovery, LAN delivery, physical-device lifecycle, Store operation or broad UI correctness claim."
+  },
+  "release_and_static_gates": {
+    "controls": {
+      "count": 498,
+      "unique_names": 498,
+      "success_markers": 498,
+      "duration_seconds": 109.421,
+      "method_list_sha256": "c0aba20f3c92caa7f057c7a21a8b0e9d1ecb862cc212281b86d4285e835b3e84",
+      "raw_summary_at": "2026-09-10T10:16:18.6437353Z",
+      "raw_ok_at": "2026-09-10T10:16:18.6438050Z",
+      "interleaved_stdout_cases": "NoticeGitBytesTest.test_notice_bytes_survive_crlf_checkout_conversion (CRLF warning) and GitTreeVerificationTest.test_unrelated_same_tree_is_rejected (fixture branch message) each have a following ok record.",
+      "inventory": "Verified freshness of 24865 rows; source review not attested.",
+      "tools": "Both downloaded ShellCheck/actionlint archives reported checksum OK at 10:16:21 UTC."
+    },
+    "controls_scope": "498 independently enumerated unique unittest identities and success markers match one Ran 498 / OK summary. Two interleaved fixture stdout lines resolve to following ok lines. Repeated Gradle productionReleaseAutomationCheck headings are output chunking, not repeated suite runs or additional application runtime.",
+    "validation_script": "The frozen set -euo pipefail script compiles Python controls, runs unittest, workflow_contract.py, inventory --check, policy-hashed ShellCheck, and policy-hashed actionlint. Raw step success and both tool archive checksum OK records bind these executions; no local rerun was performed.",
+    "detekt": {
+      "reports": 43,
+      "errors": 0,
+      "report_ledger_sha256": "3517042c71d04b19538581c99053544176ca29d20914c0f310fa72357b74716b",
+      "report_bytes": 3397,
+      "unqualified_task_count": 43,
+      "no_source_task_count": 38,
+      "task_list_sha256": "1c45f941b14082eb89b1338e3ac7ddc9110fbdd6064f8d33d17d90bd92fcd469"
+    },
+    "lint": {
+      "sha256": "c0cb62c7e49c7ca10ec22faf4862cb5738aa18c5818dd2c63923593090aaae01",
+      "bytes": 34608,
+      "version": "lint 9.1.1",
+      "warnings": 35,
+      "errors": 0,
+      "categories": {
+        "OldTargetApi": 1,
+        "AndroidGradlePluginVersion": 4,
+        "GradleDependency": 3,
+        "NewerVersionAvailable": 27
+      },
+      "allowlist_sha256": "4fe091a88dc1cec1849c0076790fa5db25608cf16ff094a30441ac99a84277d7",
+      "exact_canonical_multiset_matches": true,
+      "canonical_multiset_sha256": "38cd39e9d6656b007981b6a92cfbe0b456b6f753dcefbf1aa647adc2b06cb235",
+      "task_records": {
+        ":composeApp:lintVitalReportRelease": "2026-09-10T10:16:39.7725971Z SKIPPED",
+        ":composeApp:lintVitalRelease": "2026-09-10T10:16:39.7755708Z SKIPPED",
+        ":composeApp:lintRelease": "2026-09-10T10:16:57.8826143Z EXECUTED",
+        ":composeApp:verifyReleaseLintWarnings": "2026-09-10T10:17:18.3785783Z EXECUTED"
+      }
+    },
+    "lint_interpretation": "35 reviewed update/target advisories, not zero warnings. Independently reproduced the exact frozen canonical multiset, retaining duplicate rows; ordinary lintRelease and verifyReleaseLintWarnings actually executed. lintVitalRelease and lintVitalReportRelease were skipped and are not credited.",
+    "executed_gate_tasks": [
+      ":composeApp:verifyApplicationIdentities",
+      ":composeApp:verifyMergedReleaseManifest",
+      ":productionReleaseAutomationCheck",
+      ":composeApp:minifyReleaseWithR8",
+      ":composeApp:verifyGameShellDispatch",
+      ":productionDesktopCheck",
+      ":productionStaticAnalysis",
+      ":composeApp:bundleRelease",
+      ":productionAndroidCheck",
+      ":productionCheck"
+    ],
+    "release_automation_single_execution": true
+  },
+  "unsigned_android_artifact": {
+    "aab_member": "parlor/parlor/composeApp/build/outputs/bundle/release/composeApp-release.aab",
+    "bytes": 8872909,
+    "sha256": "07c69e758996112bf5a5e10b1307246cef1f5406768d83734d799f78665bfac5",
+    "entries": 380,
+    "expanded_bytes": 68403585,
+    "entries_ledger_sha256": "fbe23687b3330d58cbc3818123b40a8b3f7c603760d00ad8a123ef69d5cbb755",
+    "signature_metadata_entries": 0,
+    "dex": {
+      "bytes": 4714184,
+      "sha256": "6520278b689b6b617a73e44343c1a800fc0cc9871f387191fbbfd5b301759f2b",
+      "magic": "dex\n038\u0000",
+      "class_definitions": 5454,
+      "class_list_sha256": "6b05030dadb90a1c100491076931abdc9365345e146985ea22f4aa14af02cce0",
+      "header_checksum_and_sha1_match": true,
+      "canonical_main_activity_present": true,
+      "listed_fixture_namespaces_absent": true
+    },
+    "r8_mapping": {
+      "bytes": 60007671,
+      "sha256": "3c0d59898be57f4b16211e979346f392c8210363dd92b3371fafff481b0d9d0f",
+      "external_and_embedded_exact_match": true,
+      "original_class_mappings": 6263,
+      "listed_fixture_namespaces_absent": true
+    },
+    "r8": {
+      "version": "9.1.41",
+      "shrinking": true,
+      "obfuscation": true,
+      "debug_mode": false,
+      "dex_checksum_matched": true
+    },
+    "manifest": {
+      "protobuf_bytes": 7330,
+      "protobuf_sha256": "a103575623e1f11a55262801f3e200104396e2ff0989c1449d6eb74b3ef9cfee",
+      "merged_xml_bytes": 4176,
+      "merged_xml_sha256": "f0f946934d2f96ec7391f9bf1fbd2600aadcd8be570f77e5b8a36bd3aade9228",
+      "security_projection": {
+        "application_id": "com.parlor.app",
+        "version_name": "1.0.0",
+        "version_code": 1,
+        "min_sdk": 26,
+        "target_sdk": 36,
+        "permissions": [
+          "android.permission.ACCESS_NETWORK_STATE",
+          "android.permission.ACCESS_WIFI_STATE",
+          "android.permission.CHANGE_WIFI_MULTICAST_STATE",
+          "android.permission.INTERNET",
+          "com.parlor.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+        ],
+        "exported": [
+          [
+            "activity",
+            "com.parlor.app.MainActivity",
+            ""
+          ],
+          [
+            "receiver",
+            "androidx.profileinstaller.ProfileInstallReceiver",
+            "android.permission.DUMP"
+          ]
+        ],
+        "application_name": "com.parlor.app.ParlorApplication",
+        "allowBackup": "false",
+        "usesCleartextTraffic": "false",
+        "debuggable": null,
+        "testOnly": null,
+        "launchers": [
+          [
+            "activity",
+            "com.parlor.app.MainActivity",
+            "true"
+          ]
+        ],
+        "sharedUserId": null,
+        "alternate_permissions": 0
+      },
+      "protobuf_and_merged_security_fields_match": true,
+      "checked_compiled_primitive_values_match_raw_attributes": true
+    },
+    "raw_resources": {
+      "count": 9,
+      "bytes": 1347425,
+      "frozen_source_byte_equality": true,
+      "ledger_sha256": "e5655ef1821a40e6d1ab28a4dd31b035f383110a1ff63197f0c88bd0a49131e8"
+    },
+    "notices": {
+      "count": 26,
+      "bytes": 99515,
+      "source_manifest_sha256": "4b501223b3841017477a226515d3758bc60848fe00d579fac3152a81928d6406",
+      "source_catalog_sha256": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+      "source_and_package_reports_equal": true,
+      "all_frozen_source_byte_equality": true,
+      "ledger_sha256": "860734256bd9ecbad5f275c1859a9a3e52094a7b526db6c26810fd17a6d5c945",
+      "legal_approval": false
+    },
+    "artifact_embedded_source": {
+      "path": "base/root/META-INF/version-control-info.textproto",
+      "sha256": "ed7c217ee6a5a5eea39c834f0618c5d2cbb98edfb0deda2549ddb6b7ce9e9d56",
+      "revision": "75c104734373703570a307de9c7a53d291bc2718"
+    },
+    "tools": {
+      "build_tools": "36.0.0",
+      "bundletool_sha256": "a099cfa1543f55593bc2ed16a70a7c67fe54b1747bb7301f37fdfd6d91028e29",
+      "dexdump_sha256": "0944161e1e453ac40a16362ab42f4b1ee5e60eccf503cd87f4a6040c78247d02",
+      "bundletool_version": "1.18.3"
+    },
+    "inventory_receipt": {
+      "path": "build/ci-evidence/android-release-artifact-inventory.json",
+      "bytes": 78248,
+      "sha256": "71aa2d8f2ccdb1d864c579dd7791a4f6735a692cbf7ebf0efb3284c6411f12e1"
+    },
+    "raw_inspection_step_member": "Common, desktop, and Android release/11_Inspect unsigned Android release artifact and merged manifest.txt",
+    "raw_inspection_step_sha256": "8035ea8e560323e680a5a3581f9586a36171600f498e6d29c65398484249832f",
+    "independently_read": "All 380 nested AAB member lengths/hashes match the current inventory; stdlib DEX header/checksum/class-table decoding verifies all 5454 class descriptors; streamed external/embedded 60007671-byte R8 mapping agrees; bounded protobuf decoding matches merged XML security fields and checked compiled primitive attributes. No external binary tool was run by the reviewer.",
+    "forbidden_namespace_check_scope": [
+      "com.parlor.app.debug.",
+      "com.parlor.engine.testing.",
+      "com.parlor.networking.testing.",
+      "org.junit.",
+      "junit.",
+      "org.opentest4j.",
+      "io.ktor.client.engine.mock.",
+      "kotlinx.coroutines.test.",
+      "app.cash.turbine.",
+      "com.lemonappdev.konsist."
+    ],
+    "resource_scope": "All seven bundled Whodunit case JSON files and both fonts match git 75c10473 bytes exactly; no extra case/font path. All 26 notice resources match frozen source bytes exactly at the single expected package namespace.",
+    "limitations": "Namespace checks detect the listed fixtures, not arbitrary malicious renaming. No AAB runtime, reproducible-build, Store signing/publication, identity ownership or exhaustive legal-completeness claim.",
+    "native_abi_header_summary": {
+      "arm64-v8a": {
+        "bytes": 10096,
+        "elf_class": 2,
+        "machine": 183,
+        "sha256": "41e9a793c43a0f4fddb19e33f346bace464f30f888ba7b9eaf96294ea115bfb6"
+      },
+      "armeabi-v7a": {
+        "bytes": 7252,
+        "elf_class": 1,
+        "machine": 40,
+        "sha256": "41399eba6fc2a60f6f14642375c1824f3cf25eb8fec7397d753730a3ceda3e2b"
+      },
+      "x86": {
+        "bytes": 9284,
+        "elf_class": 1,
+        "machine": 3,
+        "sha256": "eb0570b41fd3bff25d8204a967c03bd7550719e768b791f680cc40cbe35f29af"
+      },
+      "x86_64": {
+        "bytes": 10760,
+        "elf_class": 2,
+        "machine": 62,
+        "sha256": "4e56c996f13670e70082658de7880c4020eabf4f25e43387f88ed78a713fc9f0"
+      }
+    }
+  },
+  "hosted_cleanup": {
+    "ownership": {
+      "path": "desktop-android-verification/_temp/parlor-verification-34464573240-1-desktop-android-ownership.json",
+      "bytes": 18853,
+      "sha256": "752e070883f98fbabf76ec8aa66737f47a5126dc9b09d3949553fc5d8d848c7b",
+      "prepared_at": "2026-09-10T10:09:54.651692+00:00",
+      "root": "/home/runner/work/parlor/parlor",
+      "output_count": 179,
+      "android_sdk_binding": {
+        "sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1",
+        "sdk_device": 2049,
+        "sdk_inode": 341395,
+        "uid": 1001
+      },
+      "source_and_task_match": true,
+      "freshness_guard": "Frozen prepare() rejects any pre-existing claimed output or dirty checkout before issuing this receipt."
+    },
+    "standalone_stops": [
+      {
+        "path": "desktop-android-verification/_temp/parlor-verification-34464573240-1-desktop-android-stop-common-android.json",
+        "sha256": "6b01a875cd38762f0b63de8d189d1e7e7ed2acfa897e87bd884f1f6f9cd88bad",
+        "started_at": "2026-09-10T10:25:30.487303+00:00",
+        "finished_at": "2026-09-10T10:25:31.151023+00:00",
+        "exit_code": 0
+      },
+      {
+        "path": "desktop-android-verification/_temp/parlor-verification-34464573240-1-desktop-android-stop-managed-device.json",
+        "sha256": "d9b6696aa20d5584d74282dcb08ecdaaca88aa32a1fc4cfd000c7957c8d3664e",
+        "started_at": "2026-09-10T10:29:41.963028+00:00",
+        "finished_at": "2026-09-10T10:29:42.554701+00:00",
+        "exit_code": 0
+      }
+    ],
+    "receipt": {
+      "path": "verification-cleanup-desktop-android/parlor-verification-34464573240-1-desktop-android-cleanup.json",
+      "bytes": 20049,
+      "sha256": "5cb0df90774a6eb3a92d85dff747e8cb92939c162d3015ba1663c7ad18468e6b",
+      "result": "FAIL",
+      "started_at": "2026-09-10T10:30:05.722120+00:00",
+      "finished_at": "2026-09-10T10:30:07.143460+00:00",
+      "preparation_outcome": "success",
+      "main_upload": {
+        "outcome": "success",
+        "artifact_id": "10147669118",
+        "artifact_digest": "71c316844aaa982a790980068547518fb62f9fc040eecd37ccf9c6bfb7b5d3c3"
+      },
+      "removed": [],
+      "retained": [
+        "build",
+        "build-logic/convention/build",
+        "composeApp/build",
+        "game-modes/mafia/build",
+        "game-modes/whodunit/build",
+        "scripts/__pycache__",
+        "scripts/ci/__pycache__",
+        "scripts/release/__pycache__",
+        "scripts/release/tests/__pycache__",
+        "scripts/verification/__pycache__",
+        "scripts/verification/ios-readiness/__pycache__",
+        "shared/content/build",
+        "shared/core/build",
+        "shared/design-system/build",
+        "shared/engine-testing/build",
+        "shared/engine/build",
+        "shared/networking-testing/build",
+        "shared/networking/build",
+        "shared/session/build",
+        "shared/storage/build",
+        "shared/transport-p2p/build"
+      ],
+      "not_created_count": 158,
+      "errors": [
+        {
+          "error": "Android sampled emulator absence did not pass; retain outputs"
+        }
+      ],
+      "gradle_stop": {
+        "started_at": "2026-09-10T10:30:05.722130+00:00",
+        "finished_at": "2026-09-10T10:30:06.316917+00:00",
+        "exit_code": 0
+      },
+      "android_emulator_absence": {
+        "result": "FAIL",
+        "started_at": "2026-09-10T10:30:07.123081+00:00",
+        "finished_at": "2026-09-10T10:30:07.143443+00:00",
+        "enumerated": 154,
+        "sampled": 118,
+        "selected_uid": 0,
+        "matching_executables": 0,
+        "errors": [
+          {
+            "code": "PermissionError"
+          }
+        ],
+        "source_and_binding_match_ownership": true
+      }
+    },
+    "raw_cleanup_json_equals_uploaded_receipt": true,
+    "raw_cleanup_step_member": "Common, desktop, and Android release/13_Clean only attested verification outputs.txt",
+    "raw_cleanup_step_sha256": "40529f8ada0fe99209fddf9ea08760e5644790d4954490cef578cabf9c78d067",
+    "reconciliation": "All 179 attested roots partition into 21 retained and 158 not created; none removed. Both standalone stops and final cleanup stop exited 0. Main artifact upload and cleanup-receipt upload succeeded; the blocker is the failed Android sampled absence audit.",
+    "diagnosis_limit": "The old helper records only PermissionError: no PID, operation, errno or selected state. sampled=118 of enumerated=154 means the 119th PID iteration did not complete; selected_uid=0 is a completed-selection COUNT, not UID 0. Counters update after executable/second-identity reads, so the interrupted process cannot be identified or excluded from this receipt.",
+    "no_false_absence": "matching_executables=0 from a failed partial sample is not emulator absence. A same-UID non-dumpable/ptrace denial is only a hypothesis; later diagnostic/probe results cannot retrospectively explain or pass this old run.",
+    "runner_post_job": {
+      "member": "Common, desktop, and Android release/29_Complete job.txt",
+      "sha256": "48d1de517bda3de07c6c4b3be925c6193ecf85f4772a0a260d9922d776a617ac",
+      "observed": "2026-09-10T10:30:08.4338304Z Terminate orphan process: pid (7272) (adb)",
+      "meaning": "Runner post-job housekeeping, not source-owned cleanup, emulator retirement, or proof that adb caused PermissionError."
+    },
+    "all_three_stop_outputs": "No Gradle daemons are running.\n"
+  },
+  "dispatch_and_local_collection": {
+    "request": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-03/request.json",
+      "sha256": "1e014d1c51d02d638844e62a29e3356b96065ead3ccb7620f71bd938bfc6dd0c",
+      "inputs": {
+        "verification_scope": "full"
+      },
+      "maximum_dispatches": 1,
+      "scope_binding_limit": "Full mode does not enforce frozen_source_sha input. Only verification_scope=full is passed; immediate request/local/remote checks plus API/checkout/ownership/log source evidence must bind the actual run. No prior Windows job is stitched into this attempt."
+    },
+    "immediate_admission": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-03/immediate-admission.json",
+      "sha256": "b292874220677236ab18b8648e7993b9f4136ad14d51055104d729717d9aba60",
+      "at": "2026-09-10T10:09:31.463924+00:00",
+      "local_remote_source_equals_frozen": true,
+      "empty_tracked_diff": true,
+      "active_workflow_id": 335554528,
+      "active_same_ref_runs": [],
+      "independent_request_review_sha256": "a6fb36e985cfc5551be6161a71cc7f740fb4b4a92c84b87355e49b619b6d9061"
+    },
+    "collection": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-03/watcher-collection-receipt.json",
+      "sha256": "4124798a9cfd606f975dfdbaf89abd44e5f9072e50a1eea1108c85f6e6b66e8f",
+      "watch_exit_code": 1,
+      "collection_exit_code": 0,
+      "stop_exit_code": 0,
+      "collection_started_at": "2026-09-10T11:23:31.550226+00:00",
+      "collection_finished_at": "2026-09-10T11:26:12.228826+00:00",
+      "stopped_at": "2026-09-10T11:26:13.098575+00:00",
+      "local_builds_or_tests": false,
+      "source_unchanged": true,
+      "tracked_status_after": "",
+      "live_build_roots_remaining": []
+    },
+    "post_collection_stop": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-03/post-collection-stop.log",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "output": "No Gradle daemons are running.\n"
+    },
+    "actual_dispatch": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-03/dispatch-result.json",
+      "sha256": "6a9b51f958eb28eba6f6e15736541ed441e534e97c32ca13976377a4c440a6ed",
+      "started_at": "2026-09-10T10:09:31.464166+00:00",
+      "finished_at": "2026-09-10T10:09:33.256943+00:00",
+      "exit_code": 0,
+      "dispatches": 1
+    },
+    "association": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-03/run-association.json",
+      "sha256": "8ebf1d2ac9c164e91f2ac1cb03d98b55cee3d5960e844d7398ed716a464b7060",
+      "observed_at": "2026-09-10T10:09:41.233043+00:00",
+      "candidate_count": 1,
+      "run_created_at": "2026-09-10T10:09:34Z",
+      "run_id": 34464573240
+    }
+  },
+  "local_collection_interpretation": "watch exit 1 accurately records the failed run; collector exit 0 and local stop exit 0 are custody/local hygiene success only. The collection-time source remained 75c10473 with empty tracked status and no live build roots. Retained artifact/evidence directories are not disposable live outputs.",
+  "independent_findings": [
+    {
+      "id": "D03-LINUX-CLEANUP-INCOMPLETE",
+      "severity": "BLOCKING_REQUIRED_QUALIFICATION_GATE",
+      "evidence": "Step 13 raw log + uploaded cleanup receipt 5cb0df90774a6eb3a92d85dff747e8cb92939c162d3015ba1663c7ad18468e6b",
+      "conclusion": "Fail-closed behavior is preserved, but required hosted cleanup did not pass. The Linux job and D03 run remain failure; passing test/artifact scopes do not close this gate.",
+      "required_disposition": "Preserve the failed receipt. Investigate using independently reviewed minimal diagnostics and fresh bindings; any later scoped evidence or follow-up run must keep its own source/platform/scope and must not rewrite D03."
+    }
+  ],
+  "other_discrepancies": [],
+  "cross_stream_limits": [
+    "This review covers only D03 Linux x64/Android at 75c10473; independent reviewers own Apple, alternate desktop hosts and repair-specific descriptor reconciliation.",
+    "C08 scoped dependency/candidate-input acceptance is separately recorded in candidate-input-c08-actual-independent-01.json (5b533609a6366a25a22c5f4dc087adc1d0ae5eb3c738c0a3353eceb822482dd4); it is not runtime or legal approval.",
+    "No new normal Debug libproc application observation occurred in this full Linux lane; B30 applicability and other native receipts are separate evidence, not replaced by control tests.",
+    "This result does not waive A37 or strict iOS file-protection failures, or promote any unfinished interaction scope.",
+    "Physical-device LAN/lifecycle checks, Store-identity collision resolution, signing/publication/Store operations, and separate owner/legal approvals remain outside this evidence. No physical device or Store workflow was invoked by this review."
+  ],
+  "reviewer_activity": {
+    "activities": "Read-only Git with GIT_OPTIONAL_LOCKS=0; stdlib JSON/XML/hash/path reading; bounded ZIP streams and nested BytesIO only. Wrote this additive review JSON.",
+    "builds_or_tests_launched": 0,
+    "platform_or_process_probes": 0,
+    "actions_or_network_requests": 0,
+    "archive_extractions": 0,
+    "source_or_control_edits": 0,
+    "git_mutations": 0,
+    "cleanup": "No reviewer-owned build output, Python cache (-B), temporary worker or extracted archive was created. Only required retained review evidence is written; coordinator-owned processes and current working-tree edits were untouched."
+  },
+  "hash_method": "Unless named otherwise, *_ledger_sha256 is SHA-256 of UTF-8 json.dumps(rows sorted by path, sort_keys=True, separators=(',', ':')) with no trailing LF. File rows contain path/bytes/sha256; resource and notice ledgers additionally contain source. Class/method/task lists and lint canonical multisets are sorted UTF-8 lines with final LF. Raw-task detail hash is compact sorted-key JSON of the exact per-task counts, suite timestamp bounds and raw task records.",
+  "completed_at": "2026-09-10T12:00:21.616031+00:00"
+}

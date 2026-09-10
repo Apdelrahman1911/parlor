@@ -1,0 +1,3146 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/fixture_review",
+  "reviewed_at": "2026-09-10T11:36:53.303496+00:00",
+  "status": "APPROVED_SCOPED_D03_ACTUAL_ORIGINAL16_TIMER_DESCRIPTORS_WITH_PRESERVED_SKIPS",
+  "findings": [],
+  "aliases": {
+    "C": "remediation-runs/2026-09-07-local-readiness",
+    "N": "remediation-runs/2026-09-08-continuation"
+  },
+  "scope": "Bounded original16 and separately authorized Whodunit Leave-confirmation policy regression mapping in actual D03 evidence. Not a duplicate whole-platform, package, native UI, dependency, cleanup-control, historical B, or final-delivery applicability review.",
+  "source": {
+    "commit": "75c104734373703570a307de9c7a53d291bc2718",
+    "tree": "4d5b660c5f508a3eb8d01cd9203f2503570dbb18",
+    "run_id": 34464573240,
+    "run_attempt": 1,
+    "branch": "fix/local-readiness-2026-09-07",
+    "workflow": ".github/workflows/production-verification.yml",
+    "run_conclusion": "failure",
+    "url": "https://github.com/Apdelrahman1911/parlor/actions/runs/34464573240",
+    "qualification_label": "D03"
+  },
+  "reused_source_applicability": {
+    "input": {
+      "path": "remediation-runs/2026-09-08-continuation/reviews/final-b30-original16-timer-75c-applicability-01.json",
+      "bytes": 10296,
+      "sha256": "f2b880f03e46fe7243079c19e6dc89843ac663c774a1f1d94cb14bf0e58c548a"
+    },
+    "scope": "Reuse accepted original16/timer source applicability to immutable75c; do not repeat historical B/source review or extend it to future commits. Actual runtime evidence below is new D03 at75c, not B30 runtime."
+  },
+  "map_inputs": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/original16-timer-commit-evidence-map-01.json",
+      "bytes": 145466,
+      "sha256": "82cc49b33044b27c1be99115847a04bfa505fa5ee28706ccfd7e30f4f0e6f0ff"
+    },
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/reviews/original16-timer-regression-descriptors-01.json",
+      "bytes": 150391,
+      "sha256": "b2fee80c8d9210fb44ab8b226a97912d30f381bc3eeea7ec9d4cb1a0e8d7e7af"
+    }
+  ],
+  "evidence_root": "remediation-runs/2026-09-08-continuation/actions/34464573240",
+  "metadata_inputs": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34464573240/download-receipt.json",
+      "bytes": 35338678,
+      "sha256": "6b14142ab06c9d327ad455985517fecbcc8397de3f70a8dcdd5cc99a8e54774f"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34464573240/run.json",
+      "bytes": 12676,
+      "sha256": "065ce022bdbd2ec8339833c24ed7edd01cbfc1d59af0df0334e1653bf9467bb5"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34464573240/attempt.json",
+      "bytes": 12698,
+      "sha256": "b896ac5baa98cbb9ba29a9c31733a0954cdc15a96c047a7baff5aa034231ba1e"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34464573240/jobs.json",
+      "bytes": 20796,
+      "sha256": "129d94a115622b7133b06198d31c0f49826ee4cc5024a75566432aaa176e980d"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34464573240/artifacts.json",
+      "bytes": 7362,
+      "sha256": "6bd42a54a332328d407c0792a9096f48f86d6a60c11191aafd016ba189597f5e"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34464573240/run-attempt-1-logs.zip",
+      "bytes": 384549,
+      "sha256": "9fdcdb1796877f252032e51bdf05d4ce878d2df3d4f2af263adadbda0afae4ae"
+    }
+  ],
+  "method": {
+    "selection": "Unique map.original16 plus map.timer_policy regression keys select43 of49 descriptor rows in preserved map order. Exclude six later UI-only rows. Compare every exact expected method name and outcome, not just class or suite totals.",
+    "source_and_custody": "Direct raw run/attempt/jobs/artifact API records bind34464573240/1 to75c/tree4d5b. Each used artifact ZIP matches its API digest and collector pin. Same-job output-ownership head/tree/run/attempt/job and successful checkout/claim precede actual task execution.",
+    "live_paths": "Derive only exact parlor/parlor/<module>/build/test-results/<task>/TEST-<suite>.xml paths from the mapped task and suite.135 selected XML files (32 x4 desktops +7 Apple) match both extracted bytes and exact raw ZIP members and retained member hashes. Historical archive paths are never selected. Collector classification is not execution proof.",
+    "execution": "Every mapped XML leaf has exactly one unsuffixed EXECUTED raw task event in the appropriate successful step. None is FROM-CACHE, UP-TO-DATE, NO-SOURCE, SKIPPED or inferred from compilation. Other nonselected tasks may be cached; no all-uncached-build claim.",
+    "xml": "Unique exact suite/testcase names and matching classnames, raw declared count equality, no errors/failures, and each selected name/outcome projection checked. All-suite selections also require exact suite size. Only eight designated methods selected from130-method lifecycle suite.",
+    "timestamps": "Each selected suite timestamp plus duration and raw task event lies within its actual API step interval, with one-second endpoint tolerance for API second precision. Buffered plain-output task headers need not precede suite start.",
+    "python": "42 exact verbose unittest method lines have same-line ok inside Linux common step.20 repeated productionReleaseAutomationCheck headers belong to one enclosing invocation, not20 separate task executions. Enclosing Ran498/OK is context; whole498-method admission belongs to Linux reviewer.",
+    "hash_encoding": "Expected names/outcomes: SHA256 of compact ensure_ascii JSON [[exact_name,outcome],...] in preserved map order. Global projection [[group_key,[[exact_name,outcome],...]],...] uses the same encoding.",
+    "counting": "323 primary mapped descriptors are overlapping subsets of the platform regression suites, not extra aggregate tests or323 defects. Alternate-host repetitions are separate observations of the same215 mapped desktop descriptors.16 original defects; MF-C1/M-C01 is one defect; Leave-confirmation policy is separate, not a17th original defect."
+  },
+  "job_bindings": {
+    "desktop-android": {
+      "job_id": 102830019251,
+      "job_name": "Common, desktop, and Android release",
+      "job_conclusion": "failure",
+      "host_labels": [
+        "ubuntu-24.04"
+      ],
+      "artifact": {
+        "id": 10147669118,
+        "name": "desktop-android-verification",
+        "archive": "desktop-android-verification.zip",
+        "bytes": 27634824,
+        "sha256": "71c316844aaa982a790980068547518fb62f9fc040eecd37ccf9c6bfb7b5d3c3",
+        "api_digest_equal": true
+      },
+      "output_ownership": {
+        "relative_path": "_temp/parlor-verification-34464573240-1-desktop-android-ownership.json",
+        "bytes": 18853,
+        "sha256": "752e070883f98fbabf76ec8aa66737f47a5126dc9b09d3949553fc5d8d848c7b",
+        "head": "75c104734373703570a307de9c7a53d291bc2718",
+        "tree": "4d5b660c5f508a3eb8d01cd9203f2503570dbb18",
+        "task": {
+          "GITHUB_RUN_ID": "34464573240",
+          "GITHUB_RUN_ATTEMPT": "1",
+          "GITHUB_JOB": "desktop-android"
+        },
+        "prepared_at": "2026-09-10T10:09:54.651692+00:00"
+      },
+      "raw_log": {
+        "member": "2_Common, desktop, and Android release.txt",
+        "bytes": 478963,
+        "sha256": "9fb6ac8b3c68c5e26615f2e641fd664bcc8285e5f70c157fc7ad65ab2572616e",
+        "lines": 4363,
+        "exact_source_output_lines": [
+          120,
+          177,
+          481
+        ]
+      },
+      "execution_step": {
+        "number": 7,
+        "name": "Run common, desktop, Android, static-analysis, and release gates",
+        "started_at": "2026-09-10T10:10:38Z",
+        "completed_at": "2026-09-10T10:25:30Z",
+        "conclusion": "success"
+      },
+      "selected_executed_tasks": [
+        [
+          ":game-modes:mafia:desktopTest",
+          2476,
+          "2026-09-10T10:18:55.3716052Z",
+          "EXECUTED"
+        ],
+        [
+          ":game-modes:whodunit:desktopTest",
+          2496,
+          "2026-09-10T10:19:33.1737273Z",
+          "EXECUTED"
+        ],
+        [
+          ":shared:design-system:desktopTest",
+          2457,
+          "2026-09-10T10:18:18.9725928Z",
+          "EXECUTED"
+        ],
+        [
+          ":shared:session:desktopTest",
+          2500,
+          "2026-09-10T10:19:48.5746374Z",
+          "EXECUTED"
+        ],
+        [
+          ":shared:transport-p2p:desktopTest",
+          2513,
+          "2026-09-10T10:20:30.1720499Z",
+          "EXECUTED"
+        ]
+      ]
+    },
+    "desktop-linux-arm64": {
+      "job_id": 102830019156,
+      "job_name": "Desktop strict verification (Linux arm64)",
+      "job_conclusion": "success",
+      "host_labels": [
+        "ubuntu-24.04-arm"
+      ],
+      "artifact": {
+        "id": 10147120950,
+        "name": "desktop-verification-desktop-linux-arm64",
+        "archive": "desktop-verification-desktop-linux-arm64.zip",
+        "bytes": 11052239,
+        "sha256": "ef54d5248b6fe4384edeaceb7aad71faf3cfdfbf46f8e10a81f030504ff9e872",
+        "api_digest_equal": true
+      },
+      "output_ownership": {
+        "relative_path": "_temp/parlor-verification-34464573240-1-desktop-linux-arm64-ownership.json",
+        "bytes": 18677,
+        "sha256": "08f87fc1a0a735b849e58801c756f9521a29f3612572afc5909828dbe07d67b2",
+        "head": "75c104734373703570a307de9c7a53d291bc2718",
+        "tree": "4d5b660c5f508a3eb8d01cd9203f2503570dbb18",
+        "task": {
+          "GITHUB_RUN_ID": "34464573240",
+          "GITHUB_RUN_ATTEMPT": "1",
+          "GITHUB_JOB": "desktop-linux-arm64"
+        },
+        "prepared_at": "2026-09-10T10:10:06.884839+00:00"
+      },
+      "raw_log": {
+        "member": "4_Desktop strict verification (Linux arm64).txt",
+        "bytes": 96119,
+        "sha256": "4f600d6ff2857fee6adda7aa29dfa33e6f30fbbb251825cf357955a1f3fd9ad1",
+        "lines": 947,
+        "exact_source_output_lines": [
+          109,
+          135,
+          227
+        ]
+      },
+      "execution_step": {
+        "number": 6,
+        "name": "Resolve and test the supported Linux arm64 desktop graph",
+        "started_at": "2026-09-10T10:10:06Z",
+        "completed_at": "2026-09-10T10:14:23Z",
+        "conclusion": "success"
+      },
+      "selected_executed_tasks": [
+        [
+          ":game-modes:mafia:desktopTest",
+          831,
+          "2026-09-10T10:13:58.2219006Z",
+          "EXECUTED"
+        ],
+        [
+          ":game-modes:whodunit:desktopTest",
+          832,
+          "2026-09-10T10:14:20.3221221Z",
+          "EXECUTED"
+        ],
+        [
+          ":shared:design-system:desktopTest",
+          789,
+          "2026-09-10T10:13:07.1219275Z",
+          "EXECUTED"
+        ],
+        [
+          ":shared:session:desktopTest",
+          804,
+          "2026-09-10T10:13:23.8259668Z",
+          "EXECUTED"
+        ],
+        [
+          ":shared:transport-p2p:desktopTest",
+          830,
+          "2026-09-10T10:13:54.7233602Z",
+          "EXECUTED"
+        ]
+      ]
+    },
+    "desktop-macos-x64": {
+      "job_id": 102830019108,
+      "job_name": "Desktop and Kotlin Native strict verification (macOS x64)",
+      "job_conclusion": "success",
+      "host_labels": [
+        "macos-15-intel"
+      ],
+      "artifact": {
+        "id": 10147387149,
+        "name": "desktop-verification-desktop-macos-x64",
+        "archive": "desktop-verification-desktop-macos-x64.zip",
+        "bytes": 11062649,
+        "sha256": "d284fbd127d0caea408d8cd9608f7551df0abd778aaa864ddd46121714f3e93a",
+        "api_digest_equal": true
+      },
+      "output_ownership": {
+        "relative_path": "_temp/parlor-verification-34464573240-1-desktop-macos-x64-ownership.json",
+        "bytes": 18676,
+        "sha256": "54ed9c2e9779e92601a3990ba46c5756509f707ff0d024852962e6c9b2133a74",
+        "head": "75c104734373703570a307de9c7a53d291bc2718",
+        "tree": "4d5b660c5f508a3eb8d01cd9203f2503570dbb18",
+        "task": {
+          "GITHUB_RUN_ID": "34464573240",
+          "GITHUB_RUN_ATTEMPT": "1",
+          "GITHUB_JOB": "desktop-macos-x64"
+        },
+        "prepared_at": "2026-09-10T10:10:22.805254+00:00"
+      },
+      "raw_log": {
+        "member": "1_Desktop and Kotlin Native strict verification (macOS x64).txt",
+        "bytes": 83331,
+        "sha256": "b19da7a5f7966ae86a82133c663fcd5058291b15b45e84de92f95f7688f512d9",
+        "lines": 770,
+        "exact_source_output_lines": [
+          110,
+          230,
+          316
+        ]
+      },
+      "execution_step": {
+        "number": 6,
+        "name": "Resolve and test the macOS x64 host-selected graphs",
+        "started_at": "2026-09-10T10:10:23Z",
+        "completed_at": "2026-09-10T10:21:20Z",
+        "conclusion": "success"
+      },
+      "selected_executed_tasks": [
+        [
+          ":game-modes:mafia:desktopTest",
+          653,
+          "2026-09-10T10:20:10.9616780Z",
+          "EXECUTED"
+        ],
+        [
+          ":game-modes:whodunit:desktopTest",
+          654,
+          "2026-09-10T10:20:39.5438420Z",
+          "EXECUTED"
+        ],
+        [
+          ":shared:design-system:desktopTest",
+          607,
+          "2026-09-10T10:18:07.4404380Z",
+          "EXECUTED"
+        ],
+        [
+          ":shared:session:desktopTest",
+          628,
+          "2026-09-10T10:18:54.3385500Z",
+          "EXECUTED"
+        ],
+        [
+          ":shared:transport-p2p:desktopTest",
+          642,
+          "2026-09-10T10:19:37.3925630Z",
+          "EXECUTED"
+        ]
+      ]
+    },
+    "desktop-windows-x64": {
+      "job_id": 102830019182,
+      "job_name": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+      "job_conclusion": "success",
+      "host_labels": [
+        "windows-2025"
+      ],
+      "artifact": {
+        "id": 10147247768,
+        "name": "desktop-verification-desktop-windows-x64",
+        "archive": "desktop-verification-desktop-windows-x64.zip",
+        "bytes": 11056765,
+        "sha256": "75cc947cdc11072857279af543845fd89560f582d409828008da572a5a137763",
+        "api_digest_equal": true
+      },
+      "output_ownership": {
+        "relative_path": "_temp/parlor-verification-34464573240-1-desktop-windows-x64-ownership.json",
+        "bytes": 18860,
+        "sha256": "f530551cedbaa8e5001b4fd81e204d3f379fee98e415062780ab12ad0ce61d56",
+        "head": "75c104734373703570a307de9c7a53d291bc2718",
+        "tree": "4d5b660c5f508a3eb8d01cd9203f2503570dbb18",
+        "task": {
+          "GITHUB_RUN_ID": "34464573240",
+          "GITHUB_RUN_ATTEMPT": "1",
+          "GITHUB_JOB": "desktop-windows-x64"
+        },
+        "prepared_at": "2026-09-10T10:10:17.894722+00:00"
+      },
+      "raw_log": {
+        "member": "3_Desktop, Kotlin Native, and Android resources strict verification (Windows x64).txt",
+        "bytes": 102416,
+        "sha256": "b84fe4f8f384664b2fedd0ace9d0264b41b8471dbbebb26f9f4784e7ab21324a",
+        "lines": 984,
+        "exact_source_output_lines": [
+          123,
+          233,
+          332
+        ]
+      },
+      "execution_step": {
+        "number": 8,
+        "name": "Resolve and test the Windows x64 host-selected graphs",
+        "started_at": "2026-09-10T10:10:27Z",
+        "completed_at": "2026-09-10T10:17:45Z",
+        "conclusion": "success"
+      },
+      "selected_executed_tasks": [
+        [
+          ":game-modes:mafia:desktopTest",
+          854,
+          "2026-09-10T10:16:46.3176825Z",
+          "EXECUTED"
+        ],
+        [
+          ":game-modes:whodunit:desktopTest",
+          857,
+          "2026-09-10T10:17:12.3948037Z",
+          "EXECUTED"
+        ],
+        [
+          ":shared:design-system:desktopTest",
+          805,
+          "2026-09-10T10:15:26.5129966Z",
+          "EXECUTED"
+        ],
+        [
+          ":shared:session:desktopTest",
+          837,
+          "2026-09-10T10:16:08.7950703Z",
+          "EXECUTED"
+        ],
+        [
+          ":shared:transport-p2p:desktopTest",
+          856,
+          "2026-09-10T10:17:10.0838069Z",
+          "EXECUTED"
+        ]
+      ]
+    },
+    "ios": {
+      "job_id": 102830019281,
+      "job_name": "iOS tests, release frameworks, and Swift wrapper",
+      "job_conclusion": "success",
+      "host_labels": [
+        "macos-15"
+      ],
+      "artifact": {
+        "id": 10149497218,
+        "name": "ios-verification",
+        "archive": "ios-verification.zip",
+        "bytes": 12743163,
+        "sha256": "254deedc42ae6067d46090f8282a1de5341a365fa88a633144cf1680351b94f8",
+        "api_digest_equal": true
+      },
+      "output_ownership": {
+        "relative_path": "_temp/parlor-verification-34464573240-1-ios-ownership.json",
+        "bytes": 18662,
+        "sha256": "a9397589ec323850392a16c97f45ee3023aa08e8adf7b5d13a33ed27f89a2740",
+        "head": "75c104734373703570a307de9c7a53d291bc2718",
+        "tree": "4d5b660c5f508a3eb8d01cd9203f2503570dbb18",
+        "task": {
+          "GITHUB_RUN_ID": "34464573240",
+          "GITHUB_RUN_ATTEMPT": "1",
+          "GITHUB_JOB": "ios"
+        },
+        "prepared_at": "2026-09-10T10:10:11.851514+00:00"
+      },
+      "raw_log": {
+        "member": "0_iOS tests, release frameworks, and Swift wrapper.txt",
+        "bytes": 562182,
+        "sha256": "2bbed7e1fe8f3baa208dfb6e3985d3dae1702e5b5fc18a4ed224a7eff1c93feb",
+        "lines": 4249,
+        "exact_source_output_lines": [
+          112,
+          223,
+          344
+        ]
+      },
+      "execution_step": {
+        "number": 17,
+        "name": "Run iOS simulator tests, Apple static analysis, and release linkage gates",
+        "started_at": "2026-09-10T10:10:18Z",
+        "completed_at": "2026-09-10T11:05:04Z",
+        "conclusion": "success"
+      },
+      "selected_executed_tasks": [
+        [
+          ":composeApp:iosSimulatorArm64Test",
+          1088,
+          "2026-09-10T10:28:09.9918760Z",
+          "EXECUTED"
+        ],
+        [
+          ":game-modes:mafia:iosSimulatorArm64Test",
+          996,
+          "2026-09-10T10:23:22.6978880Z",
+          "EXECUTED"
+        ],
+        [
+          ":shared:design-system:iosSimulatorArm64Test",
+          1010,
+          "2026-09-10T10:23:40.8043490Z",
+          "EXECUTED"
+        ],
+        [
+          ":shared:session:iosSimulatorArm64Test",
+          1056,
+          "2026-09-10T10:24:57.4036430Z",
+          "EXECUTED"
+        ],
+        [
+          ":shared:transport-p2p:iosSimulatorArm64Test",
+          1055,
+          "2026-09-10T10:24:57.3923170Z",
+          "EXECUTED"
+        ]
+      ]
+    }
+  },
+  "selected_task_table_columns": [
+    "task",
+    "raw_log_line",
+    "timestamp",
+    "status"
+  ],
+  "group_observation_columns": [
+    "job_key",
+    "xml_sha256",
+    "xml_bytes",
+    "suite_timestamp",
+    "suite_duration_seconds",
+    "raw_task_log_line",
+    "full_suite_tests",
+    "full_suite_PASS",
+    "full_suite_SKIP"
+  ],
+  "primary_mapping": {
+    "original_defects": 16,
+    "original_defect_ids": [
+      "ST-C1",
+      "SN-C1",
+      "SN-C2",
+      "WD-C1",
+      "IOS-B1",
+      "ROOT-T3",
+      "MF-C1",
+      "WD-C3",
+      "M-C03",
+      "DS-C01",
+      "DS-C02",
+      "DS-C03",
+      "WD-C2",
+      "RL-C1",
+      "RL-C2",
+      "RL-C3"
+    ],
+    "timer_policy_separate": true,
+    "groups": 43,
+    "xml_groups": 39,
+    "python_groups": 4,
+    "descriptors": 323,
+    "PASS": 320,
+    "SKIP": 3,
+    "FAIL": 0,
+    "ERROR": 0,
+    "missing": 0,
+    "different": 0,
+    "names_outcomes_projection_sha256": "375f83bd88f69769844bc375775da4bbae5e49216b7e68a3249741afa3b120ec",
+    "breakdown": [
+      {
+        "scope": "desktop-android mapped desktop",
+        "groups": 32,
+        "descriptors": 215,
+        "PASS": 212,
+        "SKIP": 3
+      },
+      {
+        "scope": "ios mapped Apple",
+        "groups": 7,
+        "descriptors": 66,
+        "PASS": 66,
+        "SKIP": 0
+      },
+      {
+        "scope": "desktop-android mapped Python",
+        "groups": 4,
+        "descriptors": 42,
+        "PASS": 42,
+        "SKIP": 0
+      }
+    ],
+    "additional_host_repetitions": [
+      {
+        "job": "desktop-linux-arm64",
+        "groups": 32,
+        "descriptors": 215,
+        "PASS": 212,
+        "SKIP": 3,
+        "missing": 0,
+        "different": 0
+      },
+      {
+        "job": "desktop-macos-x64",
+        "groups": 32,
+        "descriptors": 215,
+        "PASS": 212,
+        "SKIP": 3,
+        "missing": 0,
+        "different": 0
+      },
+      {
+        "job": "desktop-windows-x64",
+        "groups": 32,
+        "descriptors": 215,
+        "PASS": 212,
+        "SKIP": 3,
+        "missing": 0,
+        "different": 0
+      }
+    ],
+    "groups_detail": [
+      {
+        "key": "C01:com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+        "issue_ids": [
+          "MF-C1"
+        ],
+        "selected_descriptor_count": 8,
+        "selected_outcomes": {
+          "PASS": 8
+        },
+        "expected_names_outcomes_sha256": "2c20e25845fffc9eb92bc860a50edc3bb957d5b8f003011c32380cefef41ab3b",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":game-modes:mafia:desktopTest",
+        "relative_xml": "parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.domain.MafiaDoctorRulesTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "61e353213cf5cb8c80a979046de3fc9706431fb241a6c5377a9216edaa7c8388",
+            1724,
+            "2026-09-10T10:18:27.761Z",
+            0.659,
+            2476,
+            8,
+            8,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "8767e3094d393140cb50ee5be8472efdf226fd5b05a62223162efb7922e09d08",
+            1725,
+            "2026-09-10T10:13:44.080Z",
+            0.391,
+            831,
+            8,
+            8,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "f32532da93cf71911122c49b53692e365be8b268b2eb74e7b8ff2b7c4bfb9679",
+            1779,
+            "2026-09-10T10:19:45.494Z",
+            1.064,
+            653,
+            8,
+            8,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "ccdd4886ef288c2ed5e073f751ec5c37351ef1f2431e0d0bb33268452bced682",
+            1737,
+            "2026-09-10T10:16:30.898Z",
+            2.636,
+            854,
+            8,
+            8,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.games.mafia.multidevice.MafiaDoctorLanTest",
+        "issue_ids": [
+          "MF-C1"
+        ],
+        "selected_descriptor_count": 2,
+        "selected_outcomes": {
+          "PASS": 2
+        },
+        "expected_names_outcomes_sha256": "e876b78a0ceff676ed470021659441bce83c16e3ff19abee12333cc947585683",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":game-modes:mafia:desktopTest",
+        "relative_xml": "parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.multidevice.MafiaDoctorLanTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "c7ce9035d36168b61eebe891dc75de9a1d45b0d45f3a9b76b65382d9d134275f",
+            724,
+            "2026-09-10T10:18:42.907Z",
+            1.992,
+            2476,
+            2,
+            2,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "9dd3fda65cf212ca69f8833b307e1ee8ee9bac6627a187552f818c4a9eee17d0",
+            724,
+            "2026-09-10T10:13:50.417Z",
+            0.522,
+            831,
+            2,
+            2,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "c8d9708c971a2bcc2630ba4f105fa93591e8da926c8bf52869e3de9e925811f4",
+            777,
+            "2026-09-10T10:20:09.274Z",
+            1.871,
+            653,
+            2,
+            2,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "723e37b4fe089ae044db8a2f914ecd1d65f81b9f40be82355799c41beaa7b28e",
+            732,
+            "2026-09-10T10:16:55.555Z",
+            2.074,
+            854,
+            2,
+            2,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+        "issue_ids": [
+          "MF-C1"
+        ],
+        "selected_descriptor_count": 15,
+        "selected_outcomes": {
+          "PASS": 15
+        },
+        "expected_names_outcomes_sha256": "3e1f56971040f3ee1f78853bce13375dabb001c35dd36f623dfe148773def524",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":game-modes:mafia:desktopTest",
+        "relative_xml": "parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "cc9a1cc9a77b48e69e14c28e772063bbec69960f43453203aced6c08a7666f93",
+            3205,
+            "2026-09-10T10:18:45.205Z",
+            0.568,
+            2476,
+            15,
+            15,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "2244d0a92c17f5fa40e210db739f343727fe275c53824a9b376a73147dbb3bde",
+            3205,
+            "2026-09-10T10:13:51.079Z",
+            0.22,
+            831,
+            15,
+            15,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "7669968e6c5716160e8d059f749520f4ffd67524426dd8d932abfa63b7279d66",
+            3256,
+            "2026-09-10T10:20:11.449Z",
+            0.473,
+            653,
+            15,
+            15,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "74638d1da81bdc41bdbf990c1970853d561017bb9d87790fb06414820db22a6b",
+            3224,
+            "2026-09-10T10:16:57.999Z",
+            0.787,
+            854,
+            15,
+            15,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLanguageContinuityTest",
+        "issue_ids": [
+          "DS-C01"
+        ],
+        "selected_descriptor_count": 2,
+        "selected_outcomes": {
+          "PASS": 2
+        },
+        "expected_names_outcomes_sha256": "e4df62da2714426ec6ae028a50a37c3790e991f133e53454fccb6307a61e06ee",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":game-modes:mafia:desktopTest",
+        "relative_xml": "parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.flow.multidevice.MafiaHostLanguageContinuityTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "77b049fe5acf45958b57e75622e9e25de4b6da1b66c20b6152e883f9b71963eb",
+            760,
+            "2026-09-10T10:18:49.689Z",
+            3.54,
+            2476,
+            2,
+            2,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "c6ab22d949085f907463f5a0330fb2bb343599a35e1111a439ab0829a6f506fb",
+            760,
+            "2026-09-10T10:13:53.014Z",
+            1.55,
+            831,
+            2,
+            2,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "47c642dabb61700d45db04e28e2090328632491a2d766af5bdf4816a34f1ca2b",
+            815,
+            "2026-09-10T10:20:15.191Z",
+            2.368,
+            653,
+            2,
+            2,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "da8411e67cafa6c07c7b0b222fc6530bf0d738fc06887b5483911b6bbf3d0ffe",
+            769,
+            "2026-09-10T10:17:02.796Z",
+            1.734,
+            854,
+            2,
+            2,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest",
+        "issue_ids": [
+          "MF-C1"
+        ],
+        "selected_descriptor_count": 2,
+        "selected_outcomes": {
+          "PASS": 2
+        },
+        "expected_names_outcomes_sha256": "f2ce6190c6a7484ac4de9ca1de332c580dd1c0d3f1663675747d469493145cf3",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":game-modes:mafia:desktopTest",
+        "relative_xml": "parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.night.DoctorTargetEligibilityTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "d91e28586b3a416cee92539cb312c71d7afeaadccfb0122b679f04b15232ddb7",
+            748,
+            "2026-09-10T10:18:56.596Z",
+            0.013,
+            2476,
+            2,
+            2,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "804625131abecaedc06db0856eeebbb7d3f901c4ed4fa7eb2f5be9ecfd11e558",
+            746,
+            "2026-09-10T10:13:55.353Z",
+            0.002,
+            831,
+            2,
+            2,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "228416549671aae85108399fc6a08155153f94ad7a5787cb922410ebd934ee25",
+            802,
+            "2026-09-10T10:20:19.594Z",
+            0.006,
+            653,
+            2,
+            2,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "ce201c3143a94186e4646c558ba4291f6b57e2e25ed32b67be5c5e913f683a44",
+            754,
+            "2026-09-10T10:17:05.461Z",
+            0.003,
+            854,
+            2,
+            2,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest",
+        "issue_ids": [
+          "M-C03"
+        ],
+        "selected_descriptor_count": 6,
+        "selected_outcomes": {
+          "PASS": 6
+        },
+        "expected_names_outcomes_sha256": "19e01611a5788a016f10e52575183a941132e9379c7157cd98ba776d92841d02",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":game-modes:mafia:desktopTest",
+        "relative_xml": "parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.postgame.PostGameScreenLayoutTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "58324cff83a69c350dfb6184297615697f161d57b9cd7947770b942fd132601a",
+            1437,
+            "2026-09-10T10:18:56.622Z",
+            6.203,
+            2476,
+            6,
+            6,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "fc4ff3203c4399c8ed809c3b34369afc60ee1010eb6cf105aaac96af73cba964",
+            1436,
+            "2026-09-10T10:13:55.358Z",
+            0.861,
+            831,
+            6,
+            6,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "b0e86d8e6f6cf5fc6ba04d3a4b4e7b2c6feeb5658bf8e862144b3df338b67b47",
+            1491,
+            "2026-09-10T10:20:19.605Z",
+            2.702,
+            653,
+            6,
+            6,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "c3a95f7fc131f1e0bb63ed59fc82c40720741bc625068372bc9f80536d57c16f",
+            1449,
+            "2026-09-10T10:17:05.468Z",
+            1.233,
+            854,
+            6,
+            6,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest",
+        "issue_ids": [
+          "MF-C1"
+        ],
+        "selected_descriptor_count": 2,
+        "selected_outcomes": {
+          "PASS": 2
+        },
+        "expected_names_outcomes_sha256": "ea52f775ebec4b58ed5aa2e8467c436437fd95574a1154e328442ccb2c0cbdad",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":game-modes:mafia:desktopTest",
+        "relative_xml": "parlor/parlor/game-modes/mafia/build/test-results/desktopTest/TEST-com.parlor.games.mafia.ui.screens.setup.MafiaDoctorSettingUiTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "12aaa820ecaca6490fb863c33b249273fcc0d9308921c9433730d7b03c58980c",
+            736,
+            "2026-09-10T10:19:02.826Z",
+            4.518,
+            2476,
+            2,
+            2,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "7064f81a36403f42dc74ffa007695b1b102a544f86e25394ea0e3f3f8d4f93c6",
+            736,
+            "2026-09-10T10:13:56.220Z",
+            0.726,
+            831,
+            2,
+            2,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "8841138686eb2dd6e743b3449d91526fc05292b5a15c127a8a8393c7cca1dd25",
+            790,
+            "2026-09-10T10:20:22.310Z",
+            1.648,
+            653,
+            2,
+            2,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "3b549246121cf10cbd4a13fc1da9359979594cb0772f390cbbe4dc4159277a5c",
+            744,
+            "2026-09-10T10:17:06.702Z",
+            1.012,
+            854,
+            2,
+            2,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.content.TestingStoryChronologyTest",
+        "issue_ids": [
+          "WD-C2"
+        ],
+        "selected_descriptor_count": 5,
+        "selected_outcomes": {
+          "PASS": 5
+        },
+        "expected_names_outcomes_sha256": "98eceea2787733bd662bab60813463c2f01eba375e3c8be4d799ca6edf7018f0",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":game-modes:whodunit:desktopTest",
+        "relative_xml": "parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryChronologyTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "a1bc0a620aa7f89d5eb36d3a12ea8855fb8e335887302213562f7c23927035eb",
+            1238,
+            "2026-09-10T10:19:08.244Z",
+            0.256,
+            2496,
+            5,
+            5,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "e3fd24286e0b065d6a425a4958ca90b811d1805ae12bf3e45b949fea136e339b",
+            1238,
+            "2026-09-10T10:13:52.357Z",
+            0.079,
+            832,
+            5,
+            5,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "dc6e4fae4305abab8d6be71fc6658256809e732f58ce10a5b478ea9e37020fb5",
+            1291,
+            "2026-09-10T10:20:14.460Z",
+            0.106,
+            654,
+            5,
+            5,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "2f00bc7f38335be39cc035bae180bb61f812b3382c3d64d710ea34eb92c08087",
+            1249,
+            "2026-09-10T10:16:56.187Z",
+            0.112,
+            857,
+            5,
+            5,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.content.TestingStoryCompatibilityTest",
+        "issue_ids": [
+          "WD-C2"
+        ],
+        "selected_descriptor_count": 4,
+        "selected_outcomes": {
+          "PASS": 4
+        },
+        "expected_names_outcomes_sha256": "b72c0c09f33d070ba88726bfc966ce7b0d714270180b087e8b4d12e38e230c2d",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":game-modes:whodunit:desktopTest",
+        "relative_xml": "parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryCompatibilityTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "4e0b5447706d92417f5a23c49553dade0e839165f439cf33548140ed328f27b3",
+            1102,
+            "2026-09-10T10:19:08.518Z",
+            2.709,
+            2496,
+            4,
+            4,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "39163636804b82b33b95c7eb9994a1c7f77e87c691eee714af4f2cf072e3157d",
+            1102,
+            "2026-09-10T10:13:52.445Z",
+            0.642,
+            832,
+            4,
+            4,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "0120f202aaefbc90c954bff4596b13864bfcf0d47ce6fe505de2af0808f0c908",
+            1156,
+            "2026-09-10T10:20:14.577Z",
+            2.098,
+            654,
+            4,
+            4,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "05f0b0efc99ed3c1c6d57060bab6fdc204fdbdac86deacbc4ffe2d74a9aab958",
+            1111,
+            "2026-09-10T10:16:56.305Z",
+            1.876,
+            857,
+            4,
+            4,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.content.TestingStoryFollowupChronologyTest",
+        "issue_ids": [
+          "WD-C2"
+        ],
+        "selected_descriptor_count": 13,
+        "selected_outcomes": {
+          "PASS": 13
+        },
+        "expected_names_outcomes_sha256": "3d60fb732c77bdb4a8cd54cc014a88de6da3f62d58cdebdb0d0addaafd6ae6fa",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":game-modes:whodunit:desktopTest",
+        "relative_xml": "parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryFollowupChronologyTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "f8d5d859b71ca09dca60cdd8a59a582b495d49709653b9c9958bb43951090793",
+            2778,
+            "2026-09-10T10:19:11.237Z",
+            0.246,
+            2496,
+            13,
+            13,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "a575621e01ceaba0775f7a58ece125a4b74137e491cc2a9c28fafdbf92fca959",
+            2780,
+            "2026-09-10T10:13:53.089Z",
+            0.053,
+            832,
+            13,
+            13,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "9b3c7f2e3ca5232dc62ad16dd4fc5a535da95edcc4ad9bef9e5a66108efddf89",
+            2834,
+            "2026-09-10T10:20:16.680Z",
+            0.118,
+            654,
+            13,
+            13,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "88528e9fa8dd1861a06bd02bfaae43c357b3ef5dca05dc455416cfb39e611bed",
+            2799,
+            "2026-09-10T10:16:58.183Z",
+            0.236,
+            857,
+            13,
+            13,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.content.TestingStoryGameTraceTest",
+        "issue_ids": [
+          "WD-C2"
+        ],
+        "selected_descriptor_count": 1,
+        "selected_outcomes": {
+          "PASS": 1
+        },
+        "expected_names_outcomes_sha256": "cd25c4f1ea2eb5f0ed05940f4fb204979a7c07eb043dd853aecf09df40530f2c",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":game-modes:whodunit:desktopTest",
+        "relative_xml": "parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryGameTraceTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "a99a1b079bee0371a2c3717567e23f63251cb46a6fe16d4d988e34f8c6e79226",
+            536,
+            "2026-09-10T10:19:11.485Z",
+            15.664,
+            2496,
+            1,
+            1,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "227f18f94d708841c949352dd8ffd4bd4120886a75fd795b518b2daaf3de245e",
+            534,
+            "2026-09-10T10:13:53.148Z",
+            5.617,
+            832,
+            1,
+            1,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "14b4f9e2dc991462c23147561db7ae695ca22dcb0b232e69abffa7d01ebcded1",
+            590,
+            "2026-09-10T10:20:16.803Z",
+            15.242,
+            654,
+            1,
+            1,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "33d11280db923d28d27c0c75a919e19789e69a05faa5a0d63c0446a0d0ca30e2",
+            541,
+            "2026-09-10T10:16:58.433Z",
+            11.35,
+            857,
+            1,
+            1,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.content.TestingStoryRemainingChronologyTest",
+        "issue_ids": [
+          "WD-C2"
+        ],
+        "selected_descriptor_count": 3,
+        "selected_outcomes": {
+          "PASS": 3
+        },
+        "expected_names_outcomes_sha256": "21d9782160be1d14c6832cdccdf93a48960058c8620422911820f8334e9e4098",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":game-modes:whodunit:desktopTest",
+        "relative_xml": "parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.content.TestingStoryRemainingChronologyTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "8ebe2af2b6845764205c7819ff1e88bf407d1e826cf6113ea3764608f106f88f",
+            961,
+            "2026-09-10T10:19:27.154Z",
+            0.039,
+            2496,
+            3,
+            3,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "7c555e0209fb626ef537bc0f947f650ddf1f64ddb9e98bb04de6dc27cd06a383",
+            962,
+            "2026-09-10T10:13:58.766Z",
+            0.008,
+            832,
+            3,
+            3,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "dd3a3dfdd37bc5d49a59c860a70d0e02e3dd2cdb5f9cba09f92452aa0a4111a6",
+            1016,
+            "2026-09-10T10:20:32.047Z",
+            0.016,
+            654,
+            3,
+            3,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "7c85a3378a1ee171e388ea4bdbecb05b92121570d730eb213b86d3a9b3f03bef",
+            970,
+            "2026-09-10T10:17:09.784Z",
+            0.01,
+            857,
+            3,
+            3,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest",
+        "issue_ids": [
+          "WD-C3"
+        ],
+        "selected_descriptor_count": 9,
+        "selected_outcomes": {
+          "PASS": 9
+        },
+        "expected_names_outcomes_sha256": "ccf991305d01798af967047fde6042a18341f42794573413354e7ce9c8995ccb",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":game-modes:whodunit:desktopTest",
+        "relative_xml": "parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitFinalTwoRecoveryTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "f24b1b38ce02219befbc43570ea86d78032a1078a41260807665c8e7493ef949",
+            1962,
+            "2026-09-10T10:19:50.822Z",
+            0.231,
+            2496,
+            9,
+            9,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "deddf3f0302e4237f27a9c786d2dc538a440b11b2a695f694d1bc5d7b41a00c7",
+            1962,
+            "2026-09-10T10:14:03.859Z",
+            0.056,
+            832,
+            9,
+            9,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "2691f5d31b1d9588a99422f892f85ae0bc256fb91ed9793a444ae622a52bf39a",
+            2015,
+            "2026-09-10T10:20:43.504Z",
+            0.121,
+            654,
+            9,
+            9,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "1f9b7061b1ef0deca56e0b9177e43032988ec0b09a25f0fd65a5c98f988b915e",
+            1974,
+            "2026-09-10T10:17:18.491Z",
+            0.083,
+            857,
+            9,
+            9,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.snapshot.WhodunitSnapshotValidationTest",
+        "issue_ids": [
+          "WD-C3"
+        ],
+        "selected_descriptor_count": 46,
+        "selected_outcomes": {
+          "PASS": 46
+        },
+        "expected_names_outcomes_sha256": "07bfee702e18d92cd6a08bcf018e6ce18055aac687491d7ca88fb490450dd660",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":game-modes:whodunit:desktopTest",
+        "relative_xml": "parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.snapshot.WhodunitSnapshotValidationTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "87fca92c2609351ce55638c3ecb7a693a135bb49932d16f77e14e92bd8662eef",
+            8630,
+            "2026-09-10T10:19:51.235Z",
+            0.416,
+            2496,
+            46,
+            46,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "9f6bccd52d2f04aca6da595b95c57240a198eb9f3de74041225ef4b5eb389c1c",
+            8606,
+            "2026-09-10T10:14:03.980Z",
+            0.065,
+            832,
+            46,
+            46,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "67eab09eedf9c8a32b7d1872fbc058f231c5e3529a452e0d3cdad687470dddf2",
+            8692,
+            "2026-09-10T10:20:43.755Z",
+            0.213,
+            654,
+            46,
+            46,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "2c6bdda664abeb73e8b628f651754cbc1eb7e8e264e507a45dfdd2ea86612ab6",
+            8677,
+            "2026-09-10T10:17:18.669Z",
+            0.11,
+            857,
+            46,
+            46,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest",
+        "issue_ids": [
+          "WD-C1"
+        ],
+        "selected_descriptor_count": 12,
+        "selected_outcomes": {
+          "PASS": 12
+        },
+        "expected_names_outcomes_sha256": "7593148b403d18305cf1a129c73fa8f747dc6b62eaf21904503258832c31ebb0",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":game-modes:whodunit:desktopTest",
+        "relative_xml": "parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.PeerReadinessRemountTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "3cc4e7c8071e5df3bfa826327141552f07d2a2a513c020e2b0a7f9b054b133b4",
+            2452,
+            "2026-09-10T10:20:02.378Z",
+            3.741,
+            2496,
+            12,
+            12,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "010d4232f9566b9fba7b740fc701655ee5f6ce0240b0b5d32ef518ddcd907420",
+            2451,
+            "2026-09-10T10:14:06.049Z",
+            0.599,
+            832,
+            12,
+            12,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "85bd373a4deddfceb142a49549af6176d0395c88ac22154e1b7f965690cd415f",
+            2505,
+            "2026-09-10T10:20:47.630Z",
+            0.988,
+            654,
+            12,
+            12,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "126b01a3dde6e034c1a9ccc213d079fec17e9e5314bf5447463550921d0e5062",
+            2470,
+            "2026-09-10T10:17:21.646Z",
+            0.855,
+            857,
+            12,
+            12,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest",
+        "issue_ids": [
+          "WD-C4-AUTHORIZED-POLICY"
+        ],
+        "selected_descriptor_count": 6,
+        "selected_outcomes": {
+          "PASS": 6
+        },
+        "expected_names_outcomes_sha256": "9b91f52a90f21f6471568347a2c8495f1deb1a2ccde374af2bde6478c68986c8",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":game-modes:whodunit:desktopTest",
+        "relative_xml": "parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitLocalLeaveTimerTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "ca22fb117d0a15489809ec95ec01159ae325dfdf68c40ff66f8383bad9f8a5b1",
+            1405,
+            "2026-09-10T10:20:06.134Z",
+            99.682,
+            2496,
+            6,
+            6,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "604110006cbdd28e52f2d75714ebbb658029714ab6cbc9e971c981166ca3907a",
+            1400,
+            "2026-09-10T10:14:06.655Z",
+            7.5,
+            832,
+            6,
+            6,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "25d8761020f2ba2c950eb92cbc6a5c4e31d27a3150f54c909db28fc2d3190134",
+            1457,
+            "2026-09-10T10:20:48.625Z",
+            13.737,
+            654,
+            6,
+            6,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "6abd664f99bc242520c55f4c4e16ce375f21b24e770f2fff9fa6706f2cf29d09",
+            1414,
+            "2026-09-10T10:17:22.507Z",
+            9.556,
+            857,
+            6,
+            6,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest",
+        "issue_ids": [
+          "WD-C2"
+        ],
+        "selected_descriptor_count": 9,
+        "selected_outcomes": {
+          "PASS": 9
+        },
+        "expected_names_outcomes_sha256": "7f573a7226ed1ffa0e0ef5f7d9450ac56202324865a6537855a4f3b9dca14e23",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":game-modes:whodunit:desktopTest",
+        "relative_xml": "parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.WhodunitRecoveryInteractionTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "dc3ee5c8e133bf1f7b84a21c510c156afe023decc980f417733bf3bd07e1b99a",
+            1990,
+            "2026-09-10T10:21:45.817Z",
+            3.071,
+            2496,
+            9,
+            9,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "3dac8e07557c7e1459cde7a5866a55d9dae0329a3c9896fc36a63e7aab425e12",
+            1987,
+            "2026-09-10T10:14:14.156Z",
+            0.587,
+            832,
+            9,
+            9,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "d5b5c3d27cc03a1db376fca828beaca3c2e428fb737fb228f161794de06bcf6d",
+            2042,
+            "2026-09-10T10:21:02.363Z",
+            1.35,
+            654,
+            9,
+            9,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "47f1b42eb11bbe588c6af51af512dd3e79128e230a2746b22b758f035a9e0731",
+            2004,
+            "2026-09-10T10:17:32.065Z",
+            1.12,
+            857,
+            9,
+            9,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLanguageContinuityTest",
+        "issue_ids": [
+          "DS-C01"
+        ],
+        "selected_descriptor_count": 2,
+        "selected_outcomes": {
+          "PASS": 2
+        },
+        "expected_names_outcomes_sha256": "766f4f87501efd589d7d0ff1cf3f9daa95e9b87ed203b1aafe4597e6b3457fa6",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":game-modes:whodunit:desktopTest",
+        "relative_xml": "parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLanguageContinuityTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "8131c49b19231539b5d5aae36ccf742dc86bf860ef79cd45464e39333d66a6ed",
+            751,
+            "2026-09-10T10:21:48.888Z",
+            1.348,
+            2496,
+            2,
+            2,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "ed14fa54894a342ff1db0259687f0a0382b3f9eed3d67ff9480977f0fcdcb1a3",
+            751,
+            "2026-09-10T10:14:14.744Z",
+            0.242,
+            832,
+            2,
+            2,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "c5e753e6487986555930f8008d9b383b1e544e6be50b8bf99a0efff137b62f17",
+            805,
+            "2026-09-10T10:21:03.714Z",
+            0.438,
+            654,
+            2,
+            2,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "a1a9a19bad515504b39b05887a5a4cf6d6c317287462efc7fe70e9d64910b1cb",
+            759,
+            "2026-09-10T10:17:33.190Z",
+            0.571,
+            857,
+            2,
+            2,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest",
+        "issue_ids": [
+          "WD-C4-AUTHORIZED-POLICY"
+        ],
+        "selected_descriptor_count": 4,
+        "selected_outcomes": {
+          "PASS": 4
+        },
+        "expected_names_outcomes_sha256": "712c640b909913cbd9e523d7ad24f1d9ac7676f9b39723452300a261578b4970",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":game-modes:whodunit:desktopTest",
+        "relative_xml": "parlor/parlor/game-modes/whodunit/build/test-results/desktopTest/TEST-com.parlor.games.whodunit.ui.flow.multiplayer.WhodunitHostLeaveTimerTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "bd22235a525f86dcb2c1e93c99c240e60dcceef410715a5ff71f047d0fbea558",
+            1128,
+            "2026-09-10T10:21:50.250Z",
+            93.474,
+            2496,
+            4,
+            4,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "3661d31995d8a70985ab419ed1410cba6e98c4b4afc9641d2d2d1e5acca81563",
+            1121,
+            "2026-09-10T10:14:14.987Z",
+            7.84,
+            832,
+            4,
+            4,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "7b9784570e25dbb35b50ad949668fa76a6d014817c35741a9d6d8ea995315995",
+            1177,
+            "2026-09-10T10:21:04.154Z",
+            14.677,
+            654,
+            4,
+            4,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "e1b86911067b77e110157d06f71934d79dbb6d6bb86c36b025d934918a40f2cb",
+            1134,
+            "2026-09-10T10:17:33.764Z",
+            10.505,
+            857,
+            4,
+            4,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.designsystem.components.ParlorToastConcurrencyTest",
+        "issue_ids": [
+          "DS-C02"
+        ],
+        "selected_descriptor_count": 2,
+        "selected_outcomes": {
+          "PASS": 2
+        },
+        "expected_names_outcomes_sha256": "646ddfd404fe626107b7e15cb90f3b3666da78059018890840472f49cc264afe",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":shared:design-system:desktopTest",
+        "relative_xml": "parlor/parlor/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastConcurrencyTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "29d0b1b093347a66da34bae8a5d48a7054aa931a15fd4aad41165b23ebf85647",
+            735,
+            "2026-09-10T10:18:13.565Z",
+            0.147,
+            2457,
+            2,
+            2,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "2a6becddb9aec13cd7c2b6ca51ae633473daa69fbc6b4eeeada6c4a19e7fb147",
+            737,
+            "2026-09-10T10:13:03.681Z",
+            0.112,
+            789,
+            2,
+            2,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "89516e90079dc63c749e4d95ef35da289996f3a6e8377840c9105f1311550425",
+            791,
+            "2026-09-10T10:17:52.754Z",
+            0.375,
+            607,
+            2,
+            2,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "2bd02f0c4d95acd743e8b7249780c7c5013fac2012a36b926ec9b0a2bd10dc58",
+            745,
+            "2026-09-10T10:15:16.576Z",
+            0.294,
+            805,
+            2,
+            2,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.designsystem.components.ParlorToastLifetimeTest",
+        "issue_ids": [
+          "DS-C02"
+        ],
+        "selected_descriptor_count": 3,
+        "selected_outcomes": {
+          "PASS": 3
+        },
+        "expected_names_outcomes_sha256": "1a3e5b2430c7b805a323fcc5973a57d43a282f04c6a074634bc751f7fb3b9b81",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":shared:design-system:desktopTest",
+        "relative_xml": "parlor/parlor/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastLifetimeTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "45f2946561e9e9103c557b0832216f7ce10bda496a6bc5ee763d654e8cac0b5e",
+            887,
+            "2026-09-10T10:18:13.740Z",
+            3.706,
+            2457,
+            3,
+            3,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "2cb23fb7ca695e0d5f52d70edee606b57f6a9ce3d52c9d6165973938558df075",
+            886,
+            "2026-09-10T10:13:03.816Z",
+            2.294,
+            789,
+            3,
+            3,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "5ebe057a930bd1e371874614446da942b2e87c731fe794da2f640d3fa5cb4ae9",
+            941,
+            "2026-09-10T10:17:53.330Z",
+            9.993,
+            607,
+            3,
+            3,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "0d72dd0e05da0730bbc77206ad270deb7ffaaeafcec486dc2f86302fc321a9ad",
+            896,
+            "2026-09-10T10:15:16.887Z",
+            6.835,
+            805,
+            3,
+            3,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.designsystem.components.ParlorToastStateTest",
+        "issue_ids": [
+          "DS-C02"
+        ],
+        "selected_descriptor_count": 4,
+        "selected_outcomes": {
+          "PASS": 4
+        },
+        "expected_names_outcomes_sha256": "b0b75c014c7ae79993c17d1ec94821598b7079d3c1f7431fc6af2181646ad000",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":shared:design-system:desktopTest",
+        "relative_xml": "parlor/parlor/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.ParlorToastStateTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "b143c8f41348922faf7e42091a1ac1242d69c21288b868b7ed9db57eb954f245",
+            1038,
+            "2026-09-10T10:18:17.456Z",
+            0.016,
+            2457,
+            4,
+            4,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "ef273fee4d0875f627c27395b477423e6d699d3ea6bce192ae1dad9f7ca9f62e",
+            1038,
+            "2026-09-10T10:13:06.115Z",
+            0.009,
+            789,
+            4,
+            4,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "1df47926fbd33e321b5e6315e58092855e97023b51b042056d5dbce94da5aeb9",
+            1092,
+            "2026-09-10T10:18:03.338Z",
+            0.025,
+            607,
+            4,
+            4,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "be6f0de900db93ea3d36044e68d7ddbff34752b6fcf1b6f536e51c133b2716b8",
+            1048,
+            "2026-09-10T10:15:23.730Z",
+            0.008,
+            805,
+            4,
+            4,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.designsystem.components.RecoveryActionContrastTest",
+        "issue_ids": [
+          "DS-C03"
+        ],
+        "selected_descriptor_count": 3,
+        "selected_outcomes": {
+          "PASS": 3
+        },
+        "expected_names_outcomes_sha256": "e96b2278a0f8318e10f4ee2018cde79e1dcf74f56f1c90744cc4c50b3fada29e",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":shared:design-system:desktopTest",
+        "relative_xml": "parlor/parlor/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.components.RecoveryActionContrastTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "c351957f0e988ff4b14c555e344fd6527ba41b59905870f72ebe2fe41445d8ef",
+            867,
+            "2026-09-10T10:18:17.809Z",
+            0.413,
+            2457,
+            3,
+            3,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "54799d626a512349ca739db8c0dfec42d79c887dee4d1ff7349b7bde6c241250",
+            866,
+            "2026-09-10T10:13:06.428Z",
+            0.271,
+            789,
+            3,
+            3,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "df23631d6048dcc85f97fd2ea8fc49f951770eb7343de6730e09a36e64f57796",
+            921,
+            "2026-09-10T10:18:03.957Z",
+            0.849,
+            607,
+            3,
+            3,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "157da59fc2614552c106d471b738442cfa03424835558c2547147f0ca94c38a8",
+            875,
+            "2026-09-10T10:15:24.325Z",
+            1.36,
+            805,
+            3,
+            3,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.designsystem.localization.ProvideAppLanguageDesktopTest",
+        "issue_ids": [
+          "DS-C01"
+        ],
+        "selected_descriptor_count": 1,
+        "selected_outcomes": {
+          "PASS": 1
+        },
+        "expected_names_outcomes_sha256": "37176e99a3889a412ea9ee313d434bc6577f14ce352030e20c8483be58420cc0",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":shared:design-system:desktopTest",
+        "relative_xml": "parlor/parlor/shared/design-system/build/test-results/desktopTest/TEST-com.parlor.designsystem.localization.ProvideAppLanguageDesktopTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "60acdba53e9da3bd801e1c69703c06a3d69752a4df3639468b3b3d840cb2382d",
+            548,
+            "2026-09-10T10:18:18.537Z",
+            0.076,
+            2457,
+            1,
+            1,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "a1545c7e7b946565a4fd312ebc19041d61988bee5bd0317f2f34f6ebb8f29411",
+            548,
+            "2026-09-10T10:13:06.926Z",
+            0.054,
+            789,
+            1,
+            1,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "0709af1122671208ec0a597d6a2eb38eb16b69fe67791dccb1022452632ee7bd",
+            602,
+            "2026-09-10T10:18:05.208Z",
+            0.074,
+            607,
+            1,
+            1,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "1c0c33ea9ff2c59b0ff31464bd73e629d908c11057e96d9b2480777a8279e86d",
+            555,
+            "2026-09-10T10:15:26.163Z",
+            0.051,
+            805,
+            1,
+            1,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+        "issue_ids": [
+          "SN-C1"
+        ],
+        "selected_descriptor_count": 9,
+        "selected_outcomes": {
+          "PASS": 9
+        },
+        "expected_names_outcomes_sha256": "f1752fbfcb487abcd4c3f073ca0c94381e1be0a6a13a487fecb5d53f5501a976",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":shared:session:desktopTest",
+        "relative_xml": "parlor/parlor/shared/session/build/test-results/desktopTest/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "299c5318a0f01a0bcce97a71a9a548994c15a94ad4f9589b2d76312241dd4174",
+            1945,
+            "2026-09-10T10:19:47.112Z",
+            0.235,
+            2500,
+            9,
+            9,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "193640651a74a3d2bfdbd025f40a6602aa87815ff4d624e83039097344691412",
+            1944,
+            "2026-09-10T10:13:23.333Z",
+            0.076,
+            804,
+            9,
+            9,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "c0187213841e1efaf6b0efbb6d3ef0b04176360029aa35ba38e7c7d5982ca9dd",
+            1999,
+            "2026-09-10T10:18:53.190Z",
+            0.182,
+            628,
+            9,
+            9,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "3b79d38d06763f3a5555c23928399f5ee8b0e5aa44baaa890c756f2faefd7504",
+            1959,
+            "2026-09-10T10:16:08.146Z",
+            0.084,
+            837,
+            9,
+            9,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+        "issue_ids": [
+          "SN-C2"
+        ],
+        "selected_descriptor_count": 3,
+        "selected_outcomes": {
+          "PASS": 3
+        },
+        "expected_names_outcomes_sha256": "972aecf6cf24583be288a68a552dc37eb0279e3c24e2c534a28fac38b4c78c24",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":shared:transport-p2p:desktopTest",
+        "relative_xml": "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "c0042a07ed16b32cc9df3a1fbd7e5b4b828d858cf8fb38dc4e35d0f40aab0ba1",
+            851,
+            "2026-09-10T10:20:06.740Z",
+            0.096,
+            2513,
+            3,
+            3,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "09cfdead54842bc92eef2bd04958611e5f051ce8966cfe4b816f9c30a02bbb5e",
+            851,
+            "2026-09-10T10:13:32.014Z",
+            0.038,
+            830,
+            3,
+            3,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "0c5e143e372d303cefba3cd866c88c9882fb07a5dd439a2d9b7f059f048bbe7a",
+            906,
+            "2026-09-10T10:19:17.886Z",
+            0.035,
+            642,
+            3,
+            3,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "af8ca3803a9407f91296234dfc9876fc0533f7128e0e3bb6380a08ba39918f75",
+            861,
+            "2026-09-10T10:16:52.744Z",
+            0.064,
+            856,
+            3,
+            3,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.transport.p2p.HostOpeningCancellationTest",
+        "issue_ids": [
+          "SN-C2"
+        ],
+        "selected_descriptor_count": 5,
+        "selected_outcomes": {
+          "PASS": 5
+        },
+        "expected_names_outcomes_sha256": "e26b057681d4349200c1beb115628c368871066fe2c2c96c2efa57f25f3fcadc",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":shared:transport-p2p:desktopTest",
+        "relative_xml": "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.HostOpeningCancellationTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "2f1b3c1699a322d615bae2e2fce605086d2d20d85ea0171893070f5c7d501730",
+            1152,
+            "2026-09-10T10:20:07.730Z",
+            0.161,
+            2513,
+            5,
+            5,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "be536959c35ff686094868a15c7572640c200b6ec1f783d4bfb09dec16ca9dbd",
+            1152,
+            "2026-09-10T10:13:32.505Z",
+            0.149,
+            830,
+            5,
+            5,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "fb4bad9316abbffb9761914915522c89a1f06b803a2e394289dd4f65429b8895",
+            1206,
+            "2026-09-10T10:19:19.117Z",
+            0.427,
+            642,
+            5,
+            5,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "1952e8d4437e95ae1c28832bef5f90a7eed85b719f8870244dd361fba7b68e12",
+            1163,
+            "2026-09-10T10:16:53.996Z",
+            0.561,
+            856,
+            5,
+            5,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.transport.p2p.JupiterDiscoveryContractTest",
+        "issue_ids": [
+          "ROOT-T3"
+        ],
+        "selected_descriptor_count": 1,
+        "selected_outcomes": {
+          "PASS": 1
+        },
+        "expected_names_outcomes_sha256": "a05bbc6ab23b0fe69f25b04380dde95ed8b9960318a356a5214faf5e269e1957",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":shared:transport-p2p:desktopTest",
+        "relative_xml": "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.JupiterDiscoveryContractTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "d6fba44bf6a5bee7378b2c149b109623e8805aa08e0ebc2fbeca893167a0c2ee",
+            511,
+            "2026-09-10T10:20:07.905Z",
+            0.291,
+            2513,
+            1,
+            1,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "1f53872bc27bf440eb84d54e8b294ae474d9618585373075bea03184e057666a",
+            511,
+            "2026-09-10T10:13:32.667Z",
+            0.252,
+            830,
+            1,
+            1,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "ea0261a87a9a0f4b4f6a2ac7d1301cf68e1c6720bb00ac999d95a65b71c157d6",
+            565,
+            "2026-09-10T10:19:19.557Z",
+            0.655,
+            642,
+            1,
+            1,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "134f3d2d11039f5e954f66a7a902e8d7eb586b1f0b85cb6b69b180aac611a45c",
+            518,
+            "2026-09-10T10:16:54.572Z",
+            0.958,
+            856,
+            1,
+            1,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.transport.p2p.P2pKitCreationTest",
+        "issue_ids": [
+          "SN-C2"
+        ],
+        "selected_descriptor_count": 9,
+        "selected_outcomes": {
+          "PASS": 9
+        },
+        "expected_names_outcomes_sha256": "46ebbd7322a063b576b7c86358aee37b7b50d2ef97d0fb0a02124e031c0badc9",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":shared:transport-p2p:desktopTest",
+        "relative_xml": "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitCreationTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "545d6ec41ea4337f289dd8945e26ace88d8cb705a5f1e53635c1704adac48451",
+            1731,
+            "2026-09-10T10:20:10.876Z",
+            0.046,
+            2513,
+            9,
+            9,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "5257c4e1e1c93bb2dc7ad8163e4dad5b1109c077d10603b4e6ef3034080aad1f",
+            1731,
+            "2026-09-10T10:13:34.405Z",
+            0.059,
+            830,
+            9,
+            9,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "1c3e82a0333b7792c514514279780f6a3a0546c77fef2412b388b7d434870675",
+            1785,
+            "2026-09-10T10:19:26.159Z",
+            0.167,
+            642,
+            9,
+            9,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "4e6dbc2607bbe1b2c87e07e76d4bb92b7ad7b3214670f57176f3912a1a64ce59",
+            1746,
+            "2026-09-10T10:17:01.565Z",
+            0.043,
+            856,
+            9,
+            9,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest",
+        "issue_ids": [
+          "ROOT-T3"
+        ],
+        "selected_descriptor_count": 8,
+        "selected_outcomes": {
+          "PASS": 8
+        },
+        "expected_names_outcomes_sha256": "f10f8aff195f3b95b3279d10a833da5012adb28021b0861a9417c9d080d9ca64",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":shared:transport-p2p:desktopTest",
+        "relative_xml": "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLifecycleTest.xml",
+        "selection": "Only the eight corrected lifecycle signatures; other suite methods intentionally omitted",
+        "observations": [
+          [
+            "desktop-android",
+            "a8da984d47444c826546b12bad240de333813110a2821ad8aad5886ef04001c5",
+            24001,
+            "2026-09-10T10:20:10.987Z",
+            14.738,
+            2513,
+            130,
+            130,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "40fde96167436f8c546fc3edaa922cbc488be39722bcd9a03ed30519ea54f2c1",
+            23997,
+            "2026-09-10T10:13:34.518Z",
+            13.491,
+            830,
+            130,
+            130,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "1671abfb0914c7d24247a6742c4db070cb1bf46865195fa27ddc2777b0737754",
+            24055,
+            "2026-09-10T10:19:26.382Z",
+            18.244,
+            642,
+            130,
+            130,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "ab07ce45521cb9136a475f30f5ffcdd890586ab29799c30fef148a0a7bf79409",
+            24131,
+            "2026-09-10T10:17:01.849Z",
+            14.43,
+            856,
+            130,
+            130,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "issue_ids": [
+          "ROOT-T3"
+        ],
+        "selected_descriptor_count": 4,
+        "selected_outcomes": {
+          "SKIP": 3,
+          "PASS": 1
+        },
+        "expected_names_outcomes_sha256": "ed89d37a684ffa19e39c1ca671ee0de71be06c24d19f07d76f7c02edd79d11c7",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":shared:transport-p2p:desktopTest",
+        "relative_xml": "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "665039f9e548a8f25bbba591137a1598c3fe4951adeee80e45ec035816c3818a",
+            1271,
+            "2026-09-10T10:20:25.742Z",
+            6.38,
+            2513,
+            4,
+            1,
+            3
+          ],
+          [
+            "desktop-linux-arm64",
+            "fd2f5b16a0bfcc36575280957164a6ccebc3e6ebb655775d703ccfaaafd0ea94",
+            1272,
+            "2026-09-10T10:13:48.016Z",
+            5.433,
+            830,
+            4,
+            1,
+            3
+          ],
+          [
+            "desktop-macos-x64",
+            "529050881e933ac815b5a7688d3a614180eeaf5f1a62d1f4c074121bc18589e8",
+            1326,
+            "2026-09-10T10:19:44.631Z",
+            8.246,
+            642,
+            4,
+            1,
+            3
+          ],
+          [
+            "desktop-windows-x64",
+            "5603aece789f34297918537959a581c1eadbcc6f76690631ce95996ca3ef5cd2",
+            1291,
+            "2026-09-10T10:17:16.293Z",
+            6.057,
+            856,
+            4,
+            1,
+            3
+          ]
+        ]
+      },
+      {
+        "key": "C01:com.parlor.transport.p2p.PeerOpeningCancellationTest",
+        "issue_ids": [
+          "SN-C2"
+        ],
+        "selected_descriptor_count": 12,
+        "selected_outcomes": {
+          "PASS": 12
+        },
+        "expected_names_outcomes_sha256": "b07d3175bcf8f44ca20646cfdf29fbae5b353e3be4309b7c9bb3317ae517878f",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":shared:transport-p2p:desktopTest",
+        "relative_xml": "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.PeerOpeningCancellationTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "desktop-android",
+            "3ed0010c364e3281e3d5afc1c1483075f678b43225467f0af7557e2532b07cda",
+            2386,
+            "2026-09-10T10:20:32.162Z",
+            0.242,
+            2513,
+            12,
+            12,
+            0
+          ],
+          [
+            "desktop-linux-arm64",
+            "5ed40a94e9674982c3cb95626c4135cc00f3f616c935abfee4a5ac1233c5c281",
+            2387,
+            "2026-09-10T10:13:53.467Z",
+            0.141,
+            830,
+            12,
+            12,
+            0
+          ],
+          [
+            "desktop-macos-x64",
+            "d1ae6128cb4d057c8223c1e11563e2e42d3ba44a26d2dc102402c4308a9fa316",
+            2441,
+            "2026-09-10T10:19:52.897Z",
+            0.254,
+            642,
+            12,
+            12,
+            0
+          ],
+          [
+            "desktop-windows-x64",
+            "59e6d0890418e96eeea356c4b01cfe7617f5920b74913e087765358df75366d4",
+            2406,
+            "2026-09-10T10:17:22.358Z",
+            0.096,
+            856,
+            12,
+            12,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C05:com.parlor.app.storage.IosLegacySnapshotBackupTest",
+        "issue_ids": [
+          "ST-C1"
+        ],
+        "selected_descriptor_count": 14,
+        "selected_outcomes": {
+          "PASS": 14
+        },
+        "expected_names_outcomes_sha256": "28cd8737ca094e417dd1d70c20ec0f99d9d578ce0caa67492e729deb5ad17b74",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":composeApp:iosSimulatorArm64Test",
+        "relative_xml": "parlor/parlor/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.IosLegacySnapshotBackupTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "ios",
+            "6dc4c507949cc0fa678e1548461a21b947ab8f60062be15fc28cefdff71f1938",
+            2836,
+            "2026-09-10T10:28:09.772Z",
+            0.078,
+            1088,
+            14,
+            14,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C05:com.parlor.app.storage.IosStorageSafetyTest",
+        "issue_ids": [
+          "ST-C1"
+        ],
+        "selected_descriptor_count": 6,
+        "selected_outcomes": {
+          "PASS": 6
+        },
+        "expected_names_outcomes_sha256": "efc8dc3769e7b048b0bf1c06f13267a2e54f54f89ad27f6bdd7e330fff431dd1",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":composeApp:iosSimulatorArm64Test",
+        "relative_xml": "parlor/parlor/composeApp/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.app.storage.IosStorageSafetyTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "ios",
+            "97dfb48deafcff53bcc1391349955038f7bbf9f33f34679667f9edddb6e6e3e9",
+            1359,
+            "2026-09-10T10:28:09.850Z",
+            0.001,
+            1088,
+            6,
+            6,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C05:com.parlor.games.mafia.domain.MafiaDoctorRulesTest",
+        "issue_ids": [
+          "MF-C1"
+        ],
+        "selected_descriptor_count": 8,
+        "selected_outcomes": {
+          "PASS": 8
+        },
+        "expected_names_outcomes_sha256": "879adfd552fc2b4ff067361fd4a03f45726ad39262a5de41a428011412080878",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":game-modes:mafia:iosSimulatorArm64Test",
+        "relative_xml": "parlor/parlor/game-modes/mafia/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.mafia.domain.MafiaDoctorRulesTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "ios",
+            "9ed29facb0d2c4798dae1318da54bf546a35937542bdfc098df5c35e090b924d",
+            1827,
+            "2026-09-10T10:23:22.528Z",
+            0.002,
+            996,
+            8,
+            8,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C05:com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest",
+        "issue_ids": [
+          "MF-C1"
+        ],
+        "selected_descriptor_count": 15,
+        "selected_outcomes": {
+          "PASS": 15
+        },
+        "expected_names_outcomes_sha256": "dbd3d04a79c08b701d287adc48c6124076c96dd2040f88bc4d1d1b275bf6769c",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":game-modes:mafia:iosSimulatorArm64Test",
+        "relative_xml": "parlor/parlor/game-modes/mafia/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.games.mafia.snapshot.MafiaDoctorHistoryRecoveryTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "ios",
+            "cb555c22ff86caa15e65cfd6daf6c2277d340d02e8fa9a5f63b0c7d9bfce94cc",
+            3350,
+            "2026-09-10T10:23:22.530Z",
+            0.002,
+            996,
+            15,
+            15,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C05:com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest",
+        "issue_ids": [
+          "DS-C01"
+        ],
+        "selected_descriptor_count": 11,
+        "selected_outcomes": {
+          "PASS": 11
+        },
+        "expected_names_outcomes_sha256": "a940f1abc772a96cfe8a3c0f7da8c2be48c99cc9f3e2a2a9522f35b6d36d4ce3",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":shared:design-system:iosSimulatorArm64Test",
+        "relative_xml": "parlor/parlor/shared/design-system/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.designsystem.localization.IosLanguageOverrideOwnerTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "ios",
+            "1f19e7bbae11e2e5aaefe142f5f67fe8d2acda3625c427cfd28c5dbde731e043",
+            2493,
+            "2026-09-10T10:23:40.651Z",
+            0.001,
+            1010,
+            11,
+            11,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C05:com.parlor.session.multidevice.SessionStartCommitDeadlineTest",
+        "issue_ids": [
+          "SN-C1"
+        ],
+        "selected_descriptor_count": 9,
+        "selected_outcomes": {
+          "PASS": 9
+        },
+        "expected_names_outcomes_sha256": "586bcac1a220c6e914cee665beb031aa10e59a3edafc06efd2273d0bb8c8764a",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":shared:session:iosSimulatorArm64Test",
+        "relative_xml": "parlor/parlor/shared/session/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.session.multidevice.SessionStartCommitDeadlineTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "ios",
+            "73b629ac599bc53082e228b7587681418c246793dbd5be2dfb64f0e2ad4f3c4c",
+            2053,
+            "2026-09-10T10:24:57.198Z",
+            0.001,
+            1056,
+            9,
+            9,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C05:com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest",
+        "issue_ids": [
+          "SN-C2"
+        ],
+        "selected_descriptor_count": 3,
+        "selected_outcomes": {
+          "PASS": 3
+        },
+        "expected_names_outcomes_sha256": "6b701561dc673c1ad857d0bfbc95115959b8bc20dd3d55e4053eb8847e035091",
+        "kind": "LIVE_XML_AND_EXECUTED_TASK",
+        "task": ":shared:transport-p2p:iosSimulatorArm64Test",
+        "relative_xml": "parlor/parlor/shared/transport-p2p/build/test-results/iosSimulatorArm64Test/TEST-com.parlor.transport.p2p.AppLifecycleRoomRegistrationTest.xml",
+        "selection": "All methods in raw suite",
+        "observations": [
+          [
+            "ios",
+            "25b2619967e06d15bedcf4d9165006c70b919afe7cf49713dffbd4638a57a038",
+            926,
+            "2026-09-10T10:24:51.198Z",
+            0.001,
+            1055,
+            3,
+            3,
+            0
+          ]
+        ]
+      },
+      {
+        "key": "C01:test_xcode_framework_phase",
+        "issue_ids": [
+          "IOS-B1"
+        ],
+        "selected_descriptor_count": 5,
+        "selected_outcomes": {
+          "PASS": 5
+        },
+        "expected_names_outcomes_sha256": "9ab554ed1693fe9ccd50b357e49b097c3284ca2a9ed21f3869a10a4cc42857d8",
+        "kind": "RAW_PYTHON_METHODS",
+        "job": "desktop-android",
+        "task": ":productionReleaseAutomationCheck",
+        "raw_log_lines_in_expected_descriptor_order": [
+          2288,
+          2289,
+          2290,
+          2291,
+          2292
+        ]
+      },
+      {
+        "key": "C01:test_android_artifact_size",
+        "issue_ids": [
+          "RL-C1"
+        ],
+        "selected_descriptor_count": 7,
+        "selected_outcomes": {
+          "PASS": 7
+        },
+        "expected_names_outcomes_sha256": "3a32b0ad3f45d834373f956a0a68111cf640dec52f022f2b86cd1461fbaac912",
+        "kind": "RAW_PYTHON_METHODS",
+        "job": "desktop-android",
+        "task": ":productionReleaseAutomationCheck",
+        "raw_log_lines_in_expected_descriptor_order": [
+          1501,
+          1503,
+          1505,
+          1506,
+          1507,
+          1508,
+          1509
+        ]
+      },
+      {
+        "key": "C01:test_android_upload_signature",
+        "issue_ids": [
+          "RL-C2"
+        ],
+        "selected_descriptor_count": 21,
+        "selected_outcomes": {
+          "PASS": 21
+        },
+        "expected_names_outcomes_sha256": "ba699432758149654e16293d0e02095362c8dae1d5476723d9fc4eca7571c7f7",
+        "kind": "RAW_PYTHON_METHODS",
+        "job": "desktop-android",
+        "task": ":productionReleaseAutomationCheck",
+        "raw_log_lines_in_expected_descriptor_order": [
+          1542,
+          1547,
+          1554,
+          1604,
+          1607,
+          1608,
+          1609,
+          1621,
+          1642,
+          1644,
+          1659,
+          1679,
+          1682,
+          1686,
+          1689,
+          1711,
+          1716,
+          1726,
+          1731,
+          1736,
+          1771
+        ]
+      },
+      {
+        "key": "C01:test_google_promotion_edit",
+        "issue_ids": [
+          "RL-C3"
+        ],
+        "selected_descriptor_count": 9,
+        "selected_outcomes": {
+          "PASS": 9
+        },
+        "expected_names_outcomes_sha256": "739351c40ec6779c305c3b1c4448a018ec80d7d189e747c9668303eb147050b0",
+        "kind": "RAW_PYTHON_METHODS",
+        "job": "desktop-android",
+        "task": ":productionReleaseAutomationCheck",
+        "raw_log_lines_in_expected_descriptor_order": [
+          1872,
+          1873,
+          1874,
+          1875,
+          1876,
+          1877,
+          1878,
+          1879,
+          1880
+        ]
+      }
+    ]
+  },
+  "timer": {
+    "local_methods": 6,
+    "host_methods": 4,
+    "all_ten_PASS_on_each_of_four_desktop_hosts": true,
+    "policy": "Leave-confirmation time excluded from Discussion. Stay and lifecycle resume must not release pre-existing manual/session/lifecycle pauses or catch up modal time; peers gain no clock authority.",
+    "boundary": "Controller/Compose fixture and synthetic transport regressions, not physical LAN, native Back gesture, or UI event coverage."
+  },
+  "python_context": {
+    "task": ":productionReleaseAutomationCheck",
+    "repeated_header_lines": [
+      1504,
+      1544,
+      1549,
+      1556,
+      1606,
+      1623,
+      1645,
+      1664,
+      1681,
+      1688,
+      1713,
+      1718,
+      1728,
+      1733,
+      1738,
+      1773,
+      1973,
+      1991,
+      2188,
+      2305
+    ],
+    "selected_groups": 4,
+    "selected_exact_PASS_methods": 42,
+    "enclosing_raw_summary": [
+      {
+        "line": 2295,
+        "text": "2026-09-10T10:16:18.6437361Z Ran 498 tests in 109.421s"
+      },
+      {
+        "line": 2297,
+        "text": "2026-09-10T10:16:18.6438055Z OK"
+      }
+    ],
+    "boundary": "Actual script regression tests, including release-validator test fixtures, not Store credentials, signing/publication, promotion, or real Store operations."
+  },
+  "preserved_skips": {
+    "suite": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+    "methods": [
+      "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]",
+      "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+      "host_broadcast_reaches_every_peer()[desktop]"
+    ],
+    "per_desktop_host": 3,
+    "observed_hosts": [
+      "desktop-android",
+      "desktop-linux-arm64",
+      "desktop-macos-x64",
+      "desktop-windows-x64"
+    ],
+    "xml_reason": "Explicit <skipped/> entries; reason text is not present in raw XML. Do not reinterpret as PASS.",
+    "frozen_source": {
+      "commit": "75c104734373703570a307de9c7a53d291bc2718",
+      "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+      "sha256": "21451bf407d791ec85066227a2670ccf61d3506efaae47375c0bba557fe3be73",
+      "annotation_lines": [
+        [
+          104,
+          105
+        ],
+        [
+          131,
+          132
+        ],
+        [
+          177,
+          178
+        ]
+      ],
+      "reason": "Two devices for peer join/message exchange; three for host broadcast, same LAN. Single-JVM multicast is not physical-device evidence."
+    },
+    "linux_apple_leaves": {
+      "count": 26,
+      "raw_task_events": [
+        [
+          ":game-modes:mafia:iosSimulatorArm64Test",
+          2772,
+          "2026-09-10T10:24:40.4932130Z",
+          "SKIPPED"
+        ],
+        [
+          ":game-modes:mafia:iosX64Test",
+          2806,
+          "2026-09-10T10:24:51.3768394Z",
+          "SKIPPED"
+        ],
+        [
+          ":game-modes:whodunit:iosSimulatorArm64Test",
+          2823,
+          "2026-09-10T10:24:54.2743826Z",
+          "SKIPPED"
+        ],
+        [
+          ":composeApp:iosSimulatorArm64Test",
+          2835,
+          "2026-09-10T10:24:56.1745810Z",
+          "SKIPPED"
+        ],
+        [
+          ":game-modes:whodunit:iosX64Test",
+          2849,
+          "2026-09-10T10:24:58.4755226Z",
+          "SKIPPED"
+        ],
+        [
+          ":shared:content:iosSimulatorArm64Test",
+          2856,
+          "2026-09-10T10:24:58.4910324Z",
+          "SKIPPED"
+        ],
+        [
+          ":shared:content:iosX64Test",
+          2865,
+          "2026-09-10T10:25:00.0745649Z",
+          "SKIPPED"
+        ],
+        [
+          ":shared:core:iosSimulatorArm64Test",
+          2881,
+          "2026-09-10T10:25:00.9885603Z",
+          "SKIPPED"
+        ],
+        [
+          ":shared:core:iosX64Test",
+          2886,
+          "2026-09-10T10:25:01.8765934Z",
+          "SKIPPED"
+        ],
+        [
+          ":shared:design-system:iosSimulatorArm64Test",
+          2913,
+          "2026-09-10T10:25:05.2276652Z",
+          "SKIPPED"
+        ],
+        [
+          ":shared:design-system:iosX64Test",
+          2931,
+          "2026-09-10T10:25:06.5819172Z",
+          "SKIPPED"
+        ],
+        [
+          ":shared:engine:iosSimulatorArm64Test",
+          2941,
+          "2026-09-10T10:25:07.5058651Z",
+          "SKIPPED"
+        ],
+        [
+          ":shared:engine:iosX64Test",
+          2950,
+          "2026-09-10T10:25:08.4879697Z",
+          "SKIPPED"
+        ],
+        [
+          ":shared:engine-testing:iosSimulatorArm64Test",
+          2966,
+          "2026-09-10T10:25:09.1987895Z",
+          "SKIPPED"
+        ],
+        [
+          ":shared:engine-testing:iosX64Test",
+          2971,
+          "2026-09-10T10:25:09.7897058Z",
+          "SKIPPED"
+        ],
+        [
+          ":shared:networking:iosSimulatorArm64Test",
+          3000,
+          "2026-09-10T10:25:13.2775746Z",
+          "SKIPPED"
+        ],
+        [
+          ":shared:networking:iosX64Test",
+          3005,
+          "2026-09-10T10:25:15.0747262Z",
+          "SKIPPED"
+        ],
+        [
+          ":composeApp:iosX64Test",
+          3013,
+          "2026-09-10T10:25:15.4825781Z",
+          "SKIPPED"
+        ],
+        [
+          ":shared:networking-testing:iosSimulatorArm64Test",
+          3026,
+          "2026-09-10T10:25:15.7855747Z",
+          "SKIPPED"
+        ],
+        [
+          ":shared:networking-testing:iosX64Test",
+          3032,
+          "2026-09-10T10:25:16.4740935Z",
+          "SKIPPED"
+        ],
+        [
+          ":shared:session:iosSimulatorArm64Test",
+          3056,
+          "2026-09-10T10:25:21.9805848Z",
+          "SKIPPED"
+        ],
+        [
+          ":shared:storage:iosSimulatorArm64Test",
+          3069,
+          "2026-09-10T10:25:23.2785679Z",
+          "SKIPPED"
+        ],
+        [
+          ":shared:session:iosX64Test",
+          3074,
+          "2026-09-10T10:25:23.3723226Z",
+          "SKIPPED"
+        ],
+        [
+          ":shared:storage:iosX64Test",
+          3079,
+          "2026-09-10T10:25:24.1785767Z",
+          "SKIPPED"
+        ],
+        [
+          ":shared:transport-p2p:iosSimulatorArm64Test",
+          3095,
+          "2026-09-10T10:25:25.7903950Z",
+          "SKIPPED"
+        ],
+        [
+          ":shared:transport-p2p:iosX64Test",
+          3106,
+          "2026-09-10T10:25:27.3845644Z",
+          "SKIPPED"
+        ]
+      ],
+      "boundary": "Linux allTests Apple leaves really SKIPPED; no iOS runtime credited to Linux aggregate. Apple66 mapped PASS comes only from the separate actual ios job."
+    }
+  },
+  "preserved_combined_failure": {
+    "run_conclusion": "failure",
+    "only_failed_API_step": {
+      "job_id": 102830019251,
+      "job_name": "Common, desktop, and Android release",
+      "step": 13,
+      "name": "Clean only attested verification outputs"
+    },
+    "cleanup_input": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34464573240/verification-cleanup-desktop-android/parlor-verification-34464573240-1-desktop-android-cleanup.json",
+      "bytes": 20049,
+      "sha256": "5cb0df90774a6eb3a92d85dff747e8cb92939c162d3015ba1663c7ad18468e6b"
+    },
+    "cleanup_result": "FAIL",
+    "gradle_stop_exit_code": 0,
+    "errors": [
+      {
+        "error": "Android sampled emulator absence did not pass; retain outputs"
+      }
+    ],
+    "sampled_emulator_absence": {
+      "result": "FAIL",
+      "enumerated": 154,
+      "sampled": 118,
+      "selected_uid": 0,
+      "matching_executables": 0,
+      "errors": [
+        {
+          "code": "PermissionError"
+        }
+      ],
+      "binding": {
+        "sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1",
+        "sdk_device": 2049,
+        "sdk_inode": 341395,
+        "uid": 1001
+      },
+      "scope": "Enumerated visible selected-UID executable paths beneath bound SDK/emulator only; not termination, task-process ownership, AVD retirement, other SDKs/UIDs, or continuous absence"
+    },
+    "retained_output_count": 21,
+    "boundary": "No full D03 PASS or cleanup clearance. Scoped executed regression results do not erase a failed required cleanup step;0 matching executables with PermissionError is not proven absence. Root and Linux-control reviewers own remediation/requalification."
+  },
+  "limits": [
+    "No physical-device tests or Store operations were run by this review. Three loopback methods remain skipped on each desktop host.",
+    "ST-C1 Foundation/Crypto and recovery regressions do not clear strict iOS file-protection observations or arbitrary real-device protection states.",
+    "B30 applicability remains separately scoped historical evidence; this mapping is not a new ordinary Debug libproc runtime or new OS recovery receipt.",
+    "No whole840-row source equality or runtime at a later delivery commit is claimed. Any later source/control/inventory delta needs explicit applicability review.",
+    "The mapped subset cannot replace the separate Linux, three-alternate-host, Apple package/runtime and overall readiness reviews."
+  ],
+  "reviewer_activity": {
+    "source_changes": false,
+    "builds_or_tests_run": false,
+    "project_imports_or_extracted_function_execution": false,
+    "network_or_workflow_actions": false,
+    "raw_evidence_modified": false,
+    "writes": [
+      "N/reviews/final-d-original16-timer-actual-independent-01.json"
+    ],
+    "cleanup": "No build lane, workers, simulator or other fixture allocated; ZIPs closed. No reviewer build cleanup owed; no processes stopped or files deleted."
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "schema_version": 1,
+  "kind": "ANDROID_PROC_PERMISSION_DIAGNOSTIC_ONLY_DELTA_INDEPENDENT_SOURCE_REVIEW",
+  "reviewer": "/root/ci_review",
+  "author_reviewed": "/root/lifecycle_controls",
+  "reviewed_at": "2026-09-10T11:03:55.452144+00:00",
+  "status": "APPROVED_DIAGNOSTIC_ONLY_HELD_SOURCE_NOT_EXECUTED",
+  "findings": [],
+  "baseline": {
+    "commit": "75c104734373703570a307de9c7a53d291bc2718",
+    "tree": "4d5b660c5f508a3eb8d01cd9203f2503570dbb18",
+    "branch": "fix/local-readiness-2026-09-07",
+    "tracked_status": ""
+  },
+  "author_packet": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/android-proc-permission-diagnostic-01/author-note.json",
+    "bytes": 5457,
+    "sha256": "1823b4e47549236af3174629035eb9a05a26a2bb5b40016a5e5686ab0b12823a"
+  },
+  "files": [
+    {
+      "canonical": {
+        "path": "scripts/ci/verification_hygiene.py",
+        "bytes": 20930,
+        "sha256": "f1aa6d4c5dae8360a9ff1bfd675376d78cb800e3d297fc213cdddca32c7376f6"
+      },
+      "proposed": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/android-proc-permission-diagnostic-01/proposed/scripts/ci/verification_hygiene.py",
+        "bytes": 22204,
+        "sha256": "1fc2fb6f0b3bb7a505edc63277e0fe974a67ccf972753eec0da60386438c16f4"
+      }
+    },
+    {
+      "canonical": {
+        "path": "scripts/release/tests/test_ci_verification_hygiene.py",
+        "bytes": 28576,
+        "sha256": "2ba311084cd57923f85c3176b3d5ac83385022c7e0fe174ac5a38fd1c5101f63"
+      },
+      "proposed": {
+        "path": "remediation-runs/2026-09-08-continuation/reviews/android-proc-permission-diagnostic-01/proposed/scripts/release/tests/test_ci_verification_hygiene.py",
+        "bytes": 30703,
+        "sha256": "1f228c62dd1de0b79b8c0add9500dd3da7572bd761d079a058f45ef502e1f8e0"
+      }
+    }
+  ],
+  "independently_reconstructed_diff": {
+    "sha256": "8d69bc47d843cf3e1c7c4fbb322717cbf51676c013f9dac5e6ef04ddae1ece2c",
+    "bytes": 8303,
+    "lines": 138,
+    "recipe": "Concatenate difflib.unified_diff for pins in listed order; UTF-8 splitlines(keepends=True); a/<path>, b/<path>; no dates; default context=3. Printed only, no separate patch artifact."
+  },
+  "checks": [
+    "Reopened exact frozen current helper, full cleanup/source/upload/ownership flow and current synthetic proc-fixture tests. Proposed helper changes only android_proc_identity and audit_android_emulator_absence. Full helper AST independently equals canonical after removing exactly11 individually whitelisted diagnostic-only statements, the optional diagnostic/keyword-after signature additions and exactly2 trace arguments. This comparison retains the complete original lifetime guard and all original predicates/branches.",
+    "All8 process I/O accesses have fixed literal before/after stat/status/readlink/stat tags. Every PID resets operation=None and selection=unknown before first identity; selection becomes the actual original boolean only after complete first stat/status. FourUID equality, starttime/lifetime recheck, exact SDK binding/emulator subtree, executable inode/path/type checks, observer membership and all byte/count/time limits remain unchanged. Operation clears after coherent second identity, so subsequent SDK/budget failures cannot inherit an unrelated process-read tag.",
+    "Only a caught OSError while a process-read tag is active adds sibling failure_context; preexisting result/error code/counters remain unchanged. Context contains only literal operation, unknown-or-boolean selection and an exact-int errno in1..4095 or null. No added PID, process name, executable path, argv, raw exception message or global census. Permission denial/disappearance still FAIL and block output deletion; no skip/retry, privileged fallback, UID selection change, source/upload/cleanup waiver or process signals.",
+    "Test module AST differs only by errno import and the body of existing AndroidEmulatorAbsenceTest.test_executable_read_denial_or_disappearing_pid_is_not_absence. All33 test identities retained; other32 method bodies and all non-test module code unchanged. Independently counted28 source-defined subcases:8 selected accesses x2 EACCES/ENOENT classes,4 otherUID identity accesses x2 after a completed selected observer, plus4 missing/bool/negative/overbound errno cases. Assertions retain exact FAIL/error class and require correct stage/selection/errno and omission of private PID/path sentinels. No runtime execution was performed by author or reviewer."
+  ],
+  "original_hosted_failure": {
+    "run_id": "34464573240",
+    "attempt": 1,
+    "job_id": 102830019251,
+    "job_metadata": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-03/early-desktop-android-job.json",
+      "bytes": 3945,
+      "sha256": "44924ff78907cbab130b9a59a5edbb8833dfd337035f60c76686c8e2d3710f51"
+    },
+    "raw_log": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-03/early-desktop-android-job.log",
+      "bytes": 478963,
+      "sha256": "9fb6ac8b3c68c5e26615f2e641fd664bcc8285e5f70c157fc7ad65ab2572616e"
+    },
+    "actual_sample": {
+      "result": "FAIL",
+      "started_at": "2026-09-10T10:30:07.123081+00:00",
+      "finished_at": "2026-09-10T10:30:07.143443+00:00",
+      "enumerated": 154,
+      "sampled": 118,
+      "selected_uid_completed_count": 0,
+      "bound_uid": 1001,
+      "matching_executables_observed": 0,
+      "error": "PermissionError"
+    },
+    "boundary": "The original generic failure cannot identify an operation, target PID, selection state or cause. Counts place it in the119th numeric-PID iteration before completion, not necessarily an executable read or otherUID process. SameUID non-dumpable/ptrace-read denial is only a plausible mechanism. Zero matches on a failed partial sample is not absence proof. Original cleanup FAIL, removed[],21 retained paths and stop0 remain; post-job adb termination is separate and does not repair that receipt."
+  },
+  "next_gate": [
+    "Root alone may execute exact reviewed proposed bytes in an admitted source-bound overlay or adopted checkout with focused tests, preserving actual source/control bindings and mandatory stop/cleanup. The held tests retain ROOT-relative project/workflow references; blindly running them inside the proposal directory is not equivalent.",
+    "Review actual tests and any root-owned nonroot controlled-process experiment separately. A local nonroot dumpability-class demonstration does not identify the old hosted process/operation, and synthetic self+child enumeration is not a complete hosted /proc census.",
+    "No approval of the separate linux-process-probe harness/workflow draft here; native_ci owns that independent review. No unchanged matrix rerun recommended merely to exercise these diagnostics."
+  ],
+  "activity": "Read-only Git with optional locks disabled and stdlib text/JSON/hash/AST inspection; sole write this additive review. No project imports, tests/builds, real process sampling/launch/signals, network, permissions change, active-source edits, Git writes, locks or cleanup operations. No reviewer build cycle requiring cleanup.",
+  "limits": "Diagnostic metadata only, not a behavioral PermissionError fix. Drafts remain unadopted/unexecuted at this review. No actual LinuxD cleanup acceptance, Android emulator retirement, app/native/physical-device runtime, final-combined qualification, signing/Store publication, owner/legal or overall readiness approval."
+}
