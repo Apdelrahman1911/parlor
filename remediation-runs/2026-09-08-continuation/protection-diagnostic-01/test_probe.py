@@ -189,8 +189,14 @@ class AdmissionTests(unittest.TestCase):
         replies = {("rev-parse", "--show-toplevel"): str(root), ("rev-parse", "HEAD"): "1"*40,
             ("branch", "--show-current"): probe.native.BRANCH, ("rev-parse", "--is-shallow-repository"): "false",
             ("status", "--porcelain=v1", "--untracked-files=no"): "", ("rev-parse", "HEAD^{tree}"): "2"*40}
-        execute = lambda args, _label, _timeout: replies[tuple(args[1:])].encode()
+        calls = []
+        def execute(args, label, timeout):
+            calls.append((args, label, timeout))
+            return replies[tuple(args[1:])].encode()
         self.assertEqual(probe.context(env, execute, root)["job"], probe.SCOPE)
+        self.assertEqual([row for row in calls if row[2] != 20], [
+            (["/usr/bin/git", "status", "--porcelain=v1", "--untracked-files=no"], "git-binding", 60)])
+        self.assertEqual(len(calls), 6)  # No retry, omitted check, or cached result.
         for key, wrong in (("GITHUB_JOB", "ios"), ("PARLOR_DISPATCH_SCOPE", "full"), ("GITHUB_SHA", "9"*40),
                            ("GITHUB_EVENT_NAME", "push"), ("GITHUB_WORKFLOW_REF", "foreign/workflow@main")):
             with self.subTest(key=key), self.assertRaises(RuntimeError):

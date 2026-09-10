@@ -1,0 +1,254 @@
+{
+  "schema": 1,
+  "kind": "INDEPENDENT_PD01_FAILURE_AND_STATUS_ONLY_TIMEOUT_CORRECTION_REVIEW_NOT_RUNTIME_PROOF",
+  "reviewer": "/root/fixture_review",
+  "implementation_author": "/root/native_ci",
+  "reviewed_at": "2026-09-10T20:25:02.409080+00:00",
+  "status": "APPROVED_REVIEWED_CORRECTION_AND_ROOT_TEST_EVIDENCE_FOR_NEW_FROZEN_DIAGNOSTIC",
+  "scope": "Two-file runner/test delta atop b988; independent reconciliation of preserved PD01 failure, immutable artifacts and focused Linux tests. No production code or protection validation changes.",
+  "source_base": {
+    "sha": "b9883232c5208c9c3a1203347124cd36fb17dd24",
+    "tree": "4980d6e7e867ae21c6b208470b9744a2108382e7"
+  },
+  "reviewed_files": [
+    {
+      "path": "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py",
+      "bytes": 43385,
+      "sha256": "725f66f42047fd17d9abe43ea820135da07c83974d2f4dc2bfce56a87247b20a"
+    },
+    {
+      "path": "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/test_probe.py",
+      "bytes": 13056,
+      "sha256": "7e860eab7f9d6da862b9876b6612b1e7d29c00c20f0f635004e84be15d71aa67"
+    }
+  ],
+  "control_binding": {
+    "before": "48d7857c10514563208e7f80568dbca781888edf6222d6f5aa0d4c751ab5e14a",
+    "after": "62935ee0f2cf1fde7c015fe80054b3f6839c343c690913227135f37392d40bbc",
+    "files": 15,
+    "changed_paths_only": [
+      "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py",
+      "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/test_probe.py"
+    ],
+    "working_bytes_match_root_before_and_after": true,
+    "fresh_commit_tree_binding_required": true
+  },
+  "correction": {
+    "delta": "11 insertions, 2 deletions: exact tuple (status,--porcelain=v1,--untracked-files=no) receives60s instead of20s; the other five context Git commands remain20s.",
+    "causal_basis": "PD01 stopped at the exact postboot tracked-status command before simctl spawn. Its20s observation expired and the direct child was reaped at21.554s. The three prior status calls completed in0.423/0.427/0.415s and subsequent cleanup calls in1.287/0.465s.",
+    "appropriateness": "A bounded60s observation allowance addresses the demonstrated binding-command timeout without accepting incomplete status. It is not proof that60s will suffice, nor proof that boot contention, index refresh or repository size caused the delay.",
+    "preserved": [
+      "Exact repository/branch/workflow/job and source SHA/tree/control equality; clean tracked full history.",
+      "All six Git observations remain live and required; no retry, cached clean, unchecked stdout, timeout-ignore or command omission.",
+      "Overall480s collection,300s cleanup,90s finalization,40s native command and25s native self-alarm are unchanged.",
+      "Qualified toolchain/runtime, nonroot custody, direct-child ownership/reaping, immutable upload requirement and simulator/scratch cleanup guards remain unchanged.",
+      "Strict Complete comparison, native observation/image identity validation and historical failures are unchanged."
+    ],
+    "test_source": "Existing test_exact_job_and_source_admission now records calls, requires exactly one non20s argv (the closed tracked-status tuple at60s), and six total calls. Existing negative admission/control/report tests remain."
+  },
+  "actual_pd01": {
+    "run_id": 34523946762,
+    "attempt": 1,
+    "job_id": 103028140055,
+    "source_sha": "b9883232c5208c9c3a1203347124cd36fb17dd24",
+    "tree": "4980d6e7e867ae21c6b208470b9744a2108382e7",
+    "run_conclusion": "failure",
+    "main_status": "FAIL",
+    "main_error": [
+      {
+        "stage": "collection",
+        "type": "RuntimeError",
+        "code": "required-command-failed"
+      }
+    ],
+    "failure_command": {
+      "label": "git-binding",
+      "command": [
+        "/usr/bin/git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=no"
+      ],
+      "status": "TIMEOUT",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-10T20:04:00.401196+00:00",
+      "owned_pid": 2579,
+      "ownership": "direct-unreaped-Popen",
+      "timeout_observed_at": "2026-09-10T20:04:20.812214+00:00",
+      "observation_elapsed_seconds": 20.64,
+      "exit_code": -15,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 21.554,
+      "finished_at": "2026-09-10T20:04:21.971967+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    "platform": "Hosted macOS15.7.9/24G830 arm64; Xcode26.3/17C529; iOS simulator SDK/runtime26.2/23C54.",
+    "actual_execution": "Standalone Objective-C compile, ad-hoc signing, signature verification and simulator boot passed. There was no simctl spawn, no native.stdout.jsonl and no native-report.json: zero new runtime protection observations.",
+    "built_image_not_loaded_runtime": {
+      "uuid": "6b6059cd-33b7-498d-857b-487c284c5757",
+      "sha256": "11d65052fcc44cef86cb2658ca44b316d3fd3d61afdc6867fb57d7235f845d97",
+      "scope": "standalone-O0-ad-hoc-simulator-not-Parlor-Debug"
+    },
+    "other_full_jobs": "All six skipped; no combined qualification inferred.",
+    "artifacts": [
+      {
+        "artifact_id": 10170857096,
+        "member_files": 68,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34523946762/main.zip",
+        "bytes": 22942,
+        "sha256": "aa52eccb2a189cd6ec57902fc2a281ee9c20e8740371ef718b8a75f3157dc7c9"
+      },
+      {
+        "artifact_id": 10170863889,
+        "member_files": 20,
+        "path": "remediation-runs/2026-09-08-continuation/actions/34523946762/cleanup.zip",
+        "bytes": 8249,
+        "sha256": "14fa5f8ea7be49aae33acea43f3f6e5e31eb1cd28b69054413307d2cf134306d"
+      }
+    ],
+    "artifact_verification": "Both ZIP SHA256 values equal GitHub artifact metadata and collector receipt. All68 main and20 cleanup member bytes equal extracted files; all62 main and16 cleanup state log pins match. No archive or historical bytes were modified.",
+    "cleanup": {
+      "status": "FAIL",
+      "errors": [
+        {
+          "stage": "cleanup",
+          "type": "RuntimeError",
+          "code": "timed-out-or-unsettled-tool-scratch-retained"
+        }
+      ],
+      "simulator": {
+        "result": "PASS",
+        "udid": "A1ABA270-B281-4F9E-915F-C9FA5EF57470",
+        "actions": [
+          {
+            "command": "shutdown",
+            "exit_code": 0
+          },
+          {
+            "command": "delete",
+            "exit_code": 0
+          }
+        ],
+        "recovered_from_intent": false
+      },
+      "private_scratch": "Intentionally retained because the prior tracked-status timeout fails the unchanged unsettled-tool guard. Overall cleanup remains FAIL, not simulator PASS. Hosted runner disposal is not task cleanup proof.",
+      "gradle_stops": "Main stop exited0 after42.995s (cold Gradle distribution download); cleanup stops exited0 after0.656s and0.472s.",
+      "preservation_failures": 0,
+      "signals": []
+    },
+    "pinned_receipts": [
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34523946762/run.json",
+        "bytes": 12694,
+        "sha256": "f6347507bf5c68419f1317dcdf9737f835f8b955837e6e88fbfe642038c3bbc6"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34523946762/jobs.json",
+        "bytes": 8495,
+        "sha256": "8144dc68fd1925b43b726e973a8a49055c05f700c2b1c1ededa54752e5a3666e"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34523946762/artifacts.json",
+        "bytes": 1502,
+        "sha256": "b5e50bc2a8fb0827df434f500aa4bc4b5436ef317facefd449d037f449092f39"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34523946762/download-receipt.json",
+        "bytes": 852,
+        "sha256": "3a03363e909a4ee2d46231eb84edadaa7dc4af9281695d68cfa952838f7db43a"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34523946762/main/request.json",
+        "bytes": 3877,
+        "sha256": "3bed41dfd3fdf377c25de29b3ec2450e42b18bd901d4861b61f92cd5ad2d9638"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34523946762/main/state.json",
+        "bytes": 65043,
+        "sha256": "d084d3caa4b2ff9a769deaaf12d1330df527ccf6e733f1f4635341d884171c54"
+      },
+      {
+        "path": "remediation-runs/2026-09-08-continuation/actions/34523946762/cleanup/state.json",
+        "bytes": 13774,
+        "sha256": "5fc917d06426207e058f05544dd792a2582f55da0522d44007ca1049c9d63f2a"
+      }
+    ]
+  },
+  "root_actual_tests": {
+    "scope": "Linux pure harness controls only; root executed tests, reviewer inspected raw files without project imports or execution.",
+    "command": [
+      "/usr/bin/python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "/root/projects/Parlor/parlor/remediation-runs/2026-09-08-continuation/protection-diagnostic-01",
+      "-p",
+      "test_probe.py",
+      "-v"
+    ],
+    "started_at": "2026-09-10T20:22:17.818884+00:00",
+    "finished_at": "2026-09-10T20:22:19.256574+00:00",
+    "result": {
+      "tests": 27,
+      "failures": 0,
+      "errors": 0,
+      "skips": 0,
+      "exit_code": 0
+    },
+    "binding": "Before/after15-control JSON bytes are identical, all listed working files match, and aggregate62935ee0f2cf1fde7c015fe80054b3f6839c343c690913227135f37392d40bbc recomputes.",
+    "cleanup": {
+      "errors": [],
+      "removed": [
+        "/tmp/parlor-pd02-controls-n6lfm47a"
+      ],
+      "remaining_build_roots": [],
+      "scratch_absent": true,
+      "gradle_clean_not_run": "No build or project outputs; pure27 tests and mandatory stop only.",
+      "remaining_monitored_workers": []
+    },
+    "gradle_stop_exit": 0,
+    "pinned_evidence": [
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-timeout-controls-01/receipt.json",
+        "bytes": 1389,
+        "sha256": "ce69f5929294cbeac980c309ae32e8852062b1dd7ab5820046343ee1fcfa8271"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-timeout-controls-01/tests.log",
+        "bytes": 2761,
+        "sha256": "1cb919fca37fac5bc0c70425d6f112942fefff8344c6408164994c33d31feaf5"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-timeout-controls-01/controls-before.json",
+        "bytes": 2632,
+        "sha256": "9c2529cadbcb12b66539bb6a6e86542f414de29bd2918e1d682b6fc4787f7c59"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-timeout-controls-01/controls-after.json",
+        "bytes": 2632,
+        "sha256": "9c2529cadbcb12b66539bb6a6e86542f414de29bd2918e1d682b6fc4787f7c59"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-timeout-controls-01/stop.log",
+        "bytes": 31,
+        "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+      },
+      {
+        "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-timeout-controls-01/resources.txt",
+        "bytes": 339,
+        "sha256": "09b188580a264abd688b93c2883ec9f0a9696d211675c1ec7cb8028e8c0375fb"
+      }
+    ]
+  },
+  "limits": [
+    "PD01 remains a failed pre-runtime diagnostic; this correction and27 passing control tests do not add application runtime evidence.",
+    "Historical A37 strict Complete remains0 PASS/26 FAIL. No production storage rule or strict validator was relaxed.",
+    "Before another platform run, commit reviewed changes, regenerate/commit mechanical inventory and create fresh source/tree/control bindings. No dispatch or outcome is asserted here.",
+    "Normal Debug, dependency-chain and combined qualification retain their own historical bindings; this report is not a new result for them.",
+    "Physical-device, Store-operation and separate owner/legal requirements remain independent and unexecuted."
+  ],
+  "reviewer_operations": "Read-only Git and standard-library AST/JSON/hash/text/ZIP inspection only, plus this authorized new additive report. No tests, imports, builds, signals, cleanup, network, dispatch, staging or commits executed by reviewer."
+}
