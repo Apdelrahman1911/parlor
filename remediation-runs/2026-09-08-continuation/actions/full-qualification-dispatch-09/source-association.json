@@ -1,0 +1,23 @@
+{
+  "kind": "PREPARED_NOT_DISPATCHED",
+  "recorded_at": "2026-09-11T04:11:47.811620+00:00",
+  "source_sha": "d3c0df9ccba51463708728c3c618d3652e76aafa",
+  "tree": "3169657a10279eb2bfad6c59a60a5054c6092b61",
+  "source_commit": "2c914e2340fcbee9e715bd258ff6a3ec7410196b",
+  "request_sha256": "3dd1dddcbb29067f428624b5d232aa0f83651f740b77eae380be886c3f40a62f",
+  "controls_document_sha256": "72e41f19f5cdf32eaddc03bcee8b77e822e30a492d2fc12063281c768828351f",
+  "source_freeze_receipt": "remediation-runs/2026-09-08-continuation/actions/protection-probe-09/source-freeze-receipt.json",
+  "source_freeze_receipt_sha256": "1e8ed1732d2d6f7f32cdfb562c52c81bbd7a742b8ace98e2313d0a8cb4701990",
+  "source_reviews": [
+    "reviews/protection-host-setter-driver-controls-independent-01.json",
+    "reviews/protection-host-setter-native-source-independent-01.json",
+    "reviews/d08-release-documentation-actual-independent-01.json",
+    "reviews/d08-windows-workflow-line-endings-actual-independent-01.json"
+  ],
+  "focused_controls_receipts": [
+    "remediation-runs/2026-09-07-local-readiness/evidence/continuation-d08-contract-fixes-01/receipt.json",
+    "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-host-setter-controls-01/receipt.json"
+  ],
+  "requires": "Independent admission; exact local/remote freeze, clean tracked source and no unexpected active same-ref/legacy run immediately before dispatch. Intentional independently admitted same-SHA PD09 protection overlap is isolated and permitted; no other qualification scope may be dispatched while full runs. Full ignores frozen_source_sha: actual API/job/checkout/source controls must bind this freeze. Six mandatory jobs+cleanup must pass together in attempt1; focused probe skips and PD09 cannot fill any lane.",
+  "previous_failed_full": 34553741387
+}

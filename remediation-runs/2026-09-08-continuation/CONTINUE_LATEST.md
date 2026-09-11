@@ -1,6 +1,18 @@
 # Continuation execution ledger — 2026-09-11
 
-## CURRENT — PD08 paired capture, strict0/5; D08 terminal FAIL; NOT_READY
+## CURRENT — PD09 timeout/cleanup FAIL; D09 pending; H02 next; NOT_READY
+
+`N=remediation-runs/2026-09-08-continuation`; `C=remediation-runs/2026-09-07-local-readiness`. Earlier cutoffs remain historical.
+- Delivered freeze `d3c0df9ccba51463708728c3c618d3652e76aafa`, tree `3169657a10279eb2bfad6c59a60a5054c6092b61`, source `2c914e2340fcbee9e715bd258ff6a3ec7410196b`; receipt `$N/actions/protection-probe-09/source-freeze-receipt.json`.
+- **PD09 run34561580861/1 terminal FAIL**: native40s and exact-launcher sample4s timeouts, both direct children reaped; empty native stdout/stderr, no usable stack, no host/setter execution or new strict result. Empty streams do not establish non-entry or cause.
+- PD09 **four stops0**, exact owned simulator retirement PASS, but **cleanup FAIL / scratch retained by timeout guard**, removal/absence not verified. Raw `$N/actions/34561580861/`; three independent native/custody/cleanup reviews in `$N/reviews/`. No indirect-worker/global-absence claim.
+- **D09 run34561630512/1 at d3c0df9c still running** at retained04:39:40Z: **five mandatory jobs API success**, iOS Release pending; **no actual full PASS**.
+- **H02 host-only fresh-fixture addition**: native source reviewed, driver review ongoing; actual **13 H01 tests PASS**, `$C/evidence/continuation-protection-host-origin-controls-01/`. **No H02 native execution/admission yet**; local controls are not host runtime.
+- H02 changes no shipping storage, paired probe or workflow. **A37 strict0PASS/26FAIL unchanged; technical gates closed0/2**; historical APP04/PD08 strict failures are not superseded.
+- Next: root source/inventory freeze, completed source/request review and one reviewed **H02 focused dispatch**.
+- Distinct-source H02/D09 work may overlap, never stitch: D09 can qualify only `d3c0df9c` after all six mandatory jobs plus cleanup pass together and actual evidence is accepted. Preserve prior repairs/history; physical-device, Store and owner/legal requirements remain separate.
+
+## Historical PD08 paired capture, strict0/5; D08 terminal FAIL; NOT_READY — preserved cutoff
 
 `N=remediation-runs/2026-09-08-continuation`; `C=remediation-runs/2026-09-07-local-readiness`. Earlier cutoffs remain historical.
 - **PD08 run34558762289/1 API success** at executed freeze `50a2d2d112220507faaa2a7f185d47b331423999`, tree `3076d1f51de0612b4eb46757e4d5ad4ee234fe5b`.

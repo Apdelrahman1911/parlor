@@ -19,12 +19,43 @@ def report_inputs():
             dict(owned_pid=record['process_id']), dict(runtime_version=record['runtime_version']))
 
 
+def setter_report_inputs():
+    # Borrow one already controlled synthetic sample, not a paired execution or
+    # simulator context. The host-only record below contains no simulator ID.
+    samples = probe.common.load_helper('_host_origin_test_sample', probe.SHARED / 'test_probe.py')
+    rows, original_request, _ = samples.fixture()
+    host, _, _ = samples.host_fixture(rows, original_request)
+    sample = host['samples'][2]['native']
+    sample['identity']['size'] = len(probe.SETTER_PAYLOAD)
+    for witness in sample['reads']:
+        witness.update(before=copy.deepcopy(sample['identity']), after=copy.deepcopy(sample['identity']))
+    sample['fm'].update(key_present=False, protection='missing')
+    implementation = copy.deepcopy(sample['fm']['implementation_before'])
+    implementation['selector'] = 'setAttributes:ofItemAtPath:error:'
+    main = copy.deepcopy(host['main_image_before'])
+    main['image_basename'] = probe.SETTER_IMAGE
+    selected = dict(root=dict(device=7, inode=100, uid=501), identity=copy.deepcopy(sample['identity']))
+    record = dict(schema=1, kind='host-origin-protection-setter', collection_status='PASS', binding=dict(BINDING),
+        fixture_root_device=7, fixture_root_inode=100, scope=probe.SETTER_SCOPE, target_leaf='probe.bin',
+        process_id=1235, uid=501, runtime_version=[15, 7, 9], read_only=False, simulator_fixture_observed=False,
+        production_snapshots_observed=False, historical_a37_strict_result_changed=False, protection_qualified=False,
+        main_image_before=main, main_image_after=copy.deepcopy(main), before=sample, after=copy.deepcopy(sample),
+        operation=dict(id='host-origin-fm-set', requested_protection='complete', returned=False,
+            native_error=dict(present=True, code=4, domain='cocoa'), implementation_before=implementation,
+            implementation_after=copy.deepcopy(implementation)))
+    command = dict(label='host-setter-observation', owned_pid=1235, ownership='direct-unreaped-Popen',
+        status='EXITED', exit_code=0, direct_child_reaped=True)
+    return record, dict(binding=dict(BINDING), uid=501), selected, dict(uuid=main['uuid'], image_basename=probe.SETTER_IMAGE), command, \
+        dict(runtime_version=[15, 7, 9])
+
+
 class HostProbeTests(unittest.TestCase):
     def test_controls_cli_and_selection_are_disjoint_before_native_work(self):
         manifest = probe.controls()
         self.assertEqual([row['path'] for row in manifest['files']], sorted(set(probe.CONTROL_PATHS)))
         self.assertTrue(set(probe.common.CONTROL_PATHS) <= set(probe.CONTROL_PATHS))
-        for name in ('run_host_probe.py', 'test_host_probe.py', 'README.md', 'HostImageProbe.m.in', 'image_hook.py', 'test_image_hook.py'):
+        for name in ('run_host_probe.py', 'test_host_probe.py', 'README.md', 'HostImageProbe.m.in', 'image_hook.py', 'test_image_hook.py',
+                     'HostSetterProbe.m.in'):
             self.assertIn(str(probe.HERE.relative_to(probe.ROOT) / name), probe.CONTROL_PATHS)
         self.assertEqual(probe.HostProbe.__bases__, (object,))
         self.assertFalse(hasattr(probe.HostProbe, 'create_simulator'))
@@ -205,6 +236,109 @@ class HostProbeTests(unittest.TestCase):
             lane.stop.assert_not_called()
             self.assertTrue(lane.resources.is_dir())
             self.assertFalse(lane.cleanup_dir.exists())
+
+    def test_host_origin_setter_bool_error_and_class_do_not_promote_any_qualification(self):
+        record, request, selected, built, command, host = setter_report_inputs()
+        for returned, error_present, protection in ((False, True, 'missing'), (False, False, 'none'),
+                                                   (True, True, 'missing'), (True, False, 'complete')):
+            with self.subTest(returned=returned, error=error_present, protection=protection):
+                value = copy.deepcopy(record)
+                value['operation'].update(returned=returned, native_error=dict(present=error_present,
+                    code=4 if error_present else 0, domain='cocoa' if error_present else 'none'))
+                value['after']['fm'].update(protection=protection, key_present=protection != 'missing')
+                result = probe.validate_setter_report(json.dumps(value).encode(), request, selected, built, command, host)
+                self.assertEqual((result['status'], result['scope']), (probe.SETTER_COLLECTED, probe.SETTER_SCOPE))
+                self.assertEqual(result['operation'], value['operation'])
+                self.assertEqual(result['after']['fm']['protection'], protection)
+                for key in ('simulator_fixture_observed', 'production_snapshots_observed', 'historical_a37_strict_result_changed',
+                            'protection_qualified', 'runtime_implementation_causality_proven'):
+                    self.assertIs(result[key], False)
+                self.assertNotIn('strict_synthetic_complete', result)
+                self.assertNotIn('simulator_udid', json.dumps(result))
+
+    def test_host_origin_setter_rejects_identity_context_process_and_method_drift(self):
+        record, request, selected, built, command, host = setter_report_inputs()
+        for stage in ('before', 'after'):
+            for key in ('device', 'inode', 'uid', 'mode', 'links', 'size'):
+                with self.subTest(stage=stage, key=key):
+                    value = copy.deepcopy(record)
+                    value[stage]['identity'][key] += 1
+                    for witness in value[stage]['reads']:
+                        witness.update(before=copy.deepcopy(value[stage]['identity']), after=copy.deepcopy(value[stage]['identity']))
+                    with self.assertRaises(RuntimeError):
+                        probe.validate_setter_report(json.dumps(value).encode(), request, selected, built, command, host)
+        mutations = [lambda value: value.update(target_leaf='other.bin'), lambda value: value.update(scope='PAIRED'),
+            lambda value: value.update(fixture_root_inode=101), lambda value: value.update(process_id=1236),
+            lambda value: value['binding'].update(run_token='0' * 32), lambda value: value['binding'].update(simulator_udid='invented'),
+            lambda value: value['operation'].update(returned=1), lambda value: value['operation']['native_error'].update(domain='none'),
+            lambda value: [value['operation'][key].update(selector='attributesOfItemAtPath:error:') for key in
+                ('implementation_before', 'implementation_after')],
+            lambda value: value['operation']['implementation_after']['implementation'].update(image_offset=999),
+            lambda value: [value['operation'][key]['implementation'].update(image_basename='CoreFoundation') for key in
+                ('implementation_before', 'implementation_after')],
+            lambda value: [value[key].update(platforms=[1, 6]) for key in ('main_image_before', 'main_image_after')],
+            lambda value: value.update(collection_status='FAIL')]
+        for index, mutate in enumerate(mutations):
+            with self.subTest(mutation=index):
+                value = copy.deepcopy(record)
+                mutate(value)
+                with self.assertRaises(RuntimeError):
+                    probe.validate_setter_report(json.dumps(value).encode(), request, selected, built, command, host)
+
+    def test_host_origin_setter_requires_prior_image_and_one_bounded_command_sequence(self):
+        lane = object.__new__(probe.HostProbe)
+        lane.state, lane.commands, lane.execute = {}, SimpleNamespace(rows=[]), Mock()
+        with self.assertRaisesRegex(RuntimeError, 'host-image-required-before-single-setter'):
+            lane.compile_and_run_setter(Path('/synthetic/sdk'))
+        lane.execute.assert_not_called()
+        resources, sdk = Path('/synthetic/resources'), Path('/synthetic/sdk')
+        expected = (('host-image-observation', [str(resources / probe.IMAGE)], 30),) + probe.setter_build_commands(resources, sdk) + (
+            ('host-setter-observation', [str(resources / probe.SETTER_IMAGE)], 30),)
+        commands = [dict(label=label, command=arguments, timeout_seconds=timeout, status='EXITED', exit_code=0,
+            direct_child_reaped=True, ownership='direct-unreaped-Popen') for label, arguments, timeout in expected]
+        self.assertEqual(probe.setter_command_order(commands, resources, sdk), commands[-1])
+        changed = copy.deepcopy(commands)
+        changed[-1]['timeout_seconds'] = 31
+        for rows in (commands[1:], commands[::-1], commands + [commands[-1]], changed):
+            with self.subTest(rows=rows), self.assertRaises(RuntimeError):
+                probe.setter_command_order(rows, resources, sdk)
+
+    def test_host_origin_setter_retains_failed_raw_output_and_sticky_preservation_failure(self):
+        with TemporaryDirectory() as raw:
+            lane = object.__new__(probe.HostProbe)
+            lane.evidence, lane.resources = Path(raw).resolve(), Path(raw).resolve() / 'resources'
+            lane.state, lane.save = dict(logs=[]), Mock()
+            lane.commands = probe.common.Commands({}, 100)
+            lane.capture = Mock(return_value=(dict(status='TIMEOUT', exit_code=-15, direct_child_reaped=True),
+                b'{"collection_status":"FAIL"}', b'synthetic-partial-result'))
+            with self.assertRaisesRegex(RuntimeError, 'host-origin-setter-collection-process'):
+                lane.capture_setter()
+            lane.capture.assert_called_once_with([str(lane.resources / probe.SETTER_IMAGE)], 'host-setter-observation', 30, False)
+            self.assertEqual((lane.evidence / 'host-setter.stdout.json').read_bytes(), b'{"collection_status":"FAIL"}')
+            self.assertEqual((lane.evidence / 'host-setter.stderr.txt').read_bytes(), b'synthetic-partial-result')
+            with patch.object(probe.native, 'write_new', side_effect=OSError('synthetic-preservation-failure')):
+                with self.assertRaises(OSError): lane.capture_setter()
+            self.assertEqual(lane.commands.preservation, dict(failures=1,
+                errors=[dict(operation='host-report-output', error_type='OSError')]))
+
+    def test_host_origin_fixture_is_exclusive_and_binary_sources_and_fixture_bind_retirement(self):
+        with TemporaryDirectory() as raw:
+            resources = Path(raw).resolve()
+            root = resources / 'host-fixtures'
+            root.mkdir(mode=0o700)
+            probe.native.write_new(root / 'probe.bin', probe.SETTER_PAYLOAD)
+            with self.assertRaises(FileExistsError): probe.native.write_new(root / 'probe.bin', b'cannot-overwrite')
+            for name in (*probe.SETTER_INPUTS, probe.SETTER_IMAGE):
+                probe.native.write_new(resources / name, b'synthetic-owned-input')
+            for changed in (probe.SETTER_IMAGE, 'HostSetterProbe.m', 'host-fixtures/probe.bin'):
+                inputs = [dict(name=name, **probe.common.host_file_binding(resources / name)) for name in probe.SETTER_INPUTS]
+                image = probe.common.host_file_binding(resources / probe.SETTER_IMAGE)
+                selected = dict(root=probe.common.owned_directory(root), identity=probe.setter_identity(root / 'probe.bin'))
+                prior = dict(host_setter_fixture=selected, host_setter_inputs_before_compile=inputs,
+                    host_setter_inputs_after_set=copy.deepcopy(inputs), host_setter_built_image=dict(file=image), host_setter_image_after_set=image)
+                self.assertEqual(probe.setter_retirement(resources, prior), dict(inputs=inputs, image=image, fixture=selected))
+                (resources / changed).write_bytes(b'changed-after-collection')
+                with self.subTest(changed=changed), self.assertRaises(RuntimeError): probe.setter_retirement(resources, prior)
 
 
 if __name__ == '__main__':

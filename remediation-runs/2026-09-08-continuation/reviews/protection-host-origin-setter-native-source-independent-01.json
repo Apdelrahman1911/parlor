@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/storage_boundary",
+  "author": "/root",
+  "status": "APPROVED_NATIVE_TEMPLATE_SOURCE_ONLY",
+  "source": "remediation-runs/2026-09-08-continuation/protection-host-image-01/HostSetterProbe.m.in",
+  "sha256": "be3f272644ea1284552f6622ed7aa02e035548802bfa5e78908e296e234c2b9b",
+  "findings": [],
+  "conclusion": "The 140-line additive template creates no file and permits one public NSFileManager Complete setter only on compiled-root/probe.bin. Native arm64 macOS15, argc1, absence of SIMULATOR_* environment, nonroot/euid equality, canonical owner-only root and exact full seven-field regular single-link file identity are required. File permissions0600 and size<=256 are checked. Before-sample collection must succeed and close its descriptor; actual BOOL and bounded NSError fields are stored before post-call guards. Root/file custody, sampler reads, setter IMP and main image are bracketed. Self-only alarm25 starts before autoreleasepool; compiled dictionaries are capped at4096 bytes and output at256KiB. HOST_ORIGIN_ONLY, no simulator/production observation and false historical-strict/protection-qualified flags prevent promotion. Collection PASS does not require setter success or a protection class.",
+  "driver_interface": {
+    "header": "OwnedHostSetterContext.h: HOST_SET_ROOT, HOST_SET_ROOT_DEVICE, HOST_SET_ROOT_INODE, HOST_SET_BINDING_JSON, HOST_SET_EXPECTED_JSON",
+    "binding_keys": ["run_token", "source_sha", "control_sha256", "run_id", "run_attempt"],
+    "required_integration": "The driver must enforce those exact five current-run binding keys/values, exclusively create the0700 fixture root and0600 fixed-public-data probe.bin, compile its frozen full seven-field identity, preserve source/header/binary custody and enforce one no-argument invocation with the unchanged host sampler. Native binding validation checks dictionary size/count, not those field meanings. The driver author confirmed this interface; full driver approval belongs to its separate reviewer."
+  },
+  "limits": [
+    "Canonical identity guards bracket a pathname operation; they are not an atomic filesystem lock and rely on exclusive driver-owned fixture lifecycle.",
+    "The self-alarm starts in main, not before dyld/pre-main execution; the separately owned driver timeout remains necessary.",
+    "This host-origin fixture is not the earlier simulator None inode, a production-path test, physical enforcement proof or an original strict comparison. No shipping/paired source approval or runtime qualification follows."
+  ],
+  "activity": "Read-only review of the new template and its declared driver interface; no builds, tests, network or source edits. This approval receipt is the only reviewer-authored file."
+}

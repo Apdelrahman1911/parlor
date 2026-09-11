@@ -1,0 +1,77 @@
+{
+  "kind": "FOCUSED_HOST_ORIGIN_CONTROLS_NOT_NATIVE_PROTECTION_OR_QUALIFICATION",
+  "started_at": "2026-09-11T04:44:00.133763+00:00",
+  "source_head": "d3c0df9ccba51463708728c3c618d3652e76aafa",
+  "working_tree_controls_before": {
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py": "34f2ffb667e6957adb4f57a0166e2ef2fd6b901eecb0059ef3f66d7ac13f5ea5",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/test_host_probe.py": "69547e0bce3d0d77e77cf152d7a6ddd2bf1009b5ba105929a1f024340b5fe100",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/README.md": "1e609df5ba9efb469c09dd8befc1456207e4442eb7e2161fd2d06e6371910d08",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/HostSetterProbe.m.in": "be3f272644ea1284552f6622ed7aa02e035548802bfa5e78908e296e234c2b9b"
+  },
+  "tests": [
+    {
+      "label": "host-origin",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "/root/projects/Parlor/parlor/remediation-runs/2026-09-08-continuation/protection-host-image-01",
+        "-p",
+        "test_host_probe.py",
+        "-v"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "seconds": 0.466,
+      "log_sha256": "bb670461cd17d8ec34db2ff7e5b3f1bf2532bdc9c51957a7f6315a193953935c",
+      "summary": "\n----------------------------------------------------------------------\nRan 13 tests in 0.188s\n\nOK"
+    }
+  ],
+  "cleanup": {
+    "errors": [],
+    "scratch_path": "/tmp/parlor-host-origin-controls-zcofl4l_",
+    "gradle_stop_exit": 0,
+    "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+    "scratch_removed": true,
+    "checked_live_roots": [
+      "build",
+      "build-logic/build",
+      "build-logic/convention/build",
+      "composeApp/build",
+      "iosApp/build",
+      "game-modes/mafia/build",
+      "game-modes/whodunit/build",
+      "shared/core/build",
+      "shared/design-system/build",
+      "shared/engine/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "shared/networking/build",
+      "shared/networking-testing/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/content/build",
+      ".gradle",
+      ".kotlin",
+      "build-logic/.gradle",
+      "scripts/ci/__pycache__",
+      "scripts/release/__pycache__",
+      "scripts/release/tests/__pycache__",
+      "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/__pycache__",
+      "remediation-runs/2026-09-08-continuation/protection-host-image-01/__pycache__"
+    ],
+    "checked_live_outputs_remaining": [],
+    "gradle_clean": "NOT_NEEDED_NO_BUILD_OUTPUTS"
+  },
+  "result": "PASS",
+  "working_tree_controls_after": {
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py": "34f2ffb667e6957adb4f57a0166e2ef2fd6b901eecb0059ef3f66d7ac13f5ea5",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/test_host_probe.py": "69547e0bce3d0d77e77cf152d7a6ddd2bf1009b5ba105929a1f024340b5fe100",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/README.md": "1e609df5ba9efb469c09dd8befc1456207e4442eb7e2161fd2d06e6371910d08",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/HostSetterProbe.m.in": "be3f272644ea1284552f6622ed7aa02e035548802bfa5e78908e296e234c2b9b"
+  },
+  "finished_at": "2026-09-11T04:44:01.270463+00:00"
+}

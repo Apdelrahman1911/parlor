@@ -1,0 +1,170 @@
+{
+  "schema": 1,
+  "reviewer": "/root/probe_identity",
+  "status": "VERIFIED_NATIVE_TIMEOUT_FAILURE_NO_NEW_STRICT_RESULT",
+  "run_id": 34561580861,
+  "attempt": 1,
+  "job_id": 103145232043,
+  "main_artifact_id": 10184581430,
+  "run_attempt_job_conclusion": "failure",
+  "source": "d3c0df9ccba51463708728c3c618d3652e76aafa",
+  "tree": "3169657a10279eb2bfad6c59a60a5054c6092b61",
+  "control_sha256": "7eb9d79918db8fc499be2af150989aaeb795fa3d744008b5de6299219e13c461",
+  "branch": "fix/local-readiness-2026-09-07",
+  "workflow": ".github/workflows/production-verification.yml",
+  "event": "workflow_dispatch",
+  "evidence_root": "remediation-runs/2026-09-08-continuation/actions/34561580861",
+  "hashes": {
+    "download-receipt.json": "204db7e66416c3ec26f0b1afe88e24ae6a21ad5429a9268a4e0ae258891d49ea",
+    "main.zip": "85dc4a83ad43bbd5c27e6d55d44153fca39037b8c4a66cc45a77d8c42f56667a",
+    "main/state.json": "bbcf04f9238389c4b02d9df1aa15fb0c117698aec270741e414a60f67c9c672c",
+    "main/request.json": "944ecbb0fab6429f7754662ff80a3a7543fbf389f688591eb9b52c648c0f4a90",
+    "main/native-context.json": "641b09ab9ba060dce8d516ac1c4f0ef02746a8fa874f7cd66c1607cfa2c309b5",
+    "main/OwnedProbeContext.h": "40ffc239ac2dee60f9b8769e56c45bcedca923dbdcf2501584ba3ced5a047e05",
+    "main/45-built-uuid.stdout": "c49713d31a7dcfc71a9688cc083127ff9311241734fee48018c9dd9f7d7c1544",
+    "main/native.stdout.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "main/native.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "custody": {
+    "collector": "Digest exact; all non-cleanup collector file sizes/hashes match. API run/attempt/job and main artifact source/run/digest agree.",
+    "main_zip": "91 unique members, valid CRCs, all equal extracted bytes.",
+    "retained_command_logs": "82 sizes/hashes match state.",
+    "frozen_controls": "20 sorted unique control files match frozen Git bytes; compact-JSON aggregate reconstructs control_sha256."
+  },
+  "context": {
+    "binding": "Request, claim, create plan/result, state, native context and retained header agree. Header exactly reconstructs source/control/nonce/UUID/fixture identity/path. Created UUID is absent from recorded baseline.",
+    "nonce": "1c30ebe986c24e31966355636e166fb2",
+    "owned_simulator_uuid": "09419AA4-D029-459D-B6F5-6907DBE22E6F",
+    "fixture": {
+      "device": 16777231,
+      "inode": 3538550,
+      "uid": 501
+    },
+    "resources": {
+      "device": 16777231,
+      "inode": 3538549,
+      "uid": 501
+    }
+  },
+  "binary": {
+    "evidence_level": "RECORDED_COMPILED_AND_PRELAUNCH_BOUND_IMAGE_NOT_RUNTIME_ATTESTATION",
+    "path": "/Users/runner/work/_temp/parlor-protection-probe-34561580861-1/resources/ProtectionProbe",
+    "uuid": "a678a134-efd9-4f38-9cdb-3defe3f3df15",
+    "recorded_sha256": "3679d0f2963bc08acc14838697a7a598cb481e02b396efcb5efbde7f5260e70a",
+    "device": 16777231,
+    "inode": 3541027,
+    "uid": 501,
+    "mode": 33216,
+    "links": 1,
+    "bytes": 112160,
+    "modified_ns": 1789100233164121499,
+    "changed_ns": 1789100233164190833,
+    "preparation": "Bound arm64 iOS16-simulator/O0 compile, ad-hoc signing/verification, dwarfdump, boot and bootstatus all EXITED0/reaped. Dwarfdump UUID matches state. Reviewed driver supplies prelaunch full stat/hash admission.",
+    "limits": "No retained binary bytes for independent rehash, no raw final/runtime image UUID attestation, and no post-success digest check because collection failed."
+  },
+  "source_guards": "All30 recorded Git queries EXITED0/reaped in five original six-query groups. Other queries retained20s; full status retained60s with only invocation-local core.preloadIndex=false. All24 retained Git-command outputs match source root/HEAD/branch/non-shallow/tree or empty status. Initial six have completion/count records but no retained raw streams.",
+  "postboot_git": {
+    "status": "EXITED",
+    "exit_code": 0,
+    "direct_child_reaped": true,
+    "elapsed_seconds": 42.926,
+    "bound_seconds": 60,
+    "stdout_bytes": 0,
+    "stderr_bytes": 0
+  },
+  "native_capture": {
+    "label": "native-observation",
+    "command": [
+      "/usr/bin/xcrun",
+      "simctl",
+      "spawn",
+      "09419AA4-D029-459D-B6F5-6907DBE22E6F",
+      "/Users/runner/work/_temp/parlor-protection-probe-34561580861-1/resources/ProtectionProbe"
+    ],
+    "direct_popen_launcher_pid": 5488,
+    "bound_seconds": 40,
+    "status": "TIMEOUT",
+    "observation_elapsed_seconds": 40.232,
+    "elapsed_seconds": 47.318,
+    "elapsed_includes": "sampling and retirement",
+    "timeout_observed_at": "2026-09-11T04:20:25.141248+00:00",
+    "exit_code": -15,
+    "direct_child_reaped": true,
+    "stdout_bytes": 0,
+    "stderr_bytes": 0,
+    "c_phase_markers_observed": 0
+  },
+  "timeout_sample": {
+    "label": "native-observation-owned-stack",
+    "command": [
+      "/usr/bin/sample",
+      "5488",
+      "1",
+      "10",
+      "-file",
+      "/dev/stdout"
+    ],
+    "direct_popen_sampler_pid": 5876,
+    "target": "held unreaped direct launcher PID5488, not a simulator descendant",
+    "bound_seconds": 4,
+    "status": "TIMEOUT",
+    "observation_elapsed_seconds": 4.117,
+    "elapsed_seconds": 4.415,
+    "exit_code": -15,
+    "direct_child_reaped": true,
+    "stdout_bytes": 0,
+    "stderr_bytes": 0,
+    "frames": [],
+    "usable": false,
+    "assessment": "Timeout-sampling path actually exercised without PID/ownership relaxation; no usable stack or cause evidence obtained."
+  },
+  "failure_state": {
+    "status": "FAIL",
+    "errors": [
+      {
+        "stage": "collection",
+        "type": "RuntimeError",
+        "code": "native-collection-process"
+      }
+    ],
+    "preservation": {
+      "failures": 0,
+      "errors": []
+    },
+    "signals": []
+  },
+  "missing_observations": {
+    "absent_files": [
+      "native-report.json",
+      "host.stdout.json",
+      "host.stderr.txt",
+      "host-report.json",
+      "host-bindings.json",
+      "host-setter.stdout.json",
+      "host-setter.stderr.txt",
+      "host-setter-report.json",
+      "host-setter-bindings.json"
+    ],
+    "absent_commands": [
+      "host-compile",
+      "host-observation",
+      "host-setter-*"
+    ],
+    "absent_state_keys": [
+      "collection_status",
+      "strict_synthetic_complete",
+      "host_collection_status",
+      "host_setter_collection_status"
+    ],
+    "host": "SDK prequalification ran; actual host read/setter did not.",
+    "strict_result": "No new strict result was collected. PD08 strict0/5 is not PD09 evidence; missing observations are neither strict passes nor strict failures."
+  },
+  "findings": [],
+  "limits": [
+    "Independent bounded read-only review of existing evidence/frozen bytes using stdlib JSON/hash/ZIP and read-only Git queries; receipt writing only. No project imports, tests/reruns, builds, network, dispatch, source edits or cleanup.",
+    "Empty streams and no observed C markers do not establish that main never entered.",
+    "Retirement/reaping of the direct launcher does not establish simulator descendant execution/exit or global absence.",
+    "No timeout cause established; no protection, application, full or Store promotion.",
+    "Cleanup review has a separate owner; this receipt does not attest any cleanup outcome."
+  ]
+}

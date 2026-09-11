@@ -1,0 +1,89 @@
+{
+  "schema": 1,
+  "reviewer": "/root/qualification_review",
+  "status": "APPROVED_EXACT_D09_REQUEST_FOR_ROOT_IMMEDIATE_ADMISSION_NOT_EXECUTION",
+  "recorded_at": "2026-09-11T04:16:00.896989+00:00",
+  "scope": "Bounded exact D09 packet/freeze review and existing source/control-evidence reuse; no broad source audit, lane recount or full test rerun.",
+  "packet": "actions/full-qualification-dispatch-09",
+  "packet_sha256": {
+    "request.json": "3dd1dddcbb29067f428624b5d232aa0f83651f740b77eae380be886c3f40a62f",
+    "source-association.json": "c41eea1afd4fe2ba9f7b3920f5a3913060acb42d07a701f089b2900e1edc3e3e",
+    "controls.json": "72e41f19f5cdf32eaddc03bcee8b77e822e30a492d2fc12063281c768828351f"
+  },
+  "repository": "Apdelrahman1911/parlor",
+  "workflow": ".github/workflows/production-verification.yml",
+  "ref": "fix/local-readiness-2026-09-07",
+  "inputs": {
+    "verification_scope": "full",
+    "native_selection": "paired"
+  },
+  "head": "d3c0df9ccba51463708728c3c618d3652e76aafa",
+  "tree": "3169657a10279eb2bfad6c59a60a5054c6092b61",
+  "source_commit": "2c914e2340fcbee9e715bd258ff6a3ec7410196b",
+  "tracked_clean": true,
+  "inventory_sha256": "62082ad7f9d01d5e77b414eaad3dc3c7dbdd8a367283d17c34ee4d5cc4e453c7",
+  "control_sha256": "a5b5615e56d0b64e914611c3d7713b654ec771221b4308f8738d75655ba76169",
+  "binding": "Exact full+paired two-input request and association hashes match. All13 unique named controls match current bytes and frozen Git blobs; canonical sorted-key compact JSON file-list digest matches. This is explicitly a named subset, NOT an exhaustive import closure; the frozen tree binds all source.",
+  "freeze_evidence": {
+    "receipt_sha256": "1e8ed1732d2d6f7f32cdfb562c52c81bbd7a742b8ace98e2313d0a8cb4701990",
+    "log_sha256": "57d2623948cf114df70d66533d6f57bbca74e96b0c3e1186e96b72228679cee2",
+    "verified": "Reopened matching post-commit root receipt/log: exact source parent and inventory-only child/tree, clean tracked status,32670 fresh inventory rows, remote equality and stop0; all recorded commands exit0. Commit/push predate this receipt; current Git ancestry/remote observation establish the frozen binding, not independent reviewer network observation. Inventory freshness is not source review."
+  },
+  "review_sha256": {
+    "protection-host-setter-driver-controls-independent-01.json": "94cf710fc6a58a37b1b422505f9b8696d5a5907fdae37a8204f8ef4929b8c1df",
+    "protection-host-setter-native-source-independent-01.json": "90660171077a1ddbaf16075579fe4a8a4bb132aca001ff26ff47098e89123007",
+    "d08-release-documentation-source-independent-01.json": "305aee7fa26f529927ba6696bcfed1fcbbb2fb09311432a0b2d297e22cddd9aa",
+    "d08-release-documentation-actual-independent-01.json": "92943a63738d44f7e80b13de43cb5a450e0fefccfe7c79b77d22101127560756",
+    "d08-windows-workflow-line-endings-independent-01.json": "1d920bea03a0d2039989689fa572a130919d06062591a8bb89021146fcba173e",
+    "d08-windows-workflow-line-endings-actual-independent-01.json": "c3abc4fc29c57eaf8f824591941194f47c6e89ab588e9513e48303ca066a0e0d",
+    "protection-probe-pd08-request-admission-independent-01.json": "7fadc9ac8c145fd19b570f7fc5e2069b61f6c0bbc1f305ef021b266e8f13cd3d"
+  },
+  "source_reuse": "Both setter approvals match all four current/frozen source pins, including separate native template approval. From approved50a2 base, only four diagnostic files change outside retained evidence/ledger/inventory: one additive HostSet template and reviewed driver/tests/README. Full workflow and all seven job bodies remain byte-identical to D08. Existing source lineage and D08 test-fix approvals are reused by exact pin; no shipping storage, required job, aggregate, strict oracle or cleanup gate change.",
+  "focused_controls": {
+    "setter_receipt_sha256": "9271d37a2cdf0d6d8c9bf50565658822a647d862216f6830f645b7eac49069b9",
+    "setter_verified": "Actual stored paired49+targeted H01 closure1=50PASS: exact ok rows, unittest OK, exits0 and log hashes match; all4 before/after/current pins match. Stop log hash/exit0, errors[]/remaining[],25 listed roots and recorded scratch directly observed absent. Synthetic controls only; new native setter NOT_RUN.",
+    "d08_fix_receipt_sha256": "7341f27f4aa3b473a1d7b2e3ac853c1bf76508983e998418d662ad76c93c0ac1",
+    "d08_fix_reuse": "Reviewed documentation1PASS at811fb971 and independently reviewed Kotlin class12PASS at9008fec6; retained receipt/all5 command-log hashes and all11 before/after/current pins reconfirmed. Actual Windows-host efficacy is still for the new full lane; these local passes do not repair D08."
+  },
+  "historical_limit": "D08 remains failure at59a38444: four successful lanes/two failed lanes, complete12-artifact custody and separately accepted6/6cleanup. PD08 remains strict0/5 despite collection/cleanup; additive setter results must preserve original read-only/strict observations. None supplies D09 evidence.",
+  "concurrency": "D09 full uses production-verification-qualification-refs/heads/fix/local-readiness-2026-09-07. Only explicit ios-protection-probe uses protection counterpart. Intentional independently admitted same-SHA PD09 may overlap on separate hosted jobs; its admission and custody remain separate. Other focused/qualification scopes share D09 group and must not be dispatched during D09. Both groups retain cancellation; account for legacy groups.",
+  "required_jobs": {
+    "desktop-android": "Common, desktop, and Android release",
+    "desktop-linux-arm64": "Desktop strict verification (Linux arm64)",
+    "desktop-macos-x64": "Desktop and Kotlin Native strict verification (macOS x64)",
+    "desktop-windows-x64": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+    "ios": "iOS simulator runtime and Swift host",
+    "ios-release": "iOS release frameworks and Swift wrapper"
+  },
+  "required_skipped_jobs": {
+    "ios-protection-probe": "iOS strict protection diagnostic"
+  },
+  "expected_artifacts": [
+    "desktop-android-verification",
+    "desktop-verification-desktop-linux-arm64",
+    "desktop-verification-desktop-macos-x64",
+    "desktop-verification-desktop-windows-x64",
+    "ios-runtime-verification",
+    "ios-release-verification",
+    "verification-cleanup-desktop-android",
+    "verification-cleanup-desktop-linux-arm64",
+    "verification-cleanup-desktop-macos-x64",
+    "verification-cleanup-desktop-windows-x64",
+    "verification-cleanup-ios",
+    "verification-cleanup-ios-release"
+  ],
+  "final_acceptance": "One fresh attempt1 workflow_dispatch at this SHA: all six mandatory full jobs, current required tasks and own cleanup succeed together; seventh probe skipped. Complete run/attempt/seven-job API identities, actual clean checkout/source attestations,12 unique expected unexpired artifact IDs/sizes/digests and retained bounded ZIPs must reconcile. Own run-1-job ownership/stop/cleanup receipts bind source/tree/task and main-upload ID/digest. ios owns aggregate+ui; ios-release owns aggregate+wrapper. Lane reviewers establish actual current execution/package evidence; final reviewer reconciles those bound conclusions rather than counting cached/tracked XML or substituting old lanes. Collector success, compile/link, upload or cleanup alone is not full/runtime PASS.",
+  "collector03_sha256": "53d6a05f4a2c591f25e3bda2104b0c15e39cd472d6519d24e6fd1aff5234f7a8",
+  "conditions": [
+    "Root immediately confirms exact local/remote/ref/request/source/tree equality, clean tracked source and unchanged packet/control/inventory/review pins; preserve inherited untracked evidence/locks.",
+    "Root checks active same-ref and legacy runs. Only explicitly admitted same-SHA PD09 overlap is permitted; no other qualification scope may overlap. Reviewer has not made a live network/concurrency observation.",
+    "Root alone dispatches this exact packet once and preserves request/POST/API association for attempt1. Full ignores frozen_source_sha; bind actual API/job/checkout source rather than relying on an unused input.",
+    "Any source/request/contract correction requires fresh freeze/admission; no blind retry. PD09 completion/PASS is not required for D09 admission and never fills a D09 lane. Preserve failures and immutable collector bounds; no cross-run/SHA/attempt stitching."
+  ],
+  "run": null,
+  "eligible_for_root_immediate_admission": true,
+  "live_dispatch_checks": "ROOT_PENDING",
+  "findings": [],
+  "limits": "Source/request admission only. New full qualification and native setter execution remain NOT_RUN; strict protection, application readiness, physical devices and Store/signing/publication are not inferred.",
+  "activity": "Local Git/text/stdlib JSON/hash inspection and this additive untracked review only; no project imports, tests/builds/validators/network/dispatch/cancel/source edits/Git writes or child agents. No reviewer execution cleanup owed."
+}
