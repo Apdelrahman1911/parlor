@@ -14,7 +14,10 @@ network operation, player state, or production snapshot access. Ad-hoc signing
 only permits the owned simulator executable to run.
 
 Three fixed public-data files exercise atomic **Complete**, **None** and default
-requests. A directory requests Complete too. Each sample opens a read-only,
+requests; an appended fourth contrasts **Complete without Atomic**. A directory
+requests Complete too. The original14 event positions are unchanged; the
+non-atomic write/sample and a current-directory sample append three events.
+Each sample opens a read-only,
 no-follow descriptor and brackets each read with path/FD device, inode, type,
 UID, links and size equality. The five readers are FileManager, fresh NSURL
 (protection only for regular files), public `F_GETPROTECTIONCLASS`, public
@@ -29,6 +32,33 @@ the installed public headers define both that command and `PROTECTION_CLASS_A`;
 otherwise it records an explicit unavailability, never invented class `1`.
 A fresh NSURL then requests Complete on that same negative-control inode.
 Neither setter is used to fix or waive an original observation.
+
+Before cleanup, one additional standalone **macOS** reader observes the exact
+still-owned final directory and four file inodes, in this fixed order:
+
+| Simulator witness | Owned relative path |
+| --- | --- |
+| `directory-final` | `created` |
+| `complete-after-replace` | `created/complete.bin` |
+| `none-after-url-set` | `created/none.bin` |
+| `default-baseline` | `created/default.bin` |
+| `nonatomic-complete-baseline` | `created/nonatomic-complete.bin` |
+
+All seven stat fields must match, including the **final** directory size. No
+stale pre-write directory witness or replaced-away Complete inode is reused.
+The host takes no path arguments: validated simulator identities and the owned
+root are compiled into its context. Canonical root/parent/target custody brackets
+every sample; the sampler still brackets every API read with descriptor/path
+equality. Host reads never write/set protection or read file contents.
+
+The simulator sampler remains byte-identical, SHA256
+`3f4f49af81d396a07beabeed45be649314495fd286327baa931aa5eb2dcca137`.
+`host_sampler.py` creates a separately pinned host-only copy. H01's actual
+Foundation/CoreFoundation method images had ordered platforms `[1,6]`; only
+that platform predicate changes, retaining every other image guard. The pure
+application sample validator admits that pair only for FileManager/Foundation
+and NSURL/CoreFoundation method roles. Host main must remain `[1]`, and every
+simulator image must remain `[7]`. This is not a general multi-platform bypass.
 
 Actual receiver classes/selectors and resolved method IMPs are bracketed before
 and after each Foundation operation. `dladdr` plus the loaded Mach-O UUID,
@@ -48,7 +78,8 @@ python3 -B -m unittest discover -s remediation-runs/2026-09-08-continuation/prot
 
 The first is read-only; the second executes pure synthetic control tests, not
 native operations. Root owns this Linux cycle and its immediate Gradle stop.
-All six owned files, imported helper transitives, the workflow, wrapper and
+All packet controls (including host template/transform/tests and the pure
+application receipt validator), imported helper transitives, workflow, wrapper and
 shipping write source are hashed by `controls`. Commit reviewed changes, then
 the mechanical inventory, before generating the approved digest for the freeze.
 
@@ -70,15 +101,29 @@ declared explicitly in the reviewed workflow. Output directories are:
 ## Results and retirement
 
 `CAPTURED_SYNTHETIC_METADATA_NOT_APP_QUALIFICATION` means collection completed.
-The **separate** four-comparison `strict_synthetic_complete` result remains FAIL
-if any required original FileManager value is missing or not Complete. A zero
+The **separate** five-comparison `strict_synthetic_complete` retains the original
+four required sample IDs unchanged, adding only `nonatomic-complete-baseline`.
+It remains FAIL if any required FileManager value is missing or not Complete. A zero
 exit for collection **does not** pass that strict result, historical A37's26
 checks, Parlor functional storage, native app provenance or readiness. Unsupported
 APIs, missing returned bits, native errno and failed setters remain explicit
 observations, not successful class evidence. Inspect before another native run.
 
+`host-report.json` separately records same-inode simulator/host Foundation values
+and raw syscall/filesystem observations. Its
+`CAPTURED_SAME_INODE_HOST_METADATA_NOT_PROTECTION_PASS` cannot replace the
+simulator's strict result, prove implementation causality, or promote A37.
+Both raw stdout/stderr streams are saved before exit/schema checks. Retained
+generated headers, fixed identity map, source-copy hash/stat witnesses and a
+compact host-sampler diff bind the extra build. Source inputs and the host
+binary are re-attested after the owned host child is reaped; `assert-result`
+revalidates both raw reports and their source/context/image/identity bindings.
+
 The run budget is480s plus90s bounded finalization; cleanup is300s plus a final
-bounded stop reserve. A native self-alarm bounds the executable to25s. Existing
+bounded stop reserve. Each native self-alarm bounds its executable to25s; the
+host child has a30s driver bound. Simulator and host are one bounded native
+observation/build cycle, followed immediately by the existing Gradle stop.
+No app rebuild or new workflow is involved. Existing
 `native_process_probe.Commands` retains/reaps only owned Popen handles; existing
 `owned_ci_simulator` journal semantics authorize only the newly created exact
 simulator. The small create wrapper merely chooses the explicit runtime/type

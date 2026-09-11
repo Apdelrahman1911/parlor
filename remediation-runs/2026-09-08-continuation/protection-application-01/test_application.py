@@ -9,7 +9,8 @@ from types import SimpleNamespace
 import unittest
 
 import application_receipts as receipts
-from application_probe import ApplicationLane, HOST_SDK_MACRO_NAMES, parse_host_sdk_macros
+from application_probe import (ApplicationLane, HOST_SDK_MACRO_NAMES, inspect_host_sampler_copy,
+                               parse_host_sdk_macros, write_host_sampler_copy)
 
 
 TOKEN = 'application-control-fixture'
@@ -168,6 +169,51 @@ class HostSdkMacroTests(unittest.TestCase):
             self.assertFalse((destination / 'host-reader-sdk-bindings.json').exists())
 
 
+class ApplicationHostCopyTests(unittest.TestCase):
+    def test_host_compile_copy_does_not_overwrite_simulator_sampler(self):
+        shared = Path(__file__).resolve().parent.parent / 'protection-diagnostic-01'
+        original = (shared / 'ProtectionSampler.m').read_bytes()
+        header = (shared / 'ProtectionSampler.h').read_bytes()
+        with tempfile.TemporaryDirectory(prefix='parlor-host-copy-test-') as directory:
+            destination = Path(directory).resolve() / 'host-only'
+            binding = write_host_sampler_copy(shared, destination)
+            copied = (destination / 'ProtectionSampler.m').read_bytes()
+            self.assertEqual((shared / 'ProtectionSampler.m').read_bytes(), original)
+            self.assertEqual((destination / 'ProtectionSampler.h').read_bytes(), header)
+            self.assertNotEqual(copied, original)
+            self.assertIn(b'PLATFORM_MACCATALYST', copied)
+            self.assertEqual({key: binding[key] for key in ('original_sampler_sha256', 'host_sampler_sha256', 'header_sha256')},
+                dict(original_sampler_sha256=hashlib.sha256(original).hexdigest(),
+                host_sampler_sha256=hashlib.sha256(copied).hexdigest(), header_sha256=hashlib.sha256(header).hexdigest()))
+            self.assertTrue(inspect_host_sampler_copy(destination, binding)['unchanged'])
+            with self.assertRaises(FileExistsError):
+                write_host_sampler_copy(shared, destination)
+
+    def test_final_host_copy_detects_bytes_replacement_and_symlinks(self):
+        shared = Path(__file__).resolve().parent.parent / 'protection-diagnostic-01'
+        for name in ('ProtectionSampler.m', 'ProtectionSampler.h'):
+            for mutation in ('bytes', 'replacement', 'symlink'):
+                with self.subTest(name=name, mutation=mutation), tempfile.TemporaryDirectory(prefix='parlor-host-copy-test-') as directory:
+                    work = Path(directory).resolve()
+                    destination = work / 'host-only'
+                    binding = write_host_sampler_copy(shared, destination)
+                    path = destination / name
+                    if mutation == 'bytes':
+                        path.write_bytes(path.read_bytes() + b'\n')
+                    elif mutation == 'replacement':
+                        replacement = work / 'replacement'
+                        replacement.write_bytes(path.read_bytes())
+                        replacement.replace(path)
+                    else:
+                        path.unlink()
+                        path.symlink_to(shared / name)
+                    if mutation == 'symlink':
+                        with self.assertRaises(RuntimeError):
+                            inspect_host_sampler_copy(destination, binding)
+                    else:
+                        self.assertFalse(inspect_host_sampler_copy(destination, binding)['unchanged'])
+
+
 class ApplicationReceiptTests(unittest.TestCase):
     def test_missing_is_collection_not_protection_pass(self):
         result = receipts.validate_application(*application(), **BINDINGS)
@@ -259,6 +305,47 @@ class ApplicationReceiptTests(unittest.TestCase):
         self.assertTrue(all(row['same_inode'] for row in result['comparisons']))
         self.assertFalse(result['same_ios_process'])
         self.assertFalse(result['runtime_implementation_causality_proven'])
+
+    def test_host_dual_platform_getters_do_not_reclassify_strict_failure(self):
+        final, samples = application()
+        value = host(final)
+        for sampled in value['samples']:
+            for kind, name in (('fm', 'Foundation'), ('url', 'CoreFoundation')):
+                for boundary in ('implementation_before', 'implementation_after'):
+                    sampled['native'][kind][boundary]['implementation'].update(platforms=[1, 6], image_basename=name)
+        result = receipts.validate_host(value, final, samples)
+        self.assertFalse(result['runtime_implementation_causality_proven'])
+        self.assertFalse(result['l08_requirements_waived'])
+        self.assertEqual(receipts.validate_application(final, samples, **BINDINGS)['strict_passed'], 0)
+
+    def test_dual_platform_is_not_admitted_for_main_simulator_or_wrong_getter(self):
+        for target in ('main', 'simulator', 'wrong-getter'):
+            with self.subTest(target=target):
+                final, samples = application()
+                value = host(final)
+                if target == 'main':
+                    value['reader_image']['platforms'] = [1, 6]
+                    value['reader_image_after']['platforms'] = [1, 6]
+                else:
+                    sampled = samples[0]['native'] if target == 'simulator' else value['samples'][0]['native']
+                    for boundary in ('implementation_before', 'implementation_after'):
+                        sampled['url'][boundary]['implementation'].update(platforms=[1, 6],
+                            image_basename='CoreFoundation' if target == 'simulator' else 'Foundation')
+                with self.assertRaises(RuntimeError):
+                    if target == 'simulator':
+                        receipts.validate_application(final, samples, **BINDINGS)
+                    else:
+                        receipts.validate_host(value, final, samples)
+
+    def test_host_method_platform_lists_are_exact_and_integer_typed(self):
+        for platforms in ([], [6], [7], [6, 1], [1, 7], [1, 1], [1, 6, 6], [1, 6, 7],
+                          [True], [1.0], [1, True], [1, 6.0]):
+            with self.subTest(platforms=platforms):
+                value = native('file', 21, 1)
+                for boundary in ('implementation_before', 'implementation_after'):
+                    value['fm'][boundary]['implementation']['platforms'] = platforms
+                with self.assertRaises(RuntimeError):
+                    receipts.validate_native(value, 'file', platform=1)
 
     def test_host_changed_inode_platform_uid_or_executable_fails(self):
         for mutation in ('inode', 'platform', 'uid', 'image'):

@@ -25,6 +25,8 @@ NORMAL_SHA = '766087ddf72b50f51b1c4072c64afb1a7dd231f047d26e534817cddf9be295bf'
 SHARED = HERE.parent / 'protection-diagnostic-01'
 sys.path.insert(0, str(HERE))
 from application_receipts import COLLECTED, metadata_only, require, validate_application, validate_host
+sys.path.insert(0, str(SHARED))
+from host_sampler import transform as transform_host_sampler
 
 require(NORMAL.resolve() == NORMAL and hashlib.sha256(NORMAL.read_bytes()).hexdigest() == NORMAL_SHA, 'base-drift')
 _spec = importlib.util.spec_from_file_location('_protection_application_private_normal_lane', NORMAL)
@@ -68,7 +70,7 @@ def parse_host_sdk_macros(raw):
 def control_manifest(binding=None):
     rows = _base_manifest(binding)
     extra = [path for path in HERE.iterdir() if path.is_file() and path.suffix in {'.py', '.in', '.md'}]
-    extra += [SHARED / name for name in ('ProtectionSampler.h', 'ProtectionSampler.m')]
+    extra += [SHARED / name for name in ('ProtectionSampler.h', 'ProtectionSampler.m', 'host_sampler.py', 'test_host_sampler.py')]
     extra += [ROOT / path for path in ('.github/workflows/production-verification.yml', 'scripts/ci/native_continuation.py')]
     for path in extra:
         require(path.resolve() == path and path.is_file() and not path.is_symlink(), 'control-path')
@@ -82,6 +84,46 @@ def control_hash(binding=None):
 
 
 normal.control_manifest, normal.control_hash = control_manifest, control_hash
+
+
+def host_sampler_files(include):
+    files = {}
+    keys = ('st_dev', 'st_ino', 'st_mode', 'st_uid', 'st_nlink', 'st_size', 'st_mtime_ns', 'st_ctime_ns')
+    for name in ('ProtectionSampler.m', 'ProtectionSampler.h'):
+        path = include / name
+        before = path.lstat()
+        require(path.resolve(strict=True) == path and stat.S_ISREG(before.st_mode) and
+                before.st_uid == os.getuid() and before.st_nlink == 1 and 0 < before.st_size <= 32768,
+                'host-copy-file')
+        identity = {key: getattr(before, key) for key in keys}
+        sha256 = normal.digest(path)
+        after = path.lstat()
+        require(not path.is_symlink() and all(getattr(after, key) == value for key, value in identity.items()),
+                'host-copy-file-race')
+        files[name] = dict(identity, sha256=sha256)
+    return files
+
+
+def inspect_host_sampler_copy(include, expected):
+    files = host_sampler_files(include)
+    return dict(unchanged=files == expected['files'], files=files)
+
+
+def write_host_sampler_copy(simulator_include, host_include):
+    """Create a fresh host-only copy without overwriting any simulator source."""
+    original = (simulator_include / 'ProtectionSampler.m').read_bytes()
+    transformed = transform_host_sampler(original)
+    header = (simulator_include / 'ProtectionSampler.h').read_bytes()
+    require(header == (SHARED / 'ProtectionSampler.h').read_bytes(), 'host-copy-header')
+    host_include.mkdir(mode=0o700)
+    for name, content in (('ProtectionSampler.m', transformed), ('ProtectionSampler.h', header)):
+        with (host_include / name).open('xb') as output:
+            output.write(content)
+    files = host_sampler_files(host_include)
+    require(files['ProtectionSampler.m']['sha256'] == hashlib.sha256(transformed).hexdigest() and
+            files['ProtectionSampler.h']['sha256'] == hashlib.sha256(header).hexdigest(), 'host-copy-written-bytes')
+    return dict(original_sampler_sha256=hashlib.sha256(original).hexdigest(),
+        host_sampler_sha256=hashlib.sha256(transformed).hexdigest(), header_sha256=hashlib.sha256(header).hexdigest(), files=files)
 
 
 def once(text, old, new):
@@ -306,7 +348,8 @@ class ApplicationLane(normal.Lane):
         source.write_text(render((HERE / 'ProtectionApplicationRead.m.in').read_text(), dict(TOKEN=self.token, DEVICE=self.uuid,
             CONTROLS=self.approved, SOURCE=self.receipt['source_before']['source_manifest_sha256'])))
         helper = self.temporary / 'protection-application-read'
-        include = self.temporary / 'copy/iosApp/iosApp'
+        include = self.temporary / 'host-protection-sampler'
+        self.receipt['host_sampler_copy'] = write_host_sampler_copy(self.temporary / 'copy/iosApp/iosApp', include)
         self.require(['xcrun', '--sdk', 'macosx', '--show-sdk-version'], 'host-reader-sdk-version.log')
         self.preserve_host_sdk(source, include)
         self.require(['xcrun', '--sdk', 'macosx', 'clang', '-x', 'objective-c', '-std=gnu11', '-fobjc-arc',
@@ -367,6 +410,19 @@ class ApplicationLane(normal.Lane):
             sampler_sha256=normal.digest(include / 'ProtectionSampler.m')))
         output.unlink()  # Exact owned duplicate; lossless compressed bytes retained.
 
+    def verify_copy(self):
+        # The inherited finalizer invokes this after all owned workers stop.
+        super().verify_copy()
+        if 'host_sampler_copy' not in self.receipt:
+            return
+        result = dict(unchanged=False, files={})
+        try:
+            result = inspect_host_sampler_copy(self.temporary / 'host-protection-sampler', self.receipt['host_sampler_copy'])
+        finally:
+            normal.write_json(self.destination / 'host-sampler-inputs-after-workers-stop.json', result)
+            self.receipt['host_sampler_unchanged'] = result['unchanged']
+        require(result['unchanged'], 'host-copy-changed')
+
     def finalize(self):
         if self.receipt.get('diagnostic_status') in ('RUNNING', 'APP_CAPTURED'):
             self.receipt['diagnostic_status'] = 'FAIL'
@@ -374,6 +430,7 @@ class ApplicationLane(normal.Lane):
         r = self.receipt
         complete = (r.get('diagnostic_status') == COLLECTED and r['cleanup_status'] == 'PASS' and not r.get('error') and
             r['source_unchanged'] and r['controls_unchanged'] and r.get('copied_sources_unchanged') is True and
+            r.get('host_sampler_unchanged') is True and
             not r['original_outputs_preserved'] and all(r[key] == 'NOT_RUN' for key in
                 ('runtime_evidence_status', 'provenance_status', 'notice_package_status')))
         r['status'] = COLLECTED if complete else 'FAIL'

@@ -48,11 +48,16 @@ def identity(value):
     return value
 
 
-def image(value, platform):
+def image(value, platform, *, host_method=None):
+    require(type(platform) is int and platform in (1, 7) and
+            (host_method is None or platform == 1 and host_method in ('fm', 'url')), 'loaded-image-role')
     require(isinstance(value, dict) and set(value) == {'image_basename', 'uuid', 'platforms', 'cputype', 'cpusubtype', 'image_offset', 'dylib'} and
             isinstance(value['image_basename'], str) and bool(value['image_basename']) and
             isinstance(value['uuid'], str) and re.fullmatch(r'[a-f0-9]{8}(?:-[a-f0-9]{4}){3}-[a-f0-9]{12}', value['uuid']) and
-            value['platforms'] == [platform] and type(value['platforms'][0]) is int and value['cputype'] == 0x100000c and
+            type(value['platforms']) is list and all(type(item) is int for item in value['platforms']) and
+            (value['platforms'] == [platform] or platform == 1 and host_method in ('fm', 'url') and
+                value['image_basename'] == ('Foundation' if host_method == 'fm' else 'CoreFoundation') and
+                value['platforms'] == [1, 6]) and value['cputype'] == 0x100000c and
             type(value['cpusubtype']) is int and type(value['image_offset']) is int and 0 <= value['image_offset'] < 2**40,
             'loaded-image')
     dylib = value['dylib']
@@ -83,7 +88,9 @@ def validate_native(value, target, platform=7):
         require(isinstance(impl, dict) and set(impl) == {'receiver_class', 'selector', 'implementation'} and
                 isinstance(impl['receiver_class'], str) and bool(impl['receiver_class']) and impl['selector'] ==
                 ('attributesOfItemAtPath:error:' if kind == 'fm' else 'resourceValuesForKeys:error:'), 'foundation-implementation')
-        image(impl['implementation'], platform)
+        # H01 observed only these native-host getter roles as macOS/Catalyst
+        # images. The reader main and every simulator image stay singleton.
+        image(impl['implementation'], platform, host_method=kind if platform == 1 else None)
         error = row['native_error']
         require(set(error) == {'present', 'code', 'domain'} and type(error['present']) is bool and type(error['code']) is int and
                 error['domain'] in ('none', 'cocoa', 'posix', 'other') and

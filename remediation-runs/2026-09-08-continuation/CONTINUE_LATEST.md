@@ -1,6 +1,28 @@
 # Continuation execution ledger — 2026-09-10
 
-## CURRENT — 19df7e9a APP04 app capture, host reader FAIL; NOT_READY
+## CURRENT — H01 host-image predicate captured at a85fbae0; NOT_READY
+
+`N=remediation-runs/2026-09-08-continuation`. Older failures remain bound to their original runs.
+- Frozen source `a85fbae014b993a821cccb2938ed7b4403d67d70`, tree `ecaa97cf0a521cdd931cfae2cba0340fe750fe09`;
+  implementation `85de11ba78336b3c363f9ed4f485e818a7584efa`. Fresh24-control/request/freeze packet:
+  `$N/actions/protection-host-image-01/`, digest `3ecdc00cb56c16fc432b6196f0c799c433a4a104cca90fac6efb1e1f61c38df4`.
+- **H01 run34546624383/1 PASS for host-only capture**: macOS15.7.9/24G830 arm64, Xcode26.3/17C529, SDK26.2;
+  actual helper compile/sign/verify/execution exited0. Main image `[1]` satisfies the unchanged original guard.
+  Foundation and CoreFoundation images report `[1,6]`; **only `single_platform` is false** on both.
+  UUID, complete load-command bytes, address ordering and executable containment predicates all pass.
+  `[1,6]` is a legitimate macOS+MacCatalyst system-image pair, not proof Parlor is a Catalyst application.
+  Independent actual review: `$N/reviews/protection-host-image-h01-actual-independent-01.json`.
+  Raw `$N/actions/34546624383/main/{host-image.stdout.json,host-image-summary.json,state.json}`.
+- Cleanup **PASS**: three Gradle stops0, exact owned helper/copied sources/scratch removed, scratch absent/no errors;
+  `$N/actions/34546624383/cleanup/state.json`. No simulator or application build was allocated.
+- H01 invokes no storage/protection getters and reads no production snapshots; no application, normal-binary,
+  strict-protection or combined qualification follows. Its fresh image observations do not expose APP04's missing fields.
+- Host-only parser/receipt corrections are currently edited, **not committed, tested or runtime-verified** at this cutoff.
+  Require independent review, affected controls, source/inventory commits and fresh bindings before new execution.
+- **Requested technical gates closed:0/2**. A37 strict **0PASS/26FAIL**, APP04 strict **0PASS/6FAIL** remain;
+  final six-job combined qualification remains NOT_RUN. Physical-device, Store-operation and owner/legal gates remain.
+
+## Historical19df7e9a APP04 app capture, host reader FAIL — preserved cutoff
 
 `C=remediation-runs/2026-09-07-local-readiness`; `N=remediation-runs/2026-09-08-continuation`. This cutoff supersedes older status, not failures.
 - Committed freeze `19df7e9af0c112d5137c2c6cbb65f22ad7439f72`, tree `41f7e61c13618b44558bf9af2e1ebc57a128232d`.

@@ -1,0 +1,103 @@
+// Read-only macOS observation of exactly five still-owned synthetic inodes.
+// No app access, argument-supplied paths, mutation, or protection qualification.
+#import "ProtectionSampler.h"
+#import <TargetConditionals.h>
+#include <limits.h>
+#include <mach-o/loader.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include "OwnedProbeContext.h"
+#include "OwnedHostReadContext.h"
+
+#if !TARGET_OS_OSX || TARGET_OS_SIMULATOR || TARGET_OS_MACCATALYST || !defined(__arm64__)
+#error This entry point requires native arm64 macOS, never a simulator.
+#endif
+
+static void demand(BOOL value, NSString *reason) {
+    if (!value) @throw [NSException exceptionWithName:@"ProtectionBoundary" reason:reason userInfo:nil];
+}
+
+static NSDictionary *namedIdentity(NSString *path) {
+    char canonical[PATH_MAX];
+    struct stat value;
+    demand(path.isAbsolutePath && [path isEqual:path.stringByStandardizingPath] &&
+        realpath(path.fileSystemRepresentation, canonical) &&
+        [path isEqual:[NSString stringWithUTF8String:canonical]] &&
+        lstat(path.fileSystemRepresentation, &value) == 0 && value.st_uid == getuid() &&
+        (uint64_t)value.st_dev == PROBE_ROOT_DEVICE &&
+        (S_ISDIR(value.st_mode) || S_ISREG(value.st_mode) && value.st_nlink == 1) &&
+        value.st_size >= 0 && value.st_size <= 16 * 1024 * 1024, @"owned-canonical-entry");
+    return @{@"device": @((uint64_t)value.st_dev), @"inode": @((uint64_t)value.st_ino),
+        @"uid": @(value.st_uid), @"mode": @(value.st_mode), @"links": @(value.st_nlink),
+        @"size": @(value.st_size), @"type": S_ISDIR(value.st_mode) ? @"directory" : @"regular"};
+}
+
+static void attestRoot(void) {
+    NSDictionary *root = namedIdentity(PROBE_ROOT);
+    demand(getuid() > 0 && getuid() == geteuid() && [root[@"type"] isEqual:@"directory"] &&
+        ([root[@"mode"] unsignedIntValue] & 0777) == 0700 &&
+        [root[@"inode"] unsignedLongLongValue] == PROBE_ROOT_INODE, @"owned-root-custody");
+}
+
+static NSString *attestTarget(NSString *leaf, NSDictionary *expected, NSDictionary *parent) {
+    attestRoot();
+    demand([@[@"created", @"created/complete.bin", @"created/none.bin", @"created/default.bin",
+        @"created/nonatomic-complete.bin"] containsObject:leaf], @"closed-fixture-name");
+    NSString *directory = [PROBE_ROOT stringByAppendingPathComponent:@"created"];
+    demand([parent[@"type"] isEqual:@"directory"] && ([parent[@"mode"] unsignedIntValue] & 0777) == 0700 &&
+        [namedIdentity(directory) isEqual:parent], @"owned-final-directory-custody");
+    NSString *path = [PROBE_ROOT stringByAppendingPathComponent:leaf];
+    demand([namedIdentity(path) isEqual:expected], @"expected-simulator-full-identity");
+    return path;
+}
+
+int main(int argc, const char *argv[]) {
+    (void)argv;
+    @autoreleasepool {
+        signal(SIGALRM, SIG_DFL);
+        alarm(25); // Self-only bound; the driver owns/reaps this direct child.
+        NSMutableDictionary *receipt = [@{@"schema": @1, @"kind": @"synthetic-protection-host-reader",
+            @"collection_status": @"FAIL", @"process_id": @(getpid()), @"uid": @(getuid()),
+            @"read_only": @YES, @"same_simulator_process": @NO, @"production_snapshots_observed": @NO,
+            @"historical_a37_strict_result_changed": @NO, @"samples": [NSMutableArray array],
+            @"context": @{@"source_sha": PROBE_SOURCE, @"control_sha256": PROBE_CONTROL,
+                @"nonce": PROBE_NONCE, @"simulator_udid": PROBE_UDID,
+                @"fixture_root_device": @(PROBE_ROOT_DEVICE), @"fixture_root_inode": @(PROBE_ROOT_INODE)}} mutableCopy];
+        @try {
+            demand(argc == 1 && getenv("SIMULATOR_UDID") == NULL, @"host-only-invocation");
+            attestRoot();
+            NSOperatingSystemVersion version = NSProcessInfo.processInfo.operatingSystemVersion;
+            demand(version.majorVersion == 15, @"host-runtime-major");
+            receipt[@"runtime_version"] = @[@(version.majorVersion), @(version.minorVersion), @(version.patchVersion)];
+            receipt[@"main_image_before"] = ParlorProtectionImageIdentity((const void *)&main);
+            demand([receipt[@"main_image_before"][@"platforms"] isEqual:@[@(PLATFORM_MACOS)]], @"host-main-platform");
+            NSArray *expected = [NSJSONSerialization JSONObjectWithData:[HOST_EXPECTED_JSON dataUsingEncoding:NSUTF8StringEncoding]
+                options:0 error:NULL];
+            demand([expected isKindOfClass:NSArray.class] && expected.count == 5, @"compiled-identity-count");
+            NSArray *ids = @[@"directory-final", @"complete-after-replace", @"none-after-url-set",
+                @"default-baseline", @"nonatomic-complete-baseline"];
+            NSArray *leaves = @[@"created", @"created/complete.bin", @"created/none.bin", @"created/default.bin",
+                @"created/nonatomic-complete.bin"];
+            for (NSUInteger i = 0; i < leaves.count; i++) {
+                NSString *path = attestTarget(leaves[i], expected[i], expected[0]);
+                NSDictionary *sample = ParlorProtectionSample(path);
+                [receipt[@"samples"] addObject:@{@"id": ids[i], @"native": sample}];
+                attestTarget(leaves[i], expected[i], expected[0]);
+                demand([sample[@"collection_status"] isEqual:@"PASS"] && [sample[@"descriptor_closed"] isEqual:@YES] &&
+                    [sample[@"identity"] isEqual:expected[i]], @"host-same-inode-collection");
+            }
+            receipt[@"main_image_after"] = ParlorProtectionImageIdentity((const void *)&main);
+            demand([receipt[@"main_image_before"] isEqual:receipt[@"main_image_after"]], @"host-main-image-changed");
+            receipt[@"collection_status"] = @"PASS";
+        } @catch (NSException *exception) {
+            receipt[@"failure"] = [exception.name isEqual:@"ProtectionBoundary"] ? exception.reason : @"native-exception";
+        }
+        NSData *data = [NSJSONSerialization dataWithJSONObject:receipt options:NSJSONWritingSortedKeys error:NULL];
+        if (!data || data.length > 256 * 1024 || fwrite(data.bytes, 1, data.length, stdout) != data.length ||
+            fputc('\n', stdout) == EOF || fflush(stdout) != 0) return 2;
+        return [receipt[@"collection_status"] isEqual:@"PASS"] ? 0 : 1;
+    }
+}

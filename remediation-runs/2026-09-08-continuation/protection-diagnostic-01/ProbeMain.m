@@ -44,7 +44,8 @@ static void attestRoot(void) {
 
 static NSString *ownedPath(NSString *leaf, BOOL absent) {
     attestRoot();
-    demand([@[@"created", @"created/complete.bin", @"created/none.bin", @"created/default.bin"] containsObject:leaf],
+    demand([@[@"created", @"created/complete.bin", @"created/none.bin", @"created/default.bin",
+        @"created/nonatomic-complete.bin"] containsObject:leaf],
            @"closed-fixture-name");
     if (![leaf isEqual:@"created"]) {
         struct stat parent;
@@ -154,8 +155,14 @@ static NSDictionary *collect(void) {
         @"requested_protection": @"complete", @"implementation_before": before, @"implementation_after": after});
     demand([before isEqual:after], @"setter-implementation-changed");
     demand([negative isEqual:sample(@"none-after-url-set", @"created/none.bin")[@"identity"]], @"url-set-named-inode-changed");
+    // Additive contrast, not a replacement for any original strict comparison.
+    writeFile(@"nonatomic-complete-write", @"created/nonatomic-complete.bin", NSDataWritingFileProtectionComplete, NO);
+    sample(@"nonatomic-complete-baseline", @"created/nonatomic-complete.bin");
+    // The host needs the current directory's full stat, not its pre-write size.
+    sample(@"directory-final", @"created");
     unsigned pass = 0;
-    NSArray *required = @[@"directory-baseline", @"complete-baseline", @"complete-after-replace", @"none-after-url-set"];
+    NSArray *required = @[@"directory-baseline", @"complete-baseline", @"complete-after-replace", @"none-after-url-set",
+        @"nonatomic-complete-baseline"];
     for (NSString *identifier in required) {
         NSDictionary *fm = samples[identifier][@"fm"];
         if ([fm[@"dictionary_present"] boolValue] && [fm[@"key_present"] boolValue] &&

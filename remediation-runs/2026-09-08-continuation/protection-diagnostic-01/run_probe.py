@@ -6,6 +6,8 @@ journal-owned simulator utilities retain their original ownership rules.
 """
 from __future__ import annotations
 
+import difflib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -32,15 +34,35 @@ DEVICE = "com.apple.CoreSimulator.SimDeviceType.iPhone-17-Pro"
 READS = ("fm", "url", "fcntl", "attrlist", "filesystem")
 EVENTS = ("directory-create", "directory-baseline", "complete-write", "complete-baseline",
           "none-write", "none-baseline", "default-write", "default-baseline", "complete-replace",
-          "complete-after-replace", "none-kernel-set", "none-after-kernel-set", "none-url-set", "none-after-url-set")
-STRICT = ("directory-baseline", "complete-baseline", "complete-after-replace", "none-after-url-set")
+          "complete-after-replace", "none-kernel-set", "none-after-kernel-set", "none-url-set", "none-after-url-set",
+          "nonatomic-complete-write", "nonatomic-complete-baseline", "directory-final")
+STRICT = ("directory-baseline", "complete-baseline", "complete-after-replace", "none-after-url-set", "nonatomic-complete-baseline")
+HOST_TARGETS = (("directory-final", "created"), ("complete-after-replace", "created/complete.bin"),
+    ("none-after-url-set", "created/none.bin"), ("default-baseline", "created/default.bin"),
+    ("nonatomic-complete-baseline", "created/nonatomic-complete.bin"))
+HOST_IMAGE = "ProtectionHostRead"
+HOST_COLLECTED = "CAPTURED_SAME_INODE_HOST_METADATA_NOT_PROTECTION_PASS"
 CONTROL_PATHS = tuple(HERE + "/" + name for name in
-    ("run_probe.py", "ProtectionSampler.h", "ProtectionSampler.m", "ProbeMain.m", "test_probe.py", "README.md")) + (
+    ("run_probe.py", "ProtectionSampler.h", "ProtectionSampler.m", "ProbeMain.m", "HostRead.m.in",
+     "host_sampler.py", "test_host_sampler.py", "test_probe.py", "README.md")) + (
+    "remediation-runs/2026-09-08-continuation/protection-application-01/application_receipts.py",
     ".github/workflows/production-verification.yml", "scripts/ci/native_process_probe.py",
     "scripts/ci/native_continuation.py", "scripts/ci/owned_ci_simulator.py", "scripts/ci/verification_hygiene.py",
     "composeApp/src/iosMain/kotlin/com/parlor/app/storage/IosSnapshotFileSystem.kt",
     "gradlew", "gradle/wrapper/gradle-wrapper.jar", "gradle/wrapper/gradle-wrapper.properties")
 require = native.require
+
+
+def load_helper(name, path):
+    # The separate H01 driver imports this file by path from a sibling packet.
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+host_sampler = load_helper("protection_host_sampler", ROOT / HERE / "host_sampler.py")
+receipts = load_helper("protection_application_receipts", ROOT / HERE / "../protection-application-01/application_receipts.py")
 
 
 def failure(error):
@@ -123,6 +145,86 @@ def error_record(value):
         "native-error-shape")
 
 
+def context_header(fixtures, context):
+    macros = dict(PROBE_ROOT=str(fixtures), PROBE_SOURCE=context["source_sha"], PROBE_CONTROL=context["control_sha256"],
+        PROBE_UDID=context["simulator_udid"], PROBE_NONCE=context["nonce"])
+    header = "".join("#define " + key + " @" + json.dumps(value) + "\n" for key, value in macros.items())
+    return (header + "#define PROBE_ROOT_DEVICE {}ULL\n#define PROBE_ROOT_INODE {}ULL\n".format(
+        context["fixture_root_device"], context["fixture_root_inode"])).encode()
+
+
+def host_targets(report):
+    samples = {row["id"]: row["sample"] for row in report["events"] if row.get("kind") == "sample"}
+    return [dict(id=name, leaf=leaf, identity=samples[name]["identity"]) for name, leaf in HOST_TARGETS]
+
+
+def host_sources(report, header):
+    expected = json.dumps([row["identity"] for row in host_targets(report)], separators=(",", ":"), sort_keys=True)
+    return {"OwnedProbeContext.h": header,
+        "OwnedHostReadContext.h": ("#define HOST_EXPECTED_JSON @" + json.dumps(expected) + "\n").encode(),
+        "ProtectionSampler.h": native.file_bytes(ROOT / HERE / "ProtectionSampler.h"),
+        "HostProtectionSampler.m": host_sampler.transform(native.file_bytes(ROOT / HERE / "ProtectionSampler.m")),
+        "HostRead.m": native.file_bytes(ROOT / HERE / "HostRead.m.in")}
+
+
+def host_file_binding(path):
+    identity = lambda value: dict(device=value.st_dev, inode=value.st_ino, uid=value.st_uid, mode=value.st_mode,
+        links=value.st_nlink, bytes=value.st_size, modified_ns=value.st_mtime_ns, changed_ns=value.st_ctime_ns)
+    before = identity(path.lstat())
+    raw = native.file_bytes(path, maximum=16 * 1024 * 1024)
+    require(identity(path.lstat()) == before and len(raw) == before["bytes"], "host-input-custody-changed")
+    return dict(**before, sha256=native.sha(raw))
+
+
+def validate_host_report(raw, request, report, binary_uuid, command, runtime):
+    require(command.get("label") == "host-observation" and command.get("status") == "EXITED" and
+        command.get("exit_code") == 0 and command.get("direct_child_reaped") is True and
+        command.get("ownership") == "direct-unreaped-Popen" and
+        not command.get("child_cleanup_error_type") and type(command.get("owned_pid")) is int and
+        0 < command["owned_pid"] < 2**31, "owned-host-collection-process")
+    require(isinstance(raw, bytes) and 0 < len(raw) <= 256 * 1024, "host-output-bounds")
+    value = native.decode(raw)
+    receipts.metadata_only(value)
+    require(isinstance(value, dict) and set(value) == {"schema", "kind", "collection_status", "context", "process_id", "uid",
+        "runtime_version", "read_only", "same_simulator_process", "production_snapshots_observed",
+        "historical_a37_strict_result_changed", "main_image_before", "main_image_after", "samples"}, "host-record-shape")
+    require(type(value["schema"]) is int and value["schema"] == 1 and value["kind"] == "synthetic-protection-host-reader" and
+        value["collection_status"] == "PASS" and value["context"] == request["native_context"] and
+        value["read_only"] is True and all(value[key] is False for key in
+            ("same_simulator_process", "production_snapshots_observed", "historical_a37_strict_result_changed")), "host-context-scope")
+    require(type(value["process_id"]) is int and value["process_id"] == command["owned_pid"] and
+        type(value["uid"]) is int and value["uid"] == request["fixtures"]["uid"] > 0 and
+        type(runtime) is list and len(runtime) == 3 and runtime[0] == 15 and
+        all(type(v) is int and 0 <= v < 1000 for v in runtime) and value["runtime_version"] == runtime and
+        all(type(v) is int for v in value["runtime_version"]), "host-process-runtime")
+    receipts.image(value["main_image_before"], 1)
+    require(value["main_image_before"] == value["main_image_after"] and
+        value["main_image_before"]["uuid"] == binary_uuid and value["main_image_before"]["image_basename"] == HOST_IMAGE,
+        "host-built-image-binding")
+    require(type(value["samples"]) is list and len(value["samples"]) == len(HOST_TARGETS), "host-sample-count")
+    simulator_samples = {row["id"]: row["sample"] for row in report["events"] if row.get("kind") == "sample"}
+    comparisons, implementations = [], {}
+    for row, (name, leaf) in zip(value["samples"], HOST_TARGETS):
+        require(isinstance(row, dict) and set(row) == {"id", "native"} and row["id"] == name, "host-event-path-map")
+        target = "directory" if leaf == "created" else "file"
+        identity = receipts.validate_native(row["native"], target, platform=1)
+        original = simulator_samples[name]
+        require(identity == original["identity"], "host-simulator-full-identity")
+        for kind in ("fm", "url"):
+            method = row["native"][kind]["implementation_before"]
+            key = (method["receiver_class"], method["selector"])
+            require(key not in implementations or implementations[key] == method, "host-method-changed-between-samples")
+            implementations[key] = method
+        comparisons.append(dict(id=name, target=target, same_inode=True, identity=identity,
+            simulator_fm=original["fm"]["protection"], host_fm=row["native"]["fm"]["protection"],
+            simulator_url=original["url"]["protection"], host_url=row["native"]["url"]["protection"],
+            **{prefix + "_" + kind: sample[kind] for prefix, sample in (("simulator", original), ("host", row["native"]))
+               for kind in ("fcntl", "attrlist", "filesystem")}))
+    return dict(collection_status=HOST_COLLECTED, comparisons=comparisons, same_simulator_process=False,
+        strict_synthetic_complete=report["strict_synthetic_complete"], historical_a37_strict_result_changed=False,
+        runtime_implementation_causality_proven=False, production_snapshots_observed=False)
+
+
 def validate_report(raw, request, binary_uuid):
     require(isinstance(raw, bytes) and 0 < len(raw) <= 1024 * 1024, "native-output-bounds")
     rows = [native.decode(line) for line in raw.splitlines()]
@@ -148,7 +250,7 @@ def validate_report(raw, request, binary_uuid):
                 identity["device"] == request["fixtures"]["device"] and identity["uid"] == request["fixtures"]["uid"] and
                 identity["inode"] > 0 and identity["links"] >= 1 and identity["size"] <= 16 * 1024 * 1024,
                 "sample-inode-shape-or-volume")
-            is_directory = row["id"] == "directory-baseline"
+            is_directory = row["id"] in {"directory-baseline", "directory-final"}
             require(identity["type"] == ("directory" if is_directory else "regular") and
                 (stat.S_ISDIR(identity["mode"]) if is_directory else stat.S_ISREG(identity["mode"]) and identity["links"] == 1),
                 "sample-file-type")
@@ -239,9 +341,14 @@ def validate_report(raw, request, binary_uuid):
     for identifier, flag in (("complete-write", "complete"), ("complete-replace", "complete"), ("none-write", "none"), ("default-write", None)):
         require(operations[identifier]["requested_options"] == options["atomic"] | (options[flag] if flag else 0) and
             operations[identifier].get("observer_descriptor_held_across_write") is False, "exact-atomic-write-request")
-    for name in ("complete", "none", "default"):
+    require(operations["nonatomic-complete-write"]["requested_options"] == options["complete"] and
+        operations["nonatomic-complete-write"].get("observer_descriptor_held_across_write") is False, "exact-nonatomic-complete-request")
+    for name in ("complete", "none", "default", "nonatomic-complete"):
         require(samples[name + "-baseline"]["identity"]["size"] == operations[name + "-write"]["payload_bytes"], "baseline-size")
     require(len({samples[name + "-baseline"]["identity"]["inode"] for name in ("complete", "none", "default")}) == 3, "distinct-control-files")
+    require(len({samples[name]["identity"]["inode"] for name, _ in HOST_TARGETS[1:]}) == 4, "distinct-current-control-files")
+    require(all(samples["directory-baseline"]["identity"][key] == samples["directory-final"]["identity"][key]
+        for key in ("device", "inode", "uid", "mode", "type")), "final-directory-custody")
     original, replaced = samples["complete-baseline"]["identity"], samples["complete-after-replace"]["identity"]
     require(replaced["size"] == operations["complete-replace"]["payload_bytes"] != original["size"] and
         final["replacement"] == dict(before=original, after=replaced, observer_descriptor_held=False,
@@ -342,7 +449,10 @@ class Probe:
         self.save()
 
     def platform_binding(self):
-        require(self.execute(["/usr/bin/sw_vers", "-productVersion"], "macos-version").decode().startswith("15."), "qualified-macos15")
+        macos = self.execute(["/usr/bin/sw_vers", "-productVersion"], "macos-version").decode().strip()
+        require(re.fullmatch(r"15\.[0-9]{1,3}(?:\.[0-9]{1,3})?", macos), "qualified-macos15")
+        macos_runtime = [int(part) for part in macos.split(".")]
+        macos_runtime += [0] * (3 - len(macos_runtime))
         self.execute(["/usr/bin/sw_vers", "-buildVersion"], "macos-build")
         self.execute(["/usr/bin/uname", "-r"], "host-kernel")
         require(self.execute(["/usr/bin/xcodebuild", "-version"], "xcode-version").decode() == "Xcode 26.3\nBuild version 17C529\n", "qualified-xcode")
@@ -354,7 +464,8 @@ class Probe:
         selected = [row for row in runtimes if row.get("identifier") == RUNTIME]
         require(len(selected) == 1 and selected[0].get("isAvailable") is True and selected[0].get("version") == "26.2" and
             selected[0].get("buildversion") == "23C54", "actual-qualified-runtime")
-        self.state["platform"] = dict(xcode="26.3", build="17C529", sdk="26.2", sdk_path=str(sdk), runtime=selected[0], architecture="arm64")
+        self.state["platform"] = dict(xcode="26.3", build="17C529", sdk="26.2", sdk_path=str(sdk), runtime=selected[0],
+            architecture="arm64", macos_version=macos, macos_runtime_version=macos_runtime)
         headers = []
         for relative in ("usr/include/sys/fcntl.h", "usr/include/sys/attr.h", "usr/include/sys/mount.h",
             "System/Library/Frameworks/Foundation.framework/Headers/NSData.h",
@@ -403,12 +514,9 @@ class Probe:
             simulator_udid=identity, fixture_root_device=self.request["fixtures"]["device"], fixture_root_inode=self.request["fixtures"]["inode"])
         self.request["native_context"] = native_context
         native.write_new(self.evidence / "native-context.json", native.json_bytes(native_context))
-        macros = dict(PROBE_ROOT=str(self.resources / "fixtures"), PROBE_SOURCE=self.source["source_sha"], PROBE_CONTROL=self.approved,
-            PROBE_UDID=identity, PROBE_NONCE=self.request["claim"]["nonce"])
-        header = "".join("#define " + key + " @" + json.dumps(value) + "\n" for key, value in macros.items())
-        header += "#define PROBE_ROOT_DEVICE {}ULL\n#define PROBE_ROOT_INODE {}ULL\n".format(
-            native_context["fixture_root_device"], native_context["fixture_root_inode"])
-        native.write_new(self.resources / "OwnedProbeContext.h", header.encode())
+        header = context_header(self.resources / "fixtures", native_context)
+        native.write_new(self.resources / "OwnedProbeContext.h", header)
+        native.write_new(self.evidence / "OwnedProbeContext.h", header)
         for name in ("ProtectionSampler.h", "ProtectionSampler.m", "ProbeMain.m"):
             native.write_new(self.resources / name, native.file_bytes(ROOT / HERE / name))
         compiler = ["/usr/bin/xcrun", "--sdk", "iphonesimulator", "clang", "-target", "arm64-apple-ios16.0-simulator", "-isysroot", str(sdk)]
@@ -417,10 +525,10 @@ class Probe:
         # copied private XNU constants or a guess about available class values.
         raw = self.execute(compiler + ["-dM", "-E", "-x", "objective-c", "-I", str(self.resources), str(self.resources / "ProbeMain.m")],
                            "sdk-macros", 60, False)
-        names = {"F_GETPROTECTIONCLASS", "F_SETPROTECTIONCLASS", "PROTECTION_CLASS_A", "ATTR_CMN_RETURNED_ATTRS",
-                 "ATTR_CMN_DATA_PROTECT_FLAGS", "MNT_CPROTECT", "TARGET_OS_SIMULATOR", "TARGET_OS_IOS", "__arm64__"}
-        macros_found = [line for line in raw.decode().splitlines() if len(line.split()) >= 2 and line.split()[1] in names]
-        native.write_new(self.evidence / "public-sdk-macros.txt", ("\n".join(macros_found) + "\n").encode())
+        names = {b"F_GETPROTECTIONCLASS", b"F_SETPROTECTIONCLASS", b"PROTECTION_CLASS_A", b"ATTR_CMN_RETURNED_ATTRS",
+                 b"ATTR_CMN_DATA_PROTECT_FLAGS", b"MNT_CPROTECT", b"TARGET_OS_SIMULATOR", b"TARGET_OS_IOS", b"__arm64__"}
+        macros_found = [line for line in raw.splitlines() if len(line.split()) >= 2 and line.split()[1] in names]
+        native.write_new(self.evidence / "public-sdk-macros.txt", b"\n".join(macros_found) + b"\n")
         image = self.resources / "ProtectionProbe"
         self.execute(compiler + ["-fobjc-arc", "-fblocks", "-fno-modules", "-O0", "-Wall", "-Wextra", "-I", str(self.resources),
             str(self.resources / "ProbeMain.m"), str(self.resources / "ProtectionSampler.m"), "-framework", "Foundation", "-o", str(image)], "compile", 90)
@@ -446,6 +554,74 @@ class Probe:
         native.write_new(self.evidence / "native-report.json", native.json_bytes(report))
         self.state["collection_status"] = report["collection_status"]
         self.state["strict_synthetic_complete"] = report["strict_synthetic_complete"]
+        self.compile_and_read_host(report)
+
+    def capture_host(self):
+        row, out, err = self.commands.capture([str(self.resources / HOST_IMAGE)], "host-observation", 30)
+        # Preserve even a nonzero, timeout, malformed or empty result before any
+        # exit/schema check, just as for the preceding simulator observation.
+        try:
+            native.write_new(self.evidence / "host.stdout.json", out)
+            native.write_new(self.evidence / "host.stderr.txt", err)
+        except BaseException as error:
+            self.commands.preservation_error("host-raw-output", error)
+            raise
+        require(row["status"] == "EXITED" and row.get("exit_code") == 0 and row.get("direct_child_reaped"), "host-collection-process")
+        return row, out
+
+    def compile_and_read_host(self, report):
+        require(owned_directory(self.resources) == self.request["resources"] and
+            owned_directory(self.resources / "fixtures") == self.request["fixtures"], "host-scratch-custody")
+        require(self.execute(["/usr/bin/xcrun", "--sdk", "macosx", "--show-sdk-version"], "host-sdk-version").strip() == b"26.2", "qualified-host-sdk")
+        sdk = Path(self.execute(["/usr/bin/xcrun", "--sdk", "macosx", "--show-sdk-path"], "host-sdk-path").decode().strip()).resolve(strict=True)
+        require(Path(DEVELOPER + "/Platforms/MacOSX.platform") in sdk.parents, "host-sdk-outside-qualified-xcode")
+        self.state["host_platform"] = dict(sdk="26.2", sdk_path=str(sdk), target="arm64-apple-macosx15.0")
+        header = context_header(self.resources / "fixtures", self.request["native_context"])
+        sources = host_sources(report, header)
+        for name, raw in sources.items():
+            path = self.resources / name
+            if name in {"OwnedProbeContext.h", "ProtectionSampler.h"}:
+                require(native.file_bytes(path) == raw, "host-existing-include-changed")
+            else:
+                native.write_new(path, raw)
+        original = native.file_bytes(ROOT / HERE / "ProtectionSampler.m")
+        require(native.file_bytes(self.resources / "ProtectionSampler.m") == original, "original-simulator-sampler-changed")
+        native.write_new(self.evidence / "OwnedHostReadContext.h", sources["OwnedHostReadContext.h"])
+        diff = b"".join(difflib.diff_bytes(difflib.unified_diff, original.splitlines(keepends=True),
+            sources["HostProtectionSampler.m"].splitlines(keepends=True), fromfile=b"ProtectionSampler.m", tofile=b"HostProtectionSampler.m"))
+        native.write_new(self.evidence / "host-sampler.diff", diff)
+        inputs = lambda: [dict(name=name, **host_file_binding(self.resources / name)) for name in sorted(sources)]
+        before = inputs()
+        require(all(row["sha256"] == native.sha(sources[row["name"]]) for row in before), "host-copied-input-hash")
+        self.state["host_inputs_before_compile"] = before
+        native.write_new(self.evidence / "host-bindings.json", native.json_bytes(dict(targets=host_targets(report),
+            original_sampler_sha256=native.sha(original), inputs=before)))
+        self.save()
+        image = self.resources / HOST_IMAGE
+        compiler = ["/usr/bin/xcrun", "--sdk", "macosx", "clang", "-target", "arm64-apple-macosx15.0", "-isysroot", str(sdk)]
+        self.execute(compiler + ["-fobjc-arc", "-fblocks", "-fno-modules", "-O0", "-Wall", "-Wextra", "-I", str(self.resources),
+            str(self.resources / "HostRead.m"), str(self.resources / "HostProtectionSampler.m"), "-framework", "Foundation", "-o", str(image)],
+            "host-compile", 90)
+        self.execute(["/usr/bin/codesign", "--force", "--sign", "-", "--timestamp=none", str(image)], "host-adhoc-sign", 30)
+        self.execute(["/usr/bin/codesign", "--verify", "--strict", str(image)], "host-adhoc-verify", 30)
+        raw = self.execute(["/usr/bin/xcrun", "dwarfdump", "--uuid", str(image)], "host-built-uuid")
+        match = re.fullmatch(rb"UUID: ([0-9A-Fa-f-]{36}) \(arm64\) " + re.escape(str(image).encode()) + rb"\n", raw)
+        require(match is not None, "host-built-arm64-uuid")
+        binary_uuid = simulator.checked_uuid(match.group(1).decode()).lower()
+        self.state["host_built_image"] = dict(uuid=binary_uuid, file=host_file_binding(image), scope="standalone-host-not-ios-or-Parlor")
+        require(inputs() == before, "host-compiler-inputs-changed")
+        try:
+            row, out = self.capture_host()
+        finally:
+            self.state["host_inputs_after_read"] = inputs()
+            self.state["host_image_after_read"] = host_file_binding(image)
+            self.save()
+            require(self.state["host_inputs_after_read"] == before and
+                self.state["host_image_after_read"] == self.state["host_built_image"]["file"] and
+                native.file_bytes(self.resources / "ProtectionSampler.m") == original, "host-read-input-or-image-mutated")
+        comparison = validate_host_report(out, self.request, report, binary_uuid, row, self.state["platform"]["macos_runtime_version"])
+        native.write_new(self.evidence / "host-report.json", native.json_bytes(comparison))
+        self.state["host_collection_status"] = comparison["collection_status"]
 
     def stop(self):
         # Never run clean/configuration/build tasks: this lane made no project
@@ -572,9 +748,37 @@ class Probe:
             cleanup.get("evidence_upload") == main_upload and not prior.get("errors") and not cleanup.get("errors") and
             not prior["preservation"]["failures"] and not cleanup["preservation"]["failures"], "captured-and-cleaned-receipts-required")
         self.request["native_context"] = native.decode(native.file_bytes(self.evidence / "native-context.json"))
+        require(self.request["native_context"] == dict(source_sha=self.source["source_sha"], control_sha256=self.approved,
+            nonce=self.request["claim"]["nonce"], simulator_udid=prior["owned_uuid"],
+            fixture_root_device=self.request["fixtures"]["device"], fixture_root_inode=self.request["fixtures"]["inode"]),
+            "persisted-native-context-binding")
         report = validate_report(native.file_bytes(self.evidence / "native.stdout.jsonl"), self.request, prior["built_image"]["uuid"])
         require(report == native.decode(native.file_bytes(self.evidence / "native-report.json")), "collected-report-changed")
+        header = context_header(self.resources / "fixtures", self.request["native_context"])
+        sources = host_sources(report, header)
+        require(native.file_bytes(self.evidence / "OwnedProbeContext.h") == header and
+            native.file_bytes(self.evidence / "OwnedHostReadContext.h") == sources["OwnedHostReadContext.h"], "retained-host-context-binding")
+        inputs = prior["host_inputs_before_compile"]
+        require(inputs == prior["host_inputs_after_read"] and len(inputs) == len(sources) and
+            native.decode(native.file_bytes(self.evidence / "host-bindings.json")) == dict(targets=host_targets(report),
+                original_sampler_sha256=host_sampler.SAMPLER_SHA256, inputs=inputs), "retained-host-source-bindings")
+        for row, name in zip(inputs, sorted(sources)):
+            require(row["name"] == name and row["sha256"] == native.sha(sources[name]) and row["bytes"] == len(sources[name]) and
+                row["device"] == self.request["resources"]["device"] and row["uid"] == self.request["resources"]["uid"] and
+                type(row["inode"]) is int and row["inode"] > 0 and stat.S_ISREG(row["mode"]) and row["links"] == 1,
+                "retained-host-input-identity")
+        require(prior["host_image_after_read"] == prior["host_built_image"]["file"] and
+            native.HEX64.fullmatch(prior["host_built_image"]["file"]["sha256"]), "retained-host-image-binding")
+        host_commands = [row for row in prior["commands"] if row.get("label") == "host-observation"]
+        require(len(host_commands) == 1 and host_commands[0]["command"] == [str(self.resources / HOST_IMAGE)] and
+            host_commands[0]["timeout_seconds"] == 30, "exact-owned-host-command")
+        comparison = validate_host_report(native.file_bytes(self.evidence / "host.stdout.json"), self.request, report,
+            prior["host_built_image"]["uuid"], host_commands[0], prior["platform"]["macos_runtime_version"])
+        require(comparison == native.decode(native.file_bytes(self.evidence / "host-report.json")) and
+            prior["host_collection_status"] == comparison["collection_status"] and
+            prior["strict_synthetic_complete"] == comparison["strict_synthetic_complete"], "collected-host-report-changed")
         print(json.dumps(dict(collection=report["collection_status"], strict_synthetic_complete=report["strict_synthetic_complete"],
+            host_comparison=comparison["collection_status"],
             cleanup="PASS", production_and_historical_a37_qualification="NOT_ESTABLISHED", evidence_upload=main_upload,
             cleanup_upload=cleanup_upload), sort_keys=True))
         return 0

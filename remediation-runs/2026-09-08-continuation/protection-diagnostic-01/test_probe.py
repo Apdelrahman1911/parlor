@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest import mock
 
 PATH = Path(__file__).with_name("run_probe.py")
 SPEC = importlib.util.spec_from_file_location("protection_probe_under_test", PATH)
@@ -24,7 +25,7 @@ def fixture():
         fixture_root_device=7, fixture_root_inode=8))
     samples, rows = {}, []
     for name in probe.EVENTS:
-        if name in {"directory-create", "complete-write", "none-write", "default-write", "complete-replace", "none-url-set"}:
+        if name in {"directory-create", "complete-write", "none-write", "default-write", "complete-replace", "none-url-set", "nonatomic-complete-write"}:
             selector = "createDirectoryAtPath:withIntermediateDirectories:attributes:error:" if name == "directory-create" else (
                 "setResourceValue:forKey:error:" if name == "none-url-set" else "writeToFile:options:error:")
             row = dict(kind="operation", id=name, returned=True, native_error=copy.deepcopy(no_error),
@@ -33,15 +34,18 @@ def fixture():
                 row["requested_protection"] = "complete"
             else:
                 row.update(requested_options={"complete-write": 0x20000001, "none-write": 0x10000001,
-                    "default-write": 1, "complete-replace": 0x20000001}[name], payload_bytes=48 if name == "complete-replace" else 43,
+                    "default-write": 1, "complete-replace": 0x20000001, "nonatomic-complete-write": 0x20000000}[name],
+                    payload_bytes=48 if name == "complete-replace" else 43,
                     observer_descriptor_held_across_write=False)
         elif name == "none-kernel-set":
             row = dict(kind="operation", id=name, sdk_available=False, status="PUBLIC_SDK_COMMAND_OR_CLASS_UNAVAILABLE")
         else:
-            directory = name == "directory-baseline"
-            inode = 9 if directory else 10 if name == "complete-baseline" else 13 if name == "complete-after-replace" else 12 if name == "default-baseline" else 11
+            directory = name in {"directory-baseline", "directory-final"}
+            # Reuse of the replaced-away original inode is legitimate; current
+            # four-file distinctness must select complete-after-replace instead.
+            inode = 9 if directory else 10 if name in {"complete-baseline", "nonatomic-complete-baseline"} else 13 if name == "complete-after-replace" else 12 if name == "default-baseline" else 11
             identity = dict(device=7, inode=inode, uid=501, mode=0o40700 if directory else 0o100600,
-                links=2 if directory else 1, size=64 if directory else 48 if name == "complete-after-replace" else 43,
+                links=2 if directory else 1, size=128 if name == "directory-final" else 64 if directory else 48 if name == "complete-after-replace" else 43,
                 type="directory" if directory else "regular")
             fm = dict(dictionary_present=True, key_present=False, protection="missing", native_error=copy.deepcopy(no_error),
                 implementation_before=implementation("attributesOfItemAtPath:error:"), implementation_after=implementation("attributesOfItemAtPath:error:"))
@@ -63,7 +67,7 @@ def fixture():
         production_snapshots_observed=False, historical_a37_strict_result_changed=False, runtime_version=[26, 2, 0],
         context=copy.deepcopy(request["native_context"]), main_image_before=copy.deepcopy(image), main_image_after=copy.deepcopy(image),
         sdk_options=dict(atomic=1, complete=0x20000000, none=0x10000000),
-        strict_synthetic_complete=dict(required_sample_ids=list(probe.STRICT), **{"pass": 0, "fail": 4}, status="FAIL"),
+        strict_synthetic_complete=dict(required_sample_ids=list(probe.STRICT), **{"pass": 0, "fail": 5}, status="FAIL"),
         replacement=dict(before=copy.deepcopy(samples["complete-baseline"]["identity"]),
             after=copy.deepcopy(samples["complete-after-replace"]["identity"]), observer_descriptor_held=False, named_inode_changed=True)))
     return rows, request, image_uuid
@@ -71,6 +75,26 @@ def fixture():
 
 def validate(rows, request, image_uuid):
     return probe.validate_report(("\n".join(json.dumps(row) for row in rows) + "\n").encode(), request, image_uuid)
+
+
+def host_fixture(rows, request):
+    main = copy.deepcopy(rows[-1]["main_image_before"])
+    main.update(image_basename=probe.HOST_IMAGE, platforms=[1], uuid="22222222-2222-2222-2222-222222222222")
+    samples = {row["id"]: row["sample"] for row in rows if row.get("kind") == "sample"}
+    result = dict(schema=1, kind="synthetic-protection-host-reader", collection_status="PASS", context=copy.deepcopy(request["native_context"]),
+        process_id=1234, uid=501, runtime_version=[15, 7, 9], read_only=True, same_simulator_process=False,
+        production_snapshots_observed=False, historical_a37_strict_result_changed=False,
+        main_image_before=main, main_image_after=copy.deepcopy(main), samples=[])
+    for name, _ in probe.HOST_TARGETS:
+        sample = copy.deepcopy(samples[name])
+        sample["fm"].update(key_present=True, protection="complete")
+        for kind, basename in (("fm", "Foundation"), ("url", "CoreFoundation")):
+            for key in ("implementation_before", "implementation_after"):
+                sample[kind][key]["implementation"].update(platforms=[1, 6], image_basename=basename)
+        result["samples"].append(dict(id=name, native=sample))
+    command = dict(label="host-observation", status="EXITED", exit_code=0, direct_child_reaped=True,
+        ownership="direct-unreaped-Popen", owned_pid=1234)
+    return result, command, main["uuid"]
 
 
 class ReportTests(unittest.TestCase):
@@ -85,7 +109,8 @@ class ReportTests(unittest.TestCase):
     def test_collection_is_not_strict_or_application_pass(self):
         result = validate(self.rows, self.request, self.image_uuid)
         self.assertEqual(result["collection_status"], "CAPTURED_SYNTHETIC_METADATA_NOT_APP_QUALIFICATION")
-        self.assertEqual(result["strict_synthetic_complete"]["fail_count"], 4)
+        self.assertEqual(probe.STRICT[:4], ("directory-baseline", "complete-baseline", "complete-after-replace", "none-after-url-set"))
+        self.assertEqual(result["strict_synthetic_complete"]["fail_count"], 5)
         self.assertFalse(result["historical_a37_strict_result_changed"])
 
     def test_missing_event(self):
@@ -118,6 +143,13 @@ class ReportTests(unittest.TestCase):
 
     def test_wrong_write_options(self):
         self.reject(lambda rows: rows[2].update(requested_options=1))
+
+    def test_nonatomic_contrast_must_not_request_atomic(self):
+        self.reject(lambda rows: rows[14].update(requested_options=0x20000001))
+
+    def test_simulator_images_remain_single_platform(self):
+        self.reject(lambda rows: [rows[3]["sample"]["fm"][key]["implementation"].update(platforms=[1, 6])
+            for key in ("implementation_before", "implementation_after")])
 
     def test_getter_imp_changes(self):
         self.reject(lambda rows: rows[3]["sample"]["fm"]["implementation_after"]["implementation"].update(image_offset=999))
@@ -209,6 +241,85 @@ class AdmissionTests(unittest.TestCase):
         for values in ([], ["full"], ["run", "--allow-unsupported"]):
             with self.subTest(values=values), self.assertRaises(RuntimeError):
                 probe.main(values)
+
+
+class HostComparisonTests(unittest.TestCase):
+    def setUp(self):
+        self.rows, self.request, self.image_uuid = fixture()
+        self.report = validate(self.rows, self.request, self.image_uuid)
+        self.host, self.command, self.host_uuid = host_fixture(self.rows, self.request)
+
+    def validate(self, value=None):
+        return probe.validate_host_report(json.dumps(self.host if value is None else value).encode(), self.request,
+            self.report, self.host_uuid, self.command, [15, 7, 9])
+
+    def test_five_final_inodes_and_host_complete_never_promote_original_four(self):
+        self.rows[15]["sample"]["fm"].update(key_present=True, protection="complete")
+        self.rows[-1]["strict_synthetic_complete"].update({"pass": 1, "fail": 4})
+        self.report = validate(self.rows, self.request, self.image_uuid)
+        comparison = self.validate()
+        self.assertEqual([row["id"] for row in comparison["comparisons"]], [name for name, _ in probe.HOST_TARGETS])
+        self.assertEqual(comparison["comparisons"][0]["identity"]["size"], 128)
+        self.assertTrue(all(row["host_fm"] == "complete" for row in comparison["comparisons"]))
+        self.assertEqual(comparison["strict_synthetic_complete"], self.report["strict_synthetic_complete"])
+        self.assertEqual(comparison["strict_synthetic_complete"]["fail_count"], 4)
+        self.assertFalse(comparison["historical_a37_strict_result_changed"])
+
+    def test_full_identity_map_rejects_stale_directory_old_file_and_aliases(self):
+        replacements = [(0, self.rows[1]["sample"]["identity"]), (1, self.rows[3]["sample"]["identity"]),
+            (4, self.host["samples"][3]["native"]["identity"])]
+        for key in ("device", "inode", "uid", "mode", "links", "size"):
+            changed = copy.deepcopy(self.host["samples"][0]["native"]["identity"])
+            changed[key] += 1
+            replacements.append((0, changed))
+        for index, identity in replacements:
+            with self.subTest(index=index, identity=identity):
+                value = copy.deepcopy(self.host)
+                sample = value["samples"][index]["native"]
+                sample["identity"] = copy.deepcopy(identity)
+                for witness in sample["reads"]:
+                    witness.update(before=copy.deepcopy(identity), after=copy.deepcopy(identity))
+                with self.assertRaises(RuntimeError):
+                    self.validate(value)
+        value = copy.deepcopy(self.host)
+        value["samples"].reverse()
+        with self.assertRaises(RuntimeError):
+            self.validate(value)
+
+    def test_host_context_pid_main_and_method_roles_fail_closed(self):
+        mutations = [lambda value: value["context"].update(source_sha="f" * 40),
+            lambda value: value.update(process_id=999), lambda value: value.update(runtime_version=[15, 7, 8]),
+            lambda value: [value[key].update(platforms=[1, 6]) for key in ("main_image_before", "main_image_after")],
+            lambda value: [value["samples"][0]["native"]["fm"][key]["implementation"].update(image_basename="CoreFoundation")
+                for key in ("implementation_before", "implementation_after")]]
+        for index, mutate in enumerate(mutations):
+            with self.subTest(index=index):
+                value = copy.deepcopy(self.host)
+                mutate(value)
+                with self.assertRaises(RuntimeError):
+                    self.validate(value)
+
+    def test_raw_host_failure_is_preserved_before_exit_check(self):
+        class FailedCommand:
+            preservation_error = probe.Commands.preservation_error
+            def __init__(self):
+                self.preservation = dict(failures=0, errors=[])
+            def capture(self, arguments, label, timeout):
+                return dict(status="EXITED", exit_code=1, direct_child_reaped=True), b'{"collection_status":"FAIL"}\n', b"synthetic-error"
+        with tempfile.TemporaryDirectory() as temporary:
+            instance = object.__new__(probe.Probe)
+            instance.evidence = Path(temporary).resolve()
+            instance.resources = instance.evidence / "resources"
+            instance.commands = FailedCommand()
+            with self.assertRaises(RuntimeError):
+                instance.capture_host()
+            self.assertEqual((instance.evidence / "host.stdout.json").read_bytes(), b'{"collection_status":"FAIL"}\n')
+            self.assertEqual((instance.evidence / "host.stderr.txt").read_bytes(), b"synthetic-error")
+            with mock.patch.object(probe.native, "write_new", side_effect=OSError("synthetic-write-failure")):
+                with self.assertRaises(OSError):
+                    instance.capture_host()
+            self.assertEqual(instance.commands.preservation, dict(failures=1,
+                errors=[dict(operation="host-raw-output", error_type="OSError")]))
 
 
 if __name__ == "__main__":
