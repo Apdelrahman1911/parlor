@@ -1,0 +1,89 @@
+{
+  "kind": "INDEPENDENT_LF_CRLF_WORKFLOW_CONTRACT_ACTUAL_REVIEW_LINUX_ONLY",
+  "reviewer": "/root/ci_linux_arm",
+  "reviewed_at": "2026-09-11T02:38:44.078629+00:00",
+  "batch_receipt": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-d08-contract-fixes-01/receipt.json",
+  "batch_receipt_sha256": "7341f27f4aa3b473a1d7b2e3ac853c1bf76508983e998418d662ad76c93c0ac1",
+  "source_head_at_batch": "59a384441f44844a79ae62ea8ee68d0c9e1e5878",
+  "reviewed_control": {
+    "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/ProductionVerificationWorkflowContractTest.kt",
+    "sha256": "9008fec636b7734f05bb4299e492fe32ffc345be8639e44981367e4bfa547377",
+    "before_equals_after": true,
+    "matches_prior_independent_source_approval": true
+  },
+  "execution": {
+    "result": "PASS",
+    "host": "linux-x86_64 (actual Gradle log)",
+    "command": [
+      "./gradlew",
+      ":shared:transport-p2p:desktopTest",
+      "--tests",
+      "*ProductionVerificationWorkflowContractTest*",
+      "--dependency-verification=strict",
+      "--no-daemon",
+      "--no-configuration-cache",
+      "--max-workers=2",
+      "--stacktrace",
+      "--console=plain",
+      "-Pkotlin.compiler.execution.strategy=in-process",
+      "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC"
+    ],
+    "test_task": "EXECUTED; not FROM-CACHE, UP-TO-DATE or skipped",
+    "xml": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-d08-contract-fixes-01/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+    "xml_sha256": "8bf8c8693472eba2884237b509782dc950b5cc80cf3ee2129db453a76209d77f",
+    "tests": 12,
+    "passed": 12,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "unique_case_names": 12,
+    "test_timestamp_and_duration_within_command": true,
+    "required_failure_and_regression_cases": [
+      "split_apple_jobs_keep_independent_source_toolchain_cycles_and_evidence()[desktop]",
+      "protection_diagnostic_is_the_seventh_opt_in_job_not_a_full_gate()[desktop]",
+      "apple_jobs_run_kotlin_and_app_launch_tests_all_link_targets_and_unsigned_swift_release()[desktop]",
+      "workflow_job_boundaries_are_preserved_for_lf_and_windows_crlf_checkouts()[desktop]"
+    ]
+  },
+  "raw_log_bindings": [
+    {
+      "label": "transport-workflow-contract",
+      "sha256": "c05f340f68c2da0140d0b8694898b83f35fff2f9ce1e07d67260a6339964822a",
+      "exit_code": 0
+    },
+    {
+      "label": "gradle-stop-after-tests",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "exit_code": 0
+    },
+    {
+      "label": "gradle-clean",
+      "sha256": "bf731bc705a61d1c64cba14f140c8cd7d6de2766e8382ceffd6954bd959a4138",
+      "exit_code": 0
+    },
+    {
+      "label": "gradle-stop-after-clean",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+      "exit_code": 0
+    }
+  ],
+  "cleanup": {
+    "stop_after_tests_exit": 0,
+    "clean_exit": 0,
+    "stop_after_clean_exit": 0,
+    "both_stop_logs": "No Gradle daemons are running.",
+    "batch_errors": [],
+    "batch_remaining": [],
+    "batch_scratch_absent": true,
+    "independently_checked_output_cache_roots": 20,
+    "observed_remaining_at_review": [],
+    "global_caches": "Preserved by batch; reviewer performed no cleanup"
+  },
+  "findings": [],
+  "scope_limits": [
+    "Actual 12-test Linux focused class PASS includes the LF/CRLF fixture; this is not corrected Windows-host runtime proof.",
+    "D08 Windows failure is unchanged retained evidence. A fresh common full-run/source qualification is still required.",
+    "No corrected Linux ARM64/Native/app/Store/device qualification claim from this local batch.",
+    "Reviewer only read and hashed existing evidence/source and checked named path absence; no tests/builds/network/cleanup reruns."
+  ]
+}

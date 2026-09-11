@@ -4,6 +4,7 @@ import java.io.File
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
@@ -580,6 +581,46 @@ class ProductionVerificationWorkflowContractTest {
         assertFalse("./gradlew" in probe || "github.token" in probe || "secrets." in probe)
     }
 
+    @Test
+    fun workflow_job_boundaries_are_preserved_for_lf_and_windows_crlf_checkouts() {
+        val jobs = listOf(
+            "desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64",
+            "ios", "ios-release", "ios-protection-probe",
+        )
+        val lf = "on:\n  push:\njobs:\n" + jobs.joinToString("") { job -> "  $job:\n    name: $job\n" }
+        fun assertJobBoundaries(checkoutText: String) {
+            val workflow = normalizeContractText(checkoutText)
+            assertEquals(
+                jobs,
+                Regex("(?m)^  ([a-z][a-z0-9-]+):$").findAll(workflow.substringAfter("\njobs:\n"))
+                    .map { it.groupValues[1] }.toList(),
+            )
+            assertEquals(
+                "    name: ios",
+                workflow.substringAfter("\n  ios:\n").substringBefore("\n  ios-release:\n"),
+            )
+            assertEquals(
+                "    name: ios-release",
+                workflow.substringAfter("\n  ios-release:\n").substringBefore("\n  ios-protection-probe:\n"),
+            )
+            assertEquals(
+                "    name: ios-protection-probe\n",
+                workflow.substringAfter("\n  ios-protection-probe:\n"),
+            )
+        }
+        listOf("\n", "\r\n").forEach { lineEnding ->
+            val checkoutText = lf.replace("\n", lineEnding)
+            assertEquals(lf, normalizeContractText(checkoutText))
+            assertJobBoundaries(checkoutText)
+            listOf("\njobs:\n", "\n  ios:\n", "\n  ios-release:\n", "\n  ios-protection-probe:\n")
+                .forEach { marker ->
+                    val missingBoundary = lf.replace(marker, "\n").replace("\n", lineEnding)
+                    assertFailsWith<AssertionError> { assertJobBoundaries(missingBoundary) }
+                }
+        }
+        assertEquals("literal\\r\\n and lone\rreturn", normalizeContractText("literal\\r\\n and lone\rreturn"))
+    }
+
     private fun assertOwnedAppleUiLifecycle(workflow: String, appLaunchMarker: String) {
         val prepareMarker = "- name: Claim apple-ui native resource ownership"
         val finishMarker = "- name: Stop Gradle after apple-ui and retire owned Apple resources"
@@ -721,8 +762,12 @@ class ProductionVerificationWorkflowContractTest {
     private fun read(relativePath: String): String {
         val file = File(repositoryRoot, relativePath)
         assertTrue(file.isFile, "Missing release contract file: ${file.absolutePath}")
-        return file.readText()
+        return normalizeContractText(file.readText())
     }
+
+    // Git may check out semantic contract text as CRLF on Windows. Keep exact
+    // content and section boundaries; only the physical line ending differs.
+    private fun normalizeContractText(text: String): String = text.replace("\r\n", "\n")
 
     private fun catalogAliases(catalog: String, wantedSection: String): List<String> {
         return catalogSectionAssignments(catalog, wantedSection).map { assignment ->

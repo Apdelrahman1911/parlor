@@ -1,0 +1,251 @@
+{
+  "kind": "FOCUSED_REPOSITORY_CONTRACT_TESTS_NOT_WINDOWS_RUNTIME_OR_FULL_QUALIFICATION",
+  "started_at": "2026-09-11T02:31:34.738174+00:00",
+  "source_head": "59a384441f44844a79ae62ea8ee68d0c9e1e5878",
+  "working_tree_controls_before": {
+    "scripts/release/tests/test_release_documentation.py": "811fb9719189e4ca4bc17918b8d0d282141c6f56d3e0bbe58d26c5d3d7ca8a2d",
+    "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/ProductionVerificationWorkflowContractTest.kt": "9008fec636b7734f05bb4299e492fe32ffc345be8639e44981367e4bfa547377",
+    ".github/workflows/production-verification.yml": "d8868fdd407c0513fe4205b67b205af510c74b267e8ee83a1efac0b0f8fede94",
+    "docs/RELEASE_AUTOMATION.md": "bf9c13cf2a185413b9b6bb937f391f1ae77838ba3001335beaeff864cb3d0b9f",
+    "docs/RELEASE_GATES.md": "3c353b24cc2b1b63b57e31998612235fb456c69c3f915c67c6de2ff98f788092",
+    "build.gradle.kts": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+    "settings.gradle.kts": "27a40495b1adf18ca90b5a8fdd345448c2ecf2f9ac726c753468a5e627b27d18",
+    "gradle.properties": "2df8685921ad2c6eead097a6d9994bbcc93dbc5cbdeb0bce8911ffa4e83162ce",
+    "gradle/verification-metadata.xml": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+    "gradle/libs.versions.toml": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+    "shared/transport-p2p/build.gradle.kts": "6ce2fd726bd41031a5b26d0d30f8ee8f693b4dc942da90bdc48b40fbf040c3b7"
+  },
+  "commands": [
+    {
+      "label": "release-documentation",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/release/tests",
+        "-p",
+        "test_release_documentation.py",
+        "-v"
+      ],
+      "started_at": "2026-09-11T02:31:34.749688+00:00",
+      "exit_code": 0,
+      "seconds": 0.114,
+      "log_sha256": "bf4874c02c2076c8ab6f325ba52bc8d7c2bebb2dd68ae9f071cf184ad09df410"
+    },
+    {
+      "label": "transport-workflow-contract",
+      "command": [
+        "./gradlew",
+        ":shared:transport-p2p:desktopTest",
+        "--tests",
+        "*ProductionVerificationWorkflowContractTest*",
+        "--dependency-verification=strict",
+        "--no-daemon",
+        "--no-configuration-cache",
+        "--max-workers=2",
+        "--stacktrace",
+        "--console=plain",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC"
+      ],
+      "started_at": "2026-09-11T02:31:34.864603+00:00",
+      "exit_code": 0,
+      "seconds": 48.126,
+      "log_sha256": "c05f340f68c2da0140d0b8694898b83f35fff2f9ce1e07d67260a6339964822a"
+    },
+    {
+      "label": "gradle-stop-after-tests",
+      "command": [
+        "./gradlew",
+        "--stop"
+      ],
+      "started_at": "2026-09-11T02:32:22.991697+00:00",
+      "exit_code": 0,
+      "seconds": 0.718,
+      "log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "label": "gradle-clean",
+      "command": [
+        "./gradlew",
+        "clean",
+        "--dependency-verification=strict",
+        "--no-daemon",
+        "--no-configuration-cache",
+        "--max-workers=2",
+        "--stacktrace",
+        "--console=plain",
+        "-Pkotlin.compiler.execution.strategy=in-process",
+        "-Dorg.gradle.jvmargs=-Xmx3g -Dfile.encoding=UTF-8 -XX:+UseParallelGC"
+      ],
+      "started_at": "2026-09-11T02:32:23.709884+00:00",
+      "exit_code": 0,
+      "seconds": 19.931,
+      "log_sha256": "bf731bc705a61d1c64cba14f140c8cd7d6de2766e8382ceffd6954bd959a4138"
+    },
+    {
+      "label": "gradle-stop-after-clean",
+      "command": [
+        "./gradlew",
+        "--stop"
+      ],
+      "started_at": "2026-09-11T02:32:43.641715+00:00",
+      "exit_code": 0,
+      "seconds": 0.667,
+      "log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    }
+  ],
+  "resources": [
+    {
+      "at": "2026-09-11T02:31:34.744404+00:00",
+      "text": "Filesystem      Size  Used Avail Use% Mounted on\noverlay          94G   71G   18G  80% /\ntmpfs            32G   20G   12G  64% /tmp\n               total        used        free      shared  buff/cache   available\nMem:            62Gi        23Gi        16Gi        19Gi        43Gi        39Gi\nSwap:             0B          0B          0B\n"
+    },
+    {
+      "at": "2026-09-11T02:32:44.315963+00:00",
+      "text": "Filesystem      Size  Used Avail Use% Mounted on\noverlay          94G   71G   18G  80% /\ntmpfs            32G   20G   12G  64% /tmp\n               total        used        free      shared  buff/cache   available\nMem:            62Gi        23Gi        15Gi        19Gi        44Gi        39Gi\nSwap:             0B          0B          0B\n"
+    }
+  ],
+  "cleanup": {
+    "errors": [],
+    "removed_owned_roots": [
+      "build",
+      "build-logic/convention/build",
+      ".gradle",
+      ".kotlin",
+      "build-logic/.gradle"
+    ],
+    "checked_roots": [
+      "build",
+      "build-logic/build",
+      "build-logic/convention/build",
+      "composeApp/build",
+      "game-modes/mafia/build",
+      "game-modes/whodunit/build",
+      "iosApp/build",
+      "shared/content/build",
+      "shared/core/build",
+      "shared/design-system/build",
+      "shared/engine-testing/build",
+      "shared/engine/build",
+      "shared/networking-testing/build",
+      "shared/networking/build",
+      "shared/session/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      ".gradle",
+      ".kotlin",
+      "build-logic/.gradle"
+    ],
+    "remaining": [],
+    "scratch_absent": true,
+    "global_caches": "PRESERVED"
+  },
+  "test_results": [
+    {
+      "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-d08-contract-fixes-01/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+      "sha256": "8bf8c8693472eba2884237b509782dc950b5cc80cf3ee2129db453a76209d77f",
+      "attributes": {
+        "name": "com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest",
+        "tests": "12",
+        "skipped": "0",
+        "failures": "0",
+        "errors": "0",
+        "timestamp": "2026-09-11T02:32:21.873Z",
+        "hostname": "oblien",
+        "time": "0.619"
+      },
+      "cases": [
+        {
+          "name": "clean_ci_can_resolve_required_artifacts_with_strict_dependency_verification()[desktop]",
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        },
+        {
+          "name": "split_apple_jobs_keep_independent_source_toolchain_cycles_and_evidence()[desktop]",
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        },
+        {
+          "name": "protection_diagnostic_is_the_seventh_opt_in_job_not_a_full_gate()[desktop]",
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        },
+        {
+          "name": "every_version_catalog_alias_has_a_real_build_consumer()[desktop]",
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        },
+        {
+          "name": "one_version_source_drives_android_desktop_ios_and_runtime_compatibility()[desktop]",
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        },
+        {
+          "name": "workflow_job_boundaries_are_preserved_for_lf_and_windows_crlf_checkouts()[desktop]",
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        },
+        {
+          "name": "linux_job_enforces_tests_analysis_android_release_and_artifact_inspection()[desktop]",
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        },
+        {
+          "name": "xcode_resource_artifacts_are_covered_by_strict_dependency_verification()[desktop]",
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        },
+        {
+          "name": "repository_contract_inputs_invalidate_cached_results_when_ci_or_build_gates_change()[desktop]",
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        },
+        {
+          "name": "apple_jobs_run_kotlin_and_app_launch_tests_all_link_targets_and_unsigned_swift_release()[desktop]",
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        },
+        {
+          "name": "third_party_actions_are_pinned_to_reviewed_immutable_commits()[desktop]",
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        },
+        {
+          "name": "supported_desktop_hosts_execute_real_host_selected_gradle_graphs()[desktop]",
+          "failures": 0,
+          "errors": 0,
+          "skips": 0
+        }
+      ]
+    }
+  ],
+  "working_tree_controls_after": {
+    "scripts/release/tests/test_release_documentation.py": "811fb9719189e4ca4bc17918b8d0d282141c6f56d3e0bbe58d26c5d3d7ca8a2d",
+    "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/ProductionVerificationWorkflowContractTest.kt": "9008fec636b7734f05bb4299e492fe32ffc345be8639e44981367e4bfa547377",
+    ".github/workflows/production-verification.yml": "d8868fdd407c0513fe4205b67b205af510c74b267e8ee83a1efac0b0f8fede94",
+    "docs/RELEASE_AUTOMATION.md": "bf9c13cf2a185413b9b6bb937f391f1ae77838ba3001335beaeff864cb3d0b9f",
+    "docs/RELEASE_GATES.md": "3c353b24cc2b1b63b57e31998612235fb456c69c3f915c67c6de2ff98f788092",
+    "build.gradle.kts": "bd6199e1f097eb236c50c46efb91d291550110f6b4d95a8e95ff0db4d8da192b",
+    "settings.gradle.kts": "27a40495b1adf18ca90b5a8fdd345448c2ecf2f9ac726c753468a5e627b27d18",
+    "gradle.properties": "2df8685921ad2c6eead097a6d9994bbcc93dbc5cbdeb0bce8911ffa4e83162ce",
+    "gradle/verification-metadata.xml": "58b5a279cc5ccc58e1088fbe3dd248fcfdf31a307707204c5438259de7960f95",
+    "gradle/libs.versions.toml": "87a031665605a1fb3f932be31c75afd8d2d1bc0d94cfcca36101141c50788399",
+    "shared/transport-p2p/build.gradle.kts": "6ce2fd726bd41031a5b26d0d30f8ee8f693b4dc942da90bdc48b40fbf040c3b7"
+  },
+  "finished_at": "2026-09-11T02:32:44.324532+00:00",
+  "result": "PASS"
+}

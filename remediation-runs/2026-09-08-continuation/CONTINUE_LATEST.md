@@ -1,6 +1,35 @@
 # Continuation execution ledger — 2026-09-11
 
-## CURRENT — PD05 synthetic strict0/5; host comparison NOT_RUN; CI corrections locally tested, not frozen; NOT_READY
+## CURRENT — D08 mandatory-job failures; PD06 spawn/stop timeouts; NOT_READY
+
+`N=remediation-runs/2026-09-08-continuation`; `C=remediation-runs/2026-09-07-local-readiness`. Earlier cutoffs below are historical.
+- Executed freeze `59a384441f44844a79ae62ea8ee68d0c9e1e5878`, tree `9f06627b0dd047394de6f52adbc494e334651c74`;
+  source `4952432e957cd64632de34a36dfaac75cd4b9973`. Normal push/remote equality recorded in `$N/actions/protection-probe-06/source-freeze-receipt.json`.
+  Separate reviewed concurrency groups admitted **D08 34553741387/1** and **PD06 34553751369/1** together at this SHA; dispatch packets remain under `actions/{full-qualification-dispatch-08,protection-probe-06}/`.
+- **D08 cannot qualify:** Linux `desktop-android` and Windows `desktop-windows-x64` mandatory jobs failed.
+  Latest retained API transitions (through02:33:21Z): Linux arm64, macOS x64 and iOS runtime report success, **not yet actual-evidence/cleanup-reviewed**; iOS Release remains running. The seventh probe skipped.
+  Local monitor/API observations and failed logs: `$N/reviews/d08-pd06-ci-monitor-01/`; Windows current failure XML: `$N/reviews/d08-windows-failure-01/`.
+- D08 Linux failure was a stale protected-branch documentation-test expectation; Windows had three workflow-contract failures from LF-only slicing of CRLF checkout text.
+  Both test-only corrections are independently source/actual-reviewed: **Python1PASS + Gradle12PASS on Linux**, zero failures/errors/skips, clean0/two stops0 and20 checked output/cache roots absent.
+  `$C/evidence/continuation-d08-contract-fixes-01/`; reviews `d08-release-documentation-actual-independent-01.json` and `d08-windows-workflow-line-endings-actual-independent-01.json`.
+  These local regressions do not repair D08 or establish corrected Windows-host/full qualification.
+- **PD06 FAIL:** early macOS SDK26.2 version/path qualification and source/control/nonce binding succeeded before simulator creation.
+  Simulator compile/sign/verify succeeded, but exact `simctl spawn` hit its40s timeout budget: empty stdout/stderr, launcher4197 reaped with exit-15.
+  **No native samples or new strict result; host compilation/same-inode comparison NOT_RUN.** Empty output does not locate the native failure or establish cause.
+- PD06 immediate `./gradlew --stop` also hit its60s timeout budget: only the Gradle8.13 download banner, direct child reaped with exit143.
+  Only **2/3 mandatory stops exited0**. Owned simulator shutdown/delete and source-bound retirement passed, but **cleanup FAIL**, `timed-out-or-unsettled-tool-scratch-retained`; scratch was not verified removed.
+  Zero recorded preservation failures and direct-child reaping do not prove indirect-worker absence or a completed immediate stop.
+  Raw `$N/actions/34553751369/{main,cleanup}/` and ZIPs; independent custody/cleanup reviews `protection-probe-pd06-artifact-custody-independent-01.json` and `protection-probe-06-cleanup-actual-independent-01.json`.
+- New diagnostic changes are **not runtime-verified**: an early unchanged60s wrapper stop before simulator allocation, one bounded symbols-only sample of the exact admitted timed-out spawn launcher, and three fixed C-only stderr stage markers.
+  Launcher sampling is not descendant sampling; best-effort marker absence does not prove non-entry. No timeout increase, blind retry, strict/cleanup waiver or shipping-storage edit.
+  Source approvals: `protection-probe-spawn-preflight-source-independent-01.json` and separate `protection-probe-entry-markers-source-independent-01.json`.
+  Actual local **101PASS** (45 paired +56 helper), unchanged pins, stop0, scratch removed and24 checked roots absent: `$C/evidence/continuation-protection-spawn-controls-01/`, receipt SHA256 `609d7bc08f2263f784f01e62843dc8f88e698c5d171882ac85fc1f74f2da5406`.
+  Independent actual-control review approved, findings[]: `$N/reviews/protection-probe-spawn-preflight-controls-independent-01.json`; these diagnostic sources remain uncommitted. Require a new source/inventory freeze and fresh admissions before execution; no native/runtime/strict fix is established.
+- **Requested technical gates closed0/2**; A37 strict **0PASS/26FAIL**, APP04 strict **0PASS/6FAIL**, PD05 synthetic strict **0PASS/5FAIL** unchanged. PD06 adds no strict observations.
+  No same-SHA full PASS: all six mandatory jobs and cleanup must pass together in one new `full` + `paired` dispatch; diagnostic samples, API success labels and local fixes cannot be stitched into qualification.
+  Original repairs and B30/C08 historical scoped evidence remain preserved; physical-device, Store/signing/publication, account/identity and owner/legal requirements remain separate.
+
+## Historical PD05 synthetic strict0/5; host comparison NOT_RUN; CI corrections locally tested, not frozen — preserved cutoff
 
 `N=remediation-runs/2026-09-08-continuation`. Historical results retain their original execution identities.
 - **PD05 run34551626246/1 FAIL** at freeze `1c234ff026355c3f21fc1d7a589d3bd36085e74f`,

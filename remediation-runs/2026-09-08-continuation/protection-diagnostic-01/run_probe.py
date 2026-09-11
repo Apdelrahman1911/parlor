@@ -488,6 +488,10 @@ class Probe:
         row, out, err = self.capture([str(Path(self.commands.environment["JAVA_HOME"]) / "bin/java"), "-version"], "jdk-version")
         require(row["status"] == "EXITED" and row.get("exit_code") == 0 and row.get("direct_child_reaped") and
             re.search(rb'(?:openjdk|java) version "21[."]', out + err), "jdk21-required-for-stops")
+        # PD06's first stop timed out with only a wrapper-download banner. Move
+        # that bootstrap before allocation, not its 60s bound or later stops.
+        self.bindings()
+        self.stop()
         self.bind_host_sdk()
         return sdk
 
@@ -563,23 +567,37 @@ class Probe:
         match = re.fullmatch(rb"UUID: ([0-9A-Fa-f-]{36}) \(arm64\) " + re.escape(str(image).encode()) + rb"\n", raw)
         require(match is not None, "built-arm64-uuid")
         binary_uuid = simulator.checked_uuid(match.group(1).decode()).lower()
-        image_hash = native.sha(native.file_bytes(image, maximum=16 * 1024 * 1024))
-        self.state["built_image"] = dict(uuid=binary_uuid, sha256=image_hash, scope="standalone-O0-ad-hoc-simulator-not-Parlor-Debug")
+        image_file = host_file_binding(image)
+        image_hash = image_file["sha256"]
+        self.state["built_image"] = dict(uuid=binary_uuid, sha256=image_hash, file=image_file,
+            scope="standalone-O0-ad-hoc-simulator-not-Parlor-Debug")
         for operation, extra in (("boot", ()), ("bootstatus", ("-b",))):
             code, _ = self.backend.run(operation, identity, *extra)
             require(code == 0, "owned-simulator-boot")
-        self.bindings()
-        child = dict(self.commands.environment, SIMCTL_CHILD_TMPDIR=str(self.resources / "tmp") + "/")
-        row, out, err = self.commands.capture(["/usr/bin/xcrun", "simctl", "spawn", identity, str(image)], "native-observation", 40, environment=child)
-        native.write_new(self.evidence / "native.stdout.jsonl", out)
-        native.write_new(self.evidence / "native.stderr.txt", err)
-        require(row["status"] == "EXITED" and row.get("exit_code") == 0 and row.get("direct_child_reaped"), "native-collection-process")
+        _, out = self.capture_native(identity)
         report = validate_report(out, self.request, binary_uuid)
         require(native.sha(native.file_bytes(image, maximum=16 * 1024 * 1024)) == image_hash, "built-image-mutated")
         native.write_new(self.evidence / "native-report.json", native.json_bytes(report))
         self.state["collection_status"] = report["collection_status"]
         self.state["strict_synthetic_complete"] = report["strict_synthetic_complete"]
         self.compile_and_read_host(report)
+
+    def capture_native(self, identity):
+        self.bindings()
+        image = self.resources / "ProtectionProbe"
+        require(self.commands.protection_spawn_admission is None and
+            identity == self.state.get("owned_uuid") == self.request["native_context"]["simulator_udid"] and
+            owned_directory(self.resources) == self.request["resources"] and
+            host_file_binding(image) == self.state["built_image"]["file"], "owned-protection-spawn-binding")
+        arguments = ("/usr/bin/xcrun", "simctl", "spawn", identity, str(image))
+        self.commands.protection_spawn_admission = arguments
+        child = dict(self.commands.environment, SIMCTL_CHILD_TMPDIR=str(self.resources / "tmp") + "/")
+        row, out, err = self.commands.capture(arguments, "native-observation", 40,
+            environment=child, sample_protection=True)
+        native.write_new(self.evidence / "native.stdout.jsonl", out)
+        native.write_new(self.evidence / "native.stderr.txt", err)
+        require(row["status"] == "EXITED" and row.get("exit_code") == 0 and row.get("direct_child_reaped"), "native-collection-process")
+        return row, out
 
     def capture_host(self):
         row, out, err = self.commands.capture([str(self.resources / HOST_IMAGE)], "host-observation", 30)

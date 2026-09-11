@@ -18,6 +18,17 @@
 static NSDictionary *directoryIdentity;
 static NSMutableDictionary *samples;
 
+static const char mainEntryPhase[] = "parlor-protection-phase:c-main-entry\n";
+static const char foundationInitializedPhase[] = "parlor-protection-phase:foundation-initialized\n";
+static const char firstOperationPhase[] = "parlor-protection-phase:first-operation\n";
+
+static void phaseMarker(const char *bytes, size_t length) {
+    // Fixed public C-only witnesses. One best-effort write; absence does not prove non-entry.
+    int savedErrno = errno;
+    (void)write(STDERR_FILENO, bytes, length);
+    errno = savedErrno;
+}
+
 static void demand(BOOL value, NSString *reason) {
     if (!value) @throw [NSException exceptionWithName:@"ProtectionBoundary" reason:reason userInfo:nil];
 }
@@ -122,6 +133,8 @@ static NSDictionary *collect(void) {
     SEL create = @selector(createDirectoryAtPath:withIntermediateDirectories:attributes:error:);
     NSDictionary *before = ParlorProtectionImplementation(manager, create);
     NSError *error = nil;
+    // Pre-request only: owned-path and other argument evaluation still follow.
+    phaseMarker(firstOperationPhase, sizeof(firstOperationPhase) - 1);
     BOOL result = [manager createDirectoryAtPath:ownedPath(@"created", YES) withIntermediateDirectories:NO
         attributes:@{NSFileProtectionKey: NSFileProtectionComplete, NSFilePosixPermissions: @0700} error:&error];
     NSDictionary *after = ParlorProtectionImplementation(manager, create);
@@ -175,6 +188,7 @@ static NSDictionary *collect(void) {
 }
 
 int main(void) {
+    phaseMarker(mainEntryPhase, sizeof(mainEntryPhase) - 1);
     @autoreleasepool {
         signal(SIGALRM, SIG_DFL);
         alarm(25); // Self-only bound; no PID/PGID discovery or external signaling.
@@ -182,6 +196,7 @@ int main(void) {
         NSMutableDictionary *final = [@{@"kind": @"final", @"schema": @1, @"collection_status": @"FAIL",
             @"scope": @"synthetic-native-metadata-only", @"production_snapshots_observed": @NO,
             @"historical_a37_strict_result_changed": @NO} mutableCopy];
+        phaseMarker(foundationInitializedPhase, sizeof(foundationInitializedPhase) - 1);
         @try {
             attestRoot();
             const char *udid = getenv("SIMULATOR_UDID");

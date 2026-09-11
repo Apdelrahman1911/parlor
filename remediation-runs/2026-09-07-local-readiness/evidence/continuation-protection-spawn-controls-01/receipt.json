@@ -1,0 +1,107 @@
+{
+  "kind": "FOCUSED_PROTECTION_WRAPPER_AND_OWNED_SPAWN_SYNTHETIC_CONTROLS_NOT_NATIVE_RUNTIME",
+  "started_at": "2026-09-11T02:41:28.566123+00:00",
+  "source_head": "59a384441f44844a79ae62ea8ee68d0c9e1e5878",
+  "working_tree_controls_before": {
+    "scripts/ci/native_process_probe.py": "f6e31687332680e5e41af99d7bb05ce34898993186386f720a885de379fd7681",
+    "scripts/release/tests/test_native_process_probe.py": "17f4f60d1ce812f0872e16b36022ca8cf642e7ab6122992c5b568fc7ff5457f7",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py": "4994009c5a85d43b480f4aab028825738afa80e8c02f1e00608072c88c1cec50",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/test_probe.py": "8f988a98ca225d85ff926823eb0590adba9e1cf63295499082208557c9b0be17",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/ProbeMain.m": "b34d909120fcb5eb9d039b67694fe18537ad2de0f6d4bc758a72da525c467bfd",
+    "scripts/ci/native_continuation.py": "0b2c0fec310afd88810b84fcc4836ec72c0a07f0ff55f495f876dd92e2f231b3",
+    "gradle/wrapper/gradle-wrapper.properties": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2",
+    "gradle/wrapper/gradle-wrapper.jar": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f"
+  },
+  "tests": [
+    {
+      "label": "paired",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "remediation-runs/2026-09-08-continuation/protection-diagnostic-01",
+        "-p",
+        "test_probe.py",
+        "-v"
+      ],
+      "started_at": "2026-09-11T02:41:28.571945+00:00",
+      "exit_code": 0,
+      "seconds": 0.467,
+      "log_sha256": "7da34d2388caf51a71c03bf78f2c194eefbde4139c61a7596809437b75235015",
+      "unittest_cases": 45,
+      "summary": "----------------------------------------------------------------------\nRan 45 tests in 0.183s\n\nOK"
+    },
+    {
+      "label": "native-helper",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/release/tests",
+        "-p",
+        "test_native_process_probe.py",
+        "-v"
+      ],
+      "started_at": "2026-09-11T02:41:29.039423+00:00",
+      "exit_code": 0,
+      "seconds": 0.418,
+      "log_sha256": "7b584131bca388aa1407bba2a8458420fcf6ca4af51463c50a3c8b3a0b879eaa",
+      "unittest_cases": 56,
+      "summary": "{\"schema_version\": 1, \"context\": {\"head_sha\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}, \"kind\": \"PROCESS_PROBE_CUSTODY_CLEANUP\", \"status\": \"FAILED\", \"started_at\": \"2026-09-11T02:41:29.371056+00:00\", \"upload\": {\"artifact_id\": \"100\", \"sha256\": \"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\"}, \"error_type\": \"RuntimeError\", \"finished_at\": \"2026-09-11T02:41:29.371563+00:00\"}\n{\"schema_version\": 1, \"context\": {\"head_sha\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}, \"kind\": \"PROCESS_PROBE_CUSTODY_CLEANUP\", \"status\": \"FAILED\", \"started_at\": \"2026-09-11T02:41:29.372503+00:00\", \"error_type\": \"RuntimeError\", \"finished_at\": \"2026-09-11T02:41:29.372702+00:00\"}\n{\"schema_version\": 1, \"context\": {\"head_sha\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}, \"kind\": \"PROCESS_PROBE_CUSTODY_CLEANUP\", \"status\": \"FAILED\", \"started_at\": \"2026-09-11T02:41:29.373479+00:00\", \"error_type\": \"RuntimeError\", \"finished_at\": \"2026-09-11T02:41:29.373688+00:00\"}\n{\"schema_version\": 1, \"context\": {\"head_sha\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}, \"kind\": \"PROCESS_PROBE_CUSTODY_CLEANUP\", \"status\": \"FAILED\", \"started_at\": \"2026-09-11T02:41:29.374499+00:00\", \"error_type\": \"RuntimeError\", \"finished_at\": \"2026-09-11T02:41:29.374692+00:00\"}"
+    }
+  ],
+  "cleanup": {
+    "errors": [],
+    "checked_live_roots": [
+      "build",
+      "build-logic/build",
+      "build-logic/convention/build",
+      "composeApp/build",
+      "iosApp/build",
+      "game-modes/mafia/build",
+      "game-modes/whodunit/build",
+      "shared/core/build",
+      "shared/design-system/build",
+      "shared/engine/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "shared/networking/build",
+      "shared/networking-testing/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/content/build",
+      ".gradle",
+      ".kotlin",
+      "build-logic/.gradle",
+      "scripts/ci/__pycache__",
+      "scripts/release/__pycache__",
+      "scripts/release/tests/__pycache__",
+      "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/__pycache__"
+    ],
+    "preexisting_roots": [],
+    "gradle_stop_exit": 0,
+    "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+    "scratch_removed": true,
+    "checked_live_outputs_remaining": [],
+    "gradle_clean": "NOT_NEEDED_PURE_PYTHON_NO_BUILD_OUTPUTS"
+  },
+  "working_tree_controls_after": {
+    "scripts/ci/native_process_probe.py": "f6e31687332680e5e41af99d7bb05ce34898993186386f720a885de379fd7681",
+    "scripts/release/tests/test_native_process_probe.py": "17f4f60d1ce812f0872e16b36022ca8cf642e7ab6122992c5b568fc7ff5457f7",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py": "4994009c5a85d43b480f4aab028825738afa80e8c02f1e00608072c88c1cec50",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/test_probe.py": "8f988a98ca225d85ff926823eb0590adba9e1cf63295499082208557c9b0be17",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/ProbeMain.m": "b34d909120fcb5eb9d039b67694fe18537ad2de0f6d4bc758a72da525c467bfd",
+    "scripts/ci/native_continuation.py": "0b2c0fec310afd88810b84fcc4836ec72c0a07f0ff55f495f876dd92e2f231b3",
+    "gradle/wrapper/gradle-wrapper.properties": "c040b6ef2fb893ff5beea5a281614f2848f1c3996a7886f650b713f8240656a2",
+    "gradle/wrapper/gradle-wrapper.jar": "81a82aaea5abcc8ff68b3dfcb58b3c3c429378efd98e7433460610fecd7ae45f"
+  },
+  "resources": "Filesystem      Size  Used Avail Use% Mounted on\noverlay          94G   71G   18G  80% /\ntmpfs            32G   20G   12G  64% /tmp\n               total        used        free      shared  buff/cache   available\nMem:            62Gi        23Gi        16Gi        19Gi        43Gi        39Gi\nSwap:             0B          0B          0B\n",
+  "finished_at": "2026-09-11T02:41:30.235522+00:00",
+  "result": "PASS"
+}

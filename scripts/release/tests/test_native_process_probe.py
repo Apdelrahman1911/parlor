@@ -88,6 +88,14 @@ def cleanup_fixture(base):
     return lane
 
 
+def protection_spawn_fixture(lane):
+    image = "/safe/tmp/parlor-protection-probe-17-1/resources/ProtectionProbe"
+    lane.environment["TMPDIR"] = str(Path(image).parent / "tmp") + "/"
+    lane.protection_spawn_admission = ("/usr/bin/xcrun", "simctl", "spawn",
+        "AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA", image)
+    return lane.protection_spawn_admission, {**lane.environment, "SIMCTL_CHILD_TMPDIR": lane.environment["TMPDIR"]}
+
+
 class ProbeSourceContractTest(unittest.TestCase):
     def test_original_command_and_timeout_are_bound_without_importing_runner(self):
         value = probe.original_seam()
@@ -139,9 +147,11 @@ class ProbeSourceContractTest(unittest.TestCase):
 
 
 class ProbeBoundedCaptureTest(unittest.TestCase):
-    def capture(self, *, stalled=False, output=b"", sampler=None, persist=lambda: None, runtime=False):
+    def capture(self, *, stalled=False, output=b"", sampler=None, persist=lambda: None, runtime=False, spawn=False):
         clock, child = Clock(), Child()
         lane = probe.Commands({"PATH": "/usr/bin:/bin", "HOME": "/safe/home"}, 200 if runtime else 100, persist=persist)
+        if spawn:
+            admitted, environment = protection_spawn_fixture(lane)
         selector = Selector(clock, stalled)
         values = {100: iter([output, b""]), 101: iter([b""])}
         original = lane.capture
@@ -162,7 +172,9 @@ class ProbeBoundedCaptureTest(unittest.TestCase):
                 patch.object(probe.os, "set_blocking"), \
                 patch.object(probe.os, "read", side_effect=lambda fd, _size: next(values[fd])), \
                 patch.object(lane, "capture", side_effect=dispatch):
-            if runtime:
+            if spawn:
+                row, out, err = lane.capture(admitted, "native-observation", 40, sample_protection=True, environment=environment)
+            elif runtime:
                 row, out, err = lane.capture(probe.PROTECTION_RUNTIME_LIST, "runtimes", 90, sample_runtime=True)
             else:
                 row, out, err = lane.capture(probe.ORIGINAL_PS, "original", 15, sample=stalled)
@@ -319,6 +331,112 @@ class ProbeBoundedCaptureTest(unittest.TestCase):
         self.assertEqual(output, b'{"runtimes": []}')
         self.assertNotIn("stack_observation", row)
         self.assertEqual(child.signals, [])
+
+    def test_protection_spawn_timeout_samples_only_held_direct_child_without_rescuing_late_success(self):
+        def late_success(clock, child):
+            clock.value += 3
+            child.returncode = 0
+            return {"label": "sample", "status": "EXITED", "exit_code": 0, "direct_child_reaped": True}, \
+                b"Command: PRIVATE\nCall graph:\n    10 mach_msg2_trap (in libsystem_kernel.dylib) + 20 [0x123]\nBinary Images:\n/private/SECRET\n", b"PRIVATE STDERR"
+        sample = Mock(side_effect=late_success)
+        lane, child, row, _, _, launch = self.capture(stalled=True, sampler=sample, spawn=True)
+        sample.assert_called_once()
+        launch.assert_called_once()
+        self.assertEqual(launch.call_args.args[0], row["command"])
+        self.assertEqual(row["status"], "TIMEOUT")
+        self.assertEqual((row["timeout_seconds"], row["observation_elapsed_seconds"], row["elapsed_seconds"]), (40, 40, 43))
+        self.assertEqual(row["exit_code"], 0)
+        self.assertTrue(row["direct_child_reaped"])
+        self.assertEqual(lane.protection_spawn_admission, ())
+        observed = row["stack_observation"]
+        self.assertEqual(observed["target_owned_unreaped_pid"], child.pid)
+        self.assertEqual(observed["frames"], ["    10 mach_msg2_trap (in libsystem_kernel.dylib) + 20 [0x123]"])
+        self.assertTrue(observed["usable"])
+        self.assertIn("not its simulator descendants", observed["scope"])
+        self.assertNotIn("PRIVATE", json.dumps(row))
+        self.assertNotIn("SECRET", json.dumps(row))
+
+    def test_protection_sampling_rejects_unbound_commands_flags_and_environment_substitutions(self):
+        lane = probe.Commands({}, 100)
+        exact, environment = protection_spawn_fixture(lane)
+        cases = [(["xcrun", *exact[1:]], 40, {}), ([*exact, "extra"], 40, {}),
+            ([*exact[:3], "BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB", exact[4]], 40, {}),
+            ([*exact[:4], exact[4] + "Other"], 40, {}),
+            (exact, 40, {"executable": "/usr/bin/true"}), (exact, 40, {"root": Path("/foreign")}),
+            (exact, 40, {"environment": None}), (exact, 40, {"environment": {}}),
+            (exact, 40, {"environment": {**environment, "DYLD_INSERT_LIBRARIES": "private"}}),
+            (exact, 40, {"environment": {**environment, "SIMCTL_CHILD_TMPDIR": "/foreign/"}}),
+            (exact, 40, {"sample": True}), (exact, 40, {"sample_runtime": True}),
+            (exact, 40, {"sample_protection": "true"}), (exact, 40, {"sample_protection": 1}),
+            *((exact, seconds, {}) for seconds in (39, 41, 40.0, True))]
+        for arguments, timeout, options in cases:
+            with self.subTest(arguments=arguments, timeout=timeout, options=options):
+                lane = probe.Commands({}, 100)
+                _, environment = protection_spawn_fixture(lane)
+                with patch.object(probe.subprocess, "Popen") as launch:
+                    with self.assertRaisesRegex(RuntimeError, "only-(admitted-protection-spawn|exact-runtime-list|original-ps)"):
+                        lane.capture(arguments, "native-observation", timeout,
+                            **{"sample_protection": True, "environment": environment, **options})
+                launch.assert_not_called()
+        for admission in (None, (), list(exact), (123,), (*exact[:4], "/unowned/ProtectionProbe"),
+                          (*exact[:3], "12345", exact[4])):
+            with self.subTest(admission=admission):
+                lane.protection_spawn_admission = admission
+                with patch.object(probe.subprocess, "Popen") as launch:
+                    with self.assertRaisesRegex(RuntimeError, "only-admitted-protection-spawn"):
+                        arguments = admission if type(admission) is tuple and len(admission) == 5 else exact
+                        lane.capture(arguments, "native-observation", 40, sample_protection=True, environment=environment)
+                launch.assert_not_called()
+
+    def test_protection_admission_is_consumed_on_budget_refusal_without_shortening_or_replay(self):
+        lane = probe.Commands({}, 51.9)
+        exact, environment = protection_spawn_fixture(lane)
+        with patch.object(probe.time, "monotonic", return_value=0), patch.object(probe.subprocess, "Popen") as launch:
+            row, _, _ = lane.capture(exact, "native-observation", 40, sample_protection=True, environment=environment)
+            self.assertEqual((row["status"], row["timeout_seconds"]), ("SKIPPED_BUDGET", 40))
+            self.assertEqual(lane.protection_spawn_admission, ())
+            with self.assertRaisesRegex(RuntimeError, "only-admitted-protection-spawn"):
+                lane.capture(exact, "native-observation", 40, sample_protection=True, environment=environment)
+        launch.assert_not_called()
+
+    def test_protection_success_or_output_limit_never_triggers_sampling(self):
+        for limit, expected in ((probe.MAX_OUTPUT, "EXITED"), (1, "OUTPUT_LIMIT")):
+            sample = Mock(side_effect=AssertionError("must-not-sample"))
+            with self.subTest(limit=limit), patch.object(probe, "MAX_OUTPUT", limit):
+                lane, _, row, _, _, launch = self.capture(output=b"synthetic-result", sampler=sample, spawn=True)
+            self.assertEqual(row["status"], expected)
+            self.assertEqual(lane.protection_spawn_admission, ())
+            self.assertNotIn("stack_observation", row)
+            sample.assert_not_called()
+            launch.assert_called_once()
+
+    def test_protection_sample_failures_keep_timeout_and_retire_without_private_text(self):
+        for change in ({"status": "TIMEOUT"}, {"direct_child_reaped": False}, {"child_cleanup_error_type": "OSError"}, None):
+            def failed_sample(_clock, _child):
+                if change is None:
+                    raise RuntimeError("PRIVATE SAMPLE FAILURE")
+                return {"label": "sample", "status": "EXITED", "exit_code": 0, "direct_child_reaped": True, **change}, \
+                    b"Call graph:\n    10 mach_msg2_trap (in libsystem_kernel.dylib) + 20 [0x123]\n", b""
+            with self.subTest(change=change):
+                _, child, row, _, _, _ = self.capture(stalled=True, sampler=failed_sample, spawn=True)
+                self.assertEqual(row["status"], "TIMEOUT")
+                self.assertTrue(row["direct_child_reaped"])
+                self.assertEqual(child.signals, ["TERM"])
+                if change is not None:
+                    self.assertFalse(row["stack_observation"]["usable"])
+                self.assertNotIn("PRIVATE", json.dumps(row))
+
+    def test_protection_timeout_preservation_failure_prevents_sampling_but_keeps_failure_and_retirement(self):
+        sample = Mock(side_effect=AssertionError("must-not-sample"))
+        persist = Mock(side_effect=[None, None, OSError("PRIVATE WRITE FAILURE"), None])
+        lane, child, row, _, _, _ = self.capture(stalled=True, sampler=sample, persist=persist, spawn=True)
+        sample.assert_not_called()
+        self.assertEqual(row["status"], "TIMEOUT")
+        self.assertEqual(row["secondary_error_type"], "RuntimeError")
+        self.assertTrue(row["direct_child_reaped"])
+        self.assertEqual(child.signals, ["TERM"])
+        self.assertEqual(lane.preservation["failures"], 1)
+        self.assertNotIn("PRIVATE", json.dumps(lane.rows) + json.dumps(lane.preservation))
 
     def test_failed_durable_intent_prevents_launch_and_never_exports_exception_text(self):
         lane, _, row, _, _, launch = self.capture(persist=Mock(side_effect=OSError("PRIVATE WRITE PATH")))

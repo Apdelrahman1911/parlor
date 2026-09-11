@@ -1,0 +1,1172 @@
+﻿2026-09-11T02:13:00.7295087Z Current runner version: '2.337.0'
+2026-09-11T02:13:00.7316501Z ##[group]Runner Image Provisioner
+2026-09-11T02:13:00.7317170Z Hosted Compute Agent
+2026-09-11T02:13:00.7317597Z Version: 20260828.587
+2026-09-11T02:13:00.7318096Z Commit: abac92662cab4cc7352de4f9f9d2e2419aad9c29
+2026-09-11T02:13:00.7318706Z Build Date: 2026-08-28T16:44:25Z
+2026-09-11T02:13:00.7319269Z Worker ID: {93bf1688-d589-4959-a134-17a33fcf17cf}
+2026-09-11T02:13:00.7319843Z Azure Region: westcentralus
+2026-09-11T02:13:00.7320291Z ##[endgroup]
+2026-09-11T02:13:00.7321616Z ##[group]Operating System
+2026-09-11T02:13:00.7322223Z Microsoft Windows Server 2025
+2026-09-11T02:13:00.7322721Z 10.0.26100
+2026-09-11T02:13:00.7323149Z Datacenter
+2026-09-11T02:13:00.7323568Z ##[endgroup]
+2026-09-11T02:13:00.7324046Z ##[group]Runner Image
+2026-09-11T02:13:00.7324518Z Image: windows-2025-vs2026
+2026-09-11T02:13:00.7324967Z Version: 20260907.229.1
+2026-09-11T02:13:00.7326344Z Included Software: https://github.com/actions/runner-images/blob/win25-vs2026/20260907.229/images/windows/Windows2025-VS2026-Readme.md
+2026-09-11T02:13:00.7327647Z Image Release: https://github.com/actions/runner-images/releases/tag/win25-vs2026%2F20260907.229
+2026-09-11T02:13:00.7328461Z ##[endgroup]
+2026-09-11T02:13:00.7329396Z ##[group]GITHUB_TOKEN Permissions
+2026-09-11T02:13:00.7331005Z Contents: read
+2026-09-11T02:13:00.7331439Z Metadata: read
+2026-09-11T02:13:00.7331943Z ##[endgroup]
+2026-09-11T02:13:00.7333707Z Secret source: Actions
+2026-09-11T02:13:00.7334405Z Cache mode: write
+2026-09-11T02:13:00.7335091Z Prepare workflow directory
+2026-09-11T02:13:00.7674485Z Prepare all required actions
+2026-09-11T02:13:00.7718102Z Getting action download info
+2026-09-11T02:13:01.0474995Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-09-11T02:13:01.1449685Z Download action repository 'actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95' (SHA:03ad4de0992f5dab5e18fcb136590ce7c4a0ac95)
+2026-09-11T02:13:01.8786271Z Download action repository 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+2026-09-11T02:13:02.2204493Z Complete job name: Desktop, Kotlin Native, and Android resources strict verification (Windows x64)
+2026-09-11T02:13:02.3558802Z ##[group]Run $longPaths = git config --bool --get core.longpaths
+2026-09-11T02:13:02.3560218Z [36;1m$longPaths = git config --bool --get core.longpaths[0m
+2026-09-11T02:13:02.3561649Z [36;1mif ($LASTEXITCODE -ne 0 -or $longPaths -cne "true") { throw "Expected job-local Git long paths" }[0m
+2026-09-11T02:13:02.3563066Z [36;1mWrite-Output "core.longpaths=$longPaths (job-local)"[0m
+2026-09-11T02:13:02.3564099Z [36;1mif ($env:PARLOR_WINDOWS_ONLY -eq "true") {[0m
+2026-09-11T02:13:02.3565585Z [36;1m  if ($env:PARLOR_WINDOWS_SCOPE -cne "windows-only") { throw "Windows-only dispatch requires its exact explicit scope" }[0m
+2026-09-11T02:13:02.3567126Z [36;1m  $source = $env:PARLOR_WINDOWS_FROZEN_SOURCE_SHA[0m
+2026-09-11T02:13:02.3568605Z [36;1m  if ($source -cnotmatch '^[0-9a-f]{40}$' -or $source -cne $env:GITHUB_SHA -or $source -cne $env:GITHUB_WORKFLOW_SHA) {[0m
+2026-09-11T02:13:02.3570274Z [36;1m    throw "Windows-only dispatch requires the reviewed frozen source"[0m
+2026-09-11T02:13:02.3571331Z [36;1m  }[0m
+2026-09-11T02:13:02.3572620Z [36;1m  if ($env:PARLOR_WINDOWS_NATIVE_SELECTION -cnotin @("", "paired")) { throw "Windows-only dispatch cannot select native evidence" }[0m
+2026-09-11T02:13:02.3574068Z [36;1m}[0m
+2026-09-11T02:13:02.3972529Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-09-11T02:13:02.3973869Z env:
+2026-09-11T02:13:02.3974874Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-11T02:13:02.3976083Z   GIT_CONFIG_COUNT: 1
+2026-09-11T02:13:02.3976762Z   GIT_CONFIG_KEY_0: core.longpaths
+2026-09-11T02:13:02.3977510Z   GIT_CONFIG_VALUE_0: true
+2026-09-11T02:13:02.3979988Z   PARLOR_WINDOWS_SCOPE: full
+2026-09-11T02:13:02.3980719Z   PARLOR_WINDOWS_ONLY: false
+2026-09-11T02:13:02.3981497Z   PARLOR_WINDOWS_FROZEN_SOURCE_SHA: 
+2026-09-11T02:13:02.3982312Z   PARLOR_WINDOWS_NATIVE_SELECTION: paired
+2026-09-11T02:13:02.3983112Z ##[endgroup]
+2026-09-11T02:13:03.4473161Z core.longpaths=true (job-local)
+2026-09-11T02:13:03.5383791Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-09-11T02:13:03.5384283Z with:
+2026-09-11T02:13:03.5384497Z   fetch-depth: 1
+2026-09-11T02:13:03.5384746Z   persist-credentials: false
+2026-09-11T02:13:03.5385039Z   repository: Apdelrahman1911/parlor
+2026-09-11T02:13:03.5387219Z   token: ***
+2026-09-11T02:13:03.5387524Z   ssh-strict: true
+2026-09-11T02:13:03.5387737Z   ssh-user: git
+2026-09-11T02:13:03.5388081Z   clean: true
+2026-09-11T02:13:03.5388305Z   sparse-checkout-cone-mode: true
+2026-09-11T02:13:03.5388563Z   fetch-tags: false
+2026-09-11T02:13:03.5388775Z   show-progress: true
+2026-09-11T02:13:03.5389008Z   lfs: false
+2026-09-11T02:13:03.5389203Z   submodules: false
+2026-09-11T02:13:03.5389419Z   set-safe-directory: true
+2026-09-11T02:13:03.5389664Z   allow-unsafe-pr-checkout: false
+2026-09-11T02:13:03.5389920Z env:
+2026-09-11T02:13:03.5390274Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-11T02:13:03.5390715Z   GIT_CONFIG_COUNT: 1
+2026-09-11T02:13:03.5390954Z   GIT_CONFIG_KEY_0: core.longpaths
+2026-09-11T02:13:03.5391206Z   GIT_CONFIG_VALUE_0: true
+2026-09-11T02:13:03.5391430Z ##[endgroup]
+2026-09-11T02:13:03.6575933Z Syncing repository: Apdelrahman1911/parlor
+2026-09-11T02:13:03.6577099Z ##[group]Getting Git version info
+2026-09-11T02:13:03.6577427Z Working directory is 'D:\a\parlor\parlor'
+2026-09-11T02:13:03.7154730Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-09-11T02:13:03.7386013Z git version 2.55.0.windows.5
+2026-09-11T02:13:03.7420193Z ##[endgroup]
+2026-09-11T02:13:03.7433305Z Temporarily overriding HOME='D:\a\_temp\af90ca97-3887-42be-b4e5-041336194b5e' before making global git config changes
+2026-09-11T02:13:03.7434034Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-11T02:13:03.7441910Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\parlor\parlor
+2026-09-11T02:13:03.8033857Z Deleting the contents of 'D:\a\parlor\parlor'
+2026-09-11T02:13:03.8038049Z ##[group]Determining repository object format
+2026-09-11T02:13:03.8039682Z ##[endgroup]
+2026-09-11T02:13:03.8040918Z ##[group]Initializing the repository
+2026-09-11T02:13:03.8047123Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\parlor\parlor
+2026-09-11T02:13:03.8786718Z Initialized empty Git repository in D:/a/parlor/parlor/.git/
+2026-09-11T02:13:03.8833620Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/Apdelrahman1911/parlor
+2026-09-11T02:13:03.9454992Z ##[endgroup]
+2026-09-11T02:13:03.9456188Z ##[group]Disabling automatic garbage collection
+2026-09-11T02:13:03.9466972Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-09-11T02:13:03.9732729Z ##[endgroup]
+2026-09-11T02:13:03.9733378Z ##[group]Setting up auth
+2026-09-11T02:13:03.9733972Z Removing SSH command configuration
+2026-09-11T02:13:03.9743142Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-09-11T02:13:04.0028469Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-09-11T02:13:05.8179265Z Removing HTTP extra header
+2026-09-11T02:13:05.8194039Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-11T02:13:05.8450347Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-09-11T02:13:06.2584477Z Removing includeIf entries pointing to credentials config files
+2026-09-11T02:13:06.2593409Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-11T02:13:06.2831744Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-09-11T02:13:06.7052919Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:\a\_temp\git-credentials-a4b02e0a-5617-4ed4-b733-5a4631f8cf90.config http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-09-11T02:13:06.7310789Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/parlor/parlor/.git.path D:\a\_temp\git-credentials-a4b02e0a-5617-4ed4-b733-5a4631f8cf90.config
+2026-09-11T02:13:06.9961327Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/parlor/parlor/.git/worktrees/*.path D:\a\_temp\git-credentials-a4b02e0a-5617-4ed4-b733-5a4631f8cf90.config
+2026-09-11T02:13:07.0368290Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-a4b02e0a-5617-4ed4-b733-5a4631f8cf90.config
+2026-09-11T02:13:07.0669222Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-a4b02e0a-5617-4ed4-b733-5a4631f8cf90.config
+2026-09-11T02:13:07.1015352Z ##[endgroup]
+2026-09-11T02:13:07.1026612Z ##[group]Fetching the repository
+2026-09-11T02:13:07.1027853Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +59a384441f44844a79ae62ea8ee68d0c9e1e5878:refs/remotes/origin/fix/local-readiness-2026-09-07
+2026-09-11T02:13:12.3856642Z From https://github.com/Apdelrahman1911/parlor
+2026-09-11T02:13:12.3859060Z  * [new ref]           59a384441f44844a79ae62ea8ee68d0c9e1e5878 -> origin/fix/local-readiness-2026-09-07
+2026-09-11T02:13:12.3902821Z [command]"C:\Program Files\Git\bin\git.exe" branch --list --remote origin/fix/local-readiness-2026-09-07
+2026-09-11T02:13:12.4132954Z   origin/fix/local-readiness-2026-09-07
+2026-09-11T02:13:12.4170309Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse refs/remotes/origin/fix/local-readiness-2026-09-07
+2026-09-11T02:13:12.4387835Z 59a384441f44844a79ae62ea8ee68d0c9e1e5878
+2026-09-11T02:13:12.4416822Z ##[endgroup]
+2026-09-11T02:13:12.4417154Z ##[group]Determining the checkout info
+2026-09-11T02:13:12.4418189Z ##[endgroup]
+2026-09-11T02:13:12.4426147Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-09-11T02:13:12.4724025Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-09-11T02:13:12.4977869Z ##[group]Checking out the ref
+2026-09-11T02:13:12.4990744Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B fix/local-readiness-2026-09-07 refs/remotes/origin/fix/local-readiness-2026-09-07
+2026-09-11T02:13:13.6067849Z Updating files:  11% (3421/30252)
+2026-09-11T02:13:13.6694660Z Updating files:  12% (3631/30252)
+2026-09-11T02:13:13.7881325Z Updating files:  13% (3933/30252)
+2026-09-11T02:13:13.8697487Z Updating files:  14% (4236/30252)
+2026-09-11T02:13:13.9517398Z Updating files:  15% (4538/30252)
+2026-09-11T02:13:14.0128996Z Updating files:  16% (4841/30252)
+2026-09-11T02:13:14.0726768Z Updating files:  17% (5143/30252)
+2026-09-11T02:13:14.1375903Z Updating files:  18% (5446/30252)
+2026-09-11T02:13:14.2010301Z Updating files:  19% (5748/30252)
+2026-09-11T02:13:14.2655779Z Updating files:  20% (6051/30252)
+2026-09-11T02:13:14.3356911Z Updating files:  21% (6353/30252)
+2026-09-11T02:13:14.4088305Z Updating files:  22% (6656/30252)
+2026-09-11T02:13:14.4746255Z Updating files:  23% (6958/30252)
+2026-09-11T02:13:14.7704324Z Updating files:  24% (7261/30252)
+2026-09-11T02:13:15.0525370Z Updating files:  24% (7368/30252)
+2026-09-11T02:13:15.1266099Z Updating files:  25% (7563/30252)
+2026-09-11T02:13:15.1977004Z Updating files:  26% (7866/30252)
+2026-09-11T02:13:15.2662357Z Updating files:  27% (8169/30252)
+2026-09-11T02:13:15.3229625Z Updating files:  28% (8471/30252)
+2026-09-11T02:13:15.3810371Z Updating files:  29% (8774/30252)
+2026-09-11T02:13:15.4470198Z Updating files:  30% (9076/30252)
+2026-09-11T02:13:15.5045224Z Updating files:  31% (9379/30252)
+2026-09-11T02:13:15.5560940Z Updating files:  32% (9681/30252)
+2026-09-11T02:13:15.5632603Z Updating files:  33% (9984/30252)
+2026-09-11T02:13:15.6096761Z Updating files:  33% (10027/30252)
+2026-09-11T02:13:15.6630774Z Updating files:  34% (10286/30252)
+2026-09-11T02:13:15.7166838Z Updating files:  35% (10589/30252)
+2026-09-11T02:13:15.7704457Z Updating files:  36% (10891/30252)
+2026-09-11T02:13:15.8225252Z Updating files:  37% (11194/30252)
+2026-09-11T02:13:16.1891883Z Updating files:  38% (11496/30252)
+2026-09-11T02:13:16.2997234Z Updating files:  39% (11799/30252)
+2026-09-11T02:13:16.3509602Z Updating files:  40% (12101/30252)
+2026-09-11T02:13:16.4044380Z Updating files:  41% (12404/30252)
+2026-09-11T02:13:16.4597952Z Updating files:  42% (12706/30252)
+2026-09-11T02:13:16.5208882Z Updating files:  43% (13009/30252)
+2026-09-11T02:13:16.5725774Z Updating files:  44% (13311/30252)
+2026-09-11T02:13:16.6411021Z Updating files:  44% (13543/30252)
+2026-09-11T02:13:16.7088547Z Updating files:  45% (13614/30252)
+2026-09-11T02:13:16.7663392Z Updating files:  46% (13916/30252)
+2026-09-11T02:13:16.8210874Z Updating files:  47% (14219/30252)
+2026-09-11T02:13:16.8783684Z Updating files:  48% (14521/30252)
+2026-09-11T02:13:16.9425890Z Updating files:  49% (14824/30252)
+2026-09-11T02:13:17.0151861Z Updating files:  50% (15126/30252)
+2026-09-11T02:13:17.0858549Z Updating files:  51% (15429/30252)
+2026-09-11T02:13:17.1520291Z Updating files:  52% (15732/30252)
+2026-09-11T02:13:17.2250979Z Updating files:  53% (16034/30252)
+2026-09-11T02:13:17.2946340Z Updating files:  54% (16337/30252)
+2026-09-11T02:13:17.7435276Z Updating files:  55% (16639/30252)
+2026-09-11T02:13:17.8066594Z Updating files:  55% (16708/30252)
+2026-09-11T02:13:17.8688836Z Updating files:  56% (16942/30252)
+2026-09-11T02:13:17.9303952Z Updating files:  57% (17244/30252)
+2026-09-11T02:13:17.9909792Z Updating files:  58% (17547/30252)
+2026-09-11T02:13:18.0603154Z Updating files:  59% (17849/30252)
+2026-09-11T02:13:18.1353862Z Updating files:  60% (18152/30252)
+2026-09-11T02:13:18.2099666Z Updating files:  61% (18454/30252)
+2026-09-11T02:13:18.2840739Z Updating files:  62% (18757/30252)
+2026-09-11T02:13:18.3584880Z Updating files:  63% (19059/30252)
+2026-09-11T02:13:18.4208181Z Updating files:  64% (19362/30252)
+2026-09-11T02:13:18.4878503Z Updating files:  65% (19664/30252)
+2026-09-11T02:13:18.5562885Z Updating files:  66% (19967/30252)
+2026-09-11T02:13:18.5824070Z Updating files:  67% (20269/30252)
+2026-09-11T02:13:19.1661377Z Updating files:  67% (20350/30252)
+2026-09-11T02:13:19.2271125Z Updating files:  68% (20572/30252)
+2026-09-11T02:13:19.2874881Z Updating files:  69% (20874/30252)
+2026-09-11T02:13:19.3775282Z Updating files:  70% (21177/30252)
+2026-09-11T02:13:19.4456505Z Updating files:  71% (21479/30252)
+2026-09-11T02:13:19.5430835Z Updating files:  72% (21782/30252)
+2026-09-11T02:13:19.5941166Z Updating files:  73% (22084/30252)
+2026-09-11T02:13:19.6038801Z Updating files:  73% (22342/30252)
+2026-09-11T02:13:19.6780517Z Updating files:  74% (22387/30252)
+2026-09-11T02:13:19.7431021Z Updating files:  75% (22689/30252)
+2026-09-11T02:13:19.9181573Z Updating files:  76% (22992/30252)
+2026-09-11T02:13:20.0386002Z Updating files:  77% (23295/30252)
+2026-09-11T02:13:20.4837454Z Updating files:  78% (23597/30252)
+2026-09-11T02:13:20.5621956Z Updating files:  79% (23900/30252)
+2026-09-11T02:13:20.6517381Z Updating files:  80% (24202/30252)
+2026-09-11T02:13:20.7013211Z Updating files:  80% (24279/30252)
+2026-09-11T02:13:20.7617727Z Updating files:  81% (24505/30252)
+2026-09-11T02:13:20.8256489Z Updating files:  82% (24807/30252)
+2026-09-11T02:13:20.8907040Z Updating files:  83% (25110/30252)
+2026-09-11T02:13:20.9542607Z Updating files:  84% (25412/30252)
+2026-09-11T02:13:21.0218624Z Updating files:  85% (25715/30252)
+2026-09-11T02:13:21.1054592Z Updating files:  86% (26017/30252)
+2026-09-11T02:13:21.1644460Z Updating files:  87% (26320/30252)
+2026-09-11T02:13:21.3087619Z Updating files:  88% (26622/30252)
+2026-09-11T02:13:21.3706434Z Updating files:  89% (26925/30252)
+2026-09-11T02:13:21.8569973Z Updating files:  90% (27227/30252)
+2026-09-11T02:13:22.1335388Z Updating files:  90% (27424/30252)
+2026-09-11T02:13:22.2809991Z Updating files:  91% (27530/30252)
+2026-09-11T02:13:22.3332863Z Updating files:  92% (27832/30252)
+2026-09-11T02:13:22.3957092Z Updating files:  93% (28135/30252)
+2026-09-11T02:13:22.4497617Z Updating files:  94% (28437/30252)
+2026-09-11T02:13:22.5092468Z Updating files:  95% (28740/30252)
+2026-09-11T02:13:22.5947909Z Updating files:  96% (29042/30252)
+2026-09-11T02:13:22.6153841Z Updating files:  97% (29345/30252)
+2026-09-11T02:13:22.6815291Z Updating files:  97% (29424/30252)
+2026-09-11T02:13:22.7601383Z Updating files:  98% (29647/30252)
+2026-09-11T02:13:22.8522358Z Updating files:  99% (29950/30252)
+2026-09-11T02:13:22.8522827Z Updating files: 100% (30252/30252)
+2026-09-11T02:13:22.8523149Z Updating files: 100% (30252/30252), done.
+2026-09-11T02:13:22.9271496Z Switched to a new branch 'fix/local-readiness-2026-09-07'
+2026-09-11T02:13:22.9284399Z branch 'fix/local-readiness-2026-09-07' set up to track 'origin/fix/local-readiness-2026-09-07'.
+2026-09-11T02:13:22.9446882Z ##[endgroup]
+2026-09-11T02:13:22.9731520Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-09-11T02:13:22.9958940Z 59a384441f44844a79ae62ea8ee68d0c9e1e5878
+2026-09-11T02:13:22.9992406Z ##[group]Removing auth
+2026-09-11T02:13:22.9992697Z Removing SSH command configuration
+2026-09-11T02:13:23.0000258Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-09-11T02:13:23.0258672Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-09-11T02:13:23.6478332Z Removing HTTP extra header
+2026-09-11T02:13:23.6486508Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-11T02:13:23.6757664Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-09-11T02:13:24.1361848Z Removing includeIf entries pointing to credentials config files
+2026-09-11T02:13:24.1368993Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-11T02:13:24.1585803Z includeif.gitdir:D:/a/parlor/parlor/.git.path
+2026-09-11T02:13:24.1586261Z includeif.gitdir:D:/a/parlor/parlor/.git/worktrees/*.path
+2026-09-11T02:13:24.1586642Z includeif.gitdir:/github/workspace/.git.path
+2026-09-11T02:13:24.1587047Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-11T02:13:24.1619824Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/parlor/parlor/.git.path
+2026-09-11T02:13:24.1825206Z D:\a\_temp\git-credentials-a4b02e0a-5617-4ed4-b733-5a4631f8cf90.config
+2026-09-11T02:13:24.1858543Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/parlor/parlor/.git.path D\:\\a\\_temp\\git\-credentials\-a4b02e0a\-5617\-4ed4\-b733\-5a4631f8cf90\.config
+2026-09-11T02:13:24.2121052Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/parlor/parlor/.git/worktrees/*.path
+2026-09-11T02:13:24.2340631Z D:\a\_temp\git-credentials-a4b02e0a-5617-4ed4-b733-5a4631f8cf90.config
+2026-09-11T02:13:24.2375480Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/parlor/parlor/.git/worktrees/*.path D\:\\a\\_temp\\git\-credentials\-a4b02e0a\-5617\-4ed4\-b733\-5a4631f8cf90\.config
+2026-09-11T02:13:24.2627717Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-09-11T02:13:24.2851445Z /github/runner_temp/git-credentials-a4b02e0a-5617-4ed4-b733-5a4631f8cf90.config
+2026-09-11T02:13:24.2887313Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-a4b02e0a\-5617\-4ed4\-b733\-5a4631f8cf90\.config
+2026-09-11T02:13:24.3146964Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-09-11T02:13:24.3374005Z /github/runner_temp/git-credentials-a4b02e0a-5617-4ed4-b733-5a4631f8cf90.config
+2026-09-11T02:13:24.3411388Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-a4b02e0a\-5617\-4ed4\-b733\-5a4631f8cf90\.config
+2026-09-11T02:13:24.3670579Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-09-11T02:13:24.8347462Z Removing credentials config 'D:\a\_temp\git-credentials-a4b02e0a-5617-4ed4-b733-5a4631f8cf90.config'
+2026-09-11T02:13:24.8357764Z ##[endgroup]
+2026-09-11T02:13:24.8694153Z ##[group]Run actions/setup-java@03ad4de0992f5dab5e18fcb136590ce7c4a0ac95
+2026-09-11T02:13:24.8694507Z with:
+2026-09-11T02:13:24.8694654Z   distribution: temurin
+2026-09-11T02:13:24.8694820Z   java-version: 21
+2026-09-11T02:13:24.8694971Z   check-latest: false
+2026-09-11T02:13:24.8695129Z   java-package: jdk
+2026-09-11T02:13:24.8695297Z   set-default: true
+2026-09-11T02:13:24.8695452Z   verify-signature: false
+2026-09-11T02:13:24.8695615Z   server-id: github
+2026-09-11T02:13:24.8695765Z   server-username: GITHUB_ACTOR
+2026-09-11T02:13:24.8695948Z   server-password: GITHUB_TOKEN
+2026-09-11T02:13:24.8696123Z   overwrite-settings: true
+2026-09-11T02:13:24.8696291Z   job-status: success
+2026-09-11T02:13:24.8698116Z   token: ***
+2026-09-11T02:13:24.8698278Z   show-download-progress: false
+2026-09-11T02:13:24.8698459Z env:
+2026-09-11T02:13:24.8698729Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-11T02:13:24.8699091Z   GIT_CONFIG_COUNT: 1
+2026-09-11T02:13:24.8699263Z   GIT_CONFIG_KEY_0: core.longpaths
+2026-09-11T02:13:24.8699447Z   GIT_CONFIG_VALUE_0: true
+2026-09-11T02:13:24.8699604Z ##[endgroup]
+2026-09-11T02:13:25.0197241Z ##[group]Installed distributions
+2026-09-11T02:13:25.0250703Z Resolved Java 21.0.12+101.0 from tool-cache
+2026-09-11T02:13:25.0251044Z Setting Java 21.0.12+101.0 as the default
+2026-09-11T02:13:25.0269853Z Creating toolchains.xml for JDK version 21 from temurin
+2026-09-11T02:13:25.0337484Z Writing to C:\Users\runneradmin\.m2\toolchains.xml
+2026-09-11T02:13:25.0340355Z 
+2026-09-11T02:13:25.0340484Z Java configuration:
+2026-09-11T02:13:25.0340762Z   Distribution: temurin
+2026-09-11T02:13:25.0341001Z   Version: 21.0.12+101.0
+2026-09-11T02:13:25.0341293Z   Path: C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\21.0.12-101.0\x64
+2026-09-11T02:13:25.0341600Z 
+2026-09-11T02:13:25.0341891Z ##[endgroup]
+2026-09-11T02:13:25.0371364Z Creating settings.xml with server-id: github
+2026-09-11T02:13:25.0371759Z Writing to C:\Users\runneradmin\.m2\settings.xml
+2026-09-11T02:13:25.0372574Z Configured MAVEN_ARGS to include -ntp to suppress Maven transfer progress logs. Set 'show-download-progress: true' to keep the download progress output.
+2026-09-11T02:13:25.0620478Z ##[group]Run import runpy, sys
+2026-09-11T02:13:25.0620783Z [36;1mimport runpy, sys[0m
+2026-09-11T02:13:25.0621220Z [36;1msys.argv = ["verification_hygiene.py", "prepare"][0m
+2026-09-11T02:13:25.0621573Z [36;1mrunpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")[0m
+2026-09-11T02:13:25.1511472Z shell: C:\hostedtoolcache\windows\Python\3.12.10\x64\python.EXE {0}
+2026-09-11T02:13:25.1511765Z env:
+2026-09-11T02:13:25.1512057Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-11T02:13:25.1512397Z   GIT_CONFIG_COUNT: 1
+2026-09-11T02:13:25.1512576Z   GIT_CONFIG_KEY_0: core.longpaths
+2026-09-11T02:13:25.1512779Z   GIT_CONFIG_VALUE_0: true
+2026-09-11T02:13:25.1513056Z   JAVA_HOME: C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\21.0.12-101.0\x64
+2026-09-11T02:13:25.1513464Z   JAVA_HOME_21_X64: C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\21.0.12-101.0\x64
+2026-09-11T02:13:25.1513836Z   MAVEN_ARGS: -ntp
+2026-09-11T02:13:25.1513990Z ##[endgroup]
+2026-09-11T02:13:28.4484849Z ##[group]Run if (-not $IsWindows) { throw "Expected a Windows runner" }
+2026-09-11T02:13:28.4485347Z [36;1mif (-not $IsWindows) { throw "Expected a Windows runner" }[0m
+2026-09-11T02:13:28.4485891Z [36;1mif ([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture -ne [System.Runtime.InteropServices.Architecture]::X64) {[0m
+2026-09-11T02:13:28.4486368Z [36;1m  throw "Expected an x64 runner"[0m
+2026-09-11T02:13:28.4486563Z [36;1m}[0m
+2026-09-11T02:13:28.4486718Z [36;1m$head = git rev-parse HEAD[0m
+2026-09-11T02:13:28.4487103Z [36;1mif ($LASTEXITCODE -ne 0 -or $head -cne $env:GITHUB_SHA) { throw "Checkout differs from the triggering source" }[0m
+2026-09-11T02:13:28.4487470Z [36;1mWrite-Output $head[0m
+2026-09-11T02:13:28.4487667Z [36;1m$status = git status --porcelain[0m
+2026-09-11T02:13:28.4487952Z [36;1mif ($LASTEXITCODE -ne 0 -or $status) { throw "Checkout is not clean" }[0m
+2026-09-11T02:13:28.4547227Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-09-11T02:13:28.4547504Z env:
+2026-09-11T02:13:28.4547799Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-11T02:13:28.4548119Z   GIT_CONFIG_COUNT: 1
+2026-09-11T02:13:28.4548288Z   GIT_CONFIG_KEY_0: core.longpaths
+2026-09-11T02:13:28.4548471Z   GIT_CONFIG_VALUE_0: true
+2026-09-11T02:13:28.4548739Z   JAVA_HOME: C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\21.0.12-101.0\x64
+2026-09-11T02:13:28.4549135Z   JAVA_HOME_21_X64: C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\21.0.12-101.0\x64
+2026-09-11T02:13:28.4549426Z   MAVEN_ARGS: -ntp
+2026-09-11T02:13:28.4549578Z ##[endgroup]
+2026-09-11T02:13:28.8430870Z 59a384441f44844a79ae62ea8ee68d0c9e1e5878
+2026-09-11T02:13:29.0685931Z ##[group]Run & "$env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat" `
+2026-09-11T02:13:29.0686699Z [36;1m& "$env:ANDROID_HOME\cmdline-tools\latest\bin\sdkmanager.bat" `[0m
+2026-09-11T02:13:29.0687140Z [36;1m  "platforms;android-36" `[0m
+2026-09-11T02:13:29.0687456Z [36;1m  "build-tools;36.0.0" `[0m
+2026-09-11T02:13:29.0687774Z [36;1m  "platform-tools"[0m
+2026-09-11T02:13:29.0688240Z [36;1mif ($LASTEXITCODE -ne 0) { throw "sdkmanager failed with exit code $LASTEXITCODE" }[0m
+2026-09-11T02:13:29.0769851Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-09-11T02:13:29.0770124Z env:
+2026-09-11T02:13:29.0770413Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-11T02:13:29.0770745Z   GIT_CONFIG_COUNT: 1
+2026-09-11T02:13:29.0770916Z   GIT_CONFIG_KEY_0: core.longpaths
+2026-09-11T02:13:29.0771107Z   GIT_CONFIG_VALUE_0: true
+2026-09-11T02:13:29.0771419Z   JAVA_HOME: C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\21.0.12-101.0\x64
+2026-09-11T02:13:29.0771818Z   JAVA_HOME_21_X64: C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\21.0.12-101.0\x64
+2026-09-11T02:13:29.0772117Z   MAVEN_ARGS: -ntp
+2026-09-11T02:13:29.0772269Z ##[endgroup]
+2026-09-11T02:13:44.9058879Z Loading package information...                                                  
+2026-09-11T02:13:45.0361208Z Loading local repository...                                                     
+2026-09-11T02:13:45.0365277Z [                                       ] 3% Loading local repository...        
+2026-09-11T02:13:52.7350785Z [                                       ] 3% Fetch remote repository...         
+2026-09-11T02:13:54.0293638Z [=                                      ] 3% Fetch remote repository...         
+2026-09-11T02:13:54.1130378Z [=                                      ] 4% Fetch remote repository...         
+2026-09-11T02:13:54.1413960Z [=                                      ] 5% Fetch remote repository...         
+2026-09-11T02:13:54.2005061Z [==                                     ] 5% Fetch remote repository...         
+2026-09-11T02:13:54.3216778Z [==                                     ] 6% Fetch remote repository...         
+2026-09-11T02:13:54.3986829Z [==                                     ] 7% Fetch remote repository...         
+2026-09-11T02:13:54.3988634Z [==                                     ] 7% Computing updates...               
+2026-09-11T02:13:54.4072805Z [===                                    ] 8% Computing updates...               
+2026-09-11T02:13:54.4358735Z [===                                    ] 10% Computing updates...              
+2026-09-11T02:13:54.4359754Z [=======================================] 100% Computing updates...             
+2026-09-11T02:13:54.4360271Z 
+2026-09-11T02:13:54.4360487Z 
+2026-09-11T02:13:54.5631532Z ##[group]Run .\gradlew.bat productionDesktopCheck :composeApp:downloadKotlinNativeDistribution :composeApp:processDebugResources --dependency-verification=strict --no-daemon --stacktrace --console=plain
+2026-09-11T02:13:54.5632725Z [36;1m.\gradlew.bat productionDesktopCheck :composeApp:downloadKotlinNativeDistribution :composeApp:processDebugResources --dependency-verification=strict --no-daemon --stacktrace --console=plain[0m
+2026-09-11T02:13:54.5690322Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-09-11T02:13:54.5690601Z env:
+2026-09-11T02:13:54.5690883Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-11T02:13:54.5691206Z   GIT_CONFIG_COUNT: 1
+2026-09-11T02:13:54.5691380Z   GIT_CONFIG_KEY_0: core.longpaths
+2026-09-11T02:13:54.5691567Z   GIT_CONFIG_VALUE_0: true
+2026-09-11T02:13:54.5691837Z   JAVA_HOME: C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\21.0.12-101.0\x64
+2026-09-11T02:13:54.5692264Z   JAVA_HOME_21_X64: C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\21.0.12-101.0\x64
+2026-09-11T02:13:54.5692574Z   MAVEN_ARGS: -ntp
+2026-09-11T02:13:54.5692729Z ##[endgroup]
+2026-09-11T02:13:56.4074155Z Downloading https://services.gradle.org/distributions/gradle-8.13-bin.zip
+2026-09-11T02:13:58.2452137Z .............10%.............20%.............30%.............40%.............50%.............60%.............70%.............80%.............90%.............100%
+2026-09-11T02:14:01.6984950Z 
+2026-09-11T02:14:01.6987336Z Welcome to Gradle 8.13!
+2026-09-11T02:14:01.6987665Z 
+2026-09-11T02:14:01.6987858Z Here are the highlights of this release:
+2026-09-11T02:14:01.6988419Z  - Daemon JVM auto-provisioning
+2026-09-11T02:14:01.6988971Z  - Enhancements for Scala plugin and JUnit testing
+2026-09-11T02:14:01.6989566Z  - Improvements for build authors and plugin developers
+2026-09-11T02:14:01.6989985Z 
+2026-09-11T02:14:01.6990321Z For more details see https://docs.gradle.org/8.13/release-notes.html
+2026-09-11T02:14:01.6990760Z 
+2026-09-11T02:14:01.8882289Z To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.13/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+2026-09-11T02:14:04.2854827Z Daemon will be stopped at the end of the build 
+2026-09-11T02:14:05.8897847Z Calculating task graph as no cached configuration is available for tasks: productionDesktopCheck :composeApp:downloadKotlinNativeDistribution :composeApp:processDebugResources
+2026-09-11T02:14:32.4086194Z Type-safe project accessors is an incubating feature.
+2026-09-11T02:14:57.2183798Z > Task :build-logic:convention:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-11T02:15:10.5873451Z > Task :build-logic:convention:pluginDescriptors
+2026-09-11T02:15:10.6881003Z > Task :build-logic:convention:processResources
+2026-09-11T02:15:15.1993526Z > Task :build-logic:convention:compileKotlin
+2026-09-11T02:15:15.1994062Z > Task :build-logic:convention:compileJava NO-SOURCE
+2026-09-11T02:15:15.1994387Z > Task :build-logic:convention:classes
+2026-09-11T02:15:15.1994617Z > Task :build-logic:convention:jar
+2026-09-11T02:15:56.3887446Z 
+2026-09-11T02:15:56.3889698Z > Configure project :composeApp
+2026-09-11T02:15:56.3890441Z WARNING: The option setting 'android.experimental.lint.version=9.1.1' is experimental.
+2026-09-11T02:16:05.1886559Z w: Deprecated Gradle Version
+2026-09-11T02:16:05.1887982Z The used Gradle version (Gradle 8.13) is deprecated and will not be supported in future Kotlin Gradle Plugin releases.
+2026-09-11T02:16:05.1890120Z The minimum supported Gradle version will become Gradle 8.14.4 in Kotlin 2.5.0.
+2026-09-11T02:16:05.1898210Z 
+2026-09-11T02:16:05.1898630Z This warning can be suppressed in 'gradle.properties':
+2026-09-11T02:16:05.1899356Z     kotlin.suppressGradlePluginWarnings=DeprecatedGradleVersionWarning
+2026-09-11T02:16:05.1903209Z Solution: Please update the Gradle version to at least Gradle 8.14.4.
+2026-09-11T02:16:05.1903687Z 
+2026-09-11T02:16:05.1906189Z w: Native task 'iosX64Test' is disabled
+2026-09-11T02:16:05.1907196Z Task 'iosX64Test' for target 'ios_x64' cannot run on the current host (windows-x86_64).
+2026-09-11T02:16:05.1907896Z Reason: simulator tests require macOS
+2026-09-11T02:16:05.1908661Z Solution: To suppress this warning, add 'kotlin.native.ignoreDisabledTargets=true' to gradle.properties.
+2026-09-11T02:16:05.1909306Z 
+2026-09-11T02:16:05.1909583Z w: Native task 'iosSimulatorArm64Test' is disabled
+2026-09-11T02:16:05.1910375Z Task 'iosSimulatorArm64Test' for target 'ios_simulator_arm64' cannot run on the current host (windows-x86_64).
+2026-09-11T02:16:05.1911177Z Reason: simulator tests require macOS
+2026-09-11T02:16:05.1934154Z Solution: To suppress this warning, add 'kotlin.native.ignoreDisabledTargets=true' to gradle.properties.
+2026-09-11T02:16:05.1934879Z 
+2026-09-11T02:18:05.2050924Z 
+2026-09-11T02:18:05.2163854Z > Task :composeApp:kmpPartiallyResolvedDependenciesChecker
+2026-09-11T02:18:05.2173448Z > Task :composeApp:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-11T02:18:05.2188069Z > Task :composeApp:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+2026-09-11T02:18:05.2212193Z > Task :composeApp:convertXmlValueResourcesForDesktopMain NO-SOURCE
+2026-09-11T02:18:05.2279272Z > Task :composeApp:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+2026-09-11T02:18:05.2320639Z > Task :composeApp:generateResourceAccessorsForDesktopMain NO-SOURCE
+2026-09-11T02:18:05.2360962Z > Task :composeApp:generateParlorVersion
+2026-09-11T02:18:05.2361726Z > Task :game-modes:mafia:kmpPartiallyResolvedDependenciesChecker
+2026-09-11T02:18:05.2362461Z > Task :game-modes:mafia:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-11T02:18:05.3049442Z > Task :game-modes:mafia:convertXmlValueResourcesForCommonMain
+2026-09-11T02:18:05.3113089Z > Task :game-modes:mafia:copyNonXmlValueResourcesForCommonMain NO-SOURCE
+2026-09-11T02:18:05.3564419Z > Task :game-modes:mafia:prepareComposeResourcesTaskForCommonMain
+2026-09-11T02:18:05.3585884Z > Task :composeApp:copyNonXmlValueResourcesForCommonMain
+2026-09-11T02:18:05.3592716Z > Task :composeApp:convertXmlValueResourcesForCommonMain
+2026-09-11T02:18:05.3646512Z > Task :composeApp:prepareComposeResourcesTaskForCommonMain
+2026-09-11T02:18:05.3773436Z > Task :composeApp:generateExpectResourceCollectorsForCommonMain
+2026-09-11T02:18:05.4192087Z > Task :composeApp:generateComposeResClass
+2026-09-11T02:18:05.4550986Z > Task :game-modes:mafia:convertXmlValueResourcesForDesktopMain NO-SOURCE
+2026-09-11T02:18:05.4552885Z > Task :game-modes:mafia:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+2026-09-11T02:18:05.4553647Z > Task :game-modes:mafia:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+2026-09-11T02:18:05.4554400Z > Task :game-modes:mafia:generateResourceAccessorsForDesktopMain NO-SOURCE
+2026-09-11T02:18:05.4555271Z > Task :game-modes:mafia:generateComposeResClass
+2026-09-11T02:18:05.4556102Z > Task :shared:content:kmpPartiallyResolvedDependenciesChecker
+2026-09-11T02:18:05.4556785Z > Task :shared:content:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-11T02:18:05.4557484Z > Task :shared:core:kmpPartiallyResolvedDependenciesChecker
+2026-09-11T02:18:05.4558108Z > Task :shared:core:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-11T02:18:05.4558812Z > Task :game-modes:mafia:generateExpectResourceCollectorsForCommonMain
+2026-09-11T02:18:05.4559421Z > Task :shared:core:desktopProcessResources NO-SOURCE
+2026-09-11T02:18:05.4559976Z > Task :shared:core:processDesktopMainResources SKIPPED
+2026-09-11T02:18:05.5005951Z > Task :shared:engine:kmpPartiallyResolvedDependenciesChecker
+2026-09-11T02:18:05.5064223Z > Task :shared:engine:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-11T02:18:05.5374035Z > Task :shared:engine:desktopProcessResources NO-SOURCE
+2026-09-11T02:18:05.5375106Z > Task :shared:engine:processDesktopMainResources SKIPPED
+2026-09-11T02:18:05.5676717Z > Task :shared:content:desktopProcessResources NO-SOURCE
+2026-09-11T02:18:05.6247869Z > Task :shared:content:processDesktopMainResources SKIPPED
+2026-09-11T02:18:05.6520817Z > Task :shared:design-system:kmpPartiallyResolvedDependenciesChecker
+2026-09-11T02:18:05.6600970Z > Task :shared:design-system:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-11T02:18:05.6670021Z > Task :shared:design-system:convertXmlValueResourcesForCommonMain
+2026-09-11T02:18:05.6773545Z > Task :shared:design-system:copyNonXmlValueResourcesForCommonMain
+2026-09-11T02:18:05.6957574Z > Task :shared:design-system:prepareComposeResourcesTaskForCommonMain
+2026-09-11T02:18:05.6988651Z > Task :shared:design-system:generateResourceAccessorsForCommonMain
+2026-09-11T02:18:05.7240399Z > Task :shared:design-system:convertXmlValueResourcesForDesktopMain NO-SOURCE
+2026-09-11T02:18:05.7297096Z > Task :shared:design-system:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+2026-09-11T02:18:05.7486138Z > Task :shared:design-system:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+2026-09-11T02:18:05.7639240Z > Task :shared:design-system:generateResourceAccessorsForDesktopMain NO-SOURCE
+2026-09-11T02:18:05.7720556Z > Task :composeApp:generateResourceAccessorsForCommonMain
+2026-09-11T02:18:05.7982447Z > Task :game-modes:mafia:generateResourceAccessorsForCommonMain
+2026-09-11T02:18:05.8097921Z > Task :game-modes:mafia:generateActualResourceCollectorsForDesktopMain
+2026-09-11T02:18:05.8163215Z > Task :shared:design-system:generateActualResourceCollectorsForDesktopMain
+2026-09-11T02:18:05.8184024Z > Task :shared:design-system:generateComposeResClass
+2026-09-11T02:18:05.8219191Z > Task :composeApp:generateActualResourceCollectorsForDesktopMain
+2026-09-11T02:18:05.8241016Z > Task :shared:design-system:generateExpectResourceCollectorsForCommonMain
+2026-09-11T02:18:05.8288163Z > Task :shared:networking:kmpPartiallyResolvedDependenciesChecker
+2026-09-11T02:18:05.8374957Z > Task :shared:networking:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-11T02:18:05.8573849Z > Task :shared:session:kmpPartiallyResolvedDependenciesChecker
+2026-09-11T02:18:05.8624669Z > Task :shared:session:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-11T02:18:05.9060261Z > Task :shared:networking:desktopProcessResources NO-SOURCE
+2026-09-11T02:18:05.9185158Z > Task :shared:networking:processDesktopMainResources SKIPPED
+2026-09-11T02:18:05.9286534Z > Task :shared:storage:kmpPartiallyResolvedDependenciesChecker
+2026-09-11T02:18:05.9697144Z > Task :shared:storage:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-11T02:18:06.0137458Z > Task :shared:session:desktopProcessResources NO-SOURCE
+2026-09-11T02:18:06.0307581Z > Task :shared:session:processDesktopMainResources SKIPPED
+2026-09-11T02:18:06.0357023Z > Task :shared:storage:desktopProcessResources NO-SOURCE
+2026-09-11T02:18:06.0429543Z > Task :shared:storage:processDesktopMainResources SKIPPED
+2026-09-11T02:18:06.0449546Z > Task :game-modes:whodunit:kmpPartiallyResolvedDependenciesChecker
+2026-09-11T02:18:06.0508829Z > Task :game-modes:whodunit:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-11T02:18:06.0578195Z > Task :game-modes:mafia:assembleDesktopMainResources
+2026-09-11T02:18:06.0593889Z > Task :game-modes:mafia:desktopProcessResources
+2026-09-11T02:18:06.1037608Z > Task :game-modes:mafia:processDesktopMainResources SKIPPED
+2026-09-11T02:18:06.1056171Z > Task :game-modes:whodunit:convertXmlValueResourcesForDesktopMain NO-SOURCE
+2026-09-11T02:18:06.1057346Z > Task :game-modes:whodunit:copyNonXmlValueResourcesForDesktopMain NO-SOURCE
+2026-09-11T02:18:06.1058227Z > Task :game-modes:whodunit:convertXmlValueResourcesForCommonMain
+2026-09-11T02:18:06.1059277Z > Task :game-modes:whodunit:prepareComposeResourcesTaskForDesktopMain NO-SOURCE
+2026-09-11T02:18:06.1060242Z > Task :game-modes:whodunit:generateResourceAccessorsForDesktopMain NO-SOURCE
+2026-09-11T02:18:06.1061043Z > Task :game-modes:whodunit:generateComposeResClass
+2026-09-11T02:18:06.1061988Z > Task :game-modes:whodunit:copyNonXmlValueResourcesForCommonMain
+2026-09-11T02:18:06.1062744Z > Task :shared:design-system:assembleDesktopMainResources
+2026-09-11T02:18:06.1063517Z > Task :game-modes:whodunit:generateExpectResourceCollectorsForCommonMain
+2026-09-11T02:18:06.1064421Z > Task :shared:transport-p2p:kmpPartiallyResolvedDependenciesChecker
+2026-09-11T02:18:06.1065271Z > Task :shared:transport-p2p:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-11T02:18:06.1066081Z > Task :shared:transport-p2p:desktopProcessResources NO-SOURCE
+2026-09-11T02:18:06.1066974Z > Task :shared:transport-p2p:processDesktopMainResources SKIPPED
+2026-09-11T02:18:06.1067674Z > Task :shared:design-system:desktopProcessResources
+2026-09-11T02:18:06.1145977Z > Task :shared:design-system:processDesktopMainResources SKIPPED
+2026-09-11T02:18:06.1156503Z > Task :composeApp:convertXmlValueResourcesForCommonTest NO-SOURCE
+2026-09-11T02:18:06.1237615Z > Task :composeApp:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+2026-09-11T02:18:06.1238613Z > Task :composeApp:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+2026-09-11T02:18:06.1239614Z > Task :composeApp:generateResourceAccessorsForCommonTest NO-SOURCE
+2026-09-11T02:18:06.1240402Z > Task :composeApp:convertXmlValueResourcesForDesktopTest NO-SOURCE
+2026-09-11T02:18:06.1241217Z > Task :composeApp:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+2026-09-11T02:18:06.1242028Z > Task :composeApp:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+2026-09-11T02:18:06.1242856Z > Task :composeApp:generateResourceAccessorsForDesktopTest NO-SOURCE
+2026-09-11T02:18:06.1261102Z > Task :shared:engine-testing:kmpPartiallyResolvedDependenciesChecker
+2026-09-11T02:18:06.1265768Z > Task :shared:engine-testing:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-11T02:18:06.1266668Z > Task :shared:engine-testing:desktopProcessResources NO-SOURCE
+2026-09-11T02:18:06.1267759Z > Task :shared:engine-testing:processDesktopMainResources SKIPPED
+2026-09-11T02:18:06.1268472Z > Task :composeApp:assembleDesktopTestResources
+2026-09-11T02:18:06.1269107Z > Task :composeApp:desktopTestProcessResources
+2026-09-11T02:18:06.1269740Z > Task :composeApp:processDesktopTestResources SKIPPED
+2026-09-11T02:18:06.1270503Z > Task :game-modes:mafia:convertXmlValueResourcesForCommonTest NO-SOURCE
+2026-09-11T02:18:06.1271266Z > Task :game-modes:mafia:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+2026-09-11T02:18:06.1272056Z > Task :game-modes:mafia:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+2026-09-11T02:18:06.1272919Z > Task :game-modes:mafia:generateResourceAccessorsForCommonTest NO-SOURCE
+2026-09-11T02:18:06.1273885Z > Task :composeApp:assembleDesktopMainResources
+2026-09-11T02:18:06.1274657Z > Task :game-modes:mafia:convertXmlValueResourcesForDesktopTest NO-SOURCE
+2026-09-11T02:18:06.1275542Z > Task :game-modes:mafia:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+2026-09-11T02:18:06.1276390Z > Task :game-modes:mafia:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+2026-09-11T02:18:06.1277594Z > Task :game-modes:mafia:generateResourceAccessorsForDesktopTest NO-SOURCE
+2026-09-11T02:18:06.1278428Z > Task :game-modes:whodunit:prepareComposeResourcesTaskForCommonMain
+2026-09-11T02:18:06.1279252Z > Task :shared:networking-testing:kmpPartiallyResolvedDependenciesChecker
+2026-09-11T02:18:06.1280017Z > Task :game-modes:whodunit:assembleDesktopMainResources
+2026-09-11T02:18:06.1280669Z > Task :composeApp:desktopProcessResources
+2026-09-11T02:18:06.1281280Z > Task :composeApp:processDesktopMainResources SKIPPED
+2026-09-11T02:18:06.1282081Z > Task :shared:networking-testing:checkKotlinGradlePluginConfigurationErrors SKIPPED
+2026-09-11T02:18:06.1282951Z > Task :shared:networking-testing:desktopProcessResources NO-SOURCE
+2026-09-11T02:18:06.1283667Z > Task :shared:networking-testing:processDesktopMainResources SKIPPED
+2026-09-11T02:18:06.1284344Z > Task :game-modes:mafia:assembleDesktopTestResources
+2026-09-11T02:18:06.1285200Z > Task :game-modes:mafia:desktopTestProcessResources
+2026-09-11T02:18:06.1285891Z > Task :game-modes:mafia:processDesktopTestResources SKIPPED
+2026-09-11T02:18:06.1286674Z > Task :game-modes:whodunit:convertXmlValueResourcesForCommonTest NO-SOURCE
+2026-09-11T02:18:06.1287570Z > Task :game-modes:whodunit:desktopProcessResources
+2026-09-11T02:18:06.1288253Z > Task :game-modes:whodunit:processDesktopMainResources SKIPPED
+2026-09-11T02:18:06.1293568Z > Task :game-modes:whodunit:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+2026-09-11T02:18:06.1294600Z > Task :game-modes:whodunit:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+2026-09-11T02:18:06.1295529Z > Task :game-modes:whodunit:generateResourceAccessorsForCommonTest NO-SOURCE
+2026-09-11T02:18:06.1296285Z > Task :shared:content:desktopTestProcessResources NO-SOURCE
+2026-09-11T02:18:06.1301220Z > Task :shared:content:processDesktopTestResources SKIPPED
+2026-09-11T02:18:06.1301981Z > Task :shared:core:desktopTestProcessResources NO-SOURCE
+2026-09-11T02:18:06.1302752Z > Task :game-modes:whodunit:convertXmlValueResourcesForDesktopTest NO-SOURCE
+2026-09-11T02:18:06.1303605Z > Task :game-modes:whodunit:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+2026-09-11T02:18:06.1304484Z > Task :game-modes:whodunit:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+2026-09-11T02:18:06.1305380Z > Task :game-modes:whodunit:generateResourceAccessorsForDesktopTest NO-SOURCE
+2026-09-11T02:18:06.1306137Z > Task :game-modes:whodunit:assembleDesktopTestResources
+2026-09-11T02:18:06.1306817Z > Task :shared:core:processDesktopTestResources SKIPPED
+2026-09-11T02:18:06.1307459Z > Task :game-modes:whodunit:desktopTestProcessResources
+2026-09-11T02:18:06.1308107Z > Task :game-modes:whodunit:processDesktopTestResources SKIPPED
+2026-09-11T02:18:06.1309014Z > Task :shared:design-system:convertXmlValueResourcesForCommonTest NO-SOURCE
+2026-09-11T02:18:06.1309872Z > Task :shared:design-system:convertXmlValueResourcesForDesktopTest NO-SOURCE
+2026-09-11T02:18:06.1310747Z > Task :shared:design-system:copyNonXmlValueResourcesForDesktopTest NO-SOURCE
+2026-09-11T02:18:06.1311666Z > Task :shared:design-system:prepareComposeResourcesTaskForDesktopTest NO-SOURCE
+2026-09-11T02:18:06.1312608Z > Task :shared:design-system:generateResourceAccessorsForDesktopTest NO-SOURCE
+2026-09-11T02:18:06.1313384Z > Task :shared:engine:desktopTestProcessResources NO-SOURCE
+2026-09-11T02:18:06.1314040Z > Task :shared:engine:processDesktopTestResources SKIPPED
+2026-09-11T02:18:06.1314678Z > Task :shared:engine-testing:desktopTestProcessResources NO-SOURCE
+2026-09-11T02:18:06.1315530Z > Task :shared:engine-testing:processDesktopTestResources SKIPPED
+2026-09-11T02:18:06.1316172Z > Task :shared:networking:desktopTestProcessResources NO-SOURCE
+2026-09-11T02:18:06.1317294Z > Task :shared:networking:processDesktopTestResources SKIPPED
+2026-09-11T02:18:06.1533948Z > Task :shared:networking-testing:desktopTestProcessResources NO-SOURCE
+2026-09-11T02:18:06.1535497Z > Task :shared:networking-testing:processDesktopTestResources SKIPPED
+2026-09-11T02:18:06.1536673Z > Task :shared:design-system:copyNonXmlValueResourcesForCommonTest NO-SOURCE
+2026-09-11T02:18:06.1537623Z > Task :shared:session:desktopTestProcessResources NO-SOURCE
+2026-09-11T02:18:06.1538416Z > Task :shared:session:processDesktopTestResources SKIPPED
+2026-09-11T02:18:06.1539109Z > Task :shared:storage:desktopTestProcessResources NO-SOURCE
+2026-09-11T02:18:06.1539801Z > Task :shared:storage:processDesktopTestResources SKIPPED
+2026-09-11T02:18:06.1540506Z > Task :shared:transport-p2p:desktopTestProcessResources NO-SOURCE
+2026-09-11T02:18:06.1541331Z > Task :shared:transport-p2p:processDesktopTestResources SKIPPED
+2026-09-11T02:18:06.1542174Z > Task :shared:design-system:prepareComposeResourcesTaskForCommonTest NO-SOURCE
+2026-09-11T02:18:06.1543073Z > Task :shared:design-system:generateResourceAccessorsForCommonTest NO-SOURCE
+2026-09-11T02:18:06.1543925Z > Task :shared:design-system:assembleDesktopTestResources
+2026-09-11T02:18:06.1545311Z > Task :shared:design-system:desktopTestProcessResources
+2026-09-11T02:18:06.1546082Z > Task :shared:design-system:processDesktopTestResources SKIPPED
+2026-09-11T02:18:06.1546759Z > Task :composeApp:preBuild UP-TO-DATE
+2026-09-11T02:18:06.1547315Z > Task :composeApp:preDebugBuild UP-TO-DATE
+2026-09-11T02:18:06.1645151Z > Task :game-modes:mafia:preBuild UP-TO-DATE
+2026-09-11T02:18:06.1645806Z > Task :game-modes:mafia:preDebugBuild UP-TO-DATE
+2026-09-11T02:18:06.1646415Z > Task :game-modes:mafia:writeDebugAarMetadata
+2026-09-11T02:18:06.1647005Z > Task :game-modes:whodunit:preBuild UP-TO-DATE
+2026-09-11T02:18:06.1647609Z > Task :game-modes:whodunit:preDebugBuild UP-TO-DATE
+2026-09-11T02:18:06.1648220Z > Task :game-modes:whodunit:writeDebugAarMetadata
+2026-09-11T02:18:06.1648820Z > Task :shared:content:preBuild UP-TO-DATE
+2026-09-11T02:18:06.1649405Z > Task :shared:content:preDebugBuild UP-TO-DATE
+2026-09-11T02:18:06.1649972Z > Task :shared:content:writeDebugAarMetadata
+2026-09-11T02:18:06.1650567Z > Task :shared:core:preBuild UP-TO-DATE
+2026-09-11T02:18:06.1651136Z > Task :shared:core:preDebugBuild UP-TO-DATE
+2026-09-11T02:18:06.1651696Z > Task :shared:core:writeDebugAarMetadata
+2026-09-11T02:18:06.1652432Z > Task :shared:design-system:preBuild UP-TO-DATE
+2026-09-11T02:18:06.1652947Z > Task :shared:design-system:preDebugBuild UP-TO-DATE
+2026-09-11T02:18:06.1653533Z > Task :game-modes:whodunit:generateResourceAccessorsForCommonMain
+2026-09-11T02:18:06.1654112Z > Task :shared:design-system:writeDebugAarMetadata
+2026-09-11T02:18:06.1654604Z > Task :shared:engine:preBuild UP-TO-DATE
+2026-09-11T02:18:06.1655015Z > Task :shared:engine:preDebugBuild UP-TO-DATE
+2026-09-11T02:18:06.1655375Z > Task :shared:engine:writeDebugAarMetadata
+2026-09-11T02:18:06.1655826Z > Task :shared:networking:preBuild UP-TO-DATE
+2026-09-11T02:18:06.1656340Z > Task :shared:networking:preDebugBuild UP-TO-DATE
+2026-09-11T02:18:06.1656843Z > Task :shared:networking:writeDebugAarMetadata
+2026-09-11T02:18:06.1657286Z > Task :shared:session:preBuild UP-TO-DATE
+2026-09-11T02:18:06.1657769Z > Task :shared:session:preDebugBuild UP-TO-DATE
+2026-09-11T02:18:06.1658235Z > Task :shared:session:writeDebugAarMetadata
+2026-09-11T02:18:06.1658673Z > Task :shared:storage:preBuild UP-TO-DATE
+2026-09-11T02:18:06.1659140Z > Task :shared:storage:preDebugBuild UP-TO-DATE
+2026-09-11T02:18:06.1659621Z > Task :shared:storage:writeDebugAarMetadata
+2026-09-11T02:18:06.1660084Z > Task :shared:transport-p2p:preBuild UP-TO-DATE
+2026-09-11T02:18:06.1660549Z > Task :shared:transport-p2p:preDebugBuild UP-TO-DATE
+2026-09-11T02:18:06.1661289Z > Task :shared:transport-p2p:writeDebugAarMetadata
+2026-09-11T02:18:06.1661918Z > Task :game-modes:whodunit:generateActualResourceCollectorsForDesktopMain
+2026-09-11T02:18:06.1662588Z > Task :game-modes:mafia:processDebugNavigationResources
+2026-09-11T02:18:06.1663237Z > Task :game-modes:whodunit:processDebugNavigationResources FROM-CACHE
+2026-09-11T02:18:06.1967190Z > Task :shared:content:processDebugNavigationResources FROM-CACHE
+2026-09-11T02:18:06.1986896Z > Task :shared:core:processDebugNavigationResources FROM-CACHE
+2026-09-11T02:18:06.2017202Z > Task :shared:design-system:processDebugNavigationResources FROM-CACHE
+2026-09-11T02:18:06.2037211Z > Task :shared:engine:processDebugNavigationResources FROM-CACHE
+2026-09-11T02:18:06.2154148Z > Task :shared:networking:processDebugNavigationResources FROM-CACHE
+2026-09-11T02:18:06.2171703Z > Task :shared:session:processDebugNavigationResources FROM-CACHE
+2026-09-11T02:18:06.2238444Z > Task :shared:storage:processDebugNavigationResources FROM-CACHE
+2026-09-11T02:18:06.2239666Z > Task :shared:transport-p2p:processDebugNavigationResources FROM-CACHE
+2026-09-11T02:18:07.7914993Z 
+2026-09-11T02:18:07.7933388Z > Task :composeApp:downloadKotlinNativeDistribution
+2026-09-11T02:18:07.7943913Z Kotlin/Native bundle directory C:\Users\runneradmin\.konan\kotlin-native-prebuilt-windows-x86_64-2.4.10 is not empty. Native bundle files will be overwritten.
+2026-09-11T02:18:15.3293923Z 
+2026-09-11T02:18:15.3305636Z > Task :composeApp:processDebugNavigationResources
+2026-09-11T02:18:15.3308694Z > Task :composeApp:checkDebugAarMetadata
+2026-09-11T02:18:15.4190382Z > Task :composeApp:generateDebugResValues
+2026-09-11T02:18:15.4211566Z > Task :game-modes:mafia:convertXmlValueResourcesForAndroidDebug NO-SOURCE
+2026-09-11T02:18:15.4216482Z > Task :game-modes:mafia:copyNonXmlValueResourcesForAndroidDebug NO-SOURCE
+2026-09-11T02:18:15.4234587Z > Task :game-modes:mafia:prepareComposeResourcesTaskForAndroidDebug NO-SOURCE
+2026-09-11T02:18:15.4236059Z > Task :game-modes:mafia:convertXmlValueResourcesForAndroidMain NO-SOURCE
+2026-09-11T02:18:15.4237565Z > Task :game-modes:mafia:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
+2026-09-11T02:18:15.4239138Z > Task :game-modes:mafia:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+2026-09-11T02:18:15.4240431Z > Task :game-modes:mafia:copyDebugComposeResourcesToAndroidAssets
+2026-09-11T02:18:15.4241939Z > Task :game-modes:mafia:generateDebugResValues FROM-CACHE
+2026-09-11T02:18:15.4244474Z > Task :game-modes:mafia:generateDebugResources
+2026-09-11T02:18:15.4245125Z > Task :game-modes:mafia:packageDebugResources
+2026-09-11T02:18:15.4247067Z > Task :game-modes:whodunit:convertXmlValueResourcesForAndroidDebug NO-SOURCE
+2026-09-11T02:18:15.4248429Z > Task :game-modes:whodunit:copyNonXmlValueResourcesForAndroidDebug NO-SOURCE
+2026-09-11T02:18:15.4960408Z > Task :game-modes:whodunit:prepareComposeResourcesTaskForAndroidDebug NO-SOURCE
+2026-09-11T02:18:15.4962065Z > Task :game-modes:whodunit:convertXmlValueResourcesForAndroidMain NO-SOURCE
+2026-09-11T02:18:15.4967227Z > Task :game-modes:whodunit:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
+2026-09-11T02:18:15.4968388Z > Task :game-modes:whodunit:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+2026-09-11T02:18:15.4969241Z > Task :game-modes:whodunit:copyDebugComposeResourcesToAndroidAssets
+2026-09-11T02:18:15.4969829Z > Task :game-modes:whodunit:generateDebugResValues FROM-CACHE
+2026-09-11T02:18:15.4970793Z > Task :game-modes:whodunit:generateDebugResources FROM-CACHE
+2026-09-11T02:18:15.4971448Z > Task :game-modes:whodunit:packageDebugResources
+2026-09-11T02:18:15.4971987Z > Task :shared:content:generateDebugResValues FROM-CACHE
+2026-09-11T02:18:15.4972541Z > Task :shared:content:generateDebugResources FROM-CACHE
+2026-09-11T02:18:15.4973075Z > Task :composeApp:compileDebugNavigationResources
+2026-09-11T02:18:15.4974723Z > Task :shared:core:generateDebugResValues FROM-CACHE
+2026-09-11T02:18:15.4975293Z > Task :shared:core:generateDebugResources FROM-CACHE
+2026-09-11T02:18:15.6246695Z > Task :shared:content:packageDebugResources
+2026-09-11T02:18:15.6278872Z > Task :shared:design-system:convertXmlValueResourcesForAndroidDebug NO-SOURCE
+2026-09-11T02:18:15.6280206Z > Task :shared:design-system:copyNonXmlValueResourcesForAndroidDebug NO-SOURCE
+2026-09-11T02:18:15.6281217Z > Task :shared:design-system:prepareComposeResourcesTaskForAndroidDebug NO-SOURCE
+2026-09-11T02:18:15.6318036Z > Task :shared:design-system:convertXmlValueResourcesForAndroidMain NO-SOURCE
+2026-09-11T02:18:15.6318988Z > Task :shared:design-system:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
+2026-09-11T02:18:15.6320149Z > Task :shared:design-system:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+2026-09-11T02:18:15.6320957Z > Task :shared:core:packageDebugResources
+2026-09-11T02:18:15.6321586Z > Task :shared:design-system:copyDebugComposeResourcesToAndroidAssets
+2026-09-11T02:18:15.6322350Z > Task :shared:design-system:generateDebugResValues FROM-CACHE
+2026-09-11T02:18:15.6323060Z > Task :shared:engine:generateDebugResValues FROM-CACHE
+2026-09-11T02:18:15.6323752Z > Task :shared:design-system:generateDebugResources FROM-CACHE
+2026-09-11T02:18:15.6324425Z > Task :shared:engine:generateDebugResources FROM-CACHE
+2026-09-11T02:18:15.6325056Z > Task :shared:engine:packageDebugResources
+2026-09-11T02:18:15.6325681Z > Task :shared:design-system:packageDebugResources
+2026-09-11T02:18:15.6326636Z > Task :shared:networking:generateDebugResValues FROM-CACHE
+2026-09-11T02:18:15.6327305Z > Task :shared:session:generateDebugResValues FROM-CACHE
+2026-09-11T02:18:15.6328170Z > Task :shared:networking:generateDebugResources FROM-CACHE
+2026-09-11T02:18:15.6328911Z > Task :shared:session:generateDebugResources FROM-CACHE
+2026-09-11T02:18:15.6329513Z > Task :shared:networking:packageDebugResources
+2026-09-11T02:18:15.6330137Z > Task :shared:storage:generateDebugResValues FROM-CACHE
+2026-09-11T02:18:15.6331081Z > Task :shared:session:packageDebugResources
+2026-09-11T02:18:15.6920435Z > Task :shared:transport-p2p:generateDebugResValues FROM-CACHE
+2026-09-11T02:18:15.6921836Z > Task :shared:transport-p2p:generateDebugResources FROM-CACHE
+2026-09-11T02:18:15.6922954Z > Task :shared:storage:generateDebugResources FROM-CACHE
+2026-09-11T02:18:15.6923464Z > Task :shared:storage:packageDebugResources
+2026-09-11T02:18:15.6924136Z > Task :composeApp:generateDebugResources
+2026-09-11T02:18:15.6924824Z > Task :shared:transport-p2p:packageDebugResources
+2026-09-11T02:18:15.6927234Z > Task :composeApp:convertXmlValueResourcesForAndroidDebug NO-SOURCE
+2026-09-11T02:18:16.3908627Z > Task :composeApp:mapDebugSourceSetPaths
+2026-09-11T02:18:16.3909573Z > Task :composeApp:copyNonXmlValueResourcesForAndroidDebug NO-SOURCE
+2026-09-11T02:18:16.3910372Z > Task :composeApp:prepareComposeResourcesTaskForAndroidDebug NO-SOURCE
+2026-09-11T02:18:16.3911091Z > Task :composeApp:convertXmlValueResourcesForAndroidMain NO-SOURCE
+2026-09-11T02:18:16.3911753Z > Task :composeApp:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
+2026-09-11T02:18:16.3912504Z > Task :composeApp:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+2026-09-11T02:18:16.3913197Z > Task :composeApp:copyDebugComposeResourcesToAndroidAssets
+2026-09-11T02:18:16.5116107Z > Task :composeApp:packageDebugResources
+2026-09-11T02:18:19.4964479Z > Task :composeApp:mergeDebugResources
+2026-09-11T02:18:19.4965198Z > Task :composeApp:createDebugCompatibleScreenManifests
+2026-09-11T02:18:19.4965859Z > Task :composeApp:extractDeepLinksDebug
+2026-09-11T02:18:19.5962631Z > Task :game-modes:mafia:extractDeepLinksDebug
+2026-09-11T02:18:19.7228823Z > Task :game-modes:mafia:processDebugManifest
+2026-09-11T02:18:19.7250912Z > Task :game-modes:whodunit:extractDeepLinksDebug FROM-CACHE
+2026-09-11T02:18:19.7252802Z > Task :game-modes:whodunit:processDebugManifest
+2026-09-11T02:18:19.7253883Z > Task :shared:content:extractDeepLinksDebug FROM-CACHE
+2026-09-11T02:18:19.7254479Z > Task :shared:content:processDebugManifest
+2026-09-11T02:18:19.7255110Z > Task :shared:core:extractDeepLinksDebug FROM-CACHE
+2026-09-11T02:18:35.2962364Z > Task :shared:core:compileKotlinDesktop
+2026-09-11T02:18:38.5150335Z > Task :shared:core:processDebugManifest
+2026-09-11T02:18:38.5404450Z > Task :shared:design-system:extractDeepLinksDebug FROM-CACHE
+2026-09-11T02:18:38.5405263Z > Task :shared:design-system:processDebugManifest
+2026-09-11T02:18:38.5923054Z > Task :shared:engine:extractDeepLinksDebug FROM-CACHE
+2026-09-11T02:18:38.7251956Z > Task :shared:core:compileDesktopMainJava NO-SOURCE
+2026-09-11T02:18:38.7253590Z > Task :shared:core:desktopMainClasses
+2026-09-11T02:18:38.7322381Z > Task :shared:engine:processDebugManifest
+2026-09-11T02:18:38.7571815Z > Task :shared:networking:extractDeepLinksDebug FROM-CACHE
+2026-09-11T02:18:38.7679978Z > Task :shared:networking:processDebugManifest
+2026-09-11T02:18:38.7682344Z > Task :shared:session:extractDeepLinksDebug FROM-CACHE
+2026-09-11T02:18:38.7935170Z > Task :shared:core:desktopJar
+2026-09-11T02:18:38.8055562Z > Task :shared:session:processDebugManifest
+2026-09-11T02:18:40.3058043Z > Task :composeApp:parseDebugLocalResources
+2026-09-11T02:18:43.6269545Z > Task :shared:engine:compileKotlinDesktop
+2026-09-11T02:18:43.6273960Z > Task :shared:engine:compileDesktopMainJava NO-SOURCE
+2026-09-11T02:18:43.6274488Z > Task :shared:engine:desktopMainClasses
+2026-09-11T02:18:43.6294986Z > Task :shared:engine:desktopJar
+2026-09-11T02:18:44.5188157Z > Task :shared:core:compileTestKotlinDesktop
+2026-09-11T02:18:52.7689197Z > Task :shared:content:compileKotlinDesktop
+2026-09-11T02:18:52.7718058Z > Task :shared:content:compileDesktopMainJava NO-SOURCE
+2026-09-11T02:18:52.7768897Z > Task :shared:content:desktopMainClasses
+2026-09-11T02:18:52.7807416Z > Task :shared:content:desktopJar
+2026-09-11T02:18:56.6092079Z > Task :shared:networking:compileKotlinDesktop
+2026-09-11T02:18:56.6103423Z > Task :shared:networking:compileDesktopMainJava NO-SOURCE
+2026-09-11T02:18:56.6142884Z > Task :shared:networking:desktopMainClasses
+2026-09-11T02:18:56.8546532Z > Task :shared:networking:desktopJar
+2026-09-11T02:18:57.1145962Z > Task :shared:engine-testing:compileKotlinDesktop
+2026-09-11T02:18:57.1173986Z > Task :shared:engine-testing:compileDesktopMainJava NO-SOURCE
+2026-09-11T02:18:57.1239865Z > Task :shared:engine-testing:desktopMainClasses
+2026-09-11T02:18:57.1261187Z > Task :shared:engine-testing:desktopJar
+2026-09-11T02:18:57.1647460Z > Task :shared:storage:compileKotlinDesktop
+2026-09-11T02:18:57.1650831Z > Task :shared:storage:compileDesktopMainJava NO-SOURCE
+2026-09-11T02:18:57.1654740Z > Task :shared:storage:desktopMainClasses
+2026-09-11T02:18:57.2104337Z > Task :shared:storage:desktopJar
+2026-09-11T02:18:59.5137252Z > Task :shared:networking-testing:compileKotlinDesktop
+2026-09-11T02:18:59.5171911Z > Task :shared:networking-testing:compileDesktopMainJava NO-SOURCE
+2026-09-11T02:18:59.5410371Z > Task :shared:networking-testing:desktopMainClasses
+2026-09-11T02:18:59.5469420Z > Task :shared:networking-testing:desktopJar
+2026-09-11T02:18:59.7021295Z > Task :shared:design-system:compileKotlinDesktop
+2026-09-11T02:18:59.7071955Z > Task :shared:design-system:compileDesktopMainJava NO-SOURCE
+2026-09-11T02:18:59.7113808Z > Task :shared:design-system:desktopMainClasses
+2026-09-11T02:18:59.9322214Z > Task :shared:design-system:desktopJar
+2026-09-11T02:18:59.9460615Z > Task :shared:core:compileDesktopTestJava NO-SOURCE
+2026-09-11T02:18:59.9510612Z > Task :shared:core:desktopTestClasses
+2026-09-11T02:19:02.1250606Z > Task :shared:content:compileTestKotlinDesktop
+2026-09-11T02:19:02.1251344Z > Task :shared:content:compileDesktopTestJava NO-SOURCE
+2026-09-11T02:19:02.1442753Z > Task :shared:content:desktopTestClasses
+2026-09-11T02:19:06.6997892Z > Task :shared:core:desktopTest
+2026-09-11T02:19:09.7177884Z > Task :shared:session:compileKotlinDesktop
+2026-09-11T02:19:09.7212790Z > Task :shared:session:compileDesktopMainJava NO-SOURCE
+2026-09-11T02:19:09.7286636Z > Task :shared:session:desktopMainClasses
+2026-09-11T02:19:09.9974635Z > Task :shared:session:desktopJar
+2026-09-11T02:19:12.1271783Z > Task :shared:content:desktopTest
+2026-09-11T02:19:12.2735257Z > Task :shared:design-system:compileTestKotlinDesktop
+2026-09-11T02:19:12.3011289Z > Task :shared:design-system:compileDesktopTestJava NO-SOURCE
+2026-09-11T02:19:12.3558468Z > Task :shared:design-system:desktopTestClasses
+2026-09-11T02:19:14.8259134Z > Task :shared:transport-p2p:compileKotlinDesktop
+2026-09-11T02:19:14.8310076Z > Task :shared:transport-p2p:compileDesktopMainJava NO-SOURCE
+2026-09-11T02:19:14.8590790Z > Task :shared:transport-p2p:desktopMainClasses
+2026-09-11T02:19:15.1113660Z > Task :shared:transport-p2p:desktopJar
+2026-09-11T02:19:16.9568942Z > Task :shared:engine:compileTestKotlinDesktop
+2026-09-11T02:19:16.9571125Z > Task :shared:engine:compileDesktopTestJava NO-SOURCE
+2026-09-11T02:19:16.9599372Z > Task :shared:engine:desktopTestClasses
+2026-09-11T02:19:32.8142600Z > Task :shared:engine:desktopTest
+2026-09-11T02:19:33.4152425Z > Task :shared:design-system:desktopTest
+2026-09-11T02:19:34.1158549Z > Task :shared:engine-testing:compileTestKotlinDesktop
+2026-09-11T02:19:34.1332372Z > Task :shared:engine-testing:compileDesktopTestJava NO-SOURCE
+2026-09-11T02:19:34.1553022Z > Task :shared:engine-testing:desktopTestClasses
+2026-09-11T02:19:35.2026741Z > Task :shared:networking:compileTestKotlinDesktop
+2026-09-11T02:19:35.2204719Z > Task :shared:networking:compileDesktopTestJava NO-SOURCE
+2026-09-11T02:19:35.2358595Z > Task :shared:networking:desktopTestClasses
+2026-09-11T02:19:38.4331091Z > Task :game-modes:mafia:compileKotlinDesktop
+2026-09-11T02:19:38.4357695Z > Task :game-modes:mafia:compileDesktopMainJava NO-SOURCE
+2026-09-11T02:19:38.4437612Z > Task :game-modes:mafia:desktopMainClasses
+2026-09-11T02:19:38.8099280Z > Task :game-modes:mafia:desktopJar
+2026-09-11T02:19:39.5266270Z > Task :shared:engine-testing:desktopTest
+2026-09-11T02:19:40.4991508Z > Task :shared:networking-testing:compileTestKotlinDesktop
+2026-09-11T02:19:40.5090736Z > Task :shared:networking-testing:compileDesktopTestJava NO-SOURCE
+2026-09-11T02:19:40.5156238Z > Task :shared:networking-testing:desktopTestClasses
+2026-09-11T02:19:41.1285734Z > Task :game-modes:whodunit:compileKotlinDesktop
+2026-09-11T02:19:41.1549268Z > Task :game-modes:whodunit:compileDesktopMainJava NO-SOURCE
+2026-09-11T02:19:41.1605192Z > Task :game-modes:whodunit:desktopMainClasses
+2026-09-11T02:19:41.2992983Z > Task :shared:networking:desktopTest
+2026-09-11T02:19:41.7034396Z > Task :game-modes:whodunit:desktopJar
+2026-09-11T02:19:46.8132982Z > Task :shared:networking-testing:desktopTest
+2026-09-11T02:19:52.1287000Z > Task :shared:session:compileTestKotlinDesktop
+2026-09-11T02:19:52.1367528Z > Task :shared:session:compileDesktopTestJava NO-SOURCE
+2026-09-11T02:19:52.1525812Z > Task :shared:session:desktopTestClasses
+2026-09-11T02:19:53.5167882Z > Task :composeApp:compileKotlinDesktop
+2026-09-11T02:19:53.5386744Z > Task :composeApp:compileDesktopMainJava NO-SOURCE
+2026-09-11T02:19:53.5661291Z > Task :composeApp:desktopMainClasses
+2026-09-11T02:19:53.5744145Z > Task :game-modes:mafia:compileTestKotlinDesktop
+2026-09-11T02:19:53.5926580Z > Task :game-modes:mafia:compileDesktopTestJava NO-SOURCE
+2026-09-11T02:19:53.6062274Z > Task :game-modes:mafia:desktopTestClasses
+2026-09-11T02:19:53.7085265Z > Task :composeApp:desktopJar
+2026-09-11T02:19:57.9555878Z > Task :composeApp:compileTestKotlinDesktop
+2026-09-11T02:19:57.9583617Z > Task :composeApp:compileDesktopTestJava NO-SOURCE
+2026-09-11T02:19:57.9596871Z > Task :composeApp:desktopTestClasses
+2026-09-11T02:20:01.9963308Z > Task :shared:session:desktopTest
+2026-09-11T02:20:05.4207246Z > Task :shared:storage:compileTestKotlinDesktop
+2026-09-11T02:20:05.4310790Z > Task :shared:storage:compileDesktopTestJava NO-SOURCE
+2026-09-11T02:20:05.4458255Z > Task :shared:storage:desktopTestClasses
+2026-09-11T02:20:09.5276368Z > Task :shared:storage:desktopTest
+2026-09-11T02:20:11.2224732Z > Task :game-modes:whodunit:compileTestKotlinDesktop
+2026-09-11T02:20:11.2229848Z > Task :game-modes:whodunit:compileDesktopTestJava NO-SOURCE
+2026-09-11T02:20:11.2244248Z > Task :game-modes:whodunit:desktopTestClasses
+2026-09-11T02:20:13.1093384Z > Task :composeApp:desktopTest
+2026-09-11T02:20:13.1103899Z > Task :shared:storage:extractDeepLinksDebug FROM-CACHE
+2026-09-11T02:20:13.1114088Z > Task :shared:storage:processDebugManifest
+2026-09-11T02:20:13.2011291Z > Task :shared:transport-p2p:extractDeepLinksDebug FROM-CACHE
+2026-09-11T02:20:13.2173536Z > Task :shared:transport-p2p:processDebugManifest
+2026-09-11T02:20:14.3045123Z > Task :composeApp:processDebugMainManifest
+2026-09-11T02:20:14.4137348Z > Task :composeApp:processDebugManifest
+2026-09-11T02:20:14.5006200Z > Task :composeApp:processDebugManifestForPackage
+2026-09-11T02:20:14.5390493Z > Task :game-modes:mafia:compileDebugLibraryResources
+2026-09-11T02:20:14.5441822Z > Task :game-modes:mafia:parseDebugLocalResources
+2026-09-11T02:20:14.5507337Z > Task :game-modes:mafia:generateDebugRFile
+2026-09-11T02:20:14.5516020Z > Task :game-modes:whodunit:compileDebugLibraryResources FROM-CACHE
+2026-09-11T02:20:14.5544121Z > Task :game-modes:whodunit:parseDebugLocalResources FROM-CACHE
+2026-09-11T02:20:14.5574962Z > Task :game-modes:whodunit:generateDebugRFile
+2026-09-11T02:20:14.5584982Z > Task :shared:content:compileDebugLibraryResources FROM-CACHE
+2026-09-11T02:20:14.6242535Z > Task :shared:content:parseDebugLocalResources FROM-CACHE
+2026-09-11T02:20:14.6286210Z > Task :shared:content:generateDebugRFile
+2026-09-11T02:20:14.6298065Z > Task :shared:core:compileDebugLibraryResources FROM-CACHE
+2026-09-11T02:20:14.6315085Z > Task :shared:core:parseDebugLocalResources FROM-CACHE
+2026-09-11T02:20:14.6368208Z > Task :shared:core:generateDebugRFile
+2026-09-11T02:20:14.7106091Z > Task :shared:design-system:compileDebugLibraryResources FROM-CACHE
+2026-09-11T02:20:14.7626932Z > Task :shared:design-system:parseDebugLocalResources FROM-CACHE
+2026-09-11T02:20:14.7631931Z > Task :shared:design-system:generateDebugRFile
+2026-09-11T02:20:14.8123908Z > Task :shared:engine:compileDebugLibraryResources FROM-CACHE
+2026-09-11T02:20:14.8182691Z > Task :shared:engine:parseDebugLocalResources FROM-CACHE
+2026-09-11T02:20:14.8275726Z > Task :shared:engine:generateDebugRFile
+2026-09-11T02:20:14.8305501Z > Task :shared:networking:compileDebugLibraryResources FROM-CACHE
+2026-09-11T02:20:14.8329335Z > Task :shared:networking:parseDebugLocalResources FROM-CACHE
+2026-09-11T02:20:14.8355136Z > Task :shared:networking:generateDebugRFile
+2026-09-11T02:20:14.8431350Z > Task :shared:session:compileDebugLibraryResources FROM-CACHE
+2026-09-11T02:20:14.8466064Z > Task :shared:session:parseDebugLocalResources FROM-CACHE
+2026-09-11T02:20:14.8471733Z > Task :shared:session:generateDebugRFile
+2026-09-11T02:20:14.8480846Z > Task :shared:storage:compileDebugLibraryResources FROM-CACHE
+2026-09-11T02:20:14.8549698Z > Task :shared:storage:parseDebugLocalResources FROM-CACHE
+2026-09-11T02:20:14.8606848Z > Task :shared:storage:generateDebugRFile
+2026-09-11T02:20:14.8621886Z > Task :shared:transport-p2p:compileDebugLibraryResources FROM-CACHE
+2026-09-11T02:20:14.8636554Z > Task :shared:transport-p2p:parseDebugLocalResources FROM-CACHE
+2026-09-11T02:20:14.9206353Z > Task :shared:transport-p2p:generateDebugRFile
+2026-09-11T02:20:20.3979101Z > Task :composeApp:processDebugResources
+2026-09-11T02:20:23.5466163Z > Task :game-modes:mafia:desktopTest
+2026-09-11T02:20:25.8089104Z > Task :shared:transport-p2p:compileTestKotlinDesktop
+2026-09-11T02:20:25.8277330Z > Task :shared:transport-p2p:compileDesktopTestJava NO-SOURCE
+2026-09-11T02:20:25.8304919Z > Task :shared:transport-p2p:desktopTestClasses
+2026-09-11T02:20:41.2061410Z > Task :game-modes:whodunit:desktopTest
+2026-09-11T02:20:55.2956573Z 
+2026-09-11T02:20:55.2957333Z > Task :shared:transport-p2p:desktopTest FAILED
+2026-09-11T02:20:55.2960426Z 
+2026-09-11T02:20:55.2960692Z 279 tests completed, 3 failed, 3 skipped
+2026-09-11T02:20:55.2961004Z 
+2026-09-11T02:20:55.2961727Z ProductionVerificationWorkflowContractTest[desktop] > split_apple_jobs_keep_independent_source_toolchain_cycles_and_evidence()[desktop] FAILED
+2026-09-11T02:20:55.2963348Z     org.opentest4j.AssertionFailedError at ProductionVerificationWorkflowContractTest.kt:531
+2026-09-11T02:20:55.2963940Z 
+2026-09-11T02:20:55.2964567Z ProductionVerificationWorkflowContractTest[desktop] > protection_diagnostic_is_the_seventh_opt_in_job_not_a_full_gate()[desktop] FAILED
+2026-09-11T02:20:55.2965734Z     org.opentest4j.AssertionFailedError at ProductionVerificationWorkflowContractTest.kt:567
+2026-09-11T02:20:55.2966339Z 
+2026-09-11T02:20:55.2967062Z ProductionVerificationWorkflowContractTest[desktop] > apple_jobs_run_kotlin_and_app_launch_tests_all_link_targets_and_unsigned_swift_release()[desktop] FAILED
+2026-09-11T02:20:55.2968292Z     org.opentest4j.AssertionFailedError at ProductionVerificationWorkflowContractTest.kt:361
+2026-09-11T02:20:56.7949789Z 
+2026-09-11T02:20:56.7949823Z 
+2026-09-11T02:20:56.7953707Z FAILURE: Build failed with an exception.
+2026-09-11T02:20:56.7954710Z [Incubating] Problems report is available at: file:///D:/a/parlor/parlor/build/reports/problems/problems-report.html
+2026-09-11T02:20:56.7955575Z 
+2026-09-11T02:20:56.7956010Z * What went wrong:
+2026-09-11T02:20:56.7956599Z Execution failed for task ':shared:transport-p2p:desktopTest'.
+2026-09-11T02:20:56.7957937Z > There were failing tests. See the report at: file:///D:/a/parlor/parlor/shared/transport-p2p/build/reports/tests/desktopTest/index.html
+2026-09-11T02:20:56.7958622Z 
+2026-09-11T02:20:56.7958753Z * Try:
+2026-09-11T02:20:56.7959267Z > Run with --scan to get full insights.
+2026-09-11T02:20:56.7959686Z 
+2026-09-11T02:20:56.7959981Z * Exception is:
+2026-09-11T02:20:56.7960772Z org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':shared:transport-p2p:desktopTest'.
+2026-09-11T02:20:56.7962361Z 	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.lambda$executeIfValid$1(ExecuteActionsTaskExecuter.java:130)
+2026-09-11T02:20:56.7963501Z 	at org.gradle.internal.Try$Failure.ifSuccessfulOrElse(Try.java:293)
+2026-09-11T02:20:56.7964497Z 	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:128)
+2026-09-11T02:20:56.7965763Z 	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.execute(ExecuteActionsTaskExecuter.java:116)
+2026-09-11T02:20:56.7967106Z 	at org.gradle.api.internal.tasks.execution.ProblemsTaskPathTrackingTaskExecuter.execute(ProblemsTaskPathTrackingTaskExecuter.java:40)
+2026-09-11T02:20:56.7968683Z 	at org.gradle.api.internal.tasks.execution.FinalizePropertiesTaskExecuter.execute(FinalizePropertiesTaskExecuter.java:46)
+2026-09-11T02:20:56.7969989Z 	at org.gradle.api.internal.tasks.execution.ResolveTaskExecutionModeExecuter.execute(ResolveTaskExecutionModeExecuter.java:51)
+2026-09-11T02:20:56.7971486Z 	at org.gradle.api.internal.tasks.execution.SkipTaskWithNoActionsExecuter.execute(SkipTaskWithNoActionsExecuter.java:57)
+2026-09-11T02:20:56.7972687Z 	at org.gradle.api.internal.tasks.execution.SkipOnlyIfTaskExecuter.execute(SkipOnlyIfTaskExecuter.java:74)
+2026-09-11T02:20:56.7973809Z 	at org.gradle.api.internal.tasks.execution.CatchExceptionTaskExecuter.execute(CatchExceptionTaskExecuter.java:36)
+2026-09-11T02:20:56.7974962Z 	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.executeTask(EventFiringTaskExecuter.java:77)
+2026-09-11T02:20:56.7976042Z 	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:55)
+2026-09-11T02:20:56.7977093Z 	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:52)
+2026-09-11T02:20:56.7978342Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
+2026-09-11T02:20:56.7979755Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
+2026-09-11T02:20:56.7981242Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+2026-09-11T02:20:56.7982333Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+2026-09-11T02:20:56.7983434Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+2026-09-11T02:20:56.7984543Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+2026-09-11T02:20:56.7985649Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
+2026-09-11T02:20:56.7986732Z 	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter.execute(EventFiringTaskExecuter.java:52)
+2026-09-11T02:20:56.7987719Z 	at org.gradle.execution.plan.LocalTaskNodeExecutor.execute(LocalTaskNodeExecutor.java:42)
+2026-09-11T02:20:56.7989048Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:331)
+2026-09-11T02:20:56.7990381Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:318)
+2026-09-11T02:20:56.7991771Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.lambda$execute$0(DefaultTaskExecutionGraph.java:314)
+2026-09-11T02:20:56.7993248Z 	at org.gradle.internal.operations.CurrentBuildOperationRef.with(CurrentBuildOperationRef.java:85)
+2026-09-11T02:20:56.7994461Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:314)
+2026-09-11T02:20:56.7995843Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:303)
+2026-09-11T02:20:56.7997050Z 	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.execute(DefaultPlanExecutor.java:459)
+2026-09-11T02:20:56.7997996Z 	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.run(DefaultPlanExecutor.java:376)
+2026-09-11T02:20:56.7998961Z 	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+2026-09-11T02:20:56.7999962Z 	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
+2026-09-11T02:20:56.8001417Z Caused by: org.gradle.api.internal.exceptions.MarkedVerificationException: There were failing tests. See the report at: file:///D:/a/parlor/parlor/shared/transport-p2p/build/reports/tests/desktopTest/index.html
+2026-09-11T02:20:56.8002806Z 	at org.gradle.api.tasks.testing.AbstractTestTask.handleTestFailures(AbstractTestTask.java:714)
+2026-09-11T02:20:56.8003769Z 	at org.gradle.api.tasks.testing.AbstractTestTask.handleCollectedResults(AbstractTestTask.java:545)
+2026-09-11T02:20:56.8004681Z 	at org.gradle.api.tasks.testing.AbstractTestTask.executeTests(AbstractTestTask.java:540)
+2026-09-11T02:20:56.8005423Z 	at org.gradle.api.tasks.testing.Test.executeTests(Test.java:719)
+2026-09-11T02:20:56.8006229Z 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+2026-09-11T02:20:56.8007061Z 	at org.gradle.internal.reflect.JavaMethod.invoke(JavaMethod.java:125)
+2026-09-11T02:20:56.8008138Z 	at org.gradle.api.internal.project.taskfactory.StandardTaskAction.doExecute(StandardTaskAction.java:58)
+2026-09-11T02:20:56.8009165Z 	at org.gradle.api.internal.project.taskfactory.StandardTaskAction.execute(StandardTaskAction.java:51)
+2026-09-11T02:20:56.8010158Z 	at org.gradle.api.internal.project.taskfactory.StandardTaskAction.execute(StandardTaskAction.java:29)
+2026-09-11T02:20:56.8011056Z 	at org.gradle.api.internal.tasks.execution.TaskExecution$3.run(TaskExecution.java:244)
+2026-09-11T02:20:56.8011999Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:30)
+2026-09-11T02:20:56.8013088Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:27)
+2026-09-11T02:20:56.8014347Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+2026-09-11T02:20:56.8015375Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+2026-09-11T02:20:56.8016437Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+2026-09-11T02:20:56.8017512Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+2026-09-11T02:20:56.8018554Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.run(DefaultBuildOperationRunner.java:48)
+2026-09-11T02:20:56.8019537Z 	at org.gradle.api.internal.tasks.execution.TaskExecution.executeAction(TaskExecution.java:229)
+2026-09-11T02:20:56.8020467Z 	at org.gradle.api.internal.tasks.execution.TaskExecution.executeActions(TaskExecution.java:212)
+2026-09-11T02:20:56.8021480Z 	at org.gradle.api.internal.tasks.execution.TaskExecution.executeWithPreviousOutputFiles(TaskExecution.java:195)
+2026-09-11T02:20:56.8022482Z 	at org.gradle.api.internal.tasks.execution.TaskExecution.execute(TaskExecution.java:162)
+2026-09-11T02:20:56.8023328Z 	at org.gradle.internal.execution.steps.ExecuteStep.executeInternal(ExecuteStep.java:105)
+2026-09-11T02:20:56.8024260Z 	at org.gradle.internal.execution.steps.ExecuteStep.access$000(ExecuteStep.java:44)
+2026-09-11T02:20:56.8024966Z 	at org.gradle.internal.execution.steps.ExecuteStep$1.call(ExecuteStep.java:59)
+2026-09-11T02:20:56.8025637Z 	at org.gradle.internal.execution.steps.ExecuteStep$1.call(ExecuteStep.java:56)
+2026-09-11T02:20:56.8026665Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
+2026-09-11T02:20:56.8027922Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
+2026-09-11T02:20:56.8029389Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+2026-09-11T02:20:56.8030462Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+2026-09-11T02:20:56.8031478Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+2026-09-11T02:20:56.8032513Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+2026-09-11T02:20:56.8033606Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
+2026-09-11T02:20:56.8034479Z 	at org.gradle.internal.execution.steps.ExecuteStep.execute(ExecuteStep.java:56)
+2026-09-11T02:20:56.8035274Z 	at org.gradle.internal.execution.steps.ExecuteStep.execute(ExecuteStep.java:44)
+2026-09-11T02:20:56.8036064Z 	at org.gradle.internal.execution.steps.CancelExecutionStep.execute(CancelExecutionStep.java:42)
+2026-09-11T02:20:56.8036938Z 	at org.gradle.internal.execution.steps.TimeoutStep.executeWithoutTimeout(TimeoutStep.java:75)
+2026-09-11T02:20:56.8037774Z 	at org.gradle.internal.execution.steps.TimeoutStep.execute(TimeoutStep.java:55)
+2026-09-11T02:20:56.8038663Z 	at org.gradle.internal.execution.steps.PreCreateOutputParentsStep.execute(PreCreateOutputParentsStep.java:50)
+2026-09-11T02:20:56.8039782Z 	at org.gradle.internal.execution.steps.PreCreateOutputParentsStep.execute(PreCreateOutputParentsStep.java:28)
+2026-09-11T02:20:56.8040920Z 	at org.gradle.internal.execution.steps.RemovePreviousOutputsStep.execute(RemovePreviousOutputsStep.java:67)
+2026-09-11T02:20:56.8042030Z 	at org.gradle.internal.execution.steps.RemovePreviousOutputsStep.execute(RemovePreviousOutputsStep.java:37)
+2026-09-11T02:20:56.8043131Z 	at org.gradle.internal.execution.steps.BroadcastChangingOutputsStep.execute(BroadcastChangingOutputsStep.java:61)
+2026-09-11T02:20:56.8044521Z 	at org.gradle.internal.execution.steps.BroadcastChangingOutputsStep.execute(BroadcastChangingOutputsStep.java:26)
+2026-09-11T02:20:56.8045718Z 	at org.gradle.internal.execution.steps.CaptureOutputsAfterExecutionStep.execute(CaptureOutputsAfterExecutionStep.java:69)
+2026-09-11T02:20:56.8046960Z 	at org.gradle.internal.execution.steps.CaptureOutputsAfterExecutionStep.execute(CaptureOutputsAfterExecutionStep.java:46)
+2026-09-11T02:20:56.8048113Z 	at org.gradle.internal.execution.steps.ResolveInputChangesStep.execute(ResolveInputChangesStep.java:40)
+2026-09-11T02:20:56.8049422Z 	at org.gradle.internal.execution.steps.ResolveInputChangesStep.execute(ResolveInputChangesStep.java:29)
+2026-09-11T02:20:56.8050394Z 	at org.gradle.internal.execution.steps.BuildCacheStep.executeWithoutCache(BuildCacheStep.java:189)
+2026-09-11T02:20:56.8051353Z 	at org.gradle.internal.execution.steps.BuildCacheStep.executeAndStoreInCache(BuildCacheStep.java:145)
+2026-09-11T02:20:56.8052333Z 	at org.gradle.internal.execution.steps.BuildCacheStep.lambda$executeWithCache$4(BuildCacheStep.java:101)
+2026-09-11T02:20:56.8053300Z 	at org.gradle.internal.execution.steps.BuildCacheStep.lambda$executeWithCache$5(BuildCacheStep.java:101)
+2026-09-11T02:20:56.8054002Z 	at org.gradle.internal.Try$Success.map(Try.java:175)
+2026-09-11T02:20:56.8054666Z 	at org.gradle.internal.execution.steps.BuildCacheStep.executeWithCache(BuildCacheStep.java:85)
+2026-09-11T02:20:56.8055688Z 	at org.gradle.internal.execution.steps.BuildCacheStep.lambda$execute$0(BuildCacheStep.java:74)
+2026-09-11T02:20:56.8056354Z 	at org.gradle.internal.Either$Left.fold(Either.java:115)
+2026-09-11T02:20:56.8056941Z 	at org.gradle.internal.execution.caching.CachingState.fold(CachingState.java:62)
+2026-09-11T02:20:56.8057695Z 	at org.gradle.internal.execution.steps.BuildCacheStep.execute(BuildCacheStep.java:73)
+2026-09-11T02:20:56.8058468Z 	at org.gradle.internal.execution.steps.BuildCacheStep.execute(BuildCacheStep.java:48)
+2026-09-11T02:20:56.8059351Z 	at org.gradle.internal.execution.steps.StoreExecutionStateStep.execute(StoreExecutionStateStep.java:46)
+2026-09-11T02:20:56.8060349Z 	at org.gradle.internal.execution.steps.StoreExecutionStateStep.execute(StoreExecutionStateStep.java:35)
+2026-09-11T02:20:56.8061287Z 	at org.gradle.internal.execution.steps.SkipUpToDateStep.executeBecause(SkipUpToDateStep.java:75)
+2026-09-11T02:20:56.8062206Z 	at org.gradle.internal.execution.steps.SkipUpToDateStep.lambda$execute$2(SkipUpToDateStep.java:53)
+2026-09-11T02:20:56.8063099Z 	at org.gradle.internal.execution.steps.SkipUpToDateStep.execute(SkipUpToDateStep.java:53)
+2026-09-11T02:20:56.8063948Z 	at org.gradle.internal.execution.steps.SkipUpToDateStep.execute(SkipUpToDateStep.java:35)
+2026-09-11T02:20:56.8065091Z 	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsFinishedStep.execute(MarkSnapshottingInputsFinishedStep.java:37)
+2026-09-11T02:20:56.8066467Z 	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsFinishedStep.execute(MarkSnapshottingInputsFinishedStep.java:27)
+2026-09-11T02:20:56.8067872Z 	at org.gradle.internal.execution.steps.ResolveIncrementalCachingStateStep.executeDelegate(ResolveIncrementalCachingStateStep.java:49)
+2026-09-11T02:20:56.8069440Z 	at org.gradle.internal.execution.steps.ResolveIncrementalCachingStateStep.executeDelegate(ResolveIncrementalCachingStateStep.java:27)
+2026-09-11T02:20:56.8070719Z 	at org.gradle.internal.execution.steps.AbstractResolveCachingStateStep.execute(AbstractResolveCachingStateStep.java:71)
+2026-09-11T02:20:56.8071916Z 	at org.gradle.internal.execution.steps.AbstractResolveCachingStateStep.execute(AbstractResolveCachingStateStep.java:39)
+2026-09-11T02:20:56.8072946Z 	at org.gradle.internal.execution.steps.ResolveChangesStep.execute(ResolveChangesStep.java:65)
+2026-09-11T02:20:56.8073808Z 	at org.gradle.internal.execution.steps.ResolveChangesStep.execute(ResolveChangesStep.java:36)
+2026-09-11T02:20:56.8074617Z 	at org.gradle.internal.execution.steps.ValidateStep.execute(ValidateStep.java:107)
+2026-09-11T02:20:56.8075498Z 	at org.gradle.internal.execution.steps.ValidateStep.execute(ValidateStep.java:56)
+2026-09-11T02:20:56.8076562Z 	at org.gradle.internal.execution.steps.AbstractCaptureStateBeforeExecutionStep.execute(AbstractCaptureStateBeforeExecutionStep.java:64)
+2026-09-11T02:20:56.8077974Z 	at org.gradle.internal.execution.steps.AbstractCaptureStateBeforeExecutionStep.execute(AbstractCaptureStateBeforeExecutionStep.java:43)
+2026-09-11T02:20:56.8079325Z 	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.executeWithNonEmptySources(AbstractSkipEmptyWorkStep.java:125)
+2026-09-11T02:20:56.8080514Z 	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.execute(AbstractSkipEmptyWorkStep.java:61)
+2026-09-11T02:20:56.8081557Z 	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.execute(AbstractSkipEmptyWorkStep.java:36)
+2026-09-11T02:20:56.8082740Z 	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsStartedStep.execute(MarkSnapshottingInputsStartedStep.java:38)
+2026-09-11T02:20:56.8083995Z 	at org.gradle.internal.execution.steps.LoadPreviousExecutionStateStep.execute(LoadPreviousExecutionStateStep.java:36)
+2026-09-11T02:20:56.8085156Z 	at org.gradle.internal.execution.steps.LoadPreviousExecutionStateStep.execute(LoadPreviousExecutionStateStep.java:23)
+2026-09-11T02:20:56.8086214Z 	at org.gradle.internal.execution.steps.HandleStaleOutputsStep.execute(HandleStaleOutputsStep.java:75)
+2026-09-11T02:20:56.8087275Z 	at org.gradle.internal.execution.steps.HandleStaleOutputsStep.execute(HandleStaleOutputsStep.java:41)
+2026-09-11T02:20:56.8088332Z 	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.lambda$execute$0(AssignMutableWorkspaceStep.java:35)
+2026-09-11T02:20:56.8089490Z 	at org.gradle.api.internal.tasks.execution.TaskExecution$4.withWorkspace(TaskExecution.java:289)
+2026-09-11T02:20:56.8090451Z 	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.execute(AssignMutableWorkspaceStep.java:31)
+2026-09-11T02:20:56.8091518Z 	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.execute(AssignMutableWorkspaceStep.java:22)
+2026-09-11T02:20:56.8092473Z 	at org.gradle.internal.execution.steps.ChoosePipelineStep.execute(ChoosePipelineStep.java:40)
+2026-09-11T02:20:56.8093349Z 	at org.gradle.internal.execution.steps.ChoosePipelineStep.execute(ChoosePipelineStep.java:23)
+2026-09-11T02:20:56.8094465Z 	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.lambda$execute$2(ExecuteWorkBuildOperationFiringStep.java:67)
+2026-09-11T02:20:56.8095794Z 	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.execute(ExecuteWorkBuildOperationFiringStep.java:67)
+2026-09-11T02:20:56.8097078Z 	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.execute(ExecuteWorkBuildOperationFiringStep.java:39)
+2026-09-11T02:20:56.8098141Z 	at org.gradle.internal.execution.steps.IdentityCacheStep.execute(IdentityCacheStep.java:46)
+2026-09-11T02:20:56.8098974Z 	at org.gradle.internal.execution.steps.IdentityCacheStep.execute(IdentityCacheStep.java:34)
+2026-09-11T02:20:56.8099761Z 	at org.gradle.internal.execution.steps.IdentifyStep.execute(IdentifyStep.java:48)
+2026-09-11T02:20:56.8100493Z 	at org.gradle.internal.execution.steps.IdentifyStep.execute(IdentifyStep.java:35)
+2026-09-11T02:20:56.8101330Z 	at org.gradle.internal.execution.impl.DefaultExecutionEngine$1.execute(DefaultExecutionEngine.java:61)
+2026-09-11T02:20:56.8102405Z 	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:127)
+2026-09-11T02:20:56.8103564Z 	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.execute(ExecuteActionsTaskExecuter.java:116)
+2026-09-11T02:20:56.8104794Z 	at org.gradle.api.internal.tasks.execution.ProblemsTaskPathTrackingTaskExecuter.execute(ProblemsTaskPathTrackingTaskExecuter.java:40)
+2026-09-11T02:20:56.8106069Z 	at org.gradle.api.internal.tasks.execution.FinalizePropertiesTaskExecuter.execute(FinalizePropertiesTaskExecuter.java:46)
+2026-09-11T02:20:56.8107406Z 	at org.gradle.api.internal.tasks.execution.ResolveTaskExecutionModeExecuter.execute(ResolveTaskExecutionModeExecuter.java:51)
+2026-09-11T02:20:56.8108801Z 	at org.gradle.api.internal.tasks.execution.SkipTaskWithNoActionsExecuter.execute(SkipTaskWithNoActionsExecuter.java:57)
+2026-09-11T02:20:56.8109897Z 	at org.gradle.api.internal.tasks.execution.SkipOnlyIfTaskExecuter.execute(SkipOnlyIfTaskExecuter.java:74)
+2026-09-11T02:20:56.8110957Z 	at org.gradle.api.internal.tasks.execution.CatchExceptionTaskExecuter.execute(CatchExceptionTaskExecuter.java:36)
+2026-09-11T02:20:56.8112025Z 	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.executeTask(EventFiringTaskExecuter.java:77)
+2026-09-11T02:20:56.8113054Z 	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:55)
+2026-09-11T02:20:56.8114041Z 	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:52)
+2026-09-11T02:20:56.8115217Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:210)
+2026-09-11T02:20:56.8116528Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:205)
+2026-09-11T02:20:56.8117816Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:67)
+2026-09-11T02:20:56.8118841Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:60)
+2026-09-11T02:20:56.8119863Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:167)
+2026-09-11T02:20:56.8120887Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:60)
+2026-09-11T02:20:56.8121909Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:54)
+2026-09-11T02:20:56.8122924Z 	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter.execute(EventFiringTaskExecuter.java:52)
+2026-09-11T02:20:56.8123828Z 	at org.gradle.execution.plan.LocalTaskNodeExecutor.execute(LocalTaskNodeExecutor.java:42)
+2026-09-11T02:20:56.8124862Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:331)
+2026-09-11T02:20:56.8126099Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:318)
+2026-09-11T02:20:56.8127431Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.lambda$execute$0(DefaultTaskExecutionGraph.java:314)
+2026-09-11T02:20:56.8128674Z 	at org.gradle.internal.operations.CurrentBuildOperationRef.with(CurrentBuildOperationRef.java:85)
+2026-09-11T02:20:56.8130001Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:314)
+2026-09-11T02:20:56.8131372Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:303)
+2026-09-11T02:20:56.8132508Z 	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.execute(DefaultPlanExecutor.java:459)
+2026-09-11T02:20:56.8133470Z 	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.run(DefaultPlanExecutor.java:376)
+2026-09-11T02:20:56.8134395Z 	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+2026-09-11T02:20:56.8135319Z 	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
+2026-09-11T02:20:56.8135834Z 
+2026-09-11T02:20:56.8135841Z 
+2026-09-11T02:20:56.8135942Z BUILD FAILED in 7m 1s
+2026-09-11T02:20:56.8136266Z 233 actionable tasks: 178 executed, 55 from cache
+2026-09-11T02:20:56.8946730Z Configuration cache entry stored.
+2026-09-11T02:20:57.0323673Z ##[error]Process completed with exit code 1.
+2026-09-11T02:20:57.0508350Z ##[group]Run import runpy, sys
+2026-09-11T02:20:57.0508706Z [36;1mimport runpy, sys[0m
+2026-09-11T02:20:57.0508975Z [36;1msys.argv = ["verification_hygiene.py", "stop", "windows-x64"][0m
+2026-09-11T02:20:57.0509364Z [36;1mrunpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")[0m
+2026-09-11T02:20:57.0523122Z shell: C:\hostedtoolcache\windows\Python\3.12.10\x64\python.EXE {0}
+2026-09-11T02:20:57.0523399Z env:
+2026-09-11T02:20:57.0523683Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-11T02:20:57.0524013Z   GIT_CONFIG_COUNT: 1
+2026-09-11T02:20:57.0524192Z   GIT_CONFIG_KEY_0: core.longpaths
+2026-09-11T02:20:57.0524387Z   GIT_CONFIG_VALUE_0: true
+2026-09-11T02:20:57.0524668Z   JAVA_HOME: C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\21.0.12-101.0\x64
+2026-09-11T02:20:57.0525070Z   JAVA_HOME_21_X64: C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\21.0.12-101.0\x64
+2026-09-11T02:20:57.0525452Z   MAVEN_ARGS: -ntp
+2026-09-11T02:20:57.0525617Z ##[endgroup]
+2026-09-11T02:20:58.4100281Z {"task": {"GITHUB_RUN_ID": "34553741387", "GITHUB_RUN_ATTEMPT": "1", "GITHUB_JOB": "desktop-windows-x64"}, "command": ["C:\\Windows\\system32\\cmd.exe", "/d", "/c", "gradlew.bat", "--stop"], "started_at": "2026-09-11T02:20:57.108579+00:00", "exit_code": 0, "output": "No Gradle daemons are running.\n", "finished_at": "2026-09-11T02:20:57.824016+00:00"}
+2026-09-11T02:20:58.4338918Z ##[group]Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+2026-09-11T02:20:58.4339341Z with:
+2026-09-11T02:20:58.4339547Z   name: desktop-verification-desktop-windows-x64
+2026-09-11T02:20:58.4339809Z   if-no-files-found: warn
+2026-09-11T02:20:58.4339989Z   retention-days: 14
+2026-09-11T02:20:58.4340679Z   path: **/build/reports/tests/
+**/build/test-results/**/*.xml
+D:\a\_temp/parlor-verification-34553741387-1-desktop-windows-x64-ownership.json
+D:\a\_temp/parlor-verification-34553741387-1-desktop-windows-x64-stop-*.json
+
+2026-09-11T02:20:58.4341396Z   compression-level: 6
+2026-09-11T02:20:58.4341566Z   overwrite: false
+2026-09-11T02:20:58.4341732Z   include-hidden-files: false
+2026-09-11T02:20:58.4341909Z   archive: true
+2026-09-11T02:20:58.4342062Z env:
+2026-09-11T02:20:58.4342326Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-11T02:20:58.4342649Z   GIT_CONFIG_COUNT: 1
+2026-09-11T02:20:58.4342837Z   GIT_CONFIG_KEY_0: core.longpaths
+2026-09-11T02:20:58.4343038Z   GIT_CONFIG_VALUE_0: true
+2026-09-11T02:20:58.4343306Z   JAVA_HOME: C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\21.0.12-101.0\x64
+2026-09-11T02:20:58.4343705Z   JAVA_HOME_21_X64: C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\21.0.12-101.0\x64
+2026-09-11T02:20:58.4344002Z   MAVEN_ARGS: -ntp
+2026-09-11T02:20:58.4344154Z ##[endgroup]
+2026-09-11T02:21:05.3850568Z Multiple search paths detected. Calculating the least common ancestor of all paths
+2026-09-11T02:21:05.3852811Z The least common ancestor is D:\a. This will be the root directory of the artifact
+2026-09-11T02:21:05.3853352Z With the provided path, there will be 12808 files uploaded
+2026-09-11T02:21:05.3858512Z Artifact name is valid!
+2026-09-11T02:21:05.3859575Z Root directory input is valid!
+2026-09-11T02:21:05.9914736Z Uploading artifact: desktop-verification-desktop-windows-x64.zip
+2026-09-11T02:21:05.9915522Z Beginning upload of artifact content to blob storage
+2026-09-11T02:21:12.5429842Z Uploaded bytes 8388608
+2026-09-11T02:21:13.6077788Z Uploaded bytes 15371111
+2026-09-11T02:21:13.6689804Z Finished uploading artifact content to blob storage!
+2026-09-11T02:21:13.6693381Z SHA256 digest of uploaded artifact is a2ffe977c6aed2e91708fc10102fc87082b2ac096df130e3885fd91a1e223b1c
+2026-09-11T02:21:13.6695163Z Finalizing artifact upload
+2026-09-11T02:21:14.0308840Z Artifact desktop-verification-desktop-windows-x64 successfully finalized. Artifact ID 10181931494
+2026-09-11T02:21:14.0309957Z Artifact desktop-verification-desktop-windows-x64 has been successfully uploaded! Final size is 15371111 bytes. Artifact ID is 10181931494
+2026-09-11T02:21:14.0318964Z Artifact download URL: https://github.com/Apdelrahman1911/parlor/actions/runs/34553741387/artifacts/10181931494
+2026-09-11T02:21:14.0881848Z ##[group]Run import runpy, sys
+2026-09-11T02:21:14.0882139Z [36;1mimport runpy, sys[0m
+2026-09-11T02:21:14.0882380Z [36;1msys.argv = ["verification_hygiene.py", "cleanup"][0m
+2026-09-11T02:21:14.0882731Z [36;1mrunpy.run_path("scripts/ci/verification_hygiene.py", run_name="__main__")[0m
+2026-09-11T02:21:14.0896461Z shell: C:\hostedtoolcache\windows\Python\3.12.10\x64\python.EXE {0}
+2026-09-11T02:21:14.0896728Z env:
+2026-09-11T02:21:14.0896999Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-11T02:21:14.0897320Z   GIT_CONFIG_COUNT: 1
+2026-09-11T02:21:14.0897500Z   GIT_CONFIG_KEY_0: core.longpaths
+2026-09-11T02:21:14.0897709Z   GIT_CONFIG_VALUE_0: true
+2026-09-11T02:21:14.0897986Z   JAVA_HOME: C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\21.0.12-101.0\x64
+2026-09-11T02:21:14.0898384Z   JAVA_HOME_21_X64: C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\21.0.12-101.0\x64
+2026-09-11T02:21:14.0898712Z   MAVEN_ARGS: -ntp
+2026-09-11T02:21:14.0898899Z   PARLOR_VERIFICATION_PREPARE_OUTCOME: success
+2026-09-11T02:21:14.0899132Z   PARLOR_VERIFICATION_UPLOAD_OUTCOME: success
+2026-09-11T02:21:14.0899363Z   PARLOR_VERIFICATION_ARTIFACT_ID: 10181931494
+2026-09-11T02:21:14.0899739Z   PARLOR_VERIFICATION_ARTIFACT_DIGEST: a2ffe977c6aed2e91708fc10102fc87082b2ac096df130e3885fd91a1e223b1c
+2026-09-11T02:21:14.0900113Z ##[endgroup]
+2026-09-11T02:21:16.7593883Z {"task": {"GITHUB_RUN_ID": "34553741387", "GITHUB_RUN_ATTEMPT": "1", "GITHUB_JOB": "desktop-windows-x64"}, "started_at": "2026-09-11T02:21:14.145435+00:00", "removed": ["build", "build-logic/convention/build", "composeApp/build", "game-modes/mafia/build", "game-modes/whodunit/build", "shared/content/build", "shared/core/build", "shared/design-system/build", "shared/engine-testing/build", "shared/engine/build", "shared/networking-testing/build", "shared/networking/build", "shared/session/build", "shared/storage/build", "shared/transport-p2p/build"], "not_created": ["audit-runs/2026-09-05-source-audit/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/android-managed-reconciliation-mafia-cont-02/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/android-runner-independent-whodunit-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/android-runner-safety-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/coverage-binary-delta-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-apphost-closeout-history/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-checker-root-revision-history/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-frozen-reconciliation-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-frozen-reconciliation-mafia-cont/inputs-after-correction/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-frozen-reconciliation-mafia-cont/inputs/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-frozen-reconciliation-mafia-cont/order-correction-review/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-frozen-reconciliation-mafia-cont/order-correction-review/inputs/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-generation-order-history-01/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-preservation-delta-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-preservation-review-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-preservation-secondary-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-verification-review-initial-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/final-verification-skeleton-mafia-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/iosr1-apphost-01/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/iosr1-apphost-02/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/iosr1-runner-independent-whodunit-cont/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/iosr1-runner-independent-whodunit-cont/cycle01-reviewed-inputs/__pycache__", "audit-runs/2026-09-05-source-audit/evidence/runner-versions/__pycache__", "audit-runs/2026-09-05-source-audit/reproducers/__pycache__", "audit-runs/2026-09-05-source-audit/research/android-managed-listener-whodunit-cont/__pycache__", "build-logic/build", "iosApp/build", "remediation-runs/2026-09-05-confirmed-fixes/__pycache__", "remediation-runs/2026-09-05-confirmed-fixes/mafia/__pycache__", "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost/__pycache__", "remediation-runs/2026-09-05-confirmed-fixes/native_fix_review/dsc01_apphost_v2/__pycache__", "remediation-runs/2026-09-05-confirmed-fixes/observation-controls-contracts-01/__pycache__", "remediation-runs/2026-09-05-confirmed-fixes/release_fix_review/__pycache__", "remediation-runs/2026-09-05-confirmed-fixes/session_cont/apple_runner/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v10/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v11/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v12/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v3/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v4/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v5/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v6/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v7/revision01-unexecuted-controls/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v8/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/dsc01_apphost_v9/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/ios_release_wrapper_v1/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/native/ios_wrapper_smoke_v1/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/reviews/__pycache__", "remediation-runs/2026-09-06-approved-policy-completion/root/__pycache__", "remediation-runs/2026-09-07-local-readiness/__pycache__", "remediation-runs/2026-09-07-local-readiness/drafts/l08-protection-metadata-01/files/scripts/verification/ios-readiness/__pycache__", "remediation-runs/2026-09-07-local-readiness/drafts/l08-save-diagnostics-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-apk-build-helper/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/avd-sdk-root-01/emulator-package-followup-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/android-arm64-runner/darwin-null-port-retry-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-final-identity-helper/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/canonical-identity-helper/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/linux-vz-runner-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/release-readiness-map/local-gap-remediation-01/before/scripts/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/release-readiness-map/local-gap-remediation-01/before/scripts/release/tests/__pycache__", "remediation-runs/2026-09-07-local-readiness/evidence/release-content-followup/tsa-positive-runner/__pycache__", "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/control-drafts-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/control-drafts-02/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/controls-gap-drafts-01/before/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/controls-gap-drafts-01/staged/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-composition-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/l08-app-foundation-draft-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/l08-apphost-extension-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/normal-image-diagnostics-draft-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/normal-ios-launch-proposal-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/normal-vmmap-capability-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/native/rosetta-desktop-controls-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/before-null-port-adoption-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/ci-native-argument-capacity-before-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/darwin-ci-uid-inventory-01/draft/scripts/ci/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/darwin-ci-uid-inventory-01/draft/scripts/release/tests/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/dependency-candidate-consumer-03/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/dependency-native-notices-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/ios-controls-before-gap02/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-02/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/l08-native-foundation-control-03/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/before-last-query-test-correction/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/before-review-correction/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/before/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/libproc-image-observer-01/draft/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/native-failure-diagnostic-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/native-path-canonicalization-draft-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/native-path-canonicalization-draft-01/review-revision-01-original/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/native-path-canonicalization-prepatch-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/normal-launch-allocation-prepatch-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/normal-user-only-alias-draft-01/__pycache__", "remediation-runs/2026-09-07-local-readiness/reviews/partial-fifo-attestation-draft-01/__pycache__", "remediation-runs/2026-09-08-continuation/controls/__pycache__", "remediation-runs/2026-09-08-continuation/protection-application-01/__pycache__", "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/__pycache__", "remediation-runs/2026-09-08-continuation/protection-host-image-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/a33-owned-import-test-followup-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/android-emulator-absence-audit-01/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/android-emulator-absence-audit-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/android-proc-permission-diagnostic-01/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/android-proc-permission-diagnostic-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/proposed/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/revision-02/proposed/remediation-runs/2026-09-07-local-readiness/l08-storage-functional-companion-02/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/revision-02/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-observed-english-us-selector-01/revision-02/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/l08-single-tap-scanner-correction-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-01/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-01/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/linux-process-probe-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a23-scroll-correction-01/revision-02/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/integration-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a25-followup-01/revision-02/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a25-functional-copy-guard-correction-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a27-stale-runner-guard-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a29-b30-label-01/draft/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a29-b30-label-01/draft/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a29-host-followup-01/implementation-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a31-catalog-followup-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a31-host-observation-followup-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-a31-os-prerequisite-followup-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-b24-region-diagnostics-01/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-b26-region-followup-01/draft-02/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-b26-region-followup-01/draft/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-b30-text-extent-01/draft/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-l08-only-selection-01/draft/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-l08-only-selection-01/draft/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-l08-only-selection-01/draft/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-normal-only-selection-01/draft/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-normal-only-selection-01/draft/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-normal-only-selection-01/draft/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/proposed/scripts/verification/ios-settings-sheet/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-02/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-02/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-02/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-02/proposed/scripts/verification/ios-settings-sheet/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/revision-03/proposed/scripts/verification/ios-settings-sheet/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/workflow-contract-overlay-01/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/native-settings-sheet-diagnostic-01/workflow-contract-overlay-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/settings-single-execution-cli-fix-01/proposed/scripts/ci/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/settings-single-execution-cli-fix-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/settings-single-execution-cli-fix-01/proposed/scripts/verification/ios-settings-sheet/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/revision-02/proposed/scripts/release/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/windows-long-path-followup-01/revision-02/proposed/scripts/release/tests/__pycache__", "remediation-runs/2026-09-08-continuation/reviews/windows-targeted-collector-01/__pycache__", "scripts/__pycache__", "scripts/ci/__pycache__", "scripts/release/__pycache__", "scripts/release/tests/__pycache__", "scripts/verification/__pycache__", "scripts/verification/ios-os-recovery/__pycache__", "scripts/verification/ios-readiness/__pycache__", "scripts/verification/ios-settings-sheet/__pycache__"], "retained": [], "upload": {"outcome": "success", "artifact_id": "10181931494", "artifact_digest": "a2ffe977c6aed2e91708fc10102fc87082b2ac096df130e3885fd91a1e223b1c"}, "preparation_outcome": "success", "errors": [], "gradle_stop": {"command": ["C:\\Windows\\system32\\cmd.exe", "/d", "/c", "gradlew.bat", "--stop"], "started_at": "2026-09-11T02:21:14.145435+00:00", "exit_code": 0, "output": "No Gradle daemons are running.\n", "finished_at": "2026-09-11T02:21:14.859322+00:00"}, "result": "PASS", "finished_at": "2026-09-11T02:21:16.750286+00:00", "scope": "Only attested checkout build/Python-cache directories; no global caches or source", "worker_scope": "Gradle stop; workflow pins in-process Kotlin compiler execution. Other native/emulator worker termination needs separate evidence"}
+2026-09-11T02:21:16.7793972Z ##[group]Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+2026-09-11T02:21:16.7794360Z with:
+2026-09-11T02:21:16.7794558Z   name: verification-cleanup-desktop-windows-x64
+2026-09-11T02:21:16.7794807Z   if-no-files-found: warn
+2026-09-11T02:21:16.7794980Z   retention-days: 14
+2026-09-11T02:21:16.7795284Z   path: D:\a\_temp/parlor-verification-34553741387-1-desktop-windows-x64-cleanup.json
+2026-09-11T02:21:16.7795610Z   compression-level: 6
+2026-09-11T02:21:16.7795772Z   overwrite: false
+2026-09-11T02:21:16.7795934Z   include-hidden-files: false
+2026-09-11T02:21:16.7796133Z   archive: true
+2026-09-11T02:21:16.7796275Z env:
+2026-09-11T02:21:16.7796542Z   GRADLE_OPTS: -Dorg.gradle.project.kotlin.compiler.execution.strategy=in-process
+2026-09-11T02:21:16.7796856Z   GIT_CONFIG_COUNT: 1
+2026-09-11T02:21:16.7797027Z   GIT_CONFIG_KEY_0: core.longpaths
+2026-09-11T02:21:16.7797213Z   GIT_CONFIG_VALUE_0: true
+2026-09-11T02:21:16.7797505Z   JAVA_HOME: C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\21.0.12-101.0\x64
+2026-09-11T02:21:16.7797905Z   JAVA_HOME_21_X64: C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\21.0.12-101.0\x64
+2026-09-11T02:21:16.7798209Z   MAVEN_ARGS: -ntp
+2026-09-11T02:21:16.7798365Z ##[endgroup]
+2026-09-11T02:21:16.9196761Z With the provided path, there will be 1 file uploaded
+2026-09-11T02:21:16.9200933Z Artifact name is valid!
+2026-09-11T02:21:16.9201944Z Root directory input is valid!
+2026-09-11T02:21:17.2616309Z Uploading artifact: verification-cleanup-desktop-windows-x64.zip
+2026-09-11T02:21:17.2649813Z Beginning upload of artifact content to blob storage
+2026-09-11T02:21:17.5069359Z Uploaded bytes 2726
+2026-09-11T02:21:17.5905464Z Finished uploading artifact content to blob storage!
+2026-09-11T02:21:17.5906056Z SHA256 digest of uploaded artifact is aa9d3878cdd4b9da09d06579982073a7306501678023f3ec4e8aac071929b12b
+2026-09-11T02:21:17.5906588Z Finalizing artifact upload
+2026-09-11T02:21:17.9520029Z Artifact verification-cleanup-desktop-windows-x64 successfully finalized. Artifact ID 10181933084
+2026-09-11T02:21:17.9520708Z Artifact verification-cleanup-desktop-windows-x64 has been successfully uploaded! Final size is 2726 bytes. Artifact ID is 10181933084
+2026-09-11T02:21:17.9528166Z Artifact download URL: https://github.com/Apdelrahman1911/parlor/actions/runs/34553741387/artifacts/10181933084
+2026-09-11T02:21:17.9827113Z Post job cleanup.
+2026-09-11T02:21:18.1615265Z Post job cleanup.
+2026-09-11T02:21:18.3036456Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-09-11T02:21:18.3255190Z git version 2.55.0.windows.5
+2026-09-11T02:21:18.3307996Z Temporarily overriding HOME='D:\a\_temp\8a440beb-3b57-4391-be38-bd22a79324d5' before making global git config changes
+2026-09-11T02:21:18.3309004Z Adding repository directory to the temporary git global config as a safe directory
+2026-09-11T02:21:18.3317234Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\parlor\parlor
+2026-09-11T02:21:18.3558482Z Removing SSH command configuration
+2026-09-11T02:21:18.3568546Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-09-11T02:21:18.3880719Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-09-11T02:21:18.8551995Z Removing HTTP extra header
+2026-09-11T02:21:18.8562057Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-09-11T02:21:18.8840196Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-09-11T02:21:19.3784529Z Removing includeIf entries pointing to credentials config files
+2026-09-11T02:21:19.3798839Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-09-11T02:21:19.4083493Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-09-11T02:21:19.9064965Z Cleaning up orphan processes

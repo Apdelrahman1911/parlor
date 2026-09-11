@@ -1,0 +1,7 @@
+#define PROBE_ROOT @"/Users/runner/work/_temp/parlor-protection-probe-34553751369-1/resources/fixtures"
+#define PROBE_SOURCE @"59a384441f44844a79ae62ea8ee68d0c9e1e5878"
+#define PROBE_CONTROL @"bb76bb4877f2bc03d873c1c4bda0c61ac7de4dd2c67377dfb434f717e73f76b5"
+#define PROBE_UDID @"6C5B0E15-8BFB-459A-9FEE-CFB4A6B9EF04"
+#define PROBE_NONCE @"3cc79e8348f54933beee7a5884ae3d95"
+#define PROBE_ROOT_DEVICE 16777229ULL
+#define PROBE_ROOT_INODE 3531490ULL

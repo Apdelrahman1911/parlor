@@ -1,0 +1,62 @@
+{
+  "kind": "INDEPENDENT_D08_WINDOWS_WORKFLOW_CONTRACT_CAUSE_AND_SOURCE_REVIEW_NOT_RUNTIME_PASS",
+  "reviewer": "/root/ci_linux_arm",
+  "reviewed_at": "2026-09-11T02:29:59.572968+00:00",
+  "failed_run": {
+    "run_id": 34553741387,
+    "run_attempt": 1,
+    "job_id": 103121857877,
+    "job": "desktop-windows-x64",
+    "source_sha": "59a384441f44844a79ae62ea8ee68d0c9e1e5878"
+  },
+  "evidence": {
+    "artifact_id": 10181931494,
+    "artifact_name": "desktop-verification-desktop-windows-x64",
+    "api_digest": "sha256:a2ffe977c6aed2e91708fc10102fc87082b2ac096df130e3885fd91a1e223b1c",
+    "collector_receipt": "remediation-runs/2026-09-08-continuation/reviews/d08-windows-failure-01/receipt.json",
+    "archive_crc_review": "Root collector retained and bounded all 12808 members; not rerun here.",
+    "current_xml_path": "remediation-runs/2026-09-08-continuation/reviews/d08-windows-failure-01/selected/parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+    "current_xml_sha256": "c6efa02bd751e5a0b065e72ec56886142fd0ee9c637182ee10c6b9e51c9c0ecd",
+    "current_xml_bytes": 14413,
+    "xml_suite": {
+      "name": "com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest",
+      "tests": "11",
+      "skipped": "0",
+      "failures": "3",
+      "errors": "0",
+      "timestamp": "2026-09-11T02:20:51.631Z",
+      "hostname": "runnervmvmocb",
+      "time": "1.182"
+    },
+    "historical_members_used": false
+  },
+  "cause": {
+    "status": "CONFIRMED_FROM_CURRENT_FAILURE_XML_AND_FROZEN_SOURCE",
+    "mechanism": "Raw File.readText preserves Windows CRLF. LF-only job delimiters containing a trailing newline miss; Kotlin substringAfter/substringBefore fallback returns wider workflow text.",
+    "line_531": "Failure message contains 70 actual CRLF pairs and the workflow/first Linux-job header instead of the isolated macOS header.",
+    "line_567": "Actual job list contains extra push before the seven expected jobs because LF-only jobs delimiter misses.",
+    "line_361": "Runtime-job slice includes release command, so the unchanged isolation assertion fails."
+  },
+  "reviewed_correction": {
+    "path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/ProductionVerificationWorkflowContractTest.kt",
+    "sha256": "9008fec636b7734f05bb4299e492fe32ffc345be8639e44981367e4bfa547377",
+    "diff": "46 insertions / 1 deletion",
+    "approval": "APPROVED_FOR_TARGETED_EXECUTION",
+    "changes": "Only semantic contract read boundary CRLF-to-LF normalization, explanatory comment, assertFailsWith import and one same-file regression.",
+    "regression": "Exact seven jobs plus isolated runtime/release/probe sections for LF and CRLF, four missing-boundary negatives for each, preservation of literal escapes and lone carriage return."
+  },
+  "preserved": [
+    "Every pre-existing assertion is unchanged.",
+    "Exact six full lanes plus seventh opt-in protection diagnostic.",
+    "Apple runtime/release separation, source/toolchain/strict-command requirements and cleanup/upload-custody predicates.",
+    "No application, workflow, shipping source, dependency metadata or cleanup helper edit by this correction."
+  ],
+  "findings": [],
+  "validation_limits": [
+    "Reviewer ran no tests, builds, network requests, dispatches or cancellations.",
+    "Scoped git diff --check succeeded; this is not an execution result.",
+    "Patched regression and existing class await root-owned targeted execution.",
+    "D08 Windows failure remains retained; corrected source requires a new common full-run/SHA for qualification.",
+    "Separate PD06 cannot substitute. Linux ARM64 remains a separate Desktop-only evidence review; no Kotlin Native claim."
+  ]
+}

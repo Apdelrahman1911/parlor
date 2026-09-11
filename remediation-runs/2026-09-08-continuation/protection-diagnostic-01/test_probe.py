@@ -310,7 +310,7 @@ class HostSdkSequencingTests(unittest.TestCase):
         self.instance.capture = capture
         self.instance.save = mock.Mock(side_effect=lambda: self.events.append("saved"))
 
-    def test_real_platform_phase_retains_host_sdk_before_creation_and_later_reuses_it(self):
+    def platform_fixture(self):
         sdk = Path(self.developer) / "Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk"
         for relative in ("usr/include/sys/fcntl.h", "usr/include/sys/attr.h", "usr/include/sys/mount.h",
             "System/Library/Frameworks/Foundation.framework/Headers/NSData.h",
@@ -322,12 +322,16 @@ class HostSdkSequencingTests(unittest.TestCase):
         self.responses.update({"macos-version": b"15.7.9\n", "macos-build": b"24G830\n", "host-kernel": b"24.6.0\n",
             "xcode-version": b"Xcode 26.3\nBuild version 17C529\n", "developer-selection": self.developer.encode(),
             "sdk-version": b"26.2\n", "sdk-path": str(sdk).encode(), "jdk-version": b'openjdk version "21.0.12"\n',
+            "gradle-stop": b"No Gradle daemons are running.\n",
             "runtimes": json.dumps(dict(runtimes=[dict(identifier=probe.RUNTIME, isAvailable=True,
                 version="26.2", buildversion="23C54")])).encode()})
         self.instance.prepare = mock.Mock()
-        self.instance.bindings = mock.Mock()
-        self.instance.stop = mock.Mock()
+        self.instance.bindings = mock.Mock(side_effect=lambda: self.events.append("bindings"))
         self.instance.create_simulator = mock.Mock(side_effect=lambda: self.events.append("create") or "synthetic-uuid")
+        return sdk
+
+    def test_real_platform_phase_retains_host_sdk_before_creation_and_later_reuses_it(self):
+        sdk = self.platform_fixture()
         def compile_and_run(actual_sdk, identity):
             self.events.append("compile")
             self.assertEqual((actual_sdk, identity), (sdk, "synthetic-uuid"))
@@ -335,6 +339,12 @@ class HostSdkSequencingTests(unittest.TestCase):
         self.instance.compile_and_run = mock.Mock(side_effect=compile_and_run)
         with mock.patch.object(probe.signal, "signal"):
             self.assertEqual(self.instance.run(), 0)
+        self.assertLess(self.events.index("jdk-version"), self.events.index("bindings"))
+        self.assertLess(self.events.index("bindings"), self.events.index("gradle-stop"))
+        self.assertLess(self.events.index("gradle-stop"), self.events.index("host-sdk-version"))
+        self.assertEqual(self.events[-2:], ["gradle-stop", "saved"])  # Existing final stop is still required.
+        self.assertEqual([row for row in self.calls if row[1] == "gradle-stop"], [
+            ([str(probe.ROOT / "gradlew"), "--stop"], "gradle-stop", 60, True, {})] * 2)
         self.assertLess(self.events.index("host-sdk-version"), self.events.index("host-sdk-path"))
         self.assertLess(self.events.index("host-sdk-path"), self.events.index("saved"))
         self.assertLess(self.events.index("saved"), self.events.index("create"))
@@ -347,6 +357,37 @@ class HostSdkSequencingTests(unittest.TestCase):
         self.assertEqual(retained, dict(sdk="26.2", sdk_path=str(self.sdk), target="arm64-apple-macosx15.0",
             source=self.instance.source, control_sha256=self.instance.approved, nonce=self.instance.request["claim"]["nonce"]))
         self.assertIsNot(retained["source"], self.instance.source)
+
+    def test_early_wrapper_timeout_blocks_allocation_and_later_stop_cannot_rescue_it(self):
+        self.platform_fixture()
+        self.instance.compile_and_run = mock.Mock()
+        self.outcomes["gradle-stop"] = dict(status="TIMEOUT")
+        captured = self.instance.capture
+        def capture(*args, **kwargs):
+            result = captured(*args, **kwargs)
+            if args[1] == "gradle-stop":
+                self.outcomes.pop("gradle-stop", None)  # Subsequent required cleanup stop succeeds.
+            return result
+        self.instance.capture = capture
+        with mock.patch.object(probe.signal, "signal"):
+            self.assertEqual(self.instance.run(), 1)
+        self.instance.create_simulator.assert_not_called()
+        self.instance.compile_and_run.assert_not_called()
+        self.assertEqual(self.instance.state["errors"], [dict(stage="collection", type="RuntimeError", code="required-gradle-stop")])
+        self.assertEqual([row[2] for row in self.calls if row[1] == "gradle-stop"], [60, 60])
+        self.assertNotIn("host_platform", self.instance.state)
+
+    def test_jdk_or_source_drift_cannot_bootstrap_the_wrapper(self):
+        self.platform_fixture()
+        for invalid_jdk in (True, False):
+            with self.subTest(invalid_jdk=invalid_jdk):
+                self.calls.clear()
+                self.responses["jdk-version"] = b'openjdk version "17.0.1"\n' if invalid_jdk else b'openjdk version "21.0.12"\n'
+                self.instance.bindings.side_effect = RuntimeError("source-or-control-changed")
+                with self.assertRaisesRegex(RuntimeError, "jdk21-required-for-stops|source-or-control-changed"):
+                    self.instance.platform_binding()
+                self.assertNotIn("gradle-stop", [row[1] for row in self.calls])
+                self.assertNotIn("host_platform", self.instance.state)
 
     def test_failed_or_wrong_host_sdk_qualification_cannot_supply_an_attestation(self):
         for label, output, outcome in (
@@ -421,6 +462,76 @@ class HostSdkSequencingTests(unittest.TestCase):
                 self.instance.compile_and_read_host({})
         bound.assert_called_once_with()
         self.assertEqual(len(self.calls), 2)
+
+
+class NativeSpawnAdmissionTests(unittest.TestCase):
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        base = Path(temporary.name).resolve() / "parlor-protection-probe-17-1"
+        self.instance = object.__new__(probe.Probe)
+        self.instance.resources, self.instance.evidence = base / "resources", base / "evidence"
+        for directory in (self.instance.resources, self.instance.evidence, self.instance.resources / "tmp"):
+            directory.mkdir(mode=0o700, parents=True)
+        self.image = self.instance.resources / "ProtectionProbe"
+        self.image.write_bytes(b"synthetic-image-not-native-evidence")
+        self.identity = "AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA"
+        self.instance.request = dict(resources=probe.owned_directory(self.instance.resources),
+            native_context=dict(simulator_udid=self.identity))
+        self.instance.state = dict(owned_uuid=self.identity, built_image=dict(file=probe.host_file_binding(self.image)))
+        self.instance.commands = probe.Commands(dict(TMPDIR=str(self.instance.resources / "tmp") + "/"), 100)
+        self.instance.bindings = mock.Mock()
+
+    def test_exact_live_driver_admission_preserves_timeout_raw_output_before_failure(self):
+        expected = ("/usr/bin/xcrun", "simctl", "spawn", self.identity, str(self.image))
+        result = dict(status="TIMEOUT", exit_code=0, direct_child_reaped=True)
+        marker = b"parlor-protection-phase:c-main-entry\n"
+        def capture(arguments, label, timeout, **options):
+            self.instance.bindings.assert_called_once_with()
+            self.assertEqual(arguments, expected)
+            self.assertEqual(self.instance.commands.protection_spawn_admission, expected)
+            self.assertEqual((label, timeout), ("native-observation", 40))
+            self.assertEqual(options, dict(sample_protection=True, environment={**self.instance.commands.environment,
+                "SIMCTL_CHILD_TMPDIR": str(self.instance.resources / "tmp") + "/"}))
+            self.instance.commands.protection_spawn_admission = ()
+            return result, b"", marker
+        with mock.patch.object(self.instance.commands, "capture", side_effect=capture) as captured:
+            with self.assertRaisesRegex(RuntimeError, "native-collection-process"):
+                self.instance.capture_native(self.identity)
+        captured.assert_called_once()
+        self.assertEqual(result["status"], "TIMEOUT")
+        self.assertEqual((self.instance.evidence / "native.stdout.jsonl").read_bytes(), b"")
+        self.assertEqual((self.instance.evidence / "native.stderr.txt").read_bytes(), marker)
+        with mock.patch.object(self.instance.commands, "capture") as replay:
+            with self.assertRaisesRegex(RuntimeError, "owned-protection-spawn-binding"):
+                self.instance.capture_native(self.identity)
+        replay.assert_not_called()
+
+    def test_uuid_resource_image_and_source_drift_never_admit_a_spawn(self):
+        state, request = copy.deepcopy(self.instance.state), copy.deepcopy(self.instance.request)
+        mutations = [lambda: self.instance.state.update(owned_uuid="BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB"),
+            lambda: self.instance.request["native_context"].update(simulator_udid="BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB"),
+            lambda: self.instance.request["resources"].update(inode=0),
+            lambda: self.instance.state["built_image"]["file"].update(sha256="f" * 64),
+            lambda: self.instance.state["built_image"]["file"].update(inode=0),
+            lambda: setattr(self.instance.bindings, "side_effect", RuntimeError("source-or-control-changed"))]
+        for index, mutate in enumerate(mutations):
+            with self.subTest(index=index), mock.patch.object(self.instance.commands, "capture") as capture:
+                mutate()
+                with self.assertRaises(RuntimeError):
+                    self.instance.capture_native(self.identity)
+                capture.assert_not_called()
+                self.assertIsNone(self.instance.commands.protection_spawn_admission)
+                self.instance.state, self.instance.request = copy.deepcopy(state), copy.deepcopy(request)
+                self.instance.bindings.side_effect = None
+        redirected = self.image.with_name("unowned-image")
+        self.image.rename(redirected)
+        self.image.symlink_to(redirected)
+        with mock.patch.object(self.instance.commands, "capture") as capture:
+            with self.assertRaises(RuntimeError):
+                self.instance.capture_native(self.identity)
+        capture.assert_not_called()
+        self.assertIsNone(self.instance.commands.protection_spawn_admission)
 
 
 class HostComparisonTests(unittest.TestCase):

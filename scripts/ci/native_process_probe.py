@@ -32,6 +32,7 @@ OBSERVATION_SECONDS = 300
 ORIGINAL_PS_SECONDS = 15
 PROTECTION_RUNTIME_LIST = ("/usr/bin/xcrun", "simctl", "list", "runtimes", "--json")
 PROTECTION_RUNTIME_SECONDS = 90
+PROTECTION_SPAWN_SECONDS = 40
 PLATFORM_ENUMERATION_SECONDS = {
     ("/usr/bin/xcrun", "simctl", "list", "runtimes", "--json"): 120,
     ("/usr/bin/xcrun", "simctl", "list", "devicetypes", "--json"): 120,
@@ -143,6 +144,7 @@ class Commands:
     def __init__(self, environment, deadline, persist=lambda: None):
         self.environment, self.deadline, self.persist = environment, deadline, persist
         self.rows, self.handles, self.signals = [], [], []
+        self.protection_spawn_admission = None  # Installed only by the bound ProtectionProbe driver; consumed once.
         self.finalizing = False
         self.preservation = dict(failures=0, errors=[])
 
@@ -186,7 +188,7 @@ class Commands:
             row["child_cleanup_error_type"] = type(error).__name__
             row["direct_child_reaped"] = False
 
-    def capture(self, arguments, label, timeout=15, *, sample=False, sample_runtime=False,
+    def capture(self, arguments, label, timeout=15, *, sample=False, sample_runtime=False, sample_protection=False,
                 executable=None, environment=None, root=ROOT):
         # Never shorten a 15s original observation to fit the overall budget.
         # Refuse another launch and preserve SKIPPED_BUDGET instead.
@@ -204,7 +206,25 @@ class Commands:
             type(timeout) is int and timeout == PROTECTION_RUNTIME_SECONDS and
             executable is None and environment is None)),
             "only-exact-runtime-list-may-request-owned-sample")
-        observe_timeout = sample or sample_runtime
+        native.require(type(sample_protection) is bool, "only-admitted-protection-spawn-may-request-owned-sample")
+        if sample_protection:
+            admitted = self.protection_spawn_admission
+            native.require(type(admitted) is tuple and len(admitted) == 5 and
+                all(isinstance(value, str) for value in admitted) and tuple(arguments) == admitted and
+                admitted[:3] == ("/usr/bin/xcrun", "simctl", "spawn") and simulator.UUID.fullmatch(admitted[3]),
+                "only-admitted-protection-spawn-may-request-owned-sample")
+            image = Path(admitted[4])
+            native.require(not sample and not sample_runtime and label == "native-observation" and
+                type(timeout) is int and timeout == PROTECTION_SPAWN_SECONDS and executable is None and root == ROOT and
+                image.is_absolute() and str(image) == admitted[4] and ".." not in image.parts and
+                image.name == "ProtectionProbe" and image.parent.name == "resources" and
+                re.fullmatch(r"parlor-protection-probe-[1-9][0-9]*-[1-9][0-9]*", image.parent.parent.name) and
+                self.environment.get("TMPDIR") == str(image.parent / "tmp") + "/" and
+                "SIMCTL_CHILD_TMPDIR" not in self.environment and
+                environment == {**self.environment, "SIMCTL_CHILD_TMPDIR": self.environment["TMPDIR"]},
+                "only-admitted-protection-spawn-may-request-owned-sample")
+            self.protection_spawn_admission = ()  # Also consumed when the unchanged overall budget refuses launch.
+        observe_timeout = sample or sample_runtime or sample_protection
         if time.monotonic() + timeout + (12 if observe_timeout else 4) > self.deadline:
             row["status"] = "SKIPPED_BUDGET"
             self.checkpoint()
@@ -269,7 +289,9 @@ class Commands:
                     usable=(observation.get("status") == "EXITED" and observation.get("exit_code") == 0 and
                             observation.get("direct_child_reaped") is True and
                             not observation.get("child_cleanup_error_type") and bool(frames)),
-                    scope=("Symbols only from exact timed-out direct runtime-list command child; no argv or image paths."
+                    scope=("Symbols only from admitted timed-out direct ProtectionProbe simctl-spawn command child; "
+                           "not its simulator descendants; no argv or image paths." if sample_protection else
+                           "Symbols only from exact timed-out direct runtime-list command child; no argv or image paths."
                            if sample_runtime else
                            "Symbols only from exact timed-out direct ps child; no argv or image paths."))
         except BaseException as error:
