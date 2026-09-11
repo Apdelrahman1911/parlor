@@ -488,6 +488,28 @@ class Probe:
         row, out, err = self.capture([str(Path(self.commands.environment["JAVA_HOME"]) / "bin/java"), "-version"], "jdk-version")
         require(row["status"] == "EXITED" and row.get("exit_code") == 0 and row.get("direct_child_reaped") and
             re.search(rb'(?:openjdk|java) version "21[."]', out + err), "jdk21-required-for-stops")
+        self.bind_host_sdk()
+        return sdk
+
+    def bind_host_sdk(self):
+        # PD05 timed out in this lookup after boot. Qualify once before creating
+        # the owned simulator; this scheduling mitigation does not prove cause.
+        require("host_platform" not in self.state and not hasattr(self, "host_sdk"), "host-sdk-already-qualified")
+        require(self.execute(["/usr/bin/xcrun", "--sdk", "macosx", "--show-sdk-version"], "host-sdk-version").strip() == b"26.2", "qualified-host-sdk")
+        sdk = Path(self.execute(["/usr/bin/xcrun", "--sdk", "macosx", "--show-sdk-path"], "host-sdk-path").decode().strip()).resolve(strict=True)
+        require(Path(DEVELOPER + "/Platforms/MacOSX.platform") in sdk.parents, "host-sdk-outside-qualified-xcode")
+        self.host_sdk = sdk
+        self.state["host_platform"] = dict(sdk="26.2", sdk_path=str(sdk), target="arm64-apple-macosx15.0",
+            source=dict(self.source), control_sha256=self.approved, nonce=self.request["claim"]["nonce"])
+        self.save()
+
+    def bound_host_sdk(self):
+        sdk = getattr(self, "host_sdk", None)
+        require(isinstance(sdk, Path) and self.state.get("host_platform") == dict(
+            sdk="26.2", sdk_path=str(sdk), target="arm64-apple-macosx15.0", source=self.source,
+            control_sha256=self.approved, nonce=self.request["claim"]["nonce"]), "current-run-host-sdk-binding")
+        require(sdk.resolve(strict=True) == sdk and Path(DEVELOPER + "/Platforms/MacOSX.platform") in sdk.parents,
+            "host-sdk-path-changed")
         return sdk
 
     def create_simulator(self):
@@ -575,10 +597,7 @@ class Probe:
     def compile_and_read_host(self, report):
         require(owned_directory(self.resources) == self.request["resources"] and
             owned_directory(self.resources / "fixtures") == self.request["fixtures"], "host-scratch-custody")
-        require(self.execute(["/usr/bin/xcrun", "--sdk", "macosx", "--show-sdk-version"], "host-sdk-version").strip() == b"26.2", "qualified-host-sdk")
-        sdk = Path(self.execute(["/usr/bin/xcrun", "--sdk", "macosx", "--show-sdk-path"], "host-sdk-path").decode().strip()).resolve(strict=True)
-        require(Path(DEVELOPER + "/Platforms/MacOSX.platform") in sdk.parents, "host-sdk-outside-qualified-xcode")
-        self.state["host_platform"] = dict(sdk="26.2", sdk_path=str(sdk), target="arm64-apple-macosx15.0")
+        sdk = self.bound_host_sdk()
         header = context_header(self.resources / "fixtures", self.request["native_context"])
         sources = host_sources(report, header)
         for name, raw in sources.items():

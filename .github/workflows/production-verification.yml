@@ -49,7 +49,8 @@ on:
         type: string
 
 concurrency:
-  group: production-verification-${{ github.ref }}
+  # Standalone protection has its own runners; all qualification scopes stay together.
+  group: production-verification-${{ github.event_name == 'workflow_dispatch' && inputs.verification_scope == 'ios-protection-probe' && 'protection' || 'qualification' }}-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:

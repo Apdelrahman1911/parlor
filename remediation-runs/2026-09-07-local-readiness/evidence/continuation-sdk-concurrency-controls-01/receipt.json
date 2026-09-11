@@ -1,0 +1,154 @@
+{
+  "kind": "FOCUSED_SDK_SEQUENCING_AND_CONCURRENCY_CONTROLS_NOT_NATIVE_RUNTIME",
+  "started_at": "2026-09-11T02:01:42.469284+00:00",
+  "source_head": "1c234ff026355c3f21fc1d7a589d3bd36085e74f",
+  "working_tree_controls_before": {
+    ".github/workflows/production-verification.yml": "d8868fdd407c0513fe4205b67b205af510c74b267e8ee83a1efac0b0f8fede94",
+    "scripts/release/tests/test_workflow_contract.py": "e986fe8f6d2ce7a062087e5a71df0aa9aee5a2b9eb65e59d6cbf5715f374a94b",
+    "scripts/release/workflow_contract.py": "3676f7c03efc54494f922c1a733e6f25775e2f3c49c581a37aae1aff54785d06",
+    "config/release-policy.json": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py": "aa8e9ba6eeb51e5f8c80fdd6cfb395887713dd84d4926faba51f6b9f962e5f41",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/test_probe.py": "1bbd22982085f53cbf865fb3bdd838216138599f1a9b6543b720a9af42f51761",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/README.md": "b3f03d63b2adc3d178159cde2cbb6f62d3412ae5aa0d423728eddb9f1be202dc"
+  },
+  "tests": [
+    {
+      "label": "paired",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "remediation-runs/2026-09-08-continuation/protection-diagnostic-01",
+        "-p",
+        "test_probe.py",
+        "-v"
+      ],
+      "started_at": "2026-09-11T02:01:42.472886+00:00",
+      "exit_code": 0,
+      "seconds": 0.467,
+      "log_sha256": "40f5e126226b243431af686dc828b4808948bb83ef7c200c96ebc1d2c3528e02",
+      "unittest_cases": 41,
+      "summary": "Ran 41 tests in 0.174s\n\nOK"
+    },
+    {
+      "label": "workflow",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/release/tests",
+        "-p",
+        "test_workflow_contract.py",
+        "-v"
+      ],
+      "started_at": "2026-09-11T02:01:42.940223+00:00",
+      "exit_code": 0,
+      "seconds": 1.924,
+      "log_sha256": "447e52821d23fece7a1255cdf2da304e495a25bff6dfd7b2d6ff3c543a0b8250",
+      "unittest_cases": 79,
+      "summary": "Ran 79 tests in 1.748s\n\nOK\nrelease workflow contract: PASS"
+    },
+    {
+      "label": "workflow-contract",
+      "command": [
+        "python3",
+        "-B",
+        "scripts/release/workflow_contract.py"
+      ],
+      "started_at": "2026-09-11T02:01:44.864818+00:00",
+      "exit_code": 0,
+      "seconds": 0.065,
+      "log_sha256": "ed4d00104b82af25bedca2f5586359a98c6d2c5d0667ceb6a849ab748394c196"
+    },
+    {
+      "label": "actionlint-download",
+      "command": [
+        "curl",
+        "--fail",
+        "--silent",
+        "--show-error",
+        "--location",
+        "--proto",
+        "=https",
+        "--tlsv1.2",
+        "--max-filesize",
+        "20971520",
+        "--max-time",
+        "90",
+        "https://github.com/rhysd/actionlint/releases/download/v1.7.12/actionlint_1.7.12_linux_amd64.tar.gz",
+        "--output",
+        "/tmp/parlor-sdk-concurrency-wjrw1sw6/actionlint.tar.gz"
+      ],
+      "started_at": "2026-09-11T02:01:44.930976+00:00",
+      "exit_code": 0,
+      "seconds": 0.717,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "actionlint",
+      "command": [
+        "/tmp/parlor-sdk-concurrency-wjrw1sw6/actionlint",
+        "-shellcheck=",
+        ".github/workflows/production-verification.yml"
+      ],
+      "started_at": "2026-09-11T02:01:45.764866+00:00",
+      "exit_code": 0,
+      "seconds": 0.016,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "cleanup": {
+    "errors": [],
+    "gradle_stop_exit": 0,
+    "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+    "scratch_removed": true,
+    "checked_live_roots": [
+      "build",
+      "build-logic/build",
+      "build-logic/convention/build",
+      "composeApp/build",
+      "iosApp/build",
+      "game-modes/mafia/build",
+      "game-modes/whodunit/build",
+      "shared/core/build",
+      "shared/design-system/build",
+      "shared/engine/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "shared/networking/build",
+      "shared/networking-testing/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/content/build",
+      "scripts/ci/__pycache__",
+      "scripts/release/__pycache__",
+      "scripts/release/tests/__pycache__",
+      "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/__pycache__"
+    ],
+    "checked_live_outputs_remaining": []
+  },
+  "actionlint": {
+    "version": "1.7.12",
+    "archive_sha256": "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8",
+    "binary_sha256": "c872d6db8c6bf83a8eaa704fc93999f027d55dffbc63b8a6abdccb47df5f4cd4",
+    "scope": "changed workflow only; embedded shell bodies unchanged; external shellcheck disabled"
+  },
+  "working_tree_controls_after": {
+    ".github/workflows/production-verification.yml": "d8868fdd407c0513fe4205b67b205af510c74b267e8ee83a1efac0b0f8fede94",
+    "scripts/release/tests/test_workflow_contract.py": "e986fe8f6d2ce7a062087e5a71df0aa9aee5a2b9eb65e59d6cbf5715f374a94b",
+    "scripts/release/workflow_contract.py": "3676f7c03efc54494f922c1a733e6f25775e2f3c49c581a37aae1aff54785d06",
+    "config/release-policy.json": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py": "aa8e9ba6eeb51e5f8c80fdd6cfb395887713dd84d4926faba51f6b9f962e5f41",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/test_probe.py": "1bbd22982085f53cbf865fb3bdd838216138599f1a9b6543b720a9af42f51761",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/README.md": "b3f03d63b2adc3d178159cde2cbb6f62d3412ae5aa0d423728eddb9f1be202dc"
+  },
+  "resources": "Filesystem      Size  Used Avail Use% Mounted on\noverlay          94G   71G   18G  80% /\ntmpfs            32G   20G   12G  64% /tmp\n               total        used        free      shared  buff/cache   available\nMem:            62Gi        23Gi        16Gi        19Gi        43Gi        39Gi\nSwap:             0B          0B          0B\n",
+  "finished_at": "2026-09-11T02:01:46.559455+00:00",
+  "result": "PASS"
+}

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/ci_cleanup_review",
+  "author": "/root/ci_linux",
+  "decision": "APPROVE_CONCURRENCY_PARTITION_SOURCE_AND_ACTUAL_FOCUSED_REGRESSION",
+  "base_head": "1c234ff026355c3f21fc1d7a589d3bd36085e74f",
+  "source_scope": "Two-file working-tree delta by exact bytes; not a new frozen commit or native/full qualification.",
+  "pins": {
+    ".github/workflows/production-verification.yml": "d8868fdd407c0513fe4205b67b205af510c74b267e8ee83a1efac0b0f8fede94",
+    "scripts/release/tests/test_workflow_contract.py": "e986fe8f6d2ce7a062087e5a71df0aa9aee5a2b9eb65e59d6cbf5715f374a94b",
+    "scripts/release/workflow_contract.py": "3676f7c03efc54494f922c1a733e6f25775e2f3c49c581a37aae1aff54785d06",
+    "config/release-policy.json": "316b28f75a13e0b925beb6bcd893b82e077a1a9efa850022026e830f9b1d4ad4",
+    "remediation-runs/2026-09-07-local-readiness/evidence/continuation-sdk-concurrency-controls-01/receipt.json": "c800e0c50197704a97a5b9cf1ffafa53c96e80ea73b0d54e448f90b123109007",
+    "remediation-runs/2026-09-07-local-readiness/evidence/continuation-sdk-concurrency-controls-01/workflow.log": "447e52821d23fece7a1255cdf2da304e495a25bff6dfd7b2d6ff3c543a0b8250",
+    "remediation-runs/2026-09-07-local-readiness/evidence/continuation-sdk-concurrency-controls-01/workflow-contract.log": "ed4d00104b82af25bedca2f5586359a98c6d2c5d0667ceb6a849ab748394c196",
+    "remediation-runs/2026-09-07-local-readiness/evidence/continuation-sdk-concurrency-controls-01/actionlint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "remediation-runs/2026-09-07-local-readiness/evidence/continuation-sdk-concurrency-controls-01/gradle-stop.log": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+  },
+  "checks": [
+    "Only explicit workflow_dispatch with verification_scope=ios-protection-probe selects production-verification-protection-<ref>; full, every other scope, push and pull_request share production-verification-qualification-<ref>. Both retain cancel-in-progress:true. Prefix discriminator prevents cross-ref namespace ambiguity; no job-level concurrency override.",
+    "Independent byte comparison to base confirms everything outside the concurrency block is identical, including all seven job bodies, six mandatory full lanes, focused selection, source/control guards, permissions, toolchains, artifact/ownership namespaces, cleanup and in-process Kotlin pin. Job-body SHA256:911dbf7599afb339eb34fbe22faf0aee4e3a2a114947016bc21f3978383b1105.",
+    "New exact-block/single-concurrency regression pins both scope predicate and cancel semantics. AST comparison finds exactly one added test and one existing method changed: protection mutation now targets its job if rather than the new first expression occurrence; no test deleted or weakened.",
+    "Independent hosted jobs plus run/attempt/job-scoped custody permit intentionally admitted diagnostic/full overlap; diagnostic evidence still cannot substitute for any mandatory full job.",
+    "Literal group names change from the old revision. Coordinator must account for older-revision runs during immediate admission; the new partition is not retrospective cancellation evidence."
+  ],
+  "actual_focused_evidence": {
+    "workflow_cases": 79,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "observation": "Read and hash-verified raw workflow log:79 explicit ok rows, including new concurrency and corrected protection-isolation tests, Ran79/OK and exit0. Direct workflow validator exit0/PASS.",
+    "actionlint": "Receipt records policy-pinned1.7.12 archive SHA2568aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8; changed workflow invocation exit0 with empty preserved log. -shellcheck= is scoped: embedded shell bodies are byte-identical. Removed tool bytes are not independently rehashed after cleanup.",
+    "identity": "All seven receipt before/after control pins equal current files. Concurrency pins equal independent source review; execution was on modified1c234ff worktree.",
+    "outside_scope": "Same batch records41 paired-probe controls; their source/semantic approval belongs to the protection reviewer, not this review."
+  },
+  "cleanup": {
+    "result": "PASS_SCOPED_LOCAL_BATCH",
+    "observation": "Raw stop log hash matches receipt:No Gradle daemons are running; exit0. Receipt errors[]/remaining[]; independently rechecked all21 listed build/Python-cache roots absent and exact actionlint scratch absent.",
+    "limit": "No all-machine worker or global-cache clearance claimed. Reviewer did not signal workers or delete files; unrelated work/global caches and historical failed receipts preserved."
+  },
+  "findings": [],
+  "remaining": "Root reviewed source/inventory freeze and fresh requests/admissions. Actual same-SHA six-lane full execution and per-lane cleanup still require separate evidence; no new runtime, protection, Store or readiness PASS.",
+  "activity": "Read-only Git, stdlib AST/byte/hash/JSON/log inspections and scoped diff --check; no project imports, test reruns, builds, Gradle invocation, network, dispatch or Git writes. Sole write this new review receipt.",
+  "completed_at": "2026-09-11T02:03:21.391110+00:00"
+}

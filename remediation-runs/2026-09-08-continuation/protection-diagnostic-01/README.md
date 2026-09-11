@@ -137,6 +137,12 @@ unchanged run budget. There is no retry or service/PID adoption; raw sample
 headers/paths and stderr are discarded. The original ps15 contract is unchanged.
 A stack observation cannot turn the timeout into success or establish its cause.
 
+The host SDK version/path are qualified once during pre-boot platform binding,
+at the unchanged30s bounds. The retained source/control/nonce-bound attestation
+and canonical SDK path are revalidated before host compilation, without repeating
+those queries after boot. This scheduling mitigation responds to PD05's lookup
+timeout; it neither proves the cause nor changes the host read or strict oracle.
+
 Evidence is saved before the immediate post-cycle stop, then uploaded before
 destructive retirement. The exact creation journal is copied into the cleanup
 artifact; adoption/retirement records cannot become an unuploaded tail of the

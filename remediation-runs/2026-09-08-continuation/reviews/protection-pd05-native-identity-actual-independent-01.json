@@ -1,0 +1,43 @@
+{
+  "schema": 1,
+  "reviewer": "/root/probe_identity",
+  "status": "VERIFIED_ACTUAL_NATIVE_IDENTITY_JOINS_NOT_PAIRED_OR_PROTECTION_PASS",
+  "run_id": 34551626246,
+  "attempt": 1,
+  "source": "1c234ff026355c3f21fc1d7a589d3bd36085e74f",
+  "tree": "1706b4cad3e1a171ca2d9303690f683c5a7f2ff0",
+  "control_sha256": "538e6d1e869c19a6829ec393fc39bbcdad1fcba3991bc2ee37e2578e168aeab9",
+  "evidence_root": "actions/34551626246",
+  "hashes": {
+    "main.zip": "315192b110ded3f97c628eff2a8525983b318912744022ecf5894d1abf717e26",
+    "main/state.json": "5ffa4265a15653d65dddc36aa1cbd6728b86b8c558070c5ff4308012c314dc41",
+    "main/native.stdout.jsonl": "04775fee3f8ee16dfc3868cd1157ef833fd934af7fe054519e52b2f446713c3f",
+    "main/native-report.json": "261d3046acc9112f26441021dfb881105ca485484a67c0d21b4da50c8d56257c",
+    "main/native-context.json": "2bab7faf40c1552cf935e9b470c7ee6bca2aab44f1321aa9617b79d0c891ec1f",
+    "main/OwnedProbeContext.h": "e9cbaa6fa9560d7f014f1c7f9e36cc4dd10b8685aeaa751c1a327fa37210c3e6"
+  },
+  "custody": "Main artifact10181120311 matches API source/run/digest; all76 ZIP members pass CRC and equal extracted bytes. Retained command-log sizes/hashes match state. All19 sorted unique control hashes independently match frozen Git bytes and reconstruct the approved digest; fresh PD05 request/controls and API run/attempt agree. JSON read with duplicate-key/nonfinite-value rejection; no project imports.",
+  "context": {
+    "nonce": "4f3c5ddee21c418282b5845971d0757c",
+    "simulator_udid": "7C8B66C4-F423-4DE5-9983-1B00FB4BD0DB",
+    "fixture_root_device": 16777229,
+    "fixture_root_inode": 3586464,
+    "uid": 501,
+    "join": "Request/source/control/claim, create plan/result, state owned UUID, native-context and raw final context agree. Retained compiled header exactly reconstructs these values and the command-bound private fixture path. Runtime26.2.0; available runtime23C54, Xcode26.3/17C529, SDK26.2. No root/parent ownership exception used."
+  },
+  "binary": {
+    "uuid": "c59b86c7-f8ed-4095-a6cb-abd8f425c01a",
+    "recorded_sha256": "8b834bcad583fe991c5c0a349b8c01aa8869c5af31fb5466d667e17ed5a923ca",
+    "join": "Exact arm64-ios16-simulator/O0 compilation, ad-hoc sign/verify and dwarfdump commands exited0/reaped. Built UUID equals state and raw ProtectionProbe main image before/after; platforms[7]. Recorded binary digest is guarded by reviewed driver equality after native execution and before native-report write; binary bytes are not retained for an independent rehash."
+  },
+  "native_capture": "One exact owned simctl-spawn launcher PID14517 exited0/reaped in6.699s; raw stdout41981B/stderr0B. Exactly17 ordered source-defined events plus final; report events equal raw JSONL. Nine samples provide45 exact seven-field before/after descriptor/path identity witnesses, all collectionPASS/closed. Five method identities are stable across stages; all observed images remain arm64 Simulator[7].",
+  "native_final_targets": [
+    {"id":"directory-final","leaf":"created","identity":{"device":16777229,"inode":3610731,"uid":501,"mode":16832,"links":6,"size":192,"type":"directory"}},
+    {"id":"complete-after-replace","leaf":"created/complete.bin","identity":{"device":16777229,"inode":3610735,"uid":501,"mode":33188,"links":1,"size":49,"type":"regular"}},
+    {"id":"none-after-url-set","leaf":"created/none.bin","identity":{"device":16777229,"inode":3610733,"uid":501,"mode":33188,"links":1,"size":45,"type":"regular"}},
+    {"id":"default-baseline","leaf":"created/default.bin","identity":{"device":16777229,"inode":3610734,"uid":501,"mode":33188,"links":1,"size":45,"type":"regular"}},
+    {"id":"nonatomic-complete-baseline","leaf":"created/nonatomic-complete.bin","identity":{"device":16777229,"inode":3610736,"uid":501,"mode":33188,"links":1,"size":45,"type":"regular"}}
+  ],
+  "transitions": "Directory inode/device/uid/mode/type remain fixed; baseline size64/links2 advances to final192/6. Complete replacement joins original3610732/45B to current3610735/49B, named_inode_changed=true, observer_descriptor_held=false. None retains its full identity through baseline/kernel-stage/URL-stage; this does not assert the unavailable kernel setter ran. Four current file inodes are distinct. These are native target identities, not completed host joins.",
+  "limits": "Host SDK-version discovery timed out30s before host compilation: no host report, compiled host map or same-inode host observation. Overall run remains FAIL. Runtime listing exited0 at42.843s, so the new timeout sampler never executed and proves no hang fix. Strict protection interpretation belongs to root; cleanup/retirement review belongs to its assigned reviewer. No historical/app/full/Store promotion, tests or inferred missing data. Reviewer made no source edits or native/build/test/dispatch calls; only this additive actual-review receipt."
+}

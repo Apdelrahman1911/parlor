@@ -1,0 +1,90 @@
+$ git diff --name-only
+$ git add remediation-runs/2026-09-08-continuation/reviews/protection-runtime-timeout-source-independent-01.json
+$ git commit -m fix(verification): sample owned simulator discovery timeouts
+[fix/local-readiness-2026-09-07 989e093c] fix(verification): sample owned simulator discovery timeouts
+ 69 files changed, 3578 insertions(+), 15 deletions(-)
+ create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-runtime-timeout-controls-01/gradle-stop.log
+ create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-runtime-timeout-controls-01/host.log
+ create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-runtime-timeout-controls-01/paired.log
+ create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-runtime-timeout-controls-01/process.log
+ create mode 100644 remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-runtime-timeout-controls-01/receipt.json
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/artifacts.json
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/attempt.json
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/cleanup-members.json
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/cleanup.zip
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/cleanup/07-gradle-stop.stderr
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/cleanup/07-gradle-stop.stdout
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/cleanup/08-git-binding.stderr
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/cleanup/08-git-binding.stdout
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/cleanup/09-git-binding.stderr
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/cleanup/09-git-binding.stdout
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/cleanup/10-git-binding.stderr
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/cleanup/10-git-binding.stdout
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/cleanup/11-git-binding.stderr
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/cleanup/11-git-binding.stdout
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/cleanup/12-git-binding.stderr
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/cleanup/12-git-binding.stdout
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/cleanup/13-git-binding.stderr
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/cleanup/13-git-binding.stdout
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/cleanup/14-gradle-stop.stderr
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/cleanup/14-gradle-stop.stdout
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/cleanup/state.json
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/download-receipt.json
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/job.log
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/jobs.json
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/main-members.json
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/main.zip
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/main/07-macos-version.stderr
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/main/07-macos-version.stdout
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/main/08-macos-build.stderr
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/main/08-macos-build.stdout
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/main/09-host-kernel.stderr
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/main/09-host-kernel.stdout
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/main/10-xcode-version.stderr
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/main/10-xcode-version.stdout
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/main/11-developer-selection.stderr
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/main/11-developer-selection.stdout
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/main/12-sdk-version.stderr
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/main/12-sdk-version.stdout
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/main/13-sdk-path.stderr
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/main/13-sdk-path.stdout
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/main/15-gradle-stop.stderr
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/main/15-gradle-stop.stdout
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/main/request.json
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/main/state.json
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/34549827411/run.json
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/protection-probe-04/controls.json
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/protection-probe-04/dispatch-receipt.json
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/protection-probe-04/freeze.json
+ create mode 100644 remediation-runs/2026-09-08-continuation/actions/protection-probe-04/request.json
+ create mode 100644 remediation-runs/2026-09-08-continuation/reviews/1c3c33fe-b30-c08-applicability-independent-01.json
+ create mode 100644 remediation-runs/2026-09-08-continuation/reviews/pd04-ci-monitor-01/job.log
+ create mode 100644 remediation-runs/2026-09-08-continuation/reviews/pd04-ci-monitor-01/receipt.json
+ create mode 100644 remediation-runs/2026-09-08-continuation/reviews/pd04-ledger-review-record-01.json
+ create mode 100644 remediation-runs/2026-09-08-continuation/reviews/protection-probe-04-cleanup-actual-independent-01.json
+ create mode 100644 remediation-runs/2026-09-08-continuation/reviews/protection-probe-pd04-artifact-custody-independent-01.json
+ create mode 100644 remediation-runs/2026-09-08-continuation/reviews/protection-probe-pd04-request-admission-independent-01.json
+ create mode 100644 remediation-runs/2026-09-08-continuation/reviews/protection-runtime-timeout-source-independent-01.json
+ create mode 100644 remediation-runs/2026-09-08-continuation/reviews/resume-ledger-draft-01.md
+$ git rev-parse HEAD
+989e093ca1b513e7e43081fd7f1c58a276e09ce3
+$ python3 -B scripts/generate_review_inventory.py
+Wrote 30116 inventory rows to docs/review/INDEPENDENT_REVIEW_INVENTORY.csv; source review not attested
+$ git add docs/review/INDEPENDENT_REVIEW_INVENTORY.csv
+$ git commit -m chore(review): freeze inventory for runtime timeout observation
+[fix/local-readiness-2026-09-07 1c234ff0] chore(review): freeze inventory for runtime timeout observation
+ 1 file changed, 69 insertions(+), 6 deletions(-)
+$ git rev-parse HEAD
+1c234ff026355c3f21fc1d7a589d3bd36085e74f
+$ git rev-parse HEAD^{tree}
+1706b4cad3e1a171ca2d9303690f683c5a7f2ff0
+$ python3 -B scripts/generate_review_inventory.py --check
+Verified freshness of 30116 inventory rows in docs/review/INDEPENDENT_REVIEW_INVENTORY.csv; source review not attested
+$ git push origin fix/local-readiness-2026-09-07
+To https://github.com/Apdelrahman1911/parlor.git
+   1c3c33fe..1c234ff0  fix/local-readiness-2026-09-07 -> fix/local-readiness-2026-09-07
+$ git ls-remote origin refs/heads/fix/local-readiness-2026-09-07
+1c234ff026355c3f21fc1d7a589d3bd36085e74f	refs/heads/fix/local-readiness-2026-09-07
+$ git status --porcelain=v1 --untracked-files=no
+$ ./gradlew --stop
+No Gradle daemons are running.

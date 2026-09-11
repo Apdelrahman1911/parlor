@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/historical_scope",
+  "reviewed_at": "2026-09-11T01:38:37.422669+00:00",
+  "status": "SCOPED_B30_C08_APPLICABILITY_RETAINED_THROUGH_1C234FF_NOT_NEW_RUNTIME",
+  "scope": "Only the1c3c33fe-to-1c234ff extension and whether the changed native_process_probe.py enters accepted B30/C08 execution/control closures. No broad source/runtime audit or diagnostic qualification.",
+  "source": {
+    "baseline": "1c3c33fe1891c1a143aaf8a1298abd0da052b085",
+    "target": "1c234ff026355c3f21fc1d7a589d3bd36085e74f",
+    "source_commit": "989e093ca1b513e7e43081fd7f1c58a276e09ce3",
+    "target_tree": "1706b4cad3e1a171ca2d9303690f683c5a7f2ff0",
+    "tracked_diff_at_inspection": [],
+    "remote_checked": false
+  },
+  "reused_review": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/1c3c33fe-b30-c08-applicability-independent-01.json",
+    "sha256": "42134ead29202240aa5aeb6bbfad8a3e0dae22de4eb81c3c2abfaac3f1dde223",
+    "verification": "Exact retained bytes rehashed and matched target Git blob. Earlier b988/9e4 and actual B30/C08 approvals are reused through this pinned review, not re-audited."
+  },
+  "unchanged_inputs": {
+    "shipping_build": "All seven complete subtrees and five root inputs enumerated in predecessor review retain identical mode/type/object entries. B30 normal/support closed directory trees also unchanged.",
+    "shipping_build_projection_sha256": "80dd0de95d43df23e93a82b87e4261f66b703c6043fb533ae74d61e8d3ae1148",
+    "B30": {
+      "unbound_controls": 98,
+      "historical_sha256_mismatches": 0,
+      "baseline_target_mode_type_blob_changes": 0,
+      "git_projection_sha256": "a349d566f5b59fc2041bcdd545fad44f45717321378a3332242b7c289802e925",
+      "exclusion": "Only the exact historical ios-readiness-source-ci.json binding row remains excluded; no new bound manifest is manufactured."
+    },
+    "C08": {
+      "producer_consumer_reference_schema_pins": 14,
+      "sha256_mismatches": 0,
+      "baseline_target_mode_type_blob_changes": 0,
+      "git_projection_sha256": "3ceb583f2cc45faed11db37bb5a9a0d9b33cf1d447a7677d1eb6bf6503cbdc75"
+    },
+    "projection_format": "SHA256 of compact JSON sorted [[path,mode,type,object],...], using the identical path sets sealed in predecessor review."
+  },
+  "changed_probe_boundary": {
+    "path": "scripts/ci/native_process_probe.py",
+    "baseline_sha256": "c87f6d1289ee50a7387988bd85953d451dac9e1b7b88a4d60f7b4848f86516da",
+    "target_sha256": "ac9b80dde0a48c7c93fcdfcce14b117765fb29a492c3892e5af3ba2dd3b9e22f",
+    "direct_delta": "Adds default-false sample_runtime parameter and an exact runtime-list/90s opt-in owned-child timeout sample. Standalone protection wrapper/test/README and process-probe test changes accompany it; unchanged B30/C08 controls do not select it.",
+    "not_in_B30_or_C08_control_paths": true,
+    "literal_probe_references_in_112_control_files": 0,
+    "B30_route": "Unchanged normal runner imports support/normal modules and its pinned Darwin helper; its explicit manifest selects25 normal +72 support +1 Darwin file. The workflow invokes native_process_probe.py only in the separate native-process-probe scope, not B30 native-evidence normal execution. No new process-probe dependency enters the normal/libproc recipe.",
+    "C08_route": "All14 producer/exporter/renderer/consumer/bootstrap/schema controls remain identical and contain no native_process_probe, native-process-probe or protection-diagnostic-01 reference. No diagnostic sampling enters dependency export/render/consumer execution.",
+    "unchanged_orchestration_sha256": {
+      "scripts/ci/native_continuation.py": "0b2c0fec310afd88810b84fcc4836ec72c0a07f0ff55f495f876dd92e2f231b3",
+      ".github/workflows/production-verification.yml": "07a9ec441082f9c46b1e50627ddf34342f1776e589b50300c85a48024f06f4bd"
+    },
+    "full_source_manifest_exception": "The normal copied-source policy includes scripts/, so changed native_process_probe.py/test bytes can change copied/source manifests even though they are outside the B30 executable-control closure. C08 complete source bindings also remain tied to their execution source. No whole-copy/full-manifest equality is asserted."
+  },
+  "historical_scope_only": {
+    "B30": "Retain scoped normal Debug runtime/three-selected-image libproc/notices/signature/cleanup evidence at360fc797a85e1e494334fd8cc11b4e739981cea8, run34362984912/1. Whole A29/B30 workflow remains FAIL; no current binary/runtime or broader image/liveness proof.",
+    "C08": "Retain accepted fresh export/render/consumer evidence at75c104734373703570a307de9c7a53d291bc2718 for unchanged dependency/build/notices/control inputs. No current-SHA candidate execution or replacement source binding.",
+    "tests": "No additional tests or expensive B30/C08 reruns are needed solely to preserve these unchanged historical scopes. This does not waive separate validation of changed diagnostic controls or the still-required full same-SHA qualification.",
+    "verdict": "NOT_READY. No new runtime, strict-protection PASS, full qualification, Store or delivery approval."
+  },
+  "findings": [],
+  "activity": {
+    "method": "Read-only Git diff/tree/blob, bounded source-reference and stdlib JSON/hash inspection. No project imports, extracted-function execution, tests, build, native probe, network, dispatch, commit or clone.",
+    "only_write": "remediation-runs/2026-09-08-continuation/reviews/1c234ff-b30-c08-applicability-independent-01.json",
+    "cleanup": "No execution resources allocated or cleanup owed. Inherited untracked work and all tracked source preserved."
+  }
+}

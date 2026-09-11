@@ -17,6 +17,17 @@ import workflow_contract  # noqa: E402
 
 
 class WorkflowContractTest(unittest.TestCase):
+    def test_only_explicit_protection_dispatch_has_separate_concurrency(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
+        self.assertEqual(re.findall(r"(?m)^[ \t]*concurrency:", workflow), ["concurrency:"])
+        block = workflow.split("\nconcurrency:\n", 1)[1].split("\npermissions:\n", 1)[0]
+        actual = [line for line in block.splitlines() if line.strip() and not line.lstrip().startswith("#")]
+        self.assertEqual(actual, [
+            "  group: production-verification-${{ github.event_name == 'workflow_dispatch' "
+            "&& inputs.verification_scope == 'ios-protection-probe' && 'protection' || 'qualification' }}-${{ github.ref }}",
+            "  cancel-in-progress: true",
+        ])
+
     def test_windows_only_selection_cannot_skip_full_or_run_other_jobs(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text(encoding="utf-8")
         workflow_contract.verify_verification_scopes(workflow)
@@ -592,7 +603,7 @@ class WorkflowContractTest(unittest.TestCase):
         for original, replacement in (
             ("default: full", "default: ios-protection-probe"),
             (", ios-protection-probe]", "]"),
-            (workflow_contract.PROTECTION_PROBE_SCOPE, workflow_contract.FULL_VERIFICATION_SCOPE),
+            ("    if: " + workflow_contract.PROTECTION_PROBE_SCOPE, "    if: " + workflow_contract.FULL_VERIFICATION_SCOPE),
             (" && inputs.verification_scope != 'ios-protection-probe'", ""),
         ):
             changed = workflow.replace(original, replacement, 1)

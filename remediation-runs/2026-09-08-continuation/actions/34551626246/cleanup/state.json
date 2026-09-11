@@ -1,0 +1,503 @@
+{
+  "status": "FAIL",
+  "logs": [
+    {
+      "path": "07-gradle-stop.stdout",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "07-gradle-stop.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "08-git-binding.stdout",
+      "bytes": 33,
+      "sha256": "4b2c0762552728cca36b4823d66a0969e110fbe2e684bc7196d0fee162278aa7"
+    },
+    {
+      "path": "08-git-binding.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "09-git-binding.stdout",
+      "bytes": 41,
+      "sha256": "f4fdf075a727db4b92b14dbae49e86191c8238ffddfa95458b08d6a77c28f0af"
+    },
+    {
+      "path": "09-git-binding.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "10-git-binding.stdout",
+      "bytes": 31,
+      "sha256": "1c1c717d880304c7c17517f6d21c918e2d035438b7c843525b049a2f050c4692"
+    },
+    {
+      "path": "10-git-binding.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "11-git-binding.stdout",
+      "bytes": 6,
+      "sha256": "2ed27c1421e6928dbe13dbfdb5c59e1045b30341fe7ebe05700006bc5ac572c0"
+    },
+    {
+      "path": "11-git-binding.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "12-git-binding.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "12-git-binding.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "13-git-binding.stdout",
+      "bytes": 41,
+      "sha256": "880918fe458e9dcdb45a3313ca7656f4aec205d9191dabfb16d8074e2412e884"
+    },
+    {
+      "path": "13-git-binding.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "19-gradle-stop.stdout",
+      "bytes": 31,
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    },
+    {
+      "path": "19-gradle-stop.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "errors": [
+    {
+      "stage": "cleanup",
+      "type": "RuntimeError",
+      "code": "timed-out-or-unsettled-tool-scratch-retained"
+    }
+  ],
+  "started_at": "2026-09-11T01:45:23.983338+00:00",
+  "cleanup_scope": "owned-simulator-and-private-native-scratch-only",
+  "commands": [
+    {
+      "label": "git-binding",
+      "command": [
+        "/usr/bin/git",
+        "rev-parse",
+        "--show-toplevel"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-11T01:45:22.943126+00:00",
+      "owned_pid": 16651,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.061,
+      "finished_at": "2026-09-11T01:45:23.032900+00:00",
+      "stdout_bytes": 33,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "git-binding",
+      "command": [
+        "/usr/bin/git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-11T01:45:23.032998+00:00",
+      "owned_pid": 16652,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.029,
+      "finished_at": "2026-09-11T01:45:23.065570+00:00",
+      "stdout_bytes": 41,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "git-binding",
+      "command": [
+        "/usr/bin/git",
+        "branch",
+        "--show-current"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-11T01:45:23.065885+00:00",
+      "owned_pid": 16653,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.02,
+      "finished_at": "2026-09-11T01:45:23.109493+00:00",
+      "stdout_bytes": 31,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "git-binding",
+      "command": [
+        "/usr/bin/git",
+        "rev-parse",
+        "--is-shallow-repository"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-11T01:45:23.109588+00:00",
+      "owned_pid": 16654,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.033,
+      "finished_at": "2026-09-11T01:45:23.146962+00:00",
+      "stdout_bytes": 6,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "git-binding",
+      "command": [
+        "/usr/bin/git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=no"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 60,
+      "started_at": "2026-09-11T01:45:23.147047+00:00",
+      "owned_pid": 16657,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.796,
+      "finished_at": "2026-09-11T01:45:23.947677+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "git-binding",
+      "command": [
+        "/usr/bin/git",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-11T01:45:23.947913+00:00",
+      "owned_pid": 16664,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.03,
+      "finished_at": "2026-09-11T01:45:23.982224+00:00",
+      "stdout_bytes": 41,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "gradle-stop",
+      "command": [
+        "/Users/runner/work/parlor/parlor/gradlew",
+        "--stop"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 60,
+      "started_at": "2026-09-11T01:45:23.984045+00:00",
+      "owned_pid": 16665,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 1.681,
+      "finished_at": "2026-09-11T01:45:25.670340+00:00",
+      "stdout_bytes": 31,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "git-binding",
+      "command": [
+        "/usr/bin/git",
+        "rev-parse",
+        "--show-toplevel"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-11T01:45:25.690714+00:00",
+      "owned_pid": 16692,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.022,
+      "finished_at": "2026-09-11T01:45:25.715654+00:00",
+      "stdout_bytes": 33,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "git-binding",
+      "command": [
+        "/usr/bin/git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-11T01:45:25.717436+00:00",
+      "owned_pid": 16693,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.04,
+      "finished_at": "2026-09-11T01:45:25.759552+00:00",
+      "stdout_bytes": 41,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "git-binding",
+      "command": [
+        "/usr/bin/git",
+        "branch",
+        "--show-current"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-11T01:45:25.762869+00:00",
+      "owned_pid": 16694,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.048,
+      "finished_at": "2026-09-11T01:45:25.815658+00:00",
+      "stdout_bytes": 31,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "git-binding",
+      "command": [
+        "/usr/bin/git",
+        "rev-parse",
+        "--is-shallow-repository"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-11T01:45:25.817603+00:00",
+      "owned_pid": 16695,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.017,
+      "finished_at": "2026-09-11T01:45:25.837346+00:00",
+      "stdout_bytes": 6,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "git-binding",
+      "command": [
+        "/usr/bin/git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=no"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 60,
+      "started_at": "2026-09-11T01:45:25.841459+00:00",
+      "owned_pid": 16696,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.219,
+      "finished_at": "2026-09-11T01:45:26.065824+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "git-binding",
+      "command": [
+        "/usr/bin/git",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 20,
+      "started_at": "2026-09-11T01:45:26.072352+00:00",
+      "owned_pid": 16700,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.034,
+      "finished_at": "2026-09-11T01:45:26.111301+00:00",
+      "stdout_bytes": 41,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "simctl-list",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "list",
+        "devices",
+        "--json"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 45,
+      "started_at": "2026-09-11T01:45:26.120887+00:00",
+      "owned_pid": 16701,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 2.786,
+      "finished_at": "2026-09-11T01:45:28.910434+00:00",
+      "stdout_bytes": 72523,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "simctl-shutdown",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "shutdown",
+        "7C8B66C4-F423-4DE5-9983-1B00FB4BD0DB"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 90,
+      "started_at": "2026-09-11T01:45:28.936094+00:00",
+      "owned_pid": 16736,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 3.552,
+      "finished_at": "2026-09-11T01:45:32.493836+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "simctl-list",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "list",
+        "devices",
+        "--json"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 45,
+      "started_at": "2026-09-11T01:45:32.498368+00:00",
+      "owned_pid": 16752,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.293,
+      "finished_at": "2026-09-11T01:45:32.798701+00:00",
+      "stdout_bytes": 72525,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "simctl-delete",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "delete",
+        "7C8B66C4-F423-4DE5-9983-1B00FB4BD0DB"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 90,
+      "started_at": "2026-09-11T01:45:32.801726+00:00",
+      "owned_pid": 16755,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.231,
+      "finished_at": "2026-09-11T01:45:33.035914+00:00",
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "simctl-list",
+      "command": [
+        "/usr/bin/xcrun",
+        "simctl",
+        "list",
+        "devices",
+        "--json"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 45,
+      "started_at": "2026-09-11T01:45:33.037175+00:00",
+      "owned_pid": 16784,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.26,
+      "finished_at": "2026-09-11T01:45:33.302780+00:00",
+      "stdout_bytes": 71890,
+      "stderr_bytes": 0
+    },
+    {
+      "label": "gradle-stop",
+      "command": [
+        "/Users/runner/work/parlor/parlor/gradlew",
+        "--stop"
+      ],
+      "status": "EXITED",
+      "timeout_seconds": 60,
+      "started_at": "2026-09-11T01:45:33.307792+00:00",
+      "owned_pid": 16821,
+      "ownership": "direct-unreaped-Popen",
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.802,
+      "finished_at": "2026-09-11T01:45:34.113724+00:00",
+      "stdout_bytes": 31,
+      "stderr_bytes": 0
+    }
+  ],
+  "preservation": {
+    "failures": 0,
+    "errors": []
+  },
+  "signals": [],
+  "evidence_upload": {
+    "artifact_id": 10181120311,
+    "artifact_digest": "315192b110ded3f97c628eff2a8525983b318912744022ecf5894d1abf717e26",
+    "outcome": "success"
+  },
+  "creation_journal_copies": [
+    {
+      "name": "owned-simulator-plan.json",
+      "bytes": 6180,
+      "sha256": "aa56c8b796b34efd9c995fda73d8c1979c7f5fb1cb9394edb191999ae26f12e4"
+    },
+    {
+      "name": "owned-simulator-create.json",
+      "bytes": 205,
+      "sha256": "3db454d9af54ec428ee2d14eaa00596344e667fbd098a043989ce84aea30aea1"
+    }
+  ],
+  "simulator": {
+    "result": "PASS",
+    "udid": "7C8B66C4-F423-4DE5-9983-1B00FB4BD0DB",
+    "actions": [
+      {
+        "command": "shutdown",
+        "exit_code": 0
+      },
+      {
+        "command": "delete",
+        "exit_code": 0
+      }
+    ],
+    "recovered_from_intent": false
+  },
+  "finished_at": "2026-09-11T01:45:34.119600+00:00"
+}

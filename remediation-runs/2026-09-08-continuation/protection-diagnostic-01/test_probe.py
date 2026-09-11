@@ -281,6 +281,148 @@ class AdmissionTests(unittest.TestCase):
         self.assertEqual(calls, [(arguments, "git-binding", 20, True)] * 2)
 
 
+class HostSdkSequencingTests(unittest.TestCase):
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.root = Path(temporary.name).resolve()
+        self.developer = str(self.root / "Xcode.app/Contents/Developer")
+        self.sdk = Path(self.developer) / "Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk"
+        self.sdk.mkdir(parents=True)
+        selected = mock.patch.object(probe, "DEVELOPER", self.developer)
+        selected.start()
+        self.addCleanup(selected.stop)
+        self.instance = object.__new__(probe.Probe)
+        self.instance.state = dict(status="RUNNING", logs=[], errors=[])
+        self.instance.source = dict(source_sha="1" * 40, tree="2" * 40, run_id=17, run_attempt=1)
+        self.instance.approved = "3" * 64
+        self.instance.request = dict(claim=dict(nonce="4" * 32))
+        self.instance.commands = mock.Mock(environment={"JAVA_HOME": str(self.root / "jdk")},
+            handles=[], signals=[], preservation=dict(failures=0))
+        self.calls, self.events = [], []
+        self.responses = {"host-sdk-version": b"26.2\n", "host-sdk-path": str(self.sdk).encode()}
+        self.outcomes = {}
+        def capture(arguments, label, timeout=30, retain=True, **options):
+            self.calls.append((arguments, label, timeout, retain, options))
+            self.events.append(label)
+            return {"status": "EXITED", "exit_code": 0, "direct_child_reaped": True, **self.outcomes.get(label, {})}, \
+                self.responses[label], b""
+        self.instance.capture = capture
+        self.instance.save = mock.Mock(side_effect=lambda: self.events.append("saved"))
+
+    def test_real_platform_phase_retains_host_sdk_before_creation_and_later_reuses_it(self):
+        sdk = Path(self.developer) / "Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator26.2.sdk"
+        for relative in ("usr/include/sys/fcntl.h", "usr/include/sys/attr.h", "usr/include/sys/mount.h",
+            "System/Library/Frameworks/Foundation.framework/Headers/NSData.h",
+            "System/Library/Frameworks/Foundation.framework/Headers/NSFileManager.h",
+            "System/Library/Frameworks/Foundation.framework/Headers/NSURL.h"):
+            path = sdk / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(b"// Synthetic SDK header; not native platform evidence.\n")
+        self.responses.update({"macos-version": b"15.7.9\n", "macos-build": b"24G830\n", "host-kernel": b"24.6.0\n",
+            "xcode-version": b"Xcode 26.3\nBuild version 17C529\n", "developer-selection": self.developer.encode(),
+            "sdk-version": b"26.2\n", "sdk-path": str(sdk).encode(), "jdk-version": b'openjdk version "21.0.12"\n',
+            "runtimes": json.dumps(dict(runtimes=[dict(identifier=probe.RUNTIME, isAvailable=True,
+                version="26.2", buildversion="23C54")])).encode()})
+        self.instance.prepare = mock.Mock()
+        self.instance.bindings = mock.Mock()
+        self.instance.stop = mock.Mock()
+        self.instance.create_simulator = mock.Mock(side_effect=lambda: self.events.append("create") or "synthetic-uuid")
+        def compile_and_run(actual_sdk, identity):
+            self.events.append("compile")
+            self.assertEqual((actual_sdk, identity), (sdk, "synthetic-uuid"))
+            self.assertEqual(self.instance.bound_host_sdk(), self.sdk)
+        self.instance.compile_and_run = mock.Mock(side_effect=compile_and_run)
+        with mock.patch.object(probe.signal, "signal"):
+            self.assertEqual(self.instance.run(), 0)
+        self.assertLess(self.events.index("host-sdk-version"), self.events.index("host-sdk-path"))
+        self.assertLess(self.events.index("host-sdk-path"), self.events.index("saved"))
+        self.assertLess(self.events.index("saved"), self.events.index("create"))
+        self.assertLess(self.events.index("create"), self.events.index("compile"))
+        host_calls = [row for row in self.calls if row[1].startswith("host-sdk-")]
+        self.assertEqual(host_calls, [
+            (["/usr/bin/xcrun", "--sdk", "macosx", "--show-sdk-version"], "host-sdk-version", 30, True, {}),
+            (["/usr/bin/xcrun", "--sdk", "macosx", "--show-sdk-path"], "host-sdk-path", 30, True, {})])
+        retained = self.instance.state["host_platform"]
+        self.assertEqual(retained, dict(sdk="26.2", sdk_path=str(self.sdk), target="arm64-apple-macosx15.0",
+            source=self.instance.source, control_sha256=self.instance.approved, nonce=self.instance.request["claim"]["nonce"]))
+        self.assertIsNot(retained["source"], self.instance.source)
+
+    def test_failed_or_wrong_host_sdk_qualification_cannot_supply_an_attestation(self):
+        for label, output, outcome in (
+            ("host-sdk-version", b"26.3\n", {}),
+            ("host-sdk-version", b"26.2\n", {"status": "TIMEOUT"}),
+            ("host-sdk-path", str(self.sdk).encode(), {"status": "TIMEOUT"}),
+            ("host-sdk-path", str(self.root).encode(), {}),
+        ):
+            with self.subTest(label=label, output=output, outcome=outcome):
+                self.responses.update({"host-sdk-version": b"26.2\n", "host-sdk-path": str(self.sdk).encode(), label: output})
+                self.outcomes = {label: outcome}
+                with self.assertRaises(RuntimeError):
+                    self.instance.bind_host_sdk()
+                self.assertNotIn("host_platform", self.instance.state)
+                self.assertFalse(hasattr(self.instance, "host_sdk"))
+        self.instance.save.assert_not_called()
+        self.assertTrue(all(row[2] == 30 for row in self.calls))
+
+    def test_source_run_control_nonce_or_retained_path_drift_rejects_without_queries(self):
+        self.instance.bind_host_sdk()
+        source, retained = copy.deepcopy(self.instance.source), copy.deepcopy(self.instance.state["host_platform"])
+        mutations = [lambda: self.instance.source.update(source_sha="f" * 40),
+            lambda: self.instance.source.update(run_id=18), lambda: self.instance.source.update(run_attempt=2),
+            lambda: setattr(self.instance, "approved", "f" * 64),
+            lambda: self.instance.request["claim"].update(nonce="f" * 32),
+            lambda: self.instance.state["host_platform"].update(sdk_path=str(self.root)),
+            lambda: self.instance.state["host_platform"].update(sdk="26.3"),
+            lambda: self.instance.state["host_platform"].update(target="arm64-apple-ios16.0-simulator")]
+        for index, mutate in enumerate(mutations):
+            with self.subTest(index=index):
+                mutate()
+                with self.assertRaisesRegex(RuntimeError, "current-run-host-sdk-binding"):
+                    self.instance.bound_host_sdk()
+                self.instance.source = copy.deepcopy(source)
+                self.instance.approved = "3" * 64
+                self.instance.request["claim"]["nonce"] = "4" * 32
+                self.instance.state["host_platform"] = copy.deepcopy(retained)
+        self.assertEqual(len(self.calls), 2)
+
+    def test_redirected_prequalified_sdk_path_is_not_silently_resolved_again(self):
+        self.instance.bind_host_sdk()
+        relocated = self.sdk.with_name("Redirected.sdk")
+        self.sdk.rename(relocated)
+        self.sdk.symlink_to(relocated, target_is_directory=True)
+        with self.assertRaisesRegex(RuntimeError, "host-sdk-path-changed"):
+            self.instance.bound_host_sdk()
+        self.assertEqual(len(self.calls), 2)
+
+    def test_missing_current_run_binding_and_duplicate_qualification_never_query_as_fallback(self):
+        with self.assertRaisesRegex(RuntimeError, "current-run-host-sdk-binding"):
+            self.instance.bound_host_sdk()
+        self.assertEqual(self.calls, [])
+        self.instance.bind_host_sdk()
+        with self.assertRaisesRegex(RuntimeError, "host-sdk-already-qualified"):
+            self.instance.bind_host_sdk()
+        del self.instance.host_sdk  # A retained record alone is not a current-run qualification.
+        with self.assertRaisesRegex(RuntimeError, "current-run-host-sdk-binding"):
+            self.instance.bound_host_sdk()
+        self.assertEqual(len(self.calls), 2)
+
+    def test_host_read_stage_consumes_bound_sdk_before_sources_without_requery(self):
+        self.instance.bind_host_sdk()
+        self.instance.resources = self.root / "resources"
+        self.instance.resources.mkdir(mode=0o700)
+        (self.instance.resources / "fixtures").mkdir(mode=0o700)
+        self.instance.request.update(resources=probe.owned_directory(self.instance.resources),
+            fixtures=probe.owned_directory(self.instance.resources / "fixtures"), native_context={})
+        with mock.patch.object(self.instance, "bound_host_sdk", wraps=self.instance.bound_host_sdk) as bound, \
+                mock.patch.object(probe, "context_header", return_value=b"synthetic-header"), \
+                mock.patch.object(probe, "host_sources", side_effect=RuntimeError("stop-before-host-source-generation")):
+            with self.assertRaisesRegex(RuntimeError, "stop-before-host-source-generation"):
+                self.instance.compile_and_read_host({})
+        bound.assert_called_once_with()
+        self.assertEqual(len(self.calls), 2)
+
+
 class HostComparisonTests(unittest.TestCase):
     def setUp(self):
         self.rows, self.request, self.image_uuid = fixture()
