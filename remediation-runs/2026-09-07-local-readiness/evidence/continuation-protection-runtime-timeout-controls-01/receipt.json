@@ -1,0 +1,112 @@
+{
+  "kind": "FOCUSED_TIMEOUT_SAMPLE_CONTROLS_NOT_NATIVE_RUNTIME",
+  "started_at": "2026-09-11T01:31:45.091846+00:00",
+  "source_head": "1c3c33fe1891c1a143aaf8a1298abd0da052b085",
+  "working_tree_controls_before": {
+    "scripts/ci/native_process_probe.py": "ac9b80dde0a48c7c93fcdfcce14b117765fb29a492c3892e5af3ba2dd3b9e22f",
+    "scripts/release/tests/test_native_process_probe.py": "43ff2e36f8bd3ad41fa8477e1554ca555523e3c7b2b8250f5123502a1e141ef1",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py": "f146640334b31ba5cb6d91ef9bd8180b4ccd76c510de96df585c1f9268788c0e",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/test_probe.py": "e4359d78434416163d4a2d3c37ac1366113b53bea2077460ba53d21673f927bb",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/README.md": "fe38dbfdb7d6cba887dcdfc41f395966ff65e63475fc9211066ff9ef7c5ad9b2",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py": "7eb2da472015df200f8697d29182484e1507f414e3825e1fe16be9ffcb359a27",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/test_host_probe.py": "881b083da614460cf337858c26538261e16c178c32a7b8737b60efa6cf3f63eb"
+  },
+  "tests": [
+    {
+      "label": "process",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "scripts/release/tests",
+        "-p",
+        "test_native_process_probe.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "seconds": 0.415,
+      "log_sha256": "ca1ac0648a323af10b9796b064f96237890e48d92323ba6647eb7070c797297b"
+    },
+    {
+      "label": "paired",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "remediation-runs/2026-09-08-continuation/protection-diagnostic-01",
+        "-p",
+        "test_probe.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "seconds": 0.315,
+      "log_sha256": "cafc29d2c949d11f2d8f4cbd78f7c971e4bc3e34e8e96270f19e086beeb313d3"
+    },
+    {
+      "label": "host",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "remediation-runs/2026-09-08-continuation/protection-host-image-01",
+        "-p",
+        "test_host_probe.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "seconds": 0.215,
+      "log_sha256": "a35ba4d12c6fd2cc9bff9fe03a6e59a233d5e4c3b8b4d0585532665ba85d72f4"
+    }
+  ],
+  "cleanup": {
+    "errors": [],
+    "gradle_stop_exit": 0,
+    "scratch_removed": true,
+    "checked_live_roots": [
+      "build",
+      "build-logic/build",
+      "build-logic/convention/build",
+      "composeApp/build",
+      "iosApp/build",
+      "game-modes/mafia/build",
+      "game-modes/whodunit/build",
+      "shared/core/build",
+      "shared/design-system/build",
+      "shared/engine/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "shared/networking/build",
+      "shared/networking-testing/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/content/build",
+      "scripts/ci/__pycache__",
+      "scripts/release/tests/__pycache__",
+      "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/__pycache__",
+      "remediation-runs/2026-09-08-continuation/protection-host-image-01/__pycache__"
+    ],
+    "checked_live_outputs_remaining": [],
+    "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+  },
+  "working_tree_controls_after": {
+    "scripts/ci/native_process_probe.py": "ac9b80dde0a48c7c93fcdfcce14b117765fb29a492c3892e5af3ba2dd3b9e22f",
+    "scripts/release/tests/test_native_process_probe.py": "43ff2e36f8bd3ad41fa8477e1554ca555523e3c7b2b8250f5123502a1e141ef1",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py": "f146640334b31ba5cb6d91ef9bd8180b4ccd76c510de96df585c1f9268788c0e",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/test_probe.py": "e4359d78434416163d4a2d3c37ac1366113b53bea2077460ba53d21673f927bb",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/README.md": "fe38dbfdb7d6cba887dcdfc41f395966ff65e63475fc9211066ff9ef7c5ad9b2",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py": "7eb2da472015df200f8697d29182484e1507f414e3825e1fe16be9ffcb359a27",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/test_host_probe.py": "881b083da614460cf337858c26538261e16c178c32a7b8737b60efa6cf3f63eb"
+  },
+  "finished_at": "2026-09-11T01:31:46.709720+00:00",
+  "resources": "Filesystem      Size  Used Avail Use% Mounted on\noverlay          94G   72G   18G  81% /\ntmpfs            32G   20G   12G  64% /tmp\n               total        used        free      shared  buff/cache   available\nMem:            62Gi        25Gi        15Gi        19Gi        42Gi        37Gi\nSwap:             0B          0B          0B\n",
+  "result": "PASS"
+}

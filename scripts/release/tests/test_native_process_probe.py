@@ -139,17 +139,19 @@ class ProbeSourceContractTest(unittest.TestCase):
 
 
 class ProbeBoundedCaptureTest(unittest.TestCase):
-    def capture(self, *, stalled=False, output=b"", sampler=None, persist=lambda: None):
+    def capture(self, *, stalled=False, output=b"", sampler=None, persist=lambda: None, runtime=False):
         clock, child = Clock(), Child()
-        lane = probe.Commands({"PATH": "/usr/bin:/bin", "HOME": "/safe/home"}, 100, persist=persist)
+        lane = probe.Commands({"PATH": "/usr/bin:/bin", "HOME": "/safe/home"}, 200 if runtime else 100, persist=persist)
         selector = Selector(clock, stalled)
         values = {100: iter([output, b""]), 101: iter([b""])}
         original = lane.capture
         def dispatch(arguments, *args, **kwargs):
             if arguments[0] == "/usr/bin/sample":
+                self.assertEqual(lane.rows[0]["status"], "TIMEOUT")
                 self.assertIsNone(child.returncode)
                 self.assertEqual(child.waits, [])
                 self.assertEqual(arguments, ["/usr/bin/sample", "12345", "1", "10", "-file", "/dev/stdout"])
+                self.assertEqual(kwargs, {"timeout": 4})
                 if sampler is not None:
                     return sampler(clock, child)
                 return {"label": "sample", "status": "EXITED", "exit_code": 0, "direct_child_reaped": True}, b"Call graph:\n    10 sysctl (in libsystem_c.dylib) + 20 [0x123]\n", b""
@@ -160,7 +162,10 @@ class ProbeBoundedCaptureTest(unittest.TestCase):
                 patch.object(probe.os, "set_blocking"), \
                 patch.object(probe.os, "read", side_effect=lambda fd, _size: next(values[fd])), \
                 patch.object(lane, "capture", side_effect=dispatch):
-            row, out, err = lane.capture(probe.ORIGINAL_PS, "original", 15, sample=stalled)
+            if runtime:
+                row, out, err = lane.capture(probe.PROTECTION_RUNTIME_LIST, "runtimes", 90, sample_runtime=True)
+            else:
+                row, out, err = lane.capture(probe.ORIGINAL_PS, "original", 15, sample=stalled)
         return lane, child, row, out, err, popen
 
     def test_capture_drains_bounded_pipes_and_never_persists_raw_bytes(self):
@@ -233,6 +238,87 @@ class ProbeBoundedCaptureTest(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "only-original-ps"), patch.object(probe.subprocess, "Popen") as launch:
             lane.capture(probe.METADATA_PS, "metadata", 15, sample=True)
         launch.assert_not_called()
+
+    def test_runtime_listing_timeout_samples_owned_child_without_rescuing_late_success(self):
+        def completed_during_sample(clock, child):
+            clock.value += 3
+            child.returncode = 0
+            return {"label": "sample", "status": "EXITED", "exit_code": 0, "direct_child_reaped": True}, \
+                b"Command: PRIVATE\nCall graph:\n    10 mach_msg2_trap (in libsystem_kernel.dylib) + 20 [0x123]\nBinary Images:\n/private/SECRET\n", b"PRIVATE STDERR"
+        _, child, row, _, _, launch = self.capture(stalled=True, sampler=completed_during_sample, runtime=True)
+        self.assertEqual(launch.call_args.args[0], ["/usr/bin/xcrun", "simctl", "list", "runtimes", "--json"])
+        self.assertEqual(row["status"], "TIMEOUT")
+        self.assertEqual(row["timeout_seconds"], 90)
+        self.assertEqual(row["observation_elapsed_seconds"], 90)
+        self.assertEqual(row["elapsed_seconds"], 93)
+        self.assertEqual(row["exit_code"], 0)
+        self.assertTrue(row["direct_child_reaped"])
+        observed = row["stack_observation"]
+        self.assertEqual(observed["target_owned_unreaped_pid"], child.pid)
+        self.assertEqual(observed["frames"], ["    10 mach_msg2_trap (in libsystem_kernel.dylib) + 20 [0x123]"])
+        self.assertTrue(observed["usable"])
+        self.assertIn("runtime-list command child", observed["scope"])
+        self.assertNotIn("PRIVATE", json.dumps(row))
+        self.assertNotIn("SECRET", json.dumps(row))
+
+    def test_runtime_sampling_rejects_lookalikes_timeouts_and_executable_substitution(self):
+        exact = ["/usr/bin/xcrun", "simctl", "list", "runtimes", "--json"]
+        cases = [
+            (["xcrun", *exact[1:]], 90, {}),
+            (["/usr/bin/xcrun", "simctl", "list", "devices", "--json"], 90, {}),
+            (["/usr/bin/xcrun", "simctl", "list", "devicetypes", "--json"], 90, {}),
+            ([*exact[:-1], "-j"], 90, {}), ([*exact, "available"], 90, {}),
+            (probe.ORIGINAL_PS, 15, {}),
+            (exact, 90, {"executable": "/usr/bin/true"}),
+            (exact, 90, {"environment": {"DEVELOPER_DIR": "/unreviewed"}}),
+            (exact, 90, {"sample": True}), (exact, 90, {"sample_runtime": "true"}),
+            *((exact, seconds, {}) for seconds in (89, 91, 120, 90.0, True)),
+        ]
+        for arguments, timeout, options in cases:
+            with self.subTest(arguments=arguments, timeout=timeout, options=options):
+                lane = probe.Commands({}, float("inf"))
+                with patch.object(probe.subprocess, "Popen") as launch:
+                    with self.assertRaisesRegex(RuntimeError, "only-(exact-runtime-list|original-ps)"):
+                        lane.capture(arguments, "runtimes", timeout, **{"sample_runtime": True, **options})
+                launch.assert_not_called()
+
+    def test_runtime_sampling_requires_full_sample_retirement_reserve_without_shortening(self):
+        lane = probe.Commands({}, 101.9)
+        with patch.object(probe.time, "monotonic", return_value=0), patch.object(probe.subprocess, "Popen") as launch:
+            row, _, _ = lane.capture(probe.PROTECTION_RUNTIME_LIST, "runtimes", 90, sample_runtime=True)
+        self.assertEqual(row["status"], "SKIPPED_BUDGET")
+        self.assertEqual(row["timeout_seconds"], 90)
+        self.assertEqual(len(lane.rows), 1)
+        launch.assert_not_called()
+        self.assertEqual(probe.ORIGINAL_PS_SECONDS, 15)
+        self.assertEqual(probe.PLATFORM_ENUMERATION_SECONDS[probe.PROTECTION_RUNTIME_LIST], 120)
+
+    def test_runtime_failed_sample_keeps_primary_timeout_and_retires_owned_child(self):
+        for change in ({"status": "TIMEOUT"}, {"direct_child_reaped": False},
+                       {"child_cleanup_error_type": "OSError"}, None):
+            def failed_sample(_clock, _child):
+                if change is None:
+                    raise RuntimeError("PRIVATE SAMPLE FAILURE")
+                return {"label": "sample", "status": "EXITED", "exit_code": 0, "direct_child_reaped": True, **change}, \
+                    b"Call graph:\n    10 mach_msg2_trap (in libsystem_kernel.dylib) + 20 [0x123]\n", b""
+            with self.subTest(change=change):
+                _, child, row, _, _, _ = self.capture(stalled=True, sampler=failed_sample, runtime=True)
+                self.assertEqual(row["status"], "TIMEOUT")
+                self.assertTrue(row["direct_child_reaped"])
+                self.assertEqual(child.signals, ["TERM"])
+                if change is not None:
+                    self.assertFalse(row["stack_observation"]["usable"])
+                else:
+                    self.assertEqual(row["secondary_error_type"], "RuntimeError")
+                self.assertNotIn("PRIVATE", json.dumps(row))
+
+    def test_runtime_listing_success_never_samples_or_retries(self):
+        _, child, row, output, _, launch = self.capture(output=b'{"runtimes": []}', runtime=True)
+        launch.assert_called_once()
+        self.assertEqual(row["status"], "EXITED")
+        self.assertEqual(output, b'{"runtimes": []}')
+        self.assertNotIn("stack_observation", row)
+        self.assertEqual(child.signals, [])
 
     def test_failed_durable_intent_prevents_launch_and_never_exports_exception_text(self):
         lane, _, row, _, _, launch = self.capture(persist=Mock(side_effect=OSError("PRIVATE WRITE PATH")))

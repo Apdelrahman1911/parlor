@@ -415,8 +415,9 @@ class Probe:
             temporary.replace(directory / "state.json")
         return True
 
-    def capture(self, arguments, label, timeout=30, retain=True):
-        row, out, err = self.commands.capture(arguments, label, timeout)
+    def capture(self, arguments, label, timeout=30, retain=True, *, sample_runtime=False):
+        options = {"sample_runtime": sample_runtime} if sample_runtime is not False else {}
+        row, out, err = self.commands.capture(arguments, label, timeout, **options)
         if self.state is not None and retain:
             directory = self.evidence if self.mode == "run" else self.cleanup_dir
             index = len(self.commands.rows)
@@ -427,8 +428,9 @@ class Probe:
             self.save()
         return row, out, err
 
-    def execute(self, arguments, label="command", timeout=30, retain=True):
-        row, out, _ = self.capture(arguments, label, timeout, retain)
+    def execute(self, arguments, label="command", timeout=30, retain=True, *, sample_runtime=False):
+        options = {"sample_runtime": sample_runtime} if sample_runtime is not False else {}
+        row, out, _ = self.capture(arguments, label, timeout, retain, **options)
         require(row["status"] == "EXITED" and row.get("exit_code") == 0 and row.get("direct_child_reaped"), "required-command-failed")
         return out
 
@@ -460,7 +462,8 @@ class Probe:
         require(self.execute(["/usr/bin/xcrun", "--sdk", "iphonesimulator", "--show-sdk-version"], "sdk-version").strip() == b"26.2", "qualified-sdk")
         sdk = Path(self.execute(["/usr/bin/xcrun", "--sdk", "iphonesimulator", "--show-sdk-path"], "sdk-path").decode().strip()).resolve(strict=True)
         require(Path(DEVELOPER) in sdk.parents, "sdk-outside-qualified-xcode")
-        runtimes = native.decode(self.execute(["/usr/bin/xcrun", "simctl", "list", "runtimes", "--json"], "runtimes", 90, False))["runtimes"]
+        runtimes = native.decode(self.execute(["/usr/bin/xcrun", "simctl", "list", "runtimes", "--json"],
+            "runtimes", 90, False, sample_runtime=True))["runtimes"]
         selected = [row for row in runtimes if row.get("identifier") == RUNTIME]
         require(len(selected) == 1 and selected[0].get("isAvailable") is True and selected[0].get("version") == "26.2" and
             selected[0].get("buildversion") == "23C54", "actual-qualified-runtime")

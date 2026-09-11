@@ -130,6 +130,13 @@ simulator. The small create wrapper merely chooses the explicit runtime/type
 instead of the generic helper's first available iPhone. It does not call, fake,
 or relax AppHost, full-verification or native-continuation cleanup guards.
 
+Only the exact `/usr/bin/xcrun simctl list runtimes --json` at its unchanged90s
+bound opts into one4s symbols-only `sample` of that same direct, unreaped child
+after TIMEOUT is latched. The existing12s sample/retirement reserve must fit the
+unchanged run budget. There is no retry or service/PID adoption; raw sample
+headers/paths and stderr are discarded. The original ps15 contract is unchanged.
+A stack observation cannot turn the timeout into success or establish its cause.
+
 Evidence is saved before the immediate post-cycle stop, then uploaded before
 destructive retirement. The exact creation journal is copied into the cleanup
 artifact; adoption/retirement records cannot become an unuploaded tail of the

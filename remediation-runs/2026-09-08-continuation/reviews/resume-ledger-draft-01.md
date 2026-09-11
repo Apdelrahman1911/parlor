@@ -1,0 +1,22 @@
+# Resume ledger draft — 2026-09-11, PD04 runtime-discovery failure cutoff
+`N=remediation-runs/2026-09-08-continuation`; this updates the older CURRENT status, not historical evidence.
+- Frozen SHA `1c3c33fe1891c1a143aaf8a1298abd0da052b085`; reviewed source/evidence `d4da069b290f2da5f561100f024647ff0d37d6b4`.
+- Recorded tree `be6b74847498e1d977cc73a9f82573c9707c53b6`; inventory SHA256 `779130b827e39f1b4ff9fa64fdfa4efded47d6aa9e1f0b86c61b42e41b5bcfe7`.
+- Narrow host-copy policy admits observed macOS/MacCatalyst `[1,6]`; main `[1]`, simulator `[7]`, unchanged simulator sampler and all other predicates remain required.
+- Added non-atomic Complete contrast and read-only host comparison of five exact current simulator inodes; no shipping storage change.
+- Existing source approvals: `$N/reviews/protection-host-policy-source-independent-01.json` and `protection-host-comparison-source-independent-01.json`; neither is new native evidence.
+- Retained actual local controls: 72 PASS (36 standalone/policy +25 APP +11 H01), then 33 affected standalone PASS at final pins; overlapping cycles, not 105 unique tests.
+- Both retained cycles: zero failures/errors/skips, before=after pins, stop0, scratch removed, checked live outputs absent and no cleanup errors; evidence `../2026-09-07-local-readiness/evidence/continuation-protection-host-comparison-controls-{01,02}/`.
+- H01 `34546624383/1` remains PASS for host-image capture/cleanup only; no storage getters, protection PASS or application-runtime qualification.
+- PD04 packet `$N/actions/protection-probe-04/` bound 19 controls to this unchanged freeze; digest `f5221b88d322b1e277e3973e8f8638c924e7856b8abd87d0fe050521253d2749`.
+- **PD04 run34549827411/1 FAIL**, dispatched `ios-protection-probe` + `paired` at `1c3c33fe`; all six full-qualification jobs skipped.
+- Its one-attempt admission `$N/reviews/protection-probe-pd04-request-admission-independent-01.json` is consumed; not authority for a blind retry.
+- Initial `/usr/bin/xcrun simctl list runtimes --json` timed out at90s (`90.012s` elapsed), empty stdout/stderr; main `required-command-failed`.
+- Exact direct child11565 was reaped with exit`-15`; this does not establish why runtime discovery stalled or prove descendant/service quiescence.
+- No simulator create intent: cleanup records `NOT_CREATED`. Probe/helper compilation, native sampler and application execution were not reached; protection observations0.
+- **Cleanup FAIL**: `timed-out-or-unsettled-tool-scratch-retained`; three Gradle stops exited0/no daemons. Scratch-retention disposition remains unreconciled, not cleanup PASS.
+- Raw `$N/actions/34549827411/{main/state.json,main/request.json,cleanup/state.json,job.log}` retains failure/ownership evidence; both uploads succeeded, final assertion failed `required-step-outcomes`.
+- Revised host execution and actual atomic/non-atomic/same-inode readings remain pending; admission/control PASS does not establish native capture or protection enforcement.
+- Requested technical gates closed **0/2**; A37 strict **0 PASS/26 FAIL**, APP04 strict **0 PASS/6 FAIL** unchanged. Final same-SHA full qualification **NOT_RUN**.
+- Final qualification requires one fresh `full` + `paired` dispatch: six mandatory jobs and cleanup pass together at one frozen SHA; seventh probe skips. Older prepared full packets are stale/unexecuted.
+- Preserve original repairs and historical scoped evidence; no redo or stitched PASS. **NOT_READY**; physical-device, Store/signing/publication and owner/legal decisions remain out of scope.

@@ -30,6 +30,8 @@ SCOPE = "native-process-probe"
 MAX_OUTPUT = 2 * 1024 * 1024
 OBSERVATION_SECONDS = 300
 ORIGINAL_PS_SECONDS = 15
+PROTECTION_RUNTIME_LIST = ("/usr/bin/xcrun", "simctl", "list", "runtimes", "--json")
+PROTECTION_RUNTIME_SECONDS = 90
 PLATFORM_ENUMERATION_SECONDS = {
     ("/usr/bin/xcrun", "simctl", "list", "runtimes", "--json"): 120,
     ("/usr/bin/xcrun", "simctl", "list", "devicetypes", "--json"): 120,
@@ -184,7 +186,8 @@ class Commands:
             row["child_cleanup_error_type"] = type(error).__name__
             row["direct_child_reaped"] = False
 
-    def capture(self, arguments, label, timeout=15, *, sample=False, executable=None, environment=None, root=ROOT):
+    def capture(self, arguments, label, timeout=15, *, sample=False, sample_runtime=False,
+                executable=None, environment=None, root=ROOT):
         # Never shorten a 15s original observation to fit the overall budget.
         # Refuse another launch and preserve SKIPPED_BUDGET instead.
         row = dict(label=label, command=list(map(str, arguments)), status="NOT_STARTED", timeout_seconds=timeout,
@@ -193,7 +196,16 @@ class Commands:
         self.rows.append(row)
         native.require(not sample or (list(arguments) == ORIGINAL_PS and timeout == ORIGINAL_PS_SECONDS),
                        "only-original-ps-may-request-owned-sample")
-        if time.monotonic() + timeout + (12 if sample else 4) > self.deadline:
+        # PD04's empty runtime-list timeout needs an observation, not a retry or
+        # a larger command budget. This opt-in cannot substitute another image
+        # or widen the original ps sampling seam.
+        native.require(type(sample_runtime) is bool and (not sample_runtime or (
+            not sample and tuple(arguments) == PROTECTION_RUNTIME_LIST and
+            type(timeout) is int and timeout == PROTECTION_RUNTIME_SECONDS and
+            executable is None and environment is None)),
+            "only-exact-runtime-list-may-request-owned-sample")
+        observe_timeout = sample or sample_runtime
+        if time.monotonic() + timeout + (12 if observe_timeout else 4) > self.deadline:
             row["status"] = "SKIPPED_BUDGET"
             self.checkpoint()
             return row, b"", b""
@@ -243,7 +255,7 @@ class Commands:
                 except subprocess.TimeoutExpired:
                     row.update(status="TIMEOUT", timeout_observed_at=native.now(),
                                observation_elapsed_seconds=round(time.monotonic() - started, 3))
-            if row["status"] == "TIMEOUT" and sample and child.poll() is None:
+            if row["status"] == "TIMEOUT" and observe_timeout and child.poll() is None:
                 self.checkpoint(required=True)
                 # Keep the handle unreaped throughout sampling: exit leaves our
                 # zombie, not a reusable PID. Sampling never changes TIMEOUT.
@@ -257,7 +269,9 @@ class Commands:
                     usable=(observation.get("status") == "EXITED" and observation.get("exit_code") == 0 and
                             observation.get("direct_child_reaped") is True and
                             not observation.get("child_cleanup_error_type") and bool(frames)),
-                    scope="Symbols only from exact timed-out direct ps child; no argv or image paths.")
+                    scope=("Symbols only from exact timed-out direct runtime-list command child; no argv or image paths."
+                           if sample_runtime else
+                           "Symbols only from exact timed-out direct ps child; no argv or image paths."))
         except BaseException as error:
             if row["status"] in {"TIMEOUT", "INTERRUPTED", "OUTPUT_LIMIT"}:
                 row["secondary_error_type"] = type(error).__name__

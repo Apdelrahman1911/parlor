@@ -1,6 +1,36 @@
-# Continuation execution ledger — 2026-09-10
+# Continuation execution ledger — 2026-09-11
 
-## CURRENT — H01 host-image predicate captured at a85fbae0; NOT_READY
+## CURRENT — PD04 discovery timeout; no new protection observations; NOT_READY
+
+`N=remediation-runs/2026-09-08-continuation`. The user resumed after the local pause checkpoint.
+- Reviewed host-copy correction/current-inode comparison source `d4da069b290f2da5f561100f024647ff0d37d6b4`,
+  inventory freeze `1c3c33fe1891c1a143aaf8a1298abd0da052b085`, tree `be6b74847498e1d977cc73a9f82573c9707c53b6`.
+  Simulator sampler remains `3f4f49af81d396a07beabeed45be649314495fd286327baa931aa5eb2dcca137`.
+  Host-copy image policy and five exact current-inode comparison controls were independently approved;
+  existing72 PASS then affected33 PASS overlap, not105 unique tests. Both local cycles stopped/cleaned successfully.
+- **PD04 run34549827411/1 FAIL** at that freeze, `ios-protection-probe` + `paired`; all six full jobs skipped.
+  Fresh19-control request/admission: `$N/actions/protection-probe-04/` and
+  `$N/reviews/protection-probe-pd04-request-admission-independent-01.json`; this admission is consumed.
+- Initial `/usr/bin/xcrun simctl list runtimes --json` timed out90s, stdout/stderr counters0/0,
+  direct child11565 reaped with exit-15. No create intent, native compile, sampler or application execution.
+  Runtime availability validation was not reached. **No new strict comparisons were executed.**
+- **Cleanup FAIL**, `timed-out-or-unsettled-tool-scratch-retained`; three Gradle stops0, preservation failures0.
+  `NOT_CREATED` means no simulator create intent, not unused scratch: resources/fixtures/tmp existed and
+  `TMPDIR` was exposed before the failed query. No scratch deletion/absence or indirect-worker retirement is proven.
+  Preserved raw `$N/actions/34549827411/{main,cleanup,job.log}` and both original/API-digest-verified ZIPs.
+  Independent custody/cleanup reviews: `protection-probe-pd04-artifact-custody-independent-01.json` and
+  `protection-probe-04-cleanup-actual-independent-01.json`. Upload success does not change either failure.
+- The timeout's cause is unresolved. Prior same-sanitizer runtime queries succeeded; APP04 successfully
+  started its simulator on the same runner image as PD04. No environment reset or timeout extension is justified.
+  A narrowly scoped owned-child timeout observation is being prepared for independent review; not native proof.
+- Historical B30/C08 scoped applicability at1c3: `$N/reviews/1c3c33fe-b30-c08-applicability-independent-01.json`;
+  no repeated execution, new-SHA runtime result, or full qualification is implied.
+- **Requested technical gates closed0/2**: A37 strict **0PASS/26FAIL**, APP04 strict **0PASS/6FAIL** remain.
+  Final same-SHA full qualification remains pending. Require one fresh `full` + `paired` dispatch with all six
+  independent mandatory jobs and their cleanup passing together; seventh probe skips. No historical stitching.
+  Physical-device, Store/signing/publication, account/identity and owner/legal requirements remain separate.
+
+## Historical H01 host-image predicate captured at a85fbae0 — preserved cutoff
 
 `N=remediation-runs/2026-09-08-continuation`. Older failures remain bound to their original runs.
 - Frozen source `a85fbae014b993a821cccb2938ed7b4403d67d70`, tree `ecaa97cf0a521cdd931cfae2cba0340fe750fe09`;

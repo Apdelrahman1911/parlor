@@ -242,6 +242,44 @@ class AdmissionTests(unittest.TestCase):
             with self.subTest(values=values), self.assertRaises(RuntimeError):
                 probe.main(values)
 
+    def test_platform_runtime_listing_opts_into_sampling_but_timeout_still_fails(self):
+        instance = object.__new__(probe.Probe)
+        instance.state, instance.commands = None, mock.Mock()
+        sdk = probe.DEVELOPER + "/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk"
+        replies = {"macos-version": b"15.7.9\n", "macos-build": b"24G830\n", "host-kernel": b"24.6.0\n",
+            "xcode-version": b"Xcode 26.3\nBuild version 17C529\n",
+            "developer-selection": probe.DEVELOPER.encode(), "sdk-version": b"26.2\n",
+            "sdk-path": sdk.encode(), "runtimes": b'{"runtimes": []}'}
+        timed_out = dict(status="TIMEOUT", exit_code=0, direct_child_reaped=True)
+        def captured(arguments, label, timeout, **options):
+            if label == "runtimes":
+                self.assertEqual(arguments, ["/usr/bin/xcrun", "simctl", "list", "runtimes", "--json"])
+                self.assertEqual(timeout, 90)
+                self.assertEqual(options, {"sample_runtime": True})
+                return timed_out, replies[label], b""
+            self.assertEqual(options, {})
+            return dict(status="EXITED", exit_code=0, direct_child_reaped=True), replies[label], b""
+        with mock.patch.object(instance.commands, "capture", side_effect=captured) as capture, \
+                mock.patch.object(probe.Path, "resolve", lambda path, strict=False: path):
+            with self.assertRaisesRegex(RuntimeError, "required-command-failed"):
+                instance.platform_binding()
+        self.assertEqual(capture.call_count, 8)
+        self.assertEqual(capture.call_args.args[1], "runtimes")
+        self.assertEqual(timed_out["status"], "TIMEOUT")
+
+    def test_execute_default_preserves_borrowed_legacy_capture_signature(self):
+        calls = []
+        class LegacyHost:
+            execute = probe.Probe.execute
+            def capture(self, arguments, label, timeout=30, retain=True):
+                calls.append((arguments, label, timeout, retain))
+                return dict(status="EXITED", exit_code=0, direct_child_reaped=True), b"source-binding", b""
+        instance = LegacyHost()
+        arguments = ["/usr/bin/git", "rev-parse", "HEAD"]
+        self.assertEqual(instance.execute(arguments, "git-binding", 20), b"source-binding")
+        self.assertEqual(instance.execute(arguments, "git-binding", 20, sample_runtime=False), b"source-binding")
+        self.assertEqual(calls, [(arguments, "git-binding", 20, True)] * 2)
+
 
 class HostComparisonTests(unittest.TestCase):
     def setUp(self):
