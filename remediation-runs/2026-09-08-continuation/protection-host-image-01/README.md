@@ -57,6 +57,12 @@ the same full identity again. Both samples retain all five per-API path/descript
 witnesses and closed descriptors. Actual BOOL, bounded NSError and stable setter
 IMP are observations even when the call fails or the class is unchanged. The
 existing host Foundation/CoreFoundation image policy applies; main remains `[1]`.
+Setter record schema2 also follows only `NSUnderlyingErrorKey`, retaining at
+most four domain-category/code records, including the outer error. It reports
+missing, non-error, cyclic or depth-limited termination explicitly; no error
+descriptions, arbitrary domains, paths or `userInfo` dictionaries are emitted.
+This preserves a reported underlying cause, not evidence of a particular syscall
+or Foundation branch. Schema1 H02 evidence remains unchanged and separate.
 There is no API retry, replacement, fallback, payload read, private API or inferred
 kernel class. Root/path checks are bracketing observations, not an atomic lock.
 

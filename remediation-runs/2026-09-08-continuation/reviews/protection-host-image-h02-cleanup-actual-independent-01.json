@@ -1,0 +1,191 @@
+{
+  "schema": 1,
+  "reviewer": "/root/probe_cleanup",
+  "status": "ACTUAL_H02_HOST_ONLY_CLEANUP_PASS",
+  "binding": {
+    "run_id": 34564001336,
+    "attempt": 1,
+    "job_id": 103152270683,
+    "source": "22ea6bebb95317e148d89b03c40cbb7efc9d36a4",
+    "tree": "e1a94305eb7af228bb2a80841f6adb3bc00162aa",
+    "selection": "protection-host-only",
+    "profile": "host-macos15-arm64-xcode26.3-sdk26.2-attribution-and-host-origin-setter",
+    "control_sha256": "91e18dec83251b4e040fc9f706d652a660bdb8d46414ef08321589e8c575d5b0",
+    "control_files": 30
+  },
+  "evidence": {
+    "root": "actions/34564001336",
+    "pins": {
+      "download-receipt.json": "8d93e0daa86bdaab17684a50b7b62f1ecd90455c7db84f05d1d7eae522375392",
+      "main/request.json": "2cc0cfb3a284fb9f2a5206d0973c9a1ea8eabd0a597a93702fb4a8570fafad70",
+      "main/state.json": "206a6c71a02faa2bc0e83a88e0678dc38d44066984c7249017839ee0dd592dcf",
+      "cleanup/state.json": "680d0c5b456dfaa4dd77c15e7865196895677ddc0893428e9e9dd787ef684125",
+      "job.log": "fc935cf6899ae93def0a4fbab36a210777b80710edee18e2856eea5116caaf95"
+    },
+    "archives": [
+      {
+        "bundle": "main",
+        "artifact_id": 10185338654,
+        "sha256": "c9ad0b988ce9ef151f790a0028aa9867d986b9756f67c4cd894355fe5ad5cf88",
+        "bytes": 25137,
+        "members": 69
+      },
+      {
+        "bundle": "cleanup",
+        "artifact_id": 10185339705,
+        "sha256": "1fe8ed50cac65e98f8d62f27c04edcf0a2fdae15c4061c3196eb85f9cac0ff80",
+        "bytes": 6687,
+        "members": 29
+      }
+    ],
+    "verified": "Exact dispatch/request/frozen-source/run/attempt/job joins and distinct uploads; both ZIP digests, CRCs, all98 member bytes and extracted-file matches;95 state-log bindings; all30 frozen Git control objects and reconstructed control digest. Probe job and all11 executed steps success; six full-verification jobs skipped. API success is not qualification.",
+    "assertion": {
+      "timestamp": "2026-09-11T04:56:07.7319680Z",
+      "cleanup": "PASS",
+      "main_upload_matches_cleanup_and_api": true,
+      "distinct_cleanup_upload_matches_api": true,
+      "application_protection_qualification": "NOT_ESTABLISHED"
+    }
+  },
+  "three_mandatory_stops": [
+    {
+      "bundle": "main",
+      "index": 37,
+      "seconds": 3.313,
+      "allowance_seconds": 60,
+      "owned_pid": 2745,
+      "exit": 0,
+      "direct_child_reaped": true,
+      "stdout_bytes": 544,
+      "stderr_bytes": 0
+    },
+    {
+      "bundle": "cleanup",
+      "index": 7,
+      "seconds": 0.506,
+      "allowance_seconds": 60,
+      "owned_pid": 2772,
+      "exit": 0,
+      "direct_child_reaped": true,
+      "stdout_bytes": 31,
+      "stderr_bytes": 0
+    },
+    {
+      "bundle": "cleanup",
+      "index": 20,
+      "seconds": 0.533,
+      "allowance_seconds": 60,
+      "owned_pid": 2895,
+      "exit": 0,
+      "direct_child_reaped": true,
+      "stdout_bytes": 31,
+      "stderr_bytes": 0
+    }
+  ],
+  "stop_scope": "Exact /Users/runner/work/parlor/parlor/gradlew --stop for immediate post-cycle, pre-retirement and final stop. Each within60s, EXITED0/reaped, empty stderr, stdout ends No Gradle daemons are running. First544-byte stdout also contains completed distribution download. These are scoped stop observations, not global-worker absence.",
+  "settlement": {
+    "main_direct_rows": 37,
+    "cleanup_direct_rows": 20,
+    "all57_EXITED0_reaped_no_child_cleanup_errors": true,
+    "preservation_failures_main": 0,
+    "preservation_failures_cleanup": 0,
+    "errors_main": [],
+    "errors_cleanup": [],
+    "signals_main": [],
+    "signals_cleanup": [],
+    "native_observations": [
+      {
+        "index": 25,
+        "label": "host-image-observation",
+        "owned_pid": 2728,
+        "allowance_seconds": 30,
+        "seconds": 0.014,
+        "exit": 0,
+        "direct_child_reaped": true
+      },
+      {
+        "index": 30,
+        "label": "host-setter-observation",
+        "owned_pid": 2738,
+        "allowance_seconds": 30,
+        "seconds": 0.009,
+        "exit": 0,
+        "direct_child_reaped": true
+      }
+    ],
+    "limits": "Counts cover recorded main/cleanup direct children, not indirect descendants or every process on the runner."
+  },
+  "scratch": {
+    "root": "/Users/runner/work/_temp/parlor-protection-probe-34564001336-1/resources",
+    "initial_resources": {
+      "device": 16777229,
+      "inode": 3535223,
+      "uid": 501
+    },
+    "initial_temporary": {
+      "device": 16777229,
+      "inode": 3535224,
+      "uid": 501
+    },
+    "custody": "Frozen load_request/save preserve exact base/evidence identity. Cleanup revalidates resources and tmp as owned private0700 directories before enumeration; same UID501/device16777229 across all retired entries.",
+    "retired_entries": 11,
+    "retired_regular_files": 9,
+    "retired_directories": 2,
+    "enumerated_bytes": 230533,
+    "retired_names": [
+      "HostImageProbe",
+      "HostImageProbe.m",
+      "HostProtectionSampler.m",
+      "HostSetterProbe",
+      "HostSetterProbe.m",
+      "OwnedHostSetterContext.h",
+      "ProtectionSampler.h",
+      "ProtectionSampler.m",
+      "host-fixtures",
+      "host-fixtures/probe.bin",
+      "tmp"
+    ],
+    "guard": "At most128 entries and64MiB aggregate; regular files single-link and at most16MiB, or directories; same UID/device, no symlinks/path escapes. Actual11-entry modes/sizes/identities meet the recorded bounds; link predicates are source-bound, with explicit link1 witnesses for setter inputs/image/fixture.",
+    "scratch_absent": true,
+    "cleanup_finished_at": "2026-09-11T04:56:06.461099+00:00",
+    "absence": "Approved cleanup persisted retirement, required zero preservation failures and descriptor-safe rmtree, removed only resources, then checked both exists() and is_symlink() false. Successful source-bound assert-result checked those absence predicates again after both uploads. Point-in-time owned-path absence, not a present-day runner survey.",
+    "retained": "Base/evidence and unrelated/global Gradle caches intentionally outside removal scope."
+  },
+  "host_setter_retirement": {
+    "scope": "HOST_ORIGIN_ONLY",
+    "fixture": {
+      "root": {
+        "device": 16777229,
+        "inode": 3535392,
+        "uid": 501
+      },
+      "identity": {
+        "device": 16777229,
+        "inode": 3535393,
+        "uid": 501,
+        "mode": 33152,
+        "links": 1,
+        "size": 40,
+        "type": "regular"
+      }
+    },
+    "fixture_binding": "Full fixture identity matches native before/after, every before/after reader identity, main fixture, cleanup retirement, and host-fixtures/probe.bin removed entry; fixture root matches retired host-fixtures directory. Both native sample descriptors report closed.",
+    "inputs": "All four full stat/hash bindings equal before compile, after set and retirement and match their removed entries. Independently reconstructed all four bytes/hashes from frozen template/sampler transformation and request macros; retained generated header is byte-exact.",
+    "input_sha256": {
+      "HostProtectionSampler.m": "7656cc25a7e2d9ab3a6715713acf177f5c3f02855ac24fc2757df663ecc77d50",
+      "HostSetterProbe.m": "be3f272644ea1284552f6622ed7aa02e035548802bfa5e78908e296e234c2b9b",
+      "OwnedHostSetterContext.h": "88197e4a7f02529083d3973972989caad55e635d178327a06d5457e010eeaed7",
+      "ProtectionSampler.h": "f606f61c7e8c2271cd23abb3876d1b6e0daff40ccdcd9d0f43b949d4d502bb13"
+    },
+    "image": {
+      "inode": 3535414,
+      "sha256": "2b26416612a4b040fb902d15ac9a8f324a0d6a3fa62c01e34ef39f7d249496b9",
+      "binding": "Full stat/hash witness unchanged from built image through post-set and retirement; matches HostSetterProbe removed entry."
+    },
+    "attribution_image": "Built HostImageProbe custody inode3535357 matches its removed entry; no claim of a fresh attribution-image retirement hash.",
+    "fixture_content_limit": "Retirement validates fixture full identity/size, not a fresh fixture-payload content hash. No such hash-at-retirement claim."
+  },
+  "simulator": "Not part of this host-only lifecycle: no simctl command, owned simulator UUID/journal or simulator retirement receipt. No simulator cleanup is inferred.",
+  "limits": "Cleanup acceptance only. Raw host setter explicitly excludes simulator fixtures, production snapshots, changed historical A37 result and protection qualification. No app/protection/full/device/Store/readiness acceptance or indirect-worker/global-service quiescence. PD09 failure and all older historical results remain separate; no evidence stitching. Root/collector local Gradle stops are not CI cleanup receipts.",
+  "operations": "Supplied JSON/log/ZIP/hash and frozen-source inspection only; no tests/builds/network/API polling/dispatch/source edits/Git writes/resource deletion/subagents. No local build scratch created; only this new review receipt written."
+}

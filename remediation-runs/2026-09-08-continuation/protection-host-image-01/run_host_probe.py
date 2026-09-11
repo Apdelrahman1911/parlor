@@ -108,6 +108,21 @@ def preceding_image(evidence, commands):
         for name in ("host-image.stdout.json", "host-image.stderr.txt", "host-image-summary.json")})
 
 
+def validate_error_chain(value, root):
+    require(isinstance(value, dict) and set(value) == {"nodes", "termination"} and
+        type(value["nodes"]) is list and len(value["nodes"]) <= 4 and
+        type(value["termination"]) is str and
+        value["termination"] in {"no-error", "no-underlying", "non-error", "cycle", "depth-limit"},
+        "host-origin-error-chain-shape")
+    nodes, termination = value["nodes"], value["termination"]
+    for node in nodes:
+        common.error_record(node)
+        require(node["present"] is True, "host-origin-error-chain-present")
+    require((not nodes and termination == "no-error") if not root["present"] else
+        bool(nodes) and nodes[0] == root and termination != "no-error", "host-origin-error-chain-root")
+    require(termination != "depth-limit" or len(nodes) == 4, "host-origin-error-chain-depth")
+
+
 def validate_setter_report(raw, request, fixture, built, command, observed_platform):
     require(isinstance(raw, bytes) and 0 < len(raw) <= 256 * 1024, "bounded-host-origin-setter-report")
     value = native.decode(raw)
@@ -121,7 +136,7 @@ def validate_setter_report(raw, request, fixture, built, command, observed_platf
         "scope", "target_leaf", "process_id", "uid", "runtime_version", "read_only", "simulator_fixture_observed",
         "production_snapshots_observed", "historical_a37_strict_result_changed", "protection_qualified", "main_image_before", "main_image_after",
         "before", "operation", "after"}, "host-origin-setter-shape")
-    require(type(value["schema"]) is int and value["schema"] == 1 and value["kind"] == "host-origin-protection-setter" and
+    require(type(value["schema"]) is int and value["schema"] == 2 and value["kind"] == "host-origin-protection-setter" and
         value["collection_status"] == "PASS" and value["scope"] == SETTER_SCOPE and value["target_leaf"] == "probe.bin" and
         value["binding"] == request["binding"] and type(value["fixture_root_device"]) is int and type(value["fixture_root_inode"]) is int and
         value["fixture_root_device"] == fixture["root"]["device"] and value["fixture_root_inode"] == fixture["root"]["inode"] and
@@ -143,10 +158,11 @@ def validate_setter_report(raw, request, fixture, built, command, observed_platf
     for kind in ("fm", "url"):
         require(value["before"][kind]["implementation_before"] == value["after"][kind]["implementation_before"], "host-origin-setter-getter-change")
     operation = value["operation"]
-    require(isinstance(operation, dict) and set(operation) == {"id", "requested_protection", "returned", "native_error",
+    require(isinstance(operation, dict) and set(operation) == {"id", "requested_protection", "returned", "native_error", "error_chain",
         "implementation_before", "implementation_after"} and operation["id"] == "host-origin-fm-set" and
         operation["requested_protection"] == "complete" and type(operation["returned"]) is bool, "host-origin-setter-operation")
     common.error_record(operation["native_error"])
+    validate_error_chain(operation["error_chain"], operation["native_error"])
     implementation = operation["implementation_before"]
     require(isinstance(implementation, dict) and set(implementation) == {"receiver_class", "selector", "implementation"} and
         implementation == operation["implementation_after"] and implementation["selector"] == "setAttributes:ofItemAtPath:error:" and

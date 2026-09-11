@@ -1,6 +1,20 @@
 # Continuation execution ledger — 2026-09-11
 
-## CURRENT — PD09 timeout/cleanup FAIL; D09 pending; H02 next; NOT_READY
+## CURRENT — D09 older-source6/6; H02 setter rejected; H03 local-only; NOT_READY
+
+`N=remediation-runs/2026-09-08-continuation`; `C=remediation-runs/2026-09-07-local-readiness`. Last pushed checkpoint `22ea6bebb95317e148d89b03c40cbb7efc9d36a4`, not a new H03 freeze; earlier cutoffs remain historical.
+- **D09 run34561630512/1: all six mandatory jobs and6/6 scoped cleanup actual PASS at `d3c0df9ccba51463708728c3c618d3652e76aafa` only**, not the newer checkpoint/H03 source. Raw `$N/actions/34561630512/`.
+- Linux **2221PASS/3SKIP**, including three managed-device passes; Windows x64/Linux ARM64/macOS x64 **1340PASS/3SKIP each**. **573 Python PASS separately**; ARM64 is Desktop-only, skips are not passes.
+- iOS **465 KMP +5 Swift UI PASS**; three Release framework links and unsigned Simulator Swift Release wrapper passed as **build/package evidence only**, not Release runtime, signing or devices.
+- Eight independent D09 lane/custody/cleanup reviews are complete; aggregate `$N/reviews/full-d09-aggregate-actual-independent-01.json` **pending at this cutoff**, not asserted available.
+- **H02 run34564001336/1 at22ea6beb** captured host-only fresh same-inode metadata: public setter **FALSE/Cocoa256**, class3 before/after, filesystem protection capability unsupported. No strict-protection/enforcement promotion. Raw `$N/actions/34564001336/`.
+- H02 **cleanup/owned retirement PASS**: three Gradle stops0,57 recorded direct children reaped,11 retired entries, scratch absent. This is not an indirect-worker/global-absence claim.
+- **PD09 run34561580861/1 remains FAIL**: native40s/sample4s timeouts, empty native streams, direct children reaped; four stops0/exact simulator retired but **cleanup FAIL/scratch retained**. No host/setter execution or new strict result; no cause inferred.
+- **H03 four-file error-metadata-chain change reviewed; final14 local controls PASS** in `$C/evidence/continuation-protection-error-chain-controls-02/`; initial01 preserved. **Native execution/source freeze pending**; local controls are not host runtime, and no shipping/paired/workflow change is claimed.
+- **Final-source technical gates closed0/2; A37 strict0PASS/26FAIL unchanged**. D09 proves older-SHA combined execution only; historical APP04/PD08 strict failures are not superseded.
+- **Next:** freeze/review/admit one focused H03 run, then final **D10 only after source is stable**. No cross-source stitching or unchanged-area redo; physical-device, Store and owner/legal requirements remain separate/out of scope.
+
+## Historical PD09 timeout/cleanup FAIL; D09 pending; H02 next; NOT_READY — preserved cutoff
 
 `N=remediation-runs/2026-09-08-continuation`; `C=remediation-runs/2026-09-07-local-readiness`. Earlier cutoffs remain historical.
 - Delivered freeze `d3c0df9ccba51463708728c3c618d3652e76aafa`, tree `3169657a10279eb2bfad6c59a60a5054c6092b61`, source `2c914e2340fcbee9e715bd258ff6a3ec7410196b`; receipt `$N/actions/protection-probe-09/source-freeze-receipt.json`.

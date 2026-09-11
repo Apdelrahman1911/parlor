@@ -1,0 +1,216 @@
+{
+  "kind": "REVIEWED_HOST_ORIGIN_SOURCE_INVENTORY_FREEZE_AND_NORMAL_PUSH_NOT_RUNTIME",
+  "started_at": "2026-09-11T04:50:09.356727+00:00",
+  "commands": [
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "seconds": 0.004
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--name-only"
+      ],
+      "exit_code": 0,
+      "seconds": 0.016
+    },
+    {
+      "command": [
+        "git",
+        "add",
+        "-f",
+        "--",
+        "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-host-origin-controls-01",
+        "remediation-runs/2026-09-08-continuation/CONTINUE_LATEST.md",
+        "remediation-runs/2026-09-08-continuation/actions/34561580861",
+        "remediation-runs/2026-09-08-continuation/actions/full-qualification-dispatch-09",
+        "remediation-runs/2026-09-08-continuation/actions/protection-probe-09",
+        "remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py",
+        "remediation-runs/2026-09-08-continuation/protection-host-image-01/test_host_probe.py",
+        "remediation-runs/2026-09-08-continuation/protection-host-image-01/README.md",
+        "remediation-runs/2026-09-08-continuation/protection-host-image-01/HostSetterProbe.m.in",
+        "remediation-runs/2026-09-08-continuation/reviews/protection-host-origin-setter-driver-controls-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/protection-host-origin-setter-native-source-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/d3c0df9c-b30-c08-reuse-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/final-d09-exact-request-admission-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/pd09-first-failure-01",
+        "remediation-runs/2026-09-08-continuation/reviews/protection-pd09-native-failure-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/protection-probe-09-cleanup-actual-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/protection-probe-pd09-artifact-custody-independent-01.json",
+        "remediation-runs/2026-09-08-continuation/reviews/protection-probe-pd09-request-admission-independent-01.json"
+      ],
+      "exit_code": 0,
+      "seconds": 0.118
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--name-only"
+      ],
+      "exit_code": 0,
+      "seconds": 0.085
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--cached",
+        "--name-only"
+      ],
+      "exit_code": 0,
+      "seconds": 0.017
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "gc.auto=0",
+        "commit",
+        "--quiet",
+        "-m",
+        "feat(verification): isolate host-origin protection observation from simulator startup"
+      ],
+      "exit_code": 0,
+      "seconds": 0.148
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "seconds": 0.005
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "scripts/generate_review_inventory.py"
+      ],
+      "exit_code": 0,
+      "seconds": 1.133
+    },
+    {
+      "command": [
+        "git",
+        "add",
+        "docs/review/INDEPENDENT_REVIEW_INVENTORY.csv"
+      ],
+      "exit_code": 0,
+      "seconds": 0.319
+    },
+    {
+      "command": [
+        "git",
+        "-c",
+        "gc.auto=0",
+        "commit",
+        "--quiet",
+        "-m",
+        "chore(review): freeze host-origin diagnostic inventory"
+      ],
+      "exit_code": 0,
+      "seconds": 0.152
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "seconds": 0.003
+    },
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "exit_code": 0,
+      "seconds": 0.003
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "scripts/generate_review_inventory.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "seconds": 1.111
+    },
+    {
+      "command": [
+        "git",
+        "push",
+        "origin",
+        "fix/local-readiness-2026-09-07"
+      ],
+      "exit_code": 0,
+      "seconds": 5.33
+    },
+    {
+      "command": [
+        "git",
+        "ls-remote",
+        "origin",
+        "refs/heads/fix/local-readiness-2026-09-07"
+      ],
+      "exit_code": 0,
+      "seconds": 0.613
+    },
+    {
+      "command": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=no"
+      ],
+      "exit_code": 0,
+      "seconds": 0.088
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "/root/projects/Parlor/parlor/remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py",
+        "controls"
+      ],
+      "exit_code": 0,
+      "seconds": 0.204
+    },
+    {
+      "command": [
+        "./gradlew",
+        "--stop"
+      ],
+      "exit_code": 0,
+      "seconds": 0.761
+    }
+  ],
+  "staged_paths": 249,
+  "status": "PASS_SOURCE_FREEZE_NOT_RUNTIME",
+  "source_commit": "4d59830442dbe31c9c1cec2f8997b0ac08604df4",
+  "frozen_source": "22ea6bebb95317e148d89b03c40cbb7efc9d36a4",
+  "tree": "e1a94305eb7af228bb2a80841f6adb3bc00162aa",
+  "remote": "22ea6bebb95317e148d89b03c40cbb7efc9d36a4",
+  "inventory_sha256": "d3b8ca6b462a10b0399fb3b6e435d5c816e63dc2d8eeebbe838046103667a481",
+  "inventory_rows": 32915,
+  "source_reviews": {
+    "protection-host-origin-setter-driver-controls-independent-01.json": "3b41c7ee57b2c10e86cb27de3277161ca9afd67f647ade85f1f81b186a2a884d",
+    "protection-host-origin-setter-native-source-independent-01.json": "fb6377caf1d9f752963a8487916d2b7052a1663cd6d19598bd2b1314aa5faf80"
+  },
+  "stop": "No Gradle daemons are running.",
+  "finished_at": "2026-09-11T04:50:19.545317+00:00",
+  "log_sha256": "020f68643497bd3b28418e3abc3b2f4d543d786ccdd76c39880d74dfc3c11512"
+}

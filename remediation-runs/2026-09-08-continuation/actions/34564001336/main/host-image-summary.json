@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "status": "CAPTURED_HOST_IMAGE_PREDICATES_NOT_APP_QUALIFICATION",
+  "binding": {
+    "run_token": "b00c1219c8ac48509649fcf121af7ca6",
+    "source_sha": "22ea6bebb95317e148d89b03c40cbb7efc9d36a4",
+    "control_sha256": "91e18dec83251b4e040fc9f706d652a660bdb8d46414ef08321589e8c575d5b0",
+    "run_id": "34564001336",
+    "run_attempt": "1"
+  },
+  "main_image": {
+    "uuid": "7104ce1a-14be-47a1-be33-e010b4ae13dd",
+    "image_basename": "HostImageProbe",
+    "platforms": [
+      1
+    ],
+    "relative_offset": 2548
+  },
+  "results": [
+    {
+      "target": "main",
+      "original_result": "PASS",
+      "failure": "none",
+      "failed_predicates": [],
+      "platforms": [
+        1
+      ]
+    },
+    {
+      "target": "filemanager",
+      "original_result": "REJECTED",
+      "failure": "image-executable-address",
+      "failed_predicates": [
+        "single_platform"
+      ],
+      "platforms": [
+        1,
+        6
+      ]
+    },
+    {
+      "target": "url",
+      "original_result": "REJECTED",
+      "failure": "image-executable-address",
+      "failed_predicates": [
+        "single_platform"
+      ],
+      "platforms": [
+        1,
+        6
+      ]
+    }
+  ],
+  "production_snapshots_observed": false,
+  "protection_qualified": false,
+  "original_guard_changed": false
+}

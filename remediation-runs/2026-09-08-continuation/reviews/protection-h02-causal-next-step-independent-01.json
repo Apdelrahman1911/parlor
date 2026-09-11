@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "reviewer": "/root/protection_host",
+  "status": "H02_ACTUAL_HOST_FAILURE_CONFIRMED_CAUSAL_NEXT_STEP_CONDITIONAL",
+  "scope": "Actual H02 result interpretation against PD08 and retained Foundation utility lines240-284; smallest additional host-only discriminator. Not source/control reapproval, cleanup approval, dispatch admission or strict qualification.",
+  "packet": {
+    "root": "remediation-runs/2026-09-08-continuation/actions/34564001336",
+    "run_id": 34564001336,
+    "run_attempt": 1,
+    "job_id": 103152270683,
+    "source_sha": "22ea6bebb95317e148d89b03c40cbb7efc9d36a4",
+    "tree": "e1a94305eb7af228bb2a80841f6adb3bc00162aa",
+    "control_sha256": "91e18dec83251b4e040fc9f706d652a660bdb8d46414ef08321589e8c575d5b0",
+    "selection": "protection-host-only",
+    "collector_sha256": "8d93e0daa86bdaab17684a50b7b62f1ecd90455c7db84f05d1d7eae522375392"
+  },
+  "pins": {
+    "main/host-setter.stdout.json": "d6854f702329bdbc10b62bce0ea5cb7d87717640e7c3886a0f7ea0dbaa5196ac",
+    "main/host-setter.stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "main/host-setter-report.json": "59ff42a2ba9d483790e7cba177a0d4f62120fa300bd3026870148f406b1a4bed",
+    "main/host-setter-bindings.json": "ddbe4daf6bd3320dcceb6f46e98e450beff4e00041ff850866536ab6266b9ee6",
+    "main/state.json": "206a6c71a02faa2bc0e83a88e0678dc38d44066984c7249017839ee0dd592dcf",
+    "main/host-image.stdout.json": "8a392ed464d9ba9f336e90c38962ae41c227986ec81563bb75b01db0e431bec8",
+    "main/host-image-summary.json": "fd1f8cbf337b4baf9e145c753bca18ab5ca3511fddb37cb91c6b90a272cb419c"
+  },
+  "actual": [
+    "The public NSFileManager setAttributes:ofItemAtPath:error: request for complete returned FALSE with NSError present, domain=cocoa/code256. It did not return the previously hypothesized YES. Command30 was a direct owned HostSetterProbe child PID2738, exited0/reaped in0.009s within30s; stdout9502 bytes and stderr0. Process/collection success describes captured observations, not successful protection mutation.",
+    "Before and after native sample objects are exactly equal: owned regular inode3535393/device16777229, UID501, mode0600, one link,40 bytes. Each phase has five exact per-API identity witnesses and closed descriptor. FM and fresh file NSURL both expose until-first-authentication without NSError; GET63 returns3/errno0; attrlist returns actual class3 with returned protection bit, mask0xc0000000,length28/errno0. APFS flags76582912 omit MNT_CPROTECT128 and URL volume support is unsupported.",
+    "Raw operation/before/after exactly reconstruct the retained host-setter report. Run binding and root identity agree; recorded input/image identities are invariant. Host main UUID575678e6-131a-4043-95e6-99d6f63e4a85/platform[1] matches the build record. Public setter image is Foundation UUID39be75ac-350f-3b8c-9c10-8b2b5321ce8e, offset456112/platforms[1,6], stable before/after. Host getter identities match the previously reviewed PD08 host getter identities. This establishes entry-point attribution, not its internal call graph.",
+    "This is a newly created HOST_ORIGIN_ONLY fixture, not a PD08 Simulator-created inode or A37 app snapshot. H02's returned-false result cannot be substituted for earlier Simulator public-success observations. No new strict count is produced."
+  ],
+  "prior_pd08": {
+    "review": "remediation-runs/2026-09-08-continuation/reviews/protection-probe-08-host-comparison-actual-independent-01.json",
+    "sha256": "03a7ecd1718ba34081a3f167900375f7234015cfcbce14678398b5ef3a492842",
+    "retained_discriminator": "Five same-final-inode pairs had Simulator FM key missing versus host FM until-first-authentication, while regular NSURL values and kernel class3 agreed. That getter/context exposure discrepancy remains established. H02 does not explain the missing Simulator key, nor does matching framework UUID establish the same filesystem instance across hosted runs."
+  },
+  "retained_source": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/swift-tag-FileManager+Utilities.swift",
+    "sha256": "10ed21dd5fc60873916e9e5be5f7f09d43dac21da18b31de0b13de251bdd45f5",
+    "lines": "240-284 only",
+    "meaning": "An already-equal internal class returns early. After successful open, failed F_SETPROTECTIONCLASS is tolerated only for ENOTSUP followed by failed fstatfs or clear MNT_CPROTECT; other SET errors throw. The separate silent EACCES path is open failure, not SET failure. This retained source is not bound to the installed Foundation body. H02's capability-negative public FALSE does not demonstrate the ENOTSUP-suppression branch."
+  },
+  "exact_causal_gap": [
+    "Cocoa256 is not a retained POSIX errno. The raw error has only present/domain/code and omits NSUnderlyingErrorKey. It does not identify the failing operation, prove successful writable open, prove any F_SET invocation, or identify Foundation's actual numeric class argument.",
+    "Capability-negative fstatfs observations surrounding the public operation do not prove which capability query or branch occurred inside Foundation. The result could reflect a different SET error, another failure, or a different installed implementation. Selecting one explanation now would be an unsupported assumption.",
+    "An underlying NSError chain plus a separate direct fcntl control can narrow the alternatives, but matching errors are not a trace of the public setter's own call. Exact suppression attribution requires runtime-bound evidence linking that invocation to its primitive arguments/outcomes and handling branch. Attribution to A37 additionally requires the corresponding failed Simulator/app path, not only a fresh host-file experiment."
+  ],
+  "recommended_smallest_next_step": {
+    "decision": "Prefer one narrowly upgraded host-only diagnostic over an unchanged H02 retry or debugger instrumentation now; lead must separately choose, implement, review, freeze and admit it.",
+    "public_operation": "Keep exactly one public Complete request on a freshly owned fixture. Add only a bounded NSUnderlyingErrorKey chain: for example at most4 NSError nodes, normalized domain and signed code, explicit absent/non-NSError/cycle/truncation states. Do not retain descriptions, arbitrary userInfo, paths or contents. A missing underlying error is a valid captured limitation, not evidence that no underlying error occurred.",
+    "direct_control": "After retaining the public before/operation/after history, allow at most one separately labelled genuine SDK fcntl(F_SETPROTECTIONCLASS) on a verified live writable descriptor for an owned regular inode. Bind path/descriptor identity, record open outcome, capture return and errno immediately before any further API call, then retain same-inode GET/attrlist/FM/fresh-URL and fstatfs observations and descriptor closure. Do not skip solely because the capability bit is clear, retry on error, coerce success, or overwrite the preceding public observations.",
+    "argument_admission": "A direct Complete request requires a named class constant genuinely exposed by the selected public SDK. Do not guess1, enable private headers, or pass NSData option bits as a kernel class. If absent, direct Complete is NOT_RUN. A single F_SET using the immediately observed successful GET class is an alternative genuine SAME_CLASS control; record the argument's observed provenance, never label it Complete, and do not infer class-changing ability from its success.",
+    "why_bounded": "This adds missing error detail and one direct C-API boundary observation without broad builds, storage/workflow changes, setter retries, dyld interposition or debugger assumptions. Existing deadlines, source/run ownership, privacy, evidence retention and cleanup boundaries must remain intact."
+  },
+  "interpretation_rules": [
+    "An actual underlying POSIX errno narrows the public error but alone does not identify open versus SET. A separate raw SET failure records that control's actual failure, not proof Foundation made the identical call.",
+    "Public FALSE plus ENOTSUP/clear-capability evidence must not be described as observed public-success suppression. If compared with the retained tag, the discrepancy is evidence that its applicability still needs establishment, not permission to rewrite the observation.",
+    "A same-class SET success proves only acceptance of that argument on that descriptor. A missing public Complete class constant is not a simulated SET result. Even an SDK-qualified Complete SET success requires actual post-read class evidence and still would not establish enforcement.",
+    "A37 strict0PASS/26FAIL, APP04 strict0PASS/6FAIL and PD08 synthetic0PASS/5FAIL remain unchanged. No Simulator cause, production fallback, app/full qualification or physical-device/Store readiness follows from host-only observations. Keep runtime_implementation_causality_proven=false absent the missing causal bridge."
+  ],
+  "findings": [],
+  "operations": "Only local retained H02/PD08 JSON/hash consistency inspection, the specified Foundation source excerpt, and this assigned additive review. No API polling, dispatch, build/test execution, source edits, broad control/storage audit or cleanup acceptance. An initial local inspection used summary.json rather than the actual host-image-summary.json; the correct retained file was subsequently inspected. No packet mutation or reviewer scratch was created."
+}

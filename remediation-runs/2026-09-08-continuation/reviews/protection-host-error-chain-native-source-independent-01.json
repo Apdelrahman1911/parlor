@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/storage_boundary",
+  "author": "/root",
+  "status": "APPROVED_NATIVE_SOURCE_AFTER_PRESERVATION_CORRECTION",
+  "source": "remediation-runs/2026-09-08-continuation/protection-host-image-01/HostSetterProbe.m.in",
+  "sha256": "99d7f72db7fbc57d976563e97b1bd9514c9a637e801ae84847cc34c890fc7bc9",
+  "bytes": 8844,
+  "lines": 163,
+  "base_commit": "22ea6bebb95317e148d89b03c40cbb7efc9d36a4",
+  "base_source_sha256": "be3f272644ea1284552f6622ed7aa02e035548802bfa5e78908e296e234c2b9b",
+  "open_findings": [],
+  "closed_finding": {
+    "initial_source_sha256": "2e55538c5eac96917d581197d21ecd49f6ae2f19c69b38c93594d5ec63896fd4",
+    "issue": "Evaluating errorChain inside the same dictionary literal delayed retention of actual returned/native_error until the new traversal completed; a traversal exception could lose those existing observations.",
+    "correction": "Final lines143-144 retain the original returned/native_error dictionary first, then assign error_chain separately. The outer exception handler can therefore preserve those fields if traversal throws."
+  },
+  "source_findings": [
+    "Delta is confined to the new errorChain helper, native record schema1-to2 and operation.error_chain assignment. Existing single public setter, paths, ownership/context/image checks, sampling, alarm and nonqualification flags are unchanged.",
+    "Traversal follows only NSError.userInfo[NSUnderlyingErrorKey], emits at most four errorRecord nodes and retains at most four NSError objects. Pointer-identity cycle detection avoids recursive equality and ARC strong array ownership keeps compared objects alive.",
+    "Nested objects are checked as NSError before traversal. Terminal states are closed: no-error, no-underlying, non-error, cycle, depth-limit. A fourth node examines only the next relation to distinguish actual termination from truncation; no fifth node is serialized.",
+    "Nodes contain only Boolean present, integer code and closed none/cocoa/posix/other domain labels. No descriptions, userInfo dump, arbitrary domain strings, paths, pointer values, retries, debugger or extra filesystem/protection operation is added.",
+    "Objective-C generics, ARC references, dictionary subscripting and the public NSUnderlyingErrorKey use show no source-level compile/type/lifetime defect in this bounded inspection. Native compilation is not claimed."
+  ],
+  "limits": [
+    "Driver schema2/chain validation, source/control admission, tests and native execution require their separate reviews. This approval does not attest those activities.",
+    "Node-count bounds do not guarantee individual Foundation accessors cannot block; existing self-only alarm and owned driver timeout remain required. A process-level timeout may still prevent final serialization.",
+    "H02 at22ea retains only its actual outer Cocoa256 error. New underlying-error observations have not run, cannot be inferred retrospectively and cannot alone promote original strict protection or product qualification."
+  ],
+  "activity": "Read-only delta review and final-pin verification; no project imports, tests, builds, network, dispatches or native source edits. This approval receipt is the only file authored for this source review."
+}

@@ -43,6 +43,28 @@ static NSDictionary *errorRecord(NSError *error) {
             [error.domain isEqual:NSPOSIXErrorDomain] ? @"posix" : @"other"};
 }
 
+static NSDictionary *errorChain(NSError *error) {
+    NSMutableArray *nodes = [NSMutableArray array];
+    NSMutableArray<NSError *> *seen = [NSMutableArray array];
+    NSString *termination = @"no-error";
+    NSError *current = error;
+    while (current && nodes.count < 4) {
+        [seen addObject:current];
+        [nodes addObject:errorRecord(current)];
+        // Read only this standard relation. Never serialize userInfo, paths,
+        // descriptions or arbitrary error-domain strings.
+        id next = current.userInfo[NSUnderlyingErrorKey];
+        if (!next) { termination = @"no-underlying"; break; }
+        if (![next isKindOfClass:NSError.class]) { termination = @"non-error"; break; }
+        BOOL cycle = NO;
+        for (NSError *prior in seen) if (prior == next) { cycle = YES; break; }
+        if (cycle) { termination = @"cycle"; break; }
+        if (nodes.count == 4) { termination = @"depth-limit"; break; }
+        current = next;
+    }
+    return @{@"nodes": nodes, @"termination": termination};
+}
+
 static NSDictionary *namedIdentity(NSString *path) {
     char canonical[PATH_MAX];
     struct stat value;
@@ -88,7 +110,7 @@ int main(int argc, const char *argv[]) {
     signal(SIGALRM, SIG_DFL);
     alarm(25); // Bounds this process only, including Foundation startup.
     @autoreleasepool {
-        NSMutableDictionary *receipt = [@{@"schema": @1, @"kind": @"host-origin-protection-setter",
+        NSMutableDictionary *receipt = [@{@"schema": @2, @"kind": @"host-origin-protection-setter",
             @"collection_status": @"FAIL", @"scope": @"HOST_ORIGIN_ONLY", @"target_leaf": @"probe.bin",
             @"process_id": @(getpid()), @"uid": @(getuid()), @"read_only": @NO,
             @"simulator_fixture_observed": @NO, @"production_snapshots_observed": @NO,
@@ -119,6 +141,7 @@ int main(int argc, const char *argv[]) {
             NSString *path = attestTarget(expected);
             BOOL result = [manager setAttributes:@{NSFileProtectionKey: NSFileProtectionComplete} ofItemAtPath:path error:&error];
             [operation addEntriesFromDictionary:@{@"returned": @(result), @"native_error": errorRecord(error)}];
+            operation[@"error_chain"] = errorChain(error);
             attestTarget(expected);
             NSDictionary *implementationAfter = ParlorProtectionImplementation(manager, setter);
             operation[@"implementation_after"] = implementationAfter;

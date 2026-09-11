@@ -1,0 +1,478 @@
+{
+  "schema_version": 1,
+  "kind": "FULL_D09_MACOS_X64_CURRENT_DESKTOP_RUNTIME_AND_NATIVE_DISTRIBUTION_REVIEW",
+  "reviewer": "/root/ci_macos_x64",
+  "reviewed_at": "2026-09-11T13:21:52.278099+00:00",
+  "status": "APPROVED_CURRENT_LANE_WITH_THREE_SOURCE_DECLARED_SKIPS",
+  "source": {
+    "run_id": 34561630512,
+    "run_attempt": 1,
+    "job_id": 103145382811,
+    "job": "desktop-macos-x64",
+    "commit": "d3c0df9ccba51463708728c3c618d3652e76aafa",
+    "tree": "3169657a10279eb2bfad6c59a60a5054c6092b61",
+    "checkout_root": "/Users/runner/work/parlor/parlor",
+    "binding": "Completed collector, exact run/attempt/job/artifact API, ownership HEAD/tree and successful clean Darwin/x86_64 guard agree."
+  },
+  "custody": {
+    "collector_completed_at": "2026-09-11T13:12:21.019917+00:00",
+    "pin_format": [
+      "path_relative_to_continuation",
+      "bytes",
+      "sha256"
+    ],
+    "pins": [
+      [
+        "actions/34561630512/download-receipt.json",
+        53448258,
+        "64d973465fa1a2d8b43aafa4a4c0e40d52638caaa7e7e4b9dc4bb6b13d265a2e"
+      ],
+      [
+        "actions/34561630512/run.json",
+        12704,
+        "c3e93a860ade98fa621c5943350d41bcff8e046839b057b7fcbc5528eb50f419"
+      ],
+      [
+        "actions/34561630512/attempt.json",
+        12726,
+        "ee7aa6b2aeca484751472de5d8e80a43f83cce1c947b72a685d7c6e76d998a40"
+      ],
+      [
+        "actions/34561630512/jobs.json",
+        26575,
+        "cca19bd1b268059a204442b8ce8d2a4ca6314c524abd5231ef435ce67792d9d5"
+      ],
+      [
+        "actions/34561630512/artifacts.json",
+        8823,
+        "73afa353b33eb83dbbf5b61aeee25877e0244323ca6068c26a0bbfe2f3ea3ff7"
+      ],
+      [
+        "actions/34561630512/desktop-verification-desktop-macos-x64.zip",
+        17860194,
+        "54b1233f3bf00d41226c347ce0344dba3f12468b1ff3a416db7388f9f1e137a3"
+      ],
+      [
+        "actions/34561630512/run-attempt-1-logs.zip",
+        228057,
+        "25f90391edc685b735dbdccc49ca0c501641e36979087a80a138724bc2000708"
+      ]
+    ],
+    "artifact_id": 10184740042,
+    "archive_members": 14639,
+    "excluded_frozen_historical_members": 14108,
+    "log_member": [
+      "3_Desktop and Kotlin Native strict verification (macOS x64).txt",
+      85124,
+      "6b221f85b6f3fea65c77fd639b61b3a7800226018025eb8691baca848e110628"
+    ],
+    "method": "Rehashed completed collector and retained metadata/main/log ZIPs. Streamed only this lane log member; read203 exact extracted live XML and ownership, checking member size/SHA against collector. Frozen tracked paths excluded; suite headers reconciled against unique testcase elements. Whole-archive CRC/bounds retained from root collector, not repeated. No extraction or network."
+  },
+  "platform": {
+    "runner_label": "macos-15-intel",
+    "os": "macOS15.7.9",
+    "os_build": "24G830",
+    "runner_image": "macos-15 20260824.0482.1",
+    "host_guard": "Darwin/x86_64 passed",
+    "jdk": "Temurin21.0.12+101.0 x64",
+    "gradle": "8.13",
+    "dependency_scope": "Successful actual host-selected Desktop graph with strict Gradle dependency verification; plain log is not a separately retained per-artifact dependency inventory."
+  },
+  "execution": {
+    "command": "./gradlew productionDesktopCheck :composeApp:downloadKotlinNativeDistribution --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+    "body_interval": [
+      "2026-09-11T04:17:56Z",
+      "2026-09-11T04:27:13Z"
+    ],
+    "first_command_logged_at": "2026-09-11T04:17:56.2654400Z",
+    "build_result": "BUILD SUCCESSFUL in 9m 15s",
+    "build_result_logged_at": "2026-09-11T04:27:12.0801370Z",
+    "actionable_tasks": {
+      "total": 114,
+      "executed": 114,
+      "from_cache": 0,
+      "limit": "Gradle task counts, not test counts."
+    },
+    "task_row_format": [
+      "task",
+      "logged_at",
+      "outcome"
+    ],
+    "desktop_test_tasks": [
+      [
+        ":composeApp:desktopTest",
+        "2026-09-11T04:25:58.9186880Z",
+        "EXECUTED"
+      ],
+      [
+        ":game-modes:mafia:desktopTest",
+        "2026-09-11T04:26:06.7085410Z",
+        "EXECUTED"
+      ],
+      [
+        ":game-modes:whodunit:desktopTest",
+        "2026-09-11T04:26:31.2741470Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:content:desktopTest",
+        "2026-09-11T04:23:43.9000900Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:core:desktopTest",
+        "2026-09-11T04:23:22.5184840Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:design-system:desktopTest",
+        "2026-09-11T04:24:05.4746500Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:engine:desktopTest",
+        "2026-09-11T04:23:54.7575350Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:engine-testing:desktopTest",
+        "2026-09-11T04:24:00.7256240Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:networking:desktopTest",
+        "2026-09-11T04:24:10.0475790Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:networking-testing:desktopTest",
+        "2026-09-11T04:24:16.0209580Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:session:desktopTest",
+        "2026-09-11T04:24:52.3139940Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:storage:desktopTest",
+        "2026-09-11T04:24:28.2603220Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:transport-p2p:desktopTest",
+        "2026-09-11T04:25:35.0986130Z",
+        "EXECUTED"
+      ]
+    ],
+    "desktop_compile_tasks": [
+      [
+        ":shared:core:compileKotlinDesktop",
+        "2026-09-11T04:23:13.8174570Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:engine:compileKotlinDesktop",
+        "2026-09-11T04:23:20.6893980Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:content:compileKotlinDesktop",
+        "2026-09-11T04:23:30.0377770Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:engine-testing:compileKotlinDesktop",
+        "2026-09-11T04:23:32.4564570Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:storage:compileKotlinDesktop",
+        "2026-09-11T04:23:35.1565830Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:networking:compileKotlinDesktop",
+        "2026-09-11T04:23:36.0144900Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:design-system:compileKotlinDesktop",
+        "2026-09-11T04:23:38.0136400Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:networking-testing:compileKotlinDesktop",
+        "2026-09-11T04:23:42.2723190Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:session:compileKotlinDesktop",
+        "2026-09-11T04:24:02.8461450Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:transport-p2p:compileKotlinDesktop",
+        "2026-09-11T04:24:08.1849930Z",
+        "EXECUTED"
+      ],
+      [
+        ":game-modes:mafia:compileKotlinDesktop",
+        "2026-09-11T04:24:33.3356700Z",
+        "EXECUTED"
+      ],
+      [
+        ":game-modes:whodunit:compileKotlinDesktop",
+        "2026-09-11T04:24:35.2887590Z",
+        "EXECUTED"
+      ],
+      [
+        ":composeApp:compileKotlinDesktop",
+        "2026-09-11T04:25:35.0343220Z",
+        "EXECUTED"
+      ]
+    ],
+    "app_desktop_compile": [
+      ":composeApp:compileKotlinDesktop",
+      "2026-09-11T04:25:35.0343220Z",
+      "EXECUTED"
+    ],
+    "cached_or_up_to_date_task_markers": [],
+    "freshness": "All13 desktopTest tasks executed without cache/up-to-date/skip suffixes. Current XML timestamps fall inside the successful body after fresh ownership; non-test NO-SOURCE/SKIPPED lifecycle markers do not represent skipped test descriptors."
+  },
+  "current_runtime_xml": {
+    "target_xml_counts": {
+      "desktopTest": 203
+    },
+    "totals": {
+      "xml_files": 203,
+      "descriptors": 1343,
+      "passed": 1340,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 3
+    },
+    "module_row_format": [
+      "module",
+      "xml_files",
+      "descriptors",
+      "passed",
+      "failures",
+      "errors",
+      "skipped"
+    ],
+    "modules": [
+      [
+        "composeApp",
+        21,
+        96,
+        96,
+        0,
+        0,
+        0
+      ],
+      [
+        "game-modes/mafia",
+        37,
+        297,
+        297,
+        0,
+        0,
+        0
+      ],
+      [
+        "game-modes/whodunit",
+        63,
+        360,
+        360,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/content",
+        5,
+        24,
+        24,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/core",
+        2,
+        12,
+        12,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/design-system",
+        18,
+        40,
+        40,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/engine",
+        5,
+        13,
+        13,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/engine-testing",
+        3,
+        6,
+        6,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/networking",
+        8,
+        34,
+        34,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/networking-testing",
+        2,
+        5,
+        5,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/session",
+        13,
+        145,
+        145,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/storage",
+        4,
+        31,
+        31,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/transport-p2p",
+        22,
+        280,
+        277,
+        0,
+        0,
+        3
+      ]
+    ],
+    "timestamp_range": [
+      "2026-09-11T04:23:21.644Z",
+      "2026-09-11T04:27:10.675Z"
+    ],
+    "hostnames": [
+      "sat12-jr310-6720aefa-0827-4506-9894-a2a62c6bfd2b-DA71CD50CE1B.local"
+    ],
+    "xml_bytes": 315873,
+    "manifest_format": "Sorted [ZIP member path,bytes,SHA256,timestamp,hostname] compact JSON rows; exact member pins remain in the pinned completed collector.",
+    "manifest_sha256": "50089146f782fe5dca75ee845b1a47819b047dbbf60e1033f949338b4b5c20d3",
+    "selected_suite_reconciliation": {
+      "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest": {
+        "member": "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+        "sha256": "e78cd48f0a5cce3580b3601bd642c43a760646e006db2ada6094baf8e02ac6ea",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 3
+      },
+      "com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest": {
+        "member": "parlor/parlor/shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.ProductionVerificationWorkflowContractTest.xml",
+        "sha256": "3d7adb2b3dadcf511008c54cc4cda2e7d9642501041a198d1cbd4372d22bd6e6",
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "skips": {
+    "identity_row_format": [
+      "module",
+      "class",
+      "method"
+    ],
+    "identities": [
+      [
+        "shared/transport-p2p",
+        "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "host_broadcast_reaches_every_peer()[desktop]"
+      ],
+      [
+        "shared/transport-p2p",
+        "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]"
+      ],
+      [
+        "shared/transport-p2p",
+        "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]"
+      ]
+    ],
+    "frozen_source_pin": [
+      "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+      10824,
+      "21451bf407d791ec85066227a2670ccf61d3506efaae47375c0bba557fe3be73"
+    ],
+    "ignore_annotation_lines": [
+      104,
+      131,
+      177
+    ],
+    "reason": "Frozen source explicitly ignores two two-device and one three-device same-LAN fixtures because single-JVM multicast loopback is unreliable. XML has three skipped descriptors; none counted as passed.",
+    "limits": "Successful host-advertising fixture does not establish ignored peer join, roundtrip, broadcast or physical-device interoperability."
+  },
+  "kotlin_native_distribution": {
+    "task": ":composeApp:downloadKotlinNativeDistribution",
+    "outcome": "EXECUTED_NOT_CACHED",
+    "progress_headers": [
+      "2026-09-11T04:22:46.6838740Z",
+      "2026-09-11T04:23:16.6210240Z",
+      "2026-09-11T04:23:29.0220680Z"
+    ],
+    "one_task_not_three_runs": true,
+    "bundle": "/Users/runner/.konan/kotlin-native-prebuilt-macos-x86_64-2.4.10",
+    "observed": "Nonempty existing bundle reported for overwrite; LLVM21 x86_64-macos essentials83 and libffi3.2.1-3-darwin-macos download/extraction logged; requested strict build succeeded.",
+    "freshness_limit": "Existing .konan content: no wholly fresh global-cache or independently proven network-fetch claim for all distribution bytes.",
+    "native_test_runtime": "NOT_RUN; all203 current XML are desktopTest, no iOS/native test task execution. Distribution/dependency preparation is not Kotlin/Native application or iOS runtime."
+  },
+  "nonblocking_warnings": [
+    "macos_x64 Kotlin/Native host deprecated for a future Kotlin release; requested current distribution task succeeded.",
+    "iosSimulatorArm64Test unavailable on this Intel host; not a requested or executed runtime task in this lane."
+  ],
+  "ownership": {
+    "member": [
+      "_temp/parlor-verification-34561630512-1-desktop-macos-x64-ownership.json",
+      19544,
+      "5fb639de1255b4af21532e9b1bddec45fa7b256a4ac824a2c2c19fa3d0f64dac"
+    ],
+    "prepared_at": "2026-09-11T04:17:56.002930+00:00",
+    "cleanup_scope": "Stop/final cleanup belongs to independent ci_cleanup_review; no cleanup conclusion is inferred here."
+  },
+  "findings": [],
+  "disposition": "Current D09 macOSx64 Desktop execution approved with1340 passes and3 explicit ignored descriptors. This receipt alone does not qualify all six jobs/cleanup or establish protection, physical-device, iOS runtime or Store readiness.",
+  "activity": "Read-only current packet/Git-object reconciliation and this sole additive review JSON; no old-summary substitution, builds, tests, dispatch, source edits, network or archive extraction."
+}

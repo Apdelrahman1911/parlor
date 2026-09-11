@@ -1,0 +1,79 @@
+{
+  "kind": "FINAL_FOCUSED_LINUX_ERROR_CHAIN_CONTROLS_NOT_NATIVE_RUNTIME",
+  "started_at": "2026-09-11T13:31:39.627829+00:00",
+  "source_before": "22ea6bebb95317e148d89b03c40cbb7efc9d36a4",
+  "pins_before": {
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/HostSetterProbe.m.in": "99d7f72db7fbc57d976563e97b1bd9514c9a637e801ae84847cc34c890fc7bc9",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py": "24a650b5ff9cbc98aba4f583eb1637065aa45749968e72dc31408e0661cee3b8",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/test_host_probe.py": "aa5892a4d2a54db68c1dddece89984643a44dfd60c4c8152b82eb6cb9a7814ae",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/README.md": "87adcf5ed181f3cf1c5690c2bf9a1f522173d287944be9bcd1942ffa858548ac"
+  },
+  "rationale": "Bind final reviewed native outer-error-preservation correction; same14 host-driver controls, no other suite/build",
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "remediation-runs/2026-09-08-continuation/protection-host-image-01",
+        "-p",
+        "test_host_probe.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.567,
+      "log": "tests.log",
+      "sha256": "547726f867d7140d2bb054e45b77c7af2d21bee56c87692fd41243970a724bb4"
+    },
+    {
+      "command": [
+        "./gradlew",
+        "--stop"
+      ],
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "elapsed_seconds": 0.769,
+      "log": "gradle-stop.log",
+      "sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d"
+    }
+  ],
+  "errors": [],
+  "scratch_path": "/tmp/parlor-h03-final-controls-g4bcjcwy",
+  "scratch_absent": true,
+  "live_outputs_after": {
+    ".compose": false,
+    ".gradle": false,
+    ".kotlin": false,
+    "build": false,
+    "build-logic/build": false,
+    "build-logic/convention/build": false,
+    "composeApp/build": false,
+    "game-modes/mafia/build": false,
+    "game-modes/whodunit/build": false,
+    "iosApp/build": false,
+    "shared/content/build": false,
+    "shared/core/build": false,
+    "shared/design-system/build": false,
+    "shared/engine-testing/build": false,
+    "shared/engine/build": false,
+    "shared/networking-testing/build": false,
+    "shared/networking/build": false,
+    "shared/session/build": false,
+    "shared/storage/build": false,
+    "shared/transport-p2p/build": false
+  },
+  "pins_after": {
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/HostSetterProbe.m.in": "99d7f72db7fbc57d976563e97b1bd9514c9a637e801ae84847cc34c890fc7bc9",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py": "24a650b5ff9cbc98aba4f583eb1637065aa45749968e72dc31408e0661cee3b8",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/test_host_probe.py": "aa5892a4d2a54db68c1dddece89984643a44dfd60c4c8152b82eb6cb9a7814ae",
+    "remediation-runs/2026-09-08-continuation/protection-host-image-01/README.md": "87adcf5ed181f3cf1c5690c2bf9a1f522173d287944be9bcd1942ffa858548ac"
+  },
+  "pins_unchanged": true,
+  "tests_run": 14,
+  "status": "PASS",
+  "finished_at": "2026-09-11T13:31:41.180460+00:00"
+}

@@ -35,13 +35,14 @@ def setter_report_inputs():
     main = copy.deepcopy(host['main_image_before'])
     main['image_basename'] = probe.SETTER_IMAGE
     selected = dict(root=dict(device=7, inode=100, uid=501), identity=copy.deepcopy(sample['identity']))
-    record = dict(schema=1, kind='host-origin-protection-setter', collection_status='PASS', binding=dict(BINDING),
+    error = dict(present=True, code=4, domain='cocoa')
+    record = dict(schema=2, kind='host-origin-protection-setter', collection_status='PASS', binding=dict(BINDING),
         fixture_root_device=7, fixture_root_inode=100, scope=probe.SETTER_SCOPE, target_leaf='probe.bin',
         process_id=1235, uid=501, runtime_version=[15, 7, 9], read_only=False, simulator_fixture_observed=False,
         production_snapshots_observed=False, historical_a37_strict_result_changed=False, protection_qualified=False,
         main_image_before=main, main_image_after=copy.deepcopy(main), before=sample, after=copy.deepcopy(sample),
         operation=dict(id='host-origin-fm-set', requested_protection='complete', returned=False,
-            native_error=dict(present=True, code=4, domain='cocoa'), implementation_before=implementation,
+            native_error=error, error_chain=dict(nodes=[copy.deepcopy(error)], termination='no-underlying'), implementation_before=implementation,
             implementation_after=copy.deepcopy(implementation)))
     command = dict(label='host-setter-observation', owned_pid=1235, ownership='direct-unreaped-Popen',
         status='EXITED', exit_code=0, direct_child_reaped=True)
@@ -245,6 +246,8 @@ class HostProbeTests(unittest.TestCase):
                 value = copy.deepcopy(record)
                 value['operation'].update(returned=returned, native_error=dict(present=error_present,
                     code=4 if error_present else 0, domain='cocoa' if error_present else 'none'))
+                value['operation']['error_chain'] = dict(nodes=[copy.deepcopy(value['operation']['native_error'])] if error_present else [],
+                    termination='no-underlying' if error_present else 'no-error')
                 value['after']['fm'].update(protection=protection, key_present=protection != 'missing')
                 result = probe.validate_setter_report(json.dumps(value).encode(), request, selected, built, command, host)
                 self.assertEqual((result['status'], result['scope']), (probe.SETTER_COLLECTED, probe.SETTER_SCOPE))
@@ -255,6 +258,30 @@ class HostProbeTests(unittest.TestCase):
                     self.assertIs(result[key], False)
                 self.assertNotIn('strict_synthetic_complete', result)
                 self.assertNotIn('simulator_udid', json.dumps(result))
+
+    def test_host_origin_error_chain_is_bounded_redacted_and_preserves_reported_causes(self):
+        record, request, selected, built, command, host = setter_report_inputs()
+        root = record['operation']['native_error']
+        cause = dict(present=True, code=22, domain='posix')
+        for termination, nodes in (('no-underlying', [root, cause]), ('cycle', [root]),
+                                   ('non-error', [root]), ('depth-limit', [root, cause, cause, cause])):
+            with self.subTest(termination=termination):
+                value = copy.deepcopy(record)
+                value['operation']['error_chain'] = dict(nodes=copy.deepcopy(nodes), termination=termination)
+                result = probe.validate_setter_report(json.dumps(value).encode(), request, selected, built, command, host)
+                self.assertEqual(result['operation']['error_chain'], value['operation']['error_chain'])
+                self.assertFalse(result['runtime_implementation_causality_proven'])
+        bad = [dict(nodes=[root] * 5, termination='no-underlying'), dict(nodes=[root], termination='depth-limit'),
+            dict(nodes=[cause], termination='no-underlying'), dict(nodes=[], termination='no-error'),
+            dict(nodes=[root], termination='no-underlying', userInfo={}),
+            dict(nodes=[{**root, 'description': '/unapproved/path'}], termination='no-underlying'),
+            dict(nodes=[root, dict(present=False, code=0, domain='none')], termination='no-underlying')]
+        for chain in bad:
+            with self.subTest(chain=chain):
+                value = copy.deepcopy(record)
+                value['operation']['error_chain'] = chain
+                with self.assertRaises(RuntimeError):
+                    probe.validate_setter_report(json.dumps(value).encode(), request, selected, built, command, host)
 
     def test_host_origin_setter_rejects_identity_context_process_and_method_drift(self):
         record, request, selected, built, command, host = setter_report_inputs()

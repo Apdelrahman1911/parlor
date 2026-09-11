@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/ci_ios_release",
+  "status": "SCOPED_PASS_RELEASE_BUILD_ANALYSIS_PACKAGE_CLEANUP_SEPARATE",
+  "findings": [],
+  "binding": {
+    "run_id": 34561630512,
+    "run_attempt": 1,
+    "job_id": 103145382816,
+    "job_name": "iOS release frameworks and Swift wrapper",
+    "job_conclusion": "success",
+    "run_api_conclusion": "success",
+    "source_commit": "d3c0df9ccba51463708728c3c618d3652e76aafa",
+    "source_tree": "3169657a10279eb2bfad6c59a60a5054c6092b61",
+    "packet": "remediation-runs/2026-09-08-continuation/actions/34561630512/",
+    "collector_status": "COLLECTED_NOT_RUNTIME_REVIEW",
+    "collector_receipt_sha256": "64d973465fa1a2d8b43aafa4a4c0e40d52638caaa7e7e4b9dc4bb6b13d265a2e",
+    "release_artifact_id": 10185860790,
+    "release_artifact_bytes": 2795942,
+    "verified": "Run/attempt/job API, checkout log, commit.txt, fresh ownership and package source identities agree. Release artifact API size/digest/run/SHA agree with retained archive. Archive and inspected member hashes checked."
+  },
+  "toolchain": {
+    "host": "macOS 15.7.9/24G830 arm64",
+    "java": "Temurin 21.0.12+101.0",
+    "xcode": "26.3",
+    "xcode_build": "17C529",
+    "developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+    "iphoneos_sdk": "26.2",
+    "iphonesimulator_sdk": "26.2"
+  },
+  "apple_gate": {
+    "command": "./gradlew productionAppleCheck --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+    "result": "BUILD SUCCESSFUL",
+    "duration": "49m 6s",
+    "actionable_tasks": 148,
+    "executed": 148,
+    "from_cache": 0,
+    "up_to_date": 0,
+    "release_links_executed_uncached_in_serial_order": [
+      {
+        "task": ":composeApp:linkReleaseFrameworkIosArm64",
+        "job_log_line": 801,
+        "logged_at": "2026-09-11T04:25:31.2240670Z"
+      },
+      {
+        "task": ":composeApp:linkReleaseFrameworkIosSimulatorArm64",
+        "job_log_line": 807,
+        "logged_at": "2026-09-11T04:47:03.7036170Z"
+      },
+      {
+        "task": ":composeApp:linkReleaseFrameworkIosX64",
+        "job_log_line": 808,
+        "logged_at": "2026-09-11T04:57:17.1256650Z"
+      }
+    ],
+    "aggregate_log_lines": {
+      "productionAppleStaticAnalysis": 672,
+      "productionAppleCheck": 809,
+      "build_success": 813,
+      "actionable_tasks": 814
+    },
+    "active_detektMetadataIosMain_modules": [
+      "composeApp",
+      "shared/design-system",
+      "shared/networking",
+      "shared/transport-p2p"
+    ],
+    "current_xml_reports": 4,
+    "current_sarif_reports": 4,
+    "findings": 0,
+    "other_detekt_no_source_tasks": 113,
+    "historical_tracked_artifact_members_excluded": 836,
+    "counting_limit": "Unsuffixed/repeated task headings are not the actionable-task total. Empty-source and skipped non-gate tasks are not testcase results."
+  },
+  "unsigned_wrapper": {
+    "result": "BUILD SUCCEEDED",
+    "configuration": "Release",
+    "destination": "generic/platform=iOS Simulator",
+    "ARCHS": "arm64",
+    "ONLY_ACTIVE_ARCH": "YES",
+    "CODE_SIGNING_ALLOWED": "NO",
+    "CODE_SIGNING_REQUIRED": "NO",
+    "real_resource_sync_and_embed_tasks_executed": true,
+    "ide_override_bypass_used": false,
+    "simulator_release_framework_relinked": true,
+    "embedded_gradle": {
+      "result": "BUILD SUCCESSFUL",
+      "duration": "11m 57s",
+      "actionable_tasks": 138,
+      "executed": 59,
+      "up_to_date": 79,
+      "from_cache": 0
+    },
+    "job_log_lines": {
+      "invocation": 885,
+      "resource_sync": 1854,
+      "simulator_release_link": 1855,
+      "embed_task": 1858,
+      "gradle_success": 1862,
+      "xcode_success": 2109
+    },
+    "retained_stdout_lines_reconciled_in_order_with_actions_log": 1227,
+    "package_inspection_after_successful_wrapper_finish_step": true
+  },
+  "package": {
+    "hosted_inspection_status": "PASS",
+    "file_count": 56,
+    "total_bytes": 58477207,
+    "bundle_id": "com.parlor.app",
+    "version": "1.0.0",
+    "build": "1",
+    "app_minimum_os": "16.0",
+    "localizations": [
+      "en",
+      "ar"
+    ],
+    "native_binaries": [
+      {
+        "path": "Parlor",
+        "architecture": "arm64",
+        "platform": "IOSSIMULATOR",
+        "minimum_os": "16.0",
+        "bytes": 129592,
+        "sha256": "1dd0790db2dc8819c76524574e7811bba2e3079d8f7509706320ace41b64c8c0",
+        "uuid": "ca2fdde0-1042-3c5d-bab1-fda614d8b45b"
+      },
+      {
+        "path": "Frameworks/ComposeApp.framework/ComposeApp",
+        "architecture": "arm64",
+        "platform": "IOSSIMULATOR",
+        "minimum_os": "15.0",
+        "bytes": 52396808,
+        "sha256": "eb9fa5c704d9c2cc3d3cf1f321619c9d827578e5f4d8e57802db661f2eed495a",
+        "uuid": "92069a71-8604-3b4c-b08e-911d0c749068"
+      }
+    ],
+    "retained_dsym_uuid_matches_main": true,
+    "source_binding": {
+      "clean_diff": true,
+      "untracked_included": [],
+      "source_unchanged_during_inspection": true,
+      "manifest_entries": 844,
+      "source_manifest_sha256": "575162e7fbc728de04f7ef6914b22e856c79002d0ad523fc77ce67a460e0bcd9",
+      "explicit_frozen_input_files_compared": 47
+    },
+    "raw_resource_matches": {
+      "case_jsons": 7,
+      "fonts": 2,
+      "exact_source_package_lengths_and_hashes_agree": true
+    },
+    "notices": {
+      "status": "PASS",
+      "resources": 26,
+      "total_bytes": 99515,
+      "source_package_inventory_lengths_and_hashes_agree": true
+    },
+    "privacy_version_policy_inspector_and_execution_inputs_match_frozen_source": true
+  },
+  "evidence_sha256": {
+    "ios-release-verification.zip": "b5838f771925834adc6d2fd4ec4331cce4829662d56d597a217c60c4a53c9051",
+    "run-attempt-1-logs.zip": "25f90391edc685b735dbdccc49ca0c501641e36979087a80a138724bc2000708",
+    "5_iOS release frameworks and Swift wrapper.txt": "bea45587a61c7713929103bdbf8a682028133089961b54bdd6359e4995f98bc8",
+    "ios-release-artifact-inventory.json": "30396b9d4c379eb0bf2cf7d058fb7fbaaa2156b603db502138d90c9f26df13f5",
+    "ios-release-notices.json": "c93389a737fd210660da444522e0d126e06f51c18106b4a6ec2d2563f98d59f7",
+    "xcode-release-build.log": "786fd60c290514b2c80d60d433cc7f08421aedc273ef5d6fe2b459ccbd2bac01",
+    "retained_dsym_dwarf": "6caf27efff2bec0cb8f1d57a4d3478656190a6e37d57d903a0773894af0548f1"
+  },
+  "limits": [
+    "This is the Release build/static-analysis/package verdict only. Independent cleanup and the other five mandatory full-job actual reviews remain separate; overall API success alone is not a technical readiness certificate.",
+    "No runtime tests or Release launch claimed. Disabled iosX64Test is not a runtime pass. Framework linkage is not device or simulator execution.",
+    "Complete .app was not retained or locally rehashed. Package conclusions use current hosted inspection, build logs and retained dSYM; framework floor15.0 is preserved rather than incorrectly requiring16.0.",
+    "Unsigned simulator evidence does not prove signing, Store, physical-device, publication or legal readiness. The com.parlor.app Store-identity collision remains blocked.",
+    "No D08 or probe result substitutes for the reviewed current D09 evidence. Preserved warnings include experimental lint pin, deprecated Gradle version, disabled iosX64Test and absent AppIntents metadata dependency."
+  ],
+  "activity": "Waited for completed collector. Bounded read-only current Release evidence and explicit frozen-input byte binding; no builds, dispatch, network, source edits, broad source audit or full log extraction. Archive provides a combined 285308-byte/2242-line Release job log, not per-step members; an initial per-step lookup was corrected using the archive index. Sole write is this assigned review."
+}
