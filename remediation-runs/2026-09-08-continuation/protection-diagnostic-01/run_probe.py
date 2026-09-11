@@ -103,10 +103,13 @@ def context(env, execute, root=ROOT):
     require(native.HEX40.fullmatch(commit) and commit == env.get("GITHUB_SHA") == env.get("GITHUB_WORKFLOW_SHA"), "frozen-source")
     require(all(native.POSITIVE.fullmatch(env.get(key, "")) for key in ("GITHUB_RUN_ID", "GITHUB_RUN_ATTEMPT")), "run-identity")
     require(root.resolve() == root and Path(env.get("GITHUB_WORKSPACE", "")).resolve() == root, "checkout-root")
-    # PD01's post-boot tracked-status observation exceeded20s. Keep the exact
-    # source check (and all other bounds); permit60s only for that closed argv.
-    git = lambda *args: execute(["/usr/bin/git", *args], "git-binding",
-        60 if args == ("status", "--porcelain=v1", "--untracked-files=no") else 20).decode().strip()
+    # Keep the full tracked/staged check and PD01's 60s bound. PD07's post-boot
+    # timeout motivates disabling only optional parallel stat preloading, not
+    # a narrower guard, longer timeout, retry, or claim of established cause.
+    tracked_status = ("status", "--porcelain=v1", "--untracked-files=no")
+    git = lambda *args: execute(["/usr/bin/git"] + (
+        ["-c", "core.preloadIndex=false"] if args == tracked_status else []) + list(args),
+        "git-binding", 60 if args == tracked_status else 20).decode().strip()
     require(git("rev-parse", "--show-toplevel") == str(root) and git("rev-parse", "HEAD") == commit and
         git("branch", "--show-current") == native.BRANCH and git("rev-parse", "--is-shallow-repository") == "false" and
         git("status", "--porcelain=v1", "--untracked-files=no") == "", "clean-full-history-frozen-branch")

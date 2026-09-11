@@ -91,6 +91,12 @@ continuation scope. Standard honest GitHub context and public JDK21 are required
 JDK21 is used only for mandatory `./gradlew --stop`. Arbitrary loader, token,
 Java/Gradle option and simulator-identity overrides are not passed to tools.
 
+All source guards retain the full tracked/staged status check at60s, with only
+the per-command `-c core.preloadIndex=false` override; the other five Git commands
+remain unchanged at20s. This disables Git's optional parallel index/stat preload,
+not tracked paths or dirty-state checks. It is a scheduling hypothesis for PD07's
+post-boot timeout, not an established cause or measured performance improvement.
+
 The workflow sequence is `run` → upload evidence → `cleanup` → upload cleanup →
 `assert-result`. Both immutable artifact IDs/digests and successful upload/step
 outcomes are required. Existing `PARLOR_PROTECTION_*` environment names are
@@ -130,9 +136,12 @@ simulator. The small create wrapper merely chooses the explicit runtime/type
 instead of the generic helper's first available iPhone. It does not call, fake,
 or relax AppHost, full-verification or native-continuation cleanup guards.
 
-Only the exact `/usr/bin/xcrun simctl list runtimes --json` at its unchanged90s
-bound opts into one4s symbols-only `sample` of that same direct, unreaped child
-after TIMEOUT is latched. The existing12s sample/retirement reserve must fit the
+The exact `/usr/bin/xcrun simctl list runtimes --json` at its unchanged90s bound,
+and the separately admitted exact owned `ProtectionProbe` `simctl spawn` at40s,
+opt into one4s symbols-only `sample` of that same direct, unreaped command child
+after TIMEOUT is latched. Spawn admission is single-use and binds the owned UUID,
+resource custody and compiled image identity/hash, not simulator descendants.
+The existing12s sample/retirement reserve must fit the
 unchanged run budget. There is no retry or service/PID adoption; raw sample
 headers/paths and stderr are discarded. The original ps15 contract is unchanged.
 A stack observation cannot turn the timeout into success or establish its cause.
@@ -142,6 +151,11 @@ at the unchanged30s bounds. The retained source/control/nonce-bound attestation
 and canonical SDK path are revalidated before host compilation, without repeating
 those queries after boot. This scheduling mitigation responds to PD05's lookup
 timeout; it neither proves the cause nor changes the host read or strict oracle.
+
+After JDK21 and current source/control validation, the pinned wrapper first
+performs its required60s `./gradlew --stop` before simulator allocation, within
+the unchanged run budget. This moves wrapper bootstrap earlier after PD06's
+download-banner timeout; all later required stops remain unchanged.
 
 Evidence is saved before the immediate post-cycle stop, then uploaded before
 destructive retirement. The exact creation journal is copied into the cleanup

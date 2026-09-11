@@ -1,6 +1,32 @@
 # Continuation execution ledger — 2026-09-11
 
-## CURRENT — D08 mandatory-job failures; PD06 spawn/stop timeouts; NOT_READY
+## CURRENT — PD07 pre-launch Git-status timeout; local status mitigation checked; NOT_READY
+
+`N=remediation-runs/2026-09-08-continuation`; `C=remediation-runs/2026-09-07-local-readiness`. Earlier cutoffs remain historical.
+- **PD07 run34556255462/1 FAIL** at source/inventory freeze `ad62b0122ce08302c22a78b00c78e2d8ed7dc23c`,
+  tree `1a6a866d6b66cfb723ff471d8a4b49705a36c3b5`; fresh19-control packet `$N/actions/protection-probe-07/`, one-attempt admission consumed.
+- All **four mandatory Gradle stops exited0**. The early wrapper bootstrap succeeded before simulator creation,
+  **not before scratch allocation/exposure**: owned resources/fixtures/tmp already existed and child `TMPDIR` was set.
+  Marker-bearing simulator binary compilation, ad-hoc signing/verification and boot completed; this is not executed marker evidence.
+- After boot, `/usr/bin/git status --porcelain=v1 --untracked-files=no` hit its60s budget (`git-binding` row52),
+  direct child6276 reaped with exit-15 and stdout/stderr counters0/0. Main failed `required-command-failed` **before native launch**.
+  Native stdout/stderr/report files are **NOT_PRESENT**, not empty native streams. No native samples, C-marker observations, spawn-timeout sample or new strict comparison; host comparison NOT_RUN.
+- Exact owned simulator `EDA06FF0-C368-4F40-A334-205936DB8383` shutdown/delete and source-bound retirement passed.
+  Overall **cleanup FAIL**, `timed-out-or-unsettled-tool-scratch-retained`; scratch removal/absence is not established despite four stops0 and zero preservation failures.
+  Raw `$N/actions/34556255462/{main,cleanup}/` and ZIPs; independent reviews `protection-probe-pd07-artifact-custody-independent-01.json` and `protection-probe-07-cleanup-actual-independent-01.json`.
+- New source mitigation adds only per-command `-c core.preloadIndex=false` to the full tracked/staged status check.
+  The60s bound, dirty-state rejection and other Git commands remain unchanged; no persistent configuration change, source waiver or retry. Parallel index preload is a hypothesis, **not the established timeout cause or an Apple performance fix**.
+- Actual local **45 paired tests PASS** plus **six real Linux Git2.43 state comparisons**: old/new status outputs identical for clean, untracked-only, staged, unstaged, deletion and unmerged states.
+  These are Linux output-equivalence observations, not Apple/timeout proof. Pins unchanged, stop0, owned scratch removed and24 checked roots absent.
+  `$C/evidence/continuation-protection-git-status-controls-01/`; receipt SHA256 `01e4451734ea0cec586b74c4903824121442eb25b7429898a905d691fad82523`.
+  Exact three-file source change and actual45+6 controls independently approved, findings[]: `$N/reviews/protection-serial-git-status-independent-01.json`. Source changes are uncommitted; new freeze and fresh admission are required before execution.
+- **D08 34553741387/1** remains nonterminal and cannot qualify after its Linux/Windows mandatory-job failures at `59a38444`.
+  Retained API transition03:12:31Z shows iOS Release reached the unsigned Swift wrapper (started03:11:57Z), still running; no final Release actual-evidence/cleanup acceptance is claimed.
+  Its separate source/run and earlier API-success lanes cannot be combined with PD07 or local fixes into full PASS.
+- **Requested technical gates closed0/2**; A37 strict **0PASS/26FAIL**, APP04 strict **0PASS/6FAIL**, PD05 synthetic strict **0PASS/5FAIL** unchanged; PD06/PD07 add no strict observations.
+  Final qualification still requires all six mandatory jobs and cleanup passing together at one fresh frozen SHA. Preserve original repairs and historical failures; physical-device, Store and owner/legal requirements remain separate.
+
+## Historical D08 mandatory-job failures; PD06 spawn/stop timeouts — preserved cutoff
 
 `N=remediation-runs/2026-09-08-continuation`; `C=remediation-runs/2026-09-07-local-readiness`. Earlier cutoffs below are historical.
 - Executed freeze `59a384441f44844a79ae62ea8ee68d0c9e1e5878`, tree `9f06627b0dd047394de6f52adbc494e334651c74`;

@@ -218,17 +218,24 @@ class AdmissionTests(unittest.TestCase):
             GITHUB_WORKFLOW_REF=probe.native.REPOSITORY+"/"+probe.native.WORKFLOW+"@refs/heads/"+probe.native.BRANCH,
             PARLOR_FROZEN_SOURCE_SHA="1"*40, GITHUB_SHA="1"*40, GITHUB_WORKFLOW_SHA="1"*40,
             GITHUB_RUN_ID="17", GITHUB_RUN_ATTEMPT="1", GITHUB_WORKSPACE=str(root))
+        status = ("-c", "core.preloadIndex=false", "status", "--porcelain=v1", "--untracked-files=no")
         replies = {("rev-parse", "--show-toplevel"): str(root), ("rev-parse", "HEAD"): "1"*40,
             ("branch", "--show-current"): probe.native.BRANCH, ("rev-parse", "--is-shallow-repository"): "false",
-            ("status", "--porcelain=v1", "--untracked-files=no"): "", ("rev-parse", "HEAD^{tree}"): "2"*40}
+            status: "", ("rev-parse", "HEAD^{tree}"): "2"*40}
         calls = []
         def execute(args, label, timeout):
             calls.append((args, label, timeout))
             return replies[tuple(args[1:])].encode()
         self.assertEqual(probe.context(env, execute, root)["job"], probe.SCOPE)
-        self.assertEqual([row for row in calls if row[2] != 20], [
-            (["/usr/bin/git", "status", "--porcelain=v1", "--untracked-files=no"], "git-binding", 60)])
+        self.assertEqual(calls, [(["/usr/bin/git", *args], "git-binding", 60 if args == status else 20)
+            for args in replies])  # No option or timeout change for the other five exact commands.
         self.assertEqual(len(calls), 6)  # No retry, omitted check, or cached result.
+        for dirty in ("M  outside-probe.txt\n", " M outside-probe.txt\n", " D outside-probe.txt\n", "UU outside-probe.txt\n"):
+            with self.subTest(dirty=dirty):
+                replies[status] = dirty
+                with self.assertRaisesRegex(RuntimeError, "clean-full-history-frozen-branch"):
+                    probe.context(env, execute, root)
+        replies[status] = ""
         for key, wrong in (("GITHUB_JOB", "ios"), ("PARLOR_DISPATCH_SCOPE", "full"), ("GITHUB_SHA", "9"*40),
                            ("GITHUB_EVENT_NAME", "push"), ("GITHUB_WORKFLOW_REF", "foreign/workflow@main")):
             with self.subTest(key=key), self.assertRaises(RuntimeError):

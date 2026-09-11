@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "reviewer": "/root/probe_identity",
+  "author": "/root/ci_ios_runtime",
+  "status": "APPROVED_SOURCE_AND_ACTUAL_FOCUSED_CONTROLS_NATIVE_EXECUTION_PENDING",
+  "source_base": "ad62b0122ce08302c22a78b00c78e2d8ed7dc23c",
+  "pins": {
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py": "93159a6f9f31aed93b0ac2d1affab84c038cd5f8760c5b93eb21f984a82d1f85",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/test_probe.py": "baa7cfc567ce7a089e46026e5459be1b8c602e20c121f48675214428b9abfd65",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/README.md": "890c4ab88876b8d0873d8d1a51b727b1380125318da0bae41012741bc29d705c"
+  },
+  "source_review": [
+    "Only the exact original status tuple receives invocation-local -c core.preloadIndex=false; its full tracked/staged/unstaged guard, porcelain output and60s bound remain. All six queries retain their order; the other five retain exact argv and20s. No filtering, scoped decomposition, skipped guard, cached result, retry or helper API change.",
+    "The three-file diff leaves source/environment/ownership/image admission, timeout/reaping, simulator lifecycle, cleanup and strict validation code unchanged. The existing admission test now asserts all six exact commands and rejects staged-only, unstaged, deleted and unmerged status output.",
+    "README accurately records the scheduling-only hypothesis and corrects the already implemented single-use owned-spawn sampling and early wrapper bootstrap descriptions. No established cause or measured improvement is claimed."
+  ],
+  "actual_batch": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-git-status-controls-01/receipt.json",
+    "sha256": "01e4451734ea0cec586b74c4903824121442eb25b7429898a905d691fad82523",
+    "paired_log_sha256": "bca939faa39089cb4547f1845538c265af38e896469c49f570ac302a277bf76a",
+    "observed_unittest_ok_cases": 45,
+    "raw_unittest_summary": "Ran 45 tests in 0.184s; OK",
+    "recorded_unittest_exit": 0,
+    "git_fixture_receipt_sha256": "28863d544b52824ac0234cdd6d57da77c7fa55534088807e1076ecd70b536ef6",
+    "git_fixture_log_sha256": "57f3e0197bfb12b22d77aa6d6ab71529f3c2a6de1f85db82b0fd2a3fabb8722d",
+    "git_fixture_platform": "Linux x86_64, Ubuntu24.04; git version 2.43.0",
+    "observed_exact_old_new_output_comparisons": 6,
+    "fixture_states": ["clean", "untracked-only original exclusion", "staged-only", "unstaged-only", "unstaged deletion", "unmerged index without merge operation"],
+    "fixture_result": "PASS: both clean cases remain empty; all four tracked/staged negative cases remain nonempty with identical old/new bytes. All twelve status command exits are recorded0. Fixture HEAD and persistent-config hashes remain unchanged.",
+    "all_five_batch_pins_before_after_and_current_match": true,
+    "all_recorded_evidence_hashes_match_current_bytes": true
+  },
+  "cleanup": {
+    "recorded_errors": [],
+    "recorded_gradle_stop_exit": 0,
+    "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+    "observed_stop_text": "No Gradle daemons are running.",
+    "listed_roots_directly_rechecked_absent": 24,
+    "recorded_scratch_path_directly_rechecked_absent": "/tmp/parlor-git-status-controls-n356_kjj",
+    "absence_checks_include_dangling_symlinks": true
+  },
+  "semantics_corroboration": "Author and ci_macos_x64 report upstream Git2.43/2.50.1 source review: disabling optional threaded index preload retains sequential refresh and worktree-index/index-HEAD collection. This is not certification of the hosted Apple Git binary.",
+  "findings": [],
+  "limits": "Local focused controls and six stable Git fixture states only. Neither archive volume nor preload threading is established as PD07's timeout cause; serial work may be slower and other stalls remain. No concurrent-mutation atomicity, Apple/native execution, runtime/protection/host comparison or performance improvement is established. Native behavior remains NOT_RUN; no historical/full/Store promotion. Root owns any separately approved frozen dispatch.",
+  "operations": "Bounded three-file diff, exact hashes, preserved raw logs/receipts and current cleanup-path inspection, followed only by this requested receipt. No repeated broad audit, project imports, test/build reruns, network, dispatch, deletion or other edits."
+}
