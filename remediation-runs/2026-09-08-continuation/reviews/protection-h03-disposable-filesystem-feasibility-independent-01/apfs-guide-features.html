@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Features</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=7">
+    <meta charset="utf-8">
+    <meta id="book-resource-type" name="book-resource-type" content="Guide">
+    <meta scheme="apple_ref" id="identifier" name="identifier" content="//apple_ref/doc/uid/TP40016999">
+    <meta id="document-version" name="document-version" content="3.0.3">
+    <meta id="build" name="build" content="c1e4c7a89af8f899a21cfa81fc33ba42" />
+    <meta id="chapterId" name="chapterId" content="TP40016999-CH5">
+    <meta id="date" name="date" content="2018-06-04">
+    <meta id="description" name="description" content="Describes Apple’s next-generation filesystem.">
+    <meta id="book-title" name="book-title" content="Apple File System Guide">
+    <meta id="book-root" name="book-root" content="../">
+    <meta id="book-json" name="book-json" content="../book.json">
+    <meta id="devcenter" name="devcenter" content="Mac Dev Center">
+    <meta id="devcenter-url" name="devcenter-url" content="http://developer.apple.com/devcenter/mac">
+    <meta id="reflib" name="reflib" content="Documentation Archive">
+    <meta id="book-assignments" name="book-assignments" content="{Type/Guide}, {Topic/Data Management/File Management}">
+    
+    
+    <meta id="copyright" name="copyright" content="Copyright 2018 Apple Inc. All Rights Reserved.">
+    <meta id="xcode-display" name="xcode-display" content="render">
+    <meta id="IndexTitle" name="IndexTitle" content="Apple File System Guide (Legacy): Features">
+    <meta id="resources-uri" name="resources-uri" content="../../../../../Resources/1282">
+    <link id="book-index-page" rel="Start" title="Apple File System Guide" type="text/html" href="../index.html">
+    <link id="next-page" rel="Next" type="text/html" href="../FAQ/FAQ.html">
+    <link id="previous-page" rel="Prev" type="text/html" href="../Introduction/Introduction.html">
+    <link rel="stylesheet" type="text/css" href="../../../../../Resources/1282/CSS/screen.css">
+    
+    <!-- xcode_css -->
+    <link rel="stylesheet" type="text/css" href="../../../../../Resources/1282/CSS/feedback.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta id="platforms" name="platforms" content="">
+</head>    
+<body><a name="//apple_ref/doc/uid/TP40016999-CH5" title="Features"></a>
+    <div id="_omniture_top">
+    <!-- SiteCatalyst code version: H.8. Copyright 1997-2006 Omniture, Inc. -->
+    <script type="text/javascript">
+    /* RSID: */
+    var s_account="awdappledeveloper"
+    </script>
+
+    <script type="text/javascript" src="https://developer.apple.com/assets/metrics/scripts/analytics.js"></script>
+    <script type="text/javascript">
+    s.channel="www.documentationarchive.developer"
+
+    /************* DO NOT ALTER ANYTHING BELOW THIS LINE ! **************/
+    var s_code=s.t();if(s_code)document.write(s_code)</script>
+    <!-- End SiteCatalyst code version: H.8. -->
+    </div>
+
+    <div id="adcHeader" class="hideOnPrint hideInXcode">
+        <div id='ssi_Header' class="hideInXcode unified">
+            <a id="ssi_LibraryTitle" href='../../../../../navigation/'>Documentation Archive</a>
+            <a id="ssi_AppleDeveloperConnection" href='https://developer.apple.com/'>Developer</a>
+            <div id='ssi_SearchButton' role="button" title="Search">Search</div>
+        </div>
+        <form id='ssi_SearchMenu' method='get' action='../../../../../search/' accept-charset='utf-8'>
+            <label for='adcsearch'>Search Documentation Archive</label>
+            
+            
+    
+            <input type='search' id='ssi_SearchField' name='q' accesskey='s' results='5' />
+        </form>
+    </div>
+
+    <header id="header">
+        <div id="title" role="banner">
+            <h1>Apple File System Guide</h1>
+            <span id="file_links">
+                <a id="PDF_link" role="button" tabindex='4' rel="alternate" title="Download PDF"><span id="pdf_icon"></span>PDF</a>
+                <a id="Companion_link" role="button" tabindex='3' title="Download Companion File"><span id="companion_icon"></span>Companion File</a>
+            </span>
+        </div>
+        <ul id="headerButtons" class="hideOnPrint" role="toolbar">
+            <li id="toc_button" style="display:none">
+                <button tabindex="5" id="table_of_contents" class="open" role="checkbox" aria-label="Show Table of Contents"><span class="disclosure"></span>Table of Contents</button>
+            </li>
+            <li id="jumpto_button" style="display:none" role="navigation"><select tabindex="6" id="jumpTo"><option value="top">Jump To&#133;</option></select></li>
+            <li id="downloadSample_button" style="display:none">
+                <a id="Sample_link"><button id="Sample_button">Download Sample Code</button></a>
+            </li>
+        </ul>
+    </header>
+    <nav id="tocContainer" tabindex="7">
+        <ul id="toc" role="tree"></ul>
+    </nav>
+
+    <article id="contents" tabindex="0" role="main">
+        <div id="pageNavigationLinks_top" class="pageNavigationLinks">
+            <a class='nextLink' rel='next' href='../FAQ/FAQ.html'>Next</a><a class='previousLink' rel='prev' href='../Introduction/Introduction.html'>Previous</a>
+        </div>
+        <a id="top" name="top"></a>
+        <a id="INDEX" href="../index.html" style="display:none;"></a>
+        <div id="legacyOuterWrapper" role="alert"><div align="center" id="watermark"><div class="legacybox">
+<h1>Retired Document<span id="LegacyNoticeCloseBox" class="closebutton"></span></h1><p><b>Important:</b>
+This document may not represent best practices for current development. For current information, see <span class="content_text"><a href="https://developer.apple.com/documentation/foundation/file_system/about_apple_file_system" class="urlLink" rel="external">About Apple File System</a></span>.</p></div></div></div>
+        <a name="//apple_ref/doc/uid/TP40016999-CH5-DontLinkElementID_14" title="Features"></a><h1 id="pageTitle">Features</h1><p>Apple File System is a 64-bit file system supporting over 9 quintillion files on a single volume. This state-of-the-art file system features cloning for files and directories, snapshots, space sharing, fast directory sizing, atomic safe-save primitives, and improved filesystem fundamentals, as well as a unique copy-on-write design that uses I/O coalescing to deliver maximum performance while ensuring data reliability.</p><section><a name="//apple_ref/doc/uid/TP40016999-CH5-DontLinkElementID_4" title="Encryption"></a><h2 class="jump">Encryption</h2><p>Security and privacy are fundamental in the design of Apple File System. That's why Apple File System implements strong full-disk encryption, encrypting files and all sensitive metadata.</p><p>Which encryption methods are available depends on hardware and operating system support, and can vary for Mac, iPhone, iPad, Apple TV, and Apple Watch.</p><p>Apple File System supports the following encryption models for each volume in a container:</p><ul class="ul"><li class="li"><p>No encryption</p></li><li class="li"><p>Single-key encryption</p></li><li class="li"><p>Multi-key encryption with per-file keys for file data and a separate key for sensitive metadata</p></li></ul><p>Multi-key encryption ensures the integrity of user data. Even if someone were to compromise the physical security of the device and gain access to the device key, they still couldn't decrypt the user's files.</p><p>Apple File System uses AES-XTS or AES-CBC encryption modes, depending on hardware.</p></section><section><a name="//apple_ref/doc/uid/TP40016999-CH5-DontLinkElementID_5" title="Crash Protection"></a><h2 class="jump">Crash Protection</h2><p>Apple File System uses a novel copy-on-write metadata scheme to ensure that updates to the file system are crash protected, without the write-twice overhead of journaling.</p></section><section><a name="//apple_ref/doc/uid/TP40016999-CH5-DontLinkElementID_6" title="Fast Directory Sizing"></a><h2 class="jump">Fast Directory Sizing</h2><p>Fast directory sizing allows Apple File System to quickly compute the total space used by a directory hierarchy, and update it as the hierarchy evolves.</p><p>Fast directory sizing works by precomputing the size of directory as content is added and removed. Therefore, it is most appropriate for directories that contain many files and have relatively little churn. For example, a user’s Documents folder is a good candidate for fast directory sizing, whereas the <code>/tmp</code> directory would not.</p><p>The file system can enable fast directory sizing on empty directories. You cannot enable Fast Directory Sizing on directories containing files or other directories directly; you must instead first create a new directory, enable fast directory sizing on it, and then move the contents of the existing directory to the new directory.</p></section><section><a name="//apple_ref/doc/uid/TP40016999-CH5-DontLinkElementID_7" title="Atomic Safe-Save"></a><h2 class="jump">Atomic Safe-Save</h2><p>Apple File System introduces a new Atomic Safe-Save primitive for bundles and directories. Atomic Safe-Save performs renames in a single transaction such that, from the user’s perspective, the operation either is completed or does not happen at all.</p></section>
+        <div id="pageNavigationLinks_bottom" class="pageNavigationLinks">
+            <a class='nextLink' rel='next' href='../FAQ/FAQ.html'>Next</a><a class='previousLink' rel='prev' href='../Introduction/Introduction.html'>Previous</a>
+        </div><br/>
+        <div class="copyright"><br/><hr /><div align="center"><p class="content_text" lang="en" dir="ltr"> Copyright &#x00a9; 2018 Apple Inc. All Rights Reserved.  <a href="http://www.apple.com/legal/internet-services/terms/site.html" target="_blank">Terms of Use</a>   |  <a href="http://www.apple.com/privacy/" target="_blank">Privacy Policy</a>  |  Updated: 2018-06-04</p></div></div>
+
+        <div id="pediaWindow">
+            <div id="pediaHeader"></div>
+            <div id="pediaBody"></div>
+        </div>
+    </article>
+
+    
+    
+    <script charset="utf-8" src="../../../../../Resources/1282/JavaScript/lib/prototype.js"></script>
+    <script src="../../../../../Resources/1282/JavaScript/library.js"></script>
+</body>
+</html>

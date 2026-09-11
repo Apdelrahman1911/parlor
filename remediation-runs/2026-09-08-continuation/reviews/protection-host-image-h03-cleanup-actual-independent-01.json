@@ -1,0 +1,199 @@
+{
+  "schema": 1,
+  "reviewer": "/root/probe_cleanup",
+  "status": "ACTUAL_H03_HOST_ONLY_CLEANUP_PASS",
+  "binding": {
+    "run_id": 34606946362,
+    "attempt": 1,
+    "job_id": 103287593702,
+    "source": "25cd7f57b031bebdcfb4931615782b906610703f",
+    "tree": "1e44e982216bfc4fda32dc370a0d1b3d77fee836",
+    "selection": "protection-host-only",
+    "profile": "host-macos15-arm64-xcode26.3-sdk26.2-attribution-and-host-origin-setter",
+    "control_sha256": "6537d41f499b4635df3f1cfc80be3d84d07b619fa92790bb83ae0973ee9419e8",
+    "control_files": 30
+  },
+  "evidence": {
+    "root": "actions/34606946362",
+    "pins": {
+      "download-receipt.json": "2fdd0f42fa29072f4edf994ebd6c0f21fda097b989256ba808af96a5933fd473",
+      "main/request.json": "fce8a3d82e627c4a147609e0dfbe69c5bd33af61d252006c6a54c264fa92c56e",
+      "main/state.json": "c3f57e05ed136ecaf0ab82c44542f5621d7ba0a0d05a1d1c282d29aac20cac26",
+      "cleanup/state.json": "8b3a21f27c63bfada2e23840ae44a78e2198feed6a5a8384eadb83a9d8196540",
+      "job.log": "1ebe7e89576b7a6ab652498d75103f990a4157c21254cb1e0840a69476c3f518"
+    },
+    "archives": [
+      {
+        "bundle": "main",
+        "artifact_id": 10266292382,
+        "sha256": "d5b9bb7b1be58c5907d5ec53727e876d82396e22a0c6e5d86be1e7ddabd95553",
+        "bytes": 25232,
+        "members": 69,
+        "expanded_bytes": 81256
+      },
+      {
+        "bundle": "cleanup",
+        "artifact_id": 10265932701,
+        "sha256": "e751ad23d2ba6b63199ae44bc10d9d5751afee602f2590984066cb166c762344",
+        "bytes": 6685,
+        "members": 29,
+        "expanded_bytes": 19767
+      }
+    ],
+    "verified": "Exact request/dispatch/frozen-source/run/attempt/job joins; both distinct immutable uploads and cleanup main-upload receipt. ZIP digest/CRC/all98 members and extracted-file equality;95 state-log bindings;30 frozen Git control objects and reconstructed control digest. Probe job/all11 executed steps success, six full-verification jobs skipped; no qualification inferred.",
+    "assertion": {
+      "timestamp": "2026-09-11T13:54:47.2806780Z",
+      "cleanup": "PASS",
+      "uploads_match_api_and_archives": true,
+      "application_protection_qualification": "NOT_ESTABLISHED"
+    }
+  },
+  "three_mandatory_stops": [
+    {
+      "bundle": "main",
+      "index": 37,
+      "seconds": 3.299,
+      "allowance_seconds": 60,
+      "owned_pid": 2805,
+      "exit": 0,
+      "direct_child_reaped": true,
+      "stdout_bytes": 544,
+      "stderr_bytes": 0
+    },
+    {
+      "bundle": "cleanup",
+      "index": 7,
+      "seconds": 0.499,
+      "allowance_seconds": 60,
+      "owned_pid": 2939,
+      "exit": 0,
+      "direct_child_reaped": true,
+      "stdout_bytes": 31,
+      "stderr_bytes": 0
+    },
+    {
+      "bundle": "cleanup",
+      "index": 20,
+      "seconds": 0.441,
+      "allowance_seconds": 60,
+      "owned_pid": 2962,
+      "exit": 0,
+      "direct_child_reaped": true,
+      "stdout_bytes": 31,
+      "stderr_bytes": 0
+    }
+  ],
+  "stop_scope": "Exact /Users/runner/work/parlor/parlor/gradlew --stop: immediate post-cycle, pre-retirement and final. Each EXITED0/reaped within60s, stderr empty, stdout ends No Gradle daemons are running. First544-byte stdout includes distribution download completion. Not evidence of global-worker quiescence.",
+  "settlement": {
+    "main_direct_rows": 37,
+    "cleanup_direct_rows": 20,
+    "all57_EXITED0_reaped_no_child_cleanup_errors": true,
+    "main_preservation": {
+      "failures": 0,
+      "errors": []
+    },
+    "cleanup_preservation": {
+      "failures": 0,
+      "errors": []
+    },
+    "main_errors": [],
+    "cleanup_errors": [],
+    "main_signals": [],
+    "cleanup_signals": [],
+    "native_observations": [
+      {
+        "index": 25,
+        "label": "host-image-observation",
+        "seconds": 0.018,
+        "owned_pid": 2789,
+        "allowance_seconds": 30,
+        "exit": 0,
+        "direct_child_reaped": true
+      },
+      {
+        "index": 30,
+        "label": "host-setter-observation",
+        "seconds": 0.013,
+        "owned_pid": 2798,
+        "allowance_seconds": 30,
+        "exit": 0,
+        "direct_child_reaped": true
+      }
+    ],
+    "limits": "Recorded main/cleanup direct children only, not indirect descendants or all runner processes."
+  },
+  "scratch": {
+    "root": "/Users/runner/work/_temp/parlor-protection-probe-34606946362-1/resources",
+    "initial_resources": {
+      "device": 16777230,
+      "inode": 3543918,
+      "uid": 501
+    },
+    "initial_temporary": {
+      "device": 16777230,
+      "inode": 3543919,
+      "uid": 501
+    },
+    "retired_entries": 11,
+    "retired_regular_files": 9,
+    "retired_directories": 2,
+    "enumerated_bytes": 248338,
+    "retired_names": [
+      "HostImageProbe",
+      "HostImageProbe.m",
+      "HostProtectionSampler.m",
+      "HostSetterProbe",
+      "HostSetterProbe.m",
+      "OwnedHostSetterContext.h",
+      "ProtectionSampler.h",
+      "ProtectionSampler.m",
+      "host-fixtures",
+      "host-fixtures/probe.bin",
+      "tmp"
+    ],
+    "custody": "Request/source-bound base and evidence identity preserved. Cleanup rechecks resources/tmp private0700 ownership before enumeration. Every recorded retired entry has UID501/device16777230; exact tmp, fixture root/file, setter inputs/image and attribution-image identities cross-match.",
+    "bounds": "Actual11 entries satisfy count<=128, aggregate<=64MiB, each regular file<=16MiB, expected regular/directory modes and same UID/device. Frozen guard also rejects symlinks/path escapes and regular files with links!=1; setter inputs/image/fixture explicitly retain link1 witnesses.",
+    "scratch_absent": true,
+    "cleanup_finished_at": "2026-09-11T13:54:45.181171+00:00",
+    "absence": "Frozen cleanup persists retirement then requires zero preservation failures and descriptor-safe rmtree; removes only owned resources and checks both exists() and is_symlink() false. Successful assert-result repeats exact resource-absence checks after both uploads. Point-in-time source-bound receipt, not a current remote-filesystem survey.",
+    "retained": "Base/evidence and unrelated/global Gradle caches are intentionally outside removal scope."
+  },
+  "host_setter_retirement": {
+    "scope": "HOST_ORIGIN_ONLY",
+    "fixture": {
+      "root": {
+        "device": 16777230,
+        "inode": 3544187,
+        "uid": 501
+      },
+      "identity": {
+        "device": 16777230,
+        "inode": 3544188,
+        "uid": 501,
+        "mode": 33152,
+        "links": 1,
+        "size": 40,
+        "type": "regular"
+      }
+    },
+    "fixture_binding": "Native before/after and all individual read identities equal main fixture, retained setter report and cleanup retirement; fixture root/file match their removed entries. Before/after sample descriptors report closed.",
+    "inputs": "All four full stat/hash records equal before compile, after set and retirement, matching removed entries. All four source bytes/hashes independently reconstructed from this frozen source and request macros; retained generated header byte-exact.",
+    "input_sha256": {
+      "HostProtectionSampler.m": "7656cc25a7e2d9ab3a6715713acf177f5c3f02855ac24fc2757df663ecc77d50",
+      "HostSetterProbe.m": "99d7f72db7fbc57d976563e97b1bd9514c9a637e801ae84847cc34c890fc7bc9",
+      "OwnedHostSetterContext.h": "93b40a17175feb19626242d7beb1963856f0520426a2f270109443ea8ebc2c43",
+      "ProtectionSampler.h": "f606f61c7e8c2271cd23abb3876d1b6e0daff40ccdcd9d0f43b949d4d502bb13"
+    },
+    "image": {
+      "inode": 3544221,
+      "sha256": "fd5910ff88d5f638824078a818cbe17a271bf9000a53e42ccf40718f5522402d",
+      "binding": "Full stat/hash witness equals built/post-set/retirement records and matches HostSetterProbe removed entry."
+    },
+    "attribution_image": "Built HostImageProbe custody inode3544145 matches its retired entry; no fresh retirement hash for this image is claimed.",
+    "fixture_content_limit": "Fixture retirement validates full identity/size, not a fresh payload-content hash."
+  },
+  "guards": "Frozen H03 host cleanup/load_request/run/retirement/assert-result and common direct-child/stop primitives are unchanged from reviewed H02 code; independently compared Git objects/function source. H03 schema2 error-chain addition does not relax cleanup predicates. Actual H03 evidence independently checked; no H02 result substitution.",
+  "simulator": "No simctl row or owned-simulator UUID/journal/retirement in this host-only lifecycle. No simulator/global-service cleanup inferred.",
+  "limits": "Scoped cleanup acceptance only. Raw setter excludes simulator fixture, production snapshots, altered historical A37 result and protection qualification. Native operation/error-chain interpretation is outside this cleanup review. PD09 failure and all historical results remain separate; no stitching, full/app/device/Store/readiness or indirect-worker/global-process absence claim. Root/collector local stops are not CI cleanup receipts.",
+  "operations": "Supplied JSON/log/ZIP/hash and frozen-source inspection only; no builds/tests/network/API polling/dispatch/source edits/Git writes/resource deletion/subagents. No local build scratch created. Only this new receipt written."
+}

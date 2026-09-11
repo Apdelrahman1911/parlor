@@ -1,0 +1,135 @@
+{
+  "schema": 1,
+  "reviewer": "/root/qualification_review",
+  "status": "APPROVED_EXACT_D10_REQUEST_FOR_ROOT_IMMEDIATE_ADMISSION_NOT_EXECUTION",
+  "recorded_at": "2026-09-11T14:23:39.305784+00:00",
+  "scope": "Bounded exact D10 packet/freeze admission and pinned H03 source/control/actual-review reconciliation. No source re-audit, lane recount, XML/ZIP re-audit or full-suite rerun.",
+  "packet": "actions/full-qualification-dispatch-10",
+  "packet_sha256": {
+    "request.json": "3dd1dddcbb29067f428624b5d232aa0f83651f740b77eae380be886c3f40a62f",
+    "source-association.json": "e635fe57383ed6d928200d52e3b4d2e0dc4ce083445e7fda4a296e1a2074a0af",
+    "controls.json": "dc9a1e791a8cff4da05c9be5caf93b725af59a49c2ba840d2f5a80b54a8d749a"
+  },
+  "repository": "Apdelrahman1911/parlor",
+  "workflow": ".github/workflows/production-verification.yml",
+  "ref": "fix/local-readiness-2026-09-07",
+  "inputs": {
+    "verification_scope": "full",
+    "native_selection": "paired"
+  },
+  "head": "25cd7f57b031bebdcfb4931615782b906610703f",
+  "tree": "1e44e982216bfc4fda32dc370a0d1b3d77fee836",
+  "source_commit": "3fa4ef1e3f398124846b29d0b5c1a52341ea9d96",
+  "tracked_clean": true,
+  "full_history": true,
+  "inventory_sha256": "1597685acf1004c1c6965f3e7d84a19263f2e283ebc8ad8ad3276420c76323d2",
+  "inventory_rows": 36488,
+  "control_sha256": "0f5d6529528284dc499657ba11f13925451084a1f4cd7a687808264a800eeff9",
+  "binding": "Exact two-input full+paired request and source association match. All13 unique sorted named controls match current bytes and frozen25cd Git blobs; canonical sorted-key compact JSON file-list digest matches. This is a named subset, NOT exhaustive source/import closure; the entire frozen tree binds source, including existing remediation helpers.",
+  "freeze_evidence": {
+    "receipt": "remediation-runs/2026-09-08-continuation/actions/protection-host-image-03/source-freeze-receipt.json",
+    "receipt_sha256": "e5c2ce9dbb6b65622e468d31a11bf86302d7b496e392c69c5fa18e167914e269",
+    "log_sha256": "8b8dc1aae5ce524b1c852ad8d0f72ff3886dd0d4f2ccbbd5a2f034002eb325df",
+    "verified": "Source3fa4ef1e followed by inventory-only25cd commit; source/tree/inventory hash and recorded36488-row freshness/push/remote equality/stop0 reconcile. Current local branch/HEAD/tree/tracked cleanliness checked. Remote equality and freshness command execution are retained root observations, not new reviewer network/validator runs."
+  },
+  "review_sha256": {
+    "final-d09-exact-request-admission-independent-01.json": "bc5798dd2ce70eff418355000f2f4f4d97934afda9cbd8182baaa9da504943f1",
+    "full-d09-aggregate-actual-independent-01.json": "53ec6e0136a2dd161b3e0c90eba9ac734fe1edabf74b27669ec4f6261dcc9acb",
+    "protection-host-image-h02-request-admission-independent-01.json": "75203c340efa1f05fef5d6a6045467b4c919430abdd7619bf8c902eea22790ea",
+    "protection-host-image-h03-request-admission-independent-01.json": "a2769743772c60a015112a674caaa51bf402f627e59e601494363cff79a6aa41",
+    "protection-host-error-chain-native-source-independent-01.json": "5d448aaa77548fc6bca1a4f5cbcc1ef6818758921bfa1e047437eec672eb364b",
+    "protection-host-error-chain-driver-controls-independent-01.json": "94ab644245b1402ef33823026d04b47b32e44126e7f1f0e7e01accd39756a05d",
+    "protection-host-error-h03-native-actual-independent-01.json": "8d3cecec4806f8e518af106aaf6b696fd20712d9261ba60f89d4c3aa70eb6e6f",
+    "protection-host-image-h03-bindings-custody-independent-01.json": "6314e5debfa2d090b74ab90623872d07b3e78d755544344cb590b75664f121e3",
+    "protection-host-image-h03-cleanup-actual-independent-01.json": "fdfdcf875a66f0b8fd39a9ee2a8799b8b6fbf6dde5d8b2bc5b442c1496c65ffe"
+  },
+  "source_reuse": "H03 native/driver approvals bind all four corrected current/frozen diagnostic pins and the exact final controls. H02 reviewed-base admission is retained; H03 does not relabel H02. Entire production-verification workflow remains byte-identical to successful D09 atd3 (d8868fdd407c0513fe4205b67b205af510c74b267e8ee83a1efac0b0f8fede94), including all six required job bodies. New diagnostic source afterD09 nevertheless requires this separate D10; old full qualification does not transfer.",
+  "focused_controls": {
+    "receipt": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-error-chain-controls-02/receipt.json",
+    "receipt_sha256": "60b5665b15e7dacbd93422478fe1ae5e0c58f5105245650f984173eb6c26dee9",
+    "tests_log_sha256": "547726f867d7140d2bb054e45b77c7af2d21bee56c87692fd41243970a724bb4",
+    "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+    "verified": "Final14 actual controls pass, no failures/errors/skips; corrected native99d7f72d plus other three source pins unchanged before/after/current/frozen. Stop0/direct child reaped, scratch absent and20 listed live outputs absent are retained observations. Earlier14 at pre-correction source is not added as unique coverage."
+  },
+  "h03_prerequisite": {
+    "run_id": 34606946362,
+    "attempt": 1,
+    "job_id": 103287593702,
+    "source": "25cd7f57b031bebdcfb4931615782b906610703f",
+    "tree": "1e44e982216bfc4fda32dc370a0d1b3d77fee836",
+    "control_sha256": "6537d41f499b4635df3f1cfc80be3d84d07b619fa92790bb83ae0973ee9419e8",
+    "selection": "protection-host-only",
+    "collector_receipt_sha256": "2fdd0f42fa29072f4edf994ebd6c0f21fda097b989256ba808af96a5933fd473",
+    "native_actual_review_accepted": true,
+    "bindings_custody_review_accepted": true,
+    "scoped_cleanup_review_accepted": true,
+    "api_scope": "Run/attempt/probe job success; six full jobs skipped. Exactly two own immutable artifact identities/digests reconcile; no D10 lane execution supplied.",
+    "artifacts": [
+      {
+        "id": 10266292382,
+        "role": "main",
+        "zip_sha256": "d5b9bb7b1be58c5907d5ec53727e876d82396e22a0c6e5d86be1e7ddabd95553"
+      },
+      {
+        "id": 10265932701,
+        "role": "cleanup",
+        "zip_sha256": "e751ad23d2ba6b63199ae44bc10d9d5751afee602f2590984066cb166c762344"
+      }
+    ],
+    "actual": "Fresh native schema2 records one public setter returning FALSE, outer Cocoa256, underlying POSIX22 (EINVAL), no-underlying termination. Before/after remain until-first-authentication/raw class3. Observed native execution/capture is not successful mutation or strict protection.",
+    "cleanup": "Three mandatory Gradle stops exit0/reaped,57 recorded direct children exit0/reaped, own bounded scratch retirement/absence accepted. No simulator, global-process or global-cache absence claim.",
+    "limit": "Reported underlying EINVAL does not identify a syscall, internal rejecting condition, caller defect, supported-platform condition or universal macOS/Simulator limitation. No retroactive H02 chain, original strict equality or shipping repair is inferred."
+  },
+  "source_stability": {
+    "declared_by": "/root",
+    "basis": "Explicit coordination decision after the H03 native/cleanup reviews, confirmed after custody completion:25cd/tree1e44 stable for D10; no code or contract correction planned.",
+    "decision": "Proceed with the separately admitted full gates; no further same-class/LLDB harness now and no new executable source/helpers during the run. The precise internal rejecting condition and strict failure remain open, not platform-waived.",
+    "not_a_repair_claim": "Root found no evidence-supported shipping correction or documented nonphysical Complete-enabling workaround in the bounded investigation; this is not proof of platform-wide incapability. Encrypted-volume behavior is not substituted for per-file Complete protection."
+  },
+  "required_jobs": {
+    "desktop-android": "Common, desktop, and Android release",
+    "desktop-linux-arm64": "Desktop strict verification (Linux arm64)",
+    "desktop-macos-x64": "Desktop and Kotlin Native strict verification (macOS x64)",
+    "desktop-windows-x64": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+    "ios": "iOS simulator runtime and Swift host",
+    "ios-release": "iOS release frameworks and Swift wrapper"
+  },
+  "required_skipped_jobs": {
+    "ios-protection-probe": "iOS strict protection diagnostic"
+  },
+  "expected_artifacts": [
+    "desktop-android-verification",
+    "desktop-verification-desktop-linux-arm64",
+    "desktop-verification-desktop-macos-x64",
+    "desktop-verification-desktop-windows-x64",
+    "ios-runtime-verification",
+    "ios-release-verification",
+    "verification-cleanup-desktop-android",
+    "verification-cleanup-desktop-linux-arm64",
+    "verification-cleanup-desktop-macos-x64",
+    "verification-cleanup-desktop-windows-x64",
+    "verification-cleanup-ios",
+    "verification-cleanup-ios-release"
+  ],
+  "final_acceptance": "One fresh attempt1 workflow_dispatch at25cd: all six mandatory full jobs, their actual required tasks and own scoped cleanup must succeed together; seventh probe skipped. Reconcile terminal run/attempt/seven-job APIs and actual checkout/source attestations,12 unique expected artifact IDs/sizes/digests and bounded retained ZIPs. Own run-1-job ownership/stop/cleanup must bind source/tree/task and main-upload ID/digest. ios owns apple-aggregate+apple-ui; ios-release owns apple-aggregate+apple-wrapper. Separate actual lane/custody/cleanup reviews and final bound aggregate are required. API/collection success, compile/link, upload or cleanup alone is not full/runtime PASS; do not sum overlapping test suites.",
+  "collector03": {
+    "path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-03.py",
+    "sha256": "53d6a05f4a2c591f25e3bda2104b0c15e39cd472d6519d24e6fd1aff5234f7a8",
+    "binding": "Existing collector bytes equal frozen25cd; no new collector source is authorized by this admission."
+  },
+  "conditions": [
+    "Root immediately rechecks exact local/remote/ref/request/source/tree equality, clean tracked source and unchanged packet/control/inventory/review pins. Preserve unrelated untracked evidence and locks.",
+    "Root checks active qualification and legacy groups immediately before POST. H03 is terminal and independently reviewed; reviewer has made no live concurrency/API observation. No competing qualification dispatch, blind retry or cancellation to manufacture acceptance.",
+    "Root alone sends this exact request once and retains POST/dispatch/run association for a fresh attempt1. Full ignores frozen_source_sha; its absence in this exact two-input request must not be replaced by reliance on an unused input. Actual API/job/checkout source must equal25cd.",
+    "Any executable source, imported input, workflow, helper, test, contract or policy correction requires a new freeze/admission. Do not add executable helpers during D10 or stitch old/focused jobs, other SHAs or attempts into D10.",
+    "A later delivery commit requires an exact-diff check allowing only passive archived evidence/reviews, descriptive ledger and mechanically regenerated inventory; do not preapprove unknown changes. Preserve executed25cd separately from delivery HEAD. Mechanical freshness verification is not a claim that D10 executed the delivery SHA."
+  ],
+  "historical_limit": "D09 remains accepted only atd3c0df9c; D08 and focused failures remain unchanged. H03 supplies only its scoped native observation/custody/cleanup prerequisite, not a D10 lane. A37 remains0PASS/26FAIL; strict protection is open, not waived by host behavior. No application/physical-device/Store/signing/publication readiness certificate follows.",
+  "h03_review_and_stability_preconditions_met": true,
+  "eligible_for_root_immediate_admission": true,
+  "live_dispatch_checks": "ROOT_PENDING",
+  "run": null,
+  "execution_status": "D10_NOT_RUN",
+  "findings": [],
+  "activity": "Only local read-only Git/stdlib JSON/text/hash inspection and this additive untracked report. Reused independent H03 native/custody/cleanup conclusions without their lane/ZIP audits. No project imports, tests/builds/validators/network/API polling/dispatch/cancel/source or raw-evidence edits/Git writes/child agents. No reviewer execution cleanup owed."
+}

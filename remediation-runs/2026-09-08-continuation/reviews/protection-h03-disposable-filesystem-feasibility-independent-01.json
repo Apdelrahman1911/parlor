@@ -1,0 +1,73 @@
+{
+  "schema": 1,
+  "kind": "BOUNDED_H03_DISPOSABLE_HOST_FILESYSTEM_FEASIBILITY_NOT_QUALIFICATION",
+  "reviewer": "/root/protection_volume",
+  "status": "NO_DOCUMENTED_DISPOSABLE_COMPLETE_RECIPE_IDENTIFIED",
+  "scope": "Filesystem/APFS/encrypted-image alternatives after actual H03. Platform Support separately owns virtualization/SEP documentation and Apple support escalation. No new runtime, source, mount or broad platform audit.",
+  "actual_h03": {
+    "run_id": 34606946362,
+    "run_attempt": 1,
+    "source": "25cd7f57b031bebdcfb4931615782b906610703f",
+    "control_sha256": "6537d41f499b4635df3f1cfc80be3d84d07b619fa92790bb83ae0973ee9419e8",
+    "observed": "Native macOS15.7.9/24G830 arm64 public FileManager Complete request returned FALSE, Cocoa256 -> POSIX22(EINVAL), error chain terminated no-underlying. Same owned ordinary host-created file dev16777230/inode3544188 remained class3 in fcntl and valid-bit attrlist. FileManager and fresh URL remained until-first-authentication; URL volume support unsupported and MNT_CPROTECT clear on APFS fsid[16777230,26].",
+    "limit": "Underlying NSError POSIX22 is actual retained evidence, not a direct F_SETPROTECTIONCLASS trace or proof of the exact rejecting layer. No production snapshot or iOS enforcement was observed."
+  },
+  "official_findings": [
+    {
+      "reference": "disk-utility-formats.html",
+      "url": "https://support.apple.com/guide/disk-utility/file-system-formats-dsku19ed921c/mac",
+      "quote": "APFS (Encrypted): Uses the APFS format and encrypts the volume.",
+      "implication": "The documented APFS choices are ordinary/encrypted and case-sensitive variants. Case sensitivity and volume encryption are not a documented per-file Complete switch."
+    },
+    {
+      "reference": "disk-utility-images.html",
+      "url": "https://support.apple.com/guide/disk-utility/create-a-disk-image-dskutl11888/mac",
+      "quotes": [
+        "Enter and re-enter a password to unlock the disk image, then click Choose.",
+        "When you’re finished using the documents on the secure disk image, be sure to eject the disk image. As long as it’s available on your desktop, anyone with access to your computer can use the documents on it."
+      ],
+      "implication": "An encrypted APFS disk image is a supported disposable container for password/eject-based protection, not a documented Complete class/keybag positive control. No image was created or mounted."
+    },
+    {
+      "reference": "apfs-guide-features.html",
+      "url": "https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/APFS_Guide/Features/Features.html",
+      "quote": "Which encryption methods are available depends on hardware and operating system support, and can vary for Mac, iPhone, iPad, Apple TV, and Apple Watch.",
+      "implication": "The archived guide lists no/single/multi-key encryption, but generic APFS multi-key capability is not a promise that a particular host volume or guest can select it."
+    },
+    {
+      "reference": "Apple-File-System-Reference.pdf",
+      "url": "https://developer.apple.com/support/downloads/Apple-File-System-Reference.pdf",
+      "document_date": "2020-06-22",
+      "pages": [
+        135,
+        136
+      ],
+      "quote": "Volumes that use per-file encryption require hardware encryption, and the steps below describe only software encryption.",
+      "context": "Page135 describes software encryption for external storage and internal storage without hardware support, and per-volume VEK/KEK unwrapping. Page136 limits its access procedure to APFS_FS_ONEKEY volumes.",
+      "implication": "A software-encrypted disposable image is not documented as enabling the hardware-backed per-file facility. This dated format reference is architecture evidence, not proof of the precise macOS15.7.9 error path or every future virtualization implementation. Its on-disk class definitions are not permission to fabricate public SDK mutation constants."
+    },
+    {
+      "reference": "remediation-runs/2026-09-07-local-readiness/evidence/l08-file-protection-research-01/apple-platform-data-protection.json",
+      "url": "https://support.apple.com/guide/security/data-protection-overview-secf6276da8a/web",
+      "captured_response_sha256": "8bfcf2cbc58e3e01afdd5ba41acadf269696b2b8aed9ed1129f5eab11c0aa128",
+      "quote": "On a Mac with Apple silicon, Data Protection defaults to Class C (see Data Protection classes) but uses a volume key rather than a per-extent or per-file key—effectively re-creating the security model of FileVault for user data.",
+      "additional_quote": "Developers can also opt in to a higher protection class that uses a per-file or per-extent key.",
+      "implication": "Apple silicon/macOS is a positive general platform candidate, not universally incapable of higher protection classes. The adjacent macOS26.4 FileVault-default statement is not a macOS15.7.9 setting/fix. The source does not provide a disposable-image or virtual-runner recipe."
+    }
+  ],
+  "practical_result": {
+    "sampled_runner": "No supported disposable filesystem/image setting that genuinely supplies per-file Complete was identified. Do not create encrypted APFS/sparse images, change case sensitivity, or turn on FileVault merely to relabel volume encryption as a Complete positive control.",
+    "conditional_host_candidate": "A separately available real Apple-silicon Mac using its internal hardware-backed APFS storage is a documented general native-host candidate for opting into higher classes. It is not a proven positive fixture, a guest setting, or iOS/Simulator qualification. Host/volume capability must be demonstrated rather than assumed from arm64, APFS or FileVault. Whether such hardware access is allowed under nonphysical-iOS versus no-hardware scope is for root/owner; this review does not redefine the restriction or authorize execution.",
+    "if_no_permitted_host": "Use the bounded support/escalation path owned by platform_support to request an exact supported OS/hardware/volume/virtualization recipe, instead of an unchanged matrix or speculative formatting experiment.",
+    "limits": "This bounded official-document review cannot prove that every current/future third-party runner or virtual machine is incapable. No affirmative recipe was found in scope; no host was qualified. Existing strict and application gates remain unchanged."
+  },
+  "evidence_pins": {
+    "remediation-runs/2026-09-08-continuation/actions/34606946362/main/host-setter.stdout.json": "9f61998265bb2d259ba5544819d1235ced9afab9237377644eaf114eabbe94f8",
+    "remediation-runs/2026-09-08-continuation/actions/34606946362/main/state.json": "c3f57e05ed136ecaf0ab82c44542f5621d7ba0a0d05a1d1c282d29aac20cac26",
+    "remediation-runs/2026-09-07-local-readiness/evidence/l08-file-protection-research-01/apple-platform-data-protection.json": "c4ab69dbfa302edf635c7fb28bb2c910041d8b48ee67010637a3292935cecc87",
+    "remediation-runs/2026-09-08-continuation/reviews/protection-h03-disposable-filesystem-feasibility-independent-01/source-index.json": "407eba6b0fa17b231152a5fbdffe02987f83d213e3da386e7efbceb2a4326c42",
+    "remediation-runs/2026-09-08-continuation/reviews/protection-h03-disposable-filesystem-feasibility-independent-01/apfs-protection-class-extract.json": "f27015420598ce135e185a8601a2c833fdcaf5a34395e0061babe6719a85edfb"
+  },
+  "public_source_index": "remediation-runs/2026-09-08-continuation/reviews/protection-h03-disposable-filesystem-feasibility-independent-01/source-index.json",
+  "research_operations": "Targeted official Apple documentation GETs and local retained H03/source inspection only. Five distinct official documents retained; existing Platform Security capture reused by coordination with platform_support. The APFS FAQ is ancillary and not relied on for the encryption conclusion. PDF text was extracted locally using stdlib FlateDecode/ToUnicode handling; retained original PDF is authoritative. No third-party sources, package installation, source edits, tests/builds, CI/API dispatches, filesystem creation/mounting or native probes. Only additive public-evidence/review files were created."
+}

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" tests="30" skipped="0" failures="0" errors="0" timestamp="2026-09-11T14:42:45.973Z" hostname="sjc22-bt151-9970416c-5556-4511-af54-28dba4037804-76D2996E6880.local" time="0.267">
+  <properties/>
+  <testcase name="multiplayerRoutesRejectNonCanonicalUserInputAtTheOwnershipBoundary[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.001"/>
+  <testcase name="sameRouteReattachesWithoutOpeningAnotherRoom[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="aDifferentRouteCannotReplaceAnActiveSession[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="cancellingOneUiWaiterDoesNotCancelProcessOwnedOpen[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.002"/>
+  <testcase name="explicitLeaveDuringOpenWaitsForCancellationAndClosesAnOrphanRoom[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="cancelledOpenRestoresIdleAndDoesNotPoisonTheNextAcquire[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="explicitLeaveReportsOrphanCleanupFailureWithoutStrandingOwnership[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="admissionFreezeIsExactlyOnceAcrossConcurrentUiRequests[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="thrownAdmissionCloseBecomesRetryableWithoutPoisoningTheGate[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="cancelledAdmissionCloseDoesNotPoisonTheGate[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="checkpointAndRuntimeSurviveUiReattachmentAndRejectWrongKinds[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="retainedFactoryFailureIsExplicitAndDoesNotPoisonAReplacement[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="runtimeFactoryKindMismatchClosesTheUninstalledCandidate[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="retainedValuesCannotBeCreatedAfterTheSessionIsReleased[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="peerRetryRetainsMembershipAndForcesResumeOnTheNextRoom[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="leaveRacingPeerRetryWaitsThenDiscardsTheRetainedCredential[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="failedPeerRetryKeepsTheLiveSessionAndCanBeRetried[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="peerRetryRuntimeCloseFailureCannotStrandTheOwnerInClosing[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="cancelledPeerRetryCloseRestoresActiveStateAndPropagatesCancellation[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="cancelledCredentialDiscardRemainsRetryableAndPropagatesCancellation[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="leavingAFailedOpenClearsTheRouteForANewSession[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="leavingAColdFailedResumeDiscardsThePersistedMembership[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="failedColdResumeDiscardKeepsTheRouteForAnExplicitRetry[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="failedPeerFinalLeaveKeepsSessionAndConcurrentRetryClosesExactlyOnce[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="hostRetryTerminatesRuntimeBeforeLeavingAndKeepsRouteRecoverable[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="hostFinalLeaveRuntimeCloseFailureStillReleasesOwnership[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.262"/>
+  <testcase name="aNewOwnerModelsProcessDeathAsNoInMemoryHostSession[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="peerLifecycleExpiryReleasesRuntimeAndLeavesAnExplicitTerminalOwnerState[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="finalLeaveWaitsForSessionChildrenToFinishCancellationCleanup[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <testcase name="staleExpiredLifecycleCannotReplaceANewerActiveSession[iosSimulatorArm64]" classname="com.parlor.session.multidevice.ProcessMultiplayerSessionOwnerTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

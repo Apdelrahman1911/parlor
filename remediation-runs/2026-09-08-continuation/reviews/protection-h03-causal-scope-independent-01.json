@@ -1,0 +1,71 @@
+{
+  "schema": 1,
+  "kind": "INDEPENDENT_H03_CAUSAL_PLATFORM_SCOPE_REVIEW_NOT_QUALIFICATION",
+  "reviewer": "/root/protection_atomic",
+  "status": "BOUNDED_CLAIMS_ACCEPTABLE_WITH_RETAINED_EVIDENCE_LIMIT",
+  "scope": "Only the new H03 documentation, causal-inference and platform-support claims. No repeated source/runtime audit, expanded platform search or D10 monitoring.",
+  "input_pins": {
+    "remediation-runs/2026-09-08-continuation/reviews/protection-h03-platform-support-01.json": "4c1807667caf8e0536e686801d218f2493c3b93a195d315b75ffe3348f9e3382",
+    "remediation-runs/2026-09-08-continuation/reviews/protection-h03-disposable-filesystem-feasibility-independent-01.json": "d4c0633786d40d7bc60528e3750bb5a51b32cd34c0c59e9568265d8d2364ac31"
+  },
+  "h03_premise_not_reaudited": {
+    "run": "34606946362/1",
+    "source": "25cd7f57b031bebdcfb4931615782b906610703f",
+    "control_sha256": "6537d41f499b4635df3f1cfc80be3d84d07b619fa92790bb83ae0973ee9419e8",
+    "raw_path": "remediation-runs/2026-09-08-continuation/actions/34606946362/main/host-setter.stdout.json",
+    "raw_sha256": "9f61998265bb2d259ba5544819d1235ced9afab9237377644eaf114eabbe94f8",
+    "observation": "Native macOS15.7.9/24G830 arm64 public Complete setter FALSE; reported Cocoa256 -> POSIX22/EINVAL, terminating no-underlying; same owned file remains class3/until-first-authentication; APFS file-protection support false and MNT_CPROTECT clear."
+  },
+  "checks": [
+    {
+      "id": "SIMULATOR_EXCLUSION_NOT_INVENTED",
+      "result": "CONFORMANT",
+      "basis": "Complete retained Simulator HTML has zero occurrences of protect. Its full hardware/API lists do not explicitly exclude Data Protection. It is updated2018-02-15, deprecated in Xcode9, with hardware limitations explicitly as of iOS8.2. The reports correctly reject an invented Apple exclusion; this silence also does not establish current support."
+    },
+    {
+      "id": "NO_UNIVERSAL_INCAPABILITY_OR_HARDWARE_EXEMPTION",
+      "result": "CONFORMANT",
+      "basis": "Both conclusions are limited to no supported recipe identified within reviewed sources. Neither establishes that every Simulator/VM is incapable, diagnoses absent SEP/keybag hardware, or waives a gate for hardware-only enforcement. Any different host and scope interpretation require owner/root authorization and fresh evidence."
+    },
+    {
+      "id": "COMPLETE_NOT_REPLACED_BY_ENCRYPTION_OR_CLASS_C",
+      "result": "CONFORMANT",
+      "basis": "Disk Utility documents volume encryption, case sensitivity, and password/eject-based image protection, not a per-file Complete switch. The APFS extract distinguishes A/Complete from C/until-first-user-authentication. Class3, FileVault, capabilityfalse and successful collection remain nonqualifying."
+    },
+    {
+      "id": "NO_AFFIRMATIVE_RETAINED_NONPHYSICAL_RECIPE_OVERLOOKED",
+      "result": "CONFORMANT_WITH_SOURCE_LIMIT",
+      "basis": "The inspected Disk Utility format/image text and archived APFS feature text contain no Complete-enabling nonphysical recipe. The retained APFS reference extract limits its software access procedure to APFS_FS_ONEKEY and says per-file encryption requires hardware encryption. This dated architecture statement supplies neither a software-image recipe nor a universal current/future virtualization verdict. The two unretained Virtualization responses are separately limited below."
+    },
+    {
+      "id": "GENERAL_APPLE_SILICON_SUPPORT_PRESERVED",
+      "result": "CONFORMANT",
+      "basis": "The retained Platform Security paragraphs explicitly preserve developers opting into higher classes on Apple-silicon Macs. Both reports retain that positive general candidate without qualifying a particular host, guest, Simulator or app. The adjacent macOS26.4 FileVault-default statement is not converted into a remedy for macOS15.7.9."
+    },
+    {
+      "id": "ERROR_PROVENANCE_NOT_SYSCALL_CAUSALITY",
+      "result": "CONFORMANT",
+      "basis": "Both reports call Cocoa256 -> POSIX22 the reported NSError chain, not an observed failing open/fcntl call or a traced framework/kernel rejection. The exact EINVAL cause remains unidentified. The proposed Apple support question is not a demonstrated VM/hardware cause."
+    }
+  ],
+  "findings": [],
+  "evidence_pins_verified": {
+    "remediation-runs/2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/official-simulator-archive.html": "5bc8be71de5b70a1218b9c4e1121bc378f0f8512684e55e8b91581c8c6bece08",
+    "remediation-runs/2026-09-07-local-readiness/evidence/l08-file-protection-research-01/apple-platform-data-protection.json": "c4ab69dbfa302edf635c7fb28bb2c910041d8b48ee67010637a3292935cecc87",
+    "remediation-runs/2026-09-08-continuation/reviews/protection-h03-disposable-filesystem-feasibility-independent-01/source-index.json": "407eba6b0fa17b231152a5fbdffe02987f83d213e3da386e7efbceb2a4326c42",
+    "remediation-runs/2026-09-08-continuation/reviews/protection-h03-disposable-filesystem-feasibility-independent-01/Apple-File-System-Reference.pdf": "74c3db584971aea2b11549ca25799ead824e1bd8994e94cd3f8665ce5aea79cc",
+    "remediation-runs/2026-09-08-continuation/reviews/protection-h03-disposable-filesystem-feasibility-independent-01/apfs-protection-class-extract.json": "f27015420598ce135e185a8601a2c833fdcaf5a34395e0061babe6719a85edfb",
+    "remediation-runs/2026-09-08-continuation/reviews/protection-h03-disposable-filesystem-feasibility-independent-01/disk-utility-formats.html": "9a2ab9bc0d1da593863deefb3dad0fc70c782068c0a633e8cbcec77480b3a34c",
+    "remediation-runs/2026-09-08-continuation/reviews/protection-h03-disposable-filesystem-feasibility-independent-01/disk-utility-images.html": "75bd0da36dcdb28fff3569fa499568b7596e4c53432e0bc6053d49157fa8bf85",
+    "remediation-runs/2026-09-08-continuation/reviews/protection-h03-disposable-filesystem-feasibility-independent-01/apfs-guide-features.html": "fc9a246bbcb09ef82c58223e6c74e6448076786b73583896b9a19fbfbdeb274b",
+    "remediation-runs/2026-09-08-continuation/reviews/protection-h03-platform-support-01/official-support-excerpts.json": "4419c499abf9c2cfed27af012cd59bac232af505f1e79a92ecded2e4610a5131"
+  },
+  "verification_limits": [
+    "The platform-support report gives response hashes fa48f23806328dadeada7f48fd1acf1226392d6197b03f1401b212fa500415b5 and d12059820562233e31bca1d5fb6c1232704af730c9450b9a2ea591e6ec0bab71 for running-macos-in-a-virtual-machine-on-apple-silicon.json and vzmacplatformconfiguration.json, but no local body paths. Its cited evidence directory contains only official-support-excerpts.json. Their absence-of-recipe claims remain author-reported, not independently reproduced here; no network was used to fill this gap.",
+    "The support-route evidence retains selected normalized quotations, not full HTTP bodies. It supports an owner-authorized discrete API support question and minimal reproducer, not an Apple platform-support verdict. No submission is authorized by this review.",
+    "APFS PDF bytes and retained page extract were checked; dated architecture text does not locate H03's rejecting layer. The Platform Security capture's local JSON hash and embedded original-response hash name different byte objects and are not a pin mismatch.",
+    "This review does not independently establish the runner's virtualization/hardware identity. A submitted support packet must distinguish retained host facts from the proposed hosted-VM scenario and any unverified hardware assumptions."
+  ],
+  "qualification_unchanged": "No host or app is qualified and no remediation is demonstrated. Existing A37 strict0/26, APP04 0/6 and PD08 synthetic0/5 remain distinct, unchanged inherited results, not rerun or reaudited here. No class3/encryption/collection-success equivalence to Complete, no universal nonphysical impossibility conclusion and no hardware-only gate exemption.",
+  "activity": "Local retained-document reads, hash checks and this sole additive JSON review. No source/control edits, builds/tests, network, CI operations, native probes, mounts, broad searches, new agents or D10 monitoring. Lead owns notifications."
+}

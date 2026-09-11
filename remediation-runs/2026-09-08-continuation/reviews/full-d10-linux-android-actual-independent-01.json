@@ -1,0 +1,819 @@
+{
+  "schema_version": 1,
+  "kind": "FULL_D10_LINUX_ANDROID_ACTUAL_INDEPENDENT_REVIEW",
+  "reviewer": "/root/ci_linux",
+  "reviewed_at": "2026-09-11T15:50:39.439959+00:00",
+  "result": "PASS",
+  "scope": "Dynamic current-run Linux/Common/Desktop, Android unit/runtime, Python automation and unsigned package evidence only. The six-lane cleanup owner independently reviews cleanup; no other job or full readiness certificate is asserted here.",
+  "run": {
+    "run_id": 34610163120,
+    "run_attempt": 1,
+    "source_sha": "25cd7f57b031bebdcfb4931615782b906610703f",
+    "source_tree": "1e44e982216bfc4fda32dc370a0d1b3d77fee836",
+    "job_id": 103298347022,
+    "job_key": "desktop-android",
+    "job_name": "Common, desktop, and Android release",
+    "runner_label": "ubuntu-24.04",
+    "started_at": "2026-09-11T14:26:51Z",
+    "completed_at": "2026-09-11T14:48:45Z",
+    "api_conclusion": "success"
+  },
+  "custody": {
+    "collection_receipt": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34610163120/download-receipt.json",
+      "bytes": 64982714,
+      "sha256": "d89caddb61aa452599560efeb77aefd5aefda49cddefb88f22eadbe16f083e91"
+    },
+    "collection_finished_at": "2026-09-11T15:44:37.175594+00:00",
+    "run_metadata": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34610163120/run.json",
+      "bytes": 12680,
+      "sha256": "32d60c60f3d79b024142b5d8e3f72260d7c12cda6f7aeae92e5020a650c67839"
+    },
+    "attempt_metadata": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34610163120/attempt.json",
+      "bytes": 12702,
+      "sha256": "f3afda3e2ec8f2f3e58332efec1eeaa53c14321940aa94589777595f78a0c19c"
+    },
+    "jobs_metadata": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34610163120/jobs.json",
+      "bytes": 26575,
+      "sha256": "e751e09e572c98248a959b9c908a7455dc2e4ccf38e110f5b018246f7a31a3ba"
+    },
+    "artifact_metadata": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34610163120/artifact-10268423437.json",
+      "bytes": 811,
+      "sha256": "e1e8552e1319dd0394186319f7aea869cb2cfe1a07b7715996771df416435ea1"
+    },
+    "main_artifact": {
+      "artifact_id": 10268423437,
+      "path": "remediation-runs/2026-09-08-continuation/actions/34610163120/desktop-android-verification.zip",
+      "bytes": 40656319,
+      "sha256": "3ba033fe2b01e9dc423ab92c0f548d490bf1d5570288877d533d7d0dd104d271",
+      "api_digest_matches": true
+    },
+    "log_archive": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/34610163120/run-attempt-1-logs.zip",
+      "bytes": 433213,
+      "sha256": "e86553af4102f5e6724610da815d7e99e6d0de9ceb8f2979624ec07248082f46"
+    },
+    "job_log": {
+      "member": "5_Common, desktop, and Android release.txt",
+      "bytes": 498674,
+      "sha256": "8cd0dd7077a99d11669d7d87f8883f47801b07a470e265a63d1ddccfc403c1c8"
+    },
+    "ownership": {
+      "member": "_temp/parlor-verification-34610163120-1-desktop-android-ownership.json",
+      "bytes": 19801,
+      "sha256": "37ba2dda73e8455fe08e07c3dff7459fd4e18d0e39b788141cfdd82c6bf76073",
+      "source_run_attempt_job_match": true
+    },
+    "frozen_live_roots_manifest_sha256": "9f59ae8dc14e2ef1bd66d51f60e2d2fc8be4b631493061b01cb34dfcfb88932b",
+    "current_live_root_files": 1512,
+    "outside_live_roots_test_xml_files_excluded": 9609,
+    "selection": "Exact frozen live build roots under parlor/parlor/. Historical archived reports, other jobs and tracked evidence are excluded from all execution counts."
+  },
+  "aggregate": {
+    "step_number": 10,
+    "api_conclusion": "success",
+    "command": "./gradlew productionCheck productionStaticAnalysis productionReleaseAutomationCheck allTests --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+    "command_log_line": 502,
+    "build_result": {
+      "line": 3221,
+      "text": "2026-09-11T14:43:44.9718576Z BUILD SUCCESSFUL in 15m 44s"
+    },
+    "task_summary": {
+      "line": 3222,
+      "text": "2026-09-11T14:43:44.9718976Z 1179 actionable tasks: 959 executed, 220 from cache"
+    },
+    "task_counts": {
+      "actionable": 1179,
+      "executed": 959,
+      "from_cache": 220
+    },
+    "task_counts_are_not_test_counts": true,
+    "required_task_first_record_lines": {
+      ":productionCheck": 2817,
+      ":productionDesktopCheck": 2761,
+      ":productionAndroidCheck": 2816,
+      ":productionStaticAnalysis": 2754,
+      ":productionReleaseAutomationCheck": 1524,
+      ":allTests": 3217,
+      ":composeApp:compileReleaseKotlinAndroid": 2098,
+      ":composeApp:minifyReleaseWithR8": 2418,
+      ":composeApp:bundleRelease": 2815,
+      ":composeApp:lintRelease": 2456,
+      ":composeApp:verifyReleaseLintWarnings": 2486,
+      ":composeApp:verifyMergedReleaseManifest": 1454,
+      ":composeApp:verifyApplicationIdentities": 1453,
+      ":composeApp:verifyGameShellDispatch": 2737
+    },
+    "root_allTests_reached": true,
+    "module_allTests_reached": 13,
+    "ios_host_inapplicable_test_task_skips": 26,
+    "lifecycle_and_skip_note": "Lifecycle task records are graph completion, not additional tests. 13 iosSimulatorArm64Test and 13 iosX64Test leaves are explicitly SKIPPED on Linux, not Apple runtime passes or additional XML testcase skips."
+  },
+  "current_tests": {
+    "xml_files": 354,
+    "case_descriptors": 2224,
+    "passed_case_executions": 2221,
+    "failures": 0,
+    "errors": 0,
+    "skipped_cases": 3,
+    "families": {
+      "pixel2Api35ReleaseAndroidTest": {
+        "xml_files": 1,
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "modules": 1,
+        "passed": 3
+      },
+      "desktopTest": {
+        "xml_files": 203,
+        "tests": 1343,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 3,
+        "modules": 13,
+        "passed": 1340
+      },
+      "testDebugUnitTest": {
+        "xml_files": 75,
+        "tests": 439,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "modules": 13,
+        "passed": 439
+      },
+      "testReleaseUnitTest": {
+        "xml_files": 75,
+        "tests": 439,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0,
+        "modules": 13,
+        "passed": 439
+      }
+    },
+    "executed_test_tasks": [
+      {
+        "task": ":composeApp:desktopTest",
+        "log_lines": [
+          2572
+        ],
+        "xml_files": 21,
+        "cases": 96,
+        "passed": 96,
+        "skipped": 0
+      },
+      {
+        "task": ":composeApp:pixel2Api35ReleaseAndroidTest",
+        "log_lines": [
+          3920
+        ],
+        "xml_files": 1,
+        "cases": 3,
+        "passed": 3,
+        "skipped": 0
+      },
+      {
+        "task": ":composeApp:testDebugUnitTest",
+        "log_lines": [
+          2530
+        ],
+        "xml_files": 17,
+        "cases": 76,
+        "passed": 76,
+        "skipped": 0
+      },
+      {
+        "task": ":composeApp:testReleaseUnitTest",
+        "log_lines": [
+          2485
+        ],
+        "xml_files": 17,
+        "cases": 76,
+        "passed": 76,
+        "skipped": 0
+      },
+      {
+        "task": ":game-modes:mafia:desktopTest",
+        "log_lines": [
+          2577
+        ],
+        "xml_files": 37,
+        "cases": 297,
+        "passed": 297,
+        "skipped": 0
+      },
+      {
+        "task": ":game-modes:mafia:testDebugUnitTest",
+        "log_lines": [
+          2994
+        ],
+        "xml_files": 2,
+        "cases": 23,
+        "passed": 23,
+        "skipped": 0
+      },
+      {
+        "task": ":game-modes:mafia:testReleaseUnitTest",
+        "log_lines": [
+          2899
+        ],
+        "xml_files": 2,
+        "cases": 23,
+        "passed": 23,
+        "skipped": 0
+      },
+      {
+        "task": ":game-modes:whodunit:desktopTest",
+        "log_lines": [
+          2597
+        ],
+        "xml_files": 63,
+        "cases": 360,
+        "passed": 360,
+        "skipped": 0
+      },
+      {
+        "task": ":game-modes:whodunit:testDebugUnitTest",
+        "log_lines": [
+          2943
+        ],
+        "xml_files": 5,
+        "cases": 9,
+        "passed": 9,
+        "skipped": 0
+      },
+      {
+        "task": ":game-modes:whodunit:testReleaseUnitTest",
+        "log_lines": [
+          2946
+        ],
+        "xml_files": 5,
+        "cases": 9,
+        "passed": 9,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:content:desktopTest",
+        "log_lines": [
+          2549
+        ],
+        "xml_files": 5,
+        "cases": 24,
+        "passed": 24,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:content:testDebugUnitTest",
+        "log_lines": [
+          3046
+        ],
+        "xml_files": 5,
+        "cases": 24,
+        "passed": 24,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:content:testReleaseUnitTest",
+        "log_lines": [
+          2970
+        ],
+        "xml_files": 5,
+        "cases": 24,
+        "passed": 24,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:core:desktopTest",
+        "log_lines": [
+          2553
+        ],
+        "xml_files": 2,
+        "cases": 12,
+        "passed": 12,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:core:testDebugUnitTest",
+        "log_lines": [
+          3032
+        ],
+        "xml_files": 2,
+        "cases": 12,
+        "passed": 12,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:core:testReleaseUnitTest",
+        "log_lines": [
+          3004
+        ],
+        "xml_files": 2,
+        "cases": 12,
+        "passed": 12,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:design-system:desktopTest",
+        "log_lines": [
+          2561
+        ],
+        "xml_files": 18,
+        "cases": 40,
+        "passed": 40,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:design-system:testDebugUnitTest",
+        "log_lines": [
+          3082
+        ],
+        "xml_files": 8,
+        "cases": 15,
+        "passed": 15,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:design-system:testReleaseUnitTest",
+        "log_lines": [
+          3055
+        ],
+        "xml_files": 8,
+        "cases": 15,
+        "passed": 15,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:engine:desktopTest",
+        "log_lines": [
+          2578
+        ],
+        "xml_files": 5,
+        "cases": 13,
+        "passed": 13,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:engine:testDebugUnitTest",
+        "log_lines": [
+          3086
+        ],
+        "xml_files": 2,
+        "cases": 9,
+        "passed": 9,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:engine:testReleaseUnitTest",
+        "log_lines": [
+          3079
+        ],
+        "xml_files": 2,
+        "cases": 9,
+        "passed": 9,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:engine-testing:desktopTest",
+        "log_lines": [
+          2582
+        ],
+        "xml_files": 3,
+        "cases": 6,
+        "passed": 6,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:engine-testing:testDebugUnitTest",
+        "log_lines": [
+          3121
+        ],
+        "xml_files": 3,
+        "cases": 6,
+        "passed": 6,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:engine-testing:testReleaseUnitTest",
+        "log_lines": [
+          3095
+        ],
+        "xml_files": 3,
+        "cases": 6,
+        "passed": 6,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:networking:desktopTest",
+        "log_lines": [
+          2588
+        ],
+        "xml_files": 8,
+        "cases": 34,
+        "passed": 34,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:networking:testDebugUnitTest",
+        "log_lines": [
+          3151
+        ],
+        "xml_files": 8,
+        "cases": 34,
+        "passed": 34,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:networking:testReleaseUnitTest",
+        "log_lines": [
+          3125
+        ],
+        "xml_files": 8,
+        "cases": 34,
+        "passed": 34,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:networking-testing:desktopTest",
+        "log_lines": [
+          2592
+        ],
+        "xml_files": 2,
+        "cases": 5,
+        "passed": 5,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:networking-testing:testDebugUnitTest",
+        "log_lines": [
+          3147
+        ],
+        "xml_files": 2,
+        "cases": 5,
+        "passed": 5,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:networking-testing:testReleaseUnitTest",
+        "log_lines": [
+          3133
+        ],
+        "xml_files": 2,
+        "cases": 5,
+        "passed": 5,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:session:desktopTest",
+        "log_lines": [
+          2601
+        ],
+        "xml_files": 13,
+        "cases": 145,
+        "passed": 145,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:session:testDebugUnitTest",
+        "log_lines": [
+          3215
+        ],
+        "xml_files": 11,
+        "cases": 142,
+        "passed": 142,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:session:testReleaseUnitTest",
+        "log_lines": [
+          3180
+        ],
+        "xml_files": 11,
+        "cases": 142,
+        "passed": 142,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:storage:desktopTest",
+        "log_lines": [
+          2596
+        ],
+        "xml_files": 4,
+        "cases": 31,
+        "passed": 31,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:storage:testDebugUnitTest",
+        "log_lines": [
+          3205
+        ],
+        "xml_files": 4,
+        "cases": 31,
+        "passed": 31,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:storage:testReleaseUnitTest",
+        "log_lines": [
+          3193
+        ],
+        "xml_files": 4,
+        "cases": 31,
+        "passed": 31,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:transport-p2p:desktopTest",
+        "log_lines": [
+          2619
+        ],
+        "xml_files": 22,
+        "cases": 280,
+        "passed": 277,
+        "skipped": 3
+      },
+      {
+        "task": ":shared:transport-p2p:testDebugUnitTest",
+        "log_lines": [
+          3210
+        ],
+        "xml_files": 6,
+        "cases": 53,
+        "passed": 53,
+        "skipped": 0
+      },
+      {
+        "task": ":shared:transport-p2p:testReleaseUnitTest",
+        "log_lines": [
+          3204
+        ],
+        "xml_files": 6,
+        "cases": 53,
+        "passed": 53,
+        "skipped": 0
+      }
+    ],
+    "test_task_from_cache_records": 0,
+    "test_task_up_to_date_records": 0,
+    "xml_declared_counts_equal_testcase_nodes": true,
+    "duplicate_case_identities_within_task": 0,
+    "all_xml_timestamps_inside_current_job": true,
+    "timestamp_min": "2026-09-11T14:35:08.230000+00:00",
+    "timestamp_max": "2026-09-11T14:48:02+00:00",
+    "xml_manifest_sha256": "b95481a7168020e75f9c624b468ac9c5e8a0b927848c355b2b1927d1d07d0063",
+    "xml_manifest_definition": "UTF-8 JSON array, sorted by archive path, of repository-relative path, bytes and SHA256 for every current test XML; json.dumps(sort_keys=True,separators=(comma,colon)), no newline.",
+    "count_scope": "Case executions per target, not globally unique authored functions. Common cases run independently on Desktop and both Android unit-test targets; Gradle task counts are not case counts."
+  },
+  "documented_skips": {
+    "cases": [
+      {
+        "classname": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "testcase": "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]",
+        "xml_path": "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+        "xml_sha256": "8fd6606eb6a14dfe27180cce843a1f93b41c50c0e8293e84224f57ab12a88037"
+      },
+      {
+        "classname": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "testcase": "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]",
+        "xml_path": "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+        "xml_sha256": "8fd6606eb6a14dfe27180cce843a1f93b41c50c0e8293e84224f57ab12a88037"
+      },
+      {
+        "classname": "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "testcase": "host_broadcast_reaches_every_peer()[desktop]",
+        "xml_path": "shared/transport-p2p/build/test-results/desktopTest/TEST-com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest.xml",
+        "xml_sha256": "8fd6606eb6a14dfe27180cce843a1f93b41c50c0e8293e84224f57ab12a88037"
+      }
+    ],
+    "frozen_source_path": "shared/transport-p2p/src/desktopTest/kotlin/com/parlor/transport/p2p/P2pKitRoomTransportLoopbackTest.kt",
+    "frozen_source_sha256": "21451bf407d791ec85066227a2670ccf61d3506efaae47375c0bba557fe3be73",
+    "source_unchanged_from_reviewed_D09": true,
+    "reason": "Existing @Ignore peer LAN fixtures: peer join/round-trip need two physical same-LAN devices, broadcast needs three; single-JVM multicast loopback is unreliable. XML skip nodes do not contain reason strings; exact source annotations supply the reason.",
+    "scope_limit": "The real-kit host-advertising case executes, but these three skipped peer fixtures are not LAN/device-runtime passes."
+  },
+  "python_release_automation": {
+    "tests": 573,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "seconds": 122.701,
+    "summary_log": {
+      "line": 2398,
+      "text": "2026-09-11T14:34:15.1020777Z Ran 573 tests in 122.701s"
+    },
+    "result_log": {
+      "line": 2406,
+      "text": "2026-09-11T14:34:15.1099301Z OK"
+    },
+    "scope": "Python release-automation controls, counted separately from KMP/Android runtime cases."
+  },
+  "analysis_and_lint": {
+    "productionStaticAnalysis": "SUCCESS",
+    "current_detekt_xml_files": 43,
+    "detekt_checkstyle_error_nodes": 0,
+    "lintRelease": "SUCCESS",
+    "verifyReleaseLintWarnings": "SUCCESS",
+    "severity_counts": {
+      "Warning": 35
+    },
+    "warning_id_counts": {
+      "OldTargetApi": 1,
+      "AndroidGradlePluginVersion": 4,
+      "GradleDependency": 3,
+      "NewerVersionAvailable": 27
+    },
+    "accepted_inventory_path": "config/android-lint-accepted-warnings.txt",
+    "accepted_inventory_sha256": "4fe091a88dc1cec1849c0076790fa5db25608cf16ff094a30441ac99a84277d7",
+    "inventory_unchanged_from_reviewed_D09": true,
+    "exact_existing_canonical_multiset_matches": true,
+    "unexpected_or_missing_warnings": [],
+    "limit": "Reviewed version/target advisories remain reported as warnings, not zero warnings. No analyzer, gate or allowlist changed during this review."
+  },
+  "managed_device_smoke": {
+    "step_number": 12,
+    "api_conclusion": "success",
+    "command": "scripts/android/run_release_managed_device_smoke.sh",
+    "command_log_line": 3236,
+    "task": ":composeApp:pixel2Api35ReleaseAndroidTest",
+    "task_log_lines": [
+      3920
+    ],
+    "device": "pixel2Api35",
+    "tests": 3,
+    "passed": 3,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "cases": [
+      {
+        "classname": "com.parlor.app.MainActivityColdStartTest",
+        "name": "testColdStartDisplaysContentWhileSettingsIoIsBlocked"
+      },
+      {
+        "classname": "com.parlor.app.ReleaseRuntimeSmokeTest",
+        "name": "testReleaseBuildCanAcquireDeclaredMulticastLock"
+      },
+      {
+        "classname": "com.parlor.app.ReleaseRuntimeSmokeTest",
+        "name": "testReleaseBuildLaunchesCanonicalActivityWithoutDebuggableFlag"
+      }
+    ],
+    "start_and_finish_log": [
+      {
+        "line": 3921,
+        "text": "2026-09-11T14:47:51.7667476Z Starting 3 tests on pixel2Api35"
+      },
+      {
+        "line": 3924,
+        "text": "2026-09-11T14:48:02.5667509Z Finished 3 tests on pixel2Api35"
+      }
+    ],
+    "aggregate": ":productionAndroidRuntimeCheck",
+    "aggregate_log_lines": [
+      3926
+    ],
+    "build_result": {
+      "line": 3933,
+      "text": "2026-09-11T14:48:03.5705637Z BUILD SUCCESSFUL in 4m 16s"
+    },
+    "task_summary": {
+      "line": 3934,
+      "text": "2026-09-11T14:48:03.5706545Z 487 actionable tasks: 50 executed, 4 from cache, 433 up-to-date"
+    },
+    "task_counts": {
+      "actionable": 487,
+      "executed": 50,
+      "from_cache": 4,
+      "up_to_date": 433
+    },
+    "reuse_note": "Build/compilation reuse is separate; the actual managed-device test task executed and is correlated with current XML.",
+    "scope_limit": "Hosted release-emulator cold start, non-debuggable launch and multicast-lock smoke only; not full LAN play or physical-device qualification."
+  },
+  "unsigned_android_package": {
+    "step_number": 14,
+    "api_conclusion": "success",
+    "aab_member": "parlor/parlor/composeApp/build/outputs/bundle/release/composeApp-release.aab",
+    "aab_bytes": 8872910,
+    "aab_sha256": "4b8f515f62d4e03231ce1c34aa2d2376134da61e3ae124794215b66857784d79",
+    "single_aab": true,
+    "hash_matches_current_hash_file_log_inventory": true,
+    "hash_log": {
+      "line": 4358,
+      "text": "2026-09-11T14:48:05.5624220Z 4b8f515f62d4e03231ce1c34aa2d2376134da61e3ae124794215b66857784d79  composeApp/build/outputs/bundle/release/composeApp-release.aab"
+    },
+    "inventory_status": "PASS",
+    "independently_rehashed_entries": 380,
+    "expanded_bytes": 68403585,
+    "entry_name_length_hash_mismatches": [],
+    "signature_metadata_entries": [],
+    "manifest": {
+      "application_id": "com.parlor.app",
+      "exported": [
+        [
+          "activity",
+          "com.parlor.app.MainActivity",
+          ""
+        ],
+        [
+          "receiver",
+          "androidx.profileinstaller.ProfileInstallReceiver",
+          "android.permission.DUMP"
+        ]
+      ],
+      "min_sdk": 26,
+      "permissions": [
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.ACCESS_WIFI_STATE",
+        "android.permission.CHANGE_WIFI_MULTICAST_STATE",
+        "android.permission.INTERNET",
+        "com.parlor.app.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+      ],
+      "target_sdk": 36,
+      "version_code": 1,
+      "version_name": "1.0.0"
+    },
+    "merged_manifest_identity_version_sdk_match_inventory": true,
+    "merged_manifest_allowBackup": false,
+    "merged_manifest_usesCleartextTraffic": false,
+    "merged_manifest_debuggable_attribute": null,
+    "r8_mapping": {
+      "bytes": 60007671,
+      "sha256": "3c0d59898be57f4b16211e979346f392c8210363dd92b3371fafff481b0d9d0f",
+      "equals_embedded_aab_mapping": true,
+      "class_mappings": 6263,
+      "test_fixture_namespaces_absent": true
+    },
+    "dex": [
+      {
+        "bytes": 4714184,
+        "class_definitions": 5454,
+        "contains_main_activity": true,
+        "path": "base/dex/classes.dex",
+        "sha256": "6520278b689b6b617a73e44343c1a800fc0cc9871f387191fbbfd5b301759f2b",
+        "test_fixture_namespaces_absent": true
+      }
+    ],
+    "native_abis": [
+      "arm64-v8a",
+      "armeabi-v7a",
+      "x86",
+      "x86_64"
+    ],
+    "notices": {
+      "source_status": "PASS",
+      "package_status": "PASS",
+      "resource_count": 26,
+      "inventory_equals_separate_notice_report": true
+    },
+    "tool_observations": {
+      "build_tools": "36.0.0",
+      "bundletool_sha256": "a099cfa1543f55593bc2ed16a70a7c67fe54b1747bb7301f37fdfd6d91028e29",
+      "dexdump_sha256": "0944161e1e453ac40a16362ab42f4b1ee5e60eccf503cd87f4a6040c78247d02"
+    },
+    "scope_limit": "Unsigned package integrity/notices only. The documented com.parlor.app Store-identity collision remains; no signing, publication, legal completeness or physical-device readiness assertion."
+  },
+  "current_report_pins": {
+    "build/ci-evidence/android-aab.sha256": {
+      "bytes": 129,
+      "sha256": "e84c16f074ac06288bbe9c4f5072febeb4a4c44a1597f46f38a2cc2d9823d816"
+    },
+    "build/ci-evidence/android-release-artifact-inventory.json": {
+      "bytes": 78248,
+      "sha256": "46853ff13afdb78d815aa8b0652e96037d991209f738a87f73d046eb6c31cebe"
+    },
+    "build/ci-evidence/android-release-notices.json": {
+      "bytes": 10256,
+      "sha256": "aa9d81fc220f24be8bf0b3a45cd3e9ecb1f4f1e25a161d6cff6f0feca3adcf03"
+    },
+    "build/ci-evidence/commit.txt": {
+      "bytes": 41,
+      "sha256": "04f8861fe93a3451e91a629eb54fa414eeba117be1a9e0a8b8694f29abdcf46c"
+    },
+    "build/ci-evidence/merged-release-manifest.xml": {
+      "bytes": 4176,
+      "sha256": "f0f946934d2f96ec7391f9bf1fbd2600aadcd8be570f77e5b8a36bd3aade9228"
+    },
+    "composeApp/build/reports/lint-results-release.xml": {
+      "bytes": 34608,
+      "sha256": "bbc7379a0109cae0a276b3d8adc7026179a87539cdb41288a06c68fa9694b11b"
+    },
+    "composeApp/build/outputs/androidTest-results/managedDevice/release/pixel2Api35/TEST-pixel2Api35-_composeApp-.xml": {
+      "bytes": 832,
+      "sha256": "98e59bcca17f8934cf8ae3e75d3c5f105128ddaccc8f4af22c514af0e30f00c7"
+    }
+  },
+  "findings": [],
+  "limits": [
+    "D10 results are derived from its own source/run-bound raw artifacts, XML and log, not inherited D09 counts or cached reports.",
+    "Three peer-LAN testcase skips and 26 iOS host-inapplicable task skips are explicitly excluded from passing execution counts.",
+    "Six-lane cleanup and the other five full jobs remain independently owned.",
+    "No builds, tests, API/network requests, source changes or new helper files; only this assigned review receipt is written."
+  ]
+}

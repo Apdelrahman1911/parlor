@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "reviewer": "/root/platform_support",
+  "status": "BOUNDED_RESEARCH_COMPLETE_NO_SUPPORTED_HOSTED_FIX_IDENTIFIED",
+  "decision": "Do not repeat the same hosted topology or change application protection checks to chase this result. No reviewed public Apple source supplies a supported nonphysical Complete-enabling configuration or explains this exact EINVAL. An Apple code-level support question is now better founded than further speculative mutation/instrumentation. This is not proof that every Simulator/VM is incapable.",
+  "h03_input": {
+    "provenance": "Root and protection_volume supplied actual facts; raw audit belongs to the other reviewers, not this documentation review.",
+    "run": "34606946362/1",
+    "source": "25cd7f57b031bebdcfb4931615782b906610703f",
+    "raw_sha256": "9f61998265bb2d259ba5544819d1235ced9afab9237377644eaf114eabbe94f8",
+    "facts": "Native macOS15.7.9 public setter FALSE; Cocoa256 -> POSIX22 (EINVAL), chain termination no-underlying. Same owned inode stays class3; APFS support advertisement false and MNT_CPROTECT clear.",
+    "inference_boundary": "This is Foundation's reported error, not an observed failing syscall. It does not identify open, fcntl, framework argument validation, missing hardware/keybag service, or an exclusive cause. A native macOS process may still run in a VM. SDK26.2 is not host OS26.2."
+  },
+  "authoritative_platform_evidence": [
+    {
+      "retained": "../2026-09-07-local-readiness/evidence/l08-file-protection-research-01/apple-platform-data-protection.json",
+      "retained_sha256": "c4ab69dbfa302edf635c7fb28bb2c910041d8b48ee67010637a3292935cecc87",
+      "url": "https://support.apple.com/guide/security/data-protection-overview-secf6276da8a/web",
+      "published": "2026-08-03",
+      "quotes": [
+        "On a Mac with Apple silicon, Data Protection defaults to Class C (see Data Protection classes) but uses a volume key rather than a per-extent or per-file key—effectively re-creating the security model of FileVault for user data.",
+        "Developers can also opt in to a higher protection class that uses a per-file or per-extent key."
+      ],
+      "meaning": "Positive general Apple-silicon Mac feature support; not a promise for virtual guests/disposable images. The intervening macOS26.4 FileVault-default statement is not an evidenced remedy for host15.7.9 or a substitute for per-file Complete."
+    },
+    {
+      "retained": "reviews/protection-h03-disposable-filesystem-feasibility-independent-01/Apple-File-System-Reference.pdf",
+      "sha256": "74c3db584971aea2b11549ca25799ead824e1bd8994e94cd3f8665ce5aea79cc",
+      "url": "https://developer.apple.com/support/downloads/Apple-File-System-Reference.pdf",
+      "edition_page": "2020-06-22, page136",
+      "quote": "Volumes that use per-file encryption require hardware encryption, and the steps below describe only software encryption.",
+      "meaning": "Peer-fetched PDF hash and retained page extract rechecked here. Authoritative dated architecture prerequisite, not proof of current VM hardware exposure or the installed failure site. It supplies no software-only disk-image recipe for Complete. Detailed filesystem feasibility is protection_volume's separate review."
+    }
+  ],
+  "simulator_documentation_check": {
+    "retained": "../2026-09-07-local-readiness/evidence/l08-native09-protection-research-01/official-simulator-archive.html",
+    "sha256": "5bc8be71de5b70a1218b9c4e1121bc378f0f8512684e55e8b91581c8c6bece08",
+    "url": "https://developer.apple.com/library/archive/documentation/IDEs/Conceptual/iOS_Simulator_Guide/TestingontheiOSSimulator/TestingontheiOSSimulator.html",
+    "scope": "Testing and Debugging in Simulator; updated2018-02-15, explicitly deprecated in Xcode9; hardware list explicitly as of iOS8.2.",
+    "finding": "Reparsed the complete retained HTML, including full Hardware Differences and API Differences lists: zero occurrences of protect. It does NOT explicitly list Data Protection as unavailable. Do not invent that quotation or apply unrelated historical limitations to current Simulator/native macOS. No new current Simulator exclusion was found."
+  },
+  "bounded_new_search": {
+    "virtualization": [
+      {
+        "url": "https://developer.apple.com/tutorials/data/documentation/virtualization/running-macos-in-a-virtual-machine-on-apple-silicon.json",
+        "sha256": "fa48f23806328dadeada7f48fd1acf1226392d6197b03f1401b212fa500415b5",
+        "finding": "Official macOS VM setup/run sample; no affirmative per-file Data Protection configuration found."
+      },
+      {
+        "url": "https://developer.apple.com/tutorials/data/documentation/virtualization/vzmacplatformconfiguration.json",
+        "sha256": "d12059820562233e31bca1d5fb6c1232704af730c9450b9a2ea591e6ec0bab71",
+        "finding": "Documented platform properties are auxiliaryStorage, hardwareModel, machineIdentifier; page contains no Data Protection/Secure Enclave promise. Absence in these two pages is not an exhaustive virtualization support matrix."
+      }
+    ],
+    "other_limits": "Older ios_development_workflow Testing Applications URL returned404; AppDistributionGuide TestingYouriOSApp redirected to current Xcode Help, not a retained historical statement. Official forum search redirected to verify-human; no forum answer obtained or attributed to Apple. Stopped rather than broadening indefinitely."
+  },
+  "supported_next_step": {
+    "evidence": "reviews/protection-h03-platform-support-01/official-support-excerpts.json",
+    "url": "https://developer.apple.com/support/technical/",
+    "basis": "Apple offers program members code-level support for frameworks/APIs/tools, requests one discrete issue, specific expected outcome, exact hardware/OS conditions and a minimal reproducer. Its Feedback Assistant guidance says technical support engineers can investigate possible workarounds.",
+    "question": "Does NSFileManager setting NSFileProtectionComplete support a native arm64 macOS15.7.9 hosted VM whose APFS volume reports no file-protection capability, and is FALSE/Cocoa256 with underlying POSIX22 expected? If this configuration cannot supply Complete, what documented supported nonphysical configuration, if any, can?",
+    "minimal_packet": "Existing owned synthetic public-API reproducer only; normalized return/error chain, same-inode before/after classes, filesystem capability masks, and exact retained host/build/SDK/Foundation identity. Distinguish observations from proposed causes. Do not send private app data, paths, keybags, credentials, or broad terminal transcripts.",
+    "submission": "Prepared recommendation only. No ticket, forum post, private source upload, diagnostic profile, sysdiagnose collection, or Apple account action performed; owner authorization required."
+  },
+  "qualification": "A documented general Apple-silicon feature is not qualification of a specific self-hosted host, VM, Simulator or production app. A bare-metal candidate would require scope approval and its own evidence, not be silently reclassified as nonphysical. All strict historical failures remain failures; no class3/capabilityfalse/collection success equivalence to Complete.",
+  "activity": "Retained source/evidence reads and bounded public Apple GETs only. Only this report and compact new support excerpts written. No source/Git edits, builds/tests, CI, native probes, mounts, resource mutation, cloned repositories, child agents or notifications."
+}

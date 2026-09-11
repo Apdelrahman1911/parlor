@@ -1,0 +1,85 @@
+{
+  "kind": "ROOT_D10_PRE_DISPATCH_SOURCE_RECHECK_NOT_EXECUTION_ADMISSION",
+  "at": "2026-09-11T14:21:07.106073+00:00",
+  "source": "25cd7f57b031bebdcfb4931615782b906610703f",
+  "tree": "1e44e982216bfc4fda32dc370a0d1b3d77fee836",
+  "named_control_count": 13,
+  "control_sha256": "0f5d6529528284dc499657ba11f13925451084a1f4cd7a687808264a800eeff9",
+  "source_stable": true,
+  "strict_protection": "Unchanged failed A37 0/26; H03 reported EINVAL, no demonstrated application correction; no bypass or exemption. D10 closes a separate required gate only.",
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "25cd7f57b031bebdcfb4931615782b906610703f\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "HEAD^{tree}"
+      ],
+      "exit_code": 0,
+      "stdout": "1e44e982216bfc4fda32dc370a0d1b3d77fee836\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "branch",
+        "--show-current"
+      ],
+      "exit_code": 0,
+      "stdout": "fix/local-readiness-2026-09-07\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "rev-parse",
+        "--is-shallow-repository"
+      ],
+      "exit_code": 0,
+      "stdout": "false\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "status",
+        "--porcelain=v1",
+        "--untracked-files=no"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "ls-remote",
+        "origin",
+        "refs/heads/fix/local-readiness-2026-09-07"
+      ],
+      "exit_code": 0,
+      "stdout": "25cd7f57b031bebdcfb4931615782b906610703f\trefs/heads/fix/local-readiness-2026-09-07\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "python3",
+        "-B",
+        "scripts/generate_review_inventory.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "stdout": "Verified freshness of 36488 inventory rows in docs/review/INDEPENDENT_REVIEW_INVENTORY.csv; source review not attested\n",
+      "stderr": ""
+    }
+  ]
+}

@@ -1,0 +1,339 @@
+{
+  "kind": "FOCUSED_BOUNDED_HOST_ONLY_COLLECTION_NOT_RUNTIME_REVIEW",
+  "collector": "/root/probe_collector",
+  "execution_mode": "python3 -B stdin orchestration; no new executable helper/source",
+  "started_at": "2026-09-11T14:00:08.136571+00:00",
+  "status": "COLLECTED_NOT_RUNTIME_REVIEW",
+  "run_id": 34606946362,
+  "run_attempt": 1,
+  "source": "25cd7f57b031bebdcfb4931615782b906610703f",
+  "tree": "1e44e982216bfc4fda32dc370a0d1b3d77fee836",
+  "profile": "host-macos15-arm64-xcode26.3-sdk26.2-attribution-and-host-origin-setter",
+  "selection": "protection-host-only",
+  "control_sha256": "6537d41f499b4635df3f1cfc80be3d84d07b619fa92790bb83ae0973ee9419e8",
+  "helper_path": "remediation-runs/2026-09-08-continuation/reviews/full-d-compact-collector-03.py",
+  "helper_sha256": "53d6a05f4a2c591f25e3bda2104b0c15e39cd472d6519d24e6fd1aff5234f7a8",
+  "helper_functions": [
+    "archive_members",
+    "extract_selected"
+  ],
+  "helper_main_invoked": false,
+  "utility_source_path": "remediation-runs/2026-09-08-continuation/actions/34564001336/collect-h02.py",
+  "utility_source_sha256": "82d63bb62189857f70dc146e46d74623ee0d3499c6247cd0739ca04eff3ba64f",
+  "utility_definitions": [
+    "require",
+    "now",
+    "sha",
+    "new_json",
+    "read_json",
+    "download",
+    "metadata",
+    "bound_source"
+  ],
+  "utility_collector_body_invoked": false,
+  "commands": [
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34606946362"
+      ],
+      "started_at": "2026-09-11T14:00:08.152584+00:00",
+      "stdout_file": "monitor-001-run.json",
+      "stderr_file": "monitor-001-run.json.stderr",
+      "byte_limit": 4194304,
+      "timeout_seconds": 180,
+      "owned_pid": 18728,
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "finished_at": "2026-09-11T14:00:08.700145+00:00",
+      "stdout_bytes": 12680,
+      "stdout_sha256": "a7e479507c8c2ff3d23d4ef5bd356a559f2cc7c739a27c5c1a56092235316591",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34606946362/attempts/1/jobs?per_page=100"
+      ],
+      "started_at": "2026-09-11T14:00:08.700886+00:00",
+      "stdout_file": "monitor-001-jobs.json",
+      "stderr_file": "monitor-001-jobs.json.stderr",
+      "byte_limit": 4194304,
+      "timeout_seconds": 180,
+      "owned_pid": 18743,
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "finished_at": "2026-09-11T14:00:09.307295+00:00",
+      "stdout_bytes": 8495,
+      "stdout_sha256": "4267ddfcc228fa4c2ca917d7c2bdc0368b676ddc23c6cdc9b51ecab1c2f90120",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34606946362/attempts/1"
+      ],
+      "started_at": "2026-09-11T14:00:09.308273+00:00",
+      "stdout_file": "attempt.json",
+      "stderr_file": "attempt.json.stderr",
+      "byte_limit": 4194304,
+      "timeout_seconds": 180,
+      "owned_pid": 18821,
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "finished_at": "2026-09-11T14:00:09.820721+00:00",
+      "stdout_bytes": 12702,
+      "stdout_sha256": "6e6e51ef88a0d75cf34b581b612ae22ae8de6752c73a39d036e194f1c4f03ab2",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/jobs/103287593702/logs"
+      ],
+      "started_at": "2026-09-11T14:00:09.821999+00:00",
+      "stdout_file": "job.log",
+      "stderr_file": "job.log.stderr",
+      "byte_limit": 16777216,
+      "timeout_seconds": 180,
+      "owned_pid": 18865,
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "finished_at": "2026-09-11T14:00:11.050822+00:00",
+      "stdout_bytes": 40204,
+      "stdout_sha256": "1ebe7e89576b7a6ab652498d75103f990a4157c21254cb1e0840a69476c3f518",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/runs/34606946362/artifacts?per_page=100"
+      ],
+      "started_at": "2026-09-11T14:00:11.051265+00:00",
+      "stdout_file": "artifacts.json",
+      "stderr_file": "artifacts.json.stderr",
+      "byte_limit": 4194304,
+      "timeout_seconds": 180,
+      "owned_pid": 18897,
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "finished_at": "2026-09-11T14:00:11.556260+00:00",
+      "stdout_bytes": 1502,
+      "stdout_sha256": "64172c2fd839953d53995ebdf1ab6846eefe417f4cc80ed3128f58b8347832f5",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/artifacts/10266292382/zip"
+      ],
+      "started_at": "2026-09-11T14:00:11.557090+00:00",
+      "stdout_file": "main.zip",
+      "stderr_file": "main.zip.stderr",
+      "byte_limit": 16777216,
+      "timeout_seconds": 180,
+      "owned_pid": 18921,
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "finished_at": "2026-09-11T14:00:12.724625+00:00",
+      "stdout_bytes": 25232,
+      "stdout_sha256": "d5b9bb7b1be58c5907d5ec53727e876d82396e22a0c6e5d86be1e7ddabd95553",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/Apdelrahman1911/parlor/actions/artifacts/10265932701/zip"
+      ],
+      "started_at": "2026-09-11T14:00:12.731169+00:00",
+      "stdout_file": "cleanup.zip",
+      "stderr_file": "cleanup.zip.stderr",
+      "byte_limit": 16777216,
+      "timeout_seconds": 180,
+      "owned_pid": 18965,
+      "exit_code": 0,
+      "direct_child_reaped": true,
+      "finished_at": "2026-09-11T14:00:13.881501+00:00",
+      "stdout_bytes": 6685,
+      "stdout_sha256": "e751ad23d2ba6b63199ae44bc10d9d5751afee602f2590984066cb166c762344",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "archives": [
+    {
+      "artifact_id": 10266292382,
+      "artifact_name": "ios-protection-probe-34606946362-1",
+      "label": "main",
+      "archive": "main.zip",
+      "bytes": 25232,
+      "sha256": "d5b9bb7b1be58c5907d5ec53727e876d82396e22a0c6e5d86be1e7ddabd95553",
+      "api_digest_matches": true,
+      "members": 69,
+      "regular_members": 69,
+      "expanded_bytes": 81256,
+      "whole_table_paths_types_sizes_validated": true,
+      "all_members_crc_and_sha256_verified": true,
+      "original_zip_retained": true,
+      "member_inventory": "main-members.json",
+      "extraction_complete": true,
+      "extracted_regular_members": 69,
+      "member_inventory_sha256": "f311720d4e3bd907d8995b20b9507987710b1d2b5ef0f933d49b95b6c8f91ae6"
+    },
+    {
+      "artifact_id": 10265932701,
+      "artifact_name": "ios-protection-probe-cleanup-34606946362-1",
+      "label": "cleanup",
+      "archive": "cleanup.zip",
+      "bytes": 6685,
+      "sha256": "e751ad23d2ba6b63199ae44bc10d9d5751afee602f2590984066cb166c762344",
+      "api_digest_matches": true,
+      "members": 29,
+      "regular_members": 29,
+      "expanded_bytes": 19767,
+      "whole_table_paths_types_sizes_validated": true,
+      "all_members_crc_and_sha256_verified": true,
+      "original_zip_retained": true,
+      "member_inventory": "cleanup-members.json",
+      "extraction_complete": true,
+      "extracted_regular_members": 29,
+      "member_inventory_sha256": "d3fa5ce596cf9b27b4b1a0cc76103ea645d6ceaaac9d8aa203aa1b2b4ce19873"
+    }
+  ],
+  "monitor": [
+    {
+      "at": "2026-09-11T14:00:09.307808+00:00",
+      "run_status": "completed",
+      "run_conclusion": "success",
+      "job_status": "completed",
+      "job_conclusion": "success",
+      "active_steps": [],
+      "failed_steps": []
+    }
+  ],
+  "bounds": {
+    "metadata_bytes": 4194304,
+    "artifact_compressed_bytes": 16777216,
+    "artifacts_compressed_total_bytes": 33554432,
+    "members_per_archive": 1500,
+    "expanded_per_archive_bytes": 67108864,
+    "expanded_file_bytes": 8388608,
+    "job_log_bytes": 16777216,
+    "download_timeout_seconds": 180,
+    "stderr_bytes_per_command": 262144
+  },
+  "downloads_bounded_while_streaming": true,
+  "limits": "Collection and source/custody checks only. API success/raw report labels are not strict protection, runtime, cleanup or full qualification acceptance.",
+  "packet": {
+    "request.json": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/protection-host-image-03/request.json",
+      "sha256": "e21a1e59ed8fb75911101ceab8cc7d943eca1af8594d7a3f21a4768132d9b558"
+    },
+    "controls.json": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/protection-host-image-03/controls.json",
+      "sha256": "2f2641f36ea94e0f00fbe251fe85e704057a6f902ea7f7c861dc38a3cdbcd61a"
+    },
+    "freeze.json": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/protection-host-image-03/freeze.json",
+      "sha256": "3ba5436c50420a004638fd69ddcc480c11b55cd8c4c9cd7f984f6a05e0a96883"
+    },
+    "dispatch-receipt.json": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/protection-host-image-03/dispatch-receipt.json",
+      "sha256": "4dc40710412c6bf94e4abfa29e9e55ba36b0a84dd0894d378ac54f905e607da1"
+    },
+    "dispatched-run.json": {
+      "path": "remediation-runs/2026-09-08-continuation/actions/protection-host-image-03/dispatched-run.json",
+      "sha256": "b261a78a7f0a61ba2a722b4e9c10e1efed3d7ff2399b8d3006d6fe7f7e4bf18d"
+    }
+  },
+  "terminal_metadata_aliases": {
+    "run.json": "monitor-001-run.json",
+    "jobs.json": "monitor-001-jobs.json"
+  },
+  "run_conclusion": "success",
+  "run_url": "https://github.com/Apdelrahman1911/parlor/actions/runs/34606946362",
+  "probe_job_id": 103287593702,
+  "jobs": [
+    {
+      "id": 103287593702,
+      "name": "iOS strict protection diagnostic",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 103287594580,
+      "name": "iOS release frameworks and Swift wrapper",
+      "status": "completed",
+      "conclusion": "skipped"
+    },
+    {
+      "id": 103287594766,
+      "name": "Desktop and Kotlin Native strict verification (macOS x64)",
+      "status": "completed",
+      "conclusion": "skipped"
+    },
+    {
+      "id": 103287594905,
+      "name": "iOS simulator runtime and Swift host",
+      "status": "completed",
+      "conclusion": "skipped"
+    },
+    {
+      "id": 103287595327,
+      "name": "Desktop strict verification (Linux arm64)",
+      "status": "completed",
+      "conclusion": "skipped"
+    },
+    {
+      "id": 103287595494,
+      "name": "Common, desktop, and Android release",
+      "status": "completed",
+      "conclusion": "skipped"
+    },
+    {
+      "id": 103287643716,
+      "name": "Desktop, Kotlin Native, and Android resources strict verification (Windows x64)",
+      "status": "completed",
+      "conclusion": "skipped"
+    }
+  ],
+  "job_log": {
+    "path": "job.log",
+    "bytes": 40204,
+    "sha256": "1ebe7e89576b7a6ab652498d75103f990a4157c21254cb1e0840a69476c3f518",
+    "job_id": 103287593702
+  },
+  "native_binding": {
+    "run_token": "120b86de8ae24564a2811b1a4fb831ac",
+    "source_sha": "25cd7f57b031bebdcfb4931615782b906610703f",
+    "control_sha256": "6537d41f499b4635df3f1cfc80be3d84d07b619fa92790bb83ae0973ee9419e8",
+    "run_id": "34606946362",
+    "run_attempt": "1"
+  },
+  "profile_binding_verified": true,
+  "report_bindings_checked": [
+    "host-image.stdout.json",
+    "host-image-summary.json",
+    "host-setter.stdout.json",
+    "host-setter-bindings.json"
+  ],
+  "missing_native_reports": [],
+  "raw_reported_main_status": "CAPTURED",
+  "raw_reported_cleanup_status": "PASS",
+  "missing_expected_artifacts": [],
+  "unexpected_artifacts": [],
+  "finished_at": "2026-09-11T14:00:13.906655+00:00"
+}

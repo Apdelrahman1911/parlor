@@ -1,6 +1,21 @@
 # Continuation execution ledger — 2026-09-11
 
-## CURRENT — D09 older-source6/6; H02 setter rejected; H03 local-only; NOT_READY
+## CURRENT — D10 automated combined6/6 and cleanup PASS; strict0/26 FAILED; NOT_READY
+
+`N=remediation-runs/2026-09-08-continuation`. Earlier cutoffs remain historical; evidence below is bound to its actual execution source.
+- **Tested candidate** `25cd7f57b031bebdcfb4931615782b906610703f`, tree `1e44e982216bfc4fda32dc370a0d1b3d77fee836`; reviewed source commit `3fa4ef1e3f398124846b29d0b5c1a52341ea9d96`. Normal push/remote equality: `$N/actions/protection-host-image-03/source-freeze-receipt.json`. Any subsequent passive handoff/evidence delivery HEAD is separate, **not a new execution**.
+- **D10 run34610163120/1: all six mandatory full+paired lanes and6/6 scoped cleanup actual PASS**,15 Gradle stops0;12 artifacts independently accepted. Raw `$N/actions/34610163120/`; accepted aggregate `$N/reviews/full-d10-aggregate-actual-independent-01.json`, findings[]. This is automated combined qualification at the tested candidate, not product/Store readiness.
+- Linux **2221PASS/3SKIP**, including three managed-emulator passes; **573 Python PASS separately**. Windows x64/Linux ARM64/macOS x64 each **1340PASS/3SKIP**; ARM64 is Desktop-only, not Kotlin/Native. Skips are not passes; overlapping host/target suites are not summed.
+- iOS runtime **465 KMP +5 Swift UI PASS**, no failures/skips; Xcode26.3/SDK26.2. **Swift UI used iOS18.5/iPhone16Pro**; no exact KMP simulator OS/UDID is asserted or borrowed from UI.
+- iOS Release: actual `iosArm64`, `iosSimulatorArm64`, `iosX64` framework links and unsigned arm64 Simulator Swift Release wrapper **PASS as build/package evidence only**, not Release runtime, signing or physical devices.
+- **H03 run34606946362/1 at25cd7f57 captured, not protection-qualified**: public Complete setter **FALSE/Cocoa256 → POSIX22 (EINVAL)**, chain ends `no-underlying`; raw `$N/actions/34606946362/`. This is reported NSError metadata, not an observed failing syscall or proof of malformed caller arguments.
+- Its fresh host-only same-inode before/after samples remain FM/URL `until-first-authentication`, fcntl/attrlist class3, capability unsupported; no Simulator fixture/production snapshot observed. Native review `$N/reviews/protection-host-error-h03-native-actual-independent-01.json`; neither these observations nor platform documentation establish the exact rejecting condition or a universal platform limit.
+- H03 **scoped cleanup PASS**: three stops0, all57 recorded direct commands exited0/reaped,11 retired entries, scratch absent; `$N/reviews/protection-host-image-h03-cleanup-actual-independent-01.json`. No simulator/global/indirect-worker absence claim; D10 cleanup has its own accepted evidence.
+- **Original repairs16/16 (100%); latest technical gates1/2 (50%) closed**: automated combined qualification passed; strict Complete remains **FAILED, A37 0PASS/26FAIL**. H03 supplies no new strict comparison; APP04/PD08 strict failures, D08 failure and PD09 timeout/retained-scratch failure remain preserved.
+- D09@d3c0df9c remains valid only for its older candidate, not a D10 substitute. B30 normal Debug/selected-image/libproc/notices/signature/cleanup and C08 dependency export/render/consumer evidence retain **original scopes and execution identities only**; `$N/reviews/25cd7f57-b30-c08-reuse-independent-01.json`. No cross-source stitching or unchanged-area redo.
+- Remaining technical work is strict protection: the rejecting condition is unresolved and no evidence-supported shipping correction is established; **no defensible strict-closure ETA**. Keep strict checks unchanged. Physical-device, Store/signing/publication, account/identity and owner/legal requirements remain separate/out of scope.
+
+## Historical D09 older-source6/6; H02 setter rejected; H03 local-only; NOT_READY — preserved cutoff
 
 `N=remediation-runs/2026-09-08-continuation`; `C=remediation-runs/2026-09-07-local-readiness`. Last pushed checkpoint `22ea6bebb95317e148d89b03c40cbb7efc9d36a4`, not a new H03 freeze; earlier cutoffs remain historical.
 - **D09 run34561630512/1: all six mandatory jobs and6/6 scoped cleanup actual PASS at `d3c0df9ccba51463708728c3c618d3652e76aafa` only**, not the newer checkpoint/H03 source. Raw `$N/actions/34561630512/`.

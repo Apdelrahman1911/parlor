@@ -6,11 +6,20 @@ the remaining qualification gates. The [initial Linux continuation](docs/AGENT_C
 and [preserved transfer handoff](docs/AGENT_CONTINUATION_2026-09-08.md) are historical
 checkpoints; their old pending statuses do not override the latest ledger.
 
-**Not a readiness certificate.** The 16 original repairs and Whodunit
-Leave-confirmation policy are committed. Normal Debug libproc evidence and the
-dependency export/render/consumer chain have executed; their original source
-bindings and limits remain explicit. Strict iOS Complete file protection remains
-unresolved, and no same-SHA combined PASS or Store readiness is claimed.
+**Not a readiness certificate.** The original repairs are **16/16 (100%)**;
+those repairs and the Whodunit Leave-confirmation policy are committed.
+Historical B30 normal Debug/libproc and C08 dependency export/render/consumer
+evidence is reused only within its original source bindings and limits.
+
+**D10 run34610163120/1 has independently accepted automated combined6/6 and
+scoped cleanup6/6 PASS** at tested candidate
+`25cd7f57b031bebdcfb4931615782b906610703f`. Any subsequent passive handoff/evidence
+delivery HEAD is separate, not a new execution; see the ledger for exact-source
+receipts and review evidence. The two latest technical gates are **1/2 (50%)**:
+automated combined qualification passed, but strict iOS Complete protection is
+still **FAILED: A37 0 PASS / 26 FAIL**, with no defensible strict-fix ETA.
+Physical-device, Store/signing/publication, account/identity and owner/legal
+requirements remain separate/out of scope.
 
 Branch: `fix/local-readiness-2026-09-07`
 Remote: `https://github.com/Apdelrahman1911/parlor.git`
