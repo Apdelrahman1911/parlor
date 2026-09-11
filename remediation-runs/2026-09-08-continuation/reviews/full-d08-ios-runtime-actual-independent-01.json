@@ -1,0 +1,286 @@
+{
+  "schema": 1,
+  "kind": "ACTUAL_FULL_D08_IOS_RUNTIME_EVIDENCE_REVIEW",
+  "reviewer": "/root/ci_ios_runtime",
+  "reviewed_at": "2026-09-11T03:40:05.844034+00:00",
+  "decision": "PASS_IOS_RUNTIME_ONLY_CLEANUP_REVIEW_SEPARATE",
+  "findings": [],
+  "run_id": 34553741387,
+  "run_attempt": 1,
+  "job_id": 103121858282,
+  "job": "ios",
+  "job_conclusion": "success",
+  "source_sha": "59a384441f44844a79ae62ea8ee68d0c9e1e5878",
+  "source_tree": "9f06627b0dd047394de6f52adbc494e334651c74",
+  "custody": {
+    "collector_receipt": "remediation-runs/2026-09-08-continuation/actions/34553741387/download-receipt.json",
+    "collector_receipt_sha256": "0e4be955e1fc7445e74e2d23135feb19aca62f700db390fdc496efa438f4884c",
+    "artifact_id": 10182213507,
+    "artifact_name": "ios-runtime-verification",
+    "artifact_zip_sha256": "324b4198f1fb9fc0a60b288a6fd9db5d9b9800c498f158ed367b862fae813c27",
+    "api_digest_source_binding_verified": true,
+    "all_258_extracted_member_hashes_verified": true,
+    "job_log_archive_sha256": "5e50d2b0a4be5cc697b81fc4730f2f2b961114f07d38c3ac184174b8c4e2b0b8",
+    "fresh_output_and_apple_cycle_claims_same_run_source": true
+  },
+  "toolchain": {
+    "xcode": "26.3",
+    "xcode_build": "17C529",
+    "developer_dir": "/Applications/Xcode_26.3.app/Contents/Developer",
+    "iphoneos_sdk": "26.2",
+    "iphonesimulator_sdk": "26.2",
+    "host": "macOS 15.7.9 / 24G830 / arm64",
+    "runner_image": "macos-15-arm64 20260907.0337.1"
+  },
+  "kmp": {
+    "command": "./gradlew productionIosSimulatorRuntimeTests --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+    "api_step": 17,
+    "step_started_at": "2026-09-11T02:13:27Z",
+    "step_completed_at": "2026-09-11T02:26:24Z",
+    "result": "BUILD SUCCESSFUL",
+    "actionable_tasks_executed": 195,
+    "current_runtime_tasks_executed": 13,
+    "runtime_tasks_cached_up_to_date_skipped_or_no_source": 0,
+    "current_xml_suites": 75,
+    "unique_module_classname_testcase_outcomes": 465,
+    "passed": 465,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "xml_case_counts_equal_declared_totals": true,
+    "xml_timestamps_inside_current_runtime_step": true,
+    "xml_timestamp_range": [
+      "2026-09-11T02:24:25.930Z",
+      "2026-09-11T02:26:21.752Z"
+    ],
+    "xml_manifest_sha256": "92ca6a4a888f333befba81e9fb20e20d896f9383b9ed95a593a31bbbfe2dc76a",
+    "xml_manifest_recipe": "SHA256 of UTF-8 compact sorted-key JSON: sorted current {path,sha256,tests} records; path sort; exact iosSimulatorArm64Test XML members only.",
+    "modules": [
+      {
+        "module": "composeApp",
+        "task": ":composeApp:iosSimulatorArm64Test",
+        "suites": 16,
+        "tests": 91
+      },
+      {
+        "module": "game-modes/mafia",
+        "task": ":game-modes:mafia:iosSimulatorArm64Test",
+        "suites": 2,
+        "tests": 23
+      },
+      {
+        "module": "game-modes/whodunit",
+        "task": ":game-modes:whodunit:iosSimulatorArm64Test",
+        "suites": 5,
+        "tests": 9
+      },
+      {
+        "module": "shared/content",
+        "task": ":shared:content:iosSimulatorArm64Test",
+        "suites": 5,
+        "tests": 24
+      },
+      {
+        "module": "shared/core",
+        "task": ":shared:core:iosSimulatorArm64Test",
+        "suites": 2,
+        "tests": 12
+      },
+      {
+        "module": "shared/design-system",
+        "task": ":shared:design-system:iosSimulatorArm64Test",
+        "suites": 9,
+        "tests": 26
+      },
+      {
+        "module": "shared/engine",
+        "task": ":shared:engine:iosSimulatorArm64Test",
+        "suites": 2,
+        "tests": 9
+      },
+      {
+        "module": "shared/engine-testing",
+        "task": ":shared:engine-testing:iosSimulatorArm64Test",
+        "suites": 3,
+        "tests": 6
+      },
+      {
+        "module": "shared/networking",
+        "task": ":shared:networking:iosSimulatorArm64Test",
+        "suites": 8,
+        "tests": 34
+      },
+      {
+        "module": "shared/networking-testing",
+        "task": ":shared:networking-testing:iosSimulatorArm64Test",
+        "suites": 2,
+        "tests": 5
+      },
+      {
+        "module": "shared/session",
+        "task": ":shared:session:iosSimulatorArm64Test",
+        "suites": 11,
+        "tests": 142
+      },
+      {
+        "module": "shared/storage",
+        "task": ":shared:storage:iosSimulatorArm64Test",
+        "suites": 4,
+        "tests": 31
+      },
+      {
+        "module": "shared/transport-p2p",
+        "task": ":shared:transport-p2p:iosSimulatorArm64Test",
+        "suites": 6,
+        "tests": 53
+      }
+    ],
+    "specific_simulator_udid_or_os_version": "NOT_ASSERTED_FROM_KMP_LOG; UI device identity is not transferred to KMP execution",
+    "excluded_nonruntime_tasks": "Link/compile tasks and skipped configuration/SwiftPM setup tasks are not counted as executed tests."
+  },
+  "swift": {
+    "api_step": 22,
+    "configuration": "Debug",
+    "scheme": "iosApp",
+    "sdk": "iphonesimulator26.2",
+    "deployment_target": "16.0",
+    "debug_bundle": "com.parlor.app.debug",
+    "release_bundle_build_settings_only": "com.parlor.app",
+    "release_build_or_runtime_claim": false,
+    "owned_simulator": {
+      "udid": "1754405B-7502-4115-AC5F-CA02A939CD0F",
+      "nonce": "f04cd65520624c02bad14f27845a21ad",
+      "name": "Parlor-ci-f04cd65520624c02bad14f27845a21ad",
+      "runtime": "com.apple.CoreSimulator.SimRuntime.iOS-18-5",
+      "device_type": "com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro",
+      "architecture": "arm64",
+      "fresh_creation_absent_from_baseline": true,
+      "invocation_matches_created_udid": true,
+      "raw_job_stderr_confirms_os_and_architecture": true
+    },
+    "test_count": 5,
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0,
+    "all_five_started_and_passed_once_in_both_current_stdout_and_job_log": true,
+    "tests": [
+      {
+        "identifier": "iosAppUITests.ComposeContainerViewControllerTests testChildUsesFullBoundsAcrossSizesAndOpposingSemanticDirections",
+        "seconds": 7.916,
+        "outcome": "passed"
+      },
+      {
+        "identifier": "iosAppUITests.ComposeContainerViewControllerTests testDefaultAppearanceForwardingReachesTheSameChildExactlyOnce",
+        "seconds": 0.426,
+        "outcome": "passed"
+      },
+      {
+        "identifier": "iosAppUITests.ComposeContainerViewControllerTests testOneStableChildKeepsItsExplicitSemanticsIndependentOfTheOuterView",
+        "seconds": 0.904,
+        "outcome": "passed"
+      },
+      {
+        "identifier": "iosAppUITests.ComposeContainerViewControllerTests testSystemDecorationAndOrientationPoliciesStillBelongToTheChild",
+        "seconds": 0.798,
+        "outcome": "passed"
+      },
+      {
+        "identifier": "iosAppUITests.IOSAppLaunchUITests testColdLaunchRendersComposeHomeWithoutUnexpectedAlert",
+        "seconds": 19.508,
+        "outcome": "passed"
+      }
+    ],
+    "runtime_observations": [
+      "com.parlor.app.debug launched and became Running Foreground",
+      "parlor-home-brand Compose home accessibility target checked",
+      "cold-launch/no-unexpected-alert method passed",
+      "all four ComposeContainerViewController methods passed"
+    ],
+    "result": "TEST SUCCEEDED",
+    "xcresult": "Original ios-ui-tests.xcresult entries retained in verified ZIP, not decoded or counted as standalone execution proof."
+  },
+  "evidence": {
+    "current_descriptor_members": [
+      {
+        "path": "parlor/parlor/build/ci-evidence/commit.txt",
+        "sha256": "917982b5cdd474e301f1311b267b752599b0f05434d51ae334f78d8c7bf115d8"
+      },
+      {
+        "path": "parlor/parlor/build/ci-evidence/xcode-version.txt",
+        "sha256": "bb7fc9a8f5e063e81975b33054b3a526c91bcccff263ad11d5bd8bcdbe8f0973"
+      },
+      {
+        "path": "parlor/parlor/build/ci-evidence/iphoneos-sdk.txt",
+        "sha256": "14a06c556ac677f94334dd2c86395d46009b9def8685e00741e60d31305a0262"
+      },
+      {
+        "path": "parlor/parlor/build/ci-evidence/iphonesimulator-sdk.txt",
+        "sha256": "14a06c556ac677f94334dd2c86395d46009b9def8685e00741e60d31305a0262"
+      },
+      {
+        "path": "parlor/parlor/build/ci-evidence/xcode-debug-settings.txt",
+        "sha256": "dde240f94e7bcefca0d61f2ad1dda64bb925a8e69ff6b5a241e7fe4fe79ab418"
+      },
+      {
+        "path": "parlor/parlor/build/ci-evidence/xcode-release-settings.txt",
+        "sha256": "a1bc773a69fe653bcaf5d0bbf9c309fc132426f375893bb85330ad6d88f78151"
+      },
+      {
+        "path": "parlor/parlor/build/ci-evidence/xcode-ui-test.log",
+        "sha256": "a5d74831f00a0957a5f5598a56dd7fc5218d40e97c3f95787c9bcc70d5716c21"
+      }
+    ],
+    "current_source_and_target_claims": [
+      {
+        "path": "_temp/parlor-verification-34553741387-1-ios-ownership.json",
+        "sha256": "7e03e60dfd3d933c7d5b070640d46a168c7216833db7679f3cd140b317c0362e"
+      },
+      {
+        "path": "_temp/parlor-verification-34553741387-1-ios-apple-aggregate-ownership.json",
+        "sha256": "5e14930c7fc9e239d80a2c81f85ee398fecf9dcb5915e0d63363705219e0c1aa"
+      },
+      {
+        "path": "_temp/parlor-verification-34553741387-1-ios-apple-ui-ownership.json",
+        "sha256": "b9c7f2cdc9cf38124534c31d0c62e2739701bdc20c76dc9e651e72b2142d2120"
+      },
+      {
+        "path": "_temp/parlor-verification-34553741387-1-ios-apple-ui-simulator-plan.json",
+        "sha256": "da9d11aeb6ce62f7ead64bf99a882f3bf190c0f2ac363c13539a50911a267bab"
+      },
+      {
+        "path": "_temp/parlor-verification-34553741387-1-ios-apple-ui-simulator-create.json",
+        "sha256": "66572cc5ed322d568115128d60239f08e2020914e22a49a9aed825332c9fb7ff"
+      }
+    ],
+    "current_log_members": [
+      {
+        "path": "iOS simulator runtime and Swift host/1_Set up job.txt",
+        "sha256": "44838d4c52369ace441b6b087db45ba1367a325c8d454a57a30ac9d1f99d4777"
+      },
+      {
+        "path": "iOS simulator runtime and Swift host/16_Record Xcode toolchain and exact source.txt",
+        "sha256": "f19de3796e9f4863d18af1e24efabfa5638377ab8edd5fab12e49972ff0b4673"
+      },
+      {
+        "path": "iOS simulator runtime and Swift host/17_Run all KMP iOS simulator runtime tests.txt",
+        "sha256": "a2aa8f9cb82277912a0a5df3984f085bf0e4eca20c8ed3ea8193646d6b4a808b"
+      },
+      {
+        "path": "iOS simulator runtime and Swift host/21_Verify effective Debug and Release application identities.txt",
+        "sha256": "8e42a1bc30ddc4260cc0f958f86d94c51f4ce0ec9f382a497b776fce831a0bf6"
+      },
+      {
+        "path": "iOS simulator runtime and Swift host/22_Launch Swift host and Compose root on iOS Simulator.txt",
+        "sha256": "f82324044d9c450ecf09ebaf999412cf306eb83ca3fda5b29445309d985c1887"
+      }
+    ]
+  },
+  "limits": [
+    "12,277 frozen historical artifact members were excluded from runtime counts.",
+    "Runtime proof uses current successful task executions, fresh XML cases and named XCTest start/pass records; cached/link-only/archive presence is not substituted.",
+    "Full D08 six-lane qualification, other jobs and cleanup verdict are not established by this runtime-only review.",
+    "This old59a384 source execution does not qualify newer source50a2 or any diagnostic probe; no cross-run/SHA stitching.",
+    "No source audit, build, test rerun, network, dispatch or cancellation performed for this evidence review."
+  ],
+  "cleanup_review_owner": "/root/ci_cleanup_review"
+}

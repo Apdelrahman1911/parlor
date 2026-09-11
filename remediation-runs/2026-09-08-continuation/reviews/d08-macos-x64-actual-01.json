@@ -1,0 +1,370 @@
+{
+  "schema_version": 1,
+  "kind": "MACOS_X64_CURRENT_DESKTOP_RUNTIME_AND_NATIVE_DISTRIBUTION_RECONCILIATION",
+  "reviewer": "/root/ci_macos_x64",
+  "reviewed_at": "2026-09-11T03:36:22.563967+00:00",
+  "status": "D08_MACOS_X64_JOB_SUCCESS_WITH_THREE_RECORDED_SKIPS",
+  "source": {
+    "run_id": 34553741387,
+    "run_attempt": 1,
+    "job_id": 103121858192,
+    "job": "desktop-macos-x64",
+    "commit": "59a384441f44844a79ae62ea8ee68d0c9e1e5878",
+    "tree": "9f06627b0dd047394de6f52adbc494e334651c74",
+    "checkout_root": "/Users/runner/work/parlor/parlor",
+    "binding": "Retained run/attempt/job/artifact API, ownership source and clean Darwin/x86_64 host guard agree."
+  },
+  "custody": {
+    "pin_format": [
+      "path_relative_to_continuation",
+      "bytes",
+      "sha256"
+    ],
+    "pins": [
+      [
+        "actions/34553741387/download-receipt.json",
+        45967138,
+        "0e4be955e1fc7445e74e2d23135feb19aca62f700db390fdc496efa438f4884c"
+      ],
+      [
+        "actions/34553741387/run.json",
+        12693,
+        "168cfa5d324a3f3a9a9a935cc1f5f061312be2527a952d5ac02ad9471c7969d1"
+      ],
+      [
+        "actions/34553741387/attempt.json",
+        12715,
+        "5edd08a19c1f06dfae6ab94cbd1d082cf24bba8ae4c1066ecd12a6c9fd5f250d"
+      ],
+      [
+        "actions/34553741387/jobs.json",
+        26575,
+        "8f646f4099406c1b02739cec65a320d6963cd7cc60d2ceed05add47e37e3160a"
+      ],
+      [
+        "actions/34553741387/artifacts.json",
+        8823,
+        "e1b07673cbf21d17fa50bfb2d01da493a5a1ecaf87acc192da23c85578350346"
+      ],
+      [
+        "actions/34553741387/desktop-verification-desktop-macos-x64.zip",
+        15372737,
+        "8f7bd211cbb8d9f08c5108c889771052704b4d20bf7f306a5a989dd70fa318f2"
+      ],
+      [
+        "actions/34553741387/run-attempt-1-logs.zip",
+        325849,
+        "5e50d2b0a4be5cc697b81fc4730f2f2b961114f07d38c3ac184174b8c4e2b0b8"
+      ]
+    ],
+    "artifact_id": 10181980131,
+    "log_member": [
+      "2_Desktop and Kotlin Native strict verification (macOS x64).txt",
+      84423,
+      "8659bf80032715b13624710c22f9011012566853bd00abf704552ff1188721f0"
+    ],
+    "archive_members": 12808,
+    "excluded_historical_tracked_members": 12277,
+    "method": "Verified supplied collector digest and source-bound API metadata; rehashed retained main/log ZIPs. Read only the macOS x64 log member and203 exact extracted live desktopTest XML plus ownership; sizes/SHA agree with collector member table. Frozen-tree membership excluded all historical tracked reports. Whole-archive CRC/bounds validation retained from root collector, not repeated. No extraction or downloads."
+  },
+  "host": {
+    "os": "macOS15.7.9",
+    "os_build": "24G830",
+    "image": "macos-15 20260824.0482.1",
+    "architecture": "Darwin/x86_64 guard passed",
+    "jdk": "Temurin21.0.12+101.0 x64",
+    "gradle": "8.13",
+    "host_graph_scope": "Actual host-selected Desktop compile/tests under strict verification; plain log is not an independent per-artifact dependency inventory."
+  },
+  "execution": {
+    "command": "./gradlew productionDesktopCheck :composeApp:downloadKotlinNativeDistribution --dependency-verification=strict --no-daemon --stacktrace --console=plain",
+    "body_interval": [
+      "2026-09-11T02:13:36Z",
+      "2026-09-11T02:22:38Z"
+    ],
+    "result": "BUILD SUCCESSFUL in9m",
+    "actionable_tasks": {
+      "total": 114,
+      "executed": 114,
+      "from_cache": 0,
+      "limit": "Gradle task counts, not test counts."
+    },
+    "desktop_task_row_format": [
+      "task",
+      "logged_at",
+      "outcome"
+    ],
+    "desktop_tasks": [
+      [
+        ":composeApp:desktopTest",
+        "2026-09-11T02:21:43.0508500Z",
+        "EXECUTED"
+      ],
+      [
+        ":game-modes:mafia:desktopTest",
+        "2026-09-11T02:21:54.6018780Z",
+        "EXECUTED"
+      ],
+      [
+        ":game-modes:whodunit:desktopTest",
+        "2026-09-11T02:22:13.9934630Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:content:desktopTest",
+        "2026-09-11T02:19:45.2399300Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:core:desktopTest",
+        "2026-09-11T02:19:17.9376170Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:design-system:desktopTest",
+        "2026-09-11T02:20:13.4113760Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:engine:desktopTest",
+        "2026-09-11T02:20:03.0913720Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:engine-testing:desktopTest",
+        "2026-09-11T02:20:17.3035060Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:networking:desktopTest",
+        "2026-09-11T02:20:23.8533000Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:networking-testing:desktopTest",
+        "2026-09-11T02:20:22.7022850Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:session:desktopTest",
+        "2026-09-11T02:20:47.3371910Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:storage:desktopTest",
+        "2026-09-11T02:20:31.8538010Z",
+        "EXECUTED"
+      ],
+      [
+        ":shared:transport-p2p:desktopTest",
+        "2026-09-11T02:21:27.7496320Z",
+        "EXECUTED"
+      ]
+    ],
+    "desktop_main_compile": [
+      ":composeApp:compileKotlinDesktop",
+      "2026-09-11T02:21:21.9977530Z",
+      "EXECUTED"
+    ],
+    "cache_distinction": "All13 desktopTest task markers executed; no FROM-CACHE/UP-TO-DATE markers in this build. XML timestamps fall within this current successful body after fresh output ownership. This does not imply an empty global dependency cache."
+  },
+  "current_xml": {
+    "totals": {
+      "xml_files": 203,
+      "descriptors": 1342,
+      "passed": 1339,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 3
+    },
+    "module_row_format": [
+      "module",
+      "xml_files",
+      "descriptors",
+      "passed",
+      "failures",
+      "errors",
+      "skipped"
+    ],
+    "modules": [
+      [
+        "composeApp",
+        21,
+        96,
+        96,
+        0,
+        0,
+        0
+      ],
+      [
+        "game-modes/mafia",
+        37,
+        297,
+        297,
+        0,
+        0,
+        0
+      ],
+      [
+        "game-modes/whodunit",
+        63,
+        360,
+        360,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/content",
+        5,
+        24,
+        24,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/core",
+        2,
+        12,
+        12,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/design-system",
+        18,
+        40,
+        40,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/engine",
+        5,
+        13,
+        13,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/engine-testing",
+        3,
+        6,
+        6,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/networking",
+        8,
+        34,
+        34,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/networking-testing",
+        2,
+        5,
+        5,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/session",
+        13,
+        145,
+        145,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/storage",
+        4,
+        31,
+        31,
+        0,
+        0,
+        0
+      ],
+      [
+        "shared/transport-p2p",
+        22,
+        279,
+        276,
+        0,
+        0,
+        3
+      ]
+    ],
+    "timestamp_range": [
+      "2026-09-11T02:19:17.285Z",
+      "2026-09-11T02:22:35.904Z"
+    ],
+    "hostnames": [
+      "sjc20-av659-34a2da46-5990-44e3-be11-defac2bde170-0E00C18D42BC.local"
+    ],
+    "reviewed_xml_bytes": 315649,
+    "manifest_format": "Sorted [ZIP member path,bytes,SHA256,timestamp,hostname] rows serialized compact JSON; each member remains in pinned root collector table.",
+    "manifest_sha256": "8570dabcd78b0dcf1bd9616e2eb82d3a16d4bd53f77fc3dcccef701d27a1097e"
+  },
+  "skips": {
+    "identity_row_format": [
+      "module",
+      "class",
+      "method"
+    ],
+    "identities": [
+      [
+        "shared/transport-p2p",
+        "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "host_broadcast_reaches_every_peer()[desktop]"
+      ],
+      [
+        "shared/transport-p2p",
+        "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "peer_can_join_a_hosted_room_and_membership_appears_on_host()[desktop]"
+      ],
+      [
+        "shared/transport-p2p",
+        "com.parlor.transport.p2p.P2pKitRoomTransportLoopbackTest",
+        "peer_to_host_message_round_trips_and_host_to_peer_message_arrives_back()[desktop]"
+      ]
+    ],
+    "scope": "Three loopback descriptors carry empty skipped elements; not passes. No peer join, peer/host roundtrip, broadcast, physical-LAN interoperability or device evidence inferred."
+  },
+  "native_distribution": {
+    "task": ":composeApp:downloadKotlinNativeDistribution",
+    "outcome": "EXECUTED_NOT_CACHED",
+    "progress_header_timestamps": [
+      "2026-09-11T02:18:40.7376660Z",
+      "2026-09-11T02:19:10.7525620Z",
+      "2026-09-11T02:19:29.4400160Z"
+    ],
+    "header_limit": "Three progress headers describe one scheduled task, not three native runs.",
+    "bundle": "/Users/runner/.konan/kotlin-native-prebuilt-macos-x86_64-2.4.10",
+    "observed": "Log explicitly says existing bundle directory is nonempty and bundle files will be overwritten. LLVM21 x86_64-macos essentials83 and libffi3.2.1-3-darwin-macos downloads/extractions are logged; entire strict build succeeds.",
+    "freshness_limit": "Existing global .konan content means no wholly fresh-cache/network-fetch claim for all distribution bytes.",
+    "runtime_limit": "Distribution/dependency preparation only; no Kotlin/Native application execution or iOS runtime claim. Host-disabled iosSimulatorArm64 warning is not a failed requested desktop task."
+  },
+  "ownership": {
+    "member": [
+      "_temp/parlor-verification-34553741387-1-desktop-macos-x64-ownership.json",
+      19544,
+      "807a8cc09029b64510b707e1651d38bb8bddae83735cd188b19b345a57bebb4c"
+    ],
+    "prepared_at": "2026-09-11T02:13:36.608432+00:00",
+    "cleanup": "Independent ci_cleanup_review owns stop/cleanup verification; no cleanup conclusion is inferred here."
+  },
+  "findings": [],
+  "disposition": "This lane succeeded with1339 actual passes and3 explicit skips at this frozen SHA. Other full-D08 failures remain; this is not a six-lane qualification, physical-device, protection-probe or Store readiness PASS.",
+  "activity": "Read-only stdlib evidence reconciliation and this additive JSON receipt; no source edits, tests, builds, network, extraction or process operations."
+}

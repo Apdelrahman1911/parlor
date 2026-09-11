@@ -1,6 +1,36 @@
 # Continuation execution ledger — 2026-09-11
 
-## CURRENT — PD07 pre-launch Git-status timeout; local status mitigation checked; NOT_READY
+## CURRENT — PD08 paired capture, strict0/5; D08 terminal FAIL; NOT_READY
+
+`N=remediation-runs/2026-09-08-continuation`; `C=remediation-runs/2026-09-07-local-readiness`. Earlier cutoffs remain historical.
+- **PD08 run34558762289/1 API success** at executed freeze `50a2d2d112220507faaa2a7f185d47b331423999`, tree `3076d1f51de0612b4eb46757e4d5ad4ee234fe5b`.
+  Reviewed implementation `193b6f70487e93fe8f299f0c76892b73c8aaf677`; packet `$N/actions/protection-probe-08/`, actual raw `$N/actions/34558762289/`.
+- Main **CAPTURED**, no errors; native **CAPTURED_SYNTHETIC_METADATA_NOT_APP_QUALIFICATION**; strict synthetic Complete remains **0PASS/5FAIL**.
+  Actual18 JSON rows (17 events + final), nine samples/45 identity witnesses; stderr contains exact C markers `c-main-entry`, `foundation-initialized`, `first-operation`.
+  Native launcher0 in5.162s, host reader0 in0.056s; serial postboot Git status0 in45.523s within unchanged60s. Timeout sampling was not exercised.
+  This status observation does not establish preload causality or prove earlier timeouts fixed.
+- Five exact final same-inode comparisons: `directory-final`, `complete-after-replace`, `none-after-url-set`, `default-baseline`, `nonatomic-complete-baseline`.
+  Host FileManager **until-first-authentication5/5**, Simulator FileManager **missing5/5**; file URLs are until-first-authentication on both sides, directory URL not applicable.
+  Both sides have fcntl/attrlist class3 and unsupported filesystem protection capability: a scoped metadata discrepancy, not hidden Complete, enforcement, exclusive Simulator causality or a shipping-storage fix.
+- PD08 **cleanup PASS**: owned simulator/private scratch removed, `scratch_absent=true`,16 removed entries; **four stops0, all91 recorded direct commands exited0/reaped**. No indirect-worker/global-absence claim.
+  Independent actual reviews: `$N/reviews/protection-pd08-native-actual-independent-01.json`,
+  `protection-probe-08-host-comparison-actual-independent-01.json` and `protection-probe-08-cleanup-actual-independent-01.json`.
+- **D08 run34553741387/1 terminal FAIL** at `59a384441f44844a79ae62ea8ee68d0c9e1e5878`, tree `9f06627b0dd047394de6f52adbc494e334651c74`.
+  **Four successful mandatory lanes actual-reviewed; two mandatory failures remain:** Linux `desktop-android` and Windows. Its separate source/run cannot be combined with PD08 into full PASS.
+- Linux current KMP/Android unit tests **NOT_RUN**, zero current XML/test-task executions; Python release automation567 tests/1 stale-documentation failure. Managed-device smoke/unsigned package inspection **NOT_RUN**.
+  Windows **1336PASS/3FAIL/3SKIP** (CRLF-sensitive workflow slicing); Linux ARM64 and macOS x64 **1339PASS/3SKIP each**. ARM64 is Desktop-only, not Kotlin/Native; skipped loopback tests are not passes.
+- iOS runtime **465 KMP +5 Swift UI PASS**, no failures/skips; SDK26.2/Xcode26.3. Swift UI ran iOS18.5/iPhone16Pro; no exact KMP simulator OS/UDID is asserted.
+- iOS Release: actual `iosArm64`, `iosSimulatorArm64`, `iosX64` Release framework links and unsigned arm64 Simulator Swift Release wrapper **PASS**. Build/package evidence only, not Release runtime, signing, Store or device qualification.
+- D08 **6/6 scoped cleanup PASS,15 Gradle stops0**; raw `$N/actions/34553741387/`.
+  Custody/cleanup reviews: `$N/reviews/full-d08-artifact-custody-independent-01.json`, `full-d08-six-lane-cleanup-actual-independent-01.json`; independent lane reviews remain alongside them.
+- Both failed test contracts were independently corrected and locally checked: **Python1PASS + Gradle12PASS**, `$C/evidence/continuation-d08-contract-fixes-01/`.
+  These controls do not retroactively repair D08 or establish corrected Windows-host qualification.
+- **Requested technical gates closed0/2**: A37 strict **0PASS/26FAIL**, APP04 strict **0PASS/6FAIL**, PD05 synthetic strict **0PASS/5FAIL**, PD08 synthetic strict **0PASS/5FAIL**. Do not sum overlapping scopes.
+- **Next: one public host-setter diagnostic**, separately under implementation/review, **not natively verified**. Fresh freeze, **PD09 and D09 remain pending**; no new packet/admission/dispatch is asserted.
+- Final full qualification still requires all six mandatory jobs and cleanup passing together at one fresh frozen SHA; no stitching D08, PD08, local controls or historical runs.
+  Preserve original repairs and historical evidence; no unchanged-area redo. Physical-device, Store and owner/legal requirements remain separate.
+
+## Historical PD07 pre-launch Git-status timeout; local status mitigation checked; NOT_READY — preserved cutoff
 
 `N=remediation-runs/2026-09-08-continuation`; `C=remediation-runs/2026-09-07-local-readiness`. Earlier cutoffs remain historical.
 - **PD07 run34556255462/1 FAIL** at source/inventory freeze `ad62b0122ce08302c22a78b00c78e2d8ed7dc23c`,

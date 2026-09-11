@@ -97,6 +97,23 @@ def host_fixture(rows, request):
     return result, command, main["uuid"]
 
 
+def host_setter_fixture(rows, request):
+    value, command, _ = host_fixture(rows, request)
+    sample = value.pop("samples")[2]["native"]
+    sample["fm"].update(key_present=True, protection="none")
+    implementation = copy.deepcopy(sample["fm"]["implementation_before"])
+    implementation["selector"] = "setAttributes:ofItemAtPath:error:"
+    value.update(kind="synthetic-protection-host-setter", read_only=False, process_id=1235,
+        target_id="none-after-url-set", target_leaf="created/none.bin", expected_index=2,
+        before=sample, after=copy.deepcopy(sample), operation=dict(id="none-host-fm-set", requested_protection="complete",
+            returned=False, native_error=dict(present=True, domain="cocoa", code=4),
+            implementation_before=implementation, implementation_after=copy.deepcopy(implementation)))
+    for key in ("main_image_before", "main_image_after"):
+        value[key].update(image_basename=probe.HOST_SETTER_IMAGE, uuid="33333333-3333-3333-3333-333333333333")
+    command.update(label="host-setter-observation", owned_pid=1235)
+    return value, command, value["main_image_before"]["uuid"]
+
+
 class ReportTests(unittest.TestCase):
     def setUp(self):
         self.rows, self.request, self.image_uuid = fixture()
@@ -206,8 +223,10 @@ class AdmissionTests(unittest.TestCase):
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_bytes(b"synthetic-control-input")
             first = probe.controls(root)
-            (root / probe.HERE / "ProtectionSampler.m").write_bytes(b"changed-input")
-            self.assertNotEqual(first["control_sha256"], probe.controls(root)["control_sha256"])
+            for name in ("ProtectionSampler.m", "HostSet.m.in"):
+                (root / probe.HERE / name).write_bytes(b"changed-input")
+                self.assertNotEqual(first["control_sha256"], probe.controls(root)["control_sha256"])
+                (root / probe.HERE / name).write_bytes(b"synthetic-control-input")
             self.assertEqual(len(first["files"]), len(set(probe.CONTROL_PATHS)))
 
     def test_exact_job_and_source_admission(self):
@@ -546,10 +565,15 @@ class HostComparisonTests(unittest.TestCase):
         self.rows, self.request, self.image_uuid = fixture()
         self.report = validate(self.rows, self.request, self.image_uuid)
         self.host, self.command, self.host_uuid = host_fixture(self.rows, self.request)
+        self.setter, self.setter_command, self.setter_uuid = host_setter_fixture(self.rows, self.request)
 
     def validate(self, value=None):
         return probe.validate_host_report(json.dumps(self.host if value is None else value).encode(), self.request,
             self.report, self.host_uuid, self.command, [15, 7, 9])
+
+    def validate_setter(self, value=None):
+        return probe.validate_host_setter_report(json.dumps(self.setter if value is None else value).encode(), self.request,
+            self.report, self.setter_uuid, self.setter_command, [15, 7, 9])
 
     def test_five_final_inodes_and_host_complete_never_promote_original_four(self):
         self.rows[15]["sample"]["fm"].update(key_present=True, protection="complete")
@@ -597,6 +621,90 @@ class HostComparisonTests(unittest.TestCase):
                 with self.assertRaises(RuntimeError):
                     self.validate(value)
 
+    def test_host_setter_bool_error_and_class_never_promote_original_results(self):
+        original = copy.deepcopy(self.report), copy.deepcopy(self.host), self.validate()
+        for returned, protection in ((False, "none"), (True, "missing"), (True, "complete")):
+            with self.subTest(returned=returned, protection=protection):
+                value = copy.deepcopy(self.setter)
+                value["operation"].update(returned=returned, native_error=dict(present=not returned,
+                    code=0 if returned else 4, domain="none" if returned else "cocoa"))
+                value["after"]["fm"].update(key_present=protection != "missing", protection=protection)
+                result = self.validate_setter(value)
+                self.assertEqual(result["collection_status"], probe.HOST_SETTER_COLLECTED)
+                self.assertEqual(result["operation"], value["operation"])
+                self.assertEqual(result["after"]["fm"]["protection"], protection)
+                self.assertEqual(result["strict_synthetic_complete"]["fail_count"], 5)
+                self.assertFalse(result["historical_a37_strict_result_changed"])
+                self.assertFalse(result["runtime_implementation_causality_proven"])
+                self.assertFalse(result["production_snapshots_observed"])
+                self.assertEqual((self.report, self.host, self.validate()), original)
+
+    def test_host_setter_full_identity_fixed_target_and_imp_fail_closed(self):
+        for stage in ("before", "after"):
+            for key in ("device", "inode", "uid", "mode", "links", "size"):
+                with self.subTest(stage=stage, key=key):
+                    value = copy.deepcopy(self.setter)
+                    sample = value[stage]
+                    sample["identity"][key] += 1
+                    for witness in sample["reads"]:
+                        witness.update(before=copy.deepcopy(sample["identity"]), after=copy.deepcopy(sample["identity"]))
+                    with self.assertRaises(RuntimeError):
+                        self.validate_setter(value)
+        mutations = [lambda value: value.update(expected_index=1), lambda value: value.update(expected_index=True),
+            lambda value: value.update(target_leaf="created/complete.bin"), lambda value: value.update(target_id="default-baseline"),
+            lambda value: value.update(process_id=1234), lambda value: value.update(read_only=True),
+            lambda value: value["context"].update(nonce="0" * 32), lambda value: value.update(collection_status="FAIL"),
+            lambda value: value["operation"].update(returned=1),
+            lambda value: value["operation"]["native_error"].update(domain="none"),
+            lambda value: value["operation"]["implementation_after"]["implementation"].update(image_offset=99),
+            lambda value: [value["operation"][key].update(selector="attributesOfItemAtPath:error:") for key in
+                ("implementation_before", "implementation_after")],
+            lambda value: [value["operation"][key]["implementation"].update(image_basename="CoreFoundation") for key in
+                ("implementation_before", "implementation_after")],
+            lambda value: [value[key].update(platforms=[1, 6]) for key in ("main_image_before", "main_image_after")],
+            lambda value: [value[key].update(uuid=self.host_uuid) for key in ("main_image_before", "main_image_after")]]
+        for index, mutate in enumerate(mutations):
+            with self.subTest(mutation=index):
+                value = copy.deepcopy(self.setter)
+                mutate(value)
+                with self.assertRaises(RuntimeError):
+                    self.validate_setter(value)
+
+    def test_setter_requires_validated_reader_and_exact_owned_command_order(self):
+        instance = object.__new__(probe.Probe)
+        instance.state, instance.commands, instance.execute = {}, mock.Mock(rows=[]), mock.Mock()
+        with self.assertRaisesRegex(RuntimeError, "host-read-required-before-single-setter"):
+            instance.compile_and_set_host(self.report)
+        instance.execute.assert_not_called()
+        resources, sdk = Path("/synthetic/resources"), Path("/synthetic/macos-sdk")
+        expected = (("host-observation", [str(resources / probe.HOST_IMAGE)], 30),) + probe.host_setter_build_commands(resources, sdk) + (
+            ("host-setter-observation", [str(resources / probe.HOST_SETTER_IMAGE)], 30),)
+        commands = [dict(self.command, label=label, command=arguments, timeout_seconds=timeout) for label, arguments, timeout in expected]
+        self.assertEqual(probe.host_setter_command_order(commands, resources, sdk), commands[-1])
+        changed_timeout, unreaped = copy.deepcopy(commands), copy.deepcopy(commands)
+        changed_timeout[-1]["timeout_seconds"] = 31
+        unreaped[0]["direct_child_reaped"] = False
+        for rows in (commands[1:], commands + [commands[-1]], [commands[1], commands[0], *commands[2:]],
+                     commands[::-1], changed_timeout, unreaped):
+            with self.subTest(rows=rows), self.assertRaises(RuntimeError):
+                probe.host_setter_command_order(rows, resources, sdk)
+
+    def test_host_setter_binary_and_sources_are_reattested_for_retirement(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            resources = Path(temporary).resolve()
+            names = ("HostProtectionSampler.m", "HostSet.m", "OwnedHostReadContext.h", "OwnedProbeContext.h", "ProtectionSampler.h")
+            for name in (*names, probe.HOST_SETTER_IMAGE):
+                (resources / name).write_bytes(b"synthetic-owned-input")
+            for changed in (probe.HOST_SETTER_IMAGE, "HostSet.m"):
+                image = probe.host_file_binding(resources / probe.HOST_SETTER_IMAGE)
+                inputs = [dict(name=name, **probe.host_file_binding(resources / name)) for name in names]
+                prior = dict(host_setter_built_image=dict(file=image), host_setter_image_after_set=image,
+                    host_setter_inputs_before_compile=inputs, host_setter_inputs_after_set=copy.deepcopy(inputs))
+                self.assertEqual(probe.host_setter_retirement(resources, prior), dict(image=image, inputs=inputs))
+                (resources / changed).write_bytes(b"changed-after-capture")
+                with self.subTest(changed=changed), self.assertRaisesRegex(RuntimeError, "host-setter-retirement-custody"):
+                    probe.host_setter_retirement(resources, prior)
+
     def test_raw_host_failure_is_preserved_before_exit_check(self):
         class FailedCommand:
             preservation_error = probe.Commands.preservation_error
@@ -608,16 +716,18 @@ class HostComparisonTests(unittest.TestCase):
             instance = object.__new__(probe.Probe)
             instance.evidence = Path(temporary).resolve()
             instance.resources = instance.evidence / "resources"
-            instance.commands = FailedCommand()
-            with self.assertRaises(RuntimeError):
-                instance.capture_host()
-            self.assertEqual((instance.evidence / "host.stdout.json").read_bytes(), b'{"collection_status":"FAIL"}\n')
-            self.assertEqual((instance.evidence / "host.stderr.txt").read_bytes(), b"synthetic-error")
-            with mock.patch.object(probe.native, "write_new", side_effect=OSError("synthetic-write-failure")):
-                with self.assertRaises(OSError):
-                    instance.capture_host()
-            self.assertEqual(instance.commands.preservation, dict(failures=1,
-                errors=[dict(operation="host-raw-output", error_type="OSError")]))
+            for capture, prefix in ((instance.capture_host, "host"), (instance.capture_host_setter, "host-setter")):
+                with self.subTest(prefix=prefix):
+                    instance.commands = FailedCommand()
+                    with self.assertRaises(RuntimeError):
+                        capture()
+                    self.assertEqual((instance.evidence / (prefix + ".stdout.json")).read_bytes(), b'{"collection_status":"FAIL"}\n')
+                    self.assertEqual((instance.evidence / (prefix + ".stderr.txt")).read_bytes(), b"synthetic-error")
+                    with mock.patch.object(probe.native, "write_new", side_effect=OSError("synthetic-write-failure")):
+                        with self.assertRaises(OSError):
+                            capture()
+                    self.assertEqual(instance.commands.preservation, dict(failures=1,
+                        errors=[dict(operation=prefix + "-raw-output", error_type="OSError")]))
 
 
 if __name__ == "__main__":

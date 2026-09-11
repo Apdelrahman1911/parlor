@@ -1,0 +1,306 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/ci_cleanup_review",
+  "decision": "ACCEPT_D08_SIX_LANE_SCOPED_CLEANUP",
+  "run": {
+    "id": 34553741387,
+    "attempt": 1,
+    "source": "59a384441f44844a79ae62ea8ee68d0c9e1e5878",
+    "tree": "9f06627b0dd047394de6f52adbc494e334651c74",
+    "scope": "full",
+    "overall_conclusion": "failure",
+    "failed_jobs": [
+      "desktop-android",
+      "desktop-windows-x64"
+    ],
+    "focused_protection_job": "skipped; no PD evidence used"
+  },
+  "evidence_root": "remediation-runs/2026-09-08-continuation/actions/34553741387",
+  "custody": {
+    "collector_receipt_sha256": "0e4be955e1fc7445e74e2d23135feb19aca62f700db390fdc496efa438f4884c",
+    "logs_zip_sha256": "5e50d2b0a4be5cc697b81fc4730f2f2b961114f07d38c3ac184174b8c4e2b0b8",
+    "frozen_manifest_sha256": "21ecdafa91310849e694738a32e3d6b0727a76d6f0ac89af54380536ceae860d",
+    "checks": "Run/attempt/jobs and12 exact artifacts bind this source. Independently hashed all12 ZIPs against API list/individual metadata and collector; all28 current ownership/cycle/simulator/stop/final-cleanup JSON members match ZIP/manifest/extracted bytes. Every raw log member was read to EOF and hash/size checked. All15 stop and6 cleanup JSON records equal their own current raw job log. Each main artifact ID/digest and successful upload precedes deletion; all6 cleanup uploads follow finalization.",
+    "ownership": "Frozen30252-path manifest byte-equals immutable Git tree enumeration. Independently derived187 roots (17build+170Python-cache) equal every claim. Removed/not-created lists uniquely and disjointly partition all187; no removed root contains tracked source or touches historical evidence. All six fresh ownership preparations succeeded.",
+    "limits": "Original ZIPs retained; frozen historical report members are not current cleanup or execution evidence. No reviewer archive extraction."
+  },
+  "lanes": [
+    {
+      "job": "desktop-android",
+      "api_job_id": 103121858165,
+      "job_conclusion": "failure",
+      "cleanup": "PASS",
+      "artifact_ids": {
+        "main": 10181918024,
+        "cleanup": 10181919206
+      },
+      "cleanup_receipt_sha256": "a541c347ec56c0cdbecb3f6169a54c3cb91b9dfa3872e6d4a22758e0e5ddfccb",
+      "removed_build_roots": 15,
+      "removed_python_caches": 6,
+      "not_created": 166,
+      "zero_exit_stops_including_final": 3,
+      "log": {
+        "member": "1_Common, desktop, and Android release.txt",
+        "sha256": "b72dff274e7ca48a6466b94442bdb55167b8804edbdb8e9f217fd49197dc6bd9",
+        "stop_json_lines": {
+          "common-android": 2591,
+          "managed-device": 2603
+        },
+        "cleanup_json_line": 2662,
+        "orphan_heading_line": 2707
+      }
+    },
+    {
+      "job": "desktop-linux-arm64",
+      "api_job_id": 103121858057,
+      "job_conclusion": "success",
+      "cleanup": "PASS",
+      "artifact_ids": {
+        "main": 10181866645,
+        "cleanup": 10181867710
+      },
+      "cleanup_receipt_sha256": "73b4fc309a5b45fc07faa3a7fb6d5c1be4f1a4385b3ad86342893d56af9d71ed",
+      "removed_build_roots": 15,
+      "removed_python_caches": 0,
+      "not_created": 172,
+      "zero_exit_stops_including_final": 2,
+      "log": {
+        "member": "3_Desktop strict verification (Linux arm64).txt",
+        "sha256": "7d9f0bdabe9061cd0360294a64e2638b0777f326f8d3ed6037d191cc7a5c8aa6",
+        "stop_json_lines": {
+          "linux-arm64": 869
+        },
+        "cleanup_json_line": 920,
+        "orphan_heading_line": 965
+      }
+    },
+    {
+      "job": "desktop-macos-x64",
+      "api_job_id": 103121858192,
+      "job_conclusion": "success",
+      "cleanup": "PASS",
+      "artifact_ids": {
+        "main": 10181980131,
+        "cleanup": 10181982548
+      },
+      "cleanup_receipt_sha256": "5db54548557d21cbbfc46d7600ff596db61d32f44324c2ce587105b86b629d8b",
+      "removed_build_roots": 15,
+      "removed_python_caches": 0,
+      "not_created": 172,
+      "zero_exit_stops_including_final": 2,
+      "log": {
+        "member": "2_Desktop and Kotlin Native strict verification (macOS x64).txt",
+        "sha256": "8659bf80032715b13624710c22f9011012566853bd00abf704552ff1188721f0",
+        "stop_json_lines": {
+          "macos-x64": 677
+        },
+        "cleanup_json_line": 728,
+        "orphan_heading_line": 774
+      }
+    },
+    {
+      "job": "desktop-windows-x64",
+      "api_job_id": 103121857877,
+      "job_conclusion": "failure",
+      "cleanup": "PASS",
+      "artifact_ids": {
+        "main": 10181931494,
+        "cleanup": 10181933084
+      },
+      "cleanup_receipt_sha256": "eff8c91cfd88b77c3d569987169ea439b7ec16decc72bd034bbb54d696730dd6",
+      "removed_build_roots": 15,
+      "removed_python_caches": 0,
+      "not_created": 172,
+      "zero_exit_stops_including_final": 2,
+      "log": {
+        "member": "5_Desktop, Kotlin Native, and Android resources strict verification (Windows x64).txt",
+        "sha256": "f4ab7b7d5667c4d888fab4b40cebd509e8fbdefb72a25f36ea47dc254df40a39",
+        "stop_json_lines": {
+          "windows-x64": 1067
+        },
+        "cleanup_json_line": 1124,
+        "orphan_heading_line": 1172
+      }
+    },
+    {
+      "job": "ios",
+      "api_job_id": 103121858282,
+      "job_conclusion": "success",
+      "cleanup": "PASS",
+      "artifact_ids": {
+        "main": 10182213507,
+        "cleanup": 10182216126
+      },
+      "cleanup_receipt_sha256": "cbc6c5923f942cc98b4cf3685ed93384544de02b774728a33037876a2ef42144",
+      "removed_build_roots": 15,
+      "removed_python_caches": 0,
+      "not_created": 172,
+      "zero_exit_stops_including_final": 3,
+      "log": {
+        "member": "0_iOS simulator runtime and Swift host.txt",
+        "sha256": "06290153075f86d2609be1ef0b959a2431fc6c19eb9e455d061f8bf259c991f6",
+        "stop_json_lines": {
+          "apple-aggregate": 864,
+          "apple-ui": 2607
+        },
+        "cleanup_json_line": 2665,
+        "orphan_heading_line": 2712
+      }
+    },
+    {
+      "job": "ios-release",
+      "api_job_id": 103121858148,
+      "job_conclusion": "success",
+      "cleanup": "PASS",
+      "artifact_ids": {
+        "main": 10183444312,
+        "cleanup": 10183446259
+      },
+      "cleanup_receipt_sha256": "ab96990bbaaaeac54d5a61817a85a8a73abfada65099986a4779a894a0ba90ff",
+      "removed_build_roots": 15,
+      "removed_python_caches": 0,
+      "not_created": 172,
+      "zero_exit_stops_including_final": 3,
+      "log": {
+        "member": "4_iOS release frameworks and Swift wrapper.txt",
+        "sha256": "180a49ea78599df47c7f3c488b11e000f87efec17cf7d44fb887802a2aefa46e",
+        "stop_json_lines": {
+          "apple-aggregate": 816,
+          "apple-wrapper": 2115
+        },
+        "cleanup_json_line": 2184,
+        "orphan_heading_line": 2231
+      }
+    }
+  ],
+  "apple_cycles": [
+    {
+      "job": "ios",
+      "cycle": "apple-aggregate",
+      "result": "PASS",
+      "claim_sha256": "5e14930c7fc9e239d80a2c81f85ee398fecf9dcb5915e0d63363705219e0c1aa",
+      "stop_sha256": "ff07642530f36c978341d922a6336afac5196dd105a918effe2f3668b3e2eb9e",
+      "worker_passes": 2,
+      "worker_errors": 0,
+      "excluded_lifetimes": 0,
+      "baseline_lifetimes": 230,
+      "signals": [],
+      "simulator": {
+        "result": "NOT_APPLICABLE"
+      }
+    },
+    {
+      "job": "ios",
+      "cycle": "apple-ui",
+      "result": "PASS",
+      "claim_sha256": "b9c7f2cdc9cf38124534c31d0c62e2739701bdc20c76dc9e651e72b2142d2120",
+      "stop_sha256": "ee436f1d37b87266e0220f2d4108cecf9474fe3df1807642014847209286a03b",
+      "worker_passes": 2,
+      "worker_errors": 0,
+      "excluded_lifetimes": 0,
+      "baseline_lifetimes": 161,
+      "signals": [],
+      "simulator": {
+        "result": "PASS",
+        "udid": "1754405B-7502-4115-AC5F-CA02A939CD0F",
+        "actions": [
+          {
+            "command": "delete",
+            "exit_code": 0
+          }
+        ],
+        "recovered_from_intent": false
+      }
+    },
+    {
+      "job": "ios-release",
+      "cycle": "apple-aggregate",
+      "result": "PASS",
+      "claim_sha256": "7ee5a3323dd933d47c6d2b5ca8f1c809848050d557a63784a01591e7503e1a99",
+      "stop_sha256": "17d0309a37d3154de794b47b4f730393c3cfe076794501df9d9eddc6229557b4",
+      "worker_passes": 2,
+      "worker_errors": 0,
+      "excluded_lifetimes": 0,
+      "baseline_lifetimes": 242,
+      "signals": [],
+      "simulator": {
+        "result": "NOT_APPLICABLE"
+      }
+    },
+    {
+      "job": "ios-release",
+      "cycle": "apple-wrapper",
+      "result": "PASS",
+      "claim_sha256": "a0426abcc0911a26eedf3d910897eb9a1e4932cfe5301ad883d4134076aa1e8c",
+      "stop_sha256": "bf57681abe529371a31f9b4e96adf7137517f25b91c15acb037fcffb1305c52f",
+      "worker_passes": 2,
+      "worker_errors": 0,
+      "excluded_lifetimes": 0,
+      "baseline_lifetimes": 116,
+      "signals": [
+        {
+          "pid": 17916,
+          "started": [
+            1789097186,
+            114580
+          ],
+          "executable": "Contents/Developer/usr/bin/ibtoold",
+          "signal": 15,
+          "delivered": true
+        },
+        {
+          "pid": 17913,
+          "started": [
+            1789097186,
+            48070
+          ],
+          "executable": "Contents/Developer/usr/bin/ibtoold",
+          "signal": 15,
+          "delivered": true
+        }
+      ],
+      "simulator": {
+        "result": "NOT_APPLICABLE"
+      }
+    }
+  ],
+  "apple_reconciliation": "Exactly ios=aggregate+ui and ios-release=aggregate+wrapper; every current cycle prepare/run/finish passed, claims/source/run/job and final receipt hashes match. UI plan/create/adopt nonce f04cd65520624c02bad14f27845a21ad and fresh1754405B-7502-4115-AC5F-CA02A939CD0F match; device absent from pre-create baseline, delete0, no recovery-from-intent. Other3cycles simulatorNOT_APPLICABLE. Release wrapper2ibtoold TERM events match newly owned native lifetimes after claim boundary, followed by clean bounded worker resamples; no reap/whole-machine claim.",
+  "linux_v2_absence": {
+    "result": "PASS",
+    "started_at": "2026-09-11T02:20:42.743961+00:00",
+    "finished_at": "2026-09-11T02:20:42.856078+00:00",
+    "enumerated": 151,
+    "sampled": 151,
+    "selected_uid": 7,
+    "matching_executables": 0,
+    "mixed_uid_samples": 1,
+    "mixed_uid_privileged_samples": 1,
+    "exe_reader": {
+      "mode": "sudo-proc-exe-v2",
+      "eacces_denials": 3,
+      "privileged_reads": 3
+    },
+    "binding": {
+      "sdk_path_sha256": "e507a12011d2294b5329bb26fe44164d883087cb9d582c7ec9335a39e4c551e1",
+      "sdk_device": 2049,
+      "sdk_inode": 795534,
+      "uid": 1001
+    },
+    "source": {
+      "head": "59a384441f44844a79ae62ea8ee68d0c9e1e5878",
+      "tree": "9f06627b0dd047394de6f52adbc494e334651c74"
+    },
+    "errors": []
+  },
+  "linux_scope_limit": "Managed-device smoke and AAB inspection were SKIPPED after the failed common aggregate. Three stops and the source/SDK/UID-bound v2 audit passed; this is NOT a post-managed-runtime execution or emulator/AVD-retirement result. Both counter families reconcile; sampled SDK executable absence only.",
+  "preservation_and_orphans": {
+    "current_errors": "All6 current cleanup errors[]/retained[]; all4 Apple cycle errors[] and all8 worker errors[]. All15 stop exits0 with No Gradle daemons are running.",
+    "unit_test_output": "Android log2362/2368 contains native-probe preservation10/8 OSError summaries within the release-automation unittest stream, not task-bound cleanup. Passing fault-injection controls appear at2115/2119; actual focused native/probe steps were skipped. These summaries were inspected, not erased or mislabeled as actual D08 resource-preservation failure.",
+    "orphan_output": "Read all6 combined Complete-job tails and system logs. Each has one Cleaning up orphan processes heading and zero Terminate orphan process lines. No contradictory current owned-worker/preservation error found; heading alone is not proof of all-process absence.",
+    "cache_scope": "Android removed15build roots+6Python-cache roots; other5jobs removed15build roots each. Claimed but uncreated directories stay distinct from removed. Unclaimed .gradle/.kotlin and global caches are not certified removed; unrelated work/global caches and historical failures preserved."
+  },
+  "findings": [],
+  "qualification_limit": "CleanupPASS is independent of D08 overallFAIL. No rerun, cross-run/SHA stitching, new runtime/strict-protection/readiness or Store claim.",
+  "activity": "Read-only immutable Git path/tree binding and stdlib metadata/ZIP/JSON/log reconciliation; no source-code re-audit, project imports, tests, builds, network, process signals or Git writes. Sole write this new review receipt.",
+  "completed_at": "2026-09-11T03:44:04.575438+00:00"
+}

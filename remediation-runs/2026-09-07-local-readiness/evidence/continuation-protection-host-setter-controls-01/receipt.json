@@ -1,0 +1,93 @@
+{
+  "kind": "FOCUSED_HOST_SETTER_CONTROLS_NOT_NATIVE_OR_PROTECTION_PROOF",
+  "started_at": "2026-09-11T04:01:26.337334+00:00",
+  "source_head": "50a2d2d112220507faaa2a7f185d47b331423999",
+  "working_tree_controls_before": {
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py": "8a6d8526a119c95ee22b85047e6029cfec3dd9db74af5cc4ef674a5c087de35f",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/test_probe.py": "f092d43011ea237cedc88a676d6571f6381399f8e6f11c7bc9d643aeaa3b05fa",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/README.md": "334289ec3441fddf90697279608e40dfacbe433371ae68d7f008b230231868ac",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/HostSet.m.in": "c67763f432bd2d7869bf661f78507ff93681735692c570b84c51dd885c6d5177"
+  },
+  "tests": [
+    {
+      "label": "paired",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "/root/projects/Parlor/parlor/remediation-runs/2026-09-08-continuation/protection-diagnostic-01",
+        "-p",
+        "test_probe.py",
+        "-v"
+      ],
+      "cwd": ".",
+      "exit_code": 0,
+      "seconds": 0.563,
+      "log_sha256": "5e2d3d607874bee390085d818cfb90bf70890eff31b76cfd5e51258bab67a71f",
+      "summary": "\n----------------------------------------------------------------------\nRan 49 tests in 0.295s\n\nOK"
+    },
+    {
+      "label": "host-image-closure",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "-v",
+        "test_host_probe.HostProbeTests.test_controls_cli_and_selection_are_disjoint_before_native_work"
+      ],
+      "cwd": "remediation-runs/2026-09-08-continuation/protection-host-image-01",
+      "exit_code": 0,
+      "seconds": 0.285,
+      "log_sha256": "851aa4e9b1b161ca1e211b8040cffdc1b985b5596e0a9e0f34d5c95c3eb598fb",
+      "summary": "\n----------------------------------------------------------------------\nRan 1 test in 0.015s\n\nOK"
+    }
+  ],
+  "cleanup": {
+    "errors": [],
+    "scratch_path": "/tmp/parlor-host-setter-controls-08sf27_1",
+    "gradle_stop_exit": 0,
+    "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+    "scratch_removed": true,
+    "checked_live_roots": [
+      "build",
+      "build-logic/build",
+      "build-logic/convention/build",
+      "composeApp/build",
+      "iosApp/build",
+      "game-modes/mafia/build",
+      "game-modes/whodunit/build",
+      "shared/core/build",
+      "shared/design-system/build",
+      "shared/engine/build",
+      "shared/engine-testing/build",
+      "shared/session/build",
+      "shared/networking/build",
+      "shared/networking-testing/build",
+      "shared/storage/build",
+      "shared/transport-p2p/build",
+      "shared/content/build",
+      ".gradle",
+      ".kotlin",
+      "build-logic/.gradle",
+      "scripts/ci/__pycache__",
+      "scripts/release/__pycache__",
+      "scripts/release/tests/__pycache__",
+      "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/__pycache__",
+      "remediation-runs/2026-09-08-continuation/protection-host-image-01/__pycache__"
+    ],
+    "checked_live_outputs_remaining": [],
+    "gradle_clean": "NOT_NEEDED_NO_BUILD_OUTPUTS"
+  },
+  "result": "PASS",
+  "working_tree_controls_after": {
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py": "8a6d8526a119c95ee22b85047e6029cfec3dd9db74af5cc4ef674a5c087de35f",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/test_probe.py": "f092d43011ea237cedc88a676d6571f6381399f8e6f11c7bc9d643aeaa3b05fa",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/README.md": "334289ec3441fddf90697279608e40dfacbe433371ae68d7f008b230231868ac",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/HostSet.m.in": "c67763f432bd2d7869bf661f78507ff93681735692c570b84c51dd885c6d5177"
+  },
+  "finished_at": "2026-09-11T04:01:27.968134+00:00"
+}

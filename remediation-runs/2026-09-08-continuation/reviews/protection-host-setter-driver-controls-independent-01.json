@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "reviewer": "/root/probe_identity",
+  "author": "/root/ci_ios_runtime",
+  "status": "APPROVED_SOURCE_AND_ACTUAL_FOCUSED_CONTROLS_NATIVE_SETTER_PENDING",
+  "source_base": "50a2d2d112220507faaa2a7f185d47b331423999",
+  "pins": {
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py": "8a6d8526a119c95ee22b85047e6029cfec3dd9db74af5cc4ef674a5c087de35f",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/test_probe.py": "f092d43011ea237cedc88a676d6571f6381399f8e6f11c7bc9d643aeaa3b05fa",
+    "remediation-runs/2026-09-08-continuation/protection-diagnostic-01/README.md": "334289ec3441fddf90697279608e40dfacbe433371ae68d7f008b230231868ac"
+  },
+  "separate_native_template_approval": {
+    "template_sha256": "c67763f432bd2d7869bf661f78507ff93681735692c570b84c51dd885c6d5177",
+    "reviewer": "/root/storage_boundary",
+    "path": "remediation-runs/2026-09-08-continuation/reviews/protection-host-setter-native-source-independent-01.json",
+    "sha256": "90660171077a1ddbaf16075579fe4a8a4bb132aca001ff26ff47098e89123007",
+    "scope": "Native implementation review belongs to storage_boundary; this review checked the driver/template interface, not another C audit."
+  },
+  "source_review": [
+    "Original host_sources, validate_host_report, validate_report, context, child_environment, Probe.run/bindings/capture_native/capture_host remain byte-identical. Existing full source checks and budgets stay in place; the closed control set expands19 to20 by adding HostSet.m.in. No workflow, selection, input, original sampler or validator-helper change.",
+    "The original five-target read-only raw/report are saved and validated before entering the setter stage. A single preceding reader, exact reader command, original strict result, original source/image custody and hashes of all three reader artifacts are required. Distinct setter filenames/state prevent rewriting the original comparison.",
+    "One no-argument ProtectionHostSet command follows exactly four bound compile/sign/verify/UUID commands. It consumes the existing qualified SDK and compiled five-identity context, never another SDK query. Added bounds are90/30/30/30/30s; aggregate run/cleanup/finalization budgets, command cap and direct-child refusal/retirement remain unchanged. No retries, timeout samples or alternate targets.",
+    "Setter parser requires exact none-after-url-set / created/none.bin / integer index2 before exempting only that fixed leaf from the existing no-path metadata check. Current native context, uid, owned direct PID, macOS runtime and separate compiled main UUID are bound. Before/after samples retain full seven-field identity and all five descriptor/path witnesses through the unchanged native validator. Main stays platform[1]; only the explicit Foundation setter role uses the existing bounded host-Foundation image policy; simulator images remain[7].",
+    "Actual setter selector, sampled FileManager receiver class, Foundation basename and stable before/after IMP are required. BOOL, bounded NSError and resulting classes are preserved observations, including failure/unchanged class; they never change original strict or historical/application results. Raw setter streams are preserved before exit/schema failure checks.",
+    "Copied source and compiled image stat/hash identities are checked before execution, after the reaped child, and before owned scratch retirement. Shared reader sources/image and prior raw/report hashes must remain unchanged. Final assertion rereads only retained receipts, validates exact command order, source/image/retirement and removed-entry joins, and preserves original strict results. Missing post-set records may permit custody-proven failure cleanup but cannot satisfy final collection assertion."
+  ],
+  "actual_batch": {
+    "path": "remediation-runs/2026-09-07-local-readiness/evidence/continuation-protection-host-setter-controls-01/receipt.json",
+    "sha256": "9271d37a2cdf0d6d8c9bf50565658822a647d862216f6830f645b7eac49069b9",
+    "paired_log_sha256": "5e2d3d607874bee390085d818cfb90bf70890eff31b76cfd5e51258bab67a71f",
+    "paired_observed_ok_cases": 49,
+    "paired_raw_summary": "Ran 49 tests in 0.295s; OK",
+    "targeted_host_closure_log_sha256": "851aa4e9b1b161ca1e211b8040cffdc1b985b5596e0a9e0f34d5c95c3eb598fb",
+    "targeted_host_closure_observed_ok_cases": 1,
+    "targeted_host_closure_raw_summary": "Ran 1 test in 0.015s; OK",
+    "recorded_command_exits": [0, 0],
+    "observed_failures_errors_skips": 0,
+    "all_four_batch_pins_before_after_and_current_match": true,
+    "all_recorded_log_hashes_match_current_bytes": true,
+    "coverage": "Four added tests cover nonpromotion, fixed target/full identity/IMP refusal, original-reader/exact command order and retirement identities. Existing tests extend raw-failure preservation and expanded controls. Targeted H01 test checks closure/selection separation only."
+  },
+  "cleanup": {
+    "recorded_errors": [],
+    "recorded_gradle_stop_exit": 0,
+    "stop_log_sha256": "9bb9c19238f3fdde3213f2be84912b0c7e87b3e2295ec372ec245deab200d46d",
+    "observed_stop_text": "No Gradle daemons are running.",
+    "listed_roots_directly_rechecked_absent": 25,
+    "recorded_scratch_path_directly_rechecked_absent": "/tmp/parlor-host-setter-controls-08sf27_1",
+    "absence_checks_include_dangling_symlinks": true
+  },
+  "findings": [],
+  "limits": "Source and actual local synthetic controls only. New macOS setter compilation/execution, successful mutation and cleanup on the native host remain NOT_RUN. No native efficacy, runtime-cause, encryption/enforcement, strict/application/full/Store success or historical promotion is established. Filesystem custody checks are bracketing observations, not atomic locks. Root owns separately approved frozen dispatch.",
+  "operations": "Bounded three-file diff, unchanged-seam comparison, new interface/validator-boundary inspection, exact hashes and preserved actual logs/cleanup-path checks, followed only by this receipt. No broad source/C re-audit, project imports, tests/build reruns, network, dispatch, deletion or other edits."
+}

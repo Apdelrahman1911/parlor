@@ -42,8 +42,10 @@ HOST_TARGETS = (("directory-final", "created"), ("complete-after-replace", "crea
     ("nonatomic-complete-baseline", "created/nonatomic-complete.bin"))
 HOST_IMAGE = "ProtectionHostRead"
 HOST_COLLECTED = "CAPTURED_SAME_INODE_HOST_METADATA_NOT_PROTECTION_PASS"
+HOST_SETTER_IMAGE = "ProtectionHostSet"
+HOST_SETTER_COLLECTED = "CAPTURED_SAME_INODE_HOST_SETTER_NOT_PROTECTION_PASS"
 CONTROL_PATHS = tuple(HERE + "/" + name for name in
-    ("run_probe.py", "ProtectionSampler.h", "ProtectionSampler.m", "ProbeMain.m", "HostRead.m.in",
+    ("run_probe.py", "ProtectionSampler.h", "ProtectionSampler.m", "ProbeMain.m", "HostRead.m.in", "HostSet.m.in",
      "host_sampler.py", "test_host_sampler.py", "test_probe.py", "README.md")) + (
     "remediation-runs/2026-09-08-continuation/protection-application-01/application_receipts.py",
     ".github/workflows/production-verification.yml", "scripts/ci/native_process_probe.py",
@@ -170,6 +172,46 @@ def host_sources(report, header):
         "HostRead.m": native.file_bytes(ROOT / HERE / "HostRead.m.in")}
 
 
+def host_setter_sources(report, header):
+    # Reuse the reviewed host sampler and the original five-identity context;
+    # never replace the reader's entry point or change its source bundle.
+    sources = host_sources(report, header)
+    del sources["HostRead.m"]
+    sources["HostSet.m"] = native.file_bytes(ROOT / HERE / "HostSet.m.in")
+    return sources
+
+
+def host_setter_build_commands(resources, sdk):
+    image = resources / HOST_SETTER_IMAGE
+    return (
+        ("host-setter-compile", ["/usr/bin/xcrun", "--sdk", "macosx", "clang", "-target", "arm64-apple-macosx15.0",
+            "-isysroot", str(sdk), "-fobjc-arc", "-fblocks", "-fno-modules", "-O0", "-Wall", "-Wextra", "-I", str(resources),
+            str(resources / "HostSet.m"), str(resources / "HostProtectionSampler.m"), "-framework", "Foundation", "-o", str(image)], 90),
+        ("host-setter-adhoc-sign", ["/usr/bin/codesign", "--force", "--sign", "-", "--timestamp=none", str(image)], 30),
+        ("host-setter-adhoc-verify", ["/usr/bin/codesign", "--verify", "--strict", str(image)], 30),
+        ("host-setter-built-uuid", ["/usr/bin/xcrun", "dwarfdump", "--uuid", str(image)], 30))
+
+
+def host_setter_command_order(commands, resources, sdk):
+    expected = (("host-observation", [str(resources / HOST_IMAGE)], 30),) + host_setter_build_commands(resources, sdk) + (
+        ("host-setter-observation", [str(resources / HOST_SETTER_IMAGE)], 30),)
+    labels = {label for label, _, _ in expected}
+    selected = [row for row in commands if row.get("label") in labels]
+    require(len(selected) == len(expected), "host-setter-command-count")
+    for row, (label, arguments, timeout) in zip(selected, expected):
+        require(row.get("label") == label and row.get("command") == arguments and row.get("timeout_seconds") == timeout and
+            row.get("status") == "EXITED" and row.get("exit_code") == 0 and row.get("direct_child_reaped") is True and
+            row.get("ownership") == "direct-unreaped-Popen" and not row.get("child_cleanup_error_type"), "host-read-before-set-order")
+    return selected[-1]
+
+
+def preceding_host_read(evidence, commands):
+    indices = [index for index, row in enumerate(commands) if row.get("label") == "host-observation"]
+    require(len(indices) == 1, "single-preceding-host-read")
+    return dict(command_index=indices[0], **{name: native.sha(native.file_bytes(evidence / name))
+        for name in ("host.stdout.json", "host.stderr.txt", "host-report.json")})
+
+
 def host_file_binding(path):
     identity = lambda value: dict(device=value.st_dev, inode=value.st_ino, uid=value.st_uid, mode=value.st_mode,
         links=value.st_nlink, bytes=value.st_size, modified_ns=value.st_mtime_ns, changed_ns=value.st_ctime_ns)
@@ -177,6 +219,19 @@ def host_file_binding(path):
     raw = native.file_bytes(path, maximum=16 * 1024 * 1024)
     require(identity(path.lstat()) == before and len(raw) == before["bytes"], "host-input-custody-changed")
     return dict(**before, sha256=native.sha(raw))
+
+
+def host_setter_retirement(resources, prior):
+    require([row["name"] for row in prior["host_setter_inputs_before_compile"]] ==
+        ["HostProtectionSampler.m", "HostSet.m", "OwnedHostReadContext.h", "OwnedProbeContext.h", "ProtectionSampler.h"],
+        "host-setter-retirement-input-paths")
+    image = host_file_binding(resources / HOST_SETTER_IMAGE)
+    inputs = [dict(name=row["name"], **host_file_binding(resources / row["name"]))
+        for row in prior["host_setter_inputs_before_compile"]]
+    require(image == prior["host_setter_built_image"]["file"] and
+        image == prior.get("host_setter_image_after_set", image) and inputs == prior["host_setter_inputs_before_compile"] and
+        inputs == prior.get("host_setter_inputs_after_set", inputs), "host-setter-retirement-custody")
+    return dict(image=image, inputs=inputs)
 
 
 def validate_host_report(raw, request, report, binary_uuid, command, runtime):
@@ -226,6 +281,58 @@ def validate_host_report(raw, request, report, binary_uuid, command, runtime):
     return dict(collection_status=HOST_COLLECTED, comparisons=comparisons, same_simulator_process=False,
         strict_synthetic_complete=report["strict_synthetic_complete"], historical_a37_strict_result_changed=False,
         runtime_implementation_causality_proven=False, production_snapshots_observed=False)
+
+
+def validate_host_setter_report(raw, request, report, binary_uuid, command, runtime):
+    require(command.get("label") == "host-setter-observation" and command.get("status") == "EXITED" and
+        command.get("exit_code") == 0 and command.get("direct_child_reaped") is True and
+        command.get("ownership") == "direct-unreaped-Popen" and not command.get("child_cleanup_error_type") and
+        type(command.get("owned_pid")) is int and 0 < command["owned_pid"] < 2**31, "owned-host-setter-process")
+    require(isinstance(raw, bytes) and 0 < len(raw) <= 256 * 1024, "host-setter-output-bounds")
+    value = native.decode(raw)
+    require(isinstance(value, dict) and set(value) == {"schema", "kind", "collection_status", "context", "process_id", "uid",
+        "runtime_version", "read_only", "same_simulator_process", "production_snapshots_observed",
+        "historical_a37_strict_result_changed", "target_id", "target_leaf", "expected_index", "main_image_before", "main_image_after",
+        "before", "operation", "after"}, "host-setter-record-shape")
+    require(value["target_id"] == "none-after-url-set" and value["target_leaf"] == "created/none.bin" and
+        type(value["expected_index"]) is int and value["expected_index"] == 2, "host-setter-fixed-target")
+    # The one fixed public relative leaf is not arbitrary path metadata. Keep
+    # the existing no-path metadata policy intact for every other field.
+    receipts.metadata_only({key: item for key, item in value.items() if key != "target_leaf"})
+    require(type(value["schema"]) is int and value["schema"] == 1 and value["kind"] == "synthetic-protection-host-setter" and
+        value["collection_status"] == "PASS" and value["context"] == request["native_context"] and value["read_only"] is False and
+        all(value[key] is False for key in ("same_simulator_process", "production_snapshots_observed",
+            "historical_a37_strict_result_changed")), "host-setter-context-scope")
+    require(type(value["process_id"]) is int and value["process_id"] == command["owned_pid"] and
+        type(value["uid"]) is int and value["uid"] == request["fixtures"]["uid"] > 0 and
+        type(runtime) is list and len(runtime) == 3 and runtime[0] == 15 and all(type(v) is int and 0 <= v < 1000 for v in runtime) and
+        value["runtime_version"] == runtime and all(type(v) is int for v in value["runtime_version"]), "host-setter-process-runtime")
+    receipts.image(value["main_image_before"], 1)
+    require(value["main_image_before"] == value["main_image_after"] and value["main_image_before"]["uuid"] == binary_uuid and
+        value["main_image_before"]["image_basename"] == HOST_SETTER_IMAGE, "host-setter-built-image-binding")
+    expected = host_targets(report)[2]["identity"]
+    for key in ("before", "after"):
+        require(receipts.validate_native(value[key], "file", platform=1) == expected, "host-setter-full-identity")
+    for kind in ("fm", "url"):
+        require(value["before"][kind]["implementation_before"] == value["after"][kind]["implementation_before"],
+            "host-setter-getter-changed")
+    operation = value["operation"]
+    require(isinstance(operation, dict) and set(operation) == {"id", "requested_protection", "returned", "native_error",
+        "implementation_before", "implementation_after"} and operation["id"] == "none-host-fm-set" and
+        operation["requested_protection"] == "complete" and type(operation["returned"]) is bool, "host-setter-operation-shape")
+    error_record(operation["native_error"])
+    implementation = operation["implementation_before"]
+    require(isinstance(implementation, dict) and set(implementation) == {"receiver_class", "selector", "implementation"} and
+        implementation == operation["implementation_after"] and implementation["selector"] == "setAttributes:ofItemAtPath:error:" and
+        implementation["receiver_class"] == value["before"]["fm"]["implementation_before"]["receiver_class"], "host-setter-method-binding")
+    receipts.image(implementation["implementation"], 1, host_method="fm")
+    require(implementation["implementation"]["image_basename"] == "Foundation", "host-setter-foundation-image")
+    # BOOL, NSError and resulting class are observations, not collection gates
+    # and never inputs to the original simulator strict comparison.
+    return dict(collection_status=HOST_SETTER_COLLECTED, target_id=value["target_id"], target_leaf=value["target_leaf"],
+        same_inode=True, identity=expected, before=value["before"], operation=operation, after=value["after"], read_only=False,
+        strict_synthetic_complete=report["strict_synthetic_complete"], same_simulator_process=False,
+        historical_a37_strict_result_changed=False, runtime_implementation_causality_proven=False, production_snapshots_observed=False)
 
 
 def validate_report(raw, request, binary_uuid):
@@ -615,6 +722,17 @@ class Probe:
         require(row["status"] == "EXITED" and row.get("exit_code") == 0 and row.get("direct_child_reaped"), "host-collection-process")
         return row, out
 
+    def capture_host_setter(self):
+        row, out, err = self.commands.capture([str(self.resources / HOST_SETTER_IMAGE)], "host-setter-observation", 30)
+        try:
+            native.write_new(self.evidence / "host-setter.stdout.json", out)
+            native.write_new(self.evidence / "host-setter.stderr.txt", err)
+        except BaseException as error:
+            self.commands.preservation_error("host-setter-raw-output", error)
+            raise
+        require(row["status"] == "EXITED" and row.get("exit_code") == 0 and row.get("direct_child_reaped"), "host-setter-collection-process")
+        return row, out
+
     def compile_and_read_host(self, report):
         require(owned_directory(self.resources) == self.request["resources"] and
             owned_directory(self.resources / "fixtures") == self.request["fixtures"], "host-scratch-custody")
@@ -665,6 +783,69 @@ class Probe:
         comparison = validate_host_report(out, self.request, report, binary_uuid, row, self.state["platform"]["macos_runtime_version"])
         native.write_new(self.evidence / "host-report.json", native.json_bytes(comparison))
         self.state["host_collection_status"] = comparison["collection_status"]
+        self.save()
+        self.compile_and_set_host(report)
+
+    def compile_and_set_host(self, report):
+        require(self.state.get("host_collection_status") == HOST_COLLECTED and
+            "host_setter_inputs_before_compile" not in self.state and
+            not any(row.get("label", "").startswith("host-setter-") for row in self.commands.rows), "host-read-required-before-single-setter")
+        baseline = preceding_host_read(self.evidence, self.commands.rows)
+        host_command = self.commands.rows[baseline["command_index"]]
+        require(host_command.get("command") == [str(self.resources / HOST_IMAGE)] and
+            host_command.get("timeout_seconds") == 30, "exact-preceding-host-command")
+        comparison = validate_host_report(native.file_bytes(self.evidence / "host.stdout.json"), self.request, report,
+            self.state["host_built_image"]["uuid"], host_command, self.state["platform"]["macos_runtime_version"])
+        require(comparison == native.decode(native.file_bytes(self.evidence / "host-report.json")) and
+            comparison["strict_synthetic_complete"] == self.state["strict_synthetic_complete"], "validated-preceding-host-read")
+        require(owned_directory(self.resources) == self.request["resources"] and
+            owned_directory(self.resources / "fixtures") == self.request["fixtures"], "host-setter-scratch-custody")
+        sdk = self.bound_host_sdk()
+        sources = host_setter_sources(report, context_header(self.resources / "fixtures", self.request["native_context"]))
+        reader_inputs = lambda: [dict(name=row["name"], **host_file_binding(self.resources / row["name"]))
+            for row in self.state["host_inputs_before_compile"]]
+        require(reader_inputs() == self.state["host_inputs_before_compile"] == self.state["host_inputs_after_read"] and
+            host_file_binding(self.resources / HOST_IMAGE) == self.state["host_built_image"]["file"] == self.state["host_image_after_read"],
+            "host-reader-custody-before-setter")
+        for name, raw in sources.items():
+            if name == "HostSet.m":
+                native.write_new(self.resources / name, raw)
+            else:
+                require(native.file_bytes(self.resources / name) == raw, "host-setter-shared-source-changed")
+        original = native.file_bytes(ROOT / HERE / "ProtectionSampler.m")
+        require(native.file_bytes(self.resources / "ProtectionSampler.m") == original, "original-simulator-sampler-changed")
+        inputs = lambda: [dict(name=name, **host_file_binding(self.resources / name)) for name in sorted(sources)]
+        before = inputs()
+        require(all(row["sha256"] == native.sha(sources[row["name"]]) for row in before), "host-setter-copied-input-hash")
+        self.state["host_setter_inputs_before_compile"] = before
+        native.write_new(self.evidence / "host-setter-bindings.json", native.json_bytes(dict(target=host_targets(report)[2],
+            preceding_host_read=baseline, original_sampler_sha256=native.sha(original), inputs=before)))
+        self.save()
+        image = self.resources / HOST_SETTER_IMAGE
+        for label, arguments, timeout in host_setter_build_commands(self.resources, sdk):
+            raw = self.execute(arguments, label, timeout)
+        match = re.fullmatch(rb"UUID: ([0-9A-Fa-f-]{36}) \(arm64\) " + re.escape(str(image).encode()) + rb"\n", raw)
+        require(match is not None, "host-setter-built-arm64-uuid")
+        binary_uuid = simulator.checked_uuid(match.group(1).decode()).lower()
+        self.state["host_setter_built_image"] = dict(uuid=binary_uuid, file=host_file_binding(image), scope="standalone-host-setter-not-ios-or-Parlor")
+        require(inputs() == before, "host-setter-compiler-inputs-changed")
+        try:
+            row, out = self.capture_host_setter()
+        finally:
+            self.state["host_setter_inputs_after_set"] = inputs()
+            self.state["host_setter_image_after_set"] = host_file_binding(image)
+            self.save()
+            require(self.state["host_setter_inputs_after_set"] == before and
+                self.state["host_setter_image_after_set"] == self.state["host_setter_built_image"]["file"] and
+                reader_inputs() == self.state["host_inputs_after_read"] and
+                host_file_binding(self.resources / HOST_IMAGE) == self.state["host_image_after_read"] and
+                native.file_bytes(self.resources / "ProtectionSampler.m") == original and
+                preceding_host_read(self.evidence, self.commands.rows) == baseline, "host-setter-input-image-or-baseline-mutated")
+        require(host_setter_command_order(self.commands.rows, self.resources, sdk) == row, "host-setter-command-binding")
+        comparison = validate_host_setter_report(out, self.request, report, binary_uuid, row, self.state["platform"]["macos_runtime_version"])
+        native.write_new(self.evidence / "host-setter-report.json", native.json_bytes(comparison))
+        self.state["host_setter_collection_status"] = comparison["collection_status"]
+        self.save()
 
     def stop(self):
         # Never run clean/configuration/build tasks: this lane made no project
@@ -759,6 +940,8 @@ class Probe:
                 entries.append(dict(path=str(path.relative_to(self.resources)), device=info.st_dev, inode=info.st_ino,
                     uid=info.st_uid, mode=info.st_mode, bytes=info.st_size))
             self.state["removed_entries"] = entries
+            if "host_setter_built_image" in prior:
+                self.state["host_setter_retirement"] = host_setter_retirement(self.resources, prior)
             self.save()
             require(shutil.rmtree.avoids_symlink_attacks, "descriptor-safe-tree-removal-required")
             shutil.rmtree(self.resources)
@@ -820,8 +1003,38 @@ class Probe:
         require(comparison == native.decode(native.file_bytes(self.evidence / "host-report.json")) and
             prior["host_collection_status"] == comparison["collection_status"] and
             prior["strict_synthetic_complete"] == comparison["strict_synthetic_complete"], "collected-host-report-changed")
+        setter_sources = host_setter_sources(report, header)
+        setter_inputs = prior["host_setter_inputs_before_compile"]
+        require(setter_inputs == prior["host_setter_inputs_after_set"] and len(setter_inputs) == len(setter_sources) and
+            native.decode(native.file_bytes(self.evidence / "host-setter-bindings.json")) == dict(target=host_targets(report)[2],
+                preceding_host_read=preceding_host_read(self.evidence, prior["commands"]),
+                original_sampler_sha256=host_sampler.SAMPLER_SHA256, inputs=setter_inputs), "retained-host-setter-source-bindings")
+        for row, name in zip(setter_inputs, sorted(setter_sources)):
+            require(row["name"] == name and row["sha256"] == native.sha(setter_sources[name]) and row["bytes"] == len(setter_sources[name]) and
+                row["device"] == self.request["resources"]["device"] and row["uid"] == self.request["resources"]["uid"] and
+                type(row["inode"]) is int and row["inode"] > 0 and stat.S_ISREG(row["mode"]) and row["links"] == 1,
+                "retained-host-setter-input-identity")
+            if name != "HostSet.m":
+                require(row == next(item for item in inputs if item["name"] == name), "retained-host-shared-input-identity")
+        setter_image = prior["host_setter_built_image"]["file"]
+        require(prior["host_setter_image_after_set"] == setter_image and native.HEX64.fullmatch(setter_image["sha256"]) and
+            setter_image["device"] == self.request["resources"]["device"] and setter_image["uid"] == self.request["resources"]["uid"] and
+            type(setter_image["inode"]) is int and setter_image["inode"] > 0 and stat.S_ISREG(setter_image["mode"]) and
+            setter_image["links"] == 1 and 0 < setter_image["bytes"] <= 16 * 1024 * 1024 and
+            cleanup.get("host_setter_retirement") == dict(image=setter_image, inputs=setter_inputs), "retained-host-setter-image-retirement")
+        for name, identity in [(HOST_SETTER_IMAGE, setter_image)] + [(row["name"], row) for row in setter_inputs]:
+            retired = [row for row in cleanup["removed_entries"] if row.get("path") == name]
+            require(retired == [dict(path=name, **{key: identity[key] for key in ("device", "inode", "uid", "mode", "bytes")})],
+                "host-setter-retired-entry-binding")
+        setter_command = host_setter_command_order(prior["commands"], self.resources, Path(prior["host_platform"]["sdk_path"]))
+        setter_comparison = validate_host_setter_report(native.file_bytes(self.evidence / "host-setter.stdout.json"), self.request, report,
+            prior["host_setter_built_image"]["uuid"], setter_command, prior["platform"]["macos_runtime_version"])
+        require(setter_comparison == native.decode(native.file_bytes(self.evidence / "host-setter-report.json")) and
+            prior["host_setter_collection_status"] == setter_comparison["collection_status"] and
+            prior["strict_synthetic_complete"] == setter_comparison["strict_synthetic_complete"], "collected-host-setter-report-changed")
         print(json.dumps(dict(collection=report["collection_status"], strict_synthetic_complete=report["strict_synthetic_complete"],
             host_comparison=comparison["collection_status"],
+            host_setter_observation=setter_comparison["collection_status"],
             cleanup="PASS", production_and_historical_a37_qualification="NOT_ESTABLISHED", evidence_upload=main_upload,
             cleanup_upload=cleanup_upload), sort_keys=True))
         return 0

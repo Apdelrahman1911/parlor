@@ -51,6 +51,17 @@ root are compiled into its context. Canonical root/parent/target custody bracket
 every sample; the sampler still brackets every API read with descriptor/path
 equality. Host reads never write/set protection or read file contents.
 
+Only **after those unchanged five host samples and their read-only report have
+been saved and validated**, a separate no-argument macOS executable requests
+Complete once with public `NSFileManager.setAttributes:ofItemAtPath:error:`.
+Its sole target is the existing `created/none.bin`, index2 of the same compiled
+five-identity context. It cannot select another path, create/replace a file, or
+retry the API. Fresh sampler observations bracket that single setter, with the
+same full inode, root/parent custody, descriptor-close and method-image guards.
+The public BOOL, bounded NSError domain/code and actual setter IMP before/after
+are retained even when the setter fails or the resulting class is unchanged.
+The original simulator and five-target host baselines are not rewritten.
+
 The simulator sampler remains byte-identical, SHA256
 `3f4f49af81d396a07beabeed45be649314495fd286327baa931aa5eb2dcca137`.
 `host_sampler.py` creates a separately pinned host-only copy. H01's actual
@@ -78,7 +89,7 @@ python3 -B -m unittest discover -s remediation-runs/2026-09-08-continuation/prot
 
 The first is read-only; the second executes pure synthetic control tests, not
 native operations. Root owns this Linux cycle and its immediate Gradle stop.
-All packet controls (including host template/transform/tests and the pure
+All20 packet controls (including both host templates/transform/tests and the pure
 application receipt validator), imported helper transitives, workflow, wrapper and
 shipping write source are hashed by `controls`. Commit reviewed changes, then
 the mechanical inventory, before generating the approved digest for the freeze.
@@ -125,9 +136,30 @@ compact host-sampler diff bind the extra build. Source inputs and the host
 binary are re-attested after the owned host child is reaped; `assert-result`
 revalidates both raw reports and their source/context/image/identity bindings.
 
+The additive setter has distinct `host-setter.stdout.json`,
+`host-setter.stderr.txt`, `host-setter-bindings.json` and
+`host-setter-report.json` receipts. Its
+`CAPTURED_SAME_INODE_HOST_SETTER_NOT_PROTECTION_PASS` means only that the
+one-call observation and same-inode witnesses were captured, regardless of the
+BOOL/error/class result. This is **not** a new strict protection PASS. The
+original `strict_synthetic_complete`, historical A37, app qualification and
+causality claims remain unchanged. The bindings retain the preceding read-only
+raw/report hashes and command position, the same header/sampler source identities
+and a separate setter main UUID/file hash. Sources and binary are re-attested
+after that direct child is reaped and again before owned scratch retirement;
+`assert-result` checks the saved command order, raw result and exact retired
+entries without executing another reader or setter.
+
 The run budget is480s plus90s bounded finalization; cleanup is300s plus a final
 bounded stop reserve. Each native self-alarm bounds its executable to25s; the
-host child has a30s driver bound. Simulator and host are one bounded native
+reader and setter host children each have a30s driver bound. The setter adds
+exactly five command rows: compile90s, ad-hoc sign30s, verify30s, UUID30s and
+observation30s. It adds no SDK requery, timeout sample, fallback or retry. Static
+maximum paths remain71 run rows and44 cleanup rows (including the existing
+20-poll shutdown bound and final stops), below each instance's unchanged96-row
+cap. These are row ceilings, not a claim that native execution fits its time
+budget; insufficient remaining time still refuses launch. Simulator and host
+phases are one bounded native
 observation/build cycle, followed immediately by the existing Gradle stop.
 No app rebuild or new workflow is involved. Existing
 `native_process_probe.Commands` retains/reaps only owned Popen handles; existing
