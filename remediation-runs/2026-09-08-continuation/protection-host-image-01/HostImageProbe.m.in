@@ -1,0 +1,91 @@
+// Standalone HOST-only attribution diagnostic. No storage query or mutation.
+#import "ProtectionSampler.h"
+#import <TargetConditionals.h>
+#import <objc/runtime.h>
+#include <stdio.h>
+#include <unistd.h>
+
+#if !TARGET_OS_OSX || TARGET_OS_SIMULATOR || TARGET_OS_MACCATALYST || !defined(__arm64__)
+#error This entry point requires arm64 macOS, never an app or simulator.
+#endif
+
+static NSDictionary *capturedObservation;
+static NSUInteger hookCount;
+
+void ParlorHostImageCapture(NSDictionary *observation) {
+    hookCount++;
+    if (hookCount != 1 || !observation)
+        @throw [NSException exceptionWithName:@"HostImageProbeBoundary" reason:@"invalid-hook" userInfo:nil];
+    capturedObservation = [observation copy];
+}
+
+static NSString *closedFailure(NSException *exception) {
+    NSArray *allowed = @[@"image-resolution", @"image-header", @"image-count", @"image-loaded-identity",
+        @"image-command-bounds", @"image-command-size", @"image-uuid", @"image-platform", @"image-dylib",
+        @"image-segment", @"image-executable-address", @"image-name", @"resolved-method", @"method-implementation"];
+    return [exception.name isEqual:@"ProtectionBoundary"] && [allowed containsObject:exception.reason] ?
+        exception.reason : @"native-exception";
+}
+
+static NSDictionary *observe(NSString *target, id receiver, SEL selector, const void *address) {
+    capturedObservation = nil;
+    hookCount = 0;
+    NSMutableDictionary *row = [@{@"target": target, @"receiver_class": receiver ?
+        NSStringFromClass(object_getClass(receiver)) : @"not-applicable", @"selector": receiver ?
+        NSStringFromSelector(selector) : @"not-applicable", @"original_result": @"ERROR",
+        @"failure": @"none"} mutableCopy];
+    @try {
+        if (receiver) (void)ParlorProtectionImplementation(receiver, selector);
+        else (void)ParlorProtectionImageIdentity(address);
+        row[@"original_result"] = @"PASS";
+    } @catch (NSException *exception) {
+        row[@"original_result"] = [exception.name isEqual:@"ProtectionBoundary"] ? @"REJECTED" : @"ERROR";
+        row[@"failure"] = closedFailure(exception);
+    }
+    row[@"hook_count"] = @(hookCount);
+    row[@"observation"] = capturedObservation ? (id)capturedObservation : NSNull.null;
+    return row;
+}
+
+int main(int argc, const char *argv[]) {
+    (void)argv;
+    @autoreleasepool {
+        NSOperatingSystemVersion version = NSProcessInfo.processInfo.operatingSystemVersion;
+        NSMutableDictionary *record = [@{@"schema": @1, @"kind": @"host-image-predicate-diagnostic",
+            @"collection_status": @"FAIL", @"failure": @"none", @"binding": @{
+                @"run_token": @__HOST_IMAGE_TOKEN__, @"source_sha": @__HOST_IMAGE_SOURCE__,
+                @"control_sha256": @__HOST_IMAGE_CONTROLS__, @"run_id": @__HOST_IMAGE_RUN_ID__,
+                @"run_attempt": @__HOST_IMAGE_RUN_ATTEMPT__},
+            @"process_id": @(getpid()), @"uid": @(getuid()),
+            @"runtime_version": @[@(version.majorVersion), @(version.minorVersion), @(version.patchVersion)],
+            @"production_snapshots_observed": @NO, @"protection_qualified": @NO, @"original_guard_changed": @NO,
+            @"results": [NSMutableArray array]} mutableCopy];
+        @try {
+            if (argc != 1 || getuid() == 0 || getuid() != geteuid() || version.majorVersion != 15)
+                @throw [NSException exceptionWithName:@"HostImageProbeBoundary" reason:@"host-context" userInfo:nil];
+            NSMutableArray *results = record[@"results"];
+            [results addObject:observe(@"main", nil, NULL, (const void *)&main)];
+            [results addObject:observe(@"filemanager", NSFileManager.defaultManager,
+                @selector(attributesOfItemAtPath:error:), NULL)];
+            // This fixed path only constructs a receiver. No existence/resource
+            // query, directory creation, descriptor, setter or payload read occurs.
+            NSURL *url = [NSURL fileURLWithPath:@"/parlor-host-image-receiver-only" isDirectory:YES];
+            [results addObject:observe(@"url", url, @selector(resourceValuesForKeys:error:), NULL)];
+            BOOL complete = [results[0][@"original_result"] isEqual:@"PASS"];
+            for (NSDictionary *row in results) {
+                complete = complete && [row[@"hook_count"] unsignedIntegerValue] == 1 &&
+                    row[@"observation"] != NSNull.null &&
+                    [@[@"PASS", @"REJECTED"] containsObject:row[@"original_result"]];
+            }
+            record[@"collection_status"] = complete ? @"CAPTURED_HOST_IMAGE_PREDICATES_NOT_APP_QUALIFICATION" : @"FAIL";
+            if (!complete) record[@"failure"] = @"incomplete-predicate-capture";
+        } @catch (NSException *exception) {
+            record[@"failure"] = closedFailure(exception);
+        }
+        NSError *error = nil;
+        NSData *data = [NSJSONSerialization dataWithJSONObject:record options:NSJSONWritingSortedKeys error:&error];
+        if (!data || error || data.length > 256 * 1024 || fwrite(data.bytes, 1, data.length, stdout) != data.length ||
+            fputc('\n', stdout) == EOF || fflush(stdout) != 0) return 2;
+        return [record[@"collection_status"] isEqual:@"CAPTURED_HOST_IMAGE_PREDICATES_NOT_APP_QUALIFICATION"] ? 0 : 1;
+    }
+}

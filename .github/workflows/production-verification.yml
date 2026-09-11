@@ -19,10 +19,10 @@ on:
         default: full
         options: [full, native-preflight, native-evidence, native-process-probe, windows-only, linux-process-probe, android-cleanup-only, ios-protection-probe]
       native_selection:
-        description: Native lanes, Settings, OS recovery, or copied-app protection (explicit approval)
+        description: Native lanes, Settings, OS recovery, or protection diagnostics (explicit approval)
         type: choice
         default: paired
-        options: [paired, l08-only, settings-sheet-only, os-recovery-only, protection-application-only]
+        options: [paired, l08-only, settings-sheet-only, os-recovery-only, protection-application-only, protection-host-only]
       frozen_source_sha:
         description: Exact reviewed source/inventory SHA (required for every focused mode)
         type: string
@@ -1063,11 +1063,13 @@ jobs:
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
       PARLOR_DISPATCH_SCOPE: ${{ inputs.verification_scope }}
+      PARLOR_PROTECTION_SELECTION: ${{ inputs.native_selection }}
       PARLOR_FROZEN_SOURCE_SHA: ${{ inputs.frozen_source_sha }}
       PARLOR_APPROVED_PROBE_CONTROL_SHA256: ${{ inputs.approved_probe_control_sha256 }}
 
-    # Standalone same-inode diagnostic, never an app/Kotlin build or a full gate.
-    # The runner admits exact reviewed source/controls before allocating resources.
+    # Paired keeps the standalone simulator diagnostic; the explicit host mode
+    # observes loaded-image attribution without an app/Kotlin build or simulator.
+    # Both admit exact reviewed source/controls before allocating resources.
     steps:
       - name: Check out source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -1085,7 +1087,20 @@ jobs:
       - name: Run independently approved strict protection diagnostic
         id: protection_probe
         shell: bash
-        run: /usr/bin/python3 -B remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py run
+        run: |
+          set -euo pipefail
+          case "$PARLOR_PROTECTION_SELECTION" in
+            paired)
+              /usr/bin/python3 -B remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py run
+              ;;
+            protection-host-only)
+              /usr/bin/python3 -B remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py run
+              ;;
+            *)
+              printf '%s\n' 'Unsupported protection diagnostic selection' >&2
+              exit 64
+              ;;
+          esac
 
       - name: Upload strict protection diagnostic evidence
         id: protection_probe_artifact
@@ -1105,7 +1120,20 @@ jobs:
           PARLOR_PROTECTION_UPLOAD_OUTCOME: ${{ steps.protection_probe_artifact.outcome }}
           PARLOR_PROTECTION_ARTIFACT_ID: ${{ steps.protection_probe_artifact.outputs.artifact-id }}
           PARLOR_PROTECTION_ARTIFACT_DIGEST: ${{ steps.protection_probe_artifact.outputs.artifact-digest }}
-        run: /usr/bin/python3 -B remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py cleanup
+        run: |
+          set -euo pipefail
+          case "$PARLOR_PROTECTION_SELECTION" in
+            paired)
+              /usr/bin/python3 -B remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py cleanup
+              ;;
+            protection-host-only)
+              /usr/bin/python3 -B remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py cleanup
+              ;;
+            *)
+              printf '%s\n' 'Unsupported protection diagnostic selection' >&2
+              exit 64
+              ;;
+          esac
 
       - name: Upload strict protection diagnostic cleanup
         id: protection_probe_cleanup_artifact
@@ -1129,4 +1157,17 @@ jobs:
           PARLOR_PROTECTION_CLEANUP_UPLOAD_OUTCOME: ${{ steps.protection_probe_cleanup_artifact.outcome }}
           PARLOR_PROTECTION_CLEANUP_ARTIFACT_ID: ${{ steps.protection_probe_cleanup_artifact.outputs.artifact-id }}
           PARLOR_PROTECTION_CLEANUP_ARTIFACT_DIGEST: ${{ steps.protection_probe_cleanup_artifact.outputs.artifact-digest }}
-        run: /usr/bin/python3 -B remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py assert-result
+        run: |
+          set -euo pipefail
+          case "$PARLOR_PROTECTION_SELECTION" in
+            paired)
+              /usr/bin/python3 -B remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py assert-result
+              ;;
+            protection-host-only)
+              /usr/bin/python3 -B remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py assert-result
+              ;;
+            *)
+              printf '%s\n' 'Unsupported protection diagnostic selection' >&2
+              exit 64
+              ;;
+          esac

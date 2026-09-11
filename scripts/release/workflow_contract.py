@@ -459,6 +459,7 @@ def verify_protection_probe(job: str) -> None:
             re.findall(r"(?m)^      ([A-Z][A-Z0-9_]+): (.*)$", header) != [
                 ("DEVELOPER_DIR", "/Applications/Xcode_26.3.app/Contents/Developer"),
                 ("PARLOR_DISPATCH_SCOPE", "${{ inputs.verification_scope }}"),
+                ("PARLOR_PROTECTION_SELECTION", "${{ inputs.native_selection }}"),
                 ("PARLOR_FROZEN_SOURCE_SHA", "${{ inputs.frozen_source_sha }}"),
                 ("PARLOR_APPROVED_PROBE_CONTROL_SHA256", "${{ inputs.approved_probe_control_sha256 }}")]):
         fail("verification scope protection probe requires exact opt-in, toolchain, source/control and bounded job inputs")
@@ -475,6 +476,7 @@ def verify_protection_probe(job: str) -> None:
         fail("verification scope protection probe requires complete history and a credential-free checkout")
     verify_verification_jdk(job)
     runner = "/usr/bin/python3 -B remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py "
+    host_runner = "/usr/bin/python3 -B remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py "
     for name, command, step_id, environment in (
         (names[1], "run", "protection_probe", []),
         (names[3], "cleanup", "protection_probe_cleanup", [
@@ -498,11 +500,24 @@ def verify_protection_probe(job: str) -> None:
         expected_fields += [("shell", "bash")]
         if environment:
             expected_fields += [("env", "")]
-        expected_fields += [("run", runner + command)]
+        expected_fields += [("run", "|")]
+        script = ('          set -euo pipefail\n'
+                  '          case "$PARLOR_PROTECTION_SELECTION" in\n'
+                  '            paired)\n'
+                  '              ' + runner + command + '\n'
+                  '              ;;\n'
+                  '            protection-host-only)\n'
+                  '              ' + host_runner + command + '\n'
+                  '              ;;\n'
+                  '            *)\n'
+                  "              printf '%s\\n' 'Unsupported protection diagnostic selection' >&2\n"
+                  '              exit 64\n'
+                  '              ;;\n'
+                  '          esac')
         if (re.findall(r"(?m)^        ([a-z-]+):(?: (.*))?$", block) != expected_fields or
                 re.findall(r"(?m)^          ([A-Z][A-Z0-9_]+): (.*)$", block) != environment or
-                block.split("        run: ", 1)[-1].strip() != runner + command):
-            fail("verification scope protection probe requires exact token-free commands, bindings and actual outcomes")
+                block.split("        run: |\n", 1)[-1].rstrip() != script):
+            fail("verification scope protection probe requires identical closed routes, token-free commands, bindings and actual outcomes")
     prefix = "${{ runner.temp }}/parlor-protection-probe-${{ github.run_id }}-${{ github.run_attempt }}/"
     for name, step_id, artifact, path in (
         (names[2], "protection_probe_artifact", "ios-protection-probe", "evidence"),
@@ -576,8 +591,8 @@ def verify_verification_scopes(text: str) -> None:
     selections = re.findall(r"(?m)^      native_selection:\n((?:        .*\n)+)", text.split("\nconcurrency:", 1)[0])
     if (len(selections) != 1 or
             re.findall(r"(?m)^        (type|default|options): (.*)$", selections[0]) !=
-            [("type", "choice"), ("default", "paired"), ("options", "[paired, l08-only, settings-sheet-only, os-recovery-only, protection-application-only]")]):
-        fail("verification scope must retain closed paired-default, l08-only, settings-sheet-only, os-recovery-only or protection-application-only selection")
+            [("type", "choice"), ("default", "paired"), ("options", "[paired, l08-only, settings-sheet-only, os-recovery-only, protection-application-only, protection-host-only]")]):
+        fail("verification scope must retain closed paired-default, l08-only, settings-sheet-only, os-recovery-only, protection-application-only or protection-host-only selection")
     for name in ("Validate verification scope", "Run focused native continuation",
                  "Verify focused native cleanup and uploaded custody"):
         if re.findall(r"(?m)^          PARLOR_NATIVE_SELECTION: (.*)$", validation_step(ios, name)) != [
@@ -585,6 +600,8 @@ def verify_verification_scopes(text: str) -> None:
             fail("verification scope must bind identical explicit native selection into validation/run/cleanup")
     if text.count("PARLOR_NATIVE_SELECTION:") != 3:
         fail("verification scope must not override native selection outside its three reviewed boundaries")
+    if text.count("PARLOR_PROTECTION_SELECTION:") != 1:
+        fail("verification scope must bind protection selection only once at the separate diagnostic job boundary")
     diagnostic = validation_step(ios, "Run focused native continuation")
     if (re.findall(r"(?m)^          PARLOR_APPROVED_PROBE_CONTROL_SHA256: (.*)$", diagnostic) != [
             "${{ inputs.approved_probe_control_sha256 }}"] or ios.count("PARLOR_APPROVED_PROBE_CONTROL_SHA256:") != 3 or

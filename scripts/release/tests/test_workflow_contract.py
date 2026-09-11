@@ -72,10 +72,12 @@ class WorkflowContractTest(unittest.TestCase):
         workflow_contract.verify_verification_scopes(workflow)
         mutations = [block.replace('type: choice', 'type: string', 1),
                      block.replace('default: paired', 'default: l08-only', 1),
-                     block.replace('[paired, l08-only, settings-sheet-only, os-recovery-only, protection-application-only]', '[paired, l08-only, settings-sheet-only, os-recovery-only, protection-application-only, l08]', 1),
-                     block.replace('[paired, l08-only, settings-sheet-only, os-recovery-only, protection-application-only]', '[l08-only, paired, settings-sheet-only, os-recovery-only, protection-application-only]', 1),
+                     block.replace('[paired, l08-only, settings-sheet-only, os-recovery-only, protection-application-only, protection-host-only]', '[paired, l08-only, settings-sheet-only, os-recovery-only, protection-application-only, protection-host-only, l08]', 1),
+                     block.replace('[paired, l08-only, settings-sheet-only, os-recovery-only, protection-application-only, protection-host-only]', '[l08-only, paired, settings-sheet-only, os-recovery-only, protection-application-only, protection-host-only]', 1),
                      block.replace(', os-recovery-only', '', 1),
                      block.replace(', protection-application-only', '', 1),
+                     block.replace(', protection-host-only', '', 1),
+                     block.replace('default: paired', 'default: protection-host-only', 1),
                      block + block, '']
         for replacement in mutations:
             changed = workflow.replace(block, replacement, 1)
@@ -653,6 +655,91 @@ class WorkflowContractTest(unittest.TestCase):
             self.assertNotEqual(changed_job, job)
             with self.subTest(first=first), self.assertRaisesRegex(RuntimeError, "verification scope"):
                 workflow_contract.verify_verification_scopes(workflow.replace(job, changed_job, 1))
+
+    def test_protection_selection_is_bound_once_without_step_or_global_override(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        job = workflow_contract.validation_job(workflow, "ios-protection-probe")
+        original = "      PARLOR_PROTECTION_SELECTION: ${{ inputs.native_selection }}\n"
+        self.assertEqual(workflow.count(original), 1)
+        for replacement in ("", original + original,
+                            original.replace("inputs.native_selection", "inputs.verification_scope"),
+                            original.replace("${{ inputs.native_selection }}", "paired"),
+                            original.replace("${{ inputs.native_selection }}", "protection-host-only"),
+                            original.replace("PARLOR_PROTECTION_SELECTION", "PARLOR_NATIVE_SELECTION")):
+            changed = workflow.replace(job, job.replace(original, replacement, 1), 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(replacement=replacement), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+        changed = workflow.replace("\nenv:\n", "\nenv:\n  PARLOR_PROTECTION_SELECTION: paired\n", 1)
+        self.assertNotEqual(changed, workflow)
+        with self.assertRaisesRegex(RuntimeError, "verification scope"):
+            workflow_contract.verify_verification_scopes(changed)
+        for name in ("Run independently approved strict protection diagnostic",
+                     "Finalize strict protection diagnostic resources and custody",
+                     "Assert diagnostic collection and cleanup outcomes"):
+            block = workflow_contract.validation_step(job, name)
+            changed_block = block.replace("        shell: bash\n", "        shell: bash\n        env:\n"
+                                          "          PARLOR_PROTECTION_SELECTION: protection-host-only\n", 1)
+            changed = workflow.replace(job, job.replace(block, changed_block, 1), 1)
+            self.assertNotEqual(changed, workflow)
+            with self.subTest(name=name), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                workflow_contract.verify_verification_scopes(changed)
+
+    def test_protection_routes_keep_closed_identical_cases_and_literal_commands(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        job = workflow_contract.validation_job(workflow, "ios-protection-probe")
+        runner = "/usr/bin/python3 -B remediation-runs/2026-09-08-continuation/protection-diagnostic-01/run_probe.py "
+        host_runner = "/usr/bin/python3 -B remediation-runs/2026-09-08-continuation/protection-host-image-01/run_host_probe.py "
+        scripts = []
+        for name, command in (("Run independently approved strict protection diagnostic", "run"),
+                              ("Finalize strict protection diagnostic resources and custody", "cleanup"),
+                              ("Assert diagnostic collection and cleanup outcomes", "assert-result")):
+            block = workflow_contract.validation_step(job, name)
+            script = block.split("        run: |\n", 1)[1].rstrip()
+            scripts.append(script.replace(runner + command, runner + "VERB").replace(host_runner + command, host_runner + "VERB"))
+            self.assertEqual(script.count(runner + command + "\n"), 1)
+            self.assertEqual(script.count(host_runner + command + "\n"), 1)
+            for original, replacement in (
+                ('case "$PARLOR_PROTECTION_SELECTION" in', 'case "paired" in'),
+                ('$PARLOR_PROTECTION_SELECTION', '${PARLOR_PROTECTION_SELECTION:-paired}'),
+                ('$PARLOR_PROTECTION_SELECTION', '${{ inputs.native_selection }}'),
+                ("            paired)\n", "            *)\n"),
+                ("            paired)\n", "            paired|l08-only)\n"),
+                ("            protection-host-only)\n", "            protection-host-only|protection-application-only)\n"),
+                ("            protection-host-only)\n", "            protection-application-only)\n"),
+                ("            protection-host-only)\n", "            protection-*)\n"),
+                ("              exit 64\n", "              exit 0\n"),
+                ("              exit 64\n", ""),
+                ("              exit 64\n", "              " + runner + command + "\n"),
+                ("          set -euo pipefail\n", "          set -euo pipefail\n          PARLOR_PROTECTION_SELECTION=paired\n"),
+                (runner + command, host_runner + command),
+                (host_runner + command, runner + command),
+                (host_runner + command, host_runner + "controls"),
+                (host_runner + command, host_runner + "$PARLOR_PROTECTION_SELECTION"),
+                (host_runner + command, '/usr/bin/python3 -B "$RUNNER_TEMP/run_host_probe.py" ' + command),
+                (host_runner + command, host_runner + command + " || true"),
+                ("          esac", "          esac\n          ./gradlew productionAppleCheck"),
+            ):
+                changed = workflow.replace(job, job.replace(block, block.replace(original, replacement, 1), 1), 1)
+                self.assertNotEqual(changed, workflow)
+                with self.subTest(name=name, original=original, replacement=replacement), self.assertRaisesRegex(RuntimeError, "verification scope"):
+                    workflow_contract.verify_verification_scopes(changed)
+        self.assertEqual(scripts[0], scripts[1])
+        self.assertEqual(scripts[0], scripts[2])
+
+    def test_host_protection_routing_is_confined_to_the_separate_diagnostic_job(self) -> None:
+        workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()
+        job = workflow_contract.validation_job(workflow, "ios-protection-probe")
+        self.assertEqual(workflow.count("protection-host-only"), 4)  # one choice, three closed arms
+        self.assertEqual(workflow.count("PARLOR_PROTECTION_SELECTION:"), 1)
+        self.assertEqual(workflow.count("PARLOR_NATIVE_SELECTION:"), 3)
+        for job_id in ("desktop-android", "desktop-linux-arm64", "desktop-macos-x64", "desktop-windows-x64", "ios", "ios-release"):
+            with self.subTest(job=job_id):
+                block = workflow_contract.validation_job(workflow, job_id)
+                self.assertNotIn("protection-host-only", block)
+                self.assertNotIn("PARLOR_PROTECTION_SELECTION", block)
+        self.assertEqual(job.count("protection-host-image-01/run_host_probe.py"), 3)
+        self.assertEqual(job.count("protection-diagnostic-01/run_probe.py"), 3)
 
     def test_protection_probe_finalizers_bind_actual_upload_run_and_cleanup_outcomes(self) -> None:
         workflow = (workflow_contract.ROOT / ".github/workflows/production-verification.yml").read_text()

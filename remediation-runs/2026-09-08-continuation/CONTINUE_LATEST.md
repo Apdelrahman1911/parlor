@@ -1,10 +1,13 @@
 # Continuation execution ledger — 2026-09-10
 
-## CURRENT — 9abd3c4c APP03 app capture, whole diagnostic FAIL; NOT_READY
+## CURRENT — 19df7e9a APP04 app capture, host reader FAIL; NOT_READY
 
-`N=remediation-runs/2026-09-08-continuation`. This cutoff supersedes older current-state prose, not retained failures.
-- Committed freeze `9abd3c4c7d4e04c2c5243639417543d9b1f9aa9f`, tree `e102b09492147118b4c09fb536d0dc88840f273b`.
-  Source `4bfa199316d53d312b8dad299fb3949c183669d7` removed explicit NSObject inheritance and used exact scalar version checks;
+`C=remediation-runs/2026-09-07-local-readiness`; `N=remediation-runs/2026-09-08-continuation`. This cutoff supersedes older status, not failures.
+- Committed freeze `19df7e9af0c112d5137c2c6cbb65f22ad7439f72`, tree `41f7e61c13618b44558bf9af2e1ebc57a128232d`.
+  Source `b5965089cc756d915f09ff46fa8ef015214a8758` preserves exact SDK macro bytes and strictly parses selected definitions;
+  approved by `$N/reviews/protection-application-sdk-macro-independent-01.json`. Actual **7 focused Python controls PASS**,
+  stop0/scratch removed/no cleanup errors: `$C/evidence/continuation-host-sdk-macro-controls-01/` (modified-worktree, not native execution).
+  Earlier source `4bfa199316d53d312b8dad299fb3949c183669d7` removed explicit NSObject inheritance and used exact scalar version checks;
   independent approval: `$N/reviews/protection-application-swift-boundary-independent-01.json`.
   Earlier source `8da6fad53163c6920c97e366cffbeffe0dcb6280` corrected the copied Kotlin import;
   `45a0d06f9060df01b2d1a5343fd64cdfdf739aba` retained safe command identity on preflight timeouts, without extending budgets.
@@ -20,7 +23,7 @@
   `receipt.json`, `xcodebuild.log.gz`, `xcresult-summary.json`, `protection-retention.json`; no protection closure.
   Inner cleanup **PASS**,17 stages/two stops0; owned simulator/copy/DerivedData/temp removed,
   source/controls unchanged, no remaining owned workers/unknown holders/errors. Outer `cleanup/` also PASS.
-- Fresh APP-only preflight34538599669/1 at9abd3c4c **PASS**, same qualified platform;844 source rows,
+- Historical APP-only preflight34538599669/1 at9abd3c4c **PASS**, same qualified platform;844 source rows,
   112 bound controls, binding cleanup PASS. `$N/actions/34538599669/` and `reviews/protection-application-preflight-admission-03.json`.
 - **APP03 run34539013540/1 at9abd3c4c remains FAIL**, despite xcodebuild0 and **1 XCTest PASS,0 FAIL/SKIP**.
   Copied app emitted six Kotlin/native same-inode samples; retained validator result is
@@ -34,11 +37,24 @@
   compilation/execution was not reached. Raw temporary dump was not retained; no offending macro is identified.
   Both cleanup receipts **PASS**:17 inner stages/two stops0, source/controls unchanged, owned simulator/copy/
   DerivedData/temp removed, no remaining owned workers/unknown holders/errors; outer packet in `actions/34539013540/cleanup/`.
-- Macro-byte preservation/parsing correction is under implementation/review, not a completed repair or new runtime result.
-  Finish independent review, commit source then inventory and obtain fresh APP-specific preflight/control admission.
-- **Strict A37 remains0PASS/26FAIL**; capture alone cannot satisfy unchanged strict production validation.
-  **Final combined qualification NOT_RUN** for the six mandatory jobs. D05 at9abd3c4c is prepared/conditionally
-  admitted, not dispatched; macro-fix source changes require a fresh exact-source request/admission. D04 was not run.
+- Fresh APP-only preflight34541624398/1 at19df **PASS**, qualified Xcode26.3/17C529 and arm64 iOS26.2/23C54;
+  844 source rows/112 bound controls, binding cleanup PASS. `$N/reviews/protection-application-preflight-admission-04.json`.
+- **APP04 run34542099663/1 at19df FAIL**: xcodebuild0/**1 XCTest PASS,0 FAIL/SKIP**, six new Kotlin/native
+  same-inode captures and **CAPTURED_NOT_PROTECTION_PASS**, strict**0PASS/6FAIL**; both crypto-roundtrip flags true.
+  Host SDK preprocessing/parsing succeeded; host-reader clang and UUID query exited0. The actual reader exited1:
+  directory sample `image-executable-address`, `reads=[]`, descriptor closed. **Which address predicate failed is UNKNOWN**;
+  this is not completed host metadata comparison. Bound read-only output retains UID501, source/control/run/image identity.
+  Raw `$N/actions/34542099663/native-evidence/ios-readiness-40/`: `protection-application-host-reader.json`,
+  `protection-application-validation.json`, app sample JSONs, `host-reader-{compile,uuid}.log`, SDK bindings and receipt.
+  Retained `host-reader-sdk-macros.raw.gz` confirms APP04's `MPCopyrightNotice` byte0xa9 at208017.
+  APP03's raw dump was not retained: APP04 identifies its own bytes, not retroactively APP03's offending macro.
+  Both APP04 cleanup receipts **PASS**,17 inner stages/two stops0, source/controls unchanged, owned simulator/copy/
+  DerivedData/temp removed and no remaining owned workers/unknown holders/errors; outer `actions/34542099663/cleanup/`.
+- New host-only image-diagnostic implementation/review is pending, **not verified**. Preserve the failing address guard;
+  review/test/freeze that diagnostic and obtain fresh source/control admission, not reuse APP04 fixtures or approvals.
+- **Requested technical gates closed:0/2. Strict A37 remains0PASS/26FAIL**; no diagnostic capture waives strict validation.
+  **Final combined qualification NOT_RUN** for the six mandatory jobs. D06's19df request is not dispatched and is stale
+  for the pending host-only edits; require a new exact-source request/admission. D04/D05 were not run.
   C08 remains historical scoped evidence, not current-SHA consumption; physical/Store/owner/legal gates remain.
 
 ## Historical09f freeze through failed PA40 — superseded cutoff, preserved evidence

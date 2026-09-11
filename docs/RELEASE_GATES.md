@@ -96,11 +96,15 @@ owns `apple-aggregate`/`apple-wrapper`. Every cycle stops Gradle and retires its
 owned resources immediately; upload custody is required before output deletion.
 
 `verification_scope=ios-protection-probe` selects only the seventh job. It runs
-an independently reviewed, source/control-bound standalone same-inode protection
-diagnostic with its own simulator, collection and cleanup receipts, not Parlor
-runtime, a replacement full gate, or proof of physical-device protection. It is
-excluded from full runs. Successful diagnostic collection must not be relabeled
-as a passed strict protection observation or application readiness.
+an independently reviewed, source/control-bound standalone diagnostic with
+collection and cleanup receipts. Default `native_selection=paired` retains the
+same-inode protection diagnostic on its own simulator. Only the explicit
+`protection-host-only` selection instead observes macOS loaded-image attribution
+without an app build or simulator; it is not an app/native-continuation selection.
+Other selections fail before diagnostic resource allocation. Neither diagnostic
+is Parlor runtime, a replacement full gate, or proof of physical-device protection;
+both are excluded from full runs. Successful diagnostic collection must not be
+relabeled as a passed strict protection observation or application readiness.
 
 The workflow deliberately labels framework linkage separately from executable
 simulator runtime tests. A successful link is not reported as a runtime test.
